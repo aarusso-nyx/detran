@@ -1,0 +1,1169 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Secretaria/recepção",
+    "Analista ou secretaria",
+    "Analista (1º circuito) ou relator (2º circuito)",
+    "Relator (membro da JARI ou do CETRAN-AM)",
+    "Presidente da JARI, do CETRAN-AM ou coordenador",
+    "Colegiado (JARI ou CETRAN-AM)",
+    "Secretaria",
+    "Autoridade de trânsito",
+    "Requerente",
+    "Gestor RAIT",
+    "Coordenador do pool ou gestor RAIT",
+    "Requerente ou procurador habilitado",
+    "Coordenador do pool (defesa prévia) ou secretaria do colegiado (JARI/CETRAN-AM)",
+    "Secretaria da JARI (ou do CETRAN-AM)",
+    "Secretaria do colegiado, com o presidente",
+    "Autoridade de trânsito investida",
+    "Secretaria do órgão autuador",
+    "Secretaria da JARI",
+    "Secretaria executiva do CETRAN-AM",
+    "Membro do colegiado",
+    "Secretaria da sessão",
+    "Presidente da JARI",
+    "Presidente do CETRAN-AM",
+    "Autoridade de trânsito ou presidente do colegiado",
+    "Autoridade de trânsito (decadência) ou presidente do colegiado (prescrição por não julgamento ou paralisação)",
+    "Secretaria do órgão (ou da JARI)",
+    "Subcoordenador da defesa prévia",
+    "Interessado",
+    "Secretaria de protocolo",
+    "O agregado da infração",
+    "Sistema",
+    "Operador de integração",
+    "O módulo de pagamento",
+    "Secretaria do colegiado",
+    "Área de gestão de pessoas",
+    "Gabinete do órgão",
+    "Coordenador da defesa prévia",
+    "Gestor RAIT, com o dirigente do órgão",
+    "Área de processamento/notificação",
+    "Auditor/corregedor",
+    "Administrador do órgão",
+    "Presidente do colegiado (ou autoridade, no 1º circuito)"
+  ],
+  "cases": [
+    {
+      "id": "UC-RAIT-001",
+      "title": "Secretaria protocola e valida intake multi-canal",
+      "goal": "Secretaria/recepção (ou o próprio requerente, no canal digital) registra um pleito (defesa prévia, recurso JARI ou recurso CETRAN) recebido por qualquer canal — balcão, postal, PORTAL, Protocolo Virtual do Estado — como um caso RAIT com conteúdo mínimo válido, pronto para triagem de admissibilidade.",
+      "actors": ["Secretaria/recepção"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-001-001",
+          "action": "Requerente apresenta o pleito referenciando exatamente um AIT (RN-RAIT-002)."
+        },
+        {
+          "id": "UC-RAIT-001-002",
+          "action": "Secretaria (ou o formulário do PORTAL, no canal digital) confere conteúdo mínimo: órgão; identificação completa do requerente; placa + nº do AIT; exposição de fatos/fundamentos; data; assinatura (RN-RAIT-002, CONTRAN-900 art.3º)."
+        },
+        {
+          "id": "UC-RAIT-001-003",
+          "action": "Se o pleito veio em papel/balcão, secretaria digitaliza o dossiê — a obrigação de digitalizar é do órgão, não do cidadão (modelo CETRAN-SP, REF-CETRAN-PROCESSO-INTERNO)."
+        },
+        {
+          "id": "UC-RAIT-001-004",
+          "action": "Sistema registra data/hora de protocolo (data da postagem ECT conta, se via postal — CONTRAN-900 art.6º) e classifica `instancia` (`defesa_previa`\\|`jari`\\|`cetran`) e `circuito` (1º\\|2º) conforme o tipo de pleito e o AIT/decisão referenciados."
+        },
+        {
+          "id": "UC-RAIT-001-005",
+          "action": "Se houver representação por procurador, secretaria confere firma reconhecida por autenticidade (aceita no próprio balcão do DETRAN-AM — Portaria 5046/2018 art.2º §2º; não exige cartório)."
+        },
+        {
+          "id": "UC-RAIT-001-006",
+          "action": "Caso entra em `PROTOCOLADO` (WF-RAIT-001) e segue automaticamente para `TRIAGEM_ADMISSIBILIDADE` (UC-RAIT-002)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-002",
+      "title": "Analista realiza juízo de admissibilidade",
+      "goal": "Analista (ou secretaria, conforme o desenho local) verifica se o caso protocolado preenche os quatro requisitos de admissibilidade antes de qualquer análise de mérito, evitando que recursos manifestamente inadmissíveis consumam capacidade de instrução/julgamento.",
+      "actors": ["Analista ou secretaria"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-002-001",
+          "action": "Analista abre o caso a partir da fila de triagem."
+        },
+        {
+          "id": "UC-RAIT-002-002",
+          "action": "Sistema calcula tempestividade automaticamente via motor de prazos único (RN-RAIT-005) — compara data de protocolo contra o prazo aplicável ao tipo de pleito (30 dias defesa; até o vencimento da NP para recurso JARI; 30 dias para recurso CETRAN)."
+        },
+        {
+          "id": "UC-RAIT-002-003",
+          "action": "Analista confere os demais critérios: legitimidade da parte (proprietário, condutor identificado, embarcador/transportador responsável, ou procurador habilitado); presença de assinatura; existência de pedido compatível com os fatos (RN-RAIT-001, CONTRAN-900 art.4º)."
+        },
+        {
+          "id": "UC-RAIT-002-004",
+          "action": "Se todos os critérios são atendidos → caso passa a `ADMITIDO`."
+        },
+        {
+          "id": "UC-RAIT-002-005",
+          "action": "Se qualquer critério falha → caso passa a `NAO_CONHECIDO`, com motivo registrado (um dos quatro incisos do art.4º)."
+        },
+        {
+          "id": "UC-RAIT-002-006",
+          "action": "Em ambos os casos, o caso segue para comunicação ao requerente (UC-RAIT-007)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-003",
+      "title": "Analista instrui o caso e conduz diligência",
+      "goal": "Analista (1º circuito) ou relator (2º circuito, antes de preparar o voto — ver UC-RAIT-004) reúne e examina o dossiê do caso admitido, solicitando documentos/provas complementares quando necessário, até reunir condições de decidir.",
+      "actors": ["Analista (1º circuito) ou relator (2º circuito)"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-003-001",
+          "action": "Responsável assume o caso da fila (WF-RAIT-002 §2 — pull/round-robin/balanceamento) → caso passa a `EM_INSTRUCAO`."
+        },
+        {
+          "id": "UC-RAIT-003-002",
+          "action": "Responsável examina o dossiê: AIT, NA/NP, evidências (do TEAT, quando aplicável), petição e anexos do requerente."
+        },
+        {
+          "id": "UC-RAIT-003-003",
+          "action": "Se a instrução está completa, caso passa a `PRONTO_P_DECISAO` — segue para `DECIDIDO_AUTORIDADE` (1º circuito, UC-RAIT-003 encerra aqui) ou `PAUTADO` (2º circuito, segue para UC-RAIT-004/UC-RAIT-005)."
+        },
+        {
+          "id": "UC-RAIT-003-004",
+          "action": "Se faltam provas/documentos, responsável abre diligência fixando prazo ao requerente ou ao órgão autuador → caso passa a `DILIGENCIA` (900 art.9º, RN-RAIT-004)."
+        },
+        {
+          "id": "UC-RAIT-003-005",
+          "action": "Resposta chega dentro do prazo → anexada ao dossiê, caso retorna a `EM_INSTRUCAO`."
+        },
+        {
+          "id": "UC-RAIT-003-006",
+          "action": "Prazo expira sem resposta → sistema não arquiva — caso avança automaticamente a `PRONTO_P_DECISAO`, julgando-se no estado em que se encontra (RN-RAIT-004)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-004",
+      "title": "Relator prepara parecer e voto (2º circuito)",
+      "goal": "Relator (membro da JARI ou do CETRAN-AM sorteado para o caso) elabora parecer fundamentado e voto sobre um recurso já instruído, para apresentação em sessão de julgamento.",
+      "actors": ["Relator (membro da JARI ou do CETRAN-AM)"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-004-001",
+          "action": "Relator recebe o caso via distribuição por sorteio (WF-RAIT-002 §3)."
+        },
+        {
+          "id": "UC-RAIT-004-002",
+          "action": "Relator declara ausência de impedimento (não lavrou o AIT; não integra simultaneamente JARI e CETRAN no mesmo processo — CONTRAN-357 itens 4.1.c, 5.1.c)."
+        },
+        {
+          "id": "UC-RAIT-004-003",
+          "action": "Relator examina o dossiê completo (instruído em UC-RAIT-003) e, se necessário, solicita diligência complementar (retorna a UC-RAIT-003 fluxo de diligência)."
+        },
+        {
+          "id": "UC-RAIT-004-004",
+          "action": "Relator elabora o parecer: resumo descritivo, análise fundamentada, voto (provimento, não-provimento, ou não-conhecimento) — modelo CETRAN-ES art.26."
+        },
+        {
+          "id": "UC-RAIT-004-005",
+          "action": "Relator registra o parecer no sistema dentro do prazo interno de elaboração de voto (proposta: 20 dias — WF-RAIT-003 T-VOTO, `pendente regimento JARI-AM/CETRAN-AM`)."
+        },
+        {
+          "id": "UC-RAIT-004-006",
+          "action": "Caso passa a `PRONTO_P_DECISAO` → aguarda inclusão em pauta (UC-RAIT-005)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-005",
+      "title": "Presidente monta e fecha a pauta de julgamento",
+      "goal": "Presidente da JARI (ou do CETRAN-AM, ou coordenador quando houver mais de uma JARI — CONTRAN-357 item 2.3) seleciona os casos `PRONTO_P_DECISAO` do pool 2º circuito para a próxima sessão, priorizando risco de prescrição, e formaliza a pauta.",
+      "actors": ["Presidente da JARI, do CETRAN-AM ou coordenador"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-005-001",
+          "action": "Presidente abre a fila `PRONTO_P_DECISAO` do pool (JARI ou CETRAN)."
+        },
+        {
+          "id": "UC-RAIT-005-002",
+          "action": "Sistema destaca os casos com bandeira `ALERTA_N3`/`CRITICO` (WF-RAIT-002 §4) — entrada obrigatória na próxima pauta."
+        },
+        {
+          "id": "UC-RAIT-005-003",
+          "action": "Presidente completa a pauta com os demais casos por ordem FIFO (ou critério local equivalente)."
+        },
+        {
+          "id": "UC-RAIT-005-004",
+          "action": "Presidente fecha a pauta → caso(s) passam a `PAUTADO`, sessão entra em `FORMANDO_PAUTA`→`PAUTA_FECHADA` (WF-RAIT-003)."
+        },
+        {
+          "id": "UC-RAIT-005-005",
+          "action": "Secretaria dispara convocação aos membros do colegiado (WF-RAIT-003 `CONVOCACAO_ENVIADA`)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-006",
+      "title": "Colegiado julga em sessão",
+      "goal": "Colegiado (JARI ou CETRAN-AM) delibera em sessão sobre os casos pautados, produzindo decisão fundamentada por caso, registrada em ata.",
+      "actors": ["Colegiado (JARI ou CETRAN-AM)"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-006-001",
+          "action": "Secretaria abre a sessão na data/hora convocada; sistema verifica quorum (maioria simples - presidente/suplente presente — CONTRAN-357 item 8.2; `pendente regimento` para o número mínimo do CETRAN-AM)."
+        },
+        {
+          "id": "UC-RAIT-006-002",
+          "action": "Com quorum, para cada caso pautado: relator apresenta parecer/voto (`RELATORIA_LIDA`)."
+        },
+        {
+          "id": "UC-RAIT-006-003",
+          "action": "Sustentação oral (`SUSTENTACAO_ORAL`) é omitida por padrão — decisão do Owner (`_meta/open-issues.md` DT-011, 2026-08-28), não configurável. O fluxo padrão segue direto de `RELATORIA_LIDA` para `VOTACAO`; o estado só é alcançado se um regimento local vier a admiti-la formalmente no futuro."
+        },
+        {
+          "id": "UC-RAIT-006-004",
+          "action": "Membros votam (`VOTACAO`) — decisão por maioria simples (CONTRAN-357 item 8.3)."
+        },
+        {
+          "id": "UC-RAIT-006-005",
+          "action": "Se houver empate, aplica-se a regra de desempate (`DESEMPATE_PRESIDENTE` — `pendente regimento`, proposta de voto de qualidade do presidente)."
+        },
+        {
+          "id": "UC-RAIT-006-006",
+          "action": "Presidente proclama a decisão (`DECISAO_PROCLAMADA`) — provido, negado, ou não-conhecido."
+        },
+        {
+          "id": "UC-RAIT-006-007",
+          "action": "Repete-se 2-6 para cada caso da pauta; ao final, secretaria lavra a ata consolidada da sessão (`ATA_LAVRADA`) e o presidente (+ relator) assina (`ATA_ASSINADA`)."
+        },
+        {
+          "id": "UC-RAIT-006-008",
+          "action": "Cada caso julgado retorna a WF-RAIT-001 como `JULGADO_SESSAO`, seguindo para comunicação (UC-RAIT-007)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-007",
+      "title": "Secretaria comunica a decisão ao requerente",
+      "goal": "Secretaria (via processo automatizado, com canal do PORTAL como via preferencial) notifica o requerente do resultado do caso — decisão de autoridade (1º circuito), decisão de sessão (2º circuito), ou não-conhecimento — dando ciência formal e abrindo/fechando o prazo recursal seguinte.",
+      "actors": ["Secretaria"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-007-001",
+          "action": "Sistema gera a comunicação formal: resultado (acolhida/indeferida; provido/negado/não conhecido), fundamentação, e — quando aplicável — a data-limite do próximo prazo recursal (CONTRAN-918 art.17)."
+        },
+        {
+          "id": "UC-RAIT-007-002",
+          "action": "Sistema anexa de ofício ao requerente os artefatos que o órgão já possui (parecer e conclusão da JARI, quando comunicando resultado de recurso ao CETRAN — RN-RAIT-003)."
+        },
+        {
+          "id": "UC-RAIT-007-003",
+          "action": "Notificação é enviada preferencialmente por via eletrônica (SNE, se o requerente aderiu — CONTRAN-931) ou pelo canal de protocolo original."
+        },
+        {
+          "id": "UC-RAIT-007-004",
+          "action": "Caso passa a `COMUNICADO`."
+        },
+        {
+          "id": "UC-RAIT-007-005",
+          "action": "Se a decisão foi de provimento em `instancia=jari`: sistema também comunica se a autoridade vai recorrer (CONTRAN-918 art.17 §ú) — ver UC-RAIT-008."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-008",
+      "title": "Autoridade decide recorrer de decisão de provimento",
+      "goal": "Autoridade de trânsito (que impôs a penalidade originalmente) avalia se recorre ao CETRAN-AM contra uma decisão da JARI que deu provimento ao recurso do cidadão — a única hipótese em que o próprio órgão, e não o cidadão, é o recorrente de 2ª instância.",
+      "actors": ["Autoridade de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-008-001",
+          "action": "Sistema sinaliza à autoridade os casos com provimento recente, dentro da janela de 30 dias (CTB art.288, contados da publicação/notificação da decisão)."
+        },
+        {
+          "id": "UC-RAIT-008-002",
+          "action": "Autoridade avalia os fundamentos da decisão de provimento (ex.: discordância jurídica, precedente relevante, orientação normativa)."
+        },
+        {
+          "id": "UC-RAIT-008-003",
+          "action": "Se decide recorrer: sistema abre um novo caso RAIT `instancia=cetran`, remessa interna (sem petição externa — a legitimidade da autoridade é presumida pelo cargo, CTB art.288 §1º) — caso nasce em `ADMITIDO`/`DISTRIBUIDO`, herdando `caso_origem_id` do caso JARI."
+        },
+        {
+          "id": "UC-RAIT-008-004",
+          "action": "Requerente é comunicado de que a autoridade recorreu (CONTRAN-918 art.17 §ú) — a decisão favorável ainda não transitou em julgado."
+        },
+        {
+          "id": "UC-RAIT-008-005",
+          "action": "Se a autoridade não recorre dentro dos 30 dias: caso JARI passa a `TRANSITADO` — provimento torna-se definitivo, multa cancelada."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-009",
+      "title": "Recorrente interpõe recurso ao CETRAN-AM (remessa de 2ª instância)",
+      "goal": "Requerente cujo recurso foi negado ou não conhecido pela JARI interpõe recurso ao CETRAN-AM, abrindo um novo caso RAIT de 2ª instância dentro do prazo legal.",
+      "actors": ["Requerente"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-009-001",
+          "action": "Requerente interpõe recurso ao CETRAN-AM (PORTAL, Protocolo Virtual, ou Protocolo Administrativo presencial — REF-DETRANAM-SERVICOS) dentro de 30 dias da publicação/notificação da decisão da JARI (CTB art.288)."
+        },
+        {
+          "id": "UC-RAIT-009-002",
+          "action": "Sistema abre novo caso RAIT `instancia=cetran`, `caso_origem_id` = caso JARI, `ait_id` herdado — reentra em `PROTOCOLADO` do novo caso, seguindo triagem completa (UC-RAIT-001/UC-RAIT-002)."
+        },
+        {
+          "id": "UC-RAIT-009-003",
+          "action": "Sistema anexa de ofício o parecer e a conclusão da JARI ao dossiê do novo caso — requerente não precisa reapresentar o que o órgão já possui (RN-RAIT-003)."
+        },
+        {
+          "id": "UC-RAIT-009-004",
+          "action": "Novo caso segue o ciclo completo de WF-RAIT-001 (triagem → distribuição/sorteio → instrução → pauta → sessão do CETRAN-AM)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-010",
+      "title": "Gestor RAIT monitora risco de prescrição",
+      "goal": "Gestor RAIT acompanha, em painel consolidado, os casos que se aproximam de qualquer um dos três relógios de extinção de punibilidade (WF-RAIT-001 §Relógios), intervindo antes que um caso atinja o teto legal.",
+      "actors": ["Gestor RAIT"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-010-001",
+          "action": "Gestor abre o painel de risco de prescrição (dashboard), segmentado por relógio (A — decadência 180/360d; B — inércia recursal 24 meses; C — paralisação 3 anos), por pool e por nível de alerta (`ALERTA_N1`…`CRITICO`)."
+        },
+        {
+          "id": "UC-RAIT-010-002",
+          "action": "Sistema notifica automaticamente o gestor a cada caso que atinge `ALERTA_N3` ou `CRITICO` (WF-RAIT-002 §6 — cadeia de escalonamento)."
+        },
+        {
+          "id": "UC-RAIT-010-003",
+          "action": "Gestor avalia a causa do atraso: sobrecarga de pool, relator ausente/impedido, diligência pendente, sessões adiadas por falta de quorum."
+        },
+        {
+          "id": "UC-RAIT-010-004",
+          "action": "Gestor aciona a ação corretiva apropriada: reatribuição de caso (UC-RAIT-011), priorização forçada em pauta (UC-RAIT-005), ou escalonamento ao presidente JARI/CETRAN para sessão extraordinária."
+        },
+        {
+          "id": "UC-RAIT-010-005",
+          "action": "Se, apesar da intervenção, um caso atinge o teto legal (`PRESCRITO_OPERACIONAL`): gestor abre registro de incidente, documenta a causa raiz, e comunica ao LEGAL/auditoria."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-011",
+      "title": "Reatribuir caso por afastamento, impedimento ou rebalanceamento",
+      "goal": "Coordenador do pool ou gestor RAIT move um ou mais casos de um responsável (analista ou relator) para outro, por impedimento declarado, afastamento, sobrecarga, ou risco de prescrição por inércia individual.",
+      "actors": ["Coordenador do pool ou gestor RAIT"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-011-001",
+          "action": "Gatilho de reatribuição ocorre por um dos motivos: (a) impedimento declarado pelo próprio responsável (UC-RAIT-004 fluxo 2a); (b) responsável passa a `AFASTADO_TEMP` (WF-RAIT-002 §5 — reincidência em atraso, ou faltas injustificadas, CONTRAN-357 item 7.3); (c) rebalanceamento de carga decidido pelo coordenador; (d) escalonamento por risco de prescrição (UC-RAIT-010)."
+        },
+        {
+          "id": "UC-RAIT-011-002",
+          "action": "Sistema remove o caso do responsável atual e aplica a estratégia de distribuição configurada para o pool (WF-RAIT-002 §2) para escolher o novo responsável."
+        },
+        {
+          "id": "UC-RAIT-011-003",
+          "action": "Trabalho já registrado (instrução, diligências abertas) é preservado no dossiê — a reatribuição não reinicia o caso, apenas troca o responsável."
+        },
+        {
+          "id": "UC-RAIT-011-004",
+          "action": "Novo responsável é notificado; caso permanece no mesmo estado (WF-RAIT-001)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-012",
+      "title": "Processar desistência do requerente",
+      "goal": "Requerente (ou procurador habilitado) desiste do pleito por escrito a qualquer momento antes do julgamento, encerrando o caso sem decisão de mérito — tipicamente para viabilizar pagamento com desconto (ex.: adesão ao SNE — CONTRAN-931 art.9º).",
+      "actors": ["Requerente ou procurador habilitado"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-012-001",
+          "action": "Requerente registra desistência por escrito — via PORTAL (ação dedicada) ou petição no canal de origem (CONTRAN-900 art.11)."
+        },
+        {
+          "id": "UC-RAIT-012-002",
+          "action": "Sistema verifica que o caso ainda não foi julgado (`DECIDIDO_AUTORIDADE`/`JULGADO_SESSAO` não alcançados) — desistência só é admissível até o julgamento."
+        },
+        {
+          "id": "UC-RAIT-012-003",
+          "action": "Caso passa a `ENCERRADO_DESISTENCIA`, independentemente do estado em que estava."
+        },
+        {
+          "id": "UC-RAIT-012-004",
+          "action": "Sistema encerra quaisquer diligências abertas e remove o caso de pautas futuras, se pautado."
+        },
+        {
+          "id": "UC-RAIT-012-005",
+          "action": "Requerente é comunicado do encerramento; efeitos sobre pagamento/desconto são tratados no PORTAL (fora do escopo deste UC)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-013",
+      "title": "Coordenador publica a escala semanal e designa o plantão",
+      "goal": "Coordenador do pool (defesa prévia) ou secretaria do colegiado (JARI/CETRAN-AM, sob orientação do presidente) publica, para a semana seguinte, quem está disponível, quem está em plantão e quais ausências estão programadas, de modo que a distribuição só alcance quem pode trabalhar.",
+      "actors": [
+        "Coordenador do pool (defesa prévia) ou secretaria do colegiado (JARI/CETRAN-AM)"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-013-001",
+          "action": "Coordenador abre a escala da semana seguinte; sistema pré-preenche com a escala vigente e as ausências já registradas."
+        },
+        {
+          "id": "UC-RAIT-013-002",
+          "action": "Coordenador ajusta disponibilidade por membro e dia (`DISPONIVEL` / `AUSENTE_PROGRAMADO`) e o limite de casos simultâneos (`WIP`) quando diferente do padrão do pool."
+        },
+        {
+          "id": "UC-RAIT-013-003",
+          "action": "Coordenador designa o plantão de risco (`EM_PLANTAO`) e, no colegiado, o suplente de plantão por sessão do calendário."
+        },
+        {
+          "id": "UC-RAIT-013-004",
+          "action": "Sistema valida: há ao menos um plantonista por dia útil; a capacidade projetada (membros disponíveis × meta diária) cobre a chegada média; nenhum membro `AFASTADO_TEMP` ou `MANDATO_ENCERRADO` está escalado."
+        },
+        {
+          "id": "UC-RAIT-013-005",
+          "action": "Coordenador publica; a escala fica visível a todos os membros e ao gestor RAIT, com histórico de versões."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-014",
+      "title": "Secretaria executa o sorteio de relatores em lote e o presidente homologa a ata",
+      "goal": "Secretaria da JARI (ou do CETRAN-AM) distribui a relatores, por sorteio registrado, os recursos recebidos desde o último lote; o presidente homologa a ata de distribuição.",
+      "actors": ["Secretaria da JARI (ou do CETRAN-AM)"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-014-001",
+          "action": "Secretaria abre o lote (`LOTE_ABERTO`); sistema lista os casos na ordem única de consumo e os membros elegíveis (`ATIVO` e `DISPONIVEL`/`EM_PLANTAO`, titulares primeiro)."
+        },
+        {
+          "id": "UC-RAIT-014-002",
+          "action": "Sistema exclui, por caso, membros impedidos ou suspeitos (RN-RAIT-140) — inclusive quem lavrou o AIT e, no CETRAN-AM, quem integrou a JARI."
+        },
+        {
+          "id": "UC-RAIT-014-003",
+          "action": "Sistema executa o round-robin com ordem inicial aleatória e ponderação por carga aberta, aplica a prevenção (mesmo requerente no lote → mesmo relator) e gera a ata (lote, semente, ordem, membro por caso) → `LOTE_SORTEADO`."
+        },
+        {
+          "id": "UC-RAIT-014-004",
+          "action": "Presidente confere e assina a ata (PAdES+TSA); casos passam a `EM_INSTRUCAO` com relator e `T-VOTO` armado; relatores são notificados com prazo `T-CLAIM` para aceitar."
+        },
+        {
+          "id": "UC-RAIT-014-005",
+          "action": "Aceites registrados → `LOTE_ACEITO`."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-015",
+      "title": "Secretaria confirma a banca da sessão e convoca suplentes",
+      "goal": "Secretaria do colegiado, com o presidente, garante antes da sessão que a banca terá quorum, presidente ou suplente e, no CETRAN-AM, paridade de representação, convocando suplentes quando necessário.",
+      "actors": ["Secretaria do colegiado, com o presidente"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-015-001",
+          "action": "Ao fechar a pauta, sistema forma a banca prevista (`BANCA_PREVISTA`): titulares escalados + suplente de plantão; para cada item, marca os membros impedidos."
+        },
+        {
+          "id": "UC-RAIT-015-002",
+          "action": "Membros confirmam presença até `T-CONV`; sistema recalcula quorum (maioria simples), presença do presidente ou suplente e, no CETRAN-AM, a paridade dos blocos."
+        },
+        {
+          "id": "UC-RAIT-015-003",
+          "action": "Requisitos atendidos → `BANCA_CONFIRMADA`; a sessão pode abrir (`SESSAO_ABERTA`)."
+        },
+        {
+          "id": "UC-RAIT-015-004",
+          "action": "Na abertura, quorum é reverificado item a item: membro impedido no item sai da contagem daquele item."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-016",
+      "title": "Autoridade signatária decide a defesa prévia (acolhe, indefere ou devolve a minuta)",
+      "goal": "Autoridade de trânsito investida, escalada para a circunscrição do AIT, aprecia a minuta do revisor e decide a defesa da autuação, inclusive quanto ao mérito (RN-RAIT-115); é o único ator que assina a decisão do 1º circuito.",
+      "actors": ["Autoridade de trânsito investida"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-016-001",
+          "action": "Autoridade abre a fila da sua circunscrição, ordenada pela ordem única (RN-RAIT-141), com dias restantes de `T-DEC` por caso."
+        },
+        {
+          "id": "UC-RAIT-016-002",
+          "action": "Autoridade lê a minuta, o dossiê e o parecer de admissibilidade; o sistema exibe o enquadramento, as provas do órgão anexadas de ofício e as diligências realizadas."
+        },
+        {
+          "id": "UC-RAIT-016-003",
+          "action": "Autoridade decide: acolhida (AIT cancelado, registro arquivado, comunicação ao proprietário — 918 art. 9º §1º) ou indeferida (aplicação da penalidade e expedição da NP — 918 art. 9º §2º); a decisão é fundamentada e assinada (PAdES+TSA)."
+        },
+        {
+          "id": "UC-RAIT-016-004",
+          "action": "Caso passa a `DECIDIDO_AUTORIDADE`; evento `RAIT_DECISAO_PUBLICADA` é publicado; a infração transita conforme WF-INF-003 #8/#9."
+        },
+        {
+          "id": "UC-RAIT-016-005",
+          "action": "Sistema encaminha a comunicação (UC-RAIT-007) e, se indeferida, a expedição da NP (UC-RAIT-041)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-017",
+      "title": "Secretaria remete o recurso admitido à JARI com o dossiê de ofício e registra o recebimento",
+      "goal": "Secretaria do órgão autuador remete à JARI o recurso tempestivo admitido, no prazo legal de 10 dias, com tudo o que o órgão já possui anexado de ofício; a secretaria da JARI registra o recebimento, que é o marco do relógio de 24 meses.",
+      "actors": ["Secretaria do órgão autuador", "Secretaria da JARI"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-017-001",
+          "action": "Sistema monta o dossiê de remessa: AIT, evidências do TEAT, NA/NP com marcos de ciência, decisão da defesa prévia e sua minuta, petição e anexos do recorrente, registro de admissibilidade — sem exigir nada do cidadão (CTB art. 285 §4º). Por OD-R7-FJ0-001, TEAT_EVIDENCE exige ao menos um vínculo válido ao AIT; um único vínculo válido satisfaz o piso mesmo com `mandatory=false`. Além disso, todos os vínculos `mandatory=true` devem estar disponíveis e íntegros; ausência total nunca significa completude."
+        },
+        {
+          "id": "UC-RAIT-017-002",
+          "action": "Secretaria confere e assina a remessa; caso segue na fila F-J-0 até o recebimento."
+        },
+        {
+          "id": "UC-RAIT-017-003",
+          "action": "Secretaria da JARI registra o recebimento (`data_recebimento_jari`); caso passa a `DISTRIBUIDO` sem relator, na fila F-J-1; evento `RAIT_RECURSO_RECEBIDO_JULGADOR` arma `T-JUL-24M` e `T-PAR-3A` na infração (WF-INF-003 #18)."
+        },
+        {
+          "id": "UC-RAIT-017-004",
+          "action": "Caso entra no próximo lote de sorteio (UC-RAIT-014)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-018",
+      "title": "Secretaria executiva do CETRAN-AM registra o recebimento do recurso de 2ª instância e devolve a decisão",
+      "goal": "Secretaria executiva do CETRAN-AM recebe o recurso de 2ª instância (do cidadão, já triado, ou da autoridade centralizada), registra a data de recebimento que arma o segundo relógio de 24 meses, e ao final devolve a decisão ao órgão autuador para comunicação e execução.",
+      "actors": ["Secretaria executiva do CETRAN-AM"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-018-001",
+          "action": "Secretaria executiva recebe o processo com parecer e conclusão da JARI anexados de ofício (RN-RAIT-117)."
+        },
+        {
+          "id": "UC-RAIT-018-002",
+          "action": "Registra `data_recebimento_cetran`; evento `RAIT_RECURSO_RECEBIDO_JULGADOR` arma o `T-JUL-24M` do CETRAN-AM; caso em `DISTRIBUIDO` na fila F-C-0/F-J-1 do pool `cetran`."
+        },
+        {
+          "id": "UC-RAIT-018-003",
+          "action": "Distribuição por sorteio (UC-RAIT-014) excluindo quem integrou a JARI e quem pertence ao órgão recorrente (RN-RAIT-140)."
+        },
+        {
+          "id": "UC-RAIT-018-004",
+          "action": "Após `JULGADO_SESSAO` e ata assinada (UC-RAIT-020), a secretaria devolve a decisão ao órgão autuador; caso passa a `COMUNICADO` → `TRANSITADO`; evento `RAIT_CASO_TRANSITADO` encerra a instância na infração (WF-INF-003 #27/#28)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-019",
+      "title": "Membro pede vista de item em sessão e o presidente reprograma o julgamento",
+      "goal": "Membro do colegiado, após a leitura do relatório, pede vista de um item pautado; o presidente concede prazo e o item volta à pauta seguinte com prioridade, sem parar os relógios legais.",
+      "actors": ["Membro do colegiado"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-019-001",
+          "action": "Membro pede vista; presidente defere com prazo (proposta: até a sessão ordinária seguinte, prorrogável uma vez por motivo registrado — benchmarks PB e MG)."
+        },
+        {
+          "id": "UC-RAIT-019-002",
+          "action": "Item sai da votação e retorna a `PRONTO_P_DECISAO` marcado como \"vista concedida\", com prioridade obrigatória na próxima pauta (UC-RAIT-005)."
+        },
+        {
+          "id": "UC-RAIT-019-003",
+          "action": "Membro registra voto-vista no sistema até o fechamento da pauta seguinte."
+        },
+        {
+          "id": "UC-RAIT-019-004",
+          "action": "Na sessão seguinte, o item é julgado com o voto do relator e o voto-vista; se o relator for vencido, o presidente designa redator do acórdão (benchmark PB art. 43 e MG art. 34 §2º)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-020",
+      "title": "Secretaria lavra, assina e publica a ata da sessão (marco do prazo recursal)",
+      "goal": "Secretaria da sessão gera a ata a partir dos registros ao vivo, colhe as assinaturas (presidente e relator) e publica as decisões — a publicação é o marco do prazo de 30 dias para recurso ao CETRAN-AM (decisão do Owner C.24).",
+      "actors": ["Secretaria da sessão"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-020-001",
+          "action": "Sistema gera a ata (pauta, presentes, quorum por item, relatoria, votos individuais, resultado, fundamentação, vistas, itens retirados) → `ATA_LAVRADA`."
+        },
+        {
+          "id": "UC-RAIT-020-002",
+          "action": "Presidente e relatores assinam (PAdES+TSA, steering A.8) → `ATA_ASSINADA`."
+        },
+        {
+          "id": "UC-RAIT-020-003",
+          "action": "Secretaria publica as decisões (sítio do órgão, SNE quando aderente, Portal); cada caso passa a `JULGADO_SESSAO` → `COMUNICADO`; evento `RAIT_DECISAO_PUBLICADA` com a data de publicação, que arma `T-R2` (WF-INF-003 #21)."
+        },
+        {
+          "id": "UC-RAIT-020-004",
+          "action": "Comunicação individual ao recorrente (UC-RAIT-007); se provido, a autoridade centralizada é notificada (UC-RAIT-008)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-021",
+      "title": "Presidente convoca sessão extraordinária por acúmulo de casos críticos",
+      "goal": "Presidente da JARI ou do CETRAN-AM convoca sessão extraordinária quando a fila de prontos para julgamento em `ALERTA_N3`/`CRITICO` excede a capacidade das sessões ordinárias do calendário.",
+      "actors": ["Presidente da JARI", "Presidente do CETRAN-AM"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-021-001",
+          "action": "Sistema apresenta ao presidente a fila F-J-3 por dias restantes e a capacidade das próximas ordinárias."
+        },
+        {
+          "id": "UC-RAIT-021-002",
+          "action": "Presidente convoca extraordinária com data, pauta restrita aos casos em risco e antecedência mínima (`T-CONV`, ou menor com registro em ata)."
+        },
+        {
+          "id": "UC-RAIT-021-003",
+          "action": "Secretaria forma a banca e convoca suplentes (UC-RAIT-015); sessão segue WF-RAIT-003."
+        },
+        {
+          "id": "UC-RAIT-021-004",
+          "action": "Sistema registra a sessão como extraordinária para fins de teto de sessões remuneradas (UC-RAIT-036)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-022",
+      "title": "Autoridade registra suspensão de prazo por força maior como ato motivado e auditado",
+      "goal": "Autoridade de trânsito ou presidente do colegiado registra, excepcionalmente, suspensão de prazo processual por força maior comprovada, como ato motivado, auditado e revisável — nunca como regra automática (decisão do Owner C.20).",
+      "actors": ["Autoridade de trânsito ou presidente do colegiado"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-022-001",
+          "action": "Autoridade abre o ato de suspensão: casos alcançados, prazo suspenso, termo inicial e final, fundamento, prova."
+        },
+        {
+          "id": "UC-RAIT-022-002",
+          "action": "Sistema reprograma os vencimentos afetados, mantém os valores originais no histórico e marca cada caso com o ato."
+        },
+        {
+          "id": "UC-RAIT-022-003",
+          "action": "O ato entra na trilha de auditoria e gera item de revisão obrigatória ao gestor e ao LEGAL."
+        },
+        {
+          "id": "UC-RAIT-022-004",
+          "action": "Ao término, os prazos retomam a contagem; o Portal exibe a nova data-limite ao cidadão."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-023",
+      "title": "Órgão declara decadência ou prescrição de ofício e abre incidente",
+      "goal": "Autoridade de trânsito (decadência) ou presidente do colegiado (prescrição por não julgamento ou paralisação) declara de ofício a extinção da punibilidade quando um relógio legal é atingido, encerra o caso e abre incidente com causa raiz — desfecho que a escada de alertas existe para impedir.",
+      "actors": [
+        "Autoridade de trânsito (decadência) ou presidente do colegiado (prescrição por não julgamento ou paralisação)"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-023-001",
+          "action": "Sistema bloqueia movimentações de mérito no caso e abre tarefa de declaração ao responsável competente."
+        },
+        {
+          "id": "UC-RAIT-023-002",
+          "action": "Responsável lavra a declaração fundamentada (relógio atingido, datas, base legal) e assina."
+        },
+        {
+          "id": "UC-RAIT-023-003",
+          "action": "Caso encerra sem decisão de mérito; infração vai a `EXTINTO_DECADENCIA` ou `EXTINTO_PRESCRICAO`; efeitos: sem penalidade, sem RENACH, restituição se houver pagamento (UC-RAIT-033)."
+        },
+        {
+          "id": "UC-RAIT-023-004",
+          "action": "Gestor registra incidente com causa raiz e comunica LEGAL/auditoria (UC-RAIT-010 AC-4); indicador de prescrição do dashboard é atualizado."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-024",
+      "title": "Secretaria arquiva os autos julgados, mantém a custódia e aplica a retenção",
+      "goal": "Secretaria do órgão (ou da JARI) arquiva o processo encerrado, mantém a custódia digital e física, atende pedidos de vista e cópia, e aplica a política de retenção e anonimização.",
+      "actors": ["Secretaria do órgão (ou da JARI)"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-024-001",
+          "action": "Sistema consolida o dossiê final (peças, decisões, atas, comunicações com marcos, pagamentos) e o sela (hash)."
+        },
+        {
+          "id": "UC-RAIT-024-002",
+          "action": "Secretaria arquiva: os autos permanecem com o órgão autuador ou sua JARI, inclusive de veículos de outra UF (900 arts. 7-8); papel vai à custódia física com localização registrada."
+        },
+        {
+          "id": "UC-RAIT-024-003",
+          "action": "Pedidos de vista/cópia do interessado são atendidos sem requerimento formal e sem custo (RN-PORTAL-112); dado de terceiro é suprimido campo a campo."
+        },
+        {
+          "id": "UC-RAIT-024-004",
+          "action": "Ao fim do prazo de retenção identificado (proposta: 5 anos após o encerramento — RN-RAIT-136; piso de 5 anos para dados de notificação eletrônica, 931 art. 12), o sistema anonimiza o caso mantendo a camada estatística."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-025",
+      "title": "Subcoordenador revisa a qualidade das minutas por amostragem e retroalimenta a equipe",
+      "goal": "Subcoordenador da defesa prévia seleciona amostra aleatória de decisões do período, revisa fundamentação, enquadramento e coerência entre revisores, e devolve achados à equipe e ao TEAT (problemas sistemáticos de autuação).",
+      "actors": ["Subcoordenador da defesa prévia"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-025-001",
+          "action": "Sistema sorteia a amostra estratificada por revisor e enquadramento."
+        },
+        {
+          "id": "UC-RAIT-025-002",
+          "action": "Subcoordenador revisa cada item com checklist (fundamento, prova, coerência com decisões similares, linguagem) e registra achados tipados."
+        },
+        {
+          "id": "UC-RAIT-025-003",
+          "action": "Achados individuais vão ao revisor como feedback; achados sistemáticos (ex.: mesmo vício de autuação) vão ao TEAT e à JARI (357 item 3.1.c) e alimentam a taxa de provimento por enquadramento (APP-RAIT §KPIs)."
+        },
+        {
+          "id": "UC-RAIT-025-004",
+          "action": "Coordenador acompanha o indicador de divergência por revisor no dashboard."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-026",
+      "title": "Tratar impedimento declarado ou suspeição arguida",
+      "goal": "Membro (declara impedimento) ou interessado (argui suspeição) provoca a verificação de quem pode atuar no caso; o presidente decide a suspeição e o sistema redistribui, com registro que vale para sorteios e bancas futuras.",
+      "actors": [
+        "Membro do colegiado",
+        "Interessado",
+        "Presidente do colegiado (ou autoridade, no 1º circuito)"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-026-001",
+          "action": "Membro declara impedimento (hipóteses de RN-RAIT-140) ou interessado protocola arguição de suspeição pelo Portal/balcão."
+        },
+        {
+          "id": "UC-RAIT-026-002",
+          "action": "Impedimento declarado: o sistema registra `rait_impediment` com tipo e fundamento e redistribui de imediato (UC-RAIT-011), sem aproveitar trabalho de mérito."
+        },
+        {
+          "id": "UC-RAIT-026-003",
+          "action": "Suspeição arguida: presidente (ou autoridade, no 1º circuito) decide em prazo interno (proposta: 5 dias úteis); deferida → redistribuição; indeferida → recurso do interessado sem efeito suspensivo (Lei 9.784 art. 21), caso segue."
+        },
+        {
+          "id": "UC-RAIT-026-004",
+          "action": "Registro passa a excluir o membro do caso em sorteios e da contagem de quorum do item na sessão (UC-RAIT-015)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-027",
+      "title": "Secretaria recebe recurso destinado a outro órgão ou o redireciona ao órgão competente, com devolução de prazo",
+      "goal": "Secretaria de protocolo trata as peças que chegam ao DETRAN-AM mas pertencem a outro órgão autuador (CTB art. 287), e as peças protocoladas em órgão incompetente que chegam por redirecionamento — em ambos os sentidos, sem que o tempo de trânsito prejudique o administrado.",
+      "actors": ["Secretaria de protocolo"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-027-001",
+          "action": "Sistema identifica, pelo número do AIT e código RENAINF, o órgão autuador competente."
+        },
+        {
+          "id": "UC-RAIT-027-002",
+          "action": "Peça de outro órgão: secretaria emite protocolo com identificação e assinatura do recebedor, órgão e data (900 art. 6º §2º) e remete de imediato ao órgão autuador (900 art. 6º §3º), com as cópias necessárias; a data do protocolo aqui é o marco de tempestividade lá (RN-RAIT-106)."
+        },
+        {
+          "id": "UC-RAIT-027-003",
+          "action": "Peça recebida de outro órgão contra AIT do DETRAN-AM: entra em `PROTOCOLADO` com a data do protocolo de origem como marco; segue UC-RAIT-001/UC-RAIT-002."
+        },
+        {
+          "id": "UC-RAIT-027-004",
+          "action": "Peça dirigida a órgão incompetente por erro do cidadão: sistema indica o órgão competente e devolve o prazo (Lei 9.784 art. 63 §1º, subsidiária — RN-RAIT-109), sem não conhecimento."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-028",
+      "title": "Secretaria saneia pendência de conteúdo mínimo e junta documentos após o protocolo sem consumir prazo",
+      "goal": "Secretaria registra a peça mesmo incompleta, abre pendência tipada ao requerente pelo canal de origem e junta os documentos recebidos, sem que a falta formal vire recusa de protocolo nem consuma o prazo do requerente.",
+      "actors": ["Secretaria"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-028-001",
+          "action": "Sistema gera protocolo imediato e lista os itens ausentes; secretaria abre pendência com prazo interno ao requerente (proposta: 10 dias) e comunica pelo canal de origem."
+        },
+        {
+          "id": "UC-RAIT-028-002",
+          "action": "Requerente junta os documentos (Portal, balcão ou postal); secretaria anexa ao caso com data de juntada."
+        },
+        {
+          "id": "UC-RAIT-028-003",
+          "action": "Pendência encerrada → caso segue a `TRIAGEM_ADMISSIBILIDADE` (UC-RAIT-002)."
+        },
+        {
+          "id": "UC-RAIT-028-004",
+          "action": "Documentos do próprio órgão ausentes são anexados de ofício, nunca pedidos (RN-RAIT-003)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-029",
+      "title": "Sistema espelha o estado do processo no RENAINF por meio do senatran-adapter",
+      "goal": "O agregado da infração publica, a cada transição relevante, a situação do processo administrativo ao registro nacional (RENAINF) pelo senatran-adapter, único ponto de contato com a API nacional (ADR-0003), usando o mapeamento de WF-INF-003 §8.",
+      "actors": ["O agregado da infração"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-029-001",
+          "action": "Evento (`RAIT_CASO_PROTOCOLADO`, `RAIT_DECISAO_PUBLICADA`, `RAIT_CASO_TRANSITADO`, `CONDUTOR_INDICADO`, `PENALIDADE_DEFINITIVA` etc.) é traduzido para a situação nacional correspondente (`AUTUACAO_ABERTA`, `DEFESA_APRESENTADA`, `JARI_PROVIDO`, `DECISAO_FINAL`, `ARQUIVADO`…)."
+        },
+        {
+          "id": "UC-RAIT-029-002",
+          "action": "Adapter envia a atualização com idempotência e registra o recibo nacional no caso."
+        },
+        {
+          "id": "UC-RAIT-029-003",
+          "action": "Divergência entre o estado local e o retornado pelo RENAINF abre tarefa de conciliação ao operador de integração (UC-RAIT-031)."
+        },
+        {
+          "id": "UC-RAIT-029-004",
+          "action": "Consultas do Portal e do TEAT usam o espelho local com `consultado_em` e `fonte` (RN-PORTAL-117)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-030",
+      "title": "Sistema cadastra a penalidade e a pontuação no RENACH após o encerramento da instância e estorna em cancelamento",
+      "goal": "Ao encerrar a instância administrativa, o sistema envia ao RENACH, pelo senatran-adapter, a penalidade definitiva e a pontuação do sujeito passivo; em cancelamento definitivo posterior, envia o estorno. Antes do encerramento nada é cadastrado.",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-030-001",
+          "action": "Evento de encerramento identifica o sujeito passivo final (proprietário, condutor indicado, PJ) e a penalidade (multa com pontuação; advertência sem pontuação — 918 art. 10 §4º)."
+        },
+        {
+          "id": "UC-RAIT-030-002",
+          "action": "Adapter cadastra no RENACH e registra o recibo; Portal passa a exibir a pontuação ao titular."
+        },
+        {
+          "id": "UC-RAIT-030-003",
+          "action": "Reincidência e suspensão por acúmulo consideram só infrações com instância encerrada (RN-RAIT-131)."
+        },
+        {
+          "id": "UC-RAIT-030-004",
+          "action": "Cancelamento definitivo após cadastro (recurso da autoridade negado, restituição): adapter envia estorno e o Portal atualiza."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-031",
+      "title": "Operador de integração trata falhas e conciliações com RENAINF, RENACH e SNE",
+      "goal": "Operador de integração acompanha a fila de retransmissão e as divergências entre o estado local e os registros nacionais, retransmite, concilia e escala o que exige decisão humana, sem alterar decisões de mérito.",
+      "actors": ["Operador de integração"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-031-001",
+          "action": "Operador vê itens em falha (por sistema, idade, caso) e a causa retornada."
+        },
+        {
+          "id": "UC-RAIT-031-002",
+          "action": "Retransmite lotes idempotentes; itens com erro de dados (ex.: código RENAINF inválido) viram tarefa ao processamento/TEAT."
+        },
+        {
+          "id": "UC-RAIT-031-003",
+          "action": "Concilia divergências de estado: compara estado local × nacional, aplica a regra de precedência (o local é a fonte da decisão; o nacional é a fonte do registro) e registra a conciliação."
+        },
+        {
+          "id": "UC-RAIT-031-004",
+          "action": "Itens que dependem de marco jurídico (ex.: ciência ficta do SNE não confirmada, 931 art. 4º §6º) são escalados ao gestor com o impacto nos prazos."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-032",
+      "title": "Sistema emite e atualiza o documento de arrecadação conforme a fase do processo",
+      "goal": "O módulo de pagamento gera o documento próprio de arrecadação estabelecido pelo órgão máximo executivo de trânsito da União com o valor correto para a fase: 80% até o vencimento, 60% com reconhecimento nas condições legais, valor original com juros após o encerramento da instância — e o atualiza a cada transição.",
+      "actors": ["O módulo de pagamento"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-032-001",
+          "action": "Na expedição da NP, o sistema emite o documento com 80% até a data-limite única e a informação do desconto (918 art. 12 III)."
+        },
+        {
+          "id": "UC-RAIT-032-002",
+          "action": "Se o infrator reconhece a infração nas condições do art. 284 §1º (adesão ao SNE antes do envio da NA, renúncia a defesa e recurso — termo digital do Portal, DT-026), emite documento com 60% e o pagamento encerra a instância (290 III)."
+        },
+        {
+          "id": "UC-RAIT-032-003",
+          "action": "Enquanto pende recurso admitido, nenhum juros nem restrição; o documento de 80% permanece válido até a data-limite; após ela, sem recurso, o valor passa a original + juros (918 arts. 22-23) a partir do marco de RN-RAIT-128."
+        },
+        {
+          "id": "UC-RAIT-032-004",
+          "action": "Após o encerramento da instância, o documento é reemitido com Selic + 1% e disponibilizado no Portal e no SNE (931 art. 9º §1º III)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-033",
+      "title": "Sistema dispara a restituição corrigida quando o provimento ou a extinção alcança multa já paga",
+      "goal": "Ao registrar decisão favorável ao administrado ou extinção da punibilidade sobre infração com pagamento registrado, o sistema abre automaticamente o processo de restituição atualizada — evento de sistema, não requerimento do cidadão — e o encaminha à área financeira (Fazenda/tesouraria do órgão).",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-033-001",
+          "action": "Evento `RESTITUICAO_DEVIDA` é publicado com valor pago, data do pagamento e faixa aplicada."
+        },
+        {
+          "id": "UC-RAIT-033-002",
+          "action": "Sistema calcula a atualização pelo índice definido (IPCA-E, DT-013, sem parecer fazendário formal) do pagamento até a data da ordem."
+        },
+        {
+          "id": "UC-RAIT-033-003",
+          "action": "Área financeira recebe a ordem de restituição com os dados bancários informados pelo titular no Portal; o cidadão é notificado do direito e do andamento."
+        },
+        {
+          "id": "UC-RAIT-033-004",
+          "action": "Restituição paga → evento registrado no caso; Portal exibe \"restituído\"."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-034",
+      "title": "Órgão encaminha a multa definitiva não paga à cobrança e à dívida ativa (handoff Fazenda)",
+      "goal": "Após o encerramento da instância, o sistema identifica multas não pagas, aplica os encargos, tenta a cobrança administrativa (canais do Portal, parcelamento por cartão quando autorizado) e, esgotada a fase administrativa, transfere o crédito à área de dívida ativa — fronteira do RAIT (APP-RAIT §Escopo: cobrança fora).",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-034-001",
+          "action": "Sistema aplica juros e restrições admitidas (licenciamento/transferência — CTB art. 284 §3º a contrario) e mantém o documento de arrecadação atualizado (UC-RAIT-032)."
+        },
+        {
+          "id": "UC-RAIT-034-002",
+          "action": "Cobrança administrativa: lembretes pelo canal de ciência; oferta de pagamento parcelado por cartão quando o órgão estiver autorizado (918 art. 27; RN-PORTAL-126)."
+        },
+        {
+          "id": "UC-RAIT-034-003",
+          "action": "Decorrido o prazo de cobrança administrativa (parâmetro do órgão, fonte pendente), o crédito é transferido à dívida ativa com o dossiê fiscal (AIT, NP, decisão, marcos) — sub-estado `EM_COBRANCA`; o RAIT deixa de ser dono do caso."
+        },
+        {
+          "id": "UC-RAIT-034-004",
+          "action": "A prescrição da execução (5 anos do encerramento — Lei 9.873 art. 1º-A, validade para órgão estadual a confirmar) é exposta ao dashboard como relógio informativo."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-035",
+      "title": "Sistema concilia pagamentos com o estado do processo",
+      "goal": "Ao receber `PAGAMENTO_CONFIRMADO` da rede arrecadadora, o sistema atualiza o atributo de pagamento da infração sem encerrar o processo — salvo pagamento com reconhecimento — e ajusta filas, comunicações e restrições.",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-035-001",
+          "action": "Retorno bancário casa com o documento emitido (nosso número, valor, data); infração recebe `pago=true` e a faixa paga."
+        },
+        {
+          "id": "UC-RAIT-035-002",
+          "action": "Se o pagamento é de 80% ou integral, o processo continua: defesa e recurso permanecem possíveis (CTB art. 284 §2º); Portal exibe \"pago — você ainda pode recorrer\"."
+        },
+        {
+          "id": "UC-RAIT-035-003",
+          "action": "Se o pagamento é com reconhecimento e requerimento de encerramento (art. 290 III), a instância é encerrada (`INSTANCIA_ENCERRADA`, motivo reconhecimento) e o caso RAIT aberto, se houver, é encerrado como desistência (UC-RAIT-012)."
+        },
+        {
+          "id": "UC-RAIT-035-004",
+          "action": "Pagamento após o encerramento: sub-estado `QUITADA`; restrições liberadas; cobrança cancelada (UC-RAIT-034)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-036",
+      "title": "Secretaria apura presenças e relatorias e gera a folha de remuneração por sessão (jeton)",
+      "goal": "Secretaria do colegiado apura, por período, as sessões realizadas, as presenças válidas e as relatorias de cada membro, aplica as regras locais de remuneração por sessão (teto mensal, exigência de relatoria mínima, sessões extraordinárias) e envia a folha ao RH/financeiro para pagamento.",
+      "actors": ["Secretaria do colegiado"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-036-001",
+          "action": "Sistema consolida por membro: sessões com presença válida (chegada/saída dentro da sessão), itens relatados, votos proferidos, faltas justificadas e injustificadas."
+        },
+        {
+          "id": "UC-RAIT-036-002",
+          "action": "Aplica a regra parametrizada: valor por sessão, teto mensal de sessões remuneradas (benchmarks: 8 a 15), condição de relatoria mínima por sessão (RS: um processo relatado), presidente remunerado ou não (DF: não), extraordinárias."
+        },
+        {
+          "id": "UC-RAIT-036-003",
+          "action": "Gera a folha do período com memória de cálculo por membro; secretaria confere e o presidente homologa."
+        },
+        {
+          "id": "UC-RAIT-036-004",
+          "action": "Folha enviada ao RH/financeiro por integração ou arquivo assinado; eventos de pagamento retornam ao sistema para conciliação."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-037",
+      "title": "RH e gabinete gerem os mandatos dos membros: nomeação, posse, recondução, término e perda",
+      "goal": "Área de gestão de pessoas e gabinete do órgão (JARI: chefe do Executivo ou delegado; CETRAN-AM: Governador, com aprovação da ALEAM) registram no sistema os atos de nomeação, posse, recondução, término e perda de mandato, que determinam quem pode integrar pools, bancas e sorteios.",
+      "actors": ["Área de gestão de pessoas", "Gabinete do órgão"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-037-001",
+          "action": "Gabinete registra o ato: membro, representação, titular/suplente, mandato (JARI 1 a 2 anos; CETRAN 2 anos), recondução permitida conforme regimento."
+        },
+        {
+          "id": "UC-RAIT-037-002",
+          "action": "Sistema cria/atualiza o membro no pool com `mandate_starts_on`/`mandate_ends_on`; membro `ATIVO` a partir da posse."
+        },
+        {
+          "id": "UC-RAIT-037-003",
+          "action": "Alertas de fim de mandato (proposta: 90, 60 e 30 dias) ao gabinete e ao presidente para recondução ou substituição, evitando `TURMA_SUSPENSA` (WF-RAIT-004 §7)."
+        },
+        {
+          "id": "UC-RAIT-037-004",
+          "action": "Término sem recondução → `MANDATO_ENCERRADO` na data; casos abertos redistribuídos em lote (UC-RAIT-011 1a). Perda por faltas/retenção (RN-RAIT-142) → afastamento e ato de substituição."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-038",
+      "title": "Coordenador planeja a capacidade do período e solicita reforço",
+      "goal": "Coordenador da defesa prévia (e, para os colegiados, o presidente com a secretaria) projeta, por mês e trimestre, chegada, capacidade e fila, considera ausências e sazonalidade, e decide medidas: redistribuição, escala reforçada, pedido de reforço de pessoal ou proposta de nova turma.",
+      "actors": ["Coordenador da defesa prévia"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-038-001",
+          "action": "Sistema projeta a fila do próximo período com a chegada média e a capacidade escalada (revisores disponíveis × meta diária), destacando semanas com capacidade abaixo da chegada."
+        },
+        {
+          "id": "UC-RAIT-038-002",
+          "action": "Coordenador simula medidas (mais um revisor, ajuste de `WIP`, meta diária) e vê o efeito na meta de 30 dias e nos relógios legais."
+        },
+        {
+          "id": "UC-RAIT-038-003",
+          "action": "Coordenador registra o plano do período (medidas, responsáveis, datas) e, quando a lacuna é estrutural, emite pedido de reforço ao gestor com a memória de cálculo."
+        },
+        {
+          "id": "UC-RAIT-038-004",
+          "action": "Gestor decide: reforço de pessoal, hora extra, ou proposta de nova turma (UC-RAIT-039)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-039",
+      "title": "Gestor constitui nova turma ou JARI e designa o coordenador de JARIs",
+      "goal": "Gestor RAIT, com o dirigente do órgão, constitui uma unidade adicional de julgamento (turma da JARI ou nova JARI) quando a capacidade é insuficiente para julgar no prazo legal, providencia nomeações, regimento e coordenador, e ativa a unidade no sistema.",
+      "actors": ["Gestor RAIT, com o dirigente do órgão"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-039-001",
+          "action": "Gestor abre `TURMA_EM_CONSTITUICAO` com o dimensionamento (recursos/mês, capacidade atual, fila projetada) e a composição pretendida (≥3 integrantes por categoria da Res. 357)."
+        },
+        {
+          "id": "UC-RAIT-039-002",
+          "action": "Gabinete providencia nomeações (UC-RAIT-037) e o regimento é cadastrado no CETRAN-AM (357 item 9.1.b); coordenador de JARIs designado (357 item 2.3)."
+        },
+        {
+          "id": "UC-RAIT-039-003",
+          "action": "Sistema cria a unidade, o pool associado e a distribuição em dois níveis (entre turmas, depois entre relatores — WF-RAIT-004 §7); calendário de sessões da nova turma publicado."
+        },
+        {
+          "id": "UC-RAIT-039-004",
+          "action": "Unidade ativada (`TURMA_ATIVA`); lotes seguintes já a incluem."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-040",
+      "title": "Gestor acompanha a produção e a aderência às metas e retroalimenta o TEAT e a autoridade",
+      "goal": "Gestor RAIT (e coordenadores/presidentes no seu nível) acompanha, em painel, a produção por fase, por pessoa e por unidade, a aderência às metas operacionais e aos tetos legais, a qualidade e as taxas de provimento, e usa isso para decisões de gestão e para a Carta de Serviços.",
+      "actors": ["Gestor RAIT"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-040-001",
+          "action": "Painel apresenta: tempo por fase (mediana, p90), backlog por fila com idade, casos por revisor/relator, aderência ao SLA local (30 dias / 30 dias úteis), % em risco por relógio, sessões realizadas/adiadas, taxa de provimento por enquadramento, achados de qualidade (UC-RAIT-025)."
+        },
+        {
+          "id": "UC-RAIT-040-002",
+          "action": "Gestor compara períodos e unidades; identifica gargalos (fila específica, autoridade com `T-ASS` alto, relator com retenção) e aciona a ação cabível (reatribuição, escala, extraordinária, plano de capacidade)."
+        },
+        {
+          "id": "UC-RAIT-040-003",
+          "action": "Indicadores públicos (prazo prometido × cumprido) alimentam a Carta de Serviços e a avaliação do usuário (WF-PORTAL-001 §Carta; Lei 13.460 art. 7º)."
+        },
+        {
+          "id": "UC-RAIT-040-004",
+          "action": "Relatório periódico da JARI/CETRAN ao órgão sobre problemas sistemáticos nas autuações (357 item 3.1.c) é gerado a partir da taxa de provimento por enquadramento e enviado ao TEAT."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-041",
+      "title": "Processamento expede a notificação da penalidade após a decisão ou o decurso do prazo, registrando os marcos por canal",
+      "goal": "Área de processamento/notificação expede a NP quando a defesa é indeferida, não conhecida ou não apresentada, dentro do prazo de decadência, pelo canal de ciência do sujeito passivo, registrando expedição e ciência separadamente.",
+      "actors": ["Área de processamento/notificação"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-041-001",
+          "action": "Sistema monta a NP com o conteúdo do art. 12 da Res. 918: dados do art. 280 do CTB, comunicação do não acolhimento, valor e desconto, data-limite única de recurso/pagamento, autenticação, instruções."
+        },
+        {
+          "id": "UC-RAIT-041-002",
+          "action": "Expede pelo canal: SNE (disponibilização = expedição; ciência ficta em 30 dias) ou postal (entrega à ECT = expedição); registra `data_expedicao`, `data_ciencia` e a data-limite impressa (RN-RAIT-104)."
+        },
+        {
+          "id": "UC-RAIT-041-003",
+          "action": "Infração passa a `NOTIFICADO_PENALIDADE`; `T-NP-VENC` armado; documento de arrecadação emitido (UC-RAIT-032)."
+        },
+        {
+          "id": "UC-RAIT-041-004",
+          "action": "Devolução por endereço desatualizado ou recusa vale como notificação (CTB art. 282 §1º); outras falhas permitem refazer o ato dentro dos prazos (918 art. 31) e, esgotadas as tentativas, edital (RN-RAIT-126)."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-042",
+      "title": "Auditor consulta a trilha de auditoria e exporta decisões com controle LGPD",
+      "goal": "Auditor/corregedor (papel `auditor`) consulta a trilha completa de um caso ou de um período — distribuição, escalas, sorteios, atas, votos, comunicações, pagamentos, integrações — e exporta decisões e estatísticas com finalidade registrada e minimização de dados.",
+      "actors": ["Auditor/corregedor"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-042-001",
+          "action": "Auditor localiza o caso ou o recorte (período, unidade, membro) e vê a trilha cronológica com atores, atos e hashes."
+        },
+        {
+          "id": "UC-RAIT-042-002",
+          "action": "Verifica a impessoalidade da distribuição (ata do sorteio, escala vigente, motivos de reatribuição) e a regularidade das sessões (quorum por item, impedimentos, assinaturas)."
+        },
+        {
+          "id": "UC-RAIT-042-003",
+          "action": "Exporta decisões e estatísticas: dados pessoais do requerente/procurador só com base legal registrada; terceiros suprimidos; exportação assinada e registrada."
+        },
+        {
+          "id": "UC-RAIT-042-004",
+          "action": "Achados geram tarefas ao gestor ou comunicação à corregedoria; nenhuma decisão é alterada pelo auditor."
+        }
+      ]
+    },
+    {
+      "id": "UC-RAIT-043",
+      "title": "Administrador do órgão parametriza pools, estratégias, timers operacionais, calendário e escada de alertas",
+      "goal": "Administrador do órgão (`agency-admin`) mantém os parâmetros que os workflows declaram como calibração do Owner, versionados e auditáveis, sem tocar nos prazos legais, que são fixos no motor.",
+      "actors": ["Administrador do órgão"],
+      "mainFlow": [
+        {
+          "id": "UC-RAIT-043-001",
+          "action": "Administrador edita: pools e estratégia por pool (`pull`, `round_robin`, `load_balanced`); limiares da escada de alertas por relógio; timers operacionais (`T-DIL` default, `T-VOTO`, `T-CONV`, `T-CLAIM`, `T-ASS`, `T-TRI`, `T-REG`), limite de casos simultâneos; cadência e tamanho do lote; amostra de qualidade; regra de jeton; calendário de feriados nacional + AM; unidades/turmas e circunscrições."
+        },
+        {
+          "id": "UC-RAIT-043-002",
+          "action": "Cada alteração exige motivo e referência à decisão; entra em vigor em data programada; versões anteriores ficam consultáveis."
+        },
+        {
+          "id": "UC-RAIT-043-003",
+          "action": "Prazos legais (`T-NA`, `T-DEF`, `T-DEC`, `T-NP-VENC`, `T-REM10`, `T-JUL-24M`, `T-R2`, `T-PAR-3A`) não são editáveis; só o LEGAL pode alterar a base legal com nova versão do motor."
+        },
+        {
+          "id": "UC-RAIT-043-004",
+          "action": "Simulação: o sistema mostra o impacto de um novo limiar/limite sobre a fila atual antes de aplicar."
+        }
+      ]
+    }
+  ]
+}

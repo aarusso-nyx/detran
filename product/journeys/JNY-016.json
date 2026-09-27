@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-016",
+  "title": "Gestor monitora o radar de prescrição — nada pode vencer por inércia do próprio órgão",
+  "persona": {
+    "role": "gestora RAIT"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Abertura do dia. A tela inicial de Aline não é uma lista de processos — é um radar. Processos são posicionados por proximidade ao relógio que mais os ameaça (decadência, 24 meses, ou paralisação), não por ordem alfabética ou numérica. Vermelho é reservado para o que está a menos de X% do teto legal — o desenho evita \"vermelho de tudo\", que treina o olho a ignorar alertas."
+    },
+    {
+      "seq": 2,
+      "action": "Zoom num caso em risco. Um processo aparece a 20 meses de um recurso à JARI parado. Aline abre e vê: data de recebimento pela JARI, quem é o relator designado, há quanto tempo está sem movimentação. A tela não pede que ela recalcule prazo de cabeça — o sistema já traduziu \"20 meses\" em \"faltam 4 meses para prescrição irreversível por inércia\"."
+    },
+    {
+      "seq": 3,
+      "action": "Ação — não é dela julgar, é dela desbloquear. Aline não pode (nem deve) decidir o mérito. O que ela faz é escalar: cobrar o relator, redistribuir se necessário, verificar se falta quorum recorrente nas sessões. A interface separa claramente \"prazo do cidadão\" (que ele já cumpriu, ao recorrer a tempo) de \"prazo do órgão\" (que está em risco) — para nunca sugerir que o atraso é culpa de quem recorreu."
+    },
+    {
+      "seq": 4,
+      "action": "O relógio dos 3 anos de paralisação é o mais traiçoeiro: Diferente do teto de 24 meses (que é sobre o processo inteiro), a paralisação conta a partir do último ato/despacho — um processo pode estar \"dentro\" dos 24 meses totais e ainda assim prescrever por 3 anos de silêncio se, por exemplo, ficou represado numa diligência sem retomada. O painel de Aline cruza os dois relógios simultaneamente por processo, não só o mais óbvio."
+    },
+    {
+      "seq": 5,
+      "action": "Fim do dia — nenhuma surpresa amanhã: Aline fecha o painel só quando todos os casos no raio de risco têm uma ação registrada (mesmo que \"aguardando resposta do relator até DD/MM\"). O objetivo do desenho é que nunca exista um processo que prescreveu \"sem ninguém ter visto vir\"."
+    }
+  ],
+  "postconditions": [
+    "Fim do dia — nenhuma surpresa amanhã: Aline fecha o painel só quando todos os casos no raio de risco têm uma ação registrada (mesmo que \"aguardando resposta do relator até DD/MM\"). O objetivo do desenho é que nunca exista um processo que prescreveu \"sem ninguém ter visto vir\"."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Zero prescrição por inércia do órgão (decadência, art.289-A, ou Lei 9.873/99) sem alerta prévio registrado com folga mínima definida; tempo médio entre entrada em zona de risco e ação de desbloqueio; nenhum processo tratado como \"vermelho\" sem que o vermelho seja, de fato, acionável."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-RAIT-004",
+    "docs/framework/product/domains/inf/rait/journeys/JRN-RAIT-004.md"
+  ]
+}

@@ -18,6 +18,12 @@ The planned `/Volumes/Thiamat II/stech/detran-worktrees/law-corpus` location is 
 
 ## Emendas
 
+- 2026-09-27: after the maestro explicitly asked for acceptance of the
+  `product/` and `law/glossary/` content in PR #137, the Owner replied in
+  this Codex chat: “Authorization granted. Go ahead and continue until round
+  closure.” This is the separate, explicit Owner content acceptance required
+  for CTG-0002. Merge still requires green CI and the recorded cross-family
+  delivery-review PASS.
 - 2026-09-26: the Owner wrote “waive token budget to allow this round to
   finish”. The 650,000 input-token window and 80% stop rule are waived for
   R-0019; other gates and authority boundaries remain in force.

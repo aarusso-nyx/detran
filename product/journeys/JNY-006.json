@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-006",
+  "title": "Motorista profissional C/D/E e o exame toxicológico periódico — o relógio de 2 anos e meio, o que acontece se ele vencer, e o cuidado com um resultado sensível",
+  "persona": {
+    "role": "motorista profissional"
+  },
+  "preconditions": [
+    "Jorge dirige um caminhão categoria E há 12 anos — é sua profissão, não um exame que ele faz uma vez e esquece."
+  ],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "O calendário de Jorge é dele — e o sistema (se participar) precisa mostrá-lo com antecedência, não só na véspera: REF-CONTRAN-923-1009-toxicologico art. 10-B §1º-§2º: o órgão máximo executivo de trânsito da União (SENATRAN) já é responsável por disponibilizar ao condutor a última data de coleta, orientações, e a data de vencimento do próximo exame, com alerta de vencimento emitido 30 dias antes. Se esse alerta chega a Jorge por um canal que passa pelo PEC, ele precisa preservar a mesma antecedência de 30 dias — nunca comunicar o vencimento como uma surpresa de última hora."
+    },
+    {
+      "seq": 2,
+      "action": "Jorge faz o novo exame — o calendário não é afetado por segunda via da CNH: Art. 10-A §2º: emitir uma segunda via da CNH não reinicia o relógio de 2 anos e 6 meses — o cálculo é sempre a partir da data de emissão/renovação registrada no RENACH (art. 10-A §1º). Uma tela que mostrasse \"próximo exame\" recalculado a cada segunda via estaria errada; o dado de referência é fixo."
+    },
+    {
+      "seq": 3,
+      "action": "Isenção para CNH com validade curta: Art. 10-A §3º: o exame periódico não é exigido para condutores cuja CNH tenha validade inferior a três anos — uma condição de elegibilidade que qualquer tela de \"seu próximo exame\" precisa verificar antes de gerar um alerta desnecessário a Jorge."
+    },
+    {
+      "seq": 4,
+      "action": "O resultado, se positivo, é tratado com o mesmo cuidado de um resultado clínico sensível — nunca exposto fora do necessário: Este não é apenas um princípio de boas práticas — é a mesma doutrina de mascaramento por padrão já adotada para dado de saúde em `est/boat` (`_intake/ux-notes.md` §d), estendida aqui a um dado ainda mais estigmatizante: uso de substância. Nenhuma tela de fila, painel de clínica ou lista de pendências deveria mostrar \"Jorge — TOXICOLÓGICO POSITIVO\" a qualquer papel que não seja estritamente responsável pelo gate; o resumo validado (\"exame realizado: sim/não; resultado dentro do prazo: sim/não\") é o que aparece por padrão, com o detalhe bruto atrás de um segundo passo auditado."
+    },
+    {
+      "seq": 5,
+      "action": "Consequência de um resultado positivo — suspensão de três meses, não bloqueio silencioso: Art. 16 (redação 1.009/2024): resultado positivo no exame do art. 10-A gera suspensão do direito de dirigir por três meses, condicionado o levantamento da suspensão a um resultado negativo em novo exame ou ao cumprimento da penalidade. Para Jorge, motorista profissional, essa é uma informação que afeta diretamente sua renda — a comunicação dessa consequência precisa ser clara sobre o que ele pode fazer a seguir (novo exame, quando), não apenas \"suspenso\", da mesma forma que JRN-PEC-004 evita deixar \"apto com restrições\" como uma frase sem próximo passo."
+    },
+    {
+      "seq": 6,
+      "action": "Lapso do prazo sem exame — consequência não documentada no corpus lido: Nenhuma fonte capturada nesta rodada descreve explicitamente o que acontece se Jorge simplesmente deixa o prazo de 2 anos e 6 meses vencer sem fazer o novo exame (silêncio, não recusa) — diferente do caso de resultado positivo (art. 16, consequência explícita). Esta jornada não inventa uma penalidade para esse cenário; qualquer tela que tratar desse caso deveria, até validação LEGAL, comunicar apenas o fato (\"exame vencido — pendência a resolver\"), nunca uma consequência jurídica específica não confirmada."
+    },
+    {
+      "seq": 7,
+      "action": "Fim da jornada no PEC (se o PEC participar): Como em JRN-PEC-001, o resultado final e os efeitos sobre a habilitação de Jorge são geridos no RENACH — o papel do PEC, se houver, é o de processar o resultado transmitido pelo laboratório credenciado (ator externo, não o PEC nem a clínica) com o mesmo cuidado de mascaramento do passo 4."
+    }
+  ],
+  "postconditions": [],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Alerta de vencimento entregue com, no mínimo, os 30 dias de antecedência do art. 10-B §2º — nunca comunicado como surpresa de última hora."
+    },
+    {
+      "id": "AC-002",
+      "statement": "Zero exibição de detalhe de resultado toxicológico positivo em tela compartilhada/fila — só no resumo validado, com revelação do dado bruto como segundo passo auditado."
+    },
+    {
+      "id": "AC-003",
+      "statement": "Zero consequência jurídica inventada para o cenário de \"prazo vencido sem exame realizado\" além do que o art. 16 confirma para resultado positivo."
+    },
+    {
+      "id": "AC-004",
+      "statement": "Decisão de escopo de produto (PEC participa deste fluxo ou é 100% externo) registrada e visível — item aberto herdado do dossiê de pesquisa, não resolvido por esta jornada."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PEC-006",
+    "docs/framework/product/domains/ch/pec/journeys/JRN-PEC-006.md"
+  ]
+}

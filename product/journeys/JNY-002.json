@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-002",
+  "title": "Jornada do caso divergente — submissão à junta médica e eventual recurso ao CETRAN",
+  "persona": {
+    "role": "candidato"
+  },
+  "preconditions": [
+    "Carlos recebeu um resultado de inaptidão (ou de inaptidão temporária) no exame médico."
+  ],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Carlos discorda do resultado — o relógio começa a correr para ele, não contra ele. A partir do momento em que toma ciência do resultado, Carlos tem 30 dias para requerer a instauração de Junta Médica (art. 12) — o mesmo prazo vale para Junta Psicológica, se o resultado divergente for o psicológico. Nos documentos capturados do sistema, quem de fato chama `POST /juntas` é um Auditor, Gestor ou Gestor DETRAN — não Carlos diretamente (ver nota na Persona acima). A tela/processo que hoje monta esse dossiê precisa, no mínimo, tratar o prazo de 30 dias de Carlos como o gatilho de negócio — não o momento em que alguém internamente \"percebe\" o caso."
+    },
+    {
+      "seq": 2,
+      "action": "Submissão à junta: `POST /juntas` cria o caso em `SUBMITTED`, com um motivo em texto livre associado ao `encounterId` — ver WF-PEC-002. Não existe hoje uma regra de sistema que crie esse caso automaticamente a partir do resultado do exame; é sempre um ato humano deliberado."
+    },
+    {
+      "seq": 3,
+      "action": "Efeito colateral imediato: enquanto o caso da junta não estiver `DECIDED`, o encounter de Carlos não pode ser encerrado — é um dos itens do gate de fechamento em WF-PEC-001."
+    },
+    {
+      "seq": 4,
+      "action": "O órgão tem 15 dias úteis para designar a Junta — e ela é composta, não monolítica: REF-CONTRAN-927-2022 art. 14 §1º: o órgão executivo de trânsito estadual deve, no prazo de quinze dias úteis contados do recebimento do requerimento, designar a Junta Médica (art. 12 §1º: três profissionais médicos peritos examinadores ou especialistas em medicina de tráfego) ou Junta Psicológica (art. 12 §2º: três psicólogos, equivalente). O RBAC do PEC modela `JUNTA` como papel único, sem esses três assentos distintos — a jornada de Carlos, tal como o sistema a executa hoje, não deixa visível _quem_, entre três profissionais, está analisando seu caso; é uma lacuna de implementação frente a uma composição normativa explícita (ver WF-PEC-002 §\"Composição da junta\")."
+    },
+    {
+      "seq": 5,
+      "action": "A Junta tem 30 dias, a partir da designação, para decidir: Art. 14 §3º. `POST /juntas/:id/decision` registra `APROVADA`, `NEGADA` ou `SOLICITAR_COMPLEMENTO`, assinado digitalmente (PAdES) em nome de `'JUNTA'`."
+    },
+    {
+      "seq": 6,
+      "action": "Se a inaptidão for mantida, Carlos tem 30 dias para recorrer ao CETRAN — e o órgão tem 20 dias úteis para remeter os documentos. Art. 13 (recurso, 30 dias contados do conhecimento da decisão da junta) e art. 14 §2º (remessa dos documentos ao CETRAN, 20 dias úteis contados do recebimento do recurso). No sistema, esse recurso hoje não é um novo caso: quem decide pode marcar `escalateToCetran=true` na mesma chamada de decisão — uma re-atribuição de assinatura para `'CETRAN'` sobre a mesma linha de decisão (ver WF-PEC-002). Não há, nos documentos capturados, um segundo ato humano formal de \"abrir recurso\" com os próprios 30/20 dias como prazos de sistema — é uma divergência relevante entre o desenho normativo (um segundo processo, com prazo próprio) e a implementação (um flag numa decisão já tomada)."
+    },
+    {
+      "seq": 7,
+      "action": "A instância que de fato julga o recurso não é o CETRAN colegiado em si — é uma \"Junta Especial de Saúde\" que o CETRAN designa (art. 15) — achado novo, não modelado em nada do sistema. A norma descreve um terceiro colegiado, distinto tanto da Junta de 1ª instância quanto do CETRAN administrativo: \"no mínimo, três médicos, sendo dois especialistas em Medicina de Tráfego, ou, no mínimo, três psicólogos, sendo dois especialistas em psicologia do trânsito\". Se essa leitura for confirmada por LEGAL, comunicar a Carlos \"o CETRAN decidiu\" seria impreciso — o correto seria \"a Junta Especial de Saúde, designada pelo CETRAN, decidiu\". Até essa validação, qualquer tela/comunicação ao candidato deveria evitar nomear a instância decisória com precisão que o sistema ainda não sustenta — ver anti- padrão em `_intake/ux-notes.md`."
+    },
+    {
+      "seq": 8,
+      "action": "Publicação: A decisão (com ou sem escalonamento a CETRAN) é publicada no PEC/RENACH — o campo `escalatedToCetran` viaja no evento de transmissão."
+    },
+    {
+      "seq": 9,
+      "action": "Desbloqueio do encounter: Com o caso `DECIDED`, o gate de encerramento do encounter de Carlos deixa de listar \"junta pendente\" como impedimento — o encerramento segue o fluxo normal de WF-PEC-001."
+    }
+  ],
+  "postconditions": [
+    "Desbloqueio do encounter: Com o caso `DECIDED`, o gate de encerramento do encounter de Carlos deixa de listar \"junta pendente\" como impedimento — o encerramento segue o fluxo normal de WF-PEC-001."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "A escada de prazos de REF-CONTRAN-927-2022 arts. 12-15 substitui a lacuna \"nenhum prazo numérico encontrado\" da versão anterior desta jornada — e deveria ser lida como uma escada de direitos de Carlos, no mesmo espírito de JRN-RAIT-004 (\"prazo do cidadão\" vs. \"prazo do órgão\"):"
+    },
+    {
+      "id": "AC-002",
+      "statement": "| Etapa | Prazo | De quem é o relógio | | ------------------------------- | --------------------------------------------- | ------------------- | | Requerer instauração de junta | 30 dias, do conhecimento do resultado | direito de Carlos | | Órgão designar a junta | 15 dias úteis, do recebimento do requerimento | dever do órgão | | Junta decidir | 30 dias, da designação | dever do órgão | | Recorrer ao CETRAN | 30 dias, do conhecimento da decisão da junta | direito de Carlos | | Remessa de documentos ao CETRAN | 20 dias úteis, do recebimento do recurso | dever do órgão |"
+    },
+    {
+      "id": "AC-003",
+      "statement": "Zero prazo do órgão (15 dias úteis, 30 dias, 20 dias úteis) estourado sem alerta prévio registrado; zero comunicação a Carlos que confunda \"prazo que ele já cumpriu ao recorrer a tempo\" com \"atraso do próprio órgão\"; zero tela que nomeie a \"Junta Especial de Saúde\" (art. 15) como \"CETRAN\" sem essa distinção estar de fato implementada."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PEC-002",
+    "docs/framework/product/domains/ch/pec/journeys/JRN-PEC-002.md"
+  ]
+}

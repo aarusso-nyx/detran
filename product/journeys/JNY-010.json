@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-010",
+  "title": "Parceiro hospitalar registra atendimento de vítima — intake facultativo, dados mínimos de saúde, LGPD-consciente",
+  "persona": {
+    "role": "parceira hospitalar"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Entrada não é \"criar um novo sinistro\". Cleuza não abre um `CrashRecord` do zero — ela busca, por chave natural compatível com a já usada na submissão RENAEST (uf, município, data/ hora aproximada do sinistro, e idealmente o nome/documento da vítima), o registro que Yasmin já iniciou em campo. Decisão de produto central desta jornada: o hospital nunca é a origem primária de um sinistro no BOAT — ele conciliação/complementa um registro já existente vindo do agente de trânsito. Sem correspondência encontrada, a tela sinaliza claramente \"nenhum sinistro correspondente localizado\" em vez de deixar Cleuza criar um registro solto, órfão."
+    },
+    {
+      "seq": 2,
+      "action": "Dados mínimos, não o prontuário inteiro: Ao localizar o registro, Cleuza só complementa os campos que o BOAT já modela para vítima — gravidade final observada, se houve óbito, se houve atendimento médico, destino/alta — nunca um campo de texto livre espelhando prontuário clínico completo. Isso segue o princípio de minimização reforçada de dado sensível (REF-SENATRAN-PORTARIA-139-2025 art. 18: \"evitar a inclusão de dados sensíveis ... priorizar a validação de dados\"): o hospital confirma/ajusta o que já existe, não despeja um novo conjunto de dados de saúde no sistema."
+    },
+    {
+      "seq": 3,
+      "action": "Sem tempo real, sem urgência artificial: Diferente do agente de campo, Cleuza não está sob pressão de cena viva — ela pode revisar com calma, no fim do plantão, os casos pendentes de complemento vindos da equipe de trânsito. A tela dela não deveria simular urgência de atendimento ao vivo (nenhum timer, nenhum \"responda em X minutos\"); é fluxo de conciliação administrativa, no ritmo do hospital, não do trânsito."
+    },
+    {
+      "seq": 4,
+      "action": "Ela não vê o sinistro inteiro — só a parte que lhe cabe: Cleuza não tem motivo para ver dinâmica do sinistro, croqui, evidências fotográficas ou dados de outros envolvidos que não a vítima que seu hospital atendeu. A tela do parceiro hospitalar é uma superfície reduzida, deliberadamente menor que o console interno do processing-operator — mostra só o que é necessário para a finalidade de saúde, mesmo princípio de minimização do passo 2, aplicado agora à própria superfície de tela, não só ao conteúdo do campo."
+    },
+    {
+      "seq": 5,
+      "action": "Confirmação, não edição livre de gravidade: Se a gravidade que o agente registrou em campo (ex.: `COM_VITIMA_FERIDA`) já corresponde ao desfecho clínico, Cleuza confirma. Se o desfecho mudou — por exemplo, óbito hospitalar horas depois, quando o agente só pôde registrar \"ferida\" no local —, ela registra a atualização como complemento datado, não como sobrescrita silenciosa do que Yasmin viu na cena; o histórico de quem registrou o quê, e quando, se preserva."
+    },
+    {
+      "seq": 6,
+      "action": "Acesso reforçado desde o primeiro toque, não como camada extra depois: Antes mesmo de ver qualquer dado, Cleuza passa por controle de acesso reforçado consistente com RN-BOAT-003 — os mesmos campos de alta sensibilidade (`hospital_destination`, `health_notes`) que já exigem esse controle para o processing-operator interno exigem o mesmo padrão para ela, sem relaxamento só porque ela é a fonte natural do dado de saúde; ser hospital não é uma exceção à regra de acesso, é a razão pela qual a regra existe."
+    },
+    {
+      "seq": 7,
+      "action": "Nenhuma promessa de integração automática nacional: Cleuza não submete nada diretamente à RENAEST — o envio nacional continua sendo feito pelo DETRAN-AM, através do fluxo já existente (WF-BOAT-001, UC-BOAT-005), depois que o registro volta a `recorded`/`validated`. A tela deveria deixar isso explícito para não sugerir a Cleuza um vínculo direto hospital↔RENAEST que a norma não prevê (art. 6º §5º exige passagem pelo DETRAN estadual)."
+    },
+    {
+      "seq": 8,
+      "action": "Encerramento do complemento não é encerramento do registro: Quando Cleuza termina, o `CrashRecord` volta ao estado `pending_complement`/`recorded` do TEAT (WF-BOAT-001) — ela não tem papel de encerrar (`close`) nem validar (`validate`) o registro; isso permanece com field-supervisor/traffic-authority/processing-operator, mantendo a fronteira entre \"quem completa o dado de saúde\" e \"quem decide que o registro está pronto\"."
+    }
+  ],
+  "postconditions": [
+    "Encerramento do complemento não é encerramento do registro: Quando Cleuza termina, o `CrashRecord` volta ao estado `pending_complement`/`recorded` do TEAT (WF-BOAT-001) — ela não tem papel de encerrar (`close`) nem validar (`validate`) o registro; isso permanece com field-supervisor/traffic-authority/processing-operator, mantendo a fronteira entre \"quem completa o dado de saúde\" e \"quem decide que o registro está pronto\"."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "% de vítimas com destino hospitalar cujo desfecho final foi confirmado/atualizado pelo hospital (quando a onda estiver ativa); zero acesso de parceiro hospitalar a dados de sinistro fora do escopo da vítima que seu hospital atendeu; zero campo de texto livre clínico despejado sem correspondência a um campo modelado do BOAT; tempo entre alta/óbito hospitalar e complemento do registro (quando aplicável)."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-BOAT-003",
+    "docs/framework/product/domains/est/boat/journeys/JRN-BOAT-003.md"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0019",
+  "ctg": "CTG-0003",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 68,
+      "claim": "The R-0019 history row gives the 'Abertura' (opening) date as 2026-09-27, which is not a proven fact. plan.md line 3 says the round was authorized by the Owner and planned on 2026-09-26. The baseline was measured on 2026-09-26 (plan.md line 20). Checkpoint 1 is 2026-09-26 (line 415), budget.json has checkpoint_at 2026-09-26, and the first R-0019 plan commit 90610779 is dated 2026-09-26. The TASK-0011 contract says 'Atualizar somente fatos comprovados' (update only proven facts).",
+      "fix": "Change the R-0019 'Abertura' cell to 2026-09-26, matching plan.md and AUTHORIZATION.md. If the maestro means a later resumption, write it as '2026-09-26 (retomada 2026-09-27)', following the R-0015 row pattern."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 68,
+      "claim": "The 'Tokens estimados' cell says ≈1.614M input / ≈286k output. That is the budget.json total after only the first TASK-0011 entry (1,613,823 / 286,004). The current budget.json totals are 1,629,823 / 289,004, which add the TASK-0011-index-parity iteration (6k/1k) and this review (10k/2k). The entries sum exactly to those totals. '1.614M' also uses a dot, which in pt-BR notation reads as a thousands separator. The R-0016 row uses '≈1,692 M'.",
+      "fix": "Update the cell to the current provisional figure, e.g. '≈1,63 M entrada / ≈289k saída estimados até agora', or state which snapshot it refers to. Use a decimal comma consistent with the other rows. Final totals remain due at closure."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 68,
+      "claim": "The 'Escaladas' cell lists only 'TASK-0008 a Sol/high' under '≥1'. plan.md records more: the CTG-0001 Inspector escalation (line 281), TASK-0008's first escalation to Terra/high (line 300), and the delivery-correction escalation to Sol/high (line 324). It also records sensor-error deviations: the prompt-review-2 transport failure (line 230) and the CI runner allocation failure on #137. The 'Tarefas' cell omits the restricted iterations that other rows list: the TASK-0007, 0008 and 0009 delivery corrections and TASK-0011 ×1. '≥1' is not false, but the row falls short of the R-0018 level of detail.",
+      "fix": "List the escalations and restricted iterations already recorded in plan.md, or keep the provisional '≥1' wording and add 'lista completa no fechamento' so the closure task completes it."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 68,
+      "claim": "The 'Merge' cell says 'CTG-0001: PR #132 integrado' with no date or merge SHA. GitHub shows #132 merged 2026-09-27T04:02:15Z at 968f0729. The other history rows record the date and merge SHA for each merged PR.",
+      "fix": "Write '2026-09-27 PR #132 (CTG-0001, merge `968f0729`)', matching the R-0016/R-0018 row format."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "docs/meta/knowledge-base/backlog.md",
+      "line": 639,
+      "claim": "The backlog entry says #137 is waiting for 'recuperação/passagem do CI' (CI recovery/pass) but does not say why CI failed. plan.md records the triage: jobs failed within seconds with steps=[] and no runner, on two attempts of run #36299883531. The same failure appears on #136 and on main, so it is external to the diff. Without that, a reader may attribute the failure to the R-0019 content. PR #136, still open, touches backlog.md; plan.md line 336 flags that it needs reconciling before the next PR.",
+      "fix": "Optionally add a short clause such as 'falha de alocação de runner do GitHub Actions, externa ao diff (sensor-error)'. Before opening the CTG-0003 PR, reconcile backlog.md with #136 or origin/main as plan.md requires."
+    }
+  ],
+  "notes": [
+    "Authority and boundary: the authorial diff touches exactly the three files TASK-0011 may touch. In work/rounds/README.md only the R-0019 row changed. R-0016, R-0017 (still 'proposta (C-0002)'), R-0018 ('fechada', #128/#129/#130, PC-0015) and R-0020 are intact. In waves.md the R-0015, R-0016 and R-0018 rows and the ladder paragraph are unchanged. In backlog.md the R-0018 and OD-R18-005 entries are unchanged. The diff contains no docs/framework/**, law/**, product/**, record/**, .devai/** or generated files. The other modified files (plan.md, budget.json, TASK-0011.json) are maestro bookkeeping outside the worker diff.",
+    "Factual parity checked with gh: PR #132 is MERGED (2026-09-27T04:02:15Z, 968f0729). PR #137 is OPEN; its title says 'draft glossary and product corpus', but GitHub isDraft=false. Its checks show jobs failing in 2–3 s and backend-kernel skipped, which matches the runner-allocation triage in plan.md. The indexes describe #137 as a reviewed proposal waiting for Owner acceptance and CI. They claim no CTG-0002 merge, no Owner acceptance and no round closure. README keeps the gate vocabulary 'proposta (C-0002)' and PC '—' while listing only #132.",
+    "Review counts match: 2 prompt-review cycles (prompt-review-1 REVIEW, prompt-review-2 sensor-error with a PASS retry in the same cycle). 4 delivery-review cycles: 2 for CTG-0001 and 2 for CTG-0002. CTG-0003 is correctly marked pending.",
+    "budget.json entries sum exactly to estimated_input_total 1,629,823 and estimated_output_total 289,004. Status is waived_by_owner, consistent with the 'limite dispensado pelo Owner' (budget cap waived by the Owner) wording.",
+    "The reported gate evidence (docs:kb:check 773/446, format:check, verify:state-index 39/3/33/15) was not re-run by this read-only reviewer. The switch from 'ativa' to 'proposta (C-0002)' follows the gate vocabulary and does not weaken the gate.",
+    "Environment note: the claude.ai Google Drive and Mermaid Chart MCP servers need authorization through the user's claude.ai connector settings. They were not needed for this review."
+  ]
+}

@@ -7,6 +7,6 @@ Série de ADRs do DEVAI neste repositório. Contém
 `DESIGN-DECISIONS.md` e em `docs/meta/adr/README.md`. A série principal de ADRs do repositório é
 `docs/meta/adr/`.
 
-Destino da série pendente de OD-R18-001.
+Série DEVAI distinta, com prefixo `LAW-ADR-` nos índices (OD-R18-001, opção b).
 
 Scaffold gerado pelo DEVAI v1.4.5; conteúdo mantido pelo Architect.

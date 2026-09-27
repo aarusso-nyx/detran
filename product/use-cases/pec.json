@@ -1,0 +1,430 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Recepção",
+    "Técnico Biométrico",
+    "Candidato/condutor",
+    "Junta Médica ou Psicológica",
+    "Médico (exame médico) ou Psicólogo (exame psicológico)",
+    "Médico, Psicólogo ou Supervisor",
+    "Profissional autorizado",
+    "Sistema",
+    "Médico (ou Psicólogo, quando aplicável)",
+    "SENATRAN/RENACH",
+    "Adaptador SENATRAN",
+    "PEC",
+    "Operador de integração",
+    "Gestor DETRAN (ou DPO, em conformidade LGPD)"
+  ],
+  "cases": [
+    {
+      "id": "UC-PEC-001",
+      "title": "Abrir processo RENACH e agendar exame",
+      "goal": "Recepção (ou o processo já aberto pelo DETRAN/AM) liga o candidato/condutor a um processo RENACH e agenda o atendimento na clínica credenciada, dando início à trilha clínica que o PEC controla. Origem: UCAP-UC-01 (\"Abrir Processo de Habilitação no RENACH\") + SUC-UC-08 (\"Criar agendamento\").",
+      "actors": ["Recepção"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-001-001",
+          "action": "Recepção consulta/abre o processo RENACH para o paciente: `POST /integrations/renach/processes`."
+        },
+        {
+          "id": "UC-PEC-001-002",
+          "action": "O adaptador RENACH retorna `renachProcessKey`, `status` (`OPENED`|`ALREADY_OPEN`) e um `requestId`."
+        },
+        {
+          "id": "UC-PEC-001-003",
+          "action": "O PEC grava `renach_process_key` em `pec.encounters` (ou o mantém disponível para quando o encounter for aberto) — unicidade garantida por `(tenant_id, patient_id, renach_process_key)`."
+        },
+        {
+          "id": "UC-PEC-001-004",
+          "action": "Recepção cria o agendamento: `POST /appointments` — estado inicial `SCHEDULED` — ver WF-PEC-003."
+        },
+        {
+          "id": "UC-PEC-001-005",
+          "action": "Consultas de identidade complementares (`findDriverByCpf` etc.) podem retornar indicadores de negócio (`requiresMedical`, `requiresPsychological`, `requiresBiometrics`, `requiresPaymentClearance`) que orientam quais etapas subsequentes são necessárias."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-002",
+      "title": "Abrir atendimento clínico (encounter)",
+      "goal": "Recepção abre o encounter clínico que servirá de guarda-chuva para o exame médico e/ou psicológico do paciente, formalizando o início do episódio. Origem: SUC-UC-10.",
+      "actors": ["Recepção"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-002-001",
+          "action": "Recepção chama `POST /encounters` com o `patientId` (e opcionalmente `appointmentId`)."
+        },
+        {
+          "id": "UC-PEC-002-002",
+          "action": "Sistema valida que existe um agendamento `CHECKED_IN` associado; se não houver `appointmentId` explícito, busca o agendamento `CHECKED_IN` mais recente do paciente."
+        },
+        {
+          "id": "UC-PEC-002-003",
+          "action": "Encounter é criado com `status='OPEN'`."
+        },
+        {
+          "id": "UC-PEC-002-004",
+          "action": "Se o agendamento vinculado ainda não estava `CHECKED_IN`, o sistema o atualiza para esse status como efeito colateral."
+        },
+        {
+          "id": "UC-PEC-002-005",
+          "action": "A partir daqui, o encounter segue o ciclo de vida de WF-PEC-001."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-003",
+      "title": "Tratar exceção de biometria",
+      "goal": "Técnico Biométrico registra a falha de captura biométrica e solicita ao Supervisor uma liberação temporária controlada, sem comprometer a rastreabilidade do processo. Origem: UCAP-UC-04 (\"Tratar Exceções de Biometria\"), MAN-CASO-07 (\"Aprovar exceção biométrica\"). Ver JRN-PEC-003 para a narrativa completa.",
+      "actors": ["Técnico Biométrico"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-003-001",
+          "action": "Técnico Biométrico registra a falha e a justificativa."
+        },
+        {
+          "id": "UC-PEC-003-002",
+          "action": "Anexa evidências (documentais) sujeitas a dupla checagem."
+        },
+        {
+          "id": "UC-PEC-003-003",
+          "action": "Solicita a exceção ao Supervisor."
+        },
+        {
+          "id": "UC-PEC-003-004",
+          "action": "Supervisor aprova → sistema concede liberação temporária controlada com prazo/escopo limitados (`pec.biometric_exceptions.expires_at`)."
+        },
+        {
+          "id": "UC-PEC-003-005",
+          "action": "Trilha de auditoria reforçada é gravada (falha, justificativa, aprovação, liberação), vinculando ID biométrico, IP/estação e hash."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-004",
+      "title": "Submeter caso à junta médica",
+      "goal": "Candidato/condutor requer revisão do resultado; um operador autorizado protocola o ato e o órgão designa uma junta médica ou psicológica, bloqueando o encerramento do encounter até a decisão. Origem: UCAP-UC-15 (\"Enviar à Junta Médica\"), rastreado internamente como UC-J1. Ver JRN-PEC-002 para a narrativa completa e WF-PEC-002 para a máquina de estados.",
+      "actors": ["Candidato/condutor"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-004-001",
+          "action": "O candidato apresenta requerimento dentro de 30 dias da ciência do resultado."
+        },
+        {
+          "id": "UC-PEC-004-002",
+          "action": "Operador autorizado protocola `encounterId`, trilha médica/psicológica, candidato requerente, data de ciência, motivo taxonomizado e complemento textual opcional."
+        },
+        {
+          "id": "UC-PEC-004-003",
+          "action": "Sistema cria o caso em `SUBMITTED`, calcula somente os prazos com fonte e registra o ator que protocolou sem substituí-lo pelo requerente."
+        },
+        {
+          "id": "UC-PEC-004-004",
+          "action": "Enquanto o caso não estiver `DECIDED`, o encounter associado não pode ser encerrado (WF-PEC-001 §\"Gate de encerramento\")."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-005",
+      "title": "Registrar decisão da junta e formalizar recurso ao CETRAN",
+      "goal": "Junta Médica ou Psicológica registra o parecer formal sobre o caso; se mantida a inaptidão, o candidato pode interpor recurso dirigido ao CETRAN, que designará a Junta Especial descrita em UC-PEC-010. Origem: UCAP-UC-41 (\"Registrar Parecer da Junta\") e UCAP-UC-42 (\"Registrar Recurso e Decisão CETRAN/CONTRANDIFE\"). Ver WF-PEC-002.",
+      "actors": ["Junta Médica ou Psicológica"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-005-001",
+          "action": "O colegiado designado analisa o dossiê; cada membro e especialidade estão vinculados ao caso."
+        },
+        {
+          "id": "UC-PEC-005-002",
+          "action": "Registra decisão fundamentada (`APROVADA`, `NEGADA` ou `SOLICITAR_COMPLEMENTO`) e seu recibo de assinatura PAdES."
+        },
+        {
+          "id": "UC-PEC-005-003",
+          "action": "`SOLICITAR_COMPLEMENTO` leva a `UNDER_REVIEW`; decisão conclusiva leva a `DECIDED`."
+        },
+        {
+          "id": "UC-PEC-005-004",
+          "action": "Se a inaptidão permanente for mantida, a comunicação informa o prazo de 30 dias para recurso."
+        },
+        {
+          "id": "UC-PEC-005-005",
+          "action": "Recurso tempestivo cria ato próprio, passa a `RECURSO_CETRAN_APRESENTADO` e inicia a remessa documental ao CETRAN; nunca altera o signatário da decisão anterior."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-006",
+      "title": "Emitir laudo e assinar digitalmente",
+      "goal": "Médico (exame médico) ou Psicólogo (exame psicológico) emite o laudo do encounter e o assina digitalmente, tornando-o a peça clínica imutável que sustenta o resultado do processo. Origem: SUC-UC-13 (\"Emitir laudo e assinar digitalmente\"), UCAP-UC-13 (\"Emitir Laudo Médico com Assinatura Digital\").",
+      "actors": ["Médico (exame médico) ou Psicólogo (exame psicológico)"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-006-001",
+          "action": "Profissional compõe o laudo (o sistema monta um artefato PDF/A com tipo de laudo, id do encounter, id do exame de origem, versão do template)."
+        },
+        {
+          "id": "UC-PEC-006-002",
+          "action": "Validação de consistência do conteúdo."
+        },
+        {
+          "id": "UC-PEC-006-003",
+          "action": "Assinatura PAdES com certificado ICP-Brasil qualificado do profissional; carimbo de tempo (TSA) embutido."
+        },
+        {
+          "id": "UC-PEC-006-004",
+          "action": "Validação OCSP do certificado (fallback CRL se OCSP indisponível)."
+        },
+        {
+          "id": "UC-PEC-006-005",
+          "action": "Persistência em `pec.reports`: `sha256`, `signer_name`, `signer_identifier`, `signer_council` (CRM ou CRP), `signed_at`, `tsa_time`, `ocsp_status`."
+        },
+        {
+          "id": "UC-PEC-006-006",
+          "action": "Publicação no PEC/RENACH."
+        },
+        {
+          "id": "UC-PEC-006-007",
+          "action": "Se chamado via `POST /encounters/:id/sign`, o encounter avança de status — ver WF-PEC-001 (inclui a nuance de \"primeiro laudo assinado força `SIGNED`\")."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-007",
+      "title": "Retificar laudo via adendo assinado",
+      "goal": "Médico, Psicólogo ou Supervisor solicita a correção de um erro material evidente em um laudo já assinado; Supervisor e Admin Clínica aprovam em dupla; a correção é publicada como um documento novo (adendo), nunca como edição do original. Origem: SUC-UC-15 (\"Retificar registro via adendo\"), UCAP-UC-16 (\"Retificar Laudo — Fluxo Controlado\").",
+      "actors": ["Médico, Psicólogo ou Supervisor"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-007-001",
+          "action": "Médico, Psicólogo ou Supervisor solicita a retificação, descrevendo o erro material."
+        },
+        {
+          "id": "UC-PEC-007-002",
+          "action": "Supervisor e Admin Clínica aprovam a retificação (dupla aprovação — dois papéis distintos)."
+        },
+        {
+          "id": "UC-PEC-007-003",
+          "action": "Sistema gera o adendo em PDF/A, referenciando o documento original por ID e hash."
+        },
+        {
+          "id": "UC-PEC-007-004",
+          "action": "Adendo é assinado com PAdES + TSA; OCSP validado (fallback CRL)."
+        },
+        {
+          "id": "UC-PEC-007-005",
+          "action": "Adendo é vinculado ao prontuário em `pec.documents (kind='ADENDO')`, mantendo o encadeamento de hash em auditoria."
+        },
+        {
+          "id": "UC-PEC-007-006",
+          "action": "Notificação é disparada (ex.: às partes interessadas do processo)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-008",
+      "title": "Encerrar episódio clínico",
+      "goal": "Profissional autorizado (papel gatekeeper de \"Encerrar episódio\" na matriz RBAC) fecha o encounter depois que todas as condições clínicas, regulatórias e de transmissão estão satisfeitas, consolidando o episódio. Origem: UCAP-UC-17 (\"Encerrar Episódio Médico\"). Ver WF-PEC-001 §\"Gate de encerramento\" para o detalhamento normativo completo.",
+      "actors": ["Profissional autorizado"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-008-001",
+          "action": "Profissional chama `PATCH /encounters/:id/close`."
+        },
+        {
+          "id": "UC-PEC-008-002",
+          "action": "Sistema valida todas as pré-condições via `assertClosureReady()`."
+        },
+        {
+          "id": "UC-PEC-008-003",
+          "action": "Sistema gera sumário e evidências do episódio."
+        },
+        {
+          "id": "UC-PEC-008-004",
+          "action": "Episódio é exportado em PDF/A, assinado PAdES com TSA, validado via OCSP (fallback CRL)."
+        },
+        {
+          "id": "UC-PEC-008-005",
+          "action": "Resultado já publicado no RENACH (publicação ocorre antes do fechamento, não durante)."
+        },
+        {
+          "id": "UC-PEC-008-006",
+          "action": "`status='CLOSED'`, `closed_at=now()`; métricas do episódio são atualizadas."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-009",
+      "title": "Transmitir resultado ao RENACH e tratar ACK/erro",
+      "goal": "O sistema enfileira e transmite eventos relevantes do encounter (encounter, laudo, restrição) ao RENACH/DETRAN, tratando confirmação (ACK) ou erro de forma idempotente. Origem: SUC-UC-18 (\"Gerar transmissão de janela ≤15min\"), SUC-UC-19 (\"Receber ACK do DETRAN\"), SUC-UC-20 (\"Reprocessar transmissão com erro\").",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-009-001",
+          "action": "Sistema enfileira o evento: `integration.renach_outbox` recebe uma linha `status='PENDING'` com `next_attempt_at = now() + 15min`."
+        },
+        {
+          "id": "UC-PEC-009-002",
+          "action": "`POST /transmissions/events` envia o evento ao DETRAN dentro da janela de até 15 minutos."
+        },
+        {
+          "id": "UC-PEC-009-003",
+          "action": "DETRAN confirma via webhook: `status` muda para `ACKED` (sucesso) ou `ERROR` (falha), registrado de forma idempotente (`ON CONFLICT (outbox_id) DO NOTHING` em `integration.renach_acks`)."
+        },
+        {
+          "id": "UC-PEC-009-004",
+          "action": "Em caso de `ACKED`, a entidade é considerada publicada — habilita, por exemplo, o fechamento do encounter (ver WF-PEC-001)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-010",
+      "title": "Conduzir recurso à Junta Especial de Saúde (terceira instância, CETRAN)",
+      "goal": "Candidato/condutor cuja Junta Médica ou Psicológica manteve o resultado de inaptidão permanente recorre ao CETRAN (ou CONTRANDIFE), que designa uma Junta Especial de Saúde — colegiado técnico distinto, com maioria de especialistas — para julgar o mérito do recurso. Origem: Res. CONTRAN 927/2022 arts. 13 e 15. Ver WF-PEC-002 §\"Estados — trilha legal\" para a máquina de estados completa.",
+      "actors": ["Candidato/condutor"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-010-001",
+          "action": "Candidato apresenta recurso ao órgão executivo de trânsito, dirigido ao CETRAN/CONTRANDIFE, no prazo de 30 dias (art. 13)."
+        },
+        {
+          "id": "UC-PEC-010-002",
+          "action": "Órgão remete os documentos ao CETRAN/CONTRANDIFE no prazo de 20 dias úteis do recebimento do recurso (art. 14 §2º)."
+        },
+        {
+          "id": "UC-PEC-010-003",
+          "action": "CETRAN/CONTRANDIFE designa a Junta Especial de Saúde: no mínimo 3 profissionais, sendo 2 especialistas em Medicina de Tráfego (recurso médico) ou em Psicologia de Trânsito (recurso psicológico) (art. 15, parágrafo único)."
+        },
+        {
+          "id": "UC-PEC-010-004",
+          "action": "Junta Especial de Saúde analisa o dossiê e profere decisão final sobre o recurso."
+        },
+        {
+          "id": "UC-PEC-010-005",
+          "action": "Decisão é comunicada ao candidato e ao processo RENACH."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-011",
+      "title": "Registrar resultado \"apto com restrições\" e emitir código de restrição para a CNH",
+      "goal": "Médico (ou Psicólogo, quando aplicável) registra um resultado que exige restrição/adaptação registrada na CNH do candidato, usando a codificação oficial do Anexo XV da Res. CONTRAN 927/2022, e o sistema garante que o gate de encerramento não fecha o episódio sem essa restrição aplicada. Origem: motivado pelo achado de nomenclatura do dossiê CRAWLER (`_intake/research-dossier.md` §4, RN-PEC-006) — nenhuma fonte legal ou local usa o rótulo `CONDICIONADO` do schema do PEC.",
+      "actors": ["Médico (ou Psicólogo, quando aplicável)"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-011-001",
+          "action": "Médico registra o resultado do exame médico como \"apto com restrições\" (≡ `CONDICIONADO` no schema atual, RN-PEC-105) e o(s) código(s) de restrição aplicável(is) conforme o Anexo XV da Res. 927/2022 (anexo não capturado nesta rodada — ver `refs/INDEX.md` §Gaps). Este rótulo não existe na trilha psicológica — o psicólogo nunca registra \"apto com restrições\"; o equivalente funcional psicológico é \"apto com validade diminuída\" (RN-PEC-105 item 2)."
+        },
+        {
+          "id": "UC-PEC-011-002",
+          "action": "Sistema grava o resultado e associa ao menos uma `pec.encounter_restrictions`."
+        },
+        {
+          "id": "UC-PEC-011-003",
+          "action": "Laudo é emitido e assinado normalmente (UC-PEC-006)."
+        },
+        {
+          "id": "UC-PEC-011-004",
+          "action": "Gate de encerramento (RN-PEC-006 item 5) verifica: se o resultado é o equivalente a \"apto com restrições\", exige ao menos uma restrição aplicada antes de permitir `CLOSED`."
+        },
+        {
+          "id": "UC-PEC-011-005",
+          "action": "Evento de transmissão ao RENACH inclui o código de restrição."
+        },
+        {
+          "id": "UC-PEC-011-006",
+          "action": "Se, em vez disso, o resultado for \"inapto\" ou \"inapto temporário\" (médico ou psicológico): RN-PEC-106 exige comunicação imediata do perito aos setores médico/psicológico do DETRAN-AM para bloqueio do cadastro nacional — fluxo distinto deste UC, não coberto aqui (ver nota em WF-PEC-001 §\"Decisões de modelagem pendentes\")."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-012",
+      "title": "Monitorar exame toxicológico periódico pós-CNH (a cada 2,5 anos, C/D/E)",
+      "goal": "O art. 10-A da Res. CONTRAN 923/2022, incluído pela 1.009/2024, cria exame toxicológico periódico pós-habilitação para condutores C/D/E a cada 2 anos e 6 meses (RN-PEC-121). O Owner confirmou o ramo (b) de DT-024 e aprovou o desenho operacional em 2026-08-31: o PEC recebe do RENACH o evento autenticado de resultado e mantém o reflexo estadual, sem criar atendimento clínico fictício e sem integrar diretamente com laboratório.",
+      "actors": [
+        "SENATRAN/RENACH",
+        "Adaptador SENATRAN",
+        "PEC",
+        "Operador de integração"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-012-001",
+          "action": "O adaptador recebe evento com identidade única, CPF do condutor, categoria, data de coleta, resultado, laboratório e referência de origem."
+        },
+        {
+          "id": "UC-PEC-012-002",
+          "action": "Autentica a origem, valida payload e categoria C/D/E e deduplica pela identidade do evento."
+        },
+        {
+          "id": "UC-PEC-012-003",
+          "action": "Correlaciona o condutor pelo CPF dentro do tenant e registra o resultado imutável."
+        },
+        {
+          "id": "UC-PEC-012-004",
+          "action": "Para `RESULTADO_POSITIVO`, cria suspensão por três meses contados do evento normativo e registra a comunicação pendente ao processo nacional."
+        },
+        {
+          "id": "UC-PEC-012-005",
+          "action": "Para `RESULTADO_NEGATIVO` válido posterior, libera suspensão ativa vinculada ao mesmo condutor; o resultado positivo original permanece íntegro."
+        },
+        {
+          "id": "UC-PEC-012-006",
+          "action": "Eventos sem correlação, vencidos, conflitantes ou inválidos ficam em exceção auditável e não alteram o cadastro."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-013",
+      "title": "Operar a distribuição de exames entre clínicas credenciadas",
+      "goal": "Sistema distribui a solicitação de exame entre as clínicas e peritos credenciados, de modo que o candidato não escolha o examinador — exigência do art. 3º da Res. CFM 1.636/2002, cuja inobservância expõe pessoalmente o diretor médico do DETRAN em regime ético-disciplinar.",
+      "actors": ["Sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-013-001",
+          "action": "Candidato ou recepção registra a solicitação de exame sem indicar clínica ou perito — a etapa de \"escolher clínica\" deixa de existir na interface."
+        },
+        {
+          "id": "UC-PEC-013-002",
+          "action": "Candidato indica região e janela de data de preferência — a liberdade que P2 preserva, e que P1 não teria."
+        },
+        {
+          "id": "UC-PEC-013-003",
+          "action": "Sistema calcula o pool elegível: clínicas credenciadas e ativas na jurisdição, excluídas as de credenciamento vencido ou suspenso, e excluídos peritos impedidos para aquele candidato."
+        },
+        {
+          "id": "UC-PEC-013-004",
+          "action": "Sistema sorteia clínica e perito dentro do pool, por mecanismo auditável e equitativo, e registra o sorteio — semente, pool considerado e resultado — de modo que a impessoalidade seja verificável depois, não apenas afirmada."
+        },
+        {
+          "id": "UC-PEC-013-005",
+          "action": "Agendamento é criado com a clínica sorteada e segue WF-PEC-003 a partir de `SCHEDULED`."
+        }
+      ]
+    },
+    {
+      "id": "UC-PEC-014",
+      "title": "Gerenciar retenção e eliminação/devolução do prontuário eletrônico",
+      "goal": "Gestor DETRAN (ou DPO, em conformidade LGPD) administra o ciclo de retenção do prontuário eletrônico do PEC — laudos, adendos, evidências de exame — respeitando o piso legal de retenção antes de qualquer eliminação ou devolução ao paciente. Motivado pelo achado de maior impacto do dossiê CRAWLER (`_intake/research-dossier.md` §8, item 3): nenhuma `RN-PEC` trata de retenção, apesar de existirem três prazos legais capturados para objetos/atores distintos.",
+      "actors": ["Gestor DETRAN (ou DPO, em conformidade LGPD)"],
+      "mainFlow": [
+        {
+          "id": "UC-PEC-014-001",
+          "action": "Sistema (ou processo administrativo do DETRAN-AM) identifica prontuários cujo \"último registro\" ultrapassou o piso de 20 anos (Lei 13.787/2018 art. 6º)."
+        },
+        {
+          "id": "UC-PEC-014-002",
+          "action": "Antes de eliminar, oferece a alternativa de devolução ao paciente (art. 6º §2º)."
+        },
+        {
+          "id": "UC-PEC-014-003",
+          "action": "Se elimina: processo deve resguardar intimidade e sigilo (art. 6º §3º) — trilha de auditoria da própria eliminação, distinta da trilha de auditoria de uso."
+        },
+        {
+          "id": "UC-PEC-014-004",
+          "action": "DPO revisa/aprova a eliminação em lote (papel já existente na matriz RBAC do PEC, \"Conformidade LGPD; consulta trilhas/evidências\" — APP-PEC §Atores)."
+        }
+      ]
+    }
+  ]
+}

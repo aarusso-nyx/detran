@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0018",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever o README de DDL e o tools/README do CTG-0004",
+  "description": "Grupo pós-fechamento CTG-0004 (plan.md M9): OD-R18-005 e nota de stack de tools/README.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-readmes-stale", "MOD-open-decisions"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0012",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 13,
+  "tags": ["c-0002", "action-3", "ctg-0004"],
+  "branch": "orchestra/index-state-ctg4",
+  "worktree_id": "WT-index-state",
+  "prompt_composition_id": "PC-f2a6f2fe8f3facf6",
+  "acceptance_commands": [
+    ["pnpm", "verify:state-index"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-27T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-f2a6f2fe8f3facf6",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "iteration_trail": [
+    {
+      "iteration": 1,
+      "started_at": "2026-09-27T14:00:00.000Z",
+      "ended_at": "2026-09-27T14:10:00.000Z",
+      "verdict": "PASS",
+      "hard_gate_failures": [
+        "delivery-review-CTG-0004: introdução do README de DDL; resumo do backlog (Adenda A1)"
+      ]
+    }
+  ]
+}

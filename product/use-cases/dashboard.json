@@ -1,0 +1,242 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Gestor de área",
+    "Operador de monitoramento",
+    "Dono de um dever periódico",
+    "Auditor",
+    "Gestor DETRAN (visão cross-tenant)",
+    "Administração técnica",
+    "Administração técnica / Gestor DETRAN"
+  ],
+  "cases": [
+    {
+      "id": "UC-DASH-001",
+      "title": "Gestor abre o radar de prescrição",
+      "goal": "Gestor de área (Gestor RAIT, Gestor Clínica/PEC) quer ver, em um único painel, todos os casos que se aproximam de um teto legal que extingue direito — sem precisar entrar em cada app de domínio separadamente para montar esse quadro.",
+      "actors": ["Gestor de área"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-001-001",
+          "action": "Gestor abre o radar de prescrição no DASHBOARD."
+        },
+        {
+          "id": "UC-DASH-001-002",
+          "action": "Sistema lista todos os casos com indicador tipo `legal-ceiling` acima de `SEM_RISCO`, agrupados por indicador (IND-DASH-101..111) e ordenados por proximidade do teto."
+        },
+        {
+          "id": "UC-DASH-001-003",
+          "action": "Para cada caso, o painel exibe: nível de severidade atual (N1/N2/N3/CRÍTICO), base legal citada explicitamente (ex. \"CTB art. 289-A\"), dono do caso, tempo restante até o teto, e o selo de frescor da leitura (WF-DASH-003)."
+        },
+        {
+          "id": "UC-DASH-001-004",
+          "action": "Gestor filtra por pool/circuito/unidade, se desejar (ver UC-DASH-005 para a visão comparativa completa)."
+        },
+        {
+          "id": "UC-DASH-001-005",
+          "action": "Gestor seleciona um caso para ver detalhe e aciona o dono direto, se ainda não notificado (ver UC-DASH-002 para o ciclo de reconhecimento)."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-002",
+      "title": "Operador reconhece e trata um alerta",
+      "goal": "Operador de monitoramento quer garantir que um alerta recém-notificado não fique sem dono respondendo — reconhece o alerta em nome do fluxo, confirma que o dono correto foi acionado, e acompanha até a verificação de encerramento.",
+      "actors": ["Operador de monitoramento"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-002-001",
+          "action": "Operador vê o alerta `NOTIFICADO` no radar, com o dono e a cadeia de escalonamento exibidos."
+        },
+        {
+          "id": "UC-DASH-002-002",
+          "action": "Operador confirma que a notificação chegou ao dono (canal próprio do app de origem, ou confirmação manual quando o app não expõe endpoint de ACK — ver nota de gap em WF-DASH-001 §Decisões de modelagem pendentes)."
+        },
+        {
+          "id": "UC-DASH-002-003",
+          "action": "Sistema move o alerta para `RECONHECIDO`."
+        },
+        {
+          "id": "UC-DASH-002-004",
+          "action": "Dono inicia a ação no app de origem (não no DASHBOARD)."
+        },
+        {
+          "id": "UC-DASH-002-005",
+          "action": "Operador acompanha o estado do alerta; quando o sistema detecta, por evento ou leitura do app de origem, que o indicador voltou à faixa normal, o alerta move para `VERIFICADO`."
+        },
+        {
+          "id": "UC-DASH-002-006",
+          "action": "Operador confirma o encerramento (trilha de irregularidade) ou o sistema confirma automaticamente (trilha de extinção, quando o app de origem já mudou de estado). Alerta move para `ENCERRADO`."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-003",
+      "title": "Responsável prepara e comprova um dever periódico",
+      "goal": "Dono de um dever periódico (ex. Administração/Financeiro para IND-DASH-201/202, Ouvidor para IND-DASH-206/207) quer conduzir um ciclo de obrigação — do início da janela de apuração até a comprovação arquivada — sem perder o prazo nem deixar de guardar a evidência de cumprimento.",
+      "actors": ["Dono de um dever periódico"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-003-001",
+          "action": "Sistema abre a janela de apuração no início do período (ex. início do mês para deveres mensais) e notifica o dono."
+        },
+        {
+          "id": "UC-DASH-003-002",
+          "action": "Dono move o ciclo para `EM_APURACAO` ao iniciar a coleta de dados exigidos."
+        },
+        {
+          "id": "UC-DASH-003-003",
+          "action": "Dono prepara a minuta/relatório/dataset; sistema registra `PREPARADO`."
+        },
+        {
+          "id": "UC-DASH-003-004",
+          "action": "Dono envia ao órgão federal (ex. FUNSET) ou publica no portal (ex. relatório de ouvidoria); sistema registra `SUBMETIDO_PUBLICADO`."
+        },
+        {
+          "id": "UC-DASH-003-005",
+          "action": "Dono anexa a evidência de envio/publicação (protocolo, captura, hash do arquivo publicado); sistema registra `COMPROVADO`."
+        },
+        {
+          "id": "UC-DASH-003-006",
+          "action": "Sistema arquiva o ciclo (`ARQUIVADO`) — evidência retida para auditoria futura."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-004",
+      "title": "Auditor consulta trilha agregada",
+      "goal": "Auditor (papel transversal \"Auditor / DPO\", `shared/actors.md`) quer reconstruir, para um caso, período ou sistema específico, o histórico completo de alertas, deveres e janelas de indisponibilidade — sem poder alterar nada, apenas ler.",
+      "actors": ["Auditor"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-004-001",
+          "action": "Auditor abre a trilha agregada e filtra por caso, indicador, período, ou app de origem."
+        },
+        {
+          "id": "UC-DASH-004-002",
+          "action": "Sistema exibe, para cada alerta (WF-DASH-001): timestamps de `DETECTADO`, `CLASSIFICADO`, `NOTIFICADO`, `RECONHECIDO`, `EM_TRATAMENTO`, `VERIFICADO`, `ENCERRADO`/`INCIDENTE_REGISTRADO`, e os atores envolvidos em cada transição."
+        },
+        {
+          "id": "UC-DASH-004-003",
+          "action": "Sistema exibe, para cada ciclo de dever periódico (WF-DASH-002): timestamps de `JANELA_ABERTA` até `ARQUIVADO`/`NAO_CUMPRIDO`, com a evidência de comprovação anexada quando existente."
+        },
+        {
+          "id": "UC-DASH-004-004",
+          "action": "Sistema exibe, para cada painel/fonte (WF-DASH-003): histórico de janelas `FRESCO`/`ATRASADO`/`INDISPONIVEL`, para que o auditor possa avaliar se um número relatado em determinado momento era confiável."
+        },
+        {
+          "id": "UC-DASH-004-005",
+          "action": "Auditor exporta o recorte consultado (formato aberto — mesma disciplina de REF-LEI-12527 art. 8º §3º aplicada internamente)."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-005",
+      "title": "Gestor compara desempenho entre unidades/circuitos",
+      "goal": "Gestor DETRAN (visão cross-tenant, `shared/actors.md`) quer comparar desempenho entre pools, circuitos, unidades ou clínicas credenciadas — para identificar onde investir capacidade ou onde há um problema estrutural, não apenas um caso isolado.",
+      "actors": ["Gestor DETRAN (visão cross-tenant)"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-005-001",
+          "action": "Gestor abre a visão comparativa e seleciona a dimensão (pool, circuito, unidade, clínica)."
+        },
+        {
+          "id": "UC-DASH-005-002",
+          "action": "Sistema agrega, por grupo: distribuição do acervo por faixa de risco (`SEM_RISCO`..`CRITICO`), % dentro da meta operacional (ex. IND-DASH-304/305), MTTA/MTTR de alertas (WF-DASH-001), % de deveres periódicos cumpridos no prazo quando aplicável ao grupo."
+        },
+        {
+          "id": "UC-DASH-005-003",
+          "action": "Gestor ordena por qualquer coluna para identificar outliers (ex. pool com maior % de casos em N3/CRÍTICO, clínica com maior atraso médio de designação de junta)."
+        },
+        {
+          "id": "UC-DASH-005-004",
+          "action": "Gestor aciona o Gestor de área do grupo destacado para investigação (ver UC-DASH-002 para o ciclo de tratamento de um alerta específico)."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-006",
+      "title": "Técnico investiga fila de integração parada",
+      "goal": "Administração técnica quer diagnosticar rapidamente por que um indicador de saúde técnica (outbox, sincronização offline, adapter SENATRAN) está degradado, e agir antes que a degradação vire um problema de negócio (ex. AITs presos em fila, faixa de numeração esgotando).",
+      "actors": ["Administração técnica"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-006-001",
+          "action": "Técnico recebe a notificação do alerta (WF-DASH-001, `NOTIFICADO`)."
+        },
+        {
+          "id": "UC-DASH-006-002",
+          "action": "Técnico reconhece o alerta (`RECONHECIDO`) e abre o detalhe: qual fila, qual dispositivo/ agente, idade do lote mais antigo, histórico de tentativas de sincronização."
+        },
+        {
+          "id": "UC-DASH-006-003",
+          "action": "Técnico verifica o selo de frescor da própria leitura (WF-DASH-003) — confirma que o número exibido não está, ele mesmo, desatualizado antes de agir sobre ele."
+        },
+        {
+          "id": "UC-DASH-006-004",
+          "action": "Técnico investiga a causa no app de origem (TEAT): conectividade do dispositivo, erro de validação do lote, colisão de faixa de numeração."
+        },
+        {
+          "id": "UC-DASH-006-005",
+          "action": "Técnico corrige no app de origem (retransmite lote, libera dispositivo, cria nova faixa de numeração — WF-TEAT-002)."
+        },
+        {
+          "id": "UC-DASH-006-006",
+          "action": "Sistema detecta a normalização e move o alerta para `VERIFICADO` → `ENCERRADO`."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-007",
+      "title": "Publicação de dados abertos / transparência ativa",
+      "goal": "Administração técnica / Gestor DETRAN quer garantir que o módulo de transparência do DASHBOARD mantém, de forma contínua, o checklist técnico exigido pela LAI — busca, exportação em formato aberto, API legível por máquina, changelog, acessibilidade — e que os indicadores de serviço espelham o padrão nacional (volume, tempo médio, satisfação).",
+      "actors": ["Administração técnica / Gestor DETRAN"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-007-001",
+          "action": "Sistema abre o ciclo de auditoria periódica do checklist (proposta: mensal — decisão do Owner pendente, ver `_intake/bpo-notes.md`)."
+        },
+        {
+          "id": "UC-DASH-007-002",
+          "action": "Administração técnica verifica cada item do checklist: mecanismo de busca funcional, exportação disponível em formato aberto, API respondendo, changelog atualizado desde a última publicação, conformidade de acessibilidade."
+        },
+        {
+          "id": "UC-DASH-007-003",
+          "action": "Administração técnica corrige itens ausentes/quebrados antes do fechamento do ciclo."
+        },
+        {
+          "id": "UC-DASH-007-004",
+          "action": "Sistema publica os indicadores de serviço por app (volume de solicitações, tempo médio de atendimento, grau de satisfação — REF-LEI-14129 art. 22), padronizados para permitir comparação entre entes."
+        },
+        {
+          "id": "UC-DASH-007-005",
+          "action": "Ciclo é comprovado e arquivado (WF-DASH-002)."
+        }
+      ]
+    },
+    {
+      "id": "UC-DASH-008",
+      "title": "Gestor de área acompanha o calendário de deveres periódicos",
+      "goal": "Gestor de área quer ver, com antecedência, todos os deveres periódicos que vencem no horizonte próximo (semana/mês), independentemente de quem seja o dono direto de cada um — visão de calendário, não apenas reativa a alertas individuais.",
+      "actors": ["Gestor de área"],
+      "mainFlow": [
+        {
+          "id": "UC-DASH-008-001",
+          "action": "Gestor abre a visão de calendário do DASHBOARD."
+        },
+        {
+          "id": "UC-DASH-008-002",
+          "action": "Sistema exibe todos os ciclos de dever periódico do catálogo (bloco B), organizados por data-limite (quando existente) ou por periodicidade declarada, com o estado atual de cada um (`JANELA_ABERTA`, `EM_APURACAO`, `PREPARADO`, `SUBMETIDO_PUBLICADO`, `COMPROVADO`, `ARQUIVADO`, `ATRASADO`, `NAO_CUMPRIDO`)."
+        },
+        {
+          "id": "UC-DASH-008-003",
+          "action": "Gestor identifica deveres próximos do vencimento sem avanço de estado e aciona o dono diretamente, antecipando o alerta automático de WF-DASH-001."
+        },
+        {
+          "id": "UC-DASH-008-004",
+          "action": "Gestor consulta o histórico de ciclos anteriores para identificar padrões de atraso recorrente por dever."
+        }
+      ]
+    }
+  ]
+}

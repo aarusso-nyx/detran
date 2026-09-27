@@ -30,6 +30,56 @@ const REFERENCE_FAMILIES = [
   },
 ];
 
+const JOURNEY_MAPPING = [
+  'JRN-PEC-001',
+  'JRN-PEC-002',
+  'JRN-PEC-003',
+  'JRN-PEC-004',
+  'JRN-PEC-005',
+  'JRN-PEC-006',
+  'JRN-PEC-007',
+  'JRN-BOAT-001',
+  'JRN-BOAT-002',
+  'JRN-BOAT-003',
+  'JRN-BOAT-004',
+  'JRN-BOAT-005',
+  'JRN-RAIT-001',
+  'JRN-RAIT-002',
+  'JRN-RAIT-003',
+  'JRN-RAIT-004',
+  'JRN-TEAT-001',
+  'JRN-TEAT-002',
+  'JRN-TEAT-003',
+  'JRN-TEAT-004',
+  'JRN-TEAT-005',
+  'JRN-TEAT-006',
+  'JRN-DASH-001',
+  'JRN-DASH-002',
+  'JRN-DASH-003',
+  'JRN-DASH-004',
+  'JRN-DASH-005',
+  'JRN-DASH-006',
+  'JRN-DASH-007',
+  'JRN-PORTAL-001',
+  'JRN-PORTAL-002',
+  'JRN-PORTAL-003',
+  'JRN-PORTAL-004',
+  'JRN-PORTAL-005',
+  'JRN-PORTAL-006',
+  'JRN-PORTAL-007',
+  'JRN-PORTAL-008',
+  'JRN-PORTAL-009',
+  'JRN-PORTAL-010',
+  'JRN-PORTAL-011',
+];
+
+const JOURNEY_IDS_BY_SOURCE = new Map(
+  JOURNEY_MAPPING.map((sourceId, index) => [
+    sourceId,
+    `JNY-${String(index + 1).padStart(3, '0')}`,
+  ]),
+);
+
 function walkFiles(directory) {
   if (!existsSync(directory)) {
     return [];
@@ -368,6 +418,389 @@ function verifyReadmes({ repoRoot, violations }) {
   }
 }
 
+function readJson(path, rule, violations) {
+  try {
+    return JSON.parse(readFileSync(path, 'utf8'));
+  } catch {
+    addViolation(
+      violations,
+      rule,
+      'ARTIFACT_INVALID',
+      path,
+      'Artifact must be valid JSON.',
+    );
+    return null;
+  }
+}
+
+function canonicalText(value) {
+  return typeof value === 'string'
+    ? value
+        .normalize('NFC')
+        .trim()
+        .replace(/\s+/g, ' ')
+        .toLocaleLowerCase('pt-BR')
+    : null;
+}
+
+function frontMatterValue(path, key) {
+  const content = readFileSync(path, 'utf8');
+  const frontMatter = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(content);
+  const match = frontMatter
+    ? new RegExp(`^${key}:\\s*(.+?)\\s*$`, 'm').exec(frontMatter[1])
+    : null;
+  return match?.[1] ?? null;
+}
+
+function glossarySourceTerms(repoRoot) {
+  const path = join(repoRoot, 'docs/framework/glossary/domain.md');
+  if (!existsSync(path)) {
+    return { path, terms: new Map() };
+  }
+
+  const terms = new Map();
+  for (const line of readFileSync(path, 'utf8').split(/\r?\n/)) {
+    const cells = line
+      .split('|')
+      .map((cell) => cell.trim())
+      .slice(1, -1);
+    if (
+      cells.length < 3 ||
+      !cells[0] ||
+      cells[0] === 'Termo' ||
+      /^-+$/.test(cells[0])
+    ) {
+      continue;
+    }
+    const term = cells[0];
+    const canonicalTerm = canonicalText(term);
+    if (canonicalTerm) {
+      terms.set(canonicalTerm, term);
+    }
+  }
+  return { path, terms };
+}
+
+function verifyGlossaryParity({ repoRoot, violations }) {
+  const source = glossarySourceTerms(repoRoot);
+  const glossaryDirectory = join(repoRoot, 'law/glossary');
+  const entries = new Map();
+
+  for (const path of walkFiles(glossaryDirectory).filter((file) =>
+    /^GE-[0-9]{3}\.json$/.test(basename(file)),
+  )) {
+    const entry = readJson(path, 'c', violations);
+    if (!entry) {
+      continue;
+    }
+    const displayPath = relativePath(repoRoot, path);
+    const term = canonicalText(entry.term);
+    if (!term) {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_TERM_INVALID',
+        displayPath,
+        'GE term is required.',
+      );
+      continue;
+    }
+    if (entries.has(term)) {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_TERM_DUPLICATE',
+        displayPath,
+        `Duplicate canonical term ${entry.term}.`,
+      );
+    }
+    entries.set(term, { entry, path: displayPath });
+    if (entry.status !== 'draft') {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_STATUS_INVALID',
+        displayPath,
+        'GE status must be draft.',
+      );
+    }
+    if (!Array.isArray(entry.provenance) || entry.provenance.length === 0) {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_PROVENANCE_MISSING',
+        displayPath,
+        'GE provenance is required.',
+      );
+    }
+    for (const invariantId of entry.related_invariants ?? []) {
+      if (
+        !existsSync(join(repoRoot, 'law/invariants', `${invariantId}.json`))
+      ) {
+        addViolation(
+          violations,
+          'c',
+          'GLOSSARY_INVARIANT_UNRESOLVED',
+          displayPath,
+          `Related invariant ${invariantId} does not resolve.`,
+        );
+      }
+    }
+  }
+
+  for (const [term, sourceTerm] of source.terms) {
+    if (!entries.has(term)) {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_SOURCE_MISSING',
+        relativePath(repoRoot, source.path),
+        `Source term ${sourceTerm} has no GE.`,
+      );
+    }
+  }
+  for (const [term, { entry, path }] of entries) {
+    if (!source.terms.has(term)) {
+      addViolation(
+        violations,
+        'c',
+        'GLOSSARY_ENTRY_ORPHAN',
+        path,
+        `GE term ${entry.term} does not occur in domain.md.`,
+      );
+    }
+  }
+}
+
+function sourceRecords(repoRoot, family, directory, violations) {
+  const root = join(repoRoot, 'docs/framework/product');
+  const records = new Map();
+  for (const path of walkFiles(root).filter((file) =>
+    basename(file).endsWith('.md'),
+  )) {
+    const pathParts = relative(root, path).split(sep);
+    const directoryIndex = pathParts.lastIndexOf(directory);
+    if (directoryIndex === -1) {
+      continue;
+    }
+    const id = frontMatterValue(path, 'id');
+    if (!new RegExp(`^${family}-[A-Z]+-[0-9]{3}$`).test(id ?? '')) {
+      continue;
+    }
+    if (records.has(id)) {
+      addViolation(
+        violations,
+        'd',
+        'SOURCE_ID_DUPLICATE',
+        relativePath(repoRoot, path),
+        `Source ${family} id ${id} is duplicated.`,
+      );
+      continue;
+    }
+    records.set(id, {
+      path: relativePath(repoRoot, path),
+      title: frontMatterValue(path, 'title'),
+      bundle: pathParts[directoryIndex - 1],
+    });
+  }
+  return records;
+}
+
+function verifyProductParity({ repoRoot, violations }) {
+  const journeys = sourceRecords(repoRoot, 'JRN', 'journeys', violations);
+  const journeyDirectory = join(repoRoot, 'product/journeys');
+  const journeySources = new Map();
+  for (const path of walkFiles(journeyDirectory).filter((file) =>
+    /^JNY-[0-9]{3}\.json$/.test(basename(file)),
+  )) {
+    const journey = readJson(path, 'd', violations);
+    if (!journey) {
+      continue;
+    }
+    const displayPath = relativePath(repoRoot, path);
+    const sourceId = Array.isArray(journey.provenance)
+      ? journey.provenance.find((id) => /^JRN-[A-Z]+-[0-9]{3}$/.test(id))
+      : null;
+    if (!sourceId || !journeys.has(sourceId)) {
+      addViolation(
+        violations,
+        'd',
+        'JOURNEY_ORPHAN',
+        displayPath,
+        `Journey provenance ${sourceId ?? '(missing)'} does not resolve.`,
+      );
+    } else {
+      journeySources.set(sourceId, displayPath);
+      const source = journeys.get(sourceId);
+      const expectedId = JOURNEY_IDS_BY_SOURCE.get(sourceId);
+      if (
+        (expectedId && journey.id !== expectedId) ||
+        (source.title &&
+          canonicalText(journey.title) !== canonicalText(source.title))
+      ) {
+        addViolation(
+          violations,
+          'd',
+          'JOURNEY_DIVERGENT',
+          displayPath,
+          `JNY must preserve the fixed mapping and title of ${sourceId}.`,
+        );
+      }
+    }
+    if (
+      journey.status !== 'draft' ||
+      !journey.persona?.role ||
+      !Array.isArray(journey.preconditions) ||
+      !Array.isArray(journey.postconditions) ||
+      !Array.isArray(journey.steps) ||
+      journey.steps.length === 0 ||
+      !Array.isArray(journey.acceptance_criteria) ||
+      journey.acceptance_criteria.length === 0
+    ) {
+      addViolation(
+        violations,
+        'd',
+        'JOURNEY_CONTENT_INCOMPLETE',
+        displayPath,
+        'JNY must have draft status, persona, conditions, steps, and acceptance criteria.',
+      );
+    }
+  }
+  for (const [id, source] of journeys) {
+    if (!journeySources.has(id)) {
+      addViolation(
+        violations,
+        'd',
+        'JOURNEY_SOURCE_MISSING',
+        source.path,
+        `Source journey ${id} has no JNY.`,
+      );
+    }
+  }
+  if (journeys.size !== 40) {
+    addViolation(
+      violations,
+      'd',
+      'JOURNEY_SOURCE_COUNT_DIVERGENT',
+      'docs/framework/product',
+      `Expected 40 JRN sources; found ${journeys.size}.`,
+    );
+  }
+  if (journeySources.size !== 40) {
+    addViolation(
+      violations,
+      'd',
+      'JOURNEY_OUTPUT_COUNT_DIVERGENT',
+      'product/journeys',
+      `Expected 40 JNY artifacts; found ${journeySources.size}.`,
+    );
+  }
+
+  const useCases = sourceRecords(repoRoot, 'UC', 'use-cases', violations);
+  const bundledCases = new Map();
+  const bundleDirectory = join(repoRoot, 'product/use-cases');
+  for (const path of walkFiles(bundleDirectory).filter((file) =>
+    file.endsWith('.json'),
+  )) {
+    const bundle = readJson(path, 'd', violations);
+    if (!bundle) {
+      continue;
+    }
+    const displayPath = relativePath(repoRoot, path);
+    const bundleRoles = new Set(
+      Array.isArray(bundle.roles) ? bundle.roles : [],
+    );
+    for (const useCase of bundle.cases ?? []) {
+      if (!useCase?.id) {
+        continue;
+      }
+      if (bundledCases.has(useCase.id)) {
+        addViolation(
+          violations,
+          'd',
+          'BUNDLE_ID_DUPLICATE',
+          displayPath,
+          `Bundle case id ${useCase.id} is duplicated.`,
+        );
+        continue;
+      }
+      bundledCases.set(useCase.id, {
+        useCase,
+        path: displayPath,
+        bundle: basename(path, '.json'),
+      });
+      if (
+        !Array.isArray(useCase.actors) ||
+        useCase.actors.some((actor) => !bundleRoles.has(actor))
+      ) {
+        addViolation(
+          violations,
+          'd',
+          'USE_CASE_ROLE_UNDECLARED',
+          displayPath,
+          `Bundle roles must contain every actor for ${useCase.id}.`,
+        );
+      }
+    }
+  }
+  for (const [id, source] of useCases) {
+    const bundled = bundledCases.get(id);
+    if (!bundled) {
+      addViolation(
+        violations,
+        'd',
+        'USE_CASE_SOURCE_MISSING',
+        source.path,
+        `Source use case ${id} has no bundle entry.`,
+      );
+      continue;
+    }
+    if (
+      bundled.bundle !== source.bundle ||
+      bundled.useCase.title !== source.title ||
+      !Array.isArray(bundled.useCase.actors) ||
+      bundled.useCase.actors.length === 0
+    ) {
+      addViolation(
+        violations,
+        'd',
+        'USE_CASE_DIVERGENT',
+        bundled.path,
+        `Bundle entry ${id} must preserve its source bundle, title, and actors.`,
+      );
+    }
+  }
+  for (const [id, bundled] of bundledCases) {
+    if (!useCases.has(id)) {
+      addViolation(
+        violations,
+        'd',
+        'USE_CASE_ENTRY_ORPHAN',
+        bundled.path,
+        `Bundle entry ${id} has no source use case.`,
+      );
+    }
+  }
+  if (useCases.size !== 110) {
+    addViolation(
+      violations,
+      'd',
+      'USE_CASE_SOURCE_COUNT_DIVERGENT',
+      'docs/framework/product',
+      `Expected 110 UC sources; found ${useCases.size}.`,
+    );
+  }
+  if (bundledCases.size !== 110) {
+    addViolation(
+      violations,
+      'd',
+      'USE_CASE_OUTPUT_COUNT_DIVERGENT',
+      'product/use-cases',
+      `Expected 110 bundled use cases; found ${bundledCases.size}.`,
+    );
+  }
+}
+
 export function verifyLawCorpus({
   repoRoot,
   packageSchemasDir,
@@ -376,6 +809,8 @@ export function verifyLawCorpus({
   const violations = [];
   verifySchemaRoster({ repoRoot, packageSchemasDir, violations });
   verifyProvenance({ repoRoot, odRegistryPath, violations });
+  verifyGlossaryParity({ repoRoot, violations });
+  verifyProductParity({ repoRoot, violations });
   verifyReadmes({ repoRoot, violations });
   return { violations };
 }

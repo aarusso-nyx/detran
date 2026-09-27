@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-023",
+  "title": "Operador de monitoramento abre o turno — triagem de alertas, não mural de números",
+  "persona": {
+    "role": "operador de monitoramento"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Login, sem gráfico antes da lista: A primeira coisa que Marcos vê não é um dashboard de BI — é uma fila ordenada por severidade combinada (legal × operacional × técnica, ver `ux-notes.md` §c). Cada linha é um alerta que cruzou um limiar definido em algum WF do ecossistema — nunca um número que Marcos precisaria interpretar sozinho."
+    },
+    {
+      "seq": 2,
+      "action": "RAIT: três processos entraram em `ALERTA_N3` esta noite: A escada de WF-RAIT-002 §4.1 marca 21 meses (87,5% do teto de 24 meses do art. 289-A) como o gatilho de escalonamento ao gestor. Marcos não abre o processo — ele confirma que a notificação automática chegou ao gestor RAIT e registra a confirmação; se não chegou, ele mesmo aciona."
+    },
+    {
+      "seq": 3,
+      "action": "PEC: um prazo do órgão está a 90% consumido. Um caso de junta médica está a 13 dos 15 dias úteis para designação (RN-PEC-112 item 2, marco 90% proposto por paridade com a escada RAIT). Marcos sabe, pela tela, que esse é um \"prazo do órgão sem sanção expressa\" — mas que o bloqueio de cadastro nacional (RN-PEC-106) segue ativo enquanto o candidato espera. A ausência de sanção não vira ausência de urgência na tela."
+    },
+    {
+      "seq": 4,
+      "action": "BOAT: taxa de `pending_complement` subiu acima da faixa normal numa unidade: Diferente dos dois itens acima, aqui não há teto legal (RN-BOAT-004) — é um sinal de qualidade, não de risco jurídico. A tela marca isso com uma severidade visual distinta (ver `ux-notes.md` §c), para que Marcos nunca trate os dois tipos de alerta como se fossem a mesma coisa."
+    },
+    {
+      "seq": 5,
+      "action": "Integração: fila `renach_outbox` com registros `ERROR` acumulando: Um sinal técnico (RN-PEC-008) que não é sobre nenhum caso individual — é sobre a saúde da integração em si. Marcos encaminha para a administração técnica (ver JRN-DASH-004), sem tentar diagnosticar a causa raiz, que não é seu papel."
+    },
+    {
+      "seq": 6,
+      "action": "O que NÃO aparece na primeira tela: Volume total de casos, produtividade por analista, gráficos de tendência de longo prazo — tudo isso existe, mas em telas de segundo nível (vigilância/contexto), nunca competindo por atenção com o que exige ação hoje. A hierarquia visual (`ux-notes.md` §b) é o que torna essa separação possível."
+    },
+    {
+      "seq": 7,
+      "action": "Fim da triagem — cada linha tem um dono ou uma ação de Marcos: Ele não fecha a lista até que todo item tenha, ou uma confirmação de que o gestor correto já foi notificado, ou uma ação própria registrada (escalar, encaminhar). Um alerta sem dono ao final do turno é, para o desenho do painel, uma falha do painel — nunca lida como \"responsabilidade do operador\"."
+    }
+  ],
+  "postconditions": [
+    "Fim da triagem — cada linha tem um dono ou uma ação de Marcos: Ele não fecha a lista até que todo item tenha, ou uma confirmação de que o gestor correto já foi notificado, ou uma ação própria registrada (escalar, encaminhar). Um alerta sem dono ao final do turno é, para o desenho do painel, uma falha do painel — nunca lida como \"responsabilidade do operador\"."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "100% dos alertas que cruzaram limiar no turno têm dono registrado até o fechamento; tempo médio entre alerta e confirmação de recebimento pelo gestor responsável; zero alerta tratado como \"decorativo\" (sem ação possível associada) — se um alerta nunca gera ação em nenhum turno, ele é candidato a remoção do desenho, não a ser ignorado por rotina."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-DASH-001",
+    "docs/framework/product/transversal/dashboard/journeys/JRN-DASH-001.md"
+  ]
+}

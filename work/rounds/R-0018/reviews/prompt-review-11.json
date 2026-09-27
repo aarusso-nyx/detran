@@ -1,0 +1,41 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0012, TASK-0013",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0012.md",
+      "line": 33,
+      "claim": "As três primeiras linhas não contêm a primeira frase completa do cabeçalho de `19-dashboard-lifecycle-vocabulary.sql`; ela termina após a linha 3.",
+      "fix": "Permitir ler o comentário inicial completo de cada DDL manuscrito."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0018/prompts/TASK-0012.md",
+      "line": 48,
+      "claim": "`apply.sh` não aplica os DDL apenas em ordem lexical: antecipa `19-rait-priority-pre.sql`, adia `20-rls-policies.sql`, reaplica `21-ops-provisioning.sql` e termina com os arquivos `enforce` e `verify`. A instrução não define como representar essas exceções numa lista com cada arquivo uma vez.",
+      "fix": "Fixar no prompt a sequência especial de `apply.sh`, exigir que o texto introdutório corrija a afirmação atual de que o DDL 20 é o último e indicar como registrar a segunda aplicação do DDL 21."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0018/prompts/TASK-0012.md",
+      "line": 57,
+      "claim": "`ls *.sql | wc -l` não conta os arquivos de `backend/database/ddl/` quando executado da raiz da worktree.",
+      "fix": "Usar `find backend/database/ddl -maxdepth 1 -name '*.sql' | wc -l` ou declarar explicitamente o diretório de execução."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0018/prompts/TASK-0012.md",
+      "line": 59,
+      "claim": "`grep -c 'pendente R-0017' tools/README.md` imprime 0 quando não há ocorrência, mas encerra com código 1; portanto não satisfaz um critério de comando OK.",
+      "fix": "Usar `! grep -q 'pendente R-0017' tools/README.md` como critério de ausência, com resultado esperado de saída zero."
+    }
+  ],
+  "notes": []
+}
