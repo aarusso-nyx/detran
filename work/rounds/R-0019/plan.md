@@ -347,9 +347,31 @@ PR CTG-0002 e repetir os gates aplicáveis.
 
 - Checkpoint pós-review CTG-0003: `pnpm check` completo exit 0, com `git status --porcelain` byte-idêntico antes/depois. Após o PASS, a célula de contagem em `waves.md` foi atualizada mecanicamente de cinco revisões para seis (dois ciclos por CTG); não mudou a decisão ou conteúdo técnico revisado. `pnpm docs:kb:check` PASS (773 artefatos, 446 tokens), `pnpm verify:state-index` PASS (39 ADRs, três redirects, 33 rodadas, 15 closures) e `pnpm format:check` PASS após Prettier na linha da tabela. Commit local dos índices `b1438bc5`; sem push para não adicionar CTG-0003 ao PR #137. A prova e o PR próprios de CTG-0003 aguardam a sequência de merge CTG-0002.
 
+- Pós-merge CTG-0002: o Owner aceitou o conteúdo no PR #137; sete checks CI PASS, merge `2804b0791dcef403c15fbb56caa5169e07bf49a8`. `devai audit observe` no HEAD exato emitiu EV-3daec8ee7e1bb267; cadeia válida, head `1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2`; commit local `ea7a6165`. CTG-0003 atualizou só os três índices de TASK-0011 com fatos posteriores ao PASS da revisão (aceite, checks e SHA de merge), sem alterar regras ou corpus revisados; commit `8003ca14`. Gates integrados: `pnpm docs:kb:check` PASS (773/446), `docs:kb:publish-check` PASS (201), `verify:state-index` PASS (39/3/33/15), `format:check` PASS, `evidence verify --scope chain` PASS e `pnpm check` completo exit 0 com status Git antes/depois byte-idêntico. Falta prova e PR CTG-0003.
+
 ## Retomada
 
-**Checkpoint CTG-0002/CTG-0003 — 2026-09-27.** CTG-0001 está mesclado
+**Estado corrente após CTG-0002 — 2026-09-27.** O Owner concedeu aceite
+explícito do conteúdo de `product/` e `law/glossary/` em resposta à
+solicitação específica; a emenda está em `AUTHORIZATION.md` e no PR #137.
+PR #136 avançou `main` durante o CI; a branch publicou merge normal
+`153ff231`, repetiu `pnpm check` completo com status Git idêntico antes/depois,
+os oito membros DEVAI, doctor e `spec_depth`, e emitiu pela fronteira DEVAI
+a prova generic sequência 4, EV-0b3c3bafff3df3f5, head
+`0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1`.
+Os sete checks CI do candidate `e36fce11` passaram; PR #137 mesclou como
+`2804b0791dcef403c15fbb56caa5169e07bf49a8`. `devai audit observe`
+no HEAD integrado exato emitiu EV-3daec8ee7e1bb267, head de cadeia
+`1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2`;
+observação e cadeia foram commitadas localmente em `ea7a6165`, ainda sem PR.
+CTG-0003 tem TASK-0011, delivery-review ciclo 2 PASS e gates finais PASS;
+seus três índices agora registram #137 integrado. Próximo passo: prova
+generic própria, PR separado, CI e merge; depois observar o SHA do PR
+e fechar R-0019. PR #138 de R-0018 ainda pode avançar `main`; nesse caso,
+integrar por merge normal, aceitar a cadeia de `main` sem edição manual e
+reemitir a prova.
+
+**Checkpoint histórico CTG-0002/CTG-0003 — 2026-09-27.** CTG-0001 está mesclado
 no PR #132 (`968f07296a49f27f7bfccc8f453b36c44ded0373`). CTG-0002
 (TASK-0006…0010) está em proposta no PR #137, com delivery-review ciclo 2
 PASS, prova DEVAI generic sequência 3 ancorada e gates locais PASS.
@@ -370,8 +392,8 @@ Orçamento: 1.642.823 tokens de entrada e 292.004 de saída estimados,
 limite dispensado pelo Owner. Nenhum worker em curso.
 
 **Fotografias históricas abaixo:** os estados e próximos passos antigos
-foram registrados quando cada checkpoint foi produzido; o parágrafo acima
-é a posição corrente.
+foram registrados quando cada checkpoint foi produzido; o primeiro parágrafo
+desta seção é a posição corrente.
 
 **Estado corrente — CTG-0002:** CTG-0001 está integrado e observado no HEAD
 exato. TASK-0006…0010 concluídas; `pnpm law:test` 37/37,
