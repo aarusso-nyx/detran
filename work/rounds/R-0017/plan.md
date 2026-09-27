@@ -474,6 +474,15 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Triagem
 
+- `sensor-error` (checkpoint b, 2026-09-27): a primeira preparacao
+  arquivou `dist` ignorados de `@detran/ui` e `@detran/boat-mobile` ao
+  limpar a worktree; `stack:start` nao recompila dependencias frontend.
+  Ambos foram reconstruidos sem alterar fontes e a worktree permaneceu
+  limpa. Na medicao seguinte, uma unica chamada `backend.healthz` durante
+  a persona TEAT teve `backend_unreachable`; `readyz` e proxy logo depois
+  passaram. A repeticao integral do checkpoint passou 42/42 no smoke,
+  parou a stack e obteve exit 1 no smoke negativo. Saida e JSON em
+  `reports/checkpoint-b*`; nenhuma guarda foi relaxada.
 - `reference-gap` (bootstrap): `devai round plan --scaffold --round R-0017`
   retornou `ROUND_ALREADY_EXISTS` (exit 2), pois o plano autorizado ja existe
   em `origin/main`. A rodada foi mantida; `tasks/` e os demais artefatos sao
@@ -580,6 +589,12 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **Checkpoint b concluido (2026-09-27):** TASK-0007 validada ao vivo,
+  `stack:db-reset`/`start`/`health`/`smoke`/`stop` exit 0, smoke negativo
+  exit 1; 42/42 linhas positivas, denuncia Portal sintetica local presente,
+  CH 503 esperados. Delivery-review CTG-0002 ciclo 2 = PASS.
+  Proximo gate: publicar HEAD limpo e executar RC local com positivo
+  `legacy-upgrade`, seguido de evidencia DEVAI e PR/CI/merge CTG-0002.
 - **Checkpoint CTG-0002 live (2026-09-27):** TASK-0004/0005/0006
   concluidas; TASK-0007 em curso, retry 1 entregue e corrigido pelo maestro
   em `tools/detran-stack.sh`/`tools/stack/smoke.mjs`. `pnpm test:stack`

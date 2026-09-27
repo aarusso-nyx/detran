@@ -1,0 +1,341 @@
+{
+  "complete": true,
+  "pec": {
+    "state": "not_built_r0031"
+  },
+  "rows": [
+    {
+      "target": "fixture.portal.database_guard",
+      "result": "passed",
+      "reason": "db_name_rejected",
+      "status": 1,
+      "command": "DB_NAME=not_detran_local_stack tools/detran-stack.sh fixture-portal",
+      "message": "detran-stack: stack database is restricted to DB_NAME=detran_local_stack"
+    },
+    {
+      "target": "fixture.portal",
+      "result": "passed",
+      "reason": "applied",
+      "status": 0
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "frontend.portal.root",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:4200/"
+    },
+    {
+      "target": "frontend.portal.proxy",
+      "persona": "AUDITOR",
+      "fixture": "00000000-0000-7000-8000-0000c2050001",
+      "route": "/v1/portal/complaints/records",
+      "policy": "portal:complaint:read",
+      "expectedId": "00000000-0000-7000-8000-0000c2050001",
+      "url": "http://127.0.0.1:4200/v1/portal/complaints/records",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "frontend.rait.root",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:4201/"
+    },
+    {
+      "target": "frontend.rait.proxy",
+      "persona": "rait-coordinator",
+      "fixture": "RAIT-FRESH-2026-000001",
+      "route": "/v1/inf/rait/cases",
+      "policy": "inf:rait-case:read",
+      "expectedId": "RAIT-FRESH-2026-000001",
+      "url": "http://127.0.0.1:4201/v1/inf/rait/cases",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "frontend.dashboard.root",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:4202/"
+    },
+    {
+      "target": "frontend.dashboard.proxy",
+      "persona": "dash-operator",
+      "fixture": "00000000-0000-7000-8000-000081000102",
+      "route": "/v1/dashboard/alerts?layer=N1&app=portal",
+      "policy": "dashboard:alert:read",
+      "expectedId": "00000000-0000-7000-8000-000081000102",
+      "url": "http://127.0.0.1:4202/v1/dashboard/alerts?layer=N1&app=portal",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "frontend.teat.root",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:4203/"
+    },
+    {
+      "target": "frontend.teat.proxy",
+      "persona": "field-agent",
+      "fixture": "00000000-0000-7000-8000-0000e2600001",
+      "route": "/v1/ops/field/operations",
+      "policy": "ops:field-operation:read",
+      "expectedId": "00000000-0000-7000-8000-0000e2600001",
+      "url": "http://127.0.0.1:4203/v1/ops/field/operations",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200
+    },
+    {
+      "target": "fixture.database_guard",
+      "result": "passed",
+      "reason": "db_name_rejected",
+      "status": 1,
+      "command": "DB_NAME=not_detran_local_stack tools/detran-stack.sh fixture-ch",
+      "message": "detran-stack: stack database is restricted to DB_NAME=detran_local_stack"
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "ch.pades",
+      "persona": "MEDICO",
+      "fixture": "00000000-0000-7000-8000-0000c2040006,00000000-0000-7000-8000-0000c2040002",
+      "route": "/v1/ch/reports",
+      "policy": "ch:report:create",
+      "precondition": "inferred_from_adapter_message: Clinical PAdES signing service is not configured; trust readiness is unavailable",
+      "url": "http://127.0.0.1:4200/v1/ch/reports",
+      "result": "passed",
+      "reason": "adapter_unconfigured",
+      "status": 503,
+      "adapterMessage": "Clinical PAdES signing service is not configured; trust readiness is unavailable"
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "ch.biometrics",
+      "persona": "RECEPCAO",
+      "fixture": "00000000-0000-7000-8000-0000c2040005,00000000-0000-7000-8000-0000c2040004,00000000-0000-7000-8000-0000c2040003",
+      "route": "/v1/ch/biometrics/checks",
+      "policy": "ch:biometric:capture",
+      "precondition": "inferred_from_adapter_message: Biometric verification provider and processor contract are not configured",
+      "url": "http://127.0.0.1:4200/v1/ch/biometrics/checks",
+      "result": "passed",
+      "reason": "adapter_unconfigured",
+      "status": 503,
+      "adapterMessage": "Biometric verification provider and processor contract are not configured"
+    },
+    {
+      "target": "backend.healthz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/healthz"
+    },
+    {
+      "target": "backend.readyz",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3001/readyz"
+    },
+    {
+      "target": "senatran.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3000/health"
+    },
+    {
+      "target": "sefaz.health",
+      "result": "passed",
+      "reason": "ok",
+      "status": 200,
+      "url": "http://127.0.0.1:3999/health"
+    },
+    {
+      "target": "ch.council",
+      "persona": "ADMIN_CLINICA",
+      "fixture": "00000000-0000-7000-8000-0000c2040001",
+      "route": "/v1/ch/clinical-network/professionals",
+      "policy": "ch:professional:create",
+      "precondition": "inferred_from_adapter_message: Professional council verification service is not configured",
+      "url": "http://127.0.0.1:4200/v1/ch/clinical-network/professionals",
+      "result": "passed",
+      "reason": "adapter_unconfigured",
+      "status": 503,
+      "adapterMessage": "Professional council verification service is not configured"
+    }
+  ]
+}
