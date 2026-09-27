@@ -365,6 +365,17 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **CTG-0001 pos-PR #131 (2026-09-26):** PR #133 abriu com
+  delivery-review ciclo 3 `PASS` e primeira rodada de CI inteiramente verde.
+  `origin/main` avancou pelo fechamento de R-0018; o branch publicado integrou
+  esse estado por merge `90078a30`, aceitando `record/proofs/chain.json` de
+  `main` conforme §3. `pnpm install --frozen-lockfile`, `pnpm check` (incluindo
+  `test:stack` 42/42 e `test:state-index` 98/98) e `pnpm docs:check` passaram
+  apos o merge. Proximo: regravar a evidencia CTG-0001 na cadeia atual, push
+  normal, aguardar o novo CI, mesclar PR #133 e observar o SHA integrado.
+  CTG-0002 continua dependente de OD-R17-001/002, sem resposta do Owner;
+  CTG-0003 depende tambem de OD-R17-003. A dispensa de limite de tokens segue
+  vigente e nao substitui essas decisoes de dominio.
 - **Checkpoint CTG-0001 (2026-09-26):** TASK-0001…0003 concluidas;
   caracterizacao 13/13 verde na adocao, revisao 42/42 verde apos A3.
   Delivery-review ciclos 1/2 = `REVIEW`, ciclo 3 = `PASS` sem achados
