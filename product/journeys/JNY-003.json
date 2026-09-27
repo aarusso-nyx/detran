@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-003",
+  "title": "Jornada da falha biométrica — exceção aprovada por supervisor no check-in",
+  "persona": {
+    "role": "candidata"
+  },
+  "preconditions": [
+    "Beatriz chega à clínica para seu exame, mas seu dedo está com um curativo e o leitor biométrico não atinge a qualidade mínima de captura."
+  ],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Captura biométrica falha: `B{Qualidade mínima atingida?}` responde \"Não\" pec:docs/framework/pec/flows/biometria-excecao.md."
+    },
+    {
+      "seq": 2,
+      "action": "Registro de falha e justificativa: O Técnico Biométrico registra a falha e a justificativa (ex.: lesão no dedo) — ação exclusiva desse papel na matriz RBAC."
+    },
+    {
+      "seq": 3,
+      "action": "Solicitação de exceção ao Supervisor: O caso é encaminhado para aprovação; a documentação exige \"dupla checagem documental\" nesta etapa — checagem redobrada da evidência anexada, não necessariamente dois aprovadores humanos distintos da decisão em si (a matriz RBAC lista só o Supervisor como aprovador desta exceção especificamente — ver nota abaixo)."
+    },
+    {
+      "seq": 4,
+      "action": "Decisão do Supervisor: - Reprovada → Beatriz é reagendada ou a captura é refeita (`Reagendar/recapturar`). - Aprovada → liberação temporária controlada: Beatriz segue para o atendimento sem que a biometria tenha sido validada normalmente, mas sob prazo e escopo limitados (`pec.biometric_exceptions.expires_at`)."
+    },
+    {
+      "seq": 5,
+      "action": "Trilha de auditoria reforçada. Toda a sequência (falha, justificativa, aprovação, liberação) gera eventos de auditoria vinculados a ID biométrico, IP/estação e hash — ver RN-PEC-003. Base legal (com ressalva de vigência). REF-SENATRAN-PORTARIA-968-2022 art. 4º exige validação de presença por biometria em todos os exames do processo de habilitação; o texto de 2022 desse mesmo artigo (§§3º-4º) descreve exatamente o desenho técnico desta exceção — ausência temporária de impressão digital registrada por campo específico do dedo, com fallback obrigatório para reconhecimento facial. A redação dada pela Portaria SENATRAN 495/2025 substituiu esses parágrafos por \"(NR)\" no texto oficial — a evidência técnica continua forte, mas não deve ser citada como texto vigente certo até que o normativo de substituição seja localizado. A camada de aprovação humana (Supervisor, prazo/escopo limitados) é uma extensão de conformidade do próprio PEC — a norma federal não exige nem proíbe esse aprovador."
+    },
+    {
+      "seq": 6,
+      "action": "Continuidade do atendimento. O encounter de Beatriz segue o ciclo normal de WF-PEC-001 a partir daí — a exceção não bloqueia a abertura do encounter, apenas documenta o desvio no processo de captura. Nota — não confundir com o controle de estagiário: uma dupla validação de pessoas (dois logins/biometrias distintos) existe no PEC, mas para um cenário diferente: quando o atendimento é conduzido por um psicólogo estagiário, o sistema exige a biometria do estagiário e a do supervisor no fechamento do laudo (RF-013, pec:docs/framework/pec/archive-authoritative-sources.md) — ver RN-PEC-004. A exceção biométrica de captura (esta jornada) é, pelos documentos capturados, aprovada por um único papel (Supervisor)."
+    }
+  ],
+  "postconditions": [
+    "Continuidade do atendimento: O encounter de Beatriz segue o ciclo normal de WF-PEC-001 a partir daí — a exceção não bloqueia a abertura do encounter, apenas documenta o desvio no processo de captura."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Exceção deve ter prazo e escopo limitados (`expires_at`) — não é uma liberação permanente."
+    },
+    {
+      "id": "AC-002",
+      "statement": "Auditoria obrigatória e reforçada para toda a sequência — sem número de tolerância/limite de exceções por período encontrado nos documentos (fonte pendente)."
+    },
+    {
+      "id": "AC-003",
+      "statement": "Zero candidato com ausência permanente de dedo tratado, na experiência de tela, como um caso reincidente de \"exceção\" — ver `_intake/ux-notes.md` §Acessibilidade."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PEC-003",
+    "docs/framework/product/domains/ch/pec/journeys/JRN-PEC-003.md"
+  ]
+}

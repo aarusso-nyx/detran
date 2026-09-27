@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-038",
+  "title": "Cidadã registra manifestação na ouvidoria e acompanha a resposta no prazo legal",
+  "persona": {
+    "role": "cidadã"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Registrar nunca pode ser recusado, e a tela reflete isso sem letra miúda: Qualquer canal (eletrônico, correspondência, verbal — REF-LEI-13460-2017 art.10 §4º) aceita a manifestação de Cleuza; o formulário do PORTAL não exige motivo justificado além do necessário para identificá-la (art.10 §§1º-2º — vedadas exigências sobre os motivos da manifestação). Em nenhuma hipótese o recebimento pode ser recusado (art.11) — o formulário nunca \"trava\" por falta de um campo que a lei não exige."
+    },
+    {
+      "seq": 2,
+      "action": "Comprovante de recebimento imediato, com protocolo: Assim que Cleuza envia, ela recebe confirmação com protocolo e a data em que o relógio legal começou a contar — não um \"recebemos sua mensagem\" genérico sem número de acompanhamento (art.12 §ú, II)."
+    },
+    {
+      "seq": 3,
+      "action": "O relógio aparece explícito, com a mesma disciplina de \"prazo do cidadão × prazo do órgão\" já fixada para o resto do PORTAL: A tela mostra: \"O DETRAN-AM tem até 30 dias para te responder, e pode estender por mais 30 dias com justificativa — prazo máximo: 60 dias\" (art.16, caput). Cleuza não vê o prazo interno de 20 dias que um agente público específico tem para responder à ouvidoria (art.16 §ú) — isso é prazo do órgão internamente, não prazo dela; mostrar os dois juntos sem distinção confundiria Cleuza sobre quando ela pode legitimamente cobrar."
+    },
+    {
+      "seq": 4,
+      "action": "Contador visível, nunca escondido atrás de um número de protocolo frio: Uma barra de progresso ou data-limite clara (\"resposta até DD/MM\") acompanha o status da manifestação de Cleuza — mesmo padrão de transparência de prazo já adotado para processos de recurso (JRN-PORTAL-003)."
+    },
+    {
+      "seq": 5,
+      "action": "Extensão do prazo é comunicada, não silenciosa: Se o DETRAN-AM usa a prorrogação por mais 30 dias, Cleuza recebe notificação explicando por quê (\"prazo estendido — motivo: justificativa\"), nunca uma tela que simplesmente empurra a data sem explicação."
+    },
+    {
+      "seq": 6,
+      "action": "Decisão final chega com ciência clara, não um encerramento silencioso: Ao final, Cleuza recebe a decisão administrativa (art.12 §ú, IV-V) em linguagem direta — o que foi apurado, o que muda (se muda) — não apenas um status \"encerrado\" sem conteúdo."
+    },
+    {
+      "seq": 7,
+      "action": "Transparência sobre o todo, não só o caso de Cleuza: Um link discreto para o relatório anual de ouvidoria, publicado integralmente na internet (art.15 §ú, II — obrigação que o DASHBOARD monitora como indicador público), mostra a Cleuza que sua manifestação vira estatística pública, não desaparece num arquivo — reforça que o canal é real, não performático."
+    }
+  ],
+  "postconditions": [],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "% de manifestações respondidas dentro do prazo de 30 dias (sem prorrogação); % de prorrogações comunicadas com justificativa explícita versus silenciosas; zero manifestação recusada no recebimento; tempo entre confirmação de recebimento e visibilidade do protocolo para Cleuza (meta: imediato)."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PORTAL-009",
+    "docs/framework/product/transversal/portal/journeys/JRN-PORTAL-009.md"
+  ]
+}

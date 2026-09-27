@@ -1,0 +1,534 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Proprietário, condutor identificado, embarcador ou transportador responsável",
+    "Responsável pela infração",
+    "Recorrente",
+    "Autoridade que impôs a penalidade",
+    "Proprietário do veículo",
+    "Possuidor equiparado",
+    "Cidadão",
+    "Requerente",
+    "Proprietário/condutor",
+    "Cidadão/condutor",
+    "Condutor habilitado",
+    "Pessoa envolvida em um sinistro",
+    "Candidato/condutor",
+    "Usuário de qualquer serviço do DETRAN-AM",
+    "Cidadão que concluiu um serviço",
+    "Titular de dados",
+    "Cidadão com conta gov.br"
+  ],
+  "cases": [
+    {
+      "id": "UC-PORTAL-001",
+      "title": "Cidadão interpõe defesa da autuação (1º circuito)",
+      "goal": "Proprietário, condutor identificado, embarcador ou transportador responsável (REF-CONTRAN-900 art.2º) contesta a autuação (AIT/NA) antes da aplicação da penalidade, buscando o cancelamento do auto.",
+      "actors": [
+        "Proprietário, condutor identificado, embarcador ou transportador responsável"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-001-001",
+          "action": "Cidadão abre a autuação e escolhe \"Defender-se\"."
+        },
+        {
+          "id": "UC-PORTAL-001-002",
+          "action": "Sistema exibe requerimento pré-preenchido com dados já conhecidos (órgão, placa, nº do AIT, dados do requerente logado) — campos mínimos do REF-CONTRAN-900 art.3º."
+        },
+        {
+          "id": "UC-PORTAL-001-003",
+          "action": "Cidadão descreve fatos e fundamentos; anexa documentos e evidências de apoio (fotos, laudo próprio etc.)."
+        },
+        {
+          "id": "UC-PORTAL-001-004",
+          "action": "Sistema apresenta checklist de anexos que exclui qualquer documento emitido pelo próprio órgão autuador (NA/AIT/NP) — RN-RAIT-003."
+        },
+        {
+          "id": "UC-PORTAL-001-005",
+          "action": "Cidadão revisa e assina eletronicamente o requerimento (obrigatório — REF-CONTRAN-900 art.4º III trata falta de assinatura como hipótese de não conhecimento)."
+        },
+        {
+          "id": "UC-PORTAL-001-006",
+          "action": "Sistema protocola eletronicamente (REF-CONTRAN-900 art.6º §4º), grava data/hora de protocolo, emite número de protocolo, e transiciona o caso no WF-RAIT-001 para triagem de admissibilidade."
+        },
+        {
+          "id": "UC-PORTAL-001-007",
+          "action": "Cidadão recebe confirmação com o protocolo e é direcionado à tela de acompanhamento (UC-PORTAL-005)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-002",
+      "title": "Cidadão interpõe recurso à JARI (2º circuito, 1ª instância recursal)",
+      "goal": "Responsável pela infração, notificado da penalidade (NP), recorre à JARI contra a multa aplicada, buscando o cancelamento da penalidade, com efeito suspensivo automático sobre restrições enquanto o recurso tramita.",
+      "actors": ["Responsável pela infração"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-002-001",
+          "action": "Cidadão abre a NP e escolhe \"Recorrer\"."
+        },
+        {
+          "id": "UC-PORTAL-002-002",
+          "action": "Sistema exibe requerimento pré-preenchido (mesmos campos mínimos do REF-CONTRAN-900 art.3º), já vinculado ao AIT/NP de origem — um recurso por AIT."
+        },
+        {
+          "id": "UC-PORTAL-002-003",
+          "action": "Cidadão descreve fundamentos do recurso e anexa provas adicionais, se houver; checklist de anexos novamente exclui documentos que o próprio órgão já possui (RN-RAIT-003)."
+        },
+        {
+          "id": "UC-PORTAL-002-004",
+          "action": "Cidadão assina e protocola eletronicamente."
+        },
+        {
+          "id": "UC-PORTAL-002-005",
+          "action": "Sistema exibe confirmação com destaque explícito: \"Enquanto seu recurso tramita, nenhuma restrição de licenciamento ou transferência incide sobre o veículo\" (REF-CONTRAN-918 art.13; REF-CTB-extracts-raw art.285 _caput_ — efeito suspensivo automático)."
+        },
+        {
+          "id": "UC-PORTAL-002-006",
+          "action": "Caso transiciona no WF-RAIT-001 para o 2º circuito (`PAUTADO` → `JULGADO_SESSAO`); cidadão é direcionado ao acompanhamento (UC-PORTAL-005)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-003",
+      "title": "Cidadão interpõe recurso ao CETRAN (2ª instância, última instância administrativa)",
+      "goal": "Recorrente cuja penalidade foi mantida pela JARI (ou autoridade que impôs a penalidade, quando a JARI deu provimento — legitimidade recursal bilateral) recorre ao CETRAN, última instância administrativa.",
+      "actors": ["Recorrente", "Autoridade que impôs a penalidade"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-003-001",
+          "action": "Na tela de decisão da JARI (UC-PORTAL-008), cidadão vê o caminho \"Recorrer ao CETRAN\" já destacado quando o resultado é negativo."
+        },
+        {
+          "id": "UC-PORTAL-003-002",
+          "action": "Sistema exibe requerimento pré-preenchido; anexa de ofício o parecer e a conclusão da JARI ao dossiê — o cidadão não precisa reunir e reenviar o que o órgão já produziu (RN-RAIT-003; atrito hoje presente na carta de serviço atual — REF-DETRANAM-SERVICOS)."
+        },
+        {
+          "id": "UC-PORTAL-003-003",
+          "action": "Cidadão acrescenta argumentos adicionais, se desejar; assina e protocola eletronicamente."
+        },
+        {
+          "id": "UC-PORTAL-003-004",
+          "action": "Sistema confirma protocolo e explica, em linguagem direta, que esta é a última instância administrativa — não caberá novo recurso administrativo após a decisão do CETRAN (REF-CTB-extracts-raw art.290)."
+        },
+        {
+          "id": "UC-PORTAL-003-005",
+          "action": "Caso transiciona no WF-RAIT-001 para 2ª instância; cidadão acompanha normalmente (UC-PORTAL-005)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-004",
+      "title": "Proprietário indica o condutor infrator",
+      "goal": "Proprietário do veículo (PF/PJ) ou possuidor equiparado (arrendamento/comodato/aluguel ≥180 dias — REF-CONTRAN-918 art.8º) indica o condutor que efetivamente praticou a infração, para que a responsabilidade e a pontuação recaiam sobre o condutor correto.",
+      "actors": ["Proprietário do veículo", "Possuidor equiparado"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-004-001",
+          "action": "Proprietário abre a autuação e escolhe \"Indicar condutor\"."
+        },
+        {
+          "id": "UC-PORTAL-004-002",
+          "action": "Sistema exibe formulário pré-preenchido com os campos que já conhece (órgão, placa, nº do AIT, dados do proprietário) e pede apenas os dados do condutor indicado — conteúdo mínimo dos incisos I-X do REF-CONTRAN-918 art.5º."
+        },
+        {
+          "id": "UC-PORTAL-004-003",
+          "action": "Sistema oferece dois caminhos de assinatura do condutor indicado: (a) condutor com conta gov.br assina remotamente no PORTAL; (b) upload de documento físico assinado por ambas as partes."
+        },
+        {
+          "id": "UC-PORTAL-004-004",
+          "action": "Antes de confirmar, sistema exibe aviso direto sobre a consequência de indicação irregular: gera novos AITs por infração distinta e fica registrada no RENACH para averiguação de reincidência (REF-CONTRAN-918 art.5º §§2º,6º)."
+        },
+        {
+          "id": "UC-PORTAL-004-005",
+          "action": "Proprietário confirma; sistema protocola a indicação e registra a data de protocolo como termo inicial da nova contagem de prazo (equivalência digital reconhecida no modelo PR — REF-CETRAN-PROCESSO-INTERNO)."
+        },
+        {
+          "id": "UC-PORTAL-004-006",
+          "action": "Condutor indicado (se cadastrado no PORTAL) recebe sua própria notificação com os três caminhos de resposta (defender-se, indicar outro condutor se aplicável, pagar) — ver JRN-PORTAL-001."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-005",
+      "title": "Cidadão acompanha o andamento de um processo em curso",
+      "goal": "Cidadão com defesa ou recurso em tramitação quer saber, a qualquer momento, em que fase está o processo, o que (se algo) depende dele, e quando esperar uma decisão.",
+      "actors": ["Cidadão"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-005-001",
+          "action": "Cidadão acessa \"Meus processos\" no PORTAL."
+        },
+        {
+          "id": "UC-PORTAL-005-002",
+          "action": "Sistema lista cada processo com status em linguagem cidadã (mapa de estados — ver ux-notes do PORTAL) e uma linha do tempo simplificada (protocolado → em análise → decidido)."
+        },
+        {
+          "id": "UC-PORTAL-005-003",
+          "action": "Cidadão abre um processo específico e vê: data de protocolo, fase atual, documentos enviados, e — quando aplicável — de quem é a próxima ação (dele ou do órgão)."
+        },
+        {
+          "id": "UC-PORTAL-005-004",
+          "action": "Se houver diligência aberta, sistema destaca o prazo próprio para resposta, distinto do prazo geral de julgamento do órgão."
+        },
+        {
+          "id": "UC-PORTAL-005-005",
+          "action": "Cidadão pode baixar/consultar qualquer documento já enviado ou recebido no processo a qualquer momento (paridade com o modelo de completude MG — REF-BENCH-ESTADOS)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-006",
+      "title": "Cidadão desiste de defesa ou recurso até o julgamento",
+      "goal": "Requerente com defesa ou recurso em tramitação decide desistir — tipicamente para pagar a multa com desconto (ex.: aderir ao SNE e reconhecer a infração — UC-PORTAL-007) antes de uma decisão que poderia ser desfavorável, ou porque as circunstâncias mudaram.",
+      "actors": ["Requerente"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-006-001",
+          "action": "Cidadão abre o processo em \"Meus processos\" (UC-PORTAL-005) e escolhe \"Desistir\"."
+        },
+        {
+          "id": "UC-PORTAL-006-002",
+          "action": "Sistema explica em linguagem direta a consequência: a desistência é definitiva para este requerimento e a penalidade (ou o AIT, conforme a fase) segue seu curso normal sem o benefício do pedido retirado."
+        },
+        {
+          "id": "UC-PORTAL-006-003",
+          "action": "Cidadão confirma por escrito (ação equivalente a assinatura eletrônica — requisito de forma escrita do REF-CONTRAN-900 art.11)."
+        },
+        {
+          "id": "UC-PORTAL-006-004",
+          "action": "Sistema registra a desistência com data/hora, encerra o requerimento no WF-RAIT-001 (`ENCERRADO_DESISTENCIA`), e atualiza o status visível ao cidadão."
+        },
+        {
+          "id": "UC-PORTAL-006-005",
+          "action": "Se a desistência foi motivada por pagamento com desconto, sistema direciona para a tela de pagamento correspondente, com o valor e prazo aplicáveis já calculados."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-007",
+      "title": "Cidadão adere ao Sistema de Notificação Eletrônica (SNE)",
+      "goal": "Proprietário/condutor adere ao SNE para receber notificações eletronicamente e, caso opte por reconhecer futuras infrações sem apresentar defesa nem recurso, pagar com o maior desconto disponível (60% do valor — REF-CONTRAN-931 art.9º §1º I; REF-CTB-extracts-raw art.284 §1º).",
+      "actors": ["Proprietário/condutor"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-007-001",
+          "action": "Cidadão acessa \"Adesão ao SNE\" (disponível tanto em fluxo dedicado quanto como oferta contextual na tela de uma autuação — REF-CONTRAN-931 art.7º permite adesão junto ao órgão executivo estadual ou \"outros mecanismos\", base legal para oferecer isso direto no PORTAL)."
+        },
+        {
+          "id": "UC-PORTAL-007-002",
+          "action": "Sistema explica em linguagem direta o que muda: notificações passam a ser só digitais (o SNE é o único meio tecnológico hábil de notificação — art.2º § único); o prazo de ciência conta 30 dias após a disponibilização + envio, não da leitura efetiva (art.4º §6º) — cidadão precisa entender que \"não abri o app\" não pausa o prazo."
+        },
+        {
+          "id": "UC-PORTAL-007-003",
+          "action": "Sistema explica o efeito prático nos valores: reconhecer futura infração sem defesa/recurso dá 60% de desconto; manter a defesa/recurso facultativos mantém o desconto padrão de 80% até o vencimento (art.9º §1º I-II) — apresentado como comparação lado a lado, não como texto corrido."
+        },
+        {
+          "id": "UC-PORTAL-007-004",
+          "action": "Cidadão confirma a adesão; sistema registra e atualiza o cadastro (mantê-lo atualizado é dever do aderente — art.4º §4º)."
+        },
+        {
+          "id": "UC-PORTAL-007-005",
+          "action": "Confirmação exibida com opção de cancelamento a qualquer momento (art.8º I)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-008",
+      "title": "Cidadão recebe e compreende a decisão do processo",
+      "goal": "Requerente é informado do resultado do julgamento (defesa, JARI, ou CETRAN) de forma que entenda, sem apoio humano, o que aconteceu e qual é o próximo passo possível.",
+      "actors": ["Requerente"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-008-001",
+          "action": "RAIT assina a decisão e dispara o evento de resultado (REF-CONTRAN-918 art.17)."
+        },
+        {
+          "id": "UC-PORTAL-008-002",
+          "action": "PORTAL notifica o cidadão no mesmo dia (push/e-mail; SNE se aderido)."
+        },
+        {
+          "id": "UC-PORTAL-008-003",
+          "action": "Cidadão abre a tela de decisão: resultado (provido/acolhida ou negado/indeferida) em destaque, seguido de um resumo em linguagem simples do fundamento — nunca apenas o texto jurídico bruto do parecer como única explicação."
+        },
+        {
+          "id": "UC-PORTAL-008-004",
+          "action": "Sistema mostra o próximo passo aplicável, já como ação clicável: se provido e não há mais instância, \"Nada a fazer — multa cancelada\" (com restituição, se já paga — REF-CTB-extracts-raw art.286 §2º); se negado e ainda cabe recurso, \"Recorrer ao CETRAN\" já pré-vinculado ao caso (UC-PORTAL-003); se negado em última instância, valor final e formas de pagamento."
+        },
+        {
+          "id": "UC-PORTAL-008-005",
+          "action": "Documento formal da decisão (parecer/ata, conforme a instância) fica disponível para download a qualquer momento a partir desta tela."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-009",
+      "title": "Cidadão responde a uma diligência com documento ou prova adicional",
+      "goal": "Requerente cujo processo está em diligência (o órgão pediu documento/prova complementar) anexa o que foi solicitado dentro do prazo fixado, para que o processo volte a tramitar com a instrução completa.",
+      "actors": ["Requerente"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-009-001",
+          "action": "Cidadão recebe notificação específica de diligência (distinta de qualquer outra notificação do processo), com o que exatamente está sendo pedido e até quando."
+        },
+        {
+          "id": "UC-PORTAL-009-002",
+          "action": "Cidadão abre o processo em \"Meus processos\" (UC-PORTAL-005) e vê a solicitação destacada com contador de prazo visível."
+        },
+        {
+          "id": "UC-PORTAL-009-003",
+          "action": "Cidadão anexa o(s) documento(s)/prova(s) solicitados."
+        },
+        {
+          "id": "UC-PORTAL-009-004",
+          "action": "Sistema confirma o recebimento e devolve o processo à fila de julgamento no RAIT (RN-RAIT-004) — cidadão vê o status voltar de \"aguardando você\" para \"em análise\"."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-010",
+      "title": "Cidadão consulta multas, pontuação e situação da CNH",
+      "goal": "Cidadão/condutor consulta, em um só lugar, as multas em aberto, a pontuação acumulada na CNH e a situação geral de habilitação, sem precisar de nível de assinatura elevado nem de ir a um serviço por vez (WF-PORTAL-001 catálogo).",
+      "actors": ["Cidadão/condutor"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-010-001",
+          "action": "Cidadão acessa \"Minhas multas e pontuação\" a partir da tela inicial do PORTAL."
+        },
+        {
+          "id": "UC-PORTAL-010-002",
+          "action": "Sistema verifica elegibilidade (vínculo CPF↔veículo/CNH) e lista, sem exigir seleção prévia de categoria: multas em aberto (com prazo de defesa/recurso/pagamento vivo, já calculado), multas pagas/quitadas, pontuação atual na CNH (com data de referência do período de contagem)."
+        },
+        {
+          "id": "UC-PORTAL-010-003",
+          "action": "Cada item da lista linka diretamente para a ação seguinte relevante (defender, indicar condutor, pagar, ou \"sem ação disponível\" quando já definitivo) — nunca uma lista passiva sem próximo passo, mesmo princípio de JRN-PORTAL-001 \"detalhe da autuação\"."
+        },
+        {
+          "id": "UC-PORTAL-010-004",
+          "action": "Cidadão pode filtrar por veículo (se PJ com frota) ou por status."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-011",
+      "title": "Cidadão consulta e baixa a CNH digital (CNH-e)",
+      "goal": "Condutor habilitado consulta e baixa a versão digital da própria CNH, com a mesma fé pública e equivalência a documento de identidade da via física (CTB art.159, I e III, redação da Lei 15.428/2026).",
+      "actors": ["Condutor habilitado"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-011-001",
+          "action": "Condutor acessa \"Minha CNH digital\"."
+        },
+        {
+          "id": "UC-PORTAL-011-002",
+          "action": "Sistema exibe os dados da CNH vigente (categoria, validade, restrições, se houver) e o documento digital pronto para exibição/download, com QR Code ou mecanismo equivalente de validação por terceiros (mesmo padrão de fiscalização do CRLV-e — Res. 809/2020 art.7º, por analogia)."
+        },
+        {
+          "id": "UC-PORTAL-011-003",
+          "action": "Sistema destaca a validade e a data de vencimento já calculada — nunca \"10 anos desde a emissão\" cru, sempre a data final."
+        },
+        {
+          "id": "UC-PORTAL-011-004",
+          "action": "Condutor pode baixar/exibir offline (uso em fiscalização sem conexão) e compartilhar/imprimir se necessário."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-012",
+      "title": "Proprietário consulta e emite o CRLV-e do veículo",
+      "goal": "Proprietário do veículo consulta a situação de débitos e emite o Certificado de Registro e Licenciamento de Veículo em meio digital (CRLV-e), documento suficiente para os fins do CTB art.133 e que dispensa a via impressa (Res. CONTRAN 809/2020 arts.2º, 6º).",
+      "actors": ["Proprietário do veículo"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-012-001",
+          "action": "Proprietário acessa \"Meu veículo\" e seleciona \"CRLV-e\"."
+        },
+        {
+          "id": "UC-PORTAL-012-002",
+          "action": "Sistema exibe, de forma explícita e ANTES de qualquer tentativa de emissão, o estado de quitação: tributos, encargos, multas de trânsito e ambientais vinculados ao veículo, e o Seguro DPVAT (Res. 809/2020 art.4º) — tratado como estado do processo, não como erro genérico se houver pendência (REF-LEI-14129-2021 handoff UX já registrado no dossiê)."
+        },
+        {
+          "id": "UC-PORTAL-012-003",
+          "action": "Se tudo quitado e sem restrição administrativa/judicial: sistema emite o CRLV-e digital, validável por QR Code (art.7º), disponível para exibição em app oficial ou impressão em papel A4 comum (art.6º §1º), embora a via impressa não seja obrigatória (art.6º §2º)."
+        },
+        {
+          "id": "UC-PORTAL-012-004",
+          "action": "Se houver pendência: tela mostra exatamente o que falta pagar, com atalho direto para o módulo de pagamento (UC-PORTAL-015) — nunca apenas \"CRLV-e indisponível\"."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-013",
+      "title": "Cidadão acessa os próprios dados de um registro de sinistro (BAT)",
+      "goal": "Pessoa envolvida em um sinistro (condutor, proprietário do veículo, vítima ou seu representante legal) acessa o Boletim de Atendimento de Trânsito (BAT) correspondente para fins próprios (seguro, processo judicial, prova de atendimento), sem depender de solicitação presencial ao DETRAN-AM.",
+      "actors": ["Pessoa envolvida em um sinistro"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-013-001",
+          "action": "Cidadão acessa \"Meus registros de sinistro\" ou localiza o BAT a partir de uma notificação recebida (ex. veículo envolvido em ocorrência registrada por terceiro)."
+        },
+        {
+          "id": "UC-PORTAL-013-002",
+          "action": "Sistema verifica o vínculo do solicitante com o registro (WF-BOAT-001 `FECHADO`/`INTEGRADO`) e libera apenas os campos pertinentes à sua condição no sinistro — dado de saúde de vítima recebe controle de acesso reforçado (RN-BOAT-003, princípio de minimização — Portaria SENATRAN 139/2025 art.18)."
+        },
+        {
+          "id": "UC-PORTAL-013-003",
+          "action": "Cidadão visualiza/baixa o BAT (dados do sinistro, veículos e pessoas envolvidas conforme autorização) e, se aplicável, o croqui anexado."
+        },
+        {
+          "id": "UC-PORTAL-013-004",
+          "action": "Sistema registra o acesso na trilha de auditoria (dado sensível envolvido)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-014",
+      "title": "Candidato/condutor consulta o resultado de exame de aptidão física, mental ou psicológica",
+      "goal": "Candidato/condutor consulta o resultado do exame médico de aptidão física e mental e/ou da avaliação psicológica realizados no PEC, entende o que o resultado significa em linguagem simples, e localiza o próximo passo cabível (nada a fazer, renovar, ou requerer junta de revisão).",
+      "actors": ["Candidato/condutor"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-014-001",
+          "action": "Candidato acessa \"Meus exames\" (dentro do módulo de habilitação/CNH do PORTAL)."
+        },
+        {
+          "id": "UC-PORTAL-014-002",
+          "action": "Sistema exibe o resultado em linguagem simples primeiro (apto / apto com restrições / inapto temporário / inapto — nomenclatura corrigida por RN-PEC-105/RN-PEC-106, nunca o rótulo técnico interno `medical_result='CONDICIONADO'` exposto cru), com a validade já calculada (10/5/3 anos conforme faixa etária — CTB art.147 §§2º/4º) quando aplicável."
+        },
+        {
+          "id": "UC-PORTAL-014-003",
+          "action": "Se resultado psicológico: sistema respeita o prazo de disponibilização de até 2 dias úteis da conclusão da avaliação (Res. 927/2022 art.9º §3º) — enquanto não disponível, mostra \"em processamento\", nunca um vazio sem explicação."
+        },
+        {
+          "id": "UC-PORTAL-014-004",
+          "action": "Se o resultado mantém inaptidão (temporária ou permanente): tela mostra, como próximo passo único e acionável, a opção de requerer junta médica/psicológica de revisão, com o prazo de 30 dias do conhecimento já contando visivelmente (WF-PEC-002 `REQUERIMENTO_APRESENTADO`)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-015",
+      "title": "Cidadão paga uma multa (à vista com desconto, ou parcelado)",
+      "goal": "Cidadão paga uma multa de trânsito, vendo sempre lado a lado os dois regimes de desconto disponíveis (80% padrão / 60% via SNE — REF-CONTRAN-918 arts.20-21, REF-CONTRAN-931 art.9º §1º) e, quando aplicável, a opção de parcelamento por cartão.",
+      "actors": ["Cidadão"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-015-001",
+          "action": "Cidadão acessa a autuação e escolhe \"Pagar\"."
+        },
+        {
+          "id": "UC-PORTAL-015-002",
+          "action": "Sistema mostra, sempre lado a lado e nunca um escondido atrás de clique extra: valor com 80% de desconto (pagamento até o vencimento, sem SNE) e valor com 60% de desconto (se aderido ao SNE e reconhecendo a infração sem defesa/recurso — art.21) — mesmo princípio já fixado em `_intake/ux-notes.md` §c."
+        },
+        {
+          "id": "UC-PORTAL-015-003",
+          "action": "Cidadão escolhe a forma de pagamento: à vista (PIX/débito/boleto — art.24 §3º comporta tecnicamente, mesmo sem nomear PIX expressamente) ou parcelado no cartão de crédito — o art.27 da Res. 918 trata de operação de cartão por conta e risco da instituição financeira, e não fixa número de parcelas: o limite é comercial do emissor, nunca normativo (RN-PORTAL-126). A afirmação de \"até 12x\" do dossiê original é falsa (DT-120)."
+        },
+        {
+          "id": "UC-PORTAL-015-004",
+          "action": "Sistema confirma o pagamento e atualiza o status da autuação; se o pagamento libera pré-condição de outro serviço (ex. CRLV-e em UC-PORTAL-012), reconsulta automaticamente."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-016",
+      "title": "Cidadão registra manifestação na ouvidoria (reclamação, denúncia, sugestão, elogio ou solicitação)",
+      "goal": "Usuário de qualquer serviço do DETRAN-AM registra manifestação junto à ouvidoria, recebe comprovante imediato e acompanha o andamento até a decisão final, com os prazos legais de resposta visíveis (Lei 13.460/2017 arts.10-17).",
+      "actors": ["Usuário de qualquer serviço do DETRAN-AM"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-016-001",
+          "action": "Cidadão acessa \"Ouvidoria\" e escolhe o tipo de manifestação: reclamação, denúncia, sugestão, elogio, ou solicitação (taxonomia operacional — ver WF-PORTAL-004 nota sobre art.2º V)."
+        },
+        {
+          "id": "UC-PORTAL-016-002",
+          "action": "Sistema NÃO exige motivo determinante como condição de envio (art.10 §2º) — campo de descrição é livre, sem obrigar categorização fechada de causa."
+        },
+        {
+          "id": "UC-PORTAL-016-003",
+          "action": "Sistema emite comprovante de recebimento imediato, com número de protocolo (WF-PORTAL-004 `MANIFESTACAO_REGISTRADA→COMPROVANTE_EMITIDO`)."
+        },
+        {
+          "id": "UC-PORTAL-016-004",
+          "action": "Cidadão acompanha o andamento pela mesma \"Meus processos\" já usada para defesa/recurso — status em linguagem cidadã, com o prazo de resposta (30 dias, prorrogável 1x) sempre visível e já calculado."
+        },
+        {
+          "id": "UC-PORTAL-016-005",
+          "action": "Ao receber a decisão final, cidadão tem ciência confirmada no sistema (art.12 §ú, V) e é convidado a avaliar o atendimento recebido (UC-PORTAL-017)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-017",
+      "title": "Cidadão avalia o serviço recebido",
+      "goal": "Cidadão que concluiu um serviço (processo de recurso, atendimento de ouvidoria, emissão de documento) avalia a experiência, alimentando a pesquisa de satisfação anual e o painel de monitoramento de desempenho por serviço (Lei 13.460/2017 art.23; Lei 14.129/2021 art.22).",
+      "actors": ["Cidadão que concluiu um serviço"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-017-001",
+          "action": "Ao concluir um serviço, sistema convida o cidadão a avaliar — no mesmo momento/tela do resultado, nunca como notificação separada e genérica dias depois."
+        },
+        {
+          "id": "UC-PORTAL-017-002",
+          "action": "Cidadão responde: satisfação com o resultado, qualidade do atendimento, se o prazo prometido foi cumprido, e comentário livre opcional (dimensões do art.23, I-III)."
+        },
+        {
+          "id": "UC-PORTAL-017-003",
+          "action": "Sistema confirma o recebimento e explica, em uma frase, que a resposta alimenta um indicador público (transparência do art.23 §2º) — sem exigir que o cidadão leia o texto legal para entender isso."
+        },
+        {
+          "id": "UC-PORTAL-017-004",
+          "action": "Avaliação é agregada ao indicador do serviço específico, visível no painel do DASHBOARD (art.22)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-018",
+      "title": "Cidadão solicita acesso aos próprios dados tratados pelo DETRAN-AM (LGPD)",
+      "goal": "Titular de dados exerce o direito de confirmação de existência de tratamento e de acesso aos próprios dados pessoais mantidos pelo DETRAN-AM em qualquer sistema (TEAT, RAIT, BOAT, PEC), nos termos da LGPD, sem precisar identificar previamente em qual sistema o dado está.",
+      "actors": ["Titular de dados"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-018-001",
+          "action": "Cidadão acessa \"Meus dados\" / \"Solicitar acesso aos meus dados\" (funcionalidade exigida pela Lei 14.129/2021 art.21, X — \"funcionalidade para solicitar acesso a informações acerca do tratamento de dados pessoais\")."
+        },
+        {
+          "id": "UC-PORTAL-018-002",
+          "action": "Sistema oferece, de imediato e sem prazo de espera, a confirmação simplificada de existência de tratamento (LGPD art.19, I) — ex.: \"sim, temos dados seus nos seguintes sistemas: lista\"."
+        },
+        {
+          "id": "UC-PORTAL-018-003",
+          "action": "Se o cidadão quiser a declaração completa (origem dos dados, critérios utilizados, finalidade do tratamento), o sistema protocola o pedido com o prazo aplicável ao Poder Público, que não é o de 15 dias do art. 19, II da LGPD (RN-PORTAL-120) — o prazo exibido é o correto para o regime público, já contando e visível."
+        },
+        {
+          "id": "UC-PORTAL-018-004",
+          "action": "Sistema entrega a declaração completa dentro do prazo, por meio eletrônico seguro (LGPD art.19 §2º, I)."
+        }
+      ]
+    },
+    {
+      "id": "UC-PORTAL-019",
+      "title": "Cidadão eleva o nível de assinatura/conta ao tentar um ato que exige nível superior",
+      "goal": "Cidadão com conta gov.br de nível insuficiente para o ato desejado (ex. defesa prévia, exige assinatura avançada) completa a elevação de nível dentro do próprio fluxo do PORTAL, sem precisar descobrir por conta própria que existe um processo de elevação nem sair para outro canal sem retorno guiado.",
+      "actors": ["Cidadão com conta gov.br"],
+      "mainFlow": [
+        {
+          "id": "UC-PORTAL-019-001",
+          "action": "Cidadão tenta iniciar um ato (ex. \"Apresentar defesa\") com conta em nível insuficiente."
+        },
+        {
+          "id": "UC-PORTAL-019-002",
+          "action": "Sistema NUNCA mostra um erro seco — explica exatamente qual nível falta e por que este ato específico exige esse nível (citando em linguagem simples: \"atos que geram efeito jurídico sobre terceiros exigem uma verificação de identidade mais forte\"), com botão único de ação \"Elevar meu nível agora\"."
+        },
+        {
+          "id": "UC-PORTAL-019-003",
+          "action": "Cidadão escolhe um dos caminhos de validação oferecidos pela Plataforma gov.br: validação biográfica/documental (presencial ou remota, conferida por agente), validação biométrica contra base governamental, ou certificado ICP-Brasil (Decreto 10.543/2020 art.5º, I-III)."
+        },
+        {
+          "id": "UC-PORTAL-019-004",
+          "action": "Concluída a validação, sistema retoma automaticamente o ato original exatamente de onde o cidadão parou — nunca reinicia o formulário do zero."
+        }
+      ]
+    }
+  ]
+}

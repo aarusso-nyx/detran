@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-018",
+  "title": "Supervisor configura operação, faixa de numeração e catálogo normativo",
+  "persona": {
+    "role": "field-supervisor"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Planejamento da operação: Agency-admin ou field-supervisor cria `Operation` (`operation_type`, `planned_start_at`/`planned_end_at`, `objectives`, `status = planned`)."
+    },
+    {
+      "seq": 2,
+      "action": "Composição de equipe: Agentes são vinculados via `Team`/`TeamAgent`; viatura de patrulha (`PatrolVehicle`) é designada."
+    },
+    {
+      "seq": 3,
+      "action": "Homologação verificada: Supervisor confirma que os dispositivos que participarão da operação estão com `OperationalDevice.status = authorized` e versão de aplicativo vinculada a homologação vigente (RN-TEAT-003) — inclui o parque de dispositivos do BPTRAN quando a equipe é mista (convênio, REF-DETRANAM-TALAO-BODYCAM §3). Esta tela não mostra o status da homologação SENATRAN do software em si (renovação quadrienal, REF-SENATRAN-997 art. 5º) — isso é responsabilidade de agency-admin/technical-admin, fora do checklist do supervisor de campo."
+    },
+    {
+      "seq": 4,
+      "action": "Catálogo normativo: Agency-admin/technical-admin publica (ou confirma vigente) o catálogo normativo aplicável e o pacote mobile correspondente (WF-TEAT-003); pacote fica disponível via `sync-metadata` para os dispositivos da equipe. Se a operação exige uma versão de aplicativo recém-alterada em funcionalidade, agency-admin/technical-admin deveria confirmar antes que a nova homologação SENATRAN, quando exigida, já foi obtida — alteração de funcionalidade pode levar até 60 dias para ser rehomologada (REF-SENATRAN-997 Anexo VII, a) — risco de planejamento a não deixar para a véspera de uma operação grande."
+    },
+    {
+      "seq": 5,
+      "action": "Reserva de numeração: Supervisor reserva faixas de numeração para os dispositivos da equipe, cobrindo o volume esperado de autuações da operação (WF-TEAT-002) — a norma confirma que essa numeração sequencial pré-estabelecida é mandato legal, não só controle técnico interno (REF-SENATRAN-997 art. 3º, I)."
+    },
+    {
+      "seq": 6,
+      "action": "Abertura da operação: Operação muda de `planned` para execução; agentes selecionam a operação ao abrir turno (`operation-select` → `shift-context`)."
+    },
+    {
+      "seq": 7,
+      "action": "Acompanhamento em tempo real: Supervisor acompanha turnos ativos e mapa de agentes/equipes na retaguarda web (`active-shifts`, `operations-map`) — inclui, se a operação for uma blitz de alcoolemia ou envolver remoção de veículos, os pontos de atenção específicos de JRN-TEAT-003 e JRN-TEAT-004 (ex.: fila de espera por reboque, disponibilidade de etilômetro homologado por ponto de bloqueio)."
+    },
+    {
+      "seq": 8,
+      "action": "Encerramento: Ao final, supervisor revisa resumo da operação: AITs lavrados, medidas aplicadas, sinistros registrados, itens ainda em sincronização ou conflito."
+    }
+  ],
+  "postconditions": [
+    "Encerramento: Ao final, supervisor revisa resumo da operação: AITs lavrados, medidas aplicadas, sinistros registrados, itens ainda em sincronização ou conflito."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "100% dos dispositivos da operação homologados antes do início (incluindo dispositivos BPTRAN em equipes mistas); faixa de numeração suficiente para o volume da operação sem esgotamento em campo; catálogo normativo vigente instalado em todos os dispositivos antes da abertura de turno; zero operações iniciadas com homologação SENATRAN do software pendente de renovação."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-TEAT-002",
+    "docs/framework/product/domains/inf/teat/journeys/JRN-TEAT-002.md"
+  ]
+}
