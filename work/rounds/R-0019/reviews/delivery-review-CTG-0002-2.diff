@@ -1,0 +1,1262 @@
+diff --git a/law/README.md b/law/README.md
+index db2aa048..f5afd978 100644
+--- a/law/README.md
++++ b/law/README.md
+@@ -11,8 +11,8 @@ references.
+   catalog.
+ - [`trace.json`](./trace.json) maps invariant records to their authority
+   documents and tests.
+-- [`glossary/`](./glossary/README.md) is the glossary index; its corpus is
+-  pending CTG-0002.
++- [`glossary/`](./glossary/README.md) indexes 44 draft `GE` entries under joint
++  Owner and Architect authority; explicit Owner acceptance is still pending.
+ - [`schemas/`](./schemas/README.md) contains the DEVAI 1.5.6 schema roster and
+   its digest manifest. Domain schemas remain indexed in
+   [`docs/framework/schemas/`](../docs/framework/schemas/README.md).
+@@ -21,7 +21,7 @@ references.
+   implementation sources.
+ - [`adr/`](./adr/README.md) contains architecture decision records.
+ 
+-**Gate:** `pnpm verify:law-corpus` enforces law corpus rules (a), (b), and (e).
+-DEVAI members `invariants`, `invariant-strategies`, `trace`, `glob-guards`, and
+-`schemas` validate their respective catalog, trace, schema roster, and adopter
+-policy inputs.
++**Gate:** `pnpm verify:law-corpus` enforces law corpus rules (a)–(e).
++DEVAI members `invariants`, `invariant-strategies`, `trace`, `glossary`,
++`journeys`, `glob-guards`, and `schemas` validate their respective catalog,
++trace, glossary, journey, schema roster, and adopter policy inputs.
+diff --git a/law/glossary/GE-010.json b/law/glossary/GE-010.json
+index ee7f77ba..3ca5751a 100644
+--- a/law/glossary/GE-010.json
++++ b/law/glossary/GE-010.json
+@@ -2,7 +2,7 @@
+   "schemaVersion": "1.0.0",
+   "id": "GE-010",
+   "term": "RENAINF",
+-  "definition": "Registro Nacional de Infrações; a fonte não declara sua expansão normativa (source_pending).",
++  "definition": "Registro Nacional de Infrações; fonte normativa pendente (source_pending).",
+   "authority": "joint",
+   "category": "regulatory",
+   "related_invariants": [],
+diff --git a/law/glossary/README.md b/law/glossary/README.md
+index 80586f9f..750f3096 100644
+--- a/law/glossary/README.md
++++ b/law/glossary/README.md
+@@ -1,10 +1,11 @@
+ # Glossário DEVAI
+ 
++**Authority:** Owner and Architect, jointly (Constitution Article 6).
++
+ Este diretório contém a proposta transcrita do glossário humano em
+ `docs/framework/glossary/domain.md`, conforme o catálogo fechado de
+ `work/rounds/R-0019/contracts/CTG-0002.md`. As 44 entradas `GE-001` a
+-`GE-044` permanecem em `draft`, sob autoridade conjunta `Owner` + `Architect` (`joint`); o aceite do Owner
+-ainda está pendente.
++`GE-044` permanecem em `draft`, sob autoridade conjunta; o aceite explícito do Owner ainda está pendente.
+ 
+ Cada entrada aponta para a linha correspondente da fonte em `provenance`.
+ Vínculos com invariants são incluídos apenas quando o contrato os declara.
+diff --git a/product/README.md b/product/README.md
+index ea066c30..301cbff1 100644
+--- a/product/README.md
++++ b/product/README.md
+@@ -1,4 +1,6 @@
+-# Product (propostas Architect para aceite do Owner)
++# Produto — proposta draft do Owner, transcrita pelo Architect
++
++**Authority:** Owner (Constitution Article 6).
+ 
+ Todos os artefatos deste diretório são transcrições `draft` do corpus publicado e aguardam aceite explícito do Owner.
+ 
+diff --git a/product/journeys/JNY-001.json b/product/journeys/JNY-001.json
+index 7a4c07bb..09b7bdad 100644
+--- a/product/journeys/JNY-001.json
++++ b/product/journeys/JNY-001.json
+@@ -9,11 +9,11 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Agendamento: A recepção da clínica credenciada cria o agendamento de Ana (`POST /appointments`) para a data escolhida — ver WF-PEC-003. Nota de conformidade (não resolvida)."
++      "action": "Agendamento. A recepção da clínica credenciada cria o agendamento de Ana (`POST /appointments`) para a data escolhida — ver WF-PEC-003. Nota de conformidade (não resolvida). REF-CFM-1636-2002 art. 3º exige que \"todos os exames ... devem ser distribuídos imparcialmente, através de divisão equitativa obrigatória, aleatória e impessoal ... pelo órgão executivo do trânsito - DETRAN, e nunca por escolha do periciado\". A tela de agendamento do PEC, como documentada, não modela esse mecanismo — o fluxo de `POST /appointments` parece pressupor que a clínica (ou, indiretamente, Ana) escolhe onde agendar. Enquanto essa validação jurídica não é resolvida (handoff LEGAL prioritário do dossiê de pesquisa), nenhuma tela deveria reforçar visualmente a ideia de \"escolha livre de clínica\" — ver anti-padrão em `_intake/ux-notes.md`."
+     },
+     {
+       "seq": 2,
+-      "action": "Check-in com biometria: No dia, Ana comparece à clínica; a recepção faz o check-in biométrico (validação de presença por comparação com os dados coletados na abertura do formulário RENACH — REF-SENATRAN-PORTARIA-968-2022 art. 4º). A coleta em si só pode ocorrer presencialmente (art. 2º §2º, redação 2025)."
++      "action": "Check-in com biometria. No dia, Ana comparece à clínica; a recepção faz o check-in biométrico (validação de presença por comparação com os dados coletados na abertura do formulário RENACH — REF-SENATRAN-PORTARIA-968-2022 art. 4º). A coleta em si só pode ocorrer presencialmente (art. 2º §2º, redação 2025). Um `MATCH` segue o fluxo normal; um `NO_MATCH` (HTTP 412) aciona o fallback de dupla validação com justificativa — ver JRN-PEC-003 (a tecnologia LFD e o fallback por reconhecimento facial citados ali vêm do texto de 2022 do art. 4º, hoje com ressalva de vigência — os parágrafos técnicos foram substituídos por \"(NR)\" na redação de 2025 e o texto de substituição não foi localizado)."
+     },
+     {
+       "seq": 3,
+@@ -21,11 +21,11 @@
+     },
+     {
+       "seq": 4,
+-      "action": "Duas trilhas em paralelo: médico realiza exame físico e emite laudo médico assinado digitalmente; psicólogo realiza avaliação e emite laudo psicológico assinado digitalmente."
++      "action": "Duas trilhas em paralelo: — Exame médico: anamnese + exame físico pelo Médico; ao final, laudo médico assinado digitalmente (ICP-Brasil + carimbo de tempo). — Exame psicológico: instrumentos e entrevista pelo Psicólogo; laudo psicológico assinado digitalmente. REF-CONTRAN-927-2022 art. 9º §3º fixa dois dias úteis como prazo de disponibilização do resultado psicológico — o único prazo numérico de \"produção de resultado\" encontrado em todo o corpus PEC. Se, mesmo apto, Ana tiver algum comprometimento psicológico temporariamente sob controle, o resultado ainda é \"apto\", mas com prazo de validade reduzido (art. 9º §2º) — informação que a tela de resultado precisa comunicar, não só o rótulo. Cada assinatura passa por `POST /encounters/:id/sign` ou `POST /reports` — ver WF-PEC-001 para a nuance de \"primeiro laudo assinado força o status para `SIGNED`\"."
+     },
+     {
+       "seq": 5,
+-      "action": "Pré-condição toxicológica (se categoria C/D/E): Antes de liberar o encerramento, o orquestrador confere se o exame toxicológico é válido; se não for, o processo fica bloqueado até resultado válido — ver RN-PEC-007. A base legal correta é REF-CONTRAN-923-1009-toxicologico art. 10 (não a 1.009/2024 isolada, que é mera emenda); a validade do exame é de 90 dias contados da coleta (art. 10 §1º) — é validade do _resultado_, não um prazo para _obter_ o exame."
++      "action": "Pré-condição toxicológica (se categoria C/D/E). Antes de liberar o encerramento, o orquestrador confere se o exame toxicológico é válido; se não for, o processo fica bloqueado até resultado válido — ver RN-PEC-007. A base legal correta é REF-CONTRAN-923-1009-toxicologico art. 10 (não a 1.009/2024 isolada, que é mera emenda); a validade do exame é de 90 dias contados da coleta (art. 10 §1º) — é validade do _resultado_, não um prazo para _obter_ o exame. Ana, categoria B, não passa por este gate."
+     },
+     {
+       "seq": 6,
+@@ -33,7 +33,7 @@
+     },
+     {
+       "seq": 7,
+-      "action": "Publicação no RENACH: O resultado (apto / apto com restrições / inapto temporário / inapto, com códigos de restrição quando aplicável — nomenclatura de REF-CONTRAN-927-2022 art. 8º, médico, e art. 9º, psicológico) é publicado no RENACH; o encerramento só é permitido depois que essa transmissão foi confirmada (`ACKED`) — ver WF-PEC-001 e RN-PEC-008. Nota de nomenclatura."
++      "action": "Publicação no RENACH. O resultado (apto / apto com restrições / inapto temporário / inapto, com códigos de restrição quando aplicável — nomenclatura de REF-CONTRAN-927-2022 art. 8º, médico, e art. 9º, psicológico) é publicado no RENACH; o encerramento só é permitido depois que essa transmissão foi confirmada (`ACKED`) — ver WF-PEC-001 e RN-PEC-008. Nota de nomenclatura. O schema do PEC guarda esse resultado internamente como `medical_result` (com valor `'CONDICIONADO'` para o caso de restrição) — nenhuma tela deveria expor esse rótulo interno a Ana; o texto voltado ao candidato usa sempre \"apto com restrições\", o termo legal. A Portaria DETRAN-AM 005/2021 art. 34 §9º usa ainda um vocabulário próprio de cinco rótulos (incluindo \"PENDENTE\") com prazos de 30/60/90/365 dias — divergência entre nomenclatura federal e estadual ainda sem resolução de qual prevalece nos dados que o RENACH espera; ver mapa de vocabulário em `_intake/ux-notes.md`."
+     },
+     {
+       "seq": 8,
+diff --git a/product/journeys/JNY-002.json b/product/journeys/JNY-002.json
+index a03a0507..26411345 100644
+--- a/product/journeys/JNY-002.json
++++ b/product/journeys/JNY-002.json
+@@ -11,7 +11,7 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Carlos discorda do resultado — o relógio começa a correr para ele, não contra ele: A partir do momento em que toma ciência do resultado, Carlos tem 30 dias para requerer a instauração de Junta Médica (art. 12) — o mesmo prazo vale para Junta Psicológica, se o resultado divergente for o psicológico. Nos documentos capturados do sistema, quem de fato chama `POST /juntas` é um Auditor, Gestor ou Gestor DETRAN — não Carlos diretamente (ver nota na Persona acima)."
++      "action": "Carlos discorda do resultado — o relógio começa a correr para ele, não contra ele. A partir do momento em que toma ciência do resultado, Carlos tem 30 dias para requerer a instauração de Junta Médica (art. 12) — o mesmo prazo vale para Junta Psicológica, se o resultado divergente for o psicológico. Nos documentos capturados do sistema, quem de fato chama `POST /juntas` é um Auditor, Gestor ou Gestor DETRAN — não Carlos diretamente (ver nota na Persona acima). A tela/processo que hoje monta esse dossiê precisa, no mínimo, tratar o prazo de 30 dias de Carlos como o gatilho de negócio — não o momento em que alguém internamente \"percebe\" o caso."
+     },
+     {
+       "seq": 2,
+@@ -31,11 +31,11 @@
+     },
+     {
+       "seq": 6,
+-      "action": "Se a inaptidão for mantida, Carlos tem 30 dias para recorrer ao CETRAN — e o órgão tem 20 dias úteis para remeter os documentos: Art. 13 (recurso, 30 dias contados do conhecimento da decisão da junta) e art. 14 §2º (remessa dos documentos ao CETRAN, 20 dias úteis contados do recebimento do recurso). No sistema, esse recurso hoje não é um novo caso: quem decide pode marcar `escalateToCetran=true` na mesma chamada de decisão — uma re-atribuição de assinatura para `'CETRAN'` sobre a mesma linha de decisão (ver WF-PEC-002)."
++      "action": "Se a inaptidão for mantida, Carlos tem 30 dias para recorrer ao CETRAN — e o órgão tem 20 dias úteis para remeter os documentos. Art. 13 (recurso, 30 dias contados do conhecimento da decisão da junta) e art. 14 §2º (remessa dos documentos ao CETRAN, 20 dias úteis contados do recebimento do recurso). No sistema, esse recurso hoje não é um novo caso: quem decide pode marcar `escalateToCetran=true` na mesma chamada de decisão — uma re-atribuição de assinatura para `'CETRAN'` sobre a mesma linha de decisão (ver WF-PEC-002). Não há, nos documentos capturados, um segundo ato humano formal de \"abrir recurso\" com os próprios 30/20 dias como prazos de sistema — é uma divergência relevante entre o desenho normativo (um segundo processo, com prazo próprio) e a implementação (um flag numa decisão já tomada)."
+     },
+     {
+       "seq": 7,
+-      "action": "A instância que de fato julga o recurso não é o CETRAN colegiado em si — é uma \"Junta Especial de Saúde\" que o CETRAN designa (art. 15) — achado novo, não modelado em nada do sistema: A norma descreve um terceiro colegiado, distinto tanto da Junta de 1ª instância quanto do CETRAN administrativo: \"no mínimo, três médicos, sendo dois especialistas em Medicina de Tráfego, ou, no mínimo, três psicólogos, sendo dois especialistas em psicologia do trânsito\". Se essa leitura for confirmada por LEGAL, comunicar a Carlos \"o CETRAN decidiu\" seria impreciso — o correto seria \"a Junta Especial de Saúde, designada pelo CETRAN, decidiu\"."
++      "action": "A instância que de fato julga o recurso não é o CETRAN colegiado em si — é uma \"Junta Especial de Saúde\" que o CETRAN designa (art. 15) — achado novo, não modelado em nada do sistema. A norma descreve um terceiro colegiado, distinto tanto da Junta de 1ª instância quanto do CETRAN administrativo: \"no mínimo, três médicos, sendo dois especialistas em Medicina de Tráfego, ou, no mínimo, três psicólogos, sendo dois especialistas em psicologia do trânsito\". Se essa leitura for confirmada por LEGAL, comunicar a Carlos \"o CETRAN decidiu\" seria impreciso — o correto seria \"a Junta Especial de Saúde, designada pelo CETRAN, decidiu\". Até essa validação, qualquer tela/comunicação ao candidato deveria evitar nomear a instância decisória com precisão que o sistema ainda não sustenta — ver anti- padrão em `_intake/ux-notes.md`."
+     },
+     {
+       "seq": 8,
+diff --git a/product/journeys/JNY-003.json b/product/journeys/JNY-003.json
+index 39ed0491..50bd8b2b 100644
+--- a/product/journeys/JNY-003.json
++++ b/product/journeys/JNY-003.json
+@@ -27,11 +27,11 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Trilha de auditoria reforçada: Toda a sequência (falha, justificativa, aprovação, liberação) gera eventos de auditoria vinculados a ID biométrico, IP/estação e hash — ver RN-PEC-003. Base legal (com ressalva de vigência)."
++      "action": "Trilha de auditoria reforçada. Toda a sequência (falha, justificativa, aprovação, liberação) gera eventos de auditoria vinculados a ID biométrico, IP/estação e hash — ver RN-PEC-003. Base legal (com ressalva de vigência). REF-SENATRAN-PORTARIA-968-2022 art. 4º exige validação de presença por biometria em todos os exames do processo de habilitação; o texto de 2022 desse mesmo artigo (§§3º-4º) descreve exatamente o desenho técnico desta exceção — ausência temporária de impressão digital registrada por campo específico do dedo, com fallback obrigatório para reconhecimento facial. A redação dada pela Portaria SENATRAN 495/2025 substituiu esses parágrafos por \"(NR)\" no texto oficial — a evidência técnica continua forte, mas não deve ser citada como texto vigente certo até que o normativo de substituição seja localizado. A camada de aprovação humana (Supervisor, prazo/escopo limitados) é uma extensão de conformidade do próprio PEC — a norma federal não exige nem proíbe esse aprovador."
+     },
+     {
+       "seq": 6,
+-      "action": "Continuidade do atendimento: O encounter de Beatriz segue o ciclo normal de WF-PEC-001 a partir daí — a exceção não bloqueia a abertura do encounter, apenas documenta o desvio no processo de captura."
++      "action": "Continuidade do atendimento. O encounter de Beatriz segue o ciclo normal de WF-PEC-001 a partir daí — a exceção não bloqueia a abertura do encounter, apenas documenta o desvio no processo de captura. Nota — não confundir com o controle de estagiário: uma dupla validação de pessoas (dois logins/biometrias distintos) existe no PEC, mas para um cenário diferente: quando o atendimento é conduzido por um psicólogo estagiário, o sistema exige a biometria do estagiário e a do supervisor no fechamento do laudo (RF-013, pec:docs/framework/pec/archive-authoritative-sources.md) — ver RN-PEC-004. A exceção biométrica de captura (esta jornada) é, pelos documentos capturados, aprovada por um único papel (Supervisor)."
+     }
+   ],
+   "postconditions": [
+diff --git a/product/journeys/JNY-004.json b/product/journeys/JNY-004.json
+index 4a0daccd..138be7b7 100644
+--- a/product/journeys/JNY-004.json
++++ b/product/journeys/JNY-004.json
+@@ -27,7 +27,7 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Contestar — o mesmo caminho de Carlos, não um caminho à parte: Se Diego discordar da restrição em si (ex.: acha que a condição que a motivou não existe mais), o mecanismo é exatamente o de JRN-PEC-002: requerer Junta Médica, 30 dias a partir do conhecimento do resultado (REF-CONTRAN-927-2022 art. 12). Esta jornada não deveria propor um segundo fluxo de contestação — deveria apontar Diego, com clareza, para o mesmo botão/caminho que qualquer resultado divergente usa."
++      "action": "Contestar — o mesmo caminho de Carlos, não um caminho à parte. Se Diego discordar da restrição em si (ex.: acha que a condição que a motivou não existe mais), o mecanismo é exatamente o de JRN-PEC-002: requerer Junta Médica, 30 dias a partir do conhecimento do resultado (REF-CONTRAN-927-2022 art. 12). Esta jornada não deveria propor um segundo fluxo de contestação — deveria apontar Diego, com clareza, para o mesmo botão/caminho que qualquer resultado divergente usa. A diferença de tom é que \"apto com restrições\" já é uma aptidão — contestar aqui é sobre a restrição específica, não sobre \"ser aprovado\"."
+     },
+     {
+       "seq": 6,
+diff --git a/product/journeys/JNY-005.json b/product/journeys/JNY-005.json
+index f7a060dc..8a8315ee 100644
+--- a/product/journeys/JNY-005.json
++++ b/product/journeys/JNY-005.json
+@@ -23,7 +23,7 @@
+     },
+     {
+       "seq": 4,
+-      "action": "A Junta analisa e decide em até 30 dias da designação: Art. 14 §3º. Três médicos (ou três psicólogos, se o resultado contestado for o psicológico) revisam o caso de Elza — não um \"papel único\" indiferenciado."
++      "action": "A Junta analisa e decide em até 30 dias da designação. Art. 14 §3º. Três médicos (ou três psicólogos, se o resultado contestado for o psicológico) revisam o caso de Elza — não um \"papel único\" indiferenciado. Se a Junta mantém a inaptidão, Elza é informada com a mesma franqueza da primeira comunicação: o resultado permanece, mas ela ainda tem um próximo passo, e o próximo passo tem prazo próprio (não é \"fim de linha\" disfarçado)."
+     },
+     {
+       "seq": 5,
+@@ -35,7 +35,7 @@
+     },
+     {
+       "seq": 7,
+-      "action": "A decisão final não é do CETRAN colegiado — é da Junta Especial de Saúde que ele designa: Art. 15: \"para o julgamento de recurso, o Conselho de Trânsito do Estado ... deverá designar Junta Especial de Saúde\", composta por \"no mínimo, três médicos, sendo dois especialistas em Medicina de Tráfego\" (ou o equivalente psicológico). Esta é a instância que WF-PEC-002 não modela em nenhum grau — hoje o sistema trataria essa decisão como `escalatedToCetran=true` na mesma linha de decisão da Junta de 1ª instância, sem um novo caso, sem os assentos dos três (ou mais) profissionais, sem prazo próprio de julgamento distinto do art. 14 §3º."
++      "action": "A decisão final não é do CETRAN colegiado — é da Junta Especial de Saúde que ele designa. Art. 15: \"para o julgamento de recurso, o Conselho de Trânsito do Estado ... deverá designar Junta Especial de Saúde\", composta por \"no mínimo, três médicos, sendo dois especialistas em Medicina de Tráfego\" (ou o equivalente psicológico). Esta é a instância que WF-PEC-002 não modela em nenhum grau — hoje o sistema trataria essa decisão como `escalatedToCetran=true` na mesma linha de decisão da Junta de 1ª instância, sem um novo caso, sem os assentos dos três (ou mais) profissionais, sem prazo próprio de julgamento distinto do art. 14 §3º. Se Elza perguntasse \"quem, exatamente, decidiu meu recurso?\", a resposta honesta hoje seria \"o campo `signerName` foi trocado para `'CETRAN'`\" — uma resposta tecnicamente correta e humanamente insatisfatória. Esta jornada registra essa distância deliberadamente: é o ponto de maior risco de comunicação incorreta a um candidato em toda a base PEC revisada até agora."
+     },
+     {
+       "seq": 8,
+diff --git a/product/journeys/JNY-007.json b/product/journeys/JNY-007.json
+index fee35a66..7af8dcc3 100644
+--- a/product/journeys/JNY-007.json
++++ b/product/journeys/JNY-007.json
+@@ -21,7 +21,7 @@
+     },
+     {
+       "seq": 4,
+-      "action": "A armadilha operacional real: \"primeiro laudo assinado força `SIGNED`\": WF-PEC-001 documenta um comportamento observado no sistema — assinar o primeiro dos dois laudos (médico ou psicológico) do encounter empurra o status para `SIGNED` incondicionalmente, o que pode impedir o segundo profissional de assinar de forma independente pela mesma rota. Numa janela de cinco horas com múltiplos pacientes, esse é exatamente o tipo de comportamento que gera atrito silencioso: Patrícia assina o laudo médico de um paciente, e minutos depois o psicólogo da mesma clínica não consegue finalizar o laudo psicológico do mesmo paciente pelo caminho esperado."
++      "action": "A armadilha operacional real: \"primeiro laudo assinado força `SIGNED`\". WF-PEC-001 documenta um comportamento observado no sistema — assinar o primeiro dos dois laudos (médico ou psicológico) do encounter empurra o status para `SIGNED` incondicionalmente, o que pode impedir o segundo profissional de assinar de forma independente pela mesma rota. Numa janela de cinco horas com múltiplos pacientes, esse é exatamente o tipo de comportamento que gera atrito silencioso: Patrícia assina o laudo médico de um paciente, e minutos depois o psicólogo da mesma clínica não consegue finalizar o laudo psicológico do mesmo paciente pelo caminho esperado. Enquanto esse comportamento não for corrigido no backend, a tela de Patrícia precisa, no mínimo, avisá-la explicitamente antes de assinar se o laudo do outro profissional ainda não existe — para que ela não gere, sem saber, um bloqueio para o colega no meio da manhã corrida."
+     },
+     {
+       "seq": 5,
+diff --git a/product/journeys/JNY-008.json b/product/journeys/JNY-008.json
+index a0418b62..ef34e502 100644
+--- a/product/journeys/JNY-008.json
++++ b/product/journeys/JNY-008.json
+@@ -9,31 +9,31 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Chegada — a tela não exige nada antes do socorro: Yasmin desce da viatura e vai direto à vítima; o celular fica no bolso. O app não força abertura de registro para \"começar a contar tempo\" — abrir o `CrashRecord` (`crash-start`, UX-MOB-060, UC-BOAT-001) é o primeiro toque dela, não o primeiro segundo da chegada."
++      "action": "Chegada — a tela não exige nada antes do socorro. Yasmin desce da viatura e vai direto à vítima; o celular fica no bolso. O app não força abertura de registro para \"começar a contar tempo\" — abrir o `CrashRecord` (`crash-start`, UX-MOB-060, UC-BOAT-001) é o primeiro toque dela, não o primeiro segundo da chegada. Isso é decisão de produto (não há dever legal do agente equivalente ao art. 176, I, que obriga o condutor envolvido a socorrer) — mas o desenho da tela reflete o mesmo princípio de prioridade: nenhum fluxo do BOAT deveria parecer competir com o socorro físico pela atenção do agente nos primeiros minutos."
+     },
+     {
+       "seq": 2,
+-      "action": "Verificação do dever do condutor, não substituição dele: O condutor do carro, ileso, já está ajudando a acionar o SAMU — cumprindo o art. 176, I (\"prestar ou providenciar socorro, podendo fazê-lo\"). Quando Yasmin finalmente abre o registro, a tela de dinâmica (`crash-dynamics`, UX-MOB-066) tem um campo objetivo, não uma redação livre: socorro foi prestado/providenciado pelo condutor envolvido? por quem? — isso é o que o app deveria capturar do art. 176, I (fato observado), nunca uma conclusão jurídica tipo \"condutor cumpriu o art. 176\" escrita por Yasmin."
++      "action": "Verificação do dever do condutor, não substituição dele. O condutor do carro, ileso, já está ajudando a acionar o SAMU — cumprindo o art. 176, I (\"prestar ou providenciar socorro, podendo fazê-lo\"). Quando Yasmin finalmente abre o registro, a tela de dinâmica (`crash-dynamics`, UX-MOB-066) tem um campo objetivo, não uma redação livre: socorro foi prestado/providenciado pelo condutor envolvido? por quem? — isso é o que o app deveria capturar do art. 176, I (fato observado), nunca uma conclusão jurídica tipo \"condutor cumpriu o art. 176\" escrita por Yasmin. Ver §c de `_intake/ux-notes.md`."
+     },
+     {
+       "seq": 3,
+-      "action": "SAMU chega antes do registro avançar: A ambulância chega em 6 minutos. Yasmin mal classificou o tipo de sinistro (`crash-start`) e registrou local aproximado (`crash-location`, UX-MOB-061, com precisão de GPS baixa por causa da chuva — alternativa 4a de UC-BOAT-001, complemento manual da descrição textual)."
++      "action": "SAMU chega antes do registro avançar. A ambulância chega em 6 minutos. Yasmin mal classificou o tipo de sinistro (`crash-start`) e registrou local aproximado (`crash-location`, UX-MOB-061, com precisão de GPS baixa por causa da chuva — alternativa 4a de UC-BOAT-001, complemento manual da descrição textual). A equipe do SAMU já está estabilizando o motociclista para remoção. A tela não pode bloquear nem pressionar Yasmin a \"terminar antes que a vítima saia\" — não existe, em nenhuma fonte lida, um requisito de captura completa antes da remoção médica da vítima; exigir isso na UI seria inventar uma trava que a norma não impõe e que colocaria a vida da vítima em segundo plano diante do formulário."
+     },
+     {
+       "seq": 4,
+-      "action": "Captura mínima da vítima, rápida, antes dela partir: Antes da ambulância sair, Yasmin tem uma janela curta. A tela de vítimas (`crash-victims`, UX-MOB-065, UC-BOAT-003) prioriza, no topo, os únicos três campos realistas de capturar nesse minuto: identificação (se houver documento à vista), gravidade observada (`severity`, obrigatório — RN-BOAT-001) e para onde a vítima está sendo levada (`hospital_destination`)."
++      "action": "Captura mínima da vítima, rápida, antes dela partir. Antes da ambulância sair, Yasmin tem uma janela curta. A tela de vítimas (`crash-victims`, UX-MOB-065, UC-BOAT-003) prioriza, no topo, os únicos três campos realistas de capturar nesse minuto: identificação (se houver documento à vista), gravidade observada (`severity`, obrigatório — RN-BOAT-001) e para onde a vítima está sendo levada (`hospital_destination`). Tudo o mais — `health_notes` detalhado, confirmação de atendimento — pode esperar; o registro segue em `in_attendance`/`recorded` com uma marca clara de pendência de complemento, não como erro nem como bloqueio (WF-BOAT-001 `pending_complement`)."
+     },
+     {
+       "seq": 5,
+-      "action": "Vítima sai antes dos dados completos: A ambulância parte com o motociclista ainda sem sobrenome completo confirmado (documento ficou com um vizinho que \"vai levar depois\"). A tela não deveria fingir que o registro está completo — ela mostra, de forma explícita e não silenciosa, quais campos de vítima ficam pendentes, e para onde a vítima foi (hospital), como ponto de referência para complementar depois."
++      "action": "Vítima sai antes dos dados completos. A ambulância parte com o motociclista ainda sem sobrenome completo confirmado (documento ficou com um vizinho que \"vai levar depois\"). A tela não deveria fingir que o registro está completo — ela mostra, de forma explícita e não silenciosa, quais campos de vítima ficam pendentes, e para onde a vítima foi (hospital), como ponto de referência para complementar depois. Esse é exatamente o gancho para uma eventual conciliação futura com um parceiro hospitalar (JRN-BOAT-003), hoje ainda não integrada."
+     },
+     {
+       "seq": 6,
+-      "action": "Preservação da cena × liberação da via — a tensão real: Com a vítima a caminho do hospital, sobra o problema de trânsito: o caminhoneiro atrás continua buzinando, o engarrafamento cresce. O art. 176, III exige que o condutor preserve o local \"de forma a facilitar os trabalhos da polícia e da perícia\"; mas não há vítima presa no local nem indício de tacógrafo (art. 279) que justifique manter tudo intocado por muito tempo."
++      "action": "Preservação da cena × liberação da via — a tensão real. Com a vítima a caminho do hospital, sobra o problema de trânsito: o caminhoneiro atrás continua buzinando, o engarrafamento cresce. O art. 176, III exige que o condutor preserve o local \"de forma a facilitar os trabalhos da polícia e da perícia\"; mas não há vítima presa no local nem indício de tacógrafo (art. 279) que justifique manter tudo intocado por muito tempo. Decisão que a tela apoia, não decide sozinha: Yasmin fotografa e faz o croqui rápido (`crash-sketch`, UX-MOB-067) da posição exata dos veículos antes de qualquer remoção — essa é a sequência que o app deveria reforçar (evidência primeiro, liberação depois), porque uma vez os veículos movidos, a posição original não existe mais para nenhuma finalidade (perícia, seguro, BAT). Isso não decide por Yasmin se e quando liberar a via — é discricionariedade dela em campo, sem critério normativo de precedência encontrado nas fontes lidas — mas a tela não deveria deixá-la mover o veículo sem primeiro passar pelo croqui/evidência, sob risco de perder o registro definitivamente."
+     },
+     {
+       "seq": 7,
+-      "action": "Fotografar a cena, não o sofrimento: Enquanto documenta, Yasmin evita enquadrar o rosto da vítima em dor ou detalhes que exponham sua integridade física — a bodycam já está captando tudo de qualquer forma, mas as fotos que Yasmin escolhe anexar como evidência do sinistro (`crash-evidence`, UX-MOB-068) são posição de veículos, marcas de frenagem, sinalização, danos materiais. Essa é uma regra de conteúdo defensável a partir de duas normas já capturadas: o princípio de minimização de dado sensível (REF-CONTRAN-808-2020 art. 5º §5º c/c LGPD) e a vedação de exposição de \"situações constrangedoras\" ou que \"exponham a integridade física\" do envolvido (REF-DETRANAM-TALAO-BODYCAM art. 14, I, aplicada por analogia de princípio às fotos de evidência do BOAT, ainda que a Portaria trate literalmente de bodycam)."
++      "action": "Fotografar a cena, não o sofrimento. Enquanto documenta, Yasmin evita enquadrar o rosto da vítima em dor ou detalhes que exponham sua integridade física — a bodycam já está captando tudo de qualquer forma, mas as fotos que Yasmin escolhe anexar como evidência do sinistro (`crash-evidence`, UX-MOB-068) são posição de veículos, marcas de frenagem, sinalização, danos materiais. Essa é uma regra de conteúdo defensável a partir de duas normas já capturadas: o princípio de minimização de dado sensível (REF-CONTRAN-808-2020 art. 5º §5º c/c LGPD) e a vedação de exposição de \"situações constrangedoras\" ou que \"exponham a integridade física\" do envolvido (REF-DETRANAM-TALAO-BODYCAM art. 14, I, aplicada por analogia de princípio às fotos de evidência do BOAT, ainda que a Portaria trate literalmente de bodycam). Ver regra de conteúdo em `_intake/ux-notes.md` §c."
+     },
+     {
+       "seq": 8,
+diff --git a/product/journeys/JNY-010.json b/product/journeys/JNY-010.json
+index c85d2074..0bcd7aa6 100644
+--- a/product/journeys/JNY-010.json
++++ b/product/journeys/JNY-010.json
+@@ -9,7 +9,7 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Entrada não é \"criar um novo sinistro\": Cleuza não abre um `CrashRecord` do zero — ela busca, por chave natural compatível com a já usada na submissão RENAEST (uf, município, data/ hora aproximada do sinistro, e idealmente o nome/documento da vítima), o registro que Yasmin já iniciou em campo. Decisão de produto central desta jornada: o hospital nunca é a origem primária de um sinistro no BOAT — ele conciliação/complementa um registro já existente vindo do agente de trânsito."
++      "action": "Entrada não é \"criar um novo sinistro\". Cleuza não abre um `CrashRecord` do zero — ela busca, por chave natural compatível com a já usada na submissão RENAEST (uf, município, data/ hora aproximada do sinistro, e idealmente o nome/documento da vítima), o registro que Yasmin já iniciou em campo. Decisão de produto central desta jornada: o hospital nunca é a origem primária de um sinistro no BOAT — ele conciliação/complementa um registro já existente vindo do agente de trânsito. Sem correspondência encontrada, a tela sinaliza claramente \"nenhum sinistro correspondente localizado\" em vez de deixar Cleuza criar um registro solto, órfão."
+     },
+     {
+       "seq": 2,
+diff --git a/product/journeys/JNY-011.json b/product/journeys/JNY-011.json
+index 37513bc7..8cd501be 100644
+--- a/product/journeys/JNY-011.json
++++ b/product/journeys/JNY-011.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "Rejeição por dado incompleto — o gate de vítima em ação: Um sinistro grave voltou com `RENAEST.CRASH.INCOMPLETE_DATA` — gravidade `COM_VITIMA_FERIDA` sem nenhum `CrashVictim` registrado (RN-BOAT-002). A tela de complementação (UX-WEB-062) mostra exatamente o motivo da rejeição em linguagem direta (\"faltam dados de vítima para a gravidade declarada\"), não um código de erro cru (`RENAEST.CRASH.INCOMPLETE_DATA` fica disponível, mas como detalhe técnico expansível, não como a primeira coisa que Renato lê)."
++      "action": "Rejeição por dado incompleto — o gate de vítima em ação. Um sinistro grave voltou com `RENAEST.CRASH.INCOMPLETE_DATA` — gravidade `COM_VITIMA_FERIDA` sem nenhum `CrashVictim` registrado (RN-BOAT-002). A tela de complementação (UX-WEB-062) mostra exatamente o motivo da rejeição em linguagem direta (\"faltam dados de vítima para a gravidade declarada\"), não um código de erro cru (`RENAEST.CRASH.INCOMPLETE_DATA` fica disponível, mas como detalhe técnico expansível, não como a primeira coisa que Renato lê). Ele reabre contato com a equipe de campo (ou, se a onda estiver ativa, com o parceiro hospitalar de JRN-BOAT-003) para obter o dado faltante — não pode inventar um valor só para destravar a submissão."
+     },
+     {
+       "seq": 4,
+@@ -25,7 +25,7 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Estado terminal — sem caminho de correção, e a tela precisa dizer isso com todas as letras: Um sinistro de duas semanas atrás, já `CONSOLIDADO` na base nacional, precisa de uma correção (erro de município digitado). A tela não oferece um botão de \"corrigir\" nesse caso — ele simplesmente não existe, porque a Resolução 808/2020 não prevê mecanismo de correção pós- terminal e o mock nacional bloqueia com `RENAEST.CRASH.CORRECTION_NOT_ALLOWED`."
++      "action": "Estado terminal — sem caminho de correção, e a tela precisa dizer isso com todas as letras. Um sinistro de duas semanas atrás, já `CONSOLIDADO` na base nacional, precisa de uma correção (erro de município digitado). A tela não oferece um botão de \"corrigir\" nesse caso — ele simplesmente não existe, porque a Resolução 808/2020 não prevê mecanismo de correção pós- terminal e o mock nacional bloqueia com `RENAEST.CRASH.CORRECTION_NOT_ALLOWED`. Em vez de deixar Renato tentar e falhar, a tela explica a limitação diretamente (\"registro consolidado — sem mecanismo de correção conhecido; abrir chamado institucional junto à SENATRAN se a correção for indispensável\") — honestidade sobre uma lacuna normativa real, não um erro de sistema a esconder."
+     },
+     {
+       "seq": 6,
+diff --git a/product/journeys/JNY-012.json b/product/journeys/JNY-012.json
+index 48a90906..d157de05 100644
+--- a/product/journeys/JNY-012.json
++++ b/product/journeys/JNY-012.json
+@@ -19,7 +19,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "O que Fábio vê é diferente do que Yasmin registrou: O sinistro tem dois condutores e uma vítima. Fábio, como um dos condutores, vê: dados do próprio veículo e de si mesmo, dados objetivos do sinistro (local, data/hora, dinâmica, croqui, classificação de gravidade) — mas não vê `hospital_destination` nem `health_notes` da vítima, nem os dados pessoais completos do outro condutor além do estritamente necessário para o seguro (ex.: placa e seguradora do outro veículo, não CPF/endereço)."
++      "action": "O que Fábio vê é diferente do que Yasmin registrou. O sinistro tem dois condutores e uma vítima. Fábio, como um dos condutores, vê: dados do próprio veículo e de si mesmo, dados objetivos do sinistro (local, data/hora, dinâmica, croqui, classificação de gravidade) — mas não vê `hospital_destination` nem `health_notes` da vítima, nem os dados pessoais completos do outro condutor além do estritamente necessário para o seguro (ex.: placa e seguradora do outro veículo, não CPF/endereço). O controle de acesso reforçado de RN-BOAT-003 não é uma regra só para telas internas — aqui ela decide o que aparece ou não na tela do próprio cidadão envolvido, aplicando o mesmo princípio de minimização do art. 18 da REF-SENATRAN-PORTARIA-139-2025 a um público que nem é servidor do órgão."
+     },
+     {
+       "seq": 4,
+@@ -31,7 +31,7 @@
+     },
+     {
+       "seq": 6,
+-      "action": "Prazo de disponibilização — informado com a incerteza que existe, não inventado: Se Fábio consulta poucas horas depois do sinistro, e o registro do agente ainda está `in_attendance`/ `recorded` (não `validated`/`closed`), a tela não promete uma data certa de disponibilização — nenhum prazo legal confirmado existe para o caso estadual. Ela mostra o status real do registro (ex.: \"em andamento — aguardando finalização pelo órgão\") em vez de simular um prazo que não tem base normativa verificada."
++      "action": "Prazo de disponibilização — informado com a incerteza que existe, não inventado. Se Fábio consulta poucas horas depois do sinistro, e o registro do agente ainda está `in_attendance`/ `recorded` (não `validated`/`closed`), a tela não promete uma data certa de disponibilização — nenhum prazo legal confirmado existe para o caso estadual. Ela mostra o status real do registro (ex.: \"em andamento — aguardando finalização pelo órgão\") em vez de simular um prazo que não tem base normativa verificada. Anti-padrão a evitar: copiar o prazo de 5 dias úteis da PRF sem confirmação de que se aplica ao DETRAN-AM — isso criaria uma expectativa legal que o órgão pode não conseguir cumprir."
+     },
+     {
+       "seq": 7,
+diff --git a/product/journeys/JNY-013.json b/product/journeys/JNY-013.json
+index 4b8a7553..a6b7cb6d 100644
+--- a/product/journeys/JNY-013.json
++++ b/product/journeys/JNY-013.json
+@@ -21,7 +21,7 @@
+     },
+     {
+       "seq": 4,
+-      "action": "Instrução: Ela lê fatos e anexos. Se falta prova que só o próprio órgão tem (foto do equipamento, laudo), o sistema já a anexou de ofício ao dossiê (RN-RAIT-003) — Josiane nunca precisa pedir ao cidadão o que o DETRAN-AM já possui."
++      "action": "Instrução. Ela lê fatos e anexos. Se falta prova que só o próprio órgão tem (foto do equipamento, laudo), o sistema já a anexou de ofício ao dossiê (RN-RAIT-003) — Josiane nunca precisa pedir ao cidadão o que o DETRAN-AM já possui. Se falta prova que só o cidadão pode trazer, ela abre diligência com prazo (RN-RAIT-004); o caso sai da sua mesa e entra em espera com timer visível — ela é notificada quando o prazo vence ou quando o cidadão responde, o que vier primeiro."
+     },
+     {
+       "seq": 5,
+diff --git a/product/journeys/JNY-014.json b/product/journeys/JNY-014.json
+index 95510d13..9b1ef689 100644
+--- a/product/journeys/JNY-014.json
++++ b/product/journeys/JNY-014.json
+@@ -27,7 +27,7 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Sessão da JARI: Presencial ou por videoconferência. O sistema verifica quorum antes de abrir (maioria simples com presença obrigatória do presidente ou suplente — REF-CONTRAN-357 item 8.2) e bloqueia a abertura se não atingido, evitando decisão inválida por vício de quorum."
++      "action": "Sessão da JARI. Presencial ou por videoconferência. O sistema verifica quorum antes de abrir (maioria simples com presença obrigatória do presidente ou suplente — REF-CONTRAN-357 item 8.2) e bloqueia a abertura se não atingido, evitando decisão inválida por vício de quorum. Para cada processo pautado: Raimundo apresenta o voto, os demais deliberam, o resultado (provido/negado) é registrado ao vivo — não depois, de memória."
+     },
+     {
+       "seq": 6,
+diff --git a/product/journeys/JNY-015.json b/product/journeys/JNY-015.json
+index f2eb3c53..71613b87 100644
+--- a/product/journeys/JNY-015.json
++++ b/product/journeys/JNY-015.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "Canal balcão: O requerente traz papel. Aqui está a decisão de desenho central desta jornada, inspirada no modelo CETRAN-SP (REF-CETRAN-PROCESSO-INTERNO): a obrigação de digitalizar é do órgão, não do cidadão."
++      "action": "Canal balcão. O requerente traz papel. Aqui está a decisão de desenho central desta jornada, inspirada no modelo CETRAN-SP (REF-CETRAN-PROCESSO-INTERNO): a obrigação de digitalizar é do órgão, não do cidadão. Elis digitaliza na hora (scanner do balcão) e cadastra o caso no RAIT como qualquer outro — a partir desse ponto, o processo tramita 100% digital, mesmo tendo nascido em papel. O papel original vai para custódia física, mas deixa de ser o \"processo de trabalho\"."
+     },
+     {
+       "seq": 4,
+diff --git a/product/journeys/JNY-016.json b/product/journeys/JNY-016.json
+index d191569b..cab6e9fe 100644
+--- a/product/journeys/JNY-016.json
++++ b/product/journeys/JNY-016.json
+@@ -9,15 +9,15 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Abertura do dia: A tela inicial de Aline não é uma lista de processos — é um radar. Processos são posicionados por proximidade ao relógio que mais os ameaça (decadência, 24 meses, ou paralisação), não por ordem alfabética ou numérica."
++      "action": "Abertura do dia. A tela inicial de Aline não é uma lista de processos — é um radar. Processos são posicionados por proximidade ao relógio que mais os ameaça (decadência, 24 meses, ou paralisação), não por ordem alfabética ou numérica. Vermelho é reservado para o que está a menos de X% do teto legal — o desenho evita \"vermelho de tudo\", que treina o olho a ignorar alertas."
+     },
+     {
+       "seq": 2,
+-      "action": "Zoom num caso em risco: Um processo aparece a 20 meses de um recurso à JARI parado. Aline abre e vê: data de recebimento pela JARI, quem é o relator designado, há quanto tempo está sem movimentação."
++      "action": "Zoom num caso em risco. Um processo aparece a 20 meses de um recurso à JARI parado. Aline abre e vê: data de recebimento pela JARI, quem é o relator designado, há quanto tempo está sem movimentação. A tela não pede que ela recalcule prazo de cabeça — o sistema já traduziu \"20 meses\" em \"faltam 4 meses para prescrição irreversível por inércia\"."
+     },
+     {
+       "seq": 3,
+-      "action": "Ação — não é dela julgar, é dela desbloquear: Aline não pode (nem deve) decidir o mérito. O que ela faz é escalar: cobrar o relator, redistribuir se necessário, verificar se falta quorum recorrente nas sessões."
++      "action": "Ação — não é dela julgar, é dela desbloquear. Aline não pode (nem deve) decidir o mérito. O que ela faz é escalar: cobrar o relator, redistribuir se necessário, verificar se falta quorum recorrente nas sessões. A interface separa claramente \"prazo do cidadão\" (que ele já cumpriu, ao recorrer a tempo) de \"prazo do órgão\" (que está em risco) — para nunca sugerir que o atraso é culpa de quem recorreu."
+     },
+     {
+       "seq": 4,
+diff --git a/product/journeys/JNY-017.json b/product/journeys/JNY-017.json
+index 45f6f14f..b6508e5a 100644
+--- a/product/journeys/JNY-017.json
++++ b/product/journeys/JNY-017.json
+@@ -9,7 +9,7 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Login e turno: Agente autentica (STYNX), passa por MFA/reautenticação se exigido, seleciona unidade/equipe/viatura e abre turno (`shift-context` → `home`, jornada `ait-complete`/`bi-dashboard` de `ux-parity/journeys.json`). `Shift.status = open` é criado. O sistema já verifica, neste passo, que não há outra sessão ativa do mesmo agente em outro aparelho — a tela não avisa isso ao agente com destaque hoje, mas deveria (REF-SENATRAN-997 Anexo II, h; ver JRN-TEAT-006)."
++      "action": "Login e turno. Agente autentica (STYNX), passa por MFA/reautenticação se exigido, seleciona unidade/equipe/viatura e abre turno (`shift-context` → `home`, jornada `ait-complete`/`bi-dashboard` de `ux-parity/journeys.json`). `Shift.status = open` é criado. O sistema já verifica, neste passo, que não há outra sessão ativa do mesmo agente em outro aparelho — a tela não avisa isso ao agente com destaque hoje, mas deveria (REF-SENATRAN-997 Anexo II, h; ver JRN-TEAT-006). A bodycam, se o DETRAN-AM a adotar como evidência formal do TEAT, precisa estar ativa a partir daqui — todo o período de serviço operacional, não só durante a lavratura (REF-DETRANAM-TALAO-BODYCAM art. 5º)."
+     },
+     {
+       "seq": 2,
+diff --git a/product/journeys/JNY-019.json b/product/journeys/JNY-019.json
+index 06802332..9ba5cd75 100644
+--- a/product/journeys/JNY-019.json
++++ b/product/journeys/JNY-019.json
+@@ -25,7 +25,7 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Recusa do condutor (`alcohol-refusal`): Um motorista mais adiante se recusa a soprar. A tela distingue, com dois botões que não podem ser confundidos: recusa (o condutor se nega) vs. impossibilidade técnica do aparelho (falha do equipamento, sem ligação com a conduta do condutor) — consequência jurídica é diferente."
++      "action": "Recusa do condutor (`alcohol-refusal`). Um motorista mais adiante se recusa a soprar. A tela distingue, com dois botões que não podem ser confundidos: recusa (o condutor se nega) vs. impossibilidade técnica do aparelho (falha do equipamento, sem ligação com a conduta do condutor) — consequência jurídica é diferente. Recusar qualquer procedimento do art. 3º gera automaticamente a infração do art. 165 e, simultaneamente, é tipificada à parte como infração autônoma do art. 165-A — a tela registra as duas, não uma ou outra (REF-CONTRAN-432 art. 6º, parágrafo único; RN-TEAT-005)."
+     },
+     {
+       "seq": 6,
+diff --git a/product/journeys/JNY-020.json b/product/journeys/JNY-020.json
+index 159711e8..34f26903 100644
+--- a/product/journeys/JNY-020.json
++++ b/product/journeys/JNY-020.json
+@@ -29,7 +29,7 @@
+     },
+     {
+       "seq": 6,
+-      "action": "Assinatura/recusa não bloqueia a validade: O proprietário se recusa a assinar o termo, irritado. A tela não trava nem pede a Denise para \"convencer\" — a norma já resolve isso: proprietário/condutor presente no momento do recolhimento é considerado notificado mesmo que se recuse a assinar (REF-CONTRAN-1025-2026 art. 14 §2º) — mesmo padrão de três resultados de RN-TEAT-005."
++      "action": "Assinatura/recusa não bloqueia a validade. O proprietário se recusa a assinar o termo, irritado. A tela não trava nem pede a Denise para \"convencer\" — a norma já resolve isso: proprietário/condutor presente no momento do recolhimento é considerado notificado mesmo que se recuse a assinar (REF-CONTRAN-1025-2026 art. 14 §2º) — mesmo padrão de três resultados de RN-TEAT-005. Denise só registra a recusa, sem precisar negociar."
+     },
+     {
+       "seq": 7,
+diff --git a/product/journeys/JNY-021.json b/product/journeys/JNY-021.json
+index 870a84bd..e4c68c92 100644
+--- a/product/journeys/JNY-021.json
++++ b/product/journeys/JNY-021.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "Abordagem tensa: Um condutor se recusa a apresentar documentos, levanta a voz, questiona a legitimidade da parada. Wallace sabe que está sendo gravado e mantém o tom — a bodycam funciona nos dois sentidos: protege o cidadão de eventual abuso e protege Wallace de alegação falsa depois."
++      "action": "Abordagem tensa. Um condutor se recusa a apresentar documentos, levanta a voz, questiona a legitimidade da parada. Wallace sabe que está sendo gravado e mantém o tom — a bodycam funciona nos dois sentidos: protege o cidadão de eventual abuso e protege Wallace de alegação falsa depois. O app não interfere na interação humana; o papel do desenho aqui é só garantir que o indicador de gravação continue visível e que nada na interface sugira que Wallace pode pausar a câmera para \"resolver informalmente\" — é vedado (art. 8º, III)."
+     },
+     {
+       "seq": 4,
+@@ -25,7 +25,7 @@
+     },
+     {
+       "seq": 5,
+-      "action": "Falha do equipamento em campo: No meio de uma abordagem, o indicador muda para \"gravação interrompida\" — bateria, memória ou falha de transmissão. Wallace precisa comunicar imediatamente a falha (art. 9º), registrada em sistema próprio ou relatório diário (§1º)."
++      "action": "Falha do equipamento em campo. No meio de uma abordagem, o indicador muda para \"gravação interrompida\" — bateria, memória ou falha de transmissão. Wallace precisa comunicar imediatamente a falha (art. 9º), registrada em sistema próprio ou relatório diário (§1º). A jornada aqui replica o mesmo princípio já usado para evidência anexada pelo agente (RN-TEAT-002): a falha não invalida o ato legal em curso (o AIT continua podendo ser lavrado e finalizado), mas gera uma pendência explícita que não pode ficar silenciosa — Wallace não deveria precisar \"lembrar depois\" de relatar; a tela deveria forçar o registro da falha antes de deixá-lo prosseguir sem indicador de gravação ativo."
+     },
+     {
+       "seq": 6,
+diff --git a/product/journeys/JNY-022.json b/product/journeys/JNY-022.json
+index 9c15e1a8..d936de03 100644
+--- a/product/journeys/JNY-022.json
++++ b/product/journeys/JNY-022.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "Fazer — declarar o incidente antes de continuar: Régis contata o field-supervisor (rádio/telefone, fora do TEAT) e relata a falha do dispositivo antes de logar no reserva. O supervisor registra o incidente — proposta de produto: uma tela/ação \"declarar falha de dispositivo\" acessível a field-supervisor (e, idealmente, também ao próprio agente ao logar em um dispositivo diferente do último usado), que cria um evento explícito de handoff."
++      "action": "Fazer — declarar o incidente antes de continuar. Régis contata o field-supervisor (rádio/telefone, fora do TEAT) e relata a falha do dispositivo antes de logar no reserva. O supervisor registra o incidente — proposta de produto: uma tela/ação \"declarar falha de dispositivo\" acessível a field-supervisor (e, idealmente, também ao próprio agente ao logar em um dispositivo diferente do último usado), que cria um evento explícito de handoff. Este evento é o que permite à retaguarda, mais tarde, diferenciar \"troca de aparelho autorizada e documentada\" de \"sessão concorrente anômala\" quando os registros dos dois dispositivos chegarem — sem essa declaração, o sistema não tem como saber a diferença e trata como o pior caso por padrão."
+     },
+     {
+       "seq": 4,
+diff --git a/product/journeys/JNY-023.json b/product/journeys/JNY-023.json
+index 181cd665..0e1240d7 100644
+--- a/product/journeys/JNY-023.json
++++ b/product/journeys/JNY-023.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "PEC: um prazo do órgão está a 90% consumido: Um caso de junta médica está a 13 dos 15 dias úteis para designação (RN-PEC-112 item 2, marco 90% proposto por paridade com a escada RAIT). Marcos sabe, pela tela, que esse é um \"prazo do órgão sem sanção expressa\" — mas que o bloqueio de cadastro nacional (RN-PEC-106) segue ativo enquanto o candidato espera."
++      "action": "PEC: um prazo do órgão está a 90% consumido. Um caso de junta médica está a 13 dos 15 dias úteis para designação (RN-PEC-112 item 2, marco 90% proposto por paridade com a escada RAIT). Marcos sabe, pela tela, que esse é um \"prazo do órgão sem sanção expressa\" — mas que o bloqueio de cadastro nacional (RN-PEC-106) segue ativo enquanto o candidato espera. A ausência de sanção não vira ausência de urgência na tela."
+     },
+     {
+       "seq": 4,
+diff --git a/product/journeys/JNY-026.json b/product/journeys/JNY-026.json
+index b0975ea6..6ea24b10 100644
+--- a/product/journeys/JNY-026.json
++++ b/product/journeys/JNY-026.json
+@@ -13,7 +13,7 @@
+     },
+     {
+       "seq": 2,
+-      "action": "Primeira leitura — é o canal, é o destino, ou é o dado? O DASHBOARD distingue três categorias de falha técnica visíveis no card: falha de transporte (canal mTLS fora do ar), falha de aceite no destino (o RENACH/RENAEST está recusando, não está fora do ar) e falha de conteúdo (payload malformado, específico de um subconjunto de registros)."
++      "action": "Primeira leitura — é o canal, é o destino, ou é o dado? O DASHBOARD distingue três categorias de falha técnica visíveis no card: falha de transporte (canal mTLS fora do ar), falha de aceite no destino (o RENACH/RENAEST está recusando, não está fora do ar) e falha de conteúdo (payload malformado, específico de um subconjunto de registros). Cada categoria pede uma ação diferente, e confundi-las faz Diego perder tempo mexendo no lugar errado."
+     },
+     {
+       "seq": 3,
+diff --git a/product/journeys/JNY-030.json b/product/journeys/JNY-030.json
+index c5951dca..c133da70 100644
+--- a/product/journeys/JNY-030.json
++++ b/product/journeys/JNY-030.json
+@@ -11,11 +11,11 @@
+   "steps": [
+     {
+       "seq": 1,
+-      "action": "Ciência — sem elevação de identidade exigida: Maria entra no PORTAL (gov.br) só com login básico (conta nível bronze já basta para consultar) e vê a autuação com status em linguagem simples (\"Você pode se defender até DD/MM\" em vez de \"prazo de defesa prévia\" cru — REF- CONTRAN-918 art.4 §2º) e três caminhos igualmente visíveis, sem viés visual para \"pagar\": defender-se, indicar outro condutor, ou pagar com desconto. A escolha de valores já aparece lado a lado — 80% pagando até o vencimento, 60% se reconhecer a infração e aderir ao SNE (REF-CONTRAN-931 art.9º §1º; REF-CTB-extracts-raw art.284 §1º) — como uma decisão explícita e reversível-a-tempo, não como desconto escondido em letra miúda."
++      "action": "Ciência — sem elevação de identidade exigida. Maria entra no PORTAL (gov.br) só com login básico (conta nível bronze já basta para consultar) e vê a autuação com status em linguagem simples (\"Você pode se defender até DD/MM\" em vez de \"prazo de defesa prévia\" cru — REF- CONTRAN-918 art.4 §2º) e três caminhos igualmente visíveis, sem viés visual para \"pagar\": defender-se, indicar outro condutor, ou pagar com desconto. A escolha de valores já aparece lado a lado — 80% pagando até o vencimento, 60% se reconhecer a infração e aderir ao SNE (REF-CONTRAN-931 art.9º §1º; REF-CTB-extracts-raw art.284 §1º) — como uma decisão explícita e reversível-a-tempo, não como desconto escondido em letra miúda. Nada nesta tela pede confirmação de identidade além do login já feito."
+     },
+     {
+       "seq": 2,
+-      "action": "Defesa da autuação (1º circuito) — a elevação de nível como passo guiado, não muro: Ela preenche o requerimento guiado (campos mínimos do REF-CONTRAN-900 art.3º — um AIT por requerimento), anexa fotos e CNH (checklist art.5º; o PORTAL nunca pede documento emitido pelo próprio órgão — art.5º §ú, reforçado por REF-LEI-14129-2021 art.3º XIII, condicionado à confirmação de adesão do AM à lei — ver nota de revisão). Só no momento de assinar e protocolar o PORTAL confirma o nível da conta de Maria: protocolar defesa/recurso exige assinatura eletrônica avançada, por determinação expressa do REF-DECRETO-10543-2020 art.4º, II, \"h\"."
++      "action": "Defesa da autuação (1º circuito) — a elevação de nível como passo guiado, não muro. Ela preenche o requerimento guiado (campos mínimos do REF-CONTRAN-900 art.3º — um AIT por requerimento), anexa fotos e CNH (checklist art.5º; o PORTAL nunca pede documento emitido pelo próprio órgão — art.5º §ú, reforçado por REF-LEI-14129-2021 art.3º XIII, condicionado à confirmação de adesão do AM à lei — ver nota de revisão). Só no momento de assinar e protocolar o PORTAL confirma o nível da conta de Maria: protocolar defesa/recurso exige assinatura eletrônica avançada, por determinação expressa do REF-DECRETO-10543-2020 art.4º, II, \"h\". Se a conta de Maria estiver em nível básico, a tela não a manda para um fluxo genérico de \"verificação de identidade\" à parte — o próprio wizard explica, no ponto exato em que ela precisaria disso (\"para assinar seu recurso você precisa confirmar sua identidade com um passo a mais — leva menos de dois minutos\"), e a leva por um passo de validação biográfica ou biométrica embutido na mesma tela (art. 5º, II do mesmo Decreto), sem perder o que já preencheu. Documentos enviados por upload assinado eletronicamente têm presunção de autenticidade (REF-LEI-14129-2021 art.26) e nunca exigem reconhecimento de firma, salvo dúvida fundada (REF-LEI-13460-2017 art.5º, IX). Ao concluir, Maria assina e protocola eletronicamente (art.6º §4º da 900). Recebe protocolo e acompanha o andamento com status em linguagem cidadã (ver ux-notes, mapa de estados)."
+     },
+     {
+       "seq": 3,
+@@ -23,7 +23,7 @@
+     },
+     {
+       "seq": 4,
+-      "action": "Resultado da defesa: Acolhida → AIT cancelado, nada a pagar (918 art.9 §1º) — jornada encerra com uma tela de encerramento clara (\"Multa cancelada. Nada a pagar.\"), não um status genérico."
++      "action": "Resultado da defesa. Acolhida → AIT cancelado, nada a pagar (918 art.9 §1º) — jornada encerra com uma tela de encerramento clara (\"Multa cancelada. Nada a pagar.\"), não um status genérico. Indeferida → penalidade aplicada; Maria recebe a NP com a data-limite que vale ao mesmo tempo para pagar com desconto ou recorrer (918 art.12) — o PORTAL explicita que é a MESMA data para as duas ações, risco real de confusão se apresentado como dois prazos."
+     },
+     {
+       "seq": 5,
+@@ -35,11 +35,11 @@
+     },
+     {
+       "seq": 7,
+-      "action": "Julgamento colegiado: A JARI julga em sessão — ver JRN-RAIT-002; Maria é informada da decisão no mesmo dia (918 art.17). Provido → multa cancelada (se a autoridade recorrer, ela é informada — art.17 §ú)."
++      "action": "Julgamento colegiado. A JARI julga em sessão — ver JRN-RAIT-002; Maria é informada da decisão no mesmo dia (918 art.17). Provido → multa cancelada (se a autoridade recorrer, ela é informada — art.17 §ú). Negado → ela pode recorrer ao CETRAN em 30 dias da publicação/notificação (REF-CTB-extracts-raw art.288)."
+     },
+     {
+       "seq": 8,
+-      "action": "Segunda instância: CETRAN decide em última instância administrativa (REF-CTB-extracts-raw art.290) — irrecorrível administrativamente. O RAIT já anexa de ofício o parecer e conclusão da JARI ao processo de 2ª instância — Maria nunca precisa reunir e reenviar documentos que o órgão já tem (RN-RAIT-003; achado de atrito em REF-DETRANAM-SERVICOS)."
++      "action": "Segunda instância. CETRAN decide em última instância administrativa (REF-CTB-extracts-raw art.290) — irrecorrível administrativamente. O RAIT já anexa de ofício o parecer e conclusão da JARI ao processo de 2ª instância — Maria nunca precisa reunir e reenviar documentos que o órgão já tem (RN-RAIT-003; achado de atrito em REF-DETRANAM-SERVICOS). Negado → multa consolidada, juros contam apenas do encerramento da instância (918 art.23 §4º); pontuação vai ao RENACH só agora (918 art.18). Provido → multa cancelada; se já paga, restituição corrigida (REF-CTB-extracts-raw art. 286 §2º)."
+     }
+   ],
+   "postconditions": [
+diff --git a/product/journeys/JNY-031.json b/product/journeys/JNY-031.json
+index 99cf460c..ed8d2440 100644
+--- a/product/journeys/JNY-031.json
++++ b/product/journeys/JNY-031.json
+@@ -17,7 +17,7 @@
+     },
+     {
+       "seq": 3,
+-      "action": "Assinatura de duas partes — assinatura avançada para ambas, elevação guiada quando falta: A regra exige assinatura do proprietário E do condutor indicado, e o REF-DECRETO-10543-2020 art. 4º, II, \"f\" classifica esse ato como exigindo assinatura eletrônica avançada de quem assina — é uma declaração que reconhece um fato e transfere responsabilidade a terceiro, não uma simples solicitação. O desenho oferece dois caminhos: (a) o condutor indicado também tem conta gov.br e assina remotamente pelo PORTAL (modelo de referência: identificação equivalente a protocolo formal via Carteira Digital de Trânsito, já reconhecido no PR — REF-CETRAN-PROCESSO-INTERNO); (b) offline, com upload de documento assinado por ambos, para quem o condutor não usa o app."
++      "action": "Assinatura de duas partes — assinatura avançada para ambas, elevação guiada quando falta. A regra exige assinatura do proprietário E do condutor indicado, e o REF-DECRETO-10543-2020 art. 4º, II, \"f\" classifica esse ato como exigindo assinatura eletrônica avançada de quem assina — é uma declaração que reconhece um fato e transfere responsabilidade a terceiro, não uma simples solicitação. O desenho oferece dois caminhos: (a) o condutor indicado também tem conta gov.br e assina remotamente pelo PORTAL (modelo de referência: identificação equivalente a protocolo formal via Carteira Digital de Trânsito, já reconhecido no PR — REF-CETRAN-PROCESSO-INTERNO); (b) offline, com upload de documento assinado por ambos, para quem o condutor não usa o app. Se a conta de Carlos (ou a do condutor indicado, no caminho remoto) ainda não tem o nível necessário, o mesmo passo guiado embutido de JRN-PORTAL-001 aparece no momento da assinatura — nunca antes, como pré-requisito genérico de cadastro que faria Carlos abandonar a tarefa sem entender por quê."
+     },
+     {
+       "seq": 4,
+diff --git a/product/journeys/JNY-032.json b/product/journeys/JNY-032.json
+index c28b4e01..a82363c6 100644
+--- a/product/journeys/JNY-032.json
++++ b/product/journeys/JNY-032.json
+@@ -23,7 +23,7 @@
+     },
+     {
+       "seq": 4,
+-      "action": "Decisão — provido: A multa é cancelada. A tela de resultado é positiva e definitiva: \"Multa cancelada."
++      "action": "Decisão — provido. A multa é cancelada. A tela de resultado é positiva e definitiva: \"Multa cancelada. Você não precisa fazer mais nada.\" Se o pagamento já tinha sido feito antecipadamente (permitido, sem prejuízo do recurso — 918 art.33), o caminho de restituição corrigida (REF-CTB-extracts-raw art.286 §2º) é mostrado junto, não como um processo separado que o cidadão tem que descobrir sozinho."
+     },
+     {
+       "seq": 5,
+diff --git a/product/journeys/JNY-033.json b/product/journeys/JNY-033.json
+index f7cf054e..29a43763 100644
+--- a/product/journeys/JNY-033.json
++++ b/product/journeys/JNY-033.json
+@@ -13,7 +13,7 @@
+     },
+     {
+       "seq": 2,
+-      "action": "A resposta à pergunta real vem primeiro, não a lista: Antes de qualquer tabela de multas, a tela abre com uma frase objetiva: \"Você tem 14 pontos nos últimos 12 meses. Sua CNH está dentro do limite.\" (ou, se próximo do limite: \"Você está a 6 pontos do limite da sua categoria — veja o que isso significa\")."
++      "action": "A resposta à pergunta real vem primeiro, não a lista. Antes de qualquer tabela de multas, a tela abre com uma frase objetiva: \"Você tem 14 pontos nos últimos 12 meses. Sua CNH está dentro do limite.\" (ou, se próximo do limite: \"Você está a 6 pontos do limite da sua categoria — veja o que isso significa\"). A lista de infrações vem depois, como detalhe, não como a primeira coisa que Josué precisa decifrar sozinho."
+     },
+     {
+       "seq": 3,
+diff --git a/product/journeys/JNY-039.json b/product/journeys/JNY-039.json
+index a5d3f7ac..85613fc3 100644
+--- a/product/journeys/JNY-039.json
++++ b/product/journeys/JNY-039.json
+@@ -13,7 +13,7 @@
+     },
+     {
+       "seq": 2,
+-      "action": "Confirmação explícita antes de processar: Antes de finalizar, a tela confirma em uma frase: \"Você está pagando esta multa agora. Isso não impede você de continuar se defendendo ou recorrendo — o processo continua normalmente\" (REF-CONTRAN-918 art.33, caput)."
++      "action": "Confirmação explícita antes de processar. Antes de finalizar, a tela confirma em uma frase: \"Você está pagando esta multa agora. Isso não impede você de continuar se defendendo ou recorrendo — o processo continua normalmente\" (REF-CONTRAN-918 art.33, caput). Nenhuma letra miúda faz esse trabalho — é a frase principal da tela de confirmação."
+     },
+     {
+       "seq": 3,
+diff --git a/product/specification.md b/product/specification.md
+index 8305be8f..2438d580 100644
+--- a/product/specification.md
++++ b/product/specification.md
+@@ -1,6 +1,6 @@
+-# Especificação de produto — transcrição R-0019
++# Especificação de produto — proposta draft do Owner, transcrita pelo Architect (R-0019)
+ 
+-**Autoridade:** Owner. **Estado da proposta:** draft, aguardando aceite explícito do Owner.
++**Authority:** Owner (Constitution Article 6). **Estado da proposta:** draft, aguardando aceite explícito do Owner.
+ 
+ Esta especificação indexa as transcrições DEVAI das fontes publicadas em `docs/framework/`. As fichas-fonte permanecem no lugar.
+ 
+diff --git a/product/use-cases/boat.json b/product/use-cases/boat.json
+index 39bdddd3..b56d03c3 100644
+--- a/product/use-cases/boat.json
++++ b/product/use-cases/boat.json
+@@ -2,12 +2,10 @@
+   "schemaVersion": "1.0.0",
+   "roles": [
+     "Agente de trânsito (field-agent)",
+-    "Agente",
+-    "Operador de processamento/autoridade",
+     "Agente de trânsito",
++    "Operador de processamento/autoridade",
+     "Um parceiro facultativo já credenciado",
+     "Coordenador de RENAEST (municipal, onde aplicável, ou estadual — DETRAN-AM)",
+-    "O agente de trânsito",
+     "Encarregado",
+     "Operadores autorizados do órgão"
+   ],
+@@ -48,7 +46,7 @@
+       "id": "UC-BOAT-002",
+       "title": "Agente registra veículos e pessoas envolvidas",
+       "goal": "Agente registra todos os veículos e pessoas envolvidas no sinistro (condutores, passageiros, pedestres, ciclistas), com seus papéis e vínculos entre si.",
+-      "actors": ["Agente"],
++      "actors": ["Agente de trânsito"],
+       "mainFlow": [
+         {
+           "id": "UC-BOAT-002-001",
+@@ -72,7 +70,7 @@
+       "id": "UC-BOAT-003",
+       "title": "Agente registra vítimas e classifica gravidade",
+       "goal": "Agente registra cada vítima do sinistro, classificando gravidade e circunstâncias de atendimento, com controle de acesso reforçado aos dados sensíveis coletados.",
+-      "actors": ["Agente"],
++      "actors": ["Agente de trânsito"],
+       "mainFlow": [
+         {
+           "id": "UC-BOAT-003-001",
+@@ -104,7 +102,7 @@
+       "id": "UC-BOAT-004",
+       "title": "Agente captura croqui, evidências e associa AITs/medidas",
+       "goal": "Agente documenta o sinistro visualmente (croqui, fotos) e associa AITs e medidas administrativas lavrados no mesmo atendimento.",
+-      "actors": ["Agente"],
++      "actors": ["Agente de trânsito"],
+       "mainFlow": [
+         {
+           "id": "UC-BOAT-004-001",
+@@ -180,7 +178,7 @@
+       "id": "UC-BOAT-007",
+       "title": "Agente captura as três condutas de cena estruturadas (arts. 176-178) em substituição a `evaded`",
+       "goal": "Agente registra, de forma estruturada, qual dos três regimes de dever da cena do sinistro (CTB arts. 176, 177 e 178) foi observado por cada condutor/veículo envolvido — substituindo o campo booleano único `evaded` de `CrashVehicle` por dados que distinguem os três regimes jurídicos distintos. Este UC é o refinamento de produto mais consequente desta rodada BPO (ver `_intake/bpo-notes.md`).",
+-      "actors": ["Agente"],
++      "actors": ["Agente de trânsito"],
+       "mainFlow": [
+         {
+           "id": "UC-BOAT-007-001",
+@@ -266,7 +264,7 @@
+       "id": "UC-BOAT-010",
+       "title": "Bodycam no atendimento a sinistro",
+       "goal": "O agente de trânsito mantém a câmera corporal ativa durante todo o atendimento a um sinistro, vinculando o trecho de gravação correlato ao `CrashRecord` — mesma doutrina de bodycam já integralmente modelada em UC-TEAT-010 (núcleo TEAT), aqui apenas referenciada e ancorada ao domínio de sinistro, sem remodelagem.",
+-      "actors": ["O agente de trânsito"],
++      "actors": ["Agente de trânsito"],
+       "mainFlow": [
+         {
+           "id": "UC-BOAT-010-001",
+diff --git a/product/use-cases/pec.json b/product/use-cases/pec.json
+index 0d19c4e1..2d5a53f4 100644
+--- a/product/use-cases/pec.json
++++ b/product/use-cases/pec.json
+@@ -8,13 +8,12 @@
+     "Médico (exame médico) ou Psicólogo (exame psicológico)",
+     "Médico, Psicólogo ou Supervisor",
+     "Profissional autorizado",
+-    "O sistema",
++    "Sistema",
+     "Médico (ou Psicólogo, quando aplicável)",
+     "SENATRAN/RENACH",
+     "Adaptador SENATRAN",
+     "PEC",
+     "Operador de integração",
+-    "Sistema",
+     "Gestor DETRAN (ou DPO, em conformidade LGPD)"
+   ],
+   "cases": [
+@@ -258,7 +257,7 @@
+       "id": "UC-PEC-009",
+       "title": "Transmitir resultado ao RENACH e tratar ACK/erro",
+       "goal": "O sistema enfileira e transmite eventos relevantes do encounter (encounter, laudo, restrição) ao RENACH/DETRAN, tratando confirmação (ACK) ou erro de forma idempotente. Origem: SUC-UC-18 (\"Gerar transmissão de janela ≤15min\"), SUC-UC-19 (\"Receber ACK do DETRAN\"), SUC-UC-20 (\"Reprocessar transmissão com erro\").",
+-      "actors": ["O sistema"],
++      "actors": ["Sistema"],
+       "mainFlow": [
+         {
+           "id": "UC-PEC-009-001",
+diff --git a/product/use-cases/rait.json b/product/use-cases/rait.json
+index eb60a74a..c244d880 100644
+--- a/product/use-cases/rait.json
++++ b/product/use-cases/rait.json
+@@ -28,7 +28,6 @@
+     "Autoridade de trânsito (decadência) ou presidente do colegiado (prescrição por não julgamento ou paralisação)",
+     "Secretaria do órgão (ou da JARI)",
+     "Subcoordenador da defesa prévia",
+-    "Membro",
+     "Interessado",
+     "Secretaria de protocolo",
+     "O agregado da infração",
+@@ -42,7 +41,8 @@
+     "Gestor RAIT, com o dirigente do órgão",
+     "Área de processamento/notificação",
+     "Auditor/corregedor",
+-    "Administrador do órgão"
++    "Administrador do órgão",
++    "Presidente do colegiado (ou autoridade, no 1º circuito)"
+   ],
+   "cases": [
+     {
+@@ -733,7 +733,11 @@
+       "id": "UC-RAIT-026",
+       "title": "Tratar impedimento declarado ou suspeição arguida",
+       "goal": "Membro (declara impedimento) ou interessado (argui suspeição) provoca a verificação de quem pode atuar no caso; o presidente decide a suspeição e o sistema redistribui, com registro que vale para sorteios e bancas futuras.",
+-      "actors": ["Membro", "Interessado"],
++      "actors": [
++        "Membro do colegiado",
++        "Interessado",
++        "Presidente do colegiado (ou autoridade, no 1º circuito)"
++      ],
+       "mainFlow": [
+         {
+           "id": "UC-RAIT-026-001",
+diff --git a/tools/law/tests/verify.test.mjs b/tools/law/tests/verify.test.mjs
+index 9b2f181c..576b3704 100644
+--- a/tools/law/tests/verify.test.mjs
++++ b/tools/law/tests/verify.test.mjs
+@@ -714,3 +714,398 @@ test('dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta
+ 
+   assertRuleViolationFor(result, 'd', 'UC-INF-001');
+ });
++
++async function writeGlossaryVariant(repoRoot, id, term, overrides = {}) {
++  const directory = join(repoRoot, 'law/glossary');
++  await mkdir(directory, { recursive: true });
++  await writeFile(
++    join(directory, `${id}.json`),
++    JSON.stringify({
++      schemaVersion: '1.0.0',
++      id,
++      term,
++      definition: 'Definição destilada de fixture.',
++      authority: 'joint',
++      status: 'draft',
++      category: 'technical',
++      provenance: ['docs/framework/glossary/domain.md:4'],
++      related_invariants: [],
++      ...overrides,
++    }),
++  );
++}
++
++async function writeJourneyVariant(repoRoot, id, sourceId, overrides = {}) {
++  const directory = join(repoRoot, 'product/journeys');
++  await mkdir(directory, { recursive: true });
++  await writeFile(
++    join(directory, `${id}.json`),
++    JSON.stringify({
++      schemaVersion: '1.0.0',
++      id,
++      title: `Jornada ${sourceId}`,
++      status: 'draft',
++      persona: { role: 'agente' },
++      preconditions: [],
++      steps: [{ seq: 1, action: 'Executa a ação.' }],
++      postconditions: [],
++      acceptance_criteria: [{ id: 'AC-001', statement: 'source_pending' }],
++      provenance: [sourceId],
++      related_invariants: [],
++      ...overrides,
++    }),
++  );
++}
++
++async function writeUseCaseBundleVariant(
++  repoRoot,
++  filename,
++  cases,
++  roles = ['agente'],
++) {
++  const directory = join(repoRoot, 'product/use-cases');
++  await mkdir(directory, { recursive: true });
++  await writeFile(
++    join(directory, filename),
++    JSON.stringify({ schemaVersion: '1.0.0', roles, cases }),
++  );
++}
++
++async function writeUseCaseSourceAt(repoRoot, directoryName, id, title) {
++  const directory = join(
++    repoRoot,
++    `docs/framework/product/domains/${directoryName}/use-cases`,
++  );
++  await mkdir(directory, { recursive: true });
++  await writeFile(
++    join(directory, `${id}.md`),
++    `---\nid: ${id}\ntitle: ${title}\n---\n\n# ${title}\n`,
++  );
++}
++
++function assertTargetedViolation(result, rule, code, reference) {
++  assert.ok(
++    violationsFor(result.violations, rule).some(
++      (violation) =>
++        violation.code === code &&
++        (violation.path.includes(reference) ||
++          violation.detail.includes(reference)),
++    ),
++    `Expected ${code} for ${reference}; received ${JSON.stringify(violationsFor(result.violations, rule))}`,
++  );
++}
++
++test('dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE]', async () => {
++  const fixture = await makeFixture();
++  await writeGlossarySource(fixture.repoRoot, ['AIT']);
++  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT');
++  await writeGlossaryVariant(fixture.repoRoot, 'GE-002', 'ait');
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'c',
++    'GLOSSARY_TERM_DUPLICATE',
++    'GE-002.json',
++  );
++});
++
++test('dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID]', async () => {
++  const fixture = await makeFixture();
++  await writeGlossarySource(fixture.repoRoot, ['AIT']);
++  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
++    status: 'accepted',
++  });
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'c',
++    'GLOSSARY_STATUS_INVALID',
++    'GE-001.json',
++  );
++});
++
++test('dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING]', async () => {
++  const fixture = await makeFixture();
++  await writeGlossarySource(fixture.repoRoot, ['AIT']);
++  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
++    provenance: [],
++  });
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'c',
++    'GLOSSARY_PROVENANCE_MISSING',
++    'GE-001.json',
++  );
++});
++
++test('dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED]', async () => {
++  const fixture = await makeFixture();
++  await writeGlossarySource(fixture.repoRoot, ['AIT']);
++  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
++    related_invariants: ['INV-INF-999'],
++  });
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'c',
++    'GLOSSARY_INVARIANT_UNRESOLVED',
++    'GE-001.json',
++  );
++});
++
++test('dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING]', async () => {
++  const fixture = await makeFixture();
++  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
++  await writeJourneyVariant(fixture.repoRoot, 'JNY-002', 'JRN-PEC-001');
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'JOURNEY_DIVERGENT', 'JNY-002.json');
++});
++
++test('dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE]', async () => {
++  const fixture = await makeFixture();
++  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
++  await writeJourneyVariant(fixture.repoRoot, 'JNY-001', 'JRN-PEC-001', {
++    title: 'Título divergente',
++  });
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'JOURNEY_DIVERGENT', 'JNY-001.json');
++});
++
++test('dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseSource(fixture.repoRoot, 'UC-INF-001', 'Título de origem');
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
++    {
++      id: 'UC-INF-001',
++      title: 'Título divergente',
++      actors: ['agente'],
++      mainFlow: [],
++    },
++  ]);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'inf.json');
++});
++
++test('dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseSourceAt(
++    fixture.repoRoot,
++    'inf',
++    'UC-INF-001',
++    'Caso de uso',
++  );
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'portal.json', [
++    {
++      id: 'UC-INF-001',
++      title: 'Caso de uso',
++      actors: ['agente'],
++      mainFlow: [],
++    },
++  ]);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'portal.json');
++});
++
++test('dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE]', async () => {
++  const fixture = await makeFixture();
++  const useCase = {
++    id: 'UC-INF-001',
++    title: 'Caso de uso',
++    actors: ['agente'],
++    mainFlow: [],
++  };
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [useCase]);
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'other.json', [useCase]);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'BUNDLE_ID_DUPLICATE', 'other.json');
++});
++
++test('dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
++    {
++      id: 'UC-INF-001',
++      title: 'Caso de uso',
++      actors: ['secretaria'],
++      mainFlow: [],
++    },
++  ]);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'd',
++    'USE_CASE_ROLE_UNDECLARED',
++    'UC-INF-001',
++  );
++});
++
++test('dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseSource(fixture.repoRoot, 'UC-INF-001', 'Caso de uso');
++  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
++    { id: 'UC-INF-001', title: 'Caso de uso', actors: [], mainFlow: [] },
++  ]);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'inf.json');
++});
++
++for (const [label, overrides] of [
++  ['sem steps', { steps: [] }],
++  ['sem AC', { acceptance_criteria: [] }],
++  ['sem persona', { persona: {} }],
++  ['status não draft', { status: 'accepted' }],
++]) {
++  test(`dado JNY ${label} então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_${label.replaceAll(' ', '_')}]`, async () => {
++    const fixture = await makeFixture();
++    await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
++    await writeJourneyVariant(
++      fixture.repoRoot,
++      'JNY-001',
++      'JRN-PEC-001',
++      overrides,
++    );
++
++    const result = await verifyLawCorpus(fixture);
++
++    assertTargetedViolation(
++      result,
++      'd',
++      'JOURNEY_CONTENT_INCOMPLETE',
++      'JNY-001.json',
++    );
++  });
++}
++
++const journeySourceIds = [
++  ...Array.from(
++    { length: 7 },
++    (_, index) => `JRN-PEC-${String(index + 1).padStart(3, '0')}`,
++  ),
++  ...Array.from(
++    { length: 5 },
++    (_, index) => `JRN-BOAT-${String(index + 1).padStart(3, '0')}`,
++  ),
++  ...Array.from(
++    { length: 4 },
++    (_, index) => `JRN-RAIT-${String(index + 1).padStart(3, '0')}`,
++  ),
++  ...Array.from(
++    { length: 6 },
++    (_, index) => `JRN-TEAT-${String(index + 1).padStart(3, '0')}`,
++  ),
++  ...Array.from(
++    { length: 7 },
++    (_, index) => `JRN-DASH-${String(index + 1).padStart(3, '0')}`,
++  ),
++  ...Array.from(
++    { length: 11 },
++    (_, index) => `JRN-PORTAL-${String(index + 1).padStart(3, '0')}`,
++  ),
++];
++
++test('dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT]', async () => {
++  const fixture = await makeFixture();
++  for (const id of journeySourceIds.slice(0, 39)) {
++    await writeJourneySource(fixture.repoRoot, id);
++  }
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'd',
++    'JOURNEY_SOURCE_COUNT_DIVERGENT',
++    'docs/framework/product',
++  );
++});
++
++test('dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT]', async () => {
++  const fixture = await makeFixture();
++  for (const [index, id] of journeySourceIds.entries()) {
++    await writeJourneySource(fixture.repoRoot, id);
++    if (index < 39) {
++      await writeJourneyVariant(
++        fixture.repoRoot,
++        `JNY-${String(index + 1).padStart(3, '0')}`,
++        id,
++      );
++    }
++  }
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'd',
++    'JOURNEY_OUTPUT_COUNT_DIVERGENT',
++    'product/journeys',
++  );
++});
++
++async function writeUseCaseSet(repoRoot, count, bundleCount) {
++  const cases = Array.from({ length: bundleCount }, (_, index) => ({
++    id: `UC-INF-${String(index + 1).padStart(3, '0')}`,
++    title: `Caso ${index + 1}`,
++    actors: ['agente'],
++    mainFlow: [],
++  }));
++  for (let index = 0; index < count; index += 1) {
++    await writeUseCaseSource(
++      repoRoot,
++      `UC-INF-${String(index + 1).padStart(3, '0')}`,
++      `Caso ${index + 1}`,
++    );
++  }
++  await writeUseCaseBundleVariant(repoRoot, 'inf.json', cases);
++}
++
++test('dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseSet(fixture.repoRoot, 109, 109);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'd',
++    'USE_CASE_SOURCE_COUNT_DIVERGENT',
++    'docs/framework/product',
++  );
++});
++
++test('dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT]', async () => {
++  const fixture = await makeFixture();
++  await writeUseCaseSet(fixture.repoRoot, 110, 109);
++
++  const result = await verifyLawCorpus(fixture);
++
++  assertTargetedViolation(
++    result,
++    'd',
++    'USE_CASE_OUTPUT_COUNT_DIVERGENT',
++    'product/use-cases',
++  );
++});
+diff --git a/work/rounds/R-0019/budget.json b/work/rounds/R-0019/budget.json
+index c19ce360..d6f372d3 100644
+--- a/work/rounds/R-0019/budget.json
++++ b/work/rounds/R-0019/budget.json
+@@ -5,8 +5,8 @@
+   "checkpoint_at": "2026-09-26",
+   "window_input_budget": 650000,
+   "checkpoint_threshold": 520000,
+-  "estimated_input_total": 1281823,
+-  "estimated_output_total": 235004,
++  "estimated_input_total": 1551823,
++  "estimated_output_total": 278004,
+   "note": "Owner waived the token budget on 2026-09-26 to allow R-0019 to finish. Estimates remain for audit only; actual per-worker usage was not exposed by the subagent interface. The Claude alias opus resolved to claude-opus-5-5 during bootstrap.",
+   "entries": [
+     {
+@@ -256,6 +256,38 @@
+       "input_tokens": 65000,
+       "output_tokens": 14000,
+       "note": "Engineer gate rules c/d against six Inspector RED tests; provisional estimate."
++    },
++    {
++      "kind": "reviewer",
++      "id": "delivery-review-CTG-0002-cycle-1",
++      "model": "claude-opus-5-5",
++      "input_tokens": 120000,
++      "output_tokens": 7000,
++      "note": "Cross-family exhaustive review of 115 staged paths/8027 diff lines; REVIEW 4 high and 5 low."
++    },
++    {
++      "kind": "worker-escalation",
++      "id": "TASK-0008-delivery-source-fidelity",
++      "model": "gpt-6-sol/high",
++      "input_tokens": 100000,
++      "output_tokens": 25000,
++      "note": "Product Architect escalation for 45 truncated journey steps, Owner authority index and source actor low finding."
++    },
++    {
++      "kind": "worker-iteration",
++      "id": "TASK-0009-delivery-coverage",
++      "model": "gpt-6-luna/medium",
++      "input_tokens": 40000,
++      "output_tokens": 9000,
++      "note": "Inspector adds direct negative tests for every contract §5 rejection branch and mutation evidence."
++    },
++    {
++      "kind": "worker-iteration",
++      "id": "TASK-0007-delivery-law-index",
++      "model": "gpt-6-luna/low",
++      "input_tokens": 10000,
++      "output_tokens": 2000,
++      "note": "Architect transcriber updates law root index and glossary authority header."
+     }
+   ]
+ }
+diff --git a/work/rounds/R-0019/compositions.json b/work/rounds/R-0019/compositions.json
+index ce40b2a9..c8341feb 100644
+--- a/work/rounds/R-0019/compositions.json
++++ b/work/rounds/R-0019/compositions.json
+@@ -94,5 +94,29 @@
+     "pc_id": "PC-2ceaaf2bc0745929",
+     "model": "gpt-5.6-terra",
+     "effort": "high"
++  },
++  {
++    "task_id": "TASK-0008-DELIVERY",
++    "prompt_path": "work/rounds/R-0019/prompts/TASK-0008-delivery-correction.md",
++    "sha256": "bef9b04d0e02c22db7ab29420aa91d5f9e845f43dbb594994bba7783c120eed6",
++    "pc_id": "PC-bef9b04d0e02c22d",
++    "model": "gpt-6-sol",
++    "effort": "high"
++  },
++  {
++    "task_id": "TASK-0009-DELIVERY",
++    "prompt_path": "work/rounds/R-0019/prompts/TASK-0009-delivery-correction.md",
++    "sha256": "5fe3f8b69a408061611e38e2ad6379152502bb1a48b2ab1ea0eb1124c3696653",
++    "pc_id": "PC-5fe3f8b69a408061",
++    "model": "gpt-6-luna",
++    "effort": "medium"
++  },
++  {
++    "task_id": "TASK-0007-DELIVERY",
++    "prompt_path": "work/rounds/R-0019/prompts/TASK-0007-delivery-correction.md",
++    "sha256": "206441e45328622dc875ccc0be6400516b0a63c93c7c7dfc84b2c1f3075e5964",
++    "pc_id": "PC-206441e45328622d",
++    "model": "gpt-6-luna",
++    "effort": "low"
+   }
+ ]
+diff --git a/work/rounds/R-0019/contracts/CTG-0002.md b/work/rounds/R-0019/contracts/CTG-0002.md
+index 7e67c2aa..41b7283f 100644
+--- a/work/rounds/R-0019/contracts/CTG-0002.md
++++ b/work/rounds/R-0019/contracts/CTG-0002.md
+@@ -36,7 +36,7 @@ forma fechada e destilada a seguir, nunca a reprodução literal da tabela-fonte
+ | GE-007 | Recurso 2ª instância                      | Recurso ao CETRAN contra a decisão da JARI.                                                 | regulatory  | 30                   |
+ | GE-008 | Indicação de condutor                     | Ato pelo qual o proprietário aponta o infrator.                                             | business    | 31                   |
+ | GE-009 | SNE                                       | Sistema de Notificação Eletrônica para adesão e notificações digitais.                      | technical   | 32                   |
+-| GE-010 | RENAINF                                   | Registro Nacional de Infrações; a fonte não declara sua expansão normativa.                 | regulatory  | 33; `source_pending` |
++| GE-010 | RENAINF                                   | Registro Nacional de Infrações; fonte normativa pendente.                                   | regulatory  | 33; `source_pending` |
+ | GE-011 | Talonário eletrônico                      | Software de registro de infrações em equipamento preparado ou sistema do órgão.             | technical   | 34; `INV-INF-001`    |
+ | GE-012 | Faixa de numeração de AIT                 | Intervalo reservado de números de AIT para operação offline.                                | technical   | 35                   |
+ | GE-013 | Reserva de numeração offline              | Subintervalo temporário atribuído a agente e dispositivo para finalizar atos offline.       | technical   | 36                   |
+diff --git a/work/rounds/R-0019/plan.md b/work/rounds/R-0019/plan.md
+index e6cf9b8a..4fc16185 100644
+--- a/work/rounds/R-0019/plan.md
++++ b/work/rounds/R-0019/plan.md
+@@ -315,6 +315,16 @@ antes/depois da repetição completa ficou idêntico. `git fetch` encontrou
+ `bf337148` (PR #135 de R-0018) em `origin/main`; integrar por merge antes do
+ PR CTG-0002 e repetir os gates aplicáveis.
+ 
++- Delivery-review CTG-0002 ciclo 1 pela outra família (Claude Opus 5.5): **REVIEW**, quatro high e cinco low. High: 45 passos JNY perdem detalhes materiais de fonte; ramos de rejeição (c)/(d) sem testes diretos; `law/README.md` desatualizado; `product/README.md` sem linha explícita de autoridade Owner. Correções segregadas: Architect produto escalado Sol/high, Inspector testes Luna/medium, Architect índice law Luna/low. Revisor ciclo 2 fica restrito aos achados corrigidos. Nenhum commit de conteúdo ou PR antes de PASS.
++
++- TASK-0007, iteração 2/2: Architect corrigiu `law/README.md` e o cabeçalho de autoridade do índice do glossário; links relativos e `pnpm format:check` PASS. Registro em `reports/TASK-0007-delivery-correction.md`.
++
++- Architect, achado low da revisão: GE-010 e seu contrato agora dizem que “Registro Nacional de Infrações” é a expansão dada pela fonte e que a **fonte normativa** segue pendente (`source_pending`); `docs/framework/glossary/domain.md:33` permanece intacto. Relatório TASK-0010 foi ajustado para descrever a verificação efetiva de paridade GE com linhas fonte e descoberta dos bundles, sem alegar contador/whitelist próprios.
++
++- TASK-0008, escalada Sol/high de correção de entrega: auditoria 40/40 JNY e 294/294 passos de narrativa, com 49 passos restaurados em 26 jornadas; 110 UC/532 passos de fluxo conferidos. Autoridade Owner do índice `product/` restaurada, papéis equivalentes normalizados e presidente incluído em UC-RAIT-026. `devai check --only journeys` 40/40 e `pnpm format:check` PASS. Relatório em `reports/TASK-0008-delivery-correction.md`.
++
++- TASK-0009, iteração Inspector 1/2: 19 negativos diretos acrescentados; `pnpm law:test` 56/56 PASS. Em cópia descartável do verificador, cada caso ficou RED quando o respectivo código de violação foi suprimido (19/19). `pnpm format:check` do maestro PASS após formatação do prompt de review ciclo 2. Relatório em `reports/TASK-0009-delivery-correction.md`.
++
+ ## Retomada
+ 
+ **Estado corrente — CTG-0002:** CTG-0001 está integrado e observado no HEAD
+diff --git a/work/rounds/R-0019/reports/TASK-0010.md b/work/rounds/R-0019/reports/TASK-0010.md
+index 60356c2f..3a5649fd 100644
+--- a/work/rounds/R-0019/reports/TASK-0010.md
++++ b/work/rounds/R-0019/reports/TASK-0010.md
+@@ -2,7 +2,7 @@ Papel: Engineer
+ Tarefa: TASK-0010
+ Arquivos criados/alterados: `tools/law/verify.mjs`.
+ Comandos executados e saída resumida: `pnpm law:test` 37/37 PASS; `pnpm verify:law-corpus` PASS no corpus real; `pnpm check` exit 0. Prettier aplicado somente ao gate.
+-Critérios de aceitação: PASS — regras (c)/(d) adicionadas sem alterar os testes; inventários fechados 44 GE, 40 JRN/JNY e 110 UC; famílias domain e transversal, mapa fixo, títulos, duplicatas e papéis de bundle verificados.
++Critérios de aceitação: PASS — regras (c)/(d) adicionadas sem alterar os testes; paridade GE com as linhas fonte, contagens fechadas de 40 JRN/JNY e 110 UC; famílias domain e transversal descobertas, mapa fixo, títulos, duplicatas e papéis de bundle verificados.
+ Fora do escopo / deixado: comparação textual de atores UC com parágrafos livres de origem não é mecanicamente segura; cada `cases[].actors` deve pertencer a `bundle.roles` e revisão de conteúdo cabe ao reviewer/Owner.
+ OD tocadas ou propostas: nenhuma.
+ Bloqueios: nenhum.
+diff --git a/work/rounds/R-0019/tasks/TASK-0007.json b/work/rounds/R-0019/tasks/TASK-0007.json
+index e2bbea70..d66c52b7 100644
+--- a/work/rounds/R-0019/tasks/TASK-0007.json
++++ b/work/rounds/R-0019/tasks/TASK-0007.json
+@@ -15,7 +15,7 @@
+   "coupled_pipeline_position": "architect",
+   "upstream_task_id": "TASK-0006",
+   "db_isolation": "database",
+-  "iteration_count": 1,
++  "iteration_count": 2,
+   "max_iterations": 2,
+   "priority": 2,
+   "tags": [
+diff --git a/work/rounds/R-0019/tasks/TASK-0009.json b/work/rounds/R-0019/tasks/TASK-0009.json
+index 9730296b..f7bcd99f 100644
+--- a/work/rounds/R-0019/tasks/TASK-0009.json
++++ b/work/rounds/R-0019/tasks/TASK-0009.json
+@@ -15,7 +15,7 @@
+   "coupled_pipeline_position": "inspector",
+   "upstream_task_id": "TASK-0008",
+   "db_isolation": "database",
+-  "iteration_count": 0,
++  "iteration_count": 1,
+   "max_iterations": 2,
+   "priority": 2,
+   "tags": [

@@ -1,0 +1,89 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0019",
+  "ctg": "CTG-0002",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "product/journeys/JNY-001.json",
+      "line": 12,
+      "claim": "Journey steps are truncated, and some honest gaps from the source are lost. I compared each step with its numbered item in the source 'Narrativa ponta-a-ponta' section: 45 of 294 steps keep less than 90% of the source text, spread across 26 JNY (001, 002, 003, 004, 005, 007, 008, 010, 011, 012, 013, 014, 015, 016, 017, 019, 020, 021, 022, 023, 026, 030, 031, 032, 033, 039). Concrete cases: (1) JNY-001 step 1 ends on the bare heading 'Nota de conformidade (não resolvida).' and drops the unresolved CFM 1.636/2002 art. 3º point about impartial clinic distribution. (2) JNY-001 step 4 drops the 2-business-day deadline for the psychological result and the reduced-validity rule (art. 9º §§2º-3º). (3) JNY-003:30 ends on the heading 'Base legal (com ressalva de vigência).' and drops the Portaria 968/2022 vs 495/2025 vigência caveat and the note that no federal norm requires the approver. (4) JNY-032:26 stops mid-quote at '\"Multa cancelada.' and drops the restitution path. (5) JNY-008 step 3 drops 'não existe, em nenhuma fonte lida, um requisito de captura completa antes da remoção'. JNY-008 step 6 (line 31) drops 'sem critério normativo de precedência encontrado nas fontes lidas', which is the gap OD-R19-004 records. The pattern looks like a sentence splitter cutting at bold labels and at periods inside quotes. This breaks contract §3 ('todos os passos da seção Narrativa') and the escalation prompt's explicit rule 'um passo não pode ser só cabeçalho nem texto truncado'. The TASK-0008 report still states PASS.",
+      "fix": "Architect: re-transcribe every Narrativa item of the 40 JRN in full, or as a faithful distillation that keeps every material condition, deadline, legal caveat and declared gap. Include sub-bullets and bold-labelled notes, and do not split at periods inside quotes or abbreviations. Rerun a local audit that compares each step with its source item: no step below the source content, and no step ending on a heading or open quote. Record the per-JNY result in the TASK-0008 report, then rerun `devai check --only journeys` and format."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "tools/law/tests/verify.test.mjs",
+      "line": 605,
+      "claim": "The new rule (c)/(d) tests cover only the missing and orphan cases: term without GE, GE without term, JRN without JNY, JNY without JRN, UC without bundle entry, and bundle entry without UC. C-02-04 and §5 also require rejecting several other cases, and none of them has a test: case-insensitive duplicate GE term; GE status other than draft; missing GE provenance; unresolved related_invariants; swapped JNY↔JRN ID; divergent JNY title; divergent UC title; UC in the wrong bundle; duplicate bundle case ID; actor missing from roles or empty actors; incomplete JNY content (no steps, no AC, no persona, non-draft); totals other than 40 or 110. verify.mjs implements branches for these (GLOSSARY_TERM_DUPLICATE, GLOSSARY_STATUS_INVALID, GLOSSARY_PROVENANCE_MISSING, GLOSSARY_INVARIANT_UNRESOLVED, JOURNEY_DIVERGENT, JOURNEY_CONTENT_INCOMPLETE, BUNDLE_ID_DUPLICATE, USE_CASE_DIVERGENT, USE_CASE_ROLE_UNDECLARED, *_COUNT_DIVERGENT), but no test exercises them, so removing any of these branches would leave the suite green.",
+      "fix": "Inspector: add one negative test per §5 violation, each asserting the specific violation code and the path/ID. Show RED against a verify.mjs with that branch removed (disposable copy or recorded mutation), then GREEN on the current gate. Do not edit the existing tests. Engineer changes the gate only if a new test exposes a gap."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "law/README.md",
+      "line": 14,
+      "claim": "The law index is stale after this CTG. Lines 14-15 still say the glossary 'corpus is pending CTG-0002', although the diff adds GE-001…GE-044. Line 24 still says the gate enforces 'rules (a), (b), and (e)', although verify.mjs now adds (c) glossary parity and (d) product parity. The DEVAI member list also omits `glossary` and `journeys`.",
+      "fix": "Architect transcriber: update law/README.md to state that `glossary/` holds 44 draft GE entries under joint authority, still pending Owner acceptance. State that `pnpm verify:law-corpus` enforces rules (a)–(e), and add the DEVAI `glossary` and `journeys` members."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "product/README.md",
+      "line": 1,
+      "claim": "The diff deletes the canonical line '**Authority:** Owner (Constitution Article 6).' from the Owner-governed path `product/` (pinned constitution line 89), and retitles the index 'Product (propostas Architect para aceite do Owner)'. product/specification.md in the same diff says 'Autoridade: Owner', so the product index now declares authority inconsistently.",
+      "fix": "Restore '**Authority:** Owner (Constitution Article 6).' in product/README.md. Retitle it as an Owner draft proposal transcribed by the Architect, keeping the note that explicit Owner acceptance is pending."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "tools/law/verify.mjs",
+      "line": 531,
+      "claim": "Rule (c) checks only that provenance is a non-empty array. It does not check that provenance is `docs/framework/glossary/domain.md:<n>` with line n holding the entry's term, and it does not check that the GE file name matches the entry's `id`. Journey titles are compared case-insensitively (canonicalText), while UC titles are compared exactly.",
+      "fix": "Validate the GE provenance format and the term on the cited line, and check that basename equals id. Pick one title-comparison policy (exact, as for UC) for both JNY and UC."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0019/reports/TASK-0010.md",
+      "line": 5,
+      "claim": "The report claims the gate checks 'inventários fechados 44 GE' and six apps. The code has no GE count check and no whitelist of the six apps or bundles; GE parity is only against source rows.",
+      "fix": "Correct the report wording, or add explicit GE=44 and six-bundle checks with matching tests."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "law/glossary/GE-010.json",
+      "line": 5,
+      "claim": "The definition says 'a fonte não declara sua expansão normativa', but domain.md:33 does give 'Registro Nacional de Infrações'. What the source marks as pending is the normative basis ('fonte normativa pendente'). The wording comes from the contract.",
+      "fix": "At the next contract revision, reword it as 'Registro Nacional de Infrações; fonte normativa pendente (source_pending)'."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "law/glossary/README.md",
+      "line": 1,
+      "claim": "The standard header line '**Authority:** Owner and Architect, jointly (Constitution Article 6).' was replaced by prose. The prose keeps the meaning but drops the uniform authority line the other law READMEs use.",
+      "fix": "Restore the header line above the new prose."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "product/use-cases/pec.json",
+      "line": 3,
+      "claim": "Bundle roles include near-duplicate designations that differ only by article or wording: 'Sistema'/'O sistema' (pec), 'Agente de trânsito'/'O agente de trânsito'/'Agente' (boat), 'Membro'/'Membro do colegiado' (rait). UC-RAIT-026 omits the presidente, who decides the suspeição according to its 'Ator e objetivo'.",
+      "fix": "Normalize roles only where the source designations are equivalent (drop leading articles), and record any non-equivalent variant. Consider adding the presidente as an actor of UC-RAIT-026."
+    }
+  ],
+  "notes": [
+    "Read-only audit; I did not rerun the pnpm or DEVAI gates. The gate evidence was reviewed as recorded in plan.md and the TASK reports.",
+    "Glossary: all 44 GE match the contract catalog for term, definition, category, provenance line, related_invariants, authority 'joint' and status 'draft'. Each cited domain.md line contains its term. The only deviation is the '(source_pending)' suffix on GE-010, 026 and 036, where the source itself marks the pending point.",
+    "Journeys: 40/40 JNY IDs, persona.role, JRN provenance and source path match the contract §3 map, and step counts match the numbered source items. AC IDs follow AC-NNN (Adenda A-02-01). No measurable_via is invented. JNY-008/040 have empty pre/postconditions, which is defensible.",
+    "Use cases: 110/110 IDs are in the correct bundles with exact titles. All 532 mainFlow steps match the source numbered items in count and text. Actors are taken from 'Ator e objetivo' with only case or article normalization.",
+    "OD-R19-004/005/006 are present in the canonical R-0019 section of open-decisions-rait.md and match contract §6.",
+    "The order Architect→Inspector→Engineer and RED-before-GREEN is consistent with the reports. The test diff only adds tests, and nothing under docs/framework/** is changed. The segregated commits (product/**, law/glossary/**, gate) are still pending; the diff is staged, not committed."
+  ]
+}
