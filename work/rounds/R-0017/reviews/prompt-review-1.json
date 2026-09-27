@@ -1,0 +1,103 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 97,
+      "claim": "Line 97 tells the contract to probe SEFAZ in `health` 'conforme OD-R17-001', and line 103 lists 'SEFAZ mock proposto' in the externals matrix. TASK-0003.md:80 then orders the Engineer to implement `health` with 'SEFAZ conforme contrato' and have `start` wait until everything is healthy. The SEFAZ mock does not exist until TASK-0007 (CTG-0002; plan.md:137), and the local profile points at the nonexistent http://localhost:3999 (plan.md:86-87). In CTG-0001 the Engineer has three bad options: (a) probe a nonexistent server, so `health` and `start` always fail; (b) report `mock` in `config` for a service that does not exist, which invents state; or (c) invent some other behavior. The CTG-0001 delivery is not fully specified.",
+      "fix": "In TASK-0001 items 5 and 7, require the contract to fix the SEFAZ state for CTG-0001: `config` reports it as a literal such as `pending` (CTG-0002/OD-R17-001), and `health`/`start` do not probe it until TASK-0007. In TASK-0003.md:80, change 'SEFAZ conforme contrato' to 'SEFAZ fora de health em CTG-0001, conforme contrato'. TASK-0002 tests that state."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0002.md",
+      "line": 65,
+      "claim": "plan.md:179 has a file check: `git grep -n 'detran_r13' -- tools/ package.json docs/dev/` must be empty. The Inspector's suites live in `tools/stack/*.test.mjs`, which is under `tools/`. The prompt asks for tests that characterize the verbatim script, where the default is `detran_r13` (help text line 52/61, guard line 169). It also asks for the negative `db-reset`/`apply.sh --full` cases. A natural assertion such as 'the old name is refused' or 'help mentions detran_r13' breaks that round criterion. The prompt never warns about this, and TASK-0003 cannot edit tests.",
+      "fix": "In TASK-0002 (Tarefa section), add: 'o literal `detran_r13` não pode aparecer em `tools/**` (plan.md:179); negativos usam `unsafe_db` ou o nome novo do contrato; nenhuma asserção sobre o texto de `help` que cite o banco antigo'. Repeat the constraint in TASK-0001 item 1 so the C-01-nn criteria respect it."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 112,
+      "claim": "The contract (CTG-0001) will cite OD-R17-001 and OD-R17-002 and may propose new OD-R17-nnn. plan.md:226-227 (Lições) requires registering them in `open-decisions-rait.md`, in the round's section, 'no mesmo PR que as cita'. Today no R-0017 section or OD-R17 id exists in that file. The only task that writes it is TASK-0010 (CTG-0003), and plan.md:143 says 'Um PR por CTG'. So the CTG-0001 PR would cite unregistered ODs.",
+      "fix": "The maestro records a decision in plan.md §Decisões do maestro: the CTG-0001 PR includes the R-0017 section of `docs/meta/knowledge-base/open-decisions-rait.md` with OD-R17-001/002 and any ODs the contract proposes. This is done by a maestro/transcriber commit after TASK-0001 under lock MOD-open-decisions, and TASK-0010 only completes the section. TASK-0001 must list its proposed ODs in the `OD tocadas ou propostas` field."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0017/prompts/TASK-0002.md",
+      "line": 71,
+      "claim": "The list of what `revision.test.mjs` covers leaves out the SENATRAN mock: loopback binding through the stack override and a bounded health wait (TASK-0001 item 6; TASK-0003.md:72-74). The prompt's read list also lacks `senatran-mock/docker-compose.yml`. A C-01-nn could reach the Engineer with no test, which breaks rule 14 ('Testes só do Inspector').",
+      "fix": "Replace the list with 'todo C-01-nn marcado como pós-TASK-0003 no contrato, incluindo override loopback do mock e espera limitada', and add `senatran-mock/docker-compose.yml` to the closed read list."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0017/prompts/TASK-0002.md",
+      "line": 57,
+      "claim": "The characterization suite has to stay green after TASK-0003 (TASK-0003.md:66-67 and :91). The prompt does not forbid positive assertions that the revision will break, such as help text, the literal default database, or exact `status` output. Nor does it tell tests to isolate `DETRAN_STACK_STATE_DIR`, even though the script runs `mkdir -p` in `${TMPDIR}/detran-stack` on load (detran-stack.sh:5,38).",
+      "fix": "Add: 'caracterização só assere invariantes declarados como sobreviventes no contrato (exit codes, mensagens de recusa sem nome de banco, portas, projetos); todo teste define `DETRAN_STACK_STATE_DIR` num diretório temporário próprio e PATH com stubs de `docker`/`pnpm`'."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0017/prompts/TASK-0002.md",
+      "line": 57,
+      "claim": "TASK-0001 item 2 and the prompts' rules say the `apply.sh` cases `detran_r7_ctg1_a2` and `detran_r13` stay intact. No characterization test fixes their pre-connection refusals (exit 2 without the flag), so a regression TASK-0003 might cause in those cases goes undetected.",
+      "fix": "Add characterization of `bash backend/database/apply.sh --full` for an arbitrary name and for the existing cases without their flags (exit 2, before any connection), with the names built so the literal does not appear under `tools/`, or placed as the contract directs."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 88,
+      "claim": "The contract must define how the orchestrator serves `rait-web` (`apps/rait/web/angular.json` points `serve.buildTarget` at `portal-web`, a project that does not exist in that workspace). TASK-0002.md:76 requires an offline test on the 'comando efetivo', but TASK-0001 does not require an offline observation point for it, such as a `config` field or a dry-run. The Inspector might have to run `start` with stubs. Also, the 'sem editar o app' decision (a workaround in the tooling rather than fixing the app) is not recorded in §Decisões do maestro or in the backlog.",
+      "fix": "In item 4, require each frontend's effective command, including `--build-target` or equivalent, to appear in the `config` schema or in a dry-run subcommand. Record in §Decisões do maestro the choice not to edit `apps/rait/web`, with a backlog item to fix the `angular.json`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 88,
+      "claim": "The PEC status string appears in ASCII in the prompts ('nao construido (R-0031)') and with accents in plan.md:64 ('não construído (R-0031)'). The Inspector and the Engineer could each assert different bytes.",
+      "fix": "Require the contract to fix the exact status string (bytes/encoding) as a C-01-nn, and have both prompts refer to the contract rather than repeating the literal."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 100,
+      "claim": "Item 6 allows an 'override versionado' to bind the mock locally. In Compose, `ports` from override files are merged (appended), not replaced, so `3000:3000` on all interfaces would remain unless the override uses `!override`/`!reset`, which depends on the Compose version. The contract could fix a binding that cannot be achieved.",
+      "fix": "Require the contract to state the override mechanism and the minimum Compose version, or an alternative such as `docker compose run`/publishing to 127.0.0.1 without the original file, with an offline test that parses the override."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0017/tasks/TASK-0001.json",
+      "line": 25,
+      "claim": "The prompt's acceptance criterion `test -s work/rounds/R-0017/contracts/CTG-0001.md` (TASK-0001.md:119) is missing from `acceptance_commands`, which only has `pnpm format:check`.",
+      "fix": "Add `[\"test\",\"-s\",\"work/rounds/R-0017/contracts/CTG-0001.md\"]` to `acceptance_commands`."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0017/prompts/TASK-0001.md",
+      "line": 30,
+      "claim": "The plan's Mapa (plan.md:188) lists `backend/app/package.json` (`start`) as a definition for the orchestrator (the script runs `pnpm --filter @detran/app start` and checks `backend/app/dist/main.js`). It is not in TASK-0001's closed read list, which matters for defining `start`'s wait and the build.",
+      "fix": "Add `backend/app/package.json` (scripts `start`/`build` only) to the read list."
+    }
+  ],
+  "notes": [
+    "The prompt sha256 values match compositions.json (PC-2f5ae5ae…, PC-b76cc7bd…, PC-430b7290…); the script and proxy match the anchor (e91977b0…, 74a36b5c…); `git diff package.json` contains only the nine `stack:*` scripts.",
+    "ci.yml:180 (job `backend-kernel-full`, name `backend-kernel`) uses the same PostGIS digest as detran-stack.sh:11, so the digest test starts green against the verbatim bytes; TASK-0001 should mark it as characterization or invariant, not revision.",
+    "All five default `DETRAN_LOCAL_ROLES` values (detran-stack.sh:243) exist in `DETRAN_ROLES` (roles.ts:79-92), so that test is also green on the verbatim bytes.",
+    "Roles, locks and triad order (Architect → Inspector → checkpoint (a) → Engineer) match plan.md:131-147; no worker gets `git`; SENATRAN is only a mock through the adapter; CTG-0001 grants no roles (item 13 does not apply).",
+    "apps/pec/web/README.md still says 'no frontend planned', which contradicts ADR-0034; it is out of CTG-0001's boundary, so a backlog item for R-0031 is suggested.",
+    "`db_isolation: database` in TASK-0001/0002 is harmless but inaccurate; neither task uses a database."
+  ]
+}

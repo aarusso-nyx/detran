@@ -1,0 +1,111 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "tools/detran-stack.sh",
+      "line": 11,
+      "claim": "The script still accepts DETRAN_DB_IMAGE (l.11), DB_HOST/DB_PORT/DB_USER (l.13-15) and DETRAN_BACKEND_PORT (l.24). The CTG-0001 closed list rejects image, host and ports and does not accept DB_USER. `config` then reports the overridden image and DB port, which moves the contract's fixed surface. The help text (l.63-66) also advertises DB_NAME, DETRAN_DB_IMAGE, DB_PORT, DB_USER and DETRAN_BACKEND_PORT as overrides.",
+      "fix": "Hard-code the image (postgis digest), 127.0.0.1, 5432, postgres and 3001. Fail with die when any of DETRAN_DB_IMAGE, DB_HOST, DB_PORT, DB_USER or DETRAN_BACKEND_PORT is set. Update usage to list only the accepted variables. Add an offline test showing that each of these variables is rejected."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "tools/detran-stack.sh",
+      "line": 358,
+      "claim": "The backend (l.358-366) and frontends (l.385) start with `exec env`, which passes the parent's whole environment through, including *_TOKEN/*_SECRET/*_KEY/*_CERT, Cognito and PAdES/biometrics/council variables. None of the accepted variables is validated: DETRAN_RUNTIME_PROFILE takes any value, SENATRAN_PROVIDER may be something other than mock, and SENATRAN_MOCK_BASE_URL may point off loopback or carry userinfo. The contract requires these to be rejected or not passed through, with local-sandbox and mock only.",
+      "fix": "Use `env -i` with an explicit allowlist (PATH, HOME, the accepted variables and DATABASE_URL built inside the script). Fail with die unless DETRAN_RUNTIME_PROFILE is local-sandbox and SENATRAN_PROVIDER is mock. Require SENATRAN_MOCK_BASE_URL to be an http URL on 127.0.0.1 or localhost with no userinfo. Add offline tests for each rejection and for the absence of a sensitive variable in the backend's environment."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "tools/detran-stack.sh",
+      "line": 272,
+      "claim": "`start --no-mock` sets only with_mock locally (l.408-417). health_targets always probes senatran-mock (l.276), so a start with --no-mock fails after the timeout. config hard-codes senatran_mock.state 'active' (l.143) and never reports 'disabled'. The contract requires state=disabled and no probe under --no-mock.",
+      "fix": "Store the mock mode under STATE_DIR (for example `$STATE_DIR/mock.disabled`), written by start and cleared by stop. Have health_targets and config_stack read it, dropping the probe and emitting state 'disabled'. Add offline tests: `start --no-mock` with stubs followed by health/config produces no curl to :3000 and reports disabled."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "tools/detran-stack.sh",
+      "line": 407,
+      "claim": "start_stack has no cleanup on failure. If health_stack (l.420), mock_start or any step after start_backend/start_frontends fails, `set -e` exits and the backend and ng serve processes stay alive with PID files in STATE_DIR. The plan's lessons forbid leaving stray stack processes behind.",
+      "fix": "After the PIDs are recorded, set `trap 'stop_pid_file …' ERR` or explicitly handle a non-zero return from health_stack. The handler kills the PID tree of each frontend and the backend, and brings the mock down if this run started it, before returning non-zero. Add an offline test with a curl that always fails, checking that no PID file remains and that kill was called."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "tools/detran-stack.sh",
+      "line": 299,
+      "claim": "In a mock timeout, the diagnostic runs `docker compose … logs --tail=80 senatran-mock`. The Compose service is named `app` (senatran-mock/docker-compose.yml), so the command fails, `|| true` hides the failure and no mock log is printed. The failing service's diagnostic, required by C-01-11, does not happen for the mock.",
+      "fix": "Use `logs --tail=80 app` (map senatran-mock→app). Add an offline test where only :3000 fails, asserting that the docker stub receives `compose … logs --tail=80 app`."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/detran-stack.sh",
+      "line": 449,
+      "claim": "The revision removed real runtime state from status. It now prints 'database: managed' without inspecting the container, and 'senatran-mock: managed by Compose project' without `compose ps`, whereas the adopted version reported running/stopped/not created and called mock_status. The URLs are fixed values (l.466-471) and do not come from the table. status no longer matches the actual runtime.",
+      "fix": "Bring back the container_running/container_exists check and `mock_status || true`, which the existing test stubs already allow (inspect→1, compose ps→0). Generate the URLs from FRONTEND_* and report the mock as disabled when --no-mock is set."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "tools/stack/characterization.test.mjs",
+      "line": 135,
+      "claim": "The C-01-03 test instruments docker/pnpm/psql in stub-calls.log, but its only negative assertion runs against stdout/stderr (/applying|resetting|psql/), which never contains stub calls. If DDL or a connection ran before the refusal, the test would still pass whenever the 'restricted' message showed up afterward.",
+      "fix": "Assert against result.calls: no `^(pnpm|psql) ` line and no `^docker ` line other than `docker info`."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "tools/stack/revision.test.mjs",
+      "line": 233,
+      "claim": "C-01-10 'Compose version test' is checked only by the regex /2\\.24\\.4/ in the source. Nothing shows that require_compose_version rejects older versions or that it runs before `up`. No test covers start waiting for health, --no-mock or variable rejection (C-01-07 checks only top-level keys and not the nested ones).",
+      "fix": "Add offline tests with a docker stub returning `compose version --short`=2.24.3 and v2.24.4: the first fails before any `compose … up` call and the second continues. Validate the nested keys of database, services and providers against the closed schema. Cover `start` with a failing curl stub, asserting timeout, non-zero exit and diagnostics."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "tools/stack/revision.test.mjs",
+      "line": 293,
+      "claim": "C-01-12 checks only the first three roles by literal. For rait-coordinator and dash-operator it only checks that ...RAIT_ROLES and ...DASHBOARD_ROLES appear, not set membership. The roles do exist today (roles.ts:57-77), but the sensor would not notice them being removed.",
+      "fix": "Extract the RAIT_ROLES and DASHBOARD_ROLES literals (or import the compiled module) and assert that each default belongs to the union."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "tools/detran-stack.sh",
+      "line": 189,
+      "claim": "The PostGIS wait uses a fixed 60 s instead of DETRAN_STACK_HEALTH_TIMEOUT_SECONDS. The plan calls out the Apple Silicon/amd64 emulation risk as the reason the timeout is a parameter.",
+      "fix": "Use the validated timeout in the DB wait loop."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "tools/detran-stack.sh",
+      "line": 44,
+      "claim": "`mkdir -p` of STATE_DIR runs at the top level for every command, including config, which the contract requires to be pure. database_env (l.96-103), which contains DB_PASSWORD, is dead code.",
+      "fix": "Move the mkdir into start/logs and remove database_env."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "tools/detran-stack.sh",
+      "line": 479,
+      "claim": "`logs mock` calls Compose without the override file, unlike start/stop/status.",
+      "fix": "Add `-f \"$MOCK_OVERRIDE_FILE\"`."
+    }
+  ],
+  "notes": [
+    "apply.sh: the detran_local_stack arm with its own flag comes before any connection, and the r7/r13 arms are intact. The CI digest (ci.yml:180) matches and --platform linux/amd64 is present. Nothing removes a volume. `git grep detran_r13` is empty.",
+    "The Compose override uses `!override` loopback-only and senatran-mock/ was not changed. The table and RAIT build target (rait-web:build:development) are consistent between config and runtime. The PEC line matches the contracted bytes.",
+    "The architect→inspector→engineer triad was followed, and the TASK-0002 sensor-error cycles are recorded in the Triage section. OD-R17-001/002 are in the canonical registry (§H).",
+    "The volume-migration runbook belongs to TASK-0008/CTG-0002 per plan.md and is not yet written. It does not block CTG-0001, but the default container/volume changed from detran-postgres-demo to detran-local-stack-postgres, which needs documenting.",
+    "`pnpm check` is still pending: not treated as green. origin/main now has verify:state-index (R-0018), and the merge must keep it in `check` alongside `pnpm test:stack`.",
+    "The C-01-10 test needs the Compose CLI (not the daemon). If the CI runner lacks it, the test fails instead of being skipped, which is the right behavior but should be confirmed in CI."
+  ]
+}
