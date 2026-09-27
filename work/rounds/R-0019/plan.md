@@ -351,6 +351,8 @@ PR CTG-0002 e repetir os gates aplicáveis.
 
 ## Retomada
 
+**Fechamento — 2026-09-27.** CTG-0003 integrou pelo PR #139, merge `673934fc0bb634403b2ae7cfc8abf250183c4777`, após sete checks CI PASS e delivery-review ciclo 2 PASS. `devai audit observe` no HEAD integrado exato emitiu EV-fefab0abd4e46ce1; cadeia válida, head `2e3a04c5baf38ab5a1e9aa28567515b2abcd3845ede31e186c7f76856e48785c`. O comando `devai round close` emitiu PC-0016 com `merged_as` nesse SHA; `closure.json` preserva D-1/D-2, gates e os nove critérios. PR separado de fechamento integrará o recibo, a closure e os índices finais. R-0020 fará o selo.
+
 **Estado corrente após CTG-0002 — 2026-09-27.** O Owner concedeu aceite
 explícito do conteúdo de `product/` e `law/glossary/` em resposta à
 solicitação específica; a emenda está em `AUTHORIZATION.md` e no PR #137.

@@ -35,7 +35,7 @@ the method (no closure; R-0002 has no folder).
 | R-0016 | `dashboard-console` — WP-D4 + WP-D5 (DASHBOARD)                    | fechada           | #80, #103               | PC-0012 | Fable (troca Sol → Fable) |
 | R-0017 | `local-stack` — ação 4                                             | proposta (C-0002) | —                       | —       | Sol 6                     |
 | R-0018 | `index-state` — ação 3                                             | fechada           | #128, #129, #130        | PC-0015 | Opus 5.5                  |
-| R-0019 | `law-corpus` — ação 2                                              | proposta (C-0002) | #132, #137              | —       | Sol 6                     |
+| R-0019 | `law-corpus` — ação 2                                              | fechada           | #132, #137, #139        | PC-0016 | Sol 6                     |
 | R-0020 | `devai-sensors` — ação 5                                           | proposta (C-0002) | —                       | —       | Opus 5.5                  |
 | S-1.5  | _repositório STYNX_ — release STYNX 1.5.0 (7b/7c)                  | proposta (C-0002) | —                       | —       | governança do STYNX       |
 | R-0021 | `stynx-canonical` — ação 7a                                        | proposta (C-0002) | —                       | —       | Sol 6                     |
