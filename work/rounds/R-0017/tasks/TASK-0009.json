@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0017",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Adicionar o job manual stack-smoke ao CI",
+  "description": "Acrescentar workflow_dispatch opcional sem alterar os cinco checks obrigatorios.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ci-workflow"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["local-stack", "ci"],
+  "branch": "orchestra/local-stack",
+  "worktree_id": "WT-local-stack",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-26T19:55:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

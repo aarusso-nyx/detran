@@ -1,0 +1,166 @@
+{
+  "round": "R-0017",
+  "window": 1,
+  "window_input_budget": 600000,
+  "checkpoint_threshold": 480000,
+  "budget_waived": true,
+  "waiver_note": "Owner/user em 2026-09-26: waive token budget to allow this round to finish. O limite historico de 80% permanece registrado, mas nao interrompe a rodada.",
+  "estimated_input_total": 1006494,
+  "estimated_output_total": 153376,
+  "note": "Estimativas de tokens unicos de entrada por chamada; atualizar apos cada worker e reviewer. Orcamento dispensado pelo usuario para concluir R-0017.",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "M1+bootstrap+leitura",
+      "model": "gpt-6-sol",
+      "input_tokens": 60000,
+      "output_tokens": 8500,
+      "status": "in_progress",
+      "note": "Inclui leitura da base 220a4020, descoberta de worktree, install, doctor e check; a estimativa sera ajustada no checkpoint."
+    },
+    {
+      "kind": "model-check",
+      "id": "M1-codex-sol-terra-luna",
+      "model": "gpt-6-sol+gpt-5.6-terra+gpt-5.6-luna",
+      "input_tokens": 13354,
+      "output_tokens": 100,
+      "status": "completed",
+      "note": "Soma dos tokens usados reportados pelas tres chamadas triviais do Codex CLI."
+    },
+    {
+      "kind": "reviewer",
+      "id": "M1-claude-model+bridge-proof",
+      "model": "claude-opus-5-5",
+      "input_tokens": 6646,
+      "output_tokens": 400,
+      "status": "completed",
+      "note": "Estimativa; claude -p e a ponte retornaram JSON valido, sem telemetria de tokens na saida."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 40000,
+      "output_tokens": 7000,
+      "status": "completed",
+      "note": "Estimativa conservadora; REVIEW com tres achados altos e sete baixos."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa incluindo tentativa de JSON invalido e retry; PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 96325,
+      "output_tokens": 15281,
+      "status": "completed",
+      "note": "Telemetria CLI: 1547845 input, 1451520 cached; contabilizados 96325 tokens unicos. Contrato e format:check PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-attempt-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 85265,
+      "output_tokens": 13061,
+      "status": "completed-with-triage",
+      "note": "Telemetria CLI: 1312017 input, 1226752 cached; 14/14 caracterizacao verde, mas sensor-error exige correcao antes de checkpoint (a)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-retry-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 107461,
+      "output_tokens": 18100,
+      "status": "completed-with-triage",
+      "note": "Telemetria CLI: 3099077 input, 2991616 cached; 13/13 caracterizacao verde, mas revisao ainda tem sensores incorretos. Proxima etapa: escalada Terra."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-escalation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 111490,
+      "output_tokens": 19805,
+      "status": "completed",
+      "note": "Telemetria CLI: 1501826 input, 1390336 cached; caracterizacao 13/13 PASS, revisao 3 PASS/10 vermelhos por implementacao ausente, format:check PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-attempt-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 108928,
+      "output_tokens": 17509,
+      "status": "completed-with-triage",
+      "note": "Telemetria CLI: 3562624 input, 3453696 cached; test:stack 26/26, check interrompido; delivery-review REVIEW."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-delivery-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 20000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Estimativa conservadora; REVIEW com oito achados altos e quatro baixos."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-delivery-fix",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 93275,
+      "output_tokens": 18972,
+      "status": "completed",
+      "note": "Telemetria CLI: 1439067 input, 1345792 cached; 13/13 caracterizacao e 15/29 revisao antes da correcao de producao."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-delivery-fix",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 140165,
+      "output_tokens": 17459,
+      "status": "completed-with-triage",
+      "note": "Telemetria CLI: 2921861 input, 2781696 cached; 42/42 testes, mas o delivery-review ciclo 2 identificou opcionais vazios."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-delivery-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "Estimativa sem telemetria CLI; REVIEW com um achado alto novo decorrente da allowlist."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-delivery-fix-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35267,
+      "output_tokens": 3586,
+      "status": "completed",
+      "note": "Telemetria CLI: 356547 input, 321280 cached; unico sensor novo vermelho na implementacao anterior."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-delivery-fix-2",
+      "model": "gpt-6-sol",
+      "input_tokens": 38318,
+      "output_tokens": 3103,
+      "status": "completed",
+      "note": "Telemetria CLI: 329006 input, 290688 cached; 42/42 testes e config verde."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-delivery-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Estimativa sem telemetria CLI; PASS sem achados bloqueantes."
+    }
+  ]
+}
