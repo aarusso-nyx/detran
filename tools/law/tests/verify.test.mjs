@@ -90,6 +90,109 @@ async function writeInvariant(repoRoot, invariant) {
   );
 }
 
+async function writeGlossarySource(repoRoot, terms) {
+  const rows = terms
+    .map((term) => `| ${term} | Definição de fixture | REF-FIXTURE |`)
+    .join('\n');
+  const path = join(repoRoot, 'docs/framework/glossary/domain.md');
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(
+    path,
+    `## Glossário de fixture\n\n| Termo | Definição curta | Fonte |\n| --- | --- | --- |\n${rows}\n`,
+  );
+}
+
+async function writeGlossaryEntry(repoRoot, id, term) {
+  const directory = join(repoRoot, 'law/glossary');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.json`),
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      id,
+      term,
+      definition: 'Definição destilada de fixture.',
+      authority: 'joint',
+      status: 'draft',
+      category: 'technical',
+      provenance: ['docs/framework/glossary/domain.md:4'],
+      related_invariants: [],
+    }),
+  );
+}
+
+async function writeJourneySource(repoRoot, id) {
+  const directory = join(
+    repoRoot,
+    'docs/framework/product/domains/inf/journeys',
+  );
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.md`),
+    `---\nid: ${id}\ntitle: Jornada ${id}\n---\n\n# Jornada ${id}\n`,
+  );
+}
+
+async function writeJourney(repoRoot, id, sourceId) {
+  const directory = join(repoRoot, 'product/journeys');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.json`),
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      id,
+      title: `Jornada ${sourceId}`,
+      status: 'draft',
+      persona: { role: 'agente' },
+      preconditions: [],
+      steps: [{ seq: 1, action: 'Executa a ação.' }],
+      postconditions: [],
+      acceptance_criteria: [{ id: 'AC-001', statement: 'source_pending' }],
+      provenance: [sourceId],
+      related_invariants: [],
+    }),
+  );
+}
+
+async function writeUseCaseSource(repoRoot, id, title) {
+  const directory = join(
+    repoRoot,
+    'docs/framework/product/domains/inf/use-cases',
+  );
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.md`),
+    `---\nid: ${id}\ntitle: ${title}\n---\n\n# ${title}\n`,
+  );
+}
+
+async function writeUseCaseBundle(repoRoot, filename, id, title) {
+  const directory = join(repoRoot, 'product/use-cases');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, filename),
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      roles: ['agente'],
+      cases: [{ id, title, actors: ['agente'], mainFlow: [] }],
+    }),
+  );
+}
+
+function assertNoRuleViolations(result, rule) {
+  assert.deepEqual(violationsFor(result.violations, rule), []);
+}
+
+function assertRuleViolationFor(result, rule, reference) {
+  assert.ok(
+    violationsFor(result.violations, rule).some(
+      ({ path, detail }) =>
+        path.includes(reference) || detail.includes(reference),
+    ),
+    `Expected a rule ${rule} violation tied to ${reference}.`,
+  );
+}
+
 let verifierPromise;
 async function verifyLawCorpus(fixture) {
   verifierPromise ??= import('../verify.mjs').then(
@@ -496,5 +599,513 @@ test('dado README autoral que mantém frase obsoleta quando verifica a regra (e)
       (violation) => violation.code === 'README_OBSOLETE_CONTENT',
     ),
     `Unexpected codes: ${authoredReadmeViolations.map((v) => v.code)}`,
+  );
+});
+
+test('dado termo e GE correspondentes quando verifica a regra (c) então aceita o par', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['Termo de fixture']);
+  await writeGlossaryEntry(fixture.repoRoot, 'GE-001', 'Termo de fixture');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertNoRuleViolations(result, 'c');
+});
+
+test('dado termo fonte sem GE quando verifica a regra (c) então aponta a ausência', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['Termo sem entrada']);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'c', 'Termo sem entrada');
+});
+
+test('dado GE sem termo no domain.md quando verifica a regra (c) então aponta a entrada órfã', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['Termo de origem']);
+  await writeGlossaryEntry(fixture.repoRoot, 'GE-001', 'Termo órfão');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'c', 'GE-001.json');
+});
+
+test('dado JRN com JNY correspondente quando verifica a regra (d) então não marca o par como órfão', async () => {
+  const fixture = await makeFixture();
+  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
+  await writeJourney(fixture.repoRoot, 'JNY-001', 'JRN-PEC-001');
+
+  const result = await verifyLawCorpus(fixture);
+  const pairViolations = violationsFor(result.violations, 'd').filter(
+    (violation) =>
+      violation.path.endsWith('JNY-001.json') ||
+      violation.path.endsWith('JRN-PEC-001.md'),
+  );
+
+  assert.deepEqual(pairViolations, []);
+});
+
+test('dado JRN sem JNY quando verifica a regra (d) então aponta a jornada fonte sem par', async () => {
+  const fixture = await makeFixture();
+  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'd', 'JRN-PEC-001');
+});
+
+test('dado JNY sem JRN quando verifica a regra (d) então aponta a jornada DEVAI órfã', async () => {
+  const fixture = await makeFixture();
+  await writeJourney(fixture.repoRoot, 'JNY-001', 'JRN-PEC-001');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'd', 'JNY-001.json');
+});
+
+test('dado UC com entrada no bundle correspondente quando verifica a regra (d) então não marca o caso como órfão', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSource(
+    fixture.repoRoot,
+    'UC-INF-001',
+    'Caso de uso de fixture',
+  );
+  await writeUseCaseBundle(
+    fixture.repoRoot,
+    'inf.json',
+    'UC-INF-001',
+    'Caso de uso de fixture',
+  );
+
+  const result = await verifyLawCorpus(fixture);
+  const pairViolations = violationsFor(result.violations, 'd').filter(
+    (violation) =>
+      violation.path.endsWith('UC-INF-001.md') ||
+      violation.path.endsWith('inf.json'),
+  );
+
+  assert.deepEqual(pairViolations, []);
+});
+
+test('dado UC sem entrada em bundle quando verifica a regra (d) então aponta o caso fonte sem par', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSource(
+    fixture.repoRoot,
+    'UC-INF-001',
+    'Caso de uso de fixture',
+  );
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'd', 'UC-INF-001');
+});
+
+test('dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta a entrada órfã', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseBundle(
+    fixture.repoRoot,
+    'inf.json',
+    'UC-INF-001',
+    'Caso de uso de fixture',
+  );
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertRuleViolationFor(result, 'd', 'UC-INF-001');
+});
+
+async function writeGlossaryVariant(repoRoot, id, term, overrides = {}) {
+  const directory = join(repoRoot, 'law/glossary');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.json`),
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      id,
+      term,
+      definition: 'Definição destilada de fixture.',
+      authority: 'joint',
+      status: 'draft',
+      category: 'technical',
+      provenance: ['docs/framework/glossary/domain.md:4'],
+      related_invariants: [],
+      ...overrides,
+    }),
+  );
+}
+
+async function writeJourneyVariant(repoRoot, id, sourceId, overrides = {}) {
+  const directory = join(repoRoot, 'product/journeys');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.json`),
+    JSON.stringify({
+      schemaVersion: '1.0.0',
+      id,
+      title: `Jornada ${sourceId}`,
+      status: 'draft',
+      persona: { role: 'agente' },
+      preconditions: [],
+      steps: [{ seq: 1, action: 'Executa a ação.' }],
+      postconditions: [],
+      acceptance_criteria: [{ id: 'AC-001', statement: 'source_pending' }],
+      provenance: [sourceId],
+      related_invariants: [],
+      ...overrides,
+    }),
+  );
+}
+
+async function writeUseCaseBundleVariant(
+  repoRoot,
+  filename,
+  cases,
+  roles = ['agente'],
+) {
+  const directory = join(repoRoot, 'product/use-cases');
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, filename),
+    JSON.stringify({ schemaVersion: '1.0.0', roles, cases }),
+  );
+}
+
+async function writeUseCaseSourceAt(repoRoot, directoryName, id, title) {
+  const directory = join(
+    repoRoot,
+    `docs/framework/product/domains/${directoryName}/use-cases`,
+  );
+  await mkdir(directory, { recursive: true });
+  await writeFile(
+    join(directory, `${id}.md`),
+    `---\nid: ${id}\ntitle: ${title}\n---\n\n# ${title}\n`,
+  );
+}
+
+function assertTargetedViolation(result, rule, code, reference) {
+  assert.ok(
+    violationsFor(result.violations, rule).some(
+      (violation) =>
+        violation.code === code &&
+        (violation.path.includes(reference) ||
+          violation.detail.includes(reference)),
+    ),
+    `Expected ${code} for ${reference}; received ${JSON.stringify(violationsFor(result.violations, rule))}`,
+  );
+}
+
+test('dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE]', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['AIT']);
+  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT');
+  await writeGlossaryVariant(fixture.repoRoot, 'GE-002', 'ait');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'c',
+    'GLOSSARY_TERM_DUPLICATE',
+    'GE-002.json',
+  );
+});
+
+test('dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID]', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['AIT']);
+  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
+    status: 'accepted',
+  });
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'c',
+    'GLOSSARY_STATUS_INVALID',
+    'GE-001.json',
+  );
+});
+
+test('dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING]', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['AIT']);
+  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
+    provenance: [],
+  });
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'c',
+    'GLOSSARY_PROVENANCE_MISSING',
+    'GE-001.json',
+  );
+});
+
+test('dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED]', async () => {
+  const fixture = await makeFixture();
+  await writeGlossarySource(fixture.repoRoot, ['AIT']);
+  await writeGlossaryVariant(fixture.repoRoot, 'GE-001', 'AIT', {
+    related_invariants: ['INV-INF-999'],
+  });
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'c',
+    'GLOSSARY_INVARIANT_UNRESOLVED',
+    'GE-001.json',
+  );
+});
+
+test('dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING]', async () => {
+  const fixture = await makeFixture();
+  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
+  await writeJourneyVariant(fixture.repoRoot, 'JNY-002', 'JRN-PEC-001');
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'JOURNEY_DIVERGENT', 'JNY-002.json');
+});
+
+test('dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE]', async () => {
+  const fixture = await makeFixture();
+  await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
+  await writeJourneyVariant(fixture.repoRoot, 'JNY-001', 'JRN-PEC-001', {
+    title: 'Título divergente',
+  });
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'JOURNEY_DIVERGENT', 'JNY-001.json');
+});
+
+test('dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSource(fixture.repoRoot, 'UC-INF-001', 'Título de origem');
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
+    {
+      id: 'UC-INF-001',
+      title: 'Título divergente',
+      actors: ['agente'],
+      mainFlow: [],
+    },
+  ]);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'inf.json');
+});
+
+test('dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSourceAt(
+    fixture.repoRoot,
+    'inf',
+    'UC-INF-001',
+    'Caso de uso',
+  );
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'portal.json', [
+    {
+      id: 'UC-INF-001',
+      title: 'Caso de uso',
+      actors: ['agente'],
+      mainFlow: [],
+    },
+  ]);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'portal.json');
+});
+
+test('dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE]', async () => {
+  const fixture = await makeFixture();
+  const useCase = {
+    id: 'UC-INF-001',
+    title: 'Caso de uso',
+    actors: ['agente'],
+    mainFlow: [],
+  };
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [useCase]);
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'other.json', [useCase]);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'BUNDLE_ID_DUPLICATE', 'other.json');
+});
+
+test('dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
+    {
+      id: 'UC-INF-001',
+      title: 'Caso de uso',
+      actors: ['secretaria'],
+      mainFlow: [],
+    },
+  ]);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'd',
+    'USE_CASE_ROLE_UNDECLARED',
+    'UC-INF-001',
+  );
+});
+
+test('dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSource(fixture.repoRoot, 'UC-INF-001', 'Caso de uso');
+  await writeUseCaseBundleVariant(fixture.repoRoot, 'inf.json', [
+    { id: 'UC-INF-001', title: 'Caso de uso', actors: [], mainFlow: [] },
+  ]);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(result, 'd', 'USE_CASE_DIVERGENT', 'inf.json');
+});
+
+for (const [label, overrides] of [
+  ['sem steps', { steps: [] }],
+  ['sem AC', { acceptance_criteria: [] }],
+  ['sem persona', { persona: {} }],
+  ['status não draft', { status: 'accepted' }],
+]) {
+  test(`dado JNY ${label} então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_${label.replaceAll(' ', '_')}]`, async () => {
+    const fixture = await makeFixture();
+    await writeJourneySource(fixture.repoRoot, 'JRN-PEC-001');
+    await writeJourneyVariant(
+      fixture.repoRoot,
+      'JNY-001',
+      'JRN-PEC-001',
+      overrides,
+    );
+
+    const result = await verifyLawCorpus(fixture);
+
+    assertTargetedViolation(
+      result,
+      'd',
+      'JOURNEY_CONTENT_INCOMPLETE',
+      'JNY-001.json',
+    );
+  });
+}
+
+const journeySourceIds = [
+  ...Array.from(
+    { length: 7 },
+    (_, index) => `JRN-PEC-${String(index + 1).padStart(3, '0')}`,
+  ),
+  ...Array.from(
+    { length: 5 },
+    (_, index) => `JRN-BOAT-${String(index + 1).padStart(3, '0')}`,
+  ),
+  ...Array.from(
+    { length: 4 },
+    (_, index) => `JRN-RAIT-${String(index + 1).padStart(3, '0')}`,
+  ),
+  ...Array.from(
+    { length: 6 },
+    (_, index) => `JRN-TEAT-${String(index + 1).padStart(3, '0')}`,
+  ),
+  ...Array.from(
+    { length: 7 },
+    (_, index) => `JRN-DASH-${String(index + 1).padStart(3, '0')}`,
+  ),
+  ...Array.from(
+    { length: 11 },
+    (_, index) => `JRN-PORTAL-${String(index + 1).padStart(3, '0')}`,
+  ),
+];
+
+test('dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT]', async () => {
+  const fixture = await makeFixture();
+  for (const id of journeySourceIds.slice(0, 39)) {
+    await writeJourneySource(fixture.repoRoot, id);
+  }
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'd',
+    'JOURNEY_SOURCE_COUNT_DIVERGENT',
+    'docs/framework/product',
+  );
+});
+
+test('dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT]', async () => {
+  const fixture = await makeFixture();
+  for (const [index, id] of journeySourceIds.entries()) {
+    await writeJourneySource(fixture.repoRoot, id);
+    if (index < 39) {
+      await writeJourneyVariant(
+        fixture.repoRoot,
+        `JNY-${String(index + 1).padStart(3, '0')}`,
+        id,
+      );
+    }
+  }
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'd',
+    'JOURNEY_OUTPUT_COUNT_DIVERGENT',
+    'product/journeys',
+  );
+});
+
+async function writeUseCaseSet(repoRoot, count, bundleCount) {
+  const cases = Array.from({ length: bundleCount }, (_, index) => ({
+    id: `UC-INF-${String(index + 1).padStart(3, '0')}`,
+    title: `Caso ${index + 1}`,
+    actors: ['agente'],
+    mainFlow: [],
+  }));
+  for (let index = 0; index < count; index += 1) {
+    await writeUseCaseSource(
+      repoRoot,
+      `UC-INF-${String(index + 1).padStart(3, '0')}`,
+      `Caso ${index + 1}`,
+    );
+  }
+  await writeUseCaseBundleVariant(repoRoot, 'inf.json', cases);
+}
+
+test('dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSet(fixture.repoRoot, 109, 109);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'd',
+    'USE_CASE_SOURCE_COUNT_DIVERGENT',
+    'docs/framework/product',
+  );
+});
+
+test('dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT]', async () => {
+  const fixture = await makeFixture();
+  await writeUseCaseSet(fixture.repoRoot, 110, 109);
+
+  const result = await verifyLawCorpus(fixture);
+
+  assertTargetedViolation(
+    result,
+    'd',
+    'USE_CASE_OUTPUT_COUNT_DIVERGENT',
+    'product/use-cases',
   );
 });
