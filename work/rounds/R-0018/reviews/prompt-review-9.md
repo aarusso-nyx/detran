@@ -1,0 +1,27 @@
+# Prompt do reviewer — modo `prompt-review` (TASK-0008…0011, ciclo 2, restrito)
+
+> Reviewer da orquestra `index-state` (rodada `R-0018`), família oposta à do maestro (maestro Opus
+> 5.5; você: Sol 6 / Codex). Papel: Auditor (soft gate, Art. 18). Somente leitura na worktree
+> `/Users/aarusso/Development/detran-worktrees/index-state`. Responda **apenas** com o JSON do §Saída.
+
+## Escopo (restrito)
+
+Avalie **somente** se os 5 achados de `work/rounds/R-0018/reviews/prompt-review-8.json` foram
+corrigidos em `work/rounds/R-0018/prompts/TASK-0008.md` … `TASK-0011.md` e em
+`tasks/TASK-0011.json` (`upstream_task_id` = TASK-0010 — o esquema aceita um único upstream — e a
+barreira 0008 ∥ 0009 ∥ 0010 → 0011 declarada nos prompts e na descrição da tarefa), com hashes
+atualizados em `compositions.json`. Achado novo sobre texto inalterado só se for `FAIL` por definição.
+
+## Saída (JSON, e nada mais)
+
+```json
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0008…0011",
+  "cycle": 2,
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [],
+  "notes": []
+}
+```

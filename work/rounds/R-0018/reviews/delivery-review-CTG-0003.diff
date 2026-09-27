@@ -1,0 +1,2384 @@
+diff --git a/apps/boat/mobile/README.md b/apps/boat/mobile/README.md
+index af53571d..5645fc4c 100644
+--- a/apps/boat/mobile/README.md
++++ b/apps/boat/mobile/README.md
+@@ -1,10 +1,16 @@
+-# apps/boat/mobile — BOAT accident-reporting mobile app (placeholder)
++# apps/boat/mobile — BOAT field extension (`@detran/boat-mobile`)
+ 
+-Boletim de Ocorrência de Acidente de Trânsito: field-agent accident-reporting mobile
+-app on @stynx-nyx/mobile-runtime + backend/domains/ops, feeding domains/est (RENAEST).
++BOAT — Boletim de Acidentalidade de Trânsito (`docs/framework/product/domains/est/boat/APP.md`):
++crash-record (sinistro) capture feeding `backend/domains/est` (RENAEST).
+ 
+-**Built in Phase 5 (W5.2)** — includes the genuinely-new native layer: Capacitor,
+-camera, real GPS, signature capture, hardware-backed secure storage and server-side
+-device attestation.
++This package is an Angular library built with ng-packagr (`ng-package.json`; script `build`), not
++a standalone Capacitor app: the TEAT field shell (`apps/teat/mobile`) mounts it through
++`createBoatExtension` and `BOAT_PT_BR_CATALOG`.
++
++Delivered in R-0015 (WP-B4 and WP-B5; PRs #107 and #116, merge `50626da5`; closure PC-0014).
++Real hardware, field release and real RENAEST/SNE/gov.br homologation remain out of scope
++(`docs/meta/agents/orchestra/waves.md`, history row R-0015).
++
++Scripts: `pnpm --filter @detran/boat-mobile build`, `test`, `lint`, `typecheck`.
+ 
+ Especificação do frontend, contrato de rotas, erros e pacote de construção: `docs/framework/arch/boat-frontends.md`, `boat-route-contract.md`, `boat-error-catalog.md`, `boat-build-pack.md` (2026-09-13).
+diff --git a/apps/teat/mobile/README.md b/apps/teat/mobile/README.md
+index 04fc06d6..63c0412a 100644
+--- a/apps/teat/mobile/README.md
++++ b/apps/teat/mobile/README.md
+@@ -1,9 +1,15 @@
+-# apps/teat/mobile — TEAT field-agent mobile app (placeholder)
++# apps/teat/mobile — TEAT field-agent mobile app (UI and workflow homologation build)
+ 
+-Angular/Capacitor mobile app for field agents (offline-first AIT issuance), re-hosted
+-from the teat repository onto the unified backend and @stynx-nyx/mobile-runtime.
++Angular/Capacitor mobile app (`@detran/teat-mobile`) for field agents (offline-first AIT
++issuance), re-hosted from the teat repository onto the unified backend and
++@stynx-nyx/mobile-runtime. It is the field shell that mounts the BOAT extension
++(`@detran/boat-mobile`, `createBoatExtension` in `src/main.ts`).
+ 
+-**Built in Phase 3 (W3.5)** — the port must make it actually build (the origin teat app
+-has no build system).
++Delivered in R-0013 (WP-T6; PR #113, merge `646c6c28`; closure PC-0013) as a **UI and workflow
++homologation build** (ADR-0033): synthetic, segregated demonstration data; the production path
++stays fail-closed. The production mobile app is a later dedicated round, tracked in issues
++#108–#112.
++
++Scripts: `pnpm --filter @detran/teat-mobile build`, `test`, `test:focal`, `lint`, `typecheck`.
+ 
+ Especificação do frontend, contrato de rotas, erros e pacote de construção: `docs/framework/arch/teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`, `teat-build-pack.md` (2026-09-13).
+diff --git a/apps/teat/web/README.md b/apps/teat/web/README.md
+index 6fce664c..2418cf5a 100644
+--- a/apps/teat/web/README.md
++++ b/apps/teat/web/README.md
+@@ -1,9 +1,13 @@
+-# apps/teat/web — TEAT staff webapp (placeholder)
++# apps/teat/web — TEAT staff webapp (UI and workflow homologation build)
+ 
+-Angular webapp for electronic traffic-citation operations (AIT issuance and lifecycle),
+-re-hosted from the teat repository onto the unified backend.
++Angular web console (`@detran/teat-web`) for electronic traffic-citation operations (AIT issuance
++and lifecycle), re-hosted from the teat repository onto the unified backend. Frontends only live
++under apps/ (ADR-0001).
+ 
+-**Built in Phase 3 (W3.5)** — the port must make it actually build (the origin teat app
+-has no build system). Frontends only live under apps/ (ADR-0001).
++Delivered in R-0013 (WP-T6; PR #113, merge `646c6c28`; closure PC-0013) as a **UI and workflow
++homologation build** (ADR-0033): synthetic, segregated demonstration data; no production
++operation.
++
++Scripts: `pnpm --filter @detran/teat-web build`, `test`, `lint`, `typecheck`.
+ 
+ Especificação do frontend, contrato de rotas, erros e pacote de construção: `docs/framework/arch/teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`, `teat-build-pack.md` (2026-09-13).
+diff --git a/backend/domains/ch/README.md b/backend/domains/ch/README.md
+index 29b80844..18b1dce2 100644
+--- a/backend/domains/ch/README.md
++++ b/backend/domains/ch/README.md
+@@ -18,3 +18,25 @@ present: `DETRAN_BIOMETRIC_VERIFICATION_URL`,
+ basis, the bound operator contract, and one of the separate candidate-presence
+ or examiner-authorship purposes. Only an opaque capture reference is sent; the
+ adapter does not accept a raw biometric payload.
++
++## Modules
++
++| Module                  | Package                           | Blueprint                        |
++| ----------------------- | --------------------------------- | -------------------------------- |
++| `billing/`              | `@detran/ch-billing`              | `BP-CH-BILLING-001`              |
++| `biometrics/`           | `@detran/ch-biometrics`           | `BP-CH-BIOMETRICS-001`           |
++| `clinical-controls/`    | `@detran/ch-clinical-controls`    | `BP-CH-CLINICAL-CONTROLS-001`    |
++| `clinical-network/`     | `@detran/ch-clinical-network`     | `BP-CH-CLINICAL-NETWORK-001`     |
++| `clinical-reports/`     | `@detran/ch-clinical-reports`     | `BP-CH-REPORTS-001`              |
++| `encounters/`           | `@detran/ch-encounters`           | `BP-CH-ENCOUNTERS-001`           |
++| `exams/`                | `@detran/ch-exams`                | `BP-CH-EXAMS-001`                |
++| `inconsistencies/`      | `@detran/ch-inconsistencies`      | `BP-CH-INCONSISTENCIES-001`      |
++| `juntas/`               | `@detran/ch-juntas`               | `BP-CH-JUNTAS-001`               |
++| `operational-controls/` | `@detran/ch-operational-controls` | `BP-CH-OPERATIONAL-CONTROLS-001` |
++| `patients/`             | `@detran/ch-patients`             | `BP-CH-PATIENTS-001`             |
++| `process-blocks/`       | `@detran/ch-process-blocks`       | `BP-CH-PROCESS-BLOCKS-001`       |
++| `restrictions/`         | `@detran/ch-restrictions`         | `BP-CH-RESTRICTIONS-001`         |
++| `retention/`            | `@detran/ch-retention`            | `BP-CH-RETENTION-001`            |
++| `scheduling/`           | `@detran/ch-scheduling`           | `BP-CH-SCHEDULING-001`           |
++| `telehealth/`           | `@detran/ch-telehealth`           | `BP-CH-TELEHEALTH-001`           |
++| `toxicology/`           | `@detran/ch-toxicology`           | `BP-CH-TOXICOLOGY-001`           |
+diff --git a/backend/domains/ch/billing/README.md b/backend/domains/ch/billing/README.md
+new file mode 100644
+index 00000000..52fae500
+--- /dev/null
++++ b/backend/domains/ch/billing/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-billing
++
++Module path: `backend/domains/ch/billing`.
++
++## Purpose
++
++Faturamento vinculado ao preco publico federal versionado por especie de exame, vigencia e referencia anual IPCA. Clinicas nao informam nem substituem o valor de exame.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-BILLING-001.json`
++
++## DDL
++
++- `backend/database/ddl/51-ch-billing.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-BILLING-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-billing typecheck`
++- `pnpm --filter @detran/ch-billing build`
++- `pnpm --filter @detran/ch-billing test`
++- `pnpm --filter @detran/ch-billing test:unit`
++- `pnpm --filter @detran/ch-billing test:integration`
++- `pnpm --filter @detran/ch-billing test:e2e`
++- `pnpm --filter @detran/ch-billing test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/biometrics/README.md b/backend/domains/ch/biometrics/README.md
+new file mode 100644
+index 00000000..22c1e4a9
+--- /dev/null
++++ b/backend/domains/ch/biometrics/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-biometrics
++
++Module path: `backend/domains/ch/biometrics`.
++
++## Purpose
++
++Referencias e validacoes biometricas, condicoes estruturadas por dedo e excecoes com aprovacao independente, prazo e escopo.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-BIOMETRICS-001.json`
++
++## DDL
++
++- `backend/database/ddl/45-ch-biometrics.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-BIOMETRICS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-biometrics typecheck`
++- `pnpm --filter @detran/ch-biometrics build`
++- `pnpm --filter @detran/ch-biometrics test`
++- `pnpm --filter @detran/ch-biometrics test:unit`
++- `pnpm --filter @detran/ch-biometrics test:integration`
++- `pnpm --filter @detran/ch-biometrics test:e2e`
++- `pnpm --filter @detran/ch-biometrics test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/clinical-controls/README.md b/backend/domains/ch/clinical-controls/README.md
+new file mode 100644
+index 00000000..538e2506
+--- /dev/null
++++ b/backend/domains/ch/clinical-controls/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-clinical-controls
++
++Module path: `backend/domains/ch/clinical-controls`.
++
++## Purpose
++
++Eventos complementares do atendimento clinico, sempre vinculados ao encounter e com autoria auditavel. A participacao de estagiario nao transfere autoria pericial ou autoridade de assinatura.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-CLINICAL-CONTROLS-001.json`
++
++## DDL
++
++- `backend/database/ddl/52-ch-clinical-controls.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-CLINICAL-CONTROLS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-clinical-controls typecheck`
++- `pnpm --filter @detran/ch-clinical-controls build`
++- `pnpm --filter @detran/ch-clinical-controls test`
++- `pnpm --filter @detran/ch-clinical-controls test:unit`
++- `pnpm --filter @detran/ch-clinical-controls test:integration`
++- `pnpm --filter @detran/ch-clinical-controls test:e2e`
++- `pnpm --filter @detran/ch-clinical-controls test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/clinical-network/README.md b/backend/domains/ch/clinical-network/README.md
+new file mode 100644
+index 00000000..dca5e4ec
+--- /dev/null
++++ b/backend/domains/ch/clinical-network/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-clinical-network
++
++Module path: `backend/domains/ch/clinical-network`.
++
++## Purpose
++
++Clinicas credenciadas, profissionais e estacoes biometricas do PEC, relocados do schema auth para o dominio ch conforme ADR-0012.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-CLINICAL-NETWORK-001.json`
++
++## DDL
++
++- `backend/database/ddl/40-ch-clinical-network.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-CLINICAL-NETWORK-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-clinical-network typecheck`
++- `pnpm --filter @detran/ch-clinical-network build`
++- `pnpm --filter @detran/ch-clinical-network test`
++- `pnpm --filter @detran/ch-clinical-network test:unit`
++- `pnpm --filter @detran/ch-clinical-network test:integration`
++- `pnpm --filter @detran/ch-clinical-network test:e2e`
++- `pnpm --filter @detran/ch-clinical-network test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/clinical-reports/README.md b/backend/domains/ch/clinical-reports/README.md
+new file mode 100644
+index 00000000..640f2f92
+--- /dev/null
++++ b/backend/domains/ch/clinical-reports/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-clinical-reports
++
++Module path: `backend/domains/ch/clinical-reports`.
++
++## Purpose
++
++Laudos, adendos imutaveis e documentos clinicos com PAdES+TSA, validacao OCSP/CRL e artefatos sob custodia STYNX.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-REPORTS-001.json`
++
++## DDL
++
++- `backend/database/ddl/44-ch-reports.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-REPORTS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-clinical-reports typecheck`
++- `pnpm --filter @detran/ch-clinical-reports build`
++- `pnpm --filter @detran/ch-clinical-reports test`
++- `pnpm --filter @detran/ch-clinical-reports test:unit`
++- `pnpm --filter @detran/ch-clinical-reports test:integration`
++- `pnpm --filter @detran/ch-clinical-reports test:e2e`
++- `pnpm --filter @detran/ch-clinical-reports test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/encounters/README.md b/backend/domains/ch/encounters/README.md
+new file mode 100644
+index 00000000..cfb1efe9
+--- /dev/null
++++ b/backend/domains/ch/encounters/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-encounters
++
++Module path: `backend/domains/ch/encounters`.
++
++## Purpose
++
++Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json`
++
++## DDL
++
++- `backend/database/ddl/42-ch-encounters.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-ENCOUNTERS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-encounters typecheck`
++- `pnpm --filter @detran/ch-encounters build`
++- `pnpm --filter @detran/ch-encounters test`
++- `pnpm --filter @detran/ch-encounters test:unit`
++- `pnpm --filter @detran/ch-encounters test:integration`
++- `pnpm --filter @detran/ch-encounters test:e2e`
++- `pnpm --filter @detran/ch-encounters test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/exams/README.md b/backend/domains/ch/exams/README.md
+new file mode 100644
+index 00000000..0aaef740
+--- /dev/null
++++ b/backend/domains/ch/exams/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-exams
++
++Module path: `backend/domains/ch/exams`.
++
++## Purpose
++
++Exames medico e psicologico do PEC com vocabulularios federais separados, validade legal 10/5/3 e instrumentos psicologicos favoraveis no SATEPSI.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-EXAMS-001.json`
++
++## DDL
++
++- `backend/database/ddl/43-ch-exams.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-EXAMS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-exams typecheck`
++- `pnpm --filter @detran/ch-exams build`
++- `pnpm --filter @detran/ch-exams test`
++- `pnpm --filter @detran/ch-exams test:unit`
++- `pnpm --filter @detran/ch-exams test:integration`
++- `pnpm --filter @detran/ch-exams test:e2e`
++- `pnpm --filter @detran/ch-exams test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/inconsistencies/README.md b/backend/domains/ch/inconsistencies/README.md
+new file mode 100644
+index 00000000..6b730d52
+--- /dev/null
++++ b/backend/domains/ch/inconsistencies/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-inconsistencies
++
++Module path: `backend/domains/ch/inconsistencies`.
++
++## Purpose
++
++Ciclo auditavel de inconsistencias de dados, com evidencias de deteccao e correcao separadas e transicoes estritamente progressivas.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-INCONSISTENCIES-001.json`
++
++## DDL
++
++- `backend/database/ddl/53-ch-inconsistencies.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-INCONSISTENCIES-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-inconsistencies typecheck`
++- `pnpm --filter @detran/ch-inconsistencies build`
++- `pnpm --filter @detran/ch-inconsistencies test`
++- `pnpm --filter @detran/ch-inconsistencies test:unit`
++- `pnpm --filter @detran/ch-inconsistencies test:integration`
++- `pnpm --filter @detran/ch-inconsistencies test:e2e`
++- `pnpm --filter @detran/ch-inconsistencies test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/juntas/README.md b/backend/domains/ch/juntas/README.md
+new file mode 100644
+index 00000000..f5946f85
+--- /dev/null
++++ b/backend/domains/ch/juntas/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-juntas
++
++Module path: `backend/domains/ch/juntas`.
++
++## Purpose
++
++Requerimento do candidato, juntas medica e psicologica, recurso formal e Junta Especial de Saude distinta designada pelo CETRAN.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-JUNTAS-001.json`
++
++## DDL
++
++- `backend/database/ddl/55-ch-juntas.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-JUNTAS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-juntas typecheck`
++- `pnpm --filter @detran/ch-juntas build`
++- `pnpm --filter @detran/ch-juntas test`
++- `pnpm --filter @detran/ch-juntas test:unit`
++- `pnpm --filter @detran/ch-juntas test:integration`
++- `pnpm --filter @detran/ch-juntas test:e2e`
++- `pnpm --filter @detran/ch-juntas test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/operational-controls/README.md b/backend/domains/ch/operational-controls/README.md
+new file mode 100644
+index 00000000..2222badd
+--- /dev/null
++++ b/backend/domains/ch/operational-controls/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-operational-controls
++
++Module path: `backend/domains/ch/operational-controls`.
++
++## Purpose
++
++Registro auditavel de controles operacionais preservados do PEC, inclusive validacao geodesica de local de clinica.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-OPERATIONAL-CONTROLS-001.json`
++
++## DDL
++
++- `backend/database/ddl/54-ch-operational-controls.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-OPERATIONAL-CONTROLS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-operational-controls typecheck`
++- `pnpm --filter @detran/ch-operational-controls build`
++- `pnpm --filter @detran/ch-operational-controls test`
++- `pnpm --filter @detran/ch-operational-controls test:unit`
++- `pnpm --filter @detran/ch-operational-controls test:integration`
++- `pnpm --filter @detran/ch-operational-controls test:e2e`
++- `pnpm --filter @detran/ch-operational-controls test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/patients/README.md b/backend/domains/ch/patients/README.md
+new file mode 100644
+index 00000000..84b0b33e
+--- /dev/null
++++ b/backend/domains/ch/patients/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-patients
++
++Module path: `backend/domains/ch/patients`.
++
++## Purpose
++
++Cadastro do candidato/condutor no PEC, sob o regime de dado pessoal sensivel e retencao minima de 20 anos a partir do ultimo registro.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-PATIENTS-001.json`
++
++## DDL
++
++- `backend/database/ddl/41-ch-patients.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-PATIENTS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-patients typecheck`
++- `pnpm --filter @detran/ch-patients build`
++- `pnpm --filter @detran/ch-patients test`
++- `pnpm --filter @detran/ch-patients test:unit`
++- `pnpm --filter @detran/ch-patients test:integration`
++- `pnpm --filter @detran/ch-patients test:e2e`
++- `pnpm --filter @detran/ch-patients test:real`
++
++## Tests
++
++—
+diff --git a/backend/domains/ch/process-blocks/README.md b/backend/domains/ch/process-blocks/README.md
+new file mode 100644
+index 00000000..1985f17f
+--- /dev/null
++++ b/backend/domains/ch/process-blocks/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-process-blocks
++
++Module path: `backend/domains/ch/process-blocks`.
++
++## Purpose
++
++Bloqueios ativos e resolvidos do processo clinico. Cada dominio de origem define seu efeito; este modulo preserva apenas o registro auditable e idempotente sem inventar regras de negocio ausentes.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-PROCESS-BLOCKS-001.json`
++
++## DDL
++
++- `backend/database/ddl/49-ch-process-blocks.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-PROCESS-BLOCKS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-process-blocks typecheck`
++- `pnpm --filter @detran/ch-process-blocks build`
++- `pnpm --filter @detran/ch-process-blocks test`
++- `pnpm --filter @detran/ch-process-blocks test:unit`
++- `pnpm --filter @detran/ch-process-blocks test:integration`
++- `pnpm --filter @detran/ch-process-blocks test:e2e`
++- `pnpm --filter @detran/ch-process-blocks test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/restrictions/README.md b/backend/domains/ch/restrictions/README.md
+new file mode 100644
+index 00000000..103f5d9d
+--- /dev/null
++++ b/backend/domains/ch/restrictions/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-restrictions
++
++Module path: `backend/domains/ch/restrictions`.
++
++## Purpose
++
++Catalogo versionado do Anexo XV e restricoes aplicadas ao encounter. Nenhum codigo e inventado enquanto o anexo autoritativo estiver ausente.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-RESTRICTIONS-001.json`
++
++## DDL
++
++- `backend/database/ddl/47-ch-restrictions.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-RESTRICTIONS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-restrictions typecheck`
++- `pnpm --filter @detran/ch-restrictions build`
++- `pnpm --filter @detran/ch-restrictions test`
++- `pnpm --filter @detran/ch-restrictions test:unit`
++- `pnpm --filter @detran/ch-restrictions test:integration`
++- `pnpm --filter @detran/ch-restrictions test:e2e`
++- `pnpm --filter @detran/ch-restrictions test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/retention/README.md b/backend/domains/ch/retention/README.md
+new file mode 100644
+index 00000000..de1d14f7
+--- /dev/null
++++ b/backend/domains/ch/retention/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-retention
++
++Module path: `backend/domains/ch/retention`.
++
++## Purpose
++
++Inventario de custodia do prontuario pela plataforma, piso de vinte anos, retencoes juridicas e propostas de destino. Nao existe operacao de eliminacao enquanto preservacao PAdES-LTA estiver ausente.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-RETENTION-001.json`
++
++## DDL
++
++- `backend/database/ddl/48-ch-retention.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-RETENTION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-retention typecheck`
++- `pnpm --filter @detran/ch-retention build`
++- `pnpm --filter @detran/ch-retention test`
++- `pnpm --filter @detran/ch-retention test:unit`
++- `pnpm --filter @detran/ch-retention test:integration`
++- `pnpm --filter @detran/ch-retention test:e2e`
++- `pnpm --filter @detran/ch-retention test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/scheduling/README.md b/backend/domains/ch/scheduling/README.md
+new file mode 100644
+index 00000000..2dffa709
+--- /dev/null
++++ b/backend/domains/ch/scheduling/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-scheduling
++
++Module path: `backend/domains/ch/scheduling`.
++
++## Purpose
++
++Agenda homologada e distribuicao P2 auditavel: candidato escolhe regiao e janela, nunca clinica ou perito.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-SCHEDULING-001.json`
++
++## DDL
++
++- `backend/database/ddl/46-ch-scheduling.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-SCHEDULING-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-scheduling typecheck`
++- `pnpm --filter @detran/ch-scheduling build`
++- `pnpm --filter @detran/ch-scheduling test`
++- `pnpm --filter @detran/ch-scheduling test:unit`
++- `pnpm --filter @detran/ch-scheduling test:integration`
++- `pnpm --filter @detran/ch-scheduling test:e2e`
++- `pnpm --filter @detran/ch-scheduling test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/telehealth/README.md b/backend/domains/ch/telehealth/README.md
+new file mode 100644
+index 00000000..4f699d7a
+--- /dev/null
++++ b/backend/domains/ch/telehealth/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-telehealth
++
++Module path: `backend/domains/ch/telehealth`.
++
++## Purpose
++
++Sessoes de telessaude com LFD obrigatorio por etapa. Persiste referencia externa opaca, nunca URL tokenizada ou credencial de acesso.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-TELEHEALTH-001.json`
++
++## DDL
++
++- `backend/database/ddl/50-ch-telehealth.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-TELEHEALTH-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-telehealth typecheck`
++- `pnpm --filter @detran/ch-telehealth build`
++- `pnpm --filter @detran/ch-telehealth test`
++- `pnpm --filter @detran/ch-telehealth test:unit`
++- `pnpm --filter @detran/ch-telehealth test:integration`
++- `pnpm --filter @detran/ch-telehealth test:e2e`
++- `pnpm --filter @detran/ch-telehealth test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ch/toxicology/README.md b/backend/domains/ch/toxicology/README.md
+new file mode 100644
+index 00000000..42dfbe9e
+--- /dev/null
++++ b/backend/domains/ch/toxicology/README.md
+@@ -0,0 +1,33 @@
++# @detran/ch-toxicology
++
++Module path: `backend/domains/ch/toxicology`.
++
++## Purpose
++
++Resultados toxicologicos periodicos imutaveis recebidos do RENACH e suspensoes derivadas sem fabricar encounter clinico.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-CH-TOXICOLOGY-001.json`
++
++## DDL
++
++- `backend/database/ddl/56-ch-toxicology.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-CH-TOXICOLOGY-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ch-toxicology typecheck`
++- `pnpm --filter @detran/ch-toxicology build`
++- `pnpm --filter @detran/ch-toxicology test`
++- `pnpm --filter @detran/ch-toxicology test:unit`
++- `pnpm --filter @detran/ch-toxicology test:integration`
++- `pnpm --filter @detran/ch-toxicology test:e2e`
++- `pnpm --filter @detran/ch-toxicology test:real`
++
++## Tests
++
++—
+diff --git a/backend/domains/dashboard/README.md b/backend/domains/dashboard/README.md
+index e93f1e86..545cb98f 100644
+--- a/backend/domains/dashboard/README.md
++++ b/backend/domains/dashboard/README.md
+@@ -3,5 +3,11 @@
+ Domain packages backing DASHBOARD: read-models for worklist metrics, outbox health,
+ adapter telemetry, offline-sync queues, and per-phase panel-sets.
+ 
+-- Skeleton in Phase 3 (W3.6); accretes panels every phase thereafter.
+ - Transversal: read-models only, no domain writes (ADR-0001).
++
++## Modules
++
++| Module     | Package                     | Blueprint                  |
++| ---------- | --------------------------- | -------------------------- |
++| `crashes/` | `@detran/dashboard-crashes` | `BP-DASHBOARD-CRASHES-001` |
++| `monitor/` | `@detran/dashboard-monitor` | `BP-DASH-MONITOR-001`      |
+diff --git a/backend/domains/dashboard/crashes/README.md b/backend/domains/dashboard/crashes/README.md
+new file mode 100644
+index 00000000..bb9a41cb
+--- /dev/null
++++ b/backend/domains/dashboard/crashes/README.md
+@@ -0,0 +1,33 @@
++# @detran/dashboard-crashes
++
++Module path: `backend/domains/dashboard/crashes`.
++
++## Purpose
++
++Agregacao interna de sinistros para dashboard.crashes (ADR-0020 Decision 1, 3 e 4; C-2-13/14; RN-DASH-161 e RN-BOAT-131). O projetor manuscrito consome somente o envelope canonico BOAT da integration.outbox, guarda event_schema_version separado de aggregate_version e registra efeito e ledger na mesma transacao. Nao ha rota publica, dado individual, escrita em est.* ou habilitacao de P-09; leitura e exportacao aplicam dashboard.cell_threshold=10 com supressao primaria e secundaria antes da entrega.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-DASHBOARD-CRASHES-001.json`
++
++## DDL
++
++- `backend/database/ddl/71-dashboard-crashes.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-DASHBOARD-CRASHES-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/dashboard-crashes typecheck`
++- `pnpm --filter @detran/dashboard-crashes build`
++- `pnpm --filter @detran/dashboard-crashes test`
++- `pnpm --filter @detran/dashboard-crashes test:unit`
++- `pnpm --filter @detran/dashboard-crashes test:integration`
++- `pnpm --filter @detran/dashboard-crashes test:e2e`
++- `pnpm --filter @detran/dashboard-crashes test:real`
++
++## Tests
++
++- —
+diff --git a/backend/domains/dashboard/monitor/README.md b/backend/domains/dashboard/monitor/README.md
+new file mode 100644
+index 00000000..5a058a45
+--- /dev/null
++++ b/backend/domains/dashboard/monitor/README.md
+@@ -0,0 +1,35 @@
++# @detran/dashboard-monitor
++
++Module path: `backend/domains/dashboard/monitor`.
++
++## Purpose
++
++Estado proprio e projecoes do DASHBOARD (dashboard-build-pack secao WP-D1; ADR-0020 Decisoes 1, 3 e 4; WF-DASH-001 ciclo do alerta, WF-DASH-002 calendario de deveres periodicos, WF-DASH-003 frescor; plan R-0011 M1..M5). O DASHBOARD nao tem base de negocio: le projecoes alimentadas por eventos e mantem so o seu proprio estado (alert, alert\_trail, duty, duty\_cycle, indicator, indicator\_config, bi\_panel, generated\_report, export\_log, source, transparency\_audit, dataset). As oito projecoes deste pacote (prescription\_risk, production, integration\_health, pec\_deadlines, teat\_measures, portal\_service\_metrics, duty\_evidence, source\_freshness -> source) sao projetores manuscritos em src/handwritten/projections/\*.projection.ts, idempotentes em event.id via o ledger unico monitor\_projection\_applied\_event, replayaveis da integration.outbox e versionados (event\_schema\_version, aggregate\_version). A projecao dashboard.crashes NAO e redefinida aqui: e BP-DASHBOARD-CRASHES-001 (plan M2), citada por indicator.projection dos IND-DASH-203/204/310. Vocabulario global (alert\_state\_ref, alert\_transition\_ref, duty\_state\_ref, duty\_transition\_ref, freshness\_state\_ref, severity\_ref, layer\_ref, classification\_ref, block\_ref, timer\_ref) em 19-dashboard-lifecycle-vocabulary.sql; os checks deste blueprint repetem os mesmos conjuntos. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3): identificacao de objeto so como object\_ref opaco com object\_layer. CTG-0002 (module.version 1.1.0, plan M15..M25, contrato work/rounds/R-0011/contracts/CTG-0002.md): entidades timer (relogio proprio, M15) e access\_log (RN-DASH-171, append-only); sete controllers manuscritos em src/handwritten/surface/\*.controller.ts com as rotas de dashboard-route-contract secao 2..secao 4 literalmente (todo api.resources[].operations continua [] - nada gerado tem rota; politica dashboard:\* de policy.ts, camada por dashboardLayerFor, @Audit DASH\_<VERBO>); servicos do ciclo em src/handwritten/cycle (relogio, sweeper, alerta, deveres, frescor, notificador) e da superficie em src/handwritten/surface (layer gate, exportacao, relatorios, catalogo, auditoria, dados abertos); tres indices handwritten (index, cycle/index, surface/index) com reexport nomeado (A13). @detran/inf-deadlines entra so como dependencia de leitura (Calendar, Clock, InMemoryCalendar, FixedClock; backend/domains/inf/deadlines nunca e editado, OD-D28); @detran/dashboard-crashes e lido pela API publica do pacote de R-0010 (DashboardCrashesProjection.readInternal) para IND-DASH-203/204/310, nunca por dashboard.crash\_\* direto; zod para os DTOs dos comandos. SSE GET /v1/dashboard/stream vive em backend/app/src/dashboard-stream.{service,controller}.ts (M23). A cadeia de escalonamento e vocabulario global dashboard.escalation\_chain\_ref (DDL 19, M18).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-DASH-MONITOR-001.json`
++
++## DDL
++
++- `backend/database/ddl/19-dashboard-lifecycle-vocabulary.sql`
++- `backend/database/ddl/80-dashboard.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-DASH-MONITOR-001.commands.openapi.json`
++- `docs/framework/contracts/BP-DASH-MONITOR-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/dashboard-monitor typecheck`
++- `pnpm --filter @detran/dashboard-monitor build`
++- `pnpm --filter @detran/dashboard-monitor test`
++- `pnpm --filter @detran/dashboard-monitor test:unit`
++- `pnpm --filter @detran/dashboard-monitor test:integration`
++- `pnpm --filter @detran/dashboard-monitor test:e2e`
++- `pnpm --filter @detran/dashboard-monitor test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/est/README.md b/backend/domains/est/README.md
+index 11925144..fa526cc7 100644
+--- a/backend/domains/est/README.md
++++ b/backend/domains/est/README.md
+@@ -2,6 +2,10 @@
+ 
+ Domain packages for crash/accident records and sinistro analytics.
+ 
+-- Populated in Phase 5 (W5.1): teat's `crash.*` DDL and `crash-crash-records` domain move
+-  here; BOAT (apps/boat/mobile) is its primary producer.
+ - Each module is a real pnpm workspace package with explicit deps (ADR-0001, ADR-0002).
++
++## Modules
++
++| Module   | Package             | Blueprint          |
++| -------- | ------------------- | ------------------ |
++| `crash/` | `@detran/est-crash` | `BP-EST-CRASH-001` |
+diff --git a/backend/domains/est/crash/README.md b/backend/domains/est/crash/README.md
+new file mode 100644
+index 00000000..abd12443
+--- /dev/null
++++ b/backend/domains/est/crash/README.md
+@@ -0,0 +1,35 @@
++# @detran/est-crash
++
++Module path: `backend/domains/est/crash`.
++
++## Purpose
++
++BOAT crash records and related entities from WF-BOAT-001 and WF-BOAT-003.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-EST-CRASH-001.json`
++
++## DDL
++
++- `backend/database/ddl/19-est-lifecycle-vocabulary.sql`
++- `backend/database/ddl/70-est-crash.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-EST-CRASH-001.commands.openapi.json`
++- `docs/framework/contracts/BP-EST-CRASH-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/est-crash typecheck`
++- `pnpm --filter @detran/est-crash build`
++- `pnpm --filter @detran/est-crash test`
++- `pnpm --filter @detran/est-crash test:unit`
++- `pnpm --filter @detran/est-crash test:integration`
++- `pnpm --filter @detran/est-crash test:e2e`
++- `pnpm --filter @detran/est-crash test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/README.md b/backend/domains/inf/README.md
+index 6498ff7a..339bff9f 100644
+--- a/backend/domains/inf/README.md
++++ b/backend/domains/inf/README.md
+@@ -4,8 +4,24 @@ Domain packages for traffic-infraction processing: AIT lifecycle, normative rule
+ administrative measures, alcohol procedures, defesas, penalidades, recursos and
+ julgamento (JARI two-tier boards).
+ 
+-- Populated in Phase 3: W3.1 ports teat's infraction domains (ait-lifecycle, normative,
+-  measures, alcohol); W3.3 builds the RAIT backend modules (defesas, penalidades,
+-  recursos, julgamento).
+ - Each module is a real pnpm workspace package with explicit deps — no deep relative
+   imports (ADR-0001, ADR-0002).
++
++## Modules
++
++| Module              | Package                        | Blueprint                     |
++| ------------------- | ------------------------------ | ----------------------------- |
++| `ait/`              | `@detran/inf-ait`              | `BP-INF-AIT-001`              |
++| `alcohol/`          | `@detran/inf-alcohol`          | `BP-INF-ALCOHOL-001`          |
++| `collection/`       | `@detran/inf-collection`       | `BP-INF-COLLECTION-001`       |
++| `deadlines/`        | `@detran/inf-deadlines`        | —                             |
++| `infraction/`       | `@detran/inf-infraction`       | `BP-INF-INFRACTION-001`       |
++| `measures/`         | `@detran/inf-measures`         | `BP-INF-MEASURES-001`         |
++| `normative/`        | `@detran/inf-normative`        | `BP-INF-NORMATIVE-001`        |
++| `notification/`     | `@detran/inf-notification`     | `BP-INF-NOTIFICATION-001`     |
++| `rait-case/`        | `@detran/inf-rait-case`        | `BP-INF-RAIT-CASE-001`        |
++| `rait-integration/` | `@detran/inf-rait-integration` | `BP-INF-RAIT-INTEGRATION-001` |
++| `rait-org/`         | `@detran/inf-rait-org`         | `BP-INF-RAIT-ORG-001`         |
++| `rait-session/`     | `@detran/inf-rait-session`     | `BP-INF-RAIT-SESSION-001`     |
++| `rait-worklist/`    | `@detran/inf-rait-worklist`    | `BP-INF-RAIT-WORKLIST-001`    |
++| `speed/`            | `@detran/inf-speed`            | `BP-INF-SPEED-001`            |
+diff --git a/backend/domains/inf/ait/README.md b/backend/domains/inf/ait/README.md
+new file mode 100644
+index 00000000..4e908ca5
+--- /dev/null
++++ b/backend/domains/inf/ait/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-ait
++
++Module path: `backend/domains/inf/ait`.
++
++## Purpose
++
++AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-AIT-001.json`
++
++## DDL
++
++- `backend/database/ddl/31-inf-ait.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-AIT-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-AIT-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-ait typecheck`
++- `pnpm --filter @detran/inf-ait build`
++- `pnpm --filter @detran/inf-ait test`
++- `pnpm --filter @detran/inf-ait test:unit`
++- `pnpm --filter @detran/inf-ait test:integration`
++- `pnpm --filter @detran/inf-ait test:e2e`
++- `pnpm --filter @detran/inf-ait test:real`
++
++## Tests
++
++- `tests/`
++- 8 × `src/**/*.spec.ts`
+diff --git a/backend/domains/inf/alcohol/README.md b/backend/domains/inf/alcohol/README.md
+new file mode 100644
+index 00000000..ef438958
+--- /dev/null
++++ b/backend/domains/inf/alcohol/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-alcohol
++
++Module path: `backend/domains/inf/alcohol`.
++
++## Purpose
++
++Breathalyzer and alcohol-testing procedure flows ported from TEAT.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-ALCOHOL-001.json`
++
++## DDL
++
++- `backend/database/ddl/33-inf-alcohol.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-ALCOHOL-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-ALCOHOL-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-alcohol typecheck`
++- `pnpm --filter @detran/inf-alcohol build`
++- `pnpm --filter @detran/inf-alcohol test`
++- `pnpm --filter @detran/inf-alcohol test:unit`
++- `pnpm --filter @detran/inf-alcohol test:integration`
++- `pnpm --filter @detran/inf-alcohol test:e2e`
++- `pnpm --filter @detran/inf-alcohol test:real`
++
++## Tests
++
++- `tests/`
++- 9 × `src/**/*.spec.ts`
+diff --git a/backend/domains/inf/collection/README.md b/backend/domains/inf/collection/README.md
+new file mode 100644
+index 00000000..0a31c774
+--- /dev/null
++++ b/backend/domains/inf/collection/README.md
+@@ -0,0 +1,34 @@
++# @detran/inf-collection
++
++Module path: `backend/domains/inf/collection`.
++
++## Purpose
++
++Modulo de arrecadacao (ADR-0017 Decision 1): unico escritor do documento de arrecadacao (UC-RAIT-032), do pagamento conciliado do retorno bancario (UC-RAIT-035), da ordem de restituicao corrigida (UC-RAIT-033) e do encaminhamento do credito a Fazenda (UC-RAIT-034). Dinheiro nunca muda estado direto: o agregado da infracao decide (ADR-0017 Decision 2; [WF-INF-003] secao 2 linhas 12 a 16 e 29). O banco e adapter interno do modulo em ports/bank, mock-first (ADR-0017 Decision 4); cartao e parcelamento estao fora de escopo (DT-031).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-COLLECTION-001.json`
++
++## DDL
++
++- `backend/database/ddl/57-inf-collection.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-COLLECTION-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-COLLECTION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-collection typecheck`
++- `pnpm --filter @detran/inf-collection build`
++- `pnpm --filter @detran/inf-collection test`
++- `pnpm --filter @detran/inf-collection test:unit`
++- `pnpm --filter @detran/inf-collection test:integration`
++- `pnpm --filter @detran/inf-collection test:e2e`
++- `pnpm --filter @detran/inf-collection test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/infraction/README.md b/backend/domains/inf/infraction/README.md
+new file mode 100644
+index 00000000..541c63be
+--- /dev/null
++++ b/backend/domains/inf/infraction/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-infraction
++
++Module path: `backend/domains/inf/infraction`.
++
++## Purpose
++
++Agregado da infracao (ADR-0016 Decision 1; [WF-INF-003] secoes 1-6): unico escritor de state/substate, sujeito passivo, efeito suspensivo, pagamento, pontuacao e motivo de encerramento, dos relogios legais (secao 3) e da trilha de eventos (secao 6). O vocabulario canonico (15 estados, 12 sub-estados, 46 transicoes, 18 timers) vive em 14-inf-lifecycle-vocabulary.sql e e referenciado por FK.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-INFRACTION-001.json`
++
++## DDL
++
++- `backend/database/ddl/14-inf-lifecycle-vocabulary.sql`
++- `backend/database/ddl/38-inf-infraction.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-INFRACTION-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-INFRACTION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-infraction typecheck`
++- `pnpm --filter @detran/inf-infraction build`
++- `pnpm --filter @detran/inf-infraction test`
++- `pnpm --filter @detran/inf-infraction test:unit`
++- `pnpm --filter @detran/inf-infraction test:integration`
++- `pnpm --filter @detran/inf-infraction test:e2e`
++- `pnpm --filter @detran/inf-infraction test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/measures/README.md b/backend/domains/inf/measures/README.md
+new file mode 100644
+index 00000000..10ca3816
+--- /dev/null
++++ b/backend/domains/inf/measures/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-measures
++
++Module path: `backend/domains/inf/measures`.
++
++## Purpose
++
++Administrative measures, terms, retention, removal, inventory, providers, yards, and status history.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-MEASURES-001.json`
++
++## DDL
++
++- `backend/database/ddl/32-inf-measures.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-MEASURES-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-MEASURES-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-measures typecheck`
++- `pnpm --filter @detran/inf-measures build`
++- `pnpm --filter @detran/inf-measures test`
++- `pnpm --filter @detran/inf-measures test:unit`
++- `pnpm --filter @detran/inf-measures test:integration`
++- `pnpm --filter @detran/inf-measures test:e2e`
++- `pnpm --filter @detran/inf-measures test:real`
++
++## Tests
++
++- `tests/`
++- 12 × `src/**/*.spec.ts`
+diff --git a/backend/domains/inf/normative/README.md b/backend/domains/inf/normative/README.md
+new file mode 100644
+index 00000000..8841abbe
+--- /dev/null
++++ b/backend/domains/inf/normative/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-normative
++
++Module path: `backend/domains/inf/normative`.
++
++## Purpose
++
++Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-NORMATIVE-001.json`
++
++## DDL
++
++- `backend/database/ddl/30-inf-normative.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-NORMATIVE-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-NORMATIVE-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-normative typecheck`
++- `pnpm --filter @detran/inf-normative build`
++- `pnpm --filter @detran/inf-normative test`
++- `pnpm --filter @detran/inf-normative test:unit`
++- `pnpm --filter @detran/inf-normative test:integration`
++- `pnpm --filter @detran/inf-normative test:e2e`
++- `pnpm --filter @detran/inf-normative test:real`
++
++## Tests
++
++- `tests/`
++- 7 × `src/**/*.spec.ts`
+diff --git a/backend/domains/inf/notification/README.md b/backend/domains/inf/notification/README.md
+new file mode 100644
+index 00000000..51ef0a24
+--- /dev/null
++++ b/backend/domains/inf/notification/README.md
+@@ -0,0 +1,33 @@
++# @detran/inf-notification
++
++Module path: `backend/domains/inf/notification`.
++
++## Purpose
++
++Modulo de notificacao (ADR-0016 Decision 1 e 3; [WF-INF-002] secao 2 P2 Notificar): unico escritor de avisos (NA, NP, decisao, diligencia, edital), da ciencia efetiva ou ficta e das tentativas de entrega. Publica NOTIFICACAO_EXPEDIDA e NOTIFICACAO_CIENCIA; nunca decide nada sobre a infracao. Marco por canal em inf.notification_channel_ref ([RN-RAIT-104]).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-NOTIFICATION-001.json`
++
++## DDL
++
++- `backend/database/ddl/59-inf-notification.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-NOTIFICATION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-notification typecheck`
++- `pnpm --filter @detran/inf-notification build`
++- `pnpm --filter @detran/inf-notification test`
++- `pnpm --filter @detran/inf-notification test:unit`
++- `pnpm --filter @detran/inf-notification test:integration`
++- `pnpm --filter @detran/inf-notification test:e2e`
++- `pnpm --filter @detran/inf-notification test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/rait-case/README.md b/backend/domains/inf/rait-case/README.md
+new file mode 100644
+index 00000000..24693080
+--- /dev/null
++++ b/backend/domains/inf/rait-case/README.md
+@@ -0,0 +1,35 @@
++# @detran/inf-rait-case
++
++Module path: `backend/domains/inf/rait-case`.
++
++## Purpose
++
++Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-RAIT-CASE-001.json`
++
++## DDL
++
++- `backend/database/ddl/34-inf-rait-case.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-RAIT-CASE-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-rait-case typecheck`
++- `pnpm --filter @detran/inf-rait-case build`
++- `pnpm --filter @detran/inf-rait-case test`
++- `pnpm --filter @detran/inf-rait-case test:unit`
++- `pnpm --filter @detran/inf-rait-case test:integration`
++- `pnpm --filter @detran/inf-rait-case test:e2e`
++- `pnpm --filter @detran/inf-rait-case test:real`
++
++## Tests
++
++- `tests/`
++- 1 × `src/**/*.spec.ts`
+diff --git a/backend/domains/inf/rait-integration/README.md b/backend/domains/inf/rait-integration/README.md
+new file mode 100644
+index 00000000..500d7392
+--- /dev/null
++++ b/backend/domains/inf/rait-integration/README.md
+@@ -0,0 +1,34 @@
++# @detran/inf-rait-integration
++
++Module path: `backend/domains/inf/rait-integration`.
++
++## Purpose
++
++Conciliacao do RAIT com os registros nacionais (UC-RAIT-029 fluxo 3 e UC-RAIT-031 fluxo 3 e 3a): fato proprio do RAIT, nao projecao (ADR-0020 Decision 1 e 2). Nenhuma chamada nacional sai daqui — so o packages/senatran-adapter fala com RENAINF, RENACH e SNE (ADR-0003; AC-RAIT-029-1) — e nenhuma escrita na integration.outbox: a projecao da outbox por sistema pertence ao consumidor (dashboard.integration_health, ADR-0020 Decision 2) e nasce em WP-P (decisao M10). Nenhuma FK entre schemas.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-RAIT-INTEGRATION-001.json`
++
++## DDL
++
++- `backend/database/ddl/58-inf-rait-integration.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-RAIT-INTEGRATION-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-RAIT-INTEGRATION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-rait-integration typecheck`
++- `pnpm --filter @detran/inf-rait-integration build`
++- `pnpm --filter @detran/inf-rait-integration test`
++- `pnpm --filter @detran/inf-rait-integration test:unit`
++- `pnpm --filter @detran/inf-rait-integration test:integration`
++- `pnpm --filter @detran/inf-rait-integration test:e2e`
++- `pnpm --filter @detran/inf-rait-integration test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/rait-org/README.md b/backend/domains/inf/rait-org/README.md
+new file mode 100644
+index 00000000..c27f76d0
+--- /dev/null
++++ b/backend/domains/inf/rait-org/README.md
+@@ -0,0 +1,34 @@
++# @detran/inf-rait-org
++
++Module path: `backend/domains/inf/rait-org`.
++
++## Purpose
++
++Organizacao do orgao julgador: calendario de feriados ([WF-RAIT-002] secao 7; UC-RAIT-043 fluxo 1), atos de suspensao de prazo por forca maior (UC-RAIT-022), folha de jeton por periodo (UC-RAIT-036), incidente de prescricao operacional ([WF-RAIT-002] secao 4.1 e 4.2), amostra de qualidade (UC-RAIT-025), plano de capacidade ([WF-RAIT-004] secao 8; UC-RAIT-038) e exportacoes com controle LGPD (UC-RAIT-042). Parametros vivem em ops.parameter (ADR-0021 Decision 6): este blueprint nao define rait_parameter e nenhuma coluna guarda valor de parametro.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-RAIT-ORG-001.json`
++
++## DDL
++
++- `backend/database/ddl/39-inf-rait-org.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-RAIT-ORG-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-RAIT-ORG-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-rait-org typecheck`
++- `pnpm --filter @detran/inf-rait-org build`
++- `pnpm --filter @detran/inf-rait-org test`
++- `pnpm --filter @detran/inf-rait-org test:unit`
++- `pnpm --filter @detran/inf-rait-org test:integration`
++- `pnpm --filter @detran/inf-rait-org test:e2e`
++- `pnpm --filter @detran/inf-rait-org test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/rait-session/README.md b/backend/domains/inf/rait-session/README.md
+new file mode 100644
+index 00000000..69a5774d
+--- /dev/null
++++ b/backend/domains/inf/rait-session/README.md
+@@ -0,0 +1,34 @@
++# @detran/inf-rait-session
++
++Module path: `backend/domains/inf/rait-session`.
++
++## Purpose
++
++Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57). v1.2.0 fecha o schema aditivo de composicao institucional, concorrencia otimista e ata confiavel multi-signatario conforme ADR-0027, UC-RAIT-020 e WF-RAIT-003, com dependencias explicitas em case, worklist e deadlines e somente leituras CRUD. v1.2.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, sem expor escrita CRUD nem sustentacao oral.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-RAIT-SESSION-001.json`
++
++## DDL
++
++- `backend/database/ddl/36-inf-rait-session.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-RAIT-SESSION-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-RAIT-SESSION-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-rait-session typecheck`
++- `pnpm --filter @detran/inf-rait-session build`
++- `pnpm --filter @detran/inf-rait-session test`
++- `pnpm --filter @detran/inf-rait-session test:unit`
++- `pnpm --filter @detran/inf-rait-session test:integration`
++- `pnpm --filter @detran/inf-rait-session test:e2e`
++- `pnpm --filter @detran/inf-rait-session test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/rait-worklist/README.md b/backend/domains/inf/rait-worklist/README.md
+new file mode 100644
+index 00000000..8dddc35a
+--- /dev/null
++++ b/backend/domains/inf/rait-worklist/README.md
+@@ -0,0 +1,34 @@
++# @detran/inf-rait-worklist
++
++Module path: `backend/domains/inf/rait-worklist`.
++
++## Purpose
++
++Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-RAIT-WORKLIST-001.json`
++
++## DDL
++
++- `backend/database/ddl/35-inf-rait-worklist.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.commands.openapi.json`
++- `docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-rait-worklist typecheck`
++- `pnpm --filter @detran/inf-rait-worklist build`
++- `pnpm --filter @detran/inf-rait-worklist test`
++- `pnpm --filter @detran/inf-rait-worklist test:unit`
++- `pnpm --filter @detran/inf-rait-worklist test:integration`
++- `pnpm --filter @detran/inf-rait-worklist test:e2e`
++- `pnpm --filter @detran/inf-rait-worklist test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/inf/speed/README.md b/backend/domains/inf/speed/README.md
+new file mode 100644
+index 00000000..b58781a4
+--- /dev/null
++++ b/backend/domains/inf/speed/README.md
+@@ -0,0 +1,33 @@
++# @detran/inf-speed
++
++Module path: `backend/domains/inf/speed`.
++
++## Purpose
++
++Medicao de velocidade por equipamento ACOPLADO ao talao eletronico (UC-TEAT-013). Escopo: inciso II do art. 3o §1o da Res. 918/2022. Fiscalizacao eletronica por equipamento fixo (inciso III, com referendo) esta FORA — ver inf/teat/APP.md secao Fronteira.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INF-SPEED-001.json`
++
++## DDL
++
++- `backend/database/ddl/37-inf-speed.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INF-SPEED-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/inf-speed typecheck`
++- `pnpm --filter @detran/inf-speed build`
++- `pnpm --filter @detran/inf-speed test`
++- `pnpm --filter @detran/inf-speed test:unit`
++- `pnpm --filter @detran/inf-speed test:integration`
++- `pnpm --filter @detran/inf-speed test:e2e`
++- `pnpm --filter @detran/inf-speed test:real`
++
++## Tests
++
++- 1 × `src/**/*.spec.ts`
+diff --git a/backend/domains/integration/README.md b/backend/domains/integration/README.md
+new file mode 100644
+index 00000000..fe5fd1f0
+--- /dev/null
++++ b/backend/domains/integration/README.md
+@@ -0,0 +1,9 @@
++# backend/domains/integration
++
++Purpose: pendente de fonte (`source_pending`).
++
++## Modules
++
++| Module            | Package                              | Blueprint                           |
++| ----------------- | ------------------------------------ | ----------------------------------- |
++| `renaest-mirror/` | `@detran/integration-renaest-mirror` | `BP-INTEGRATION-RENAEST-MIRROR-001` |
+diff --git a/backend/domains/integration/renaest-mirror/README.md b/backend/domains/integration/renaest-mirror/README.md
+new file mode 100644
+index 00000000..f47852fa
+--- /dev/null
++++ b/backend/domains/integration/renaest-mirror/README.md
+@@ -0,0 +1,33 @@
++# @detran/integration-renaest-mirror
++
++Module path: `backend/domains/integration/renaest-mirror`.
++
++## Purpose
++
++Espelho consumidor integration.renaest\_mirror fisicamente em backend/domains/integration/renaest-mirror e logicamente do adapter (ADR-0001 amendment; ADR-0020 Decision 1, 3 e 4; C-2-14). O projetor manuscrito recebe eventos e recibos BOAT canonicos da integration.outbox, mantendo somente protocolo, situacao nacional, retificacoes e ledger local. Ele nao chama SENATRAN, nao tem FK para est.\*, nao le est.\* exceto pela leitura de evento permitida em arquivo \*.projection.ts, e nunca altera o estado BOAT.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-INTEGRATION-RENAEST-MIRROR-001.json`
++
++## DDL
++
++- `backend/database/ddl/72-integration-renaest-mirror.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-INTEGRATION-RENAEST-MIRROR-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/integration-renaest-mirror typecheck`
++- `pnpm --filter @detran/integration-renaest-mirror build`
++- `pnpm --filter @detran/integration-renaest-mirror test`
++- `pnpm --filter @detran/integration-renaest-mirror test:unit`
++- `pnpm --filter @detran/integration-renaest-mirror test:integration`
++- `pnpm --filter @detran/integration-renaest-mirror test:e2e`
++- `pnpm --filter @detran/integration-renaest-mirror test:real`
++
++## Tests
++
++- —
+diff --git a/backend/domains/ops/README.md b/backend/domains/ops/README.md
+index 98d1f34b..8b5abea9 100644
+--- a/backend/domains/ops/README.md
++++ b/backend/domains/ops/README.md
+@@ -15,3 +15,17 @@ lookup snapshots; and polymorphic evidence custody.
+ The minimum `ops/agency` cut contains `agency_unit`, `agency_jurisdiction` and
+ `agency_competence`; agreements are outside this delivery. `shift.status` remains
+ `source_pending` until the canonical source vocabulary is published.
++
++## Modules
++
++| Module          | Package                    | Blueprint                 |
++| --------------- | -------------------------- | ------------------------- |
++| `agency/`       | `@detran/ops-agency`       | `BP-OPS-AGENCY-001`       |
++| `core/`         | `@detran/ops-core`         | —                         |
++| `evidence/`     | `@detran/ops-evidence`     | `BP-OPS-EVIDENCE-001`     |
++| `example/`      | `@detran/ops-example`      | `BP-OPS-EXAMPLE-001`      |
++| `field/`        | `@detran/ops-field`        | `BP-OPS-FIELD-001`        |
++| `offline-sync/` | `@detran/ops-offline-sync` | `BP-OPS-OFFLINE-SYNC-001` |
++| `parameter/`    | `@detran/ops-parameter`    | `BP-OPS-PARAMETER-001`    |
++| `provisioning/` | `@detran/ops-provisioning` | `BP-OPS-PROVISIONING-001` |
++| `snapshots/`    | `@detran/ops-snapshots`    | `BP-OPS-SNAPSHOTS-001`    |
+diff --git a/backend/domains/ops/agency/README.md b/backend/domains/ops/agency/README.md
+new file mode 100644
+index 00000000..91344b0a
+--- /dev/null
++++ b/backend/domains/ops/agency/README.md
+@@ -0,0 +1,33 @@
++# @detran/ops-agency
++
++Module path: `backend/domains/ops/agency`.
++
++## Purpose
++
++Minimum institutional context for TEAT mobile bootstrap and jurisdiction routing (teat-route-contract.md §4.1; steering H.40; OD-T02/OD-013).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-AGENCY-001.json`
++
++## DDL
++
++- `backend/database/ddl/13-ops-agency.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-AGENCY-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-agency typecheck`
++- `pnpm --filter @detran/ops-agency build`
++- `pnpm --filter @detran/ops-agency test`
++- `pnpm --filter @detran/ops-agency test:unit`
++- `pnpm --filter @detran/ops-agency test:integration`
++- `pnpm --filter @detran/ops-agency test:e2e`
++- `pnpm --filter @detran/ops-agency test:real`
++
++## Tests
++
++—
+diff --git a/backend/domains/ops/core/README.md b/backend/domains/ops/core/README.md
+new file mode 100644
+index 00000000..6c5d0aab
+--- /dev/null
++++ b/backend/domains/ops/core/README.md
+@@ -0,0 +1,29 @@
++# @detran/ops-core
++
++Module path: `backend/domains/ops/core`.
++
++## Purpose
++
++pendente de fonte (`source_pending`)
++
++## Blueprint
++
++—
++
++## DDL
++
++—
++
++## Routes and contract
++
++—
++
++## Scripts
++
++- `pnpm --filter @detran/ops-core typecheck`
++- `pnpm --filter @detran/ops-core build`
++- `pnpm --filter @detran/ops-core test`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ops/evidence/README.md b/backend/domains/ops/evidence/README.md
+new file mode 100644
+index 00000000..a68af5f8
+--- /dev/null
++++ b/backend/domains/ops/evidence/README.md
+@@ -0,0 +1,35 @@
++# @detran/ops-evidence
++
++Module path: `backend/domains/ops/evidence`.
++
++## Purpose
++
++Evidence metadata, custody and formal access from TEAT evidence workflow and INV-EVIDENCE-001; binary storage remains a STYNX seam.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-EVIDENCE-001.json`
++
++## DDL
++
++- `backend/database/ddl/17-ops-evidence.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-EVIDENCE-001.commands.openapi.json`
++- `docs/framework/contracts/BP-OPS-EVIDENCE-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-evidence typecheck`
++- `pnpm --filter @detran/ops-evidence build`
++- `pnpm --filter @detran/ops-evidence test`
++- `pnpm --filter @detran/ops-evidence test:unit`
++- `pnpm --filter @detran/ops-evidence test:integration`
++- `pnpm --filter @detran/ops-evidence test:e2e`
++- `pnpm --filter @detran/ops-evidence test:real`
++
++## Tests
++
++- `tests/`
++- 8 × `src/**/*.spec.ts`
+diff --git a/backend/domains/ops/example/README.md b/backend/domains/ops/example/README.md
+new file mode 100644
+index 00000000..28f251c2
+--- /dev/null
++++ b/backend/domains/ops/example/README.md
+@@ -0,0 +1,33 @@
++# @detran/ops-example
++
++Module path: `backend/domains/ops/example`.
++
++## Purpose
++
++Tiny Phase 2 generator proof; no real domain behavior.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-EXAMPLE-001.json`
++
++## DDL
++
++- `backend/database/ddl/30-ops-example.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-EXAMPLE-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-example typecheck`
++- `pnpm --filter @detran/ops-example build`
++- `pnpm --filter @detran/ops-example test`
++- `pnpm --filter @detran/ops-example test:unit`
++- `pnpm --filter @detran/ops-example test:integration`
++- `pnpm --filter @detran/ops-example test:e2e`
++- `pnpm --filter @detran/ops-example test:real`
++
++## Tests
++
++—
+diff --git a/backend/domains/ops/field/README.md b/backend/domains/ops/field/README.md
+new file mode 100644
+index 00000000..6077bd1b
+--- /dev/null
++++ b/backend/domains/ops/field/README.md
+@@ -0,0 +1,35 @@
++# @detran/ops-field
++
++Module path: `backend/domains/ops/field`.
++
++## Purpose
++
++Field-operation context from TEAT BP-MOBILE-OPERATIONS-001 and RN-TEAT-003; handwritten operations routes remain mounted through the generated module.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-FIELD-001.json`
++
++## DDL
++
++- `backend/database/ddl/13-ops-field-operations.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-FIELD-001.commands.openapi.json`
++- `docs/framework/contracts/BP-OPS-FIELD-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-field typecheck`
++- `pnpm --filter @detran/ops-field build`
++- `pnpm --filter @detran/ops-field test`
++- `pnpm --filter @detran/ops-field test:unit`
++- `pnpm --filter @detran/ops-field test:integration`
++- `pnpm --filter @detran/ops-field test:e2e`
++- `pnpm --filter @detran/ops-field test:real`
++
++## Tests
++
++- `tests/`
++- 2 × `src/**/*.spec.ts`
+diff --git a/backend/domains/ops/offline-sync/README.md b/backend/domains/ops/offline-sync/README.md
+new file mode 100644
+index 00000000..fe7e5083
+--- /dev/null
++++ b/backend/domains/ops/offline-sync/README.md
+@@ -0,0 +1,35 @@
++# @detran/ops-offline-sync
++
++Module path: `backend/domains/ops/offline-sync`.
++
++## Purpose
++
++Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-OFFLINE-SYNC-001.json`
++
++## DDL
++
++- `backend/database/ddl/18-ops-offline-sync.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.commands.openapi.json`
++- `docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-offline-sync typecheck`
++- `pnpm --filter @detran/ops-offline-sync build`
++- `pnpm --filter @detran/ops-offline-sync test`
++- `pnpm --filter @detran/ops-offline-sync test:unit`
++- `pnpm --filter @detran/ops-offline-sync test:integration`
++- `pnpm --filter @detran/ops-offline-sync test:e2e`
++- `pnpm --filter @detran/ops-offline-sync test:real`
++
++## Tests
++
++- `tests/`
++- 2 × `src/**/*.spec.ts`
+diff --git a/backend/domains/ops/parameter/README.md b/backend/domains/ops/parameter/README.md
+new file mode 100644
+index 00000000..c64dbd0b
+--- /dev/null
++++ b/backend/domains/ops/parameter/README.md
+@@ -0,0 +1,33 @@
++# @detran/ops-parameter
++
++Module path: `backend/domains/ops/parameter`.
++
++## Purpose
++
++Shared versioned parameter store from ADR-0021 Decision 1; command discipline follows UC-RAIT-043 §Fluxo principal.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-PARAMETER-001.json`
++
++## DDL
++
++- `backend/database/ddl/15-ops-parameter.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-PARAMETER-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-parameter typecheck`
++- `pnpm --filter @detran/ops-parameter build`
++- `pnpm --filter @detran/ops-parameter test`
++- `pnpm --filter @detran/ops-parameter test:unit`
++- `pnpm --filter @detran/ops-parameter test:integration`
++- `pnpm --filter @detran/ops-parameter test:e2e`
++- `pnpm --filter @detran/ops-parameter test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/ops/provisioning/README.md b/backend/domains/ops/provisioning/README.md
+new file mode 100644
+index 00000000..4e826968
+--- /dev/null
++++ b/backend/domains/ops/provisioning/README.md
+@@ -0,0 +1,35 @@
++# @detran/ops-provisioning
++
++Module path: `backend/domains/ops/provisioning`.
++
++## Purpose
++
++Operational offline provisioning from offline-operational-provisioning.md §§1–12 and INV-OFFLINE-001; cryptographic algorithms and wire format remain source_pending until the cross-platform security decision.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-PROVISIONING-001.json`
++
++## DDL
++
++- `backend/database/ddl/21-ops-provisioning.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-PROVISIONING-001.commands.openapi.json`
++- `docs/framework/contracts/BP-OPS-PROVISIONING-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-provisioning typecheck`
++- `pnpm --filter @detran/ops-provisioning build`
++- `pnpm --filter @detran/ops-provisioning test`
++- `pnpm --filter @detran/ops-provisioning test:unit`
++- `pnpm --filter @detran/ops-provisioning test:integration`
++- `pnpm --filter @detran/ops-provisioning test:e2e`
++- `pnpm --filter @detran/ops-provisioning test:real`
++
++## Tests
++
++- `tests/`
++- 1 × `src/**/*.spec.ts`
+diff --git a/backend/domains/ops/snapshots/README.md b/backend/domains/ops/snapshots/README.md
+new file mode 100644
+index 00000000..93fc08e8
+--- /dev/null
++++ b/backend/domains/ops/snapshots/README.md
+@@ -0,0 +1,35 @@
++# @detran/ops-snapshots
++
++Module path: `backend/domains/ops/snapshots`.
++
++## Purpose
++
++Frozen external lookup snapshots preserved for legal acts, migrated from TEAT BP-EXTERNAL-SNAPSHOTS-001.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-OPS-SNAPSHOTS-001.json`
++
++## DDL
++
++- `backend/database/ddl/16-ops-snapshots.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-OPS-SNAPSHOTS-001.commands.openapi.json`
++- `docs/framework/contracts/BP-OPS-SNAPSHOTS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/ops-snapshots typecheck`
++- `pnpm --filter @detran/ops-snapshots build`
++- `pnpm --filter @detran/ops-snapshots test`
++- `pnpm --filter @detran/ops-snapshots test:unit`
++- `pnpm --filter @detran/ops-snapshots test:integration`
++- `pnpm --filter @detran/ops-snapshots test:e2e`
++- `pnpm --filter @detran/ops-snapshots test:real`
++
++## Tests
++
++- `tests/`
++- 2 × `src/**/*.spec.ts`
+diff --git a/backend/domains/portal/README.md b/backend/domains/portal/README.md
+index 10cdede0..331ce4e8 100644
+--- a/backend/domains/portal/README.md
++++ b/backend/domains/portal/README.md
+@@ -4,5 +4,15 @@ Domain packages backing PORTAL: citizen-facing aggregates over inf/est/ch (ticke
+ points, CNH via the senatran-adapter CDT port), appeal intake into the RAIT worklist,
+ notifications (SNE semantics), LGPD via @stynx-nyx/privacy.
+ 
+-- Populated in Phase 4 (W4.3).
+ - Transversal: reads across domains but owns only its own aggregates (ADR-0001).
++
++## Modules
++
++| Module             | Package                          | Blueprint                       |
++| ------------------ | -------------------------------- | ------------------------------- |
++| `citizen-service/` | `@detran/portal-citizen-service` | `BP-PORTAL-CITIZEN-SERVICE-001` |
++| `complaints/`      | `@detran/portal-complaints`      | `BP-PORTAL-COMPLAINTS-001`      |
++| `identity/`        | `@detran/portal-identity`        | `BP-PORTAL-IDENTITY-001`        |
++| `inbox/`           | `@detran/portal-inbox`           | `BP-PORTAL-INBOX-001`           |
++| `projections/`     | `@detran/portal-projections`     | `BP-PORTAL-PROJECTIONS-001`     |
++| `requests/`        | `@detran/portal-requests`        | `BP-PORTAL-REQUESTS-001`        |
+diff --git a/backend/domains/portal/citizen-service/README.md b/backend/domains/portal/citizen-service/README.md
+new file mode 100644
+index 00000000..056bb51c
+--- /dev/null
++++ b/backend/domains/portal/citizen-service/README.md
+@@ -0,0 +1,35 @@
++# @detran/portal-citizen-service
++
++Module path: `backend/domains/portal/citizen-service`.
++
++## Purpose
++
++Atendimento ao cidadao (ADR-0019 Decision 4; [WF-PORTAL-004] secao Estados, secao Prazos e secao Carta de Servicos; plan R-0009 M12-M14): manifestacao de ouvidoria da Lei 13.460/2017 (entidade distinta de portal.complaint do PEC, M2 — nunca duas tabelas para a mesma manifestacao; unificacao futura e OD-P14), prorrogacao justificada dos prazos do art. 16 e Carta de Servicos como dados (portal.service_catalog, 11 campos de RN-PORTAL-108). Prazos calculados com addCalendarDays de @detran/inf-deadlines; timers T-OUV-RESPOSTA, T-OUV-INFO, T-LGPD-ACESSO e T-AVAL-CONVITE (owner = portal) em inf.infraction_timer_ref, espelhados em portal-timers.ts (M14). brand_profile e public_hostname NAO sao entidades deste blueprint: DDL manuscrito 19-portal-platform.sql (M11). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica MANIFESTACAO_REGISTRADA e MANIFESTACAO_ENCERRADA (M21).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-CITIZEN-SERVICE-001.json`
++
++## DDL
++
++- `backend/database/ddl/64-portal-citizen-service.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-CITIZEN-SERVICE-001.commands.openapi.json`
++- `docs/framework/contracts/BP-PORTAL-CITIZEN-SERVICE-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-citizen-service typecheck`
++- `pnpm --filter @detran/portal-citizen-service build`
++- `pnpm --filter @detran/portal-citizen-service test`
++- `pnpm --filter @detran/portal-citizen-service test:unit`
++- `pnpm --filter @detran/portal-citizen-service test:integration`
++- `pnpm --filter @detran/portal-citizen-service test:e2e`
++- `pnpm --filter @detran/portal-citizen-service test:real`
++
++## Tests
++
++- `tests/`
++- 2 × `src/**/*.spec.ts`
+diff --git a/backend/domains/portal/complaints/README.md b/backend/domains/portal/complaints/README.md
+new file mode 100644
+index 00000000..56b9da17
+--- /dev/null
++++ b/backend/domains/portal/complaints/README.md
+@@ -0,0 +1,33 @@
++# @detran/portal-complaints
++
++Module path: `backend/domains/portal/complaints`.
++
++## Purpose
++
++Ouvidoria protocol intake and auditable triage owned by Portal. This is the reviewed UC-PORTAL-016 realization and the durable successor to PEC complaints; it does not create a competing CH aggregate.
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-COMPLAINTS-001.json`
++
++## DDL
++
++- `backend/database/ddl/60-portal-complaints.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-COMPLAINTS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-complaints typecheck`
++- `pnpm --filter @detran/portal-complaints build`
++- `pnpm --filter @detran/portal-complaints test`
++- `pnpm --filter @detran/portal-complaints test:unit`
++- `pnpm --filter @detran/portal-complaints test:integration`
++- `pnpm --filter @detran/portal-complaints test:e2e`
++- `pnpm --filter @detran/portal-complaints test:real`
++
++## Tests
++
++- `tests/`
+diff --git a/backend/domains/portal/identity/README.md b/backend/domains/portal/identity/README.md
+new file mode 100644
+index 00000000..a9093676
+--- /dev/null
++++ b/backend/domains/portal/identity/README.md
+@@ -0,0 +1,35 @@
++# @detran/portal-identity
++
++Module path: `backend/domains/portal/identity`.
++
++## Purpose
++
++Identidade federada do cidadao (ADR-0019 Decision 1; [WF-PORTAL-002] secao Estados; plan R-0009 M3-M6): guarda so o que o gov.br nao guarda — sujeito por hash de CPF, representacao (procuracao), matriz ato -> nivel de assinatura como dados (portal.act_level_policy) e vinculos (portal.entitlement). Nunca armazena token, credencial nem CPF em claro (RN-PORTAL-112). Nenhuma rota CRUD gerada (M1): as rotas de /v1/portal/* sao manuscritas em src/handwritten e usam os repositorios gerados. Publica NIVEL_ASSINATURA_ELEVADO e REPRESENTACAO_VALIDADA (ADR-0019 Ownership table).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-IDENTITY-001.json`
++
++## DDL
++
++- `backend/database/ddl/61-portal-identity.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-IDENTITY-001.commands.openapi.json`
++- `docs/framework/contracts/BP-PORTAL-IDENTITY-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-identity typecheck`
++- `pnpm --filter @detran/portal-identity build`
++- `pnpm --filter @detran/portal-identity test`
++- `pnpm --filter @detran/portal-identity test:unit`
++- `pnpm --filter @detran/portal-identity test:integration`
++- `pnpm --filter @detran/portal-identity test:e2e`
++- `pnpm --filter @detran/portal-identity test:real`
++
++## Tests
++
++- `tests/`
++- 3 × `src/**/*.spec.ts`
+diff --git a/backend/domains/portal/inbox/README.md b/backend/domains/portal/inbox/README.md
+new file mode 100644
+index 00000000..c49d73e0
+--- /dev/null
++++ b/backend/domains/portal/inbox/README.md
+@@ -0,0 +1,35 @@
++# @detran/portal-inbox
++
++Module path: `backend/domains/portal/inbox`.
++
++## Purpose
++
++Caixa do cidadao (ADR-0019 Decision 3; [WF-PORTAL-003] secao Estados e secao Prazos; plan R-0009 M15): itens da caixa como projecao de eventos mais fatos de ciencia (portal.acknowledgement_evidence), adesao ao SNE como macro-estado do vinculo (NAO_ADERIDO_SNE | ADERIDO_SNE) e assinaturas push. A leitura de um item SNE grava a evidencia e publica NOTIFICACAO_CIENCIA na outbox (topic portal), idempotente; a ciencia efetiva do aviso e do modulo inf/notification (ADR-0016). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica INBOX_LIDO, NOTIFICACAO_CIENCIA, SNE_ADESAO_SOLICITADA e SNE_CANCELAMENTO_SOLICITADO (M21).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-INBOX-001.json`
++
++## DDL
++
++- `backend/database/ddl/63-portal-inbox.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-INBOX-001.commands.openapi.json`
++- `docs/framework/contracts/BP-PORTAL-INBOX-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-inbox typecheck`
++- `pnpm --filter @detran/portal-inbox build`
++- `pnpm --filter @detran/portal-inbox test`
++- `pnpm --filter @detran/portal-inbox test:unit`
++- `pnpm --filter @detran/portal-inbox test:integration`
++- `pnpm --filter @detran/portal-inbox test:e2e`
++- `pnpm --filter @detran/portal-inbox test:real`
++
++## Tests
++
++- `tests/`
++- 1 × `src/**/*.spec.ts`
+diff --git a/backend/domains/portal/projections/README.md b/backend/domains/portal/projections/README.md
+new file mode 100644
+index 00000000..1e3e1169
+--- /dev/null
++++ b/backend/domains/portal/projections/README.md
+@@ -0,0 +1,35 @@
++# @detran/portal-projections
++
++Module path: `backend/domains/portal/projections`.
++
++## Purpose
++
++Projecoes do Portal (ADR-0020 Decision 1, 2 e 5; ADR-0019 Decision 5; plan R-0009 M16-M17): as cinco leituras cidadas do catalogo de projecoes (infraction_view, process_timeline, points_view, crash_view, exam_view) como entidades pequenas alimentadas por eventos da outbox (topics inf e rait) por projetores manuscritos idempotentes em event.id (portal.projection_applied_event) e replayaveis; mais o cache das leituras nacionais feitas so por packages/senatran-adapter (portal.national_read_cache, TTL = parametro portal.read_cache_ttl_minutes via @detran/ops-parameter, nunca literal). Nenhuma projecao escreve de volta; rotulos cidadaos, nunca tokens de inf (RN-PORTAL-112). Sem FK para outros pacotes: toda linha e reconstruivel por replay. Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-PROJECTIONS-001.json`
++
++## DDL
++
++- `backend/database/ddl/65-portal-projections.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-PROJECTIONS-001.commands.openapi.json`
++- `docs/framework/contracts/BP-PORTAL-PROJECTIONS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-projections typecheck`
++- `pnpm --filter @detran/portal-projections build`
++- `pnpm --filter @detran/portal-projections test`
++- `pnpm --filter @detran/portal-projections test:unit`
++- `pnpm --filter @detran/portal-projections test:integration`
++- `pnpm --filter @detran/portal-projections test:e2e`
++- `pnpm --filter @detran/portal-projections test:real`
++
++## Tests
++
++- `tests/`
++- 5 × `src/**/*.spec.ts`
+diff --git a/backend/domains/portal/requests/README.md b/backend/domains/portal/requests/README.md
+new file mode 100644
+index 00000000..9cdb208c
+--- /dev/null
++++ b/backend/domains/portal/requests/README.md
+@@ -0,0 +1,36 @@
++# @detran/portal-requests
++
++Module path: `backend/domains/portal/requests`.
++
++## Purpose
++
++Ciclo comum de pedidos do cidadao (ADR-0019 Decision 2; [WF-PORTAL-001] secao Estados e secao Transicoes; plan R-0009 M7-M9): uma unica maquina de 13 estados fixos em codigo (OD-P13) para todo servico do catalogo, com protocolo imediato (T-PROTOCOLO, Lei 14.129/2021 art. 27 IV) antes de qualquer validacao de conteudo e delegacao ao comando do dominio dono (M8). O pedido nunca guarda a decisao. Inclui rascunho versionado, anexos, ciencia de consequencias, avaliacao e registro de idempotencia (M9). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica SOLICITACAO_CRIADA, SOLICITACAO_PROTOCOLADA, SOLICITACAO_DESISTIDA, SOLICITACAO_CONCLUIDA e AVALIACAO_REGISTRADA (M21).
++
++## Blueprint
++
++`docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json`
++
++## DDL
++
++- `backend/database/ddl/19-portal-platform.sql`
++- `backend/database/ddl/62-portal-requests.sql`
++
++## Routes and contract
++
++- `docs/framework/contracts/BP-PORTAL-REQUESTS-001.commands.openapi.json`
++- `docs/framework/contracts/BP-PORTAL-REQUESTS-001.openapi.json`
++
++## Scripts
++
++- `pnpm --filter @detran/portal-requests typecheck`
++- `pnpm --filter @detran/portal-requests build`
++- `pnpm --filter @detran/portal-requests test`
++- `pnpm --filter @detran/portal-requests test:unit`
++- `pnpm --filter @detran/portal-requests test:integration`
++- `pnpm --filter @detran/portal-requests test:e2e`
++- `pnpm --filter @detran/portal-requests test:real`
++
++## Tests
++
++- `tests/`
++- 4 × `src/**/*.spec.ts`
+diff --git a/backend/domains/shared/README.md b/backend/domains/shared/README.md
+index 7f547c9c..bb52fdbb 100644
+--- a/backend/domains/shared/README.md
++++ b/backend/domains/shared/README.md
+@@ -7,6 +7,7 @@ decorators, the global guard, role normalization and the request-path
+ 
+ - Package name: `@detran/shared`; domain packages import this workspace package
+   rather than using deep relative paths (ADR-0001).
+-- Role union: PEC 15 + eight unique TEAT staff codes + `CIDADAO`; TEAT
+-  `auditor` maps to PEC `AUDITOR` (ADR-0005).
++- Role union (`DETRAN_ROLES` in `src/roles.ts`, 36 codes): PEC 15 + eight unique TEAT
++  staff codes + RAIT 10 + DASHBOARD 2 + `CIDADAO`; TEAT `auditor` maps to PEC
++  `AUDITOR` (ADR-0005).
+ - Keep this thin: anything platform-generic belongs in stynx, not here.
+diff --git a/docs/framework/arch/README.md b/docs/framework/arch/README.md
+index f5b56a7b..a0c3e0f8 100644
+--- a/docs/framework/arch/README.md
++++ b/docs/framework/arch/README.md
+@@ -1,7 +1,7 @@
+ # Architecture
+ 
+-Stub — Phase 2 (W2.1) documents the composition root, adapter kernel, runtime
+-profiles, policy matrix and tenancy enforcement here.
++Índice dos documentos de arquitetura de `docs/framework/arch/`: cada outro `*.md` do diretório
++aparece uma vez abaixo.
+ 
+ - [apps/rait/web — especificação do frontend](./rait-web-frontend.md) (2026-09-12, draft).
+ - [apps/rait/web — diagramas de módulos, rotas e componentes](./rait-web-structure-diagrams.md) (2026-09-12, draft; SVGs em `./diagrams/`).
+@@ -16,3 +16,4 @@ profiles, policy matrix and tenancy enforcement here.
+ - DASHBOARD (2026-09-13): [frontend de monitoramento](./dashboard-frontends.md) · [contrato de rotas](./dashboard-route-contract.md) · [catálogo de erros](./dashboard-error-catalog.md) · [pacote de construção](./dashboard-build-pack.md).
+ - Portão de implementação (2026-09-13): [pontos de atenção e decisões abertas](../../meta/knowledge-base/implementation-gate-2026-09-13.md).
+ - Fechamento de decisões (2026-09-13): [plano em três vias](../../meta/knowledge-base/decision-closure-plan.md) · [catálogo de parâmetros e flags](./parameter-catalogue.md) (ADR-0021) · [cédulas do Owner](../../meta/knowledge-base/owner-ballots/README.md).
++- Complementos: [Contrato do comando de alteração de parâmetro OPS](./ops-parameter-command-contract.md) (2026-09-14, draft) · [apps/rait/web — formulários, validação de forma e gates de transição (WP-E, consolidado do CTG-0002c)](./rait-web-forms.md) (2026-09-22, draft) · [Contrato executável do aplicativo móvel TEAT](./teat-mobile-contract.md) (2026-09-24, draft) · [Contrato executável do console web TEAT](./teat-web-contract.md) (2026-09-24, draft) · [Estrutura de navegação web do TEAT](./teat-web-structure-diagrams.md) (2026-09-21, draft).
+diff --git a/docs/meta/agents/orchestra/waves.md b/docs/meta/agents/orchestra/waves.md
+index b50c1e02..7f235dfd 100644
+--- a/docs/meta/agents/orchestra/waves.md
++++ b/docs/meta/agents/orchestra/waves.md
+@@ -64,5 +64,6 @@ ficam ativas ao mesmo tempo (ondas 5 e 6).
+ | R-0014 | `portal-pwa`        | 2026-09-17                       | PRs #60…#66; PC-0007                                                                                                                                                                                                                                          | 0012 + fechamento; WP-P4…P6                                                                               | 8…11                                                                                                                         | B1 Lighthouse; B2 reviewer; B3 Codex                                                                                                                                                                            | ~4.93M únicos acumulados; janela 4                                                                                                                                              | `gpt-5.6-sol\|gpt-5.6-terra\|gpt-5.6-luna`; comandos longos em segundo plano; app isolado por arquivo; asserções por conjunto vedadas; Sonnet/médio (ou Terra/médio) para Inspectors de matriz grande.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+ | R-0015 | `boat-mobile`       | 2026-09-22 (retomada 2026-09-24) | PR #107 (CTG-0001, merge `1dc8b630`); PR #116 (CTG-0002, merge `50626da5`); fechamento PC-0014                                                                                                                                                                | TASK-0001…0012; dois CTGs entregues e observados                                                          | 8 prompt-review; 4 delivery-review (dois por CTG)                                                                            | 2 humanas: Emendas 2 e 3 do Owner; terceiro e quarto prompt-review restritos às duas fronteiras residuais do Inspector                                                                                          | estimativa em `work/rounds/R-0015/budget.json`                                                                                                                                  | Troca Fable → Sol decidida pelo Owner em 2026-09-21; corrigir ownership Inspector/Engineer antes de redespachar; matchers de rotas específicas precedem wildcard; checkout limpo exige construir pacote workspace novo antes do typecheck dos consumidores; manter `source_pending`; portas nativas sem consumidor por tela ficam como OD; hardware real, release de campo e homologação RENAEST/SNE/gov.br permanecem fora.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+ | R-0016 | `dashboard-console` | 2026-09-21                       | 2026-09-21 PR #80 (CTG-0001, merge `6a50f026`); 2026-09-22 PR #103 (CTG-0002, merge `973e78c3`); fechamento PC-0012                                                                                                                                           | 8 planejadas/executadas (0001…0006, 0008) + iterações restritas: TASK-0004 ×4, TASK-0005 ×3, TASK-0006 ×2 | 6 prompt-review + 4 delivery-review                                                                                          | 0 humanas (desvios registrados: FAIL de estrutura em prompt-review 1/3/5; delivery-review CTG-0001 e CTG-0002 em ciclo 1; fronteira do maestro em `src/app/**` corrigida por A9; queda de API 529 em TASK-0005) | ≈1,692 M entrada / ≈0,368 M saída únicos, janela 1 de 3 previstas (`budget.json`)                                                                                               | `.gitignore` com `reports/` escondeu `apps/dashboard/web/src/app/features/reports/` do git **e** do Prettier ao mesmo tempo — depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>`; dois apps não podem exigir cada um que a linha `check` **termine** com a própria tripla — o sensor de scaffold deve afirmar **contenção** (A11); o maestro não escreve em `src/app/**` nem para correção mecânica — achado de gate volta ao dono da fronteira em iteração restrita (A9); contradições entre critérios do próprio contrato resolvidas por adenda numerada do Architect antes de redespachar o Inspector (A7); sensores que varrem literais não podem citar o literal que procuram, e literais de outro domínio em spec colidem com `verify:parameter-catalogue`; transcrever fichas e semente i18n em paralelo a partir do mesmo contrato produziu 34/36 textos divergentes em `intro`/`empty` (OD-D16-019) — a semente deve nascer antes das fichas, ou o contrato fixa os textos; queda de API (529) no meio de uma tarefa longa não é achado do worker — redespachar com o mesmo `PC-` e registrar em §Triagem.                                                                                                                                                                                                        |
++| R-0018 | `index-state`       | 2026-09-26                       | `source_pending (fechamento)`                                                                                                                                                                                                                                 | `source_pending (fechamento)`                                                                             | `source_pending (fechamento)`                                                                                                | `source_pending (fechamento)`                                                                                                                                                                                   | `source_pending (fechamento)`                                                                                                                                                   | Política de numeração de ADRs (ADR-0035, OD-R18-004) e gate `verify:state-index` em `pnpm check`; relatórios de worker rastreados pelo `.gitignore` e excluídos do Prettier; `git check-ignore` prova-se sem `-v` (com `-v`, um caminho que casa negação sai 0); escada Sol 6 / Opus 5.5 (parágrafo abaixo da tabela); READMEs de módulo por esqueleto fixo e fontes fechadas; `source_pending (fechamento)`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+ 
+ **Troca de família de maestros (C-0002, OD-C2-003, decisão do Owner de 2026-09-26; ids confirmados em R-0018, `plan.md` M1):** a partir de R-0017, os maestros são Sol 6 (Codex, `gpt-6-sol`, sucessor de GPT-5.6 Sol) e Opus 5.5 (Claude Code, `claude-opus-5-5`), alternados, no lugar de GPT-5.6 Sol e Fable 5.1; reviewer sempre da outra família, nível grande. Escada Codex: Sol 6 grande, Terra `gpt-5.6-terra` médio (`gpt-6-terra` indisponível na conta), Luna `gpt-6-luna` pequeno; escada Claude: Opus 5.5 grande e médio, Sonnet 5 `claude-sonnet-5` pequeno. `codex-cli` ≥ 0.157.1 exigido para `gpt-6-*`. `model-ladder.md` atualizado em R-0018 CTG-0002.
+diff --git a/docs/meta/knowledge-base/backlog.md b/docs/meta/knowledge-base/backlog.md
+index 960a930a..7b9479de 100644
+--- a/docs/meta/knowledge-base/backlog.md
++++ b/docs/meta/knowledge-base/backlog.md
+@@ -634,3 +634,5 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
+ - [ ] **DASHBOARD OD-D16-018 — campo `parent` em `DashboardRouteEntry`**: necessário para manter as filhas de detalhe (D-14/D-16) dentro do manifesto sem estourar a contagem de 18 fichas; ratificado pelo maestro (precedente `level`, R-0012 `CTG-0002a.md` §2); sem ação pendente além do registro; dono Architect (ratificado); fonte `contracts/CTG-0002.md` §14.1.
+ - [ ] **DASHBOARD OD-D16-019 — fichas × semente i18n, `intro`/`empty` divergentes**: `dashboard.screens.<slug_>.intro`/`.empty` divergem em 34 dos 36 textos entre as 18 fichas §12 e a semente (títulos iguais 18/18) porque TASK-0002 (fichas) e TASK-0003 (i18n) transcreveram em paralelo a partir do mesmo contrato; a semente prevalece no app (M5); falta alinhar as fichas ao texto da semente (ou o Owner escolhe o texto e a semente é corrigida por adenda); dono Architect (transcr.) / Owner; fonte `contracts/CTG-0002.md` §14.1.
+ - [ ] **DASHBOARD frente — subida do console de L0 a L2**: `apps/dashboard/web` foi entregue em nível L0 nesta rodada (R-0016, PR #103); a subida a L2 exige facades e `<feature>.client.ts` sobre os clientes gerados de `BP-DASH-MONITOR-001` (upstream já em `main`, R-0011 CTG-0002 mesclado durante esta rodada, PC-0009), dados reais nas 18 telas e teste de supressão secundária ponta a ponta (D-13); dono Architect / próxima rodada; fonte `plan.md` A5, `dashboard-build-pack.md` §WP-D5.
++- [x] **R-0018 `index-state` — CTG-0001, CTG-0002 e CTG-0003 integrados (`source_pending (fechamento)`)**: numeração de ADRs racionalizada (ADR-0035…0038, redirecionamentos, §Aliases) e gate `verify:state-index`; índices de estado (build packs, `waves.md`, `docs/start/index.md`, `BUILD-PLAN.md`, `work/rounds/README.md`) sincronizados com os closures; relatórios de worker versionados; `model-ladder.md` com Sol 6 / Opus 5.5; 52 READMEs novos e 12 atualizados. ODs em aberto: `source_pending (fechamento)`.
++- [ ] **OD-R18-005 — `backend/database/ddl/README.md` desatualizado**: faltam as faixas `13-ops-agency`, `15`–`19`, `21`, `61`–`65`, `70`–`72` e `80`; fora de R-0018 pelo lock de R-0017; fonte `work/rounds/R-0018/contracts/CTG-0003.md` §4.
+diff --git a/docs/meta/knowledge-base/open-decisions-rait.md b/docs/meta/knowledge-base/open-decisions-rait.md
+index 1e5dd42d..4fe880e4 100644
+--- a/docs/meta/knowledge-base/open-decisions-rait.md
++++ b/docs/meta/knowledge-base/open-decisions-rait.md
+@@ -355,9 +355,10 @@ sem distinguir; demais valores seguem a convenção da §F.
+ 
+ ## R-0018 — índice de ADRs e índices de estado (C-0002)
+ 
+-| ID         | Questão                                                                                                                                                                                                                                                                                        | Premissa adotada                                                                                                                                                                                                                               | Destrava/bloqueia                                                                     | Afeta                                                                                                                                                 |
+-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+-| OD-R18-001 | Destino da série `law/adr/` (`ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md`): (a) renumerar para `docs/meta/adr/` pelo próximo número livre (hoje ADR-0039), com redirecionamento em `law/adr/`; ou (b) manter como série DEVAI distinta, declarada nos dois índices com o prefixo `LAW-ADR-`. | Pendente: o arquivo não muda; os dois índices o listam como `LAW-ADR-0001` em §Série `law/adr` com "Destino pendente de OD-R18-001"; `law/adr/README.md` declara a pendência; `lawAdrMode: "pending"` em `tools/docs/state-index/config.json`. | Destrava a forma final dos índices e de `law/adr/README.md`; não bloqueia o CTG-0001. | `law/adr/**`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`, `tools/docs/state-index/config.json`, `tools/docs/adr/renumber.config.json` (opção a) |
+-| OD-R18-002 | Aceitar a ADR-0022 (execução por orquestras), `Proposed` desde 2026-09-14 e seguida por R-0003…R-0016?                                                                                                                                                                                         | Os índices mostram `Proposed`, lido do arquivo. No aceite, o `## Status` da ADR-0022 e os dois índices mudam no mesmo commit (o gate exige, C-01-15/16).                                                                                       | Destrava a coerência formal do método; não bloqueia o CTG-0001.                       | `docs/meta/adr/ADR-0022-orchestra-execution-model.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`                                               |
+-| OD-R18-003 | Aplicar `work/rounds/R-0018/proposals/CLAUDE.md.patch` e `AGENTS.md.patch` (CTG-0002: DEVAI 1.4.5 → 1.5.6, papéis, `packages/` completo, `pnpm check` descrito)?                                                                                                                               | Nenhum patch aplicado sem aceite explícito do Owner registrado em §Decisões do maestro; `CLAUDE.md` e `AGENTS.md` intocados.                                                                                                                   | Bloqueia só a Meta 8 (CTG-0002).                                                      | `CLAUDE.md`, `AGENTS.md`                                                                                                                              |
+-| OD-R18-004 | Aceitar a ADR-0035 (política de numeração de ADRs)?                                                                                                                                                                                                                                            | A ADR-0035 entra `Proposed`; renumeração 0036…0038, redirecionamentos, §Aliases e gate executam a Meta 1 do plano autorizado de R-0018. Em caso de rejeição, o Owner decide o tratamento dos números já atribuídos.                            | Destrava o status `Accepted` da política; não bloqueia o CTG-0001.                    | `docs/meta/adr/ADR-0035-adr-numbering-policy.md`, índices                                                                                             |
++| ID         | Questão                                                                                                                                                                                                                                                                                                                                                                                                                     | Premissa adotada                                                                                                                                                                                                                               | Destrava/bloqueia                                                                                                                                    | Afeta                                                                                                                                                 |
++| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
++| OD-R18-001 | Destino da série `law/adr/` (`ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md`): (a) renumerar para `docs/meta/adr/` pelo próximo número livre (hoje ADR-0039), com redirecionamento em `law/adr/`; ou (b) manter como série DEVAI distinta, declarada nos dois índices com o prefixo `LAW-ADR-`.                                                                                                                              | Pendente: o arquivo não muda; os dois índices o listam como `LAW-ADR-0001` em §Série `law/adr` com "Destino pendente de OD-R18-001"; `law/adr/README.md` declara a pendência; `lawAdrMode: "pending"` em `tools/docs/state-index/config.json`. | Destrava a forma final dos índices e de `law/adr/README.md`; não bloqueia o CTG-0001.                                                                | `law/adr/**`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`, `tools/docs/state-index/config.json`, `tools/docs/adr/renumber.config.json` (opção a) |
++| OD-R18-002 | Aceitar a ADR-0022 (execução por orquestras), `Proposed` desde 2026-09-14 e seguida por R-0003…R-0016?                                                                                                                                                                                                                                                                                                                      | Os índices mostram `Proposed`, lido do arquivo. No aceite, o `## Status` da ADR-0022 e os dois índices mudam no mesmo commit (o gate exige, C-01-15/16).                                                                                       | Destrava a coerência formal do método; não bloqueia o CTG-0001.                                                                                      | `docs/meta/adr/ADR-0022-orchestra-execution-model.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`                                               |
++| OD-R18-003 | Aplicar `work/rounds/R-0018/proposals/CLAUDE.md.patch` e `AGENTS.md.patch` (CTG-0002: DEVAI 1.4.5 → 1.5.6, papéis, `packages/` completo, `pnpm check` descrito)?                                                                                                                                                                                                                                                            | Nenhum patch aplicado sem aceite explícito do Owner registrado em §Decisões do maestro; `CLAUDE.md` e `AGENTS.md` intocados.                                                                                                                   | Bloqueia só a Meta 8 (CTG-0002).                                                                                                                     | `CLAUDE.md`, `AGENTS.md`                                                                                                                              |
++| OD-R18-004 | Aceitar a ADR-0035 (política de numeração de ADRs)?                                                                                                                                                                                                                                                                                                                                                                         | A ADR-0035 entra `Proposed`; renumeração 0036…0038, redirecionamentos, §Aliases e gate executam a Meta 1 do plano autorizado de R-0018. Em caso de rejeição, o Owner decide o tratamento dos números já atribuídos.                            | Destrava o status `Accepted` da política; não bloqueia o CTG-0001.                                                                                   | `docs/meta/adr/ADR-0035-adr-numbering-policy.md`, índices                                                                                             |
++| OD-R18-005 | `backend/database/ddl/README.md` está desatualizado: lista `00`–`05`, `10`–`12`, `13-ops-field-operations`, `14`, `20` e `75` e cita a faixa "30…60", mas o diretório tem também `13-ops-agency.sql`, `15`–`19` (dez arquivos), `21-ops-provisioning.sql`, `61`–`65`, `70`–`72` e `80-dashboard.sql` (medido em 2026-09-26). O arquivo está sob o lock de R-0017 (`backend/database/**`). Quem o atualiza, e em que rodada? | Pendente: R-0018 não toca o arquivo (lock de R-0017; `work/rounds/R-0018/plan.md` §Concorrência); o README segue como está.                                                                                                                    | Não bloqueia R-0018; destrava a Meta 6 do plano de R-0018 para esse arquivo, que fica registrada como não cumprida no closure se continuar pendente. | `backend/database/ddl/README.md`                                                                                                                      |
+diff --git a/packages/api-clients/README.md b/packages/api-clients/README.md
+new file mode 100644
+index 00000000..ab6bc8f8
+--- /dev/null
++++ b/packages/api-clients/README.md
+@@ -0,0 +1,27 @@
++# @detran/api-clients
++
++Module path: `packages/api-clients`.
++
++## Purpose
++
++Tipos TypeScript dos contratos OpenAPI do monorepo, gerados por tools/contracts/generate-clients.mjs.
++
++## Blueprint
++
++—
++
++## DDL
++
++—
++
++## Routes and contract
++
++—
++
++## Scripts
++
++- `pnpm --filter @detran/api-clients typecheck`
++
++## Tests
++
++- —
+diff --git a/packages/sefaz-adapter/README.md b/packages/sefaz-adapter/README.md
+new file mode 100644
+index 00000000..4809e8b9
+--- /dev/null
++++ b/packages/sefaz-adapter/README.md
+@@ -0,0 +1,30 @@
++# @detran/sefaz-adapter
++
++Module path: `packages/sefaz-adapter`.
++
++## Purpose
++
++Typed, mockable boundary for DETRAN payment operations with SEFAZ providers.
++
++## Blueprint
++
++—
++
++## DDL
++
++—
++
++## Routes and contract
++
++—
++
++## Scripts
++
++- `pnpm --filter @detran/sefaz-adapter typecheck`
++- `pnpm --filter @detran/sefaz-adapter build`
++- `pnpm --filter @detran/sefaz-adapter test`
++- `pnpm --filter @detran/sefaz-adapter test:unit`
++
++## Tests
++
++- 2 × `src/**/*.spec.ts`
+diff --git a/tools/README.md b/tools/README.md
+index 1cc21169..85c766da 100644
+--- a/tools/README.md
++++ b/tools/README.md
+@@ -2,13 +2,13 @@
+ 
+ Repo-local engineering tooling (not shipped, not a runtime dependency of any app):
+ 
+-- Phase 2 (W2.5): teat's blueprint generators, made **regenerable-only** — a CI drift
+-  check compares generated files to blueprint output; generated files are never
++- Blueprint generators (`tools/blueprints/`, ported from teat), **regenerable-only** — a CI
++  drift check compares generated files to blueprint output; generated files are never
+   hand-edited.
+ - Verification scripts as gates accrete (boundary checks, decorator checks, OpenAPI
+   drift), unless a script belongs to a specific workspace package.
+ 
+-Current Phase-2 checks:
++Checks with their own entry below (the complete gate chain is the `check` script of the root `package.json`):
+ 
+ - `verify-controller-decorators.ts` — protected routes require `@Resource` and
+   `@Action`; mutating routes require structured `@Audit` metadata.
+@@ -24,5 +24,40 @@ Current Phase-2 checks:
+ - `refresh-pec-test-disposition.mjs` — regenerates the 611-row legacy PEC test
+   ledger from an explicitly supplied, read-only origin checkout.
+ 
++Scripts of the root `package.json` that call `tools/`:
++
++| Script                        | Command                                                                                                                                             |
++| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `verify:decorators`           | `tsx tools/verify-controller-decorators.ts`                                                                                                         |
++| `verify:rls-ddl`              | `tsx tools/check-rls-ddl.ts`                                                                                                                        |
++| `verify:role-catalog`         | `tsx tools/check-role-catalog.ts`                                                                                                                   |
++| `verify:lifecycle-vocabulary` | `tsx tools/check-lifecycle-vocabulary.ts`                                                                                                           |
++| `verify:senatran-boundary`    | `tsx tools/verify-senatran-boundary.ts`                                                                                                             |
++| `verify:pec-parity`           | `tsx tools/verify-pec-parity.ts`                                                                                                                    |
++| `verify:pec-superset`         | `tsx tools/verify-pec-superset.ts`                                                                                                                  |
++| `verify:orchestra-bridge`     | `bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh`                                                                        |
++| `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                      |
++| `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                               |
++| `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                        |
++| `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                |
++| `devai:rc:publish`            | `node tools/ci/publish-local-rc.mjs`                                                                                                                |
++| `blueprints:generate`         | `node tools/blueprints/generate.mjs`                                                                                                                |
++| `parameters:generate`         | `node tools/parameters/generate-seed.mjs`                                                                                                           |
++| `parameters:test`             | `node --test tools/parameters/tests/*.test.mjs`                                                                                                     |
++| `verify:parameter-catalogue`  | `node tools/parameters/verify.mjs --check-generated --check-usage`                                                                                  |
++| `blueprints:check`            | `node tools/blueprints/check.mjs`                                                                                                                   |
++| `contracts:openapi`           | `node tools/contracts/generate-openapi.mjs`                                                                                                         |
++| `contracts:check`             | `node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check` |
++| `contracts:test`              | `node --test tools/contracts/tests/*.test.mjs`                                                                                                      |
++| `contracts:clients`           | `node tools/contracts/generate-clients.mjs`                                                                                                         |
++| `docs:kb:check`               | `node tools/docs/kb/check.mjs`                                                                                                                      |
++| `docs:kb:cutover-check`       | `node tools/docs/kb/check.mjs --cutover`                                                                                                            |
++| `docs:kb:publish-check`       | `node tools/docs/kb/publish-dry-run.mjs`                                                                                                            |
++| `verify:state-index`          | `node tools/docs/state-index/check.mjs`                                                                                                             |
++| `test:state-index`            | `node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs`                                                               |
++| `adr:renumber`                | `node tools/docs/adr/renumber.mjs`                                                                                                                  |
++
++Local stack (`tools/detran-stack*`, `tools/stack/`): pendente R-0017.
++
+ Keep entries small and single-purpose; anything platform-generic belongs in stynx or
+ devai, not here.
