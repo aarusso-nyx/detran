@@ -7,7 +7,45 @@
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
 > não há contexto anterior a recuperar.
 
-## 0. Identidade e limites
+## OD-C2-005 — fluxo contínuo (prevalece)
+
+Decisão do Owner de 2026-09-27 (C-0002 §12; detalhe em `plan.md` §Execução OD-C2-005). Prevalece
+sobre qualquer instrução deste prompt que mande abrir PR, mesclar, registrar evidência ou pedir
+delivery-review por CTG.
+
+- **Branch única** `orchestra/stynx-sse-tenancy`, com um commit por tarefa ou por CTG (`CODESTYLE.md`,
+  autoria por caminho).
+- **Entre CTGs não há** PR, CI remoto, merge, `devai evidence record`, `devai audit observe`,
+  `pnpm check` completo nem delivery-review. Os `acceptance_commands` de cada tarefa continuam sendo
+  a definição de pronto, com a triagem de falha por tarefa. `pnpm backend:rls-smoke` segue comparado à
+  linha de base depois de cada CTG de O5 e O6.
+- **Uma** prompt-review no bootstrap (§5), sobre `plan.md` e os prompts de **todos** os CTGs.
+- **Ondas** conforme `plan.md` §Execução OD-C2-005: O1 CTG-0001 (TASK-0001); O2 TASK-0002 ∥ TASK-0003;
+  O3 CTG-0002 (TASK-0004); O4 TASK-0005; O5 TASK-0006 ∥ TASK-0008; O6 TASK-0007 ∥ TASK-0009; O7 TASK-0010.
+  No máximo 3 workers simultâneos, com fronteiras de escrita disjuntas. Você serializa os commits.
+  Ao fim de cada onda, faça `git push -u origin orchestra/stynx-sse-tenancy`, sem PR: R-0023 e R-0024
+  empilham sobre esse branch.
+- **Caracterização commitada antes de qualquer troca:** o commit do CTG-0001 precede o de TASK-0004,
+  e a caracterização é reexecutada verde depois do bump, antes de O5.
+- **Abertura empilhada:** se R-0021 não estiver em `main`, abra sobre
+  `origin/orchestra/stynx-canonical` e integre as revisões dela por `git merge --no-edit`. A rodada
+  inteira pode avançar; do CTG-0002 em diante, sobre `1.5.0-rc.N` (OD-S15-01). Só o PR final espera
+  R-0021 em `main` e a 1.5.0 **final** com o pin trocado.
+- **Sequência final**, uma vez:
+  1. `git merge --no-edit origin/main`; caracterização sobre `main` na worktree temporária destacada
+     (`plan.md`); pin final e lockfile, se houve RC.
+  2. CI local: `pnpm check`, `pnpm backend:test:ci`, `pnpm --filter @detran/app test:e2e`,
+     `pnpm backend:rls-smoke`, `pnpm verify:rls-ddl`, `pnpm verify:stynx-pin`,
+     `pnpm verify:decorators`, `pnpm verify:role-catalog`,
+     `pnpm --filter @detran/{rait,dashboard,portal,teat}-web test|typecheck|lint|build`,
+     `pnpm contracts:check`, `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check`,
+     as verificações de arquivo do plano e `pnpm devai:rc:prepare` quando aplicável.
+  3. **Uma** delivery-review de Sol 6 sobre o diff inteiro (§8).
+  4. **Um** PR (§9.3), com a tabela CTG → tarefas → commits e os gates no corpo.
+  5. CI remoto, depois o merge (§9.4–9.5).
+  6. Publicação única: `evidence-R-0022.json` com todos os CTGs, `evidence record`/`verify`,
+     `audit observe` no sha do merge, `closure.json`, `round close`, `round seal`, `waves.md` e
+     `backlog.md` (§9).
 
 - Você é o maestro da frente **`stynx-sse-tenancy`**: ação **7c** da campanha C-0002 (pin STYNX
   1.5.0, SSE com fonte única no backend e nos apps RAIT/PORTAL/DASHBOARD/TEAT web, fim do
@@ -27,19 +65,20 @@
   `work/rounds/R-0022/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
-- Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado com
-  **R-0021 (`orchestra/stynx-canonical`) mesclada** (C-0002 §2). O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (caracterização de tenancy/RLS e de SSE sobre 1.4.0):
-  nenhum upstream além de R-0021 — pode ser desenvolvido e mesclado antes da 1.5.0. CTG-0002 (pin
-  1.5.0) e todos os seguintes: STYNX 1.5.0 **publicado** no registry pela rodada S-1.5 do repositório
-  STYNX (esta campanha não a abre) e tabela de conformidade §7 da spec devolvida. CTG-0003 (tenancy) →
-  CTG-0004 (SSE backend) em série; CTG-0005 (SSE Angular) em paralelo ao CTG-0004. CTG-0006
-  (assinatura final) condicional a UPS-SIG publicada. CTG-0007 (docs) no fim**. No bootstrap, registre
-  em `plan.md` §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
+- Concorrência (regra de `waves.md`; OD-C2-005, que subsume a adenda A-C2-11): a rodada **abre e
+  trabalha** empilhada em `origin/orchestra/stynx-canonical` (R-0021) enquanto R-0021 não estiver em
+  `main`. O **PR final** só abre com R-0021 em `main`, com a caracterização executada de novo sobre
+  `main` (regras em `plan.md` §Execução OD-C2-005 e §Adendas). O que depende de upstream por CTG:
+  **CTG-0001 (caracterização de tenancy/RLS e de SSE sobre 1.4.0): nenhum upstream além do branch de
+  R-0021. CTG-0002 (pin 1.5.0) e todos os seguintes: STYNX 1.5.0 no registry pela rodada S-1.5 do
+  repositório STYNX (esta campanha não a abre), em RC para desenvolver e final para o PR final
+  (OD-S15-01), e tabela de conformidade §7 da spec devolvida. CTG-0003 (tenancy) → CTG-0004 (SSE
+  backend) em série; CTG-0005 (SSE Angular) em paralelo ao CTG-0003 e ao CTG-0004. CTG-0006 (assinatura final)
+  condicional a UPS-SIG publicada. CTG-0007 (docs) no fim**. No bootstrap, registre em `plan.md`
+  §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), se a 1.5.0 está publicada
-  (`npm view @stynx-nyx/tenancy@1.5.0 version`), quais grupos estão liberados para merge e quais
-  serão desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam
-  ou empilham, nunca bloqueiam a rodada inteira.
+  (`npm view @stynx-nyx/tenancy@1.5.0 version`) e sobre qual base a rodada abre (§1). Grupos livres
+  avançam sempre; grupos presos aguardam ou empilham, nunca bloqueiam a rodada inteira.
 
 ## 1. Bootstrap (Engineer)
 
@@ -114,7 +153,7 @@ depois de o upstream estar em `main`; um branch empilhado pode ser enviado
 (`git push -u origin orchestra/stynx-sse-tenancy`) sem PR para que outras frentes empilhem sobre ele.
 
 **Avanços do `main` durante a rodada.** Outras frentes mesclam enquanto você trabalha. No início de
-cada janela, em cada checkpoint (§7) e antes de cada PR (§9): `git fetch -q origin` e
+cada janela, em cada checkpoint (§7) e antes do PR final (§9): `git fetch -q origin` e
 `git log --oneline HEAD..origin/main`; se houver commits novos, use `git rebase origin/main` somente
 se o branch nunca foi publicado. Caso contrário, use `git merge --no-edit origin/main`. Nunca use
 `--force`, `--force-with-lease` ou equivalente. Depois da integração, rode de novo os gates do
@@ -215,8 +254,9 @@ relatório, grave-o em `reports/TASK-nnnn.md`.
 
 ## 7. Checkpoint por tarefa (Engineer) — hard gates
 
-Rode os `acceptance_commands` da tarefa e, ao fim de cada grupo acoplado, `pnpm check`,
-`pnpm backend:test:ci` e `pnpm backend:rls-smoke` (saída comparada à linha de base do CTG-0001).
+Rode os `acceptance_commands` da tarefa e, ao fim de cada CTG de O5 e O6, `pnpm backend:rls-smoke`
+(saída comparada à linha de base do CTG-0001). `pnpm check` e `pnpm backend:test:ci` rodam uma vez,
+na sequência final (OD-C2-005).
 Falha → triagem em uma linha (`plant-bug | sensor-error | policy-issue | reference-gap`) em `plan.md`
 §Triagem → 1 nova tentativa com o achado no prompt → se falhar, nível acima da mesma família → se
 falhar, `escalated`. Nunca ajuste um teste para passar; nunca edite arquivo gerado. Vazamento entre
@@ -224,19 +264,22 @@ tenants → `FAIL` imediato e parada da rodada.
 
 ## 8. Revisão da entrega (reviewer, outra família)
 
-Para cada grupo acoplado concluído: `git diff --stat` + diff completo + relatórios + critérios em
-`reviews/delivery-review-<ctg>.md` (modo `delivery-review`) → ponte → veredito. `PASS` libera o
-commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `escalated`. CTG-0003 e
-CTG-0004 só mesclam com `PASS`, sem dispensa.
+Uma vez, na sequência final (OD-C2-005), depois do CI local: `git diff --stat` + diff completo da
+rodada contra `origin/main` + relatórios + critérios em `reviews/delivery-review-R-0022.md` (modo
+`delivery-review`) → ponte → veredito. `PASS` libera o PR; `REVIEW` volta ao worker responsável
+(máximo 2 ciclos, restritos aos itens apontados); `FAIL` → `escalated`. A rodada (com CTG-0003 e
+CTG-0004) só mescla com `PASS`, sem dispensa.
 
 ## 9. Commit, evidência, PR, merge, fechamento (Engineer; Architect no fechamento)
 
-1. `git add` só dos caminhos das tarefas; commit por `CODESTYLE.md` (`<type>(<scope>): …`,
-   corpo com ADR/OD citados, trailer de atribuição da sessão).
-2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
+1. Durante a rodada: `git add` só dos caminhos das tarefas; um commit por tarefa ou por CTG, por
+   `CODESTYLE.md` (`<type>(<scope>): …`, corpo com ADR/OD citados, trailer de atribuição da sessão);
+   push sem PR ao fim de cada onda. Os itens 2 a 7 formam a sequência final (OD-C2-005) e rodam uma vez.
+2. Evidência (item 6 da sequência final, depois do merge): escreva `evidence-R-0022.json` com todos os
+   CTGs (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0022 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
-3. Confirme que todo upstream do grupo está em `main` (e, a partir do CTG-0002, a 1.5.0 publicada) e
+3. Confirme que todo upstream da rodada está em `main` (R-0021 e a 1.5.0 final publicada) e
    rebaseie (`git rebase origin/main`; somente se o branch nunca foi publicado); em branch publicado,
    use `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
    `git push -u origin orchestra/stynx-sse-tenancy` e então `gh pr create --base main` com o corpo pelo
