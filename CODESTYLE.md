@@ -39,7 +39,7 @@ is convention that reviewers and agents enforce. Companion of `AGENTS.md` (gover
   seeded with `ON CONFLICT … DO UPDATE`.
 - National systems: only through `packages/senatran-adapter` (`verify:senatran-boundary`).
 
-## Frontend (Angular 22, `@detran/ui`, STYNX 1.3.1)
+## Frontend (Angular 22, `@detran/ui`, STYNX 1.4.0)
 
 - Standalone components, `ChangeDetectionStrategy.OnPush`, signals; no NgModules in app code;
   `inject()` over constructor injection.

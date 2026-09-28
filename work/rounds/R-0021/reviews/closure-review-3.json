@@ -1,0 +1,44 @@
+{
+  "mode": "pre-close-review",
+  "round": "R-0021",
+  "cycle": 3,
+  "verdict": "PASS",
+  "authority_to_close": "yes",
+  "authority_reason": "The authority blocker from cycles 1 and 2 was that Owner A1 did not cover the new token-budget-window1 FAIL. That blocker is now resolved. The Owner was asked one closed question: emit round close without seal, keep token-budget-window1 FAIL at 3,391,468 against the 2,250,000 limit, keep A1's historical FAILs, and do not raise the past limit or turn any FAIL into PASS/N/A. The Owner answered 'Autorizacao concedida. prossiga ate a conclusão.' In context this is a clear yes to that exact act. It is not a waiver, because the question itself ruled out raising the limit and ruled out reclassifying any FAIL. Adenda A2 records the reply word for word and limits it correctly: close only, no seal, no retroactive limit change, the 1,800,000 checkpoint unchanged, and future budget-unit policy out of scope. 'Prossiga até a conclusão' cannot reasonably be read to include a seal. The question excluded a seal, A2 excludes it again, and DEVAI 1.5.6 rejects a seal while criteria are failing. plan.md D-2 is now marked 'efetivado pela Adenda A2' and matches. The draft still has closing_decision D-2 and notes that bind it to A2. Every FAIL is preserved: the budget gate, the budget criterion, the eight historical migration and ADR criteria, and the original close-plus-seal criterion. A PASS verdict with authority_to_close 'yes' lets the orchestrator run the DEVAI close verb. This review does not issue that PC.",
+  "findings": [
+    {
+      "id": "F-C3-01",
+      "severity": "low",
+      "area": "budget.json windows.window3.claude_cumulative_baseline",
+      "title": "The Claude 'cumulative' baseline uses a different scope from the Codex baseline",
+      "detail": "codex_cumulative_baseline is cumulative from W1 through W2. W1 codex gross 271,478,910 plus W2 86,599,164 equals 358,078,074; cached 268,661,376 plus 85,447,296 equals 354,108,672; non-cached 2,817,534 plus 1,151,868 equals 3,969,402; output 545,560 plus 155,131 equals 700,691. All four match. claude_cumulative_baseline (gross 2,138,440; cache-read 1,942,314; non-cache 196,126; output 30,286) equals the W2-only Claude values and leaves out W1's 7,862,989 gross and 573,934 non-cache. If the W3 Claude delta comes from a counter scoped to R-0021 since W2 began, the arithmetic is right and only the label is misleading. If the counter covers all R-0021 sessions from the start, subtracting this baseline would wrongly add W1's Claude usage to W3. That error would overstate W3 and would not hide W1's failure. Fix: state the Claude counter's scope start (for example 'since 2026-09-28T06:13:56Z'), or rename the key to window2-final.",
+      "blocking": false
+    },
+    {
+      "id": "F-C3-02",
+      "severity": "low",
+      "area": "budget.json windows.window2.ended_at / AUTHORIZATION.md A2 / ORCHESTRATOR-FINAL",
+      "title": "The recorded W2 end time is 2m38s past the 5-hour window",
+      "detail": "window2.started_at is 06:13:56Z, the same as W1's end. With window_hours 5, W2 should end at 11:13:56Z, but it is recorded as ended at 11:16:34Z, which is 5h02m38s. W2's observed input (1,347,994) is well under both the checkpoint and the limit, and the snapshot deliberately charges resumed work up to 14:10:22Z to W2, so there is no compliance effect. Still, either the timestamp or the window definition is inconsistent. Fix: correct it to 11:13:56Z, or explain what the 11:16:34Z expiry was measured from.",
+      "blocking": false
+    },
+    {
+      "id": "F-C3-03",
+      "severity": "low",
+      "area": "AUTHORIZATION.md Adenda A2",
+      "title": "The quoted question is a condensed version of the question file, not a verbatim copy",
+      "detail": "A2 says 'A pergunta foi: “…”' and presents the question in quotation marks, with the figures 3.391.468 and 2.250.000 and the sentence 'Isso não altera o teto passado…' written into it. The prepared question in /tmp/r21-owner-budget-decision-request.md has the same substance but different wording: the figures sit in the context paragraph, the question says 'por esse excesso', and the closing sentence reads 'A resposta não alterará…'. The file promised that the answer would be recorded verbatim, and the Owner's reply is recorded verbatim, so the authority is intact. The quotation marks around the question, however, imply a verbatim copy. If the chat message differed from the file, keep things as they are. Otherwise, mark the quote as a summary or cite the /tmp request file, which is outside the repo.",
+      "blocking": false
+    }
+  ],
+  "notes": [
+    "Scope: only the Owner A2 decision, the related wording in plan.md, AUTHORIZATION.md and ORCHESTRATOR-FINAL.md, the separated W2/W3 accounting in budget.json, and /tmp/r21-closure-draft.json. Cycles 1 and 2 were used as history, and all their findings are resolved: D-2 is no longer 'proposto', the close-plus-seal criterion is added as fail, and the draft states the chain head. Reviewer: claude-opus-5-5, read-only. No PC, close or seal was issued.",
+    "Git: HEAD is still 9a9b99a7f9ae2a70ccd75295798bc975b1f94229. The diff from that checkpoint changes only work/rounds/R-0021/{AUTHORIZATION.md, budget.json, plan.md, reports/ORCHESTRATOR-FINAL.md}, with 86 lines added and 16 removed. No product, test, dependency or workflow file changed, so no backend rerun is required.",
+    "Draft checks: merged_as is 1576708f8378817d5e3338953015f5acdb704e1e, which git confirms is the merge commit for PR #153 with parents c3c0df57 and c3df8fac. evidence.terminal_sha256 is ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77 and proof_epoch is R-0021. 'Original DEVAI close + seal anchor acceptance' is fail. The token-budget-window1 gate and criterion are fail. The eight historical migration and ADR criteria are fail. There is no id or closed_at, and release_disposition is none-needed.",
+    "W1 arithmetic: Codex 271,478,910 minus 268,661,376 is 2,817,534. Claude 7,862,989 minus 7,289,055 is 573,934. The sum, 3,391,468, is above 2,250,000. nominal_limit_exceeded is true. The W1 estimated-unique entries sum to 1,346,000, which matches. W1 is still FAIL and has its own record, so no reset hides it.",
+    "W2 arithmetic: Codex 86,599,164 minus 85,447,296 is 1,151,868. Claude 2,138,440 minus 1,942,314 is 196,126. The sum is 1,347,994. Remaining to the checkpoint is 1,800,000 minus 1,347,994, or 452,006. Remaining to the limit is 2,250,000 minus 1,347,994, or 902,006. The W2 estimates sum to 690,000. Charging the resumed actions up to 14:10:22Z to W2 is the conservative choice for W3 and does not affect W1.",
+    "W3 arithmetic: the baseline non-cached value 358,078,074 minus 354,108,672 is 3,969,402. The observed Codex value 1,230,649 minus 1,054,208 is 176,441. Remaining to the checkpoint is 1,623,559 and remaining to the limit is 2,073,559. The W3 estimates sum to 460,000. The deadline is 19:10:22Z, 5 hours after 14:10:22Z. The same 2,250,000 limit and 1,800,000 checkpoint apply. The W3 Claude figures (0 at 14:12:32Z) do not yet include this review, and the ledger says they will be updated before the close.",
+    "ORCHESTRATOR-FINAL describes this checkpoint accurately: authority is recorded in A2, the independent review and the DEVAI verb are still pending, and the state is open with no seal. Once the close is emitted, the sentences saying review and close are 'pending' should be refreshed along with the final W3 snapshot. That is a normal post-close update, not a finding here.",
+    "The future budget-unit policy for R-0022 is correctly left out of A2 and is not a precondition. The gate results reported by the orchestrator (format:check, docs:kb:check, diff --check, DEVAI chain verify) were accepted as reported and not rerun, as instructed."
+  ]
+}

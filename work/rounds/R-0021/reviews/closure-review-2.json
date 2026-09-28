@@ -1,0 +1,61 @@
+{
+  "mode": "pre-close-review",
+  "round": "R-0021",
+  "cycle": 2,
+  "verdict": "REVIEW",
+  "authority_to_close": "no",
+  "authority_reason": "The authority boundary has not changed since cycle 1. Owner A1 authorizes a close without seal only for the transferred migration criteria. The window-1 budget failure is a new FAIL in the active scope: 3,391,468 input tokens excluding cache reads, against a 2,250,000 ceiling and a 1,800,000 checkpoint. A1 does not cover it. The Architect cannot accept it and a reviewer cannot waive it. The prepared request `/tmp/r21-owner-budget-decision-request.md` asks only the narrow question. It asks whether to issue the formal `round close` of R-0021 without seal while keeping gate and criterion `token-budget-window1` FAIL, with no retrospective waiver and no PASS/N/A reclassification. It moves the future budget-unit policy out of the preconditions. Until the Owner answers and the answer is recorded verbatim in AUTHORIZATION.md and in the D-2 closing decision, D-2 stays proposed, and neither `closure.json` nor `round close` may be issued. This review grants no authority and infers none.",
+  "resolved_findings": [
+    {
+      "cycle1_severity": "medium",
+      "path": "/tmp/r21-closure-draft.json",
+      "summary": "Original close-plus-seal acceptance",
+      "status": "resolved",
+      "evidence": "The draft (SHA-256 f7b08fb0d2c2aabbfc67183b121e9bd07d950a04f5fc51d46d9cb9f7a163c0df, as read by this review) contains validation criterion 'Original DEVAI close + seal anchor acceptance' with verdict `fail`. Its evidence cites Owner A1, DEVAI 1.5.6 ROUND_ARCHIVE_VALIDATION_NOT_GREEN, and that no record.md or close-state.jsonl was created. The criterion is in `validation_criteria`, not only in notes. The draft has no `id` or `closed_at`, and the git status snapshot shows no PC under record/ and no seal artifact. This satisfies plan.md:168-169, which requires a replaced criterion to appear in the closure as not met."
+    },
+    {
+      "cycle1_severity": "low",
+      "path": "CLAUDE.md; .claude/agents/engineer-frontend.md",
+      "summary": "Current-state STYNX pointers",
+      "status": "resolved",
+      "evidence": "CLAUDE.md now reads 'STYNX 1.4.0 platform substrate (Angular 22, ADR-0015; WP-0 migrated to 1.3.1 on 2026-09-13, R-0021 pinned 1.4.0 …)', which is current state with the WP-0 history kept. .claude/agents/engineer-frontend.md:3 reads 'STYNX 1.4.0 / Angular 22'. This matches the Agent registry description in this session."
+    },
+    {
+      "cycle1_severity": "low",
+      "path": "DESIGN-DECISIONS.md",
+      "summary": "ADR-0015 historical tuple",
+      "status": "resolved",
+      "evidence": "DESIGN-DECISIONS.md:27 reads 'STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 was accepted in WP-0 (Owner, 2026-09-12); R-0021 amended the current STYNX pin to 1.4.0. DEVAI 1.5.6 is current under ADR-0028.' The historical tuple is kept word for word and the current state is stated separately. The Vigência column 'parcial → ADR-0028' is consistent. format:check and docs:kb:check reruns are reported as exit 0 in /tmp/r21-preclose-{format,docs}-after-review.log."
+    },
+    {
+      "cycle1_severity": "low",
+      "path": "/tmp/r21-closure-draft.json",
+      "summary": "Chain-state binding",
+      "status": "resolved",
+      "evidence": "The draft's `evidence` object is {proof_epoch: 'R-0021', terminal_sha256: 'ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77'}. This conforms to law/schemas/phase-closure.schema.json:163-177 (additionalProperties false, both required). Gate `evidence-chain` detail names EV-15963d738bf70dfe and the same head. Chain verification: `devai evidence verify` could not be rerun in this session (the tool's permission check returned no verdict). However, the conversation-start git status shows no changes under record/ or .devai/, so the chain is byte-identical to the one verified in cycle 1 at ded0df1d with head ec36cf1b…."
+    }
+  ],
+  "findings": [
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0021/reports/ORCHESTRATOR-FINAL.md",
+      "summary": "Three sentences are stale or misstate who holds authority. Line 23 says the PC was not issued 'porque o controle orçamentário adicional será julgado antes por reviewer independente', which makes the reviewer the decider. Cycle 1 has already ruled that the gating step is an Owner decision. Line 19 says 'A revisão pré-close … ainda será executada', but cycle 1 has already run and returned REVIEW / authority_to_close: no. Line 3 says 'O fechamento formal é autorizado sem selo' without saying this covers only A1's transferred criteria. Line 31 of the same report correctly conditions D-2 on the Owner decision, so the report contradicts itself.",
+      "fix": "Line 23: say the PC is withheld pending the Owner's narrow budget decision (see /tmp/r21-owner-budget-decision-request.md), not pending reviewer judgment. Line 19: record pre-close review cycle 1 REVIEW (authority_to_close: no, four non-authority findings) and cycle 2 as the verification of those corrections. Line 3: qualify the close-without-seal authority as covering the transferred migration criteria only, with the window-1 budget FAIL awaiting a separate Owner decision. Rerun `pnpm format:check` and `pnpm docs:kb:check`."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0021/plan.md",
+      "summary": "D-2 (plan.md:191) is still marked 'proposto', which is correct. But its last sentences still leave it to the independent review to decide whether the budget FAIL needs an express Owner decision. Cycle 1 has already ruled that it does. The draft's `closing_decision: D-2` binds this text. The maestro summary at plan.md:193 ('Fechamento sem selo expressamente aprovado') is also unqualified in the same way as report line 3.",
+      "fix": "Amend D-2 so it stays proposed pending the narrow Owner decision on issuing close with `token-budget-window1` kept FAIL, citing closure-review-1 as the ruling. Qualify plan.md:193 as covering the A1-transferred criteria only. When the Owner answers, record it verbatim and make D-2 effective by citing it. Do not change the gate or criterion verdicts."
+    }
+  ],
+  "notes": [
+    "Scope: only the four non-authority findings from cycle 1, plus consistency of the texts that carry them (draft, ORCHESTRATOR-FINAL.md, plan.md, budget.json, CLAUDE.md, the engineer-frontend agent file, DESIGN-DECISIONS.md, and the decision request). Both new findings are wording in governance documents only. They do not change any gate, criterion, hash or product object, and neither blocks the Owner decision request from being sent.",
+    "Item 4 is confirmed for the draft, the report and the request. The draft notes say D-2 'is not effective until the Owner decides the additional budget failure' and 'No retrospective waiver is inferred'. Gate and criterion `token-budget-window1` are both `fail`. Report line 31 marks D-2 as conditioned on the Owner and says the round is 'aberto, sem selo'. The request asks one yes/no question and states that the unit policy 'não é pré-condição'. Neither a PC nor a round close is present.",
+    "budget.json keeps the unit 'estimated_unique_input_tokens' as the ledger's own unit and records the observed runtime metric separately, with `nominal_limit_exceeded: true`. Its methodology text says 'control failure, not an Owner waiver'. This is consistent with the draft. The window-2 snapshot is still 2026-09-28T07:42:20Z. As cycle 1 noted, refresh it and compare it with the 1,800,000 checkpoint immediately before any close write.",
+    "The draft conforms to phase-closure.schema.json apart from `id`/`closed_at`, which the runtime allocates. All gate statuses and criterion verdicts are within the enums, and `merged_as` = 1576708f8378817d5e3338953015f5acdb704e1e.",
+    "Backend tests were not rerun, as instructed, because product, test and dependency Git objects are unchanged. The pnpm check, format and docs exit-0 results are taken as reported from the /tmp logs named in the prompt.",
+    "The untracked `closure-review-1.*` and `closure-review-2.json.{raw,formatted}.*` files under reviews/ are bridge artifacts. Remove the transient raw/formatted files after the final JSON is persisted.",
+    "Read-only: no repository changes, no PC, no close, no seal, and no authority grant made or suggested."
+  ]
+}
