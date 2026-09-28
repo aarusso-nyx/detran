@@ -14,12 +14,78 @@ Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os 
 `teat-web-wiring`** (decisão do coordenador): o módulo web do BOAT vive em
 `apps/teat/web/src/app/features/sinistros/` (`MOD-teat-web-sinistros`) e é carregado pelo shell do
 TEAT web (`app.routes.ts`, `app.config.ts`, `core/` — `MOD-teat-web-shell`). O CTG-0004 desta rodada
-(web) **mescla antes** de R-0029 alterar shell ou rotas; R-0029 rebaseia a árvore de rotas sobre ele.
+(web) **existe no branch publicado** `orchestra/boat-wiring` antes de R-0029 alterar shell ou rotas;
+R-0029 empilha a árvore de rotas sobre ele, e o PR final de R-0029 espera o merge desta rodada.
 Esta rodada **não** toca `MOD-teat-web-shell`, salvo o import já existente de `sinistros.routes`
 (qualquer mudança nele é adenda e aviso a R-0029). O shell mobile do TEAT
 (`apps/teat/mobile/src/app/features/sinistro/`, `MOD-teat-mobile-sinistro`) não tem outra frente na C-0002.
 Esquema do delta: `work/rounds/R-0030/availability-manifest.schema.md` (R-0030).
-**Janelas previstas:** 3.
+**Janelas previstas:** 3 (recalibradas para ≈ 2,5 em §Execução OD-C2-005).
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
+um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
+aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
+`acceptance_commands` de cada tarefa, que continuam sendo a definição de pronto do worker.
+
+**Ondas.** Branch única `orchestra/boat-wiring`, até 3 workers na mesma worktree. O maestro
+serializa os commits (um por tarefa ou por CTG) e faz push sem PR ao fim de cada onda.
+
+| Onda | Tarefas em paralelo (CTG)                                          | Fronteiras de escrita (disjuntas)                                                                                                                       | Depende de                                                       |
+| ---- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| O1   | TASK-0001 (CTG-0001)                                               | `work/rounds/R-0028/{binding-matrix.md,contracts/}`                                                                                                     | bootstrap e prompt-review único                                  |
+| O2   | TASK-0002 (CTG-0001) ∥ TASK-0003 (CTG-0002) ∥ TASK-0008 (CTG-0004) | `boat-build-pack.md` §4 e backlog ∥ specs de portas em `apps/boat/mobile/src/lib` ∥ specs em `apps/teat/web/src/app/features/sinistros/`                | TASK-0001                                                        |
+| O3   | TASK-0004 (CTG-0002)                                               | `apps/boat/mobile/src/lib/ports/` e providers exportados                                                                                                | TASK-0003                                                        |
+| O4   | TASK-0005 (CTG-0003) ∥ TASK-0009 (CTG-0004)                        | specs de páginas e componentes em `apps/boat/mobile/src/lib` ∥ `sinistros.pages.ts`/`sinistros.routes.ts` (nunca `MOD-teat-web-shell`)                  | TASK-0004; TASK-0008 e TASK-0004                                 |
+| O5   | TASK-0006 ∥ TASK-0007 (CTG-0003)                                   | `apps/boat/mobile/src/lib/{pages,shared}/` ∥ `BoatCrashGateway` (arquivo fixado por TASK-0001) e `apps/teat/mobile/src/app/features/sinistro/`          | TASK-0005                                                        |
+| O6   | TASK-0010 (CTG-0005)                                               | `work/rounds/R-0028/reports/TASK-0010.md` (nenhum código)                                                                                               | TASK-0007, TASK-0009; `pnpm stack:start` e `stack:status` verdes |
+| O7   | TASK-0011 (CTG-0005)                                               | `docs/framework/arch/availability/boat.availability.json`, `boat-build-pack.md`, `boat-frontends.md`, `apps/boat/mobile/README.md`, `waves.md`, backlog | TASK-0010                                                        |
+
+O CTG-0004 (web) fecha na O4, logo depois do CTG-0002. O push da O4 é o que libera R-0029 para
+empilhar sobre o shell do TEAT web.
+
+**Abertura empilhada.**
+
+- **Base de abertura.** Com R-0024 em `main`, a rodada abre sobre `origin/main`. Sem ele, abre
+  empilhada em `origin/orchestra/stynx-dedup` assim que o padrão existir no branch publicado
+  (`git cat-file -e origin/orchestra/stynx-dedup:docs/framework/arch/frontend-wiring-pattern.md`).
+  Novas revisões do upstream entram por `git merge --no-edit origin/orchestra/stynx-dedup`.
+- **O que espera o merge do upstream:** só o PR final. R-0024 precisa estar em `main`, com o pin
+  STYNX 1.5.0 **final** herdado de R-0022. Pode-se desenvolver sobre `1.5.0-rc.N`, mas nenhum PR
+  mescla com pin de RC (OD-S15-01).
+- **Jusante.** R-0029 empilha em `origin/orchestra/boat-wiring` depois do push da O4 (CTG-0004 no
+  branch publicado). Esta rodada mescla antes de R-0029. O lock `apps/teat/web` deixa de serializar
+  PRs: o conflito vira de merge no fim (§12).
+
+**Sequência final** (na ordem de C-0002 §12):
+
+1. `git fetch -q origin` e `git merge --no-edit origin/main`, com R-0024 já em `main`.
+2. **CI local completo:**
+   - `pnpm check`; `pnpm test:boat-transitions`;
+   - `pnpm --filter @detran/boat-mobile typecheck|lint|test|build`,
+     `pnpm --filter @detran/teat-web typecheck|lint|test|build` e
+     `pnpm --filter @detran/teat-mobile typecheck|lint|test|build`;
+   - `pnpm --filter @detran/est-crash test:unit` e `test:integration`,
+     `pnpm --filter @detran/app test:e2e` e `pnpm backend:test:ci`;
+   - `pnpm contracts:check`, `pnpm verify:parameter-catalogue`, `pnpm docs:kb:check`,
+     `pnpm docs:kb:publish-check` e `pnpm format:check`;
+   - os `grep`/`git grep` de §Critérios e o `git diff --name-only origin/main` do shell (vazio);
+   - `pnpm devai:rc:prepare`, quando aplicável.
+3. **Uma delivery-review** (Sol 6) do diff inteiro (`origin/main...HEAD`). `REVIEW` admite
+   correções restritas aos itens apontados, em no máximo 2 ciclos; `FAIL` → `escalated`.
+4. **Um PR** contra `main`, com o corpo pelo template, a tabela CTG → tarefas → commits e o
+   resultado dos gates.
+5. **CI remoto.** Falha de código volta à tarefa responsável. Merge só com CI verde e `PASS`.
+6. **Publicação final:**
+   - `evidence-R-0028.json` com os 5 CTGs, `devai evidence record` e `evidence verify`;
+   - `devai audit observe` no SHA do merge;
+   - `closure.json`, `devai round close` e `devai round seal`;
+   - `waves.md` e backlog.
+
+**Janelas recalibradas:** 3 → ≈ 2,5. A 1ª janela cobre bootstrap, prompt-review e O1–O4 (7
+tarefas). A 2ª cobre O5–O7, e a sequência final pede ≈ 0,5. O ganho vem de 5 ciclos
+PR/CI/evidência/review que viram 1.
 
 ## Decisões do Owner (2026-09-26)
 
@@ -110,12 +176,14 @@ Esquema do delta: `work/rounds/R-0030/availability-manifest.schema.md` (R-0030).
 | TASK-0011 | Architect (transcr.) | transcriber-docs    | Sonnet 5 / baixo | `MOD-docs-boat`, `MOD-r28-availability`               | TASK-0010            | `docs/framework/arch/availability/boat.availability.json` (17 rotas; selo conforme OD-R28-001); `boat-build-pack.md` §WP-B4/B5 (nota de reclassificação datada, sem apagar a de R-0015); `boat-frontends.md` §9/§10 e `:28`; `apps/boat/mobile/README.md` (sem promessa de Capacitor); `waves.md` §Histórico; backlog                                                 |
 
 - CTG-0001 = 0001 → 0002. CTG-0002 = 0003 → 0004. CTG-0003 = 0005 → 0006 ∥ 0007.
-- CTG-0004 = 0008 → 0009 (**mescla antes** de qualquer CTG de R-0029 que toque `MOD-teat-web-shell`).
-- CTG-0005 = 0010 → 0011. Um PR por CTG; no máximo três tarefas por vez; TASK-0008 ∥ TASK-0003.
+- CTG-0004 = 0008 → 0009 (**publicado no branch**, push da onda O4, antes de qualquer CTG de R-0029
+  que toque `MOD-teat-web-shell`; esta rodada mescla antes de R-0029).
+- CTG-0005 = 0010 → 0011. Commits por CTG na branch única; um PR no fim (OD-C2-005); no máximo três
+  tarefas por vez; TASK-0008 ∥ TASK-0003.
 
 **Checkpoints do maestro (Engineer):** (a) bootstrap: `test -f docs/framework/arch/frontend-wiring-pattern.md`;
 linha de base `pnpm --filter @detran/boat-mobile test` e `pnpm --filter @detran/teat-web test`
-(contagens em §Leitura); (b) antes do PR do CTG-0004: `gh pr list --state open --search "orchestra/teat-web-wiring"`
+(contagens em §Leitura); (b) antes do PR final: `gh pr list --state open --search "orchestra/teat-web-wiring"`
 — se R-0029 já tiver PR tocando shell, coordenar pela §Concorrência (esta rodada mescla primeiro);
 (c) antes de TASK-0010: `pnpm stack:start` e `pnpm stack:status` verdes.
 
@@ -138,7 +206,7 @@ linha de base `pnpm --filter @detran/boat-mobile test` e `pnpm --filter @detran/
 - `pnpm contracts:check` → sem diff; `pnpm verify:parameter-catalogue` → `0 errors`;
   `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check` → OK.
 - `git diff --name-only origin/main -- apps/teat/web/src/app/app.routes.ts apps/teat/web/src/app/app.config.ts apps/teat/web/src/app/core`
-  → vazio no PR do CTG-0004.
+  → vazio no PR final (OD-C2-005).
 - `docs/framework/arch/availability/boat.availability.json` válido (JSON; esquema de R-0030); smoke de TASK-0010 com resultado por passo.
 - `pnpm check` → verde. DEVAI: `evidence record`/`verify` por CTG, `audit observe` no SHA de cada
   merge, `round close` + `round seal` com âncora.

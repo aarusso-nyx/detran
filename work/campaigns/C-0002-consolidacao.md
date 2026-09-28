@@ -314,3 +314,113 @@ sobre as descrições históricas de ações 7a/7c que presumam migrações conc
 Não abre R-0022 e não autoriza escrita, release ou execução no STYNX. A comparação publicada
 1.4.0 × RC.2 dos três pacotes está documentada com hashes na spec A1; RC.3 local não constitui
 prova de publicação. As decisões OD-S15-01 permanecem fechadas.
+
+## 12. OD-C2-005: fluxo de rodada contínuo, sem PRs nem checks intermediários (Owner, 2026-09-27)
+
+**Decisão do Owner.** A diretriz é o **menor tempo de conclusão**. Nas rodadas **R-0022…R-0032**, os
+CTGs são implementados em sequência direta, ou em paralelo quando possível, numa branch única por
+rodada. O CI local, o PR, o CI remoto e a publicação final acontecem **uma única vez, no fim da
+rodada**. Esta decisão prevalece sobre o que dizem §4 ("um PR por CTG", "delivery-review por CTG")
+e os planos e prompts das rodadas afetadas.
+
+**Durante a rodada**
+
+- **Branch única** `orchestra/<frente>`, com um commit por tarefa ou por CTG. Os commits seguem
+  `CODESTYLE.md` e a autoria por caminho (OD-R20-003).
+- **Entre CTGs não há:**
+  - PR, CI remoto, merge em `main`;
+  - `devai evidence record`, `devai audit observe`;
+  - `pnpm check` completo;
+  - delivery-review.
+- **Mantidos:**
+  - os `acceptance_commands` de cada tarefa, que são a definição de pronto do worker na tríade;
+  - a triagem de falha por tarefa;
+  - **um** ciclo de prompt-review no bootstrap, sobre o plano e os prompts de todos os CTGs.
+- **Paralelismo de CTGs.** CTGs sem dependência de tarefa entre si e com locks disjuntos correm em
+  paralelo, com até 3 workers simultâneos na mesma worktree e fronteiras de escrita disjuntas. O
+  maestro serializa os commits. Cada plano traz a seção §Execução OD-C2-005 com as ondas.
+- **Push sem PR.** O branch é publicado (`git push -u`) ao fim de cada onda, para que as rodadas
+  dependentes possam empilhar sobre ele.
+
+**Fim da rodada**, na ordem:
+
+1. Integrar `origin/main` por merge, nunca rebase de branch publicado. Todos os upstreams da rodada
+   precisam estar em `main`.
+2. **CI local completo:**
+   - `pnpm check`;
+   - os tiers de teste do plano (`pnpm backend:test:ci` e os dos apps);
+   - o RC local atestado (`pnpm devai:rc:prepare`) quando aplicável.
+3. **Uma delivery-review** do reviewer da outra família sobre o diff inteiro da rodada.
+   - `REVIEW`: correções restritas aos itens apontados, com no máximo 2 ciclos.
+   - `FAIL`: `escalated`.
+4. **Um PR** contra `main`, com o corpo pelo template. O corpo traz a tabela CTG → tarefas → commits
+   e o resultado dos gates.
+5. **CI remoto**. Falha de código volta à tarefa responsável. Merge somente com CI verde e PASS.
+6. **Publicação final:**
+   - um `evidence-<round>.json` com todos os CTGs;
+   - `devai evidence record`;
+   - `devai audit observe` no SHA do merge;
+   - `closure.json`, `devai round close` e `devai round seal`;
+   - `waves.md` e `backlog.md` atualizados.
+
+**Entre rodadas: abertura empilhada.** Uma rodada pode **abrir e trabalhar** sobre o branch
+publicado do upstream (`origin/orchestra/<upstream>`), integrando as revisões dele por merge. O
+**PR final** só abre depois do merge do upstream em `main`, e o CI local é refeito sobre `main`.
+A adenda A-C2-11 (§13) fica subsumida por esta regra.
+
+**Nenhum caminho novo para pular gates.** Continuam valendo:
+
+- STYNX 1.5.0 **final** para o merge das rodadas que trocam implementação (OD-S15-01);
+- recibos do Owner para as ações proibidas;
+- critérios de aceitação imutáveis;
+- ODs no registro canônico;
+- nenhum `--force`;
+- nenhuma edição de arquivo gerado.
+
+**Risco aceito pelo Owner.** Uma falha só detectada no fim custa mais retrabalho. A mitigação é
+manter os comandos de aceitação por tarefa e o prompt-review inicial.
+
+**Locks partilhados da fase D.** Os locks `MOD-shared-policy` e `apps/teat/web` deixam de
+serializar PRs por CTG. O conflito vira de merge no fim da rodada: a rodada que mesclar depois
+integra `main`, mantém os dois blocos em `policy.ts` e roda de novo `pnpm --filter @detran/shared
+test` e `policy-routes.e2e`.
+
+### Adenda A-C2-12: esclarecimentos da OD-C2-005 (Architect, 2026-09-27)
+
+- **PR de publicação.** A publicação final (`audit observe` no SHA do merge, `closure.json`,
+  `round close`, `round seal` e índices) só pode ser feita depois do merge. Ela sai num **segundo e
+  último PR por rodada**, `chore(round): close R-00nn`, que contém só `record/`, `work/rounds/R-00nn/`
+  e índices, sem código. É a única exceção ao "um PR por rodada", como em R-0017 (#144/#145). A
+  evidência do conteúdo (`evidence record`) segue no PR principal.
+- **Decisões do Owner sem esperar o PR.** O maestro pede ao Owner, na própria sessão, a decisão de
+  cada OD assim que ela surgir. O registro canônico continua no PR final, e os padrões fail-closed
+  valem até a decisão.
+- **R-0031 × R-0030.** O manual PEC dos consoles sai de R-0031 e vai para R-0032, que já espera
+  R-0030. O PR final de R-0031 deixa de esperar R-0030 e passa a depender só de R-0022, R-0023 e
+  R-0024 (detalhe nos `plan.md` de R-0031 e de R-0032).
+- **Referências a SHA de merge de CTG.** Em critérios que citavam o SHA do merge de um CTG
+  (ex.: R-0023 CTG-0001), vale o SHA do commit do CTG na branch única ou da última regeneração
+  atribuída. O texto do critério não muda.
+- **Interação com a adenda A11 (§11, R-0021).** A11 transfere para R-0022 as migrações integrais de
+  assinatura, outbox e offline-sync. As ondas de `R-0022/plan.md` §Execução OD-C2-005 são recalculadas
+  no bootstrap pelo Architect, conforme a adenda A1 daquela rodada, mantendo as regras desta seção:
+  branch única, ondas paralelas, fim de rodada único.
+
+## 13. Adenda A-C2-11: abertura antecipada por caracterização (Owner, 2026-09-27)
+
+A regra da orquestra (`waves.md`) permite abrir uma frente sobre base empilhada: o que depende do
+upstream é o **merge**, não a abertura. Os CTG-0001 de R-0022 e de R-0023 são caracterização pura,
+sem troca de implementação, e passam a poder abrir antes do merge da rodada anterior:
+
+| Rodada | CTG antecipado                                 | Pode abrir                                                                                  | PR só depois de | Regra de integração                                                                                                                             |
+| ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-0022 | CTG-0001 (caracterização de tenancy/RLS e SSE) | em paralelo a R-0021, empilhado em `orchestra/stynx-canonical`                              | merge de R-0021 | a caracterização roda de novo sobre `main`; mudança de teste só por adenda do Architect atribuída a R-0021                                      |
+| R-0023 | CTG-0001 (matriz papel × rota × método)        | em paralelo a R-0022, sobre `main` com R-0021 ou empilhado em `orchestra/stynx-sse-tenancy` | merge de R-0022 | a matriz é regenerada sobre `main`; cada linha de diff é atribuída a uma mudança documentada de R-0022, e linha sem atribuição bloqueia o merge |
+
+- **Efeito:** o caminho crítico da fase C encurta em ≈ 1–2 janelas.
+- **O que não muda:**
+  - a ordem de merge (R-0021 → R-0022 → R-0023);
+  - a exigência de STYNX 1.5.0 final para os CTGs de troca;
+  - a regra "caracterização mescla antes de qualquer troca".
+- **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
+  `prompts/00-maestro.md`.

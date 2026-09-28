@@ -11,14 +11,93 @@ os produz no bootstrap. Maestro **Opus 5.5** (Claude Code); reviewer **Sol 6** v
 `tools/orchestra/bridge.sh codex …` (ids confirmados no bootstrap), nível grande em toda revisão.
 Worktree `/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy`, branch
 `orchestra/stynx-sse-tenancy`.
-**Concorrência com upstreams da campanha:** abre após **R-0021** (`orchestra/stynx-canonical`)
-mesclada. **Upstream externo:** STYNX **1.5.0 publicado** no registry pela rodada **S-1.5** (repositório
+**Concorrência com upstreams da campanha:** a rodada inteira pode abrir **empilhada** em
+`origin/orchestra/stynx-canonical` (R-0021); o PR final espera o merge de R-0021 (OD-C2-005, que
+subsume a adenda A-C2-11 em §Adendas). **Upstream externo:** STYNX **1.5.0 publicado** no registry pela rodada **S-1.5** (repositório
 STYNX), com os itens MUST de UPS-TEN, UPS-SSE, UPS-NGSSE e UPS-TEST-01 (OD-C2-004). CTG-0001
-(caracterização) é desenvolvido e provado sobre **1.4.0** enquanto a 1.5.0 não sai; nenhum PR a partir
-do CTG-0002 abre antes da publicação. R-0023 e R-0024 dependem desta rodada mesclada. As rodadas de
+(caracterização) é desenvolvido e provado sobre **1.4.0** enquanto a 1.5.0 não sai; o PR final não
+abre antes da publicação da 1.5.0 final. R-0023 e R-0024 empilham sobre o branch publicado desta
+rodada; os PRs finais delas esperam o merge desta. As rodadas de
 ligação (R-0025…R-0029) vêm depois e **não** tocam SSE: consomem o que esta rodada entrega.
 **Janelas previstas:** 3 (1: bootstrap + CTG-0001; 2: CTG-0002 + CTG-0003 + CTG-0004; 3: CTG-0005 +
-CTG-0006 condicional + CTG-0007 + fechamento); recalibrar no bootstrap.
+CTG-0006 condicional + CTG-0007 + fechamento); recalibradas em §Execução OD-C2-005.
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+Esta seção **prevalece sobre qualquer menção a um PR/merge/evidência/delivery-review por CTG neste
+plano** (C-0002 §12). A rodada corre na branch única `orchestra/stynx-sse-tenancy`, com um commit por
+tarefa ou por CTG. Entre CTGs não há PR, CI remoto, `devai evidence record`, `audit observe`,
+`pnpm check` completo nem delivery-review. Os critérios de aceitação não mudam; muda só o momento:
+os `acceptance_commands` de cada tarefa rodam ao fim da tarefa (definição de pronto do worker), e os
+critérios formulados "por CTG", "ao fim de cada CTG" ou "no sha de cada merge" rodam **uma vez**, na
+sequência final (`pnpm check` no fim da rodada; uma evidência com todos os CTGs; `audit observe` no
+sha do merge único). A comparação de `pnpm backend:rls-smoke` com a linha de base continua após cada
+CTG de O5 e O6 (Meta 2), como comando de aceitação.
+
+**Ondas** (até 3 workers simultâneos na mesma worktree; o maestro serializa os commits; push sem PR
+ao fim de cada onda):
+
+| Onda | CTGs / tarefas em paralelo                                                               | Fronteiras de escrita (disjuntas)                                                                                                                                                                                                                       | Depende de                                                                                           |
+| ---- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| O1   | CTG-0001: TASK-0001                                                                      | `work/rounds/R-0022/contracts/`, `docs/framework/arch/sse-stream-contract.md`, `open-decisions-rait.md` §C-0002                                                                                                                                         | bootstrap e prompt-review única com `PASS`                                                           |
+| O2   | CTG-0001: TASK-0002 ∥ TASK-0003                                                          | `backend/app/tests/**` × `apps/*/*/src/**/*.spec.ts`                                                                                                                                                                                                    | O1                                                                                                   |
+| O3   | CTG-0002: TASK-0004                                                                      | manifestos da lista de R-0021, `tools/blueprints/generate.mjs`; `pnpm-lock.yaml` pelo maestro                                                                                                                                                           | O2 **commitada** (caracterização verde sobre 1.4.0); 1.5.0 (RC ou final) no registry, checkpoint (a) |
+| O4   | CTG-0003 (contrato): TASK-0005                                                           | `work/rounds/R-0022/contracts/CTG-0003…0006.md`, spec upstream §8                                                                                                                                                                                       | O3 e caracterização reexecutada verde após o bump; checkpoint (c)                                    |
+| O5   | CTG-0003: TASK-0006 ∥ CTG-0005: TASK-0008                                                | `backend/app/src/{app.module,detran-runtime}.ts` e rotas públicas do Portal × serviços SSE de `apps/{rait,dashboard,portal,teat}/web/src/app/core/**`                                                                                                   | O4                                                                                                   |
+| O6   | CTG-0004: TASK-0007 ∥ CTG-0006: TASK-0009 (condicional) (∥ TASK-0008, se ainda em curso) | `backend/app/src/{teat,portal,dashboard}-stream.*` e `backend/app/src/handwritten/rait/rait-stream.*` × escopo de `MOD-shared-documents` e `app.module.ts`; se TASK-0007 precisar de `app.module.ts` (fábricas do poller), serializa atrás de TASK-0009 | TASK-0006 (as duas: dependência de TASK-0007 e lock `MOD-app-module` de TASK-0009)                   |
+| O7   | CTG-0007: TASK-0010                                                                      | ADR nova e emendas, `sse-stream-contract.md`, `rait-events-sse-contract.md`, `detran-ui-guide.md`, `waves.md`, `backlog.md`                                                                                                                             | O5 e O6 (TASK-0009 incluída, porque a ADR de divisão registra a assinatura)                          |
+
+A ordem de prova fica: o commit do CTG-0001 precede o commit de TASK-0004 (caracterização commitada
+antes de qualquer troca), e a caracterização é reexecutada verde depois do bump, com o _shim_ ainda
+presente, antes de O5.
+
+**Abertura empilhada.**
+
+- **Base:** enquanto R-0021 não estiver em `main`, a worktree nasce de
+  `origin/orchestra/stynx-canonical`
+  (`git worktree add -b orchestra/stynx-sse-tenancy "/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy" origin/orchestra/stynx-canonical`);
+  depois disso, de `origin/main`. Revisões de R-0021 entram por `git merge --no-edit`, nunca por
+  rebase de branch publicado.
+- **Pode ser feito antes do merge de R-0021:** a rodada inteira, O1…O7. Do CTG-0002 em diante, o
+  desenvolvimento sobre `1.5.0-rc.N` é permitido (OD-S15-01).
+- **Espera o merge de R-0021:** só o PR final. Ele também exige a STYNX 1.5.0 **final** publicada,
+  o pin `1.5.0` final em todos os manifestos e a tabela de conformidade §7 preenchida (OD-S15-01,
+  OD-R22-02).
+- **Caracterização sobre `main` (regra de A-C2-11, mantida):** antes do PR final, o maestro roda de
+  novo a caracterização numa worktree temporária destacada no commit do CTG-0001, integrado
+  localmente a `origin/main` por merge não publicado. Os comandos são `pnpm --filter @detran/app test:e2e`,
+  `pnpm backend:rls-smoke` e `pnpm --filter @detran/{rait,dashboard,portal,teat}-web test`. O
+  resultado vai para §Concorrência. Um teste que precise mudar por efeito documentado de R-0021 exige
+  adenda numerada do Architect antes da edição. Sem justificativa em R-0021, a divergência é
+  `plant-bug` de R-0021, nunca ajuste de teste.
+- **Downstream:** R-0023 (inteira) e R-0024 (CTGs de frontend) empilham sobre
+  `origin/orchestra/stynx-sse-tenancy`. O push de O3 (pin) libera o CTG-0002 em diante de R-0023; o
+  push de O5 (SSE Angular) libera o CTG-0003 de R-0024.
+
+**Sequência final** (C-0002 §12, nesta ordem):
+
+1. `git fetch -q origin` e `git merge --no-edit origin/main`, com R-0021 já em `main`; caracterização
+   sobre `main` (acima); se a rodada correu em RC, pin `1.5.0` final, `pnpm install` e commit do
+   lockfile.
+2. CI local completo: `pnpm check`; `pnpm backend:test:ci`; `pnpm --filter @detran/app test:e2e`;
+   `pnpm backend:rls-smoke` (igual à linha de base do CTG-0001) e `pnpm verify:rls-ddl`;
+   `pnpm verify:stynx-pin`; `pnpm verify:decorators` e `pnpm verify:role-catalog`;
+   `pnpm --filter @detran/{rait,dashboard,portal,teat}-web test`, `typecheck`, `lint` e `build`;
+   `pnpm contracts:check`, `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check`;
+   as verificações de arquivo (`grep`/`ls`) dos critérios; `pnpm devai:rc:prepare` quando aplicável.
+3. **Uma** delivery-review (Sol 6, nível grande, pela ponte) sobre o diff inteiro da rodada:
+   `REVIEW` → correções restritas, no máximo 2 ciclos; `FAIL` → `escalated`. Não há waiver em
+   tenancy/SSE.
+4. **Um** PR contra `main`, pelo template, com a tabela CTG → tarefas → commits e os gates.
+5. CI remoto; falha de código volta à tarefa responsável; merge só com CI verde e `PASS`.
+6. Publicação: `evidence-R-0022.json` com os 7 CTGs, `devai evidence record` e `evidence verify`,
+   `devai audit observe` no sha do merge, `closure.json`, `devai round close`, `devai round seal`,
+   `waves.md` e `backlog.md`.
+
+**Janelas recalibradas:** 3 → **≈ 2,5**. Janela 1: bootstrap, prompt-review única, O1 e O2, sem
+esperar R-0021. Janela 2: O3…O5. Janela 3 (meia): O6, O7 e a sequência final. O ganho vem de trocar
+7 ciclos de PR/CI/review por 1 e de tirar o CTG-0001 do caminho crítico. O prazo real continua
+preso à 1.5.0 final (S-1.5) e ao merge de R-0021, não ao trabalho da rodada.
 
 ## Decisões do Owner — OD-S15-01 (2026-09-26)
 
@@ -100,11 +179,10 @@ rodada:
 CTG-0001 = 0001 → 0002 ∥ 0003 (fronteiras disjuntas: `backend/app/tests/**` × `apps/*/*/src/**/*.spec.ts`).
 CTG-0002 = 0004 (pin). CTG-0003 = 0005 → 0006 (tenancy). CTG-0004 = 0007 (SSE backend; contrato em
 0005). CTG-0005 = 0008 (SSE Angular; pode correr em paralelo ao CTG-0004, locks disjuntos). CTG-0006 =
-0009 (condicional). CTG-0007 = 0010. **Um PR por CTG**, em ordem; o seguinte nasce empilhado no anterior
-ainda não mesclado, nunca com commits novos no branch de um PR aberto.
+0009 (condicional). CTG-0007 = 0010. Commits por CTG na branch única; um PR no fim (OD-C2-005).
 
 **Tríade e ordem de prova.** TASK-0002/0003 provados verdes sobre 1.4.0 (saída no relatório — âncora
-da caracterização), mesclados antes do bump, reexecutados verdes após o bump (CTG-0002, _shim_ ainda
+da caracterização), commitados antes do bump, reexecutados verdes após o bump (CTG-0002, _shim_ ainda
 presente) e só então começam as remoções. O Engineer nunca altera teste de caracterização; contradição
 teste × contrato → adenda numerada do Architect.
 
@@ -175,7 +253,8 @@ Todos existem em `package.json` hoje, salvo `verify:stynx-pin` (entregue por R-0
   `.gitignore`; depois de cada `git add`, comparar `find <dir> -type f` com `git ls-files <dir>` (R-0016).
 - **Critérios imutáveis:** mudança só por adenda numerada com decisão do Owner; critério substituído
   aparece no closure como não cumprido, nunca PASS.
-- **ODs no registro canônico:** `open-decisions-rait.md` §C-0002 no PR do CTG-0001.
+- **ODs no registro canônico:** `open-decisions-rait.md` §C-0002 no commit do CTG-0001 (entra no PR
+  final).
 - **Âncora da prova:** `audit observe` no sha exato do merge; `round close` + `round seal` com a âncora;
   se outra rodada fechar antes, aceitar a cadeia de `main`, observar o HEAD integrado e repetir `round close`.
 - **Orçamento:** `budget.json` desde o bootstrap; 80 % da janela → checkpoint e parada.
@@ -239,6 +318,35 @@ proposta, sem autorização de início por este registro.
 
 O encerramento de R-0021 sem selo não autoriza dispensa automática do selo ou de critérios de
 R-0022. A adoção de notificações continua vinculada ao produtor OD-P40, fora destas transferências.
+
+**A-C2-11 (Owner, 2026-09-27): abertura antecipada do CTG-0001.** Esta rodada pode **abrir antes
+do merge de R-0021**, somente para o CTG-0001, que é caracterização pura de tenancy/RLS e SSE sobre o
+comportamento atual.
+
+- **Base:** o CTG-0001 nasce **empilhado** em `origin/orchestra/stynx-canonical` (R-0021), ou em
+  `origin/main` se R-0021 ainda não tiver publicado o branch. As revisões de R-0021 são integradas por
+  `git merge --no-edit`, nunca por rebase de branch publicado.
+- **O que pode ser feito antes do merge de R-0021:** TASK-0001 (contrato e inventário), TASK-0002 e
+  TASK-0003 (testes de caracterização), a prompt-review e a delivery-review do CTG-0001.
+- **O que espera o merge de R-0021:** o PR do CTG-0001 contra `main`. Depois do merge, o maestro
+  integra `origin/main`, roda de novo toda a caracterização e grava o resultado em §Concorrência.
+  Qualquer teste que precise mudar por efeito documentado de R-0021 (troca do despacho RENACH, pin
+  1.4.0) exige adenda numerada do Architect **antes** da edição, e a delivery-review é refeita
+  restrita a essa mudança. Sem justificativa em R-0021, a divergência é tratada como regressão de
+  R-0021 (triagem `plant-bug`, comunicada a R-0021), nunca como ajuste de teste.
+- **O que não muda:** os CTG-0002 em diante continuam exigindo R-0021 em `main` e STYNX 1.5.0 final
+  para o merge (OD-S15-01). O desenvolvimento sobre `1.5.0-rc.N` continua permitido.
+- **Locks:** o CTG-0001 toca só `backend/app/tests/**` e `apps/*/*/src/**/*.spec.ts`; nenhum lock é
+  comum com R-0021. Se R-0021 alterar algum desses caminhos, o conflito é resolvido por merge no
+  empilhamento.
+- **Subsumida por OD-C2-005 (2026-09-27):** a rodada inteira pode abrir empilhada, não só o CTG-0001.
+  Deixam de existir o PR e a delivery-review próprios do CTG-0001. Continuam valendo a reexecução da
+  caracterização sobre `main` antes do PR final e a regra "caracterização commitada antes de qualquer
+  troca" dentro da branch (§Execução OD-C2-005).
+
+- **Interação com A1 (acima):** a abertura empilhada passa a ser sobre o branch de R-0021 com o
+  escopo revisto por A1. As ondas de §Execução OD-C2-005 são recalculadas no bootstrap, e as três
+  migrações recebidas ganham ondas próprias sem violar os locks.
 
 ## Bloqueios
 
