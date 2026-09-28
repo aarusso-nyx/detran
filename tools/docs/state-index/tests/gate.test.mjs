@@ -1380,6 +1380,169 @@ test('C-01-19 dado uma linha fechada com PC existente e round_id igual à rodada
   );
 });
 
+// ---------------------------------------------------------------------------
+// Adenda R-0017 — supersessão append-only de closures
+// ---------------------------------------------------------------------------
+
+test('C-01-18 dado PC predecessor e PC terminal da mesma rodada, com README apontando ao terminal, quando o gate roda então aceita a cadeia append-only', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0002.json',
+        JSON.stringify(
+          {
+            id: 'PC-0002',
+            round_id: 'R-0003',
+            supersedes: 'PC-0001',
+          },
+          null,
+          2,
+        ),
+      );
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        ROUNDS_README_TEXT.replace('PC-0001', 'PC-0002'),
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.equal(result.status, 0, combined(result));
+      assert.equal(findingIds(combined(result)).size, 0, combined(result));
+    },
+  );
+});
+
+test('C-01-18 dado um sucessor que aponta para PC de outra rodada quando o gate roda então acusa ligação entre rodadas', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0002.json',
+        JSON.stringify(
+          {
+            id: 'PC-0002',
+            round_id: 'R-0004',
+            supersedes: 'PC-0001',
+          },
+          null,
+          2,
+        ),
+      );
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        `${ROUNDS_README_TEXT}| R-0004 | fixture sucessor cruzado | fechada | #2 | PC-0002 | Fixture |\n`,
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.equal(result.status, 1, combined(result));
+      assert.ok(findingIds(combined(result)).has('C-01-18'));
+      assert.match(combined(result), /outra rodada|entre rodadas/i);
+    },
+  );
+});
+
+test('C-01-18 dado dois PCs que se supersedem mutuamente quando o gate roda então acusa ciclo', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0001.json',
+        JSON.stringify(
+          { id: 'PC-0001', round_id: 'R-0003', supersedes: 'PC-0002' },
+          null,
+          2,
+        ),
+      );
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0002.json',
+        JSON.stringify(
+          { id: 'PC-0002', round_id: 'R-0003', supersedes: 'PC-0001' },
+          null,
+          2,
+        ),
+      );
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        ROUNDS_README_TEXT.replace('PC-0001', 'PC-0002'),
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.equal(result.status, 1, combined(result));
+      assert.ok(findingIds(combined(result)).has('C-01-18'));
+      assert.match(combined(result), /ciclo/i);
+    },
+  );
+});
+
+test('C-01-18 dado dois PCs sem sucessão para a mesma rodada quando o gate roda então acusa dois terminais', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0002.json',
+        JSON.stringify({ id: 'PC-0002', round_id: 'R-0003' }, null, 2),
+      );
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        ROUNDS_README_TEXT.replace('PC-0001', 'PC-0002'),
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.equal(result.status, 1, combined(result));
+      assert.ok(findingIds(combined(result)).has('C-01-18'));
+      assert.match(combined(result), /dois terminais|terminal único/i);
+    },
+  );
+});
+
+test('C-01-18 dado um sucessor cujo predecessor não existe quando o gate roda então acusa predecessor ausente', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'record/proofs/compliance/closures/PC-0002.json',
+        JSON.stringify(
+          {
+            id: 'PC-0002',
+            round_id: 'R-0003',
+            supersedes: 'PC-0099',
+          },
+          null,
+          2,
+        ),
+      );
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        ROUNDS_README_TEXT.replace('PC-0001', 'PC-0002'),
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.equal(result.status, 1, combined(result));
+      assert.ok(findingIds(combined(result)).has('C-01-18'));
+      assert.match(
+        combined(result),
+        /predecessor.*ausente|PC-0099.*inexistente/i,
+      );
+    },
+  );
+});
+
 test('C-01-20 dado uma rodada fora de preMethodRounds marcada pré-método quando o gate roda então acusa', async () => {
   await withRoot(
     (root) => {
