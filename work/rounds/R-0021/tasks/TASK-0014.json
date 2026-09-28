@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0021",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Documentar pin, transfer\u00eancias e resultado real",
+  "description": "Documentar pin, transfer\u00eancias e resultado real conforme AUTHORIZATION A1 e contratos fechados.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-adr", "MOD-docs"],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0007",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r21", "owner-a1"],
+  "branch": "orchestra/stynx-canonical",
+  "worktree_id": "WT-stynx-canonical",
+  "prompt_composition_id": "PC-eb405bc7a8d14e67",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "verify:state-index"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-28T01:17:11.018441+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-eb405bc7a8d14e67",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

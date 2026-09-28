@@ -288,24 +288,32 @@ Efeitos:
   para `stynx generate module`.
 - **S-1.5:** escopo máximo, com estimativa recalibrada no seu bootstrap.
 
-## 11. Adenda A-C2-11: abertura antecipada por caracterização (Owner, 2026-09-27)
+## 11. Adenda A11 — escopo revisto de R-0021 e transferências (2026-09-27)
 
-A regra da orquestra (`waves.md`) permite abrir uma frente sobre base empilhada: o que depende do
-upstream é o **merge**, não a abertura. Os CTG-0001 de R-0022 e de R-0023 são caracterização pura,
-sem troca de implementação, e passam a poder abrir antes do merge da rodada anterior:
+**Decisão do Owner:** plano de execução revisto aprovado nesta sessão; registro canônico em
+`docs/meta/knowledge-base/open-decisions-rait.md` §C-0002. Esta adenda prevalece sobre A5 e
+sobre as descrições históricas de ações 7a/7c que presumam migrações concluídas em R-0021.
 
-| Rodada | CTG antecipado                                 | Pode abrir                                                                                  | PR só depois de | Regra de integração                                                                                                                             |
-| ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| R-0022 | CTG-0001 (caracterização de tenancy/RLS e SSE) | em paralelo a R-0021, empilhado em `orchestra/stynx-canonical`                              | merge de R-0021 | a caracterização roda de novo sobre `main`; mudança de teste só por adenda do Architect atribuída a R-0021                                      |
-| R-0023 | CTG-0001 (matriz papel × rota × método)        | em paralelo a R-0022, sobre `main` com R-0021 ou empilhado em `orchestra/stynx-sse-tenancy` | merge de R-0022 | a matriz é regenerada sobre `main`; cada linha de diff é atribuída a uma mudança documentada de R-0022, e linha sem atribuição bloqueia o merge |
+- **R-0021:** caracterização do comportamento atual, pin exato 1.4.0, gate dinâmico de versões e
+  adenda A1 da especificação upstream. Migrações de assinatura (OD-R21-01), outbox inteira,
+  incluindo despacho RENACH (OD-R21-02), e offline-sync inteira (OD-R21-04) passam a R-0022.
+- **R-0022:** recebe as três migrações integrais e seus testes de paridade. Não parte de fachada,
+  deduplicação ou despacho já migrados. Requisitos MUST da spec A1 ausentes bloqueiam o CTG
+  consumidor, sem novo contorno. Isso substitui a atribuição histórica de extras offline a R-0024.
+  Consumo de RC e merge só na 1.5.0 final continuam regidos por OD-S15-01.
+- **Notificações:** adoção de `StynxNotificationsModule` junto do produtor OD-P40 (OD-R21-03),
+  sem módulo ou DDL sem consumidor em R-0021.
+- **Fechamento R-0021:** emitir `round close`, preservando os critérios das migrações como não
+  cumpridos (`fail`); não emitir/apresentar selo de conclusão. A limitação conhecida do DEVAI
+  1.5.6 para selo com critérios `fail` é registrada, sem alterar resultados (OD-R21-05).
+- **Preparação e execução:** Astra materializa e revisa os artefatos; após PASS independente
+  do Opus 5.5 pela ponte, maestro em sessão limpa `gpt-6-sol`/`high`. Até quatro ciclos de revisão
+  por item e 2,25 milhões de tokens de entrada por janela, com checkpoint em 1,8 milhão
+  (OD-R21-06); demais gates e condições bloqueantes permanecem.
 
-- **Efeito:** o caminho crítico da fase C encurta em ≈ 1–2 janelas.
-- **O que não muda:**
-  - a ordem de merge (R-0021 → R-0022 → R-0023);
-  - a exigência de STYNX 1.5.0 final para os CTGs de troca;
-  - a regra "caracterização mescla antes de qualquer troca".
-- **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
-  `prompts/00-maestro.md`.
+Não abre R-0022 e não autoriza escrita, release ou execução no STYNX. A comparação publicada
+1.4.0 × RC.2 dos três pacotes está documentada com hashes na spec A1; RC.3 local não constitui
+prova de publicação. As decisões OD-S15-01 permanecem fechadas.
 
 ## 12. OD-C2-005: fluxo de rodada contínuo, sem PRs nem checks intermediários (Owner, 2026-09-27)
 
@@ -358,7 +366,7 @@ e os planos e prompts das rodadas afetadas.
 **Entre rodadas: abertura empilhada.** Uma rodada pode **abrir e trabalhar** sobre o branch
 publicado do upstream (`origin/orchestra/<upstream>`), integrando as revisões dele por merge. O
 **PR final** só abre depois do merge do upstream em `main`, e o CI local é refeito sobre `main`.
-A adenda A-C2-11 (§11) fica subsumida por esta regra.
+A adenda A-C2-11 (§13) fica subsumida por esta regra.
 
 **Nenhum caminho novo para pular gates.** Continuam valendo:
 
@@ -393,3 +401,26 @@ test` e `policy-routes.e2e`.
 - **Referências a SHA de merge de CTG.** Em critérios que citavam o SHA do merge de um CTG
   (ex.: R-0023 CTG-0001), vale o SHA do commit do CTG na branch única ou da última regeneração
   atribuída. O texto do critério não muda.
+- **Interação com a adenda A11 (§11, R-0021).** A11 transfere para R-0022 as migrações integrais de
+  assinatura, outbox e offline-sync. As ondas de `R-0022/plan.md` §Execução OD-C2-005 são recalculadas
+  no bootstrap pelo Architect, conforme a adenda A1 daquela rodada, mantendo as regras desta seção:
+  branch única, ondas paralelas, fim de rodada único.
+
+## 13. Adenda A-C2-11: abertura antecipada por caracterização (Owner, 2026-09-27)
+
+A regra da orquestra (`waves.md`) permite abrir uma frente sobre base empilhada: o que depende do
+upstream é o **merge**, não a abertura. Os CTG-0001 de R-0022 e de R-0023 são caracterização pura,
+sem troca de implementação, e passam a poder abrir antes do merge da rodada anterior:
+
+| Rodada | CTG antecipado                                 | Pode abrir                                                                                  | PR só depois de | Regra de integração                                                                                                                             |
+| ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-0022 | CTG-0001 (caracterização de tenancy/RLS e SSE) | em paralelo a R-0021, empilhado em `orchestra/stynx-canonical`                              | merge de R-0021 | a caracterização roda de novo sobre `main`; mudança de teste só por adenda do Architect atribuída a R-0021                                      |
+| R-0023 | CTG-0001 (matriz papel × rota × método)        | em paralelo a R-0022, sobre `main` com R-0021 ou empilhado em `orchestra/stynx-sse-tenancy` | merge de R-0022 | a matriz é regenerada sobre `main`; cada linha de diff é atribuída a uma mudança documentada de R-0022, e linha sem atribuição bloqueia o merge |
+
+- **Efeito:** o caminho crítico da fase C encurta em ≈ 1–2 janelas.
+- **O que não muda:**
+  - a ordem de merge (R-0021 → R-0022 → R-0023);
+  - a exigência de STYNX 1.5.0 final para os CTGs de troca;
+  - a regra "caracterização mescla antes de qualquer troca".
+- **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
+  `prompts/00-maestro.md`.

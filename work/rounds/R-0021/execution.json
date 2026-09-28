@@ -1,0 +1,139 @@
+{
+  "round_id": "R-0021",
+  "worktree": "/Users/aarusso/.codex/worktrees/stynx-canonical/detran",
+  "base_sha": "e47a68014ffdd24e1f9da03c4fc9e1b78ecf381b",
+  "orchestrator": {
+    "model": "gpt-6-sol",
+    "effort": "high"
+  },
+  "reviewer": {
+    "model": "claude-opus-5-5",
+    "bridge": "tools/orchestra/bridge.sh"
+  },
+  "max_concurrent_workers": 3,
+  "dependencies": {
+    "TASK-0002": ["TASK-0001"],
+    "TASK-0003": ["TASK-0001"],
+    "TASK-0015": ["TASK-0001"],
+    "TASK-0004": ["TASK-0002", "TASK-0003", "TASK-0015"],
+    "TASK-0014": ["TASK-0002", "TASK-0003", "TASK-0004"]
+  },
+  "active_groups": ["CTG-0001", "CTG-0002", "CTG-0007"],
+  "cancelled_tasks": [
+    "TASK-0005",
+    "TASK-0006",
+    "TASK-0007",
+    "TASK-0008",
+    "TASK-0009",
+    "TASK-0010",
+    "TASK-0011",
+    "TASK-0012",
+    "TASK-0013"
+  ],
+  "write_paths": {
+    "TASK-0001": [
+      "work/rounds/R-0021/contracts/**",
+      "work/rounds/R-0021/inputs/published-api-*",
+      "work/rounds/R-0021/reports/TASK-0001.md",
+      "work/rounds/R-0021/reports/UPSTREAM-ISSUES.md",
+      "work/campaigns/C-0002-stynx-upstream-spec.md",
+      "docs/meta/knowledge-base/open-decisions-rait.md",
+      "work/campaigns/C-0002-consolidacao.md",
+      "work/rounds/R-0022/plan.md",
+      "work/rounds/R-0022/prompts/00-maestro.md"
+    ],
+    "TASK-0002": [
+      "backend/domains/ch/clinical-reports/tests/unit/r21-signature-characterization.spec.ts",
+      "backend/domains/shared/src/documents/r21-document-trust-characterization.spec.ts",
+      "backend/app/src/r21-renach-characterization.spec.ts",
+      "backend/app/tests/e2e/r21-trust-profiles.e2e.spec.ts",
+      "backend/app/tests/integration/r21-renach-characterization.integration.spec.ts"
+    ],
+    "TASK-0003": [
+      "backend/app/tests/e2e/r21-offline-sync.e2e.spec.ts",
+      "backend/domains/ops/offline-sync/tests/integration/r21-offline-characterization.integration.spec.ts"
+    ],
+    "TASK-0015": ["tools/stynx-pin/tests/*.test.mjs"],
+    "TASK-0004": [
+      "tools/check-stynx-pin.ts",
+      "tools/stynx-version.json",
+      "tools/blueprints/generate.mjs",
+      "package.json",
+      "apps/boat/mobile/package.json",
+      "apps/dashboard/web/package.json",
+      "apps/portal/web/package.json",
+      "apps/rait/web/package.json",
+      "apps/teat/mobile/package.json",
+      "apps/teat/web/package.json",
+      "backend/app/package.json",
+      "backend/domains/ops/core/package.json",
+      "backend/domains/shared/package.json",
+      "packages/senatran-adapter/package.json",
+      "packages/ui/package.json"
+    ],
+    "TASK-0014": [
+      "docs/meta/adr/ADR-0015-stynx-1-3-1-angular-22-and-rait-role-catalogue.md",
+      "docs/meta/agents/orchestra/waves.md",
+      "docs/meta/knowledge-base/backlog.md",
+      "work/rounds/README.md",
+      "work/rounds/R-0021/reports/TASK-0014.md"
+    ]
+  },
+  "exclusive_resources": [
+    "pnpm-install",
+    "blueprint-generation",
+    "global-gates",
+    "disposable-database-per-name"
+  ],
+  "closure_disposition": "round-close-with-original-transferred-criteria-fail-no-seal",
+  "generated_paths_by_maestro": [
+    "backend/domains/ch/billing/package.json",
+    "backend/domains/ch/biometrics/package.json",
+    "backend/domains/ch/clinical-controls/package.json",
+    "backend/domains/ch/clinical-network/package.json",
+    "backend/domains/ch/clinical-reports/package.json",
+    "backend/domains/ch/encounters/package.json",
+    "backend/domains/ch/exams/package.json",
+    "backend/domains/ch/inconsistencies/package.json",
+    "backend/domains/ch/juntas/package.json",
+    "backend/domains/ch/operational-controls/package.json",
+    "backend/domains/ch/patients/package.json",
+    "backend/domains/ch/process-blocks/package.json",
+    "backend/domains/ch/restrictions/package.json",
+    "backend/domains/ch/retention/package.json",
+    "backend/domains/ch/scheduling/package.json",
+    "backend/domains/ch/telehealth/package.json",
+    "backend/domains/ch/toxicology/package.json",
+    "backend/domains/dashboard/crashes/package.json",
+    "backend/domains/dashboard/monitor/package.json",
+    "backend/domains/est/crash/package.json",
+    "backend/domains/inf/ait/package.json",
+    "backend/domains/inf/alcohol/package.json",
+    "backend/domains/inf/collection/package.json",
+    "backend/domains/inf/infraction/package.json",
+    "backend/domains/inf/measures/package.json",
+    "backend/domains/inf/normative/package.json",
+    "backend/domains/inf/notification/package.json",
+    "backend/domains/inf/rait-case/package.json",
+    "backend/domains/inf/rait-integration/package.json",
+    "backend/domains/inf/rait-org/package.json",
+    "backend/domains/inf/rait-session/package.json",
+    "backend/domains/inf/rait-worklist/package.json",
+    "backend/domains/inf/speed/package.json",
+    "backend/domains/integration/renaest-mirror/package.json",
+    "backend/domains/ops/agency/package.json",
+    "backend/domains/ops/evidence/package.json",
+    "backend/domains/ops/example/package.json",
+    "backend/domains/ops/field/package.json",
+    "backend/domains/ops/offline-sync/package.json",
+    "backend/domains/ops/parameter/package.json",
+    "backend/domains/ops/provisioning/package.json",
+    "backend/domains/ops/snapshots/package.json",
+    "backend/domains/portal/citizen-service/package.json",
+    "backend/domains/portal/complaints/package.json",
+    "backend/domains/portal/identity/package.json",
+    "backend/domains/portal/inbox/package.json",
+    "backend/domains/portal/projections/package.json",
+    "backend/domains/portal/requests/package.json"
+  ]
+}

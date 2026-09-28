@@ -1,0 +1,88 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0001",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/e2e/r21-trust-profiles.e2e.spec.ts",
+      "line": 51,
+      "claim": "C-01-04 requires the real composition and real readiness, and requires proof that no local provider is chosen as a fallback. Neither the new spec nor runtime-profiles.e2e.spec.ts provides this. The test-profile case compiles and inits the module but asserts nothing about the clinical services being off. The staging-like case (line 64) only checks the shape of AppModule.forRoot(). It then calls checkCapabilities() on a standalone `new PadesSigningHttpAdapter()`, not on the provider bound in the module or on DetranClinicalTrustReadiness (the 'clinical-trust' health indicator). production and local-sandbox are not covered for HTTP in clear. The matrix in TASK-0002.md marks C-01-04 PASS without this evidence.",
+      "fix": "The Inspector (TASK-0002, cycle 2) should compile AppModule.forRoot() with Test.createTestingModule and resolve PadesSigningHttpAdapter and DetranClinicalTrustReadiness from the module. Assert that the bound provider is the HTTP adapter, not a local or mock one. Assert that readiness is rejected or unhealthy for http:// and for missing URL/TOKEN in staging-like and production. For test/local-sandbox, assert the actual state of the clinical services (not bound, or readiness not positive), matching current behaviour. Then update the matrix with test names."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "backend/domains/ch/clinical-reports/tests/unit/r21-signature-characterization.spec.ts",
+      "line": 108,
+      "claim": "C-01-03 lists timeout explicitly, and C-01-01 requires proof that the secret does not leak in errors. The adapter uses AbortSignal.timeout(5_000/15_000) at pades-signing.http-adapter.ts:97/136. No new or existing test in clinical-reports exercises a timeout. No test asserts that the Bearer token is absent from the error message (HTTP 503, not configured, invalid receipt). Both parts are marked PASS on description alone.",
+      "fix": "Add two cases to the same file. (a) A fetch that rejects with an AbortError/TimeoutError in renderAndSign and in checkCapabilities, expecting rejection with no receipt and no positive readiness. (b) For each negative path, assert that the error message and serialization do not contain 'fixture-bearer-token'. Update the C-01-01 and C-01-03 rows."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "backend/app/src/r21-renach-characterization.spec.ts",
+      "line": 40,
+      "claim": "C-01-09 requires that a negative ACK keeps the error and the retry. The service (pec-renach-transmission.service.ts:196-238) persists status 'error', last_error=message, available_at=now()+15 minutes, and does not downgrade 'acked' to 'error'. It also rejects a reused event_id with a different payload (ConflictException). None of this is tested. The existing spec covers only positive ACK and duplicates (AC-PEC-009-3), and the new test only covers input validation before persistence.",
+      "fix": "Add cases with mocked query calls, following the pattern already used in pec-renach-transmission.spec.ts. (1) status ERROR with a message: assert the SQL/params for delivery_attempt status='error', last_error, and interval '15 minutes'. (2) ERROR ACK after acked: effectiveStatus stays 'acked'. (3) Same event_id with a different payload_sha256: ConflictException and no update. Map each case to C-01-09."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "backend/domains/ops/offline-sync/tests/integration/r21-offline-characterization.integration.spec.ts",
+      "line": 52,
+      "claim": "C-01-28 requires that a principal from another tenant can neither read nor change items, receipts, reservations or conflicts, plus RLS under role_app_backend. The new RLS test covers only ops.sync_queue_item. Existing HTTP coverage (teat-field-sync §5.13, sync-batch C-0002-30) covers only receipts via TEAT.TENANT_MISMATCH. There is no cross-tenant negative for sync_receipt, numbering reservations or sync_conflict under role_app_backend, nor for the reserve/cancel/block/close/reconcile or resolve routes with another tenant's ID. Tenant isolation is a criterion that cannot be waived.",
+      "fix": "The Inspector (TASK-0003, cycle 2) should extend the same spec. Seed tenant B with owner (reservation, receipt, conflict). Under tenant A with role_app_backend, SELECT returns 0 rows and UPDATE has rowCount 0 for each table, and B preserves the row. Add HTTP cases in r21-offline-sync.e2e.spec.ts for a tenant-B reservation/conflict ID (the current code/status, without inventing any). Update the matrix with test names."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0021/reports/TASK-0003.md",
+      "line": 34,
+      "claim": "The criterion→proof matrix points only to files, not test names, although the contract requires links to specific cases. C-01-21 ('item key and device_batch_id are distinct identifiers') is mapped only to the new e2e. That e2e varies only device_batch_id under the same Idempotency-Key and does not characterize the distinction between item key and batch.",
+      "fix": "List the test name for each C-01-20…30 (for example sync-batch lines 992/1065/1094 for C-01-21/22/29). Add, or map, a case where the same item key goes into another batch or another Idempotency-Key and replays without a new effect."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/app/src/r21-renach-characterization.spec.ts",
+      "line": 28,
+      "claim": "C-01-08 says 'prove values and states'. The processing reclaim after 15 minutes is proven only by a substring of the mocked SQL, never against a real database.",
+      "fix": "Optionally add to r21-renach-characterization.integration.spec.ts a processing outbox row with dispatched_at older than 15 minutes, and one newer, claimed through the real SQL under role_app_backend."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "backend/app/tests/integration/r21-renach-characterization.integration.spec.ts",
+      "line": 95,
+      "claim": "C-01-10 proves RLS only on integration.outbox, with ad-hoc SQL. It does not cover integration.delivery_attempt or integration.inbox_receipt, which make up the RENACH path, and it does not use the service's withTenantContext.",
+      "fix": "Add cross-tenant negatives for delivery_attempt and inbox_receipt under role_app_backend, or record in the report why they are excluded."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0021/reports/UPSTREAM-ISSUES.md",
+      "line": 3,
+      "claim": "Nineteen issues were published in stynx-nyx/stynx. AUTHORIZATION.md and the OD registry say 'without writing to STYNX', and this report is not in TASK-0001's write_paths. The Owner's authorization exists only as a quote inside this report. Issues are not code, so this is no FAIL, but the traceability is weak.",
+      "fix": "Record a numbered addendum (A2) in AUTHORIZATION.md with the Owner's instruction and date, and assign the report to an explicit write path in execution.json."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0021/reports/TASK-0002.md",
+      "line": 27,
+      "claim": "The worker did not get an exit code from `pnpm typecheck`, and its command table does not reflect the full e2e list. Coverage exists only through the maestro's pnpm check (which includes typecheck) and task0002-e2e-fixed.log.",
+      "fix": "In CTG-0001-gates.md, state explicitly that typecheck was covered by ctg0001-check.log and that the full TASK-0002 e2e list is the one in task0002-e2e-fixed.log."
+    }
+  ],
+  "notes": [
+    "Verified: the current SHA-256 of the three new specs matches the final hashes in the TASK-0002 and TASK-0003 reports (fe00fece…, 7d3781a9…, 1fc5336d…).",
+    "Owner A1 decision: coherent across AUTHORIZATION, OD-R21-01…06, campaign A11, spec §8.1, R-0022 plan/maestro and execution.json. Migrations are transferred, criteria stay fail, and closing happens without a seal. No canonical contradiction was found. Normalizing the 76 UPS items to MUST is consistent with OD-S15-01 (U1–U15) plus A1 (SIG/OBX/OFS).",
+    "Boundaries: no production, DDL, manifest or lockfile changes. The seven specs match exactly the files allowed for TASK-0002/0003. The five TASK-0001 docs are in its write_paths.",
+    "Tests before pin: characterization is green on 1.3.1. pnpm check exited 0 and backend:test:ci exited 0. The SENATRAN mock used locally matches the senatran-mock job in ci.yml, so the first failure is correctly triaged as sensor-error.",
+    "Already covered by existing suites and accepted: C-01-02 (8 negatives), C-01-05/06 (RAIT.SIGNATURE_* codes in document-trust-batch/session-minutes), C-01-07 (AC-PEC-009-1, 007-4, kind mismatch), C-01-22/24/25/29 (sync-batch and teat-field-sync).",
+    "prompt-review-3 PASS is valid as the prompt gate. After the Inspector's corrections, rerun the focused suites, pnpm check and backend:test:ci, update the hashes and logs in the reports, and send a cycle-2 review limited to these items."
+  ]
+}
