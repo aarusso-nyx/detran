@@ -1,0 +1,87 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0021",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0021/contracts/CTG-0001.md",
+      "line": 126,
+      "claim": "The command `pnpm --filter @detran/shared test --passWithNoTests=false` always fails. `test` is a pnpm built-in command, so pnpm parses the flag itself and aborts with `ERROR Unknown option: 'passWithNoTests'`. I reproduced this in the worktree. The list in §4 is the fixed before/after list for C-02-12, so the 1.3.1 baseline can never be recorded with this command.",
+      "fix": "Change it to `pnpm --filter @detran/shared run test --passWithNoTests=false`. The form with `run` forwards the arguments to vitest; `pnpm --filter @detran/shared run test` gave 13 files and 430 tests passing. Use the same form in TASK-0002.md/json."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0021/prompts/TASK-0002.md",
+      "line": 81,
+      "claim": "The TASK-0002 acceptance commands (TASK-0002.md lines 81-88 and the same list in tasks/TASK-0002.json) differ from the list in CTG-0001 §4 (lines 125-129). (a) `--passWithNoTests=false` is missing from ch-clinical-reports, shared and app test:unit, even though every vitest config sets `passWithNoTests: true`, so an empty collection counts as green. (b) The e2e command runs only r21-trust-profiles and leaves out runtime-profiles.e2e.spec.ts and rait-case-commands.e2e.spec.ts, which the contract names as existing proof for C-01-04. (c) The integration command leaves out pec-pipeline-persistence. The Inspector therefore cannot prove green on the existing suites that the criteria map to, and after the pin the maestro would be repeating a list the worker never ran. TASK-0003.md line 88 and tasks/TASK-0003.json have the same gap: `ops-offline-sync test:integration` and `test:unit` run without `--passWithNoTests=false`.",
+      "fix": "Copy CTG-0001 §4 lines 125-129 exactly into the TASK-0002 prompt and JSON, and lines 130-132 into TASK-0003, with `--passWithNoTests=false` on every vitest command and `run test` for shared. Keep `pnpm typecheck`. Recompute sha256/pc_id in compositions.json."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0021/prompts/TASK-0002.md",
+      "line": 85,
+      "claim": "`pnpm --filter @detran/ch-juntas test` fails on the clean baseline. Its output is `Failed to resolve entry for package \"@detran/ch-clinical-reports\"` from `src/junta-signing.adapter.ts:2`, because there is no dist build and the juntas vitest config has no alias. No CI suite runs this command (it is not in backend:test:unit), and CTG-0001 line 119 forbids recompiling or installing to fix imports. The Inspector would therefore be blocked on an 'exit 0' criterion that has nothing to do with the characterization.",
+      "fix": "Either remove ch-juntas from the acceptance commands in TASK-0002.md/json (CTG-0001 §4 does not list it) and keep JuntaSigningAdapter covered through the clinical-reports suites, or add an explicit maestro prerequisite in the prompt and in the contract §4: `pnpm --filter @detran/ch-clinical-reports build` under lock before the baseline, repeated identically after the pin."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0021/prompts/TASK-0004.md",
+      "line": 11,
+      "claim": "The Engineer's closed reading list leaves out `work/rounds/R-0021/contracts/stynx-manifests.json`. CTG-0002 §3 (line 64) says that file is the source of the closed list: which 11 manifests are manual-source and which 48 come from blueprints:generate. The write path on line 32 ('Manifestos de fonte listados em contracts/CTG-0002.md') points to a contract that lists no paths. The prompt also does not say who runs `pnpm blueprints:generate`. That operation is the exclusive `blueprint-generation` resource in execution.json and a single regeneration checkpoint under README §4.13. The prompt also does not say which generated paths may appear in the diff.",
+      "fix": "Add `work/rounds/R-0021/contracts/stynx-manifests.json` to the reading list. In the write paths of TASK-0004.md and execution.json, replace the free-text item with 'the 11 manual-source paths from stynx-manifests.json'. State that the maestro runs `pnpm blueprints:generate` under the lock at the dependency-ready checkpoint (or explicitly grants the lock to the worker). State that the only generated diff allowed is the 48 generation paths in stynx-manifests.json; any other change is reported, not edited."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0021/execution.json",
+      "line": 34,
+      "claim": "Astra's preparation changed files that belong to no task's write_paths: work/campaigns/C-0002-stynx-upstream-spec.md (A1 addendum), docs/meta/knowledge-base/open-decisions-rait.md (OD-R21-01…06), work/campaigns/C-0002-consolidacao.md, and work/rounds/R-0022/{plan.md,prompts/00-maestro.md}. TASK-0001 (write_paths here and in TASK-0001.md lines 20-24) only covers contracts/inputs/report, even though its target_modules include MOD-upstream-spec and MOD-kb-open-decisions. The maestro is told to 'add somente caminhos da tarefa' (00-maestro.md:49). Following that rule, the upstream addendum and the canonical OD registry would be left out of the CTG-0001 PR, or would enter it with no role, review or evidence attributed. The upstream addendum is an A1 deliverable.",
+      "fix": "Add those five paths to the TASK-0001 write_paths in execution.json and to the 'Pode tocar' section of TASK-0001.md, record them in reports/TASK-0001.md as Architect/Astra deliverables, and state in 00-maestro.md (CTG-0001) that they go into the CTG-0001 PR and delivery-review. Update the TASK-0001 hash in compositions.json."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0021/contracts/CTG-0001.md",
+      "line": 73,
+      "claim": "C-01-10 requires 'o padrão database.tx sob role_app_backend do harness existente'. `database.tx` exists only in the offline harness, which is not in TASK-0002's reading list. The app integration specs use their own executor instead (`set local role role_app_backend` plus `set_config app.tenant_id`, as in pec-pipeline-persistence). TASK-0002 also does not read rait-case-commands.e2e.spec.ts, report-lifecycle.service.ts, encounter-closure.service.ts, or the vitest.config/package.json of clinical-reports and juntas that the contract cites.",
+      "fix": "Rewrite the reference as 'padrão executor de backend/app/tests/integration/pec-pipeline-persistence.integration.spec.ts' and add the missing files to the closed reading list of TASK-0002.md."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0021/prompts/TASK-0015.md",
+      "line": 33,
+      "claim": "The C-02-07 test (default cwd) will probably spawn with cwd set to the tmpdir fixture. From there, `--import tsx` resolves relative to the cwd and fails outside the repository. That would be a harness error, not the expected RED.",
+      "fix": "Tell the Inspector to pass the absolute path to tsx (`import.meta.resolve('tsx')` from the repository) in `--import`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0021/prompts/TASK-0004.md",
+      "line": 40,
+      "claim": "Removing dead dependencies (@stynx-nyx/audit in backend/app, 4 in boat/mobile) changes product manifests beyond the pin. The import search it requires is an open search, outside the closed reading list. CTG-0001 line 164 treats these dependencies as inventory only.",
+      "fix": "Either state that removal is optional and needs a specific closed search command (rg over the listed paths) plus green build/typecheck and a justification in the report, or keep the dependencies pinned at 1.4.0 and leave them as inventory for R-0022."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0021/tasks/TASK-0014.json",
+      "line": 13,
+      "claim": "target_modules includes MOD-upstream-spec, but the TASK-0014 write_paths do not include the upstream spec.",
+      "fix": "Remove MOD-upstream-spec from TASK-0014 or add the path along with the reason."
+    }
+  ],
+  "notes": [
+    "Reviewed with the rubric's constraints: the Owner A1 decisions (migrations moved to R-0022, notifications with OD-P40, close with `fail`, no seal, 4 cycles, 2.25M) were not treated as pending. The cancelled tasks were not held against the plan.",
+    "Checked and OK: the sha256 and pc_id of all 15 prompts match compositions.json; `prettier --check work/rounds/R-0021` passes; all tasks/*.json validate against law/schemas/task.schema.json, which is identical to the one installed with DEVAI 1.5.6.",
+    "Confirmed facts: the 59 manifests in stynx-manifests.json cover every tracked package.json that declares @stynx-nyx outside dist (48 generated, 11 manual; the only other matches are ng-package.json files, not manifests). generate.mjs:370-371 contains 1.3.1. Forwarding `--passWithNoTests=false` works through test:unit/test:e2e scripts and makes an empty collection fail. The baselines for clinical-reports test:unit (23), shared (430), ops-offline-sync test:unit (33) and app pec-renach (8) are green.",
+    "Dependencies in execution.json and locks are consistent: 0002 and 0003 use separate databases, 0015 runs before 0004, and 0014 runs after the active groups. The maestro correctly covers the exclusive backend:test:ci, the frozen open-PR branch, round close without seal, and transferred criteria as `fail`.",
+    "Low: 00-maestro.md:26 should say explicitly that the exclusive databases get DDL and seed (as prepare-legacy does) before the e2e runs of TASK-0002/0003.",
+    "After the fixes, recompute the TASK-0001/0002/0003/0004 hashes in compositions.json. Cycle 2 is limited to the items above."
+  ]
+}

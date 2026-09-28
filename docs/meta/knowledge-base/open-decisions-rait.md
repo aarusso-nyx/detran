@@ -390,3 +390,26 @@ Nota de implementacao A7: a fixture local tambem cria/reativa somente
 leituras do smoke passem pela tenancy/RLS normal. Isso nao amplia a decisao
 OD-R17-004: nenhuma role, grupo, permissao, policy, fixture canonica ou
 banco fora de `detran_local_stack` e alterado.
+
+## C-0002 — STYNX e escopo revisto de R-0021 (2026-09-27)
+
+Registro canônico das decisões já tomadas pelo **Owner**. A transcrição pelo Architect não
+reabre decisões. Fontes: plano aprovado nesta sessão; `work/rounds/R-0021/plan.md` e
+`AUTHORIZATION.md`; campanha C-0002 A11; especificação upstream §8.1/A1. As recomendações
+anteriores de R-0021/R-0022 são históricas quando divergirem destas decisões.
+
+| ID        | Questão                                           | Decisão do Owner e efeito                                                                                                                                                                                                                                                                       | Estado  |
+| --------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| OD-S15-01 | Escopo e consumo do STYNX 1.5.0                   | Decidida em 2026-09-26: U1–U15 obrigatórios; desenvolver/testar sobre RC publicada permitido, merge só na 1.5.0 final conforme; UPS-TEN-01 opção (b), middleware anterior aos guards/interceptors; UPS-TEN-02 rejeita Host × cabeçalho divergentes. Preservada; SIG/OBX/OFS confirmados por A1. | Fechada |
+| OD-R21-01 | Lacunas de assinatura na 1.4.0                    | Transferir a migração inteira para R-0022, aguardando suporte upstream; não mover contornos atrás de fachada em R-0021. UPS-SIG-01…04 MUST para a migração, com paridade provada.                                                                                                               | Fechada |
+| OD-R21-02 | Escopo da troca de outbox                         | Opção (b): transferir tudo para R-0022, inclusive despacho RENACH, log de eventos e ledger. Nenhuma troca parcial em R-0021; UPS-OBX-01…02 MUST para a migração.                                                                                                                                | Fechada |
+| OD-R21-03 | Adoção de notifications                           | Opção (b): registrar ausência de reimplementação local e adotar junto do produtor OD-P40. Sem módulo/DDL sem consumidor em R-0021; notificação legal continua domínio DETRAN.                                                                                                                   | Fechada |
+| OD-R21-04 | Compatibilidade e migração offline-sync           | Caracterizar e especificar requisitos em R-0021; transferir migração inteira para R-0022, incluindo itens antes atribuídos a R-0024. UPS-OFS-01…04 e compatibilidade da spec A1 MUST; ausência bloqueia migração, sem novos contornos.                                                          | Fechada |
+| OD-R21-05 | Conclusão com critérios transferidos              | Concluir o escopo revisto e emitir `round close`, sem `round seal`; preservar os critérios históricos das migrações como não cumpridos (`fail`) e o destino R-0022. Registrar a incompatibilidade conhecida do DEVAI 1.5.6 com selo de critérios `fail`, sem contornar alterando resultados.    | Fechada |
+| OD-R21-06 | Preparação, execução, revisões e orçamento R-0021 | Astra materializa os artefatos; após PASS do Opus 5.5 pela ponte, maestro em sessão limpa `gpt-6-sol`/`high`. Autoriza até quatro ciclos de revisão por item e até 2,25 milhões de tokens de entrada por janela, checkpoint em 1,8 milhão; demais gates permanecem.                             | Fechada |
+
+**Fronteira de autorização:** estas decisões não abrem R-0022, não autorizam alterações no STYNX
+e não afirmam que o upstream aceitou, publicou ou implementou os requisitos. A igualdade dos
+arquivos próprios de signature/outbox/offline-sync entre 1.4.0 e RC.2 está comprovada pelos
+artefatos e hashes da spec A1; RC.3 local não libera consumo. A conformidade futura será
+registrada a partir da publicação e das provas, sem reabrir OD-S15-01.

@@ -1,5 +1,7 @@
 # R-0022 — frente `stynx-sse-tenancy` (C-0002, ação 7c: pin 1.5.0, SSE com fonte única, tenancy sem _monkey-patch_, assinatura final)
 
+> **Adenda vigente A1 (2026-09-27), em §Adendas:** R-0022 recebe assinatura, outbox e offline-sync inteiras de R-0021; não pressupor migrações parciais. A transferência não autoriza o início desta rodada.
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26 pelo
 Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase C) e de
 `work/campaigns/C-0002-stynx-upstream-spec.md` (§3, §4, §6.11, §6.12). Reaproveita o rascunho da
@@ -199,6 +201,44 @@ OD-P30 (autenticação oportunista), OD-R21-01 (contornos de assinatura atrás d
 ## Triagem
 
 ## Adendas
+
+### A1 — transferências integrais de R-0021 (2026-09-27)
+
+Autoridade: plano revisto de R-0021 aprovado pelo Owner; OD-R21-01…06; campanha A11 e
+especificação upstream §8.1/A1. Esta adenda prevalece sobre as metas 3, 5 e 7, TASK-0004,
+TASK-0009, CTG-0006 e referências a contratos/fachadas de R-0021 ainda não produzidos.
+A tabela de tarefas e os critérios anteriores permanecem como histórico; esta rodada segue
+proposta, sem autorização de início por este registro.
+
+1. R-0021 entrega caracterização e pin/gate 1.4.0, com fechamento sem selo; **nenhuma** migração
+   de assinatura, despacho/outbox ou offline-sync é pressuposta. Para a abertura de R-0022,
+   conferir PRs, fechamento real e critérios transferidos, sem exigir nem alegar selo de R-0021.
+2. Receber as migrações **inteiras**: assinatura (incluindo composição e fachada), outbox
+   (despacho RENACH e log de eventos), offline-sync (deduplicação, numeração, lote, recibos,
+   aplicação transacional e conflitos). TASK-0009 deixa de ser simples remoção condicional de
+   contornos: deverá ser redecomposta em tríade para a migração completa. Outbox e offline
+   ganham grupos e tarefas próprios no futuro bootstrap, sem renumerar tarefas históricas.
+3. Antes de produzir prompts de implementação, Architect atualiza o DAG, fronteiras, locks,
+   estimativa de janelas e critérios; Inspector reaproveita e amplia a caracterização R-0021,
+   verde sobre 1.4.0 antes e sobre a release alvo depois. Nenhum Engineer remove mecanismo
+   genérico antes da prova dos requisitos UPS-SIG/OBX/OFS MUST da spec A1.
+4. A ausência de UPS-OBX-01 não libera novo mecanismo local de log/cursor pela antiga
+   OD-R22-01; bloqueia sua migração. O mapeamento fino do domínio para uma fonte SSE pública
+   pode permanecer, mas não substitui capacidade genérica ausente. Regra análoga vale para
+   assinatura e offline: checkpoint no CTG afetado, sem novo contorno. Grupos independentes
+   continuam conforme seus pré-requisitos comprovados.
+5. Pin: atualizar a fonte única `tools/stynx-version.json`, manifestos descobertos dinamicamente
+   e lockfile pelo maestro; o gerador e o verificador consomem essa fonte. Não voltar à lista
+   histórica fixa de 59 manifestos nem reintroduzir versão literal no gerador.
+6. OD-S15-01 continua válida: desenvolvimento/testes podem consumir RC publicada; merge exige
+   1.5.0 final e conformidade publicada. RC.2 mantém os arquivos próprios dos três pacotes
+   iguais a 1.4.0 (hashes na spec A1); RC.3 local não comprova conformidade.
+7. Leitura de entrada substituta: `work/rounds/R-0021/contracts/CTG-0001.md`, relatórios e
+   fechamento efetivos, spec §8.1/A1, ADR-0018 e ADR-0036. Não presumir existência de
+   `R-0021/contracts/CTG-0003.md` de migração cancelada nem de fachada já convertida.
+
+O encerramento de R-0021 sem selo não autoriza dispensa automática do selo ou de critérios de
+R-0022. A adoção de notificações continua vinculada ao produtor OD-P40, fora destas transferências.
 
 ## Bloqueios
 

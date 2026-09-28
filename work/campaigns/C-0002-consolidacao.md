@@ -287,3 +287,30 @@ Efeitos:
 - **R-0024:** adota U8–U15 sem exceção, incluindo a avaliação e a migração do gerador de blueprints
   para `stynx generate module`.
 - **S-1.5:** escopo máximo, com estimativa recalibrada no seu bootstrap.
+
+## 11. Adenda A11 — escopo revisto de R-0021 e transferências (2026-09-27)
+
+**Decisão do Owner:** plano de execução revisto aprovado nesta sessão; registro canônico em
+`docs/meta/knowledge-base/open-decisions-rait.md` §C-0002. Esta adenda prevalece sobre A5 e
+sobre as descrições históricas de ações 7a/7c que presumam migrações concluídas em R-0021.
+
+- **R-0021:** caracterização do comportamento atual, pin exato 1.4.0, gate dinâmico de versões e
+  adenda A1 da especificação upstream. Migrações de assinatura (OD-R21-01), outbox inteira,
+  incluindo despacho RENACH (OD-R21-02), e offline-sync inteira (OD-R21-04) passam a R-0022.
+- **R-0022:** recebe as três migrações integrais e seus testes de paridade. Não parte de fachada,
+  deduplicação ou despacho já migrados. Requisitos MUST da spec A1 ausentes bloqueiam o CTG
+  consumidor, sem novo contorno. Isso substitui a atribuição histórica de extras offline a R-0024.
+  Consumo de RC e merge só na 1.5.0 final continuam regidos por OD-S15-01.
+- **Notificações:** adoção de `StynxNotificationsModule` junto do produtor OD-P40 (OD-R21-03),
+  sem módulo ou DDL sem consumidor em R-0021.
+- **Fechamento R-0021:** emitir `round close`, preservando os critérios das migrações como não
+  cumpridos (`fail`); não emitir/apresentar selo de conclusão. A limitação conhecida do DEVAI
+  1.5.6 para selo com critérios `fail` é registrada, sem alterar resultados (OD-R21-05).
+- **Preparação e execução:** Astra materializa e revisa os artefatos; após PASS independente
+  do Opus 5.5 pela ponte, maestro em sessão limpa `gpt-6-sol`/`high`. Até quatro ciclos de revisão
+  por item e 2,25 milhões de tokens de entrada por janela, com checkpoint em 1,8 milhão
+  (OD-R21-06); demais gates e condições bloqueantes permanecem.
+
+Não abre R-0022 e não autoriza escrita, release ou execução no STYNX. A comparação publicada
+1.4.0 × RC.2 dos três pacotes está documentada com hashes na spec A1; RC.3 local não constitui
+prova de publicação. As decisões OD-S15-01 permanecem fechadas.

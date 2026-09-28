@@ -1,0 +1,7 @@
+# R-0021 prompt-review ciclo 2 — somente correções
+
+Papel Auditor; Opus 5.5; somente leitura. Leia reviews/prompt-review-1.json e confira cada achado contra os arquivos atuais. Autoridade Owner A1 inalterada. Não reabra texto inalterado salvo FAIL canônico, explicitando motivo de não descoberta anterior. Responda somente JSON {mode:"prompt-review",round:"R-0021",verdict:"PASS|REVIEW|FAIL",findings:[{severity:"high|low",item:1,file:"...",line:1,claim:"...",fix:"..."}],notes:[]}.
+
+Correções: H1 run test para shared; H2 listas CTG0001 §4 copiadas exatamente para TASK0002/0003 JSON e prompts, com false e typecheck; H3 juntas mantido com build clinical-reports explícito pelo maestro antes/depois; H4 inventory leitura,11paths manuais enumerados e geração48 exclusivamente maestro; H5 cinco docs atribuídos TASK0001/relatório/execution/maestroPR. Lows: executor SQL app e leituras faltantes incluídos; tsx URL absoluta no harness; dependências todas preservadas (encontrado import angular-i18n em boat-pages.ts); lock MOD-upstream-spec removido de TASK0014; DDL/seed antes de testes explicitado no maestro. Hashes atualizados após prettier.
+
+Arquivos: work/rounds/R-0021/contracts/CTG-0001.md, CTG-0002.md, stynx-manifests.json; execution.json; prompts/00-maestro.md e TASK0001/0002/0003/0004/0015 (nomes TASK-000n.md); tasks/*.json; compositions.json; reports/TASK-0001.md. Use os caminhos reais e faça checagens focais necessárias. Não rode gate global concorrente: baseline pnpm check está em andamento no mesmo checkout, em blueprints:check.

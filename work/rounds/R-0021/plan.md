@@ -184,14 +184,38 @@ Todos existem em `package.json` hoje, salvo `verify:stynx-pin` (entregável de T
 
 ## Decisões do maestro
 
+A1 (Owner, 2026-09-27): esta seção e AUTHORIZATION.md prevalecem sobre a proposta histórica acima. O escopo autorizado é CTG-0001 (inventário/caracterização/adenda), CTG-0002 (pin/gate) e CTG-0007 (documentação/fechamento). CTG-0003/0004/0005 transferidos integralmente a R-0022; CTG-0006 é decisão sem código. TASK-0005…0013 canceladas nesta rodada, nunca concluídas por inferência. TASK-0015 é o Inspector do verificador, antes de TASK-0004. TASK-0001 é materializada na preparação Astra. TASK-0014 depende dos grupos ativos, não das tarefas canceladas.
+
+Astra prepara; Sol `gpt-6-sol/high` orquestra após PASS independente. Até quatro ciclos de revisão/item; orçamento 2,25 M de entrada/janela, checkpoint 1,8 M. Critérios originais de migração ficam `fail` no closure. Fechamento sem selo expressamente aprovado. ADR-0036 é o alvo canônico do antigo ADR-0006-ops.
+
+O contrato fechado do pin é `contracts/CTG-0002.md`; o grafo adicional e as dependências múltiplas vivem em `execution.json` (o esquema TASK aceita apenas um `upstream_task_id`).
+
 ## Concorrência
+
+Base verificada: `e47a68014ffdd24e1f9da03c4fc9e1b78ecf381b`, R-0017 concluída (PRs #133/#143/#144/#145); nenhum PR aberto no bootstrap. Worktree gerenciada `/Users/aarusso/.codex/worktrees/stynx-canonical/detran`; branch `orchestra/stynx-canonical`. R-0020 tem checkout próprio; integrar avanços de main sem reescrever branch publicado.
+
+TASK-0002 e TASK-0003 têm arquivos distintos; testes com o mesmo banco são serializados. TASK-0015 pode trabalhar em paralelo em branch/worktree separado após congelamento do candidato CTG-0001, sem commits de CTG novo em PR aberto. Instalação, geração, banco e gates globais têm lock exclusivo. Máximo três workers, limitado pela capacidade real.
 
 ## Triagem
 
 ## Adendas
 
+### A1 — escopo e execução aprovados pelo Owner
+
+Ver AUTHORIZATION.md e contratos. Preservar integralmente as metas e critérios históricos; nenhuma migração transferida será marcada PASS. O pin 1.4.0 e suas provas permanecem exigidos. A caracterização HTTP de offline-sync usa o harness real do app (TEAT/BOAT), e os testes de integração permanecem no pacote offline; nenhuma dependência de teste nova será inventada. Prompt de referência anterior preservado em `inputs/00-maestro-before-A1.md`.
+
 ## Bloqueios
 
 ## Retomada
 
+Preparação Astra concluída e prompt-review-3 PASS aceito pela ponte (ciclo1 REVIEW, ciclo2 falha de formato). TASK0001 pre_merge; nenhuma implementação disparada pelo Astra. Handoff para Sol High com prompts/00-maestro.md e execution.json. Baseline em andamento pelo preparador, conforme reports/bootstrap.md; aguardar o resultado real antes de liberar Inspectors. Sol atualiza este checkpoint por grupo.
+
+Checkpoint Sol: baseline `pnpm check` exit 0 comprovado por `/tmp/r21-baseline.done` e `reports/baseline-check.log`. Head/base `e47a68014ffdd24e1f9da03c4fc9e1b78ecf381b`; `origin/main` igual. TASK-0001 permanece `pre_merge`. TASK-0002 e TASK-0003 despachadas em paralelo a Terra/medium com bancos PostGIS exclusivos `detran_r21_task2` e `detran_r21_task3`, após build clinical-reports exit 0. TASK-0015 ainda não despachada; CTG-0001 deve congelar o candidato antes. Nenhum PR R-0021 aberto, nenhum CI remoto desta rodada, último veredito prompt-review-3 PASS. Container ativo `detran-r21-postgis` (ID `a9abf78080db`); não há processo de longa duração iniciado pelo maestro fora dele. Próximos comandos: receber relatórios TASK-0002/0003, validar critérios e gates focais, executar gates globais e delivery-review CTG-0001.
+
+Checkpoint CTG-0001: TASK-0002 e TASK-0003 entregues por Terra/medium, com uma iteração focal cada (limpeza da fixture RENACH e negativo RLS inequívoco). Caracterização 1.3.1 verde; matrizes C-01 nos relatórios. `pnpm check` final exit 0; `pnpm backend:test:ci` exit 0 com mock SENATRAN da rodada (app e2e 37/37, upgrade 21/21); logs e triagem em `reports/CTG-0001-gates.md`. A primeira tentativa backend sem mock falhou como `sensor-error` e foi preservada. Base/HEAD ainda `e47a68014ffdd24e1f9da03c4fc9e1b78ecf381b`, sem PR ou CI remoto. Serviço mock vivo PID 96431, PostGIS container `a9abf78080db`; nenhum worker ativo. Próximos comandos: delivery-review CTG-0001 por Opus 5.5, correções se exigidas, commit/evidência e PR/RC exact-tree.
+
+Checkpoint CTG-0001, revisão 2: os quatro achados high foram corrigidos pelos Inspectors; Opus 5.5 retornou PASS em `reviews/delivery-review-CTG-0001-2.json`. Os gates repetidos na árvore do ciclo 2 têm exit 0: `reports/ctg0001-check-cycle2.log` e `reports/ctg0001-backend-ci-cycle2.log` (37 arquivos e2e/1.681 testes, upgrade 21/21). Dois low de metadados foram corrigidos no hash do relatório e em `execution.json`; os lows de granularidade de teste RENACH estão delimitados no relatório TASK-0002, sem alteração de asserções. `origin/main` avançou para `8e7c583211f3a622db8745720504abe48e73d74e` com oito commits de selo corretivo da R-0017; antes do PR, integrar via merge normal e revalidar o delta, com especial atenção a `open-decisions-rait.md` e à cadeia de provas. Mock PID 96431 e PostGIS `a9abf78080db` continuam exclusivos desta rodada. Próximos comandos: commit CTG-0001, merge de main, gates/review do delta, evidência, PR e RC exact-tree.
+
 ## Leitura
+
+Planejamento e preparação ancorados em `e47a68014ffdd24e1f9da03c4fc9e1b78ecf381b`: AGENTS/CODESTYLE, Constituição pinned e schemas task/closure, método/model-ladder/waves/templates/bridge, campanha e spec upstream, plano/maestro R-0021 e consumidor R-0022, manuais de papéis, steering §H, ODs, ADRs e código/testes listados nos contratos. Pacotes publicados 1.4.0 e RC2 inspecionados por tarball; detalhes/hashes em inputs publicados. Cada subagente declara no relatório suas fontes adicionais.

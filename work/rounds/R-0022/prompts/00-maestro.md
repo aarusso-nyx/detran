@@ -1,5 +1,7 @@
 # Prompt do maestro — orquestra `stynx-sse-tenancy` (rodada `R-0022`)
 
+> **Adenda de leitura A1 — 2026-09-27:** este prompt não inicia R-0022. Quando a rodada for autorizada, aplicar primeiro a adenda A1 de seu `plan.md` e a spec upstream §8.1; elas prevalecem sobre os pressupostos históricos abaixo.
+
 > Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `Anthropic — Claude Code com Opus 5.5`
 > (id exato do modelo confirmado com `claude --help` no bootstrap), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
@@ -267,3 +269,34 @@ ciclos de REVIEW e escaladas; gates executados com saída resumida (inclusive `b
 e depois); evidência (sequência e head da cadeia); OD tocadas; conformidade real da 1.5.0 (ids UPS
 consumidos e ausentes); o que ficou fora e por quê; consumo estimado (`budget.json`); ajustes que
 recomenda ao método (`orchestra/README.md`, `model-ladder.md`).
+
+## 11. Adenda A1 — entrada após o escopo revisto de R-0021 (2026-09-27)
+
+Antes do bootstrap, ler `work/rounds/R-0022/plan.md` §Adendas A1,
+`work/campaigns/C-0002-consolidacao.md` §11/A11 e
+`work/campaigns/C-0002-stynx-upstream-spec.md` §8.1/A1. A transferência foi aprovada pelo Owner,
+mas **não abre R-0022** nem autoriza ações no repositório STYNX.
+
+- Conferir os PRs, relatórios e fechamento reais de R-0021: caracterização, pin 1.4.0 e gate de
+  versões; migrações de assinatura, outbox e offline-sync inteiras transferidas, critérios
+  históricos não cumpridos e fechamento sem selo autorizado. Não exigir selo de R-0021 como
+  pré-requisito e não registrar migrações parciais como entregues.
+- Redecompor a assinatura (antiga TASK-0009/CTG-0006) e adicionar tríades de outbox e
+  offline-sync antes de revisar prompts. Registrar dependências com tenancy/SSE e locks de
+  app, armazenamento, testes, instalação e banco. Preservar ids históricos; tarefas novas
+  recebem ids seguintes livres no bootstrap. Recalibrar prazo/orçamento sem iniciar trabalho
+  antes da autorização da rodada.
+- Contratos partem dos artefatos publicados e dos testes de R-0021; não pressupor fachada,
+  despacho RENACH ou deduplicação já migrados, nem o contrato CTG-0003 cancelado de R-0021.
+  `contracts/CTG-0001.md`, relatórios e fechamento são a entrada real. A ADR de operações é
+  ADR-0036. O pin usa `tools/stynx-version.json` e descoberta dinâmica de manifestos.
+- UPS-SIG-01…04, UPS-OBX-01…02 e UPS-OFS-01…04, incluindo compatibilidade offline da spec A1,
+  são MUST para a migração consumidora. Item ausente bloqueia esse CTG; a antiga alternativa
+  de implementar novo contorno local não está autorizada. Preservar prova antes/depois com
+  RLS e HTTP reais, incluindo TEAT/BOAT, rollback e replay. Notificações aguardam OD-P40.
+- OD-S15-01 permanece fechada: RC publicada permite desenvolvimento/teste, nunca merge;
+  merge exige 1.5.0 final conforme. A RC.2 não altera os arquivos próprios dos três pacotes;
+  árvore local da RC.3 não vale como prova. Verificar a release efetivamente consumida.
+
+Esta adenda não muda os critérios de selo de R-0022 nem transfere a ela automaticamente o
+orçamento ampliado ou a autorização operacional concedidos a R-0021.

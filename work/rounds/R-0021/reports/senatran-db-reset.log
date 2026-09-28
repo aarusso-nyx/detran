@@ -1,0 +1,32 @@
+
+> senatran-mock@0.0.1 db:reset /Users/aarusso/.codex/worktrees/stynx-canonical/detran/senatran-mock
+> bash database/apply.sh --full --sample
+
+Dropping and recreating database 'senatran'…
+NOTICE:  database "senatran" does not exist, skipping
+  ddl/00-extensions.sql
+  ddl/01-schemas.sql
+  ddl/05-senatran-ref.sql
+  ddl/10-senatran-entities.sql
+  ddl/20-renach.sql
+  ddl/21-renainf.sql
+  ddl/22-audit.sql
+  ddl/23-renaest.sql
+  ddl/24-sne.sql
+  ddl/25-cdt.sql
+  ddl/26-detran.sql
+  ddl/30-mock.sql
+  ddl/90-contract-read.sql
+  ddl/91-contract-transactional.sql
+  ddl/92-comments.sql
+  seed/10-ref.sql
+  seed/20-read.sql
+  seed/30-mock.sql
+  seed/40-renach.sql
+  seed/50-renainf.sql
+  seed/60-audit.sql
+  seed/70-renaest.sql
+  seed/80-sne.sql
+  seed/85-cdt.sql
+  seed/88-detran.sql
+apply.sh: done (full=1 sample=1, db=senatran)

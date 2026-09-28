@@ -1,5 +1,7 @@
 # C-0002 — especificação upstream única para o STYNX 1.5.0 (rodada S-1.5)
 
+> **Leitura vigente — adenda A1 de 2026-09-27 (§8.1):** UPS-SIG-01…04, UPS-OBX-01…02 e UPS-OFS-01…04 confirmados como MUST para suas migrações integrais em R-0022. As seções anteriores preservam a proposta histórica; A1 prevalece nas divergências. Não constitui autorização ou prova de execução upstream.
+
 > **Adenda A3 da campanha (2026-09-26):** a migração de `dashCan` é feita em R-0024, não em R-0023.
 
 **Autoridade:** Architect do DETRAN (Constitution Art. 6). **Status:** proposta — C-0002 rev. 2,
@@ -359,3 +361,78 @@ do Owner quando mudar escopo ou nível. Sem adendas em 2026-09-26.
 
 O registro canônico da OD é `docs/meta/knowledge-base/open-decisions-rait.md` (seção C-0002), no PR
 de CTG-0001 de R-0021, que é a primeira rodada da campanha a consumir esta especificação.
+
+## 8.1. Adenda A1 — lacunas confirmadas por R-0021 (2026-09-27)
+
+**Papel:** Architect, Constituição Art. 7; autoridade por caminho no Art. 6.
+**Autoridade da mudança:** plano revisto de R-0021 aprovado pelo Owner nesta sessão;
+OD-R21-01, OD-R21-02 e OD-R21-04 no registro canônico. Esta adenda confirma requisitos de
+consumo, sem declarar aprovação, publicação ou implementação pelo STYNX. OD-S15-01 permanece
+fechada, inclusive consumo de RC para desenvolvimento e merge somente com 1.5.0 final.
+
+### Evidência e regra de consumo
+
+Comparação dos tarballs publicados 1.4.0 e 1.5.0-rc.2: os arquivos próprios `.js` e `.d.ts`
+sob `package/dist/<pacote>/` são idênticos byte a byte (signature: 34; outbox: 22;
+offline-sync: 20). O restante de `dist/` contém outros pacotes e não integra essa conclusão.
+A RC.2 não resolve as lacunas abaixo. Fonte local de uma RC posterior, inclusive RC.3,
+não comprova API publicada nem conformidade. Revalidar a release consumida na abertura de R-0022.
+
+| Pacote       | Versão     | SHA-256 do tarball                                                 |
+| ------------ | ---------- | ------------------------------------------------------------------ |
+| signature    | 1.4.0      | `207def517d26b754da911052de8eb62406f3d43140a5565725722d5d6cbed1eb` |
+| signature    | 1.5.0-rc.2 | `8209e1dd42ff23073d825fc5fa213078a9c9382e0f3be344c259df1134850607` |
+| outbox       | 1.4.0      | `0bf68d6dfc0977925ffe2fbca297c90fc783a5698952b410942fb50e66eb9da1` |
+| outbox       | 1.5.0-rc.2 | `6df718055ff04fd2708db71360ffc169a74f5060e1c5aa54586dc37857c5d356` |
+| offline-sync | 1.4.0      | `5d36d734da4551da626da5c03add852368035f506bc5e1145473a8c20bc89584` |
+| offline-sync | 1.5.0-rc.2 | `77a0076c3f5f22edee309a270c2137a02476040883f3148f8fcd140a172762af` |
+
+Todos os requisitos desta adenda são **MUST para o CTG consumidor em R-0022**, inclusive
+os antes SHOULD. Falta de API pública ou de comportamento equivalente bloqueia a migração
+afetada; não autoriza novo contorno, cópia do STYNX ou redução da caracterização. Adaptadores
+finos podem traduzir nomes e envelopes e aplicar regras de negócio DETRAN; não podem reconstruir
+o mecanismo genérico ausente. As migrações de assinatura, outbox e offline-sync são transferidas
+**inteiras**; R-0021 não deixa uma fachada já migrada, despacho já convertido ou deduplicação
+já substituída. Os critérios históricos transferidos permanecem não cumpridos em R-0021.
+
+### Requisitos confirmados e provas exigidas
+
+| ID         | Nível | Comportamento exigido e prova de paridade                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| UPS-SIG-01 | MUST  | Pedido e resultado expressam nível mínimo ADVANCED/QUALIFIED; resultado inferior, backend ausente ou evidência inválida falham fechados. Provar assinatura válida, inválida, indisponibilidade e matriz de perfis/configurações de ADR-0018, mantendo os negativos dos adapters clínicos e de juntas.                                                                                                                                     |
+| UPS-SIG-02 | MUST  | Prontidão verifica as capacidades exigidas pelo consumidor (PAdES, TSA, LTA, OCSP/CRL), com erro tipado e integração de health; capacidade ausente torna o serviço não pronto. Provar presença/ausência por capacidade e restrições dos perfis sem declarar backend simulado apto em produção.                                                                                                                                            |
+| UPS-SIG-03 | MUST  | Manifestos canônicos de atas de sessão e lote com evidência verificável por signatário, PAdES/certificado e instante real de assinatura; preservar vínculo documento–manifesto–signatário. Provar manifesto válido, adulterado, signatário/evidência ausente e falha de confiança; digest isolado ou instante época zero não satisfazem o requisito.                                                                                      |
+| UPS-SIG-04 | MUST  | Verificar evidência de retirada/revogação, preservando vínculo ao documento e autoria; prova válida aceita e evidência adulterada ou referente a outro documento recusa. Preservar resultados da porta `verifyWithdrawalEvidence`.                                                                                                                                                                                                        |
+| UPS-OBX-01 | MUST  | Oferecer append de eventos sem sobrescrever fatos distintos do mesmo agregado, deduplicação por `(tenant_id, idempotency_key)` e leitura ordenada por `(created_at, id)`, compatível com UPS-SSE-03. Provar dois eventos do mesmo agregado preservados, replay sem duplicata, cursor estável e isolamento entre tenants; distinguir log de eventos e fila de despacho.                                                                    |
+| UPS-OBX-02 | MUST  | Preservar despacho/ACK RENACH e ledger de tentativas com hashes de requisição/resposta e protocolo do provedor. Provar retry, resultado, ACK válido/inválido e vínculo da tentativa ao evento/tenant; migração de storage deve conservar pendências e trilha histórica, sem entrega duplicada ou perda de evento.                                                                                                                         |
+| UPS-OFS-01 | MUST  | Reservar, cancelar, bloquear, fechar, reconciliar/liquidar e consultar consumo de numeração mantendo transições, números consumidos, ausência de sobreposição e TTL resolvido no catálogo do tenant/órgão (`teat.numbering.reservation_ttl_hours`), não substituído por 24 h fixas. Provar concorrência com banco real, expiração e isolamento de tenant; identidade do agente é distinta do ator autenticado quando o protocolo permite. |
+| UPS-OFS-02 | MUST  | Persistir/consultar recibos e preservar idempotência de item por tenant+chave+hash e identidade do lote por tenant/dispositivo/device_batch_id, sequência e conjunto de chaves declaradas. Provar replay do ACK perdido sem novo efeito, divergência de contexto 409, sequência repetida 409, lacuna 422, integridade divergente com recibo rejeitado/conflito e mesmos envelopes públicos.                                               |
+| UPS-OFS-03 | MUST  | Porta de aplicação de item ao domínio na mesma transação de efeito, consumo, recibo e evento. Preservar TEAT e BOAT, rejeição por item e processamento parcial previsto; falha interna reverte o conjunto atômico do item. Provar rollback real, repetição sem efeito duplicado e ausência de leitura/escrita cross-tenant.                                                                                                               |
+| UPS-OFS-04 | MUST  | Detector configurável de concorrência por janela, agente e dispositivos, com exceção por handoff autorizado e resolução de conflitos equivalente. Preservar as ações e transições de resolução atuais, sem equiparar mecanicamente `device-wins`/`server-wins` às operações DETRAN. Provar suspeita nos dois atos afetados, handoff, janela ausente/desligada, resolução permitida/proibida e isolamento.                                 |
+
+### Compatibilidade offline vinculante (UPS-OFS-01…04)
+
+- Preservar rotas, status HTTP, envelopes e códigos públicos existentes; a caracterização R-0021
+  será a prova antes/depois, incluindo HTTP real de TEAT e BOAT. O tenant provém do contexto
+  confiável; campos enviados pelo cliente não o substituem. Preservar `agent_id` de negócio e
+  `actorId` auditável sem assumir igualdade; associação/autorização continuam verificadas pelo app.
+- Lotes legados sem `batch_sequence` continuam aceitos; itens sem `idempotency_key` usam a
+  chave sintética existente e ficam `received` com `TEAT.SYNC_LEGACY_ITEM_NOT_APPLIED`, sem
+  aplicar ao domínio. A plataforma precisa representar esse estado, não inventar chaves para
+  aplicar automaticamente o legado.
+- A entrada atual aceita `items` com ao menos um item sem máximo de 100 no schema. O limite fixo
+  de 100 da 1.4.0 não pode rejeitar lotes hoje válidos; oferecer configuração compatível e provar
+  lote com mais de 100 itens. Manter limites já definidos pelo contrato público para strings,
+  hashes, UUIDs e numeração; novos limites exigem decisão do Owner, não tradução silenciosa.
+- Operações de faixa, resolução e lote preservam seus efeitos e recibos; disponibilidade de
+  método com nome semelhante não é equivalência semântica. Provar replay de lote fechado e
+  divergência do conjunto declarado, conflitos de hash, consulta de recibos e consumo.
+- TTL e janela de concorrência são dados do catálogo e podem variar por escopo. A porta upstream
+  deve permitir resolução por operação com relógio testável, não exigir configuração global
+  fixa nem calcular novos valores de negócio. Preservar a política existente para parâmetro ausente.
+
+**Fontes locais verificadas:** `backend/domains/ops/offline-sync/src/handwritten/` (especialmente
+`submit-batch.command.ts`, `submit-batch.spec.ts`, `reserve-numbering.command.ts`,
+`settle-numbering.command.ts`), contratos e testes citados no inventário de R-0021, ADR-0018,
+ADR-0036 e `backend/database/ddl/04-integration-storage.sql`. O nome dos símbolos upstream
+continua proposto: a tabela §7 só será preenchida com release, API e testes efetivamente publicados.
