@@ -8,14 +8,17 @@ ADR-0006 (shared Angular UI kit); does not alter ADR-0001…0011 or ADR-0014.
 
 ## Context
 
-The repository pins `@stynx-nyx/*@1.1.1`, Angular `21.2.x` (peer `>=20.3 <22`
-in `@detran/ui`) and `@aarusso-nyx/devai@1.4.5`. The frontend specification
+At the original decision on 2026-09-12, the repository pinned
+`@stynx-nyx/*@1.1.1`, Angular `21.2.x` (peer `>=20.3 <22` in `@detran/ui`)
+and `@aarusso-nyx/devai@1.4.5`. WP-0 migrated the workspace to STYNX 1.3.1
+and Angular 22 on 2026-09-13. R-0021 now fixes the STYNX pin at **1.4.0**;
+Angular 22 remains unchanged. The current DEVAI pin is **1.5.6** under
+ADR-0028; R-0021 did not change it. The 1.4.5 pin above is historical. The frontend specification
 of the RAIT console (`docs/framework/arch/rait-web-frontend.md`) was written
-against that substrate. Before the console is built by a multi-agent
-orchestration, the Owner decided to adopt the latest STYNX release so that the
-build targets one platform version for its whole lifetime.
+against the adopted substrate.
 
-Facts established on 2026-09-12 against the private registry:
+Historical facts established on 2026-09-12 against the private registry
+(before WP-0 and the R-0021 pin amendment):
 
 | Package family              | 1.1.1 (pinned)     | 1.3.1 (`latest`)                               |
 | --------------------------- | ------------------ | ---------------------------------------------- |
@@ -24,15 +27,16 @@ Facts established on 2026-09-12 against the private registry:
 | DEVAI pinned by STYNX 1.3.1 | —                  | `@aarusso-nyx/devai@1.4.5` (same as here)      |
 | TypeScript in STYNX 1.3.1   | —                  | `^6.0.3` (same as this workspace)              |
 
-Every STYNX symbol imported by this repository (`provideStynxDefaults`,
+The original compatibility review found every then-imported STYNX symbol
+(`provideStynxDefaults`,
 `provideStynxAuth`, `StynxAngularAuthModuleOptions`,
 `StynxToastContainerComponent`, `CognitoTokenVerifier`,
 `getPrincipalFromRequest`, `Principal`, `AuditEventEnvelope`,
 `generateRequestId`, `RequestContext`, `Database`, `Transaction`,
 `TxOptions`, `StynxHealthModule`, `StynxLoggingModule`, `StynxStorageModule`,
-`IntegrationContext`, `StynxI18nModule`) is still exported by the 1.3.1
-typings. The only breaking edge is Angular 21 → 22 for `@detran/ui` and every
-frontend app. STYNX 1.3.1 also documents the canonical error envelope
+`IntegrationContext`, `StynxI18nModule`) exported by the 1.3.1
+typings. The only breaking edge at that review was Angular 21 → 22 for
+`@detran/ui` and every frontend app. STYNX 1.3.1 also documented the canonical error envelope
 (`StynxError`: `code`, `status`, `messageKey`, `context`) that the RAIT error
 catalogue adopts.
 
@@ -43,17 +47,15 @@ infraction lifecycle vocabulary of `WF-INF-003` existed only in Markdown.
 
 ## Decision
 
-1. **Platform target.** The DETRAN suite targets STYNX **1.3.1** for backend
-   and frontend packages, Angular **22.x** (the STYNX 1.3.1 peer range) and
-   DEVAI **1.4.5** (unchanged, the version the STYNX 1.3.1 workspace itself
-   pins). `docs/framework/arch/rait-web-frontend.md` §1 is rewritten against
-   this target. The workspace pins migrate in one dedicated Engineer change
-   (work package WP-0 of `docs/framework/arch/rait-build-pack.md`): bump every
-   `@stynx-nyx/*` pin to `1.3.1`, `@detran/ui` peer range to `>=22 <23` with
-   Angular/ng-packagr 22 dev pins, refresh `pnpm-lock.yaml`, run `pnpm check`,
-   `pnpm backend:test:ci` and `pnpm --filter @detran/ui test`. Until that
-   change merges, `package.json` files still resolve 1.1.1; `AGENTS.md`,
-   `README.md` and `docs/start` state both the target and the current pin.
+1. **Platform target.** The DETRAN suite pins STYNX **1.4.0** for backend
+   and frontend packages, Angular **22.x** (the STYNX 1.3.1/1.4.0 peer range) and
+   DEVAI **1.5.6** (adopted separately by ADR-0028; the historical WP-0 workspace
+   pinned 1.4.5). `docs/framework/arch/rait-web-frontend.md` §1 is rewritten against
+   this target. The original migration to STYNX 1.3.1 was executed as the
+   dedicated Engineer change (work package WP-0 of
+   `docs/framework/arch/rait-build-pack.md`); its historical scope and result
+   are recorded below. The R-0021 pin amendment to 1.4.0 is separately recorded
+   in the pin amendment below.
 2. **RAIT role family.** Ten codes join `DETRAN_ROLES`: `rait-analyst`,
    `rait-coordinator`, `rait-secretary`, `rait-signing-authority`,
    `rait-central-authority`, `rait-rapporteur`, `rait-chair`, `rait-manager`,
@@ -98,3 +100,13 @@ infraction lifecycle vocabulary of `WF-INF-003` existed only in Markdown.
   require RLS on them; they are read-only for `role_app_backend`.
 
 **Migration record.** WP-0 executed on 2026-09-13 on branch `build/stynx-1-3-1` (Owner decision, steering H.41): every `@stynx-nyx/*` pin 1.1.1 → 1.3.1 (14 manifests + blueprint generator), `@detran/ui` to Angular 22.1.6 / ng-packagr 22.1.1 / TypeScript 6.0.3 with peer `>=22.0.0 <23`, `@stynx-nyx/feature-flags` added to the backend app (ADR-0019). Adjustments found are recorded in `docs/framework/arch/wp0-stynx-1-3-1-migration.md` §7.
+
+**Pin amendment — R-0021 (2026-09-28).** CTG-0002 fixed the canonical STYNX
+version at 1.4.0 using `tools/stynx-version.json`, the pin verifier, and the
+blueprint generator. Across 59 source manifests, 158 `@stynx-nyx/*`
+declarations moved from 1.3.1 to 1.4.0 (48 generated manifests and 11 manual
+manifests); required checks, backend CI, build, and RLS smoke are recorded in
+`work/rounds/R-0021/reports/CTG-0002-gates.md`. This amendment records the pin
+and verification only. Signature, outbox, and offline-sync transfers remain
+for R-0022; notifications wait for producer OD-P40. It does not claim those
+migrations or a round closure.

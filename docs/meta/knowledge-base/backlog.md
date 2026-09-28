@@ -1,5 +1,10 @@
 # Research backlog (steering queue)
 
+## Handoff R-0021 para R-0022 (2026-09-28)
+
+- [ ] **Sensor CI stack smoke — R-0022:** jobs remotos `108792483206` (candidato) e `108793701832` (`main` STYNX 1.3.1) terminaram `stack:smoke` com exit 1, embora a reprodução isolada do SHA `2bc62e7a30270ac5c312656906e0465766811f2a` tenha passado 42/42. Primeiro reter e publicar o sumário de linhas do workflow para identificar o target que falhou; a triagem não expõe a linha/target e não autoriza alterar testes antes disso. Fonte: `work/rounds/R-0021/reports/CTG-0002-stack-smoke-triage.md` (added 2026-09-28).
+- [ ] **Migrações STYNX transferidas — R-0022:** assinatura, outbox (incluindo despacho RENACH) e offline-sync aguardam suporte upstream compatível; preservar A1 e os requisitos originais ainda não cumpridos. Inventariar dependências STYNX sem import em R-0022. Notificações aguardam o produtor de OD-P40; não montar o módulo sem ele. Fonte: `work/rounds/R-0021/contracts/CTG-0001.md`, `AUTHORIZATION.md` e `work/campaigns/C-0002-stynx-upstream-spec.md` (added 2026-09-28).
+
 > **Pendências consolidadas vivem em [`open-issues.md`](./open-issues.md)** (72 itens, tipados e
 > priorizados, exportáveis para issues com `_meta/issues-export.py`). Este arquivo continua sendo
 > o diário das rodadas; o registro é a lista de trabalho.

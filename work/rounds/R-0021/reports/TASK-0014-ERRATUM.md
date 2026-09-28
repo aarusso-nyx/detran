@@ -1,0 +1,3 @@
+# TASK-0014 — errata do Architect após review CTG-0007 ciclo 1
+
+O relatório verbatim do worker TASK-0014 afirma na lista de arquivos e na primeira linha da matriz que DEVAI 1.4.5 permanece no pin atual. Essa afirmação é incorreta. DEVAI 1.4.5 era o pin histórico da decisão WP-0; o pin atual deste repositório é `@aarusso-nyx/devai@1.5.6` em `package.json`, adotado separadamente por ADR-0028 e mantido durante R-0021. A emenda de ADR-0015 foi corrigida para declarar esse estado. O relatório original do worker é preservado verbatim; esta errata é a interpretação canônica do maestro para os dois trechos, sem alterar o resultado dos gates nem o escopo A1.
