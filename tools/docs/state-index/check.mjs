@@ -794,7 +794,12 @@ export function checkStateIndex({ root, config }) {
           const data = JSON.parse(
             fs.readFileSync(path.join(root, relPath), 'utf8'),
           );
-          return { relPath, id: data.id, roundId: data.round_id };
+          return {
+            relPath,
+            id: data.id,
+            roundId: data.round_id,
+            supersedes: data.supersedes,
+          };
         })
     : [];
 
@@ -832,8 +837,11 @@ export function checkStateIndex({ root, config }) {
     roundRowByRound.get(row.round).push(row);
   }
   const pcById = new Map(pcFiles.map((p) => [p.id, p]));
+  const pcsByRound = new Map();
 
   for (const pc of pcFiles) {
+    if (!pcsByRound.has(pc.roundId)) pcsByRound.set(pc.roundId, []);
+    pcsByRound.get(pc.roundId).push(pc);
     const rows = roundRowByRound.get(pc.roundId) ?? [];
     if (rows.length === 0) {
       findings.push({
@@ -844,12 +852,78 @@ export function checkStateIndex({ root, config }) {
       continue;
     }
     for (const row of rows) {
-      if (row.estado !== 'fechada' || row.pc !== pc.id) {
+      if (row.estado !== 'fechada') {
         findings.push({
           id: 'C-01-18',
           file: roundsReadmeRel,
           line: row.line,
-          message: `linha de ${pc.roundId} deve ter Estado fechada e PC ${pc.id}`,
+          message: `linha de ${pc.roundId} deve ter Estado fechada`,
+        });
+      }
+    }
+  }
+
+  for (const [roundId, pcs] of pcsByRound) {
+    const successorIds = new Set();
+    for (const pc of pcs) {
+      if (pc.supersedes === undefined) continue;
+      const predecessor = pcById.get(pc.supersedes);
+      if (!predecessor) {
+        findings.push({
+          id: 'C-01-18',
+          file: pc.relPath,
+          message: `predecessor ${pc.supersedes} ausente para ${pc.id}`,
+        });
+      } else if (predecessor.roundId !== roundId) {
+        findings.push({
+          id: 'C-01-18',
+          file: pc.relPath,
+          message: `${pc.id} supersede PC de outra rodada: ${pc.supersedes}`,
+        });
+      } else {
+        successorIds.add(pc.supersedes);
+      }
+    }
+
+    const visited = new Set();
+    let cycle = false;
+    for (const pc of pcs) {
+      const path = new Set();
+      let current = pc;
+      while (current && !visited.has(current.id)) {
+        if (path.has(current.id)) {
+          cycle = true;
+          break;
+        }
+        path.add(current.id);
+        const predecessor = pcById.get(current.supersedes);
+        current = predecessor?.roundId === roundId ? predecessor : undefined;
+      }
+      for (const id of path) visited.add(id);
+    }
+    if (cycle) {
+      findings.push({
+        id: 'C-01-18',
+        file: pcs[0].relPath,
+        message: `ciclo de supersessão entre PCs de ${roundId}`,
+      });
+    }
+
+    const terminals = pcs.filter((pc) => !successorIds.has(pc.id));
+    if (terminals.length !== 1) {
+      findings.push({
+        id: 'C-01-18',
+        file: roundsReadmeRel,
+        message: `${roundId} exige terminal único; encontrados ${terminals.length} PCs terminais`,
+      });
+    }
+    for (const row of roundRowByRound.get(roundId) ?? []) {
+      if (terminals.length === 1 && row.pc !== terminals[0].id) {
+        findings.push({
+          id: 'C-01-18',
+          file: roundsReadmeRel,
+          line: row.line,
+          message: `linha de ${roundId} deve apontar ao PC terminal ${terminals[0].id}`,
         });
       }
     }
