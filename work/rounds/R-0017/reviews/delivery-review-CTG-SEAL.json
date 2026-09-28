@@ -1,0 +1,58 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "tools/devai/render-rounds-index.mjs",
+      "line": 268,
+      "claim": "The check that decides whether the script runs as the entry point builds its URL with `new URL(`file://${invokedPath}`)`. That breaks when the path contains '#', '?' or '%', and also when the path goes through a symlink (import.meta.url is the real path, but argv[1] is not). In those cases main() never runs, and `pnpm verify:rounds-index` exits 0 without comparing anything. The gate fails open. `tools/docs/state-index/check.mjs:1182` already uses `pathToFileURL(process.argv[1]).href`.",
+      "fix": "Import `pathToFileURL` (or use `fileURLToPath(import.meta.url) === realpathSync(process.argv[1])`) and use the same idiom as check.mjs so the gate cannot pass silently."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "tools/devai/tests/render-rounds-index.test.mjs",
+      "line": 1,
+      "claim": "The suite covers idempotence, filename/id mismatch and cycles. It has no negative case for `--check` against a stale or missing index, which is exactly what `verify:rounds-index` protects in `pnpm check`. It also has no renderer cases for cross-round links, two terminals, a missing predecessor or unreadable JSON. The acceptance section of CTG-SEAL only asks for these on the combined suite, and they are covered only on the state-index side.",
+      "fix": "Add tests where `--check` exits non-zero after changing one byte of the index or deleting it, and add the missing supersession negatives on the renderer side."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "law/README.md",
+      "line": 1,
+      "claim": "`law/README.md` lists every subdirectory of the corpus (constitution, invariants, trace, glossary, schemas, policy, adr) but does not mention the new `law/register/`. `verify:law-corpus` passes, but the Architect's normative index is now incomplete.",
+      "fix": "Add a line pointing to `register/DECISIONS.md` (D-1/D-2, R-0017 annex, append-only)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "law/register/DECISIONS.md",
+      "line": 9,
+      "claim": "All 18 PCs use D-1/D-2. The register now gives those IDs general meaning for every round, but only R-0017 has an annex. D-2 also adds a generic rule (\"só emite o PC após merge, CI verde e PASS da outra família\"). That goes a little beyond item 3 of SEAL-AUTHORIZATION, which only asked to tie D-1/D-2 to R-0017.",
+      "fix": "State explicitly that the annexes for the other rounds are pending and are not implied, or cite the source of the D-2 rule (for example AGENTS.md or the orchestra) so it does not read as a new norm."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": ".prettierignore",
+      "line": 16,
+      "claim": "`work/rounds/*/record.md` is taken out of format:check, but no continuous gate covers it. Only the one-time `round seal` validates it. A later hand edit of any record.md would go unnoticed. The index does have `verify:rounds-index`, so its exclusion is justified.",
+      "fix": "Record this as known, or have `verify:state-index` / a sensor check that each record.md's `phase_closure` matches the round's terminal PC."
+    }
+  ],
+  "notes": [
+    "PC-0017 has no diff against origin/main, its SHA-256 is 7618551a…c024 (matches the one reported), and it still contains 4 `\"verdict\": \"fail\"` entries.",
+    "PC-0018 is append-only with `supersedes: PC-0017`. The four historical criteria are `n/a` and cite A4–A6, the ODs and the preserved FAIL. None is promoted to pass. Its content is identical to `closure-seal-correction.json` apart from the fields the verb adds (id, closed_at).",
+    "The state-index gate works as intended. It requires `fechada` on every row of a round that has a PC. It fails on a missing predecessor, a cross-round link, a cycle (including self-supersession, which leaves zero terminals) and a fork (two terminals). It requires the row to point at the single terminal. C-01-19 and C-01-20 are unchanged. The existing test at line 1317 still covers a row pointing at the wrong PC.",
+    "The renderer runs `readdir` + `sort`, uses a numeric BigInt order and `\\n` line endings, fails on invalid id/round_id/supersedes, duplicates and missing arguments (confirmed: running with no arguments exits 1), and `--check` is byte-for-byte (exit 0 on the current tree).",
+    "close-state.jsonl has exactly one line, with PC-0018. The fields of record.md match record-input.json. The gates in record.md are exactly the PC-0018 keys, all `pass`.",
+    "The PC-0018 notes contain the typo 'sello' (should be 'selo'). The file is immutable after close, so do not re-emit it just for this. If you want, mention it in plan.md.",
+    "Untracked zero-byte temporary files `reviews/delivery-review-CTG-SEAL.json.formatted.XwSmVc` and `.raw.b2PcGH` must not go into the commit.",
+    "The waves.md row and the plan.md status say 'publicação por PR/CI pendente'. Update them in the post-merge observation.",
+    "The PASS depends on the full `pnpm check` going green, CI, and observing the exact merge SHA, all still pending."
+  ]
+}
