@@ -8,6 +8,46 @@
 > **Pré-condição:** o Owner autorizou `work/campaigns/C-0002-consolidacao.md` e
 > `work/rounds/R-0030/plan.md`. Sem essa autorização registrada, pare antes do §1 e reporte.
 
+## OD-C2-005 — fluxo contínuo (prevalece)
+
+Decisão do Owner de 2026-09-27 (`work/campaigns/C-0002-consolidacao.md` §12). Prevalece sobre
+qualquer trecho deste prompt que mande abrir PR, rodar CI remoto, gravar evidência, observar
+auditoria ou pedir delivery-review por CTG.
+
+- **Branch única** `orchestra/user-docs`. Faça um commit por tarefa ou por CTG, seguindo
+  `CODESTYLE.md` e a autoria por caminho (OD-R20-003). Só você commita, em série.
+- **Nada intermediário:** entre CTGs não há PR, CI remoto, merge em `main`,
+  `devai evidence record`, `devai audit observe`, `pnpm check` completo nem delivery-review.
+- **Mantidos:**
+  - os `acceptance_commands` de cada tarefa e a triagem por tarefa (§7);
+  - **um** ciclo de prompt-review (§5) no bootstrap, sobre `plan.md`, o anexo e os prompts de
+    TASK-0001…0018. Os prompts de manual levam as listas de rotas extraídas dos manifestos
+    disponíveis; diferença posterior de manifesto é `reference-gap` tratado na O4, não novo ciclo.
+- **Ondas.** Siga `plan.md` §Execução OD-C2-005 (O1…O10): até 3 workers simultâneos, com
+  fronteiras de escrita disjuntas.
+- **Push sem PR** ao fim de cada onda: `git push -u origin orchestra/user-docs`. Os pushes da O4,
+  O8 e O9 liberam R-0031 e R-0032 para empilhar.
+- **Abertura empilhada:**
+  - O1–O3 abrem cedo, sobre `origin/main`, sem esperar R-0025…R-0029.
+  - Da O4 em diante, integre com `git merge --no-edit origin/orchestra/<frente>` cada branch D
+    publicado que já tenha o seu `*.availability.json` (`rait-web-wiring`, `dashboard-wiring`,
+    `portal-delegations`, `boat-wiring`, `teat-web-wiring`), ou `origin/main` para as D já
+    mescladas.
+  - TASK-0004 só despacha com os 5 arquivos no branch.
+  - O PR final espera as 5 D em `main`, com STYNX 1.5.0 final.
+- **Sequência final,** executada uma vez:
+  1. `git fetch -q origin && git merge --no-edit origin/main`.
+  2. CI local: os comandos de `plan.md` §Execução OD-C2-005 (`pnpm check`, `docs:availability:check`,
+     `docs:user:check`, `docs:user:test`, `npm ci --prefix docs/site && pnpm docs:check`,
+     `docs:security`, `docs:kb:*`, `format:check`, `verify:*`, triplas de `@detran/portal-web`,
+     `@detran/rait-web` e `@detran/teat-mobile`, `pnpm backend:test:ci`) e
+     `pnpm devai:rc:prepare`, quando aplicável.
+  3. Uma delivery-review (§8) do diff inteiro.
+  4. Um PR (§9.3).
+  5. CI remoto e merge (§9.4–5).
+  6. Evidência única `evidence-R-0030.json` com os 5 CTGs, `audit observe` no SHA do merge,
+     `round close` e `round seal` (§9.2, §9.5–7).
+
 ## 0. Identidade e limites
 
 - Você é o maestro da frente **`user-docs`**: **ação 1 da campanha C-0002** (documentação de
@@ -23,15 +63,16 @@
   Família do reviewer: **a outra** (`codex`), modelo **Sol 6** (id da CLI confirmado com
   `codex --help`/`~/.codex/config.toml` no bootstrap e anotado em `plan.md` §Decisões do maestro),
   sempre pela ponte `tools/orchestra/bridge.sh`. Nunca inverta.
-- Orçamento desta janela de 5 h: **frente prevista para 4 janelas; nesta janela, planejamento de maestro + CTG-0001 (TASK-0001 e TASK-0003 Opus 5.5, TASK-0002 e TASK-0004 Sonnet 5) com até 2 prompt-reviews e 1 delivery-review ≈ 700 k tokens de entrada; ao atingir 80 % (≈ 560 k) grave checkpoint e pare**. Contabilize em
+- Orçamento desta janela de 5 h: **frente prevista para 4 janelas; nesta janela, planejamento de maestro + CTG-0001 (TASK-0001 e TASK-0003 Opus 5.5, TASK-0002 e TASK-0004 Sonnet 5) com 1 ciclo de prompt-review (até 2 rodadas de REVIEW; delivery-review só no fim, OD-C2-005) ≈ 700 k tokens de entrada; ao atingir 80 % (≈ 560 k) grave checkpoint e pare**. Contabilize em
   `work/rounds/R-0030/budget.json` (obrigatório; uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare — sem
   dispensa implícita.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
-- Concorrência (regra de `waves.md`): esta frente **só abre** com R-0025, R-0026, R-0027, R-0028 e
-  R-0029 mesclados em `main` (confira `ls docs/framework/arch/availability/` → 5 arquivos da fase D;
-  falta de algum → pare e reporte). O que depende de upstream é o **merge de cada grupo acoplado**:
-  **CTG-0001 (convenção, esquema, gate de disponibilidade, manifesto TEAT mobile): R-0024 em `main` (para `routeSources` e shell); CTG-0002 (site pt-BR, glossário): R-0019 `law-corpus` em `main` (`law/glossary/`); CTG-0003 (manuais, FAQ, gate de cobertura) e CTG-0004 (ajuda contextual): nenhum upstream além dos anteriores desta rodada; CTG-0005 (documentação): nenhum. R-0031 `pec-web` pode estar aberta em paralelo: ela depende do seu CTG-0001 e CTG-0003 para o manual PEC e empilha o CTG de Portal sobre o seu CTG-0004 (ambas tocam `apps/portal/web`) — registre em `plan.md` §Concorrência e não toque `apps/pec/web` nem os arquivos `pec-*`. Locks partilhados com outras frentes: `package.json` (scripts), `docs/framework/arch/parameter-catalogue.md`, `docs/meta/knowledge-base/open-issues.md`, `waves.md` — integre `origin/main` por merge antes de cada PR**. No bootstrap, registre em `plan.md`
+- Concorrência (regra de `waves.md` e OD-C2-005): o **PR final** desta frente só abre com R-0025,
+  R-0026, R-0027, R-0028 e R-0029 mesclados em `main`; a frente **abre cedo** (O1–O3) e empilha os
+  branches D publicados a partir da O4 (confira `ls docs/framework/arch/availability/` → 5 arquivos
+  da fase D antes de TASK-0004; falta de algum → pare e reporte). Por grupo, vale a presença no branch:
+  **CTG-0001 (convenção, esquema, gate de disponibilidade, manifesto TEAT mobile): R-0024 em `main` (para `routeSources` e shell); CTG-0002 (site pt-BR, glossário): R-0019 `law-corpus` em `main` (`law/glossary/`); CTG-0003 (manuais, FAQ, gate de cobertura) e CTG-0004 (ajuda contextual): nenhum upstream além dos anteriores desta rodada; CTG-0005 (documentação): nenhum. R-0031 `pec-web` e R-0032 `portal-pec` podem estar abertas em paralelo: dependem de o seu CTG-0001 e CTG-0003 existirem no branch publicado para o manual PEC, e R-0032 empilha o CTG de telas do Portal sobre o seu CTG-0004 (ambas tocam `apps/portal/web`) — registre em `plan.md` §Concorrência e não toque `apps/pec/web` nem os arquivos `pec-*`. Locks partilhados com outras frentes: `package.json` (scripts), `docs/framework/arch/parameter-catalogue.md`, `docs/meta/knowledge-base/open-issues.md`, `waves.md` — integre `origin/main` por merge antes do PR final**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -116,7 +157,7 @@ depois de o upstream estar em `main`; um branch empilhado pode ser enviado
 (`git push -u origin orchestra/user-docs`) sem PR para que outras frentes empilhem sobre ele.
 
 **Avanços do `main` durante a rodada.** No início de cada janela, em cada checkpoint (§7) e antes
-de cada PR (§9): `git fetch -q origin` e `git log --oneline HEAD..origin/main`; se houver commits
+do PR final (§9): `git fetch -q origin` e `git log --oneline HEAD..origin/main`; se houver commits
 novos, use `git rebase origin/main` somente se o branch nunca foi publicado. Caso contrário, use
 `git merge --no-edit origin/main`. Nunca use `--force`, `--force-with-lease` ou equivalente. Depois
 da integração, rode de novo os gates do grupo. Ao resolver conflitos: arquivo **gerado** → nunca
@@ -192,7 +233,7 @@ critérios de aceitação (comandos + resultado), proibições, entrega (formato
 ## 5. Revisão dos prompts (reviewer, outra família)
 
 Monte `reviews/prompt-review-<n>.md` com `docs/meta/agents/orchestra/reviewer-prompt.template.md`
-em modo `prompt-review`, anexando `plan.md`, o anexo e todos os `prompts/*.md` do lote. Invoque:
+em modo `prompt-review`, anexando `plan.md`, o anexo e os `prompts/*.md` de todas as tarefas (ciclo único, OD-C2-005). Invoque:
 
 ```bash
 tools/orchestra/bridge.sh codex <id-Sol-6> work/rounds/R-0030/reviews/prompt-review-1.md work/rounds/R-0030/reviews/prompt-review-1.json "/Volumes/Thiamat II/stech/detran-worktrees/user-docs"
@@ -213,8 +254,9 @@ Marque `status=in_progress` na tarefa; ao receber o relatório, grave-o em
 
 ## 7. Checkpoint por tarefa (Engineer) — hard gates
 
-Rode os `acceptance_commands` da tarefa e, ao fim de cada grupo acoplado, `pnpm check`,
-`pnpm docs:check` e os gates do grupo (`plan.md` §Checkpoints). Falha → triagem em uma linha
+Rode os `acceptance_commands` da tarefa e os checkpoints locais de `plan.md` §Checkpoints (b)–(d).
+`pnpm check` completo, `pnpm docs:check` e os tiers de teste rodam uma vez, na sequência final
+(§OD-C2-005). Falha → triagem em uma linha
 (`plant-bug | sensor-error | policy-issue | reference-gap`) em `plan.md` §Triagem → 1 nova
 tentativa com o achado no prompt → se falhar, nível acima da mesma família → se falhar,
 `escalated`. Nunca ajuste um teste para passar; nunca edite arquivo gerado; nunca afrouxe uma
@@ -222,29 +264,33 @@ regra R/U do gate para o corpus passar — rota sem manual é escrita, não isen
 
 ## 8. Revisão da entrega (reviewer, outra família)
 
-Para cada grupo acoplado concluído: `git diff --stat` + diff completo + relatórios + critérios em
-`reviews/delivery-review-<ctg>.md` (modo `delivery-review`) → ponte → veredito. Para os manuais,
-anexe a saída de `pnpm docs:user:check` e uma amostra de 10 rotas por perfil com o texto e a
-evidência de código. `PASS` libera o commit; `REVIEW` volta ao worker responsável (máximo 2
-ciclos); `FAIL` → `escalated`.
+Uma vez, no fim da rodada (OD-C2-005), depois do CI local: `git diff --stat origin/main...HEAD` +
+diff completo + relatórios + critérios em `reviews/delivery-review-R-0030.md` (modo
+`delivery-review`) → ponte → veredito. Para os manuais, anexe a saída de `pnpm docs:user:check` e
+uma amostra de 10 rotas por perfil com o texto e a evidência de código. `PASS` libera o PR;
+`REVIEW` → correções restritas aos itens apontados, pelo worker responsável (máximo 2 ciclos);
+`FAIL` → `escalated`.
 
 ## 9. Commit, evidência, PR, merge, fechamento (Engineer; Architect no fechamento)
 
 1. `git add` só dos caminhos das tarefas (mais `reports/`); commit por `CODESTYLE.md`
    (`<type>(<scope>): …`, corpo com ADR/OD citados, papel declarado, trailer de atribuição da
-   sessão). Um PR por CTG.
-2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
+   sessão). Commits por CTG na branch única; um PR no fim (OD-C2-005).
+2. Evidência — só na publicação final, depois do merge (OD-C2-005): escreva `evidence-R-0030.json`
+   com todos os CTGs (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0030 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human` e
    confirme que a nova linha de `record/proofs/work/generic/R-0030.jsonl` tem âncora em
    `record/proofs/chain.json`. Commit "chore(devai): …".
-3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
+3. PR único, depois do CI local e do `PASS` da delivery-review final: confirme que todo upstream
+   da rodada está em `main` e rebaseie (`git rebase origin/main`;
    somente se o branch nunca foi publicado); em branch publicado, use
    `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
    `git push -u origin orchestra/user-docs` e então `gh pr create --base main` com o corpo pelo
    `.github/pull_request_template.md` (papel, fontes, o que muda, verificação, OD tocadas,
-   fora de escopo, linha final de atribuição). No PR do CTG-0001, peça ao Owner decisão sobre
-   OD-UD-001 e OD-UD-002 (os padrões fail-closed valem até lá).
+   fora de escopo, linha final de atribuição), mais a tabela CTG → tarefas → commits e o
+   resultado dos gates. No PR, peça ao Owner decisão sobre OD-UD-001 e OD-UD-002 (os padrões
+   fail-closed valem até lá).
 4. Acompanhe o CI (`gh pr checks <n>`); falha de infraestrutura (pull do Docker, registro) →
    `gh run rerun <id> --failed`; falha de código → volte ao §7 na tarefa certa.
 5. **Merge** somente com CI verde **e** `PASS` do reviewer na última entrega:

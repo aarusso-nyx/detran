@@ -10,17 +10,98 @@ nível grande** pela ponte (`tools/orchestra/bridge.sh claude <id-opus-5.5> …`
 `claude --help`). Frente de **segurança**: reviewer grande em toda delivery-review, **sem waiver**.
 Worktree `/Volumes/Thiamat II/stech/detran-worktrees/authz-unification`, branch
 `orchestra/authz-unification`.
-**Concorrência:** o CTG-0001 pode abrir antes do merge de R-0022 (adenda A-C2-11 em §Adendas); os
-demais CTGs abrem com `origin/main` contendo o merge de **R-0022** (`orchestra/stynx-sse-tenancy`:
-pin `@stynx-nyx/*` = 1.5.0, SSE e tenancy canônicos). Upstream externo: **STYNX 1.5.0** com os itens
+**Concorrência:** a rodada inteira pode abrir **empilhada** em `origin/orchestra/stynx-sse-tenancy`
+(R-0022: pin `@stynx-nyx/*` = 1.5.0, SSE e tenancy canônicos); cada CTG começa quando a onda de
+R-0022 de que depende existir no branch publicado, e o PR final espera o merge de **R-0022**
+(OD-C2-005, que subsume a adenda A-C2-11 em §Adendas; §Execução OD-C2-005). Upstream externo: **STYNX 1.5.0** com os itens
 de autorização e sessão da especificação `work/campaigns/C-0002-stynx-upstream-spec.md` (S-1.5;
 §5: `UPS-AUTHZ-01…06` MUST, `UPS-AUTHZ-07` e `UPS-SES-01…03` SHOULD; regra de consumo em §7). R-0024 (`orchestra/stynx-dedup`)
 corre em paralelo **só** nos CTGs de frontend (locks disjuntos: esta rodada não toca `apps/` nem
-`packages/ui`); o CTG de backend de R-0024 espera o merge desta rodada. Lock partilhado com a fase D:
+`packages/ui`); o CTG de backend de R-0024 começa após o CTG-0003 e o CTG-0004 desta rodada
+existirem no branch publicado (empilhar); o PR final dela espera o merge desta. Lock partilhado com a fase D:
 `MOD-shared-policy` (R-0025 e R-0027 acrescentam chaves) — nenhuma rodada da fase D abre antes de
 R-0024, então não há disputa em C-0002.
-**Janelas previstas:** 2 (campanha §3); recalibradas no bootstrap. 1: bootstrap + CTG-0001 + CTG-0002;
+**Janelas previstas:** 2 (campanha §3); recalibradas em §Execução OD-C2-005. 1: bootstrap + CTG-0001 + CTG-0002;
 2: CTG-0003 + CTG-0004 (condicional) + CTG-0005 + fechamento.
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+Esta seção **prevalece sobre qualquer menção a um PR/merge/evidência/delivery-review por CTG neste
+plano** (C-0002 §12). A rodada corre na branch única `orchestra/authz-unification`, com um commit por
+tarefa ou por CTG. Entre CTGs não há PR, CI remoto, `devai evidence record`, `audit observe`,
+`pnpm check` completo nem delivery-review. Os critérios de aceitação não mudam; muda só o momento:
+
+- os `acceptance_commands` de cada tarefa rodam ao fim da tarefa. Entre eles, `pnpm verify:authz-matrix`
+  com diff vazio em TASK-0005, TASK-0007 e TASK-0008;
+- os critérios formulados "por CTG", "no fim de cada CTG" ou "no sha de cada merge" rodam **uma vez**,
+  na sequência final;
+- o `<sha-merge-CTG-0001>` do critério da matriz passa a ser o sha do **commit** do CTG-0001 na branch
+  ou, se houver, o da última regeneração atribuída a R-0022 (ver abaixo), registrado em §Concorrência
+  e em `evidence-R-0023.json`.
+
+**Ondas.** O DAG desta rodada é **linear**: cada tarefa depende da anterior, e as de código partilham
+`MOD-app-module`/`MOD-shared-policy`. Não há paralelismo interno sem violar dependência. O ganho vem
+de três fontes: a ausência de ciclos intermediários, o empilhamento sobre R-0022 e os CTGs de
+frontend de R-0024 correndo ao lado. Push sem PR ao fim de cada onda, porque R-0024 empilha sobre
+este branch.
+
+| Onda | CTGs / tarefas                              | Fronteiras de escrita                                                                                                                                                                                                                  | Depende de                                                                                                                                     |
+| ---- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| O1   | CTG-0001: TASK-0001 → TASK-0002             | `work/rounds/R-0023/contracts/`, `open-decisions-rait.md` §C-0002; depois `tools/authz/`, `docs/framework/arch/fixtures/authz-route-role-matrix.json`, `backend/app/tests/e2e/authz-route-matrix.e2e.spec.ts`, `package.json` (script) | bootstrap e prompt-review única com `PASS`; base: branch publicado de R-0022 (qualquer onda) ou `main` com R-0021                              |
+| O2   | CTG-0002: TASK-0003 → TASK-0004 → TASK-0005 | `contracts/CTG-0002.md`, `contracts/CTG-0003.md`, rascunho da ADR; `policy-provider.parity.spec.ts`; `backend/domains/shared/src/policy/`                                                                                              | O1 **commitada** (matriz antes de qualquer troca); O3 de R-0022 (pin 1.5.0 RC ou final, com `UPS-AUTHZ-01…06` nos `.d.ts`) no branch publicado |
+| O3   | CTG-0003: TASK-0006 → TASK-0007             | specs a migrar (lista de TASK-0006); `app.module.ts`, guardas de autorização, filtros SSE (`teat-stream.service.ts`, `dashboard-stream.service.ts`)                                                                                    | O2; O5 e O6 de R-0022 no branch publicado (R-0022 reescreve `app.module.ts` e os serviços SSE)                                                 |
+| O4   | CTG-0004: TASK-0008                         | `backend/app/src/detran-session-policy.ts` e as opções de `@stynx-nyx/sessions`                                                                                                                                                        | O3                                                                                                                                             |
+| O5   | CTG-0005: TASK-0009                         | ADR final, `docs/meta/adr/README.md`, `dashboard-build-pack.md`, `waves.md`, `backlog.md`                                                                                                                                              | O3 e O4                                                                                                                                        |
+
+**Abertura empilhada.**
+
+- **Base:** `origin/orchestra/stynx-sse-tenancy`
+  (`git worktree add -b orchestra/authz-unification "/Volumes/Thiamat II/stech/detran-worktrees/authz-unification" origin/orchestra/stynx-sse-tenancy`).
+  Se R-0022 ainda não tiver publicado o branch, a base é `origin/main` com R-0021, só para O1.
+  Revisões de R-0022 entram por `git merge --no-edit origin/orchestra/stynx-sse-tenancy`, nunca por
+  rebase de branch publicado.
+- **Pode ser feito antes do merge de R-0022:** a rodada inteira, O1…O5, sobre `1.5.0-rc.N` quando for
+  o caso (OD-S15-01), respeitando a coluna "Depende de".
+- **Espera o merge de R-0022:** só o PR final. Ele também exige a STYNX 1.5.0 **final** com os itens
+  de autorização e sessão e o pin `1.5.0` final (OD-S15-01).
+- **Matriz e integrações de R-0022 (regra de A-C2-11, mantida):** a matriz só é regenerada em modo
+  de caracterização, nunca por Engineer. Cada vez que uma revisão de R-0022, ou de `main` no fim,
+  entra na branch e muda a saída de `pnpm verify:authz-matrix`, o maestro regenera a matriz numa
+  worktree temporária destacada. Essa worktree fica no commit que fixou a matriz vigente, integrado
+  localmente ao upstream por merge não publicado, portanto sem as trocas desta rodada. O diff é
+  atribuído linha a linha a mudanças documentadas de R-0022 em §Concorrência. A matriz regenerada é
+  commitada na branch (`test(authz): …`, citando o sha de R-0022). Linha sem atribuição é regressão
+  de R-0022: triagem `plant-bug`, comunicada a R-0022, e bloqueio do PR final. Em seguida,
+  `pnpm verify:authz-matrix` no HEAD da rodada tem de sair com diff vazio.
+- **Caracterização commitada antes de qualquer troca:** o commit do CTG-0001 precede qualquer
+  commit de O2. Nenhum Engineer toca guarda antes dele.
+
+**Sequência final** (C-0002 §12, nesta ordem):
+
+1. Com R-0022 em `main`: `git fetch -q origin`, `git merge --no-edit origin/main` e a regeneração
+   atribuída da matriz sobre `main` (acima); se a rodada correu em RC, pin `1.5.0` final e
+   `pnpm install --frozen-lockfile`.
+2. CI local completo: `pnpm check`; `pnpm backend:test:ci`; `pnpm verify:authz-matrix` (diff vazio) e
+   `git diff --exit-code <sha da matriz> -- docs/framework/arch/fixtures/authz-route-role-matrix.json`;
+   `pnpm --filter @detran/shared test`; `pnpm --filter @detran/app test:e2e`; `pnpm backend:rls-smoke`;
+   `pnpm verify:rls-ddl`; `pnpm verify:stynx-pin`; `pnpm verify:role-catalog`; `pnpm verify:decorators`;
+   os `grep` dos critérios; `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check`;
+   `pnpm devai:rc:prepare` quando aplicável.
+3. **Uma** delivery-review (Opus 5.5, nível grande, pela ponte) sobre o diff inteiro, com o diff da
+   matriz e a saída de `verify:authz-matrix` anexados. Ampliação de acesso é `FAIL`, sem ciclo de
+   `REVIEW`; `REVIEW` pede correções restritas, no máximo 2 ciclos. Não há waiver.
+4. **Um** PR contra `main`, pelo template, com a tabela CTG → tarefas → commits e os gates.
+5. CI remoto; falha de código volta à tarefa responsável; merge só com CI verde e `PASS`.
+6. Publicação: `evidence-R-0023.json` com os 5 CTGs e a âncora (sha da matriz),
+   `devai evidence record` e `evidence verify`, `devai audit observe` no sha do merge,
+   `closure.json`, `devai round close`, `devai round seal`, `waves.md` e `backlog.md`. Avisar
+   R-0024 do merge.
+
+**Janelas recalibradas:** 2 → **≈ 2 de trabalho, ≈ ½–1 depois do merge de R-0022**. O DAG linear e
+o reviewer grande não encolhem o volume. O1 e O2 correm empilhadas enquanto R-0022 faz O4…O7, e O3…O5
+correm a partir do push de O6 de R-0022. Depois do merge de R-0022, resta a sequência final, que
+inclui a regeneração atribuída da matriz sobre `main`, a delivery-review grande e o CI. Se O5/O6 de
+R-0022 atrasarem, O3 espera; esse risco vem de R-0022, não do trabalho desta rodada.
 
 ## Decisões do Owner — OD-S15-01 (2026-09-26)
 
@@ -122,22 +203,22 @@ rodada:
 | TASK-0008 | Engineer             | engineer-backend    | Sol 6 / médio  | `MOD-app-session-policy`                                          | TASK-0007          | **condicional** a UPS-SES publicado: `detran-session-policy.ts` substituído pelas opções de `@stynx-nyx/sessions`; `detran-session-policy.spec.ts` verde sem edição (ou migrado por Inspector em adenda se só o ponto de entrada mudar); sem publicação → `cancelled` com registro e item no backlog da próxima minor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | TASK-0009 | Architect (transcr.) | transcriber-docs    | Luna / médio   | `MOD-docs`, `MOD-adr`                                             | TASK-0007 (e 0008) | ADR final; `docs/meta/adr/README.md`; `dashboard-build-pack.md` linha Política; `waves.md` §Histórico; `backlog.md` (OD-D16-015 aponta para R-0024; item de autorização fechado); lacunas não publicadas registradas para a próxima minor do STYNX                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
-CTG-0001 = 0001 → 0002 (caracterização; **mescla antes de qualquer troca**). CTG-0002 = 0003 → 0004 →
+CTG-0001 = 0001 → 0002 (caracterização; **commitada antes de qualquer troca**). CTG-0002 = 0003 → 0004 →
 0005 (dados + provider, sem mudança de guarda). CTG-0003 = 0006 → 0007 (troca do guarda). CTG-0004 =
-0008 (condicional). CTG-0005 = 0009. **Um PR por CTG**, em ordem; o CTG seguinte nasce empilhado no
-anterior ainda não mesclado, nunca com commits novos no branch de um PR aberto.
+0008 (condicional). CTG-0005 = 0009. Commits por CTG na branch única; um PR no fim (OD-C2-005).
 
 **Tríade e ordem de prova.** A matriz de TASK-0002 é o artefato de aceitação da rodada: gerada no
 HEAD pós-R-0022, commitada no CTG-0001 e **nunca** regenerada por Engineer para "atualizar". Em
-CTG-0002 e CTG-0003 o gate é `pnpm verify:authz-matrix` com diff vazio contra o arquivo mesclado.
+CTG-0002 e CTG-0003 o gate é `pnpm verify:authz-matrix` com diff vazio contra o arquivo commitado no
+CTG-0001 (ou na última regeneração atribuída a R-0022, §Execução OD-C2-005).
 Contradição teste × contrato: adenda numerada do Architect antes de redespachar.
 
 **Checkpoints do maestro (Engineer):** (a) bootstrap — `node -e` sobre os `package.json` confirma
 `@stynx-nyx/*` = 1.5.0 e leitura dos `.d.ts` de `@stynx-nyx/backend` (authorization) e `sessions`;
 item MUST de autorização ausente (`UPS-AUTHZ-01…06`) → `checkpoint` e parada pela regra de consumo
 da especificação (§7, OD-R22-02: sem shim novo, sem cópia local do código STYNX); (b) após TASK-0002, script novo
-no `package.json` → `pnpm install --frozen-lockfile` sem diff de lockfile; (c) fim de cada CTG,
-`pnpm check` e `pnpm backend:test:ci`.
+no `package.json` → `pnpm install --frozen-lockfile` sem diff de lockfile; (c) `pnpm check` e
+`pnpm backend:test:ci` uma vez, na sequência final (OD-C2-005).
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -204,11 +285,11 @@ Todos existem hoje, salvo `verify:authz-matrix`, entregável de TASK-0002 (gate 
   aparece no closure como **não cumprido**; proibido reproduzir as substituições de R-0013/R-0014 e o
   waiver SQL2 de R-0007.
 - **ODs no registro canônico:** OD-R23-01 em `docs/meta/knowledge-base/open-decisions-rait.md` §C-0002
-  no PR do CTG-0001; OD só em `contracts/` não conta.
+  no commit do CTG-0001 (entra no PR final); OD só em `contracts/` não conta.
 - **Âncora da prova:** `audit observe` no sha exato do merge; `round close` e `round seal`; se outra
   rodada fechar antes, aceitar a cadeia de `main`, observar o HEAD integrado e repetir `round close`.
 - **Orçamento:** `budget.json` desde o bootstrap; a 80 % da janela, checkpoint e parada.
-- **Caracterização antes de troca:** nenhum Engineer toca guarda antes do merge do CTG-0001; o
+- **Caracterização antes de troca:** nenhum Engineer toca guarda antes do commit do CTG-0001; o
   Engineer nunca edita teste nem a matriz.
 - Testes cobrem presença **e** ausência (R-0011, R-0016); listas de leitura dos workers fechadas,
   incluindo `policy-routes.e2e.spec.ts` como referência (`reference-gap` de R-0010).
@@ -252,6 +333,10 @@ caracterização antes de qualquer troca de guarda.
   1.5.0 final (OD-S15-01).
 - **Locks:** `MOD-authz-matrix`, `MOD-app-tests-authz` e `MOD-root-scripts` não são comuns com R-0022,
   exceto `package.json` na raiz (script do gerador), resolvido por merge.
+- **Subsumida por OD-C2-005 (2026-09-27):** a rodada inteira pode abrir empilhada, não só o CTG-0001.
+  Deixam de existir o PR e a delivery-review próprios do CTG-0001. Continuam valendo a regeneração
+  atribuída da matriz sobre `main` antes do PR final, em cada integração de R-0022, e a regra
+  "caracterização commitada antes de qualquer troca" dentro da branch (§Execução OD-C2-005).
 
 ## Bloqueios
 

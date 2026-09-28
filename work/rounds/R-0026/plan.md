@@ -10,13 +10,16 @@ Rastreio: #123 (reconciliação), #124 (L0 → L2), #96 (produtores RAIT, OD-D17
 `compositions.json` só nascem no bootstrap, depois da autorização.
 **Concorrência (upstreams da campanha):**
 
-- **Abertura:** R-0024 `stynx-dedup` mesclada (`docs/framework/arch/frontend-wiring-pattern.md`,
+- **Abertura:** R-0024 `stynx-dedup` publicada em `origin/orchestra/stynx-dedup` (abertura
+  empilhada, §Execução OD-C2-005; o PR final espera o merge em `main`) (`docs/framework/arch/frontend-wiring-pattern.md`,
   cliente de comando único, costura SSE e shell em `@detran/ui`); transitivamente R-0022 (SSE de
   fonte única, pin 1.5.0) e R-0023 (`StynxAuthorizationModule`; `policy.ts` como dados). Fase A e
   R-0020 em `main`.
 - **Locks compartilhados (C-0002 §3.5):** o CTG-0002, se criar chave em `policy.ts`, e o CTG-0003
-  (backend RAIT: `backend/domains/inf/rait-*`, `inf/deadlines`) são **serializados** com o CTG-0002
-  de R-0025 `rait-web-wiring` e com os CTGs backend de R-0027 `portal-delegations`. O CTG-0003
+  (backend RAIT: `backend/domains/inf/rait-*`, `inf/deadlines`) partilham o lock com o CTG-0002
+  de R-0025 `rait-web-wiring` e com os CTGs backend de R-0027 `portal-delegations`. Sob a OD-C2-005,
+  o lock não serializa PRs: a regra de convivência e a ordem de merge recomendada estão em
+  §Execução OD-C2-005. O CTG-0003
   interessa também a R-0027: `rait.decision.published` é consumido por
   `backend/app/src/portal-stream.service.ts`. Os demais CTGs correm livres (`apps/dashboard/web` e
   `backend/domains/dashboard/*` são exclusivos desta rodada).
@@ -25,6 +28,91 @@ Rastreio: #123 (reconciliação), #124 (L0 → L2), #96 (produtores RAIT, OD-D17
   Schema, §6 selos, §7 obrigações da fase D). Superfície desta rodada: `dashboard-web`.
 
 **Janelas previstas:** 4 (1 planejamento + CTG-0001; 1 CTG-0002 ∥ CTG-0003; 1–2 CTG-0004; CTG-0005 no fim).
+Recalibradas para ≈ 3 pela OD-C2-005 (ver §Execução OD-C2-005).
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+**Precedência.** Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre
+qualquer menção a um PR/merge/evidência/delivery-review por CTG neste plano**. A rodada corre numa
+branch única, `orchestra/dashboard-wiring`, com commits por tarefa ou por CTG. Entre CTGs não há PR,
+CI remoto, `devai evidence record`, `devai audit observe`, `pnpm check` completo nem
+delivery-review. Ficam mantidos os `acceptance_commands` de cada tarefa, os checkpoints (b)–(d) como
+gates de tarefa e **um** prompt-review no bootstrap. Os critérios de aceitação não mudam; muda só o
+momento em que rodam: no fim da rodada. Onde um critério cita "PR do CTG-x", "por CTG" ou "por
+merge", leia-se o PR final, a evidência única e o SHA do merge final.
+
+**Ondas.** Derivadas da coluna "Depende de" e dos locks da tabela de tarefas. No máximo 3 workers
+simultâneos. O maestro serializa os commits e faz push sem PR ao fim de cada onda.
+
+| Onda | CTGs / tarefas em paralelo                                                                                      | Fronteiras de escrita (disjuntas)                                                                                                                                                       | Dependência                                                                                         |
+| ---- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| O1   | CTG-0001: TASK-0001; depois TASK-0002 ∥ TASK-0003 ∥ TASK-0006; TASK-0009 entra na primeira vaga                 | `MOD-r26-{read,command}-map` → `MOD-dashboard-{build-pack,route-contract,error-catalog,i18n}` ∥ `MOD-r26-contract-ctg2` ∥ `MOD-r26-contract-ctg3` → `MOD-r26-contract-ctg4`             | TASK-0001 antes das demais                                                                          |
+| O2   | CTG-0002: TASK-0004 → TASK-0005 ∥ CTG-0003: TASK-0007 → TASK-0008 ∥ CTG-0004: TASK-0010 → TASK-0011 → TASK-0012 | `MOD-app-e2e-dashboard`, `MOD-dashboard-monitor(-tests)`, `MOD-contracts-dashboard` ∥ `MOD-inf-rait-{tests,backend}`, `MOD-inf-deadlines`, `MOD-dashboard-seed` ∥ `MOD-dashboard-web-*` | TASK-0004 e TASK-0007 partilham `MOD-dashboard-monitor-tests`: TASK-0007 começa depois de TASK-0004 |
+| O3   | CTG-0004 (fecho): TASK-0013 (smoke)                                                                             | `MOD-r26-stack-smoke` (nenhum código)                                                                                                                                                   | TASK-0012 e TASK-0008 commitadas; checkpoint (d)                                                    |
+| O4   | CTG-0005: TASK-0014 → TASK-0016 ∥ TASK-0015                                                                     | `MOD-availability-dashboard-web`, `MOD-availability-schema` → `MOD-dashboard-web-tests-availability` ∥ `MOD-dashboard-build-pack`, `MOD-docs-dashboard-arch`, `MOD-docs`                | TASK-0013 (`reports/TASK-0013.md`)                                                                  |
+
+O checkpoint (c) roda como gate de tarefa depois de TASK-0005 e depois de TASK-0008. As telas do
+CTG-0004 que usam rota nova do CTG-0002 esperam só o commit de TASK-0005 na branch.
+
+**Lock `MOD-shared-policy` partilhado na fase D (C-0002 §12).** O lock é partilhado entre o CTG-0003
+(produtores RAIT) e o CTG-0002, se criar chave. Também o usam o CTG-0002/0003 de R-0025 e o CTG-0003
+de R-0027 (delegações). Sob a OD-C2-005, ele deixa de serializar PRs por CTG. Regra de convivência:
+
+- cada rodada edita `backend/domains/shared/src/policy.ts` (e `backend/domains/inf/rait-*`) no seu
+  próprio branch, sem esperar as outras;
+- quem mesclar depois integra `origin/main` por merge, mantém os blocos das duas rodadas no formato
+  de dados de R-0023 e roda de novo `pnpm --filter @detran/shared test` e `policy-routes.e2e`
+  (`pnpm backend:test:e2e`);
+- ordem de merge final recomendada: **R-0025 → R-0026 → R-0027**. R-0026 mescla depois de R-0025,
+  cuja extensão de `policy-routes.e2e` a `inf:rait-*` passa a conferir as rotas RAIT tocadas aqui, e
+  antes de R-0027, que consome `rait.decision.published` em `portal-stream.service.ts`;
+- a ordem não bloqueia o desenvolvimento paralelo: quem ficar pronto antes mescla antes, e a outra
+  rodada aplica a mesma regra.
+
+**Abertura empilhada.** A rodada pode abrir e trabalhar sobre `origin/orchestra/stynx-dedup`
+(R-0024) assim que esse branch estiver publicado com `docs/framework/arch/frontend-wiring-pattern.md`.
+Novas revisões de R-0024 entram por `git merge --no-edit origin/orchestra/stynx-dedup`, nunca por
+rebase de branch publicado. O checkpoint (a) lê a base empilhada no lugar de `origin/main`, inclusive
+a versão de `@stynx-nyx/*` e a presença de `@stynx-nyx/jobs` (OD-R26-003). Só o **PR final** espera
+o merge de R-0024 em `main`, que exige R-0022 e R-0023. O requisito de STYNX 1.5.0 final chega por
+transitividade: R-0022 só mescla com 1.5.0 final (OD-S15-01). Se OD-R26-003 = (a) depender de
+`@stynx-nyx/jobs` do pin 1.5.0, a sequência final confere que o pin em `main` é o final, não um RC.
+
+**Sequência final** (C-0002 §12, na ordem):
+
+1. `git merge --no-edit origin/main`, com R-0024 (e, transitivamente, R-0022/R-0023) em `main`.
+   Conflito em `policy.ts` segue a regra de convivência acima. TASK-0014 regrava `measuredAt` e os
+   selos sobre o `main` integrado se a medição anterior tiver sido feita na base empilhada.
+2. CI local completo, com os comandos abaixo e os greps dos critérios 1, 2, 7, 9 e 13:
+   - `pnpm check`;
+   - `pnpm contracts:check`, `pnpm blueprints:check` e `pnpm contracts:test`;
+   - `pnpm --filter @detran/shared test`;
+   - `pnpm --filter @detran/dashboard-monitor test`;
+   - `pnpm backend:test:ci`;
+   - `pnpm backend:test:e2e` (`policy-routes.e2e`);
+   - `pnpm --filter @detran/app test:e2e`;
+   - `bash backend/database/seed.sh` duas vezes;
+   - `pnpm --filter @detran/dashboard-web typecheck`, `lint`, `test` e `build`;
+   - `pnpm verify:parameter-catalogue`;
+   - `pnpm docs:kb:check` e `pnpm docs:kb:publish-check`;
+   - `pnpm format:check`;
+   - `pnpm stack:start` + `pnpm stack:smoke`, com `reports/TASK-0013.md` refeito se o `main`
+     integrado mudou código tocado;
+   - `pnpm devai:rc:prepare`, quando aplicável.
+3. **Uma** delivery-review (Sol 6 pela ponte) sobre o diff inteiro. Com `REVIEW`, as correções se
+   limitam aos itens apontados, em no máximo 2 ciclos. Com `FAIL`, a rodada vai a `escalated`.
+4. **Um** PR contra `main`, com a tabela CTG → tarefas → commits e os gates.
+5. CI remoto. Falha de código volta à tarefa responsável. O merge só acontece com CI verde e `PASS`.
+6. Publicação final:
+   - `evidence-R-0026.json` com os 5 CTGs;
+   - `devai evidence record` + `evidence verify`;
+   - `devai audit observe` no SHA do merge;
+   - `closure.json`, `devai round close` + `round seal`;
+   - `waves.md` e `backlog.md` atualizados.
+
+**Janelas recalibradas:** 4 → **≈ 3**. Estimativa por onda: O1 ≈ 0,5; O2 ≈ 1–1,5, com os três CTGs
+em paralelo e CTG-0004 (10 módulos) no caminho crítico; O3 + O4 + sequência final ≈ 1. O ganho vem
+da remoção de 5 ciclos de PR/CI/evidência e da espera pelo lock partilhado.
 
 ## Decisões do Owner (2026-09-26)
 
@@ -117,13 +205,14 @@ Rastreio: #123 (reconciliação), #124 (L0 → L2), #96 (produtores RAIT, OD-D17
 | TASK-0015 | Architect (transcr.) | transcriber-docs    | Sonnet 5 / baixo | `MOD-dashboard-build-pack`, `MOD-docs-dashboard-arch`, `MOD-docs`                                                                                                                | TASK-0013                                 | Build pack §1/§2 (WP-D5 em L2, gates reais), `dashboard-frontends.md` §10, README do app, `backlog.md` (#123/#124/#96–#100 fechadas ou com OD), `waves.md` §Histórico                                                                                                                                                                                                                                                                                                             |
 
 - CTG-0001 = 0001 → 0002.
-- CTG-0002 = 0003 → 0004 → 0005 (serializado com R-0025/R-0027 **só** se tocar `MOD-shared-policy`).
-- CTG-0003 = 0006 → 0007 → 0008 (**lock compartilhado, serializado** com R-0025 CTG-0002 e R-0027).
+- CTG-0002 = 0003 → 0004 → 0005 (regra de convivência com R-0025/R-0027 **só** se tocar `MOD-shared-policy`).
+- CTG-0003 = 0006 → 0007 → 0008 (**lock compartilhado** com R-0025 CTG-0002 e R-0027; regra de
+  convivência de §Execução OD-C2-005, sem espera de PR).
   Se OD-R26-001 = (b), o CTG-0003 não existe: TASK-0002 registra a OD e o seed segue `connected=false`.
 - CTG-0004 = 0009 → 0010 → 0011 → 0012 → 0013.
 - CTG-0005 = 0014 → 0016, ∥ 0015.
 
-Um PR por CTG. TASK-0003, TASK-0006 e TASK-0009 podem correr em paralelo (locks disjuntos); no
+Commits por CTG na branch única; um PR no fim (OD-C2-005). TASK-0003, TASK-0006 e TASK-0009 podem correr em paralelo (locks disjuntos); no
 máximo três tarefas simultâneas.
 
 **Checkpoints do maestro (Engineer):**
@@ -205,8 +294,9 @@ as resolver, nunca por inferência.
   exibido como token, nunca calculado; divergência vira OD, não adaptação silenciosa.
 - **Passe global** (OD-D16-005/OD-D76): se R-0023 mantiver `'*'` para `GLOBAL_ADMIN_ROLES`, a matriz
   papel × camada muda; o Inspector declara a diferença, o Owner decide.
-- **Varredura de bandeira** é código novo no backend RAIT sob lock compartilhado: CTG-0003 espera a
-  vez e integra `origin/main` por merge; conflito em `policy.ts` mantém os dois blocos.
+- **Varredura de bandeira** é código novo no backend RAIT sob lock compartilhado: CTG-0003 avança no
+  branch próprio e, se R-0025 mesclar antes, a sequência final integra `origin/main` por merge;
+  conflito em `policy.ts` mantém os dois blocos.
 - **Seed** faz parte do CI: `connected=true` sem replay verde é proibido.
 - **Padrão de ligação ausente** (R-0024 não mesclada) → parada no checkpoint (a).
 - **Anexo de R-0030 ausente em `main`** → TASK-0014 espera; CTG-0005 não fecha sem ele.

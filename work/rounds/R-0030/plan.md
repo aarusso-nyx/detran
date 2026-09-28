@@ -8,17 +8,96 @@ ids exatos confirmados no bootstrap). Worktree
 `/Volumes/Thiamat II/stech/detran-worktrees/user-docs`, branch `orchestra/user-docs`. Nenhum
 `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap.
 Anexo normativo desta rodada, **antecipado para a fase D**: `availability-manifest.schema.md`.
-**Concorrência:** abre após o merge de **R-0025 `rait-web-wiring`, R-0026 `dashboard-wiring`,
-R-0027 `portal-delegations`, R-0028 `boat-wiring` e R-0029 `teat-web-wiring`** (os manuais
+**Concorrência:** o PR final espera o merge de **R-0025 `rait-web-wiring`, R-0026 `dashboard-wiring`,
+R-0027 `portal-delegations`, R-0028 `boat-wiring` e R-0029 `teat-web-wiring`**; a abertura é
+antecipada e o conteúdo empilhado conforme §Execução OD-C2-005 (os manuais
 descrevem o comportamento já ligado; o manifesto acumulado é o índice de cobertura). Também
 precisa em `main`: R-0017 `local-stack` (stack para conferir comportamento), R-0018 `index-state`
 (`.gitignore` de `reports/`, índices), R-0019 `law-corpus` (`law/glossary/`), R-0024
 `stynx-dedup` (shell único de `@detran/ui`: ponto de ajuda, se existir). **R-0031 `pec-web` pode
-abrir em paralelo** (locks disjuntos), mas o CTG de manual PEC e a linha PEC de
-`portal-web.availability.json` de R-0031 dependem do merge dos CTG-0001 e CTG-0003 desta rodada, e o
-CTG de Portal de R-0031 empilha sobre o CTG-0004 desta rodada (ambos tocam `apps/portal/web`).
+abrir em paralelo** (locks disjuntos), mas o CTG de manual PEC de R-0031 e a linha PEC de
+`portal-web.availability.json` (hoje de R-0032) dependem de os CTG-0001 e CTG-0003 desta rodada
+existirem no branch publicado (empilhar; o PR final deles espera o merge desta rodada), e o CTG de
+telas do Portal (hoje o CTG-0004 de R-0032) empilha sobre o CTG-0004 desta rodada (ambos tocam
+`apps/portal/web`).
 **Janelas previstas:** 4 (1 planejamento + CTG-0001/0002; 2 manuais; 1 ajuda contextual e
-fechamento).
+fechamento). Recalibradas para ≈ 3 em §Execução OD-C2-005.
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
+um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
+aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
+`acceptance_commands` de cada tarefa, que continuam sendo a definição de pronto do worker.
+
+**Ondas.** Branch única `orchestra/user-docs`, até 3 workers na mesma worktree. O maestro serializa
+os commits (um por tarefa ou por CTG) e faz push sem PR ao fim de cada onda.
+
+| Onda | Tarefas em paralelo (CTG)                                          | Fronteiras de escrita (disjuntas)                                                                                                                                                                            | Depende de                                                                   |
+| ---- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| O1   | TASK-0001 (CTG-0001)                                               | `docs/framework/arch/user-docs-convention.md`, `availability-manifest.schema.json`, `open-issues.md`, `work/rounds/R-0030/contracts/`                                                                        | bootstrap e prompt-review único                                              |
+| O2   | TASK-0002 (CTG-0001) ∥ TASK-0005 (CTG-0002) ∥ TASK-0006 (CTG-0002) | `tools/docs/user-docs/tests/**` ∥ `docs/site/{docusaurus.config.ts,sidebars.ts,scripts/sync-docs.mjs}`, `docs/_ia/*`, `docs/adopters/index.md`, `docs/roles/index.md` ∥ `docs/adopters/manuais/glossario.md` | TASK-0001                                                                    |
+| O3   | TASK-0003 (CTG-0001)                                               | `tools/docs/user-docs/check.mjs`, `package.json` (scripts)                                                                                                                                                   | TASK-0002                                                                    |
+| O4   | TASK-0004 (CTG-0001)                                               | `teat-mobile.availability.json` e campos `help`/`profiles`/`evidence` dos 5 arquivos da fase D                                                                                                               | TASK-0003; **os 5 manifestos da fase D no branch** (em `main` ou empilhados) |
+| O5   | TASK-0007 ∥ TASK-0008 ∥ TASK-0009 (CTG-0003)                       | `docs/adopters/manuais/{cidadao,colegiado-secretaria,agente-transito}/`                                                                                                                                      | TASK-0004, TASK-0005                                                         |
+| O6   | TASK-0010 ∥ TASK-0011 ∥ TASK-0012 (CTG-0003)                       | `docs/adopters/manuais/{operador,gestor,auditor-dpo,administrador}/`                                                                                                                                         | TASK-0007; TASK-0008; TASK-0009                                              |
+| O7   | TASK-0013 (CTG-0003)                                               | `docs/adopters/manuais/{index,faq}.md`                                                                                                                                                                       | TASK-0006, 0010, 0011, 0012                                                  |
+| O8   | TASK-0014 (CTG-0003)                                               | `package.json` (`docs:user:check` no `check`)                                                                                                                                                                | TASK-0013                                                                    |
+| O9   | TASK-0015 → TASK-0016 → TASK-0017 (CTG-0004), em série             | `contracts/CTG-0004.md` e `parameter-catalogue.md` → specs de ajuda nos 3 apps → implementação nos 3 apps e campos `help`                                                                                    | TASK-0014                                                                    |
+| O10  | TASK-0018 (CTG-0005)                                               | `waves.md`, `backlog.md`, `open-issues.md`, READMEs dos apps                                                                                                                                                 | TASK-0017                                                                    |
+
+Os pushes das ondas O4 (CTG-0001: convenção, esquema e gate) e O8 (CTG-0003: manuais e gate de
+cobertura) liberam R-0031 (CTG-0006) e R-0032 (CTG-0005) para empilhar em
+`origin/orchestra/user-docs`. O push da O9 (CTG-0004: ajuda contextual no Portal) libera o CTG-0004
+de R-0032.
+
+**Abertura empilhada.**
+
+- **Abertura antecipada.** O1–O3 (convenção, esquema, gate com fixtures, site pt-BR e glossário)
+  abrem sobre `origin/main` antes do merge das rodadas D. Basta ter R-0017, R-0018, R-0019 e R-0024
+  em `main`; R-0024 pode vir empilhado em `origin/orchestra/stynx-dedup`.
+- **Conteúdo.** Da O4 em diante, o maestro integra os branches publicados da fase D à medida que
+  cada um tiver o seu `*.availability.json`, com `git merge --no-edit origin/orchestra/<frente>`:
+  `rait-web-wiring`, `dashboard-wiring`, `portal-delegations`, `boat-wiring` e `teat-web-wiring`.
+  Rodada já mesclada entra por `origin/main`. TASK-0004 só despacha com os 5 arquivos no branch.
+- **O que espera o merge dos upstreams:** só o PR final. R-0025…R-0029 precisam estar em `main`,
+  com STYNX 1.5.0 **final** herdado de R-0022. Os gates `docs:*` são refeitos sobre `main`, porque
+  os manifestos das D podem mudar até o merge delas. Divergência volta à rodada dona como issue
+  (§Riscos).
+
+**Sequência final** (na ordem de C-0002 §12):
+
+1. `git fetch -q origin` e `git merge --no-edit origin/main`, com R-0025…R-0029 já em `main`.
+2. **CI local completo:**
+   - `pnpm check` (com `docs:availability:check`, `docs:user:test` e `docs:user:check` encadeados);
+   - `pnpm docs:availability:check`, `pnpm docs:user:check` e `pnpm docs:user:test`;
+   - `npm ci --prefix docs/site && pnpm docs:check` e `pnpm docs:security`;
+   - `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check`,
+     `pnpm verify:parameter-catalogue` e `pnpm verify:role-catalog`;
+   - `pnpm --filter @detran/portal-web lint|test|build`,
+     `pnpm --filter @detran/rait-web lint|test|build` e
+     `pnpm --filter @detran/teat-mobile lint|test|build`;
+   - `pnpm backend:test:ci` (inalterado);
+   - `pnpm devai:rc:prepare`, quando aplicável.
+3. **Uma delivery-review** (Sol 6) do diff inteiro (`origin/main...HEAD`), com a saída de
+   `docs:user:check` e a amostra de 10 rotas por perfil. `REVIEW` admite correções restritas aos
+   itens apontados, em no máximo 2 ciclos; `FAIL` → `escalated`.
+4. **Um PR** contra `main`, com o corpo pelo template, a tabela CTG → tarefas → commits e o
+   resultado dos gates. O pedido de decisão sobre OD-UD-001/002 vai neste PR.
+5. **CI remoto.** Falha de código volta à tarefa responsável. Merge só com CI verde e `PASS`.
+6. **Publicação final:**
+   - `evidence-R-0030.json` com os 5 CTGs, `devai evidence record` e `evidence verify`;
+   - `devai audit observe` no SHA do merge;
+   - `closure.json`, `devai round close` e `devai round seal`;
+   - `waves.md`, `work/rounds/README.md` e backlog.
+
+**Janelas recalibradas:** 4 → ≈ 3 de trabalho.
+
+- 1ª janela: bootstrap, prompt-review de TASK-0001…0018 e O1–O3, em paralelo às D.
+- 2ª janela: O4–O8 (manuais).
+- 3ª janela: O9–O10 e a sequência final.
+
+O calendário depende do merge da última D; a espera não está contada.
 
 ## Estado de partida (inspeção de 2026-09-25, `work/campaigns/C-0002-inspecao-2026-09-25/g-documentacao.md` §3, §7)
 
@@ -94,13 +173,14 @@ rota no manual sem rota no manifesto; **U4** todo texto de tela citado entre `«
 valor no catálogo pt-BR da superfície; **U5** página de manual sem `status` publicável ou sem
 `perfil` válido é erro.
 
-**CTGs (um PR por CTG):** CTG-0001 = 0001 → 0002 → 0003 → 0004 (convenção, esquema, gate de
+**CTGs (commits por CTG na branch única; um PR no fim — OD-C2-005):** CTG-0001 = 0001 → 0002 → 0003 → 0004 (convenção, esquema, gate de
 disponibilidade, manifesto TEAT mobile); CTG-0002 = 0005 ∥ 0006 (site pt-BR, glossário);
 CTG-0003 = 0007 ∥ 0008 ∥ 0009 → 0010 ∥ 0011 ∥ 0012 → 0013 → 0014 (manuais, FAQ, gate de cobertura;
-no máximo 3 workers simultâneos); CTG-0004 = 0015 → 0016 → 0017 (ajuda contextual); CTG-0005 = 0018. CTG-0002 nasce após o merge do CTG-0001 ou empilhado nele; idem os seguintes.
+no máximo 3 workers simultâneos); CTG-0004 = 0015 → 0016 → 0017 (ajuda contextual); CTG-0005 = 0018. Os CTGs seguintes correm na mesma branch, pelas ondas de §Execução OD-C2-005.
 
-**Checkpoints do maestro (Engineer):** (a) bootstrap: `ls docs/framework/arch/availability/` deve
-listar os 5 arquivos da fase D — falta de algum é bloqueio (§Bloqueios) com a rodada dona; (b) após
+**Checkpoints do maestro (Engineer):** (a) bootstrap: `ls docs/framework/arch/availability/` registra
+quais dos 5 arquivos da fase D já estão no branch; antes de TASK-0004 (onda O4) os 5 são
+obrigatórios (em `main` ou empilhados) — falta de algum é bloqueio (§Bloqueios) com a rodada dona; (b) após
 TASK-0005, `npm ci --prefix docs/site` e `pnpm docs:check`; (c) em cada lote de manuais, `pnpm
 docs:user:check` rodado localmente (ainda fora do `pnpm check`) e a lista de rotas descobertas
 anexada ao relatório; (d) CTG-0004: `pnpm install` só se o lockfile mudar (não deve).
@@ -137,7 +217,7 @@ anexada ao relatório; (d) CTG-0004: `pnpm install` só se o lockfile mudar (nã
 | ajuda contextual                               | `apps/rait/web/src/app/core/shortcut-help.component.ts`; `apps/portal/web/src/app/core/runtime-config.ts`, `apps/rait/web/src/app/core/runtime-config.ts`; `apps/teat/mobile/src/app/features/complementares/pages/context-help.page.ts`; `IU-TEAT-context-help`; `docs/reference/legal/contran/REF-CONTRAN-985-1003-MBFT.md`; `docs/framework/arch/frontend-wiring-pattern.md` (R-0024) |
 | i18n                                           | `docs/framework/arch/parameter-catalogue.md` §Namespaces i18n (OD-P46)                                                                                                                                                                                                                                                                                                                   |
 
-## ODs propostas (registro canônico: `docs/meta/knowledge-base/open-issues.md`, no PR do CTG-0001)
+## ODs propostas (registro canônico: `docs/meta/knowledge-base/open-issues.md`, no commit do CTG-0001)
 
 - **OD-UD-001** — lugar da seção de manuais. Padrão proposto: `docs/adopters/manuais/`, preservando
   a IA de 7 seções (DEVAI). Alternativa: 8ª seção `usuarios`.

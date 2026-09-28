@@ -11,21 +11,118 @@ ponte `tools/orchestra/bridge.sh claude` (OD-C2-003; ids confirmados no bootstra
 **OD-PW-001 — decidida pelo Owner em 2026-09-26: plano completo em R-0032.** A superfície C
 (P-01…P-07 no Portal, ADR-0034 §2) saiu desta rodada e virou **R-0032 `portal-pec`**
 (`work/rounds/R-0032/plan.md`; maestro Opus 5.5, reviewer Sol 6). R-0032 é **consumidora** dos
-contratos (CTG-0001) e das fixtures (CTG-0002) desta rodada: ela abre após o merge do CTG-0001
-daqui e mescla o seu CTG de backend após o CTG-0002 daqui. Esta rodada não toca
+contratos (CTG-0001) e das fixtures (CTG-0002) desta rodada: ela abre empilhada em
+`origin/orchestra/pec-web` após o CTG-0001 daqui existir no branch publicado e avança o seu CTG de
+backend após o CTG-0002 daqui existir no branch; o PR final de R-0032 espera o merge desta rodada. Esta rodada não toca
 `apps/portal/web`, `backend/domains/portal` nem `portal-web.availability.json`.
 **Concorrência:** abre após o merge de R-0024 `stynx-dedup` (kit de app e
 `docs/framework/arch/frontend-wiring-pattern.md`) e pode correr **em paralelo a R-0030**
-`user-docs` (locks disjuntos). Upstreams de merge por grupo: CTG-0001/0002 (backend PEC) — R-0023
-`authz-unification` em `main` (política como dados; qualquer mudança em `MOD-shared-policy` é
+`user-docs` (locks disjuntos). Upstreams por grupo (presença no branch para trabalhar; merge em
+`main` só para o PR final, OD-C2-005): CTG-0001/0002 (backend PEC) — R-0023
+`authz-unification` (política como dados; qualquer mudança em `MOD-shared-policy` é
 serializada com a frente que o detiver); CTG-0004/0005 (app) — R-0022 (assinatura final e SSE de
-fonte única) e R-0024; CTG-0006 (stack, manual e manifesto) — CTG-0001 e CTG-0003 de R-0030
-mesclados (convenção, gate e manuais) e R-0017 `local-stack` em `main`; a TASK-0017 (slot `pec`)
+fonte única) e R-0024; CTG-0006 (stack, manual e manifesto) — CTG-0001 e CTG-0003 de R-0030 no
+branch publicado `orchestra/user-docs` (convenção, gate e manuais; empilhar) e R-0017 `local-stack` em `main`; a TASK-0017 (slot `pec`)
 é serializada com a TASK-0011 de R-0032 (lock `MOD-local-stack`).
 **Janelas previstas:** 5 (eram 6 com a superfície C; a campanha estimou ≈ 4 para R-0030 ∥ R-0031;
 esta rodada paga a dívida de contratos, fixtures e integração antes das telas). Fase F: R-0031 (5)
 com R-0032 (4) sobreposta a partir do CTG-0002 daqui, ≈ 6 janelas no caminho crítico. O maestro
-recalibra no bootstrap e registra em `plan.md` §Decisões do maestro.
+recalibra no bootstrap e registra em `plan.md` §Decisões do maestro. Recalibradas para ≈ 4 em
+§Execução OD-C2-005.
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+> **Adenda A-C2-12 (Architect, 2026-09-27; prevalece sobre as ondas abaixo).** Para que R-0031 não
+> fique presa ao merge de R-0030, a parte de **manual** de TASK-0018 sai desta rodada e vai para
+> R-0032: `docs/adopters/manuais/{clinico,regulatorio}/` e as seções PEC de `gestor`, `auditor-dpo` e
+> `administrador`. Nesta rodada, TASK-0018 entrega só `docs/framework/arch/availability/pec-web.availability.json`,
+> escrito conforme `work/rounds/R-0030/availability-manifest.schema.md`. A validação por gate
+> acontece quando o gate de R-0030 existir em `main`. A O13 deixa de exigir os CTGs de R-0030 no
+> branch, e o PR final de R-0031 espera só **R-0022, R-0023 e R-0024** em `main` com a STYNX 1.5.0
+> final. Nenhum critério de aceitação desta rodada exige o manual: o critério de manual passa a ser
+> cobrado em R-0032.
+
+Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
+um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
+aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
+`acceptance_commands` de cada tarefa, que continuam sendo a definição de pronto do worker.
+
+**Ondas.** Branch única `orchestra/pec-web`, até 3 workers na mesma worktree. O maestro serializa os
+commits (um por tarefa ou por CTG) e faz push sem PR ao fim de cada onda.
+
+| Onda | Tarefas em paralelo (CTG)                               | Fronteiras de escrita (disjuntas)                                                                                                                                                 | Depende de                                                                             |
+| ---- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| O1   | TASK-0001 (CTG-0001)                                    | `route-manifest.md`, `BP-CH-*.commands.openapi.json`, `pec-error-catalog.md`, `pec-build-pack.md`, `contracts/CTG-0001.md`                                                        | bootstrap e prompt-review único                                                        |
+| O2   | TASK-0002 (CTG-0001)                                    | `backend/app/tests/e2e/pec-commands-characterization.e2e.spec.ts`, `tools/contracts/tests/`                                                                                       | TASK-0001                                                                              |
+| O3   | TASK-0003 (CTG-0001)                                    | `tools/contracts/check-commands.mjs`, erros em `backend/domains/ch/*/src`, gerados por `pnpm contracts:*`                                                                         | TASK-0002                                                                              |
+| O4   | TASK-0004 (CTG-0002)                                    | `pec-fixtures.md`, `contracts/CTG-0002.md`                                                                                                                                        | TASK-0003                                                                              |
+| O5   | TASK-0005 ∥ TASK-0006 (CTG-0002) ∥ TASK-0008 (CTG-0003) | `ch/{patients,…,clinical-controls}/tests/integration/` ∥ `ch/{juntas,…,process-blocks}/tests/integration/` ∥ `pec-frontends.md`, `contracts/CTG-0004.md`, `contracts/CTG-0005.md` | TASK-0004; TASK-0003 (TASK-0008 divide lock com TASK-0004, daí a O5)                   |
+| O6   | TASK-0007 (CTG-0002) ∥ TASK-0009 ∥ TASK-0010 (CTG-0003) | semente `ch`, `seed.sh`, `package.json` (tiers), módulos `ch` ∥ fichas `IU-PEC-{C,R}-*` e `import-manifest.json` ∥ `i18n/pec.pt-BR.json` e `parameter-catalogue.md`               | TASK-0005, TASK-0006; TASK-0008                                                        |
+| O7   | TASK-0011 (CTG-0003)                                    | testes de `tools/parameters`                                                                                                                                                      | TASK-0010                                                                              |
+| O8   | TASK-0012 (CTG-0003)                                    | verificador de `tools/parameters`                                                                                                                                                 | TASK-0011                                                                              |
+| O9   | TASK-0013 (CTG-0004)                                    | specs do console A em `apps/pec/web`                                                                                                                                              | TASK-0009, TASK-0012; CTG-0002 concluído; R-0022 e R-0024 no branch                    |
+| O10  | TASK-0014 (CTG-0004)                                    | `apps/pec/web` (scaffold e 12 telas A), `package.json` (`check`), lockfile pelo maestro                                                                                           | TASK-0013                                                                              |
+| O11  | TASK-0015 (CTG-0005) ∥ TASK-0017 (CTG-0006)             | specs do console B ∥ slot `pec` em `tools/detran-stack.sh` e runbook                                                                                                              | TASK-0014; TASK-0017 serializada com a TASK-0011 de R-0032 (`MOD-local-stack`)         |
+| O12  | TASK-0016 (CTG-0005)                                    | 7 telas B em `apps/pec/web`                                                                                                                                                       | TASK-0015                                                                              |
+| O13  | TASK-0018 (CTG-0006)                                    | `pec-web.availability.json`, `docs/adopters/manuais/{clinico,regulatorio}/` e seções PEC de `gestor`, `auditor-dpo`, `administrador`                                              | TASK-0016; CTG-0001 e CTG-0003 de R-0030 no branch (empilhar em `orchestra/user-docs`) |
+| O14  | TASK-0019 (CTG-0006)                                    | `pec-build-pack.md`, `waves.md`, `backlog.md`                                                                                                                                     | TASK-0017, TASK-0018                                                                   |
+
+- **O3 publica o CTG-0001.** R-0032 abre empilhada em `origin/orchestra/pec-web` a partir daí.
+  Antes desse push, o maestro confere a cobertura de `route-manifest.md` contra o §Mapa de R-0032.
+- **O6 publica o CTG-0002** (fixtures e personas); a partir daí o CTG-0002 de R-0032 avança.
+- **Ordem da O6 dentro da onda.** TASK-0007 (`MOD-ch-modules`) e a TASK-0004 de R-0032
+  (`ch/*` eventos) não correm juntas: R-0032 só entra em `ch/*` depois do push da O6.
+
+**Abertura empilhada.**
+
+- **Base de abertura.** A rodada abre sobre `origin/main` com R-0024 mesclado. Sem ele, empilhada
+  em `origin/orchestra/stynx-dedup`, com `frontend-wiring-pattern.md` no branch. R-0023
+  (`orchestra/authz-unification`) e R-0022 (`orchestra/stynx-sse-tenancy`) entram por
+  `git merge --no-edit` quando as ondas que dependem deles chegarem: O1 para a política e O9 para o
+  app.
+- **Para a O13.** Integre `origin/orchestra/user-docs` depois do push da O8 de R-0030 (CTG-0001 e
+  CTG-0003 no branch).
+- **O que espera o merge dos upstreams:** só o PR final. R-0022, R-0023, R-0024 e R-0030 precisam
+  estar em `main`, com STYNX 1.5.0 **final** (OD-S15-01: nenhum PR com pin de RC). R-0017 já está
+  em `main`.
+
+**Sequência final** (na ordem de C-0002 §12):
+
+1. `git fetch -q origin` e `git merge --no-edit origin/main`, com todos os upstreams em `main`.
+2. **CI local completo:**
+   - `pnpm check`;
+   - `pnpm contracts:check` e `pnpm contracts:test`;
+   - `pnpm verify:decorators`, `verify:pec-parity`, `verify:pec-superset`,
+     `verify:senatran-boundary`, `verify:role-catalog` e `verify:rls-ddl`;
+   - `seed.sh` duas vezes sobre banco limpo, `pnpm backend:test:integration` e
+     `pnpm backend:test:ci`;
+   - `pnpm parameters:test`, `pnpm verify:parameter-catalogue` e `pnpm parameters:generate` (sem
+     diff);
+   - `pnpm --filter @detran/pec-web typecheck|lint|test|build`;
+   - `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`, `pnpm format:check`,
+     `pnpm docs:availability:check` e `pnpm docs:user:check`;
+   - `pnpm stack:start` e `pnpm stack:smoke`;
+   - `pnpm devai:rc:prepare`, quando aplicável.
+3. **Uma delivery-review** (Opus 5.5) do diff inteiro (`origin/main...HEAD`), com a lista de
+   personas das fixtures. `REVIEW` admite correções restritas aos itens apontados, em no máximo 2
+   ciclos; `FAIL` → `escalated`.
+4. **Um PR** contra `main`, com o corpo pelo template, a tabela CTG → tarefas → commits e o
+   resultado dos gates. O pedido de decisão sobre OD-PW-002 vai neste PR.
+5. **CI remoto.** Falha de código volta à tarefa responsável. Merge só com CI verde e `PASS`.
+6. **Publicação final:**
+   - `evidence-R-0031.json` com os 6 CTGs, `devai evidence record` e `evidence verify`;
+   - `devai audit observe` no SHA do merge;
+   - `closure.json`, `devai round close` e `devai round seal`;
+   - `waves.md`, `work/rounds/README.md` e backlog.
+
+**Janelas recalibradas:** 5 → ≈ 4.
+
+- 1ª janela: bootstrap, prompt-review de TASK-0001…0019 e O1–O4.
+- 2ª janela: O5–O8.
+- 3ª janela: O9–O12.
+- 4ª janela: O13–O14 e a sequência final.
+
+O PR final espera R-0030; essa espera não está contada.
 
 ## Estado de partida (verificado em 2026-09-26 sobre `a92ef731`)
 
@@ -120,14 +217,14 @@ recalibra no bootstrap e registra em `plan.md` §Decisões do maestro.
 | TASK-0018 | Architect (transcr.) | transcriber-docs    | Luna / médio   | `MOD-availability-pec`, `MOD-user-docs-pec`                         | TASK-0016            | `docs/framework/arch/availability/pec-web.availability.json` (marcador de indisponibilidade PEC do §6.1 do esquema); `docs/adopters/manuais/{clinico,regulatorio}/` e seções PEC nos manuais `gestor`, `auditor-dpo`, `administrador` (convenção de R-0030); `cidadao` e `portal-web` são de R-0032                                                                                                                                                                                                                                                                    |
 | TASK-0019 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                          | TASK-0017, TASK-0018 | `pec-build-pack.md` (WPs executados, gates reais), `waves.md` §Histórico, `backlog.md`, estado das OD-PW (OD-PW-001 decidida → R-0032)                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
-**CTGs (um PR por CTG):** CTG-0001 = 0001 → 0002 → 0003 (contratos, erros, clientes); CTG-0002 =
+**CTGs (commits por CTG na branch única; um PR no fim — OD-C2-005):** CTG-0001 = 0001 → 0002 → 0003 (contratos, erros, clientes); CTG-0002 =
 0004 → 0005 ∥ 0006 → 0007 (fixtures, integração, tiers); CTG-0003 = 0008 → 0009 ∥ 0010 → 0011 →
 0012 (frontends, fichas, i18n, exceção de namespace); CTG-0004 = 0013 → 0014 (scaffold e console A);
 CTG-0005 = 0015 → 0016 (console B); CTG-0006 = 0017 ∥ 0018 → 0019 (stack, manifesto, manual,
 documentação). O antigo CTG de Portal (TASK-0017…0019 da versão anterior) saiu para R-0032
 (OD-PW-001 decidida); a numeração foi recompactada. CTG-0003 pode correr em paralelo ao CTG-0002
-(locks disjuntos) depois do merge do CTG-0001; CTG-0004 exige CTG-0002 e CTG-0003 mesclados (as
-telas consomem fixtures e contratos).
+(locks disjuntos) depois de o CTG-0001 concluir na branch; CTG-0004 exige CTG-0002 e CTG-0003
+concluídos na branch (as telas consomem fixtures e contratos).
 
 **Checkpoints do maestro (Engineer):** (a) CTG-0001: `pnpm contracts:check` e `pnpm contracts:test`
 antes e depois da troca de exceções; a caracterização de TASK-0002 fica verde nas duas pontas
@@ -174,7 +271,7 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
 | manual e manifesto      | `docs/framework/arch/user-docs-convention.md` e `work/rounds/R-0030/availability-manifest.schema.md` (R-0030)                                                                                                                                                                    |
 | stack                   | `tools/detran-stack.sh` e runbook de R-0017                                                                                                                                                                                                                                      |
 
-## ODs propostas (registro canônico: `docs/framework/arch/pec-build-pack.md` §Questões abertas, no PR do CTG-0001)
+## ODs propostas (registro canônico: `docs/framework/arch/pec-build-pack.md` §Questões abertas, no commit do CTG-0001)
 
 - **OD-PW-001** — acesso do cidadão ao PEC no Portal. **Decidida pelo Owner em 2026-09-26: plano
   completo em R-0032** (`work/rounds/R-0032/plan.md`). A escolha do vínculo cidadão → candidato
@@ -207,8 +304,8 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   local/homologação; o driver real fica fora (ADR-0034 §6).
 - **Consumidora a jusante (R-0032)**: contratos incompletos para as rotas `ch` do candidato ou
   fixtures sem personas de candidato travam R-0032. O `route-manifest.md` (TASK-0001) lista essas
-  operações, e a delivery-review do CTG-0001 e do CTG-0002 confere a cobertura contra o mapa de
-  R-0032.
+  operações; o maestro confere a cobertura contra o mapa de R-0032 antes dos pushes que publicam o
+  CTG-0001 e o CTG-0002, e a delivery-review final a reconfirma (OD-C2-005).
 - **Lock partilhado com R-0030 nos manifestos e com R-0032 na stack**: CTG-0006 empilha sobre os
   CTGs de R-0030 citados em §Concorrência e serializa `MOD-local-stack` com R-0032.
 - **Volume** (17 módulos de integração + 19 telas): janelas acima da estimativa da campanha;
