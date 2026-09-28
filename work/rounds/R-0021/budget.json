@@ -326,6 +326,36 @@
       "output_estimate": 10000,
       "result": "reserved",
       "note": "Reserva estimada para revisão de autoridade e delta de fechamento; atualizar conforme execução."
+    },
+    {
+      "id": "astra-root-supervision-window3",
+      "role": "architect",
+      "model": "gpt-6-astra",
+      "window": "window3",
+      "input_estimate": 60000,
+      "output_estimate": 8000,
+      "result": "in-progress",
+      "note": "Nova reserva de supervisão após resposta Owner; estimativa separada de W1/W2."
+    },
+    {
+      "id": "sol-window3-close",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "window": "window3",
+      "input_estimate": 350000,
+      "output_estimate": 65000,
+      "result": "in-progress",
+      "note": "Reserva para decisão A2, revisão, close e PR final; início 14:10:22Z, não estende W2."
+    },
+    {
+      "id": "closure-review-window3-reserve",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "window": "window3",
+      "input_estimate": 50000,
+      "output_estimate": 10000,
+      "result": "PASS",
+      "note": "Pré-close ciclo 3 Opus 5.5 PASS, authority_to_close=yes; três achados baixos de redação/escopo temporal corrigidos antes do close. Estimativa de planejamento, não contador runtime."
     }
   ],
   "windows": {
@@ -348,24 +378,58 @@
       }
     },
     "window2": {
-      "started_at": "2026-09-28T06:13:56Z",
+      "started_at": "2026-09-28T06:16:34Z",
       "estimated_unique_input_tokens": 690000,
       "estimated_output_tokens": 116000,
       "observed": {
-        "as_of": "2026-09-28T08:03:33.840706+00:00",
-        "codex_gross_input_tokens": 84892824,
-        "codex_cached_input_tokens": 83779712,
-        "codex_non_cached_input_tokens": 1113112,
-        "codex_output_tokens": 150623,
+        "as_of": "2026-09-28T14:10:22Z",
+        "attribution": "Conservative boundary: final W2 snapshot includes the first resumed actions before the W3 baseline; W2 wall-clock interval ended at 11:16:34Z while waiting for Owner. No extension.",
+        "codex_gross_input_tokens": 86599164,
+        "codex_cached_input_tokens": 85447296,
+        "codex_non_cached_input_tokens": 1151868,
+        "codex_output_tokens": 155131,
         "claude_gross_input_tokens": 2138440,
         "claude_cache_read_input_tokens": 1942314,
         "claude_non_cache_read_input_tokens": 196126,
         "claude_output_tokens": 30286,
-        "combined_non_cache_read_input_tokens": 1309238,
-        "remaining_to_checkpoint_on_observed_metric": 490762,
-        "remaining_to_limit_on_observed_metric": 940762
+        "combined_non_cache_read_input_tokens": 1347994,
+        "remaining_to_checkpoint_on_observed_metric": 452006,
+        "remaining_to_limit_on_observed_metric": 902006
+      },
+      "ended_at": "2026-09-28T11:16:34Z"
+    },
+    "window3": {
+      "started_at": "2026-09-28T14:10:22Z",
+      "deadline_at": "2026-09-28T19:10:22Z",
+      "estimated_unique_input_tokens": 460000,
+      "estimated_output_tokens": 83000,
+      "codex_cumulative_baseline": {
+        "input_tokens": 358078074,
+        "cached_input_tokens": 354108672,
+        "output_tokens": 700691,
+        "non_cached_input_tokens": 3969402
+      },
+      "claude_window2_scoped_baseline": {
+        "gross_input_tokens": 2138440,
+        "cache_read_input_tokens": 1942314,
+        "non_cache_read_input_tokens": 196126,
+        "output_tokens": 30286
+      },
+      "observed": {
+        "as_of": "2026-09-28T14:33:41Z",
+        "codex_gross_input_tokens": 10045793,
+        "codex_cached_input_tokens": 9763200,
+        "codex_non_cached_input_tokens": 282593,
+        "codex_output_tokens": 27663,
+        "claude_gross_input_tokens": 457455,
+        "claude_cache_read_input_tokens": 378155,
+        "claude_non_cache_read_input_tokens": 79300,
+        "claude_output_tokens": 10526,
+        "combined_non_cache_read_input_tokens": 361893,
+        "remaining_to_checkpoint_on_observed_metric": 1438107,
+        "remaining_to_limit_on_observed_metric": 1888107
       }
     }
   },
-  "telemetry_methodology": "Estimated unique input is a planning ledger, not the sum of runtime counters. Codex gross/cached/output are final per-thread cumulative snapshots; the Sol window1 CLI includes its 1,452 non-cached cleanup tokens after the cutoff. Claude input/cache-creation/cache-read/output deduplicates streamed rows by message.id using the maximum counter. Combined non-cache-read input subtracts Codex cached input and excludes Claude cache reads; it is not identical to estimated unique input. Root cumulative increments matched each last_token_usage input in 739/739 observations, so child-thread counters are not embedded again in the root counter. Scope is R21 root, CLI maestro and descendants only; no transcripts or local session paths are copied. Window1 observed 3,391,468 exceeds the nominal 2,250,000 threshold; this is a control failure, not an Owner waiver. Window2 is tracked separately."
+  "telemetry_methodology": "Estimated unique input is a planning ledger, not the sum of runtime counters. Codex gross/cached/output are final per-thread cumulative snapshots; the Sol window1 CLI includes its 1,452 non-cached cleanup tokens after the cutoff. Claude input/cache-creation/cache-read/output deduplicates streamed rows by message.id using the maximum counter. Combined non-cache-read input subtracts Codex cached input and excludes Claude cache reads; it is not identical to estimated unique input. Root cumulative increments matched each last_token_usage input in 739/739 observations, so child-thread counters are not embedded again in the root counter. Scope is R21 root, CLI maestro and descendants only; no transcripts or local session paths are copied. Window1 observed 3,391,468 exceeds the nominal 2,250,000 threshold; this is a control failure, not an Owner waiver. Window2 ran from 06:16:34Z to 11:16:34Z and elapsed while awaiting Owner A2; it was not extended. The resumed run starts window3 at 14:10:22Z with the same limits; the W2 final snapshot conservatively includes the first resumed actions through the W3 baseline. Window3 Codex deltas subtract its cumulative baseline; Claude deltas subtract the W2-scoped baseline because the Claude audit for W3 excludes W1 sessions."
 }
