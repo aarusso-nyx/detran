@@ -15,7 +15,8 @@
       "model": "gpt-6-astra",
       "input_estimate": 130000,
       "output_estimate": 12000,
-      "note": "Planejamento aprovado, análise publicada de RC2, estimativa inclui subagente de inspeção."
+      "note": "Planejamento aprovado, análise publicada de RC2, estimativa inclui subagente de inspeção.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "astra-materialization",
@@ -23,7 +24,8 @@
       "model": "gpt-6-astra",
       "input_estimate": 100000,
       "output_estimate": 20000,
-      "note": "Reserva estimada, atualizar com preparação efetiva; inclui contratos e documentação delegados."
+      "note": "Reserva estimada, atualizar com preparação efetiva; inclui contratos e documentação delegados.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "prompt-review-1",
@@ -32,7 +34,8 @@
       "input_estimate": 65000,
       "output_estimate": 4000,
       "result": "REVIEW",
-      "note": "5 high e 4 low; todos endereçados pelo Architect, sem execução de workers."
+      "note": "5 high e 4 low; todos endereçados pelo Architect, sem execução de workers.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "prompt-review-2",
@@ -41,7 +44,8 @@
       "input_estimate": 35000,
       "output_estimate": 3000,
       "result": "transport-error",
-      "note": "Conclusão textual PASS, mas cerca Markdown rejeitada pela ponte; não utilizada como gate."
+      "note": "Conclusão textual PASS, mas cerca Markdown rejeitada pela ponte; não utilizada como gate.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "prompt-review-3",
@@ -50,7 +54,8 @@
       "input_estimate": 18000,
       "output_estimate": 1200,
       "result": "PASS",
-      "note": "Correções confirmadas, hashes conferidos, JSON aceito pela ponte."
+      "note": "Correções confirmadas, hashes conferidos, JSON aceito pela ponte.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "sol-ctg0001-orchestration",
@@ -59,7 +64,8 @@
       "input_estimate": 85000,
       "output_estimate": 17000,
       "result": "gates-pass",
-      "note": "Estimativa única para leitura, bancos, triagem e gates do CTG-0001; bruto da sessão não exposto pelo runtime."
+      "note": "Estimativa única para leitura, bancos, triagem e gates do CTG-0001; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0002",
@@ -68,7 +74,8 @@
       "input_estimate": 30000,
       "output_estimate": 6500,
       "result": "PASS",
-      "note": "Native worker medium; uma iteração restrita de limpeza de fixture. Bruto não exposto."
+      "note": "Native worker medium; uma iteração restrita de limpeza de fixture. Contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0003",
@@ -77,7 +84,8 @@
       "input_estimate": 30000,
       "output_estimate": 6000,
       "result": "PASS",
-      "note": "Native worker medium; uma iteração restrita de prova RLS. Bruto não exposto."
+      "note": "Native worker medium; uma iteração restrita de prova RLS. Contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0001-1",
@@ -86,7 +94,8 @@
       "input_estimate": 115000,
       "output_estimate": 7000,
       "result": "REVIEW",
-      "note": "Primeiro ciclo exaustivo; quatro high e quatro low; bruto da CLI indisponível."
+      "note": "Primeiro ciclo exaustivo; quatro high e quatro low; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0002-cycle2",
@@ -95,7 +104,8 @@
       "input_estimate": 18000,
       "output_estimate": 3500,
       "result": "PASS",
-      "note": "Correções restritas de composição, timeout/redação e ACK; bruto do runtime indisponível."
+      "note": "Correções restritas de composição, timeout/redação e ACK; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0003-cycle2",
@@ -104,7 +114,8 @@
       "input_estimate": 17000,
       "output_estimate": 3000,
       "result": "PASS",
-      "note": "Correções restritas de RLS SQL/HTTP e idempotência; bruto do runtime indisponível."
+      "note": "Correções restritas de RLS SQL/HTTP e idempotência; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0001-2",
@@ -113,7 +124,8 @@
       "input_estimate": 35000,
       "output_estimate": 4500,
       "result": "PASS",
-      "note": "Quatro high resolvidos, quatro low remanescentes; hash e write_paths corrigidos depois, sem alterar specs. Bruto indisponível."
+      "note": "Quatro high resolvidos, quatro low remanescentes; hash e write_paths corrigidos depois, sem alterar specs. Contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0015",
@@ -122,7 +134,8 @@
       "input_estimate": 18000,
       "output_estimate": 4500,
       "result": "RED-expected",
-      "note": "Native medium; 8 casos blackbox falham só por CLI ausente, iteração focal de protocolos/diretórios excluídos. Bruto indisponível."
+      "note": "Native medium; 8 casos blackbox falham só por CLI ausente, iteração focal de protocolos/diretórios excluídos. Contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "audit-ctg0001",
@@ -131,7 +144,8 @@
       "input_estimate": 10000,
       "output_estimate": 1200,
       "result": "PASS",
-      "note": "Sessão nativa separada, observação DEVAI exata do merge #149; bruto não exposto."
+      "note": "Sessão nativa separada, observação DEVAI exata do merge #149; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "task-0004",
@@ -140,7 +154,8 @@
       "input_estimate": 26000,
       "output_estimate": 4500,
       "result": "PASS",
-      "note": "Native medium; pin/gate, ajustes focais de SemVer e ordem diagnóstica; bruto não exposto."
+      "note": "Native medium; pin/gate, ajustes focais de SemVer e ordem diagnóstica; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0002-1",
@@ -149,7 +164,8 @@
       "input_estimate": 65000,
       "output_estimate": 4000,
       "result": "PASS",
-      "note": "Ciclo 1 exaustivo; quatro low e zero high; bruto indisponível."
+      "note": "Ciclo 1 exaustivo; quatro low e zero high; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0002-2",
@@ -158,7 +174,8 @@
       "input_estimate": 12000,
       "output_estimate": 1800,
       "result": "PASS",
-      "note": "Ciclo 2 restrito ao avanço documental de main; zero achados."
+      "note": "Ciclo 2 restrito ao avanço documental de main; zero achados.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "sol-ctg0002-orchestration",
@@ -167,7 +184,8 @@
       "input_estimate": 70000,
       "output_estimate": 12000,
       "result": "gates-pass",
-      "note": "Estimativa única para geração, instalação, integração main, gates e revisão; bruto da sessão não exposto."
+      "note": "Estimativa única para geração, instalação, integração main, gates e revisão; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0002-3",
@@ -176,7 +194,8 @@
       "input_estimate": 18000,
       "output_estimate": 2500,
       "result": "PASS",
-      "note": "Delta do PR #150 em main, cadeia e smoke; um low de rastreabilidade."
+      "note": "Delta do PR #150 em main, cadeia e smoke; um low de rastreabilidade.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "delivery-review-ctg0002-4",
@@ -185,7 +204,8 @@
       "input_estimate": 5000,
       "output_estimate": 1000,
       "result": "PASS",
-      "note": "F-C3-01 corrigido; zero achados; último ciclo autorizado do item."
+      "note": "F-C3-01 corrigido; zero achados; último ciclo autorizado do item.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "audit-ctg0001-reemission",
@@ -194,7 +214,8 @@
       "input_estimate": 6000,
       "output_estimate": 900,
       "result": "PASS",
-      "note": "Sessão nativa separada, observação exata do merge #149 reemitida sobre cadeia concorrente R-0020; bruto indisponível."
+      "note": "Sessão nativa separada, observação exata do merge #149 reemitida sobre cadeia concorrente R-0020; contadores runtime auditados separadamente abaixo.",
+      "window": "window1_including_preparation"
     },
     {
       "id": "astra-upstream-and-supervision",
@@ -203,7 +224,148 @@
       "input_estimate": 125000,
       "output_estimate": 12000,
       "result": "published-and-preflight",
-      "note": "Estimativa única adicional da publicação/verificação de 19 issues upstream, supervisão após handoff e preflight do close; sem telemetria bruta disponível."
+      "note": "Estimativa única adicional da publicação/verificação de 19 issues upstream, supervisão após handoff e preflight do close; com telemetria bruta recuperada separadamente abaixo.",
+      "window": "window1_including_preparation"
+    },
+    {
+      "id": "task-0014",
+      "role": "architect",
+      "model": "gpt-6-luna",
+      "window": "window1_including_preparation",
+      "input_estimate": 140000,
+      "output_estimate": 23000,
+      "result": "PASS",
+      "note": "Transcrição documental; estimativa retrospectiva separada dos contadores runtime."
+    },
+    {
+      "id": "delivery-review-ctg0007-1",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "window": "window1_including_preparation",
+      "input_estimate": 45000,
+      "output_estimate": 6500,
+      "result": "REVIEW",
+      "note": "Pin DEVAI corrente corrigido; estimativa retrospectiva."
+    },
+    {
+      "id": "delivery-review-ctg0007-2",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "window": "window1_including_preparation",
+      "input_estimate": 28000,
+      "output_estimate": 4300,
+      "result": "PASS",
+      "note": "ADR/errata corrigidas; estimativa retrospectiva."
+    },
+    {
+      "id": "sol-ctg0007-window1",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "window": "window1_including_preparation",
+      "input_estimate": 100000,
+      "output_estimate": 20000,
+      "result": "checkpoint",
+      "note": "Fechamento da sessão 1, gates/revisões/documentos; estimativa retrospectiva, distinta da telemetria."
+    },
+    {
+      "id": "astra-root-supervision-window2",
+      "role": "architect",
+      "model": "gpt-6-astra",
+      "window": "window2",
+      "input_estimate": 50000,
+      "output_estimate": 6000,
+      "result": "reservation",
+      "note": "Reserva estimada informada pelo root para handoff, supervisão e conferência final; não duplica a entrada 125k/12k da janela 1."
+    },
+    {
+      "id": "sol-window2-orchestration",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "window": "window2",
+      "input_estimate": 500000,
+      "output_estimate": 85000,
+      "result": "in-progress",
+      "note": "Reserva estimada para CI/PR, provas e fechamento; confrontar com snapshot observado em vez de alegar cumprimento."
+    },
+    {
+      "id": "audit-ctg0002-reanchor-window2",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "window": "window2",
+      "input_estimate": 25000,
+      "output_estimate": 2500,
+      "result": "PASS",
+      "note": "Observação reemitida no SHA #151 após PR #152; estimativa separada do contador runtime."
+    },
+    {
+      "id": "delivery-review-ctg0007-3",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "window": "window2",
+      "input_estimate": 45000,
+      "output_estimate": 10000,
+      "result": "PASS",
+      "note": "Delta da cadeia concorrente; estimativa separada do contador Claude."
+    },
+    {
+      "id": "audit-ctg0007-window2",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "window": "window2",
+      "input_estimate": 20000,
+      "output_estimate": 2500,
+      "result": "PASS",
+      "note": "Observação exata do merge PR #153; estimativa separada do contador runtime."
+    },
+    {
+      "id": "preclose-and-governance-review-reserve",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "window": "window2",
+      "input_estimate": 50000,
+      "output_estimate": 10000,
+      "result": "reserved",
+      "note": "Reserva estimada para revisão de autoridade e delta de fechamento; atualizar conforme execução."
     }
-  ]
+  ],
+  "windows": {
+    "window1_including_preparation": {
+      "started_at": "2026-09-28T01:13:56.271872+00:00",
+      "ended_at": "2026-09-28T06:13:56Z",
+      "estimated_unique_input_tokens": 1346000,
+      "estimated_output_tokens": 185900,
+      "observed": {
+        "codex_gross_input_tokens": 271478910,
+        "codex_cached_input_tokens": 268661376,
+        "codex_non_cached_input_tokens": 2817534,
+        "codex_output_tokens": 545560,
+        "claude_gross_input_tokens": 7862989,
+        "claude_cache_read_input_tokens": 7289055,
+        "claude_non_cache_read_input_tokens": 573934,
+        "claude_output_tokens": 73515,
+        "combined_non_cache_read_input_tokens": 3391468,
+        "nominal_limit_exceeded": true
+      }
+    },
+    "window2": {
+      "started_at": "2026-09-28T06:13:56Z",
+      "estimated_unique_input_tokens": 690000,
+      "estimated_output_tokens": 116000,
+      "observed": {
+        "as_of": "2026-09-28T08:03:33.840706+00:00",
+        "codex_gross_input_tokens": 84892824,
+        "codex_cached_input_tokens": 83779712,
+        "codex_non_cached_input_tokens": 1113112,
+        "codex_output_tokens": 150623,
+        "claude_gross_input_tokens": 2138440,
+        "claude_cache_read_input_tokens": 1942314,
+        "claude_non_cache_read_input_tokens": 196126,
+        "claude_output_tokens": 30286,
+        "combined_non_cache_read_input_tokens": 1309238,
+        "remaining_to_checkpoint_on_observed_metric": 490762,
+        "remaining_to_limit_on_observed_metric": 940762
+      }
+    }
+  },
+  "telemetry_methodology": "Estimated unique input is a planning ledger, not the sum of runtime counters. Codex gross/cached/output are final per-thread cumulative snapshots; the Sol window1 CLI includes its 1,452 non-cached cleanup tokens after the cutoff. Claude input/cache-creation/cache-read/output deduplicates streamed rows by message.id using the maximum counter. Combined non-cache-read input subtracts Codex cached input and excludes Claude cache reads; it is not identical to estimated unique input. Root cumulative increments matched each last_token_usage input in 739/739 observations, so child-thread counters are not embedded again in the root counter. Scope is R21 root, CLI maestro and descendants only; no transcripts or local session paths are copied. Window1 observed 3,391,468 exceeds the nominal 2,250,000 threshold; this is a control failure, not an Owner waiver. Window2 is tracked separately."
 }
