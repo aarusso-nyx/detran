@@ -1,0 +1,50 @@
+{
+  "action": "reanchor_observation_after_concurrent_main_merge",
+  "round": "R-0020",
+  "role": "engineer",
+  "coupled_task_group": "CTG-0001",
+  "observed_exact_sha": "2a0f7ce2bb713499c53b673a5a2516041518db92",
+  "original_audit_event": "EV-66cbf1e5a90c4e04",
+  "original_chain_head": "64d5e95b9831934596a0a8209d3e553d185fd2e9ee54dc47b4a12a60d7444951",
+  "concurrent_main_merge": "69642874c1ccd4cf4d1c6f0ec431ecd9fb848a05",
+  "resolution": "Accepted origin/main record/proofs/chain.json after PR #151; reattest unchanged audit artifacts by governed generic evidence; audit.observe at the old SHA cannot be replayed from the new HEAD",
+  "artifacts": [
+    {
+      "path": ".devai/state/audit-observations/2a0f7ce2bb713499c53b673a5a2516041518db92/inventory.json",
+      "sha256": "f3337c48055351e6352079b89269bf4a06042f84ba9557ef176857e1ee42569f",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/2a0f7ce2bb713499c53b673a5a2516041518db92/scorecard.json",
+      "sha256": "0cbf0ea0df9f3e1ec382c1150309d16da4b9eccaa8ad9ed3dfb8e8305813f519",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/2a0f7ce2bb713499c53b673a5a2516041518db92/backlog.json",
+      "sha256": "a71e1732246e1d962b36b7c1717640610b4b00f7f0da2782143356642003ad4f",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/2a0f7ce2bb713499c53b673a5a2516041518db92/assessment.json",
+      "sha256": "d86147725f929aa800ea1b12252848ecfb25ef5cc176c696d6cda265cd85f8c6",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/2a0f7ce2bb713499c53b673a5a2516041518db92/status.json",
+      "sha256": "e22b0e4a4ea02ba8e23ce620535acbca3ddb31fff4a8f60adc55f2e8adbd2759",
+      "kind": "audit"
+    }
+  ],
+  "gates": [
+    {
+      "name": "artifact sha256",
+      "result": "pass",
+      "note": "five byte hashes match original audit.observe event"
+    },
+    {
+      "name": "evidence verify",
+      "result": "pass",
+      "note": "main chain valid before re-anchor"
+    }
+  ]
+}

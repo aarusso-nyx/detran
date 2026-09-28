@@ -1,0 +1,43 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 395,
+      "claim": "At HEAD 938686fc, plan.md still gives 'a linha append-only seq. 115' and head 64d5e95b as the observation's anchor (lines 393 and 395), and the 'Próximo passo' at line 397 predates the reanchor. In the current chain, seq. 115 is EV-848d167507498048 (audit.observe for R-0021, exact_sha=3d96eeb8…). The note that marks these values as historical and records EV-23cb7d85e6e53c5f, seq. 117 and head 6f815156… exists only as an uncommitted change in the working tree.",
+      "fix": "Commit the plan.md update ('Atualização do PR #152 após o merge concorrente #151' and the new 'Próximo passo') on the #152 branch before updating the PR and rerunning CI. This keeps the checkpoint narrative in the PR consistent with record/proofs/chain.json."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/evidence-CTG-0001-observation-reanchor.json",
+      "line": 4,
+      "claim": "The payload declares \"role\": \"engineer\". The file was committed in d4521281 by DEVAI Architect with 'Role: Architect' in the message. Commit 938686fc then describes the verb run as an Engineer role. This matches the Engineer→Machine pattern of seq. 1, but the authorship of the declaration and the role in the payload do not match.",
+      "fix": "No change to record/ (append-only). In future declarations, either keep the role in the payload equal to the role of the commit that writes the input, or say in the commit message that the Architect is declaring an input that the Engineer will execute."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "record/proofs/work/generic/R-0020.jsonl",
+      "line": 2,
+      "claim": "The generic seq. 2 payload re-attests the five hashes, the original event, the SHA and the cause. It does not repeat 'readiness_promoting=false' from the original event. Chain record EV-23cb7d85e6e53c5f has only round_id and proof_sequence in its notes and artifacts: []. The binding to the artifacts goes through the jsonl line, not through the chain record. This is a limit of the evidence.record.generic verb, not an error in the execution.",
+      "fix": "For future reanchors, add readiness_promoting:false to the declared payload. Do not rewrite seq. 2."
+    }
+  ],
+  "notes": [
+    "Scope: origin/main = 69642874c1ccd4cf4d1c6f0ec431ecd9fb848a05. git diff origin/main..HEAD touches only: the five artifacts under .devai/state/audit-observations/2a0f7ce2…/, record/proofs/chain.json (+27/-1), record/proofs/work/generic/R-0020.jsonl (+1), and R-0020 work/ files (AUTHORIZATION-RETAKE, budget, plan, the reanchor evidence file, the first-cycle review, TASK-0003). R-0021 changes that are already in main (package.json files, pnpm-lock, tools/check-stynx-pin.ts, R-0021.jsonl) are not part of the net diff for #152.",
+    "Chain conflict resolution: git diff 69642874 648e9795 -- record is empty. The merge accepted main's record/ exactly, with no hand edits. The chain diff against main is purely append-only: head 68726d21… → 6f815156…, one new record seq. 117 EV-23cb7d85e6e53c5f (evidence.record.generic, previous_hash = 68726d2199efd588…, which is main's seq. 116 manifest). 938686fc changes only record/proofs/** and is authored by DEVAI Machine.",
+    "Hashes: shasum -a 256 of the five current artifacts matches exactly, byte for byte, (a) the artifacts of the original event EV-66cbf1e5a90c4e04 in chain.json at 2b851358/d4c3a3bb (seq. 115 on the old line, manifest_hash 64d5e95b…), (b) evidence-CTG-0001-observation-reanchor.json lines 11-37, and (c) the payload of R-0020.jsonl seq. 2. observed_exact_sha, original_audit_event, original_chain_head and concurrent_main_merge in the payload match what I verified.",
+    "The generic proof does not replace audit.observe. EV-66cbf1e5a90c4e04 is no longer in the current chain, and the jsonl line explicitly says it is a re-attestation of unchanged artifacts. The original event stays verifiable because d4c3a3bb is an ancestor of HEAD, and PRs #150 and #151 were merge commits, not squashes. Recommendation: merge #152 with a merge commit as well, so d4c3a3bb and 2b851358 stay reachable from main and original_chain_head can be audited.",
+    "Explaining the failed replay with AUDIT_OBSERVE_EXACT_HEAD_REQUIRED is consistent: the original event records context.git.head_sha = 2a0f7ce2…, which is the exact SHA required. The alternative would have been to rewrite chain.json by hand, which is forbidden. Choosing a generic proof after rehearsing in a disposable clone follows the rule the maestro set on plan.md line 394 ('nunca resolver cadeia à mão').",
+    "Read-only verification: `devai evidence verify --scope chain` → {\"valid\":true,\"errors\":[]} at HEAD 938686fc. `--scope local` → no-claim (normal CI required). I did not run any --write command. After that verify, `git status` showed plan.md modified; the diff is the maestro's concurrent edit at 03:10, not mine.",
+    "Gates and readiness: the net diff has no tests, CI, package.json, law/ or tools/ changes. No skip or .only was added. The 'readiness' hits in the diff are only paths inside inventory.json. status.json in the observation keeps readiness_promoting=false. No PC, record.md or close-state is touched. R-0017 stays sealed and R-0020 stays open (CTG-0002…0006 pending).",
+    "Out of #152's scope, for the Owner: main's R-0021.jsonl has sequences 1, 2 and 3, but the chain only has records for proof_sequence 1 (seq. 113) and 3 (seq. 116). The R-0021 seq. 2 line is orphaned, which the uncommitted plan.md already mentions as a pending Owner decision. It came from #151 and should not be blamed on #152.",
+    "budget.json does not yet include entries for the reanchor or this review. Update it before merge, following M11.",
+    "Before merging #152: commit the plan.md update, run pnpm check after integration, get green CI on the updated PR, and use a merge commit. CTG-0002 stays separate and was not evaluated."
+  ]
+}
