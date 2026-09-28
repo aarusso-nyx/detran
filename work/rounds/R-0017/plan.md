@@ -1,6 +1,6 @@
 # R-0017 — frente `local-stack` (C-0002, ação 4: stack local versionada)
 
-**Status:** **em execução — C-0002 rev. 2, autorizada pelo Owner em 2026-09-26.** Planejada em 2026-09-26
+**Status:** **selada localmente com PC-0018; publicação por PR pendente.** C-0002 rev. 2, autorizada pelo Owner em 2026-09-26. Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase A, primeira linha) e da
 inspeção (b) de 2026-09-25 (`work/campaigns/C-0002-inspecao-2026-09-25/b-camadas.md`, versionado na campanha: achados A5, M3,
 M4). Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no
@@ -297,6 +297,13 @@ tools/stack/sefaz-adapter-smoke.mjs` execute, inclusive erros. Nenhum
 
 ## Decisões do maestro
 
+- **Owner, correção do selo (2026-09-27):** após confirmar que DEVAI 1.6.0
+  não corrige as recusas, autorizou `SEAL-AUTHORIZATION.md`: PC corretivo
+  append-only que supersede PC-0017, `n/a` explícito para os quatro critérios
+  substituídos sem alterar seus `fail` históricos, D-1/D-2 em `law/register`
+  e gerador local determinístico para o índice. O pin permanece 1.5.6 nesta
+  correção. O gate `verify:state-index` precisa reconhecer a cadeia de
+  supersessão e exigir a cabeça única; contrato em `contracts/CTG-SEAL.md`.
 - **Owner, OD-R17-001/002/003 (2026-09-27):** aceitas as tres recomendacoes
   da rodada: mock SEFAZ-AM minimo de seis rotas, PAdES clinico/biometria/
   conselho explicitamente `off` com 503 fail-closed no smoke, e job
@@ -470,6 +477,18 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Bloqueios
 
+- **Reavaliação do selo com DEVAI 1.6.0 (2026-09-27):** a versão foi publicada,
+  mas mantém as três pré-condições impeditivas: D-1/D-2 precisam existir em
+  `law/register`, o índice `record/derived/indexes/rounds.md` precisa conter
+  o PC e o PC referenciado não pode ter critério `fail`. O renderer oficial de
+  rodadas continua omitindo o ID do PC do corpo gerado; PC-0017 preserva quatro
+  `fail` históricos exigidos pelas adendas A4–A6. Um ensaio com o binário 1.6.0
+  sobre o binding 1.5.6 recusou `AUTHORITY_POLICY_RESOLVED_BYTES_MISMATCH`;
+  `doctor` exige `init bind` antes de qualquer migração. Não atualizar o pin
+  como tentativa de contornar o selo. Detalhes e sequência proposta em
+  `reports/seal-readiness-2026-09-27.md`. Após a verificação, o Owner
+  autorizou a correção governada em `SEAL-AUTHORIZATION.md`; este bloqueio
+  histórico está resolvido para a implementação, mas o selo ainda não existe.
 - **Selo adiado, nao fechamento (2026-09-27):** `devai round close`
   emitiu PC-0017 apos os tres CTGs mesclados e observados no SHA exato.
   `devai round seal` recusou `ROUND_ARCHIVE_RECORD_MISSING` (exit 2).
@@ -615,6 +634,50 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **R-0017 fechada e selada em `main` (2026-09-27 BRT):** PR #147 mesclado com
+  `foundation`, `backend-kernel`, `verified-local-rc`, `evidence-gate`,
+  `boat-documents-real` e mocks verdes; review cruzado Claude Opus 5.5
+  `PASS` nos ciclos 1 e 2. O merge exato é
+  `b31f12728f0de35e5da0ad4c904425ed2b9fb01c`. PC-0018 é o PC terminal
+  e `close-state.jsonl` declara a rodada `closed`; PC-0017 permanece com os
+  quatro `fail` históricos. A prova CTG-SEAL é a sequência genérica 7,
+  ancorada no head `9a1543cb2bb75554549ab7f8dbb612eff14d28854e83be4930dbe05790be80db`.
+  `audit observe` do merge exato retornou
+  `EV-8b3063e2a763ab41`; a cadeia local válida passou ao head
+  `4e7d24d618730d6555af5b2e4ad5ff92af3e915f9420ab17d9c438cb8a16f994`.
+  Esta observação pós-merge e a atualização final de histórico serão
+  publicadas em PR de metadados. R-0020 não precisa selar R-0017 novamente.
+- **Selo governado executado (2026-09-27):** clone descartável
+  `/tmp/r17-seal-authorized.28FQYi/repo` reproduziu o fluxo exato com
+  PC-0018, D-1/D-2, índice e `close-state.jsonl`; `round seal` retornou
+  `ok: true`. Na worktree real, `round close` emitiu PC-0018 com
+  `supersedes: PC-0017`, `round plan --declare` gerou `record.md`, o
+  gerador local materializou `record/derived/indexes/rounds.md` e
+  `round seal` retornou `ok: true` com uma linha fechada para PC-0018. SHA-256 de
+  PC-0017 permaneceu `7618551a11e32b830f02193806621325b8116d7265cfe3fdb9e64b044fa9c024`;
+  cadeia válida no head
+  `25f94219921c2f37f927aa55c2aa98d97e96502d753be669134e6245c1b429d1`.
+  Testes focados 85/85, `verify:state-index` 18 closures,
+  `verify:rounds-index` e `docs:kb:check` verdes. O verificador genérico
+  `devai check --only schema --schema <phase-closure>` recusou a referência
+  interna `common-defs.schema.json`; o próprio `round close` validou o novo
+  PC pelo schema embutido. Próximos: `pnpm check`, revisão cruzada, commits
+  por papel, PR, CI verde, merge e observação do SHA exato. Até o merge, o
+  selo está somente na branch local.
+- **Selo R-0017 após publicação DEVAI 1.6.0 (2026-09-27):** `origin/main`
+  `e47a6801` contém PRs #133/#143/#144/#145, CI verde e PC-0017; nova branch
+  local `orchestra/local-stack-seal` parte desse HEAD. Nenhum recibo foi
+  reescrito nem selo aplicado. 1.6.0 não corrige o contrato de `round seal`;
+  antes de migrar o pin, avaliar separadamente o custo de `init bind` e seus
+  gates. O clone descartável confirmou: com D-1/D-2 e índice sintéticos,
+  PC-0017 recusa `ROUND_ARCHIVE_VALIDATION_NOT_GREEN`; um PC corretivo
+  append-only com `supersedes: PC-0017` e critérios históricos `n/a` pode
+  selar após a decisão explícita do Owner registrada em
+  `SEAL-AUTHORIZATION.md` e a geração local do índice. Próximo: implementar,
+  ensaiar o fluxo final no clone, revisar, executar
+  gates, PR/CI/merge e confirmar `close-state.jsonl`. `round status` 1.5.6
+  tem bug após o selo (`TASK_ROUND_INACTIVE`), então usar também o artefato e
+  a saída do verbo como prova.
 - **Fechamento PC-0017 (2026-09-27):** PR #144 mesclado em
   `d5afcf9211373238d6eb7b8ad09188a342101a39` com os cinco checks
   obrigatorios verdes, `stack-smoke` manual corretamente skipped e
