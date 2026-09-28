@@ -1,0 +1,37 @@
+{
+  "mode": "post-close-review",
+  "round": "R-0021",
+  "cycle": 4,
+  "verdict": "PASS",
+  "authority_to_close": "yes",
+  "authority_reason": "Owner A1 authorized closing without a seal while keeping the transferred historical migration criteria at fail. Owner Adenda A2 records the Owner's literal answer 'Autorizacao concedida. prossiga ate a conclusão.' to the narrow question, now marked as a summary. A2 authorizes the close with token-budget-window1 still FAIL. It grants no retroactive waiver, raises no limit, converts nothing to PASS/N/A and does not authorize a seal. PC-0019 matches that authority exactly: D-1=A1, D-2 is bound to A2, the gate and the criterion token-budget-window1 are 'fail', the nine historical migration criteria are 'fail', close+seal is 'fail', and merged_as and the proof head are the expected values. I found no concrete error that blocks publishing the final PR.",
+  "findings": [
+    {
+      "id": "F-1",
+      "severity": "low",
+      "blocking": false,
+      "path": "work/rounds/R-0021/reviews/closure-review-4.json.formatted.QopFA1, work/rounds/R-0021/reviews/closure-review-4.json.raw.o4YHGM",
+      "issue": "Two empty (0-byte) untracked temp files from the JSON bridge for this cycle are in the reviews directory.",
+      "recommendation": "Once the bridge writes closure-review-4.json, delete them or leave them out of the final PR's staging. Do not commit the random-suffix artifacts."
+    },
+    {
+      "id": "F-2",
+      "severity": "low",
+      "blocking": false,
+      "path": "work/rounds/R-0021/budget.json",
+      "issue": "Typo in the note of reservation sol-window3-close: 'início14:10:22Z' is missing a space.",
+      "recommendation": "Change it to 'início 14:10:22Z' if the budget ledger is updated after close. Cosmetic only."
+    }
+  ],
+  "notes": [
+    "The receipt is bound correctly. `jq -S 'del(.id,.closed_at)'` on PC-0019.json is identical to work/rounds/R-0021/closure.json, so the runtime emitted exactly the reviewed draft. id=PC-0019, closed_at=2026-09-28T14:18:18.702Z.",
+    "The commits check out. merged_as=1576708f8378817d5e3338953015f5acdb704e1e is the merge commit 'Merge pull request #153', with parents c3c0df57/c3df8fac, and it is an ancestor of HEAD. Batch commits 3d96eeb8 and 69642874 are the merges of PR #149 and PR #151. evidence.terminal_sha256 and the evidence-chain gate both name ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77.",
+    "There is no fictitious PASS. token-budget-window1 is 'fail' in both gates and validation_criteria, with Codex 2,817,534 + Claude 573,934 = 3,391,468 > 2,250,000. Goals 2–6 and 9, the three sets of original acceptance commands, and close+seal are all 'fail'. Goals 7 and 8 and the four A1 active-scope criteria are 'pass', which is consistent with what was delivered.",
+    "The smoke results are kept apart. The isolated-stack-smoke gate says 42/42 PASS for candidate 2bc62e7a in DinD and states outright that the remote workflows failed on both the candidate and 1.3.1 main, claiming no remote PASS. ORCHESTRATOR-FINAL, waves.md and the notes in PC-0019 say the same.",
+    "The index is consistent. record/derived/indexes/rounds.md gains exactly one row: PC-0019 | R-0021 | — | 1576708f…. It lists 19 PC rows, and there are 19 PC-*.json files in record/proofs/compliance/closures. work/rounds/README.md marks R-0021 'fechada', PC-0019, 'PR final pendente'. The other changes in README.md are only column realignment.",
+    "The window accounting is internally consistent. The W3 Codex cumulative baseline of 3,969,402 non-cached equals W1 2,817,534 + W2 1,151,868. W2 has started_at 06:16:34Z and ended_at 11:16:34Z, exactly 5h. The W2 as_of of 14:10:22Z is later than its end, but it is explicitly declared a conservative boundary attribution with no extension. The Claude W3 baseline is labeled as W2 scope.",
+    "plan.md D-2, ORCHESTRATOR-FINAL and the AUTHORIZATION A2 text say the same thing: close without a seal, FAILs preserved, no waiver, the final PR still pending.",
+    "There is no fabricated seal. work/rounds/R-0021 has no record.md or close-state.jsonl, and the receipt records ROUND_ARCHIVE_VALIDATION_NOT_GREEN as the reason no seal was made.",
+    "Out of scope for this review: product and tests, which earlier cycles reviewed, and the final pnpm check and the final PR's CI, which the operator will require on the exact SHA before merge."
+  ]
+}

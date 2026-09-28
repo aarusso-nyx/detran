@@ -1,0 +1,50 @@
+{
+  "mode": "pre-close-review",
+  "round": "R-0021",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "authority_to_close": "no",
+  "authority_reason": "Owner A1 authorizes a `round close` without seal only for a narrow set of FAILs: the original migration criteria it transferred to R-0022 (signature, outbox/RENACH, offline-sync, notifications, dead dependencies, migration ADRs). The budget is a separate control that A1 sets itself (AUTHORIZATION.md:20: input up to 2,250,000 per 5-hour window, checkpoint at 1,800,000). The maestro sets three further conditions. First, §Fechamento (00-maestro.md:59) requires active-scope gates to be green. Second, §Orçamento (00-maestro.md:69) says to stop at the authorized limit. Third, plan.md:173 says 'checkpoint and stop at 80%'. Window 1 used 3,391,468 input tokens, excluding cache reads, which is above both the ceiling and the checkpoint. This is a new FAIL. It is not a transferred criterion. It sits in the active scope, and plan.md D-2 correctly says A1 does not waive it. The maestro line 'no need to ask the Owner again' (00-maestro.md:61) only covers closing without a seal. It does not cover a new failed control. The Architect cannot accept this overrun on the Owner's behalf, and the runtime accepting the close technically is not constitutional authority. Before `closure.json` is written and `round close` runs, the Owner needs to make one narrow, explicit decision: 'Do you authorize the formal close of R-0021 without a seal while keeping gate `token-budget-window1` and the matching validation criterion as `fail`? The ceiling was 2,250,000 and the checkpoint was 1,800,000. Window 1 observed 3,391,468 input tokens excluding cache reads (Codex 2,817,534 + Claude 573,934). The estimated-unique ledger showed 1,346,000. This close would not waive the overrun, authorize it after the fact, or turn it into PASS/N/A. Please also say which unit is authoritative for the budget ceiling from R-0022 onward: estimated unique input or runtime input excluding cache reads.' Once the answer is recorded (as a new D-n in plan.md and AUTHORIZATION.md, or by turning the proposed D-2 into an effective decision that cites it), the draft can close as written, after the findings below are fixed.",
+  "findings": [
+    {
+      "severity": "high",
+      "path": "work/rounds/R-0021/plan.md",
+      "summary": "D-2 is still 'proposto'. It is conditional and cites no Owner decision that covers the new FAIL `token-budget-window1`. The draft's `closing_decision: D-2` and its notes ('Owner expressly authorized round close without round seal') would claim authority that A1 only grants for the transferred criteria. The breach is a failure of an active-scope control that A1 set itself, and the maestro rules require green gates and a stop at the authorized limit.",
+      "fix": "Do not write `closure.json` or run `round close` yet. Ask the Owner the exact question in authority_reason. Record the answer verbatim with its source and date in AUTHORIZATION.md and as a new D-n in plan.md, or amend D-2 from 'proposto' to effective and cite that decision. Update the draft's notes and token-gate detail to cite it. Keep `status: fail` on both the gate and the criterion."
+    },
+    {
+      "severity": "medium",
+      "path": "/tmp/r21-closure-draft.json",
+      "summary": "The original acceptance criterion at plan.md:132-133 (and lesson :172) requires `devai round close` **and** `devai round seal`, anchored in the chain. A1 replaced it with close without seal. Lesson plan.md:169 says a replaced criterion must appear in the closure as not met. The draft only mentions the missing seal in `notes`. It is not in `validation_criteria`.",
+      "fix": "Add a criterion 'Original DEVAI close + seal anchor acceptance' with verdict `fail`. Evidence: Owner A1 approved close without seal; DEVAI 1.5.6 `round seal` rejects failed criteria (ROUND_ARCHIVE_VALIDATION_NOT_GREEN); no record.md or close-state.jsonl was created."
+    },
+    {
+      "severity": "low",
+      "path": "CLAUDE.md",
+      "summary": "The STYNX 1.4.0 fixes in the working tree do not reach every current-state pointer. CLAUDE.md:7 still says 'STYNX 1.3.1 platform substrate … WP-0 done 2026-09-13'. .claude/agents/engineer-frontend.md:3 still says 'STYNX 1.3.1 / Angular 22'. The corrected AGENTS.md, README.md, CODESTYLE.md and docs/start/index.md now say 1.4.0 current.",
+      "fix": "Use the AGENTS.md pattern: 'STYNX 1.4.0 (pinned in R-0021; migrated to 1.3.1 in WP-0 on 2026-09-13)'. Update the agent description to 1.4.0. Include both files in the governance PR."
+    },
+    {
+      "severity": "low",
+      "path": "DESIGN-DECISIONS.md",
+      "summary": "The ADR-0015 index row rewrites its historical source description. The original row said 'STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target (Owner, 2026-09-12; workspace pins migrated in WP-0)'. The new text drops DEVAI 1.4.5 from what was accepted in WP-0, so the index no longer records the original decision faithfully. The STYNX 1.3.1 WP-0 history is kept.",
+      "fix": "Keep the historical tuple and add the current state: 'STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 accepted in WP-0 (Owner, 2026-09-12); R-0021 amended the current STYNX pin to 1.4.0; DEVAI 1.5.6 is current under ADR-0028.' Then rerun `pnpm format:check` and `pnpm docs:kb:check`."
+    },
+    {
+      "severity": "low",
+      "path": "/tmp/r21-closure-draft.json",
+      "summary": "Gate `evidence-chain` says 'Final head recorded in closing report', but the draft never states the verified pre-close head `ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77`. It also has no `evidence` binding (proof_epoch/terminal_sha256). The closure record therefore does not name the chain state it closes over.",
+      "fix": "Put the verified head ec36cf1b… and observation `EV-15963d738bf70dfe` into the `evidence-chain` detail. If the runtime does not fill in the optional `evidence` object, add it with the terminal hash."
+    }
+  ],
+  "notes": [
+    "Verified independently: `gh pr view 153` shows state MERGED, headRefOid `c3df8facd5bbd437524264bf33b42d4ed1398ed3` and mergeCommit `1576708f8378817d5e3338953015f5acdb704e1e`. `gh pr checks 153 --required` shows evidence-gate, foundation, senatran-mock, senatran-mock-tests and verified-local-rc all passing. HEAD `ded0df1d` has single parent 1576708f. Its diff adds only the five `.devai/state/audit-observations/1576708f…/` artifacts plus one appended chain record: `EV-15963d738bf70dfe`, audit.observe, head_sha 1576708f, sequence 120, previous_hash c4289834…. status.json shows readiness_promoting=false. `devai evidence verify --scope chain` returned valid with head `ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77`.",
+    "Budget arithmetic checks out, and no gross cache reads are counted as unique input. Codex: 271,478,910 − 268,661,376 = 2,817,534. Claude: 7,862,989 − 7,289,055 = 573,934. Sum = 3,391,468. Window 2: 1,047,596 + 44,044 = 1,091,640, with 708,360 left to the checkpoint and 1,158,360 to the ceiling. The 26 window-1 ledger entries sum to 1,346,000 input and 185,900 output. The 6 window-2 entries sum to 690,000 and 116,000. Claude's figure excluding cache reads correctly includes cache-creation input. I did not re-derive the per-thread runtime counters from transcripts. The 739/739 root-increment match is taken as reported, and it does support treating the thread counters as non-overlapping. Either way, window 1 is above the ceiling under the observed metric. The estimated-unique ledger cannot show compliance because the ledger's unit ('estimated_unique_input_tokens') was chosen by the maestro, not by the Owner, whose A1 text just says 'input'.",
+    "The window-2 snapshot (07:42:20Z) was taken before this review and any Owner round-trip. Refresh it right before the close write, and re-check it against the 1,800,000 checkpoint.",
+    "The historical FAIL criteria in the draft match A1 and OD-R21-01…03 and the plan's goals 2–6 and 9. Jobs (goal 7) and characterization (goal 8) are correctly PASS. None is turned into PASS/N/A. The only gap is the missing seal criterion (medium finding).",
+    "The smoke distinction is stated accurately. `isolated-stack-smoke: pass` covers only the exact CTG-0002 product candidate 2bc62e7a (42/42, Docker-in-Docker). The remote manual workflows are explicitly failed on both the candidate and the 1.3.1 main baseline, and no remote PASS is claimed. It was not rerun for the CTG-0007 docs-only delta; CTG-0007-main-sync.md shows the product/test/dependency trees are identical.",
+    "The draft conforms to phase-closure.schema.json apart from the runtime-allocated `id` and `closed_at`. The gate and criterion enums are valid, `merged_as` equals the PR #153 merge, and `release_disposition` is none-needed.",
+    "The untracked `closure-review-1.json.{raw,formatted}.*` files belong to this bridge invocation. Delete them after the final JSON is persisted.",
+    "Read-only: I made no repository changes, created no PC, and ran neither close nor seal."
+  ]
+}

@@ -4,7 +4,7 @@ Read `AGENTS.md` — it is the canonical agent-facing constitution for this repo
 (mirroring the pec/teat convention: one source of truth, this file is a pointer).
 
 Quick facts: DEVAI-governed (`@aarusso-nyx/devai@1.5.6`, Constitution 1.0.0
-pinned at `.devai/pin/constitution.md`), STYNX 1.3.1 platform substrate (Angular 22, ADR-0015, WP-0 done 2026-09-13; `@stynx-nyx/*` via GitHub Packages; `NODE_AUTH_TOKEN="$(gh auth token)"` locally). Domain-first
+pinned at `.devai/pin/constitution.md`), STYNX 1.4.0 platform substrate (Angular 22, ADR-0015; WP-0 migrated to 1.3.1 on 2026-09-13, R-0021 pinned 1.4.0; `@stynx-nyx/*` via GitHub Packages; `NODE_AUTH_TOKEN="$(gh auth token)"` locally). Domain-first
 monorepo: `backend/` modular monolith (inf/est/ch/ops + portal/dashboard/shared),
 `apps/` frontends only, `packages/senatran-adapter` as the sole national-API
 boundary; `packages/` holds `api-clients` (`@detran/api-clients`), `sefaz-adapter`

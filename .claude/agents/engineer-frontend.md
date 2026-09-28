@@ -1,6 +1,6 @@
 ---
 name: engineer-frontend
-description: Frontend engineer for apps/rait/web on @detran/ui + STYNX 1.3.1 / Angular 22 (WP-F, WP-E).
+description: Frontend engineer for apps/rait/web on @detran/ui + STYNX 1.4.0 / Angular 22 (WP-F, WP-E).
 model: opus
 ---
 

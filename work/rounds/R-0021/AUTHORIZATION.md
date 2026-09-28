@@ -29,3 +29,9 @@ Durante a execução da rodada, o Owner instruiu expressamente: “registre todo
 A restrição anterior de não escrever no STYNX continua aplicável ao código, aos arquivos e às branches do repositório irmão; o registro dessas issues é a exceção explicitamente autorizada. A autorização não inicia uma rodada upstream, não autoriza implementação ou release STYNX e não altera as transferências para R-0022.
 
 Astra, no papel Architect, executou a publicação dos 76 requisitos em 18 issues e no índice [STYNX #289](https://github.com/stynx-nyx/stynx/issues/289). O arquivo `work/rounds/R-0021/reports/UPSTREAM-ISSUES.md` integra as entregas documentais autorizadas de TASK-0001/CTG-0001 por esta adenda, além da lista de caminhos da preparação original. A revisão deve considerar esta instrução posterior na análise de escopo; o trabalho não foi redisparado a um worker.
+
+## Adenda A2 — decisão específica para close com falha orçamentária (2026-09-28)
+
+Fonte: resposta expressa do Owner nesta conversa à pergunta restrita apresentada após `reviews/closure-review-1.json` e confirmada em `reviews/closure-review-2.json`. Em síntese, a pergunta pediu autorização para emitir o `round close` sem selo com `token-budget-window1` e os critérios históricos em FAIL, sem aumento retroativo do teto nem conversão de FAIL em PASS/N/A. Resposta literal do Owner: **“Autorizacao concedida. prossiga ate a conclusão.”**
+
+A resposta autoriza o ato futuro de `round close` com o FAIL orçamentário adicional exposto, além dos FAILs já autorizados pela A1. Não concede aumento retroativo do teto, não muda o limite de 2.250.000 tokens nem o checkpoint de 1.800.000, não transforma o desvio em PASS/N/A e não autoriza `round seal`. A janela 2 expirou durante a espera pela decisão; a retomada usa uma terceira janela separada de 5 horas com os mesmos limites, preservando a contabilidade das anteriores. A política da unidade de orçamento para rodadas futuras permanece fora desta decisão.
