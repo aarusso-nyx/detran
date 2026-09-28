@@ -1,0 +1,184 @@
+✖ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (2.566625ms)
+✖ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (0.788542ms)
+✖ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (1.090125ms)
+✖ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (2.062791ms)
+✖ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (5.301125ms)
+✖ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (0.619709ms)
+✖ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (0.826833ms)
+✖ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (1.908583ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 65.725959
+
+✖ failing tests:
+
+test at tools/stynx-pin/tests/check.test.mjs:84:1
+✖ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (2.566625ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:97:16
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:85:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.start (node:internal/test_runner/test:1257:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:101:1
+✖ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (0.788542ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:111:20
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:102:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:132:1
+✖ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (1.090125ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:152:20
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:133:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:160:1
+✖ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (2.062791ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:173:20
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:161:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:184:1
+✖ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (5.301125ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:208:20
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:185:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:232:1
+✖ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (0.619709ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:291:22
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:289:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:298:1
+✖ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (0.826833ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:305:16
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:299:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/stynx-pin/tests/check.test.mjs:310:1
+✖ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (1.908583ms)
+  AssertionError [ERR_ASSERTION]: CLI ausente para caracterização RED: /Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/check-stynx-pin.ts
+      at runCheck (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:46:10)
+      at file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:330:18
+      at withFixture (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:23:12)
+      at TestContext.<anonymous> (file:///Users/aarusso/.codex/worktrees/stynx-canonical/detran/tools/stynx-pin/tests/check.test.mjs:311:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
