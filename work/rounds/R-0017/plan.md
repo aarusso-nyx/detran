@@ -470,7 +470,12 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Bloqueios
 
-(vazio; OD-R17-001/002/003/004 decididas pelo Owner em 2026-09-27)
+- **Selo adiado, nao fechamento (2026-09-27):** `devai round close`
+  emitiu PC-0017 apos os tres CTGs mesclados e observados no SHA exato.
+  `devai round seal` recusou `ROUND_ARCHIVE_RECORD_MISSING` (exit 2).
+  O registro de arquivo e o fluxo de selo pertencem a R-0020, que sela
+  R-0003…R-0019 (C-0002 §4); nenhuma guarda foi contornada. Nao ha OD
+  pendente que bloqueie o fechamento de R-0017.
 
 ## Triagem
 
@@ -610,6 +615,15 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **Fechamento PC-0017 (2026-09-27):** PR #144 mesclado em
+  `d5afcf9211373238d6eb7b8ad09188a342101a39` com os cinco checks
+  obrigatorios verdes, `stack-smoke` manual corretamente skipped e
+  delivery-review CTG-0003 ciclo 2 PASS. `audit observe` exato emitiu
+  EV-5a597c2297292a98; cadeia valida no head
+  `25f94219921c2f37f927aa55c2aa98d97e96502d753be669134e6245c1b429d1`.
+  `round close` emitiu PC-0017; `round seal` recusou
+  `ROUND_ARCHIVE_RECORD_MISSING` e fica para R-0020. Proximo: publicar
+  fechamento e indices por PR, sem mexer no recibo imutavel.
 - **CTG-0003 pronto para evidência e PR (2026-09-27):** TASK-0008,
   TASK-0009 e TASK-0010 concluídas; a transcrição exigiu escalada
   Terra/alto por contexto histórico longo e correção documental dos dois

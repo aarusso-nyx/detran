@@ -33,7 +33,7 @@ the method (no closure; R-0002 has no folder).
 | R-0014 | `portal-pwa` — WP-P4…P6 (PORTAL)                                   | fechada           | #60…#66                 | PC-0007 | Fable                     |
 | R-0015 | `boat-mobile` — WP-B4 + WP-B5 (BOAT)                               | fechada           | #107, #116              | PC-0014 | Sol (troca Fable → Sol)   |
 | R-0016 | `dashboard-console` — WP-D4 + WP-D5 (DASHBOARD)                    | fechada           | #80, #103               | PC-0012 | Fable (troca Sol → Fable) |
-| R-0017 | `local-stack` — ação 4                                             | aberta            | #133, #143              | —       | Sol 6                     |
+| R-0017 | `local-stack` — ação 4                                             | fechada           | #133, #143, #144        | PC-0017 | Sol 6                     |
 | R-0018 | `index-state` — ação 3                                             | fechada           | #128, #129, #130        | PC-0015 | Opus 5.5                  |
 | R-0019 | `law-corpus` — ação 2                                              | fechada           | #132, #137, #139        | PC-0016 | Sol 6                     |
 | R-0020 | `devai-sensors` — ação 5                                           | proposta (C-0002) | —                       | —       | Opus 5.5                  |
