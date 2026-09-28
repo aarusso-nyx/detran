@@ -1,0 +1,48 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0007",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "medium",
+      "path": "docs/meta/adr/ADR-0015-stynx-1-3-1-angular-22-and-rait-role-catalogue.md",
+      "summary": "The amended Context says 'R-0021 now fixes the STYNX pin at 1.4.0; Angular 22 and DEVAI 1.4.5 remain unchanged'. Decision item 1 was rewritten in the present tense ('The DETRAN suite pins STYNX 1.4.0 … and DEVAI 1.4.5 (unchanged …)'). Both statements are false for the current tree. package.json:90 pins `@aarusso-nyx/devai` 1.5.6. ADR-0028 (Accepted) adopted DEVAI 1.5.6. AGENTS.md and AUTHORIZATION.md also cite the DEVAI 1.5.6 runtime. The worker then repeated the error as a PASS criterion in reports/TASK-0014.md ('Angular 22 e DEVAI 1.4.5 permanecem'). This is a documentary defect that introduces a new wrong claim about the current pin, and it contradicts another accepted ADR.",
+      "fix": "In Context, keep 1.4.5 only as the historical fact of 2026-09-12. State that the current DEVAI pin is 1.5.6 per ADR-0028, and that R-0021 did not change it. In Decision item 1, move DEVAI 1.4.5 to the past tense or add a cross-reference to ADR-0028. Correct the matching line in reports/TASK-0014.md (criterion row 1 and the 'Arquivos' list), or add a maestro erratum to the report without rewriting the worker's verbatim output. Then rerun `pnpm format:check` and `pnpm docs:kb:check`."
+    },
+    {
+      "severity": "low",
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "summary": "In the R-0021 row, the 'Tokens estimados' column reads 'estimativa indisponível'. However, work/rounds/R-0021/budget.json has 22 entries totalling about 1.033 M input / about 132 k output, including the new astra-upstream-and-supervision entry. Every other row reports budget.json estimates. The row therefore misstates the recorded accounting.",
+      "fix": "Replace it with '≈1,033 M entrada / ≈132 k saída até o checkpoint, estimativas em `budget.json`; telemetria bruta indisponível; atualizar no fechamento', or equivalent wording that clearly marks a checkpoint."
+    },
+    {
+      "severity": "low",
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "summary": "The 'Escaladas' column of the R-0021 row holds 'Sem selo; close aguardando recibo', which is closure state and not escalations. The 'Tarefas' column reads 'TASK-0001…0015; CTG-0001/0002 mesclados' and does not say that TASK-0005…0013 were cancelled and transferred under A1. A reader could take this as 15 tasks carried out. The 'Ciclos de REVIEW' count '2 prompt-review' also leaves out the transport-invalid prompt-review-2 attempt (reviews/prompt-review-2.transport.log), and that attempt is not otherwise recorded.",
+      "fix": "'Tarefas': list the active tasks (TASK-0001…0004, 0014, 0015) and state 'TASK-0005…0013 canceladas/transferidas (A1)'. 'Escaladas': record the actual escalations, or 'nenhuma'. Move the no-seal/closure-pending note to 'Ajustes ao método' or 'Merge'. Optionally note 'prompt-review-2 rejeitado pelo bridge (JSON inválido), ciclo 3 PASS'."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0007-1.json.raw.8A5BgB",
+      "summary": "The bridge for this review left two zero-byte temporary files in reviews/: `.json.raw.8A5BgB` and `.json.formatted.cYo16J`. They are not git-ignored (`git check-ignore` exit 1), so a blanket `git add work/rounds/R-0021` would commit empty temporary files next to the canonical review artefacts.",
+      "fix": "Remove both temporary files once the bridge writes delivery-review-CTG-0007-1.json. Stage only the canonical .json, .prompt.md and .bridge.json files."
+    },
+    {
+      "severity": "info",
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "summary": "The stack-smoke entry cites the job IDs 108792483206 and 108793701832, the isolated 42/42 run on 2bc62e7a and the next step (retain and publish the per-line workflow summary before any test change). This matches CTG-0002-stack-smoke-triage.md. The workflow run IDs (36379619536 and 36380030490) are only in the triage report. The migration entry covers signature, all of outbox including RENACH, offline-sync, notifications gated on OD-P40, and an inventory of unused STYNX dependencies. It does not say explicitly that there is no removal in R-0022's inventory step.",
+      "fix": "Optional: add the two run IDs or links. Change 'Inventariar dependências STYNX sem import' to 'inventariar, sem remover'. This is not blocking."
+    }
+  ],
+  "notes": [
+    "Scope checked: the diff 69642874..HEAD (a4f6783e) adds only the exact DEVAI audit observation of merge #151 (.devai/state/audit-observations/69642874…/* and record/proofs/chain.json). The runtime generated it and I did not re-derive the hashes. The uncommitted diff touches only ADR-0015, waves.md, backlog.md, rounds/README.md, AUTHORIZATION.md, budget.json and plan.md, plus new reports. There are no product, test, lockfile or .devai edits.",
+    "AUTHORIZATION.md: I checked the markers against the installed runtime. In release-host.js, authorizationIsActive tests /status:\\s*active\\b/ and /\\bGRANTED\\b/, and requires that close-state.jsonl be absent (it is absent). The added text says the markers represent the Owner's existing authorization and that they 'não ampliam o escopo nem alteram a Adenda A1'. A1 and the upstream-issues addendum are otherwise byte-identical. I found no expansion of authority.",
+    "plan.md D-1 matches A1. It authorizes a formal close without a seal, keeps the transferred criteria as not met, and does not satisfy the signature, outbox, offline-sync, notifications or dead-dependency criteria. The new CTG-0002 merged checkpoint agrees with the triage, the gates report and the observed event EV-fd403e322b9e0bbb with head dd20c041…abb1c. It correctly calls the remote workflow exit 1 on both the candidate and main 1.3.1, and does not claim a remote PASS.",
+    "budget.json: the new entry astra-upstream-and-supervision (125 k in / 12 k out, gpt-6-astra, role architect) is separate from earlier entries and matches CLOSE-RUNTIME-PREFLIGHT.md. The '19 issues' count equals 18 requirement issues plus index #289, consistent with AUTHORIZATION.md.",
+    "ORCHESTRATOR-FINAL.md is written as a checkpoint ('será atualizado no fechamento; não antecipa recibo PC nem selo'). It does not claim close, a PC or a seal. It accurately records PR #149/#151 and their SHAs, the review cycles and the smoke divergence.",
+    "rounds/README.md marks R-0021 'aberta' with #149 (3d96eeb8) and #151 (69642874) and PC '—'. The vocabulary fix is confirmed by the worker's verify:state-index rerun. No PC, close receipt or seal is claimed in any file in this CTG.",
+    "The ADR-0015 amendment separates the WP-0 1.3.1 history from the R-0021 1.4.0 pin. Its figures (59 manifests, 158 declarations, 48 generated, 11 manual) match CTG-0002-gates.md and contracts/CTG-0002.md. It explicitly does not claim the migrations or round closure. The only defect there is the DEVAI version (finding 1).",
+    "Gates: the worker reported docs:kb:check, docs:kb:publish-check, verify:state-index and format:check with final exit 0; the intermediate failures are recorded. I did not rerun them (read-only review). Global `pnpm check` and `pnpm backend:test:ci` for CTG-0007 have not been run and are not inferred. They, plus a rerun of the four focal gates after the fixes above, must pass before the PR. After the medium finding is corrected, a PASS in the next cycle is expected, still conditional on those gates. No Owner decision was reopened and no seal is suggested."
+  ]
+}

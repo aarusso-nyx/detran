@@ -1,5 +1,9 @@
 # R-0021 — autorização do Owner
 
+status: active
+
+GRANTED — representação para o runtime DEVAI 1.5.6 da autorização expressa do Owner já documentada abaixo. Estes marcadores não ampliam o escopo nem alteram a Adenda A1.
+
 Papel: Architect. Fonte: instrução do Owner nesta conversa, seguida de aprovação expressa do plano de implementação em 2026-09-27 (America/Sao_Paulo).
 
 O Owner autorizou executar R-0021 até concluir o escopo revisto, incluindo preparação Astra, workers, revisão independente, evidência, PRs e merges com checks verdes. Preparação e materialização: GPT-6 Astra. Orquestração após prompt-review PASS: `gpt-6-sol`, esforço `high`, sessão limpa. Reviewer: `claude-opus-5-5`, ponte existente.
