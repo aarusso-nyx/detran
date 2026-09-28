@@ -12,6 +12,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 
 const repositoryRoot = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -154,12 +155,20 @@ async function writeFixture(root) {
   );
 }
 
-async function runBaseline(root, outDir, extraArgs = []) {
+async function runBaseline(root, outDir, extraArgs = [], env = process.env) {
   return spawnSync(
     process.execPath,
     [baseline, '--repo-root', root, '--out-dir', outDir, ...extraArgs],
-    { cwd: repositoryRoot, encoding: 'utf8' },
+    { cwd: repositoryRoot, encoding: 'utf8', env },
   );
+}
+
+async function comparator() {
+  const source = await readFile(baseline, 'utf8');
+  const start = source.indexOf('function compareBaseline(');
+  const end = source.indexOf('\nasync function main()', start);
+  assert.ok(start >= 0 && end > start, 'compareBaseline source is present');
+  return runInNewContext(`(${source.slice(start, end)})`);
 }
 
 async function withFixture(callback) {
@@ -403,3 +412,91 @@ test('dada uma SensorReading de abertura removida quando mede o fechamento entã
     }
   });
 });
+
+async function a2ComparisonFixture() {
+  const opening = JSON.parse(
+    await readFile(
+      resolve(repositoryRoot, 'work/rounds/R-0020/baseline.json'),
+      'utf8',
+    ),
+  );
+  const final = structuredClone(opening);
+  const orphan = {
+    path: 'record/proofs/work/generic/R-0021.jsonl',
+    sequence: 2,
+    sha256: 'c562dfce81ec9ba08c4d3eae22547ad36adb99fbb76dc2632bb20e81fbbfb804',
+  };
+  assert.equal(opening.proofs.orphans.length, 52);
+  assert.equal(opening.proofs.verification.valid, true);
+  final.proofs.lines.push({ ...orphan, round_id: 'R-0021', anchored: false });
+  final.proofs.orphans.push(orphan);
+  final.proofs.jsonl_lines += 1;
+  final.proofs.counts.jsonl_lines += 1;
+  final.proofs.counts.orphans += 1;
+  final.proofs.anchor_gate = {
+    exit_code: 0,
+    directly_anchored: 67,
+    declared_orphans: 53,
+    undeclared_orphans: 0,
+    duplicate_anchors: 0,
+    invalid_references: 0,
+    validation_errors: 0,
+  };
+  return { compare: await comparator(), final, opening };
+}
+
+test('dada somente a órfã A2 e gate estrito limpo quando compara proofs então aceita a linha nova', async () => {
+  const { compare, final, opening } = await a2ComparisonFixture();
+  const result = compare(opening, final);
+  assert.equal(result.axes.proofs.verdict, 'PASS');
+  assert.ok(!result.failures.some(({ axis }) => axis === 'proofs'));
+});
+
+for (const [name, change] of [
+  ['gate ausente', (final) => delete final.proofs.anchor_gate],
+  ['gate com falha', (final) => (final.proofs.anchor_gate.exit_code = 1)],
+  [
+    'órfã não declarada pelo gate',
+    (final) => (final.proofs.anchor_gate.undeclared_orphans = 1),
+  ],
+  [
+    'âncora duplicada no gate',
+    (final) => (final.proofs.anchor_gate.duplicate_anchors = 1),
+  ],
+  [
+    'referência inválida no gate',
+    (final) => (final.proofs.anchor_gate.invalid_references = 1),
+  ],
+  [
+    'erro de validação no gate',
+    (final) => (final.proofs.anchor_gate.validation_errors = 1),
+  ],
+  ['cadeia inválida', (final) => (final.proofs.verification.valid = false)],
+  [
+    'hash A2 diferente',
+    (final) => {
+      final.proofs.lines.at(-1).sha256 = '0'.repeat(64);
+      final.proofs.orphans.at(-1).sha256 = '0'.repeat(64);
+    },
+  ],
+  [
+    'outra órfã nova',
+    (final) => {
+      final.proofs.lines.push({
+        path: 'record/proofs/work/generic/R-0020.jsonl',
+        sequence: 4,
+        sha256: '0'.repeat(64),
+        round_id: 'R-0020',
+        anchored: false,
+      });
+    },
+  ],
+]) {
+  test(`dada A2 com ${name} quando compara proofs então falha`, async () => {
+    const { compare, final, opening } = await a2ComparisonFixture();
+    change(final);
+    const result = compare(opening, final);
+    assert.equal(result.axes.proofs.verdict, 'FAIL');
+    assert.ok(result.failures.some(({ axis }) => axis === 'proofs'));
+  });
+}
