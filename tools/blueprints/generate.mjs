@@ -6,6 +6,38 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
+const stynxVersionFile = path.join(root, 'tools/stynx-version.json');
+let stynxVersionConfig;
+try {
+  stynxVersionConfig = JSON.parse(fs.readFileSync(stynxVersionFile, 'utf8'));
+} catch (error) {
+  const reason = error instanceof Error ? error.message : String(error);
+  throw new Error(`${stynxVersionFile}: unable to read valid JSON (${reason})`);
+}
+function isExactVersion(value) {
+  const match =
+    /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/u.exec(
+      value,
+    );
+  if (!match) return false;
+  return (
+    match[4]
+      ?.split('.')
+      .every(
+        (part) => !/^\d+$/u.test(part) || part === '0' || !part.startsWith('0'),
+      ) ?? true
+  );
+}
+if (
+  typeof stynxVersionConfig !== 'object' ||
+  stynxVersionConfig === null ||
+  Array.isArray(stynxVersionConfig) ||
+  typeof stynxVersionConfig.version !== 'string' ||
+  !isExactVersion(stynxVersionConfig.version)
+) {
+  throw new Error(`${stynxVersionFile}: expected an exact version string`);
+}
+const stynxVersion = stynxVersionConfig.version;
 const sourceDir = path.resolve(
   root,
   process.env.BLUEPRINTS_DIR ?? 'docs/framework/blueprints',
@@ -367,8 +399,8 @@ function packageFiles(bp, sha, module, entities) {
           '@detran/shared': 'workspace:*',
           ...(module.dependencies ?? {}),
           '@nestjs/common': '^11.1.28',
-          '@stynx-nyx/core': '1.3.1',
-          '@stynx-nyx/data': '1.3.1',
+          '@stynx-nyx/core': stynxVersion,
+          '@stynx-nyx/data': stynxVersion,
         },
         devDependencies: {
           '@types/node': '^24.10.1',
