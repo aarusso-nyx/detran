@@ -1,0 +1,126 @@
+{
+  "action": "Deliver R-0021 CTG-0002 STYNX 1.4.0 source pin, dynamic verifier and unchanged post-pin characterization under Owner A1",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "bf85eb70bb112b47605833bb21c8d82863a45eee",
+    "3e7ee10cb71f8a634d4ace2c40be452b8ddda31a",
+    "15b5ab773bcb8c2d3db52a4fb242274a1cc3f1be",
+    "6d4adc01575e6b55eb7077a5585aaa1ef20d525e",
+    "39006eb4e7ff3e6c4d4709ff30561d16b6f723dd",
+    "1bbb30e509441aa63408bbc849d5c05786cc4f31",
+    "c9a4d573d8dfe99d7cceda48a36f22caeb6ea4fc"
+  ],
+  "artifacts": [
+    {
+      "path": "tools/stynx-version.json",
+      "sha256": "d4c2fe723957189455921c4d3cedd0cf6e0f4a639fd532c71406b60f41530ed1"
+    },
+    {
+      "path": "tools/check-stynx-pin.ts",
+      "sha256": "ce8a8de67f3b95a5574f5173407c0bc9bd1e54939575dbc18daf233f679f5b40"
+    },
+    {
+      "path": "tools/blueprints/generate.mjs",
+      "sha256": "473eacab3549878535dab2ed74a046c64e4224bc4b9660ac62b461685c972f99"
+    },
+    {
+      "path": "tools/stynx-pin/tests/check.test.mjs",
+      "sha256": "95dc74060b2da90a65b02a7402ea8d28fc50891555de8acd2c97d15ae272a0f0"
+    },
+    {
+      "path": "package.json",
+      "sha256": "ac962f01e40e0e55d56cbed0370d3bdb5091a64ec910919bc4c464f900529e3d"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "9e6fcdbbf2eb59a27025b38cf7dbd212292401cde64ea48b1ed39ee380fce5a5"
+    },
+    {
+      "path": "work/rounds/R-0021/contracts/CTG-0002.md",
+      "sha256": "dc15e5ba07528c52c680e05adcb595938f794d38b9442f0050389d43267ca4b8"
+    },
+    {
+      "path": "work/rounds/R-0021/contracts/stynx-manifests.json",
+      "sha256": "4c943600bb67f4c7371e5a7d92cfa447e32824b25c4d6b4120e08c80a5a64dfa"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/TASK-0015.md",
+      "sha256": "ebbb128fc840331ebcc4149d2f2d521c561be658d3964717f898a160107f530a"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/TASK-0004.md",
+      "sha256": "62806aa3625b0b3da1541fc45b6c6dce9c8cb7a8cf02ba30a0ce4298ce92d357"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/CTG-0002-gates.md",
+      "sha256": "0a1662f355b19baea4cfe9757225401250f2d5af835f9b907ecee3ea60eebec5"
+    },
+    {
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0002-1.json",
+      "sha256": "351fafbdafdc70fb8278e82f3bc22f50c8dbfaa37e174076fe8c0623ee2b759a"
+    },
+    {
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0002-2.json",
+      "sha256": "8381156ffd933c97dc7a08381870f57953849bedf7917a677bc692d439ba20e4"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0002-check.log",
+      "sha256": "857a2123d011ad7254ffafe3ca91a7ce8afb06afc6bbd5e797485632f0033a16"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0002-check-main-merge.log",
+      "sha256": "50ee83057dd6371e59d74b039ad246f879edcda55fe824b5adfca3cc03af66f9"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0002-backend-ci.log",
+      "sha256": "976dbd6b675ef70f85246175d38831b6de0256fbb0e496b47383acdd07a35c8c"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0002-build.log",
+      "sha256": "1296fa4a50fea8a563dba738c2a8d71e524623fcc9d4efc48ffa11562dcd88bb"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0002-rls-smoke.log",
+      "sha256": "0a09062867f30c22d0657342f2a2e93b8f9725bc5e0b4158299ee1fb5d82e83d"
+    }
+  ],
+  "gates": [
+    {
+      "name": "Inspector TASK-0015 RED then GREEN unchanged",
+      "result": "pass",
+      "note": "Eight blackbox cases first RED only for missing CLI, then 8/8 pass; spec SHA fixed."
+    },
+    {
+      "name": "pnpm check on STYNX 1.4.0",
+      "result": "pass",
+      "note": "exit 0; SHA log in artifacts"
+    },
+    {
+      "name": "pnpm backend:test:ci on STYNX 1.4.0",
+      "result": "pass",
+      "note": "exit 0; PostGIS R21 fixed database, mock SENATRAN; app e2e 37 files/1681 passed, 3 preexisting todo, upgrade 21/21"
+    },
+    {
+      "name": "pnpm build and backend:rls-smoke",
+      "result": "pass",
+      "note": "both exit 0; hashes in artifacts"
+    },
+    {
+      "name": "pnpm check after main merge",
+      "result": "pass",
+      "note": "exit 0; product/runner unchanged by 23-file planning advance"
+    },
+    {
+      "name": "delivery-review CTG-0002 cycles 1 and 2",
+      "result": "pass",
+      "note": "Claude Opus 5.5 pure JSON PASS exhaustive and PASS delta; no high findings"
+    },
+    {
+      "name": "devai evidence verify and devai:doctor",
+      "result": "pass",
+      "note": "exit 0 before this record; audit head a88d485148a537de89608425a79d4b2c997a8c6929609e0c73f9b3b5b7c97485"
+    }
+  ]
+}
