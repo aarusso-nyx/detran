@@ -20,6 +20,8 @@ references.
   local release candidate policies, mutation requirements, and authoritative
   implementation sources.
 - [`adr/`](./adr/README.md) contains architecture decision records.
+- [`register/DECISIONS.md`](./register/DECISIONS.md) resolves D-1/D-2 and records
+  the append-only R-0017 closure annex.
 
 **Gate:** `pnpm verify:law-corpus` enforces law corpus rules (a)–(e).
 DEVAI members `invariants`, `invariant-strategies`, `trace`, `glossary`,

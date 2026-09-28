@@ -1,0 +1,83 @@
+{
+  "action": "Deliver R-0017 CTG-SEAL: authorized append-only PC-0018 supersession, D-1/D-2 register, deterministic rounds index, DEVAI seal and cross-family review",
+  "round": "R-0017",
+  "coupled_task_group": "CTG-SEAL",
+  "role": "engineer",
+  "commits": [
+    "646778365cb5d40cc5e4b42c7d294763d0fe110b",
+    "cff5f1ea5a9547d477f63a61216be8c0dfd7a5bc",
+    "9790efa651a1625a091bc43329474a8151dc6016",
+    "6d44610a4e0a6c778cc92df3a026fe0d8b588b94"
+  ],
+  "artifacts": [
+    {
+      "path": "record/proofs/compliance/closures/PC-0018.json",
+      "sha256": "d6227ca91b56af6e8c107803e58c7ab98442200b8aabbb59fe5e04a9dcc83e55"
+    },
+    {
+      "path": "work/rounds/R-0017/close-state.jsonl",
+      "sha256": "44411a90c438d49b5d421db380c58f2ff61493be964ede01f4879c8c3b5292cd"
+    },
+    {
+      "path": "work/rounds/R-0017/record.md",
+      "sha256": "12e0282563f702aeb7656788724c5add8b9f262f7529647fe8243e421684b2e5"
+    },
+    {
+      "path": "record/derived/indexes/rounds.md",
+      "sha256": "934780b55ce9bb7b4d0e3c319d28346e6fabba0aa5a53646c83c4234f26a3fcb"
+    },
+    {
+      "path": "law/register/DECISIONS.md",
+      "sha256": "1221a7b5eed15b93315fe8bf4a42bd3b8226cfb2136ff17318c214db571644fa"
+    },
+    {
+      "path": "tools/devai/render-rounds-index.mjs",
+      "sha256": "775f2b60497ebe44d7864e3c81f597a6b094fe2938e72ef268973b13ed19cc68"
+    },
+    {
+      "path": "tools/docs/state-index/check.mjs",
+      "sha256": "b651dfdd2e3d3e99143614d1becd79885cdb75614fb3b6011f74df6b422ce246"
+    },
+    {
+      "path": "work/rounds/R-0017/reviews/delivery-review-CTG-SEAL-cycle-2.json",
+      "sha256": "a6d4d3173f98572659ed64597efb61124129a6b7b7bb70af0ff0dd651b910621"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Full monorepo gate exit 0 on 2026-09-27 after isolating ignored docs/site/build from parameter-catalogue scan"
+    },
+    {
+      "name": "pnpm docs:check",
+      "result": "pass",
+      "note": "Docusaurus clear, typecheck and production build exit 0"
+    },
+    {
+      "name": "pnpm verify:state-index",
+      "result": "pass",
+      "note": "39 ADRs, 33 rounds, 18 closures with terminal PC-0018"
+    },
+    {
+      "name": "pnpm verify:rounds-index",
+      "result": "pass",
+      "note": "Deterministic index --check byte match"
+    },
+    {
+      "name": "DEVAI round seal",
+      "result": "pass",
+      "note": "ok true; close-state.jsonl status closed, phase_closure PC-0018"
+    },
+    {
+      "name": "delivery-review CTG-SEAL cycle 2",
+      "result": "pass",
+      "note": "Claude Opus 5.5, other family, PASS after five low findings from cycle 1 corrected or recorded"
+    }
+  ],
+  "decisions": [
+    "OD-R17-005: Owner authorized governed correction after DEVAI 1.6.0 assessment",
+    "D-1 and D-2 resolved for R-0017",
+    "PC-0017 immutable with four historical fail verdicts; PC-0018 supersedes with n/a under A4-A6"
+  ]
+}
