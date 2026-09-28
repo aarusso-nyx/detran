@@ -26,7 +26,8 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
    silently); keep the evidence chain intact — since DEVAI 1.4.5 the governed chain is
    `record/proofs/chain.json` with per-round proof lines under `record/proofs/work/`
    (round `R-0001`); `.devai/state/evidence-chain.json` is the pre-1.4.5 legacy chain,
-   kept tracked and read-only. Both are hash-chained and CI-verified.
+   kept tracked and read-only. The governed chain is verified in CI; the legacy
+   chain is not currently checked there. Preserve both without rewriting history.
 5. **Architecture boundaries:** no app or domain module calls SENATRAN directly —
    everything goes through `packages/senatran-adapter` (ADR-0003). Backend domain
    modules are workspace packages with explicit deps — no deep relative imports

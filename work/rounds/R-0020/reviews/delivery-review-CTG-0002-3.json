@@ -1,0 +1,43 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/reports/TASK-0006.md",
+      "line": 12,
+      "claim": "Este relatório ficou para trás em relação ao estado integrado. Ele ainda cita `pnpm devai:test` 46/46, quando o valor atual é 56/56 (reexecutei). Também afirma que o bloqueio restante da prova A2 é o PR #154, mas esse PR já foi mesclado e a R-0021 seq. 5 está gravada. A linha 8 repete a contagem antiga de 20/20 e 38/38.",
+      "fix": "Na TASK-0006, registrar como resultado final 28/28 no teste focal, 56/56 em `devai:test` e 81/53/0/0/0/0 no gate. Citar as seis provas gravadas (R-0020 seq. 3, R-0005 seq. 11, R-0007 seq. 43, R-0013 seq. 16, R-0017 seq. 8 e R-0021 seq. 5) com o head `fa3b777e…760e`. Remover a frase sobre o bloqueio do PR #154."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/reports/TASK-0005.md",
+      "line": 9,
+      "claim": "O relatório se contradiz. A linha 9 termina com 'A suíte atual retorna 18 PASS', mas o cabeçalho (linha 3) e a linha 12 dizem 28/28. Reexecutei e o valor correto é 28/28 PASS.",
+      "fix": "Trocar '18 PASS' por '28 PASS' ou remover a frase, que as linhas 11 e 12 já cobrem."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/tasks/TASK-0006.json",
+      "line": 5,
+      "claim": "A TASK-0006 continua `in_progress`, embora a entrega Engineer esteja concluída: script, package.json, .gitattributes, A2 e as seis provas gravadas. As TASK-0004 e TASK-0005 já estão `completed`.",
+      "fix": "Depois deste PASS e antes do commit Engineer, mudar para `completed`, valor aceito pelo schema. Em seguida, rodar de novo `pnpm verify:state-index` e a validação de schema de tarefas."
+    }
+  ],
+  "notes": [
+    "Revisão feita só em leitura, sem nenhum `--write`. O limite de quatro ciclos não foi atingido.",
+    "High de completude dos ciclos 1 e 2: resolvido. Reexecutei `node tools/devai/verify-proof-anchors.mjs --repo-root .` e obtive exit 0 com 81 âncoras diretas, 53 órfãs declaradas e zero em não declaradas, âncoras duplicadas, referências inválidas e erros de validação. `devai evidence verify --scope chain` confirmou a cadeia válida com head `fa3b777edfa04ab0ffd889dea9436d23e25b489358232ed29a70d682b921760e`.",
+    "Append-only confirmado pelo `git diff --numstat record/`. Os seis JSONL têm exatamente uma linha acrescentada e nenhuma removida. `chain.json` tem 369 linhas acrescentadas e uma removida, que é só a troca do campo `head`. As novas linhas são R-0005 seq. 11, R-0007 seq. 43, R-0013 seq. 16, R-0017 seq. 8, R-0020 seq. 3 e R-0021 seq. 5. Todas têm `role: engineer` e `readiness_promoting: false`, e as declaratórias trazem `coupled_task_group: CTG-0002`.",
+    "A2 conferida nos bytes. A R-0021 seq. 2 tem SHA-256 `c562dfce…fb804`. `AUTHORIZATION-A2-2026-09-28.md` tem SHA-256 `8058b19e…ac40f`, contém a fala literal do Owner e se restringe a essa única linha. `CTG-0002-exceptions.jsonl` tem uma linha com os cinco campos e o digest `63a3ea15…9441`. A prova R-0021 seq. 5 cita adendo, `decision_ref` e `decision_sha256` idênticos.",
+    "A2 só vale quando há uma prova declaratória diretamente ancorada. `readA2Exception` (verify-proof-anchors.mjs:391-452) exige envelope exato, digest canônico recalculado e hash da autorização. Mesmo assim, o trio só é aceito dentro de `validateDeclarations` (mjs:526-555), depois das checagens de âncora única da declaração, hash físico, ausência de âncora direta e ausência de duplicata. Sem o arquivo de exceção (ENOENT → null), a R-0021:2 cai em `not an allowed historical orphan`. Qualquer outro trio falha pela conjunção com a allowlist histórica fixada por digest. Os oito cenários A2 cobrem esses negativos, inclusive a nova linha R-0020 declarada.",
+    "Testes reexecutados: `verify-proof-anchors.test.mjs` 28/28, `baseline.test.mjs` 19/19, `node --test tools/devai/tests/*.test.mjs` 56/56 e `pnpm format:check` PASS. `pnpm check` completo não foi reexecutado por mim. O gate já está encadeado nele (package.json:15), então o CI é a confirmação final.",
+    "Lows do ciclo 2: (a) a sequência citada com o hash de outra linha agora é testada (test:621), assim como a contagem isolada adulterada (`proofs.counts.orphans = 51`, test:644); (b) `localeCompare` saiu e a ordenação usa `compareCanonicalPaths` (mjs:306-320); (c) o relatório RED traz saídas resumidas e declara com honestidade que o output bruto não foi retido.",
+    "`baseline.mjs`: `measureAnchorGate` é somente leitura, porque compara status e HEAD do git antes e depois e lança erro se mudarem. `compareBaseline` só admite uma nova órfã física se ela for o trio A2 exato, com gate limpo em todos os contadores e `verification.valid === true`. Em qualquer outro caso retorna FAIL, conforme CTG-0002.md:284-295. Os status `completed` das TASK-0004 e TASK-0005 estão dentro do schema.",
+    "Segregação de commits está pronta, sem bloqueio. Architect: AGENTS.md, contrato, plano, budget, TASK-0004, relatório 0004, autorização e exceção A2. Inspector: os dois testes e o relatório 0005. Engineer: script, baseline.mjs, package.json, .gitattributes, payloads, TASK-0006 e relatório 0006. Machine/DEVAI: `record/proofs/**`. Fora do PR CTG-0002 ficam CTG-0003.md, CTG-0003-R18-proposal.md, AUTHORIZATION-CTG3-2026-09-28.md e TASK-0007-PREWORK.md. Também não devem entrar no staging os temporários do bridge `delivery-review-CTG-0002-3.json.formatted.aLTgJg` e `.raw.ipHLj4`, que não estão ignorados pelo git.",
+    "Não encontrei contradição canônica, violação de fronteira nem gate enfraquecido, e não levantei achado novo sobre texto inalterado. Os três lows são de consistência documental e ficam como correção antes do commit."
+  ]
+}

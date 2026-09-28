@@ -1,0 +1,51 @@
+{
+  "action": "reanchor_observation_after_concurrent_main_merge",
+  "round": "R-0020",
+  "role": "engineer",
+  "coupled_task_group": "CTG-0001",
+  "readiness_promoting": false,
+  "observed_exact_sha": "c3c0df57b8fe9977bc808ff66fdc85328ffa756c",
+  "original_audit_event": "EV-47640325d901cd0a",
+  "original_chain_head": "b31b9b2771db655d436a1b634b3cc764db72327d0c9362d1d43a3b21f9bec14e",
+  "concurrent_main_merge": "1576708f8378817d5e3338953015f5acdb704e1e",
+  "resolution": "Accepted origin/main chain after R-0021 PR #153; reattest five unchanged audit artifacts by governed generic evidence; audit.observe for the old SHA cannot replay at the new HEAD",
+  "artifacts": [
+    {
+      "path": ".devai/state/audit-observations/c3c0df57b8fe9977bc808ff66fdc85328ffa756c/inventory.json",
+      "sha256": "60a9fef221b857515c2374f65674d33bf6cfbf411cfc5e3d57ba95a4c6cfcbb9",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/c3c0df57b8fe9977bc808ff66fdc85328ffa756c/scorecard.json",
+      "sha256": "485d2fb6d91b34d896f1b3fb98afd0fd960e1ec9fa0bbb3e4281220320e1ece6",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/c3c0df57b8fe9977bc808ff66fdc85328ffa756c/backlog.json",
+      "sha256": "15494c2a264f90556f2c3d29ed319bc778e866f3a2f909141c999e639cefbfae",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/c3c0df57b8fe9977bc808ff66fdc85328ffa756c/assessment.json",
+      "sha256": "474c87db6ba9ee4d8e2cc3204961efa4b9ec0542a8a1e7d7d58583e1915c88c8",
+      "kind": "audit"
+    },
+    {
+      "path": ".devai/state/audit-observations/c3c0df57b8fe9977bc808ff66fdc85328ffa756c/status.json",
+      "sha256": "62d07bec0c1a6565ba6ee8cb28daa03d3a5ac1022733f9a9f92827c894c76f5a",
+      "kind": "audit"
+    }
+  ],
+  "gates": [
+    {
+      "name": "artifact sha256",
+      "result": "pass",
+      "note": "five byte hashes match original audit.observe event"
+    },
+    {
+      "name": "evidence verify",
+      "result": "pass",
+      "note": "main chain valid before re-anchor"
+    }
+  ]
+}

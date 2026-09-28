@@ -286,11 +286,11 @@ autoria Owner; após `init bind|apply`, `devai doctor` deve mostrar todos `[✓]
 
 ## Decisões do Owner a obter (registro canônico, seção R-0020)
 
-- **OD-R20-001** — decisões dos 14 PC: (A) registrar `D-1` (autorização do Owner no
+- **OD-R20-001 — decidida pelo Owner em 2026-09-28: (A).** Decisões dos PC: (A) registrar `D-1` (autorização do Owner no
   `AUTHORIZATION.md` da rodada) e `D-2` (fechamento pelo maestro após merge com CI verde e PASS do
   reviewer) em `law/register/DECISIONS.md`, com anexo por rodada — sem novo PC; ou (B) novo
   `round close` por rodada com decisões `DII-nnnn` próprias (novos PC, os antigos ficam). Proposta: A.
-- **OD-R20-002** — `record/derived/indexes/rounds.md`: (A) pedido upstream ao DEVAI e espera; ou
+- **OD-R20-002 — decidida pelo Owner em 2026-09-28: (B).** `record/derived/indexes/rounds.md`: (A) pedido upstream ao DEVAI e espera; ou
   (B) gerador local determinístico a partir de `record/proofs/compliance/closures/*.json`, commit
   segregado com recibo do Owner. Proposta: B com issue upstream.
 - **OD-R20-003** — **decidida pelo Owner em 2026-09-26: (A).** Autoria por caminho: (A) identidades `DEVAI Architect|Owner|Machine` nos commits
@@ -302,20 +302,46 @@ autoria Owner; após `init bind|apply`, `devai doctor` deve mostrar todos `[✓]
 - **OD-R20-006** — ADR-0022 **já aceita** por OD-R18-002: manter a ADR aceita ou emendá-la por
   supersessão através da ADR orquestra × DEVAI; o aceite não é reaberto.
 - **A1** — meta de PASS (Meta 8).
+- **A2 — aprovada pelo Owner em 2026-09-28:** somente a linha `record/proofs/work/generic/R-0021.jsonl` seq. 2, SHA-256 `c562dfce81ec9ba08c4d3eae22547ad36adb99fbb76dc2632bb20e81fbbfb804`, pode ser declarada por nova prova DEVAI append-only. Registro literal em `AUTHORIZATION-A2-2026-09-28.md`; a exceção de identidade fica em `contracts/CTG-0002-exceptions.jsonl`, fora da baseline. Nenhuma outra órfã nova é autorizada.
 
 ## Decisões do maestro
 
-- **A2 — correção factual pela decisão Owner OD-R18-002:** ADR-0022 já está Accepted em `main`.
+- **Correção factual pela decisão Owner OD-R18-002:** ADR-0022 já está Accepted em `main`.
   A OD-R20-006 só decide manutenção ou supersessão; nenhum critério de aceitação foi trocado.
+
+- **M1 — troca de famílias autorizada pelo Owner em 2026-09-27:** maestro e workers Codex;
+  reviewer Claude Code pela ponte. Escada vigente e ids: Sol 6 `gpt-6-sol` (maestro, Architect
+  e tarefas grandes), Terra `gpt-5.6-terra` (médio), Luna `gpt-6-luna` (pequeno), reviewer
+  Opus 5.5 `claude-opus-5-5` (grande). `codex --help` e `claude --help` confirmam os parâmetros
+  `--model`; os ids constam da confirmação executada em R-0018/R-0019 e de
+  `model-ladder.md`. As CLIs locais são `codex-cli 0.157.1` e Claude Code 2.1.283.
+
+- **M2 — worktree do host:** a correção do Owner substitui o caminho em `/Volumes/Thiamat II`;
+  worktree gerenciada e limpa criada de `origin/main` em
+  `/Users/aarusso/.codex/worktrees/devai-sensors/detran`, branch `orchestra/devai-sensors`.
+
+- **M3 — scaffold:** ensaio isolado de `devai round plan --scaffold --write` retornou
+  `ROUND_ALREADY_EXISTS` sem alterar arquivos rastreados: `plan.md` já existe em `main`.
+  Não repetir a escrita na worktree.
+
 - **M4 — cobertura Inspector:** revisão cruzada 1 identificou ausência de testes precedentes nos
   CTGs 0005/0006. Acrescentadas TASK-0019/0020, mantendo os critérios e a ordem Architect →
   Inspector → Engineer; nenhum worker dessas tarefas foi disparado antes da revisão.
+
 - **M5 — prompt-review:** Claude Code `claude-opus-5-5` pela ponte: ciclo 1 `REVIEW` (10 high,
   10 low), ciclo 2 `PASS` (0 high, 3 low). Corrigidas as três notas low de redação dos prompts
   TASK-0003/0015/0018 e alinhados locks/comandos de TASK-0019/0020; os critérios não mudaram.
   `db_isolation=database` permanece porque o schema 2.0.0 só aceita `database|cluster`.
+
+- **M6 — teste de caracterização estável:** a tentativa 1 de TASK-0002 usou contagens vivas de
+  tarefas inválidas; isso seria quebrado pelo CTG-0003. Classificação `sensor-error`; a
+  clarificação C-01-T1 do contrato permite `--repo-root` temporário para fixtures e preserva
+  todos os critérios C-01. O Inspector corrige o teste antes da implementação.
+
 - **M7 — lock R-0017 em `package.json`:** PR #143 estava aberto enquanto a TASK-0003 ficou pronta; o Inspector TASK-0002 concluiu. O lock foi liberado pelos merges #143–#148. A branch local, ainda não publicada, foi atualizada para `8e7c5832`; a TASK-0003 está liberada.
+
 - **M8 — selo anterior e artefatos comuns:** R-0017 já está selada como PC-0018 em `main`; excluí-la da fila de `round seal` da R-0020 evita uma segunda emissão. O registro D-1/D-2 e o gerador de índice da R-0017 são precedente existente; TASK-0007 deve considerar os demais PC sem reabrir a decisão corretiva da R-0017.
+
 - **M9 — escalada de TASK-0003:** duas tentativas do worker Codex Terra tiveram falhas de
   caracterização; um subagente Codex Sol 6 separado (Engineer) executou a escalada. O campo
   `executor` da TASK-0003 reflete o executor final; `prompt_composition_id` preserva o prompt
@@ -328,34 +354,25 @@ autoria Owner; após `init bind|apply`, `devai doctor` deve mostrar todos `[✓]
   não existe. `task.schema.json` limita `evidence_refs` a IDs `EV-*`, por isso os caminhos
   dos relatórios de tentativa constam aqui e em `reports/`, mas não naquele campo. Nenhuma
   execução de worker usou Git.
+
 - **M10 — comparação de sensores com fonte pendente:** a comparação final de leituras
   persistidas expõe o seu próprio veredito e falha se uma leitura da abertura desaparecer.
   O eixo `sensors` e o resultado geral permanecem `REVIEW` enquanto
   `sense run spec_depth` estiver `source_pending`, pois a ação anuncia efeito
   `remote-write` e não foi executada pelo medidor somente leitura. O teste do Inspector
   verifica tanto a preservação quanto a remoção de uma leitura.
+
 - **M11 — autorização suplementar do Owner em 2026-09-28:** o limite de ciclos de
   prompt-review e delivery-review por item dobra de 2 para 4; o orçamento de entrada
   por janela triplica de 750000 para 2250000, com checkpoint de 80% em 1800000.
   A janela 2 conserva o consumo estimado anterior de 600000. A decisão está em
   `AUTHORIZATION-RETAKE-2026-09-28.md` e não modifica gates nem a ordem serial.
-- **M6 — teste de caracterização estável:** a tentativa 1 de TASK-0002 usou contagens vivas de
-  tarefas inválidas; isso seria quebrado pelo CTG-0003. Classificação `sensor-error`; a
-  clarificação C-01-T1 do contrato permite `--repo-root` temporário para fixtures e preserva
-  todos os critérios C-01. O Inspector corrige o teste antes da implementação.
 
-- **M1 — troca de famílias autorizada pelo Owner em 2026-09-27:** maestro e workers Codex;
-  reviewer Claude Code pela ponte. Escada vigente e ids: Sol 6 `gpt-6-sol` (maestro, Architect
-  e tarefas grandes), Terra `gpt-5.6-terra` (médio), Luna `gpt-6-luna` (pequeno), reviewer
-  Opus 5.5 `claude-opus-5-5` (grande). `codex --help` e `claude --help` confirmam os parâmetros
-  `--model`; os ids constam da confirmação executada em R-0018/R-0019 e de
-  `model-ladder.md`. As CLIs locais são `codex-cli 0.157.1` e Claude Code 2.1.283.
-- **M2 — worktree do host:** a correção do Owner substitui o caminho em `/Volumes/Thiamat II`;
-  worktree gerenciada e limpa criada de `origin/main` em
-  `/Users/aarusso/.codex/worktrees/devai-sensors/detran`, branch `orchestra/devai-sensors`.
-- **M3 — scaffold:** ensaio isolado de `devai round plan --scaffold --write` retornou
-  `ROUND_ALREADY_EXISTS` sem alterar arquivos rastreados: `plan.md` já existe em `main`.
-  Não repetir a escrita na worktree.
+- **M12 — descrição da cadeia legada no CTG-0002:** `AGENTS.md` afirmava que a
+  cadeia legada era verificada em CI, mas a inspeção do workflow e a baseline
+  mostram apenas o gate da cadeia governada. Corrigir a afirmação factual na
+  regra 4, preservando a cadeia legada rastreada e somente leitura. O novo gate
+  de âncoras é adicional ao verificador governado; nenhum check existente sai.
 
 ## Bloqueios
 
@@ -383,6 +400,43 @@ autoria Owner; após `init bind|apply`, `devai doctor` deve mostrar todos `[✓]
   produziu 0 células e PC/estado nulos apesar de `audit scorecard` e `round status` retornarem
   `ok: true`. Classificação `sensor-error`; escalar à camada grande Codex antes de aceitar o CTG.
 
+- CTG-0002, ensaio preliminar em `/tmp/r20-ctg2-rehearsal.tIVLAD/repo`:
+  `devai evidence record --kind generic --round R-0017 --as-role engineer --write`
+  com as três linhas órfãs R-0017 produziu seq. 8, exit 0, mesmo com PC-0018 já selado;
+  `evidence verify --scope chain` retornou valid e head
+  `6f7a7344041b1b287c529b029d09f499b9b0f3369afbf8cb7b6ef39217018d95`.
+  Resultado apenas do clone; a entrada real será refeita com o conjunto completo no
+  HEAD integrado, sob lock livre e após ensaio de todos os quatro payloads.
+- CTG-0002, ensaio conjunto em `/tmp/r20-ctg2-full-rehearsal.EGtV2e/repo`:
+  quatro `evidence record --kind generic --write` em R-0005, R-0007, R-0013 e
+  R-0017 aceitaram respectivamente 1, 38, 10 e 3 linhas declaradas e produziram
+  seq. 11, 43, 16 e 8; `evidence verify --scope chain` confirmou cadeia válida,
+  head `62c931a7f8c4544b0587c990b7a8ab2ed20d4bdabd684485157fd0bae26acb9d`.
+  Este HEAD é só de clone descartável; repetir após integração final de `main`.
+  O verificador local proposto, executado contra esse clone já corrigido, retornou
+  76 âncoras diretas, 52 órfãs declaradas, zero órfãs não declaradas, zero
+  duplicatas e zero referências inválidas (exit 0). No HEAD de trabalho sem
+  correções, o mesmo script fica RED esperado com 52 órfãs não declaradas.
+
+- CTG-0002 após o merge #151 e a reancoragem da observação: o gate
+  `pnpm verify:proof-anchors` fica RED com 53 órfãs não declaradas, 74 âncoras
+  diretas, zero duplicatas e zero referências inválidas. As 52 da baseline
+  permanecem, e `record/proofs/work/generic/R-0021.jsonl` seq. 2 entrou por
+  `main` sem âncora direta; a seq. 3 foi regravada. O hash da linha seq. 2 é
+  `c562dfce81ec9ba08c4d3eae22547ad36adb99fbb76dc2632bb20e81fbbfb804`.
+  Classificação `policy-issue` de concorrência: o verificador DEVAI confirma
+  cadeia criptográfica válida, mas não cruza as linhas JSONL. A proposta A2
+  no contrato está sem efeito até aprovação expressa do Owner; nenhum gate foi
+  afrouxado. Testes Inspector 7/7 e `pnpm format:check` PASS.
+- CTG-0002, ensaio de A2 **somente no clone**
+  `/tmp/r20-ctg2-after-r21.vVChxs/repo`: as quatro provas históricas mais a
+  declaração exata da R-0021 seq. 2 produziram seq. 11, 43, 16, 8 e 4.
+  O script proposto contou 79 âncoras diretas, 53 órfãs declaradas, zero
+  órfãs não declaradas, zero duplicatas e zero referências inválidas (exit 0);
+  `evidence verify --scope chain` confirmou head válido
+  `44a43891b77e34a09b99dbb7e49d369807839740c58b63e07a5c85cc5296f88b`.
+  A2 continua sem efeito no branch até decisão expressa do Owner.
+
 ## Retomada
 
 - **Checkpoint 2026-09-27 20:53 UTC, janela 1 (histórico):** pausa por lock upstream partilhado do PR #143. A branch R-0020 não tinha push, PR nem commits locais.
@@ -395,8 +449,24 @@ autoria Owner; após `init bind|apply`, `devai doctor` deve mostrar todos `[✓]
 - **Delivery-review da observação, ciclo 1:** Claude Code `claude-opus-5-5` deu `PASS` para o commit `d4c3a3bb` e a autorização suplementar, com dois achados low. A frase operacional de orçamento foi alinhada a M11; os arquivos temporários do bridge desapareceram após a conclusão da chamada. O reviewer confirmou o SHA exato, os cinco hashes dos artefatos, a linha append-only seq. 115, cadeia válida e ausência de promoção de readiness. PR #151 da R-0021 segue como lock partilhado de `record/proofs/chain.json`.
 - **Atualização do PR #152 após o merge concorrente #151:** R-0021 entrou em `main` como `69642874`; a branch integrou por merge `648e9795`, aceitando `record/proofs/chain.json` de `main` e verificando o head `68726d21`. A seq. 115 e o head `64d5e95b` acima são históricos da primeira execução; na cadeia corrente, seq. 115 pertence à R-0021. `audit observe --at 2a0f7ce2…` recusou repetição em HEAD novo com `AUDIT_OBSERVE_EXACT_HEAD_REQUIRED`. Os cinco artefatos mantiveram seus hashes; `evidence-CTG-0001-observation-reanchor.json` registra o evento original, a causa e os hashes. O `evidence record --kind generic --round R-0020 --write` foi ensaiado em `/tmp/r20-observation-reanchor.gBgBbD/repo` e executado na branch, criando `EV-23cb7d85e6e53c5f` (R-0020 seq. 2; cadeia seq. 117) e head válido `6f81515670216688e458681e32ed0d8b46bf94be90e7ab553f3fb53532ed6cf3`. A revisão Claude da reancoragem e `pnpm check` pós-integração estão em curso; depois é obrigatório novo CI antes do merge do #152.
 - **Delivery-review da reancoragem:** Claude Code `claude-opus-5-5` deu `PASS` no primeiro ciclo válido, com três notas low: comitar esta atualização do plano, explicitar melhor o papel no payload de futuras declarações e incluir `readiness_promoting: false` em futuras reancoragens. A primeira chamada de revisão retornou PASS em JSON cercado por Markdown, que a ponte recusou; a segunda chamada produziu JSON válido e está preservada com o hash do prompt. Nenhuma nota altera a prova append-only já emitida.
+- **Retomada CTG-0002 após PR #152:** o PR #152 foi mesclado como `c3c0df57b8fe9977bc808ff66fdc85328ffa756c`, com reviewer `PASS` e CI verde. O `audit observe --at c3c0df57… --round R-0020 --write` foi ensaiado em clone e executado no SHA exato, criando `EV-47640325d901cd0a` e cadeia válida no head `b31b9b2771db655d436a1b634b3cc764db72327d0c9362d1d43a3b21f9bec14e` (commit Machine `8e7e7038`). O ensaio das quatro correções históricas no clone `/tmp/r20-ctg2-four-after152.tmIOsh/repo` gerou as sequências 11, 43, 16 e 8, cadeia válida em `2c0875fe62417ac776369d466b134e1d161fe3938fced9410691c3954be6237f`; gate de âncoras: 78 diretas, 52 declaradas, **1 não declarada**, zero duplicatas e referências inválidas. A remanescente é a R-0021 seq. 2 da proposta A2. O PR concorrente #153 da R-0021 está aberto e toca `record/proofs/chain.json`, mantendo o lock das provas reais. O maestro identificou que a implementação inicial permitia declarar qualquer linha nova com hash válido, apesar do contrato limitar as exceções aos 52 trios históricos; Inspector e Engineer receberam correção e teste RED/PASS. A2 e OD-R20-001/002/004/006 seguem pendentes de resposta expressa do Owner.
+- **Issue upstream CTG-0002:** [DEVAI #168](https://github.com/aarusso-nyx/devai/issues/168) registra a ausência de cruzamento entre as linhas JSONL e as notas de âncora da cadeia, com a semântica append-only esperada para declarações históricas. Nenhuma alteração foi feita no repositório irmão.
+- **Delivery-review CTG-0002 ciclo 1:** Claude Code `claude-opus-5-5` deu `REVIEW`: high de completude (53 órfãs ainda sem declaração), medium de allowlist histórica mutável sem digest e de cobertura de testes, além de cinco observações low. O maestro corrigiu o registro cronológico de RED no relatório Inspector, ordenou M1…M12 e acrescentou papel, CTG, `readiness_promoting: false` e trace aos quatro inputs antes de qualquer prova real. Architect, Inspector e Engineer receberam os achados de contrato, digest, testes e diagnóstico, cada um dentro da fronteira de escrita. O gate e as provas permanecem sem efeito até liberação do lock #153 e decisão A2.
+- **Correções pós-review CTG-0002:** o contrato fixa os 52 trios históricos por 5.597 bytes canônicos e digest `f7e35c3977f6da17344c26605982d046a9f844cb4612d3acbc565ec9f01dd37b`; o Engineer valida metadados 119/67/52, duas visões da baseline e digest, sem aceitar A2 antes do Owner. O Inspector ampliou a suíte para 18/18 PASS, incluindo adulteração congruente da baseline, sequência, declaração sem âncora e notas malformadas. `pnpm devai:test` passou 36/36. O ensaio dos quatro payloads atualizados no clone `/tmp/r20-ctg2-hardened.YxtT0F/repo` gerou as sequências 11, 43, 16 e 8; o gate retornou RED **exatamente** pela R-0021 seq. 2 (78 diretas, 52 declaradas, 1 não declarada, zero duplicatas/referências/erros de validação), enquanto `evidence verify --scope chain` confirmou head válido `e7e210276ebc2167803e7d1fc91b78e7937e36c30eb3cc75e0e5d01abbc783bb`. `record/proofs/**` da branch real permaneceu limpo. O PR #153 tornou-se mergeable após atualização da R-0021, mas ainda está aberto e sem checks no novo head; o lock continua.
+- **Delivery-review CTG-0002 ciclo 2:** Claude Code `claude-opus-5-5` manteve `REVIEW` somente pela completude aguardando lock #153 e A2. Considerou resolvidos o medium da allowlist e a maior parte da cobertura, bem como diagnósticos, payloads, ordem M1…M12 e formatação. Restaram low de teste de sequência citada com hash de outra linha, ordenação por `localeCompare` em vez de bytes e resumo das saídas RED no relatório; Inspector/Engineer receberam os dois ajustes de código, e o maestro registrou o limite de retenção do output RED sem inventar log. Nenhum PASS libera commit ou PR ainda.
+- **Correções pós-ciclo 2:** o Inspector acrescentou os dois casos residuais (referência à sequência 8 com hash da 9 e contagem da baseline adulterada), chegando a 20/20; `pnpm devai:test` passou 38/38. O Engineer substituiu `localeCompare` por comparação determinística de caminhos. `pnpm format:check` passou. O PR #153 tornou-se mergeable no novo head `c3df8fac`, com CI em andamento, mas a cadeia desse branch não contém a observação local pós-#152 de R-0020 (`EV-47640325d901cd0a`). Se #153 mesclar antes do CTG-0002, integrar `main` aceitando sua cadeia e reatestar os cinco artefatos da observação local por DEVAI, sem merge textual, antes das provas históricas. A R-0021 seq. 2 permanece sem âncora em #153.
+- **Checkpoint operacional CTG-0002:** TASK-0004 Architect e TASK-0005 Inspector concluídas; TASK-0006 Engineer implementada com 20/20 testes próprios e 38/38 na suíte `devai:test`, mas o gate real segue RED 53/0 porque as provas não foram gravadas. Último veredito Claude Opus 5.5: `REVIEW` no ciclo 2, só por completude; há até dois ciclos remanescentes pelo M11. Branch `orchestra/devai-sensors` está em `8e7e7038`, à frente do remoto por dois commits (merge #152 e observação), com diff CTG-0002 não comitado e `record/proofs/**` limpo. `origin/main` está em `c3c0df57`. Consumo estimado da janela 2: 1.407.000/2.250.000 tokens de entrada, abaixo do checkpoint 1.800.000. **Pendentes:** CI/merge #153 para liberar lock, integração de main por merge, reancoragem da observação local se a cadeia de #153 prevalecer, quatro provas históricas, decisão A2 para R-0021 seq. 2, gate verde, revisão final, commits/PR/CI/merge CTG-0002; depois CTG-0003…0006 e A1/OD-R20-001/002/004/006. As decisões foram reapresentadas ao Owner; nenhuma aprovação foi inferida do silêncio.
+- **Retomada após PR #153:** R-0021 mesclou o PR #153 em `main` como `1576708f8378817d5e3338953015f5acdb704e1e`, com CI verde; nenhum PR concorrente está aberto. O maestro guardou o diff CTG-0002, integrou `main` pelo merge `d86e1f7b`, aceitou a cadeia de `main` no conflito sem edição textual e verificou head válido `c4289834cb0e0ebd42b305839e64edbc65d35827712e46be19518f7c32be5c57`; restaurou o diff. Os cinco artefatos intactos da observação de `c3c0df57` foram reancorados em R-0020 seq. 3 por `evidence record` após ensaio em `/tmp/r20-post153-reanchor.Z32MTu/repo`. As quatro correções históricas foram ensaiadas de novo em `/tmp/r20-ctg2-after153.dOiRQC/repo` e gravadas pelo verbo DEVAI na branch real: R-0005 seq. 11, R-0007 seq. 43, R-0013 seq. 16 e R-0017 seq. 8. Cadeia real válida no head `35b7451b1b3eac7014a77a5b9b0d643fc7e40b52015f69e3f402c4699c81a77f`; gate: 80 diretas, 52 declaradas, **1 órfã não declarada** (R-0021 seq. 2), zero duplicatas/referências/erros de validação. As provas ainda estão sem commit e sem PR porque a revisão final depende da decisão A2. A pergunta do Owner sobre avançar CTG-0003…0006 enquanto aguardava R-0021 perdeu o bloqueio de R-0021; preparo reversível pode ser empilhado, mas merges, selos, CI e configuração seguem a ordem e as decisões explícitas do plano.
+- **A2 aprovada e materializada como input:** o Owner aprovou a exceção exata da R-0021 seq. 2. `AUTHORIZATION-A2-2026-09-28.md` contém a fala literal e seu SHA-256 é `8058b19e4c19570a8556ce775d4b21aabeebd13399d323742e91f90d20eac40f`; `contracts/CTG-0002-exceptions.jsonl` contém apenas esse trio com digest canônico `63a3ea15d53b9cd61585104c54cb0282abb53e6cd8b4154d1169f290ad6e9441`. Architect atualiza o contrato, Inspector caracteriza RED/PASS e Engineer implementa a validação fail-closed. O PR #154 da R-0021 está aberto e toca `record/proofs/chain.json`; nenhuma nova prova real será gravada enquanto esse lock durar.
+- **A2 implementada e ensaiada:** Inspector escalado Codex Sol 6 acrescentou oito cenários à suíte: 27/28 antes do Engineer, só o positivo A2 RED; depois, 28/28 PASS. `pnpm devai:test` passou 46/46. O Engineer exige arquivo excepcional de uma linha e cinco campos exatos, decisão Owner e hash fixos, único trio e digest; ausência do arquivo mantém a órfã RED e linhas novas R-0020 nunca são admitidas. No clone descartável `/tmp/r20-a2-approved.bKGRe9/repo`, com cópia da cadeia local atual, `devai evidence record --kind generic --round R-0021 --as-role engineer --write` criou seq. 5; gate contou 81 âncoras diretas, 53 órfãs declaradas, **zero não declaradas**, zero duplicatas/referências/erros; cadeia DEVAI válida no head `228b69bdcd8fd75ea1c7f0100f448a8e554cb4e25bd95f19da84a9e5905e0440`. A prova A2 real ainda não foi gravada porque o PR #154 mantém o lock de `record/proofs/**`.
 - **Orçamento:** janela 1 fechou com 546521/750000 tokens de entrada estimada (72,9%) e 69772 de saída. A janela 2 retomou com 600000 tokens de entrada estimada; por M11 e `AUTHORIZATION-RETAKE-2026-09-28.md`, seu orçamento é 2250000 e o checkpoint é 1800000, contabilizados em `budget.json`.
-- **Próximo passo:** obter PASS da revisão de reancoragem, concluir `pnpm check`, atualizar o PR #152 e mesclá-lo só com novo CI verde. O CTG-0002 tem contrato e testes concluídos, implementação do gate em andamento; a prova real aguarda o merge #152 e a decisão do Owner sobre a linha órfã R-0021 seq. 2. Antes de qualquer nova escrita governada, integrar `main` por merge no branch publicado e ensaiar no clone descartável.
+- **Situação após consulta de liberação:** o PR #154 da R-0021 está aberto, com CI em curso, e toca `record/proofs/chain.json`, `AGENTS.md`, `waves.md` e `record/derived/indexes/rounds.md`; estes caminhos voltam a ser locks partilhados. As cinco provas locais recém-gravadas do CTG-0002 continuam sem commit, com cadeia válida e uma órfã não declarada. Antes do PR CTG-0002, obter A2, integrar o merge #154 por `git merge --no-edit origin/main`, aceitar a cadeia de `main` se houver conflito e reemitir por DEVAI as provas locais perdidas, após ensaio em clone; então gate verde, delivery-review `PASS`, commits por papel, CI e merge. Para a conclusão da rodada, obter também OD-R20-001/002/004/006, A1, aceite da ADR v2 de CI e recibos exatos dos 11 achados quando as propostas estiverem concretas. OD-R20-003/005 já estão decididas. Os CTGs 0003–0006 podem receber preparo reversível empilhado, sem promover gates, selos, configuração ou merges fora da ordem serial.
+- **Prework reversível CTG-0003:** `contracts/CTG-0003.md` e `reports/TASK-0007-PREWORK.md` mapeiam 16 PC e closures, normalização e ensaio do selo, sem concluir TASK-0007 ou alterar fontes normativas. Foi confirmado que PC-0015 de R-0018 contém um `validation_criteria.verdict: fail`; o runtime DEVAI 1.5.6 recusa seu selo. Preservar PC-0015 e pedir decisão expressa para correção append-only específica antes de selar R-0018. R-0017 já está selada pelo PC-0018 e fica fora da fila. OD-R20-001/002 continuam pendentes.
+- **Correção R-0018 autorizada:** `contracts/CTG-0003-R18-proposal.md` fixa PC-0015 imutável, novo PC append-only com `supersedes: PC-0015`, `n/a` apenas para o comando literal que falhou e critério próprio C-02-21 `pass` somente após medição atual. `git check-ignore --no-index -v dist/x` saiu 0 no candidato local e apontou `.gitignore:3:dist/`; repetir após integração. Em resposta à proposta e ao questionário OD-R20-001/002, o Owner disse literalmente “Sim, autorizo todas as ações para a correta finalização.” `AUTHORIZATION-CTG3-2026-09-28.md` registra a fala e o escopo: correção específica R-0018, OD-R20-001=A e OD-R20-002=B. Nenhum novo PC ou selo foi emitido até aqui.
+- **CTG-0002 após merge #154:** R-0021 fechou no PR #154 como `d3ec20cb7bb79b4126975810585144857daa0293`, com CI verde. Branch publicado integrou `origin/main` pelo merge `133530a4`; o stash do diff CTG-0002 foi aplicado, e os conflitos de `record/proofs/chain.json` e as cinco linhas geradas locais foram resolvidos aceitando **integralmente** o estado de `main`, sem edição textual. A cadeia base ficou válida em `ec36cf1bf45f951d6db2d4e9849cc3c2a5be56705040f208a0598ea4d882db77`; gate inicial: 75 diretas, 53 órfãs não declaradas. No clone `/tmp/r20-after154.UMAp2H/repo`, seis verbos `evidence record --write` produziram R-0020 seq. 3, R-0005 seq. 11, R-0007 seq. 43, R-0013 seq. 16, R-0017 seq. 8 e A2 R-0021 seq. 5; gate 81 diretas, 53 declaradas, zero não declaradas/duplicatas/referências/erros, cadeia válida em `15e32b61fda997ffeece4954c4e88717180f78190504ecdde3a5958e1056e0f2`. Repetição real pelo maestro gerou as mesmas sequências e gate verde; head real `fa3b777edfa04ab0ffd889dea9436d23e25b489358232ed29a70d682b921760e`. `doctor` tier3 OK. Aguardam `pnpm check`, baseline final e delivery-review ciclo 3 antes dos commits e PR.
+- **Triagem da baseline pós-A2:** `pnpm devai:baseline --out-dir /tmp/r20-baseline-after154 --final --against work/rounds/R-0020/baseline.json` retornou `FAIL` em `proofs` (medidor só reconhece âncora física e chama a R-0021 seq. 2 de nova órfã) e `tasks` (TASK-0004/0005 usavam `status: done`, fora do enum). Corrigidos os dois status para `completed`; schema DEVAI de ambas passou. Inspector caracteriza em teste RED a comparação que exige gate estrito zero e cadeia válida para aceitar apenas a exceção A2 declarada; Architect documenta a regra; Engineer implementará somente após RED. A baseline de abertura permanece intocada e a linha A2 não será contada como âncora física.
+- **Baseline A2 após correção:** Inspector teve 18/19 PASS com único RED positivo, depois Engineer acrescentou `proofs.anchor_gate` somente leitura e comparação restrita ao trio exato A2, sem modificar `anchored` nem as 52 linhas históricas; 19/19 e `pnpm devai:test` 56/56 PASS. Nova medição em `/tmp/r20-baseline-after154-fixed/baseline-final.json`: exit 0, eixo `proofs` PASS, `tasks` PASS, `scorecard` PASS, nenhum eixo FAIL e veredito geral REVIEW só pelas fontes pendentes prévias (`checks`, `sensors`, `rounds`, `pull_requests`, `mixed_commits`). O arquivo final oficial será materializado no fechamento, após todos os CTGs. `pnpm check` completo em curso; revisão final CTG-0002 ainda pendente.
+- **Delivery-review CTG-0002 ciclo 3:** `pnpm check` completo saiu 0; testes DEVAI finais 56/56 e formato PASS. Claude Opus 5.5 devolveu `PASS` após verificar independentemente 81/53/0/0/0/0, cadeia `fa3b777edfa04ab0ffd889dea9436d23e25b489358232ed29a70d682b921760e`, bytes da autorização A2, seis provas append-only, gate fail-closed e baseline sem regressão. Três lows de consistência foram corrigidos antes do commit: relatórios TASK-0005/0006 e `status: completed` da TASK-0006. `verify:state-index` saiu 0 com 19 closures; schema DEVAI da TASK-0006 saiu 0. Seguem commits segregados por papel, PR CTG-0002, CI e merge.
 
 ## Leitura
 

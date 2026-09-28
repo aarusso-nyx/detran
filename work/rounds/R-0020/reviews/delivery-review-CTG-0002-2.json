@@ -1,0 +1,59 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": "CTG-0002 completude (pendência do ciclo 1, ainda aberta)",
+      "file": "package.json",
+      "line": 88,
+      "claim": "A pendência continua. Reexecutei `node tools/devai/verify-proof-anchors.mjs --repo-root .` na branch real e o resultado foi o mesmo do ciclo 1: 74 âncoras diretas, 0 declaradas, 53 órfãs não declaradas, 0 âncoras duplicadas, 0 referências inválidas e 0 erros de validação, com exit 1. Nenhuma das quatro provas declaratórias foi gravada, e `record/` e `.devai/` estão sem modificações. O lock de `record/proofs/**` do PR #153 continua aberto. TASK-0006 segue `in_progress` (tasks/TASK-0006.json:5). A R-0021 seq. 2 depende de A2, que não foi aprovada. O ensaio em `/tmp/r20-ctg2-hardened.YxtT0F/repo` (78/52/1) mostra que, mesmo gravando as quatro provas, a entrega ficaria RED até haver uma decisão do Owner. O `pnpm check` e o CI vão falhar.",
+      "fix": "Esperar o PR #153 liberar o lock e integrar `main` por merge. Conferir as órfãs de novo no HEAD integrado e ensaiar em clone descartável. Gravar as quatro provas com `devai evidence record --kind generic --as-role engineer`. Obter a decisão expressa do Owner sobre A2. Se aprovada, aplicá-la somente por `CTG-0002-exceptions.jsonl`, com teste RED/PASS próprio. Abrir novo delivery-review com `pnpm verify:proof-anchors`, `pnpm check` e CI verdes."
+    },
+    {
+      "severity": "low",
+      "item": "Cobertura: sequência divergente dentro da declaração (medium do ciclo 1, resolvido em parte)",
+      "file": "tools/devai/tests/verify-proof-anchors.test.mjs",
+      "line": 404,
+      "claim": "O novo teste de 'sequência divergente' altera a sequência física do JSONL (erro `expected sequence 2, received 3`). Ele não cobre uma declaração que cita `sequence` diferente com o `sha256` de outra linha, que é o caso 'hash ou sequência divergente' do item 3 do contrato e do parágrafo de testes (CTG-0002.md:166-170,184-186). O título do teste da linha 191 diz 'hash ou sequência', mas o teste só varia o hash. O ramo de código é o mesmo (`hash mismatch`, mjs:415), então o risco é baixo. Os outros cenários pedidos no ciclo 1 foram acrescentados e verificam o motivo exato: declaração sem âncora, linha já ancorada, caminho divergente, nota malformada, round divergente e adulteração isolada ou congruente da baseline.",
+      "fix": "O Inspector deve acrescentar um cenário em que a declaração cita `sequence: 8` com o `sha256` da linha 9, esperando `/hash mismatch for record\\/proofs\\/work\\/generic\\/R-0005\\.jsonl:8/`. Pode também acrescentar um caso que altere só `proofs.counts`, que o contrato lista como 'a contagem' (CTG-0002.md:190-191)."
+    },
+    {
+      "severity": "low",
+      "item": "Ordenação canônica: localeCompare × bytes UTF-8",
+      "file": "tools/devai/verify-proof-anchors.mjs",
+      "line": 286,
+      "claim": "O contrato manda ordenar por bytes UTF-8 (CTG-0002.md:131-132), mas o script usa `String.prototype.localeCompare`, que depende da ICU e da locale. Para os 52 caminhos atuais o resultado é o mesmo: recalculei 5.597 bytes e o digest `f7e35c39…dd37b`, e a ordem coincide com a comparação por código. Uma divergência só faria o gate falhar fechado, nunca ampliaria a allowlist. Este achado cabe no ciclo 2 porque o texto é novo nesta correção.",
+      "fix": "Trocar por comparação por código/bytes, por exemplo `a.path < b.path ? -1 : a.path > b.path ? 1 : a.sequence - b.sequence`, nas linhas 284-297."
+    },
+    {
+      "severity": "low",
+      "item": "Rastreabilidade do RED (low do ciclo 1, resolvido em parte)",
+      "file": "work/rounds/R-0020/reports/TASK-0005.md",
+      "line": 9,
+      "claim": "A cronologia foi corrigida: sete RED com o script ausente, depois o oitavo RED de linha nova declarada, alinhado ao budget. O fix pedia também 'os comandos e as saídas resumidas' de cada RED, e o relatório ainda não traz as saídas nem os motivos de falha. A linha 10 afirma cobertura de 'hash/seq. divergentes', o que é mais do que existe (ver achado sobre a linha 404).",
+      "fix": "Acrescentar um resumo das saídas RED (exit e mensagem, ex.: `Cannot find module …verify-proof-anchors.mjs` × 7 e `status 0` no cenário de linha nova). Ajustar a linha 10 à cobertura real."
+    },
+    {
+      "severity": "low",
+      "item": "Segregação de commits por papel (low do ciclo 1, ainda aberto)",
+      "file": "AGENTS.md",
+      "line": 1,
+      "claim": "M12 foi reordenada e o code span foi unido (plan.md:370,421), então essa parte está resolvida. A árvore, porém, continua sem commit e mistura Architect (AGENTS.md, contrato, plano), Inspector (testes) e Engineer (script, package.json, .gitattributes, payloads). Resta também um bridge temporário (`delivery-review-CTG-0002-2.json.formatted.*`/`.raw.*`).",
+      "fix": "Antes do PR, fazer um commit por papel, com AGENTS.md no commit Architect. Não versionar os temporários do bridge."
+    }
+  ],
+  "notes": [
+    "Revisão feita somente em leitura, sem `--write`. `git status` de `record/` e `.devai/` está limpo.",
+    "Allowlist (medium do ciclo 1): resolvido. Recalculei a canonização a partir de `baseline.json` e obtive 5.597 bytes, SHA-256 `f7e35c3977f6da17344c26605982d046a9f844cb4612d3acbc565ec9f01dd37b` e `head_sha` c848723c…. Os valores coincidem com o contrato (CTG-0002.md:134-135) e com as constantes do script (mjs:5-13). Uma baseline adulterada não amplia a allowlist. Os 52 trios `path/sequence/sha256` estão presos ao digest embutido no código. Os totais 119/67/52 e `anchored` booleano são obrigatórios, e `proofs.orphans` deve ser igual a `proofs.lines[anchored=false]`. A distribuição 1/38/10/3 e o sufixo `path` ↔ `round_id` fixam `round_id`, que não entra no digest. Tipos inválidos (ex.: `sequence` string) passam o digest, mas falham na linha 339. Ampliar a allowlist exige mudar o código do Engineer, e isso fica visível em review. A2 está fora de `baseline.json`, sem efeito e em arquivo separado que não existe (CTG-0002.md:196-238).",
+    "Cobertura (medium do ciclo 1): resolvida em parte, e o que falta foi rebaixado para low. Reexecutei `node --test tools/devai/tests/verify-proof-anchors.test.mjs` e obtive 18/18 PASS. Cada cenário confere o motivo exato: `undeclared orphan`, `hash mismatch`, `duplicate declaration`, `not an allowed historical orphan`, `historical orphan allowlist mismatch`, `invalid historical orphan count`, `invalid historical orphan metadata`, `duplicate anchor`, `invalid anchor reference`, `orphan declaration requires one direct anchor`, `already has a direct anchor`, `invalid orphan reference`, `invalid anchor notes` e `invalid orphan declaration`. O teste de caminho inexistente (R-0099) cai em `target.relativePath !== reference.path` e cobre de fato o caminho divergente. `/sequence/` (linha 408) é o motivo menos específico, mas ali o erro é lançado sozinho.",
+    "Asserção frouxa (low do ciclo 1): resolvida. `expectFailure` agora exige a regex do motivo além de rodada e sequência (test:100-115).",
+    "Totais de diagnóstico (low do ciclo 1): resolvido. `invalid references` conta só `invalid anchor reference` e `invalid orphan reference` (mjs:498-502), e `validation errors` fica separado. Uma declaração só entra em `declarations` depois de ter exatamente uma âncora direta e passar em todas as checagens (mjs:388-445).",
+    "Chave/kind (low do ciclo 1): resolvido por fail-closed explícito, `unsupported proof kind` (mjs:118-122). Não há teste dedicado desse ramo, mas o fix aceito não exigia um.",
+    "Payloads (low do ciclo 1): resolvido. Os quatro têm `role: engineer`, `coupled_task_group: CTG-0002`, `readiness_promoting: false` e `trace`, com 1/38/10/3 trios. O gate ignora os campos extras.",
+    "Plano (low do ciclo 1): M1…M12 estão em ordem, e o code span `pnpm verify:proof-anchors` ocupa uma só linha (plan.md:421).",
+    "Não verifiquei de forma independente o ensaio em `/tmp/r20-ctg2-hardened.YxtT0F/repo` (78/52/1, head `e7e21027…83bb`). Ele é coerente com 74 + 4 provas ancoradas = 78 e 53 − 52 = 1.",
+    "Não há contradição canônica, violação de autoridade nem escrita fora da fronteira, portanto não há FAIL. O veredito é REVIEW só por causa do high de completude, que depende do lock #153 e da decisão do Owner sobre A2."
+  ]
+}
