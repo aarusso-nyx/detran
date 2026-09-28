@@ -4,9 +4,9 @@
   "status": "active",
   "window_input_budget": 750000,
   "checkpoint_threshold": 600000,
-  "estimated_input_total": 555000,
-  "estimated_output_total": 87000,
-  "note": "Janela 2: estimativas conservadoras; janela 1 preservada em budget-window-1.json. Reviewer CTG-0001 ciclo 2 PASS. Próximo evento: commits, evidência e PR. Parar em 600000 tokens de entrada nesta janela.",
+  "estimated_input_total": 575000,
+  "estimated_output_total": 90000,
+  "note": "Janela 2: estimativas conservadoras; janela 1 preservada em budget-window-1.json. CTG-0001 tem reviewer PASS, commits segregados e evidência DEVAI válida; próximo evento: PR/CI. Parar em 600000 tokens de entrada nesta janela.",
   "entries": [
     {
       "kind": "maestro-resume",
@@ -87,6 +87,14 @@
       "input_tokens": 15000,
       "output_tokens": 3000,
       "note": "Estimativa: correções low de texto e trilha, integração do PR #149 e validações locais."
+    },
+    {
+      "kind": "maestro-evidence",
+      "id": "CTG-0001-commits-and-proof",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: commits por papel, entrada de evidência, ensaio em clone e prova seq. 1 validada."
     }
   ]
 }
