@@ -1,0 +1,118 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "tools/devai/baseline.mjs",
+      "line": 572,
+      "claim": "C-01-04 não é cumprido. O eixo `sensors` nunca conta `SensorReading` persistida: todo o eixo vira `source_pending` com o motivo 'fonte não declarada'. Só que o runtime DEVAI persiste em `.devai/state/sensor-readings`, e a própria medição já tem a contagem nativa: `sensor-integrity` retorna `readings_scanned: 0` em baseline.json. O resultado de `sense run spec_depth`, exigido pelo contrato (CTG-0001.md:57), também não foi registrado nem marcado como pendente. Mesmo assim, o relatório (reports/TASK-0003.md:15) declara C-01-04 PASS. Na medição final, as leituras que o CTG-0004 vai gravar não seriam contadas, e a regra de não regressão de sensores não teria como ser verificada.",
+      "fix": "Contar as leituras persistidas por kind e estado, com referência. Fontes: `.devai/state/sensor-readings` do repo-root e/ou `readings_scanned` do membro `sensor-integrity`, que já está no JSON. Registrar a configuração dos presets e o resultado de `sense run spec_depth`, se ele for somente leitura; se não for, marcá-lo `source_pending` com motivo próprio. Corrigir a linha 15 do relatório TASK-0003 e acrescentar à fixture do Inspector um caso com leitura persistida."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "tools/devai/baseline.mjs",
+      "line": 314,
+      "claim": "C-01-06 pede que cada linha jsonl tenha chave rodada/sequência e SHA-256. O contrato (CTG-0001.md:59) também manda calcular o hash de cada linha. O medidor só emite caminho, sequência e sha256 das 52 órfãs. As 67 linhas ancoradas não aparecem individualmente. Sem esse registro, a medição final não consegue provar que uma linha ancorada da abertura continua a mesma (Art. 41, append-only). Também não dá para separar 'linha nova' de 'linha reescrita'.",
+      "fix": "Emitir `proofs.lines[]` com {path, sequence, round_id, sha256, anchored} para todas as linhas, na ordem caminho/linha. `orphans` pode continuar como subconjunto. Cobrir o caso da linha ancorada no teste de fixture."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "tools/devai/baseline.mjs",
+      "line": 887,
+      "claim": "O contrato exige que baseline.md traga contagens e diagnósticos `source_pending` dos oito eixos (CTG-0001.md:160). O `markdown()` lê `baseline[axis].counts`, mas `checks` e `proofs` não têm `counts`, então o baseline.md versionado mostra `checks: {}` e `proofs: {}`. Os números apresentados como evidência (15 `ok: true`/10 falhas; 67 ancoradas; cadeia válida) não aparecem no Markdown. O diagnóstico por rodada, como R-0017 `TASK_ROUND_INACTIVE`, fica reduzido ao literal 'source_pending'.",
+      "fix": "Derivar do JSON as contagens de `checks` (por `ok`, exit code e veredito nativo) e de `proofs` (jsonl_lines, anchored, orphans, duplicate_anchors, `verification.valid`). Listar no Markdown os membros e rodadas com seus motivos de `source_pending`. Regenerar baseline.md a partir do mesmo JSON, sem medir de novo."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "tools/devai/baseline.mjs",
+      "line": 956,
+      "claim": "C-01-10 e a interface do contrato (CTG-0001.md:26-27, 163-186) exigem repetir a medição no fechamento com nomes `baseline-final.*` e comparar campo a campo contra a abertura, com FAIL em caso de regressão. O critério da rodada (plan.md:199) depende disso. O script sempre grava `baseline.json`/`baseline.md` e não tem modo de comparação. Nenhuma TASK de R-0020 recebe o comparador, e isso não está registrado como fora de escopo, nem no relatório TASK-0003 nem no plano.",
+      "fix": "Implementar no mesmo CTG `--final --against <baseline.json>`, que grava `baseline-final.*` com a comparação dos oito eixos e aplica as regras de não regressão do contrato. Os testes de regressão cabem ao Inspector, em fixture. Alternativa: registrar em plan.md §Fora de escopo/§Decisões do maestro a TASK e o CTG que entregam o comparador antes do fechamento."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0020/tasks/TASK-0003.json",
+      "line": 18,
+      "claim": "O método exige que cada escalada seja registrada na tarefa em `iteration_trail` (orchestra/README.md §6). A TASK-0003 teve três execuções: Terra tentativa 1, Terra tentativa 2 e escalada para `gpt-6-sol`. Ainda assim, TASK-0003.json mantém `iteration_count: 0`, `status: in_progress`, executor `gpt-5.6-terra` e nenhum `iteration_trail`. Em `reports/` não há `.jsonl` nem `.worker.json` de nenhuma dessas execuções, ao contrário de TASK-0001/0002. A autoria do código de Engineer não pode ser verificada. O executor escalado usa o mesmo modelo do maestro, que materializa e aceita a baseline (Art. 10), e isso aparece apenas como estimativa em budget.json.",
+      "fix": "Preservar em `reports/` os transcritos e os `worker.json` das tentativas 1 e 2 e da escalada (`TASK-0003-attempt-{1,2}.*`, `TASK-0003.*`), com head_before/head_after. Atualizar TASK-0003.json com `iteration_trail` e `iteration_count`, deixando o executor escalado explícito, e acrescentar em plan.md §Decisões do maestro que a escalada foi um worker separado, não o maestro."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/devai/baseline.mjs",
+      "line": 627,
+      "claim": "Falha medida e recusa (`adrs`, `forbidden-actions`, `docs-links`, `ci-economy` com exit 1) recebem `source_pending`. Pelo contrato, recusa é dado medido, e `source_pending` fica para entrada ou ambiente ausente. Com isso, a comparação final desses membros fica bloqueada. Não há campo normalizado de estado: `mutation` tem `value.ok: false`/`status: na`, mas entra entre os '15 ok:true', assim como os passes de população vazia (`test-trace` com 0 arquivos, `sensor-integrity` com 0 leituras).",
+      "fix": "Separar `state` (veredito nativo e `value.status`/`value.ok`) de `source_pending`, que deve valer só para membros que exigem entrada, como `pr-compliance`, `blueprint`, `schema` e `translation`, cada um com motivo próprio."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "tools/devai/baseline.mjs",
+      "line": 837,
+      "claim": "`mixed_commits.source_pending` e `rounds.source_pending` usam o literal 'source_pending', sem o motivo exigido em CTG-0001.md:153. O teste fixa esse literal (tools/devai/tests/baseline.test.mjs:170).",
+      "fix": "Usar um motivo, por exemplo 'classificador canônico F2/F3 ausente das fontes fechadas', e fazer o Inspector ajustar a asserção para exigir uma string não vazia diferente de null."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "tools/devai/baseline.mjs",
+      "line": 822,
+      "claim": "O contrato manda medir R-0020 separadamente como rodada ativa (CTG-0001.md:58). O script só emite o rótulo `active_round: 'R-0020'`. Da mesma forma, a quantidade e o digest de `.devai/state/audit-observations` (CTG-0001.md:56) não são registrados nem marcados como pendentes.",
+      "fix": "Medir `round status` e os documentos de R-0020 num campo separado do denominador. Registrar a contagem e o digest das observações versionadas, ou `source_pending` com motivo."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "tools/devai/baseline.mjs",
+      "line": 841,
+      "claim": "O eixo PR fica todo `source_pending`, embora o denominador (PRs mesclados no histórico do HEAD) possa ser medido localmente. Não há OD nem registro no plano sobre a fonte dos corpos de PR, apesar de o contrato exigir fonte ou OD para métricas pendentes (CTG-0001.md:211). Sem isso, a regra final sobre `Inv-Compliance:` nos PRs da rodada fica sem fonte.",
+      "fix": "Medir o denominador pelo histórico Git e abrir OD ou decisão do maestro sobre a fonte dos corpos, por exemplo um `gh` somente leitura com saída fixada."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "package.json",
+      "line": 61,
+      "claim": "`devai:test` não entra em `pnpm check`, ao contrário do padrão `parameters:test` citado em plan.md:185. Os testes do Inspector não protegem o CI. A evidência de que '`pnpm check` inclui testes' não cobre esta suíte.",
+      "fix": "Incluir `pnpm devai:test` em `check` neste CTG, ou registrar em qual CTG isso será feito."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "tools/devai/tests/baseline.test.mjs",
+      "line": 121,
+      "claim": "A fixture não cobre C-01-09 (duas execuções com bytes idênticos), a recusa de `--out-dir` dentro do repo, a leitura sem escrita no repo-root, os 25 membros em ordem com `source_pending` sem configuração DEVAI, nem o HEAD `source_pending` em fixture sem Git (C-01-T2). Esses pontos foram verificados só manualmente pelo maestro.",
+      "fix": "O Inspector acrescenta asserções na mesma fixture temporária, sem medição integral repetida."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/devai/baseline.mjs",
+      "line": 397,
+      "claim": "O validador de schema é próprio (subconjunto de palavras-chave; `date-time` via `Date.parse`, que é permissivo). O futuro gate `verify:round-tasks` usará `devai check --only schema`. Os dois validadores podem divergir, e isso afetaria a regra final de tarefas.",
+      "fix": "Usar o mesmo validador do gate, ou documentar a equivalência e cobrir a divergência com teste de fixture."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 366,
+      "claim": "§Retomada está defasada. Diz 'Em curso: TASK-0003', 'CTG-0001 ainda não tem implementação, baseline materializada' e 'Nenhum delivery-review ainda', o que contradiz a linha 78 e o relatório TASK-0003.",
+      "fix": "Atualizar §Retomada e §Concluídas com o estado real antes do commit."
+    }
+  ],
+  "notes": [
+    "Os hashes SHA-256 de baseline.json (a2f05656…) e baseline.md (f65220db…) conferem com a evidência. `head_sha` = c848723c1ee9053233b7e08732c5b80bbe06d625. Contagens conferidas contra o JSON: 25 membros, 45 células (43 UNKNOWN / 2 N/A), 59/49 kinds, 17 rodadas (R-0017 `TASK_ROUND_INACTIVE`), 119/67/52 provas com cadeia válida e 106 registros, 294 TASKs (151/143/0).",
+    "Não há caminho absoluto no JSON; os campos voláteis encontrados são `duration_ms: 0` e campos de erro de schema, que não quebram o determinismo.",
+    "Tríade na ordem certa: Architect (contrato) → Inspector (RED em fixture) → Engineer. Nenhum teste foi relaxado e nenhum arquivo gerado foi editado à mão. A mudança em package.json é aditiva e está dentro do lock liberado (M7).",
+    "Há arquivos temporários não rastreados em `reviews/` (`delivery-review-CTG-0001.json.formatted.*`, `.raw.*`). Limpar antes do commit.",
+    "Nenhuma contradição canônica, ADR, decisão do Owner ou violação de fronteira de escrita que justifique FAIL. OD-R20-003/005 foram preservadas, e ODs pendentes e A1 não foram presumidos."
+  ]
+}
