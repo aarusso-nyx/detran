@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0007",
+  "cycle": 3,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0021/reports/ORCHESTRATOR-FINAL.md",
+      "summary": "Line 18 still names `EV-fd403e322b9e0bbb` and head `dd20c041e50928a77cbea9c3d3c578e3ba837ebfbb3bf73c333021bcc20abb1c` as the current exact observation of the #151 merge. The same stale reference appears in `plan.md:227` (Retomada, checkpoint CTG-0002). After merge `699c6ca5` took main's chain, `EV-fd403e322b9e0bbb` is no longer in the integrated `record/proofs/chain.json`, and neither is the old generic sequence 4, `EV-aefa285db64f418a`. The replacement observation `EV-13603dba522df1e8` (head `f96c5b7f…`) is recorded only in `CTG-0007-main-sync.md` and `evidence-CTG-0007-main-sync.json`. This round already has a precedent for this situation: for CTG-0001, ORCHESTRATOR-FINAL records that the observation was reissued as `EV-848d167507498048`.",
+      "fix": "In ORCHESTRATOR-FINAL.md, record that the #151 observation was reissued on the integrated chain as `EV-13603dba522df1e8` with head `f96c5b7f417ffbe64223fdfb003973b3db468ad1f4c3dc97d8684e505b3df00e`, and that generic CTG-0007 sequence 4 was reissued as `EV-d0e2794b60028423` with head `c4289834…`. Keep `EV-fd403e…` as history. Add a checkpoint to plan.md §Retomada that covers PR #152 and the main-sync. Rerun `pnpm format:check` and `pnpm docs:kb:check`. This is documentary only. The chain is correct and this does not block the PASS."
+    }
+  ],
+  "notes": [
+    "Integration: `699c6ca5` is a normal merge with parents `dad0d5ce` and `c3c0df57`. Its `record/` equals main (`c3c0df57`) exactly: chain blob `87359f23…`, R-0021.jsonl with 3 lines, R-0020.jsonl with 2 lines. No hashes were edited by hand. `git diff 69642874..c3c0df57` contains only 18 files, all under `record/`, `work/rounds/R-0020/` and `.devai/state/audit-observations/2a0f7ce2…/`. `git diff dad0d5ce..HEAD` touches no path in backend, apps, packages, tools, docs, .github, package.json, pnpm-lock.yaml, law or .devai/pin.",
+    "Object equality: I checked all 10 Git object IDs in the main-sync table independently. They are identical in `dad0d5ce`, `699c6ca5` and HEAD. The one exception is `work/rounds/R-0021/`, which changes only in HEAD (`5017bbd0`) because the sync report, logs and evidence were added after the merge. The report's claim is limited to 'before = merge', so this matches.",
+    "Chain: main's 117 records are an exact prefix of `775906fb`, which adds `EV-13603dba522df1e8` (`audit.observe`, `context.git.head_sha` = `69642874…`, `readiness_promoting=false`, `previous_hash` `6f815156…`, head `f96c5b7f…`). That chain is in turn an exact prefix of HEAD, which adds `EV-d0e2794b60028423` (`evidence.record.generic`, `proof_sequence=4`, head `c4289834cb0e0ebd42b305839e64edbc65d35827712e46be19518f7c32be5c57`). Commit `775906fb` touches only `chain.json`. The five artifact hashes in `EV-13603dba` are the same as in the dropped `EV-fd403e…` and match the versioned files. `git diff dad0d5ce..HEAD` on `.devai/state/audit-observations/69642874…/` is empty, which confirms the outputs are byte-identical. `devai evidence verify --scope chain` in this checkout returned `valid:true` with no errors.",
+    "Generic proof: in HEAD, the sequence 4 line of `R-0021.jsonl` replaces the old line (timestamp 06:46 → 07:03). Its payload is exactly equal to `evidence-CTG-0007-main-sync.json`. All 12 artifact SHA-256 values listed in that evidence match the files in HEAD, including the new logs and `delivery-review-CTG-0007-2.json`.",
+    "Focused gates: the logs show prettier 'All matched files use Prettier code style!', 'knowledge-base check: OK (773 artifacts…)', 'publication dry run: OK', and index tests 'pass 103 / fail 0' and 'pass 9 / fail 0'. I also ran prettier on files committed after the log: `CTG-0007-main-sync.md`, `evidence-CTG-0007-main-sync.json` and `chain.json`. All three are formatted.",
+    "Global gates: `pnpm check`, `backend:test:ci`, `pnpm build` and RLS smoke stay tied to an identical product, test and dependency tree, and I did not rerun them. The required checks on PR #153 at the new SHA have not been observed, and this review does not infer that CI is green. The remote stack smoke is still not PASS, and the report states that correctly.",
+    "A1: the delta declares nothing delivered from CTG-0003/0004/0005 or TASK-0005…0013. It issues no PC, close receipt or seal. The only 'PC-' match in the diff is a test name inside `ctg0007-main-sync-index.log`.",
+    "Housekeeping: cycle 3's temporary files `delivery-review-CTG-0007-3.json.raw.ChbtH9` and `.formatted.8XnwEQ` are untracked in `reviews/`. Delete them after the bridge writes the final JSON, as was done in the earlier cycles.",
+    "Read-only: I made no changes to the repository. `evidence verify` left no mutation (`git status` shows only the cycle 3 bridge files)."
+  ]
+}
