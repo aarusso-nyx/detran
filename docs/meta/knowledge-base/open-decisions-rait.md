@@ -414,3 +414,18 @@ e não afirmam que o upstream aceitou, publicou ou implementou os requisitos. A 
 arquivos próprios de signature/outbox/offline-sync entre 1.4.0 e RC.2 está comprovada pelos
 artefatos e hashes da spec A1; RC.3 local não libera consumo. A conformidade futura será
 registrada a partir da publicação e das provas, sem reabrir OD-S15-01.
+
+## R-0020 — sensores DEVAI (C-0002, ação 5)
+
+As decisões já tomadas permanecem fechadas. A ADR-0022 foi aceita pela OD-R18-002; a OD-R20-006
+decide apenas se a nova ADR a mantém ou a emenda por supersessão.
+
+| ID         | Questão                                                                | Estado / premissa até decisão                                                                            | Decisor | Fonte                        |
+| ---------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------- | ---------------------------- |
+| OD-R20-001 | Destino de `D-1` e `D-2` dos PC históricos.                            | Pendente para os demais PC; R-0017 já registrou D-1/D-2 em `law/register/DECISIONS.md`, sem reemitir PC. | Owner   | `work/rounds/R-0020/plan.md` |
+| OD-R20-002 | Escritor de `record/derived/indexes/rounds.md` ausente no DEVAI 1.5.6. | Pendente para a campanha; R-0017 já introduziu gerador determinístico local e índice em `main`.          | Owner   | `work/rounds/R-0020/plan.md` |
+| OD-R20-003 | Autoria por caminho ou recibo avulso.                                  | **Decidida (A), Owner 2026-09-26:** identidades segregadas e controle de autoridade por caminho.         | Owner   | `work/rounds/R-0020/plan.md` |
+| OD-R20-004 | Destino das observações de auditoria versionadas.                      | Pendente; manter os 35 MB versionados ou reter só âncora com artefato externo.                           | Owner   | `work/rounds/R-0020/plan.md` |
+| OD-R20-005 | Constituição 1.0.1.                                                    | **Decidida: aceitar**, por `devai init bind --constitution` e commit segregado de autoria Owner.         | Owner   | `work/rounds/R-0020/plan.md` |
+| OD-R20-006 | ADR-0022 aceita: manter ou emendar por supersessão?                    | Pendente; o aceite da ADR-0022 por OD-R18-002 não é reaberto.                                            | Owner   | `work/rounds/R-0020/plan.md` |
+| A1         | Piso de PASS e membros obrigatórios aplicáveis.                        | Pendente da medição CTG-0001; nenhuma meta é presumida nem reduzida.                                     | Owner   | `work/rounds/R-0020/plan.md` |

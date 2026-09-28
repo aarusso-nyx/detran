@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0020",
+  "status": "pre_merge",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar e medir linha de base",
+  "description": "tools/devai/baseline.mjs, scripts devai:baseline/devai:test, baseline.json/md",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-devai-tools", "MOD-root-package-json"],
+  "target_substrates": ["F2", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0001",
+    "ref:engineer-backend",
+    "escalated:gpt-6-sol"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-6f7b18eb4a8d0481",
+  "acceptance_commands": [
+    ["pnpm", "devai:test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-6f7b18eb4a8d0481",
+    "max_iterations": 3,
+    "capabilities": ["read", "local-write"]
+  },
+  "iteration_trail": [
+    {
+      "iteration": 1,
+      "started_at": "2026-09-28T02:46:03Z",
+      "ended_at": null,
+      "verdict": "REVIEW",
+      "hard_gate_failures": [
+        "Validação parcial de TASK e ausência de round status, detectadas pelo maestro."
+      ],
+      "soft_gate_failures": [],
+      "evidence_refs": []
+    },
+    {
+      "iteration": 2,
+      "started_at": "2026-09-28T02:55:05Z",
+      "ended_at": null,
+      "verdict": "ESCALATED",
+      "hard_gate_failures": [
+        "Ensaio oficial: audit scorecard e round status em result.value não interpretados; 0 células e PC nulo."
+      ],
+      "soft_gate_failures": [],
+      "evidence_refs": []
+    },
+    {
+      "iteration": 3,
+      "started_at": "2026-09-28T03:04:41Z",
+      "ended_at": null,
+      "verdict": "PASS",
+      "hard_gate_failures": [],
+      "soft_gate_failures": [
+        "Delivery-review CTG-0001 ciclo 1: REVIEW; cinco achados high corrigidos; ciclo 2 PASS."
+      ],
+      "evidence_refs": []
+    }
+  ]
+}

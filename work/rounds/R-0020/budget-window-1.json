@@ -1,0 +1,68 @@
+{
+  "round": "R-0020",
+  "window": 1,
+  "status": "checkpoint",
+  "window_input_budget": 750000,
+  "checkpoint_threshold": 600000,
+  "estimated_input_total": 546521,
+  "estimated_output_total": 69772,
+  "note": "Janela 1 pausada por lock upstream em package.json (PR #143), com 546521 tokens únicos estimados; retomar após merge de R-0017. Entradas por worker usam input bruto menos cache-read; maestro e reviewer são estimativas.",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap-reading",
+      "model": "gpt-6-sol",
+      "input_tokens": 190000,
+      "output_tokens": 28000,
+      "note": "Estimativa provisória de leitura, bootstrap, pnpm check, 20 tarefas/prompts e correção após primeira revisão; saída CLI não fornece consumo do maestro."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 65000,
+      "output_tokens": 10000,
+      "note": "Primeira revisão exaustiva por bridge Claude; REVIEW, 10 high e 10 low, prompt anexado de 127510 bytes; estimativa única."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 65000,
+      "output_tokens": 4000,
+      "note": "Segundo ciclo restrito; PASS com 0 high e 3 low de redação, corrigidos mecanicamente. Entrada anexada de 162880 bytes."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0001-attempt-1",
+      "model": "gpt-6-sol",
+      "input_tokens": 51856,
+      "output_tokens": 1732,
+      "note": "CLI bruto 374672 input, 322816 cache-read; bloqueou por confirmação de lock ausente, sem escrita."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "gpt-6-sol",
+      "input_tokens": 53772,
+      "output_tokens": 11035,
+      "note": "CLI bruto 1100940 input, 1047168 cache-read; contrato entregue, format:check PASS."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0002-attempt-1",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 57034,
+      "output_tokens": 5631,
+      "note": "CLI bruto 502986 input, 445952 cache-read; RED documentado, mas teste de TASK inválida depende da árvore viva e requer fixture estável."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 63859,
+      "output_tokens": 9374,
+      "note": "CLI bruto 1121139 input, 1057280 cache-read; fixture temporária estável, RED esperado, format:check PASS."
+    }
+  ]
+}

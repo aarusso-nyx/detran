@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Normalizar tarefas e criar gate",
+  "description": "normalize-tasks.mjs, verify-round-tasks.mjs, tasks históricas e template",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-devai-tools",
+    "MOD-round-tasks",
+    "MOD-orchestra-task-template"
+  ],
+  "target_substrates": ["F2", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0003",
+    "ref:engineer-backend"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-076fd4afcc59170a",
+  "acceptance_commands": [
+    [
+      "node",
+      "--test",
+      "tools/devai/tests/normalize-tasks.test.mjs",
+      "tools/devai/tests/verify-round-tasks.test.mjs"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-076fd4afcc59170a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/tasks/TASK-0003.json",
+      "line": 53,
+      "claim": "O `iteration_trail` tem as três iterações e o executor final `gpt-6-sol`, então a correção high 5 está atendida. Faltam dois detalhes: as iterações 1 e 2 terminaram, mas continuam com `ended_at: null`; e as três entradas têm `evidence_refs: []` (linhas 59, 70, 81), embora os relatórios `reports/TASK-0003-attempt-{1,2}.*` e `TASK-0003-escalated.*` já existam.",
+      "fix": "Preencher `evidence_refs` com os caminhos dos relatórios de cada tentativa. Usar em `ended_at` o horário da tentativa seguinte ou do veredito do maestro, com a mesma ressalva de reconstrução registrada em M9. Outra opção é declarar em M9 por que o campo continua nulo."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/reports/TASK-0003.md",
+      "line": 20,
+      "claim": "O relatório ainda diz 'segunda execução e revisão final ainda em curso'. Isso contradiz a evidência deste ciclo: `pnpm check` exit 0 após a integração de `main`. O §Retomada de plan.md (linhas 382 e 384) também continua dizendo que falta integrar o #149 e que `pnpm check` está em execução.",
+      "fix": "Atualizar a linha 20 do relatório e o §Retomada/Próximo passo de plan.md com o estado real antes do commit do CTG."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "tools/devai/baseline.mjs",
+      "line": 669,
+      "claim": "O motivo gravado para `sense_run_spec_depth` diz 'efeitos … não confirmados como somente leitura'. Ele não cita a fonte da afirmação feita no relatório e em M10: a ação `sense run` declara `effect: remote-write` em action-registry.json:2741. Enquanto isso, a própria baseline.json registra o kind `spec_depth` com efeito `read`, vindo de sensor-registry. Quem lê só a baseline vê uma contradição aparente.",
+      "fix": "Mudar o motivo para citar a fonte, por exemplo 'ação `sense run` declara efeito remote-write em action-registry.json; kind spec_depth é read, mas a ação não foi executada pelo medidor somente leitura'. Depois, regenerar os artefatos a partir do mesmo HEAD."
+    }
+  ],
+  "notes": [
+    "Correção high 1, sensores: atendida. `measureSensors` (baseline.mjs:621-673) inventaria `.devai/state/sensor-readings` por kind, status e referência. O resultado entra em `counts.by_kind`/`by_status`, e `persisted` fica null quando há erro de leitura. `sense_run_spec_depth` fica `source_pending` com motivo próprio. O comparador (1140-1169) expõe `persisted_readings.verdict`, dá FAIL quando uma leitura é removida ou alterada e deixa o eixo e o total em REVIEW enquanto spec_depth está pendente. Os testes em baseline.test.mjs:322-405 cobrem preservação (PASS/REVIEW/REVIEW) e remoção (FAIL com exit ≠ 0, com baseline-final gravado mesmo assim). A permanência em REVIEW é compatível com o critério de plan.md:199, porque só regressão é FAIL, e está registrada em M10.",
+    "Correção high 2, provas: atendida. `proofs.lines` tem 119 entradas `{path, sequence, round_id, sha256, anchored}`, 67 delas ancoradas, e `orphans` continua como subconjunto. O comparador (1195-1220) separa linha removida ou reescrita de nova linha órfã.",
+    "Correção high 3, Markdown: atendida. baseline.md mostra as contagens derivadas de `checks` (25 / 15 ok / 10 falhas, exit codes, vereditos) e de `proofs` (119/67/52/0/106/valid). Os diagnósticos listam os quatro membros `source_pending` com motivo e R-0017 `TASK_ROUND_INACTIVE`.",
+    "Correção high 4, medição final: atendida. `--final --against` exige os dois argumentos, confere `schema_version`/`round_id`, grava `baseline-final.{json,md}` com a comparação dos oito eixos e sai com exit 1 se houver FAIL (baseline.mjs:1327-1361).",
+    "Correção high 5, trilha: atendida. Os três pares `.md/.jsonl/.worker.json` têm `head_before`/`head_after`, `raw_tool_transcript_available: false` e `dispatch_time_exact_available: false`. Os JSONL marcam o conteúdo como 'mensagens observáveis' e não o apresentam como transcrito bruto. M9 declara a limitação do runtime e diz que os `started_at` foram reconstruídos.",
+    "Verificação local: SHA-256 de baseline.json (534b4429…) e baseline.md (ce57de54…) conferem com a evidência. `pnpm devai:test` deu 18/18 PASS nesta revisão, e `devai:test` agora faz parte de `pnpm check`.",
+    "Os arquivos temporários não rastreados de `reviews/` (`delivery-review-CTG-0001-2.json.formatted.*`, `.raw.*`) continuam presentes; remover antes do commit.",
+    "Nenhuma contradição canônica, violação de fronteira ou teste relaxado foi encontrada nas correções. Os achados low do ciclo 1 que não dependem das correções high não foram reabertos."
+  ]
+}
