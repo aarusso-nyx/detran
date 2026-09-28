@@ -35,3 +35,9 @@ Na worktree real, os mesmos verbos retornaram PC-0018 e selo `ok: true`. O SHA-2
 O comando genérico `devai check --only schema --schema <phase-closure.schema.json>` recusou uma referência relativa `common-defs.schema.json` do pacote; a validação embutida de `round close` aceitou PC-0018. Esta falha de invocação genérica é registrada como `sensor-error`, sem mudança no schema ou no PC.
 
 O reviewer Claude Opus 5.5 retornou `PASS` no primeiro ciclo com cinco achados de baixa severidade. O caso em que a entrada por symlink/caracteres reservados poderia não executar o gate foi corrigido e recebeu teste; o renderer ganhou testes para índice obsoleto ou ausente, predecessor ausente, vínculo entre rodadas, dois terminais e JSON inválido. `law/README.md` agora aponta ao registro e D-2 cita a fonte de R-0017 sem inferir anexos das demais rodadas. O `record.md` gerado é protegido no ato do selo; uma edição manual posterior de seu frontmatter não é detectada continuamente por `format:check`. Esse limite fica registrado para uma futura checagem de integridade específica.
+
+## Publicação e observação pós-merge
+
+O ciclo 2 de `delivery-review` retornou `PASS`. `pnpm check` e `pnpm docs:check` passaram integralmente; a prova DEVAI CTG-SEAL foi registrada como sequência genérica 7 e a cadeia validou no head `9a1543cb2bb75554549ab7f8dbb612eff14d28854e83be4930dbe05790be80db`. O PR #147 passou por todos os checks obrigatórios, incluindo `verified-local-rc`, e foi mesclado em `b31f12728f0de35e5da0ad4c904425ed2b9fb01c`.
+
+Depois do merge, `audit observe --at b31f12728f0de35e5da0ad4c904425ed2b9fb01c` retornou `EV-8b3063e2a763ab41`; a cadeia local validou no head `4e7d24d618730d6555af5b2e4ad5ff92af3e915f9420ab17d9c438cb8a16f994`. A observação e o histórico final seguem para PR de metadados, sem reabrir o selo.
