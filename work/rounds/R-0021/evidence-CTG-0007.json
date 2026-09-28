@@ -1,0 +1,113 @@
+{
+  "action": "Deliver R-0021 CTG-0007 documentary transcription and close preflight under Owner A1 after exact CTG-0002 merge observation",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0007",
+  "role": "engineer",
+  "commits": [
+    "a4f6783e9547fcbec5b1c472df7d863a073ae413",
+    "fd58d9b08eb98c2471fa2aad50c30d52dfdd90a1",
+    "8659176a8c2f0bd46ba5c1f061f3591ae76b1911"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/meta/adr/ADR-0015-stynx-1-3-1-angular-22-and-rait-role-catalogue.md",
+      "sha256": "5eabd21d28ec3db6b5b90f428ea1b5ab9633694cafc44f8d1b9868e523af7e8e"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "sha256": "ece87235ec48c728660ab5174dc0fe7f748867f139ef513464fc941b0d3ae3af"
+    },
+    {
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "sha256": "eee31decbaf2d13c1a933055e81744c720ae8a81a30815ff5b7adc90352c4a87"
+    },
+    {
+      "path": "work/rounds/README.md",
+      "sha256": "2c198a582c2807860e75f2cf490d20255357247af0f55ea9059d17e1e8b9d9a0"
+    },
+    {
+      "path": "work/rounds/R-0021/AUTHORIZATION.md",
+      "sha256": "c52153aabb98112e3f0398b068d218bc3b1d1c5f6eea6c75698a2123659e1bef"
+    },
+    {
+      "path": "work/rounds/R-0021/plan.md",
+      "sha256": "b1f2d6e2249d5ae759caceb7afa28cd15abd95a7df3ed7c6cc43d29e07dccab9"
+    },
+    {
+      "path": "work/rounds/R-0021/budget.json",
+      "sha256": "d9a48cacbc1168f7cb6a4b9563f0c4f02fe31a64f9610fa31dbc7fe9be6f8b28"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/TASK-0014.md",
+      "sha256": "2f190bf6b6065d36b6535b97e54f133f29743368ee294fde9cb5de2536ffd029"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/TASK-0014-ERRATUM.md",
+      "sha256": "adca71c3d684e8bc879afdab3574d707ee58f0c6553590c2287dcb897833fdba"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/CTG-0007-gates.md",
+      "sha256": "8a6ef97cc3955586aefe5b01e85b9c1d0095152db02f5c489741c9d045fc32d2"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ORCHESTRATOR-FINAL.md",
+      "sha256": "4e17470d9362098707a86477aa3cbed344ec8820ffb5260ca754c6b719c0f70a"
+    },
+    {
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0007-1.json",
+      "sha256": "9fd62f4e261b3671f62ff0d4e2bb841144aba6097511454a250ab2c23e03b8a5"
+    },
+    {
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0007-2.json",
+      "sha256": "452abe8a4dc4cdccfc8ea7c8b6b2306960b206c51c3e151c445e100a3f5199ac"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-check.log",
+      "sha256": "46561d5f9d730913c69a075e6e0b5e77ca29393d892665fa98d9ed3318ff415a"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-backend-ci.log",
+      "sha256": "4668153d3ee1f8fda495d05a9872062df947eedd4a7573bb5a179b64b6d757e1"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-build.log",
+      "sha256": "ed91a435682db60f0c1267d30fb20711227dcb22e38eac9ccc6fff2644087b74"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-rls-smoke.log",
+      "sha256": "0a09062867f30c22d0657342f2a2e93b8f9725bc5e0b4158299ee1fb5d82e83d"
+    }
+  ],
+  "gates": [
+    {
+      "name": "Opus 5.5 delivery review CTG-0007 cycle 2",
+      "result": "pass",
+      "note": "Pure JSON PASS; prior medium DEVAI pin error corrected in ADR-0015 and worker erratum."
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Exit 0 on candidate documentary tree; full output versioned."
+    },
+    {
+      "name": "pnpm backend:test:ci",
+      "result": "pass",
+      "note": "Exit 0 on R21 exclusive PostGIS and SENATRAN mock; app e2e 37 files/1681 pass plus 3 prior TODO, upgrade 21/21."
+    },
+    {
+      "name": "pnpm build and backend:rls-smoke",
+      "result": "pass",
+      "note": "Both exit 0; RLS smoke confirms 140 inf/ch tables and tenant isolation."
+    },
+    {
+      "name": "format:check after gate report",
+      "result": "pass",
+      "note": "Exit 0 after report and review outputs were staged."
+    },
+    {
+      "name": "DEVAI doctor and chain verification before record",
+      "result": "pass",
+      "note": "Both exit 0; pre-record chain head dd20c041e50928a77cbea9c3d3c578e3ba837ebfbb3bf73c333021bcc20abb1c."
+    }
+  ]
+}
