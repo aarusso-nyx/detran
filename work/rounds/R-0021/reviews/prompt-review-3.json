@@ -1,0 +1,17 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0021",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The cycle-2 verdict, taken from prompt-review-2.transport.log, stands. The only issue in that log was the Markdown fence. Its content was PASS with no findings.",
+    "Integrity: all 15 prompts recompute to the sha256 and pc_id in compositions.json. The prompt_composition_id in each tasks/*.json matches its pc_id. The prompts, contracts, execution.json and reports/TASK-0001.md were last modified at 22:27:39, and tasks/*.json and compositions.json at 22:28:15. The transport log was written at 22:31:38, so nothing changed after the review.",
+    "H1 fixed: CTG-0001.md:125 and TASK-0002.md:94 now use pnpm --filter @detran/shared run test --passWithNoTests=false.",
+    "H2 fixed: TASK-0002.md:93-98 matches CTG-0001 lines 124-129, and TASK-0003.md:87-89 matches lines 130-132. Every vitest command carries --passWithNoTests=false.",
+    "H3 fixed: juntas uses run test. The maestro runs the ch-clinical-reports build under lock before TASK-0002 and again after the pin, as stated in CTG-0001:119, TASK-0002.md:83 and 00-maestro.md:31.",
+    "H4 fixed: TASK-0004.md:26 reads stynx-manifests.json. TASK-0004.md:73 makes blueprints:generate and install maestro-only and allows only the 48 generated paths. execution.json has generated_paths_by_maestro.",
+    "H5 fixed: execution.json assigns all five docs to TASK-0001, and 00-maestro.md:31 includes them in the CTG-0001 PR, delivery-review and evidence.",
+    "Lows fixed: TASK-0002 reads rait-case-commands.e2e.spec.ts (line 60). TASK-0015.md:37 passes the absolute tsx URL from import.meta.resolve. Dependencies are preserved. TASK-0014 target_modules is [MOD-adr, MOD-docs]. 00-maestro.md:26 puts DDL and seed before the first e2e/integration run.",
+    "No global gate was run and no files were modified. The only checks were file reads and hash recomputation."
+  ]
+}

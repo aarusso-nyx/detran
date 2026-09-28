@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0021",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Fixar STYNX 1.4.0 e integrar verificador",
+  "description": "Fixar STYNX 1.4.0 e integrar verificador conforme AUTHORIZATION A1 e contratos fechados.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-deps-stynx-pin",
+    "MOD-blueprints-generator",
+    "MOD-root-scripts",
+    "MOD-stynx-pin"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r21", "owner-a1"],
+  "branch": "orchestra/stynx-canonical",
+  "worktree_id": "WT-stynx-canonical",
+  "prompt_composition_id": "PC-3a56912b734e5eed",
+  "acceptance_commands": [
+    ["node", "--test", "tools/stynx-pin/tests/check.test.mjs"],
+    ["pnpm", "verify:stynx-pin"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-28T01:17:11.018441+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-3a56912b734e5eed",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

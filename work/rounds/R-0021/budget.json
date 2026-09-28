@@ -1,0 +1,119 @@
+{
+  "round_id": "R-0021",
+  "unit": "estimated_unique_input_tokens",
+  "initial_input_limit": 750000,
+  "authorized_multiplier": 3,
+  "window_input_limit": 2250000,
+  "checkpoint_input_threshold": 1800000,
+  "window_hours": 5,
+  "max_review_cycles_per_item": 4,
+  "window_started_at": "2026-09-28T01:13:56.271872+00:00",
+  "entries": [
+    {
+      "id": "astra-plan",
+      "role": "architect",
+      "model": "gpt-6-astra",
+      "input_estimate": 130000,
+      "output_estimate": 12000,
+      "note": "Planejamento aprovado, análise publicada de RC2, estimativa inclui subagente de inspeção."
+    },
+    {
+      "id": "astra-materialization",
+      "role": "architect",
+      "model": "gpt-6-astra",
+      "input_estimate": 100000,
+      "output_estimate": 20000,
+      "note": "Reserva estimada, atualizar com preparação efetiva; inclui contratos e documentação delegados."
+    },
+    {
+      "id": "prompt-review-1",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 65000,
+      "output_estimate": 4000,
+      "result": "REVIEW",
+      "note": "5 high e 4 low; todos endereçados pelo Architect, sem execução de workers."
+    },
+    {
+      "id": "prompt-review-2",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 35000,
+      "output_estimate": 3000,
+      "result": "transport-error",
+      "note": "Conclusão textual PASS, mas cerca Markdown rejeitada pela ponte; não utilizada como gate."
+    },
+    {
+      "id": "prompt-review-3",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 18000,
+      "output_estimate": 1200,
+      "result": "PASS",
+      "note": "Correções confirmadas, hashes conferidos, JSON aceito pela ponte."
+    },
+    {
+      "id": "sol-ctg0001-orchestration",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 85000,
+      "output_estimate": 17000,
+      "result": "gates-pass",
+      "note": "Estimativa única para leitura, bancos, triagem e gates do CTG-0001; bruto da sessão não exposto pelo runtime."
+    },
+    {
+      "id": "task-0002",
+      "role": "inspector",
+      "model": "gpt-5.6-terra",
+      "input_estimate": 30000,
+      "output_estimate": 6500,
+      "result": "PASS",
+      "note": "Native worker medium; uma iteração restrita de limpeza de fixture. Bruto não exposto."
+    },
+    {
+      "id": "task-0003",
+      "role": "inspector",
+      "model": "gpt-5.6-terra",
+      "input_estimate": 30000,
+      "output_estimate": 6000,
+      "result": "PASS",
+      "note": "Native worker medium; uma iteração restrita de prova RLS. Bruto não exposto."
+    },
+    {
+      "id": "delivery-review-ctg0001-1",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 115000,
+      "output_estimate": 7000,
+      "result": "REVIEW",
+      "note": "Primeiro ciclo exaustivo; quatro high e quatro low; bruto da CLI indisponível."
+    },
+    {
+      "id": "task-0002-cycle2",
+      "role": "inspector",
+      "model": "gpt-5.6-terra",
+      "input_estimate": 18000,
+      "output_estimate": 3500,
+      "result": "PASS",
+      "note": "Correções restritas de composição, timeout/redação e ACK; bruto do runtime indisponível."
+    },
+    {
+      "id": "task-0003-cycle2",
+      "role": "inspector",
+      "model": "gpt-5.6-terra",
+      "input_estimate": 17000,
+      "output_estimate": 3000,
+      "result": "PASS",
+      "note": "Correções restritas de RLS SQL/HTTP e idempotência; bruto do runtime indisponível."
+    },
+    {
+      "id": "delivery-review-ctg0001-2",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 35000,
+      "output_estimate": 4500,
+      "result": "PASS",
+      "note": "Quatro high resolvidos, quatro low remanescentes; hash e write_paths corrigidos depois, sem alterar specs. Bruto indisponível."
+    }
+  ]
+}

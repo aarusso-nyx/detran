@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0015",
+  "round_id": "R-0021",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever negativos do verificador de pin",
+  "description": "Escrever negativos do verificador de pin conforme AUTHORIZATION A1 e contratos fechados.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-stynx-pin-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r21", "owner-a1"],
+  "branch": "orchestra/stynx-canonical",
+  "worktree_id": "WT-stynx-canonical",
+  "prompt_composition_id": "PC-45e4a2aef581690f",
+  "acceptance_commands": [
+    ["node", "--test", "tools/stynx-pin/tests/check.test.mjs"]
+  ],
+  "created_at": "2026-09-28T01:17:11.018441+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-45e4a2aef581690f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

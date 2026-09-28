@@ -1,0 +1,51 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0001",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0021/reports/CTG-0001-gates.md",
+      "line": 24,
+      "claim": "The SHA-256 recorded for ctg0001-check-cycle2.log has only 62 hex characters and does not match the file. The actual hash is 362d61932f7d4a660537f8949655f5d5d4c3a9080bb0f76b843d33da18d1c7b1; the report drops the '5d' after '…8949655f5d'. The hash for ctg0001-backend-ci-cycle2.log (29494ec1…) is correct.",
+      "fix": "Correct the hash on line 24 to 362d61932f7d4a660537f8949655f5d5d4c3a9080bb0f76b843d33da18d1c7b1."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "backend/app/tests/integration/r21-renach-characterization.integration.spec.ts",
+      "line": 95,
+      "claim": "Low finding from review 1 still open. The spec is unchanged (SHA-256 fe00fece… matches cycle 1). C-01-10 still proves RLS only on integration.outbox. TASK-0002.md:43 does not record why integration.delivery_attempt and integration.inbox_receipt are excluded.",
+      "fix": "Add cross-tenant negatives under role_app_backend for delivery_attempt and inbox_receipt. Alternatively, record the reason for excluding them in the C-01-10 row of TASK-0002.md."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/app/src/r21-renach-characterization.spec.ts",
+      "line": 29,
+      "claim": "Optional low finding from review 1 still open. The 15-minute reclaim of processing rows (C-01-08) is still proven only by a substring of the mocked SQL. There is no case against a real database.",
+      "fix": "Optional: add, in the RENACH integration spec, one processing row with dispatched_at older than 15 minutes and one newer row, claimed through the real SQL under role_app_backend."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0021/execution.json",
+      "line": 27,
+      "claim": "The Owner's authorization for the upstream issues is now on record in AUTHORIZATION.md:21 ('Autorização adicional do Owner — issues upstream (2026-09-27)'), which resolves the substance of the finding. However, execution.json write_paths still does not list work/rounds/R-0021/reports/UPSTREAM-ISSUES.md. The link to TASK-0001 exists only in the text of the addendum.",
+      "fix": "Add work/rounds/R-0021/reports/UPSTREAM-ISSUES.md to execution.json write_paths (TASK-0001, or maestro/Architect artifacts), or state explicitly in the addendum that the path stays outside write_paths as a maestro artifact."
+    }
+  ],
+  "notes": [
+    "Integrity: the current SHA-256 of all six changed or kept specs matches the cycle-2 hashes in TASK-0002.md and TASK-0003.md (7005642d…, 9167e533…, da6d527f…, fe00fece…, 841170431f…, 0172d51a…). The output of review 1 matches output_sha256 6a5bf12e… in its .bridge.json. The prompt from review 1 now hashes to a139ff86…, not the bridge's 52a7eee1…. This is consistent with the Prettier formatting disclosed at CTG-0001-gates.md:24.",
+    "High item 4 (C-01-04) resolved: r21-trust-profiles.e2e.spec.ts compiles AppModule.forRoot() in all four profiles. In local-sandbox and test it proves that DetranClinicalTrustReadiness is not bound. In staging-like and production it resolves the binder, adapter and readiness from the real module (app.module.ts:716-726). It requires 'up' only with complete HTTPS config and a successful health check, and requires rejection plus readiness 'down' for http:// and for a missing token. There is no port or interface token: consumers inject PadesSigningHttpAdapter directly, so no alternative local provider can exist.",
+    "High item 3 (C-01-01/03) resolved: the timeout case covers renderAndSign and checkCapabilities with rejection and no receipt. The redaction check through JSON.stringify is meaningful for the adapter's real errors, because ServiceUnavailableException (HttpException) serializes response, status and message as enumerable properties. It is applied to 'not configured', HTTP 503 and the eight invalid receipts.",
+    "High item 9 (C-01-09) resolved: new cases cover ACK ERROR persisting 'error', last_error and retry with interval '15 minutes'; no regression from 'acked' on a late ERROR; and a ConflictException for a reused event_id with a divergent payload, with only 2 queries (no update).",
+    "High item 6 (C-01-28) resolved: the SQL spec uses harness.database(), which runs 'set local role role_app_backend'. It covers sync_queue_item, sync_receipt, numbering_reservation and sync_conflict of tenant B: SELECT returns empty, UPDATE has rowCount 0, and B keeps each row. HTTP cancellation of a tenant-B reservation and resolution of a tenant-B conflict by tenant A return 404 TEAT.TENANT_MISMATCH. Other routes (reserve/block/close/reconcile) were not required, given the 'reservation/conflict' scope of the fix in review 1.",
+    "Low item 2 resolved: the TASK-0003 matrix now names specific test cases. The C-01-21 e2e resends the same item key with another device_batch_id and another Idempotency-Key and gets queue=1 and crashes=1, which characterizes item key and batch as distinct.",
+    "Low item 7 (typecheck and e2e list) resolved in substance by CTG-0001-gates.md:22, apart from the hash typo reported above.",
+    "Gates for cycle 2: backend:test:ci exited 0, and its log shows clinical-reports 34 tests, offline-sync integration 46 tests, and app e2e 37 files / 1,681 passed. The new cases are therefore inside the gate. pnpm check exited 0 on the cycle-2 tree.",
+    "No canonical FAIL: the diff stays within the seven authorized specs plus round artifacts, with no production code, DDL, manifest or lockfile changes. Decisions A1, OD-R21 and closing without a seal are unchanged."
+  ]
+}
