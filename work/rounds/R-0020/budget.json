@@ -4,9 +4,9 @@
   "status": "active",
   "window_input_budget": 2250000,
   "checkpoint_threshold": 1800000,
-  "estimated_input_total": 670000,
-  "estimated_output_total": 104000,
-  "note": "Retomada por autorização suplementar do Owner em 2026-09-28: orçamento triplicado para 2250000 e checkpoint em 1800000; consumo anterior de 600000 preservado. CTG-0001 mesclado como PR #150; observação pós-merge local aguarda review/PR.",
+  "estimated_input_total": 825000,
+  "estimated_output_total": 126000,
+  "note": "Retomada por autorização suplementar do Owner em 2026-09-28: orçamento triplicado para 2250000 e checkpoint em 1800000; consumo anterior de 600000 preservado. CTG-0001 mesclado como PR #150; observação e reancoragem no PR #152 após merge concorrente da R-0021.",
   "entries": [
     {
       "kind": "maestro-resume",
@@ -119,6 +119,30 @@
       "input_tokens": 55000,
       "output_tokens": 7000,
       "note": "Estimativa: delivery-review da observação pós-merge; PASS com duas observações low."
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0001-observation-reanchor",
+      "model": "gpt-6-sol",
+      "input_tokens": 45000,
+      "output_tokens": 8000,
+      "note": "Estimativa: merge #151, resolução da cadeia por aceitação de main, ensaio/registro da reancoragem e revisão da prova."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-observation-reanchor-bridge-invalid-json",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: reviewer respondeu PASS, mas a ponte recusou a cerca Markdown e não gravou JSON; chamada preservada no orçamento."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-observation-reanchor-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: entrega reancorada revisada com PASS e três achados low."
     }
   ]
 }
