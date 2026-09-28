@@ -26,7 +26,9 @@
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado com
-  **R-0021 (`orchestra/stynx-canonical`) mesclada** (C-0002 §2). O que depende de upstream é o
+  **R-0021 (`orchestra/stynx-canonical`) mesclada** (C-0002 §2). **Exceção (adenda A-C2-11, Owner, 2026-09-27):** o
+  CTG-0001 pode abrir antes, empilhado em `origin/orchestra/stynx-canonical`; o PR dele só abre depois do merge de
+  R-0021, com a caracterização executada de novo sobre `main` (regras em `plan.md` §Adendas). O que depende de upstream é o
   **merge de cada grupo acoplado**: **CTG-0001 (caracterização de tenancy/RLS e de SSE sobre 1.4.0):
   nenhum upstream além de R-0021 — pode ser desenvolvido e mesclado antes da 1.5.0. CTG-0002 (pin
   1.5.0) e todos os seguintes: STYNX 1.5.0 **publicado** no registry pela rodada S-1.5 do repositório

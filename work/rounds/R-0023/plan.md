@@ -10,7 +10,8 @@ nível grande** pela ponte (`tools/orchestra/bridge.sh claude <id-opus-5.5> …`
 `claude --help`). Frente de **segurança**: reviewer grande em toda delivery-review, **sem waiver**.
 Worktree `/Volumes/Thiamat II/stech/detran-worktrees/authz-unification`, branch
 `orchestra/authz-unification`.
-**Concorrência:** abre com `origin/main` contendo o merge de **R-0022** (`orchestra/stynx-sse-tenancy`:
+**Concorrência:** o CTG-0001 pode abrir antes do merge de R-0022 (adenda A-C2-11 em §Adendas); os
+demais CTGs abrem com `origin/main` contendo o merge de **R-0022** (`orchestra/stynx-sse-tenancy`:
 pin `@stynx-nyx/*` = 1.5.0, SSE e tenancy canônicos). Upstream externo: **STYNX 1.5.0** com os itens
 de autorização e sessão da especificação `work/campaigns/C-0002-stynx-upstream-spec.md` (S-1.5;
 §5: `UPS-AUTHZ-01…06` MUST, `UPS-AUTHZ-07` e `UPS-SES-01…03` SHOULD; regra de consumo em §7). R-0024 (`orchestra/stynx-dedup`)
@@ -229,6 +230,28 @@ Respeitadas sem reabrir: OD-C2-001…004, OD-S15-01, OD-R22-02 (regra de MUST au
 ## Triagem
 
 ## Adendas
+
+**A-C2-11 (Owner, 2026-09-27): abertura antecipada do CTG-0001.** Esta rodada pode **abrir antes
+do merge de R-0022**, somente para o CTG-0001, que gera a matriz papel × rota × método e os testes de
+caracterização antes de qualquer troca de guarda.
+
+- **Base:** o CTG-0001 nasce em `origin/main` (com R-0021 mesclada) ou **empilhado** em
+  `origin/orchestra/stynx-sse-tenancy` (R-0022), sempre integrando por `git merge --no-edit`.
+- **O que pode ser feito antes do merge de R-0022:** TASK-0001 (inventário e formato da matriz),
+  TASK-0002 (gerador `tools/authz/route-role-matrix.ts`, matriz "antes" e e2e), a prompt-review e a
+  delivery-review do CTG-0001.
+- **O que espera o merge de R-0022:** o PR do CTG-0001 contra `main`. Depois do merge, o maestro
+  integra `origin/main` e **regenera a matriz** sobre o estado pós-R-0022 (pin 1.5.0, middleware de
+  contexto, rejeição de conflito Host × `X-Tenant-Id`). A matriz versionada é a regenerada. O diff
+  entre a versão antecipada e a regenerada vai para o PR e para `plan.md` §Concorrência, com cada
+  linha atribuída a uma mudança documentada de R-0022. Uma linha sem atribuição é regressão de R-0022
+  (triagem `plant-bug`, comunicada a R-0022) e bloqueia o merge. Nenhuma linha é "aceita" sem
+  atribuição.
+- **O que não muda:** o CTG-0001 continua a **mesclar antes de qualquer troca** (CTG-0002 em diante),
+  e os CTG-0002 em diante continuam exigindo R-0022 em `main` e os itens de autorização e sessão da
+  1.5.0 final (OD-S15-01).
+- **Locks:** `MOD-authz-matrix`, `MOD-app-tests-authz` e `MOD-root-scripts` não são comuns com R-0022,
+  exceto `package.json` na raiz (script do gerador), resolvido por merge.
 
 ## Bloqueios
 

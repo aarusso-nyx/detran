@@ -10,7 +10,7 @@ os produz no bootstrap. Maestro **Opus 5.5** (Claude Code); reviewer **Sol 6** v
 Worktree `/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy`, branch
 `orchestra/stynx-sse-tenancy`.
 **Concorrência com upstreams da campanha:** abre após **R-0021** (`orchestra/stynx-canonical`)
-mesclada. **Upstream externo:** STYNX **1.5.0 publicado** no registry pela rodada **S-1.5** (repositório
+mesclada; **o CTG-0001 pode abrir antes, empilhado em R-0021 (adenda A-C2-11 em §Adendas)**. **Upstream externo:** STYNX **1.5.0 publicado** no registry pela rodada **S-1.5** (repositório
 STYNX), com os itens MUST de UPS-TEN, UPS-SSE, UPS-NGSSE e UPS-TEST-01 (OD-C2-004). CTG-0001
 (caracterização) é desenvolvido e provado sobre **1.4.0** enquanto a 1.5.0 não sai; nenhum PR a partir
 do CTG-0002 abre antes da publicação. R-0023 e R-0024 dependem desta rodada mesclada. As rodadas de
@@ -199,6 +199,27 @@ OD-P30 (autenticação oportunista), OD-R21-01 (contornos de assinatura atrás d
 ## Triagem
 
 ## Adendas
+
+**A-C2-11 (Owner, 2026-09-27): abertura antecipada do CTG-0001.** Esta rodada pode **abrir antes
+do merge de R-0021**, somente para o CTG-0001, que é caracterização pura de tenancy/RLS e SSE sobre o
+comportamento atual.
+
+- **Base:** o CTG-0001 nasce **empilhado** em `origin/orchestra/stynx-canonical` (R-0021), ou em
+  `origin/main` se R-0021 ainda não tiver publicado o branch. As revisões de R-0021 são integradas por
+  `git merge --no-edit`, nunca por rebase de branch publicado.
+- **O que pode ser feito antes do merge de R-0021:** TASK-0001 (contrato e inventário), TASK-0002 e
+  TASK-0003 (testes de caracterização), a prompt-review e a delivery-review do CTG-0001.
+- **O que espera o merge de R-0021:** o PR do CTG-0001 contra `main`. Depois do merge, o maestro
+  integra `origin/main`, roda de novo toda a caracterização e grava o resultado em §Concorrência.
+  Qualquer teste que precise mudar por efeito documentado de R-0021 (troca do despacho RENACH, pin
+  1.4.0) exige adenda numerada do Architect **antes** da edição, e a delivery-review é refeita
+  restrita a essa mudança. Sem justificativa em R-0021, a divergência é tratada como regressão de
+  R-0021 (triagem `plant-bug`, comunicada a R-0021), nunca como ajuste de teste.
+- **O que não muda:** os CTG-0002 em diante continuam exigindo R-0021 em `main` e STYNX 1.5.0 final
+  para o merge (OD-S15-01). O desenvolvimento sobre `1.5.0-rc.N` continua permitido.
+- **Locks:** o CTG-0001 toca só `backend/app/tests/**` e `apps/*/*/src/**/*.spec.ts`; nenhum lock é
+  comum com R-0021. Se R-0021 alterar algum desses caminhos, o conflito é resolvido por merge no
+  empilhamento.
 
 ## Bloqueios
 

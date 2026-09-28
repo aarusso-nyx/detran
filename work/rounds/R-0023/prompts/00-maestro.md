@@ -29,7 +29,10 @@
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md` e C-0002 §2): para **abrir** esta frente, `origin/main` deve conter o merge de **R-0022**
-  (`orchestra/stynx-sse-tenancy`: pin `@stynx-nyx/*` = 1.5.0). Sem ele, grave `checkpoint` e pare. O que depende de upstream é o
+  (`orchestra/stynx-sse-tenancy`: pin `@stynx-nyx/*` = 1.5.0). Sem ele, grave `checkpoint` e pare. **Exceção (adenda
+  A-C2-11, Owner, 2026-09-27):** o CTG-0001 (matriz de caracterização) pode abrir antes, sobre `main` com R-0021 ou
+  empilhado em `origin/orchestra/stynx-sse-tenancy`; o PR dele só abre depois do merge de R-0022, com a matriz
+  regenerada e o diff atribuído (regras em `plan.md` §Adendas). O que depende de upstream é o
   **merge de cada grupo acoplado**: **CTG-0001 (matriz de caracterização): R-0022 em `main`. CTG-0002 (dados + provider) e CTG-0003 (troca do guarda): CTG-0001 mesclado e itens MUST de autorização presentes nos `.d.ts` instalados de 1.5.0 (`UPS-AUTHZ-01…06`; senão checkpoint, OD-R22-02). CTG-0004 (sessão): itens de sessão publicados em 1.5.0; senão a tarefa é cancelada com registro e desvio na ADR de divisão (spec §7, SHOULD ausente). CTG-0005 (docs): CTG-0003/0004. R-0024 corre em paralelo só nos CTGs de frontend; nada desta frente toca `apps/` ou `packages/ui`**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão

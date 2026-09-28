@@ -287,3 +287,22 @@ Efeitos:
 - **R-0024:** adota U8–U15 sem exceção, incluindo a avaliação e a migração do gerador de blueprints
   para `stynx generate module`.
 - **S-1.5:** escopo máximo, com estimativa recalibrada no seu bootstrap.
+
+## 11. Adenda A-C2-11: abertura antecipada por caracterização (Owner, 2026-09-27)
+
+A regra da orquestra (`waves.md`) permite abrir uma frente sobre base empilhada: o que depende do
+upstream é o **merge**, não a abertura. Os CTG-0001 de R-0022 e de R-0023 são caracterização pura,
+sem troca de implementação, e passam a poder abrir antes do merge da rodada anterior:
+
+| Rodada | CTG antecipado                                 | Pode abrir                                                                                  | PR só depois de | Regra de integração                                                                                                                             |
+| ------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-0022 | CTG-0001 (caracterização de tenancy/RLS e SSE) | em paralelo a R-0021, empilhado em `orchestra/stynx-canonical`                              | merge de R-0021 | a caracterização roda de novo sobre `main`; mudança de teste só por adenda do Architect atribuída a R-0021                                      |
+| R-0023 | CTG-0001 (matriz papel × rota × método)        | em paralelo a R-0022, sobre `main` com R-0021 ou empilhado em `orchestra/stynx-sse-tenancy` | merge de R-0022 | a matriz é regenerada sobre `main`; cada linha de diff é atribuída a uma mudança documentada de R-0022, e linha sem atribuição bloqueia o merge |
+
+- **Efeito:** o caminho crítico da fase C encurta em ≈ 1–2 janelas.
+- **O que não muda:**
+  - a ordem de merge (R-0021 → R-0022 → R-0023);
+  - a exigência de STYNX 1.5.0 final para os CTGs de troca;
+  - a regra "caracterização mescla antes de qualquer troca".
+- **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
+  `prompts/00-maestro.md`.
