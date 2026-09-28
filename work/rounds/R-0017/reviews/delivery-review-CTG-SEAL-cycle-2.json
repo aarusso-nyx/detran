@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0017/prompts/00-maestro.md",
+      "line": 297,
+      "claim": "§9.6 of the maestro prompt still says the R-0017 seal is deferred to R-0020 and says 'Nunca contorne a recusa'. The waves.md row for R-0019 still says that R-0020 'fará o selo da rodada'. SEAL-AUTHORIZATION.md, OD-R17-005 and plan.md §Decisões do maestro already record the Owner's explicit decision, so this is not a governance violation. But anyone who reads only §9.6 or R-0020's scope (C-0002 §4, 'sela R-0003…R-0019') will expect to seal R-0017 again.",
+      "fix": "When R-0020 is planned, remove R-0017 from the set it seals, or state that R-0017 was already sealed by PC-0018. Leave the historical prompt unchanged. This is optional before the merge."
+    }
+  ],
+  "notes": [
+    "Item 1 of cycle 1 is fixed. The entry-point guard compares realpathSync(argv[1]) with realpathSync(fileURLToPath(import.meta.url)). The new test runs the renderer through a symlink named 'renderer#?%.mjs' and requires the failure 'missing or unreadable'. That proves main() runs and the gate does not become a no-op.",
+    "Item 2 of cycle 1 is fixed. There are renderer tests for a changed index (stale), a missing index, a missing predecessor, a cross-round link, two terminals and unreadable JSON. There are also positive and negative supersession tests on the state-index side.",
+    "Item 3 of cycle 1 is fixed. law/README.md now points to register/DECISIONS.md.",
+    "Item 4 of cycle 1 is fixed. The preamble of DECISIONS.md says the annexes for the other rounds are pending and that nothing is inferred for them. D-2 cites prompts/00-maestro.md §9 only for R-0017, and §9.5 does require green CI plus reviewer PASS before the merge.",
+    "Item 5 of cycle 1 is fixed. The last paragraph of seal-readiness-2026-09-27.md records the residual risk that a later hand edit of record.md is not detected continuously.",
+    "Re-checked locally. The SHA-256 of PC-0017 is 7618551a…c024 and it has no diff against origin/main. It still contains 4 fail verdicts. `node --test` on render-rounds-index and gate.test gave 91/91 pass. `render-rounds-index --check` exited 0. `verify:state-index` passed: 39 ADRs, 33 rounds, 18 closures. Prettier passes on the new files. close-state.jsonl has exactly 1 line, with PC-0018.",
+    "No regressions. Apart from the documentation additions, the only difference from cycle 1 is the entry-point guard and the tests. The state-index logic did not change.",
+    "Untracked zero-byte temporary files `reviews/delivery-review-CTG-SEAL-cycle-2.json.formatted.0rTTOq` and `.raw.cEZLAS` must not go into the commit.",
+    "This PASS is conditional. Before the merge: the full `pnpm check` must be green (it is being re-run after isolating docs/site/build), the PR CI must be green, and after the merge the exact merge SHA must be observed. The waves.md row and the plan.md status must be updated after that observation."
+  ]
+}
