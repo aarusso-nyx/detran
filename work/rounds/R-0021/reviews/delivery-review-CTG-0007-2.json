@@ -1,0 +1,30 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0007",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0007-2.json.raw.Cb35O7",
+      "summary": "This cycle's bridge left two zero-byte temporary files in reviews/: `delivery-review-CTG-0007-2.json.raw.Cb35O7` and `delivery-review-CTG-0007-2.json.formatted.CfVLxC`. Neither is ignored by git. The cycle-1 temporary files (`.raw.8A5BgB` and `.formatted.cYo16J`) are already gone.",
+      "fix": "The maestro already plans to do this: delete both files after the bridge writes delivery-review-CTG-0007-2.json. Stage only the canonical .json, .prompt.md and .bridge.json files of cycles 1 and 2."
+    },
+    {
+      "severity": "info",
+      "path": "DESIGN-DECISIONS.md",
+      "summary": "The index row for ADR-0015 (line 27) still says 'STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target', and it does not mention the R-0021 amendment to STYNX 1.4.0. It points to ADR-0028 as 'parcial', so DEVAI is covered. The ADR title also keeps 1.4.5, which is acceptable as the historical name. None of this blocks the review, because the medium finding was about the ADR body and the worker's report.",
+      "fix": "Optional: add '; STYNX pin amended to 1.4.0 in R-0021' to the summary cell of the ADR-0015 row. Leave the ADR title unchanged. Rerun `pnpm docs:kb:check` and `pnpm format:check` if you edit it."
+    }
+  ],
+  "notes": [
+    "Medium finding 1 is fixed. In ADR-0015, the Context section now presents `@aarusso-nyx/devai@1.4.5` as the pin at the original decision on 2026-09-12. It states that the current DEVAI pin is 1.5.6 under ADR-0028 and that R-0021 did not change it. Decision item 1 now says DEVAI **1.5.6** ('adopted separately by ADR-0028; the historical WP-0 workspace pinned 1.4.5'). The facts table (line 27) is labelled 'Historical facts established on 2026-09-12 … (before WP-0 and the R-0021 pin amendment)', so 'same as here' is correct in context. Both claims check out: package.json:90 has `\"@aarusso-nyx/devai\": \"1.5.6\"`, and ADR-0028-devai-1-5-2-attested-local-rc.md is titled 'Adopt DEVAI 1.5.6' and is Accepted. The ADR-0028 reference is unambiguous: under ADR-0035 the other ADR-0028 file is only a redirect to ADR-0038.",
+    "The worker's report is handled correctly. reports/TASK-0014.md is kept verbatim: line 8 and matrix row 1 still say 'DEVAI 1.4.5 permanecem'. reports/TASK-0014-ERRATUM.md names exactly those two passages, calls them incorrect, and states the current pin (1.5.6 via ADR-0028, kept through R-0021). It does not change gate results or the A1 scope. ORCHESTRATOR-FINAL.md:24 refers to the erratum, so a reader can follow the correction.",
+    "Low finding 2 (waves.md tokens) is fixed. The column now reads '≈1,033 M entrada / ≈132 k saída até o checkpoint, estimativas em `budget.json`; telemetria bruta indisponível', which is clearly a checkpoint figure.",
+    "Low finding 3 (waves.md Tasks, Escalations and REVIEW columns) is fixed. The Tasks column lists TASK-0001…0004, 0014, 0015 and 'TASK-0005…0013 canceladas/transferidas (A1)'. Escalations reads 'nenhuma', and the closure state is marked as not an escalation. REVIEW cycles now include 'ciclo 2 rejeitado pelo bridge (JSON inválido), ciclo 3 PASS'. The rest of the diff (20+/19−) is Prettier re-padding of the other rows. Only the R-0021 row adds content.",
+    "Low finding 4 (cycle-1 temporary files) is fixed: the files no longer exist. The same pattern reappears in cycle 2 (see the first finding) and is left to the maestro, as planned.",
+    "Items that passed in cycle 1 were not reopened, including the backlog info finding, which was optional.",
+    "Gates: I did not rerun anything (read-only review). `pnpm docs:kb:check` exit 0 is taken from the maestro's report. `pnpm format:check` must be exit 0 before the candidate. Global `pnpm check` and `pnpm backend:test:ci` are still pending and are not inferred. This PASS covers only the documentary content of CTG-0007 and depends on those gates. No PC, close receipt or seal is suggested."
+  ]
+}
