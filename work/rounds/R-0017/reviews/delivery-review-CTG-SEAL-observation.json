@@ -1,0 +1,32 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0017/reviews/delivery-review-CTG-SEAL-observation.json.raw.rqkfZC",
+      "line": 1,
+      "claim": "There are two empty (0-byte) temporary files left over from the bridge: delivery-review-CTG-SEAL-observation.json.raw.rqkfZC and .json.formatted.CCXzXP. Neither .gitignore nor .prettierignore covers them, so an 'git add' of the reviews directory would publish them in the metadata PR.",
+      "fix": "Delete both temporary files before staging. Commit only the .md prompt, which .gitattributes and .prettierignore already cover, and the final review JSON."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0017/close-state.jsonl",
+      "line": 1,
+      "claim": "close-state.jsonl sets merged_as to d5afcf92, which is the merge of PR #144 (CTG-0003), not b31f1272, the merge of PR #147. This is consistent with PC-0018 being the observation of the already-merged delivery. The new text in plan.md does not contradict it, but a reader could confuse the two merges.",
+      "fix": "No change needed in the append-only record. Optionally, in plan.md, note that merged_as refers to the delivery merge (#144) and that b31f1272 is the seal merge."
+    }
+  ],
+  "notes": [
+    "All five artifacts match the SHA-256 values in EV-8b3063e2a763ab41 exactly: inventory f0ede00a…, scorecard 18b5e114…, backlog aa3ea1ec…, assessment 3a22ffb8…, status b68b3db5….",
+    "The observation is tied to the exact merge SHA. HEAD is b31f12728f0de35e5da0ad4c904425ed2b9fb01c, the merge of PR #147 with parents e47a6801 and 4f388ab1. inventory.integration_head, scorecard.integration_head, backlog.merge_sha, status.merge_sha and the exact_sha note all equal b31f1272….",
+    "chain.json only appends records. At HEAD there are 111 records with head 9a1543cb…. The working copy adds exactly record 112, whose previous_hash and previous_run_hash both equal 9a1543cb…. The new head is 4e7d24d6…, sequences are contiguous, and 'devai evidence verify --scope chain' returned valid:true with errors:[].",
+    "The PC-0018/PC-0017 supersession is intact. PC-0018.json has supersedes \"PC-0017\" and SHA-256 d6227ca9…, which matches evidence-CTG-SEAL.json. PC-0017.json keeps its four 'fail' entries and was last changed in a179861c. close-state.jsonl is unchanged from HEAD, reads status closed with phase_closure PC-0018, and its SHA-256 44411a90… matches the evidence. Neither record/proofs/compliance nor close-state.jsonl has any diff.",
+    "The document claims check out: record/proofs/work/generic/R-0017.jsonl has 7 entries and the seventh is CTG-SEAL. Head 9a1543cb… was the chain head at the merged HEAD. PASS in cycles 1 and 2 is consistent with seal-readiness-2026-09-27.md. The line saying R-0020 will not repeat the R-0017 seal is consistent with the terminal PC-0018.",
+    "The scorecard is overall UNKNOWN (43/45 UNKNOWN, 2 N/A) and status.readiness_promoting=false, so the observation promotes nothing and none of the texts treats it as readiness. This limitation belongs to the DEVAI sensors, not to this PR.",
+    "There are no functional changes. The diff covers only .gitattributes, .prettierignore, waves.md, chain.json, plan.md and seal-readiness-2026-09-27.md, plus the five untracked artifacts."
+  ]
+}

@@ -634,6 +634,19 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **R-0017 fechada e selada em `main` (2026-09-27 BRT):** PR #147 mesclado com
+  `foundation`, `backend-kernel`, `verified-local-rc`, `evidence-gate`,
+  `boat-documents-real` e mocks verdes; review cruzado Claude Opus 5.5
+  `PASS` nos ciclos 1 e 2. O merge exato é
+  `b31f12728f0de35e5da0ad4c904425ed2b9fb01c`. PC-0018 é o PC terminal
+  e `close-state.jsonl` declara a rodada `closed`; PC-0017 permanece com os
+  quatro `fail` históricos. A prova CTG-SEAL é a sequência genérica 7,
+  ancorada no head `9a1543cb2bb75554549ab7f8dbb612eff14d28854e83be4930dbe05790be80db`.
+  `audit observe` do merge exato retornou
+  `EV-8b3063e2a763ab41`; a cadeia local válida passou ao head
+  `4e7d24d618730d6555af5b2e4ad5ff92af3e915f9420ab17d9c438cb8a16f994`.
+  Esta observação pós-merge e a atualização final de histórico serão
+  publicadas em PR de metadados. R-0020 não precisa selar R-0017 novamente.
 - **Selo governado executado (2026-09-27):** clone descartável
   `/tmp/r17-seal-authorized.28FQYi/repo` reproduziu o fluxo exato com
   PC-0018, D-1/D-2, índice e `close-state.jsonl`; `round seal` retornou
