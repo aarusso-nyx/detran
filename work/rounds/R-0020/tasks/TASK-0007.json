@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir decisões e selo das rodadas",
+  "description": "contracts/CTG-0003.md e law/register/DECISIONS.md quando OD-R20-001/002 decididas",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r20-contract-seal", "MOD-law-register"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0003",
+    "ref:architect-blueprint"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-1caafa750e63d159",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-1caafa750e63d159",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

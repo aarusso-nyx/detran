@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0017",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar hooks de autoridade",
+  "description": "settings e hooks; bind/apply executados pelo maestro",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-devai-config",
+    "MOD-claude-settings",
+    "MOD-git-hooks"
+  ],
+  "target_substrates": ["F2", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0020",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0006",
+    "ref:engineer-backend"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-c93b370d48f04265",
+  "acceptance_commands": [["pnpm", "check"]],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-c93b370d48f04265",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

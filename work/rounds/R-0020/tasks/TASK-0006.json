@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar gate de âncoras",
+  "description": "verify-proof-anchors.mjs, package.json, .gitattributes",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-devai-tools",
+    "MOD-root-package-json",
+    "MOD-gitattributes"
+  ],
+  "target_substrates": ["F2", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0002",
+    "ref:engineer-backend"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-6fd56a6ece77211d",
+  "acceptance_commands": [
+    ["node", "--test", "tools/devai/tests/verify-proof-anchors.test.mjs"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-6fd56a6ece77211d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

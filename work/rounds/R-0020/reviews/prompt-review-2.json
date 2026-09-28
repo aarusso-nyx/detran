@@ -1,0 +1,39 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0003.md",
+      "line": 42,
+      "claim": "Correção parcial do achado high 7 do ciclo 1. A Tarefa (linha 36) e os critérios foram corrigidos: o worker usa --out-dir temporário e o maestro materializa a baseline. Mas 'Escopo fechado' ainda lista baseline.json/md como entrega do worker. A mesma redação antiga está em plan.md:198. O texto contraria 'Pode tocar' (linhas 27-28), embora a Tarefa e os critérios já deixem clara a intenção.",
+      "fix": "Remover 'baseline.json/md' do Escopo fechado em TASK-0003.md:42 e em plan.md:198, ou acrescentar '(materializados pelo maestro)'. Recompor o hash e o PC de TASK-0003."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0015.md",
+      "line": 44,
+      "claim": "Correção parcial do achado low 12 do ciclo 1. A Tarefa (linha 38) e o critério (linha 53) foram corrigidos, mas o Escopo fechado ainda diz 'ci.yml, pull_request_template.md e recibos aprovados'. O mesmo aparece em plan.md:210. law/policy/forbidden-action-authorizations.json não está em 'Pode tocar'. O lock MOD-forbidden-receipts já saiu de tasks/TASK-0015.json.",
+      "fix": "Trocar por 'ci.yml e pull_request_template.md; recibos aplicados pelo maestro em commit Owner' em TASK-0015.md:44 e plan.md:210. Recompor o hash e o PC."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0018.md",
+      "line": 50,
+      "claim": "A lista de leitura e 'Pode tocar' agora incluem waves.md e .gitignore, e a Tarefa pede a entrada Maestro/Histórico. Mas o Escopo fechado omite .gitignore, e a Tarefa não diz o que mudar nele (referência ao Art. 41). Um worker Luna/low pode deixar de fazer.",
+      "fix": "Acrescentar '.gitignore (corrigir referência ao Art. 41 conforme .devai/pin/constitution.md, se ainda incorreta)' ao Escopo fechado e à Tarefa."
+    }
+  ],
+  "notes": [
+    "Os 7 achados high do ciclo 1 estão corrigidos. (1) ADR-0022: plan.md:56-58 marca a tabela como histórica e 'Accepted por OD-R18-002'; OD-R20-006 foi estreitada em plan.md:278 e no registro canônico open-decisions-rait.md; a decisão A2 está em plan.md:284; ADR-0022-orchestra-execution-model.md:5 confirma. (2) Inspector em CTG-0005/0006: TASK-0019 fica entre 0014 e 0015 e TASK-0020 entre 0016 e 0017; o upstream_task_id nos JSONs bate com a ordem topológica em plan.md. (3) Listas de leitura: TASK-0007 lista PC-0001…0016, os closure.json e release-host.js; TASK-0009 lista task.template.json e usa a tabela de CTG-0003 como fonte fechada; TASK-0010 usa a tabela de CTG-0003 como única fonte; TASK-0014 lista adr-validation-policy.schema, forbidden-actions.json, ADR-0001 e reports/forbidden-actions-baseline.json, que existe; TASK-0016 lista pin, authority-policy, mutation-strength, CLAUDE.md, law/adr/README.md, DESIGN-DECISIONS.md e .claude/agents/*; TASK-0018 lista os cinco arquivos editáveis mais o pin. (4) TASK-0003: usa --out-dir, verifica o status Git dentro do próprio script e o maestro materializa a baseline. (5) TASK-0006 e TASK-0009: o gate fica RED com contagem reportada, e o verde é critério do maestro depois da correção ou da normalização. (6) TASK-0014 prepara os recibos com authorized_by reservado ao Owner, e a diferença 43 × 11 fica para classificação sem ampliar recibos; a triagem está registrada em plan.md. (7) Checkpoints (e), (f) e (g) em plan.md:165-173 cobrem aceite da ADR v2, recibos, bind 1.0.1 com doctor, e record/closure/seal da R-0020.",
+    "Achados low do ciclo 1 atendidos: TASK-0008 roda as duas suítes; TASK-0004/0005/0006 incluem baseline.json e os três jsonl; TASK-0017 remete o doctor ao checkpoint do CTG-0006; Meta 2 passa a parte de CI para o CTG-0005.",
+    "Integridade: o sha256 dos 20 prompts bate com compositions.json; prompt_composition_id = pc_id nos 20 JSONs.",
+    "db_isolation: 'database' é aceito como nota. O schema 2.0.0 não tem 'none', então não há correção a fazer.",
+    "Nota menor sem efeito no veredito: o lock de TASK-0019 é 'MOD-ci-tests' em plan.md e 'MOD-ctg-0005-tests' em tasks/TASK-0019.json. Os acceptance_commands de TASK-0019/0020 no JSON não trazem o `node --test` que o prompt exige; alinhar se possível.",
+    "Limpeza antes do commit: reviews/ tem temporários vazios (prompt-review-2.json.formatted.*, .raw.*)."
+  ]
+}

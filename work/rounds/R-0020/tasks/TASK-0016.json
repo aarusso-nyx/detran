@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0016",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir autoridade por caminho e método",
+  "description": "contracts/CTG-0006.md e ADRs propostas",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r20-contract-authority", "MOD-law-adr"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0006",
+    "ref:architect-blueprint"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-156733068f0eea3f",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-156733068f0eea3f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

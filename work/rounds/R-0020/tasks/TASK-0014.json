@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir gates CI e ADR v2",
+  "description": "adr-validation.json, ADR v2 e contracts/CTG-0005.md",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r20-contract-ci", "MOD-law-adr"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0013",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0005",
+    "ref:architect-blueprint"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-e85bc8d801e3fea3",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-27T20:15:24Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-e85bc8d801e3fea3",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

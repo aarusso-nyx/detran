@@ -1,0 +1,100 @@
+{
+  "round": "R-0020",
+  "window": 2,
+  "status": "active",
+  "window_input_budget": 750000,
+  "checkpoint_threshold": 600000,
+  "estimated_input_total": 575000,
+  "estimated_output_total": 90000,
+  "note": "Janela 2: estimativas conservadoras; janela 1 preservada em budget-window-1.json. CTG-0001 tem reviewer PASS, commits segregados e evidência DEVAI válida; próximo evento: PR/CI. Parar em 600000 tokens de entrada nesta janela.",
+  "entries": [
+    {
+      "kind": "maestro-resume",
+      "id": "main-integration-and-baseline",
+      "model": "gpt-6-sol",
+      "input_tokens": 45000,
+      "output_tokens": 12000,
+      "note": "Estimativa: fetch/rebase, conflito OD, plano, clone e medição oficial; sem telemetria do maestro."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0003-attempt-1",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 65000,
+      "output_tokens": 9000,
+      "note": "Estimativa: implementação inicial; testes 13/13 PASS; revisão revelou validação parcial e round status ausente."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0003-attempt-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 65000,
+      "output_tokens": 8000,
+      "note": "Estimativa: schema/round status; ensaio oficial revelou parser incorreto de result.value."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0003-escalated",
+      "model": "gpt-6-sol",
+      "input_tokens": 115000,
+      "output_tokens": 20000,
+      "note": "Estimativa: parser de 8 eixos, PC/closure, formato determinístico; testes e duas medições temporárias."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 65000,
+      "output_tokens": 9000,
+      "note": "Estimativa: revisão de entrega inicial; REVIEW com cinco achados high e oito low."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0002-delivery-corrections",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: cinco testes RED adicionais e correção da expectativa source_pending."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0003-delivery-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 75000,
+      "output_tokens": 10000,
+      "note": "Estimativa: cinco correções high, comparação de sensores e 18 testes PASS."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "delivery-review-cycle-1-triage",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Estimativa: atualização do plano, orçamento, rastros e verificação da medição oficial."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: revisão restrita aos cinco high; PASS com três observações low."
+    },
+    {
+      "kind": "maestro-followup",
+      "id": "delivery-review-cycle-2-low",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Estimativa: correções low de texto e trilha, integração do PR #149 e validações locais."
+    },
+    {
+      "kind": "maestro-evidence",
+      "id": "CTG-0001-commits-and-proof",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: commits por papel, entrada de evidência, ensaio em clone e prova seq. 1 validada."
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 261,
+      "claim": "The plan still treats ADR-0022 as open. OD-R20-006 offers 'accept, supersede or reject', Meta 7 (line 117) says the round 'defines the fate of ADR-0022 (accept, amend or reject)', and the baseline table (line 59) calls it _Proposed_. But docs/meta/adr/ADR-0022-orchestra-execution-model.md:5 says 'Accepted on 2026-09-27 by Owner decision (OD-R18-002, round R-0018)'. Prompts TASK-0016/0017/0018 (line 48/47/49) say 'ADR-0022 já foi aceita em R-0018'. So the plan contradicts both an Owner decision and its own prompts, and the 'aceitar' option in OD-R20-006 is moot.",
+      "fix": "Add a numbered plan addendum that records ADR-0022 as Accepted (OD-R18-002). Narrow OD-R20-006 to 'keep ADR-0022, or amend it by supersession through LAW-ADR-0003'. Mark line 59 as a historical measurement taken at a92ef731. Update the OD-R20-006 wording in the registry. Do not reopen the acceptance."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 145,
+      "claim": "CTG-0005 (TASK-0014→0015) and CTG-0006 (TASK-0016→0017→0018) have no Inspector task. That breaks the Architect→Inspector→Engineer triad and orchestra/README §4.1 and §4.14 ('verifiers → negative case', 'tests only from the Inspector'). TASK-0017 delivers runtime code (tools/devai/authority-hook.mjs, prompt line 28) that refuses writes by path, and TASK-0015 changes CI gates, both with no test written first. R-0010 had its prompt-review rejected for this same reason.",
+      "fix": "Add an Inspector task to CTG-0006 between TASK-0016 and TASK-0017: tools/devai/tests/authority-hook.test.mjs, covering allowed and refused paths per role for record/, .devai/, law/ and product/, plus the maestro case. Add an Inspector task to CTG-0005 before TASK-0015, for example a structural test of ci.yml (required steps present, none with continue-on-error) and of the PR template (Inv-Compliance: and Art. 7). Update the JSONs, upstream_task_id and compositions."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0018.md",
+      "line": 13,
+      "claim": "The closed reading list leaves out every file the task must edit: maestro-prompt.template.md, orchestra/README.md, waves.md, backlog.md and .gitignore (lines 26–30). Rule 1 forbids reading outside the list, so the worker must either break the rule or edit blind. The prompt also never asks for the family-swap entry in waves.md (Maestro column and §Histórico), which AUTHORIZATION.md:18 assigns to 'the documentation task'.",
+      "fix": "Add all five editable files to the reading list, plus .devai/pin/constitution.md for the Art. 41 fix in .gitignore. Put the waves.md entry required by AUTHORIZATION.md:15-18 in the Tarefa section."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 13,
+      "claim": "The task edits docs/meta/agents/orchestra/task.template.json (line 31), but that file is not in the reading list. The list also lacks any sample of the 143 invalid historical tasks, which have 74 non-INV target_invariants, 50 db_isolation errors and 31 coupled_task_group errors. The deterministic normalizer can't be designed without seeing those shapes, so the worker is pushed into a free search.",
+      "fix": "Add task.template.json to the reading list. Add either the invalid-task sample listed in CTG-0003.md (the field-by-field normalization table from TASK-0007) or 2–3 representative historical TASK files per error class."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0010.md",
+      "line": 13,
+      "claim": "Sixteen record.md files need the fields record-meta, declared_by, closed_by, phase_closure, merged_as, gates, plan_path and orchestrator_prompt. The reading list has none of their sources: record/proofs/compliance/closures/PC-*.json, work/rounds/R-nnnn/{closure.json,plan.md,prompts/00-maestro.md}. A Luna/low worker would have to search the repository or invent values.",
+      "fix": "Have CTG-0003.md (TASK-0007) carry the complete round→PC→merged_as→gates→plan→prompt map as a table, and state in the prompt that this table is the only source. Otherwise, list the per-round closures and closure.json files explicitly."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0007.md",
+      "line": 13,
+      "claim": "The plan (line 137) asks for the round→PC→merged_as→gates→plan/prompt map and a seal rehearsal across 17 rounds. The reading list has no closure PC-*.json, no per-round closure.json and no release-host.js (the seal requirements). The rehearsal also needs `devai round seal` (--write) in a scratch clone, which the prompt's 'Não pode tocar' forbids for workers.",
+      "fix": "Add record/proofs/compliance/closures/PC-0001…0016.json and work/rounds/R-00{03…19}/closure.json to the reading list, or a manifest the maestro generates. Move the seal rehearsal into a maestro checkpoint with a report, or allow it explicitly and only in a scratch clone outside the worktree."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0003.md",
+      "line": 53,
+      "claim": "The criterion `pnpm devai:baseline → baseline.json/md gerados` makes the worker write work/rounds/R-0020/baseline.{json,md}. Those files are outside 'Pode tocar' (lines 27–28), and line 47 says the maestro materializes them. The Entrega at line 52 also lists baseline.json/md as the worker's deliverable. The prompt contradicts itself, and running the script would violate the write boundary. On top of that, `audit scorecard` in the plan's baseline wrote observations to .devai/state/audit-observations/ (plan line 58), so a 'read-only' script that calls it may write to .devai/ without anyone noticing.",
+      "fix": "Give the script a --out (or stdout) mode. The worker's criterion becomes 'pnpm devai:baseline --out <tmp> runs and passes the tests', and baseline.* is materialized by the maestro. Require the script to run `git status --porcelain` before and after, and to fail if anything under .devai/ changed. The CTG-0001 contract must name each DEVAI command the script may call and confirm that it has no write effect."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0006.md",
+      "line": 52,
+      "claim": "TASK-0006 puts verify:proof-anchors into `pnpm check`, and line 54 requires '0 undeclared orphan lines'. Yet the correction entries that declare the 49 orphans are recorded by the maestro only afterwards. When the worker runs it, `pnpm check` fails by construction, so the acceptance criterion can't be met. The same happens in TASK-0009 (line 57): `verify:round-tasks → 0 invalid` before the maestro applies the normalization.",
+      "fix": "Define the order in the prompt: (1) the worker delivers the gate and runs it with the RED count expected by the contract; (2) the maestro records the corrections, or applies the normalization; (3) the maestro runs `pnpm check`/`verify:*` as the green criterion for the CTG. Or state explicitly that `pnpm check` green is a maestro criterion after step 2. Never weaken the gate."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0020/prompts/TASK-0014.md",
+      "line": 26,
+      "claim": "The plan (line 144) makes the 'proposal for forbidden-action-authorizations.json (11 receipts) for the Owner' part of TASK-0014. The prompt neither asks for it nor gives sources to write it: no forbidden-actions output with the 11 SHAs and rules, and no adr-validation-policy.schema.json for the law/policy/adr-validation.json that it must create. The deliverable disappears from the prompt, and the policy would have to be written without its schema.",
+      "fix": "In Tarefa, require the 11 receipts to be drafted in a section of CTG-0005.md (commit, rule, justification; authorized_by left for the Owner). Add to the reading list: node_modules/.../schemas/adr-validation-policy.schema.json, forbidden-actions.json, law/adr/ADR-0001-*.md as the format model, and the output of `devai check --only forbidden-actions` saved by the maestro under reports/."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0016.md",
+      "line": 13,
+      "claim": "The per-path authority contract and the Constitution 1.0.1 ADR must be written without .devai/pin/constitution.md (Art. 6/7/18/41), .devai/config/authority-policy.json, .claude/agents/* or law/policy/mutation-strength.json. The plan (line 42) makes the destination of mutation-strength.json and the CLAUDE.md update part of OD-R20-005. Without these sources the worker would have to search or invent.",
+      "fix": "Add .devai/pin/constitution.md, .devai/config/authority-policy.json, law/policy/mutation-strength.json, CLAUDE.md, law/adr/README.md and DESIGN-DECISIONS.md §law/adr to the reading list."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 165,
+      "claim": "No checkpoint or task schedules the Owner's acceptance of ADR v2, meaning the Accepted status commit authored by DEVAI Owner or Architect under an Owner decision, before TASK-0015. Nothing schedules `init bind --constitution` 1.0.1 in a segregated Owner commit either. In TASK-0015.json, upstream_task_id only covers TASK-0014, although the plan (line 145) also requires 'recibos do Owner'.",
+      "fix": "Add named checkpoints (e) ADR v2 accepted by the Owner and receipts applied, before TASK-0015 is dispatched, and (f) bind of Constitution 1.0.1 by the maestro after a scratch-clone rehearsal. Record both as blocks for TASK-0015 and TASK-0017."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0015.md",
+      "line": 53,
+      "claim": "Line 53 lists 'recibos aprovados' as the worker's deliverable, but law/policy/forbidden-action-authorizations.json is not in 'Pode tocar', and line 39 says the maestro applies it. The TASK-0015.json lock (MOD-forbidden-receipts) doesn't match the prompt's boundary.",
+      "fix": "Remove 'recibos aprovados' from the Entrega/criterion. Keep MOD-forbidden-receipts only as a maestro lock, or move it out of the worker JSON."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0020/prompts/TASK-0008.md",
+      "line": 54,
+      "claim": "The criterion only runs normalize-tasks.test.mjs. verify-round-tasks.test.mjs, which is also delivered, has no execution criterion.",
+      "fix": "Use `node --test tools/devai/tests/normalize-tasks.test.mjs tools/devai/tests/verify-round-tasks.test.mjs`."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0004.md",
+      "line": 13,
+      "claim": "Defining the per-round correction payload requires the orphan jsonl lines (sequence and sha256) and merge 9ac6dd55. The reading list has chain.json but none of the record/proofs/work/generic/*.jsonl files for R-0005/R-0007/R-0013, nor the baseline.json from CTG-0001 that measured them. TASK-0006 has the same gap: it needs the jsonl format to cross-check jsonl × chain.",
+      "fix": "Add work/rounds/R-0020/baseline.json (the orphan-anchors axis) and the three affected jsonl files to the reading lists of TASK-0004/0005/0006."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "work/rounds/R-0020/prompts/TASK-0017.md",
+      "line": 49,
+      "claim": "The plan (line 147) requires 'doctor verde' and an Engineer pre-push hook, but the prompt only has `pnpm check`. `pnpm exec devai doctor … → all [✓] in host-integrated` is a round criterion (plan line 176) and has no place among the per-task or maestro criteria of CTG-0006.",
+      "fix": "State explicitly that `devai doctor` all [✓] is the maestro's CTG-0006 criterion after bind/apply, and list it among the checkpoints."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 170,
+      "claim": "Criterion: `round status` closed 'for R-0020 at the end'. No task produces work/rounds/R-0020/record.md or R-0020's closure, both of which `round seal` requires (plan line 67).",
+      "fix": "Assign record.md for R-0020 to TASK-0018 (or a maestro closing step) and add the R-0020 seal to the closing checkpoints."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 83,
+      "claim": "Meta 2 (CTG-0002) puts verify:proof-anchors 'no CI' and considers 'cadeia legada verificada no CI'. Any change to ci.yml before the ADR v2 accepted in CTG-0005 triggers FORBID-CI-WITHOUT-ADR. TASK-0006 correctly leaves ci.yml out, but the plan doesn't say that the CI part moves to CTG-0005.",
+      "fix": "Add a note: in CTG-0002 the gate enters only through `pnpm check`. The explicit ci.yml step and any legacy-chain check go in CTG-0005, after ADR v2 is accepted."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/prompts/TASK-0010.md",
+      "line": 1,
+      "claim": "TASK-0010 uses Luna/low for 16 record.md files with fields that go through the seal gate, including merged_as and gates. By volume and sensitivity it is not a 'small' task on the ladder. A transcription error would only show up at `round seal` time.",
+      "fix": "Keep Luna only if CTG-0003.md provides the complete map (see the TASK-0010 finding). Otherwise raise it to Terra/medium."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0020/tasks/TASK-0001.json",
+      "line": 17,
+      "claim": "All 18 tasks declare db_isolation 'database', but none uses a database (contracts, docs, node scripts). The schema accepts it, but the value is semantically wrong. The normalization in TASK-0009 itself fixes db_isolation on historical tasks.",
+      "fix": "Use the schema's 'none' value (or its equivalent) for tasks that don't touch a database."
+    }
+  ],
+  "notes": [
+    "Item 11: `devai check --only schema --schema law/schemas/task.schema.json --instance` returned ok=true for all 18 task JSONs. The shasum-256 of the 18 prompts matches compositions.json exactly. pc_id = PC-<16 hex prefix>, and prompt_composition_id/executor.prompt_composition_id/model/effort match in every JSON. The upstream_task_id chain is serial from 0001 to 0018.",
+    "Item 10: the ids gpt-6-sol/gpt-5.6-terra/gpt-6-luna/claude-opus-5-5 match model-ladder.md:23-26 and AUTHORIZATION.md.",
+    "Item 5: OD-R20-003=(A) and OD-R20-005=accepted are not reopened. OD-R20-001/002/004 and A1 remain conditions before their effects in the prompts. The exception is OD-R20-006 (first finding).",
+    "law/adr/ADR-0002…0004 don't collide with docs/meta/adr: law/adr/README.md defines a separate LAW-ADR- series (OD-R18-001). Adding them to the DESIGN-DECISIONS.md and docs/meta/adr/README.md indexes isn't in any 'Pode tocar', so a maestro or transcription step should cover it.",
+    "Every file in the reading lists exists, except those created by earlier tasks (contracts/, reports/, tools/devai/) and .claude/settings.json, which doesn't exist yet and is created by TASK-0017.",
+    "The reviews/ folder has empty temporary files (prompt-review-1.json.formatted.*, .raw.*) that the maestro should remove before committing."
+  ]
+}
