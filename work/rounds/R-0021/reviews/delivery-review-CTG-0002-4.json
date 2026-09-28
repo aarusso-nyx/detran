@@ -1,0 +1,15 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0002",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "F-C3-01 resolved. The triage report now includes concrete excerpts of the failing remote step for both runs. The candidate is job 108792483206 (log SHA-256 155f3c63…), with `stack:smoke` starting at 04:57:34 and ending at 04:58:10 with `ELIFECYCLE Command failed with exit code 1` and `Process completed with exit code 1`. Main 1.3.1 is job 108793701832 (log SHA-256 c4cff29a…), running from 05:03:48 to 05:04:23 with the same exit code 1. Both excerpts show exit 1, which matches the earlier classification that the failure reproduces on the reference.",
+    "The edit is honest about what the logs do not show. The report says the remote log does not expose the failing row or target. That matches the code in tools/stack/smoke.mjs: `writeReport` writes the rows only to `smoke-report.{json,txt}` in the evidence directory, and the CLI only sets `process.exitCode = report.complete ? 0 : 1`, without printing the failing row. The report does not invent a target.",
+    "The local classification and the local result are unchanged. The report still states exit 0 and 42/42 `passed` for the isolated reproduction, with the same SHA-256 values for the summary (c66ec752…) and the log (483ea193…) that were checked in cycle 3. It still says the remote manual workflow failed, and it does not say it passed.",
+    "The follow-up destination is concrete: `docs/meta/knowledge-base/backlog.md`, during TASK-0014, as an open item for the CI stack smoke sensor for R-0022, with both job IDs and the 42/42 reproduction. The next step it names is to keep and publish the workflow's row summary before fixing any test. The text is in the future tense ('registrar… durante TASK-0014'). backlog.md has no entry about this yet, which is consistent: the report does not claim the item is already recorded or fixed. Recording it is left to TASK-0014 and is outside this review.",
+    "Limitation: I tried to fetch the logs of the two jobs with `gh api …/actions/jobs/<id>/logs` to re-check the hashes. The response body was empty (SHA-256 e3b0c442…, which is the hash of empty input), probably because of network or sandbox limits. So the log hashes 155f3c63… and c4cff29a… and the excerpts are accepted as stated by the author and were not independently re-verified. They are consistent with the smoke script's behaviour and with the cycle 3 classification.",
+    "Scope: no other point that passed in cycle 3 was reopened. I did not infer the final result of the integrated `pnpm check` (reports/ctg0002-check-r20-merge.log). The cycle 3 conditions still apply: `exit=0` must be recorded before the push, the re-emitted CTG-0002 proof must pass `evidence verify --scope chain`, and the PR must get new green CI. No file in the repository was edited. The only writes were temporary files in /tmp from the failed log fetch."
+  ]
+}
