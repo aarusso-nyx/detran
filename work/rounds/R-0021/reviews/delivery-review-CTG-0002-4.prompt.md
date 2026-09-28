@@ -1,0 +1,5 @@
+# Delivery review CTG-0002, cycle 4 — F-C3-01 only
+
+Papel: Auditor independente, somente leitura; `claude-opus-5-5`. Retorne apenas um objeto JSON puro, começando em `{` e terminando em `}`, sem cercas Markdown ou texto extra. Use `mode`, `round`, `coupled_task_group`, `verdict`, `findings`, `notes` como no ciclo 3.
+
+O ciclo 3 foi PASS com somente o achado low F-C3-01: faltavam trechos concretos do erro remoto e destino de seguimento na triagem do stack smoke. Releia apenas `work/rounds/R-0021/reviews/delivery-review-CTG-0002-3.json` e `work/rounds/R-0021/reports/CTG-0002-stack-smoke-triage.md`, especialmente os trechos novos dos jobs `108792483206` e `108793701832` e o destino `docs/meta/knowledge-base/backlog.md` por TASK-0014. Verifique se a edição é honesta: os logs não expõem target remoto, ambos terminam exit 1, reprodução isolada local permanece 42/42 PASS, e o seguimento não declara correção já feita. Não reabra outros pontos PASS, não infira gate `pnpm check` final ainda em execução, não edite arquivos. Se o low estiver resolvido, PASS com findings vazios.

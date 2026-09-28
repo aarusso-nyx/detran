@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0002",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Delta scope: HEAD 1bbb30e5 has two parents: 39006eb4 (candidate) and c10b2263 (main). The merge base is 3d96eeb8, the base declared in cycle 1. `git diff 39006eb4..HEAD` touches 23 files, 2005 insertions and 369 deletions, all in work/campaigns/C-0002-consolidacao.md and work/rounds/R-0022…R-0032/{plan.md,prompts/00-maestro.md}. This is the same file set as `git diff 3d96eeb8..c10b2263`.",
+    "The merge was a clean fast-forward-equivalent. The output of `git diff 3d96eeb8..39006eb4` is byte-identical to `git diff c10b2263..HEAD`, so there was no conflict resolution and the candidate's product content is unchanged after integration.",
+    "Pin unaffected: the delta changes no package.json, pnpm-lock.yaml, tools/stynx-version.json, tools/check-stynx-pin.ts, tools/stynx-pin/tests/*, tools/blueprints/generate.mjs, backend/apps/packages code, work/rounds/R-0021/contracts/CTG-0002.md or stynx-manifests.json. The 1.4.0 pin, the verifier, the Inspector tests and the gate order in `check` stay as reviewed in cycle 1.",
+    "Proofs unaffected: the delta changes no work/rounds/R-0021/** file, including reports/ctg0002-*.log, CTG-0002-gates.md, evidence-CTG-0001.json and the reviews. The logs and hashes recorded in cycle 1 are therefore preserved. TASK-0004.json at HEAD is `pre_merge`, as recorded in the 39006eb4 checkpoint, and that closes the process part of cycle 1's first low.",
+    "Decision A1 stays consistent: §11 (Adenda A11, which moves signature/outbox/offline-sync to R-0022) predates the delta, and the new text only cross-references it (A-C2-12). The new §12 OD-C2-005 (single branch, no intermediate PRs or checks) explicitly covers R-0022…R-0032, so it does not change the R-0021/CTG-0002 flow. A-C2-11 (R-0022 CTG-0001 opens stacked on `orchestra/stynx-canonical`) keeps the merge order R-0021 → R-0022 and the requirement of STYNX 1.5.0 final only for R-0022+ swap CTGs. Neither changes the 1.4.0 pin in this round, nor does either authorize writes to STYNX.",
+    "Non-blocking operational observation: the consumer plans (R-0022 §Base) assume `origin/orchestra/stynx-canonical` as the stacking base. The current branch is `feat/r21-stynx-pin`, which has no upstream configured, and origin/orchestra/stynx-canonical exists separately. The maestro should confirm which branch goes into the PR, and whether R-0022 stacks on it, so that the stacked CTG-0001 does not diverge from the reviewed candidate. This is not a product defect.",
+    "The cycle-1 lows still stand as dispositioned: the historical STYNX 1.3.1 descriptions are left for TASK-0014/R-0022, the CLI stack trace is non-blocking, and logs without an `exit=` line are covered below.",
+    "The `pnpm check` on the integrated tree (reports/ctg0002-check-main-merge.log, 317 lines, untracked) was still running at the time of review. It has no `exit=` line and no final record. No PASS is inferred from it. This PASS only covers the main delta and depends on that exit being recorded as 0 before the PR, as the maestro declared.",
+    "Untracked files work/rounds/R-0021/reviews/delivery-review-CTG-0002-2.{prompt.md,json.raw.*,json.formatted.*} are artifacts of this review's bridge and are outside the candidate. No file was edited."
+  ]
+}

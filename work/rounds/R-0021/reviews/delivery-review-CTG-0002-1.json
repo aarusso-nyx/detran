@@ -1,0 +1,53 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0002",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 0,
+      "file": "work/rounds/R-0021/tasks/TASK-0004.json",
+      "line": 5,
+      "claim": "TASK-0004 still has status \"queued\". Its product was delivered in bf85eb70, and TASK-0015 was already moved to \"pre_merge\". The round state does not match the report or the gates.",
+      "fix": "Before the CTG-0002 PR, the maestro should move TASK-0004 to pre_merge through the DEVAI flow. Do not edit the product."
+    },
+    {
+      "severity": "low",
+      "item": 0,
+      "file": "apps/portal/web/package.json",
+      "line": 5,
+      "claim": "The descriptions in apps/portal/web, apps/dashboard/web and apps/rait/web still say \"STYNX 1.3.1\" while the dependencies are pinned at 1.4.0. The verifier only checks dependency sections, so it does not catch this. Keeping the text was correct under the contract (only STYNX versions change), but it is now stale documentation.",
+      "fix": "Record it for R-0022 or for the ADR-0015 update (TASK-0014). Do not change it in this CTG."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "tools/check-stynx-pin.ts",
+      "line": 42,
+      "claim": "fail() writes the message and then throws an Error. For a missing, malformed or non-exact version source, the CLI therefore ends with an uncaught stack trace. The exit code is 1 and the path and cause are present, but the output is noisier than the ordered diagnostics. Diagnostics are also sorted with localeCompare on the whole line, which depends on the locale.",
+      "fix": "In a later cycle, print the message, set exitCode = 1 and stop without throwing. Consider a plain code-point comparison for deterministic ordering. This is not blocking."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0021/reports/CTG-0002-gates.md",
+      "line": 13,
+      "claim": "The ctg0002-*.log files do not record an explicit exit status. Exit 0 is inferred from the final output and the absence of ELIFECYCLE/ERR_, so the hashes prove the content but not the exit code. Also, origin/main has already moved to c10b2263 (PR #146, R-0022…R-0032 plans), so `git diff origin/main..HEAD` now shows inverted changes that are not part of this candidate.",
+      "fix": "In later runs, add an `exit=<code>` line to each log. Before publishing, do a normal merge of origin/main and repeat pnpm check on the integrated tree."
+    }
+  ],
+  "notes": [
+    "Scope: I checked `git diff 3d96eeb8..HEAD` (87 files) against the declared base. origin/main is at c10b2263, so a direct diff against it wrongly shows changes to R-0022…R-0032 and C-0002 that come from main. The only uncommitted files are the review prompt and its empty temp files.",
+    "C-02-01…08: the spec has SHA-256 95dc7406…a0f0, the same as the frozen spec. It was introduced in d6051857, before the base, and the CTG did not change it. The check log shows 8 pass, 0 fail, 0 skip. The TASK-0015 RED runs (task0015-red*.log) failed only because the CLI was missing.",
+    "Verifier (tools/check-stynx-pin.ts): it reads <repoRoot>/tools/stynx-version.json and resolves argv[2] or cwd. It rejects a missing, malformed or non-exact version and has no hardcoded fallback. It walks the tree with readdirSync/withFileTypes, so it does not follow symlinks to directories or files. It excludes exactly the 11 directory names in the contract. It checks all four dependency sections, requires strict equality for @stynx-nyx/*, reports invalid JSON, non-object manifests and invalid sections, sorts diagnostics, and does no writes or network calls. Running it on the current tree exits 0.",
+    "C-02-09: the generator reads the single version source from process.cwd() (not from BLUEPRINTS_OUTPUT) with the same exact-version check. No '1.3.1' string remains in the generator or the verifier. Besides the 59 manifests, only apps/boat/mobile/ng-package.json and packages/ui/ng-package.json mention @stynx-nyx, and they are outside the rule's scope.",
+    "Manifests: comparing base and HEAD semantically over 59 package.json files gives 158 @stynx-nyx declarations, all 1.3.1→1.4.0, with no other change. The root package.json only gained the scripts. The set matches the inventory exactly: 11 manual-source and 48 blueprints:generate, and every declaration listed in stynx-manifests.json is at 1.4.0.",
+    "C-02-10: verify:stynx-pin and test:stynx-pin run in check right after format:check. The other gates are neither removed nor reordered.",
+    "pnpm-lock.yaml: no 1.3.1 STYNX references remain (127 at 1.4.0). No top-level package outside @stynx-nyx changed. The @aws-sdk and similar lines only reflect the dependency lists of the new STYNX tarballs.",
+    "C-02-11: the recomputed hashes of all 8 ctg0002-*.log files match CTG-0002-gates.md. Frozen install reports 'Lockfile is up to date'. pnpm check contains no ELIFECYCLE. pnpm build covers the whole chain through inf-rait-integration. RLS smoke is OK (140 tables).",
+    "C-02-12 and the C-01-01…10/20…30 repeat: the backend CI run after the pin has the same counts as CTG-0001 cycle 2 (37 files, 1,681 passed plus 3 todo, upgrade 21/21, same 14 'No test files' packages, 430/7/10/1). The set of passed-test lines is identical between ctg0001-backend-ci-cycle2.log and ctg0002-backend-ci.log.",
+    "DEVAI proof: EV-7dc5678feb492d87 is an audit.observe record from devai-cli with exact_sha=3d96eeb8… and readiness_promoting=false. The SHA-256 hashes of the five artifacts in .devai/state/audit-observations/3d96eeb8…/ match the record. The record is sequence 114, links from previous_hash 0095e58c…, and has head a88d4851…. `devai evidence verify --scope chain` returns valid:true.",
+    "Owner decision A1 was respected: signature, outbox, offline and notifications were not migrated, and no new STYNX API was adopted. The possibly dead BOAT dependencies were kept. Running the full-stack smoke on the isolated workflow_dispatch runner is accepted, because local port 5432 belongs to another PostgreSQL."
+  ]
+}
