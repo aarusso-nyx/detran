@@ -1,0 +1,87 @@
+{
+  "action": "Deliver R-0020 CTG-0002 append-only proof declarations and strict anchor gate",
+  "round": "R-0020",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "readiness_promoting": true,
+  "commits": [
+    "afe5ed5f5a55c87fc273825d30b3048886973bbd",
+    "f7b0972b37f6a9951715a2bac580a1c0799aef5c",
+    "355479166dd1ec620366f4464acf7dd50dba0205",
+    "b7d77b8cdb6a0746d771d5bf22e826704655aba6"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0020/AUTHORIZATION-A2-2026-09-28.md",
+      "sha256": "8058b19e4c19570a8556ce775d4b21aabeebd13399d323742e91f90d20eac40f"
+    },
+    {
+      "path": "work/rounds/R-0020/contracts/CTG-0002.md",
+      "sha256": "6f321a6e822c308ef75355e4109d23a3b04b625da2bcc02855d9f3fa2b7a4226"
+    },
+    {
+      "path": "work/rounds/R-0020/contracts/CTG-0002-exceptions.jsonl",
+      "sha256": "3643eea309e967e6a15b3b7518cbe5e1ae1ca6b6f765fc280ad25dba2b2741bb"
+    },
+    {
+      "path": "tools/devai/verify-proof-anchors.mjs",
+      "sha256": "534a08cc73e795768f63e6be1e93e76d3ab03d86439be694ba586a07278cf535"
+    },
+    {
+      "path": "tools/devai/baseline.mjs",
+      "sha256": "f4d01727de605700698baba44d27aca1429a7964e3bb46eebb0e5b47161bec26"
+    },
+    {
+      "path": "tools/devai/tests/verify-proof-anchors.test.mjs",
+      "sha256": "517f3cdca49558d7e0476313247f9f10baeaa844215ef7e0b2b6ef0c7614ec03"
+    },
+    {
+      "path": "tools/devai/tests/baseline.test.mjs",
+      "sha256": "2393bbe7880405b4e1494946533ed514167d196533cbf328d883519465f94878"
+    },
+    {
+      "path": "work/rounds/R-0020/reviews/delivery-review-CTG-0002-3.json",
+      "sha256": "9c9035ddfd4a3755e914a5d74e71e3196dda716249286d8572a4c7f684042015"
+    }
+  ],
+  "proofs": {
+    "reanchored_observation": "R-0020:3",
+    "historical_declarations": [
+      "R-0005:11",
+      "R-0007:43",
+      "R-0013:16",
+      "R-0017:8"
+    ],
+    "a2_declaration": "R-0021:5",
+    "declared_orphans": 53,
+    "undeclared_orphans": 0,
+    "head_before_delivery_record": "fa3b777edfa04ab0ffd889dea9436d23e25b489358232ed29a70d682b921760e"
+  },
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "exit 0 after integration with origin/main"
+    },
+    {
+      "name": "pnpm devai:test",
+      "result": "pass",
+      "note": "56/56"
+    },
+    {
+      "name": "pnpm verify:proof-anchors",
+      "result": "pass",
+      "note": "81 directly anchored, 53 declared, zero undeclared or invalid; DEVAI chain valid"
+    },
+    {
+      "name": "pnpm devai:baseline --final --against baseline.json",
+      "result": "pass",
+      "note": "exit 0; proofs, tasks and scorecard PASS; no axis FAIL; REVIEW only for opening source_pending"
+    },
+    {
+      "name": "Claude Opus 5.5 delivery-review cycle 3",
+      "result": "pass",
+      "note": "verdict PASS; three low consistency findings corrected before commits"
+    }
+  ]
+}

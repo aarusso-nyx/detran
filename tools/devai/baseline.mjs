@@ -272,6 +272,41 @@ function pending(reason, extra = {}) {
   return { ...extra, source_pending: reason };
 }
 
+function measureAnchorGate(repoRoot) {
+  const before = gitSnapshot(repoRoot);
+  const result = run(
+    process.execPath,
+    [
+      resolve(scriptRoot, 'tools/devai/verify-proof-anchors.mjs'),
+      '--repo-root',
+      repoRoot,
+    ],
+    repoRoot,
+  );
+  const after = gitSnapshot(repoRoot);
+  if (before.status !== after.status || before.headSha !== after.headSha) {
+    throw new Error('verify-proof-anchors alterou o estado do repo-root');
+  }
+
+  const counters = Object.fromEntries(
+    `${result.stdout}\n${result.stderr}`
+      .split('\n')
+      .map((line) => line.match(/^([^:]+):\s*(\d+)$/))
+      .filter(Boolean)
+      .map(([, name, value]) => [name, Number(value)]),
+  );
+  return {
+    argv: ['node', 'tools/devai/verify-proof-anchors.mjs', '--repo-root', '.'],
+    exit_code: result.exitCode,
+    directly_anchored: counters['directly anchored'] ?? null,
+    declared_orphans: counters['declared orphans'] ?? null,
+    undeclared_orphans: counters['undeclared orphans'] ?? null,
+    duplicate_anchors: counters['duplicate anchors'] ?? null,
+    invalid_references: counters['invalid references'] ?? null,
+    validation_errors: counters['validation errors'] ?? null,
+  };
+}
+
 async function measureProofs(repoRoot) {
   const chainPath = resolve(repoRoot, 'record/proofs/chain.json');
   const proofPaths = await walk(
@@ -400,6 +435,7 @@ async function measureProofs(repoRoot) {
     };
   }
   return {
+    anchor_gate: measureAnchorGate(repoRoot),
     anchored: jsonlLines - orphans.length,
     chain_head: chain.head ?? null,
     chain_records: Array.isArray(chain.records) ? chain.records.length : null,
@@ -1207,9 +1243,33 @@ function compareBaseline(opening, final) {
       const priorKeys = new Set(
         (before.lines ?? []).map((line) => `${line.path}:${line.sequence}`),
       );
-      for (const line of after.lines ?? []) {
-        if (!priorKeys.has(`${line.path}:${line.sequence}`) && !line.anchored)
-          fail(`${line.path} #${line.sequence}: nova linha órfã`);
+      const newOrphans = (after.lines ?? []).filter(
+        (line) =>
+          !priorKeys.has(`${line.path}:${line.sequence}`) && !line.anchored,
+      );
+      const a2Orphan = {
+        path: 'record/proofs/work/generic/R-0021.jsonl',
+        sequence: 2,
+        sha256:
+          'c562dfce81ec9ba08c4d3eae22547ad36adb99fbb76dc2632bb20e81fbbfb804',
+      };
+      const gate = after.anchor_gate;
+      const gatePasses =
+        gate?.exit_code === 0 &&
+        gate.undeclared_orphans === 0 &&
+        gate.duplicate_anchors === 0 &&
+        gate.invalid_references === 0 &&
+        gate.validation_errors === 0;
+      const onlyA2 =
+        newOrphans.length === 1 &&
+        newOrphans[0].path === a2Orphan.path &&
+        newOrphans[0].sequence === a2Orphan.sequence &&
+        newOrphans[0].sha256 === a2Orphan.sha256;
+      if (
+        newOrphans.length > 0 &&
+        !(onlyA2 && gatePasses && after.verification?.valid === true)
+      ) {
+        fail('nova linha órfã sem resolução A2 estrita');
       }
       if (after.duplicate_anchors.length > before.duplicate_anchors.length)
         fail('âncoras duplicadas aumentaram');

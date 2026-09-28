@@ -1,0 +1,90 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": "CTG-0002 completude",
+      "file": "package.json",
+      "line": 88,
+      "claim": "A entrega está incompleta. O gate real `pnpm verify:proof-anchors` continua RED; reexecutei `node tools/devai/verify-proof-anchors.mjs --repo-root .` e obtive 74 âncoras diretas, 0 declaradas, 53 órfãs não declaradas, 0 duplicatas e 0 referências inválidas. Nenhuma das quatro provas declaratórias foi gravada, e o lock de `record/proofs/**` do PR #153 continua aberto. TASK-0006 está `in_progress` (tasks/TASK-0006.json:5). A linha R-0021 seq. 2 (SHA-256 `c562dfce…fb804`, que confirmei nos bytes físicos) não tem âncora e não pode ser declarada enquanto A2 não for aprovada. Como `pnpm check` agora inclui o gate e o CI roda `pnpm check` (.github/workflows/ci.yml:150,402), o PR ficará vermelho até que as provas sejam gravadas e o Owner decida sobre A2.",
+      "fix": "Depois que o PR #153 liberar o lock, integrar `main` por merge. Conferir de novo o conjunto de órfãs no HEAD integrado e ensaiar em clone descartável. Só então gravar as quatro provas por `devai evidence record --kind generic` com `--as-role engineer`. Obter do Owner uma decisão expressa sobre A2, ou outra decisão governada para a R-0021 seq. 2. Com `pnpm verify:proof-anchors`, `pnpm check` e o CI verdes, abrir um novo delivery-review. Não afrouxar o gate."
+    },
+    {
+      "severity": "medium",
+      "item": "Allowlist fail-closed baseada na baseline",
+      "file": "tools/devai/verify-proof-anchors.mjs",
+      "line": 223,
+      "claim": "A lista de exceções lê `proofs.lines[anchored=false]` em `work/rounds/R-0020/baseline.json`, um arquivo mutável fora de `record/`, sem fixar quantidade nem digest. Não confere essa lista com `proofs.orphans`, que o contrato indica como fonte (CTG-0002.md:12-13). Hoje o conteúdo está correto: confirmei que contrato, baseline, os quatro payloads e os bytes físicos coincidem em 52/52 trios. O problema é a proteção. Basta acrescentar uma entrada `anchored:false` à baseline para que uma linha nova declarada passe, contrariando o item 4 ('pelo trio exato acima', CTG-0002.md:147-150). Além disso, aplicar A2 com esse desenho exigiria reescrever uma medição histórica, a baseline.",
+      "fix": "Fixar a allowlist: exigir exatamente 52 entradas, idênticas a `proofs.orphans`, e comparar com um digest SHA-256 embutido da lista canônica ordenada de trios (ou do arquivo baseline.json). Em caso de divergência, falhar fechado. Se A2 for aprovada, aplicá-la por arquivo de exceção separado, append-only e com digest próprio, citando a decisão do Owner, sem editar a baseline. Acrescentar um teste RED de adulteração da baseline."
+    },
+    {
+      "severity": "medium",
+      "item": "Cobertura de testes do contrato",
+      "file": "tools/devai/tests/verify-proof-anchors.test.mjs",
+      "line": 171,
+      "claim": "O item 3 do contrato e o parágrafo de testes (CTG-0002.md:141-146,160-163) exigem RED para 'hash ou sequência divergente'. Só existe teste de hash divergente; sequência divergente não é testada. Também faltam testes para: prova declaratória sem âncora própria (mjs:295), declaração de linha que já tem âncora direta (mjs:338), declaração de linha inexistente ou de caminho divergente (mjs:315), nota malformada em registro `evidence.record.generic` (mjs:188-203) e `payload.round` diferente do `round_id` (mjs:271). Todos esses ramos existem no código, mas nenhum teste os exercita.",
+      "fix": "O Inspector deve acrescentar cenários RED para cada ramo: sequência divergente, declaração sem âncora, declaração de linha já ancorada, linha ou caminho inexistente, notas generic malformadas e round divergente. Os testes existentes devem ser preservados."
+    },
+    {
+      "severity": "low",
+      "item": "Asserção de falha frouxa",
+      "file": "tools/devai/tests/verify-proof-anchors.test.mjs",
+      "line": 100,
+      "claim": "`expectFailure` só verifica exit diferente de 0 e a regex `R-0005[\\s\\S]*1`. O dígito `1` aparece em quase qualquer saída, e o motivo da falha não é conferido. Um teste pode passar por um motivo diferente do cenário pretendido.",
+      "fix": "Conferir a mensagem específica de cada cenário, por exemplo `hash mismatch for record/proofs/work/generic/R-0005.jsonl:1`, `duplicate declaration`, `is not an allowed historical orphan` ou `duplicate anchors`."
+    },
+    {
+      "severity": "low",
+      "item": "Totais de diagnóstico",
+      "file": "tools/devai/verify-proof-anchors.mjs",
+      "line": 408,
+      "claim": "`invalid references` é calculado como `errors.length - unanchored - duplicateAnchors`. Assim, declarações duplicadas, hashes divergentes, declarações sem âncora e linhas JSONL duplicadas são todos contados como referências inválidas. `declared orphans` também conta alvos de declarações cuja própria linha é inválida ou não tem âncora (mjs:295-351). O exit continua correto, mas os totais pedidos no item 5 ficam distorcidos.",
+      "fix": "Separar os contadores por categoria e só registrar uma declaração em `declarations` quando a linha declaratória tiver exatamente uma âncora direta."
+    },
+    {
+      "severity": "low",
+      "item": "Chave de linha ignora caminho/kind",
+      "file": "tools/devai/verify-proof-anchors.mjs",
+      "line": 13,
+      "claim": "A chave é `round:sequence`, mas o script lê `record/proofs/work/**/*.jsonl`. Se o DEVAI passar a gravar outro kind (`work/<kind>/R-XXXX.jsonl`), as sequências colidem com as de `generic`, gerando erro espúrio de linha duplicada e sobrescrevendo `linesByKey`. Hoje só existe `generic/`.",
+      "fix": "Restringir a leitura a `record/proofs/work/generic/`, ou falhar fechado com mensagem explícita quando surgir um diretório de kind desconhecido."
+    },
+    {
+      "severity": "low",
+      "item": "Payloads declaratórios",
+      "file": "work/rounds/R-0020/evidence-CTG-0002-correction-R-0007.json",
+      "line": 1,
+      "claim": "Os quatro payloads estão corretos em trios e causa: R-0007 cita o merge 9ac6dd55 para as sequências 38–39 e `source_pending` para as demais. Porém, não seguem as notas do ciclo anterior: não têm papel explícito, `readiness_promoting: false`, `trace` nem referência a `CTG-0002`, que a própria proposta A2 usa com `trace` (CTG-0002.md:195).",
+      "fix": "Antes da gravação real, acrescentar `role`/`as_role: engineer`, `readiness_promoting: false`, `ctg: CTG-0002` e `trace`. O gate ignora campos extras, então ele não muda."
+    },
+    {
+      "severity": "low",
+      "item": "Rastreabilidade do RED",
+      "file": "work/rounds/R-0020/reports/TASK-0005.md",
+      "line": 7,
+      "claim": "O relatório diz 'oito RED antes da correção fail-closed do Engineer'. Nesse momento a implementação já existia, então apenas o cenário de linha nova declarada podia estar RED. Isso diverge da nota do budget ('sete cenários RED') e não há log preservado da execução RED. A ordem 'testes antes da implementação' fica mal documentada.",
+      "fix": "Corrigir o relatório: sete RED antes da implementação (script ausente) e um RED antes da correção fail-closed, com os comandos e as saídas resumidas."
+    },
+    {
+      "severity": "low",
+      "item": "Plano e segregação de commits",
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 342,
+      "claim": "M12 foi inserida entre M11 e M6, fora de ordem. Em plan.md:409-410, o prettier quebrou o code span `pnpm verify:proof-anchors` em duas linhas. A árvore também mistura três papéis: Architect (AGENTS.md, contrato, plano), Inspector (testes) e Engineer (script, package.json, .gitattributes).",
+      "fix": "Reordenar M12 e reunir o code span numa só linha. Fazer um commit por papel, conforme a lição 23 do prompt do maestro. A correção de AGENTS.md vai no commit Architect, respeitando a autoria por caminho da Constituição (pin:98)."
+    }
+  ],
+  "notes": [
+    "Revisão feita somente em leitura, sem nenhum `--write`. `record/` e `.devai/state` não têm modificações na worktree, portanto não há escrita manual de provas.",
+    "Conferência independente: os 52 trios do contrato são idênticos a `baseline.json` (`proofs.lines anchored=false` e `proofs.orphans`, 52 cada), aos quatro payloads e aos SHA-256 recalculados dos bytes físicos JSONL sem terminador.",
+    "A R-0021 seq. 2 foi confirmada: o SHA-256 da linha física é `c562dfce81ec9ba08c4d3eae22547ad36adb99fbb76dc2632bb20e81fbbfb804`, e a linha não tem âncora direta. A2 não foi considerada aprovada.",
+    "O fail-closed de linha nova declarada funciona. Uma declaração com hash correto de linha fora da allowlist gera erro `is not an allowed historical orphan`, e a linha continua contada como não declarada (teste 5). O risco que resta é a allowlist ser mutável (achado medium).",
+    "`node --test tools/devai/tests/verify-proof-anchors.test.mjs`: 8/8 PASS, reexecutado. O cadastro da cadeia tem 118 registros: 74 `evidence.record.generic`, todos com notas válidas, e 44 `audit.observe` sem notas de prova.",
+    "A mudança em AGENTS.md é factual e está correta: ci.yml:68 verifica apenas a cadeia governada. Ela está coberta pela M12 e pela meta 2 do plano (plan.md:112). `.gitattributes` com `record/proofs/** merge=binary` cumpre o contrato.",
+    "`verify:proof-anchors` compõe o script Node e `devai evidence verify --scope chain` com `&&`, como pede o item 1. A inclusão em `pnpm check` segue o item 5, e o passo explícito em ci.yml fica corretamente adiado para o CTG-0005.",
+    "Os arquivos vazios `delivery-review-CTG-0002-1.json.formatted.*` e `.raw.*` são temporários da ponte desta chamada e não foram julgados como entrega.",
+    "Não há contradição canônica nem violação de autoridade, por isso o veredito não é FAIL. É REVIEW por causa do achado high de completude."
+  ]
+}
