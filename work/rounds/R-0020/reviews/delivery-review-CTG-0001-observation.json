@@ -1,0 +1,32 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 395,
+      "claim": "The 'Orçamento' bullet still says to stop at 600000 input tokens in window 2. That contradicts M11 (lines 337-341), the staged budget.json (window_input_budget 2250000, checkpoint_threshold 1800000) and AUTHORIZATION-RETAKE-2026-09-28.md. A maestro reading only this operative bullet would stop early.",
+      "fix": "Change the bullet to: window 2 resumes with 600000 estimated tokens, budget 2250000, checkpoint 1800000, per M11/AUTHORIZATION-RETAKE-2026-09-28.md. Keep the window 1 figures as history."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/reviews/delivery-review-CTG-0001-observation.json.formatted.OxnzRv",
+      "line": 1,
+      "claim": "Two empty (0-byte) untracked temporary files from the bridge (.json.formatted.OxnzRv and .json.raw.YC7Efx) are in reviews/. If a broad git add picks them up, they would pollute the review record of the observation PR.",
+      "fix": "Delete both temporary files. Commit only the final delivery-review-CTG-0001-observation.json and .md, and a .bridge.json if the convention calls for one."
+    }
+  ],
+  "notes": [
+    "Linkage to the exact SHA: status.json, backlog.json, scorecard.json and inventory.json all carry merge_sha or integration_head 2a0f7ce2bb713499c53b673a5a2516041518db92, which is the current origin/main. The chain record's context.git.head_sha and its note exact_sha=... match that SHA.",
+    "Emitted by DEVAI with no manual edits: d4c3a3bb has author DEVAI Machine <devai-machine@local.invalid> and touches only the five artifacts plus record/proofs/chain.json. The local shasum -a 256 of all five artifacts equals the sha256 values recorded in EV-66cbf1e5a90c4e04 (inventory f3337c48…, scorecard 0cbf0ea0…, backlog a71e1732…, assessment d8614772…, status e22b0e4a…). The files are clean relative to HEAD.",
+    "The chain is append-only. The diff removes only the old head line (99a7f6cc…) and appends record sequence 115, whose previous_hash and previous_run_hash are 99a7f6cc… and whose manifest_hash is 64d5e95b…, equal to the new head. evidence verify --scope chain, run read-only, returned {valid:true, errors:[]}.",
+    "readiness_promoting is false in status.json and in the record notes. The scorecard has 45 cells: 43 UNKNOWN and 2 N/A, 0 passing. The assessment is YELLOW and explicitly reports a sensor coverage gap, and the backlog is empty. Nothing promotes readiness. previous_observation_digest and previous_merge_sha are null, consistent with this being the first persisted observation on this line.",
+    "Boundaries: origin/main..HEAD plus the staged changes touch no PC, record.md or close-state.jsonl, and nothing under R-0017, which stays sealed. The plan lists observation PR/CI/merge, CTG-0002…0006 and ODs as pending, so R-0020 is not declared closed. The only change to TASK-0003.json (pre_merge→completed, in e5500a9a with author DEVAI Architect) is consistent with the verified merge of PR #150.",
+    "Supplementary authorization: the AUTHORIZATION-RETAKE text, M11 and the staged budget.json agree (4 cycles per item, 2250000/1800000, previous 600000 consumption kept) and state that criteria, gates, write boundaries, serial order and the PASS+green-CI requirement are unchanged. This review is cycle 1 of this item, within the limit. When committing, attribute the authorization file to the Owner's decision (Owner quote, Architect/Engineer role as transcriber) in the commit message.",
+    "Lock recorded: PR #151 (R-0021) is OPEN and modifies record/proofs/chain.json (it observes 3d96eeb8…). None of its changes are attributed to this diff. If #151 merges first, integrate main by merge and re-run DEVAI in a disposable clone, as plan.md line 394 already says. Never resolve the chain by hand; a new sequence number and a new head will require re-verification before merge."
+  ]
+}
