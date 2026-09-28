@@ -5,6 +5,44 @@
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
 > não há contexto anterior a recuperar.
 
+## OD-C2-005 — fluxo contínuo (prevalece)
+
+Decisão do Owner de 2026-09-27 (`work/campaigns/C-0002-consolidacao.md` §12). Prevalece sobre
+qualquer trecho deste prompt que mande abrir PR, rodar CI remoto, gravar evidência, observar
+auditoria ou pedir delivery-review por CTG.
+
+- **Branch única** `orchestra/teat-web-wiring`. Faça um commit por tarefa ou por CTG, seguindo
+  `CODESTYLE.md` e a autoria por caminho (OD-R20-003). Só você commita, em série.
+- **Nada intermediário:** entre CTGs não há PR, CI remoto, merge em `main`,
+  `devai evidence record`, `devai audit observe`, `pnpm check` completo nem delivery-review.
+- **Mantidos:**
+  - os `acceptance_commands` de cada tarefa e a triagem por tarefa (§7);
+  - **um** ciclo de prompt-review (§5) no bootstrap, sobre `plan.md` e os prompts de TASK-0001…0012.
+- **Ondas.** Siga `plan.md` §Execução OD-C2-005 (O1…O9): até 3 workers simultâneos, com
+  fronteiras de escrita disjuntas. O shell (`MOD-teat-web-shell`) só é tocado na O4.
+- **Push sem PR** ao fim de cada onda: `git push -u origin orchestra/teat-web-wiring`.
+- **Abertura empilhada.** O1–O2 abrem sobre `origin/main`, ou sobre `origin/orchestra/stynx-dedup`
+  se R-0024 ainda não mesclou. Antes da O3, o CTG-0004 de R-0028 precisa existir em
+  `origin/orchestra/boat-wiring`
+  (`git log origin/orchestra/boat-wiring -- apps/teat/web/src/app/features/sinistros`):
+  - branch ainda não publicado → crie-o sobre esse upstream;
+  - branch já publicado → `git merge --no-edit origin/orchestra/boat-wiring`.
+
+  O PR final espera o merge de R-0028 (e de R-0024, com STYNX 1.5.0 final em `main`).
+
+- **Sequência final,** executada uma vez:
+  1. `git fetch -q origin && git merge --no-edit origin/main`.
+  2. CI local: os comandos de `plan.md` §Execução OD-C2-005 (`pnpm check`, tripla de
+     `@detran/teat-web` mais `ng build --configuration production`, testes de
+     `@detran/teat-mobile` e `@detran/boat-mobile`, `pnpm --filter @detran/app test:e2e`,
+     `pnpm backend:test:ci`, `pnpm contracts:check`, `docs:kb:*`, `format:check`) e
+     `pnpm devai:rc:prepare`, quando aplicável.
+  3. Uma delivery-review (§8) do diff inteiro.
+  4. Um PR (§9.3).
+  5. CI remoto e merge (§9.4–5).
+  6. Evidência única `evidence-R-0029.json` com os 5 CTGs, `audit observe` no SHA do merge,
+     `round close` e `round seal` (§9.2, §9.5–7).
+
 ## 0. Identidade e limites
 
 - Você é o maestro da frente **`teat-web-wiring`**: pacotes de trabalho **WP-T4 (web) — TEAT web produtivo no lugar da página genérica JSON (ação 6 da C-0002), com OD-R29-001 = (a), decidida pelo Owner em 2026-09-26** de `docs/framework/arch/teat-build-pack.md`.
@@ -19,8 +57,8 @@
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
-  **e o upstream de abertura da campanha mesclado** (R-0024 `stynx-dedup` em `main` e `docs/framework/arch/frontend-wiring-pattern.md` presente) — fora isso, nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (matriz de rotas, ODs, i18n): nenhum upstream. CTG-0002 (fundação: dados, rotas, rename de `data/kernel STYNX.client.ts`, fim do componente genérico; lock `MOD-teat-web-shell`): **decisão do Owner em OD-R29-001** e merge do CTG-0004 de R-0028 `boat-wiring` (`orchestra/boat-wiring`, telas web em `apps/teat/web/src/app/features/sinistros/`, lock `MOD-teat-web-sinistros`, que esta rodada nunca altera). CTG-0003 e CTG-0004 (módulos): CTG-0002 mesclado (ou empilhado nele). CTG-0005 (smoke, delta, docs): stack local de R-0017 (`pnpm stack:start`) e esquema `work/rounds/R-0030/availability-manifest.schema.md` em `main` ou empilhado em `orchestra/user-docs`**. No bootstrap, registre em `plan.md`
+  **e o upstream de abertura da campanha mesclado** (R-0024 `stynx-dedup` em `main` e `docs/framework/arch/frontend-wiring-pattern.md` presente, ou empilhado em `origin/orchestra/stynx-dedup` com o padrão presente — OD-C2-005) — fora isso, nunca pare por upstream ainda não mesclado. O que depende de upstream é o
+  **PR final** (OD-C2-005); por grupo, vale a presença no branch: **CTG-0001 (matriz de rotas, ODs, i18n): nenhum upstream. CTG-0002 (fundação: dados, rotas, rename de `data/kernel STYNX.client.ts`, fim do componente genérico; lock `MOD-teat-web-shell`): **decisão do Owner em OD-R29-001** e o CTG-0004 de R-0028 `boat-wiring` no branch publicado `origin/orchestra/boat-wiring` (empilhar; o PR final espera o merge de R-0028; telas web em `apps/teat/web/src/app/features/sinistros/`, lock `MOD-teat-web-sinistros`, que esta rodada nunca altera). CTG-0003 e CTG-0004 (módulos): CTG-0002 concluído na branch. CTG-0005 (smoke, delta, docs): stack local de R-0017 (`pnpm stack:start`) e esquema `work/rounds/R-0030/availability-manifest.schema.md` em `main` ou empilhado em `orchestra/user-docs`**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -69,7 +107,7 @@ com `git ls-files <dir>` (R-0007 perdeu 24 relatórios; R-0016 perdeu um módulo
 substituído entra no closure como **não cumprido** — vetadas as trocas de R-0013/R-0014 (Lighthouse →
 axe; suíte integral → testes focais) e o waiver SQL2 de R-0007; (13) toda OD nova vai ao registro
 canônico (`docs/framework/arch/teat-build-pack.md` §4) no mesmo PR — OD só em `contracts/` não conta; (14) âncora da prova:
-`evidence record`/`verify` por CTG, `audit observe` no SHA exato do merge, `round close` **e**
+`evidence record`/`verify` (uma vez, com todos os CTGs — OD-C2-005), `audit observe` no SHA exato do merge, `round close` **e**
 `round seal` (DEVAI 1.5.6); nenhuma rodada fecha com prova sem âncora; (15) `budget.json`
 obrigatório — a 80 % da janela, checkpoint e parada, sem dispensa implícita; (16) testes de
 caracterização antes de toda troca de implementação; (17) nenhuma integração externa real
@@ -109,7 +147,7 @@ depois de o upstream estar em `main`; um branch empilhado pode ser enviado
 (`git push -u origin orchestra/teat-web-wiring`) sem PR para que outras frentes empilhem sobre ele.
 
 **Avanços do `main` durante a rodada.** Outras frentes mesclam enquanto você trabalha. No início de
-cada janela, em cada checkpoint (§7) e antes de cada PR (§9): `git fetch -q origin` e
+cada janela, em cada checkpoint (§7) e antes do PR final (§9): `git fetch -q origin` e
 `git log --oneline HEAD..origin/main`; se houver commits novos, use `git rebase origin/main` somente
 se o branch nunca foi publicado. Caso contrário, use `git merge --no-edit origin/main`. Nunca use
 `--force`, `--force-with-lease` ou equivalente. Depois da integração, rode de novo os gates do
@@ -202,31 +240,36 @@ Marque `status=in_progress` na tarefa; ao receber o relatório, grave-o em
 
 ## 7. Checkpoint por tarefa (Engineer) — hard gates
 
-Rode os `acceptance_commands` da tarefa e, ao fim de cada grupo acoplado, `pnpm check` e o tier
-de teste do WP (`pnpm backend:test:ci` ou o indicado). Falha → triagem em uma linha
+Rode os `acceptance_commands` da tarefa. `pnpm check` e os tiers de teste (`pnpm backend:test:ci`
+e os dos apps) rodam uma vez, na sequência final (§OD-C2-005). Falha → triagem em uma linha
 (`plant-bug | sensor-error | policy-issue | reference-gap`) em `plan.md` §Triagem → 1 nova
 tentativa com o achado no prompt → se falhar, nível acima da mesma família → se falhar,
 `escalated`. Nunca ajuste um teste para passar; nunca edite arquivo gerado.
 
 ## 8. Revisão da entrega (reviewer, outra família)
 
-Para cada grupo acoplado concluído: `git diff --stat` + diff completo + relatórios + critérios em
-`reviews/delivery-review-<ctg>.md` (modo `delivery-review`) → ponte → veredito. `PASS` libera o
-commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `escalated`.
+Uma vez, no fim da rodada (OD-C2-005), depois do CI local: `git diff --stat origin/main...HEAD` +
+diff completo + relatórios + critérios em `reviews/delivery-review-R-0029.md` (modo
+`delivery-review`) → ponte → veredito. `PASS` libera o PR; `REVIEW` → correções restritas aos
+itens apontados, pelo worker responsável (máximo 2 ciclos); `FAIL` → `escalated`.
 
 ## 9. Commit, evidência, PR, merge, fechamento (Engineer; Architect no fechamento)
 
 1. `git add` só dos caminhos das tarefas; commit por `CODESTYLE.md` (`<type>(<scope>): …`,
-   corpo com WF/UC/RN/OD citados, trailer de atribuição da sessão).
-2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
+   corpo com WF/UC/RN/OD citados, trailer de atribuição da sessão). Um commit por tarefa ou por
+   CTG na branch única; nenhum PR antes da sequência final (OD-C2-005).
+2. Evidência — só na publicação final, depois do merge (OD-C2-005): escreva `evidence-R-0029.json`
+   com todos os CTGs (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0029 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
-3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
+3. PR único, depois do CI local e do `PASS` da delivery-review final: confirme que todo upstream
+   da rodada está em `main` e rebaseie (`git rebase origin/main`;
    somente se o branch nunca foi publicado); em branch publicado, use
    `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
    `git push -u origin orchestra/teat-web-wiring` e então `gh pr create --base main` com o corpo pelo
    `.github/pull_request_template.md` (papel, WP e fontes, o que muda, verificação, OD tocadas,
-   fora de escopo, linha final de atribuição).
+   fora de escopo, linha final de atribuição), mais a tabela CTG → tarefas → commits e o
+   resultado dos gates.
 4. Acompanhe o CI (`gh pr checks <n>`); falha de infraestrutura (pull do Docker, registro) →
    `gh run rerun <id> --failed`; falha de código → volte ao §7 na tarefa certa.
 5. **Merge** somente com CI verde **e** `PASS` do reviewer na última entrega:

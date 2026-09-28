@@ -8,6 +8,57 @@
 > **Pré-condição:** o Owner autorizou `work/campaigns/C-0002-consolidacao.md` (rev. 2) e
 > `work/rounds/R-0025/plan.md`. Sem essa autorização registrada, pare antes do §1 e reporte.
 
+## OD-C2-005 — fluxo contínuo (prevalece)
+
+Decisão do Owner de 2026-09-27 (`work/campaigns/C-0002-consolidacao.md` §12). Prevalece sobre o que
+§0–§9 dizem sobre PR, merge, evidência ou delivery-review por CTG.
+
+- **Branch única** `orchestra/rait-web-wiring`, com um commit por tarefa ou por CTG, conforme
+  `CODESTYLE.md` e a autoria por caminho. Você serializa os commits.
+- **Entre CTGs não há** PR, CI remoto, merge em `main`, `devai evidence record`,
+  `devai audit observe`, `pnpm check` completo nem delivery-review.
+- **Mantidos:** os `acceptance_commands` de cada tarefa, que são a definição de pronto do worker; a
+  triagem de falha por tarefa (§7); os checkpoints (b)–(e) de `plan.md` como gates de tarefa.
+- **Um** ciclo de prompt-review no bootstrap (§5), sobre `plan.md` e os prompts de **todos** os
+  CTGs, antes de disparar a O1.
+- **Ondas:** siga a tabela O1…O5 de `plan.md` §Execução OD-C2-005, com até 3 workers simultâneos,
+  fronteiras de escrita disjuntas e dependências da tabela de tarefas. TASK-0008 só começa com
+  TASK-0005 e TASK-0007 commitadas (`MOD-shared-policy`).
+- **Push sem PR** ao fim de cada onda: `git push -u origin orchestra/rait-web-wiring`. Rodadas
+  dependentes empilham sobre ele.
+- **Abertura empilhada:** crie a worktree a partir de `origin/orchestra/stynx-dedup` (R-0024) quando
+  R-0024 não estiver em `main`:
+  `git worktree add -b orchestra/rait-web-wiring "/Volumes/Thiamat II/stech/detran-worktrees/rait-web-wiring" origin/orchestra/stynx-dedup`.
+  Integre novas revisões com `git merge --no-edit origin/orchestra/stynx-dedup`. Só o PR final
+  espera R-0024 em `main`, com R-0022/R-0023 e STYNX 1.5.0 final por transitividade.
+- **Lock `MOD-shared-policy` partilhado** com R-0026 (CTG-0003) e R-0027 (CTG-0003): não espere as
+  outras rodadas. Edite `policy.ts` no seu branch. Se outra rodada mesclar antes, no passo 1 mantenha
+  os dois blocos e rode de novo `pnpm --filter @detran/shared test` e `pnpm backend:test:e2e`
+  (`policy-routes.e2e`). Ordem de merge recomendada: R-0025 → R-0026 → R-0027, sem bloquear
+  nenhuma rodada.
+- **Sequência final** (uma vez, na ordem):
+  1. `git fetch -q origin && git merge --no-edit origin/main`, com R-0024 em `main`;
+  2. CI local:
+     - `pnpm check`;
+     - `pnpm contracts:check`, `pnpm contracts:clients` (sem diff), `pnpm contracts:test` e
+       `pnpm blueprints:check`;
+     - `pnpm --filter @detran/shared test`;
+     - `pnpm backend:test:ci` e `pnpm backend:test:e2e`;
+     - `pnpm --filter @detran/app test:e2e`;
+     - `pnpm --filter @detran/rait-web typecheck`, `lint`, `test` e `build`;
+     - `pnpm verify:parameter-catalogue`;
+     - `pnpm docs:kb:check` e `pnpm docs:kb:publish-check`;
+     - `pnpm format:check`;
+     - `pnpm stack:start` + `pnpm stack:smoke`;
+     - `pnpm devai:rc:prepare`, quando aplicável;
+  3. **uma** delivery-review do diff inteiro (`git diff origin/main...HEAD`), com `REVIEW` limitado
+     a 2 ciclos;
+  4. **um** PR com a tabela CTG → tarefas → commits e os gates;
+  5. CI remoto e merge com CI verde e `PASS`;
+  6. `evidence-R-0025.json` com todos os CTGs, seguido de `evidence record`/`verify`,
+     `audit observe` no SHA do merge, `closure.json`, `round close` + `round seal`, `waves.md` e
+     `backlog.md` (§9).
+
 ## 0. Identidade e limites
 
 - Você é o maestro da frente **`rait-web-wiring`**: **ação 6 da campanha C-0002** para o RAIT web
@@ -22,25 +73,26 @@
   `plan.md` §Tarefas. Família do reviewer: **a outra** (`claude`), modelo **Opus 5.5** (id confirmado com
   `claude --help` no bootstrap, guardado em `REVIEWER_MODEL`), sempre pela ponte
   `tools/orchestra/bridge.sh`. Nunca inverta.
-- Orçamento desta janela de 5 h: **frente prevista para 5 janelas; nesta janela, planejamento do maestro (leitura + prompts do CTG-0001 e
-  dos contratos TASK-0003/0006/0009/0013) + TASK-0001 (Sol 6) + TASK-0002 (Luna) + 1 prompt-review + 1 delivery-review
+- Orçamento desta janela de 5 h: **frente prevista para ≈ 4 janelas (OD-C2-005); nesta janela, planejamento do maestro (leitura + prompts de
+  todos os CTGs) + 1 prompt-review + O1 (TASK-0001, TASK-0002, TASK-0009, TASK-0013)
   ≈ 650 k tokens de entrada; ao atingir 80 % (≈ 520 k) grave checkpoint e pare**. Contabilize em
   `work/rounds/R-0025/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
-  e **R-0024 `stynx-dedup` mesclada** (padrão de ligação; ver §1) — fora isso, nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (matriz, delta de rotas, triagem de OD): nenhum upstream além de R-0024.
+  e **R-0024 `stynx-dedup` mesclada ou publicada em `origin/orchestra/stynx-dedup`** (padrão de ligação;
+  abertura empilhada, seção OD-C2-005) — fora isso, nunca pare por upstream ainda não mesclado. O que depende de upstream é o
+  **PR final** (seção OD-C2-005); as notas abaixo dizem só a ordem interna dos grupos: **CTG-0001 (matriz, delta de rotas, triagem de OD): nenhum upstream além de R-0024.
   CTG-0002 (backend: caso e sessão, endpoints F-01…F-05 e alinhamentos A-1…A-6) e CTG-0003
   (backend: worklist e organização, F-06…F-16), ambos em `MOD-shared-policy`: **lock compartilhado,
-  serializados** entre si (CTG-0003 abre PR depois do merge do CTG-0002), com os CTGs de
+  serializados** entre si (TASK-0008 depois de TASK-0005 na branch); com os CTGs de
   R-0027 `portal-delegations` (`orchestra/portal-delegations`) e com o CTG-0003 de R-0026
   `dashboard-wiring` (`orchestra/dashboard-wiring`, produtores RAIT) que tocam `policy.ts` ou
-  `backend/domains/inf/rait-*`. OD-R25-001 foi **decidida pelo Owner em 2026-09-26** (desalinhados
+  `backend/domains/inf/rait-*` vale a regra de convivência da seção OD-C2-005. OD-R25-001 foi **decidida pelo Owner em 2026-09-26** (desalinhados
   readequados ao endpoint existente; faltantes criados nesta rodada; resultado em
   `work/rounds/R-0025/command-gap-analysis.md`). CTG-0004 (comandos no app): linhas `alinhado` e
-  `desalinhado` avançam sem backend; linhas `faltante` dependem do merge do CTG de backend que cria
-  o endpoint. CTG-0005 (guarda, SSE, formulários, L0, smoke): stack local de R-0017 em `main`.
+  `desalinhado` avançam sem backend; linhas `faltante` dependem do commit, na branch, do CTG de
+  backend que cria o endpoint. CTG-0005 (guarda, SSE, formulários, L0, smoke): stack local de R-0017 em `main`.
   CTG-0006 (docs e delta de disponibilidade): esquema
   `work/rounds/R-0030/availability-manifest.schema.md` em `main`**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
@@ -124,10 +176,11 @@ Fixe `REVIEWER_MODEL` com o id confirmado (Opus 5.5 no Claude Code) e registre-o
 workers, em `plan.md` §Decisões do maestro. **Leia `docs/framework/arch/frontend-wiring-pattern.md`
 inteiro já no bootstrap**: ele é o contrato de ligação desta rodada (cliente de comando gerado, If-Match e
 Idempotency-Key, mapeamento de erros, estados de tela, SSE canônico, guardas por política). Se o arquivo
-não existir em `origin/main`, pare antes do §3 e grave checkpoint (upstream R-0024 não mesclado).
+não existir na base (`origin/main` ou `origin/orchestra/stynx-dedup`), pare antes do §3 e grave checkpoint (upstream R-0024 não mesclado).
 Remeça as contagens de `plan.md` §Estado de partida e registre divergências em §Leitura.
 
-Se a worktree ou o branch não existirem, crie-os a partir de `origin/main`:
+Se a worktree ou o branch não existirem, crie-os a partir de `origin/main` (ou de
+`origin/orchestra/stynx-dedup`, se R-0024 ainda não estiver em `main`; seção OD-C2-005):
 `git worktree add -b orchestra/rait-web-wiring "/Volumes/Thiamat II/stech/detran-worktrees/rait-web-wiring" origin/main`.
 
 **Base empilhada** (só para grupos que precisam de código de um upstream ainda não mesclado):
@@ -239,26 +292,30 @@ Marque `status=in_progress` na tarefa; ao receber o relatório, grave-o em
 
 ## 7. Checkpoint por tarefa (Engineer) — hard gates
 
-Rode os `acceptance_commands` da tarefa e, ao fim de cada grupo acoplado, `pnpm check` e o tier
-de teste do WP (`pnpm backend:test:ci` ou o indicado). Falha → triagem em uma linha
+Rode os `acceptance_commands` da tarefa e os checkpoints (b)–(e) de `plan.md` que ela dispara.
+`pnpm check` e os tiers completos rodam uma vez, na sequência final (OD-C2-005). Falha → triagem em uma linha
 (`plant-bug | sensor-error | policy-issue | reference-gap`) em `plan.md` §Triagem → 1 nova
 tentativa com o achado no prompt → se falhar, nível acima da mesma família → se falhar,
 `escalated`. Nunca ajuste um teste para passar; nunca edite arquivo gerado.
 
 ## 8. Revisão da entrega (reviewer, outra família)
 
-Para cada grupo acoplado concluído: `git diff --stat` + diff completo + relatórios + critérios em
-`reviews/delivery-review-<ctg>.md` (modo `delivery-review`) → ponte → veredito. `PASS` libera o
-commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `escalated`.
+**Uma vez, no passo 3 da sequência final (OD-C2-005):** `git diff --stat` + diff completo da rodada
+
+- relatórios + critérios em `reviews/delivery-review-R-0025.md` (modo `delivery-review`) → ponte →
+  veredito. `PASS` libera o PR; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `escalated`.
 
 ## 9. Commit, evidência, PR, merge, fechamento (Engineer; Architect no fechamento)
 
+Durante as ondas, só o passo 1 (commit por tarefa/CTG) e o push sem PR. Os passos 2–7 rodam uma
+vez, na sequência final (OD-C2-005).
+
 1. `git add` só dos caminhos das tarefas; commit por `CODESTYLE.md` (`<type>(<scope>): …`,
    corpo com WF/UC/RN/OD citados, trailer de atribuição da sessão).
-2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
+2. Evidência (depois do merge): escreva `evidence-R-0025.json` com todos os CTGs (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0025 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
-3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
+3. Confirme que todo upstream da rodada está em `main` e rebaseie (`git rebase origin/main`;
    somente se o branch nunca foi publicado); em branch publicado, use
    `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
    `git push -u origin orchestra/rait-web-wiring` e então `gh pr create --base main` com o corpo pelo
@@ -282,7 +339,7 @@ commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `es
 **Condições de parada** (grave `checkpoint` em `plan.md` §Retomada: tarefas concluídas, em curso,
 pendentes; último veredito; próximos passos): orçamento da janela esgotado; bloqueio por decisão
 `OD-*` não coberta pelo steering §H; todos os grupos livres concluídos e os restantes presos a
-upstream não mesclado (inclusive o lock compartilhado da §0); reviewer
+upstream não mesclado (só o PR final espera; o lock compartilhado não para a rodada); reviewer
 `FAIL` após escalada. Um novo maestro retoma pelo mesmo prompt e pelo `plan.md`.
 
 ## 10. Relatório final (última mensagem da sessão)

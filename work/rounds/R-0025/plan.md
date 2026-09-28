@@ -9,7 +9,8 @@ Worktree `/Volumes/Thiamat II/stech/detran-worktrees/rait-web-wiring`, branch
 só nascem no bootstrap, depois da autorização.
 **Concorrência (upstreams da campanha):**
 
-- **Abertura:** R-0024 `stynx-dedup` mesclada (entrega `docs/framework/arch/frontend-wiring-pattern.md`,
+- **Abertura:** R-0024 `stynx-dedup` publicada em `origin/orchestra/stynx-dedup` (abertura
+  empilhada, §Execução OD-C2-005; o PR final espera o merge em `main`) (entrega `docs/framework/arch/frontend-wiring-pattern.md`,
   cliente de comando único, costura SSE única e shell em `@detran/ui`). Transitivamente: R-0022
   (pin STYNX 1.5.0, SSE de fonte única, assinatura final) e R-0023 (`StynxAuthorizationModule` como
   fonte única; `policy.ts` como dados). Fase A (R-0017 stack local, R-0018 índices, R-0019 corpus)
@@ -18,8 +19,8 @@ só nascem no bootstrap, depois da autorização.
   sessão) e CTG-0003 (worklist e organização), ambos em `MOD-shared-policy` e
   `backend/domains/inf/rait-*` — são **serializados** entre si, com os CTGs de R-0027
   `portal-delegations` e com o CTG-0003 de R-0026 `dashboard-wiring` (produtores RAIT) que tocam os
-  mesmos locks. Ordem: quem abrir PR primeiro mescla primeiro; o outro integra `origin/main` por
-  merge e refaz os gates. Os demais CTGs correm livres (lock `apps/rait/web` é exclusivo desta
+  mesmos locks. Sob a OD-C2-005, o lock não serializa PRs: cada rodada edita no seu branch e a regra
+  de convivência e a ordem de merge recomendada estão em §Execução OD-C2-005. Os demais CTGs correm livres (lock `apps/rait/web` é exclusivo desta
   rodada).
 - **Manifesto de disponibilidade:** forma e caminho fixados em
   `work/rounds/R-0030/availability-manifest.schema.md` (§1 caminho canônico, §3–§4 forma e JSON
@@ -35,6 +36,82 @@ CTG-0005/0006). Antes da OD-R25-001: 4.
 R-02…R-36), **16 `faltante`** (endpoints F-01…F-16 criados nesta rodada) e **0 `obsoleto na UI`**,
 com a marca `fail-closed-assinatura` em 3 linhas; lista o inverso (operações de backend sem uso na
 UI) e propõe OD-R25-006…015. É entrada normativa de TASK-0001, TASK-0003, TASK-0006 e TASK-0009.
+
+## Execução OD-C2-005 (Owner, 2026-09-27)
+
+**Precedência.** Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre
+qualquer menção a um PR/merge/evidência/delivery-review por CTG neste plano**. A rodada corre numa
+branch única, `orchestra/rait-web-wiring`, com commits por tarefa ou por CTG. Entre CTGs não há PR,
+CI remoto, `devai evidence record`, `devai audit observe`, `pnpm check` completo nem
+delivery-review. Ficam mantidos os `acceptance_commands` de cada tarefa, os checkpoints (b)–(e) como
+gates de tarefa e **um** prompt-review no bootstrap. Os critérios de aceitação não mudam; muda só o
+momento em que rodam: no fim da rodada. Onde um critério ou texto cita "PR do CTG-x", "por CTG" ou
+"cada merge", leia-se o PR final, a evidência única e o SHA do merge final.
+
+**Ondas.** Derivadas da coluna "Depende de" e dos locks da tabela de tarefas. No máximo 3 workers
+simultâneos na mesma worktree. O maestro serializa os commits e faz push sem PR ao fim de cada onda.
+
+| Onda | CTGs / tarefas em paralelo                                                                                                                                                    | Fronteiras de escrita (disjuntas)                                                                                                                                                                                                  | Dependência                                                                                                 |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| O1   | CTG-0001: TASK-0001; depois TASK-0002 ∥ TASK-0009 (contrato do CTG-0004) ∥ TASK-0013 (contrato do CTG-0005)                                                                   | `MOD-r25-command-matrix`/`route-delta` → `MOD-docs-rait-od`+`MOD-rait-web-i18n` ∥ `MOD-r25-contract-ctg4` ∥ `MOD-r25-contract-ctg5`                                                                                                | TASK-0001 antes das três                                                                                    |
+| O2   | CTG-0002: TASK-0003 → TASK-0004 → TASK-0005 ∥ CTG-0003 (parte Architect/Inspector): TASK-0006 → TASK-0007 ∥ CTG-0004: TASK-0010 → TASK-0011 (linhas `alinhado`/`desalinhado`) | contrato + testes + backend caso/sessão (`MOD-shared-policy`, `MOD-inf-rait-{case,session}`, `MOD-ddl-36`) ∥ `MOD-r25-contract-ctg3`, depois `MOD-inf-rait-tests` ∥ `MOD-rait-web-tests-data`, `MOD-rait-web-data-{case,worklist}` | O1; TASK-0006 após TASK-0002; TASK-0007 só após TASK-0004 (`MOD-inf-rait-tests`, `MOD-shared-policy-tests`) |
+| O3   | CTG-0003: TASK-0008 ∥ CTG-0004: TASK-0012 (R-23…R-36) e linhas F-01…F-05 de TASK-0010/0011                                                                                    | `MOD-shared-policy`, `MOD-inf-rait-{worklist,org}`, `MOD-ddl-35`, `MOD-ddl-39` ∥ `MOD-rait-web-data-{session,org}`, `MOD-rait-web-tests-data`                                                                                      | TASK-0008 após TASK-0005 e TASK-0007 commitadas (mesmo lock `MOD-shared-policy`, serial)                    |
+| O4   | CTG-0004 (fecho): linhas F-06…F-16 de TASK-0010/0011/0012; depois CTG-0005: TASK-0014 → TASK-0015 ∥ TASK-0016 → TASK-0017                                                     | `MOD-rait-web-*` de dados → `MOD-rait-web-tests-{core,features}`, `MOD-app-e2e-rait-stream` → `MOD-rait-web-core` ∥ `MOD-rait-web-{features,forms}` → `MOD-r25-stack-smoke`                                                        | TASK-0008 commitada; TASK-0014 após TASK-0012 e TASK-0013                                                   |
+| O5   | CTG-0006: TASK-0018 → TASK-0019 ∥ TASK-0020                                                                                                                                   | `MOD-availability-rait-web`, `MOD-availability-schema` → `MOD-rait-web-tests-availability` ∥ `MOD-docs-rait-arch`, `MOD-docs`                                                                                                      | TASK-0017 (`reports/TASK-0017.md`)                                                                          |
+
+O checkpoint (c) roda como gate de tarefa depois de TASK-0005 e de novo depois de TASK-0008, sem PR
+entre os dois. Os `acceptance_commands` de TASK-0010/0011/0012 cobrem as linhas F-nn assim que o
+endpoint correspondente estiver commitado na branch.
+
+**Lock `MOD-shared-policy` partilhado na fase D (C-0002 §12).** O lock é partilhado com o CTG-0003
+de R-0026 (produtores RAIT) e com o CTG-0003 de R-0027 (delegações) e deixa de serializar PRs por
+CTG. Regra de convivência:
+
+- cada rodada edita `backend/domains/shared/src/policy.ts` no seu próprio branch, sem esperar as
+  outras;
+- quem mesclar depois integra `origin/main` por merge, mantém os blocos das duas rodadas no formato
+  de dados de R-0023 e roda de novo `pnpm --filter @detran/shared test` e `policy-routes.e2e`
+  (`pnpm backend:test:e2e`);
+- ordem de merge final recomendada: **R-0025 → R-0026 → R-0027**. R-0025 é a maior mudança em
+  `policy.ts` (F-01…F-16, A-1…A-3, tuplas órfãs da OD-R25-015) e estende `policy-routes.e2e` a
+  `inf:rait-*`. As rodadas seguintes passam a ser conferidas por essa extensão. A ordem não bloqueia
+  o desenvolvimento paralelo: se outra rodada ficar pronta antes, ela mescla primeiro e R-0025 aplica
+  a mesma regra.
+
+**Abertura empilhada.** A rodada pode abrir e trabalhar sobre `origin/orchestra/stynx-dedup`
+(R-0024) assim que esse branch estiver publicado com `docs/framework/arch/frontend-wiring-pattern.md`.
+Novas revisões de R-0024 entram por `git merge --no-edit origin/orchestra/stynx-dedup`, nunca por
+rebase de branch publicado. O checkpoint (a) e a reconferência de TASK-0001 leem a base empilhada no
+lugar de `origin/main`; a reconferência se repete sobre `main` no passo 1 da sequência final. Só o
+**PR final** espera o merge de R-0024 em `main`, que por sua vez exige R-0022 e R-0023 em `main`.
+A rodada não troca implementação STYNX. O requisito de STYNX 1.5.0 final chega por transitividade:
+R-0022 só mescla com 1.5.0 final (OD-S15-01).
+
+**Sequência final** (C-0002 §12, na ordem):
+
+1. `git merge --no-edit origin/main`, com R-0024 (e, transitivamente, R-0022/R-0023) em `main`.
+   Conflito em `policy.ts` segue a regra de convivência acima. TASK-0018 regrava `measuredAt` e os
+   selos sobre o `main` integrado se a medição anterior tiver sido feita na base empilhada.
+2. CI local completo: `pnpm check`; `pnpm contracts:check`, `pnpm contracts:clients` (sem diff),
+   `pnpm contracts:test`, `pnpm blueprints:check`; `pnpm --filter @detran/shared test`;
+   `pnpm backend:test:ci`; `pnpm backend:test:e2e` (`policy-routes.e2e` com `inf:rait-*`);
+   `pnpm --filter @detran/app test:e2e`; `pnpm --filter @detran/rait-web typecheck`, `lint`, `test`,
+   `build`; `pnpm verify:parameter-catalogue`; `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`;
+   `pnpm format:check`; os greps dos critérios 1–2; `pnpm stack:start` + `pnpm stack:smoke`
+   (`reports/TASK-0017.md` refeito se o `main` integrado mudou código tocado); `pnpm devai:rc:prepare`
+   quando aplicável.
+3. **Uma** delivery-review (Opus 5.5 pela ponte) sobre o diff inteiro da rodada: `REVIEW` →
+   correções só nos itens apontados, no máximo 2 ciclos; `FAIL` → `escalated`.
+4. **Um** PR contra `main`, com corpo pelo template e a tabela CTG → tarefas → commits e os gates.
+5. CI remoto; falha de código volta à tarefa responsável; merge só com CI verde e `PASS`.
+6. `evidence-R-0025.json` com os 6 CTGs, `devai evidence record` + `evidence verify`,
+   `devai audit observe` no SHA do merge, `closure.json`, `devai round close` + `round seal`,
+   `waves.md` e `backlog.md` atualizados.
+
+**Janelas recalibradas:** 5 → **≈ 4**. Estimativa por onda: O1 ≈ 0,5; O2 ≈ 1; O3 ≈ 0,5–1; O4 ≈ 1;
+O5 e sequência final ≈ 1. O ganho vem da remoção de 6 ciclos de PR/CI/evidência e do paralelismo
+entre backend e app. O peso de CTG-0002/0003 (16 endpoints) e da readequação dos 64 comandos não
+muda.
 
 ## Estado de partida (verificado em 2026-09-26 sobre `a92ef731`; o maestro remede no bootstrap)
 
@@ -106,7 +183,7 @@ UI) e propõe OD-R25-006…015. É entrada normativa de TASK-0001, TASK-0003, TA
    padrão de ligação (If-Match, Idempotency-Key, mapeamento de erros, invalidação): (a) 13
    `alinhado` ligados como estão; (b) 35 `desalinhado` **readequados** ao endpoint real (R-02…R-36:
    path, alvo, corpo, chave, papel) com facades e specs ajustadas; (c) 16 `faltante` ligados às rotas
-   F-nn depois do merge do CTG de backend correspondente; (d) `obsoleto`: nenhum hoje — verificação
+   F-nn depois que o CTG de backend correspondente estiver commitado na branch; (d) `obsoleto`: nenhum hoje — verificação
    de que não sobra método de comando sem linha na matriz. `RaitCommandUnavailableError` removida
    (grep = 0); `fail-closed-assinatura` renderizada como estado indisponível com OD-R25-004, sem
    `throw`; `it.todo` de comando viram testes reais.
@@ -135,10 +212,10 @@ Reestruturadas em 2026-09-26 pela decisão do Owner na OD-R25-001 (antes da auto
 | TASK-0005 | Engineer             | engineer-backend    | Terra / médio  | `MOD-shared-policy`, `MOD-inf-rait-case`, `MOD-inf-rait-session`, `MOD-contracts-rait`, `MOD-ddl-36`, `MOD-contracts-ops` | TASK-0004                               | Controladores/serviços manuscritos F-01…F-05; contratos `*.commands.openapi.json` manuscritos; `policy.ts` (F-nn + A-1…A-3, OD-R25-015); A-5 (`check-commands.mjs`); A-6 se OD-R25-014 = (a) via `pnpm blueprints:generate`; `pnpm contracts:clients`; nenhum gerado editado à mão                                                                                                                                                                                                                       |
 | TASK-0006 | Architect            | architect-blueprint | Sol 6 / alto   | `MOD-r25-contract-ctg3`                                                                                                   | TASK-0002                               | `contracts/CTG-0003.md`: F-06…F-16 (worklist e organização) de `command-gap-analysis.md` §5.2, na mesma forma de TASK-0003; DDL `MOD-ddl-35` (F-09, OD-R25-007) e `MOD-ddl-39` (F-15, OD-R25-011); OD-R25-009/012 aplicadas; critérios C-25-3-nn                                                                                                                                                                                                                                                         |
 | TASK-0007 | Inspector            | inspector-tests     | Terra / médio  | `MOD-inf-rait-tests`, `MOD-shared-policy-tests`                                                                           | TASK-0006, TASK-0004                    | Testes de comando F-06…F-16 e de política (presença e ausência por papel); acréscimo das novas rotas ao `policy-routes.e2e` de TASK-0004                                                                                                                                                                                                                                                                                                                                                                 |
-| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-shared-policy`, `MOD-inf-rait-worklist`, `MOD-inf-rait-org`, `MOD-contracts-rait`, `MOD-ddl-35`, `MOD-ddl-39`        | TASK-0007, **merge do CTG-0002**        | Controladores/serviços manuscritos F-06…F-16; contratos `BP-INF-RAIT-{WORKLIST,ORG}-001.commands.openapi.json`; `policy.ts`; `pnpm contracts:clients`; nenhum gerado editado à mão                                                                                                                                                                                                                                                                                                                       |
+| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-shared-policy`, `MOD-inf-rait-worklist`, `MOD-inf-rait-org`, `MOD-contracts-rait`, `MOD-ddl-35`, `MOD-ddl-39`        | TASK-0007, **CTG-0002 na branch**       | Controladores/serviços manuscritos F-06…F-16; contratos `BP-INF-RAIT-{WORKLIST,ORG}-001.commands.openapi.json`; `policy.ts`; `pnpm contracts:clients`; nenhum gerado editado à mão                                                                                                                                                                                                                                                                                                                       |
 | TASK-0009 | Architect            | architect-blueprint | Sol 6 / alto   | `MOD-r25-contract-ctg4`                                                                                                   | TASK-0001                               | `contracts/CTG-0004.md`: aplicação de `frontend-wiring-pattern.md` aos 6 clientes e às facades (sem variante); tabela de readequação R-01…R-36 (assinatura pública, alvo, corpo, chave, papel) e ligação F-01…F-16 às rotas dos contratos de CTG-0002/0003; verificação de obsoletos (0); forma do estado indisponível (`fail-closed-assinatura`); invalidação pós-comando; critérios C-25-4-nn                                                                                                          |
 | TASK-0010 | Inspector            | inspector-tests     | Terra / médio  | `MOD-rait-web-tests-data`                                                                                                 | TASK-0009 (linhas F-nn: TASK-0005/0008) | Specs que substituem os `it.todo` de comando e os sentinelas "sem requisição HTTP" de R-0012 (substituição declarada aqui, não enfraquecimento): verbo/path/headers/corpo lidos do OpenAPI em disco; chave exibida = chave efetiva da rota; `fail-closed-assinatura` não emite requisição; 64/64, um arquivo de spec por cliente                                                                                                                                                                         |
-| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-rait-web-data-case`, `MOD-rait-web-data-worklist`                                                                    | TASK-0010                               | `case.client.ts`, `worklist.client.ts` e facades `case`, `protocol`, `queue`, `signing`, `radar`: alinhados, readequações R-01…R-22 e faltantes F-01, F-02, F-06…F-14 (estes após o merge do CTG de backend)                                                                                                                                                                                                                                                                                             |
+| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-rait-web-data-case`, `MOD-rait-web-data-worklist`                                                                    | TASK-0010                               | `case.client.ts`, `worklist.client.ts` e facades `case`, `protocol`, `queue`, `signing`, `radar`: alinhados, readequações R-01…R-22 e faltantes F-01, F-02, F-06…F-14 (estes após o commit do CTG de backend na branch)                                                                                                                                                                                                                                                                                  |
 | TASK-0012 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-rait-web-data-session`, `MOD-rait-web-data-org`                                                                      | TASK-0011                               | `session.client.ts`, `org.client.ts`, `collection.client.ts`, `integration.client.ts`; facades restantes; R-23…R-36; F-03…F-05, F-15, F-16; remoção de `RaitCommandUnavailableError`                                                                                                                                                                                                                                                                                                                     |
 | TASK-0013 | Architect            | architect-blueprint | Sol 6 / alto   | `MOD-r25-contract-ctg5`                                                                                                   | TASK-0001                               | `contracts/CTG-0005.md`: `caseAccessGuard` (OD-R25-002); protocolo SSE a provar (`RAIT_STREAM_TOPICS`, `Last-Event-ID`, 204, heartbeat/OD-R12-007) sobre a costura canônica; mapa schema → página (16); páginas L0 promovidas; jornadas do smoke                                                                                                                                                                                                                                                         |
 | TASK-0014 | Inspector            | inspector-tests     | Terra / médio  | `MOD-rait-web-tests-core`, `MOD-rait-web-tests-features`, `MOD-app-e2e-rait-stream`                                       | TASK-0013, TASK-0012                    | Guarda (presença/ausência; sentinela `core/guards.spec.ts:258` substituído); e2e HTTP de `/v1/inf/rait/stream` (só teste; defeito de backend = triagem `plant-bug` + OD, não correção); cada página do mapa importa e aplica o schema; nível de cada rota = `route-delta.md`                                                                                                                                                                                                                             |
@@ -152,17 +229,18 @@ Reestruturadas em 2026-09-26 pela decisão do Owner na OD-R25-001 (antes da auto
 - CTG-0001 = 0001 → 0002.
 - CTG-0002 (backend: caso e sessão, F-01…F-05, A-1…A-6) = 0003 → 0004 → 0005.
 - CTG-0003 (backend: worklist e organização, F-06…F-16) = 0006 → 0007 → 0008.
-- **CTG-0002 e CTG-0003: lock compartilhado `MOD-shared-policy`; serializados** entre si (CTG-0003
-  abre PR só depois do merge do CTG-0002) e com R-0027 e com o CTG-0003 de R-0026 (produtores RAIT).
+- **CTG-0002 e CTG-0003: lock compartilhado `MOD-shared-policy`; serializados** entre si (TASK-0008
+  começa depois de TASK-0005 commitada na branch). Com R-0027 e com o CTG-0003 de R-0026 (produtores
+  RAIT) vale a regra de convivência de §Execução OD-C2-005.
   TASK-0006 e TASK-0007 podem correr durante o CTG-0002 (locks de contrato e de teste disjuntos
   do Engineer; TASK-0007 espera TASK-0004 por `MOD-shared-policy-tests`).
 - CTG-0004 (comandos no app) = 0009 → 0010 → 0011 → 0012. As linhas `alinhado` e `desalinhado`
-  avançam sem esperar o backend; as linhas `faltante` de cada CTG de backend entram depois do merge
-  dele (o CTG-0004 abre PR depois do merge do CTG-0003).
+  avançam sem esperar o backend; as linhas `faltante` de cada CTG de backend entram depois do commit
+  dele na branch (o CTG-0004 fecha depois de TASK-0008).
 - CTG-0005 (guarda, SSE, formulários, rotas, smoke) = 0013 → 0014 → 0015 ∥ 0016 → 0017.
 - CTG-0006 (docs e disponibilidade) = 0018 → 0019, ∥ 0020.
 
-Um PR por CTG. TASK-0003, TASK-0006, TASK-0009 e TASK-0013 podem correr em paralelo (locks
+Commits por CTG na branch única; um PR no fim (OD-C2-005). TASK-0003, TASK-0006, TASK-0009 e TASK-0013 podem correr em paralelo (locks
 disjuntos); no máximo três tarefas simultâneas.
 
 **Checkpoints do maestro (Engineer):**
@@ -271,8 +349,8 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 - **Endpoint novo sem fonte:** F-nn cujo valor não está na fonte (prazo, ordem de suplentes, estado
   de publicação) sai com `source_pending` e OD-R25-006…015; o Inspector testa a recusa, não um valor
   inventado.
-- **Dois CTGs de backend no mesmo lock:** CTG-0003 espera o merge do CTG-0002; se R-0027 ou R-0026
-  mesclar entre os dois, integra `origin/main` e refaz o checkpoint (c).
+- **Dois CTGs de backend no mesmo lock:** TASK-0008 espera TASK-0005 na branch; se R-0027 ou R-0026
+  mesclar antes do PR final, a sequência final integra `origin/main` e refaz o checkpoint (c).
 - **Sentinelas de R-0012** (`core/guards.spec.ts:258`, "sem requisição HTTP" em `queue.facade.spec.ts`)
   codificam o stub; a substituição é do Inspector, declarada nesta tabela.
 - **Colisão no lock compartilhado** com R-0027/R-0026: `policy.ts` em conflito → mantém os dois
@@ -292,7 +370,8 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
   substituído vai ao closure como **não cumprido**. Proibido repetir R-0013/R-0014 (Lighthouse → axe;
   suíte integral → focal) e o waiver SQL2 de R-0007.
 - **ODs no registro canônico** (`open-decisions-rait.md`) no mesmo PR que as cria.
-- **Âncora da prova:** `evidence record`/`verify` por CTG; `audit observe` no SHA exato do merge;
+- **Âncora da prova:** `evidence record`/`verify` único no fim da rodada, com todos os CTGs
+  (OD-C2-005); `audit observe` no SHA exato do merge;
   `round close` + `round seal`; nenhuma rodada fecha sem âncora.
 - **Orçamento:** `budget.json` obrigatório; checkpoint a 80 % e parada, sem dispensa implícita.
 - **Caracterização antes de troca:** a matriz papel × rota (`app.guards-matrix.*.spec.ts`) é

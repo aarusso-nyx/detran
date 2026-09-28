@@ -8,6 +8,45 @@
 > **Pré-condição:** o Owner autorizou `work/campaigns/C-0002-consolidacao.md` (rev. 2) e
 > `work/rounds/R-0023/plan.md`. Sem essa autorização registrada, pare antes do §1 e reporte.
 
+## OD-C2-005 — fluxo contínuo (prevalece)
+
+Decisão do Owner de 2026-09-27 (C-0002 §12; detalhe em `plan.md` §Execução OD-C2-005). Prevalece
+sobre qualquer instrução deste prompt que mande abrir PR, mesclar, registrar evidência ou pedir
+delivery-review por CTG.
+
+- **Branch única** `orchestra/authz-unification`, com um commit por tarefa ou por CTG (`CODESTYLE.md`,
+  autoria por caminho).
+- **Entre CTGs não há** PR, CI remoto, merge, `devai evidence record`, `devai audit observe`,
+  `pnpm check` completo nem delivery-review. Os `acceptance_commands` de cada tarefa continuam sendo
+  a definição de pronto, com a triagem de falha por tarefa. `pnpm verify:authz-matrix` com diff vazio
+  é aceitação de TASK-0005, TASK-0007 e TASK-0008.
+- **Uma** prompt-review no bootstrap (§5), sobre `plan.md` e os prompts de **todos** os CTGs.
+- **Ondas** conforme `plan.md` §Execução OD-C2-005. O DAG é linear: O1 CTG-0001 (0001 → 0002);
+  O2 CTG-0002 (0003 → 0004 → 0005); O3 CTG-0003 (0006 → 0007); O4 CTG-0004 (0008); O5 CTG-0005 (0009).
+  Ao fim de cada onda, faça `git push -u origin orchestra/authz-unification`, sem PR, porque R-0024
+  empilha sobre esse branch.
+- **Abertura empilhada:** abra sobre `origin/orchestra/stynx-sse-tenancy` (R-0022), ou sobre `main`
+  com R-0021 se o branch de R-0022 ainda não existir (só O1). Integre as revisões de R-0022 por
+  `git merge --no-edit`. O2 espera a onda O3 de R-0022 (pin) no branch publicado; O3 espera O5 e O6
+  de R-0022. Só o PR final espera R-0022 em `main` e a 1.5.0 **final**.
+- **Matriz:** o commit do CTG-0001 precede qualquer troca. Em cada integração de R-0022, e sobre
+  `main` no fim, a matriz é regenerada só na worktree temporária destacada (commit da matriz vigente
+  mais o upstream, sem as trocas), com o diff atribuído linha a linha em `plan.md` §Concorrência.
+  Linha sem atribuição bloqueia o PR final.
+- **Sequência final**, uma vez:
+  1. `git merge --no-edit origin/main` e regeneração atribuída; pin final, se houve RC.
+  2. CI local: `pnpm check`, `pnpm backend:test:ci`, `pnpm verify:authz-matrix`,
+     `pnpm --filter @detran/shared test`, `pnpm --filter @detran/app test:e2e`,
+     `pnpm backend:rls-smoke`, `pnpm verify:rls-ddl`, `pnpm verify:stynx-pin`,
+     `pnpm verify:role-catalog`, `pnpm verify:decorators`, os `grep` do plano, `pnpm docs:kb:check`,
+     `pnpm docs:kb:publish-check`, `pnpm format:check` e `pnpm devai:rc:prepare` quando aplicável.
+  3. **Uma** delivery-review de Opus 5.5, nível grande, sobre o diff inteiro (§8).
+  4. **Um** PR (§9.3), com a tabela CTG → tarefas → commits e os gates no corpo.
+  5. CI remoto, depois o merge (§9.4–9.5).
+  6. Publicação única: `evidence-R-0023.json` com todos os CTGs e a âncora da matriz,
+     `evidence record`/`verify`, `audit observe` no sha do merge, `closure.json`, `round close`,
+     `round seal`, `waves.md`, `work/rounds/README.md` e `backlog.md` (§9).
+
 ## 0. Identidade e limites
 
 - Você é o maestro da frente **`authz-unification`**: **ação 7d** (autorização com fonte única no STYNX) de `work/campaigns/C-0002-consolidacao.md` (revisão 2), com o plano já extraído em `work/rounds/R-0023/plan.md`.
@@ -28,9 +67,12 @@
   `work/rounds/R-0023/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
-- Concorrência (regra de `waves.md` e C-0002 §2): para **abrir** esta frente, `origin/main` deve conter o merge de **R-0022**
-  (`orchestra/stynx-sse-tenancy`: pin `@stynx-nyx/*` = 1.5.0). Sem ele, grave `checkpoint` e pare. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (matriz de caracterização): R-0022 em `main`. CTG-0002 (dados + provider) e CTG-0003 (troca do guarda): CTG-0001 mesclado e itens MUST de autorização presentes nos `.d.ts` instalados de 1.5.0 (`UPS-AUTHZ-01…06`; senão checkpoint, OD-R22-02). CTG-0004 (sessão): itens de sessão publicados em 1.5.0; senão a tarefa é cancelada com registro e desvio na ADR de divisão (spec §7, SHOULD ausente). CTG-0005 (docs): CTG-0003/0004. R-0024 corre em paralelo só nos CTGs de frontend; nada desta frente toca `apps/` ou `packages/ui`**. No bootstrap, registre em `plan.md`
+- Concorrência (regra de `waves.md`; OD-C2-005, que subsume a adenda A-C2-11): a frente **abre e
+  trabalha** empilhada em `origin/orchestra/stynx-sse-tenancy` (R-0022: pin `@stynx-nyx/*` = 1.5.0),
+  ou sobre `main` com R-0021 só para o CTG-0001 se R-0022 ainda não tiver publicado o branch. O **PR
+  final** só abre com R-0022 em `main`, com a matriz regenerada e o diff atribuído (regras em
+  `plan.md` §Execução OD-C2-005 e §Adendas). O que depende de upstream por CTG:
+  **CTG-0001 (matriz de caracterização): branch publicado de R-0022 ou `main` com R-0021. CTG-0002 (dados + provider) e CTG-0003 (troca do guarda): CTG-0001 commitado, onda O3 (pin) de R-0022 no branch publicado (O5/O6 para o CTG-0003) e itens MUST de autorização presentes nos `.d.ts` instalados de 1.5.0 (`UPS-AUTHZ-01…06`; senão checkpoint, OD-R22-02). CTG-0004 (sessão): itens de sessão publicados em 1.5.0; senão a tarefa é cancelada com registro e desvio na ADR de divisão (spec §7, SHOULD ausente). CTG-0005 (docs): CTG-0003/0004. R-0024 corre em paralelo só nos CTGs de frontend; nada desta frente toca `apps/` ou `packages/ui`**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -81,7 +123,8 @@ canônico (`docs/meta/knowledge-base/open-decisions-rait.md`) no mesmo PR — OD
 conta; (14) âncora da prova: `audit observe` no sha exato, `round close` **e** `round seal`;
 (15) `budget.json` desde o bootstrap, checkpoint a 80 %, sem dispensa implícita; (16) **caracterização
 antes de troca**: a matriz papel × rota × método é gerada, versionada e mesclada (CTG-0001) antes de
-qualquer mudança de guarda; o Engineer nunca a regenera nem edita teste; (17) nenhuma integração
+qualquer mudança de guarda — pela OD-C2-005, **commitada** na branch antes da troca e regenerada
+sobre `main` antes do PR final; o Engineer nunca a regenera nem edita teste; (17) nenhuma integração
 externa real, nenhum valor normativo inventado (`source_pending`), nenhum `--force`, nenhum arquivo
 gerado editado à mão.
 
@@ -114,7 +157,7 @@ depois de o upstream estar em `main`; um branch empilhado pode ser enviado
 (`git push -u origin orchestra/authz-unification`) sem PR para que outras frentes empilhem sobre ele.
 
 **Avanços do `main` durante a rodada.** Outras frentes mesclam enquanto você trabalha. No início de
-cada janela, em cada checkpoint (§7) e antes de cada PR (§9): `git fetch -q origin` e
+cada janela, em cada checkpoint (§7) e antes do PR final (§9): `git fetch -q origin` e
 `git log --oneline HEAD..origin/main`; se houver commits novos, use `git rebase origin/main` somente
 se o branch nunca foi publicado. Caso contrário, use `git merge --no-edit origin/main`. Nunca use
 `--force`, `--force-with-lease` ou equivalente. Depois da integração, rode de novo os gates do
@@ -217,31 +260,34 @@ Marque `status=in_progress` na tarefa; ao receber o relatório, grave-o em
 
 ## 7. Checkpoint por tarefa (Engineer) — hard gates
 
-Rode os `acceptance_commands` da tarefa e, ao fim de cada grupo acoplado, `pnpm check` e o tier
-de teste do WP (`pnpm backend:test:ci` ou o indicado). Falha → triagem em uma linha
+Rode os `acceptance_commands` da tarefa. `pnpm check` e o tier de teste do WP
+(`pnpm backend:test:ci`) rodam uma vez, na sequência final (OD-C2-005). Falha → triagem em uma linha
 (`plant-bug | sensor-error | policy-issue | reference-gap`) em `plan.md` §Triagem → 1 nova
 tentativa com o achado no prompt → se falhar, nível acima da mesma família → se falhar,
 `escalated`. Nunca ajuste um teste para passar; nunca edite arquivo gerado.
 
 ## 8. Revisão da entrega (reviewer, outra família)
 
-Para cada grupo acoplado concluído: `git diff --stat` + diff completo + relatórios + critérios em
-`reviews/delivery-review-<ctg>.md` (modo `delivery-review`) → ponte → veredito. `PASS` libera o
-commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `escalated`.
-Nesta frente toda delivery-review anexa também o diff de
-`docs/framework/arch/fixtures/authz-route-role-matrix.json` contra o sha do merge do CTG-0001 (deve
-ser vazio a partir do CTG-0002) e a saída de `pnpm verify:authz-matrix`; achado de ampliação de
-acesso é `FAIL`, sem ciclo de `REVIEW`.
+Uma vez, na sequência final (OD-C2-005), depois do CI local: `git diff --stat` + diff completo da
+rodada contra `origin/main` + relatórios + critérios em `reviews/delivery-review-R-0023.md` (modo
+`delivery-review`) → ponte → veredito. `PASS` libera o PR; `REVIEW` volta ao worker responsável
+(máximo 2 ciclos, restritos aos itens apontados); `FAIL` → `escalated`.
+Nesta frente a delivery-review anexa também o diff de
+`docs/framework/arch/fixtures/authz-route-role-matrix.json` contra o sha do commit do CTG-0001 (ou da
+última regeneração atribuída; deve ser vazio a partir do CTG-0002), as atribuições de §Concorrência e
+a saída de `pnpm verify:authz-matrix`; achado de ampliação de acesso é `FAIL`, sem ciclo de `REVIEW`.
 
 ## 9. Commit, evidência, PR, merge, fechamento (Engineer; Architect no fechamento)
 
-1. `git add` só dos caminhos das tarefas (`git add -f work/rounds/R-0023/reports` enquanto o
-   `.gitignore` esconder `reports/`; conferir `find <dir> -type f` × `git ls-files <dir>`); commit por `CODESTYLE.md` (`<type>(<scope>): …`,
-   corpo com WF/UC/RN/OD citados, trailer de atribuição da sessão).
-2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
+1. Durante a rodada: `git add` só dos caminhos das tarefas (`git add -f work/rounds/R-0023/reports` enquanto o
+   `.gitignore` esconder `reports/`; conferir `find <dir> -type f` × `git ls-files <dir>`); um commit por tarefa ou
+   por CTG, por `CODESTYLE.md` (`<type>(<scope>): …`, corpo com WF/UC/RN/OD citados, trailer de atribuição da
+   sessão); push sem PR ao fim de cada onda. Os itens 2 a 7 formam a sequência final (OD-C2-005) e rodam uma vez.
+2. Evidência (item 6 da sequência final, depois do merge): escreva `evidence-R-0023.json` com todos os CTGs
+   (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0023 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
-3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
+3. Confirme que todo upstream da rodada está em `main` (R-0022 e a 1.5.0 final) e rebaseie (`git rebase origin/main`;
    somente se o branch nunca foi publicado); em branch publicado, use
    `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
    `git push -u origin orchestra/authz-unification` e então `gh pr create --base main` com o corpo pelo
@@ -281,9 +327,11 @@ recomenda ao método (`orchestra/README.md`, `model-ladder.md`).
   `tasks/TASK-nnnn.json` e `prompts/TASK-nnnn.md`, sem replanejar. Divergência encontrada no
   bootstrap (ex.: símbolo publicado diferente da especificação S-1.5) vira adenda numerada.
 - A matriz `docs/framework/arch/fixtures/authz-route-role-matrix.json` é o artefato de aceitação da
-  rodada; o sha do merge do CTG-0001 é a âncora registrada em `evidence-CTG-0001.json` e em
-  `closure.json`. Nenhum worker a regenera depois do CTG-0001, salvo o próprio gate em modo de
-  comparação.
+  rodada; o sha do commit do CTG-0001 (ou da última regeneração atribuída a R-0022) é a âncora
+  registrada em `evidence-R-0023.json` e em `closure.json`. Nenhum worker a regenera depois do
+  CTG-0001, salvo o próprio gate em modo de comparação e a regeneração atribuída do maestro
+  (OD-C2-005).
 - OD-D76 e OD-309 são invariantes: nenhuma tarefa as decide nem altera; OD-R23-01 entra no
-  registro canônico (`open-decisions-rait.md` §C-0002) no PR do CTG-0001.
-- R-0024 depende do merge desta rodada para o seu CTG de backend: ao fechar, avise no relatório final.
+  registro canônico (`open-decisions-rait.md` §C-0002) no commit do CTG-0001 (entra no PR final).
+- R-0024 empilha o seu CTG de backend sobre o push de O3/O4 desta rodada, e o PR final de R-0024
+  depende do merge desta: ao fechar, avise no relatório final.
