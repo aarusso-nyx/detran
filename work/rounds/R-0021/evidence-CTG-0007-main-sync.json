@@ -1,0 +1,84 @@
+{
+  "action": "Re-record R-0021 CTG-0007 documentary candidate after PR #152 advanced main, with unchanged product/test tree and reanchored exact merge observation",
+  "round": "R-0021",
+  "coupled_task_group": "CTG-0007",
+  "role": "engineer",
+  "commits": [
+    "dad0d5ceaa1a1525e4bc0997699a2a312acd09eb",
+    "699c6ca59dd304b7138fddeb39dd8f216d447be7",
+    "775906fb402cdc0a801b17afca7ce932dc28302c",
+    "6cd4ff5b2c86a2c47ac833da86245403f2f72981"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0021/evidence-CTG-0007.json",
+      "sha256": "57a9f22d47f21ec47f825c0e1b8904716a9537b750cab2810c4cd199a0f4934d"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/CTG-0007-gates.md",
+      "sha256": "8a6ef97cc3955586aefe5b01e85b9c1d0095152db02f5c489741c9d045fc32d2"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/CTG-0007-main-sync.md",
+      "sha256": "1c442ac22dfb629776a756134ab10396024e3db700a06508f2f94955f440aba2"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-check.log",
+      "sha256": "46561d5f9d730913c69a075e6e0b5e77ca29393d892665fa98d9ed3318ff415a"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-backend-ci.log",
+      "sha256": "4668153d3ee1f8fda495d05a9872062df947eedd4a7573bb5a179b64b6d757e1"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-build.log",
+      "sha256": "ed91a435682db60f0c1267d30fb20711227dcb22e38eac9ccc6fff2644087b74"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-rls-smoke.log",
+      "sha256": "0a09062867f30c22d0657342f2a2e93b8f9725bc5e0b4158299ee1fb5d82e83d"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-main-sync-format.log",
+      "sha256": "2d20b040b47a087ead8f486f7cdd3ddfc6fea73fd892371b801c5300c943d28e"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-main-sync-docs.log",
+      "sha256": "fd38b9c72bee02ca208c4eab93860cd6a8c0748073f61ddf084ef46c1f7a6d02"
+    },
+    {
+      "path": "work/rounds/R-0021/reports/ctg0007-main-sync-index.log",
+      "sha256": "f0f39a13a046b06437f71f30295ca37d1380399cf0e15b686bbcec735da69b13"
+    },
+    {
+      "path": "work/rounds/R-0021/reviews/delivery-review-CTG-0007-2.json",
+      "sha256": "452abe8a4dc4cdccfc8ea7c8b6b2306960b206c51c3e151c445e100a3f5199ac"
+    },
+    {
+      "path": ".devai/state/audit-observations/69642874c1ccd4cf4d1c6f0ec431ecd9fb848a05/status.json",
+      "sha256": "792a9691c780585cd7a1d1c10cefe3de460981a4bfe414023d06b0e7dbdae5a3"
+    }
+  ],
+  "gates": [
+    {
+      "name": "full CTG-0007 check, backend CI, build and RLS smoke",
+      "result": "pass",
+      "note": "All exit 0 on candidate; product, test, manifest, tools, docs and workflow Git objects unchanged by PR #152 merge, with object IDs in main-sync report."
+    },
+    {
+      "name": "focused gates on PR #152 governance delta",
+      "result": "pass",
+      "note": "format, docs KB check/publish, state and rounds indexes plus tests all exit 0; logs hashed in artifacts."
+    },
+    {
+      "name": "exact CTG-0002 merge audit reanchored on main chain",
+      "result": "pass",
+      "note": "Dedicated Auditor runtime event EV-13603dba522df1e8 on exact SHA 69642874; five observation files byte-identical; chain verified head f96c5b7f417ffbe64223fdfb003973b3db468ad1f4c3dc97d8684e505b3df00e."
+    },
+    {
+      "name": "independent delivery review CTG-0007",
+      "result": "pass",
+      "note": "Opus 5.5 pure JSON cycle 2 PASS after cycle 1 REVIEW correction. Concurrent main delta review to follow before PR merge."
+    }
+  ]
+}
