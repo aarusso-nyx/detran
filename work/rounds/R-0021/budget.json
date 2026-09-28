@@ -123,6 +123,51 @@
       "output_estimate": 4500,
       "result": "RED-expected",
       "note": "Native medium; 8 casos blackbox falham só por CLI ausente, iteração focal de protocolos/diretórios excluídos. Bruto indisponível."
+    },
+    {
+      "id": "audit-ctg0001",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 10000,
+      "output_estimate": 1200,
+      "result": "PASS",
+      "note": "Sessão nativa separada, observação DEVAI exata do merge #149; bruto não exposto."
+    },
+    {
+      "id": "task-0004",
+      "role": "engineer",
+      "model": "gpt-6-luna",
+      "input_estimate": 26000,
+      "output_estimate": 4500,
+      "result": "PASS",
+      "note": "Native medium; pin/gate, ajustes focais de SemVer e ordem diagnóstica; bruto não exposto."
+    },
+    {
+      "id": "delivery-review-ctg0002-1",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 65000,
+      "output_estimate": 4000,
+      "result": "PASS",
+      "note": "Ciclo 1 exaustivo; quatro low e zero high; bruto indisponível."
+    },
+    {
+      "id": "delivery-review-ctg0002-2",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 12000,
+      "output_estimate": 1800,
+      "result": "PASS",
+      "note": "Ciclo 2 restrito ao avanço documental de main; zero achados."
+    },
+    {
+      "id": "sol-ctg0002-orchestration",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 70000,
+      "output_estimate": 12000,
+      "result": "gates-pass",
+      "note": "Estimativa única para geração, instalação, integração main, gates e revisão; bruto da sessão não exposto."
     }
   ]
 }
