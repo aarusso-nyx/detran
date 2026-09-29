@@ -487,3 +487,33 @@ são partilhados por merge, e seus gates novos passam a valer quando ela mesclar
 - Tarefas válidas em `pnpm verify:round-tasks`.
 - Push sem PR ao fim de cada onda e checkpoint explícito.
 - Integrar upstreams sempre por merge.
+
+## 16. Adenda A-C2-15: pré-trabalho da fase D (Owner, 2026-09-30)
+
+**Motivo.** Com R-0022 e R-0023 em curso e R-0024 ainda por vir, cerca de 25–30 % de cada rodada da
+fase D (análise, contratos e duas entregas de código isoladas) não depende da plataforma. A
+antecipação encurta a fase D em ≈ 2–3 janelas.
+
+**Tarefas liberadas agora:**
+
+| Rodada | Tarefas liberadas agora                                                                                      | Esperam                                             |
+| ------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| R-0025 | TASK-0001, 0002, 0003, 0006 (matriz e contratos F-01…F-16)                                                   | 0004/0005/0007/0008 (R-0022/R-0023); 0009+ (R-0024) |
+| R-0026 | TASK-0001, 0002, 0003; TASK-0006 com transporte pendente                                                     | 0004/0005, 0007/0008, 0009+                         |
+| R-0027 | TASK-0001, 0002; TASK-0003/0004 (`BANK_PORT` fail-closed dentro de `inf/collection`); TASK-0005 (testes RED) | 0006 (`policy.ts`); 0007+                           |
+| R-0028 | TASK-0001, 0002; TASK-0003/0004 (portas de homologação BOAT)                                                 | 0005+                                               |
+| R-0029 | TASK-0001, 0002                                                                                              | 0003+                                               |
+
+**Execução em duas sessões sequenciais** (famílias de §2 preservadas):
+
+| Sessão | Maestro              | Reviewer | Sequência                |
+| ------ | -------------------- | -------- | ------------------------ |
+| A      | Codex Sol 6          | Opus 5.5 | R-0027 → R-0025 → R-0029 |
+| B      | Claude Code Opus 5.5 | Sol 6    | R-0028 → R-0026          |
+
+**Regras:**
+
+- Cada rodada tem branch própria sobre `origin/main`, `AUTHORIZATION.md`, um prompt-review restrito às
+  tarefas liberadas, push sem PR e checkpoint.
+- Nenhum arquivo de R-0020, R-0022, R-0023 ou R-0024 em curso é tocado. As listas estão nos `plan.md`.
+- Na retomada depois de R-0024, contratos divergentes viram adenda do Architect.
