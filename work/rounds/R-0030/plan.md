@@ -25,6 +25,19 @@ fechamento). Recalibradas para ≈ 3 em §Execução OD-C2-005.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-13 (Owner, 2026-09-29; prevalece).** A rodada **abre já** sobre `origin/main` e
+> executa **somente as ondas O1–O3**: convenção, esquema, gate e site pt-BR. Ao concluir a O3, o
+> maestro faz push do branch (sem PR), grava checkpoint em §Retomada ("aguardando manifestos da
+> fase D") e para. A O4 em diante retoma quando os branches das rodadas R-0025…R-0029 estiverem
+> publicados. Nada nas O1–O3 toca `app.module.ts`, `policy.ts`, `@detran/ui` nem os apps.
+>
+> **Troca de família (Owner, 2026-09-29; prevalece sobre o cabeçalho e as tabelas):** maestro e
+> workers na família **Codex**: Sol 6 para Architect e tarefas grandes; escada Codex vigente
+> (`model-ladder.md`) para Inspector, Engineer e transcrição. Reviewer da outra família:
+> **Claude Code com Opus 5.5**, pela ponte `tools/orchestra/bridge.sh claude …`. Nas tabelas, os
+> modelos Opus 5.5/Sonnet 5 dos workers leem-se como o nível equivalente da escada Codex. Registrar
+> em `AUTHORIZATION.md`, `plan.md` §Decisões do maestro (M1) e `waves.md`.
+
 Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
 um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
 aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
