@@ -555,6 +555,12 @@ recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7�
   Detalhe em `reports/TASK-0002.md`. Nenhuma tarefa nova é despachada; TASK-0014 (iteração 2) e
   TASK-0017, só de caracterização e já em curso, terminam e são registradas sem commit de produto.
   Aguarda decisão do Owner.
+- **B2 — decisão do Owner (2026-09-29):** "Corrija em PR próprio contra main." Hotfix na branch
+  `fix/portal-manifestation-tenant-leak` (worker Opus 5.5 em worktree isolada; Inspector → Engineer),
+  commits `c1cc3b55`, `f37aa006`, `5a6f2552`, `ffe773c7`; revisão Sol 6 ciclo 1 FAIL (OD-P30 no caminho
+  Stynx; teste permissivo) → ciclo 2 **PASS** (`reviews/hotfix-tenant-leak-review-{1,2}.json`);
+  **PR #159** aberto contra `main`, merge a critério do Owner com CI verde. Depois do merge, a rodada
+  integra `main` e retoma TASK-0002 (C-01-09 verde nas duas fases).
 
 ## Retomada
 
