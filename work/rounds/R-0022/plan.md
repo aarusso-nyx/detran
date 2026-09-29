@@ -566,6 +566,25 @@ OD-R22-04/05, a escrever por TASK-0005):
 - **Offline-sync:** TASK-0018 em **checkpoint OD-R22-02** (OD-R22-22/24/25/26/27/30 = checkpoint);
   pedido consolidado de 1.5.x ao STYNX (fora desta rodada, pelo Owner).
 
+### A4 — decisões do Owner de 2026-09-29, terceira leva (Architect/maestro)
+
+Fonte: `AUTHORIZATION.md` §Adenda B5; registro em `open-decisions-rait.md` §C-0002.
+
+- **Critério da assinatura (OD-R22-12), texto adotado:** "Os testes de caracterização de R-0021 e de
+  TASK-0012 ficam verdes sem edição pelo Engineer, **exceto** os casos que um Inspector (TASK-0021)
+  retirar ou adaptar, cada um com um caso de paridade M-06-P que prova o mesmo comportamento sobre a
+  API publicada; caso sem correspondente não se retira." TASK-0021 (Inspector) é criada com prompt
+  próprio e prompt-review antes do despacho.
+- **OD-R22-40:** espécies clínicas com LTA (laudo, adendo, exportação, decisão de junta) em
+  checkpoint OD-R22-02 até stynx-nyx/stynx#318; a parte documental RAIT (sem LTA) segue.
+- **OD-R22-07:** o app grava em `signed-documents`; TASK-0009 parte B só depois da decisão de
+  `mimeAllowlist`/colunas, imutabilidade de `storage.objects` e convenção de chave (Architect).
+- **OD-R22-38:** TASK-0022 (Engineer, CTG-0002, depois de TASK-0004) remove as dependências
+  `@stynx-nyx/*` sem import, com lista conferida pelo Architect e prompt-review.
+- **OD-R22-39:** smoke remoto encaminhado à R-0020 por `backlog.md` (TASK-0010).
+- **OD-R22-37:** exceções 403/421 documentadas por TASK-0010 junto de OD-P30.
+- **Pendente:** aprovação da estrutura da matriz de OD-R22-08.
+
 ## Bloqueios
 
 - **B1 — prompt-review ciclo 1 = FAIL** (Sol 6 `gpt-6-sol`, 2026-09-29,

@@ -72,3 +72,22 @@ com PASS; FAIL ou REVIEW no último ciclo → parada e novo relato ao Owner.
 - **Nova janela:** "Você está autorizado a abrir uma nova janela quando necessário."
 - Pendentes de esclarecimento: OD-R22-08 (matriz proposta), OD-R22-07 (impacto), adenda de critério
   de OD-R22-12, residual OD-P30, resíduos de R-0021.
+
+## Adenda B5 — respostas do Owner de 2026-09-29 (terceira leva)
+
+Respostas literais: "Item 5 - Adotar a denda." · "Item 6 - Manter erros." · "Item 8 - 1.a; 2.b" ·
+"Item 1 - (i) checkpoint e pedido à STYNX; (também como github issues em stynx)" ·
+"Item 2: OD-R22-07 - APP Grava". Efeitos (transcritos em `open-decisions-rait.md` §C-0002 e em
+`plan.md` §Adendas A4):
+
+- **OD-R22-12:** adenda ao critério de aceitação da assinatura adotada (texto em `plan.md` A4).
+- **OD-R22-37 (residual OD-P30):** manter 403 `PORTAL.SESSION_TENANT_MISMATCH` e 421
+  `PORTAL.TENANT_UNRESOLVED` no caminho anônimo; exceções documentadas a "nunca 401/403".
+- **OD-R22-38 (resíduo R-0021, dependências STYNX sem uso):** remover nesta rodada (tarefa nova de
+  Engineer depois do pin, com prompt-review).
+- **OD-R22-39 (resíduo R-0021, smoke remoto da stack):** encaminhar à R-0020 (sensores), via backlog.
+- **OD-R22-40 (LTA clínico × `stynx-cms`, antes OD-R22-08-G):** (i) checkpoint (OD-R22-02) das
+  espécies clínicas com LTA e pedido à STYNX, registrado em stynx-nyx/stynx#318 (UPS-SIG-05).
+- **OD-R22-07:** o **app** grava em `signed-documents` (escritor único, tenant do contexto,
+  verificação antes de gravar).
+- Pendente: aprovação da estrutura da matriz de OD-R22-08 (não respondida nesta leva).
