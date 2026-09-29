@@ -374,6 +374,12 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   até caracterização HTTP viável. O CTG-0001 publica contratos, checker e
   clientes sem alterar mensagens livres, status HTTP ou adaptadores de
   assinatura protegidos. A segunda janela retoma em O4.
+- **M7 (2026-09-29, Architect):** TASK-0005 e TASK-0006 chegaram ao limite de
+  duas iterações com prova RLS efetiva somente para `ch.patient` e
+  `ch.billing_invoice`. As demais quinze specs verificam apenas metadado RLS,
+  logo ficam em checkpoint, sem declarar CTG-0002 concluído. Depois de
+  TASK-0007 haverá corretiva dedicada de Inspector para fixtures e isolamento
+  por tabela; ela permanece em O6 e não altera adaptadores de assinatura.
 
 ## Concorrência
 
@@ -401,11 +407,17 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   viável. `pnpm contracts:check` e `pnpm contracts:test` passam com 338
   operações e 87 clientes. `PEC.SIGNING_UNAVAILABLE` continua bloqueado após
   a migração de R-0022, pois os adaptadores protegidos não foram tocados.
-- **Prompt-review bootstrap (2026-09-29, em resolução):** o ciclo 2 retornou `REVIEW`
+- **Prompt-review bootstrap (2026-09-29, resolvido):** o ciclo 2 retornou `REVIEW`
   apenas por descrição desatualizada de TASK-0010.json. A descrição foi
   corrigida e `verify:round-tasks`/`format:check` passaram. O §5 de
   `prompts/00-maestro.md` limita a revisão a dois ciclos; o Owner autorizou
-  ciclos adicionais pela A-R31-02. O1 ainda aguarda `PASS`.
+  ciclos adicionais pela A-R31-02. O ciclo 3, restrito ao achado residual,
+  retornou `PASS` em `reviews/prompt-review-3.json` antes do despacho O1.
+- **O5, cobertura RLS incompleta (2026-09-29):** os dois Inspectors esgotaram
+  suas duas iterações. `patients` prova isolamento A/B real e `billing` prova
+  isolamento A/B real; os outros quinze módulos só leem `pg_class.relrowsecurity`.
+  O CTG-0002 não será publicado até a corretiva posterior à semente O6 comprovar
+  leitura e mutação A/B no recurso de cada módulo.
 
 ## Triagem
 

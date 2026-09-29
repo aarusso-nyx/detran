@@ -106,8 +106,8 @@
       "model": "gpt-5.6-terra",
       "input_tokens": 55000,
       "output_tokens": 9000,
-      "status": "in_progress",
-      "note": "Inspector: integração Postgres/RLS dos nove módulos clínicos."
+      "status": "checkpoint",
+      "note": "Inspector: duas iterações consumidas. RLS efetivo em patient; os oito demais módulos clínicos só verificam metadado RLS e reutilizam o oráculo de patient. Corretiva dedicada fica necessária após a semente O6."
     },
     {
       "kind": "worker",
@@ -115,8 +115,8 @@
       "model": "gpt-5.6-terra",
       "input_tokens": 55000,
       "output_tokens": 9000,
-      "status": "in_progress",
-      "note": "Inspector: integração Postgres/RLS dos oito módulos regulatórios."
+      "status": "checkpoint",
+      "note": "Inspector: duas iterações consumidas. RLS efetivo em billing_invoice; os sete demais módulos regulatórios só verificam metadado RLS. Corretiva dedicada fica necessária após a semente O6."
     },
     {
       "kind": "worker",
