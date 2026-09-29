@@ -1,5 +1,5 @@
 // Generated from BP-CH-BILLING-001 v1.0.0 sha256:8814fad00febff6787905872dd30b4f54fe6c33ab4b750bd471093d1e6186fe4
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
@@ -35,48 +35,8 @@ export class BillingInvoiceItemRepository {
         ).rows,
     );
   }
-  async findOne(
-    id: string,
-    transaction?: Transaction,
-  ): Promise<BillingInvoiceItem> {
-    const result = await this.execute(transaction, (tx) =>
-      tx.query<BillingInvoiceItem & Record<string, unknown>>(
-        'select * from ch.billing_invoice_item where id = $1 limit 1',
-        [id],
-      ),
-    );
-    const row = result.rows[0];
-    if (!row)
-      throw new NotFoundException('BillingInvoiceItem ' + id + ' not found');
-    return row;
-  }
-  create(
+  async create(
     dto: CreateBillingInvoiceItemDto,
-    transaction?: Transaction,
-  ): Promise<BillingInvoiceItem> {
-    return this.write('insert', undefined, dto, transaction);
-  }
-  update(
-    id: string,
-    dto: Partial<CreateBillingInvoiceItemDto>,
-    transaction?: Transaction,
-  ): Promise<BillingInvoiceItem> {
-    return this.write('update', id, dto, transaction);
-  }
-  async remove(id: string, transaction?: Transaction): Promise<void> {
-    const result = await this.execute(transaction, (tx) =>
-      tx.query(
-        'delete from ch.billing_invoice_item where id = $1 returning id',
-        [id],
-      ),
-    );
-    if (!result.rows[0])
-      throw new NotFoundException('BillingInvoiceItem ' + id + ' not found');
-  }
-  private async write(
-    operation: 'insert' | 'update',
-    id: string | undefined,
-    dto: Partial<CreateBillingInvoiceItemDto>,
     transaction?: Transaction,
   ): Promise<BillingInvoiceItem> {
     const entries = Object.entries(dto).filter(
@@ -95,21 +55,11 @@ export class BillingInvoiceItemRepository {
       ') values (' +
       columns.map((_, index) => '$' + (index + 1)).join(', ') +
       ') returning *';
-    const updateSql =
-      'update ch.billing_invoice_item set ' +
-      columns.map((field, index) => field + ' = $' + (index + 1)).join(', ') +
-      ', updated_at = now() where id = $' +
-      (columns.length + 1) +
-      ' returning *';
     const result = await this.execute(transaction, (tx) =>
-      tx.query<BillingInvoiceItem & Record<string, unknown>>(
-        operation === 'insert' ? insertSql : updateSql,
-        operation === 'insert' ? values : [...values, id],
-      ),
+      tx.query<BillingInvoiceItem & Record<string, unknown>>(insertSql, values),
     );
     const row = result.rows[0];
-    if (!row)
-      throw new NotFoundException('BillingInvoiceItem ' + id + ' not found');
+    if (!row) throw new Error('BillingInvoiceItem insert returned no row');
     return row;
   }
   private execute<T>(
