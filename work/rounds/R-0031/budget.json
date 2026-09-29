@@ -1,11 +1,20 @@
 {
   "round": "R-0031",
   "front": "pec-web",
-  "window": 1,
+  "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 515000,
-  "estimated_output_total": 79000,
+  "estimated_input_total": 70000,
+  "estimated_output_total": 14000,
+  "prior_windows": [
+    {
+      "window": 1,
+      "estimated_input_total": 515000,
+      "estimated_output_total": 79000,
+      "status": "checkpoint",
+      "note": "Bootstrap e O1–O3; a OD-PW-007 foi resolvida pelo Owner antes da segunda janela."
+    }
+  ],
   "entries": [
     {
       "kind": "maestro-planning",
@@ -79,8 +88,17 @@
       "model": "gpt-5.6-terra",
       "input_tokens": 50000,
       "output_tokens": 10000,
-      "status": "checkpoint",
-      "note": "Engineer: checker de contratos e geração oficial de clientes concluídos; envelopes PEC aguardam OD-PW-007 porque a caracterização HTTP não foi produzida antes da alteração."
+      "status": "completed",
+      "note": "Engineer: checker de contratos e geração oficial de clientes concluídos; OD-PW-007 diferiu envelopes PEC até caracterização HTTP viável."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 70000,
+      "output_tokens": 14000,
+      "status": "in_progress",
+      "note": "Architect: fixtures PEC sintéticas e matriz de integração dos 17 módulos CH."
     }
   ]
 }

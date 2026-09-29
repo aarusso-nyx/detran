@@ -370,6 +370,10 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   `pnpm install` e registra o lockfile, como já exigido no checkpoint (c).
   Só então libera o Inspector da TASK-0013; os comandos do pacote deixam
   de apontar para um projeto inexistente. Isto não autoriza O9 nesta sessão.
+- **M6 (2026-09-29, Owner, OD-PW-007):** envelopes `PEC.*` ficam diferidos
+  até caracterização HTTP viável. O CTG-0001 publica contratos, checker e
+  clientes sem alterar mensagens livres, status HTTP ou adaptadores de
+  assinatura protegidos. A segunda janela retoma em O4.
 
 ## Concorrência
 
@@ -390,14 +394,13 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
 
 ## Bloqueios
 
-- **OD-PW-007 (2026-09-29, aguardando Owner):** a TASK-0002 caracterizou a
+- **OD-PW-007 (2026-09-29, decidida pelo Owner):** a TASK-0002 caracterizou a
   matriz de autorização, mas não produziu status e corpos HTTP das 82 rotas;
-  a TASK-0003 não pode trocar mensagens livres por envelopes `PEC.*` sem
-  inventar comportamento. `pnpm contracts:check` e `pnpm contracts:test`
-  passam com 338 operações e 87 clientes. Definir se os envelopes ficam
-  explicitamente diferidos até caracterização HTTP viável, ou autorizar a
-  estratégia que a produzirá. `PEC.SIGNING_UNAVAILABLE` continua bloqueado
-  após a migração de R-0022, pois os adaptadores protegidos não foram tocados.
+  a TASK-0003 não troca mensagens livres por envelopes `PEC.*` sem inventar
+  comportamento. O Owner autorizou o diferimento até caracterização HTTP
+  viável. `pnpm contracts:check` e `pnpm contracts:test` passam com 338
+  operações e 87 clientes. `PEC.SIGNING_UNAVAILABLE` continua bloqueado após
+  a migração de R-0022, pois os adaptadores protegidos não foram tocados.
 - **Prompt-review bootstrap (2026-09-29, em resolução):** o ciclo 2 retornou `REVIEW`
   apenas por descrição desatualizada de TASK-0010.json. A descrição foi
   corrigida e `verify:round-tasks`/`format:check` passaram. O §5 de
