@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0015",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Migrar a outbox (log de eventos e despacho RENACH) para @stynx-nyx/outbox 1.5.x",
+  "description": "Migrar a outbox (log de eventos e despacho RENACH) para @stynx-nyx/outbox 1.5.x (CTG-0008), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0015.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-shared-events",
+    "MOD-integration-ddl",
+    "MOD-app-module"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0008",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0014",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0008", "outbox"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-482986ff405c1dab",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:unit",
+      "--passWithNoTests=false",
+      "src/pec-renach-transmission.spec.ts",
+      "src/r21-renach-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/pec-pipeline-persistence.integration.spec.ts",
+      "tests/integration/r21-renach-characterization.integration.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    ["pnpm", "backend:rls-smoke"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-482986ff405c1dab",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

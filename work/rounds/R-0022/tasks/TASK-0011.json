@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato da migração integral da assinatura (UPS-SIG-01…04)",
+  "description": "Contrato da migração integral da assinatura (UPS-SIG-01…04) (CTG-0006), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0011.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r22-contracts-sig"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0000",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0006", "signature", "a1"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-5d4fe3468c423be5",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0006.md"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-5d4fe3468c423be5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

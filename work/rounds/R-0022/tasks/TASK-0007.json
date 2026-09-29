@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Quatro fluxos SSE do backend sobre o serviço STYNX",
+  "description": "Quatro fluxos SSE do backend sobre o serviço STYNX (CTG-0004), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0007.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-app-sse-backend"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0004", "sse"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-c6c46d562a326b4c",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/sse-conformance.e2e.spec.ts",
+      "tests/e2e/teat-stream.e2e.spec.ts",
+      "tests/e2e/portal-stream.e2e.spec.ts",
+      "tests/e2e/dashboard-stream.e2e.spec.ts",
+      "tests/e2e/rait-stream.e2e.spec.ts"
+    ],
+    ["pnpm", "backend:rls-smoke"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-c6c46d562a326b4c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

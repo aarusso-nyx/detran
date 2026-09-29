@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever ADRs, contratos de fio e índices da rodada",
+  "description": "Transcrever ADRs, contratos de fio e índices da rodada (CTG-0007), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0010.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs", "MOD-adr"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0007",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0018",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0007", "docs"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-d20b3da0ab1d3de5",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "verify:state-index"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-d20b3da0ab1d3de5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

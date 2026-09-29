@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato de caracterização de tenancy/RLS e SSE (CTG-0001)",
+  "description": "Contrato de caracterização de tenancy/RLS e SSE (CTG-0001) (CTG-0001), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0001.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r22-contracts-c1",
+    "MOD-kb-open-decisions",
+    "MOD-sse-contract-doc"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0000",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0001", "characterization"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-659ff560b687d7f7",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0001.md"],
+    ["test", "-s", "docs/framework/arch/sse-stream-contract.md"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-659ff560b687d7f7",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

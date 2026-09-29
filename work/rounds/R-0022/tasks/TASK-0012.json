@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Caracterização ampliada da assinatura sobre 1.4.0",
+  "description": "Caracterização ampliada da assinatura sobre 1.4.0 (CTG-0006), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0012.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r22-tests-sig"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0006", "signature", "characterization"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-661dabbb27ff358a",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ch-clinical-reports",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ch-juntas",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/runtime-profiles.e2e.spec.ts",
+      "tests/e2e/r21-trust-profiles.e2e.spec.ts",
+      "tests/e2e/rait-case-commands.e2e.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-661dabbb27ff358a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

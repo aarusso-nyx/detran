@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0017",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Caracterização ampliada do offline-sync sobre 1.4.0",
+  "description": "Caracterização ampliada do offline-sync sobre 1.4.0 (CTG-0009), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0017.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r22-tests-ofs"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0009",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0016",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0009", "offline-sync", "characterization"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-02086cd797aec6cf",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:integration",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/teat-field-sync.e2e.spec.ts",
+      "tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "tests/e2e/r21-offline-sync.e2e.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-02086cd797aec6cf",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

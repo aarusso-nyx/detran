@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Fixar STYNX na maior 1.5.x final pela fonte única",
+  "description": "Fixar STYNX na maior 1.5.x final pela fonte única (CTG-0002), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0004.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-deps-stynx-pin", "MOD-blueprints-generator"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0002", "pin"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-ed1a4f462ccc0c16",
+  "acceptance_commands": [
+    ["pnpm", "verify:stynx-pin"],
+    ["pnpm", "test:stynx-pin"],
+    ["pnpm", "blueprints:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-ed1a4f462ccc0c16",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

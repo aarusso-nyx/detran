@@ -275,7 +275,64 @@ OD-P30 (autenticação oportunista), OD-R21-01 (contornos de assinatura atrás d
 
 ## Decisões do maestro
 
+Maestro Opus 5.5 (`claude-opus-5-5`, Claude Code 2.1.283), bootstrap de 2026-09-29. Papéis: Architect
+ao planejar e revisar; Engineer ao commitar.
+
+- **M1 — ids de modelo** (reconfirmados com chamada mínima, `claude -p --model <id>` e
+  `codex exec -m <id>`; `claude --help`/`codex --help` não listam ids): Opus 5.5 = `claude-opus-5-5`,
+  Sonnet 5 = `claude-sonnet-5`, Sol 6 = `gpt-6-sol` (`codex-cli` 0.157.1). Sem divergência com
+  `model-ladder.md`.
+- **M2 — worktree e branch.** `/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy` não
+  existe nesta máquina. A rodada corre na worktree gerida pelo app
+  `/Users/aarusso/Development/detran/.claude/worktrees/r-0022-stynx-sse-tenancy-c949d9`, na branch
+  `orchestra/stynx-sse-tenancy` criada de `origin/main` `c325f9b5` (A-C2-13: abre sobre `origin/main`).
+  Nenhuma outra worktree ou branch desta frente existia (descoberta de estado registrada em
+  §Concorrência).
+- **M3 — pin.** Maior 1.5.x final no registry em 2026-09-29: **1.5.0** (`latest=1.5.0` nos 25 pacotes
+  `@stynx-nyx/*` consumidos; não há 1.5.1 nem 1.5.2). Se a 1.5.2 (STYNX #314) sair antes de O4, TASK-0004
+  a adota. Tarballs 1.5.0 extraídos, fora do repositório, em `~/.cache/detran-r22/stynx-1.5.0/`
+  (`SHA256SUMS` no mesmo diretório; ex.: tenancy `4b6c1c33…`, backend `660aac91…`, angular `cce512e6…`,
+  outbox `c894be7b…`, offline-sync `d4892e4b…`, signature `813490dd…`, data `f6435ce2…`). É a fonte
+  **publicada** dos contratos das migrações antes de O4 (lição 15).
+- **M4 — conformidade preliminar (símbolos).** Todos os MUST de A1 e de U1–U3/UPS-TEST-01 têm símbolo
+  nos `.d.ts` publicados de 1.5.0: `PublicTenantRoute`/`PublicTenantRouteOptions`,
+  `TenantResolverContext.host/path`, `StynxEventStreamModule/Service`, `EventStreamSource`,
+  `provideStynxEventStream`, `FakeStynxEventStreamTransport/Clock`, `SignatureRequest.minimumSignatureLevel`,
+  `SignatureManifestService`, `SignatureWithdrawalVerifier`, `SignatureReadinessIndicator`,
+  `OutboxService.appendInTransaction`, `OutboxEventStreamSource`, `dispatchEventsDue`/`ackEvent`/
+  `cutoverLegacyMessages`, `OfflineSyncItemApplier`, `OfflineSyncConcurrencyDetector`,
+  `settleNumberingReservation`, `getSyncItemReceipt`, `OfflineSyncDurableStore`. O STYNX devolveu a
+  tabela §7 em `stynx/work/rounds/R-0002/conformance-1.5.0.md` (leitura, sem escrita). Conformidade
+  **de comportamento** continua a cargo de TASK-0005 e dos contratos de migração; MUST divergente →
+  checkpoint do CTG consumidor (OD-R22-02).
+- **M5 — bancos.** PostGIS descartável exclusivo `detran-r22-postgis` (porta local 59722, mesma imagem
+  do CI), banco `detran_r7_ctg1_a2` preparado por `pnpm backend:test:prepare-legacy`. Workers de
+  backend em paralelo recebem, cada um, um contêiner próprio (`detran-r22-postgis-<n>`) e um arquivo de
+  ambiente em `~/.cache/detran-r22/env/`; nenhum worker cria, reseta ou aplica DDL fora do seu
+  contêiner.
+- **M6 — tarefas em partes.** Onde o contrato de uma migração dividir o trabalho de Engineer em
+  partes, o maestro despacha o **mesmo** prompt revisado com o identificador da parte; a parte não
+  cria tarefa nova nem prompt novo sem prompt-review.
+
 ## Concorrência
+
+Descoberta de estado (2026-09-29, `origin/main` = `c325f9b5`, merge do PR #157):
+
+- **R-0021** inteira em `main`: #149 (CTG-0001), #151 (pin 1.4.0 e verificador dinâmico), #153
+  (CTG-0007), #154 (close sem selo, PC-0019). Nenhum upstream da rodada pendente de merge.
+- **STYNX 1.5.0 final** publicado em 2026-09-29T00:55Z (`npm view @stynx-nyx/tenancy@1.5.0 version`
+  → `1.5.0`); RC.1 e RC.2 não são usadas.
+- **R-0020** (`orchestra/devai-sensors`) parada; nenhum PR aberto dela. Locks partilhados por merge no
+  fim: CI, `.devai/config`, `record/`.
+- **PR #158** (Owner, `docs/c0002-a-c2-13`, aberto) edita este `plan.md` (inserção no topo de
+  §Execução OD-C2-005), `C-0002-consolidacao.md` §14 e os planos de R-0030/R-0031. Esta rodada não
+  edita aquele trecho; o conflito, se houver, resolve-se no merge de `origin/main` da sequência final.
+- **Downstream:** R-0023 (O1 já; resto empilhado aqui), R-0024 (O1–O4 empilhados depois do push de O4
+  e de O6), R-0031 (não toca os adaptadores de assinatura), R-0032 O3 (eventos `ch` pelo outbox
+  migrado aqui).
+- Linha de base no bootstrap: `pnpm backend:rls-smoke` → `check-rls-smoke: OK (tenant isolation, 140
+inf/ch tables, ops RLS, SRID-4674 round-trip, audit persistence)`
+  (`reports/baseline-rls-smoke.log`); `pnpm check` em `reports/baseline-check.log`.
 
 ## Triagem
 
@@ -348,8 +405,84 @@ comportamento atual.
   escopo revisto por A1. As ondas de §Execução OD-C2-005 são recalculadas no bootstrap, e as três
   migrações recebidas ganham ondas próprias sem violar os locks.
 
+### A2 — decomposição e ondas recalculadas no bootstrap (Architect/maestro, 2026-09-29)
+
+Autoridade: A1 itens 2–3 e A-C2-12 ("as ondas são recalculadas no bootstrap pelo Architect"),
+A-C2-13 (pin 1.5.x final, abertura sobre `origin/main`). Esta adenda **não muda critérios** de
+aceitação: acrescenta tarefas e grupos para as três migrações recebidas, preserva os ids históricos
+e substitui a tabela de ondas de §Execução OD-C2-005. Metas 3, 5 e 7 leem-se com A1.
+
+**Tarefas novas e redefinidas** (ids históricos preservados; novos a partir de TASK-0011):
+
+| Tarefa    | CTG      | Papel     | Perfil              | Modelo/esforço   | Lock (`target_modules`)                                           | Depende de           | Entrega                                                                                                                                                                                                                     |
+| --------- | -------- | --------- | ------------------- | ---------------- | ----------------------------------------------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0011 | CTG-0006 | Architect | architect-blueprint | Opus 5.5 / alto  | `MOD-r22-contracts-sig`                                           | —                    | `contracts/CTG-0006.md`: inventário, critérios C-06-nn de caracterização (reuso de C-01-01…06 de R-0021) e de migração a partir dos `.d.ts` publicados de 1.5.0 (UPS-SIG-01…04), mapa arquivo → destino, partes do Engineer |
+| TASK-0012 | CTG-0006 | Inspector | inspector-tests     | Opus 5.5 / médio | `MOD-r22-tests-sig`                                               | TASK-0011            | specs `r22-signature-*` que codificam C-06-nn; verdes sobre 1.4.0 no que é comportamento atual; os de paridade com a API nova ficam vermelhos/`it.fails` só onde o contrato disser                                          |
+| TASK-0009 | CTG-0006 | Engineer  | engineer-backend    | Opus 5.5 / médio | `MOD-shared-documents`, `MOD-ch-signing`, `MOD-app-module`\*      | TASK-0012, TASK-0005 | **redefinida por A1:** migração integral da assinatura para `@stynx-nyx/signature` 1.5.x; testes de R-0021 e de TASK-0012 verdes sem edição                                                                                 |
+| TASK-0013 | CTG-0008 | Architect | architect-blueprint | Opus 5.5 / alto  | `MOD-r22-contracts-obx`                                           | —                    | `contracts/CTG-0008.md`: outbox inteira (log de eventos e despacho RENACH, UPS-OBX-01/02), DDL/armazenamento, leitores de `integration.outbox`, corte do legado, critérios C-08-nn, partes                                  |
+| TASK-0014 | CTG-0008 | Inspector | inspector-tests     | Opus 5.5 / médio | `MOD-r22-tests-obx`                                               | TASK-0013            | specs `r22-outbox-*` (dois eventos do mesmo agregado, replay, cursor, isolamento, retry/ACK/ledger) sobre 1.4.0                                                                                                             |
+| TASK-0015 | CTG-0008 | Engineer  | engineer-backend    | Opus 5.5 / alto  | `MOD-shared-events`, `MOD-integration-ddl`, `MOD-app-module`\*    | TASK-0014, TASK-0006 | migração integral da outbox; caracterização verde sem edição; `pnpm backend:rls-smoke` igual à linha de base                                                                                                                |
+| TASK-0016 | CTG-0009 | Architect | architect-blueprint | Opus 5.5 / alto  | `MOD-r22-contracts-ofs`                                           | —                    | `contracts/CTG-0009.md`: offline-sync inteiro (UPS-OFS-01…04 e compatibilidade vinculante da spec A1), critérios C-09-nn, partes                                                                                            |
+| TASK-0017 | CTG-0009 | Inspector | inspector-tests     | Opus 5.5 / médio | `MOD-r22-tests-ofs`                                               | TASK-0016            | specs `r22-offline-*` (lote > 100 itens, item legado sem chave, replay de lote fechado, TTL e janela por catálogo, HTTP TEAT/BOAT, rollback, RLS) sobre 1.4.0                                                               |
+| TASK-0018 | CTG-0009 | Engineer  | engineer-backend    | Opus 5.5 / alto  | `MOD-ops-offline-sync`, `MOD-ops-offline-ddl`, `MOD-app-module`\* | TASK-0017, TASK-0015 | migração integral do offline-sync; caracterização de R-0021 e de TASK-0017 verde sem edição                                                                                                                                 |
+
+\* `MOD-app-module` (`backend/app/src/app.module.ts` e `backend/app/src/detran-runtime.ts`) é
+exclusivo: quem não precisa dele, pelo contrato, não o recebe no prompt; quem precisa, serializa.
+TASK-0007 depende também de TASK-0015 (A1 item 4: com UPS-OBX-01 publicado, a fonte SSE é a fonte
+publicada sobre o log migrado; não há `EventStreamSource` local sobre `integration.outbox`, e
+OD-R22-01 (a) fica sem objeto). TASK-0010 depende de todas as Engineer. TASK-0005 escreve
+`CTG-0003…0005.md` e a adenda de conformidade da spec; confere os contratos de migração contra os
+`.d.ts` instalados e reporta divergência (o maestro a resolve por adenda numerada antes de despachar
+o Engineer). TASK-0009 passa de Sonnet 5 a Opus 5.5 (migração integral, fail-closed).
+
+**Ondas** (substituem a tabela de §Execução OD-C2-005; até 3 workers; o maestro serializa commits):
+
+| Onda | Tarefas em paralelo               | Fronteiras de escrita (disjuntas)                                                                                                                                               | Depende de                                                                  | Push                                  |
+| ---- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------- |
+| O1   | TASK-0001 ∥ TASK-0011 ∥ TASK-0013 | `contracts/CTG-0001.md`, `sse-stream-contract.md`, `open-decisions-rait.md` §C-0002 × `contracts/CTG-0006.md` × `contracts/CTG-0008.md`                                         | bootstrap e prompt-review única `PASS`                                      | sim                                   |
+| O2   | TASK-0002 ∥ TASK-0003 ∥ TASK-0016 | `backend/app/tests/e2e/{tenancy-context,sse-conformance,rait-stream}.e2e.spec.ts` × `apps/*/web/src/**/*.spec.ts` (SSE) × `contracts/CTG-0009.md`                               | O1                                                                          | sim                                   |
+| O3   | TASK-0012 ∥ TASK-0014 ∥ TASK-0017 | arquivos `r22-signature-*` × `r22-outbox-*` × `r22-offline-*` (lista fechada por contrato)                                                                                      | O1/O2 (cada Inspector depois do seu Architect)                              | sim — toda a caracterização commitada |
+| O4   | TASK-0004 (pin)                   | `tools/stynx-version.json`, manifestos descobertos, `tools/blueprints/generate.mjs` se preciso; lockfile pelo maestro                                                           | O3 commitada; checkpoint (a); caracterização inteira reexecutada após o pin | **sim, cedo (A-C2-13)**               |
+| O5   | TASK-0005                         | `contracts/CTG-0003…0005.md`, adenda §8 da spec upstream                                                                                                                        | O4; checkpoint (c)                                                          | sim                                   |
+| O6   | TASK-0006 ∥ TASK-0008             | `app.module.ts`/`detran-runtime.ts`/rotas públicas do Portal × serviços SSE dos 4 apps                                                                                          | O5                                                                          | **sim, cedo depois de TASK-0008**     |
+| O7   | TASK-0015 (partes)                | escopo de `CTG-0008.md` (eventos compartilhados, DDL de integração, RENACH, leitores)                                                                                           | TASK-0006                                                                   | sim                                   |
+| O8   | TASK-0007 ∥ TASK-0009 ∥ TASK-0018 | streams SSE × assinatura/documentos × offline-sync; `MOD-app-module` serializado entre as que o contrato marcar                                                                 | TASK-0015 (0007 e 0018), TASK-0006 (0009)                                   | sim                                   |
+| O9   | TASK-0010                         | ADR nova de SSE/tenancy, ADR de divisão STYNX × DETRAN (não criada por R-0021), emendas, `sse-stream-contract.md`, `rait-events-sse-contract.md`, `detran-ui-guide.md`, índices | O6–O8                                                                       | sim; depois a sequência final         |
+
+`pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
+recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
+
 ## Bloqueios
+
+- **B1 — prompt-review ciclo 1 = FAIL** (Sol 6 `gpt-6-sol`, 2026-09-29,
+  `reviews/prompt-review-1.json`, 17 achados `high`, todos com correção concreta). Motivo do FAIL:
+  prompts de Engineer que permitem remover specs (TASK-0007, TASK-0008) e inversão de `it.fails` pelo
+  maestro (TASK-0012) contrariam o Art. 10 (testes só pelo Inspector). Demais achados: `it.fails` do
+  braço sem _shim_ (TASK-0002), `role_app_backend` explícito no negativo B→A, leitura não fechada em
+  TASK-0013, coleta efetiva (`--passWithNoTests=false` por arquivo) nos testes web e nos specs
+  `r22-*`, filtros `pnpm` com chaves, dependências não declaradas (0004←0003, 0016←0013, 0015←0006,
+  0018←0015, 0010←0007/0008/0009) e `MOD-app-module` em TASK-0007. Nenhum worker foi disparado.
+  Pela regra §5 do prompt do maestro, a rodada para e aguarda decisão do Owner.
 
 ## Retomada
 
+Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1). Concluído: bootstrap (AUTHORIZATION, branch
+`orchestra/stynx-sse-tenancy`, banco e 3 slots, linha de base `pnpm check` exit 0 e
+`backend:rls-smoke` OK, pin escolhido 1.5.0, A2 com ondas O1–O9, 18 tarefas e prompts, PCs).
+Último veredito: prompt-review ciclo 1 FAIL (B1). Em curso: nada. Pendente: todas as tarefas
+(TASK-0001…0018). Próximo passo, se o Owner autorizar: corrigir os 17 achados e submeter o ciclo 2
+restrito a eles; com PASS, disparar O1.
+
 ## Leitura
+
+Maestro, 2026-09-29, `git rev-parse HEAD` = `c325f9b540e0b6696395f3442d7f920909ca3b76` (`origin/main`).
+Lido: `prompts/00-maestro.md` e este `plan.md` inteiros; `AGENTS.md`, `CODESTYLE.md`,
+`docs/meta/agents/orchestra/{model-ladder.md, worker-prompt.template.md, reviewer-prompt.template.md,
+task.template.json}`, `orchestra/README.md` §9; `C-0002-consolidacao.md` §11–§13 e §14 (PR #158);
+`C-0002-stynx-upstream-spec.md` §Decisões, §1–§4, §6.6, §6.11–§6.13, §7, §8, §8.1;
+`work/rounds/R-0021/{AUTHORIZATION.md, closure.json, contracts/CTG-0001.md}` e a lista de relatórios;
+`~/Development/stynx/work/rounds/R-0002/conformance-1.5.0.md` (só leitura); `.d.ts` publicados de
+1.5.0 (busca de símbolos, M4); `tools/stynx-version.json`, `tools/check-stynx-pin.ts` (cabeçalho),
+`backend/database/tests/run-backend-ci.mjs`, `prepare-rait-priority-upgraded-legacy.mjs` (ambiente),
+`.github/workflows/ci.yml` (job `backend-kernel`). Código alvo lido só por inventário de caminhos e
+tamanhos; a leitura detalhada fica com os Architects de O1/O2/O5 (listas fechadas nos prompts).

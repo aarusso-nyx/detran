@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contratos de tenancy, SSE backend e SSE Angular sobre a 1.5.x instalada",
+  "description": "Contratos de tenancy, SSE backend e SSE Angular sobre a 1.5.x instalada (CTG-0003), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0005.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r22-contracts-c3", "MOD-upstream-spec"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0003", "ctg-0004", "ctg-0005", "conformance"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-f4ed0ff2826d82b7",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0003.md"],
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0004.md"],
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0005.md"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-f4ed0ff2826d82b7",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Caracterizar a costura SSE dos quatro apps web sobre 1.4.0",
+  "description": "Caracterizar a costura SSE dos quatro apps web sobre 1.4.0 (CTG-0001), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0003.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-web-tests-sse"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0001", "characterization", "web"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-e3722b4e84520ec5",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "test"],
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "test"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "lint"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "lint"],
+    ["pnpm", "--filter", "@detran/teat-web", "test"],
+    ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/teat-web", "lint"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-e3722b4e84520ec5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0018",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Migrar o offline-sync para @stynx-nyx/offline-sync 1.5.x",
+  "description": "Migrar o offline-sync para @stynx-nyx/offline-sync 1.5.x (CTG-0009), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0018.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-offline-sync",
+    "MOD-ops-offline-ddl",
+    "MOD-app-module"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0009",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0017",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0009", "offline-sync"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-1413e656a486d449",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:integration",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/teat-field-sync.e2e.spec.ts",
+      "tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "tests/e2e/r21-offline-sync.e2e.spec.ts"
+    ],
+    ["pnpm", "backend:rls-smoke"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-1413e656a486d449",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
