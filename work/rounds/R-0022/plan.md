@@ -595,6 +595,10 @@ OD-R22-04/05, a escrever por TASK-0005):
   **PR #159** aberto contra `main`, merge a critério do Owner com CI verde. Depois do merge, a rodada
   integra `main` e retoma TASK-0002 (C-01-09 verde nas duas fases).
 
+- **B2 encerrado** (2026-09-29): PR #159 mesclado (`c4d5417c`) e integrado à branch por merge
+  (`2fad7265`); C-01-09 verde sobre 1.4.0. C-01-01 e C-01-04 resolvidos por adenda A2 do CTG-0001.
+  A rodada pode retomar (nova janela).
+
 ## Retomada
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
