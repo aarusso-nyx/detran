@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Crie testes e fixtures positivos e negativos para cada R1–R8 e U1–U5",
+  "description": "Crie testes e fixtures positivos e negativos para cada R1–R8 e U1–U5. Teste a derivação dos 36 papéis de roles.ts sem sobra, falta ou repetição. Entregue sensores RED quando o gate ainda não existir; não implemente check.mjs. Dependencies: TASK-0001",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-gate-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["user-docs", "wave-O2"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-6a250697df2859bd",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "--test", "tools/docs/user-docs/tests/*.test.mjs"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-6a250697df2859bd",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

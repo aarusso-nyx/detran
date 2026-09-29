@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0030",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escreva a convenção nas nove seções do plano",
+  "description": "Escreva a convenção nas nove seções do plano; transcreva literalmente o JSON Schema do anexo §4 se ausente; feche CTG-0001 com extração AST por superfície, R1–R8, U1–U5, saída/códigos e fixtures; registre OD-UD-001…005 no registro canônico.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-arch-user-docs-convention",
+    "MOD-availability-schema",
+    "MOD-kb-open-issues",
+    "MOD-r30-contracts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["user-docs", "wave-O1"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-482a68cf180f24ca",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-482a68cf180f24ca",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

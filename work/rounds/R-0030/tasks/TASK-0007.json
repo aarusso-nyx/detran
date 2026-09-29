@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Escreva manual do cidadão para cada rota de tela do perfil no manifesto portal-web, incluindo login, defesa, indicação, ",
+  "description": "Escreva manual do cidadão para cada rota de tela do perfil no manifesto portal-web, incluindo login, defesa, indicação, recursos, pagamento, SNE, documentos offline, sinistros, exames, ouvidoria, LGPD e acessibilidade apenas se o código e fontes confirmarem. Dependencies: TASK-0004, TASK-0005",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-cidadao"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["user-docs", "wave-O5"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-dbac3a1608b292bf",
+  "acceptance_commands": [["pnpm", "docs:user:check"]],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-dbac3a1608b292bf",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Escreva manuais auditor-dpo e administrador, cada um cobrindo suas rotas de tela em todos os manifestos aplicáveis",
+  "description": "Escreva manuais auditor-dpo e administrador, cada um cobrindo suas rotas de tela em todos os manifestos aplicáveis. Inclua trilhas, exportações, LGPD, parâmetros e cadastros só se as fontes/código sustentarem. Dependencies: TASK-0007, TASK-0008, TASK-0009",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-auditor-admin"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 12,
+  "tags": ["user-docs", "wave-O6"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-5b8dd964e8eb5b4a",
+  "acceptance_commands": [["pnpm", "docs:user:check"]],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-5b8dd964e8eb5b4a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0030",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Todos os 11 achados high do ciclo 1 estão resolvidos. As leituras acrescentadas em TASK-0001/0003/0004/0006/0010/0011/0012/0015/0016/0017 existem na base, inclusive os globs IU-BOAT, IU-DASH-D e IU-TEAT. As exceções esperadas são os manifestos da fase D e o relatório TASK-0016, que são de fase futura.",
+    "D-05: TASK-0001 registra OD-UD-006 em open-issues.md, e TASK-0004 cita essa OD e bloqueia se ela não existir. Assim nenhum id é derivado sem fonte.",
+    "FAQ: o par de marcadores public:cidadao está definido na convenção por TASK-0001, é escrito por TASK-0013 e projetado por TASK-0005. Sem os marcadores, o FAQ fica inteiro fora do site, e isso resolve o risco de OD-UD-002.",
+    "Interface de CLI do gate fixada em CTG-0001: subcomandos, --repo-root, --fixture-root, saídas OK e exits 0/1/2. O subconjunto de JSON Schema também está delimitado, sem ajv.",
+    "Low: TASK-0017 ainda mantém o texto antigo sobre R-0024 e o shell @detran/ui. Convém alinhar com TASK-0015 e dizer que a ausência de frontend-wiring-pattern.md, que hoje não existe, equivale a R-0024 sem posição e remete a OD-UD-004.",
+    "Low: a lista de specs de TASK-0017 usa globs com a ressalva de valerem só para os arquivos do relatório TASK-0016. O fail-closed depende do maestro anexar a lista exata antes do despacho, como o próprio prompt exige.",
+    "Low: o critério node -e de TASK-0001 depende do cabeçalho literal da seção 4 do anexo, que está presente na linha 112. Se o anexo mudar, o comando quebra sem aviso claro.",
+    "Os achados low do ciclo 1 foram tratados: RED restrito a ENOENT em TASK-0002, exit diferente de 0 esperado em TASK-0003, kb:check e publish-check em TASK-0005, parameter-catalogue e lint/build em TASK-0017, crases REF-*/RN-*, fichas em TASK-0008/0009, e Terra justificado em plan.md nas linhas 304-306. Os scripts verify:parameter-catalogue e docs:kb:publish-check existem, e os três apps têm lint e build."
+  ]
+}

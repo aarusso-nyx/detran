@@ -9,6 +9,11 @@ não invenção); onde a fonte não fixa um valor, o campo correspondente é `x-
 um exemplo inventado (ver `teat-normative-package.schema.json`, campos derivados da tabela
 metrológica).
 
+## Manifesto de disponibilidade
+
+`availability-manifest.schema.json` cobre os manifestos de disponibilidade por superfície
+(JSON Schema 2020-12). Fonte: R-0030, anexo `availability-manifest.schema.md` §4 e CTG-0001.
+
 ## Schemas de payload
 
 | Arquivo                               | Cobre                                                                                                                                                                                                                                 | Fonte                                                                                     |

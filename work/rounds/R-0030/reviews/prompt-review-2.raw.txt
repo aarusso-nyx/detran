@@ -1,0 +1,647 @@
+# Reviewer — ciclo 2 restrito aos achados do ciclo 1 (R-0030)
+
+Papel: Auditor (soft gate). Família: Claude Code Opus 5.5, oposta ao maestro Codex Sol 6. Somente leitura. Não escreva arquivos.
+
+O ciclo 1 retornou REVIEW com JSON inválido e a ponte o rejeitou (exit 4); o texto recuperado está em reviews/prompt-review-1.unparsed.md. Este ciclo verifica SOMENTE as correções dos achados ali listados. Nenhum achado novo em texto inalterado, salvo FAIL por contradição canônica explícita. Se as correções resolveram os achados high, responda PASS; observações remanescentes de severidade low vão em notes.
+
+Leia AUTHORIZATION.md, plan.md §Decisões do maestro M1 e §Concorrência, availability-manifest.schema.md §2, §4–§7, e o texto da primeira revisão. Os diffs abaixo são exaustivos para prompts alterados; consulte os arquivos atuais somente para contexto.
+
+<file path="work/rounds/R-0030/reviews/prompt-review-1.unparsed.md">
+# Saída bruta rejeitada pela ponte (JSON inválido)
+
+```json
+{
+  "mode": "prompt-review",
+  "round": "R-0030",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0001.md",
+      "line": 13,
+      "claim": "A leitura fechada não basta para fechar CTG-0001 (a extração AST por superfície, U4 e o fechamento dos marcadores do §6.1) nem a convenção §1. Faltam as fontes de rota: `apps/{rait,dashboard,portal}/web/src/app/app.route-manifest.ts`, `apps/teat/{mobile,web}/src/app/app.routes.ts`, `app.homologation.routes.ts`, `features/*/*.routes.ts` e `apps/teat/web/src/app/features/sinistros/sinistros.routes.ts`. Faltam também os catálogos pt-BR de cada superfície (U4 exige mapear superfície → catálogo; boat fica em `apps/boat/mobile/src/lib/i18n/`). Por último, faltam `work/campaigns/C-0002-inspecao-2026-09-25/g-documentacao.md` §7–§9, que o 'mapa entregável → definições' dá como fonte da convenção, e os arquivos que carregam os marcadores de indisponibilidade (páginas `unavailable.page`, `Unavailable*Adapter`), sem os quais não dá para fechar a lista do §6.1.",
+      "fix": "Acrescentar à leitura: os routeSources da tabela do anexo §2 que existem na base, os 6 catálogos `*.pt-BR.json` (portal, rait, dashboard, teat mobile, teat web, boat), `g-documentacao.md` e a busca somente leitura `grep -rl 'CommandUnavailableError\\|Unavailable.*Adapter\\|PORTAL.SERVICE_UNAVAILABLE' apps/`. Na Tarefa, deixar explícito que a convenção fecha a lista do §6.1 e que CTG-0001 fixa a interface de CLI do gate (subcomandos, flag de raiz para fixtures, formato de saída e códigos de saída), porque TASK-0002 depende disso."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0030/prompts/TASK-0004.md",
+      "line": 40,
+      "claim": "O prompt pede `ait-speed-measurement` como `indisponivel_nesta_versao` 'com OD vigente', mas não diz qual é a OD. Nos registros canônicos do R4 não há id para D-05: `teat-build-pack.md:21` diz só 'BOAT e D-05 continuam indisponíveis', e a ficha IU-TEAT-ait-speed-measurement não cita OD/DT. O worker ou inventa um id, ou reprova em R4/R8.",
+      "fix": "O maestro identifica o id canônico que mantém D-05 indisponível e o cita literalmente no prompt. Se não houver, TASK-0001 registra uma OD-UD nova em `open-issues.md` para D-05 e TASK-0004 cita essa OD. Enquanto nenhuma existir, a instrução é bloqueio, nunca um id derivado."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0004.md",
+      "line": 13,
+      "claim": "Para criar o manifesto teat-mobile é preciso preencher `roles` (pelas guardas vigentes), `screen` (as fichas IU-TEAT existem, conforme R7), `evidence.files`/`tests` (páginas e specs), `level` e `help`. A leitura inclui só os arquivos de rota, ADR-0033 e roles.ts. Ficam de fora as guardas e páginas de `apps/teat/mobile/src/app/features/**`, os specs, as fichas `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`, `docs/framework/arch/teat-mobile-contract.md` (a tabela da linha ~1058 dá rota × ficha × papéis × componente) e os registros canônicos do R4.",
+      "fix": "Acrescentar `docs/framework/arch/teat-mobile-contract.md`, `docs/framework/arch/teat-build-pack.md`, `apps/teat/mobile/src/app/**/*.ts` (somente leitura, para guardas, páginas e specs), `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`, `docs/meta/knowledge-base/open-issues.md`, `work/rounds/R-0030/contracts/CTG-0001.md` e `docs/framework/arch/user-docs-convention.md`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0006.md",
+      "line": 13,
+      "claim": "Vários termos obrigatórios (PORTAL, DASHBOARD, PEC, TEAT, jeton, banca, pauta, selo de frescor, camadas N0–N3, CRLV-e/CNH-e) não têm fonte REF-*/RN-* na leitura fechada: são só law/glossary, domain.md, rait-i18n-glossary, o README do boat e g-documentacao. O mapa aponta `APP.md` de cada app, mas nenhum `APP.md` existe no repositório. Com fail-closed, o worker omite a maior parte dos termos que o plano exige (meta 3).",
+      "fix": "Acrescentar `docs/framework/arch/{dashboard-frontends,rait-web-frontend,teat-frontends,portal-frontends,boat-frontends}.md`, `docs/framework/product/shared/actors.md` e os `apps/*/*/README.md`. Autorizar grep somente leitura em `docs/framework/product/**` e `docs/reference/**` para localizar ids `RN-*`/`REF-*`. Trocar a menção a `APP.md` pelos READMEs, que existem."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0010.md",
+      "line": 13,
+      "claim": "O manual do operador cobre rotas de rait-web e dashboard-web, mas a leitura só traz o catálogo `apps/teat/web/.../teat.pt-BR.json`. U4 exige que todo texto citado entre «…» exista no catálogo pt-BR da superfície, e para RAIT e DASHBOARD faltam `rait.pt-BR.json` e `dashboard.pt-BR.json`, além de `dashboard-frontends.md`/`rait-web-frontend.md`.",
+      "fix": "Acrescentar `apps/rait/web/src/app/i18n/rait.pt-BR.json`, `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`, `docs/framework/arch/dashboard-frontends.md` e `docs/framework/arch/rait-web-frontend.md`. Regra geral para O5/O6: o anexo de inventário da O4 também estende a leitura ao manifesto e ao catálogo pt-BR de cada superfície que aparece no inventário do perfil."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0011.md",
+      "line": 13,
+      "claim": "O manual do gestor cobre rotas de teat-web (BI do TEAT: `bi-analyst`, `GESTOR_DETRAN`), mas a leitura não inclui `apps/teat/web/src/app/i18n/teat.pt-BR.json` nem `teat-frontends.md`/`teat-web-contract.md`, e U4 fica sem catálogo. Também faltam as fichas `IU-DASH-D-*`, que o mapa lista como fonte do manual DASHBOARD.",
+      "fix": "Acrescentar `apps/teat/web/src/app/i18n/teat.pt-BR.json`, `docs/framework/arch/teat-web-contract.md`, `docs/framework/arch/rait-web-frontend.md` e as fichas `docs/framework/product/**/screens/IU-DASH-D-*.md`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0012.md",
+      "line": 13,
+      "claim": "O prompt pede cobrir auditor-dpo e administrador 'em todos os manifestos aplicáveis', mas só lê rait-web, dashboard-web e portal-web. `agency-admin`/`technical-admin` e `auditor`→`AUDITOR` são papéis TEAT (roles.ts, `TEAT_STAFF_ROLES`), então é provável que haja rotas teat-web/teat-mobile/boat desses perfis. Também falta o catálogo `portal.pt-BR.json`, embora portal-web seja lido (U4).",
+      "fix": "Acrescentar `docs/framework/arch/availability/{teat-web,teat-mobile,boat}.availability.json`, `apps/portal/web/src/app/i18n/portal.pt-BR.json`, `apps/teat/web/src/app/i18n/teat.pt-BR.json`, `apps/teat/mobile/src/app/i18n/teat.pt-BR.json` e `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json` (ou aplicar a regra geral do achado de TASK-0010)."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0030/prompts/TASK-0005.md",
+      "line": 47,
+      "claim": "'Publique fail-closed só cidadao, FAQ cidadão e glossário' não diz como publicar só uma seção de `faq.md`, que é um arquivo único com seções por perfil (TASK-0013). `sync-docs.mjs` publica e exclui por arquivo, pelo `status` do front matter (linhas 62–78). Sem mecanismo definido, o worker ou publica o FAQ inteiro, expondo perguntas de perfis internos (risco de OD-UD-002), ou inventa um marcador que TASK-0013 desconhece.",
+      "fix": "Exigir que a convenção §5/§7 (TASK-0001) fixe o mecanismo: FAQ cidadão em arquivo próprio, ou um marcador de seção que `sync-docs` extraia. TASK-0005 implementa exatamente esse mecanismo. Se a convenção não o definir, a regra é que `faq.md` fique inteiro fora do site."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0015.md",
+      "line": 13,
+      "claim": "A tabela app × arquivo × rótulo i18n × âncora exige as 4 páginas explicativas do PORTAL (`pontuacao/como-funciona`, `vinculo/por-que-nao-vejo`, `carta-servicos`, `acessibilidade`) e os catálogos pt-BR de portal, rait e teat-mobile, e nada disso está na leitura. Além disso, `docs/framework/arch/frontend-wiring-pattern.md` não existe na base (R-0024 não mesclou) e o prompt não diz o que fazer quando ele estiver ausente.",
+      "fix": "Acrescentar os arquivos das 4 páginas do PORTAL (caminhos exatos em `apps/portal/web/src/app/features/**`) e os três catálogos `*.pt-BR.json`. Declarar que, se `frontend-wiring-pattern.md` não existir no despacho, isso equivale a 'R-0024 sem posição' e aplica o padrão de OD-UD-004 (fora da rodada)."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0030/prompts/TASK-0017.md",
+      "line": 13,
+      "claim": "O Engineer deve 'satisfazer os testes do Inspector', mas a leitura não traz nenhum spec escrito por TASK-0016 e também omite os catálogos i18n e as páginas do PORTAL. A tríade Inspector → Engineer fica sem o contrato executável.",
+      "fix": "Acrescentar a lista exata de specs criados ou alterados por TASK-0016 (copiada do relatório dela), `apps/{portal/web,rait/web,teat/mobile}/src/app/i18n/*.pt-BR.json` e as páginas do PORTAL listadas em CTG-0004."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0016.md",
+      "line": 13,
+      "claim": "Para os specs do PORTAL, a leitura não inclui as 4 páginas explicativas, que são os pontos de entrada, nem os catálogos i18n. A caracterização prévia ('antes da troca') exige ler os componentes que serão alterados.",
+      "fix": "Acrescentar as páginas do PORTAL e os catálogos pt-BR dos três apps listados em CTG-0004, mais um spec existente por app como padrão de harness e axe (`axe-core` já está nas dependências dos três apps)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0002.md",
+      "line": 106,
+      "claim": "O prompt espera RED, mas `tasks/TASK-0002.json` lista `node --test …` em `acceptance_commands` sem campo de saída esperada. O mesmo acontece em TASK-0003 (`docs:availability:check` com falha esperada, linha 108) e em TASK-0016. Além disso, a linha 105 junta 'RED esperado' ao critério de `format:check`, que precisa ser PASS.",
+      "fix": "Explicitar no prompt: `format:check` → PASS. Em `node --test`, RED só por `check.mjs` ausente (ENOENT/import); qualquer falha de fixture é FAIL. Registrar no relatório o conjunto de nomes RED. O maestro anota a expectativa de exit≠0 na triagem da tarefa."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0001.md",
+      "line": 110,
+      "claim": "O `node -e` só faz o parse do JSON; a 'identidade semântica com o anexo §4' fica sem comando que a verifique. Além disso, o §7.4 do anexo pede uma linha em `docs/framework/schemas/README.md` para quem transcreve primeiro, e esse arquivo não está em 'Pode tocar'.",
+      "fix": "Usar um `node -e` que extraia o bloco JSON do §4 do anexo e compare por `assert.deepStrictEqual` com o arquivo. Incluir `docs/framework/schemas/README.md` (uma linha) em 'Pode tocar', ou registrar o item em §Fora de escopo."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0005.md",
+      "line": 53,
+      "claim": "A tarefa altera `docs/_ia/publication.json` e `categories.json`, que alimentam `docs:kb:check` e `docs:kb:publish-check`, mas os critérios só pedem `docs:check`/`docs:security`. Há ainda um risco de não determinismo: TASK-0006 grava `glossario.md` em paralelo, e o conjunto publicado muda durante o `docs:check`. Um item de navbar para doc ainda inexistente quebra com `onBrokenLinks: 'throw'`.",
+      "fix": "Acrescentar `pnpm docs:kb:check` e `pnpm docs:kb:publish-check`. O item 'Manuais' aponta para a categoria autogerada ou para `docs/adopters/index.md`, nunca para um doc ainda inexistente. O checkpoint (b) do maestro roda depois de TASK-0005 e TASK-0006."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0017.md",
+      "line": 109,
+      "claim": "Os critérios não incluem `pnpm verify:parameter-catalogue` (chaves i18n novas, OD-P46, `--check-usage`) nem lint/build dos três apps, embora a tarefa altere código de app e catálogos.",
+      "fix": "Acrescentar `pnpm verify:parameter-catalogue` e `pnpm --filter <app> lint` e `build` para portal-web, rait-web e teat-mobile."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0030/prompts/TASK-0006.md",
+      "line": 39,
+      "claim": "'REF-_, RN-_' é artefato de formatação (os `*` viraram `_`) e pode induzir prefixos errados.",
+      "fix": "Escrever `REF-*`/`RN-*` entre crases."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0009.md",
+      "line": 13,
+      "claim": "Faltam as fichas `IU-TEAT-*`/`IU-BOAT-*` que o mapa lista como fonte, e TASK-0008 não inclui `docs/framework/arch/rait-i18n-glossary.md`, também previsto no mapa.",
+      "fix": "Acrescentar `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md` e as fichas IU-BOAT a TASK-0009, e `rait-i18n-glossary.md` a TASK-0008."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0030/prompts/TASK-0007.md",
+      "line": 1,
+      "claim": "As compositions atribuem Terra (médio) a TASK-0004 e TASK-0007…0012, que o plano define como Sonnet 5 (pequeno) e cuja escada põe `transcriber-docs` no nível pequeno (Luna). É um upgrade de custo sem registro em §Decisões do maestro.",
+      "fix": "Registrar a justificativa em plan.md §M1 (volume de ≈250 rotas) ou alinhar com Luna."
+    }
+  ],
+  "notes": [
+    "Os papéis constitucionais estão coerentes com o plano em todas as 18 tarefas; target_modules conferem com os locks e os pares que se repetem (MOD-root-scripts em 0003/0014, MOD-availability-reconcile em 0004/0017, MOD-r30-contracts em 0001/0015) caem em ondas seriais distintas.",
+    "As fronteiras da O2 (0002 ∥ 0005 ∥ 0006) são disjuntas; os prompts proíbem Git a todos os workers.",
+    "roles.ts confere com o anexo §5: DETRAN_ROLES = 15 PEC + 8 TEAT + 10 RAIT + 2 DASHBOARD + CIDADAO = 36.",
+    "Todos os scripts citados existem em package.json, exceto os que TASK-0003 cria (`docs:availability:check`, `docs:user:check`, `docs:user:test`). `docs/site/node_modules` existe (TASK-0005 roda sem instalar). Node v24 aceita glob em `node --test`.",
+    "Depois de O3, `pnpm check` fica vermelho até a O4 por desenho fail-closed. O CI só dispara em push para `main`/PR, então os pushes sem PR não quebram o CI remoto; ainda assim, R-0031/R-0032 só devem empilhar após o push da O4, como o plano já prevê.",
+    "A resolução do reference-gap das rotas dos manuais na O4 (anexo do inventário sem novo prompt-review, com hash/PC atualizados) é aceita sob fail-closed. Recomenda-se que o mesmo anexo estenda a leitura aos manifestos e catálogos das superfícies do inventário.",
+    "`typescript` está na raiz; não há `ajv`. TASK-0003 terá de validar JSON Schema 2020-12 em Node puro, e CTG-0001 deve delimitar o subconjunto de palavras-chave exercido pelo esquema do §4."
+  ]
+}
+```
+</file>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0001.md">
+--- original/work/rounds/R-0030/prompts/TASK-0001.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0001.md
+@@ -26,6 +26,29 @@
+ - `backend/domains/shared/src/roles.ts`
+ - `docs/meta/knowledge-base/open-issues.md`
+ - `tools/contracts/check-commands.mjs`
++- `apps/rait/web/src/app/app.route-manifest.ts`
++- `apps/dashboard/web/src/app/app.route-manifest.ts`
++- `apps/portal/web/src/app/app.route-manifest.ts`
++- `apps/teat/mobile/src/app/app.routes.ts`
++- `apps/teat/mobile/src/app/app.homologation.routes.ts`
++- `apps/teat/mobile/src/app/features/*/*.routes.ts`
++- `apps/teat/web/src/app/app.routes.ts`
++- `apps/teat/web/src/app/app.homologation.routes.ts`
++- `apps/teat/web/src/app/features/*/*.routes.ts`
++- `apps/teat/web/src/app/features/sinistros/sinistros.routes.ts`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
++- `apps/teat/web/src/app/i18n/teat.pt-BR.json`
++- `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json`
++- `apps/rait/web/src/app/core/error-boundary.ts`
++- `apps/dashboard/web/src/app/core/pages/unavailable.page.ts`
++- `apps/portal/web/src/app/data/read-status.ts`
++- `apps/portal/web/src/app/core/pages/service-unavailable.page.ts`
++- `apps/teat/mobile/src/app/shared/mobile-printer.port.ts`
++- `work/campaigns/C-0002-inspecao-2026-09-25/g-documentacao.md`
++- `docs/framework/schemas/README.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -33,6 +56,7 @@
+ 
+ - `docs/framework/arch/user-docs-convention.md`
+ - `docs/framework/schemas/availability-manifest.schema.json`
++- `docs/framework/schemas/README.md`
+ - `work/rounds/R-0030/contracts/CTG-0001.md`
+ - `docs/meta/knowledge-base/open-issues.md`
+ 
+@@ -42,7 +66,7 @@
+ 
+ ## Tarefa
+ 
+-Escreva a convenção nas nove seções do plano; transcreva literalmente o JSON Schema do anexo §4 se ausente; feche CTG-0001 com extração AST por superfície, R1–R8, U1–U5, saída/códigos e fixtures; registre OD-UD-001…005 no registro canônico.
++Escreva a convenção nas nove seções do plano; transcreva literalmente o JSON Schema do anexo §4 se ausente; feche na convenção os marcadores de indisponibilidade do anexo §6.1; feche CTG-0001 com extração AST por superfície, R1–R8, U1–U5, interface CLI, saída/códigos e fixtures; registre OD-UD-001…005 e `OD-UD-006` para D-05/`ait-speed-measurement` indisponível no registro canônico (`open-issues.md`), já que não há ID canônico vigente; não atribua outro ID sem fonte.
+ 
+ ## Definições vinculantes
+ 
+@@ -107,11 +131,19 @@
+ valor no catálogo pt-BR da superfície; **U5** página de manual sem `status` publicável ou sem
+ `perfil` válido é erro.
+ 
++### Contrato de CLI e fixtures a fixar em CTG-0001
++
++Fixe estes comandos e semântica no contrato, para que TASK-0002 escreva fixtures antes de TASK-0003: `node tools/docs/user-docs/check.mjs availability --repo-root .` e `node tools/docs/user-docs/check.mjs user --repo-root .`; `--fixture-root <diretório>` substitui as fontes do repositório por uma árvore fechada de teste. Os scripts `docs:availability:check` e `docs:user:check` chamam respectivamente esses subcomandos. Em sucesso, saída humana `OK (<n> rotas, 6 superfícies, 0 erros)` ou `OK (<m> rotas de tela cobertas, 7 perfis, 0 divergências de selo)`. Em erro, uma linha por diagnóstico com `R1`…`R8` ou `U1`…`U5`, caminho e id da rota; resumo com contagens. Exit `0` = PASS, `1` = divergência de conteúdo/regra, `2` = fonte obrigatória ausente/CLI inválida. Nunca emitir OK vazio quando os manifestos D faltarem. Fixe a árvore mínima de fixtures e o subconjunto de JSON Schema 2020-12 exercido pelo anexo §4; não dependa de `ajv` ausente da raiz.
++
++### Publicação do FAQ fail-closed
++
++`faq.md` é um único arquivo com seções por perfil. Defina na convenção §5/§7 marcadores literais `<!-- public:cidadao:start -->` e `<!-- public:cidadao:end -->` envolvendo apenas a seção cidadão. O site só projeta esse trecho quando há exatamente um par em ordem; marcador ausente, duplicado ou malformado exclui `faq.md` inteiro do site. `docs:user:check` continua cobrindo todo o FAQ versionado. TASK-0005 implementa a projeção e TASK-0013 escreve os marcadores; o `faq.md` não pode entrar no site antes de TASK-0013.
++
+ ## Critérios de aceitação
+ 
+ - `pnpm format:check` → PASS, 0 erros; registrar contagens/resultados relevantes
+ - `pnpm docs:kb:check` → PASS, 0 erros; registrar contagens/resultados relevantes
+-- `node -e "JSON.parse(require('fs').readFileSync('docs/framework/schemas/availability-manifest.schema.json','utf8'))"` → JSON válido e semanticamente idêntico ao anexo §4.
++- `node -e 'const fs=require("node:fs");const a=require("node:assert/strict");const s=fs.readFileSync("work/rounds/R-0030/availability-manifest.schema.md","utf8");const b=s.split("## 4. JSON Schema (transcrever literalmente)")[1].match(/```json\s*([\s\S]*?)```/)[1];a.deepStrictEqual(JSON.parse(fs.readFileSync("docs/framework/schemas/availability-manifest.schema.json","utf8")),JSON.parse(b));'` → parse e identidade semântica com o anexo §4; `docs/framework/schemas/README.md` tem a linha do esquema.
+ 
+ ## Regras sem exceção
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0002.md">
+--- original/work/rounds/R-0030/prompts/TASK-0002.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0002.md
+@@ -102,8 +102,8 @@
+ 
+ ## Critérios de aceitação
+ 
+-- `pnpm format:check` → PASS, 0 erros; na tríade Inspector a ausência temporária de implementação é RED esperado e deve ser registrada
+-- `node --test tools/docs/user-docs/tests/*.test.mjs` → sensores podem ficar RED antes de TASK-0003; relatar cada falha esperada e nenhum falso verde.
++- `pnpm format:check` → PASS, 0 erros; format:check jamais é RED esperado
++- `node --test tools/docs/user-docs/tests/*.test.mjs` → RED esperado somente porque `check.mjs` ainda não existe (ENOENT/import). Falha de fixture ou asserção é FAIL. Relatar os nomes exatos dos sensores RED; o maestro registra exit ≠ 0 como esperado nesta etapa.
+ 
+ ## Regras sem exceção
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0003.md">
+--- original/work/rounds/R-0030/prompts/TASK-0003.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0003.md
+@@ -23,6 +23,27 @@
+ - `tools/contracts/check-commands.mjs`
+ - `package.json`
+ - `backend/domains/shared/src/roles.ts`
++- `apps/rait/web/src/app/app.route-manifest.ts`
++- `apps/dashboard/web/src/app/app.route-manifest.ts`
++- `apps/portal/web/src/app/app.route-manifest.ts`
++- `apps/teat/mobile/src/app/app.routes.ts`
++- `apps/teat/mobile/src/app/app.homologation.routes.ts`
++- `apps/teat/mobile/src/app/features/*/*.routes.ts`
++- `apps/teat/web/src/app/app.routes.ts`
++- `apps/teat/web/src/app/app.homologation.routes.ts`
++- `apps/teat/web/src/app/features/*/*.routes.ts`
++- `apps/teat/web/src/app/features/sinistros/sinistros.routes.ts`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
++- `apps/teat/web/src/app/i18n/teat.pt-BR.json`
++- `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json`
++- `apps/rait/web/src/app/core/error-boundary.ts`
++- `apps/dashboard/web/src/app/core/pages/unavailable.page.ts`
++- `apps/portal/web/src/app/data/read-status.ts`
++- `apps/portal/web/src/app/core/pages/service-unavailable.page.ts`
++- `apps/teat/mobile/src/app/shared/mobile-printer.port.ts`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -105,7 +126,7 @@
+ ## Critérios de aceitação
+ 
+ - `pnpm docs:user:test` → PASS para positivos e negativos de fixtures R1–R8 e U1–U5, 0 falhas.
+-- `pnpm docs:availability:check` → **reference-gap esperado nesta sessão A-C2-13**: falha explícita pelos cinco manifestos da fase D ausentes. O gate jamais dá PASS vazio. O resultado final `OK (<n> rotas, 6 superfícies, 0 erros)` fica diferido até O4/TASK-0004, sem alterar o critério imutável do plano. Registre a saída literal.
++- `pnpm docs:availability:check` → **exit ≠ 0 por `reference-gap` esperado nesta sessão A-C2-13 (o maestro registra essa expectativa na triagem; qualquer outro erro é FAIL)**: falha explícita pelos cinco manifestos da fase D ausentes. O gate jamais dá PASS vazio. O resultado final `OK (<n> rotas, 6 superfícies, 0 erros)` fica diferido até O4/TASK-0004, sem alterar o critério imutável do plano. Registre a saída literal.
+ 
+ ## Regras sem exceção
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0004.md">
+--- original/work/rounds/R-0030/prompts/TASK-0004.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0004.md
+@@ -23,6 +23,13 @@
+ - `apps/teat/mobile/src/app/features/*/*.routes.ts`
+ - `docs/meta/adr/ADR-0033-teat-ui-workflow-homologation-scope.md`
+ - `backend/domains/shared/src/roles.ts`
++- `docs/framework/arch/teat-mobile-contract.md`
++- `docs/framework/arch/teat-build-pack.md`
++- `apps/teat/mobile/src/app/**/*.ts`
++- `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`
++- `docs/meta/knowledge-base/open-issues.md`
++- `work/rounds/R-0030/contracts/CTG-0001.md`
++- `docs/framework/arch/user-docs-convention.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -37,7 +44,7 @@
+ 
+ ## Tarefa
+ 
+-Crie o manifesto teat-mobile para todas as rotas exceto crash-*; homologacao/ADR-0033, ait-speed-measurement indisponivel_nesta_versao com OD vigente. Reconcilie exclusivamente help/profiles/evidence e history nos cinco manifestos D. Só iniciar com os cinco manifestos presentes.
++Crie o manifesto teat-mobile para todas as rotas exceto crash-*; homologacao/ADR-0033, ait-speed-measurement indisponivel_nesta_versao com `OD-UD-006` registrado em `docs/meta/knowledge-base/open-issues.md` pela TASK-0001; se esse registro não existir, pare com bloqueio R4/R8. Reconcilie exclusivamente help/profiles/evidence e history nos cinco manifestos D. Só iniciar com os cinco manifestos presentes.
+ 
+ ## Definições vinculantes
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0005.md">
+--- original/work/rounds/R-0030/prompts/TASK-0005.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0005.md
+@@ -44,15 +44,17 @@
+ 
+ ## Tarefa
+ 
+-Converta o site, navegação, rodapé, sidebars e IA para pt-BR; adicione Manuais em Adotantes; publique fail-closed só cidadao, FAQ cidadão e glossário até OD-UD-002; retire Stub de adopters e deixe ponteiro em roles.
++Converta o site, navegação, rodapé, sidebars e IA para pt-BR; adicione Manuais em Adotantes; publique fail-closed só cidadão e glossário; projete só a seção cidadão de `faq.md` depois de TASK-0013, pelo par de marcadores da convenção; até lá, exclua o FAQ inteiro; retire Stub de adopters e deixe ponteiro em roles.
+ 
+ ## Definições vinculantes
+ 
+-Padrão OD-UD-002: publicar somente cidadão, FAQ da seção cidadão e glossário; todos os demais manuais permanecem versionados e cobertos pelo gate, mas fora do site público até decisão do Owner. A IA mantém sete seções.
++Padrão OD-UD-002: publicar cidadão, glossário e só o trecho de `faq.md` entre `<!-- public:cidadao:start -->` e `<!-- public:cidadao:end -->`, quando houver exatamente um par válido. Se o arquivo ou marcador faltar, ou houver duplicação/ordem inválida, excluir o FAQ inteiro. Os demais manuais ficam versionados e cobertos pelo gate, fora do site público. A IA mantém sete seções. O item de navbar “Manuais” aponta à categoria gerada ou a `docs/adopters/index.md`, nunca a doc futuro.
+ 
+ ## Critérios de aceitação
+ 
+ - `pnpm docs:check` → PASS, 0 erros; registrar contagens/resultados relevantes
++- `pnpm docs:kb:check` → PASS, 0 erros.
++- `pnpm docs:kb:publish-check` → PASS, 0 erros.
+ - `pnpm docs:security` → PASS, 0 erros; registrar contagens/resultados relevantes
+ 
+ ## Regras sem exceção
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0006.md">
+--- original/work/rounds/R-0030/prompts/TASK-0006.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0006.md
+@@ -23,6 +23,18 @@
+ - `apps/boat/mobile/README.md`
+ - `docs/framework/arch/user-docs-convention.md`
+ - `work/campaigns/C-0002-inspecao-2026-09-25/g-documentacao.md`
++- `docs/framework/arch/dashboard-frontends.md`
++- `docs/framework/arch/rait-web-frontend.md`
++- `docs/framework/arch/teat-frontends.md`
++- `docs/framework/arch/portal-frontends.md`
++- `docs/framework/arch/boat-frontends.md`
++- `docs/framework/product/shared/actors.md`
++- `apps/portal/web/README.md`
++- `apps/rait/web/README.md`
++- `apps/dashboard/web/README.md`
++- `apps/teat/mobile/README.md`
++- `apps/teat/web/README.md`
++- `apps/pec/web/README.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -36,11 +48,13 @@
+ 
+ ## Tarefa
+ 
+-Redija glossário em linguagem de usuário, cada termo com REF-_, RN-_ ou linha de law/glossary. Cubra siglas e termos do plano; se faltar fonte, omita e relate.
++Redija glossário em linguagem de usuário, cada termo com `REF-*`, `RN-*` ou linha de law/glossary. Cubra siglas e termos do plano; se faltar fonte, omita e relate.
+ 
+ ## Definições vinculantes
+ 
+ Termos mandatórios com fonte: RAIT, TEAT, BOAT (Boletim de Acidentalidade de Trânsito, APP-BOAT), PORTAL, DASHBOARD, PEC, RENAVAM, CDT, CRLV-e, CNH-e, relator, pauta, diligência, jeton, vista, banca, selo de frescor, camadas N0–N3. Omitir e listar termos sem fonte.
++
++Busca somente leitura para fontes de termos: `rg -n "<termo>|RN-|REF-" docs/framework/product docs/reference`, restrita ao termo em pauta; não tome o resultado da busca como fonte sem ler o arquivo encontrado. `APP.md` citado no mapa do plano não existe; use os READMEs listados.
+ 
+ ## Critérios de aceitação
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0008.md">
+--- original/work/rounds/R-0030/prompts/TASK-0008.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0008.md
+@@ -30,6 +30,7 @@
+ - `docs/framework/arch/rait-web-journeys/JW-08-presidente.md`
+ - `docs/framework/arch/rait-error-catalog.md`
+ - `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `docs/framework/arch/rait-i18n-glossary.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -51,7 +52,7 @@
+ 
+ Anatomia obrigatória de cada página: front matter `id: MAN-<PERFIL>-<n>`, `status`, `perfil`, `superficies`, `updated`. Para cada rota de tela do perfil, cabeçalho com âncora `rota-<surface>-<slug>` e blocos **Para que serve · Quem acessa · Como fazer · Estados e mensagens · Prazos (como direito) · Selo**. `slug` é derivado do `path` do manifesto, segundo a convenção. Selo escrito = rótulo exato do manifesto. Texto de tela citado entre `«…»` deve ser valor literal do catálogo pt-BR da superfície. Números normativos só com REF-* ou chave do catálogo de parâmetros citada; caso contrário `source_pending`/OD no relatório. Não descreva ação parcial, bloqueada ou L0 como disponível. Cada rota `kind: tela` exige bloco em cada perfil de `profiles`; `auxiliar` não exige bloco. Rotas sem manifesto são proibidas.
+ 
+-OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
++OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. Ele também lista como leitura obrigatória fechada o manifesto e o catálogo pt-BR de cada superfície que apareça no inventário; se faltar algum, pare. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
+ 
+ ### Selos
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0009.md">
+--- original/work/rounds/R-0030/prompts/TASK-0009.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0009.md
+@@ -26,6 +26,8 @@
+ - `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
+ - `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json`
+ - `docs/meta/adr/ADR-0033-teat-ui-workflow-homologation-scope.md`
++- `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`
++- `docs/framework/product/domains/est/boat/screens/IU-BOAT-*.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -47,7 +49,7 @@
+ 
+ Anatomia obrigatória de cada página: front matter `id: MAN-<PERFIL>-<n>`, `status`, `perfil`, `superficies`, `updated`. Para cada rota de tela do perfil, cabeçalho com âncora `rota-<surface>-<slug>` e blocos **Para que serve · Quem acessa · Como fazer · Estados e mensagens · Prazos (como direito) · Selo**. `slug` é derivado do `path` do manifesto, segundo a convenção. Selo escrito = rótulo exato do manifesto. Texto de tela citado entre `«…»` deve ser valor literal do catálogo pt-BR da superfície. Números normativos só com REF-* ou chave do catálogo de parâmetros citada; caso contrário `source_pending`/OD no relatório. Não descreva ação parcial, bloqueada ou L0 como disponível. Cada rota `kind: tela` exige bloco em cada perfil de `profiles`; `auxiliar` não exige bloco. Rotas sem manifesto são proibidas.
+ 
+-OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
++OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. Ele também lista como leitura obrigatória fechada o manifesto e o catálogo pt-BR de cada superfície que apareça no inventário; se faltar algum, pare. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
+ 
+ ### Selos
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0010.md">
+--- original/work/rounds/R-0030/prompts/TASK-0010.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0010.md
+@@ -25,6 +25,10 @@
+ - `docs/framework/arch/teat-web-contract.md`
+ - `docs/framework/arch/rait-web-journeys/JW-11-operador-integracao.md`
+ - `apps/teat/web/src/app/i18n/teat.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`
++- `docs/framework/arch/dashboard-frontends.md`
++- `docs/framework/arch/rait-web-frontend.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -46,7 +50,7 @@
+ 
+ Anatomia obrigatória de cada página: front matter `id: MAN-<PERFIL>-<n>`, `status`, `perfil`, `superficies`, `updated`. Para cada rota de tela do perfil, cabeçalho com âncora `rota-<surface>-<slug>` e blocos **Para que serve · Quem acessa · Como fazer · Estados e mensagens · Prazos (como direito) · Selo**. `slug` é derivado do `path` do manifesto, segundo a convenção. Selo escrito = rótulo exato do manifesto. Texto de tela citado entre `«…»` deve ser valor literal do catálogo pt-BR da superfície. Números normativos só com REF-* ou chave do catálogo de parâmetros citada; caso contrário `source_pending`/OD no relatório. Não descreva ação parcial, bloqueada ou L0 como disponível. Cada rota `kind: tela` exige bloco em cada perfil de `profiles`; `auxiliar` não exige bloco. Rotas sem manifesto são proibidas.
+ 
+-OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
++OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. Ele também lista como leitura obrigatória fechada o manifesto e o catálogo pt-BR de cada superfície que apareça no inventário; se faltar algum, pare. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
+ 
+ ### Selos
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0011.md">
+--- original/work/rounds/R-0030/prompts/TASK-0011.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0011.md
+@@ -26,6 +26,11 @@
+ - `docs/framework/arch/dashboard-frontends.md`
+ - `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`
+ - `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/teat/web/src/app/i18n/teat.pt-BR.json`
++- `docs/framework/arch/teat-frontends.md`
++- `docs/framework/arch/teat-web-contract.md`
++- `docs/framework/arch/rait-web-frontend.md`
++- `docs/framework/product/transversal/dashboard/screens/IU-DASH-D-*.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -47,7 +52,7 @@
+ 
+ Anatomia obrigatória de cada página: front matter `id: MAN-<PERFIL>-<n>`, `status`, `perfil`, `superficies`, `updated`. Para cada rota de tela do perfil, cabeçalho com âncora `rota-<surface>-<slug>` e blocos **Para que serve · Quem acessa · Como fazer · Estados e mensagens · Prazos (como direito) · Selo**. `slug` é derivado do `path` do manifesto, segundo a convenção. Selo escrito = rótulo exato do manifesto. Texto de tela citado entre `«…»` deve ser valor literal do catálogo pt-BR da superfície. Números normativos só com REF-* ou chave do catálogo de parâmetros citada; caso contrário `source_pending`/OD no relatório. Não descreva ação parcial, bloqueada ou L0 como disponível. Cada rota `kind: tela` exige bloco em cada perfil de `profiles`; `auxiliar` não exige bloco. Rotas sem manifesto são proibidas.
+ 
+-OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
++OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. Ele também lista como leitura obrigatória fechada o manifesto e o catálogo pt-BR de cada superfície que apareça no inventário; se faltar algum, pare. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
+ 
+ ### Selos
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0012.md">
+--- original/work/rounds/R-0030/prompts/TASK-0012.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0012.md
+@@ -25,6 +25,13 @@
+ - `docs/framework/arch/rait-web-frontend.md`
+ - `apps/rait/web/src/app/i18n/rait.pt-BR.json`
+ - `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`
++- `docs/framework/arch/availability/teat-web.availability.json`
++- `docs/framework/arch/availability/teat-mobile.availability.json`
++- `docs/framework/arch/availability/boat.availability.json`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/teat/web/src/app/i18n/teat.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
++- `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -47,7 +54,7 @@
+ 
+ Anatomia obrigatória de cada página: front matter `id: MAN-<PERFIL>-<n>`, `status`, `perfil`, `superficies`, `updated`. Para cada rota de tela do perfil, cabeçalho com âncora `rota-<surface>-<slug>` e blocos **Para que serve · Quem acessa · Como fazer · Estados e mensagens · Prazos (como direito) · Selo**. `slug` é derivado do `path` do manifesto, segundo a convenção. Selo escrito = rótulo exato do manifesto. Texto de tela citado entre `«…»` deve ser valor literal do catálogo pt-BR da superfície. Números normativos só com REF-* ou chave do catálogo de parâmetros citada; caso contrário `source_pending`/OD no relatório. Não descreva ação parcial, bloqueada ou L0 como disponível. Cada rota `kind: tela` exige bloco em cada perfil de `profiles`; `auxiliar` não exige bloco. Rotas sem manifesto são proibidas.
+ 
+-OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
++OD-C2-005 e A-C2-13: os cinco manifestos da fase D estão ausentes no bootstrap; portanto a lista de rotas deste prompt é **vazia/condicional agora**, e isto não autoriza escrever manual vazio. Na O4, depois de integrar os cinco manifestos e concluir TASK-0004, o maestro anexa a este prompt o inventário fechado do perfil em `id | path | screen | seal | decision` (cada rota `kind=tela`, `profiles` contendo o perfil). Esse anexo é a resolução do `reference-gap` de bootstrap, sem segundo prompt-review conforme direção do Owner. Ele também lista como leitura obrigatória fechada o manifesto e o catálogo pt-BR de cada superfície que apareça no inventário; se faltar algum, pare. O anexo traz linhas exatas do manifesto, não instruções abertas; o maestro atualiza o hash e `prompt_composition_id` após anexá-lo, antes do despacho. Antes de receber esse inventário, pare; não use as contagens da inspeção como rotas presumidas. No relatório, reproduza a tabela exata e prove cobertura 100% dela.
+ 
+ ### Selos
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0013.md">
+--- original/work/rounds/R-0030/prompts/TASK-0013.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0013.md
+@@ -40,7 +40,7 @@
+ 
+ ## Tarefa
+ 
+-Crie índice por sete perfis com selos e orientação de ajuda e FAQ por perfil; cada resposta aponta uma âncora existente de manual.
++Crie índice por sete perfis com selos e orientação de ajuda e FAQ por perfil; cada resposta aponta uma âncora existente de manual. Em `faq.md`, envolva apenas a seção cidadão com `<!-- public:cidadao:start -->` e `<!-- public:cidadao:end -->`, uma vez cada e nessa ordem.
+ 
+ ## Definições vinculantes
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0015.md">
+--- original/work/rounds/R-0030/prompts/TASK-0015.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0015.md
+@@ -28,6 +28,13 @@
+ - `apps/teat/mobile/src/app/features/complementares/pages/context-help.page.ts`
+ - `docs/framework/arch/availability/*.availability.json`
+ - `docs/meta/knowledge-base/open-issues.md`
++- `apps/portal/web/src/app/features/catalogo/pages/points-explainer.page.ts`
++- `apps/portal/web/src/app/core/pages/entitlement-missing.page.ts`
++- `apps/portal/web/src/app/features/catalogo/pages/service-charter.page.ts`
++- `apps/portal/web/src/app/core/pages/acessibilidade.page.ts`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -106,7 +113,7 @@
+ rota no manual sem rota no manifesto; **U4** todo texto de tela citado entre `«…»` existe como
+ valor no catálogo pt-BR da superfície; **U5** página de manual sem `status` publicável ou sem
+ `perfil` válido é erro.
+-Ajuda contextual: runtime helpBaseUrl ausente → nenhum link. MBFT: tópico do contexto + âncora do manual + REF-CONTRAN-985-1003-MBFT; nenhum texto normativo sem fonte fechada. O ponto de ajuda no shell @detran/ui só se R-0024 tiver entregue posição.
++Ajuda contextual: runtime helpBaseUrl ausente → nenhum link. MBFT: tópico do contexto + âncora do manual + REF-CONTRAN-985-1003-MBFT; nenhum texto normativo sem fonte fechada. O ponto de ajuda no shell @detran/ui só se `docs/framework/arch/frontend-wiring-pattern.md` existir e confirmar posição. Sua ausência equivale a R-0024 sem posição: registrar OD-UD-004 e deixar o shell fora da rodada, sem inventar ponto.
+ 
+ ## Critérios de aceitação
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0016.md">
+--- original/work/rounds/R-0030/prompts/TASK-0016.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0016.md
+@@ -24,6 +24,16 @@
+ - `apps/rait/web/src/app/core/shortcut-help.component.ts`
+ - `apps/teat/mobile/src/app/features/complementares/pages/context-help.page.ts`
+ - `docs/framework/arch/availability/*.availability.json`
++- `apps/portal/web/src/app/features/catalogo/pages/points-explainer.page.ts`
++- `apps/portal/web/src/app/core/pages/entitlement-missing.page.ts`
++- `apps/portal/web/src/app/features/catalogo/pages/service-charter.page.ts`
++- `apps/portal/web/src/app/core/pages/acessibilidade.page.ts`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
++- `apps/portal/web/src/app/core/pages/acessibilidade.page.spec.ts`
++- `apps/rait/web/src/app/core/shortcut.service.spec.ts`
++- `apps/teat/mobile/src/app/app.a11y.spec.ts`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+
+</diff>
+
+<diff path="work/rounds/R-0030/prompts/TASK-0017.md">
+--- original/work/rounds/R-0030/prompts/TASK-0017.md
++++ corrigido/work/rounds/R-0030/prompts/TASK-0017.md
+@@ -24,6 +24,17 @@
+ - `apps/rait/web/src/app/core/shortcut-help.component.ts`
+ - `apps/teat/mobile/src/app/features/complementares/pages/context-help.page.ts`
+ - `docs/framework/arch/availability/*.availability.json`
++- `apps/portal/web/src/app/features/catalogo/pages/points-explainer.page.ts`
++- `apps/portal/web/src/app/core/pages/entitlement-missing.page.ts`
++- `apps/portal/web/src/app/features/catalogo/pages/service-charter.page.ts`
++- `apps/portal/web/src/app/core/pages/acessibilidade.page.ts`
++- `apps/portal/web/src/app/i18n/portal.pt-BR.json`
++- `apps/rait/web/src/app/i18n/rait.pt-BR.json`
++- `apps/teat/mobile/src/app/i18n/teat.pt-BR.json`
++- `apps/portal/web/src/**/*.spec.ts (somente arquivos do relatório TASK-0016)`
++- `apps/rait/web/src/**/*.spec.ts (somente arquivos do relatório TASK-0016)`
++- `apps/teat/mobile/src/**/*.spec.ts (somente arquivos do relatório TASK-0016)`
++- `work/rounds/R-0030/reports/TASK-0016.md`
+ 
+ Globs acima permitem apenas os arquivos que correspondem ao padrão e só para leitura. Arquivo de fase D ausente bloqueia somente tarefas que o exigem: O4 em diante; O1–O3 seguem pela autorização A-C2-13.
+ 
+@@ -106,12 +117,21 @@
+ `perfil` válido é erro.
+ Ajuda contextual: runtime helpBaseUrl ausente → nenhum link. MBFT: tópico do contexto + âncora do manual + REF-CONTRAN-985-1003-MBFT; nenhum texto normativo sem fonte fechada. O ponto de ajuda no shell @detran/ui só se R-0024 tiver entregue posição.
+ 
++Antes da implementação, o maestro anexa do relatório `TASK-0016.md` a lista **exata** dos specs criados/alterados; leia esses arquivos como contrato executável. Se a lista ou algum spec faltar, pare.
++
+ ## Critérios de aceitação
+ 
+ - `pnpm docs:availability:check` → PASS, 0 erros; registrar contagens/resultados relevantes
++- `pnpm verify:parameter-catalogue` → PASS, 0 erros.
+ - `pnpm docs:user:check` → PASS, 0 erros; registrar contagens/resultados relevantes
++- `pnpm --filter @detran/portal-web lint` → PASS, 0 erros.
++- `pnpm --filter @detran/portal-web build` → PASS, 0 erros.
+ - `pnpm --filter @detran/portal-web test` → PASS, 0 erros; registrar contagens/resultados relevantes
++- `pnpm --filter @detran/rait-web lint` → PASS, 0 erros.
++- `pnpm --filter @detran/rait-web build` → PASS, 0 erros.
+ - `pnpm --filter @detran/rait-web test` → PASS, 0 erros; registrar contagens/resultados relevantes
++- `pnpm --filter @detran/teat-mobile lint` → PASS, 0 erros.
++- `pnpm --filter @detran/teat-mobile build` → PASS, 0 erros.
+ - `pnpm --filter @detran/teat-mobile test` → PASS, 0 erros; registrar contagens/resultados relevantes
+ 
+ ## Regras sem exceção
+
+</diff>
+
+Resposta obrigatória: exatamente UM objeto JSON válido, sem bloco Markdown, sem texto antes ou depois. Use strings curtas, sem aspas internas nem quebras de linha. Se precisar citar texto com aspas, escape cada aspas como \". Campos exatos: mode="prompt-review", round="R-0030", verdict="PASS"|"REVIEW"|"FAIL", findings=[{severity:"high"|"low",item:number,file:string,line:number,claim:string,fix:string}], notes=[string]. Em PASS, findings pode ser [] e use notes para baixo risco. Verifique que sua saída passa em JSON.parse antes de responder.

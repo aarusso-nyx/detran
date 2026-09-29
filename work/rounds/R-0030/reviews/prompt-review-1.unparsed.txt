@@ -1,0 +1,164 @@
+# Saída bruta rejeitada pela ponte (JSON inválido)
+
+```json
+{
+  "mode": "prompt-review",
+  "round": "R-0030",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0001.md",
+      "line": 13,
+      "claim": "A leitura fechada não basta para fechar CTG-0001 (a extração AST por superfície, U4 e o fechamento dos marcadores do §6.1) nem a convenção §1. Faltam as fontes de rota: `apps/{rait,dashboard,portal}/web/src/app/app.route-manifest.ts`, `apps/teat/{mobile,web}/src/app/app.routes.ts`, `app.homologation.routes.ts`, `features/*/*.routes.ts` e `apps/teat/web/src/app/features/sinistros/sinistros.routes.ts`. Faltam também os catálogos pt-BR de cada superfície (U4 exige mapear superfície → catálogo; boat fica em `apps/boat/mobile/src/lib/i18n/`). Por último, faltam `work/campaigns/C-0002-inspecao-2026-09-25/g-documentacao.md` §7–§9, que o 'mapa entregável → definições' dá como fonte da convenção, e os arquivos que carregam os marcadores de indisponibilidade (páginas `unavailable.page`, `Unavailable*Adapter`), sem os quais não dá para fechar a lista do §6.1.",
+      "fix": "Acrescentar à leitura: os routeSources da tabela do anexo §2 que existem na base, os 6 catálogos `*.pt-BR.json` (portal, rait, dashboard, teat mobile, teat web, boat), `g-documentacao.md` e a busca somente leitura `grep -rl 'CommandUnavailableError\\|Unavailable.*Adapter\\|PORTAL.SERVICE_UNAVAILABLE' apps/`. Na Tarefa, deixar explícito que a convenção fecha a lista do §6.1 e que CTG-0001 fixa a interface de CLI do gate (subcomandos, flag de raiz para fixtures, formato de saída e códigos de saída), porque TASK-0002 depende disso."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0030/prompts/TASK-0004.md",
+      "line": 40,
+      "claim": "O prompt pede `ait-speed-measurement` como `indisponivel_nesta_versao` 'com OD vigente', mas não diz qual é a OD. Nos registros canônicos do R4 não há id para D-05: `teat-build-pack.md:21` diz só 'BOAT e D-05 continuam indisponíveis', e a ficha IU-TEAT-ait-speed-measurement não cita OD/DT. O worker ou inventa um id, ou reprova em R4/R8.",
+      "fix": "O maestro identifica o id canônico que mantém D-05 indisponível e o cita literalmente no prompt. Se não houver, TASK-0001 registra uma OD-UD nova em `open-issues.md` para D-05 e TASK-0004 cita essa OD. Enquanto nenhuma existir, a instrução é bloqueio, nunca um id derivado."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0004.md",
+      "line": 13,
+      "claim": "Para criar o manifesto teat-mobile é preciso preencher `roles` (pelas guardas vigentes), `screen` (as fichas IU-TEAT existem, conforme R7), `evidence.files`/`tests` (páginas e specs), `level` e `help`. A leitura inclui só os arquivos de rota, ADR-0033 e roles.ts. Ficam de fora as guardas e páginas de `apps/teat/mobile/src/app/features/**`, os specs, as fichas `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`, `docs/framework/arch/teat-mobile-contract.md` (a tabela da linha ~1058 dá rota × ficha × papéis × componente) e os registros canônicos do R4.",
+      "fix": "Acrescentar `docs/framework/arch/teat-mobile-contract.md`, `docs/framework/arch/teat-build-pack.md`, `apps/teat/mobile/src/app/**/*.ts` (somente leitura, para guardas, páginas e specs), `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md`, `docs/meta/knowledge-base/open-issues.md`, `work/rounds/R-0030/contracts/CTG-0001.md` e `docs/framework/arch/user-docs-convention.md`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0006.md",
+      "line": 13,
+      "claim": "Vários termos obrigatórios (PORTAL, DASHBOARD, PEC, TEAT, jeton, banca, pauta, selo de frescor, camadas N0–N3, CRLV-e/CNH-e) não têm fonte REF-*/RN-* na leitura fechada: são só law/glossary, domain.md, rait-i18n-glossary, o README do boat e g-documentacao. O mapa aponta `APP.md` de cada app, mas nenhum `APP.md` existe no repositório. Com fail-closed, o worker omite a maior parte dos termos que o plano exige (meta 3).",
+      "fix": "Acrescentar `docs/framework/arch/{dashboard-frontends,rait-web-frontend,teat-frontends,portal-frontends,boat-frontends}.md`, `docs/framework/product/shared/actors.md` e os `apps/*/*/README.md`. Autorizar grep somente leitura em `docs/framework/product/**` e `docs/reference/**` para localizar ids `RN-*`/`REF-*`. Trocar a menção a `APP.md` pelos READMEs, que existem."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0010.md",
+      "line": 13,
+      "claim": "O manual do operador cobre rotas de rait-web e dashboard-web, mas a leitura só traz o catálogo `apps/teat/web/.../teat.pt-BR.json`. U4 exige que todo texto citado entre «…» exista no catálogo pt-BR da superfície, e para RAIT e DASHBOARD faltam `rait.pt-BR.json` e `dashboard.pt-BR.json`, além de `dashboard-frontends.md`/`rait-web-frontend.md`.",
+      "fix": "Acrescentar `apps/rait/web/src/app/i18n/rait.pt-BR.json`, `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json`, `docs/framework/arch/dashboard-frontends.md` e `docs/framework/arch/rait-web-frontend.md`. Regra geral para O5/O6: o anexo de inventário da O4 também estende a leitura ao manifesto e ao catálogo pt-BR de cada superfície que aparece no inventário do perfil."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0011.md",
+      "line": 13,
+      "claim": "O manual do gestor cobre rotas de teat-web (BI do TEAT: `bi-analyst`, `GESTOR_DETRAN`), mas a leitura não inclui `apps/teat/web/src/app/i18n/teat.pt-BR.json` nem `teat-frontends.md`/`teat-web-contract.md`, e U4 fica sem catálogo. Também faltam as fichas `IU-DASH-D-*`, que o mapa lista como fonte do manual DASHBOARD.",
+      "fix": "Acrescentar `apps/teat/web/src/app/i18n/teat.pt-BR.json`, `docs/framework/arch/teat-web-contract.md`, `docs/framework/arch/rait-web-frontend.md` e as fichas `docs/framework/product/**/screens/IU-DASH-D-*.md`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0012.md",
+      "line": 13,
+      "claim": "O prompt pede cobrir auditor-dpo e administrador 'em todos os manifestos aplicáveis', mas só lê rait-web, dashboard-web e portal-web. `agency-admin`/`technical-admin` e `auditor`→`AUDITOR` são papéis TEAT (roles.ts, `TEAT_STAFF_ROLES`), então é provável que haja rotas teat-web/teat-mobile/boat desses perfis. Também falta o catálogo `portal.pt-BR.json`, embora portal-web seja lido (U4).",
+      "fix": "Acrescentar `docs/framework/arch/availability/{teat-web,teat-mobile,boat}.availability.json`, `apps/portal/web/src/app/i18n/portal.pt-BR.json`, `apps/teat/web/src/app/i18n/teat.pt-BR.json`, `apps/teat/mobile/src/app/i18n/teat.pt-BR.json` e `apps/boat/mobile/src/lib/i18n/boat.pt-BR.json` (ou aplicar a regra geral do achado de TASK-0010)."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0030/prompts/TASK-0005.md",
+      "line": 47,
+      "claim": "'Publique fail-closed só cidadao, FAQ cidadão e glossário' não diz como publicar só uma seção de `faq.md`, que é um arquivo único com seções por perfil (TASK-0013). `sync-docs.mjs` publica e exclui por arquivo, pelo `status` do front matter (linhas 62–78). Sem mecanismo definido, o worker ou publica o FAQ inteiro, expondo perguntas de perfis internos (risco de OD-UD-002), ou inventa um marcador que TASK-0013 desconhece.",
+      "fix": "Exigir que a convenção §5/§7 (TASK-0001) fixe o mecanismo: FAQ cidadão em arquivo próprio, ou um marcador de seção que `sync-docs` extraia. TASK-0005 implementa exatamente esse mecanismo. Se a convenção não o definir, a regra é que `faq.md` fique inteiro fora do site."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0015.md",
+      "line": 13,
+      "claim": "A tabela app × arquivo × rótulo i18n × âncora exige as 4 páginas explicativas do PORTAL (`pontuacao/como-funciona`, `vinculo/por-que-nao-vejo`, `carta-servicos`, `acessibilidade`) e os catálogos pt-BR de portal, rait e teat-mobile, e nada disso está na leitura. Além disso, `docs/framework/arch/frontend-wiring-pattern.md` não existe na base (R-0024 não mesclou) e o prompt não diz o que fazer quando ele estiver ausente.",
+      "fix": "Acrescentar os arquivos das 4 páginas do PORTAL (caminhos exatos em `apps/portal/web/src/app/features/**`) e os três catálogos `*.pt-BR.json`. Declarar que, se `frontend-wiring-pattern.md` não existir no despacho, isso equivale a 'R-0024 sem posição' e aplica o padrão de OD-UD-004 (fora da rodada)."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0030/prompts/TASK-0017.md",
+      "line": 13,
+      "claim": "O Engineer deve 'satisfazer os testes do Inspector', mas a leitura não traz nenhum spec escrito por TASK-0016 e também omite os catálogos i18n e as páginas do PORTAL. A tríade Inspector → Engineer fica sem o contrato executável.",
+      "fix": "Acrescentar a lista exata de specs criados ou alterados por TASK-0016 (copiada do relatório dela), `apps/{portal/web,rait/web,teat/mobile}/src/app/i18n/*.pt-BR.json` e as páginas do PORTAL listadas em CTG-0004."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0016.md",
+      "line": 13,
+      "claim": "Para os specs do PORTAL, a leitura não inclui as 4 páginas explicativas, que são os pontos de entrada, nem os catálogos i18n. A caracterização prévia ('antes da troca') exige ler os componentes que serão alterados.",
+      "fix": "Acrescentar as páginas do PORTAL e os catálogos pt-BR dos três apps listados em CTG-0004, mais um spec existente por app como padrão de harness e axe (`axe-core` já está nas dependências dos três apps)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0002.md",
+      "line": 106,
+      "claim": "O prompt espera RED, mas `tasks/TASK-0002.json` lista `node --test …` em `acceptance_commands` sem campo de saída esperada. O mesmo acontece em TASK-0003 (`docs:availability:check` com falha esperada, linha 108) e em TASK-0016. Além disso, a linha 105 junta 'RED esperado' ao critério de `format:check`, que precisa ser PASS.",
+      "fix": "Explicitar no prompt: `format:check` → PASS. Em `node --test`, RED só por `check.mjs` ausente (ENOENT/import); qualquer falha de fixture é FAIL. Registrar no relatório o conjunto de nomes RED. O maestro anota a expectativa de exit≠0 na triagem da tarefa."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0001.md",
+      "line": 110,
+      "claim": "O `node -e` só faz o parse do JSON; a 'identidade semântica com o anexo §4' fica sem comando que a verifique. Além disso, o §7.4 do anexo pede uma linha em `docs/framework/schemas/README.md` para quem transcreve primeiro, e esse arquivo não está em 'Pode tocar'.",
+      "fix": "Usar um `node -e` que extraia o bloco JSON do §4 do anexo e compare por `assert.deepStrictEqual` com o arquivo. Incluir `docs/framework/schemas/README.md` (uma linha) em 'Pode tocar', ou registrar o item em §Fora de escopo."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0005.md",
+      "line": 53,
+      "claim": "A tarefa altera `docs/_ia/publication.json` e `categories.json`, que alimentam `docs:kb:check` e `docs:kb:publish-check`, mas os critérios só pedem `docs:check`/`docs:security`. Há ainda um risco de não determinismo: TASK-0006 grava `glossario.md` em paralelo, e o conjunto publicado muda durante o `docs:check`. Um item de navbar para doc ainda inexistente quebra com `onBrokenLinks: 'throw'`.",
+      "fix": "Acrescentar `pnpm docs:kb:check` e `pnpm docs:kb:publish-check`. O item 'Manuais' aponta para a categoria autogerada ou para `docs/adopters/index.md`, nunca para um doc ainda inexistente. O checkpoint (b) do maestro roda depois de TASK-0005 e TASK-0006."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0030/prompts/TASK-0017.md",
+      "line": 109,
+      "claim": "Os critérios não incluem `pnpm verify:parameter-catalogue` (chaves i18n novas, OD-P46, `--check-usage`) nem lint/build dos três apps, embora a tarefa altere código de app e catálogos.",
+      "fix": "Acrescentar `pnpm verify:parameter-catalogue` e `pnpm --filter <app> lint` e `build` para portal-web, rait-web e teat-mobile."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0030/prompts/TASK-0006.md",
+      "line": 39,
+      "claim": "'REF-_, RN-_' é artefato de formatação (os `*` viraram `_`) e pode induzir prefixos errados.",
+      "fix": "Escrever `REF-*`/`RN-*` entre crases."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0030/prompts/TASK-0009.md",
+      "line": 13,
+      "claim": "Faltam as fichas `IU-TEAT-*`/`IU-BOAT-*` que o mapa lista como fonte, e TASK-0008 não inclui `docs/framework/arch/rait-i18n-glossary.md`, também previsto no mapa.",
+      "fix": "Acrescentar `docs/framework/product/domains/inf/teat/screens/IU-TEAT-*.md` e as fichas IU-BOAT a TASK-0009, e `rait-i18n-glossary.md` a TASK-0008."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0030/prompts/TASK-0007.md",
+      "line": 1,
+      "claim": "As compositions atribuem Terra (médio) a TASK-0004 e TASK-0007…0012, que o plano define como Sonnet 5 (pequeno) e cuja escada põe `transcriber-docs` no nível pequeno (Luna). É um upgrade de custo sem registro em §Decisões do maestro.",
+      "fix": "Registrar a justificativa em plan.md §M1 (volume de ≈250 rotas) ou alinhar com Luna."
+    }
+  ],
+  "notes": [
+    "Os papéis constitucionais estão coerentes com o plano em todas as 18 tarefas; target_modules conferem com os locks e os pares que se repetem (MOD-root-scripts em 0003/0014, MOD-availability-reconcile em 0004/0017, MOD-r30-contracts em 0001/0015) caem em ondas seriais distintas.",
+    "As fronteiras da O2 (0002 ∥ 0005 ∥ 0006) são disjuntas; os prompts proíbem Git a todos os workers.",
+    "roles.ts confere com o anexo §5: DETRAN_ROLES = 15 PEC + 8 TEAT + 10 RAIT + 2 DASHBOARD + CIDADAO = 36.",
+    "Todos os scripts citados existem em package.json, exceto os que TASK-0003 cria (`docs:availability:check`, `docs:user:check`, `docs:user:test`). `docs/site/node_modules` existe (TASK-0005 roda sem instalar). Node v24 aceita glob em `node --test`.",
+    "Depois de O3, `pnpm check` fica vermelho até a O4 por desenho fail-closed. O CI só dispara em push para `main`/PR, então os pushes sem PR não quebram o CI remoto; ainda assim, R-0031/R-0032 só devem empilhar após o push da O4, como o plano já prevê.",
+    "A resolução do reference-gap das rotas dos manuais na O4 (anexo do inventário sem novo prompt-review, com hash/PC atualizados) é aceita sob fail-closed. Recomenda-se que o mesmo anexo estenda a leitura aos manifestos e catálogos das superfícies do inventário.",
+    "`typescript` está na raiz; não há `ajv`. TASK-0003 terá de validar JSON Schema 2020-12 em Node puro, e CTG-0001 deve delimitar o subconjunto de palavras-chave exercido pelo esquema do §4."
+  ]
+}
+```

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implemente check",
+  "description": "Implemente check.mjs em Node puro com TypeScript AST para rotas; satisfaça os testes do Inspector. Adicione docs:availability:check, docs:user:check, docs:user:test no package.json e encadeie availability e user:test em check; user:check só em TASK-0014. Dependencies: TASK-0002",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-gate", "MOD-root-scripts"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["user-docs", "wave-O3"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-67520c2c6d090b1d",
+  "acceptance_commands": [
+    ["pnpm", "docs:user:test"],
+    ["pnpm", "docs:availability:check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-67520c2c6d090b1d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

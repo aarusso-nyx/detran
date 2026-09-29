@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Encadeie docs:user:check em pnpm check após o corpus estar completo",
+  "description": "Encadeie docs:user:check em pnpm check após o corpus estar completo; não altere o gate ou os manuais para fazê-lo passar. Dependencies: TASK-0013",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-root-scripts"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0013",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 14,
+  "tags": ["user-docs", "wave-O8"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-860f4dd5df95487e",
+  "acceptance_commands": [["pnpm", "docs:user:check"]],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-860f4dd5df95487e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

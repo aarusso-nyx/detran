@@ -283,10 +283,75 @@ R-0031 **não redefine** nada disto; segue `user-docs-convention.md`:
 
 ## Decisões do maestro
 
+### M1 — bootstrap e troca de família (Owner, 2026-09-29)
+
+O prompt desta sessão autoriza somente O1–O3 sobre `origin/main`, no branch
+`orchestra/user-docs`; prevalece sobre as atribuições de família no cabeçalho,
+na tabela de tarefas e no prompt anterior. Maestro **Codex Sol 6**
+(`gpt-6-sol`); workers Codex **Sol 6** (`gpt-6-sol`) para Architect/tarefas
+grandes, **Terra** (`gpt-5.6-terra`) para nível médio e **Luna**
+(`gpt-6-luna`) para nível pequeno; reviewer independente **Claude Code Opus
+5.5** (`claude-opus-5-5`) por `tools/orchestra/bridge.sh claude`. Os comandos
+`codex --help` e `claude --help` confirmaram, respectivamente, as opções `-m`
+e `--model`; os IDs exatos seguem a escada `model-ladder.md`, previamente
+testada em R-0018. As versões locais são `codex-cli 0.157.1` e Claude Code
+`2.1.283` (doctor). O PR #158 da adenda A-C2-13 estava aberto no bootstrap;
+o texto do Owner nesta sessão aplica a adenda. O checkout inicial e
+`origin/main` estavam em `c325f9b540e0b6696395f3442d7f920909ca3b76`,
+limpos. Worktree gerenciada criada em
+`/Users/aarusso/.codex/worktrees/user-docs-r0030/detran`.
+
+As transcrições extensas TASK-0004 e TASK-0007…0012 usam Terra (nível médio)
+pelo volume de rotas e pela reconciliação entre manifesto, ficha e catálogo;
+as transcrições fechadas TASK-0006, TASK-0013 e TASK-0018 usam Luna (nível
+pequeno). Isto calibra o custo da escada Codex sem mudar a autoridade ou os
+critérios das tarefas.
+
+Não se executa `pnpm check` completo no bootstrap, por OD-C2-005 §12; os
+`acceptance_commands` por tarefa e o prompt-review único continuam. A sessão
+encerra após O3, com push sem PR ao fim de cada onda e checkpoint em §Retomada.
+
+## Concorrência
+
+Em `origin/main` no bootstrap: R-0017 (`local-stack`), R-0018
+(`index-state`) e R-0019 (`law-corpus`) já integradas. R-0024 (`stynx-dedup`)
+e R-0025…R-0029 ainda não estão em `main`; não há
+`docs/framework/arch/availability/` no branch base. O1–O3 estão liberadas
+pela adenda A-C2-13 sem esses manifestos. O4 e TASK-0004 esperam os cinco
+arquivos da fase D no branch. R-0031 `pec-web` tem branch local em outra
+worktree, com locks disjuntos; o manual PEC e R-0032 dependem do branch
+publicado desta rodada conforme §Execução OD-C2-005. Locks partilhados:
+`package.json`, `parameter-catalogue.md`, `open-issues.md` e `waves.md`;
+integrar `origin/main` por merge antes do PR final, sem rebase após o push.
+
 ## Bloqueios
 
 ## Triagem
 
+- 2026-09-29, prompt-review-1: `sensor-error` na ponte. Claude retornou
+  achados `REVIEW`, mas cercou a resposta em Markdown e produziu JSON inválido;
+  `bridge.sh` recusou exit 4 e não gravou veredito. Texto bruto recuperado em
+  `reviews/prompt-review-1.unparsed.txt`. Os achados concretos sobre leituras,
+  FAQ e OD de D-05 serão corrigidos antes de nova chamada; nenhum worker foi
+  despachado com esse resultado.
+
 ## Retomada
 
 ## Leitura
+
+Base lida: `c325f9b540e0b6696395f3442d7f920909ca3b76` (`origin/main`).
+Leituras de bootstrap: `AGENTS.md`, `CODESTYLE.md`,
+`docs/meta/agents/{README.md,orchestra/README.md,orchestra/model-ladder.md,orchestra/waves.md}`;
+`work/campaigns/C-0002-consolidacao.md` §12 e §14 (adenda A-C2-13 suprida
+pelo prompt do Owner enquanto #158 está aberto);
+`work/rounds/R-0030/{plan.md,availability-manifest.schema.md,prompts/00-maestro.md}`;
+`docs/meta/adr/ADR-0011-phase-6-documentation-publication.md`,
+`ADR-0033-teat-ui-workflow-homologation-scope.md`,
+`ADR-0034-pec-web-frontend.md`; IA, publicação e site em
+`docs/_ia/{categories,publication}.json` e `docs/site/`;
+`backend/domains/shared/src/roles.ts`, `tools/contracts/check-commands.mjs`,
+`docs/framework/arch/parameter-catalogue.md` §Namespaces i18n,
+`docs/meta/knowledge-base/{decision-closure-plan,steering,open-issues}.md`
+e os cinco manuais de papel de `docs/meta/agents/`. O
+`frontend-wiring-pattern.md` de R-0024 e os cinco manifestos da fase D ainda
+não existem na base, conforme §Concorrência.

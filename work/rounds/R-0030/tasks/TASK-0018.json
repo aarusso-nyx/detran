@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0018",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Atualize histórico em waves, backlog, estado OD-UD no registro canônico e linha Manual do usuário nos READMEs existentes",
+  "description": "Atualize histórico em waves, backlog, estado OD-UD no registro canônico e linha Manual do usuário nos READMEs existentes. Não feche OD sem decisão do Owner. Dependencies: TASK-0017",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0017",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 18,
+  "tags": ["user-docs", "wave-O10"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-230dfe0545bda9c3",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-230dfe0545bda9c3",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

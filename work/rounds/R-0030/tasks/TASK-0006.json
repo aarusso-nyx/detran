@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Redija glossário em linguagem de usuário, cada termo com REF-*, RN-* ou linha de law/glossary",
+  "description": "Redija glossário em linguagem de usuário, cada termo com REF-*, RN-* ou linha de law/glossary. Cubra siglas e termos do plano; se faltar fonte, omita e relate. Dependencies: TASK-0001",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-glossary"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["user-docs", "wave-O2"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-bcbf2edd75287a1f",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-bcbf2edd75287a1f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0015",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Feche CTG-0004 com tabela app × arquivo × rótulo i18n × âncora, helpBaseUrl fail-closed, MBFT tópico/âncora/REF-CONTRAN-",
+  "description": "Feche CTG-0004 com tabela app × arquivo × rótulo i18n × âncora, helpBaseUrl fail-closed, MBFT tópico/âncora/REF-CONTRAN-985-1003-MBFT; resolva OD-UD-004/005 conforme fonte, editando apenas linhas de namespace se necessário. Dependencies: TASK-0014",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r30-contracts", "MOD-parameter-catalogue-doc"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0014",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 15,
+  "tags": ["user-docs", "wave-O9"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-e0451423cb998809",
+  "acceptance_commands": [
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-e0451423cb998809",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0017",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implemente ajuda nos três apps conforme CTG-0004 e testes do Inspector",
+  "description": "Implemente ajuda nos três apps conforme CTG-0004 e testes do Inspector; atualize só help/history nos manifestos pertinentes. Preserve comportamento existente; compare as suítes antes e depois. Dependencies: TASK-0016",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-web-help",
+    "MOD-rait-web-help",
+    "MOD-teat-mobile-help",
+    "MOD-availability-reconcile"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0016",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 17,
+  "tags": ["user-docs", "wave-O9"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-feae534d6b300798",
+  "acceptance_commands": [
+    ["pnpm", "docs:availability:check"],
+    ["pnpm", "docs:user:check"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "test"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "--filter", "@detran/portal-web", "lint"],
+    ["pnpm", "--filter", "@detran/portal-web", "build"],
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "--filter", "@detran/rait-web", "build"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "lint"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "build"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-feae534d6b300798",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

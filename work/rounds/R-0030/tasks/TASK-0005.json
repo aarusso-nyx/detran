@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Converta o site, navegação, rodapé, sidebars e IA para pt-BR",
+  "description": "Converta o site, navegação, rodapé, sidebars e IA para pt-BR; adicione Manuais em Adotantes; publique fail-closed só cidadao, FAQ cidadão e glossário até OD-UD-002; retire Stub de adopters e deixe ponteiro em roles. Dependencies: TASK-0001",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs-site"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["user-docs", "wave-O2"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-42668a6bd7985b00",
+  "acceptance_commands": [
+    ["pnpm", "docs:check"],
+    ["pnpm", "docs:security"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-42668a6bd7985b00",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

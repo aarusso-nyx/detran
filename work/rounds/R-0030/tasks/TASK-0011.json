@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0030",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Escreva manual gestor cobrindo cada rota de tela RAIT, DASHBOARD e TEAT web cujo profiles contém o perfil",
+  "description": "Escreva manual gestor cobrindo cada rota de tela RAIT, DASHBOARD e TEAT web cujo profiles contém o perfil; distinga teto legal de SLA e cite fontes para camadas/frescor. Dependencies: TASK-0007, TASK-0008, TASK-0009",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-user-docs-gestor"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["user-docs", "wave-O6"],
+  "branch": "orchestra/user-docs",
+  "worktree_id": "WT-user-docs-r0030",
+  "prompt_composition_id": "PC-070b3cb09749eb30",
+  "acceptance_commands": [["pnpm", "docs:user:check"]],
+  "created_at": "2026-09-29T16:45:54.161Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-070b3cb09749eb30",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
