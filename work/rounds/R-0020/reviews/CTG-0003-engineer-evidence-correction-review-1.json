@@ -1,0 +1,36 @@
+{
+  "mode": "read-only point review of the CTG-0003 Engineer attribution correction",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": "Where the executing role is recorded",
+      "file": "record/proofs/chain.json",
+      "line": 6368,
+      "claim": "Chain record sequence 130 (EV-69bf082d25d6a5e7) has actor_role \"harness\" and notes only round_id/proof_sequence, the same as record 129 for line 5. The chain does not record that the verb ran with --as-role engineer. That Engineer attribution exists only as payload.role inside line 6, which the author declares about themselves. This is not a defect in the correction. It is a limit of what DEVAI 1.5.6 records, and the same limit applies to line 5.",
+      "fix": "No change to this append. If the maestro wants the --as-role value itself provable from the chain, open an issue or ADR against DEVAI so it records the declared role in the event. Until then, the evidence of Engineer attribution is the payload plus the maestro's report that the command ran with --as-role engineer."
+    },
+    {
+      "severity": "info",
+      "item": "Staging the correction",
+      "file": "work/rounds/R-0020/reviews/CTG-0003-engineer-evidence-correction-review-1.json.raw.R8sfKs",
+      "line": 1,
+      "claim": "The worktree has leftover temporary files (.raw.R8sfKs and .formatted.hBeigX) next to the correction and the append. They are not part of the evidence and must not go into the commit. The input evidence-CTG-0003-engineer-correction.json is still untracked, and line 6 anchors no artifact that points to it (its payload is the file itself, byte-for-byte after JSON parse).",
+      "fix": "Commit together, and only: evidence-CTG-0003-engineer-correction.json, R-0020.jsonl, chain.json, the review prompt and the final review JSON. Delete or ignore the .raw.* and .formatted.* temporary files before `git add`."
+    }
+  ],
+  "notes": [
+    "Line 6 corrects.line_hash = 768a54de18af146f54f617f6d621fe018a1ad46ad3c6b7ede8b73fa6e23ab7fa, which is exactly line_hash of sequence 5. previous_line_hash on line 6 is the same value, so the file chain is continuous.",
+    "Line 5 is preserved: `git show HEAD:record/proofs/work/generic/R-0020.jsonl` is byte-identical to the first 5 lines of the working tree (cmp OK). The R-0020.jsonl diff adds one line and removes none.",
+    "It does not reclassify bytes: the correction is additive (field payload.role, historical_value \"architect\", corrected_delivery_initiator \"engineer\", historical_line_preserved true). It does not rewrite or replace sequence 5.",
+    "The A3.6 proof and the reviewed delivery are unchanged. The sha256 values of evidence-CTG-0003.json (cc286cec…), A3.6-round-seal-verification.json (ee14c827…, identical to the report_sha256 in line 5) and delivery-review-CTG-0003-4.json (ba6b928e…) match the current files, and git status shows none of them modified. readiness_promoting=false.",
+    "Commits cited: 818a5a24 is an ancestor of 5d4b0257 (HEAD). 5d4b0257 only adds the cycle-4 review artifacts.",
+    "The input file equals line 6's payload exactly (checked by JSON comparison).",
+    "chain.json: the only removed line is the old head (9fba66dc…). Record 130 has previous_hash and previous_run_hash equal to 9fba66dc…, the manifest_hash of record 129. `devai evidence verify --scope chain` returns valid with head 69170c6d…, matching the new head.",
+    "`pnpm verify:proof-anchors`: exit 0, 84 directly anchored, 53 declared orphans, 0 undeclared, 0 duplicates, 0 invalid, chain valid. This matches the numbers reported (83 before plus this append).",
+    "Normative basis confirmed: work/rounds/R-0020/prompts/00-maestro.md:264 requires `evidence record --kind generic --round R-0020 ... --as-role engineer`.",
+    "The only commands run were reads and read-only verifiers. No file was edited and no write verb was run."
+  ]
+}
