@@ -389,7 +389,24 @@ caracterização antes de qualquer troca de guarda.
 
 ## Bloqueios
 
+**M2 — TASK-0002 ainda sem aceite (Inspector, O1).** O gerador e o e2e
+direcionado estão no worktree da branch; a matriz sobre `origin/main`
+`c4d5417c` contém 32.943 células observadas e 8.503 pares
+`handlerNotEvaluated`. O modo `verify:authz-matrix` reproduz a fixture byte a
+byte em banco descartável limpo, mas falha corretamente pela incompletude
+(C-01-04/05). Em STYNX 1.4.0, a prova HTTP de token aceito e sessão ativa
+retorna 500 `REQUEST_CONTEXT_MUTATION_FORBIDDEN` antes da política; os pares
+autenticados do perfil completo estão em `notMaterializable` (A-R23-02).
+`pnpm --filter @detran/app test:e2e` falha em cinco testes que falham sem o
+spec novo em outro banco limpo. Ver `reports/TASK-0002.md`. Não há autorização para substituir
+`allow` por passagem de guardas ou para relaxar `acceptance_commands`.
+
 ## Retomada
+
+O1 permanece **em execução**, TASK-0001 commitada e TASK-0002 ainda sem
+aceite. Não registrar o checkpoint de O1 concluída, nem publicar branch ou
+abrir PR enquanto os gates da TASK-0002 estiverem vermelhos. Prosseguir
+somente na fronteira da O1; O2 continua aguardando R-0022.
 
 ## Leitura
 
