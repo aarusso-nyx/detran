@@ -4,8 +4,8 @@
   "status": "active",
   "window_input_budget": 2250000,
   "checkpoint_threshold": 1800000,
-  "estimated_input_total": 565000,
-  "estimated_output_total": 93000,
+  "estimated_input_total": 620000,
+  "estimated_output_total": 102000,
   "prior_window_archive": "work/rounds/R-0020/budget-window-3.json",
   "prior_window_input_total": 2223000,
   "prior_window_output_total": 363000,
@@ -266,6 +266,30 @@
       "input_tokens": 10000,
       "output_tokens": 1500,
       "note": "PR exclusivo #157, CI 36524424262 verde e merge c325f9b5; integração de main sem conflito."
+    },
+    {
+      "kind": "maestro-architect",
+      "id": "A1-PF-contract-tasks-prompts",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Owner receipt 261b2be0, contract and composed TASK-0029/0030."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-PF-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "PASS with three low wording findings."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-PF-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "PASS, zero findings after targeted corrections."
     }
   ]
 }

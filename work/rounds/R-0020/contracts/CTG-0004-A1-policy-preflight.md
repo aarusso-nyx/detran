@@ -1,0 +1,19 @@
+# CTG-0004 — adenda A1-PF: compatibilidade das políticas de sensores
+
+**Papel:** Architect, Constituição Art. 7. **Fonte Owner:** `AUTHORIZATION-A1-PREFLIGHT-2026-09-29.md` (commit `261b2be0`). **Estado:** contrato de preflight antes da retomada Engineer TASK-0013. Esta adenda acrescenta diagnóstico e não modifica os critérios do contrato CTG-0004 nem o RGR.
+
+## Fontes e fronteira
+
+O verificador lê somente, da versão DEVAI **instalada**, `dist/law/policy/sensor-registry.json`, `dist/law/policy/sense-presets.json` e `dist/runtime/index/schemas/sensor-reading.schema.json`. Não consulta `main` upstream como substituto do pin, não executa sensor e não escreve em `.devai/`, `record/` ou no pacote. A interface pura `verifySensorPolicy({ registry, presets, schema })` devolve `{ ok, errors, counts }`, com `errors` ordenados de forma estável e campos `code`, `path`, `kind` quando aplicável e `message`. A CLI local `tools/devai/verify-sensor-policy.mjs` lê as fontes padrão, imprime esse diagnóstico em JSON e sai 0 somente se `ok: true`. O erro de enum ausente tem código `SENSOR_KIND_NOT_IN_SCHEMA`; falhas de estrutura ou população usam códigos específicos e não produzem exceção silenciosa. Caminhos de fixture explícitos são permitidos apenas para testes e não alteram a verificação padrão. O script raiz `pnpm verify:sensor-policy` e sua inclusão em `pnpm check` são responsabilidade Engineer da TASK-0030 após RED Inspector TASK-0029.
+
+## Invariantes executáveis
+
+1. Exigir registry com kinds únicos e quatro presets únicos `baseline`, `structural`, `governed`, `sweep`. Cada preset tem membros sem duplicatas e conhecidos no registry. O schema tem enum `properties.sensor.properties.kind.enum` válido e sem duplicatas. Fonte ausente ou malformada falha fechada com caminho e código; não vira lista vazia nem PASS.
+2. No contrato R-0020 atual, as populações esperadas são 4/12/20/49. `baseline` equivale ao conjunto de entries com tier `BASELINE`; `structural`, à união `BASELINE ∪ TIER2`; `governed`, à união `BASELINE ∪ TIER2 ∪ TIER3`. A ordem dessas três listas vem do preset e não precisa igualar a ordem do registry. Mudança de população em release futura exige revisão do contrato, nunca adaptação silenciosa.
+3. `sweep.members` é **exatamente** a sequência de entries `effect: read` na ordem do registry, com 49 membros. `sweep.excluded` é exatamente a sequência dos dez entries não `read`. `sweep.round_required` é `true`. Nenhum membro pode ser omitido, reordenado ou movido para `excluded` para obter verde.
+4. Todo kind do registry selecionado por qualquer preset deve estar no enum `SensorReading.sensor.kind`. Valores extras no enum sem entry ativa no registry são informativos; não produzem leitura nem anulam a falta de um kind ativo. O diagnóstico agrega todos os ausentes em ordem estável e identifica registry, preset(s), schema e kind.
+5. Na versão 1.5.6 pinada, o comando real deve sair **1** com exatamente `decision_record_integrity`, `decision_citation_resolution`, `archive_immutability` e `round_record_integrity` ausentes do enum. Essa falha é a prova de bloqueio, não um teste enfraquecido. Fixture coerente passa; fixtures com kind ausente, membro omitido, duplicata, exclusão errada e fonte malformada falham.
+
+## Sequência de autoridade
+
+TASK-0029 Inspector caracteriza a interface pura e a CLI com fixtures, incluindo o RED da ausência do módulo. TASK-0030 Engineer implementa o verificador até os testes de fixture ficarem verdes e demonstra o FAIL esperado da fonte instalada. O maestro valida os comandos e registra os hashes. A TASK-0013 continua `rgr_pending`; só é elegível a retomada humana quando houver correção upstream publicada, pin governado, preflight real verde e revisão do RGR. A1-1/A1-2 e quatro PASS reais de A1-3=B permanecem gates separados.

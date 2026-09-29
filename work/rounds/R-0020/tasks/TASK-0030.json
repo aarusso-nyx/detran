@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0030",
+  "round_id": "R-0020",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar preflight de políticas de sensores",
+  "description": "tools/devai/verify-sensor-policy.mjs e script raiz",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-devai-tools", "MOD-root-package-json"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0029",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0004",
+    "ref:engineer-backend",
+    "adenda:A1-PF"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-4d87c5225effffcf",
+  "acceptance_commands": [
+    ["node", "--test", "tools/devai/tests/sensor-policy.test.mjs"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T05:42:20Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-4d87c5225effffcf",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

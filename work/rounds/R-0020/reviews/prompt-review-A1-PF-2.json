@@ -1,0 +1,17 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "group": "CTG-0004-A1-PF",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Hashes confirmed with a read-only `shasum -a 256`. The SHA-256 of `prompts/TASK-0029.md` is 2cbf05613ad33c746aaf3fdc863f1b1e23b780ab65875108f5ac8f2b0d7150a9, and the SHA-256 of `prompts/TASK-0030.md` is 4d87c5225effffcff6b7e4ba9ec96e68777e1ce9cceab92dd376981368eac399. `compositions.json:227-240` records the same sha256 values, with pc_id PC-2cbf05613ad33c74 and PC-4d87c5225effffcf (the first 16 hex characters of each hash). It also records model gpt-5.6-terra and effort medium. `tasks/TASK-0029.json` and `tasks/TASK-0030.json` use the same PC ids in `prompt_composition_id` and in `executor.prompt_composition_id`. The cycle-1 PCs (766426e0…/ab53d154…) no longer appear outside `reviews/`.",
+    "Low 1 (fixture union and enum duplicate) is resolved. `TASK-0029.md:37` now says the coherent fixture 'faz a união do enum com os quatro kinds, acrescentando somente os ausentes e sem duplicatas', so it stays GREEN after a future re-pin. The negative list now includes 'kind duplicado no preset ou enum', which matches invariant 1 of the addendum (the enum has no duplicates). The frozen fixture still removes the four values even if the future pin contains them.",
+    "Low 2 (tier sets and 4/12/20/49 counts) is resolved in both prompts. `TASK-0029.md:41` says the verifier checks both the tier-derived sets and the contractual counts 4/12/20/49, and that a RED caused by a population change requires an explicit contract revision rather than adapting the fixture or the gate. `TASK-0030.md:44-45` says the same thing: set plus count, 49 sweep entries in registry order, 10 excluded entries in order, round_required=true, and no silent adaptation. Both prompts agree with invariant 2 of the addendum (`CTG-0004-A1-policy-preflight.md:12`).",
+    "Low 3 (Engineer report and CI RED) is resolved. `TASK-0030.md:45` orders the worker to record in the report that `pnpm check` and CI stay RED by design on this pin, because the preflight runs before `devai:test`. `TASK-0030.md:53` repeats this in the acceptance criteria. The TASK-0030 row of the `plan.md` table (uncommitted diff) records that `pnpm check` stays RED until the release and re-pin. Residual point, not blocking: the delivery template (`TASK-0030.md:62-71`) has no dedicated field for this. The maestro should check that the report includes it, for example under 'Comandos e saídas' or 'FAIL real do pin'.",
+    "Residual point, not blocking: cycle 1 also suggested cutting any intermediate observation PR from a commit without TASK-0030, as was done for #157. The plan does not state this. It is an orchestration concern for the maestro, not for the prompts.",
+    "The rest is unchanged and consistent with cycle 1. TASK-0029 (Inspector) touches only `tools/devai/tests/sensor-policy.test.mjs`, runs no real sensor, and uses a dynamic import to produce individual REDs. TASK-0030 (Engineer) touches only `verify-sensor-policy.mjs` and `package.json`, and places `verify:sensor-policy` before `devai:test`. TASK-0013 stays `rgr_pending`. A1-1/A1-2 are pending, and A1-3=B still requires four real PASS results.",
+    "This PASS closes the prompt review for dispatching TASK-0029, and TASK-0030 after it. It does not authorize a delivery, commit, PR or merge."
+  ]
+}

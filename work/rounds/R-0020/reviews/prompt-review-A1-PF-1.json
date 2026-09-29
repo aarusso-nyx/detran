@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "group": "CTG-0004-A1-PF",
+  "cycle": 1,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0029.md",
+      "line": 37,
+      "claim": "The coherent fixture 'adds the four missing kinds to the enum'. After a future pin that already contains them, a plain append would duplicate enum values. If the verifier treats a duplicate enum as malformed (invariant 1: 'enum válido'), the positive case would go falsely RED after the re-pin.",
+      "fix": "Say that the coherent fixture adds only the kinds that are missing (a set union, no duplicates). Optionally add a negative case for a duplicated enum value so the rule is explicit."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0029.md",
+      "line": 41,
+      "claim": "The fixtures are derived from the installed sources, and the 4/12/20/49 populations are contractual. Both prompts leave open whether the verifier compares against those constants or derives them from the tiers. A future release that changes the populations would make the coherent fixture RED in `devai:test`. The contract (invariant 2) wants that outcome, but the prompts do not say so. That leaves the TASK-0029 and TASK-0030 interfaces ambiguous and risks an unnecessary RGR.",
+      "fix": "State in both prompts that the verifier checks the tier-derived set AND the contractual counts 4/12/20/49. State that a RED caused by a population change after a re-pin is the intended contract-revision signal and does not break the fixture."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0030.md",
+      "line": 31,
+      "claim": "CI runs `pnpm check` (`.github/workflows/ci.yml:150,402`). Placing `verify:sensor-policy` before `devai:test` in an `&&` chain means it short-circuits all later gates on this pin. The masking effect is equivalent to the one that already exists, because `sense.test.mjs` is already RED without `sense.mjs`. It still makes the whole CI `check` RED for any PR cut from this branch that includes TASK-0030, until the re-pin.",
+      "fix": "Record in the TASK-0030 report and in the plan that CI `check` stays RED by design until the upstream release and re-pin. Keep any intermediate observation PRs cut from commits that do not include TASK-0030, as was done for #157."
+    }
+  ],
+  "notes": [
+    "Hashes match: registry 0910facf…7806, presets 96715fa3…5c12 and schema dcfb7fc2…931f equal the RGR. The prompt SHA-256s 766426e0…/ab53d154… match the PC-766426e0e196160d and PC-ab53d154d0d89f26 entries in `compositions.json` and the TASK JSONs.",
+    "Installed source (1.5.6) recomputed with a read-only script: 59 entries, all `active`, `id` equals `kind` for every entry. Tiers: BASELINE 4, TIER2 8, TIER3 8, SWEEP 59. The baseline, structural and governed presets equal BASELINE, BASELINE∪TIER2 and BASELINE∪TIER2∪TIER3 as sets (4/12/20). `sweep.members` equals the 49 `read` entries in registry order. `excluded` equals the 10 non-read entries in order. `round_required` is true.",
+    "Enum has 60 values. registry−schema is exactly decision_record_integrity, decision_citation_resolution, archive_immutability and round_record_integrity (indices 52–55, sweep-only, `read`), in registry order. schema−registry is the 5 informational values api_test, db_test, journey_test, contract_validation and mutation_test.",
+    "The three shorter presets include non-read kinds (build: local-write, unit_test: harness-write). All of them are in the enum, so this does not change the expected FAIL. `sense-presets.json` declares `ordering: canonical-sensor-registry-order`, yet the baseline order (build, lint, type_check, unit_test) differs from registry order. The addendum explicitly tolerates this ('ordem vem do preset'), which is compatible with the installed source.",
+    "Decomposition is valid. TASK-0029 (Inspector, test file only, dynamic import for individual REDs, upstream TASK-0011) comes before TASK-0030 (Engineer, verifier plus `package.json` only, upstream TASK-0029). TASK-0030 does not resume TASK-0013, does not touch DEVAI, `.devai/`, `record/` or the pin, and does not run sensors.",
+    "The real FAIL remains a gate: it is kept out of the regression suite (a maestro diagnostic command), `pnpm verify:sensor-policy` exits 1 with the four kinds, and reducing the sweep or using a fallback is forbidden. The frozen fixture with the four kinds removed keeps the negative test stable after a future re-pin.",
+    "Scope is intact: A1-1/A1-2 remain pending and A1-3=B (four real PASS results as the merge gate) is unchanged. The authorization is in commit 261b2be0 (1 file). The CTG-0004-A1 addendum, the prompts and the TASK JSONs are still untracked. `reports/TASK-0029.md` does not exist yet, as expected before dispatch.",
+    "The three lows are wording clarifications, so this PASS does not block dispatch. It is not a delivery review and does not authorize a PR or merge."
+  ]
+}
