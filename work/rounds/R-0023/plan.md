@@ -26,6 +26,24 @@ R-0024, então não há disputa em C-0002.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-14 (Owner, 2026-09-30; prevalece).** A rodada **abre já** sobre `origin/main`, que
+> contém o hotfix B2 (PR #159: autenticação oportunista do Portal sem identidade cruzada entre
+> tenants), e executa **somente a O1**: CTG-0001, TASK-0001 → TASK-0002, com a matriz papel × rota ×
+> método "antes", o gerador e o e2e.
+>
+> - A matriz é gerada sobre `main` com o #159 incluído; o comportamento `201 anonymous:true` do
+>   pedido cruzado faz parte da linha de base.
+> - Maestro e workers na família **Codex** (Sol 6), reviewer **Opus 5.5** via Claude Code.
+> - Ao concluir a O1: push do branch `orchestra/authz-unification` (sem PR), checkpoint em §Retomada
+>   ("aguardando R-0022: pin 1.5.x e tenancy canônica") e parada.
+> - A O2 em diante retoma empilhada em `origin/orchestra/stynx-sse-tenancy`, quando R-0022 tiver
+>   publicado a troca do pin (TASK-0004) e a da tenancy. A matriz é regenerada com diff atribuído
+>   (A-C2-11/§13).
+> - **Não tocar** os locks de R-0020 (`.github/workflows/`, `.devai/config`, `law/register`,
+>   `record/`, fora a evidência de fim de rodada) nem arquivos de R-0022 em curso
+>   (`backend/app/src/app.module.ts`, `detran-runtime.ts`, serviços SSE).
+> - Tarefas em `tasks/` devem passar em `pnpm verify:round-tasks` (gate de R-0020 já em `main`).
+
 Esta seção **prevalece sobre qualquer menção a um PR/merge/evidência/delivery-review por CTG neste
 plano** (C-0002 §12). A rodada corre na branch única `orchestra/authz-unification`, com um commit por
 tarefa ou por CTG. Entre CTGs não há PR, CI remoto, `devai evidence record`, `audit observe`,
