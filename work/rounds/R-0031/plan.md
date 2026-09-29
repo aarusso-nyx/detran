@@ -32,6 +32,18 @@ recalibra no bootstrap e registra em `plan.md` §Decisões do maestro. Recalibra
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-13 (Owner, 2026-09-29; prevalece sobre a "Base de abertura").** A rodada **abre
+> já** sobre `origin/main`, sem esperar R-0024, e executa **somente as ondas O1–O8**: contratos e
+> caracterização PEC, catálogo de erros, fixtures, integração Postgres dos 17 módulos `ch`, fichas,
+> i18n e parâmetros. Ao concluir a O8, o maestro faz push do branch (sem PR), grava checkpoint em
+> §Retomada ("aguardando R-0024: kit e padrão de ligação") e para. A O9 (app `apps/pec/web`)
+> retoma empilhada em `origin/orchestra/stynx-dedup` ou sobre `main` com R-0024 mesclada.
+>
+> - **Evitar conflito com R-0022:** a O3 (erros em `ch/*/src`) não toca os adaptadores de assinatura
+>   de `ch/clinical-reports` e `ch/juntas`, que R-0022 migra. Se algum erro exigir mudança nesses
+>   arquivos, ele fica registrado para depois da migração.
+> - **R-0032:** abre empilhada em `origin/orchestra/pec-web` quando o CTG-0001 (O1–O3) for publicado.
+
 > **Adenda A-C2-12 (Architect, 2026-09-27; prevalece sobre as ondas abaixo).** Para que R-0031 não
 > fique presa ao merge de R-0030, a parte de **manual** de TASK-0018 sai desta rodada e vai para
 > R-0032: `docs/adopters/manuais/{clinico,regulatorio}/` e as seções PEC de `gestor`, `auditor-dpo` e

@@ -424,3 +424,66 @@ sem troca de implementação, e passam a poder abrir antes do merge da rodada an
   - a regra "caracterização mescla antes de qualquer troca".
 - **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
   `prompts/00-maestro.md`.
+
+## 14. Adenda A-C2-13: aberturas com R-0020 parada (Owner, 2026-09-29)
+
+**Estado verificado em 2026-09-29:**
+
+- **S-1.5:** concluída. `@stynx-nyx/*` **1.5.0 final** publicado (STYNX #308/#309); a 1.5.2 está em
+  preparação (STYNX #314).
+- **R-0021:** fechada (PC-0019).
+- **R-0020:** aberta e **parada** à espera de atualizações upstream do DEVAI.
+
+A parada de R-0020 não bloqueia a cadeia principal: os locks dela (CI, `.devai/config`, `record/`)
+são partilhados por merge, e seus gates novos passam a valer quando ela mesclar.
+
+**Aberturas autorizadas:**
+
+| Rodada | Abre sobre                                                       | Executa agora                                                                 | Para em                                          |
+| ------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------ |
+| R-0022 | `origin/main`                                                    | rodada inteira; pin = maior 1.5.x final publicado no bootstrap, exato         | — (PR final com a conformidade conferida)        |
+| R-0023 | `origin/main`, depois empilhada em `orchestra/stynx-sse-tenancy` | O1 (matriz de caracterização) já; o resto empilhado conforme §12/§13          | —                                                |
+| R-0024 | empilhada em `orchestra/stynx-sse-tenancy`                       | O1–O4 (frontend), quando o pin e o SSE Angular de R-0022 estiverem publicados | O5 (backend), que espera R-0023                  |
+| R-0030 | `origin/main`                                                    | O1–O3                                                                         | O4 (manifestos da fase D)                        |
+| R-0031 | `origin/main`                                                    | O1–O8, sem tocar os adaptadores de assinatura que R-0022 migra                | O9 (app; espera R-0024)                          |
+| R-0032 | empilhada em `orchestra/pec-web`                                 | O1–O2, após o CTG-0001 de R-0031 publicado                                    | O3 (eventos `ch` pelo outbox migrado por R-0022) |
+
+**Regras:**
+
+- A rodada que "para em" grava checkpoint em `plan.md` §Retomada e faz push sem PR. Ao retomar, integra
+  os upstreams por merge.
+- **R-0030 com maestro Codex (Owner, 2026-09-29):** maestro Sol 6 e workers Codex; reviewer Opus 5.5
+  via Claude Code. Substitui a coluna "Maestro" de §2 para R-0030.
+- **Pin 1.5.x:** usar a maior 1.5.x final é esclarecimento do Architect sobre OD-C2-004/OD-S15-01
+  (mesma minor, patch posterior). A conformidade da §7 da especificação é conferida contra a versão
+  fixada.
+
+## 15. Adenda A-C2-14: aberturas de R-0023 e R-0032 com R-0020 e R-0022 em curso (Owner, 2026-09-30)
+
+**Estado verificado em 2026-09-30:**
+
+- **R-0020** (`orchestra/devai-sensors`): CTG-0001…0003 mesclados. O CTG-0004 está parado no
+  `reference-gap` da TASK-0013: faltam 4 kinds de sensor `read` no enum de `SensorReading` do DEVAI
+  (1.5.6, v1.6.0 e `main`), relacionado ao DEVAI #168. Os locks dela são CI, `.devai/config`,
+  `law/register` e `record/`.
+- **R-0022** (`orchestra/stynx-sse-tenancy`):
+  - A B2 foi fechada pelo hotfix #159 (mesclado em `c4d5417c`). As decisões OD-R22-01…40 estão
+    registradas (A3, A4; B4/B5).
+  - O pin continua em 1.4.0. As migrações de outbox, offline-sync e assinatura LTA aguardam a STYNX
+    1.5.x (stynx-nyx/stynx #316–#319), em checkpoint OD-R22-02 por item. O restante da rodada segue.
+- **R-0031** (`orchestra/pec-web`): O1–O8 publicadas, em checkpoint à espera de R-0024.
+- **R-0030** (`orchestra/user-docs`): O1–O3 publicadas, em checkpoint à espera da fase D.
+
+**Aberturas autorizadas:**
+
+| Rodada | Maestro                                           | Abre sobre                 | Executa agora                                                            | Para em                                       |
+| ------ | ------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------ | --------------------------------------------- |
+| R-0023 | Codex Sol 6 (reviewer Opus 5.5)                   | `origin/main` (com o #159) | O1: matriz papel × rota × método "antes", gerador e e2e                  | O2 (espera o pin 1.5.x e a tenancy de R-0022) |
+| R-0032 | Codex Sol 6 (troca de família; reviewer Opus 5.5) | `origin/orchestra/pec-web` | O1–O2: mapa, ADR de identidade (C), fichas `IU-PEC-P-*` e caracterização | O3 (eventos `ch` e outbox de R-0022)          |
+
+**Regras comuns:**
+
+- Não tocar os locks de R-0020 nem os arquivos de R-0022 em curso.
+- Tarefas válidas em `pnpm verify:round-tasks`.
+- Push sem PR ao fim de cada onda e checkpoint explícito.
+- Integrar upstreams sempre por merge.

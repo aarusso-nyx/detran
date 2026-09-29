@@ -24,6 +24,19 @@ CTG-0006 condicional + CTG-0007 + fechamento); recalibradas em §Execução OD-C
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-13 (Owner, 2026-09-29; prevalece).** Estado verificado: a S-1.5 terminou,
+> `@stynx-nyx/*` **1.5.0 final** está publicado (STYNX #308/#309) e R-0021 está fechada (PC-0019).
+> Esta rodada **abre já**.
+>
+> - **Pin:** a maior versão **1.5.x final** publicada no bootstrap, exata em todos os manifestos,
+>   pela fonte única `tools/stynx-version.json` (A1). Se a 1.5.2 (#314 do STYNX) sair antes do CTG
+>   que troca o pin, ela é adotada. A conformidade (tabela §7 da especificação) é conferida contra a
+>   versão fixada.
+> - **R-0020 parada não bloqueia esta rodada.** Os locks de R-0020 (CI, `.devai/config`, `record/`)
+>   são partilhados por merge. Os gates novos de R-0020 passam a valer quando ela mesclar.
+> - **Onda de pin publicada cedo:** R-0023 (O1) e R-0024 (O1–O4) empilham neste branch. Publique
+>   (`git push`, sem PR) a onda do pin e a do SSE Angular assim que ficarem verdes.
+
 Esta seção **prevalece sobre qualquer menção a um PR/merge/evidência/delivery-review por CTG neste
 plano** (C-0002 §12). A rodada corre na branch única `orchestra/stynx-sse-tenancy`, com um commit por
 tarefa ou por CTG. Entre CTGs não há PR, CI remoto, `devai evidence record`, `audit observe`,

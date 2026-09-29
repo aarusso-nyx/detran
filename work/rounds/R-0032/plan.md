@@ -49,6 +49,27 @@ de R-0031". O caminho crítico fica em ≈ 6 janelas, como estimado em C-0002 §
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-14 (Owner, 2026-09-30; prevalece).** A rodada **abre já**, empilhada em
+> `origin/orchestra/pec-web`, onde R-0031 já publicou os CTG-0001 e CTG-0002 (contratos `BP-CH-*`,
+> fixtures e integração `ch`) e parou em checkpoint após a O8. Executa **somente as ondas O1–O2**:
+> TASK-0001 (mapa de rotas, contratos e ADR de identidade = opção (C), OD-R32-001); TASK-0002 (fichas
+> `IU-PEC-P-*`, `import-manifest.json`, `portal-build-pack.md` §4); TASK-0003 (specs e e2e de
+> caracterização `portal-pec-access`); TASK-0008 (specs PEC em `apps/portal/web`).
+>
+> - **Troca de família (Owner, 2026-09-30):** maestro e workers **Codex** (Sol 6 e escada Codex);
+>   reviewer **Opus 5.5** via Claude Code. Substitui o "Maestro previsto" do cabeçalho.
+> - Ao concluir a O2: push do branch `orchestra/portal-pec` (sem PR), checkpoint em §Retomada
+>   ("aguardando R-0022: outbox e eventos `ch`; R-0024: kit; R-0027: delegação") e parada.
+> - **Não tocar:**
+>   - `backend/domains/shared/src/policy.ts` e `backend/app/src/portal-delegation.providers.ts`
+>     (O4/O6);
+>   - eventos `ch` e outbox, que R-0022 migra (O3);
+>   - os adaptadores de assinatura de `ch/clinical-reports` e `ch/juntas`;
+>   - os locks de R-0020.
+> - **ADR de identidade:** confira o próximo número livre em `docs/meta/adr/README.md` imediatamente
+>   antes do commit, porque R-0022 também pode criar ADRs. Rode `pnpm verify:state-index`.
+> - O manual PEC dos consoles (A-C2-12) continua nas ondas finais desta rodada, não nesta abertura.
+
 > **Adenda A-C2-12 (Architect, 2026-09-27).** Esta rodada recebe de R-0031 (TASK-0018) a parte de
 > **manual PEC dos consoles**: `docs/adopters/manuais/{clinico,regulatorio}/` e as seções PEC de
 > `gestor`, `auditor-dpo` e `administrador`, pela convenção de R-0030. Ela entra como tarefa de
