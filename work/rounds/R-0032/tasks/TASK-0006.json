@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Especificar jornadas de comandos cidadãos",
+  "description": "Codificar jornadas ciência, junta, devolutiva e recurso via delegação até evento/projeção/SSE; negativos janela 422 dueOn, vínculo 404, nível 403, replay idempotente, recurso sem UPHELD, requerente candidato, 20du pelo calendário. Apenas testes. Baseline verde e novos casos RED contratual até TASK-0007; e2e com DB_NAME detran_r32_journeys e limpeza afterAll.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-requests-tests",
+    "MOD-app-e2e-portal-pec",
+    "MOD-ch-juntas-tests"
+  ],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-af252c85e0d35200",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-requests", "test:unit"],
+    ["pnpm", "--filter", "@detran/ch-juntas", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-af252c85e0d35200",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

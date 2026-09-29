@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Emitir eventos e projetar vínculo e leituras",
+  "description": "Eventos mínimos na outbox e projetores reais, incluindo holder por hash e views pec_*; gerar DDL e entidades pelo blueprint, sem editar gerados. Não tocar eventos/outbox/assinatura nesta sessão O1–O2 nem locks R20; execução só em O3 após upstream R31 CTG-0002.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ch-events-citizen",
+    "MOD-blueprints-portal",
+    "MOD-portal-projections"
+  ],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-5941d54d8cac9883",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:generate"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "--filter", "@detran/portal-projections", "test:unit"],
+    ["node", "tools/domain-boundaries/verify.mjs"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-5941d54d8cac9883",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar páginas PEC no módulo exames",
+  "description": "Rotas, páginas e fachadas por padrão R24, reuso T-20/junta/DeadlineCard/ServiceWizard, cliente gerado, SSE único, políticas e estados decididos. Não iniciar antes CTG-0003. Bloqueada até OD-R32-006: Owner decide destino do critério i18n original de TASK-0008; chaves 7/7 + auxiliar presentes antes de iniciar.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-pec"],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 10,
+  "tags": ["portal-pec", "blocked-OD-R32-006"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-f01d87bcad2406ba",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "lint"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/portal-web", "build"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-f01d87bcad2406ba",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

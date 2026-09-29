@@ -1,0 +1,158 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0032",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0002.md",
+      "line": 22,
+      "claim": "A leitura (l.22) e a fronteira de escrita (l.45) apontam para `docs/framework/product/import-manifest.json`, que não existe. O manifesto real, lido por `tools/docs/kb/check.mjs:13`, é `docs/meta/knowledge-base/import-manifest.json`. Com o caminho atual, o worker para por arquivo ausente ou cria um manifesto órfão, e `docs:kb:check` não vê o baseline +7.",
+      "fix": "Trocar os dois caminhos por `docs/meta/knowledge-base/import-manifest.json`, em TASK-0002.md e em TASK-0002.json (description)."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0032/prompts/TASK-0001.md",
+      "line": 68,
+      "claim": "A tarefa manda 'não presumir contrato de toxicology ausente nesta base' e registrar lacuna/`source_pending`. Mas `docs/framework/contracts/BP-CH-TOXICOLOGY-001.openapi.json` existe, com os operationIds `listPeriodicToxicologyResult`, `getPeriodicToxicologyResult`, `listToxicologySuspension` e `getToxicologySuspension`. As leituras de P-03 (`/v1/ch/restrictions/codes`, `/applied`) estão em `BP-CH-RESTRICTIONS-001.openapi.json`. A lista fechada (l.30-33) só traz os `*.commands.openapi.json`, então o Architect registraria uma lacuna falsa e ficaria sem os operationIds de leitura.",
+      "fix": "Incluir `BP-CH-TOXICOLOGY-001.openapi.json`, `BP-CH-RESTRICTIONS-001.openapi.json` e `BP-CH-REPORTS-001.openapi.json` (consultas) na leitura. Reescrever a frase: toxicology tem contrato de consulta e não tem comando nem evento consumível pelo Portal (plan.md l.199-202)."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0001.md",
+      "line": 13,
+      "claim": "A leitura fechada não basta para os contratos que a tarefa precisa fixar. Para o CTG-0002 (colunas das views, RLS, assinatura da porta 'mesmo SQL de getOwn', chaves `portal:*`) faltam `roles.ts`, `policy.ts`, `candidate-dossier.{service,controller}.ts`, `exam-view.projection.ts`, `projection-contract.ts`, `projectors.service.ts`, `65-portal-projections.sql`, `41-ch-patients.sql`, `BP-PORTAL-PROJECTIONS-001.json` e RN-PEC-130. Para o CTG-0003 (alvos, identidade OD-R27-001, prazos no dono) faltam `delegation.service.ts`, `portal-delegation.providers.ts` (só leitura), `junta-lifecycle.service.ts`, `inf/deadlines/src/{calendar,local-date}.ts` e `work/rounds/R-0027/decision-brief-OD-R27-001-002.md`. Para o CTG-0004 (guardas, erros, marcador) faltam `portal-route-contract.md`, `portal-error-catalog.md`, `app.route-manifest.ts` e WF-PEC-001…005. Como a lista proíbe outras leituras, o Architect teria de inventar colunas, códigos e assinaturas.",
+      "fix": "Acrescentar os caminhos acima, que são o mapa entregável → definições de plan.md l.422-433 nas linhas identidade/leituras/comandos/telas mais WF, ou permitir explicitamente esse mapa como leitura."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0032/prompts/TASK-0001.md",
+      "line": 11,
+      "claim": "O texto comum a todos os prompts diz que 'OD-R32-002…005 seguem padrões fail-closed do plano'. O plano (l.439-468) não define padrão fail-closed: define 'padrão proposto' permissivo, com `simples` para consultas, `entrevista_devolutiva` e `pec_ciencia_resultado`, inclusão de serviços no catálogo, termo inicial de ciência e conteúdo do dossiê. A AUTHORIZATION.md l.5 exige fail-closed até decisão expressa. Sem semântica explícita por OD, TASK-0001 e depois TASK-0007 (seed de `act_level_policy`) podem codificar o padrão proposto como se fosse decidido.",
+      "fix": "Fixar no prompt de TASK-0001, com repasse a TASK-0002/0005/0007/0010, a semântica fail-closed de cada OD. Por exemplo: OD-R32-002, linhas novas no nível mais restritivo (`avancada`) com `legal_basis=source_pending (OD-R32-002)`. OD-R32-003, sem ciência registrada não há prazo iniciado nem aceite presumido. OD-R32-004, serviços novos só como `bloqueado_por_decisao`/inativos até decisão, exceto `junta_medica` (OD-R27-002 = (b)). OD-R32-005, conteúdo mínimo sem instrumento psicológico. Alternativa: citar que 'padrão proposto = fail-closed' foi aceito pelo Owner, se houver fonte."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0032/prompts/TASK-0008.md",
+      "line": 67,
+      "claim": "A troca A-C2-14 (TASK-0008 passa a entregar specs) deixa sem dono a transcrição i18n de `portal.pt-BR.json` (plan.md l.349, lock `MOD-portal-i18n`). O CTG-0004 fica sem tarefa de Architect/transcriber (§4 itens 1, 14 e 15) e com duas tarefas de Inspector no mesmo módulo. Nenhum prompt futuro pode escrever o i18n: TASK-0010 (Pode tocar) exclui `portal.pt-BR.json`. TASK-0009 exige 'tela↔ficha↔rota↔i18n 7/7'. Resultado: TASK-0009/0010 ficam impossíveis de cumprir sem nova decisão do Owner. O prompt só registra a pendência e não põe gate. É a contradição que exige decisão adicional.",
+      "fix": "Sem mudar o plano agora: registrar em plan.md §Bloqueios uma OD explícita para o Owner (destino do critério i18n: nova tarefa Architect/transcriber com `MOD-portal-i18n` antes da O7, ou devolução do critério à TASK-0008). Marcar TASK-0009 e TASK-0010 como bloqueadas até essa decisão, com a condição escrita nos dois prompts e JSONs."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0008.md",
+      "line": 51,
+      "claim": "As specs da O2 devem cobrir D2 (dossiê sem máscara), D6 (422 com `dueOn`), assurance e vínculo. A leitura fechada (l.13-38), porém, não traz `contracts/CTG-0002.md` e `CTG-0003.md` (formas do dossiê, restrições e erros), `portal-error-catalog.md`, `portal-route-contract.md`, `exames.facade.ts`, `exam-list.page.ts` e `junta-medica.page.ts`. Os clientes gerados só existem após TASK-0005/0007. Sem essas fontes, o Inspector inventa formas de payload, o que viola 'nada inventado' e contratos antes das telas (ADR-0034 §3).",
+      "fix": "Incluir CTG-0002/0003.md, os dois documentos de arquitetura do Portal e os arquivos existentes do módulo `exames`. Restringir as asserções da O2 a formas definidas nos contratos do CTG-0001 e deixar para TASK-0009 o que depende de cliente gerado, com esse limite explícito no prompt."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0032/prompts/TASK-0009.md",
+      "line": 37,
+      "claim": "TASK-0009 tem como Pode tocar os mesmos `pec-screens.spec.ts` e `pec-routes.a11y.spec.ts` criados por TASK-0008. A l.42 do mesmo prompt proíbe 'arquivos de teste de outro worker', e a tarefa pede 'completar' a bateria de outro Inspector: fronteira contraditória, contra a rubrica 3. A leitura também não traz as fichas IU-PEC-P-0{1…7}, `portal.pt-BR.json`, `i18n-keys.spec.ts`, `screen-sheets.spec.ts` e `app.route-manifest.ts`, necessários ao 'tela↔ficha↔rota↔i18n'.",
+      "fix": "Dar a TASK-0009 arquivos próprios (ex.: `pec-screens.contract.spec.ts`, `pec-routes.a11y.full.spec.ts`), ou declarar expressamente que TASK-0009 herda a posse das specs de TASK-0008 com autorização do maestro. Acrescentar as fichas e os arquivos de i18n, manifesto e specs existentes à leitura."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0032/prompts/TASK-0003.md",
+      "line": 64,
+      "claim": "TASK-0003 cria `portal-pec-access.e2e.spec.ts` e roda `pnpm --filter @detran/app test:e2e` sem `DB_NAME` explícito nem regra de limpeza no `afterAll`, contra §4 item 16. Não existe `work/rounds/R-0032/env-detran-r32.sh`, ao contrário de R-0031 e anteriores, então o e2e roda em banco compartilhado e não idempotente.",
+      "fix": "O maestro cria `work/rounds/R-0032/env-detran-r32.sh` com `DB_NAME` próprio e o inclui na leitura de TASK-0003 e TASK-0006. Acrescentar ao prompt: 'cada arquivo e2e limpa no afterAll o que criou; rodar com o env da rodada'."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0032/prompts/TASK-0006.md",
+      "line": 54,
+      "claim": "TASK-0006 (Inspector, antes do Engineer TASK-0007) exige `exit 0` nos testes novos, o que é inalcançável sem a implementação e empurra para teste fraco. Ela também não roda o arquivo e2e que escreve (`portal-pec-journeys.e2e.spec.ts`, l.29), porque falta `pnpm --filter @detran/app test:e2e`.",
+      "fix": "Usar o mesmo texto de TASK-0003: baseline verde, novos casos RED esperado relatado sem PASS. Acrescentar `pnpm --filter @detran/app test:e2e` com o env da rodada."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0011.md",
+      "line": 29,
+      "claim": "A fronteira e a leitura de TASK-0011/0012 citam `docs/framework/arch/local-stack-runbook.md`, que não existe. O runbook real é `docs/dev/operations/local-stack.md`. A meta 'rotas v1/portal/exams* no smoke de R-0017' exige editar `tools/stack/smoke.mjs` e talvez `tools/stack/portal-fixture.sh`, que estão fora da fronteira.",
+      "fix": "Trocar o caminho do runbook em TASK-0011 e TASK-0012. Incluir `tools/stack/smoke.mjs` (e `portal-fixture.sh`, se a persona depender dele) em Pode tocar e na leitura de TASK-0011."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0032/prompts/TASK-0003.md",
+      "line": 45,
+      "claim": "Os negativos exigidos pela rubrica (terceiro, tenant, nível, `*`) estão presentes. Faltam os do plano (l.260-265 e §Lições): vínculo vencido, principal sem `CIDADAO` e a prova de que a sessão `CIDADAO` continua sem `ch:candidate-dossier:*`/`CANDIDATO`.",
+      "fix": "Acrescentar esses três negativos à tarefa e à description de TASK-0003.json."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0032/AUTHORIZATION.md",
+      "line": 3,
+      "claim": "A troca de entrega de TASK-0008 (A-C2-14, specs no lugar de i18n) só aparece em plan.md M2 e nos prompts. O texto de autorização versionado não a registra, e a M2 se apoia em 'instrução direta'.",
+      "fix": "Acrescentar à AUTHORIZATION.md a frase do Owner sobre TASK-0008, para rastreabilidade."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0001.md",
+      "line": 22,
+      "claim": "A leitura não traz `ADR-0035-adr-numbering-policy.md`, que rege o número livre e `verify:state-index`. `MOD-adr-index` está em TASK-0001.json, mas não no lock do plano, e colide com R-0022, que também cria ADRs.",
+      "fix": "Incluir a ADR-0035 na leitura e registrar `MOD-adr-index` como lock serializado com R-0022 em §Concorrência."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0002.md",
+      "line": 13,
+      "claim": "Falta um modelo de ficha irmã (ex.: `IU-PEC-C-01.md`) para frontmatter e formato validados pelo `docs:kb:check`, e falta `IU-PORTAL-T20.md` (P-02 estende T-20).",
+      "fix": "Acrescentar os dois arquivos à leitura."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0032/prompts/TASK-0005.md",
+      "line": 31,
+      "claim": "TASK-0004/0005/0007 têm fronteiras por diretório inteiro (`backend/app/src/`, `ch/*/src/`, `portal/projections/src/handwritten/`). Essas fronteiras contêm specs de TASK-0003/0006 e `portal-delegation.providers.ts`, dono R-0027 e lock de TASK-0007. O texto comum 'Nesta sessão O1–O2, não tocar policy.ts/providers/outbox' contradiz, em leitura literal, o Pode tocar dessas tarefas futuras.",
+      "fix": "Excluir nominalmente as specs do Inspector e `portal-delegation.providers.ts` da fronteira de TASK-0005. Reescrever o texto comum como 'vedado até a onda desta tarefa'."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0032/prompts/TASK-0007.md",
+      "line": 58,
+      "claim": "A tarefa pede `seed.sh` duas vezes (§4 item 9), mas os `acceptance_commands` não o incluem.",
+      "fix": "Acrescentar `bash backend/database/seed.sh` (2×, banco limpo, env da rodada) aos critérios."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0032/prompts/TASK-0008.md",
+      "line": 72,
+      "claim": "Specs que referenciam páginas ainda inexistentes deixam `tsc -p tsconfig.spec.json` vermelho. Isso quebra `pnpm typecheck` e `portal-web test` no `pnpm check` do branch publicado desde a O2 até a O8. É aceitável pelo §4 item 13, mas não está registrado.",
+      "fix": "O maestro registra no checkpoint da O2 o RED esperado de typecheck/test do portal-web, separado do sensor-error de `revision.test.mjs:433`."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0032/tasks/TASK-0002.json",
+      "line": 39,
+      "claim": "A autorização diz 'Sol 6 para o maestro, Architect e tarefas grandes'. TASK-0002/0013/0014 (Architect/transcriber) usam `gpt-6-luna`. A interpretação 'Architect grande' (M1) é plausível, mas não está literalmente na autorização.",
+      "fix": "Anotar em M1 que o Architect transcriber de esforço baixo segue a escada pequena equivalente."
+    }
+  ],
+  "notes": [
+    "Modelos conferem com `model-ladder.md` e com a autorização: gpt-6-sol (TASK-0001, high), gpt-5.6-terra (médio), gpt-6-luna (pequeno). Reviewer `claude-opus-5-5` via `bridge.sh claude` em compositions.json, budget.json e waves.md.",
+    "Na O2, os `target_modules` de TASK-0002, TASK-0003 e TASK-0008 são disjuntos. Todos os prompts vedam git e instalação de pacotes e preservam `revision.test.mjs:433`, `policy.ts`, `portal-delegation.providers.ts`, eventos/outbox/assinatura `ch` e locks R-0020.",
+    "Estão preservados: OD-R32-001 = (C) (holder por `subjectCpfHash`, projeções só com metadados, porta sob demanda com auditoria bilateral, sem papel novo nem CANDIDATO), OD-R27-001 = (a), junta médica nesta rodada e ADR-0034 §2–6.",
+    "Veredito REVIEW: os achados high se corrigem nos prompts/JSONs e em plan.md §Bloqueios sem alterar metas nem critérios. O item i18n de TASK-0008 depende de decisão do Owner antes da O7, não antes da O2.",
+    "Não há PR, delivery-review nem evidência nesta sessão, conforme a AUTHORIZATION.md."
+  ]
+}

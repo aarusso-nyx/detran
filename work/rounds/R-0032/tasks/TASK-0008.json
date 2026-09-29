@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Especificar telas PEC do Portal em O2",
+  "description": "A-C2-14, instrução expressa desta sessão: produzir specs PEC em apps/portal/web na O2. Cobrir manifesto 7/7 + auxiliar, presença/ausência CIDADAO, assurance e vínculo, D1/D2/D3/D4/D6, estados bloqueados e axe por rota/estado. Não editar i18n. O critério original de TASK-0008 no plan.md é i18n e permanece pendente de clarificação do Owner; não declará-lo cumprido nem removê-lo. Não invadir TASK-0009: estas specs são contrato inicial, TASK-0009 completa a bateria após CTG-0003. Na O2, testar somente formas fixadas por CTG-0001/0004; dependências de CTG-0002/0003 e clientes gerados ficam diferidas para TASK-0009. RED de test/typecheck esperado e registrado, critério i18n original aberto.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-tests-pec"],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["portal-pec", "A-C2-14"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-e6bbce8474490472",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-e6bbce8474490472",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

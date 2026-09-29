@@ -1,0 +1,38 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0032",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0008.md",
+      "line": 43,
+      "claim": "A seção 'Leitura diferida para O7' diz que CTG-0002/0003 'ainda são produzidos após a O2'. Isso é falso: TASK-0001, na O1, tem `work/rounds/R-0032/contracts/CTG-0002.md` e `CTG-0003.md` em Pode tocar, então esses contratos já existem na O2. A correção do high 6 se sustenta pela alternativa que o ciclo 1 aceitou: na O2 só se testa o que CTG-0001/0004 fixam, e o resto fica diferido para TASK-0009. Nenhum payload é inventado e a fronteira é conservadora. Só a justificativa está errada.",
+      "fix": "Trocar a justificativa por 'são contratos do CTG-0002/0003, cujas implementações e clientes gerados só existem após O4/O6; por isso as asserções dependentes ficam com TASK-0009'. Opcionalmente, permitir ler os dois arquivos sem asserir sobre eles."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0032/prompts/TASK-0011.md",
+      "line": 13,
+      "claim": "O high 10 foi corrigido: o runbook real `docs/dev/operations/local-stack.md` substitui o caminho inexistente em TASK-0011, TASK-0012 e TASK-0011.json, e `tools/stack/smoke.mjs` e `portal-fixture.sh` agora estão na fronteira e na leitura. Mas em TASK-0011 o runbook aparece só em Pode tocar, não na leitura fechada ('Leia somente estes caminhos'). O worker teria de editar um arquivo que não pode ler. Isso não afeta esta sessão, porque TASK-0011 é da O9.",
+      "fix": "Acrescentar `docs/dev/operations/local-stack.md` à leitura fechada de TASK-0011 antes do despacho da O9."
+    }
+  ],
+  "notes": [
+    "High 1 (manifesto KB): corrigido. TASK-0002.md, na leitura e em Pode tocar, e TASK-0002.json usam `docs/meta/knowledge-base/import-manifest.json`, que existe.",
+    "High 2 (toxicologia): corrigido. TASK-0001 lê `BP-CH-TOXICOLOGY-001.openapi.json`, `BP-CH-RESTRICTIONS-001.openapi.json` e `BP-CH-REPORTS-001.openapi.json`. Os operationIds existem: listPeriodicToxicologyResult, getPeriodicToxicologyResult, listToxicologySuspension, getToxicologySuspension, listRestrictionCode, getRestrictionCode, listEncounterRestriction e getEncounterRestriction. A frase agora diz que toxicology tem contrato de consulta, mas não comando nem evento, e manda não inventar operationId de comando. Isso concorda com plan.md l.200.",
+    "High 3 (leitura fechada TASK-0001): corrigido. Todos os caminhos pedidos no ciclo 1 estão presentes e existem na base, incluindo roles/policy, candidate-dossier, projeções, DDL 65/41, BP-PORTAL-PROJECTIONS-001, RN-PEC-130, delegation.service, providers (leitura), junta-lifecycle, deadlines calendar/local-date, o brief OD-R27-001-002, route contract, error catalog, route manifest e WF-PEC-001…005. A ADR-0035 também foi incluída.",
+    "High 4 (fail-closed): corrigido. plan.md M3 define a semântica restritiva de cada OD-R32-002…005 e o texto comum de todos os prompts a repete. O item (002) concorda com ADR-0024 §5 ('a missing row never releases the act'). O item (004) preserva `junta_medica` pela OD-R27-002=(b). O texto proíbe tratar padrão proposto como aprovação.",
+    "High 5 (i18n): corrigido. plan.md §Bloqueios registra a OD-R32-006, com decisão do Owner antes da O7. TASK-0009 e TASK-0010 têm bloqueio explícito no prompt, na description do JSON e na tag `blocked-OD-R32-006`. TASK-0008 não declara cumprido nem remove o critério i18n original. M2 registra a troca A-C2-14, e a AUTHORIZATION.md a reproduz.",
+    "High 6 (leitura TASK-0008): corrigido. Foram incluídos portal-route-contract, portal-error-catalog, exames.facade, exam-list.page e junta-medica.page, além das specs de manifesto, fichas, i18n, axe e junta. As asserções da O2 ficam limitadas a CTG-0001/0004 e às interfaces existentes, e as demais são diferidas explicitamente para TASK-0009. A ressalva sobre a justificativa está no achado low.",
+    "High 7 (fronteiras TASK-0008/0009): corrigido. TASK-0009 escreve `pec-screens.contract.spec.ts` e `pec-routes.a11y.full.spec.ts`, e só lê os arquivos de TASK-0008. A leitura agora inclui as fichas P-01…07, portal.pt-BR.json, i18n-keys.spec, screen-sheets.spec e app.route-manifest. As duas tarefas compartilham o lock `MOD-portal-web-tests-pec`, mas ficam em ondas distintas (O2 e O7).",
+    "High 8 (e2e isolado): corrigido. `env-detran-r32.sh` existe e segue o padrão de R-0031, com `r32_set_db access|journeys|final`. TASK-0003 usa `access` e TASK-0006 usa `journeys`: cada uma dá `source` no env, confere `DB_NAME` e limpa no `afterAll`. As descriptions dos JSONs repetem isso. Como em R-0031, o env não cria o banco nem aplica DDL; o maestro prepara o banco antes do e2e.",
+    "High 9 (RED do Inspector): corrigido. TASK-0006 passou a exigir baseline verde e novos casos com RED contratual até TASK-0007, sem declarar PASS, e agora inclui `pnpm --filter @detran/app test:e2e` com o env da rodada. TASK-0003 e TASK-0008 usam a mesma formulação.",
+    "High 10 (runbook): corrigido. A ressalva sobre a leitura de TASK-0011 está no achado low.",
+    "compositions.json confere: o sha256 dos 14 prompts, o pc_id e o modelo coincidem com tasks/*.json e executor. Nenhuma contradição com a Constituição, as ADRs 0020/0024/0034 ou decisões do Owner (OD-R32-001=(C), OD-R27-001=(a), OD-R27-002=(b)) apareceu no texto alterado.",
+    "Fora do escopo deste ciclo, em texto inalterado e de ondas futuras: TASK-0010 lê `docs/framework/arch/frontend-wiring-pattern.md`, e TASK-0013 lê `docs/framework/arch/user-docs-convention.md` e `availability/portal-web.availability.json`. Esses arquivos não existem nesta base. Conferir antes do despacho da O8 e da O11. Não impede a O1–O2.",
+    "A sessão continua limitada a O1–O2, sem PR, delivery-review nem evidência, conforme a AUTHORIZATION.md."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0032",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar contratos e arquitetura PEC Portal",
+  "description": "Definir mapa P-01…P-07 e auxiliar com rota, ato, projeção/porta, operaçãoId real do contrato R31, política, UC/RN/WF e selo. Propor ADR para exceção de leitura sensível ao ADR-0020. Definir esquema versionado de eventos mínimos, views, vínculo/RLS, porta e negativos; comandos, ciência e prazos no dono; guardas/estados/marcador/a11y. Conferir número livre da ADR e usar esse número real, sem criar arquivo literal ADR-NEXT. CTG-0001 é contrato da rodada. Operações de leitura vêm dos contratos query de reports, restrictions e toxicology; tox não possui comando/evento cidadão nesta base. OD-R32-002…005 permanecem inativas/fail-closed conforme M3. ADR e ambos os índices seguem verify:state-index com MOD-adr-index serializado com R-0022.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r32-contracts", "MOD-adr-new", "MOD-adr-index"],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-7ed7c34857ee872c",
+  "acceptance_commands": [
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:state-index"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-7ed7c34857ee872c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Adicionar persona PEC à stack",
+  "description": "Persona de CPF sintético igual à fixture R31, assurance avancada e smoke das rotas portal/exams*. Serializar MOD-local-stack com R31. Runbook real docs/dev/operations/local-stack.md; smoke.mjs e portal-fixture.sh na fronteira.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-local-stack"],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-9b68a575ca141570",
+  "acceptance_commands": [
+    ["pnpm", "stack:start"],
+    ["pnpm", "stack:smoke"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-9b68a575ca141570",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

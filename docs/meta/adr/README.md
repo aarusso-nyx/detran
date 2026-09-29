@@ -51,6 +51,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0036](ADR-0036-ops-field-operations-port.md)                      | Field-operations port scope and offline-sync deferral                                   | Accepted | —                                                                                |
 | [ADR-0037](ADR-0037-rait-legal-priority-owner-policy.md)               | RAIT legal-priority Owner policy (legal validation pending before delivery)             | Accepted | —                                                                                |
 | [ADR-0038](ADR-0038-provisionamento-operacional-offline.md)            | Operational offline provisioning                                                        | Accepted | —                                                                                |
+| [ADR-0039](ADR-0039-pec-portal-citizen-identity.md)                    | Vínculo do candidato PEC e leitura clínica sob demanda no Portal                        | Proposed | exceção restrita → [ADR-0020](ADR-0020-read-models-and-projections.md)           |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 

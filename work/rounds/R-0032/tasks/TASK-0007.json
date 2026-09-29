@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar comandos cidadãos delegados",
+  "description": "Entregar alvos, ciência, onBehalfOf/requerente, prazos no servidor, catálogo e política como dados; preservar linhas R27 e executar seed duas vezes. Só em O6 após R27; esta composição não autoriza tocar providers/policy nesta sessão O1–O2.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-app-portal-delegation",
+    "MOD-ch-juntas",
+    "MOD-ch-clinical-reports",
+    "MOD-seed-portal",
+    "MOD-shared-policy"
+  ],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-bcd5d04d88508a48",
+  "acceptance_commands": [
+    ["pnpm", "contracts:openapi"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "--filter", "@detran/ch-juntas", "test:unit"],
+    ["pnpm", "backend:test:e2e"],
+    ["bash", "backend/database/seed.sh"],
+    ["bash", "backend/database/seed.sh"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-bcd5d04d88508a48",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

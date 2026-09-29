@@ -510,12 +510,27 @@ da delegação), OD-R27-002 (junta no catálogo), OD-P17 (`lgpd_declaracao`) e O
 
 ## Decisões do maestro
 
+- **M1 (2026-09-30, bootstrap).** Por autorização do Owner em `AUTHORIZATION.md`, maestro e workers são Codex: `gpt-6-sol` para o maestro/Architect grande, `gpt-5.6-terra` para nível médio e `gpt-6-luna` para nível pequeno. Architect em transcrição de esforço baixo segue o nível pequeno equivalente, sem tomar decisão nova. Reviewer da outra família: Claude Code Opus 5.5, id `claude-opus-5-5`, somente por `tools/orchestra/bridge.sh claude`. Ids conferidos em `model-ladder.md` e nas opções `-m`/`--model` das CLIs. Aplicam-se os esforços da tabela de tarefas e a escada equivalente. O limite desta sessão é O1–O2; o status inicial de proposta fica superado pela autorização registrada, sem alterar os critérios originais.
+- **M2 (A-C2-14, instrução direta do Owner nesta abertura).** Na O2 desta sessão, TASK-0008 entrega specs PEC em `apps/portal/web`. A tabela anterior de §Execução e §Tarefas descreve a TASK-0008 como transcrição de i18n; esse critério anterior permanece aberto e não será declarado cumprido por specs. A mudança de entrega é registrada explicitamente para a revisão única dos prompts; o destino do critério i18n será anotado no checkpoint se o Owner não o decidir nesta sessão. TASK-0009 permanece Inspector de telas na O7, após os upstreams exigidos.
+- **M3 (interpretação fail-closed de O1–O2, sem decisão nova de mérito).** As OD-R32-002…005 do §ODs propostas ainda são propostas ao Owner. Até resposta expressa: (002) nenhuma linha nova de nível é ativada; ausência da linha nega o ato conforme ADR-0024, e a base legal fica `source_pending (OD-R32-002)`; (003) sem ciência expressa ou presencial registrada pelo dono, nenhum prazo preclusivo inicia, e disponibilização/emissão não são ciência; (004) serviços novos permanecem indisponíveis/bloqueados por decisão, exceto `junta_medica` já autorizada por OD-R27-002 = (b); (005) o contrato delimita o máximo proposto do dossiê, mas não habilita novo acesso clínico até decisão do conteúdo — nenhum instrumento psicológico, anotação técnica ou cópia em `portal.*`. A O1 documenta e a O2 caracteriza guardas e negativos, sem ativar esses atos.
+
 ## Concorrência
+
+- Bootstrap: `origin/main` = `c4d5417c`; `origin/orchestra/pec-web` = `7c0854f3`, com `BP-CH-JUNTAS-001.commands.openapi.json` e `pec-error-catalog.md`. R-0031 está após O8, com CTG-0001/0002 publicado; O1–O2 podem avançar na base empilhada. R-0020 segue em preparação local, com locks `.github/workflows/`, `.devai/config`, `law/register` e `record/` preservados. R-0022 está ativa em `orchestra/stynx-sse-tenancy`, ainda fora de `main`; O3 espera sua migração de outbox/eventos `ch`. R-0027 ainda não está em `main`; O6 espera a delegação. R-0024 libera O7+ depois do kit. PR #160 (A-C2-14) aberto no bootstrap. Revisões de R-0031 entram só por `git merge --no-edit`.
+- Após o bootstrap, `origin/main` avançou a `38c79714` pelo merge do PR #160 (A-C2-14). O texto do Owner nesta sessão prevalece nos pontos de família e TASK-0008. A base empilhada R-0031 segue `7c0854f3`; o avanço de `main` será integrado por merge após o commit da O1, sem rebase.
+- `MOD-adr-index` (`docs/meta/adr/README.md`, `DESIGN-DECISIONS.md`) é serializado com R-0022. O Architect propõe a ADR na O1; o maestro confere o próximo número livre imediatamente antes do commit e atualiza os dois índices em conjunto. Se R-0022 publicar antes, integra-se somente pela regra de merge autorizada e revalida-se `pnpm verify:state-index`.
 
 ## Bloqueios
 
+- **OD-R32-006 (destino do critério i18n de TASK-0008).** A autorização A-C2-14 deslocou a entrega de TASK-0008 para specs em `apps/portal/web` na O2, preservando o critério original de chaves `portal.pt-BR.json` sem dono nesta sessão. O Owner deve decidir, antes da O7, entre tarefa Architect/transcriber nova com `MOD-portal-i18n` ou devolução do critério à TASK-0008 numa janela posterior. **TASK-0009 e TASK-0010 bloqueadas** até essa decisão, pois exigem tela ↔ ficha ↔ rota ↔ i18n 7/7; não se declara o critério original cumprido por specs.
+
 ## Triagem
+
+- Bootstrap: `pnpm check` interrompido em `pnpm test:stack` (57/58 PASS): sensor `tools/stack/revision.test.mjs:433` usa `/pec/` sobre o comando Docker inteiro e casa o nome da worktree `portal-pec` no caminho absoluto. É `sensor-error` herdado da R-0031 (TASK-0015 corrige o regex do slot na O11 dela). Este lock permanece com R-0031; O1–O2 seguem com gates específicos e não alteram o teste.
+- Preparo reversível do banco isolado `detran_r32_access`: `pnpm backend:db:apply` passou; `SEED_PROFILE=ch bash backend/database/seed.sh` falhou na transação com `rait_priority_consistency(): query returned no rows`, classificado como `plant-bug` de ordem/interação da seed upstream para investigação fora de O1–O2. `SEED_PROFILE=fresh` passou no banco próprio, seguido de `82-fixtures-ch.sql` isolado em transação, também PASS. Os testes de acesso usam apenas esse banco; nenhuma seed canônica foi editada ou gate afrouxado.
 
 ## Retomada
 
 ## Leitura
+
+- Bootstrap na base `7c0854f314ab6253c80c71cc8de7e2ce4c3b6a7d`: `AGENTS.md`, `CODESTYLE.md`, `docs/meta/agents/{README.md,orchestra/{README.md,model-ladder.md,waves.md}}`, `work/campaigns/C-0002-consolidacao.md` §12/§15, `docs/meta/adr/ADR-0034-pec-web-frontend.md`, `work/rounds/R-0032/{plan.md,prompts/00-maestro.md}`, `work/rounds/R-0027/decision-brief-OD-R27-001-002.md`; leituras específicas das tarefas constam nos prompts.

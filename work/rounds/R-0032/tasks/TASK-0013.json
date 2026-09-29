@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever manifesto e manual cidadão",
+  "description": "Linhas P e auxiliar com history R32 e decision para selo não disponível; manual fiel ao comportamento real, bloqueios e direitos. A convenção R30 ausente bloqueia esta tarefa até upstream.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-availability-portal", "MOD-user-docs-cidadao"],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0012",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 13,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-658fac4e8d7d97ec",
+  "acceptance_commands": [
+    ["pnpm", "docs:availability:check"],
+    ["pnpm", "docs:user:check"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-658fac4e8d7d97ec",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

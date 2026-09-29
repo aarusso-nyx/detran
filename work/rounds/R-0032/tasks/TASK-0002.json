@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever fichas P e ODs",
+  "description": "Transcrever sete fichas draft com apps: [portal], fonte §C/D/E, baseline +7 no import-manifest no mesmo lote e OD-R32-001…005 em §4 do build pack, sem decidir OD pendente. Manifesto canônico: docs/meta/knowledge-base/import-manifest.json.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-product-pec-screens-p",
+    "MOD-kb-manifest",
+    "MOD-portal-build-pack-od"
+  ],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-280552df6c4723f0",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-280552df6c4723f0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

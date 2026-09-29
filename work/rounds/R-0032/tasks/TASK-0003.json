@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0032",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Caracterizar acesso PEC antes da troca",
+  "description": "Antes da troca, registrar matriz papel × rota e respostas atuais de GET /v1/portal/exams[/{id}]. Depois codificar replay/idempotência, igualdade do hash e ausência de vínculo para outro CPF, titular sem máscara versus SUPORTE mascarado, terceiro/tenant 404, assurance 403, guarda bloqueia *, auditoria dupla e ausência de estados internos no payload. Testes novos somente; preservar a caracterização versionada e mostrar RED esperado dos novos requisitos, sem reescrever baseline. Negativos: vínculo vencido, ausência de CIDADAO e sessão CIDADAO sem CANDIDATO/ch:candidate-dossier:*. Usar DB_NAME isolado da rodada e limpeza afterAll. Baseline versionada antes da troca, novos casos RED contratual; e2e no DB_NAME exclusivo detran_r32_access com limpeza afterAll.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-projections-tests",
+    "MOD-portal-identity-tests",
+    "MOD-app-e2e-portal-pec",
+    "MOD-ch-clinical-reports-tests"
+  ],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["portal-pec"],
+  "branch": "orchestra/portal-pec",
+  "worktree_id": "WT-portal-pec",
+  "prompt_composition_id": "PC-91dc76d8897b0aae",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-projections", "test:unit"],
+    ["pnpm", "--filter", "@detran/portal-identity", "test:unit"],
+    ["pnpm", "--filter", "@detran/ch-clinical-reports", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-91dc76d8897b0aae",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
