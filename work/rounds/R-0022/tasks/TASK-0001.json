@@ -13,10 +13,7 @@
     "MOD-kb-open-decisions",
     "MOD-sse-contract-doc"
   ],
-  "target_substrates": [
-    "F2",
-    "F3"
-  ],
+  "target_substrates": ["F2", "F3"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
@@ -25,33 +22,15 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": [
-    "r22",
-    "ctg-0001",
-    "characterization"
-  ],
+  "tags": ["r22", "ctg-0001", "characterization"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
   "prompt_composition_id": "PC-944e2c0ce31cadca",
   "acceptance_commands": [
-    [
-      "test",
-      "-s",
-      "work/rounds/R-0022/contracts/CTG-0001.md"
-    ],
-    [
-      "test",
-      "-s",
-      "docs/framework/arch/sse-stream-contract.md"
-    ],
-    [
-      "pnpm",
-      "docs:kb:check"
-    ],
-    [
-      "pnpm",
-      "format:check"
-    ]
+    ["test", "-s", "work/rounds/R-0022/contracts/CTG-0001.md"],
+    ["test", "-s", "docs/framework/arch/sse-stream-contract.md"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
   ],
   "created_at": "2026-09-29T17:00:00.000Z",
   "executor": {
@@ -65,9 +44,6 @@
     },
     "prompt_composition_id": "PC-944e2c0ce31cadca",
     "max_iterations": 2,
-    "capabilities": [
-      "read",
-      "local-write"
-    ]
+    "capabilities": ["read", "local-write"]
   }
 }
