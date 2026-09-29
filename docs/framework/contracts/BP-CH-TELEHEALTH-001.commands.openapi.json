@@ -1,0 +1,47 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-TELEHEALTH-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-TELEHEALTH-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/telehealth/sessions": {
+      "post": {
+        "operationId": "pecPostChTelehealthSessions",
+        "summary": "POST /v1/ch/telehealth/sessions",
+        "x-blueprint": "BP-CH-TELEHEALTH-001",
+        "x-source-controller": "backend/domains/ch/telehealth/src/telehealth-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/telehealth/sessions/{id}/conclude": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChTelehealthSessionsByIdConclude",
+        "summary": "PATCH /v1/ch/telehealth/sessions/{id}/conclude",
+        "x-blueprint": "BP-CH-TELEHEALTH-001",
+        "x-source-controller": "backend/domains/ch/telehealth/src/telehealth-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

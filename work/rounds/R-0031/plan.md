@@ -42,6 +42,23 @@ recalibra no bootstrap e registra em `plan.md` §Decisões do maestro. Recalibra
 > final. Nenhum critério de aceitação desta rodada exige o manual: o critério de manual passa a ser
 > cobrado em R-0032.
 
+> **Adenda A-R31-01 / OD-PW-006 (Owner, 2026-09-29; prevalece sobre O11,
+> TASK-0015 e TASK-0017).** O Owner autorizou nesta sessão que o Inspector da
+> TASK-0015 atualize primeiro `tools/stack/revision.test.mjs` C-01-09 para o
+> contrato do slot PEC, inclusive tornando a asserção imune ao nome da
+> worktree. A TASK-0017 só começa depois da TASK-0015 e tem
+> `pnpm test:stack` nos seus `acceptance_commands`. O lock `MOD-local-stack`
+> fica com TASK-0015 durante o teste e depois com TASK-0017 durante a
+> implementação; ambas deixam de ser simultâneas em O11. Esta adenda prepara
+> O11 para a retomada após O8, sem autorizar executá-la nesta sessão. Nenhum
+> critério anterior é substituído; o teste novo e o comando são acréscimos.
+
+> **Adenda A-R31-02 (Owner, 2026-09-29; prompt-review).** O Owner autorizou
+> novas revisões nesta sessão além do limite de dois ciclos do prompt do
+> maestro. Cada ciclo adicional fica restrito ao achado ainda não corrigido do
+> ciclo anterior; o despacho de workers continua exigindo `PASS`. Esta adenda
+> não altera critérios de aceitação nem autoriza delivery-review ou PR.
+
 Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
 um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
 aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
@@ -330,10 +347,89 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
 
 ## Decisões do maestro
 
+- **M1 (2026-09-29, Architect):** autorização do Owner registrada em
+  `AUTHORIZATION.md`. A-C2-13 prevalece sobre a base de abertura: worktree
+  isolada sobre `origin/main` `c325f9b5`, branch `orchestra/pec-web`, execução
+  limitada a O1–O8. A partir de O9, retomada por outro maestro após R-0024.
+  A-C2-12 transfere o manual PEC de consoles para R-0032.
+- **M2 (2026-09-29, Architect):** `codex --help` confirma `-m/--model` e
+  `claude --help` confirma `--model`; ids vigentes do
+  `docs/meta/agents/orchestra/model-ladder.md`: `gpt-6-sol`,
+  `gpt-5.6-terra`, `gpt-6-luna` e `claude-opus-5-5`. Reviewer só pela ponte
+  `tools/orchestra/bridge.sh claude`.
+- **M3 (2026-09-29, Architect):** recontagem de `backend/domains/ch/*/` =
+  **17 módulos**. A proibição de editar os adaptadores de assinatura em
+  `clinical-reports` e `juntas` vale também para os workers.
+- **M4 (2026-09-29, Architect):** em `c325f9b5`,
+  `rg -n '^\s*@(Get|Post|Patch|Put|Delete)\(' backend/domains/ch/*/src/*controller.ts backend/app/src/pec-*controller.ts | wc -l`
+  mede **82 operações manuscritas**: 57 em `ch` e 25 em `backend/app`.
+  A TASK-0001 documenta os contratos da superfície efetivamente escaneada;
+  operações ainda inexistentes de R-0032 não são inventadas aqui.
+- **M5 (2026-09-29, Architect):** para O9, o próximo maestro primeiro
+  materializa o scaffold `@detran/pec-web` com o kit de R-0024, executa
+  `pnpm install` e registra o lockfile, como já exigido no checkpoint (c).
+  Só então libera o Inspector da TASK-0013; os comandos do pacote deixam
+  de apontar para um projeto inexistente. Isto não autoriza O9 nesta sessão.
+
+## Concorrência
+
+- `origin/main` em `c325f9b5` contém o fechamento de R-0017. As frentes
+  R-0022, R-0023 e R-0024 não estão nele; os branches remotos
+  `orchestra/stynx-sse-tenancy`, `orchestra/authz-unification` e
+  `orchestra/stynx-dedup` não estavam publicados no bootstrap. R-0030
+  `orchestra/user-docs` também não estava publicada. Descoberta feita com
+  `git log --oneline -30 origin/main`, branches remotos e `gh pr list`.
+- Pela A-C2-13, O1–O8 avançam sobre `origin/main`, sem esperar R-0024.
+  O1–O8 não tocam `MOD-shared-policy`; se R-0023 publicar mudança relevante,
+  integrar por merge normal após o primeiro push e repetir os gates afetados.
+  O9+ aguardam R-0024 e R-0022 no branch. O PR final, fora desta sessão,
+  aguarda R-0022, R-0023 e R-0024 em `main`.
+- O CTG-0001 será publicado ao fim da O3 para R-0032 empilhar nele; o
+  CTG-0002 será publicado ao fim da O6. Nenhum PR, CI remoto, evidência ou
+  delivery-review nesta sessão.
+
 ## Bloqueios
 
+- **Prompt-review bootstrap (2026-09-29, em resolução):** o ciclo 2 retornou `REVIEW`
+  apenas por descrição desatualizada de TASK-0010.json. A descrição foi
+  corrigida e `verify:round-tasks`/`format:check` passaram. O §5 de
+  `prompts/00-maestro.md` limita a revisão a dois ciclos; o Owner autorizou
+  ciclos adicionais pela A-R31-02. O1 ainda aguarda `PASS`.
+
 ## Triagem
+
+- **2026-09-29, `sensor-error`:** `pnpm check` inicial passou em
+  `format:check`, `verify:archival-pc-guard`, `verify:stynx-pin` e
+  `test:stynx-pin`, mas parou em `test:stack`: o caso C-01-09 usa a regex
+  `/pec/` contra comandos Docker e casa o caminho da worktree
+  `pec-web-r0031`, embora nenhum comando do slot PEC tenha sido chamado.
+  Teste e implementação não foram alterados para mascarar a falha. Os
+  `acceptance_commands` por tarefa continuam obrigatórios.
+- **2026-09-29, prompt-review:** Claude Opus 5.5 deu `REVIEW` no ciclo 1
+  (oito achados altos) e no ciclo 2 (uma descrição residual de TASK-0010).
+  Após A-R31-02, o ciclo 3, restrito a essa descrição, deu `PASS` em
+  `reviews/prompt-review-3.json`. Os 19 hashes de `compositions.json`,
+  `pnpm verify:round-tasks` e `pnpm format:check` estão verdes.
 
 ## Retomada
 
 ## Leitura
+
+- Base de leitura: `c325f9b540e0b6696395f3442d7f920909ca3b76`
+  (`origin/main`, 2026-09-29). Lidos: `AGENTS.md`, `CODESTYLE.md`,
+  `docs/meta/agents/{README,architect-blueprint,engineer-backend,engineer-frontend,inspector-tests,transcriber-docs}.md`,
+  `docs/meta/agents/orchestra/{README,model-ladder,waves,task.template.json,worker-prompt.template.md,reviewer-prompt.template.md}`,
+  `work/campaigns/C-0002-consolidacao.md` §12 (o arquivo em
+  `origin/main` ainda não contém §14; a A-C2-13 foi fornecida diretamente
+  pelo Owner nesta sessão),
+  `docs/meta/adr/ADR-0034-pec-web-frontend.md`, este plano e
+  `prompts/00-maestro.md`, `work/rounds/R-0032/plan.md` §Mapa,
+  `IU-PEC-001.md`, `APP.md` (§Atores, §Vocabulário, §Residual),
+  `docs/meta/decisions/pec.md`, `open-issues.md` DT-021…024,
+  ADR-0003/0009/0012/0018, `roles.ts`, `policy.ts` (linhas `ch`),
+  `check-commands.mjs`, `backend/database/seed.sh`,
+  `parameter-catalogue.md`, `decision-closure-plan.md`, `steering.md` §H,
+  `work/rounds/R-0030/availability-manifest.schema.md`.
+  `docs/framework/arch/frontend-wiring-pattern.md` e
+  `docs/framework/arch/user-docs-convention.md` não existem nesta base; a
+  primeira é dependência da O9 e a segunda da rodada R-0032 para o manual.

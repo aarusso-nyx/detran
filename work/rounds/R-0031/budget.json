@@ -1,0 +1,68 @@
+{
+  "round": "R-0031",
+  "front": "pec-web",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 415000,
+  "estimated_output_total": 59000,
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap-2026-09-29",
+      "model": "gpt-6-sol",
+      "input_tokens": 150000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "Estimativa de tokens únicos: descoberta, leituras, linha de base, autorização e composição de 19 prompts/JSONs; uso bruto do agente de composição não disponível."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1-invalid-output",
+      "model": "claude-opus-5-5",
+      "input_tokens": 60000,
+      "output_tokens": 5000,
+      "status": "invalid-output",
+      "note": "A ponte rejeitou a primeira saída por JSON inválido; sem veredito persistido."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 60000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Repetição de formato produziu REVIEW com oito achados high."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 60000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Ciclo restrito: sete achados high corrigidos, uma descrição de TASK-0010.json permaneceu desatualizada e foi corrigida em seguida."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Exceção autorizada pelo Owner, restrita à descrição da TASK-0010.json."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "gpt-6-sol",
+      "input_tokens": 80000,
+      "output_tokens": 18000,
+      "status": "completed",
+      "note": "Architect Sol 6: contratos, manifesto, catálogo e build pack; tokens únicos estimados."
+    }
+  ]
+}

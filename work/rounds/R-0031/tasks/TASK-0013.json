@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Especificar testes das doze telas clínicas",
+  "description": "Escreva specs C-01…C-12: ficha↔rota↔i18n 12/12; presença e ausência de cada PEC_ROLE; D1, D4, assinatura sem provedor não emite laudo, estado explícito; homologação biométrica rotulada; C-12 bloqueado conforme OD-PW-002; axe sem serious/critical. Red inicial esperado antes do Engineer.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-pec-web-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["pec-web", "o9"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-d5bb228034c17785",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/pec-web", "test"],
+    ["pnpm", "--filter", "@detran/pec-web", "typecheck"]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-d5bb228034c17785",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

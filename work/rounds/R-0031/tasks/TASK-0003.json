@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Aplicar catálogo de erros e gerar clientes PEC",
+  "description": "Inclua raízes ch e controladores pec-* do app e validação PEC.* em check-commands.mjs, com cobertura bidirecional das 82 operações manuscritas atuais (57 ch, 25 app). Mapeie exceções dos comandos ch ao catálogo, preservando status HTTP caracterizados. Rode contratos OpenAPI e clientes gerados pelos scripts; nunca edite saída gerada à mão. A caracterização deve ficar verde nas duas pontas, com apenas o código de erro previsto mudando. Não toque nos adaptadores de assinatura em clinical-reports ou juntas; se o catálogo exigir alteração ali, reporte bloqueio para plan.md §Bloqueios após R-0022.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contracts-tools",
+    "MOD-ch-errors",
+    "MOD-api-clients-generated"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o3"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-5669041475fdc17e",
+  "acceptance_commands": [
+    ["pnpm", "contracts:openapi"],
+    ["pnpm", "contracts:clients"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "contracts:test"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db characterization && pnpm backend:test:e2e"
+    ]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-5669041475fdc17e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

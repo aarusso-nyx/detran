@@ -1,0 +1,93 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-SCHEDULING-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-SCHEDULING-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/appointments": {
+      "post": {
+        "operationId": "pecPostChAppointments",
+        "summary": "POST /v1/ch/appointments",
+        "x-blueprint": "BP-CH-SCHEDULING-001",
+        "x-source-controller": "backend/domains/ch/scheduling/src/scheduling-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/appointments/{id}/reroll": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChAppointmentsByIdReroll",
+        "summary": "POST /v1/ch/appointments/{id}/reroll",
+        "x-blueprint": "BP-CH-SCHEDULING-001",
+        "x-source-controller": "backend/domains/ch/scheduling/src/scheduling-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/appointments/{id}/no-show": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChAppointmentsByIdNoShow",
+        "summary": "PATCH /v1/ch/appointments/{id}/no-show",
+        "x-blueprint": "BP-CH-SCHEDULING-001",
+        "x-source-controller": "backend/domains/ch/scheduling/src/scheduling-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/appointments/{id}/cancel": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChAppointmentsByIdCancel",
+        "summary": "PATCH /v1/ch/appointments/{id}/cancel",
+        "x-blueprint": "BP-CH-SCHEDULING-001",
+        "x-source-controller": "backend/domains/ch/scheduling/src/scheduling-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

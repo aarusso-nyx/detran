@@ -1,0 +1,24 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-CLINICAL-CONTROLS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-CLINICAL-CONTROLS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/clinical-controls/events": {
+      "post": {
+        "operationId": "pecPostChClinicalControlsEvents",
+        "summary": "POST /v1/ch/clinical-controls/events",
+        "x-blueprint": "BP-CH-CLINICAL-CONTROLS-001",
+        "x-source-controller": "backend/domains/ch/clinical-controls/src/clinical-control-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

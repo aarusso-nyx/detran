@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0031",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir contratos das rotas PEC e catálogo de erros",
+  "description": "Produza route-manifest.md com as 19 telas A/B, rotas de UI e operações backend, papéis de policy.ts, UC/RN/WF, bloqueios §E; inclua tabela separada das operações ch consumidas por R-0032 sem rota de UI. Escreva BP-CH-*.commands.openapi.json com x-blueprint para TODAS as operações manuscritas escaneadas pelo checker bidirecional (baseline 82: 57 ch e 25 app), incluindo as consumidas, pec-error-catalog.md com códigos PEC.*, pec-build-pack.md com WPs, ODs e remissão da superfície C a R-0032; em §Questões abertas registre OD-PW-006 como decidida pelo Owner em 2026-09-29 (A-R31-01): Inspector TASK-0015 atualiza C-01-09 e o regex de caminho em `tools/stack/revision.test.mjs` antes de Engineer TASK-0017 acrescentar o slot PEC, sem o Engineer alterar o teste, e contracts/CTG-0001.md. Nenhum contrato sem operação real; preserve status HTTP atuais até caracterização.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-pec-contracts",
+    "MOD-pec-arch-docs",
+    "MOD-r31-contracts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o1"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-70519661a45058ba",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "work/rounds/R-0031/route-manifest.md",
+      "docs/framework/contracts/BP-CH-*.commands.openapi.json",
+      "docs/framework/arch/pec-error-catalog.md",
+      "docs/framework/arch/pec-build-pack.md",
+      "work/rounds/R-0031/contracts/CTG-0001.md"
+    ]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-70519661a45058ba",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever 19 fichas de tela dos consoles PEC",
+  "description": "Crie fichas IU-PEC-C-01…C-12 e IU-PEC-R-01…R-07, status draft, apps [pec], fontes herdadas de IU-PEC-001. Registre as 19 no import-manifest.json no mesmo lote. As sete P são de R-0032. Não invente comportamento; lacuna vira OD-PW.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-pec-screens", "MOD-kb-manifest"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o6"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-015812b02acbaaea",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-015812b02acbaaea",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

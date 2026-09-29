@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0016",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar sete telas regulatórias",
+  "description": "Implemente R-01…R-07 até specs do Inspector passarem, sobre scaffold existente. R-04 sem prazos literais; R-06 leitura; R-07 bloqueada; R-03 colegiado distinto; R-05 só comandos existentes e demais ações bloqueadas.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-pec-web-regulatory"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["pec-web", "o12"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-816cb5704ac721fa",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/pec-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/pec-web", "lint"],
+    ["pnpm", "--filter", "@detran/pec-web", "test"],
+    ["pnpm", "--filter", "@detran/pec-web", "build"]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-816cb5704ac721fa",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-BIOMETRICS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-BIOMETRICS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/biometrics/checks": {
+      "post": {
+        "operationId": "pecPostChBiometricsChecks",
+        "summary": "POST /v1/ch/biometrics/checks",
+        "x-blueprint": "BP-CH-BIOMETRICS-001",
+        "x-source-controller": "backend/domains/ch/biometrics/src/biometric-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/finger-conditions": {
+      "post": {
+        "operationId": "pecPostChBiometricsFingerConditions",
+        "summary": "POST /v1/ch/biometrics/finger-conditions",
+        "x-blueprint": "BP-CH-BIOMETRICS-001",
+        "x-source-controller": "backend/domains/ch/biometrics/src/biometric-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/exceptions": {
+      "post": {
+        "operationId": "pecPostChBiometricsExceptions",
+        "summary": "POST /v1/ch/biometrics/exceptions",
+        "x-blueprint": "BP-CH-BIOMETRICS-001",
+        "x-source-controller": "backend/domains/ch/biometrics/src/biometric-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/exceptions/{id}/decision": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChBiometricsExceptionsByIdDecision",
+        "summary": "POST /v1/ch/biometrics/exceptions/{id}/decision",
+        "x-blueprint": "BP-CH-BIOMETRICS-001",
+        "x-source-controller": "backend/domains/ch/biometrics/src/biometric-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

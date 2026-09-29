@@ -1,0 +1,13 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0031",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The cycle-2 high finding on TASK-0010.json:9 (description) is resolved. The generation instruction is gone ('Rode geração após qualquer edição do catálogo'), and so is 'por analogia a boat.'. The description now says 'Não execute parameters:generate nesta O6: ele escreve backend/database/seed/05-parameters.sql, sob lock de TASK-0007'. It also says any divergence of 05-parameters.sql in check-only mode is 'bloqueio até TASK-0012, não autorização para gerar agora', and the pec. line is 'provisório sob OD-PW-004; não crie chave de parâmetro pec.*'.",
+    "The JSON and the prompt now agree. prompts/TASK-0010.md:54 has the same text. Line 62 records OD-PW-004 as pending with a provisional line, and line 68 treats a diff in 05-parameters.sql as a blocker until TASK-0012. One cosmetic difference: the prompt says 'como proposta sob OD-PW-004' and adds 'comunique a decisão pendente ao maestro'. That does not contradict the JSON.",
+    "acceptance_commands (TASK-0010.json:25-33) is check-only. package.json:71 defines verify:parameter-catalogue as 'node tools/parameters/verify.mjs --check-generated --check-usage', which does not call generate-seed.mjs (parameters:generate, package.json:68). prettier --check is limited to the two files of the task. Both commands match prompts/TASK-0010.md:68-69.",
+    "The write boundary is consistent. target_modules is still [MOD-pec-i18n, MOD-parameter-catalogue-doc], and nothing in the JSON or the prompt authorises writing to backend/database/seed/. Generation of 05-parameters.sql stays with TASK-0012 in O8, as noted in cycle 2.",
+    "No new FAIL-level canonical contradiction found in unchanged text. The other findings were not re-evaluated, as requested."
+  ]
+}

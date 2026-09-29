@@ -1,0 +1,37 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-EXAMS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-EXAMS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/exams/medical": {
+      "post": {
+        "operationId": "pecPostChExamsMedical",
+        "summary": "POST /v1/ch/exams/medical",
+        "x-blueprint": "BP-CH-EXAMS-001",
+        "x-source-controller": "backend/domains/ch/exams/src/exam-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/psychological": {
+      "post": {
+        "operationId": "pecPostChExamsPsychological",
+        "summary": "POST /v1/ch/exams/psychological",
+        "x-blueprint": "BP-CH-EXAMS-001",
+        "x-source-controller": "backend/domains/ch/exams/src/exam-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

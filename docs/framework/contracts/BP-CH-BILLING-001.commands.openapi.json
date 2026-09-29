@@ -1,0 +1,158 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-BILLING-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-BILLING-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/billing/report": {
+      "get": {
+        "operationId": "pecGetChBillingReport",
+        "summary": "GET /v1/ch/billing/report",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/exam-prices": {
+      "post": {
+        "operationId": "pecPostChBillingExamPrices",
+        "summary": "POST /v1/ch/billing/exam-prices",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/items": {
+      "post": {
+        "operationId": "pecPostChBillingItems",
+        "summary": "POST /v1/ch/billing/items",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/items/{id}/payments": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChBillingItemsByIdPayments",
+        "summary": "POST /v1/ch/billing/items/{id}/payments",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/invoices/close": {
+      "post": {
+        "operationId": "pecPostChBillingInvoicesClose",
+        "summary": "POST /v1/ch/billing/invoices/close",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/invoices/{id}/transition": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChBillingInvoicesByIdTransition",
+        "summary": "POST /v1/ch/billing/invoices/{id}/transition",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/divergences": {
+      "post": {
+        "operationId": "pecPostChBillingDivergences",
+        "summary": "POST /v1/ch/billing/divergences",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/divergences/{id}/resolve": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChBillingDivergencesByIdResolve",
+        "summary": "POST /v1/ch/billing/divergences/{id}/resolve",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/domains/ch/billing/src/billing-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/integrations/sefaz/payment/validate": {
+      "post": {
+        "operationId": "pecPostChIntegrationsSefazPaymentValidate",
+        "summary": "POST /v1/ch/integrations/sefaz/payment/validate",
+        "x-blueprint": "BP-CH-BILLING-001",
+        "x-source-controller": "backend/app/src/pec-sefaz.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,437 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-OPERATIONAL-CONTROLS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/operational-controls/records": {
+      "post": {
+        "operationId": "pecPostChOperationalControlsRecords",
+        "summary": "POST /v1/ch/operational-controls/records",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/domains/ch/operational-controls/src/operational-control-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/operational-controls/clinic-location/validate": {
+      "post": {
+        "operationId": "pecPostChOperationalControlsClinicLocationValidate",
+        "summary": "POST /v1/ch/operational-controls/clinic-location/validate",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/domains/ch/operational-controls/src/operational-control-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/operational-controls/dashboard": {
+      "get": {
+        "operationId": "pecGetChOperationalControlsDashboard",
+        "summary": "GET /v1/ch/operational-controls/dashboard",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/domains/ch/operational-controls/src/operational-control-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/audit/events": {
+      "get": {
+        "operationId": "pecGetAuditEvents",
+        "summary": "GET /v1/audit/events",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-audit-query.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/audit/events/export": {
+      "get": {
+        "operationId": "pecGetAuditEventsExport",
+        "summary": "GET /v1/audit/events/export",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-audit-query.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito": {
+      "get": {
+        "operationId": "pecGetAdminUsersCognito",
+        "summary": "GET /v1/admin/users/cognito",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/groups/all": {
+      "get": {
+        "operationId": "pecGetAdminUsersCognitoGroupsAll",
+        "summary": "GET /v1/admin/users/cognito/groups/all",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "pecGetAdminUsersCognitoByUsername",
+        "summary": "GET /v1/admin/users/cognito/{username}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "pecPatchAdminUsersCognitoByUsername",
+        "summary": "PATCH /v1/admin/users/cognito/{username}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/groups": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "pecGetAdminUsersCognitoByUsernameGroups",
+        "summary": "GET /v1/admin/users/cognito/{username}/groups",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/block": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostAdminUsersCognitoByUsernameBlock",
+        "summary": "POST /v1/admin/users/cognito/{username}/block",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/unblock": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostAdminUsersCognitoByUsernameUnblock",
+        "summary": "POST /v1/admin/users/cognito/{username}/unblock",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/groups/{group}": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "group",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostAdminUsersCognitoByUsernameGroupsByGroup",
+        "summary": "POST /v1/admin/users/cognito/{username}/groups/{group}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "pecDeleteAdminUsersCognitoByUsernameGroupsByGroup",
+        "summary": "DELETE /v1/admin/users/cognito/{username}/groups/{group}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/verify": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostAdminUsersCognitoByUsernameVerify",
+        "summary": "POST /v1/admin/users/cognito/{username}/verify",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/cognito/{username}/reset-password": {
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostAdminUsersCognitoByUsernameResetPassword",
+        "summary": "POST /v1/admin/users/cognito/{username}/reset-password",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-cognito-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/admin/process-parameters": {
+      "get": {
+        "operationId": "pecGetChAdminProcessParameters",
+        "summary": "GET /v1/ch/admin/process-parameters",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-process-parameters.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/admin/process-parameters/{key}": {
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "operationId": "pecPutChAdminProcessParametersByKey",
+        "summary": "PUT /v1/ch/admin/process-parameters/{key}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-process-parameters.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "pecDeleteChAdminProcessParametersByKey",
+        "summary": "DELETE /v1/ch/admin/process-parameters/{key}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-process-parameters.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/transmissions/dispatch": {
+      "post": {
+        "operationId": "pecPostChTransmissionsDispatch",
+        "summary": "POST /v1/ch/transmissions/dispatch",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-renach-transmission.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/transmissions/callbacks/renach": {
+      "post": {
+        "operationId": "pecPostChTransmissionsCallbacksRenach",
+        "summary": "POST /v1/ch/transmissions/callbacks/renach",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-renach-transmission.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/transmissions/callbacks/toxicology": {
+      "post": {
+        "operationId": "pecPostChTransmissionsCallbacksToxicology",
+        "summary": "POST /v1/ch/transmissions/callbacks/toxicology",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-toxicology-inbound.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users": {
+      "get": {
+        "operationId": "pecGetAdminUsers",
+        "summary": "GET /v1/admin/users",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-user-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      },
+      "post": {
+        "operationId": "pecPostAdminUsers",
+        "summary": "POST /v1/admin/users",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-user-admin.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/admin/users/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchAdminUsersById",
+        "summary": "PATCH /v1/admin/users/{id}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-user-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "pecDeleteAdminUsersById",
+        "summary": "DELETE /v1/admin/users/{id}",
+        "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+        "x-source-controller": "backend/app/src/pec-user-admin.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testar exceção i18n pec. no verificador",
+  "description": "Acrescente teste de pec. que aceita prefixo só em namespace i18n e rejeita o mesmo prefixo como chave de parâmetro. Preserve os negativos existentes e não altere o verificador.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameters-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o7"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-78fa47bff21c37c4",
+  "acceptance_commands": [["pnpm", "parameters:test"]],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-78fa47bff21c37c4",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

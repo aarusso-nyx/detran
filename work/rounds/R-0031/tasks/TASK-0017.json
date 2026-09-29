@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0017",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Adicionar slot PEC à stack local",
+  "description": "Adicione slot pec na próxima porta livre de detran-stack.sh e linha no runbook de R-0017; DETRAN_LOCAL_ROLES só no perfil local. Serialize o lock MOD-local-stack com TASK-0011 de R-0032.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-local-stack"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["pec-web", "o11"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-41510bef254174c5",
+  "acceptance_commands": [
+    ["pnpm", "stack:config"],
+    ["pnpm", "test:stack"],
+    ["pnpm", "stack:smoke"]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-41510bef254174c5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

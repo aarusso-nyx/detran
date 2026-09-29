@@ -1,0 +1,139 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-JUNTAS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-JUNTAS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/juntas/cases": {
+      "post": {
+        "operationId": "pecPostChJuntasCases",
+        "summary": "POST /v1/ch/juntas/cases",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/cases/{id}/second-board": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChJuntasCasesByIdSecondBoard",
+        "summary": "POST /v1/ch/juntas/cases/{id}/second-board",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/cases/{id}/special-board": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChJuntasCasesByIdSpecialBoard",
+        "summary": "POST /v1/ch/juntas/cases/{id}/special-board",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/boards/{id}/decisions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChJuntasBoardsByIdDecisions",
+        "summary": "POST /v1/ch/juntas/boards/{id}/decisions",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/cases/{id}/appeals": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChJuntasCasesByIdAppeals",
+        "summary": "POST /v1/ch/juntas/cases/{id}/appeals",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/appeals/{id}/forward": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChJuntasAppealsByIdForward",
+        "summary": "PATCH /v1/ch/juntas/appeals/{id}/forward",
+        "x-blueprint": "BP-CH-JUNTAS-001",
+        "x-source-controller": "backend/domains/ch/juntas/src/junta-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

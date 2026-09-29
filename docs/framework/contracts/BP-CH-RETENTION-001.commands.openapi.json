@@ -1,0 +1,126 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-RETENTION-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-RETENTION-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/retention/patients/{patientId}/assess": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChRetentionPatientsByPatientIdAssess",
+        "summary": "POST /v1/ch/retention/patients/{patientId}/assess",
+        "x-blueprint": "BP-CH-RETENTION-001",
+        "x-source-controller": "backend/domains/ch/retention/src/retention-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/cases/{caseId}/holds": {
+      "parameters": [
+        {
+          "name": "caseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChRetentionCasesByCaseIdHolds",
+        "summary": "POST /v1/ch/retention/cases/{caseId}/holds",
+        "x-blueprint": "BP-CH-RETENTION-001",
+        "x-source-controller": "backend/domains/ch/retention/src/retention-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/holds/{holdId}/release": {
+      "parameters": [
+        {
+          "name": "holdId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChRetentionHoldsByHoldIdRelease",
+        "summary": "POST /v1/ch/retention/holds/{holdId}/release",
+        "x-blueprint": "BP-CH-RETENTION-001",
+        "x-source-controller": "backend/domains/ch/retention/src/retention-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/cases/{caseId}/dispositions": {
+      "parameters": [
+        {
+          "name": "caseId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChRetentionCasesByCaseIdDispositions",
+        "summary": "POST /v1/ch/retention/cases/{caseId}/dispositions",
+        "x-blueprint": "BP-CH-RETENTION-001",
+        "x-source-controller": "backend/domains/ch/retention/src/retention-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/dispositions/{dispositionId}/review": {
+      "parameters": [
+        {
+          "name": "dispositionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChRetentionDispositionsByDispositionIdReview",
+        "summary": "POST /v1/ch/retention/dispositions/{dispositionId}/review",
+        "x-blueprint": "BP-CH-RETENTION-001",
+        "x-source-controller": "backend/domains/ch/retention/src/retention-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

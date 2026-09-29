@@ -1,0 +1,105 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0031",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0031/prompts/TASK-0010.md",
+      "line": 54,
+      "claim": "TASK-0010 is told to run the parameter generator after editing the catalogue, and its acceptance at line 68 is `pnpm parameters:generate`. That script writes `backend/database/seed/05-parameters.sql` (tools/parameters/generate-seed.mjs:74-75). This file is outside TASK-0010's 'Pode tocar' (lines 32-33). TASK-0010 also runs in wave O6 alongside TASK-0007, which holds the seed lock (MOD-seed-ch, `backend/database/seed/`), so both tasks can write the seed directory at the same time. The line 'reporte diff esperado para TASK-0012' admits the output may change.",
+      "fix": "Remove the generation step from TASK-0010. Replace its acceptance with a check-only command (`pnpm verify:parameter-catalogue`, which already uses `--check-generated`), and say that any diff in `05-parameters.sql` is a blocker. Give `05-parameters.sql` explicitly to TASK-0012 or to the maestro, running after O6."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0031/prompts/TASK-0003.md",
+      "line": 35,
+      "claim": "The glob `docs/framework/contracts/BP-CH-*.openapi.json (somente via geração)` also matches `BP-CH-*.commands.openapi.json`. Those files are hand-written by the Architect in TASK-0001 and are not generated: generate-openapi.mjs:243-246 skips them. So the Engineer could edit the reference the Architect defined, which violates Art. 10 and item 4.1 of the method.",
+      "fix": "Narrow the glob to `docs/framework/contracts/BP-CH-*-001.openapi.json` (CRUD, generated). Add `BP-CH-*.commands.openapi.json` to 'Não pode tocar'. Any contract gap goes back to the Architect as a blocker."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0031/prompts/TASK-0002.md",
+      "line": 25,
+      "claim": "TASK-0002 (Inspector) and TASK-0003 (Engineer, lines 13-29) are missing key inputs from their closed reading lists. Neither lists `work/rounds/R-0031/contracts/CTG-0001.md`, the triad contract the Architect writes in TASK-0001. Neither lists the new `docs/framework/contracts/BP-CH-*.commands.openapi.json`. TASK-0003 also omits `tools/contracts/check-commands.mjs`, which it must edit, and the existing tests in `tools/contracts/tests/`. As written, neither worker can derive the criteria without searching outside its list.",
+      "fix": "Add `work/rounds/R-0031/contracts/CTG-0001.md` and `docs/framework/contracts/BP-CH-*.commands.openapi.json` to both lists. Add `tools/contracts/check-commands.mjs` and `tools/contracts/generate-openapi.mjs` to TASK-0003."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0031/prompts/TASK-0002.md",
+      "line": 56,
+      "claim": "The prompt asks for a 'matriz papel × rota' but does not say it must have positive tests for each grant in policy.ts and exhaustive negative tests for every canonical role that is left out (the 15 `PEC_ROLES` plus the other roles in roles.ts). It also does not forbid granting access by analogy. This violates item 4.8 of the method. The same gap applies to the CTG-0002 matrix that TASK-0005 and TASK-0006 test.",
+      "fix": "For each route in route-manifest.md, require an explicit positive test for every role granted in policy.ts, plus a negative test (403) for every canonical role in roles.ts that is not granted. The set of roles must be derived from roles.ts, not from a list written by hand. Apply the same rule to TASK-0005 and TASK-0006, and require that CTG-0002.md (TASK-0004) states it."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0031/prompts/TASK-0005.md",
+      "line": 75,
+      "claim": "The Postgres acceptance commands in TASK-0002 (`backend:test:e2e`), TASK-0003, TASK-0005, TASK-0006 and TASK-0007 have no explicit `DB_NAME` and no environment file. `work/rounds/R-0031/env-detran-r31.sh` does not exist, and no prompt contains 'DB_NAME'. The prompts also do not require e2e/integration files to clean up what they created in `afterAll`. This violates item 4.16 of the method (R-0009). Parallel O5 runs (TASK-0005 ∥ TASK-0006) against the same persistent database would interfere with each other.",
+      "fix": "Have the maestro create `work/rounds/R-0031/env-detran-r31.sh` with an explicit `DB_NAME`. Cite it in each prompt's reading list and acceptance criteria (`source … && pnpm …`). Add the rule 'each spec cleans up in afterAll what it created' to TASK-0002, TASK-0005 and TASK-0006."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0031/prompts/TASK-0006.md",
+      "line": 74,
+      "claim": "The Inspector tasks have no `typecheck` acceptance criterion, which item 4.18 of the method requires (R-0014). This applies to TASK-0002 (e2e spec in backend/app), TASK-0005 (9 ch packages), TASK-0006 (8 ch packages) and TASK-0013 (app). All 17 `@detran/ch-*` packages have a `typecheck` script.",
+      "fix": "Add `pnpm --filter @detran/ch-<módulo> typecheck` for each module in TASK-0005 and TASK-0006, `pnpm --filter @detran/app typecheck` in TASK-0002, and `pnpm --filter @detran/pec-web typecheck` in TASK-0013/0015. Make the same additions to `acceptance_commands` in `tasks/*.json`."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0031/prompts/TASK-0017.md",
+      "line": 53,
+      "claim": "The pec slot changes a behaviour that is already locked by a test. `tools/stack/revision.test.mjs:423-433` (C-01-09) requires the line 'pec: não construído (R-0031)' and forbids any Docker call containing 'pec'. Adding the slot necessarily breaks this test. No Inspector task in CTG-0006 updates it, so the Engineer would either leave the gate red or edit the test. The acceptance criteria also omit `pnpm test:stack`.",
+      "fix": "Add an Inspector task before TASK-0017 that rewrites C-01-09 (and whatever else the new slot requires) to the new contract. Also fix the regex so it matches the slot name instead of any path, which also fixes the baseline sensor-error. Add `pnpm test:stack` to TASK-0017's acceptance criteria. Record this before O11 is dispatched."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0031/prompts/TASK-0013.md",
+      "line": 68,
+      "claim": "TASK-0013 (Inspector, O9) is accepted with `pnpm --filter @detran/pec-web test`, but the package does not exist until TASK-0014 creates the scaffold. Today `apps/pec/web` contains only README.md, so the command matches no project and cannot be a meaningful red. This also contradicts the plan's checkpoint (c) at plan.md:232-234, which says scaffold, `pnpm install` and the build/lint/test triple come *before* the Inspector is released.",
+      "fix": "Put the scaffold first: either a separate Engineer scaffold task, or the maestro creating it at checkpoint (c) with the lockfile. Then TASK-0013 writes specs against an existing package, and TASK-0014 implements the 12 screens. Since this is O9, it can be fixed before the resumption, but it must be recorded in plan.md §Retomada."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0031/prompts/TASK-0001.md",
+      "line": 77,
+      "claim": "The only acceptance for TASK-0001, TASK-0004, TASK-0008, TASK-0018 and TASK-0019 is `pnpm format:check`, which is `prettier --check .` over the whole repository. It does not isolate the files the task touched and does not check that the contracts parse as JSON or carry `x-blueprint`.",
+      "fix": "Use `node_modules/.bin/prettier --check <arquivos tocados>`. For TASK-0001, add `node tools/contracts/check-commands.mjs` with the expected result written out (red only because the `ch` roots are not yet scanned, fixed in TASK-0003)."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0031/prompts/TASK-0003.md",
+      "line": 57,
+      "claim": "The baseline '82 operações (57 ch, 25 app)' appears only in the prompts and in tasks/*.json. It is not recorded as a measurement in plan.md §Decisões do maestro, which makes the '82/82' criterion unauditable.",
+      "fix": "Record M4 in plan.md with the count command and the SHA it was run on."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0031/prompts/TASK-0015.md",
+      "line": 32,
+      "claim": "The glob `apps/pec/web/**/*.spec.ts` also covers the C specs from TASK-0013 (another Inspector's tests).",
+      "fix": "Restrict it to the R module directory, for example `apps/pec/web/src/app/regulatorio/**/*.spec.ts`, as defined in pec-frontends.md."
+    }
+  ],
+  "notes": [
+    "TASK-0002 says the characterization stays green 'nas duas pontas', but after TASK-0003 the error body changes. Specify that the characterization asserts status and body with the new code field excluded, and that the PEC.* field is asserted by a separate sensor that starts red.",
+    "TASK-0010: writing the `pec.` exception into the catalogue implements OD-PW-004's proposed default before the Owner decides. Mark the row as provisional under OD-PW-004 instead of 'por analogia a boat.'.",
+    "TASK-0003 cannot touch `backend/app/src/pec-*.controller.ts`. If the bidirectional check or the PEC.* envelope requires changes to the 25 app routes, that is a blocker to report. Make this explicit or extend the boundary with a separate lock.",
+    "TASK-0007 relies on the maestro's checkpoint (b) for `seed.sh` twice on a clean database (item 4.9). Consider making it an explicit criterion for the worker.",
+    "plan.md:67 (O13) still lists `docs/adopters/manuais/**` in the boundary. Addendum A-C2-12 overrides it; align the table. `docs:availability:check` and `docs:user:check` (plan.md:103, 252) do not exist in package.json yet. That is expected until R-0030 lands, but it should be recorded.",
+    "TASK-0014 reads `frontend-wiring-pattern.md`, which does not exist on c325f9b5. Acceptable only because O9 waits for R-0024.",
+    "The baseline failure of `pnpm check` at tools/stack/revision.test.mjs:433 is correctly triaged as sensor-error, and no prompt authorises relaxing the test.",
+    "Roles, model and effort match plan.md and compositions.json. The Architect → Inspector → Engineer order holds in CTG-0001, CTG-0002 and CTG-0003. Workers are forbidden from using git and the signing adapters in clinical-reports and juntas are protected in every prompt."
+  ]
+}

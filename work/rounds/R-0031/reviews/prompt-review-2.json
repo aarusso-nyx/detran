@@ -1,0 +1,28 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0031",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0031/tasks/TASK-0010.json",
+      "line": 8,
+      "claim": "Finding 1 (TASK-0010 writing the seed) is fixed only in the prompt. prompts/TASK-0010.md:54 and :68 now forbid `parameters:generate` in O6 and use check-only `pnpm verify:parameter-catalogue`, whose script includes --check-generated. But the `description` in the task JSON is unchanged. It still says 'Rode geração após qualquer edição do catálogo e reporte diff esperado para TASK-0012' and 'por analogia a boat.'. That tells the worker to write backend/database/seed/05-parameters.sql, which is outside target_modules [MOD-pec-i18n, MOD-parameter-catalogue-doc] and under TASK-0007's lock in O6. It also contradicts the prompt. The 'por analogia' wording contradicts the provisional OD-PW-004 line in the prompt (note from cycle 1). The task record and the prompt now disagree on a write boundary.",
+      "fix": "Align the TASK-0010.json description with the prompt. Remove the generation instruction, say a diff in 05-parameters.sql is a blocker until TASK-0012, and replace 'por analogia a boat.' with 'provisória sob OD-PW-004'."
+    }
+  ],
+  "notes": [
+    "Finding 1: fixed in the prompt. TASK-0012 (prompts/TASK-0012.md:35, :56) now holds 05-parameters.sql only as output of `pnpm parameters:generate` in O8, after O6. The only residual is the TASK-0010.json description above.",
+    "Finding 2: fixed. prompts/TASK-0003.md:42 narrows the glob to `BP-CH-*-001.openapi.json (somente via geração)`. Line 66 says the `*.commands.openapi.json` contracts must not be edited or rewritten and gaps go back to the Architect, and 'qualquer arquivo fora de Pode tocar' covers them. It also records the lock gap for `backend/app/src/pec-*.controller.ts` as a blocker (line 62 in Não pode tocar), which resolves the cycle-1 note.",
+    "Finding 3: fixed. TASK-0002:32-34 and TASK-0003:31-36 now list CTG-0001.md, BP-CH-*.commands.openapi.json and env-detran-r31.sh. TASK-0002 also lists check-commands.mjs and generate-openapi.mjs. TASK-0003 lists check-commands.mjs, generate-openapi.mjs and tools/contracts/tests/.",
+    "Finding 4: fixed. TASK-0002:61, TASK-0004:44 (CTG-0002 must state the rule), TASK-0005:51 and TASK-0006:50 now require a positive test per grant in policy.ts and a 403 for every canonical role in roles.ts without a grant, including roles outside PEC_ROLES, with the set derived from roles.ts and no access by analogy.",
+    "Finding 5: fixed. env-detran-r31.sh exists, and r31_set_db exports DB_NAME=detran_r31_{characterization|clinical|regulatory|final}. seed.sh consumes DB_NAME (seed.sh:7). The Postgres commands in TASK-0002, 0003, 0005, 0006 and 0007 go through `source … && r31_set_db <grupo>`, and O5 uses separate databases (clinical vs regulatory). afterAll cleanup is required in TASK-0002:61, TASK-0005:51 and TASK-0006:50. Residual, not blocking: the env file says it creates no database. Only TASK-0007 says the maestro prepares the clean 'final' database. No prompt says who creates and migrates (backend/database/apply.sh) the characterization, clinical and regulatory databases before O2 and O5. Record this as a checkpoint step for the maestro.",
+    "Finding 6: fixed. `pnpm --filter @detran/app typecheck` is in TASK-0002. `@detran/ch-<módulo> typecheck` is in all 9 modules of TASK-0005 and all 8 of TASK-0006. `@detran/pec-web typecheck` is in TASK-0013 and TASK-0015. The same commands are in tasks/*.json, and every package has a typecheck script and a test:integration script.",
+    "Finding 7: fixed by Owner addendum A-R31-01 / OD-PW-006 (plan.md:45-54). TASK-0015 now holds `tools/stack/revision.test.mjs (somente C-01-09 e sensor do slot pec)` and MOD-local-stack, and is told to restrict the regex to the slot name. TASK-0017 has upstream TASK-0015, may not edit the test, and has `pnpm test:stack` in its acceptance. Minor wording issue: TASK-0015's first criterion (`pec-web test`) mentions the 'sensor do slot', which actually runs in `test:stack`.",
+    "Finding 8: fixed in substance. plan.md M5 (Decisões do maestro) and TASK-0013:42 / TASK-0015:50 put the maestro's scaffold and `pnpm install` before the Inspector, and say that a filter matching no project is not a valid RED. Residual, not blocking: §Retomada (plan.md:397) is still empty, since M5 was recorded in Decisões instead. plan.md:75 (O10), plan.md:224 and the TASK-0014.json description still say TASK-0014 'cria o scaffold'. TASK-0014:45 still says 'Maestro fará pnpm install', which is redundant. Align these before O9.",
+    "The three low findings from cycle 1 are addressed. Acceptance now runs prettier on the touched files only (TASK-0004:57, TASK-0010:69). M4 records the count of 82 operations with the command and the SHA c325f9b5. The glob in TASK-0015 is restricted to `apps/pec/web/src/app/regulatorio/**`.",
+    "Still open from the cycle-1 notes: plan.md:78 (O13) and :228 still list `docs/adopters/manuais/**` in TASK-0018's boundary, while A-C2-12 moves it to R-0032.",
+    "The baseline failure at tools/stack/revision.test.mjs:433 is still correctly triaged as sensor-error. No prompt authorises relaxing the test before TASK-0015."
+  ]
+}

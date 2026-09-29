@@ -1,0 +1,116 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-INCONSISTENCIES-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/inconsistencies": {
+      "post": {
+        "operationId": "pecPostChInconsistencies",
+        "summary": "POST /v1/ch/inconsistencies",
+        "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+        "x-source-controller": "backend/domains/ch/inconsistencies/src/inconsistency-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/inconsistencies/{id}/notify": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChInconsistenciesByIdNotify",
+        "summary": "PATCH /v1/ch/inconsistencies/{id}/notify",
+        "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+        "x-source-controller": "backend/domains/ch/inconsistencies/src/inconsistency-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/inconsistencies/{id}/correct": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChInconsistenciesByIdCorrect",
+        "summary": "PATCH /v1/ch/inconsistencies/{id}/correct",
+        "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+        "x-source-controller": "backend/domains/ch/inconsistencies/src/inconsistency-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/inconsistencies/{id}/reprocess": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChInconsistenciesByIdReprocess",
+        "summary": "PATCH /v1/ch/inconsistencies/{id}/reprocess",
+        "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+        "x-source-controller": "backend/domains/ch/inconsistencies/src/inconsistency-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/inconsistencies/{id}/close": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChInconsistenciesByIdClose",
+        "summary": "PATCH /v1/ch/inconsistencies/{id}/close",
+        "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+        "x-source-controller": "backend/domains/ch/inconsistencies/src/inconsistency-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

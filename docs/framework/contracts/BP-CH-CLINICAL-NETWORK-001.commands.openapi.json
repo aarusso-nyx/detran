@@ -1,0 +1,47 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-CLINICAL-NETWORK-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-CLINICAL-NETWORK-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/clinical-network/professionals": {
+      "post": {
+        "operationId": "pecPostChClinicalNetworkProfessionals",
+        "summary": "POST /v1/ch/clinical-network/professionals",
+        "x-blueprint": "BP-CH-CLINICAL-NETWORK-001",
+        "x-source-controller": "backend/domains/ch/clinical-network/src/professional-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/professionals/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChClinicalNetworkProfessionalsById",
+        "summary": "PATCH /v1/ch/clinical-network/professionals/{id}",
+        "x-blueprint": "BP-CH-CLINICAL-NETWORK-001",
+        "x-source-controller": "backend/domains/ch/clinical-network/src/professional-commands.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

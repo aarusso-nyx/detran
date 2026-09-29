@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir fixtures PEC e matriz de integração",
+  "description": "Escreva pec-fixtures.md com personas sintéticas: candidato para cada estado P-01…P-07 com CPF sintético compartilhado com R-0032; clínicas/tenants; profissionais; encounters em cada estado; laudo/adendo; junta com prazos vindos de parâmetros; recurso CETRAN; retenção BLOCKED; toxicologia positivo/negativo/inválido; transmissões ACK/erro. Escreva contracts/CTG-0002.md com matriz por 17 módulos: ciclo de vida, isolamento tenant, titular sem máscara × Suporte mascarado e assinatura fail-closed. Nenhum CPF válido, biometria real ou integração externa real.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-pec-arch-docs", "MOD-r31-contracts"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o4"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-acb27df5e8627750",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "docs/framework/arch/pec-fixtures.md",
+      "work/rounds/R-0031/contracts/CTG-0002.md"
+    ]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-acb27df5e8627750",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

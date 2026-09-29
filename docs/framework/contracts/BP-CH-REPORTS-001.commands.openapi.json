@@ -1,0 +1,231 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-REPORTS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-REPORTS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/candidate-dossier/{encounterId}": {
+      "parameters": [
+        {
+          "name": "encounterId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "pecGetChCandidateDossierByEncounterId",
+        "summary": "GET /v1/ch/candidate-dossier/{encounterId}",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/candidate-dossier.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/candidate-dossier/{encounterId}/feedback-requests": {
+      "parameters": [
+        {
+          "name": "encounterId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChCandidateDossierByEncounterIdFeedbackRequests",
+        "summary": "POST /v1/ch/candidate-dossier/{encounterId}/feedback-requests",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/candidate-dossier.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/candidate-dossier/feedback-requests/{id}/schedule": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChCandidateDossierFeedbackRequestsByIdSchedule",
+        "summary": "POST /v1/ch/candidate-dossier/feedback-requests/{id}/schedule",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/candidate-dossier.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/candidate-dossier/feedback-requests/{id}/complete": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChCandidateDossierFeedbackRequestsByIdComplete",
+        "summary": "POST /v1/ch/candidate-dossier/feedback-requests/{id}/complete",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/candidate-dossier.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/encounters/{id}/close": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "pecPatchChEncountersByIdClose",
+        "summary": "PATCH /v1/ch/encounters/{id}/close",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/encounter-closure.controller.ts",
+        "responses": {
+          "200": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/reports": {
+      "post": {
+        "operationId": "pecPostChReports",
+        "summary": "POST /v1/ch/reports",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/report-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/reports/{id}/addenda": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChReportsByIdAddenda",
+        "summary": "POST /v1/ch/reports/{id}/addenda",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/report-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/reports/addenda/{id}/approvals/supervisor": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChReportsAddendaByIdApprovalsSupervisor",
+        "summary": "POST /v1/ch/reports/addenda/{id}/approvals/supervisor",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/report-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/reports/addenda/{id}/approvals/clinic-admin": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChReportsAddendaByIdApprovalsClinicAdmin",
+        "summary": "POST /v1/ch/reports/addenda/{id}/approvals/clinic-admin",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/report-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/reports/addenda/{id}/sign": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChReportsAddendaByIdSign",
+        "summary": "POST /v1/ch/reports/addenda/{id}/sign",
+        "x-blueprint": "BP-CH-REPORTS-001",
+        "x-source-controller": "backend/domains/ch/clinical-reports/src/report-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

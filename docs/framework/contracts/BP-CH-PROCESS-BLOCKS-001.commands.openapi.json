@@ -1,0 +1,47 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Comandos e consultas manuscritos PEC — BP-CH-PROCESS-BLOCKS-001",
+    "version": "1.0.0",
+    "x-blueprint": "BP-CH-PROCESS-BLOCKS-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/ch/process-blocks": {
+      "post": {
+        "operationId": "pecPostChProcessBlocks",
+        "summary": "POST /v1/ch/process-blocks",
+        "x-blueprint": "BP-CH-PROCESS-BLOCKS-001",
+        "x-source-controller": "backend/domains/ch/process-blocks/src/process-block-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    },
+    "/v1/ch/process-blocks/{id}/resolve": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "pecPostChProcessBlocksByIdResolve",
+        "summary": "POST /v1/ch/process-blocks/{id}/resolve",
+        "x-blueprint": "BP-CH-PROCESS-BLOCKS-001",
+        "x-source-controller": "backend/domains/ch/process-blocks/src/process-block-commands.controller.ts",
+        "responses": {
+          "201": {
+            "description": "Resposta atual do controlador; corpo a caracterizar na TASK-0002"
+          }
+        }
+      }
+    }
+  }
+}

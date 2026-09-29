@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0031",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Criar integração Postgres dos nove módulos clínicos",
+  "description": "Crie no mínimo uma spec de integração Postgres por módulo patients, scheduling, biometrics, encounters, exams, clinical-reports, restrictions, telehealth e clinical-controls. Exercite matriz de CTG-0002, tenant RLS negativo, ciclo de vida e assinatura fail-closed quando aplicável. Não altere produção ou testes de outra disciplina.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ch-tests-clinical"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o5"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-46c8784edb59be61",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-patients test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-patients", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-scheduling test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-scheduling", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-biometrics test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-biometrics", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-encounters test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-encounters", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-exams test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-exams", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-clinical-reports test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-clinical-reports", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-restrictions test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-restrictions", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-telehealth test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-telehealth", "typecheck"],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db clinical && pnpm --filter @detran/ch-clinical-controls test:integration"
+    ],
+    ["pnpm", "--filter", "@detran/ch-clinical-controls", "typecheck"]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-46c8784edb59be61",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
