@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0025",
+  "status": "ready",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Registrar ODs RAIT e chaves i18n",
+  "description": "Transcrever decisões e pendências da matriz no registro canônico e i18n permitido.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs-rait-od", "MOD-rait-web-i18n"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r25", "a-c2-15", "session-a"],
+  "branch": "orchestra/rait-web-wiring",
+  "worktree_id": "WT-rait-web-wiring",
+  "prompt_composition_id": "PC-2e44e03d253592d1",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-lc",
+      "rg -q 'OD-R25-001' docs/meta/knowledge-base/open-decisions-rait.md && rg -q 'OD-R25-002' docs/meta/knowledge-base/open-decisions-rait.md && rg -q 'OD-R25-015' docs/meta/knowledge-base/open-decisions-rait.md && python3 -m json.tool docs/framework/arch/i18n/rait.pt-BR.json >/dev/null"
+    ],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T22:06:52Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-2e44e03d253592d1",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

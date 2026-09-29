@@ -1,12 +1,14 @@
 # R-0025 — frente `rait-web-wiring` (ação 6 da C-0002 — RAIT web: 64 comandos, `caseAccessGuard`, SSE canônico, formulários e rotas L0)
 
-**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner.** Planejada em 2026-09-26
+**Status:** pré-trabalho da Sessão A autorizado pela A-C2-15; somente
+TASK-0001/0002/0003/0006 liberadas. A rodada integral aguarda os upstreams.
+Planejada em 2026-09-26
 pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6** (Codex CLI),
 workers da escada Codex (Sol 6 / Terra / Luna, `model-ladder.md` após R-0018), reviewer **Opus 5.5**
 pela ponte `tools/orchestra/bridge.sh claude` (OD-C2-003; ids de CLI confirmados no bootstrap).
-Worktree `/Volumes/Thiamat II/stech/detran-worktrees/rait-web-wiring`, branch
+Worktree `/Users/aarusso/.codex/worktrees/rait-web-wiring/detran`, branch
 `orchestra/rait-web-wiring`. Rastreio: issue #122. `AUTHORIZATION.md`, `tasks/` e `compositions.json`
-só nascem no bootstrap, depois da autorização.
+foram criados no bootstrap da Sessão A, depois da autorização direta.
 **Concorrência (upstreams da campanha):**
 
 - **Abertura:** R-0024 `stynx-dedup` publicada em `origin/orchestra/stynx-dedup` (abertura
@@ -410,6 +412,24 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 
 ## Decisões do maestro
 
+- **M1 (bootstrap da Sessão A, papel Architect).** Base `origin/main` em
+  `d8c5d72a4c2cdf527ded9cef4485bc399ff464c9`, branch
+  `orchestra/rait-web-wiring`. Maestro e tarefas de arquitetura grandes:
+  `gpt-6-sol` (alto); escada de workers: `gpt-5.6-terra` (médio) e
+  `gpt-6-luna` (baixo); reviewer da outra família: `claude-opus-5-5` pela
+  ponte. IDs seguem `docs/meta/agents/orchestra/model-ladder.md`; o transporte
+  do reviewer será validado no prompt-review pelo maestro.
+- **M2 (recorte A-C2-15).** Liberadas apenas TASK-0001/0002/0003/0006. Nesta
+  sessão, os gates são `acceptance_commands` reais por tarefa,
+  `pnpm verify:round-tasks`, `pnpm format:check`, `pnpm docs:kb:check` quando
+  aplicável e um prompt-review restrito aos quatro prompts. A verificação dos
+  contratos não autoriza editar blueprints, controladores, DDL, política ou
+  testes antes da retomada. Sem PR, delivery-review, CI completo, evidência ou
+  fechamento nesta sessão.
+- **M3 (dependências).** TASK-0001 precede TASK-0002; TASK-0002 precede
+  TASK-0003 e TASK-0006. Os contratos de TASK-0003 e TASK-0006 têm locks
+  disjuntos e podem avançar juntos depois do registro canônico das ODs.
+
 ## Concorrência
 
 ## Bloqueios
@@ -419,3 +439,16 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 ## Retomada
 
 ## Leitura
+
+- Bootstrap da Sessão A na branch `orchestra/rait-web-wiring`, base
+  `origin/main` `d8c5d72a4c2cdf527ded9cef4485bc399ff464c9`.
+  Lidos `AGENTS.md`, C-0002 §12/§14/§15/§16, este plano,
+  `prompts/00-maestro.md`, `command-gap-analysis.md` e o bootstrap da Sessão A
+  de R-0027 como referência de formato. O recorte autorizado está em
+  `AUTHORIZATION.md`.
+- Linha de base `pnpm --filter @detran/rait-web test`: primeira tentativa na
+  worktree limpa falhou na resolução de `@detran/ui` porque o `dist` ignorado
+  ainda não existia (127 suítes sem executar testes; nas demais, 1.783 PASS e
+  5 TODO). Depois de `pnpm --filter @detran/ui build`, sem mudança de fonte,
+  a repetição passou: 154 arquivos PASS, 1 skipped, 4.434 testes PASS e
+  **139 TODO**. Esse é o número para comparação no critério 2.
