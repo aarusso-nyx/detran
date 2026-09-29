@@ -457,7 +457,9 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
   TASK-0003 (`8c90734e`, CTG-0002 F-01…F-05/A-1…A-6) e TASK-0006
   (`43b861a3`, CTG-0003 F-06…F-16). Bootstrap/autorização: `b8f2d38f`,
   `e3d54745`; prompt-review REVIEW → PASS: `e21b89d7`. O avanço de
-  `origin/main` por PR #162 foi integrado por merge `a9448324` antes do push.
+  `origin/main` por PR #162 e PR #163 foi integrado por merges `a9448324` e
+  `784a3b93` antes do push; os novos blobs desses PRs não alteram as fontes
+  RAIT usadas nos três contratos desta sessão.
 - **Esperam:** TASK-0004/0005/0007/0008 dependem do formato de política de
   R-0023 e do outbox/assinatura de R-0022; TASK-0009 em diante dependem do
   padrão, kit e shell de R-0024. Os contratos documentais não habilitam
