@@ -1,0 +1,52 @@
+{
+  "round_id": "R-0027",
+  "unit": "estimated_unique_input_tokens",
+  "window_input_limit": 700000,
+  "checkpoint_input_threshold": 560000,
+  "window_hours": 5,
+  "entries": [
+    {
+      "id": "bootstrap-session-a",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 45000,
+      "output_estimate": 6500,
+      "note": "Leitura de autorização, estado remoto, plano, método e contrato bancário; estimativa até o bootstrap."
+    },
+    {
+      "id": "r27-planning-worker",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 30000,
+      "output_estimate": 6000,
+      "note": "Artefatos de planejamento TASK-0001…0005, hashes e validação."
+    },
+    {
+      "id": "prompt-review-1-transport-error",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 15000,
+      "output_estimate": 2000,
+      "result": "transport-error",
+      "note": "PASS textual com seis low; ponte rejeitou cerca Markdown."
+    },
+    {
+      "id": "prompt-review-1-retry",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 15000,
+      "output_estimate": 2000,
+      "result": "PASS",
+      "note": "Retry de transporte do mesmo ciclo, JSON válido e sem achados high."
+    },
+    {
+      "id": "task-0001",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 35000,
+      "output_estimate": 7000,
+      "result": "PASS-contract; TASK-0004-blocked",
+      "note": "Matriz de oito serviços, CTG-0002/0003 e conclusão de fronteira bancária."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0027",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0027/prompts/TASK-0003.md",
+      "line": 7,
+      "claim": "A fronteira de escrita libera só `backend/domains/inf/collection/src/handwritten/**/*.spec.ts`. As specs unitárias atuais do pacote ficam em `backend/domains/inf/collection/tests/unit/` (`bank-port.mock.spec.ts`, `collection-commands.spec.ts`), e o vitest do tier unit inclui as duas árvores. O worker pode concluir que precisa editar `tests/unit/bank-port.mock.spec.ts` para caracterizar o mock e ficar fora da fronteira.",
+      "fix": "Incluir `backend/domains/inf/collection/tests/unit/**/*.spec.ts` na fronteira de TASK-0003 ou dizer explicitamente que os casos novos vão em `src/handwritten/**/*.spec.ts` e que `tests/unit/` é somente leitura."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0027/tasks/TASK-0003.json",
+      "line": 1,
+      "claim": "Os `acceptance_commands` de TASK-0003 e TASK-0005 saem com código diferente de zero quando os testes ficam RED, que é o resultado esperado. Só os prompts distinguem RED esperado de erro de harness; o JSON não codifica essa diferença, e o checkpoint §7 do maestro pode classificar o RED esperado como falha e iniciar triagem e nova tentativa.",
+      "fix": "Registrar em `plan.md` §Triagem ou numa nota do checkpoint que, para TASK-0003/0005, a saída não zero com falhas limitadas aos casos novos de `BANK_PORT`/delegação é RED aceito, e que o relatório do worker precisa listar os nomes dos casos RED."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0027/tasks/TASK-0004.json",
+      "line": 662,
+      "claim": "O prompt permite o resultado BLOCKED (sem edição, espera por R-0022), mas os `acceptance_commands` só descrevem o caminho implementado. Nesse caminho, `runtime-profiles.e2e.spec.ts` continua RED, e o gate falharia mesmo com o bloqueio legítimo.",
+      "fix": "No checkpoint de TASK-0004, tratar BLOCKED como estado terminal que dispensa os `acceptance_commands`: `git diff --quiet` na fronteira e `status` = `blocked` com motivo R-0022."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0027/plan.md",
+      "line": 3,
+      "claim": "O cabeçalho ainda diz 'proposta — C-0002 rev. 2, aguardando autorização do Owner' e 'Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe', embora esses artefatos já existam e a A-C2-15 esteja registrada.",
+      "fix": "Atualizar o status para 'autorizada (A-C2-15), sessão A, TASK-0001…0005' e remover a frase sobre artefatos inexistentes."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0027/plan.md",
+      "line": 297,
+      "claim": "A tabela de tarefas ainda dá a TASK-0004 o lock `MOD-app-composition` e o texto 'se o contrato decidir compor no app', o que diverge da A-C2-15 e de TASK-0004.json (só `MOD-inf-collection-bank`). A adenda prevalece, mas a tabela confunde a leitura do worker, que recebe `plan.md` §Tarefas.",
+      "fix": "Anotar na linha de TASK-0004 que a A-C2-15 restringe o lock a `MOD-inf-collection-bank` e que composição no app significa espera por R-0022."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0027/budget.json",
+      "line": 6,
+      "claim": "`budget.json` tem só a entrada do bootstrap, e o 00-maestro §0 exige uma linha por chamada ao reviewer.",
+      "fix": "Adicionar a entrada `prompt-review-1` (reviewer `claude-opus-5-5`, estimativas de entrada e saída) antes de disparar a O1."
+    }
+  ],
+  "notes": [
+    "Hashes sha256 de `prompts/TASK-0001…0005.md` conferidos contra `compositions.json`: os cinco batem, e os `pc_id` coincidem com `prompt_composition_id` e `executor.prompt_composition_id` de cada tarefa. Prettier verde nos prompts.",
+    "`pnpm verify:round-tasks` → OK. Comandos `test:unit`, `typecheck` e `test:e2e` existem em `@detran/inf-collection`, `@detran/portal-requests` e `@detran/app`; `format:check` e `docs:kb:check` existem na raiz. Os arquivos e2e citados existem.",
+    "Rubrica 1: TASK-0001 fixa as oito linhas, OD-R27-001=a e OD-R27-002=b como imutáveis e a triagem das OD-P. TASK-0002 transcreve para o registro canônico `portal-build-pack.md` §4. TASK-0003 exige caracterização antes do RED. TASK-0005 escreve só testes RED até TASK-0006. Não há tarefa além de 0005 em `tasks/`.",
+    "Rubrica 2: TASK-0001 item 4 e a trava de TASK-0004 proíbem dependência de `@detran/app`, cópia de `detranRuntimeProfile`/`isLocalRuntimeProfile` e leitura ad hoc de `DETRAN_RUNTIME_PROFILE` no domínio. Sem caminho legítimo, TASK-0004 não edita nada e espera R-0022. `isLocalRuntimeProfile` está de fato em `detran-runtime.ts:87`, e `BANK_PORT` em `handwritten/index.ts` é incondicional, como descrito.",
+    "Rubrica 3: papéis corretos (Architect/transcriber, Inspector, Engineer). TASK-0004 tem os testes como somente leitura. Nenhuma fronteira toca `app.module.ts`, `detran-runtime.ts`, `policy.ts`, SSE, outbox, `packages/ui`, `.github/workflows`, `.devai/config`, `law/register` ou `record/`.",
+    "Rubrica 5: prompt-review único, sem PR, delivery-review ou `pnpm check` intermediário nos prompts de worker. O 00-maestro fala em prompt-review sobre todos os CTGs, mas a A-C2-15 prevalece e limita o ciclo às tarefas liberadas.",
+    "Nenhum achado high; os lows podem ser corrigidos pelo maestro sem novo ciclo de revisão."
+  ]
+}

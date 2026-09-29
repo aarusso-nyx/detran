@@ -1,12 +1,12 @@
 # R-0027 — frente `portal-delegations` (ação 6 da C-0002 — Portal: defesa, recursos, indicação, pagamento, junta e diligência religados)
 
-**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26 pelo
+**Status:** **autorizada para a Sessão A da A-C2-15 — TASK-0001…0005** (`AUTHORIZATION.md`). Planejada em 2026-09-26 pelo
 Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6** (Codex CLI), workers
 da escada Codex (Sol 6 / Terra / Luna vigentes) por subagentes nativos, reviewer **Opus 5.5** pela
 ponte `tools/orchestra/bridge.sh claude` (C-0002 §4; ids de CLI confirmados no bootstrap). Worktree
-`/Volumes/Thiamat II/stech/detran-worktrees/portal-delegations`, branch `orchestra/portal-delegations`.
+`/Users/aarusso/.codex/worktrees/portal-delegations/detran`, branch `orchestra/portal-delegations`.
 Sem issue: TASK-0002 abre a issue da frente (referenciando `backlog.md:103-107`) no CTG-0001; ela entra no PR final (OD-C2-005).
-Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap.
+`AUTHORIZATION.md`, `tasks/` e `compositions.json` foram criados no bootstrap da Sessão A.
 **Concorrência:** abre sobre **R-0024 `stynx-dedup`** mesclada ou publicada em
 `origin/orchestra/stynx-dedup` (abertura empilhada, §Execução OD-C2-005; o PR final espera o merge) (cliente de comando, costura SSE, shell
 e error boundary únicos em `@detran/ui`; `docs/framework/arch/frontend-wiring-pattern.md`, entregável
@@ -19,6 +19,28 @@ empilhar ou aguardar só o CTG-0005). Paralelas da fase D com locks disjuntos: R
 **Janelas previstas:** 3. Recalibradas para ≈ 2,5 pela OD-C2-005 (ver §Execução OD-C2-005).
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
+
+> **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada na **sessão A** (Codex
+> Sol 6; reviewer Opus 5.5), **primeira da sequência**. Tarefas liberadas: **TASK-0001/0002**
+> (matriz de delegação com OD-R27-001 = a e OD-R27-002 = b, ODs e issue) e **TASK-0003/0004**
+> (`BANK_PORT` fail-closed por perfil). A composição fica **dentro de `inf/collection`**, usando a API
+> de perfil existente (`isLocalRuntimeProfile`, `backend/app/src/detran-runtime.ts:87`, somente
+> leitura), sem editar `app.module.ts`/`detran-runtime.ts`. Se o contrato exigir composição no app,
+> TASK-0004 espera R-0022. Também liberada: **TASK-0005** (testes das delegações reais; ficam
+> vermelhos até TASK-0006). Esperam: TASK-0006 (`policy.ts`, R-0023) e TASK-0007 em diante (R-0024).
+>
+> - **Base:** `origin/main`, branch `orchestra/portal-delegations`. Push sem PR ao fim de cada tarefa
+>   liberada; checkpoint em §Retomada com o que falta e o que espera; parada.
+> - **Não tocar:** `backend/app/src/app.module.ts`, `backend/app/src/detran-runtime.ts`, serviços
+>   SSE, `backend/domains/shared/src/policy.ts`, `backend/domains/shared/src/documents`, outbox
+>   (`integration.*`), offline-sync e pin STYNX (R-0022/R-0023); `packages/ui` e shells ou
+>   núcleos dos apps (R-0024); locks de R-0020 (`.github/workflows/`, `.devai/config`,
+>   `law/register`, `record/`).
+> - **Reconferência na retomada:** todo contrato produzido agora é reconferido contra `origin/main`
+>   quando a rodada retomar depois da R-0024. Divergência vira adenda numerada do Architect, sem
+>   reescrever o já aprovado.
+> - Tarefas válidas em `pnpm verify:round-tasks`; um prompt-review no bootstrap cobrindo só as tarefas
+>   liberadas; `acceptance_commands` por tarefa; sem PR e sem delivery-review (OD-C2-005).
 
 **Precedência.** Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre
 qualquer menção a um PR/merge/evidência/delivery-review por CTG neste plano**.
@@ -250,7 +272,7 @@ de serializar PRs por CTG. Regra de convivência:
 | TASK-0001 | Architect            | architect-blueprint | Sol 6 / alto   | `MOD-r27-delegation-matrix`                                                                                                         | —                    | `delegation-matrix.md` (8 linhas, colunas da meta 1; JARI×CETRAN×defesa no corpo de `raitCaseProtocol`; ator da delegação conforme OD-R27-001 e chaves novas em `policy.ts`); triagem das OD-P da lista (bloqueante/não/fechada por fonte); decisão sobre a junta sem contrato (contrato de comando novo × consumo in-process tipado — recomendação na OD); `contracts/CTG-0002.md` (porta bancária) e `contracts/CTG-0003.md` (alvos, eventos, e2e de jornada, critérios C-27-3-nn) |
 | TASK-0002 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-portal-build-pack-od`, `MOD-kb-backlog`                                                                                        | TASK-0001            | `portal-build-pack.md` §4: situação das OD-P triadas e novas `OD-R27-nnn` (texto de TASK-0001); `backlog.md:103-107` reescrito; corpo da issue da frente (o maestro a abre com `gh issue create`)                                                                                                                                                                                                                                                                                    |
 | TASK-0003 | Inspector            | inspector-tests     | Terra / médio  | `MOD-inf-collection-tests`, `MOD-app-e2e-runtime`                                                                                   | TASK-0001            | testes: por perfil, `BANK_PORT` resolve mock explícito (`local-sandbox`, `test`) e a composição **falha** em `staging-like`/`production` sem provedor; caso novo em `runtime-profiles.e2e.spec.ts`; caracterização prévia do comportamento atual (antes da troca)                                                                                                                                                                                                                    |
-| TASK-0004 | Engineer             | engineer-backend    | Terra / médio  | `MOD-inf-collection-bank`, `MOD-app-composition`                                                                                    | TASK-0003            | fábrica de `BANK_PORT` por perfil conforme `contracts/CTG-0002.md` (sem ler env dentro do domínio se o contrato decidir compor no app); nenhum arquivo gerado editado                                                                                                                                                                                                                                                                                                                |
+| TASK-0004 | Engineer             | engineer-backend    | Terra / médio  | `MOD-inf-collection-bank` (A-C2-15; `MOD-app-composition` espera R-0022)                                                            | TASK-0003            | fábrica de `BANK_PORT` por perfil conforme `contracts/CTG-0002.md` somente se couber integralmente em `inf/collection`; se o contrato exigir composição no app, tarefa em espera por R-0022, sem edição                                                                                                                                                                                                                                                                              |
 | TASK-0005 | Inspector            | inspector-tests     | Terra / médio  | `MOD-portal-requests-tests`, `MOD-app-e2e-portal`                                                                                   | TASK-0001            | converte os 6 `it.todo` de `requests.service.spec.ts:1398-1416` e os 2 de `portal-requests.e2e.spec.ts:776,868`; substitui a asserção 422 de C-0002-70 pela delegação real (declarado aqui, não é enfraquecimento); e2e de jornada por serviço (pedido → delegação → `externalId` → estado → evento/SSE) em `portal-journeys.e2e.spec.ts` contra mocks; negativos: sem papel, pré-estado inválido, idempotência repetida, `lgpd`/`crlv` ainda 422                                    |
 | TASK-0006 | Engineer             | engineer-backend    | Sol 6 / médio  | `MOD-app-portal-delegation`, `MOD-portal-requests`, `MOD-shared-policy` (OD-R27-001 (a) exige chaves novas; serializado com R-0025) | TASK-0005, TASK-0004 | alvos reais em `portal-delegation.providers.ts` (um `DelegationTarget` por linha `ligado`; `fail-closed-OD` com motivo novo `OD-R27-nnn`, nunca `delegacao_indisponivel_r0007`); comentário 1-12 corrigido; entradas de política se previstas; testes verdes                                                                                                                                                                                                                         |
 | TASK-0007 | Architect            | architect-blueprint | Terra / alto   | `MOD-r27-contract-ctg4`                                                                                                             | TASK-0001            | `contracts/CTG-0004.md`: aplicação de `frontend-wiring-pattern.md` às 8 rotas (estados, erros, If-Match/Idempotency-Key, SSE de andamento, remoção das superfícies "indisponível" só onde a matriz diz `ligado`), `payment-flags.ts` × `payment.methods` (OD-P74), critérios C-27-4-nn                                                                                                                                                                                               |
@@ -260,7 +282,7 @@ de serializar PRs por CTG. Regra de convivência:
 | TASK-0011 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs-portal`, `MOD-r27-availability`                                                                                           | TASK-0010            | `docs/framework/arch/availability/portal-web.availability.json` (esquema de R-0030: 8 rotas `disponivel` ou `indisponivel-nesta-versao`+OD; `lgpd`/`crlv` com #125); `portal-build-pack.md` §1/§3/WP-P2; `portal-frontends.md` §6/§10; `apps/portal/web/README.md`; `waves.md` §Histórico; backlog                                                                                                                                                                                   |
 
 - CTG-0001 = 0001 → 0002. CTG-0002 = 0003 → 0004 (porta bancária; livre, sem `MOD-shared-policy`).
-- CTG-0003 = 0005 → 0006 (após o CTG-0002 commitado na branch; OD-R27-001 = (a), decidida; lock `policy.ts` partilhado com R-0025/R-0026 sob a regra de convivência de §Execução OD-C2-005).
+- CTG-0003 = 0005 → 0006 (TASK-0005 pode correr em paralelo à TASK-0003; só a TASK-0006 espera o CTG-0002 commitado na branch; OD-R27-001 = (a), decidida; lock `policy.ts` partilhado com R-0025/R-0026 sob a regra de convivência de §Execução OD-C2-005).
 - CTG-0004 = 0007 → 0008 → 0009 → 0010. CTG-0005 = 0011.
 - Commits por CTG na branch única; um PR no fim (OD-C2-005). TASK-0003 ∥ TASK-0005 ∥ TASK-0007 (locks disjuntos); no máximo três por vez.
 
@@ -349,12 +371,54 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
 
 ## Decisões do maestro
 
+- **M1 (bootstrap da sessão A).** Maestro Codex `gpt-6-sol`; Architect e tarefas
+  grandes no mesmo modelo; escada de workers `gpt-5.6-terra` e `gpt-6-luna`.
+  Reviewer Claude Code `claude-opus-5-5` pela ponte. `codex --help` e
+  `claude --help` expõem `--model`; os ids exatos vêm da escada verificada em
+  R-0018 (`docs/meta/agents/orchestra/model-ladder.md`). A ponte validará o id
+  Claude na chamada do prompt-review. Base: `origin/main` em `38c7971`.
+- **M2 (escopo A-C2-15).** A composição de `BANK_PORT` será especificada primeiro.
+  TASK-0004 só prossegue se couber integralmente em `inf/collection` sem importar
+  o app no domínio e sem editar `app.module.ts` ou `detran-runtime.ts`.
+- **M3 (prompt-review).** Opus 5.5 devolveu `PASS`, sem achado high, no único
+  ciclo de prompt-review da Sessão A. O primeiro transporte falhou porque a
+  resposta veio em cerca Markdown; o retry do mesmo ciclo produziu JSON válido
+  em `reviews/prompt-review-1.json`.
+
 ## Concorrência
+
+- R-0020: `orchestra/devai-sensors` remoto publicado; locks de CI,
+  `.devai/config`, `law/register` e `record/` intocados nesta sessão.
+- R-0022: `orchestra/stynx-sse-tenancy` remoto publicado; composição do app,
+  serviços SSE, outbox, offline-sync e pin STYNX intocados.
+- R-0023: `orchestra/authz-unification` em worktree local; `policy.ts` intocado.
+- R-0032: `orchestra/portal-pec` em worktree local; seus contratos de junta
+  aguardam R-0022. R-0024 não está publicada.
 
 ## Bloqueios
 
 ## Triagem
 
+- TASK-0003 e TASK-0005: código não zero é RED aceito somente quando o relatório
+  enumera os casos novos e a falha corresponde ao comportamento ainda ausente.
+  Falha de DB, Redis, Cognito, importação ou timeout é bloqueio de harness.
+- TASK-0004 em `blocked` por necessidade de composição no app dispensa os
+  `acceptance_commands` do caminho implementado. O maestro confere que a
+  fronteira de produção não tem diff atribuível à tarefa e registra R-0022.
+
 ## Retomada
 
 ## Leitura
+
+- Bootstrap em `origin/main` `38c79714b9a48b1c66ee693817e200f1aeba8324`.
+  Lidos `AGENTS.md`, `README.md`, `CODESTYLE.md`, Constituição Artigos 6–7,
+  C-0002 §12/§14/§15/§16 do branch `origin/docs/c0002-a-c2-15`, este plano e
+  `prompts/00-maestro.md`, ADR-0001/0017, método e escada da orquestra,
+  `collection.module.ts`, `handwritten/index.ts`, porta bancária e perfil do app.
+- Linhas de base: `@detran/inf-collection test:unit` 10/10; `@detran/portal-requests
+test:unit` 97 PASS + 7 TODO; após compilar `@detran/ui` sem mudar fontes,
+  `@detran/portal-web test` 1314 PASS + 14 TODO. O e2e focal de perfil teve
+  4 PASS + 3 falhas de harness por ausência da tabela local
+  `portal.public_hostname`; isso não é RED bancário.
+- `pnpm exec devai doctor --repo-root . --format human`: OK; versão instalada
+  DEVAI 1.5.6; `pnpm verify:round-tasks`: OK (320 tarefas) após a revisão.

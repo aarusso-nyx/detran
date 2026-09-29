@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0027",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Consolidar matriz e contratos de delegação",
+  "description": "Consolidar contratos de delegação e porta bancária antes da implementação.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r27-delegation-matrix"],
+  "target_substrates": ["F1", "F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r27", "a-c2-15", "session-a"],
+  "branch": "orchestra/portal-delegations",
+  "worktree_id": "WT-portal-delegations",
+  "prompt_composition_id": "PC-a4180e6d6b13366a",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-lc",
+      "test -s work/rounds/R-0027/delegation-matrix.md && test -s work/rounds/R-0027/contracts/CTG-0002.md && test -s work/rounds/R-0027/contracts/CTG-0003.md"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-a4180e6d6b13366a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

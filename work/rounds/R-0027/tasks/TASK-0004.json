@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0027",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Compor BANK_PORT por perfil se viável",
+  "description": "Implementar a composição interna somente se o contrato de TASK-0001 provar viabilidade; caso contrário esperar R-0022.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-collection-bank"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r27", "a-c2-15", "session-a"],
+  "branch": "orchestra/portal-delegations",
+  "worktree_id": "WT-portal-delegations",
+  "prompt_composition_id": "PC-fc8697979db066d0",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-collection", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-collection", "typecheck"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--",
+      "runtime-profiles.e2e.spec.ts"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-fc8697979db066d0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

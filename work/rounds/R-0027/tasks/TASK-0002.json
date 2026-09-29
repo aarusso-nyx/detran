@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0027",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Registrar ODs e preparar issue",
+  "description": "Transcrever as decisões aprovadas no registro canônico, backlog e corpo da issue.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-build-pack-od", "MOD-kb-backlog"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "transcriber",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r27", "a-c2-15", "session-a"],
+  "branch": "orchestra/portal-delegations",
+  "worktree_id": "WT-portal-delegations",
+  "prompt_composition_id": "PC-be44f90ed3ca034f",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-lc",
+      "test -s work/rounds/R-0027/issue-body.md && rg -q 'OD-R27-001' docs/framework/arch/portal-build-pack.md && rg -q 'OD-R27-002' docs/framework/arch/portal-build-pack.md"
+    ],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-be44f90ed3ca034f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
