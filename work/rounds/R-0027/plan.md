@@ -384,6 +384,10 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
   ciclo de prompt-review da Sessão A. O primeiro transporte falhou porque a
   resposta veio em cerca Markdown; o retry do mesmo ciclo produziu JSON válido
   em `reviews/prompt-review-1.json`.
+- **M4 (TASK-0004).** `contracts/CTG-0002.md` conclui que a API de perfil está
+  apenas no app e que o domínio não recebe token de perfil. Composição interna
+  exigiria dependência reversa ou parser duplicado; pela A-C2-15, TASK-0004
+  entra em checkpoint à espera de R-0022, sem editar código de produção.
 
 ## Concorrência
 
@@ -407,6 +411,25 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
   fronteira de produção não tem diff atribuível à tarefa e registra R-0022.
 
 ## Retomada
+
+- **Sessão A, checkpoint após TASK-0005.** Concluídas e publicadas:
+  TASK-0001 (matriz e CTG-0002/0003, `78abdc29`), TASK-0002 (ODs, backlog e
+  [issue #164](https://github.com/aarusso-nyx/detran/issues/164), `fb131803`),
+  TASK-0003 (caracterização bancária, `e8bc1084`) e TASK-0005 (delegações
+  RED, `96893ed9`). Bootstrap/autorização: `c25514d2` e `f0fbf92b`.
+  `origin/main` com PR #161 foi integrado por merge antes do primeiro push.
+- **Espera:** TASK-0004 depende de um contrato de perfil para `inf/collection`
+  de R-0022; os dois RED de `BANK_PORT` em não local são deliberados. TASK-0006
+  (`policy.ts` e alvos reais) espera R-0023 e a retomada da rodada. TASK-0007
+  em diante esperam o padrão de R-0024. OD-R27-003 segue Architect
+  `source_pending`; OD-R27-004 segue Owner/LEGAL `source_pending`.
+- **Prova disponível:** `@detran/inf-collection test:unit` 10 PASS;
+  `@detran/app typecheck` PASS; e2e de perfil 6 PASS + 2 RED `BANK_PORT`;
+  `@detran/portal-requests test:unit` 98 PASS + 5 RED + 1 TODO preservado;
+  e2e Portal focal 62 PASS + 4 RED; `docs:kb:check`, `format:check` e
+  `verify:round-tasks` PASS na Sessão A. Não houve CI completo, delivery-review
+  ou PR, conforme OD-C2-005/A-C2-15.
+- contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15).
 
 ## Leitura
 
