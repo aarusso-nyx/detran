@@ -1,6 +1,6 @@
 # R-0023 — frente `authz-unification` (C-0002, ação 7d: autorização com fonte única no STYNX)
 
-**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
+**Status:** **aberta para O1 por autorização do Owner de 2026-09-30** (`AUTHORIZATION.md`); O2–O5 aguardam nova sessão após o checkpoint. Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase C) e da inspeção (d)
 (`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` §4.2–§4.3, lacuna A3, M3, candidatos U6/U7). Nenhum
 `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: nascem no bootstrap, depois da
@@ -191,6 +191,14 @@ rodada:
 
 ## Tarefas
 
+**Leitura A-C2-14 para esta sessão.** Nas linhas TASK-0001/0002 abaixo, a
+linha de base é `origin/main` pós-#159 e a inspeção de `.d.ts` é da versão
+1.4.0 instalada. Referências históricas ao HEAD pós-R-0022 e à conformidade
+1.5.0 aplicam-se à regeneração atribuída na retomada, antes de O2. A matriz
+integral cobre cada combinação de rota, principal e perfil que o guarda real
+consegue materializar; variantes impossíveis em um perfil são inventariadas
+explicitamente, sem resultado fabricado.
+
 | Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                              | Depende de         | Entrega                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | --------- | -------------------- | ------------------- | -------------- | ----------------------------------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | TASK-0001 | Architect            | architect-blueprint | Sol 6 / alto   | `MOD-r23-contracts`, `MOD-kb-open-decisions`                      | —                  | `contracts/CTG-0001.md`: inventário fechado dos pontos de decisão (acima) com arquivo:linha; **formato da matriz** (JSON: uma linha por rota montada × principal, campos `method`, `path`, `controller`, `handler`, `resource`, `action`, `public`, `principal`, `profile`, `outcome` ∈ {`allow`, `401`, `403`}, `code`, `layer`); **conjunto fechado de principais** (36 papéis isolados; os 4 de `GLOBAL_ADMIN_ROLES` isolados; `permissions:['*']` sem papel; `permissions:['<recurso>:*']` por domínio; sem principal; principal sem vínculo ao tenant; variantes de claim `device_id`, `agent_id`, `decision_body`); os **dois perfis de runtime** (local e completo); decisão do nível de execução (in-process pela cadeia de `APP_GUARD` do `AppModule` real para a matriz inteira + amostra HTTP `supertest` estratificada que ancora o harness); tabela de conformidade de 1.5.0 lida dos `.d.ts` instalados (`node_modules/@stynx-nyx/{backend,contracts,sessions,angular-auth}`), nunca da proposta; critérios C-01-nn; OD-R23-01 no registro canônico (`open-decisions-rait.md` §C-0002) |
@@ -207,8 +215,9 @@ CTG-0001 = 0001 → 0002 (caracterização; **commitada antes de qualquer troca*
 0005 (dados + provider, sem mudança de guarda). CTG-0003 = 0006 → 0007 (troca do guarda). CTG-0004 =
 0008 (condicional). CTG-0005 = 0009. Commits por CTG na branch única; um PR no fim (OD-C2-005).
 
-**Tríade e ordem de prova.** A matriz de TASK-0002 é o artefato de aceitação da rodada: gerada no
-HEAD pós-R-0022, commitada no CTG-0001 e **nunca** regenerada por Engineer para "atualizar". Em
+**Tríade e ordem de prova.** A matriz de TASK-0002 é o artefato de aceitação da rodada: nesta O1,
+gerada em `main` pós-#159 e commitada no CTG-0001; no futuro, regenerada com diff atribuído após
+R-0022, **nunca** por Engineer para "atualizar". Em
 CTG-0002 e CTG-0003 o gate é `pnpm verify:authz-matrix` com diff vazio contra o arquivo commitado no
 CTG-0001 (ou na última regeneração atribuída a R-0022, §Execução OD-C2-005).
 Contradição teste × contrato: adenda numerada do Architect antes de redespachar.
@@ -306,11 +315,51 @@ Respeitadas sem reabrir: OD-C2-001…004, OD-S15-01, OD-R22-02 (regra de MUST au
 
 ## Decisões do maestro
 
+**M1 — bootstrap O1 (Architect, autorização A-C2-14 do Owner).** Base
+`origin/main` em `c4d5417ccaa510422f5f4ac0d326af2219001799` (PR #159,
+hotfix B2). Branch `orchestra/authz-unification`. A ajuda de `codex` aceita
+`-m/--model` e a de `claude` aceita `--model`; o catálogo de IDs confirmado em
+`model-ladder.md` é `gpt-6-sol` (maestro e TASK-0001),
+`gpt-5.6-terra` (TASK-0002), `gpt-6-luna` (escada restante) e
+`claude-opus-5-5` (reviewer pela ponte). As ajudas não enumeram IDs; a
+confirmação operacional ocorre ao despachar. O1 usa STYNX 1.4.0 tal como em
+`main`, sem antecipar o pin da R-0022. Só TASK-0001/0002 são ativas nesta
+sessão; `acceptance_commands` permanecem por tarefa. A prompt-review única
+cobre os prompts ativos de O1 e o plano integral. Sem PR ou delivery-review.
+`pnpm install --frozen-lockfile`, `devai doctor` (1.5.6) e `pnpm check` de
+linha de base sobre o HEAD anterior às mudanças passaram (exit 0).
+Prompt-review da O1: ciclo 1 `REVIEW` (quatro achados altos, oito baixos),
+ciclo 2 `PASS` pelo Opus 5.5 via `bridge.sh`; a primeira serialização do
+ciclo 2 foi rejeitada pela ponte por JSON inválido e repetida sem ampliar o
+escopo da revisão. Os prompts corrigidos cobrem a pipeline Nest completa,
+decisões internas, materialização real dos principais e curingas das ilhas.
+
 ## Concorrência
+
+No bootstrap, `origin/main` inclui R-0021 e o hotfix B2 (#159). O PR #160
+(A-C2-14) está aberto; o prompt do Owner é a autorização vinculante. A
+R-0020 tem CTG-0001…0003 mesclados e mantém as branches
+`orchestra/devai-sensors` e de preparação CTG5/6; o CTG-0004 espera o
+`reference-gap` DEVAI #168. Esta rodada não altera seus locks
+`.github/workflows/`, `.devai/config`, `law/register` e `record/`. A R-0022 tem
+`origin/orchestra/stynx-sse-tenancy` publicado em `ca4fe44f`; seu checkpoint
+registra pin e ondas O4–O9 ainda pendentes. Nenhum arquivo de `app.module.ts`,
+`detran-runtime.ts`, serviços SSE ou pin STYNX entra em O1. A base da matriz é
+`main` pós-#159: o pedido oportunista do Portal com Host e `X-Tenant-Id`
+cruzados responde `201 anonymous:true`. O2 espera o pin 1.5.x e a tenancy
+canônica de R-0022; a integração futura exige regeneração e diff atribuído
+pela A-C2-11.
 
 ## Triagem
 
 ## Adendas
+
+**A-C2-14 (Owner, 2026-09-30; prompt de abertura enquanto PR #160 aberto).**
+Esta sessão executa somente O1 sobre `origin/main` pós-#159. A linha de base
+da matriz inclui `201 anonymous:true` no caso Host/`X-Tenant-Id` cruzado do
+Portal oportunista. Ao concluir TASK-0001/0002, fazer push sem PR e parar.
+Não há delivery-review nesta sessão; só a prompt-review do bootstrap. Não
+editar os locks R-0020 nem os arquivos R-0022 listados em §Concorrência.
 
 **A-C2-11 (Owner, 2026-09-27): abertura antecipada do CTG-0001.** Esta rodada pode **abrir antes
 do merge de R-0022**, somente para o CTG-0001, que gera a matriz papel × rota × método e os testes de
@@ -343,3 +392,14 @@ caracterização antes de qualquer troca de guarda.
 ## Retomada
 
 ## Leitura
+
+Bootstrap O1 sobre `c4d5417ccaa510422f5f4ac0d326af2219001799`:
+`AGENTS.md`, `CODESTYLE.md`, `README.md`, `law/constitution.md`,
+`BUILD-PLAN.md`, `DESIGN-DECISIONS.md`, `docs/start/index.md`,
+`.devai/config/project.json`, `docs/meta/agents/{README.md,architect-blueprint.md,inspector-tests.md}`,
+`docs/meta/agents/orchestra/{README.md,model-ladder.md,task.template.json,worker-prompt.template.md,reviewer-prompt.template.md}`,
+`work/campaigns/C-0002-consolidacao.md` §12–§14 e §15 no branch do PR #160,
+`work/rounds/R-0023/{plan.md,prompts/00-maestro.md}`,
+`work/rounds/R-0022/plan.md` §Adendas/§Retomada, e os comandos de descoberta
+de branches/PRs. §15 da campanha ainda não existe em `main` porque PR #160
+segue aberto; A-C2-14 é aplicada pelo prompt do Owner.

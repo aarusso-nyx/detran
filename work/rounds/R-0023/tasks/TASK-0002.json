@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0023",
+  "status": "in_progress",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Gerar e provar a matriz de autorização anterior à troca",
+  "description": "Gerador determinístico da matriz integral sobre main pós-PR #159, fixture versionada e e2e com amostra HTTP estratificada.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-authz-matrix",
+    "MOD-app-tests-authz",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["c-0002", "authz-unification", "o1"],
+  "branch": "orchestra/authz-unification",
+  "worktree_id": "WT-authz-unification",
+  "prompt_composition_id": "PC-8a7f09e89e054255",
+  "acceptance_commands": [
+    ["pnpm", "verify:authz-matrix"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-30T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-8a7f09e89e054255",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "spawned_at": "2026-09-29T21:01:39.364Z"
+}

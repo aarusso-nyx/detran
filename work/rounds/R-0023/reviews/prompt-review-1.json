@@ -1,0 +1,110 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0023",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0023/prompts/TASK-0001.md",
+      "line": 34,
+      "claim": "The rg search that is supposed to close the inventory is limited to `backend/domains/{portal,dashboard,teat,rait,ops}/`. `teat/` and `rait/` do not exist under `backend/domains/`, which contains ch, dashboard, est, inf, integration, ops, portal and shared. The search therefore skips `inf/`, `est/`, `ch/` and `integration/`. That leaves out `canDecideAitCancelRequest` (`backend/domains/inf/ait/src/ait-lifecycle.service.ts:1081`, invariant H.39/OD-T01) and the role checks in `backend/domains/inf/rait-case`. The inventory that plan.md:196 calls \"fechado\" would be incomplete while still claiming to be closed.",
+      "fix": "Replace the scope with `backend/domains/` in full, excluding `**/generated/**` and `*.spec.ts`, plus `backend/app/src/`. List inf/ait and inf/rait-case explicitly as sources of decisions made inside the service."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0023/prompts/TASK-0002.md",
+      "line": 41,
+      "claim": "TASK-0002.md:41, TASK-0001.md:63-64 and plan.md:196 require the matrix to be decided in-process by \"cadeia real de `APP_GUARD` do `AppModule`\". About 19 controllers use `@UseGuards(PortalCitizenGuard)`, and `pec-renach-transmission`/`pec-toxicology-inbound` use `@UseGuards(RenachWebhookGuard)`. `DashboardLayerGate` is injected and called inside handlers (for example `alerts.controller.ts:75`), and `canDecideAitCancelRequest` runs inside the service. An APP_GUARD-only evaluation records `allow` where HTTP returns 401 or 403. It also cannot fill the `layer` field or the `decision_body` variant that the contract itself requires. The result would be a fictitious characterization on the Portal, webhook, DASHBOARD (N3 always denied) and AIT-cancellation surfaces.",
+      "fix": "Require the full per-route Nest guard pipeline in Nest order: global APP_GUARD, then controller and method `@UseGuards`, including the ProvisioningIfMatchGuard → auth → session → ProvisioningPolicyGuard order in `app.module.ts:755-1025`. For gates inside handlers or services (DashboardLayerGate, canDecideAitCancelRequest, role checks in services), the contract must either evaluate them over HTTP for every affected route × principal, or mark the cell with an explicit `layer` value such as `layer:\"handler-not-evaluated\"`. It must never write `allow`. The gate fails closed if a route has a guard or gate the generator does not know."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0023/prompts/TASK-0001.md",
+      "line": 57,
+      "claim": "The prompts do not say how each principal enters the pipeline in each profile. In the local profile, permissions are derived from roles (`detran-runtime.ts:326` `permissionsForRoles`). In the full profile (`staging-like`/`production`), they come from Cognito claims (`detran-runtime.ts:384`), with StynxSessionsModule and DetranSessionStrongFactorGuard in the path. Without a rule, the worker may set `request.user` directly and skip the auth guard. That is fictitious for principals such as `permissions:['*']` without a role, which are unreachable in the local profile. TASK-0002's reading list also omits the canonical references for booting the full profile (`backend/app/tests/e2e/runtime-profiles.e2e.spec.ts`, `dashboard-e2e.support.ts`).",
+      "fix": "In TASK-0001 item 3/4, require every principal to be injected only through the input that each profile's real auth guard reads (token or headers from the canonical fixtures), never by pre-filling `request.user`. The contract must record, per profile, whether each variant can be materialized, and a variant that cannot is recorded as such, with no invented cell. Add `backend/app/tests/e2e/runtime-profiles.e2e.spec.ts` and `backend/app/tests/e2e/dashboard-e2e.support.ts` to both reading lists."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0023/prompts/TASK-0001.md",
+      "line": 59,
+      "claim": "The wildcard principal is defined only as `permissions:['<recurso>:*']` \"por domínio\", with no resources fixed. The plan's main risk (plan.md:265-267) is STYNX's wildcard reaching the strict islands (`RAIT_STRICT_COMMAND_RULES`, `OPS_PROVISIONING_STRICT_RULES`), `RAIT_DISABLED_POLICY_KEYS`, `inf:rait-case:protocol`, `ch:retention:review` and `ops:parameter:*`. TASK-0004 only proves parity of the provider against `isDetranActionAllowed`. It does not prove the STYNX guard's own wildcard matching in O3. The matrix is the only end-to-end proof, and a vague domain-level choice leaves an access-widening path uncovered.",
+      "fix": "Fix the closed set of wildcard principals as: one `<recurso>:*` for each resource that owns a strict-island key, a disabled key or a named exception (at least `inf:rait-case:*`, `inf:rait-suspension-act:*`, `inf:rait-export:*`, `ch:retention:*`, `ops:parameter:*`, and the provisioning resource), plus one per domain for the rest, and `*`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0023/prompts/TASK-0002.md",
+      "line": 13,
+      "claim": "The B2 baseline (`201 anonymous:true`) must be an explicit HTTP proof. Neither reading list includes the #159 reference files: `backend/app/tests/e2e/portal-manifestation-tenant-isolation.e2e.spec.ts`, `backend/app/src/portal-opportunistic-auth.spec.ts` and `backend/domains/portal/citizen-service/src/handwritten/manifestations.controller.ts`.",
+      "fix": "Add all three to the closed reading lists of TASK-0001 and TASK-0002, and have the contract cite the exact request (Host, `X-Tenant-Id`, body)."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0023/plan.md",
+      "line": 197,
+      "claim": "plan.md:197 (\"saída verde sobre o HEAD pós-R-0022\") and plan.md:211 (\"gerada no HEAD pós-R-0022\") contradict A-C2-14 and AUTHORIZATION.md, which set the base to `origin/main` after #159. plan.md:196 asks for a \"tabela de conformidade de 1.5.0\", while TASK-0001.md:69-71 correctly asks for the installed 1.4.0.",
+      "fix": "Annotate the TASK-0001/0002 rows and the \"Tríade\" paragraph with \"na O1 desta sessão: `main` pós-#159 e 1.4.0 (A-C2-14); conformidade 1.5.0 refeita no bootstrap de O2\"."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0023/plan.md",
+      "line": 203,
+      "claim": "TASK-0008 is still \"condicional\" and cancels if UPS-SES is missing (plan.md:153-157, 203, 207 and 273-275; 00-maestro.md:63 and 75). This contradicts OD-S15-01, under which a missing item leads to a checkpoint. plan.md:111-114 declares these branches void, so this does not affect O1, but the text is inconsistent.",
+      "fix": "When the O2–O5 prompts are materialized at resumption, rewrite TASK-0008 and 00-maestro §0 as unconditional (missing item → checkpoint, OD-R22-02)."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0023/prompts/TASK-0001.md",
+      "line": 33,
+      "claim": "`backend/app/node_modules/@stynx-nyx/angular-auth` does not exist. It is a frontend package and not a dependency of `@detran/app`, so the reading list points to a missing path.",
+      "fix": "Remove `angular-auth` from the list, or mark UPS-AUTHZ-06 as \"não verificável no backend em O1\"."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "work/rounds/R-0023/prompts/TASK-0002.md",
+      "line": 33,
+      "claim": "\"Não toque `backend/domains/**/src/` fora de specs\" implies that specs under domains may be written, which contradicts the exhaustive four-file list at lines 28-31.",
+      "fix": "Change it to \"Não toque `backend/domains/**` (inclusive specs)\"."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0023/prompts/TASK-0002.md",
+      "line": 56,
+      "claim": "`verify:authz-matrix` and the e2e need Postgres (see `policy-routes.e2e.spec.ts`: DB_HOST/DB_NAME). The prompt does not set `DB_NAME` or a round env file (orchestra README §4.16), and it does not say how the recording mode is invoked, even though plan.md:227-228 says the first run records and the second compares.",
+      "fix": "Declare the env (`DB_NAME` or `work/rounds/R-0023/env-*.sh`) and the exact recording command (for example `tsx tools/authz/route-role-matrix.ts --write`), keeping `verify:authz-matrix` as compare-only."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0023/plan.md",
+      "line": 377,
+      "claim": "§Leitura is empty. 00-maestro.md:197 requires the HEAD hash and the list of what was read. M1 (plan.md:309-319) does not record the baseline `pnpm check` or `devai doctor` required by 00-maestro.md:139-140.",
+      "fix": "Record the hash and reading list in §Leitura, and the baseline results in M1, before dispatching TASK-0001."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0023/AUTHORIZATION.md",
+      "line": 3,
+      "claim": "The authorization, A-C2-14 and `created_at` in the task JSONs are dated 2026-09-30, but the files were created on 2026-09-29.",
+      "fix": "Use the actual date of the Owner's prompt."
+    }
+  ],
+  "notes": [
+    "Checked and correct: TASK-0001 → TASK-0002 order (upstream_task_id, pipeline position); roles match write scope (Architect: contract and OD; Inspector: generator, fixture, e2e, script); the compositions.json sha256 values match the prompts; the models match model-ladder.md (Architect on grande; Inspector on médio for a large matrix).",
+    "Checked and correct: the O1 locks are disjoint from R-0020 (`.github/workflows/`, `.devai/`, `law/register/`, `record/`) and from R-0022 (`backend/app/src/`, pin, SSE); the only shared file is the root `package.json`, resolved by merge.",
+    "Checked and correct: the acceptance_commands exist (`docs:kb:check`, `docs:kb:publish-check`, `format:check`, `@detran/app test:e2e`); `verify:authz-matrix` is explicitly a deliverable of TASK-0002; no gate is weakened; `skip`/`todo` and subsampling are forbidden.",
+    "Checked and correct: the prompts assume no 1.5.x API (TASK-0001 item 5 reads the installed 1.4.0 `.d.ts`); OD-D76, OD-309 and OD-R23-01 are respected with no decision taken; the B2 baseline is explicit in AUTHORIZATION.md, A-C2-14 and both prompts.",
+    "The O2–O5 prompts were not required, per the Owner's scope for this opening."
+  ]
+}
