@@ -643,6 +643,15 @@ Fonte: `AUTHORIZATION.md` §Adenda B6.
   C-08-01/03/04/14. Owner: hotfix em PR próprio contra `main` (Adenda B8); depois, iteração 4 de
   TASK-0014.
 
+- **B4 — reviewer indisponível** (2026-09-29): `codex` (Sol 6) respondeu "You've hit your usage limit
+  … try again at Oct 3rd, 2026 3:41 PM". Sem revisão cruzada até lá (sem dispensa, sem inverter
+  família). Afeta: hotfix `fix/untyped-sql-parameters-sweep` (commits `fa7340ef`, `550e9887`, publicado,
+  sem PR até a revisão) e a delivery-review final. Não afeta o trabalho das ondas (OD-C2-005: revisão só
+  no fim). Achados fora da classe, pendentes de hotfix pela política B9: `FOR UPDATE` com agregado/
+  `GROUP BY` em `inf/rait-session/src/handwritten/rait-session-command.service.ts:599,1310`; repositório
+  gerado `ch/billing/src/repositories/billing-invoice-item.repository.ts:44,69` (BP-CH-BILLING-001,
+  `where id` sem coluna `id`; correção no blueprint/gerador).
+
 ## Retomada
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
