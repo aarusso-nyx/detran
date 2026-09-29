@@ -1,0 +1,35 @@
+{
+  "role": "role_app_backend",
+  "commands": [
+    {
+      "file": "backend/domains/ch/telehealth/src/telehealth-lifecycle.service.ts",
+      "method": "conclude",
+      "contains": "insert into ch.billing_item",
+      "reason": "$2 dentro de jsonb_build_object (could not determine data type)"
+    },
+    {
+      "file": "backend/domains/ch/juntas/src/junta-lifecycle.service.ts",
+      "method": "designate",
+      "contains": "designation_deadline_rule, designation_deadline_at",
+      "reason": "$2 em case when $2 = 'SECOND' colide com a coluna varchar instance (inconsistent types deduced)"
+    },
+    {
+      "file": "backend/domains/ch/juntas/src/junta-lifecycle.service.ts",
+      "method": "decide",
+      "contains": "update ch.junta_case",
+      "reason": "$2 em case when $2 in (...) colide com a coluna varchar status (inconsistent types deduced)"
+    },
+    {
+      "file": "backend/domains/ch/retention/src/retention-lifecycle.service.ts",
+      "method": "propose",
+      "contains": "insert into ch.retention_disposition",
+      "reason": "$3/$5 em case when $3 = 'BLOCKED' then $5 colidem com as colunas varchar status e uuid proposed_by (inconsistent types deduced)"
+    },
+    {
+      "file": "backend/domains/portal/complaints/src/complaint-lifecycle.service.ts",
+      "method": "transition",
+      "contains": "update portal.complaint",
+      "reason": "$2/$4 em case when $2 in (...) then $4 colidem com as colunas varchar status e uuid closed_by (inconsistent types deduced)"
+    }
+  ]
+}
