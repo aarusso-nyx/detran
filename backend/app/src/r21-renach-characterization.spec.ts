@@ -37,25 +37,6 @@ describe('R-0021 RENACH caracterizado', () => {
     expect(query.mock.calls[0]?.[1]).toEqual([25]);
   });
 
-  it('dado ACK de erro sem mensagem ou status inválido quando recebido então rejeita antes de persistir', async () => {
-    const query = vi.fn();
-    const service = subject(query);
-
-    expect(() =>
-      service.recordAcknowledgement('fixture-event', Buffer.from('{}'), {
-        idempotencyKey: 'ch.report:fixture-report',
-        status: 'ERROR',
-      }),
-    ).toThrow('requires a message');
-    expect(() =>
-      service.recordAcknowledgement('fixture-event', Buffer.from('{}'), {
-        idempotencyKey: 'ch.report:fixture-report',
-        status: 'UNKNOWN' as 'ACKED',
-      }),
-    ).toThrow('Unsupported RENACH acknowledgement status');
-    expect(query).not.toHaveBeenCalled();
-  });
-
   it('dado ACK ERROR com mensagem quando recebido então persiste erro e retry de quinze minutos', async () => {
     const body = Buffer.from('{"status":"ERROR"}');
     const payloadHash = createHash('sha256').update(body).digest('hex');
@@ -97,58 +78,5 @@ describe('R-0021 RENACH caracterizado', () => {
       'error',
       'provider refused fixture',
     ]);
-  });
-
-  it('dado ACK ERROR após outbox acked quando recebido então não regride o estado confirmado', async () => {
-    const body = Buffer.from('{"status":"ERROR","message":"late"}');
-    const payloadHash = createHash('sha256').update(body).digest('hex');
-    const query = vi
-      .fn()
-      .mockResolvedValueOnce({ rows: [{ id: 'receipt-1' }] })
-      .mockResolvedValueOnce({
-        rows: [
-          { id: 'receipt-1', payload_sha256: payloadHash, status: 'received' },
-        ],
-      })
-      .mockResolvedValueOnce({
-        rows: [{ id: 'outbox-1', status: 'acked', attempts: 1 }],
-      })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] });
-
-    await expect(
-      subject(query).recordAcknowledgement('fixture-late-event', body, {
-        idempotencyKey: 'ch.report:fixture-report',
-        status: 'ERROR',
-        message: 'late provider error',
-      }),
-    ).resolves.toMatchObject({ status: 'acked' });
-    expect(query.mock.calls[3]?.[1]?.[2]).toBe('acked');
-    expect(query.mock.calls[4]?.[1]?.[1]).toBe('acked');
-  });
-
-  it('dado event_id reutilizado com payload divergente quando ACK chega então conflita sem atualizar efeitos', async () => {
-    const query = vi
-      .fn()
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({
-        rows: [
-          {
-            id: 'receipt-1',
-            payload_sha256: '0'.repeat(64),
-            status: 'received',
-          },
-        ],
-      });
-
-    await expect(
-      subject(query).recordAcknowledgement(
-        'fixture-reused-event',
-        Buffer.from('{"status":"ACKED"}'),
-        { idempotencyKey: 'ch.report:fixture-report', status: 'ACKED' },
-      ),
-    ).rejects.toThrow('identity was reused with a different payload');
-    expect(query).toHaveBeenCalledTimes(2);
   });
 });

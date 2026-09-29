@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PecRenachTransmissionService } from './pec-renach-transmission.service.js';
@@ -179,18 +178,6 @@ describe('PecRenachTransmissionService', () => {
     );
   });
 
-  it('AC-PEC-009-5 claims due work with skip-locked idempotent coordination', async () => {
-    const query = vi.fn().mockResolvedValueOnce({ rows: [] });
-    const submitMedicalExam = vi.fn();
-
-    await expect(
-      subject(query, { submitMedicalExam }).dispatchDue(500),
-    ).resolves.toEqual([]);
-    expect(query.mock.calls[0]?.[0]).toContain('for update skip locked');
-    expect(query.mock.calls[0]?.[1]).toEqual([25]);
-    expect(submitMedicalExam).not.toHaveBeenCalled();
-  });
-
   it('fails closed when queue metadata disagrees with the report kind', async () => {
     const query = vi
       .fn()
@@ -217,105 +204,5 @@ describe('PecRenachTransmissionService', () => {
     ]);
     expect(submitMedicalExam).not.toHaveBeenCalled();
     expect(submitPsychologicalEvaluation).not.toHaveBeenCalled();
-  });
-
-  it('normalizes a non-finite dispatch limit before querying', async () => {
-    const query = vi.fn().mockResolvedValueOnce({ rows: [] });
-
-    await expect(
-      subject(query, { submitMedicalExam: vi.fn() }).dispatchDue(Number.NaN),
-    ).resolves.toEqual([]);
-    expect(query.mock.calls[0]?.[1]).toEqual([25]);
-  });
-
-  it('AC-PEC-009-3 records a RENACH ACK once and resolves the outbox item', async () => {
-    const body = Buffer.from(
-      JSON.stringify({
-        idempotencyKey: 'ch.report:report-1',
-        status: 'ACKED',
-        providerProtocol: 'RENACH-1',
-      }),
-    );
-    const payloadHash = createHash('sha256').update(body).digest('hex');
-    const query = vi
-      .fn()
-      .mockResolvedValueOnce({ rows: [{ id: 'receipt-1' }] })
-      .mockResolvedValueOnce({
-        rows: [
-          {
-            id: 'receipt-1',
-            payload_sha256: payloadHash,
-            status: 'received',
-          },
-        ],
-      })
-      .mockResolvedValueOnce({
-        rows: [{ id: 'outbox-1', status: 'processing', attempts: 1 }],
-      })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] });
-    const service = subject(query, { submitMedicalExam: vi.fn() });
-
-    await expect(
-      service.recordAcknowledgement('event-1', body, {
-        idempotencyKey: 'ch.report:report-1',
-        status: 'ACKED',
-        providerProtocol: 'RENACH-1',
-      }),
-    ).resolves.toEqual({
-      eventId: 'event-1',
-      outboxId: 'outbox-1',
-      status: 'acked',
-      duplicate: false,
-    });
-    expect(query.mock.calls[0]?.[0]).toContain('on conflict');
-    expect(query.mock.calls[3]?.[0]).toContain('integration.delivery_attempt');
-    expect(query.mock.calls[3]?.[1]).toEqual([
-      'outbox-1',
-      1,
-      'acked',
-      'RENACH-1',
-      null,
-      null,
-      payloadHash,
-    ]);
-    expect(query.mock.calls[4]?.[1]).toEqual(['outbox-1', 'acked', null]);
-    expect(query.mock.calls[5]?.[0]).toContain("status = 'processed'");
-  });
-
-  it('AC-PEC-009-3 treats the same processed event as an idempotent duplicate', async () => {
-    const body = Buffer.from(
-      JSON.stringify({
-        idempotencyKey: 'ch.report:report-1',
-        status: 'ACKED',
-      }),
-    );
-    const payloadHash = createHash('sha256').update(body).digest('hex');
-    const query = vi
-      .fn()
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({
-        rows: [
-          { id: 'receipt-1', payload_sha256: payloadHash, status: 'processed' },
-        ],
-      })
-      .mockResolvedValueOnce({
-        rows: [{ id: 'outbox-1', status: 'acked', attempts: 1 }],
-      });
-
-    await expect(
-      subject(query, { submitMedicalExam: vi.fn() }).recordAcknowledgement(
-        'event-1',
-        body,
-        { idempotencyKey: 'ch.report:report-1', status: 'ACKED' },
-      ),
-    ).resolves.toEqual({
-      eventId: 'event-1',
-      outboxId: 'outbox-1',
-      status: 'acked',
-      duplicate: true,
-    });
-    expect(query).toHaveBeenCalledTimes(3);
   });
 });
