@@ -1,0 +1,21 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-check-then-write-races",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "backend/domains/dashboard/monitor/src/handwritten/cycle/alert.service.ts",
+      "line": 393,
+      "claim": "O sweeper pode adquirir várias travas de alerta na mesma transação em ordens opostas. No passo 1, os timers seguem (due_at, id); no passo 4, os ciclos seguem (duty_code, period). Duas instâncias em passos diferentes podem travar A→B e B→A, causando deadlock. A prova nova cobre apenas uma chave.",
+      "fix": "Estabelecer uma ordem única de aquisição entre os passos do sweeper, ou serializar o processamento por tenant antes de adquirir outras travas; acrescentar uma prova com duas chaves em ordem inversa."
+    }
+  ],
+  "notes": [
+    "As sete specs de corrida estão incluídas nos tiers de integração; esses tiers rodam em sequência, com fileParallelism=false, o que permite clonar o banco template no CI.",
+    "A alteração do teste unitário de laudos acompanha a nova consulta de trava e preserva as verificações anteriores. FOR NO KEY UPDATE é compatível com as travas de FK dos inserts de laudo.",
+    "OD-HF-B9-001 registra corretamente a divergência de fontes e mantém a decisão RENACH parada para o Owner. A duplicação do harness é aceitável neste hotfix.",
+    "Parecer de leitura: não reexecutei os testes na worktree somente leitura."
+  ]
+}
