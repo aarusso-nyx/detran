@@ -596,7 +596,7 @@ export class RaitSessionCommandService {
       fail('RAIT.VIEW_REQUEST_NOT_ALLOWED', 422, { agendaItemId: item.id });
     const used = rows<{ count: string }>(
       await tx.query(
-        'select count(*)::text as count from inf.rait_agenda_item where tenant_id = $1 and view_requested_by = $2 for update',
+        'select count(*)::text as count from (select id from inf.rait_agenda_item where tenant_id = $1 and view_requested_by = $2 for update) locked',
         [context.tenantId, context.actorId],
       ),
     )[0];
@@ -1307,13 +1307,16 @@ export class RaitSessionCommandService {
       fail('RAIT.MEMBER_IMPEDED', 422, { memberId: context.actorId });
     const quorum = rows<{ required: number; observed: number }>(
       await tx.query(
-        `select session.quorum_required as required, count(attendance.id)::integer as observed
-         from inf.rait_session session
-         join inf.rait_attendance attendance
-           on attendance.tenant_id = session.tenant_id and attendance.session_id = session.id
-        where session.tenant_id = $1 and session.id = $2 and attendance.present = true
-        group by session.quorum_required
-        for update of session, attendance`,
+        `select locked.quorum_required as required, count(locked.attendance_id)::integer as observed
+         from (
+           select session.quorum_required, attendance.id as attendance_id
+             from inf.rait_session session
+             join inf.rait_attendance attendance
+               on attendance.tenant_id = session.tenant_id and attendance.session_id = session.id
+            where session.tenant_id = $1 and session.id = $2 and attendance.present = true
+            for update of session, attendance
+         ) locked
+        group by locked.quorum_required`,
         [context.tenantId, item.session_id],
       ),
     )[0];
