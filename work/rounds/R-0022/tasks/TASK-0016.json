@@ -13,15 +13,15 @@
   "target_invariants": [],
   "coupled_task_group": "CTG-0009",
   "coupled_pipeline_position": "architect",
-  "upstream_task_id": "TASK-0000",
+  "upstream_task_id": "TASK-0013",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["r22", "ctg-0009", "offline-sync", "a1"],
+  "tags": ["r22", "ctg-0009", "offline-sync", "a1", "after:TASK-0013"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-6a2fc1cf606d57af",
+  "prompt_composition_id": "PC-382c9f971b2e8323",
   "acceptance_commands": [
     ["test", "-s", "work/rounds/R-0022/contracts/CTG-0009.md"],
     ["pnpm", "format:check"]
@@ -36,7 +36,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-6a2fc1cf606d57af",
+    "prompt_composition_id": "PC-382c9f971b2e8323",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

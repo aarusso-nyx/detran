@@ -21,8 +21,33 @@
   "tags": ["r22", "ctg-0006", "signature", "characterization"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-661dabbb27ff358a",
+  "prompt_composition_id": "PC-88aaf849ce1419ab",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ch-clinical-reports",
+      "test:unit",
+      "--passWithNoTests=false",
+      "tests/unit/r22-signature-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/documents/r22-document-trust-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-trust-profiles.e2e.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -67,7 +92,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-661dabbb27ff358a",
+    "prompt_composition_id": "PC-88aaf849ce1419ab",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

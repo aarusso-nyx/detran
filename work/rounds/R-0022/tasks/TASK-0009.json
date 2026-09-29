@@ -22,11 +22,44 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["r22", "ctg-0006", "signature"],
+  "tags": [
+    "r22",
+    "ctg-0006",
+    "signature",
+    "after:TASK-0004",
+    "after:TASK-0005",
+    "after:TASK-0006",
+    "after:TASK-0012"
+  ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-aa44384dd569f7a5",
+  "prompt_composition_id": "PC-33557a69f78790c5",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ch-clinical-reports",
+      "test:unit",
+      "--passWithNoTests=false",
+      "tests/unit/r22-signature-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/documents/r22-document-trust-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-trust-profiles.e2e.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -73,7 +106,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-aa44384dd569f7a5",
+    "prompt_composition_id": "PC-33557a69f78790c5",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

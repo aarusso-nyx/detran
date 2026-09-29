@@ -37,3 +37,11 @@ em `work/rounds/R-0022/AUTHORIZATION.md` no bootstrap."
   `tools/orchestra/bridge.sh`; workers da família do maestro (`claude-opus-5-5`,
   `claude-sonnet-5`).
 - Bancos descartáveis exclusivos desta rodada; nunca bancos de outra frente.
+
+## Adenda B1 — prompt-review ciclo 1 FAIL tratado como corrigível (Owner, 2026-09-29)
+
+Pergunta do maestro, depois de `reviews/prompt-review-1.json` (Sol 6, FAIL, 17 achados `high`):
+tratar o FAIL como corrigível, aplicar as 17 correções e submeter o ciclo 2 restrito a elas, com no
+máximo 2 ciclos. Resposta literal do Owner: **"Sim, aplique as 17 correções e submeto o ciclo 2,
+restrito a elas, com no máximo 2 ciclos?"** — lida como autorização. Não dispensa PASS: workers só
+com PASS; FAIL ou REVIEW no último ciclo → parada e novo relato ao Owner.

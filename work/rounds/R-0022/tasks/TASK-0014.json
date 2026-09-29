@@ -21,8 +21,25 @@
   "tags": ["r22", "ctg-0008", "outbox", "characterization"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-c5cdc13fab81435a",
+  "prompt_composition_id": "PC-dbb3efe707efe337",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/events/r22-outbox-characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/r22-outbox-characterization.integration.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -60,7 +77,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-c5cdc13fab81435a",
+    "prompt_composition_id": "PC-dbb3efe707efe337",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

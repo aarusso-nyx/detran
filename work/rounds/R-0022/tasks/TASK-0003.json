@@ -21,8 +21,40 @@
   "tags": ["r22", "ctg-0001", "characterization", "web"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-e3722b4e84520ec5",
+  "prompt_composition_id": "PC-6c5658f584d1c2be",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/rait-web",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse.characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/dashboard-web",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse/sse.characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/portal-web",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/realtime.characterization.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse.characterization.spec.ts"
+    ],
     ["pnpm", "--filter", "@detran/rait-web", "test"],
     ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
     ["pnpm", "--filter", "@detran/rait-web", "lint"],
@@ -46,7 +78,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-e3722b4e84520ec5",
+    "prompt_composition_id": "PC-6c5658f584d1c2be",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

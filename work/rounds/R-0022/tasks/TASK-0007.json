@@ -8,7 +8,7 @@
   "title": "Quatro fluxos SSE do backend sobre o serviço STYNX",
   "description": "Quatro fluxos SSE do backend sobre o serviço STYNX (CTG-0004), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0007.md.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-app-sse-backend"],
+  "target_modules": ["MOD-app-sse-backend", "MOD-app-module"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0004",
@@ -18,10 +18,18 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["r22", "ctg-0004", "sse"],
+  "tags": [
+    "r22",
+    "ctg-0004",
+    "sse",
+    "after:TASK-0005",
+    "after:TASK-0006",
+    "after:TASK-0015",
+    "after:TASK-0019"
+  ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-c6c46d562a326b4c",
+  "prompt_composition_id": "PC-101fdde71de90de5",
   "acceptance_commands": [
     [
       "pnpm",
@@ -50,7 +58,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-c6c46d562a326b4c",
+    "prompt_composition_id": "PC-101fdde71de90de5",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

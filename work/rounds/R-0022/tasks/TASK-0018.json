@@ -22,11 +22,35 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["r22", "ctg-0009", "offline-sync"],
+  "tags": [
+    "r22",
+    "ctg-0009",
+    "offline-sync",
+    "after:TASK-0004",
+    "after:TASK-0005",
+    "after:TASK-0015",
+    "after:TASK-0017"
+  ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-1413e656a486d449",
+  "prompt_composition_id": "PC-bd5ee7f354d0960d",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/r22-offline-characterization.integration.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-offline-sync.e2e.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -65,7 +89,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-1413e656a486d449",
+    "prompt_composition_id": "PC-bd5ee7f354d0960d",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

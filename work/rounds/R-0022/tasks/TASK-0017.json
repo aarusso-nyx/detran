@@ -21,8 +21,24 @@
   "tags": ["r22", "ctg-0009", "offline-sync", "characterization"],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-02086cd797aec6cf",
+  "prompt_composition_id": "PC-9c96ff9f327f3e3a",
   "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/ops-offline-sync",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/r22-offline-characterization.integration.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-offline-sync.e2e.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -58,7 +74,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-02086cd797aec6cf",
+    "prompt_composition_id": "PC-9c96ff9f327f3e3a",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

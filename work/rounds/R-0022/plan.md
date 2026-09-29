@@ -449,6 +449,43 @@ o Engineer). TASK-0009 passa de Sonnet 5 a Opus 5.5 (migração integral, fail-c
 | O8   | TASK-0007 ∥ TASK-0009 ∥ TASK-0018 | streams SSE × assinatura/documentos × offline-sync; `MOD-app-module` serializado entre as que o contrato marcar                                                                 | TASK-0015 (0007 e 0018), TASK-0006 (0009)                                   | sim                                   |
 | O9   | TASK-0010                         | ADR nova de SSE/tenancy, ADR de divisão STYNX × DETRAN (não criada por R-0021), emendas, `sse-stream-contract.md`, `rait-events-sse-contract.md`, `detran-ui-guide.md`, índices | O6–O8                                                                       | sim; depois a sequência final         |
 
+**A2.1 — correções do ciclo 1 da prompt-review** (Owner autorizou tratar o FAIL como corrigível,
+`AUTHORIZATION.md` §Adenda B1; prevalece sobre as tabelas acima onde divergir):
+
+- **Art. 10.** Engineer nunca cria, edita nem remove teste; exceção única: inverter o `it.fails` do
+  _bearer_ do TEAT web (C-05-nn). Some a exceção da _flag_ do _shim_: o A/B de TASK-0002 força as
+  duas ordens de registro no módulo de teste e é válido antes e depois (200, sem
+  `RequestContextMissingError`). Nenhum `it.fails` de paridade nas caracterizações de migração: todo
+  caso é válido nas duas fases.
+- **TASK-0019 (nova, Inspector, Sonnet 5/médio, CTG-0004/0005, lock `MOD-r22-sse-spec-retirement`)**:
+  retira os specs e dublês do mecanismo SSE local listados por TASK-0005 em "Specs a retirar
+  (TASK-0019)", cada caso mapeado a um C-01-nn. Onda **O5 = TASK-0005 → TASK-0019**; TASK-0007 e
+  TASK-0008 só depois dela. Nas migrações, a retirada é feita pelo Inspector do CTG (TASK-0012,
+  TASK-0014, TASK-0017) pela seção "Specs a retirar" do contrato.
+- **Arquivos de teste fixos das migrações:** assinatura
+  `backend/domains/ch/clinical-reports/tests/unit/r22-signature-characterization.spec.ts`,
+  `backend/domains/shared/src/documents/r22-document-trust-characterization.spec.ts`,
+  `backend/app/tests/e2e/r22-trust-profiles.e2e.spec.ts`; outbox
+  `backend/domains/shared/src/events/r22-outbox-characterization.spec.ts`,
+  `backend/app/tests/integration/r22-outbox-characterization.integration.spec.ts`; offline
+  `backend/domains/ops/offline-sync/tests/integration/r22-offline-characterization.integration.spec.ts`,
+  `backend/app/tests/e2e/r22-offline-sync.e2e.spec.ts`. Todos com `--passWithNoTests=false` nos
+  `acceptance_commands` do Inspector e do Engineer do CTG; os specs web de caracterização idem, por
+  arquivo, em TASK-0003, TASK-0008 e TASK-0019.
+- **Pré-condições de despacho** (no prompt e em `tags` `after:TASK-nnnn` de cada tarefa):
+  0004 ← 0002, 0003, 0012, 0014, 0017; 0005 ← 0004, 0011, 0013, 0016; 0006 ← 0004, 0005;
+  0016 ← 0013; 0019 ← 0004, 0005; 0008 ← 0005, 0019; 0007 ← 0005, 0006, 0015, 0019;
+  0009 ← 0004, 0005, 0006, 0012; 0015 ← 0004, 0005, 0006, 0014; 0018 ← 0004, 0005, 0015, 0017;
+  0010 ← 0005–0009, 0015, 0018, 0019. Com 0016 ← 0013, O1 = 0001 ∥ 0011 ∥ 0013 e O2 = 0002 ∥ 0003 ∥
+  0016 ficam como estão.
+- **RLS:** todo negativo de RLS (inclusive "evento de B nunca entregue a A") executa a operação sob
+  `role_app_backend` com o tenant do contexto; owner só prepara e limpa fixtures.
+- **TASK-0007** declara `MOD-app-module`; se `CTG-0004.md` disser que não precisa de
+  `app.module.ts`, o maestro não lhe entrega o arquivo; se precisar, O8 serializa 0007, 0009 e 0018
+  nesse lock.
+- **TASK-0013** lê uma lista fechada de 34 arquivos de produção que citam
+  `integration.outbox`/`delivery_attempt`/`inbox_receipt` (inventário do maestro), sem busca aberta.
+
 `pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
 recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
 
