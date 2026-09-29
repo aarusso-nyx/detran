@@ -107,3 +107,10 @@ Respostas literais: "1. a+b" · "2. Sim, aprovo".
   `inf.signature_policy` com revisão/vigência, piso nacional como modelo e recusa — nunca fallback
   —, herança órgão → estado, norma separada do perfil de runtime, fail-closed); valores marcados
   "proposta" validados depois, UF a UF, com `source_ref` e aprovação.
+
+## Adenda B7 — terceira iteração de TASK-0014 (Owner, 2026-09-29)
+
+Resposta literal: "a, autorizo a 3ª iteração". TASK-0014 (caracterização da outbox) recebe uma
+terceira iteração, além do `max_iterations` 2, com a leitura ampliada pedida no relatório da
+iteração 2, para caracterizar C-08-01, 03, 04, 13 e completar 06, 12 e 16 sobre 1.4.0 antes do pin.
+C-08-14/15 seguem pela leitura somente leitura de OD-R22-17 (Adenda B4).
