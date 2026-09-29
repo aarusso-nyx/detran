@@ -4,12 +4,12 @@
   "status": "active",
   "window_input_budget": 2250000,
   "checkpoint_threshold": 1800000,
-  "estimated_input_total": 295000,
-  "estimated_output_total": 52000,
+  "estimated_input_total": 540000,
+  "estimated_output_total": 89000,
   "prior_window_archive": "work/rounds/R-0020/budget-window-3.json",
   "prior_window_input_total": 2223000,
   "prior_window_output_total": 363000,
-  "note": "Janela 4 ativa sob M11: CTG-0003 tem 16 selos e baseline A3 sem FAIL; check/review integral/commits/evidência/PR pendentes. CTG-0004…0006 seguem seriais e A1 aguarda resposta Owner.",
+  "note": "Janela 4 ativa sob M11: CTG-0003 mesclado e observado; TASK-0011/0012 do CTG-0004 entregues, TASK-0013 em RGR por enum upstream. A1-3=B; A1-1/2 pendentes. Estimativas posteriores à abertura lançadas em bloco auditável abaixo.",
   "entries": [
     {
       "kind": "reviewer",
@@ -106,6 +106,150 @@
       "input_tokens": 22000,
       "output_tokens": 4500,
       "note": "PASS com dois lows de cobertura corrigidos pelo Inspector."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-final-delivery-reviews",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "note": "PASS ciclo 4 e revisão dirigida de prova Engineer; estimativa retrospectiva."
+    },
+    {
+      "kind": "maestro",
+      "id": "CTG-0003-CI-merge-observation",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "PR #156, CI, merge e observação Auditor no SHA exato; estimativa retrospectiva."
+    },
+    {
+      "kind": "architect",
+      "id": "TASK-0011-contract",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Contrato condicional CTG-0004; estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0011-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 7000,
+      "output_tokens": 1000,
+      "note": "Estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0011-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 7000,
+      "output_tokens": 1000,
+      "note": "Estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0011-prompt-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 6000,
+      "output_tokens": 1000,
+      "note": "PASS; estimativa retrospectiva."
+    },
+    {
+      "kind": "inspector",
+      "id": "TASK-0012-RED-tests",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "14 REDs individuais; estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0012-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 8000,
+      "output_tokens": 1000,
+      "note": "estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0012-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 8000,
+      "output_tokens": 1000,
+      "note": "estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0012-prompt-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 7000,
+      "output_tokens": 1000,
+      "note": "estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0012-prompt-review-4",
+      "model": "claude-opus-5-5",
+      "input_tokens": 7000,
+      "output_tokens": 1000,
+      "note": "PASS; estimativa retrospectiva."
+    },
+    {
+      "kind": "engineer",
+      "id": "TASK-0013-partial-wrapper",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Pausada por RGR; WIP na branch rgr/TASK-0013."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0013-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 8000,
+      "output_tokens": 1000,
+      "note": "estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0013-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 8000,
+      "output_tokens": 1000,
+      "note": "estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0013-prompt-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 9000,
+      "output_tokens": 1000,
+      "note": "PASS; estimativa retrospectiva."
+    },
+    {
+      "kind": "reviewer",
+      "id": "RGR-TASK-0013-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "REVIEW; cinco achados sobre Art. 22, branch e validação de schema."
+    },
+    {
+      "kind": "reviewer",
+      "id": "RGR-TASK-0013-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "PASS; dois lows de rastreio e trailer WIP."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "RGR-TASK-0013-source-validation-and-checkpoint",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "note": "Divergência upstream, branch RGR, decisões Architect e checkpoint."
     }
   ]
 }

@@ -1,0 +1,36 @@
+{
+  "mode": "rgr-review",
+  "round": "R-0020",
+  "task_id": "TASK-0013",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/reports/RGR-TASK-0013-sensor-kind-schema.md",
+      "line": 24,
+      "claim": "Q1 names the upstream tracking reference only as `source_pending`. Cycle 1 asked for an upstream tracking reference, and so far there is no DEVAI issue or PR to link. This is acceptable because the RGR correctly refuses to write to DEVAI, but the Art. 22 resolution has nothing to point at until a reference exists.",
+      "fix": "Once an issue or PR exists in aarusso-nyx/devai, replace `source_pending` with its URL in the RGR and in plan.md §Bloqueios. Do not resume TASK-0013 without that reference and a published release."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/reports/TASK-0013.md",
+      "line": 11,
+      "claim": "The body of WIP commit 282623928fdb on `rgr/TASK-0013` contains the literal text `\\n\\n` instead of real line breaks, so the Sources and Co-authored-by lines sit in the same paragraph. As a result, git does not parse the Co-authored-by trailer. This is cosmetic and does not affect preservation, but the recorded authorship is weaker.",
+      "fix": "Optional: at resume, or when the WIP is rewritten or discarded, record authorship with real trailers. Do not rewrite the branch just for this."
+    }
+  ],
+  "notes": [
+    "Finding 1 (high, qids/risk) is resolved. The RGR gives an explicit high risk classification on line 3 and a qid table RGR-R20-0013-Q1..Q3 with options, consequences and disposition. Q1=A under A1-3=B, Q2 A or B provided one final pin contains both fixes, Q3=A. No Owner decision is inferred.",
+    "Finding 2 (low, Art. 22 preservation) is resolved. Local branch `rgr/TASK-0013` = 282623928fdb210d697296247e936b3e9c569b35, single parent 4bbbaa7b (the current HEAD of orchestra/devai-sensors). Diff: package.json +1, tools/devai/sense.mjs +323. SHA-256 of sense.mjs in the commit = 68ebf6b2…c2d0, identical to what the RGR records. `git worktree list` shows no temporary RGR worktree. In the shared worktree, tools/devai/sense.mjs does not exist and package.json has no diff against HEAD. The report and the RGR forbid both paths in any CTG-0004 commit.",
+    "Finding 3 (low, validation description) is resolved. The RGR and TASK-0013.md now say that the wrapper does not apply the pinned schema document to any field (hand-written validator plus kind checked against the registry). The resume criterion requires the full JSON Schema with no local copy.",
+    "Finding 4 (low, Inspector test) is resolved. Disposition item 2 in the RGR and the next steps in the report and the plan checkpoint require an Inspector characterization that validates the 49 sweep readings against the actually pinned schema before the Engineer resumes, without weakening the 14 tests, the schema or the 49-member set.",
+    "Finding 5 (low, iteration_count) is resolved. TASK-0013.json has iteration_count 0 and max_iterations 2 (unchanged at top level and in executor). The only working-tree diff against HEAD is status in_progress→rgr_pending. Q3=A justifies the choice under Art. 22.",
+    "plan.md: the §Bloqueios entry and the last §Retomada checkpoint (2026-09-29) agree with the RGR on SHA 28262392, rgr_pending, iteration_count 0, no PR or delivery-review, A1-3=B in force, A1-1/A1-2 pending, and CTG-0005/0006 serial.",
+    "I did not re-review the upstream source. The installed hashes and the text cited in the RGR did not change materially from cycle 1.",
+    "The cycle-1 leftovers (.formatted.4abKLC/.raw.x4lWI6) are no longer in reviews/. The new zero-byte files RGR-TASK-0013-review-2.json.formatted.pbl3b9 and .raw.ozpJxd appear to be temporaries from the bridge running this review. Remove or rename them before any commit.",
+    "This PASS covers only the RGR corrections and the pause state. It does not authorize a PR, merge, delivery-review, resumption of TASK-0013 or a start on CTG-0005/0006.",
+    "Read-only mode: I ran only git branch/rev-parse/log/show/diff/status/worktree list, file reads and shasum. I did not run any test, sensor or write.",
+    "The claude.ai Google Drive and Mermaid Chart MCP servers need authorization in claude.ai connector settings. This review did not use them."
+  ]
+}

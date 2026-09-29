@@ -1,0 +1,56 @@
+{
+  "mode": "rgr-review",
+  "round": "R-0020",
+  "task_id": "TASK-0013",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0020/reports/RGR-TASK-0013-sensor-kind-schema.md",
+      "line": 20,
+      "claim": "Pinned Constitution Art. 22 (.devai/pin/constitution.md:254) says an RGR must carry structured questions, each with a qid and optional candidate answers, plus a risk classification. This RGR has neither. It lists required steps in 'Disposição governada necessária' but asks the Architect or Owner nothing concrete. The precedent RGR-TASK-0009-legacy-tasks.md:25 does have a qid table.",
+      "fix": "Add a qid table. Suggested questions: (Q1) route the 4-kind enum fix upstream to DEVAI (issue/PR in aarusso-nyx/devai, with emission and validation tests) versus an Architect addendum that records sweep as incomplete and keeps CTG-0004 blocked. (Q2) require one release that carries both the enum fix and the scorecard route fix 268bb838, versus accepting separate releases. (Q3) whether TASK-0013 resumes on the current attempt or on a new one. Also add an explicit risk classification and the upstream tracking reference."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/reports/TASK-0013.md",
+      "line": 11,
+      "claim": "Art. 22 (.devai/pin/constitution.md:256) says the paused task keeps its branch as `rgr/<task-id>` and its worktree is destroyed. Here the partial sense.mjs and the devai:sense line in package.json stay uncommitted in the shared orchestra/devai-sensors worktree, and there is no `rgr/TASK-0013` branch (git branch --list '*rgr*' is empty). This deviation is not declared. It also risks the partial wrapper or the package.json line being swept into a later maestro or Architect commit.",
+      "fix": "Keep the partial work on `rgr/TASK-0013` as a non-delivery WIP commit and remove it from the shared worktree. If the Owner/Architect prefers to keep it in the worktree, record that as an explicit, justified deviation from Art. 22 in the RGR and the report. Either way, list both paths as forbidden in any CTG-0004 commit."
+    },
+    {
+      "severity": "low",
+      "file": "tools/devai/sense.mjs",
+      "line": 297,
+      "claim": "The RGR is right that the wrapper gets around the enum: line 297 builds `kinds` from the registry keys, and line 165 checks sensor.kind against that set. The RGR understates the scope, though. loadPolicy (lines 249-262) only reads schema.$id and schema_version. validateReading is a hand-written copy of the schema, so the pinned sensor-reading.schema.json is never actually applied to any field. That is a drift risk beyond the 4 kinds.",
+      "fix": "Amend the RGR/report text to say the wrapper does not validate against the pinned schema document at all, not just that the kind check uses the registry. The resume criterion should require validation with the pinned schema itself (compiled JSON Schema, including the kind enum), with no local copy."
+    },
+    {
+      "severity": "low",
+      "file": "tools/devai/tests/sense.test.mjs",
+      "line": 128,
+      "claim": "The sweep test only checks `result.selected` against the 49 kinds. No test checks that all 49 readings are valid against the enum of the pinned schema. The validation test (lines 140-150) runs only the baseline preset. That is why the registry-based wrapper passes 14/14. The RGR reads this correctly as a 'GREEN técnico', and item 2 of the disposition asks for the missing Inspector characterization.",
+      "fix": "No change to the RGR. At resume, the Inspector should add a test that loads the enum from the installed schema and requires every sweep reading to validate. Under the 1.5.6 pin that test stays RED until a governed re-pin, and it must not be weakened."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/tasks/TASK-0013.json",
+      "line": 22,
+      "claim": "iteration_count went from 0 to 1 (max_iterations 2) at the RGR pause, so a stop caused by a reference-gap uses up an implementation iteration. Neither the RGR nor the report says whether an RGR pause should count against the iteration budget. If it does, the resume has only one attempt left for a defect that is not the Engineer's.",
+      "fix": "Record the counting decision in the RGR (as a qid) or revert to 0 if the round's policy does not count RGR pauses. Do not change max_iterations."
+    }
+  ],
+  "notes": [
+    "Deterministic comparison on the installed sources. SHA-256 of registry 0910facf…7806, preset 96715fa3…c12, schema dcfb7fc2…931f and sense.mjs 68ebf6b2…c2d0 all match the RGR exactly.",
+    "The counts in the RGR are confirmed. Registry: 59 kinds, 59 unique, 49 with effect `read`. The sweep preset has 49 members and 10 exclusions, and equals the registry read order both as a sequence and as a set. round_required=true. The kind enum has 60 values.",
+    "registry−enum = {decision_record_integrity, decision_citation_resolution, archive_immutability, round_record_integrity}. All 4 are effect `read`, tier SWEEP, emitter packages/loop/src/governance-ledger/index.ts. They appear only in sweep, not in baseline, structural or governed.",
+    "enum−registry = {api_test, db_test, journey_test, contract_validation, mutation_test}. This matches the RGR.",
+    "Upstream was checked read-only with `gh api` (the network worked). On v1.6.0 and main, law/schemas/sensor-reading.schema.json has a 60-value enum without the 4 kinds, and law/policy/sensor-registry.json has 59 kinds, 49 read, including all 4. The contradiction is still present upstream.",
+    "Commit 268bb83835e52d05f0932fd8f04d64e4b47104d5 exists ('refactor(scorecard): read one readings store and derive N/A cells from the ledger'). compare v1.6.0...268bb838 = ahead, so it is not in v1.6.0. compare 268bb838...main = ahead, so it is in main. Latest release is v1.6.0 (2026-09-26). This matches CTG-0004:15 and the RGR.",
+    "The `rgr_pending` disposition is valid: task.schema.json:49 lists it (the Constitution text uses 'rgr-pending', which is only a spelling variant). Not making a delivery commit, not opening a PR and not merging are consistent with CTG-0004 §Aceitação 2-4, with A1-3=B (four real PASS results stay the merge gate), and with the rule against omitting sweep members or weakening the schema.",
+    "The partial wrapper does get around the restriction, and the RGR says so correctly.",
+    "Scope limits of this review: I did not run node --test, pnpm check, any sensor, any `--write` command or any other state-changing command. I did not re-check the dry-run result AUTHORITY_WRITE_CONSENT_REQUIRED or the inconclusive `pnpm check`.",
+    "Untracked leftovers RGR-TASK-0013-review-1.json.formatted.4abKLC and .raw.x4lWI6 are in reviews/. Remove them or give them canonical names before any commit.",
+    "The claude.ai Google Drive and Mermaid Chart MCP servers need authorization in claude.ai connector settings. This review did not use them."
+  ]
+}
