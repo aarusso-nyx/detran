@@ -419,19 +419,20 @@ export class JuntaLifecycleService {
       await tx.query(
         `insert into integration.outbox
           (topic, aggregate_type, aggregate_id, payload, idempotency_key, status, available_at)
-         values ('ch.renach.junta-decision', 'ch.junta_decision', $1,
-                 jsonb_build_object('decisionId', $1, 'caseId', $2, 'outcome', $3,
-                                    'administrativeExhausted', $4,
+         values ('ch.renach.junta-decision', 'ch.junta_decision', $1::text,
+                 jsonb_build_object('decisionId', $1::text, 'caseId', $2::text,
+                                    'outcome', $3::text,
+                                    'administrativeExhausted', $4::boolean,
                                     'remainingAppeal',
                                     case
-                                      when $5 = 'SECOND' and $3 = 'UPHELD'
+                                      when $5::text = 'SECOND' and $3::text = 'UPHELD'
                                       then jsonb_build_object(
                                         'instance', 'SPECIAL',
                                         'designatingAuthority', 'CETRAN',
                                         'filingDeadlineRule', '30_CALENDAR_DAYS')
                                       else null
                                     end),
-                 'ch.junta-decision:' || $1, 'pending', now())`,
+                 'ch.junta-decision:' || $1::text, 'pending', now())`,
         [
           decision.id,
           board.case_id,
