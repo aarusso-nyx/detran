@@ -391,7 +391,7 @@ caracterização antes de qualquer troca de guarda.
 
 **M2 — TASK-0002 ainda sem aceite (Inspector, O1).** O gerador e o e2e
 direcionado estão no worktree da branch; a matriz sobre `origin/main`
-`c4d5417c` contém 32.943 células observadas e 8.503 pares
+`c4d5417c` contém 33.974 células observadas e 8.508 pares
 `handlerNotEvaluated`. O modo `verify:authz-matrix` reproduz a fixture byte a
 byte em banco descartável limpo, mas falha corretamente pela incompletude
 (C-01-04/05). Em STYNX 1.4.0, a prova HTTP de token aceito e sessão ativa
