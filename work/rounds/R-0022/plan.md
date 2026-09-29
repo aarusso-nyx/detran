@@ -319,7 +319,9 @@ ao planejar e revisar; Engineer ao commitar.
   fail-closed: preservar o comportamento atual e não despachar o que depender delas):
   OD-R22-04 (SSE RAIT sem filtro por papel/pool; TASK-0001), OD-R22-05 (DASHBOARD: `id` repetido e
   429 sem `Retry-After`; TASK-0001), OD-R22-06…14 = OD-R22-S01…S09 de `contracts/CTG-0006.md`
-  (assinatura; TASK-0011). OD-R22-06…14 bloqueiam só TASK-0009 (O8).
+  (assinatura; TASK-0011). OD-R22-06…14 bloqueiam só TASK-0009 (O8). OD-R22-15…21 = P-08-1…7 de `contracts/CTG-0008.md`
+  (outbox; TASK-0013): 15 bloqueia TASK-0015 parte 1; 16…19 bloqueiam a parte 2 (e, por dependência,
+  TASK-0007 e TASK-0018); o corte de `integration.*` sem símbolo publicado é candidato a OD-R22-02.
 
 ## Concorrência
 
