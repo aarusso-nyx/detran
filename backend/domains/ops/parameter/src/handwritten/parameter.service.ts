@@ -273,6 +273,15 @@ export class OpsParameterService {
         throw new OpsParameterError('RAIT.PARAMETER_LEGAL_READONLY', 422, {
           key,
         });
+      // Serializa os PUT da mesma série (tenant+chave+superfície+escopo+
+      // órgão): sem linha anterior não há o que `for update` bloquear, e o
+      // `limit 1` sob READ COMMITTED relê a versão antiga depois da espera.
+      await queryTx.query(
+        `select pg_advisory_xact_lock(hashtextextended(
+           'ops.parameter:' || current_setting('app.tenant_id') || ':' || $1
+             || ':' || $2 || ':' || $3 || ':' || coalesce($4::text, ''), 0))`,
+        [key, surface, targetScope, targetAgency],
+      );
       const currentResult = await queryTx.query(
         `select * from ops.parameter
           where tenant_id = current_setting('app.tenant_id')::uuid

@@ -19,6 +19,7 @@ import { measureConcludedEvent, measureReleasedEvent } from './events.js';
 import {
   appendEvent,
   findRow,
+  lockRow,
   inTenantTransaction,
   measureStateInvalid,
   patchRow,
@@ -59,7 +60,7 @@ export class ReleaseRetentionCommand {
       const retention = await findRow(this.deps, tx, 'retentions', retentionId);
       if (!retention) throw tenantMismatch({ retentionId });
       const measureId = stringOf(retention.measure_id);
-      const measure = await findRow(this.deps, tx, 'measures', measureId);
+      const measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });
 
       const currentState = stringOf(measure.current_status);

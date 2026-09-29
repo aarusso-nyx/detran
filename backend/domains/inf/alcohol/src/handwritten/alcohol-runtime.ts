@@ -134,6 +134,29 @@ export async function findRow(
   return result.rows[0];
 }
 
+/**
+ * Leitura do procedimento pai com `for update`: a checagem de estado e a
+ * escrita que dela depende ficam na mesma linha bloqueada (sem ela, dois
+ * comandos concorrentes em READ COMMITTED passam na mesma checagem).
+ */
+export async function lockRow(
+  deps: AlcoholDeps,
+  tx: unknown,
+  table: AlcoholTableName,
+  id: string,
+): Promise<AlcoholRow | undefined> {
+  const store = storeOf(deps, table);
+  if (typeof store?.find === 'function' || typeof store?.findOne === 'function')
+    return findRow(deps, tx, table, id);
+  const sql = asQueryable(tx);
+  if (!sql) return undefined;
+  const result = await sql.query(
+    `select * from ${ALCOHOL_TABLES[table]} where id = $1 for update`,
+    [id],
+  );
+  return result.rows[0];
+}
+
 export async function findRowsWhere(
   deps: AlcoholDeps,
   tx: unknown,

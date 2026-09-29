@@ -5,7 +5,7 @@
 // contract §6) e responde sempre 409 `TEAT.MEASURE_STATE_INVALID` com
 // `allowed: []` — nenhum estado admite `cancel`. `source_pending` (OD-T37).
 import {
-  findRow,
+  lockRow,
   inTenantTransaction,
   measureStateInvalid,
   stringOf,
@@ -24,7 +24,7 @@ export class CancelMeasureCommand {
 
   async execute(measureId: string, _input: CancelMeasureInput): Promise<never> {
     return inTenantTransaction(this.deps, async (tx) => {
-      const measure = await findRow(this.deps, tx, 'measures', measureId);
+      const measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });
       const currentState = stringOf(measure.current_status);
       throw measureStateInvalid(measureId, currentState, [], 'cancel');

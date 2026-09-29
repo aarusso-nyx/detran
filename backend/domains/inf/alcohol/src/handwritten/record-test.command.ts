@@ -8,6 +8,7 @@ import {
   appendEvent,
   assertAlcoholAllowed,
   findRow,
+  lockRow,
   findRowsWhere,
   inTenantTransaction,
   insertRow,
@@ -57,7 +58,7 @@ export class RecordTestCommand {
     const testedAt = input.tested_at ?? scope.occurredAt;
 
     return inTenantTransaction(this.deps, async (tx) => {
-      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
+      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
       if (!procedure) throw tenantMismatch({ procedureId });
       assertAlcoholAllowed(procedure, procedureId, ALLOWED, 'record-test');
 
