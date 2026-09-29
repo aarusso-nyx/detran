@@ -24,6 +24,26 @@ Esquema do delta: `work/rounds/R-0030/availability-manifest.schema.md` (R-0030).
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada na **sessão B** (Claude
+> Code Opus 5.5; reviewer Sol 6), **primeira da sequência**. Tarefas liberadas: **TASK-0001/0002**
+> (matriz de vínculo, desenho do gateway e das 6 portas, ODs) e **TASK-0003/0004** (specs e
+> implementação das portas de homologação em `apps/boat/mobile/src/lib/ports/`, sem `@capacitor/*`,
+> atestação nunca `true`). Esperam: TASK-0005 em diante (páginas, gateway e telas web dependem do
+> padrão de R-0024 e do SSE de R-0022).
+>
+> - **Base:** `origin/main`, branch `orchestra/boat-wiring`. Push sem PR ao fim de cada tarefa
+>   liberada; checkpoint em §Retomada com o que falta e o que espera; parada.
+> - **Não tocar:** `backend/app/src/app.module.ts`, `backend/app/src/detran-runtime.ts`, serviços
+>   SSE, `backend/domains/shared/src/policy.ts`, `backend/domains/shared/src/documents`, outbox
+>   (`integration.*`), offline-sync e pin STYNX (R-0022/R-0023); `packages/ui` e shells ou
+>   núcleos dos apps (R-0024); locks de R-0020 (`.github/workflows/`, `.devai/config`,
+>   `law/register`, `record/`).
+> - **Reconferência na retomada:** todo contrato produzido agora é reconferido contra `origin/main`
+>   quando a rodada retomar depois da R-0024. Divergência vira adenda numerada do Architect, sem
+>   reescrever o já aprovado.
+> - Tarefas válidas em `pnpm verify:round-tasks`; um prompt-review no bootstrap cobrindo só as tarefas
+>   liberadas; `acceptance_commands` por tarefa; sem PR e sem delivery-review (OD-C2-005).
+
 Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
 um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
 aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
