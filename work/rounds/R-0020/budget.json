@@ -4,12 +4,12 @@
   "status": "active",
   "window_input_budget": 2250000,
   "checkpoint_threshold": 1800000,
-  "estimated_input_total": 757000,
-  "estimated_output_total": 125000,
+  "estimated_input_total": 804000,
+  "estimated_output_total": 133000,
   "prior_window_archive": "work/rounds/R-0020/budget-window-3.json",
   "prior_window_input_total": 2223000,
   "prior_window_output_total": 363000,
-  "note": "Janela 4 ativa sob M11: CTG-0003 mesclado e observado; TASK-0011/0012 e A1-PF TASK-0029/0030 do CTG-0004 entregues, TASK-0013 em RGR por enum upstream. A1-3=B; A1-1/2 pendentes. Estimativas posteriores à abertura lançadas em bloco auditável abaixo.",
+  "note": "Janela 4 ativa sob M11: CTG-0003 mesclado e observado; TASK-0011/0012 e A1-PF TASK-0029/0030 do CTG-0004 entregues, TASK-0013 em RGR por enum upstream. A1-1/2 aceitas e A1-3=B; release/pin upstream pendentes. Estimativas posteriores à abertura lançadas em bloco auditável abaixo.",
   "entries": [
     {
       "kind": "reviewer",
@@ -346,6 +346,46 @@
       "input_tokens": 15000,
       "output_tokens": 2500,
       "note": "23/23 PASS, formatação verde; pnpm check parou no preflight real pelos quatro kinds upstream."
+    },
+    {
+      "kind": "maestro-architect",
+      "id": "A1-1-A1-2-owner-receipt-and-contract",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "Recibo Owner segregado e aplicação do aceite A1 no contrato e plano."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-acceptance-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 12000,
+      "output_tokens": 2000,
+      "note": "REVIEW; um high de consentimento CI versus sensing local e dois lows temporais."
+    },
+    {
+      "kind": "maestro-architect",
+      "id": "A1-acceptance-remediation",
+      "model": "gpt-6-sol",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "note": "Contrato distingue CI efêmero de execução local, release e pin antes do ensaio."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-acceptance-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "note": "PASS; um low no checkpoint do plano corrigido após revisão."
+    },
+    {
+      "kind": "maestro-gate",
+      "id": "A1-acceptance-record-verification",
+      "model": "gpt-6-sol",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "note": "Formatação, autoria, hash da proposta, task schema e diff-check revalidados."
     }
   ]
 }

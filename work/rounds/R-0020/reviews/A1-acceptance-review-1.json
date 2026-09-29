@@ -1,0 +1,39 @@
+{
+  "mode": "decision-review",
+  "round": "R-0020",
+  "group": "CTG-0004-A1-acceptance",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0020/contracts/CTG-0004.md",
+      "line": 28,
+      "claim": "The new text says the general orchestration command `sense run --preset baseline ... --write --publish` may run 'somente após o ensaio em clone exigido pelo aceite A1-2'. That makes A1-2 look like the only remaining condition for the command in general. The receipt (A1-2b, line 11) grants the consent 'somente no job efêmero de CI', 'sem ampliar seu escopo'. TASK-0013 (contract lines 152-155) still has the maestro running presets and recording the first readings outside CI. The edit therefore implies that the Owner's CI-only consent covers the maestro's local execution. It also drops the published-pin condition at this point in the contract.",
+      "fix": "Rewrite as: 'no job efêmero de CI, somente sob A1-2b, após novo pin governado e ensaio em clone; fora do CI, só o ensaio em clone descartável; a execução pelo maestro no repositório não está coberta por A1-2b e exige autorização própria ou fica pendente'. Make TASK-0013 item 3 consistent with this without changing the Owner's decision."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/contracts/CTG-0004.md",
+      "line": 14,
+      "claim": "The 'Efeito permitido agora' column for A1-2 says 'Preparar implementação e ensaio em clone'. For A1-1 (line 13) it says 'Medir as quatro coordenadas reais'. The receipt (line 14) requires the correction to be in a published, governed-pinned version before TASK-0013 resumes and before the sensing rehearsal. The installed preflight still fails for four kinds. So neither the rehearsal nor the measurement is permitted now; the header line 4 conditions this, but the table cell alone does not.",
+      "fix": "In both cells, state that the rehearsal and measurement come only after a published release and a governed pin (for example: 'após release corrigida e pin governado: …'). Until then, allow only specification and tests."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/contracts/CTG-0004.md",
+      "line": 146,
+      "claim": "This line still reads 'A1-1/A1-2 podem permanecer pendentes sem impedir a entrega independente do contrato' with no temporal marker. The same document now declares A1-1/A1-2 decided (lines 4, 13-14), so the two statements conflict.",
+      "fix": "Keep it as history of TASK-0011 but mark it as such, for example: '(na entrega da TASK-0011; decididas depois em AUTHORIZATION-A1-1-A1-2-2026-09-29.md)'."
+    }
+  ],
+  "notes": [
+    "The receipt faithfully records all four items against the proposal (SHA-256 a8163f49…346b, confirmed by recomputing the hash): A1-1 (floor 4, minimums 0/3/1/0/0, the four named coordinates with no substitution, only the two opening N/A); A1-2a (the same 16 members, readings_scanned>0, positive test-trace population, real since-ref and PR body, three self-application N/A with an upstream issue, ci-economy and dependencies kept as REVIEW, no gate removed); A1-2b and A1-2c as separate, conditional consents limited to the ephemeral CI job. It quotes the Owner's words verbatim and states it does not widen the scope.",
+    "Authorship by path checks out. Commit 6c4bc3b5 is by 'DEVAI Owner' and touches only AUTHORIZATION-A1-1-A1-2-2026-09-29.md, the same pattern as b8b6cd72 (A1-3). The CTG-0004.md delta is an Architect edit and the plan.md delta is the maestro's; both are uncommitted and not mixed into the Owner commit.",
+    "The records do not presume an upstream fix. The receipt, the DEVAI row of the contract and M15 all require a published release fixing both the route and the enum, followed by a governed pin. main@268bb838 and v1.6.0 are explicitly not substitutes.",
+    "A1-3=B is preserved. AUTHORIZATION-A1-3 is untouched, including its historical line 13 saying A1-1/A1-2 were pending. The historical checkpoints in plan.md (A1-PF, 'ainda sem resposta') are unchanged. The new entry is append-only, and only the current-state sections (A1 decisions, Blockers) were updated, consistently.",
+    "The CTG-0004-A1-proposal.md proposal is unchanged.",
+    "The untracked files reviews/A1-acceptance-review-1.json.formatted.* and .raw.* look like temporary artifacts. Before any commit, decide whether they should be preserved; this is outside the scope of this review.",
+    "Nothing was executed: no sensor, sense run or record, --write, --publish, install or Git write. This review does not authorize a PR, pin, sensing or CI while the installed preflight fails for four kinds."
+  ]
+}

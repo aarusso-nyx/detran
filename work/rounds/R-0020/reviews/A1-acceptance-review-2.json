@@ -1,0 +1,27 @@
+{
+  "mode": "decision-review",
+  "round": "R-0020",
+  "group": "CTG-0004-A1-acceptance",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 646,
+      "claim": "The new entry says A1-2 'autoriza separadamente `sense run --write --publish` sob ensaio de não publicação e não escrita em `record/`' but never says this consent covers only the ephemeral CI job. For `sense record --write`, the same sentence does say 'apenas ao job efêmero'. Read on its own, this historical record leaves A1-2b looking as if it could cover the maestro running on the real repository. That is the ambiguity finding 1 of cycle 1 fixed in the contract. The binding sections of plan.md (line 331 and M15, lines 424-431) do restrict it to the ephemeral job, so this is a local imprecision and does not make anything eligible to run.",
+      "fix": "Rewrite as '…autoriza separadamente `sense run --write --publish` somente no job efêmero de CI, após ensaio em clone de não publicação e não escrita em `record/`, …'."
+    }
+  ],
+  "notes": [
+    "Finding 1 of cycle 1 (high) is resolved. CTG-0004.md:27-31 limits A1-2b to 'somente no job efêmero de CI' after the fixed release, the governed pin and the disposable clone rehearsal. It says outright that running on the real repository by the maestro needs its own authorization. Item 3 of the sensing procedure (lines 112-118) and TASK-0013 (lines 156-163) repeat the same limit for `sense record --write` and for the first readings, and state that A1-2b/c cover only the ephemeral CI job. The published-pin condition is back.",
+    "Finding 2 of cycle 1 (low) is resolved. The 'Efeito permitido agora' cells for A1-1 (line 13) and A1-2 (line 14) now allow only specification, tests and non-executing preparation for now. Measurement and rehearsal wait for the fixed release and the governed pin, and the CI verbs only after the receipt's conditions are proven.",
+    "Finding 3 of cycle 1 (low) is resolved. CTG-0004.md:149-151 now places the sentence in the original TASK-0011 delivery and points to the later decision in `AUTHORIZATION-A1-1-A1-2-2026-09-29.md`.",
+    "A1-3=B is not reopened. The A1-3 row of the table is unchanged. Item 4 still requires at least four real `PASS` results, now the named cells with no substitution. `AUTHORIZATION-A1-3-2026-09-29.md` has no diff against HEAD. plan.md keeps B as the merge gate at lines 331, 430 and 440.",
+    "Nothing becomes eligible to run early. TASK-0013 now resumes only after the release and the pin, matching the receipt's line 14. The CI job needs the proofs plus an eligible pin (item 5). M15 says the consents do not release TASK-0013 while the pin is incompatible. The installed preflight still fails for four kinds, so nothing is authorized.",
+    "The source proposal is unchanged. `contracts/CTG-0004-A1-proposal.md` has no diff, and its SHA-256 recomputes to a8163f498ed784144750ccc71554e3a1e1adbfad2d7f38404d598049981b346b, matching the receipt. The Owner receipt has no diff against commit 6c4bc3b5.",
+    "Cosmetic, outside the scope of the three findings: plan.md:646 shortens the hash to `a8163f49…bfad2d7f`. The second segment comes from the middle of the digest, not the end (…346b). Using the full hash or `a8163f49…346b` would avoid confusion.",
+    "The untracked files `reviews/A1-acceptance-review-2.json.formatted.*` and `.raw.*` look like temporary artifacts. Decide what to do with them before any commit.",
+    "Nothing was executed: no sensor, no `devai sense run|record`, no `--write` or `--publish`, no install and no Git write. This review does not authorize a PR, pin, sensing or CI while the installed preflight fails."
+  ]
+}
