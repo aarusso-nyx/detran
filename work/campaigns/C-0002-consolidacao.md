@@ -424,3 +424,34 @@ sem troca de implementação, e passam a poder abrir antes do merge da rodada an
   - a regra "caracterização mescla antes de qualquer troca".
 - **Detalhes:** estão em `plan.md` §Adendas de R-0022 e de R-0023, e no §0 dos respectivos
   `prompts/00-maestro.md`.
+
+## 14. Adenda A-C2-13: aberturas com R-0020 parada (Owner, 2026-09-29)
+
+**Estado verificado em 2026-09-29:**
+
+- **S-1.5:** concluída. `@stynx-nyx/*` **1.5.0 final** publicado (STYNX #308/#309); a 1.5.2 está em
+  preparação (STYNX #314).
+- **R-0021:** fechada (PC-0019).
+- **R-0020:** aberta e **parada** à espera de atualizações upstream do DEVAI.
+
+A parada de R-0020 não bloqueia a cadeia principal: os locks dela (CI, `.devai/config`, `record/`)
+são partilhados por merge, e seus gates novos passam a valer quando ela mesclar.
+
+**Aberturas autorizadas:**
+
+| Rodada | Abre sobre                                                       | Executa agora                                                                 | Para em                                          |
+| ------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------ |
+| R-0022 | `origin/main`                                                    | rodada inteira; pin = maior 1.5.x final publicado no bootstrap, exato         | — (PR final com a conformidade conferida)        |
+| R-0023 | `origin/main`, depois empilhada em `orchestra/stynx-sse-tenancy` | O1 (matriz de caracterização) já; o resto empilhado conforme §12/§13          | —                                                |
+| R-0024 | empilhada em `orchestra/stynx-sse-tenancy`                       | O1–O4 (frontend), quando o pin e o SSE Angular de R-0022 estiverem publicados | O5 (backend), que espera R-0023                  |
+| R-0030 | `origin/main`                                                    | O1–O3                                                                         | O4 (manifestos da fase D)                        |
+| R-0031 | `origin/main`                                                    | O1–O8, sem tocar os adaptadores de assinatura que R-0022 migra                | O9 (app; espera R-0024)                          |
+| R-0032 | empilhada em `orchestra/pec-web`                                 | O1–O2, após o CTG-0001 de R-0031 publicado                                    | O3 (eventos `ch` pelo outbox migrado por R-0022) |
+
+**Regras:**
+
+- A rodada que "para em" grava checkpoint em `plan.md` §Retomada e faz push sem PR. Ao retomar, integra
+  os upstreams por merge.
+- **Pin 1.5.x:** usar a maior 1.5.x final é esclarecimento do Architect sobre OD-C2-004/OD-S15-01
+  (mesma minor, patch posterior). A conformidade da §7 da especificação é conferida contra a versão
+  fixada.
