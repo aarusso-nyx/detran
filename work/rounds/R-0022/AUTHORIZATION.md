@@ -57,3 +57,18 @@ com PASS; FAIL ou REVIEW no último ciclo → parada e novo relato ao Owner.
   `docs/meta/knowledge-base/open-decisions-rait.md` §C-0002 "R-0022 — decisões do Owner".
 - A exceção de OD-R22-16 é única e nominal: não autoriza outro contorno local nem muda a regra de
   consumo de OD-R22-02 para os demais itens.
+
+## Adenda B4 — respostas do Owner de 2026-09-29 (segunda leva)
+
+- **OD-R22-17 e OD-R22-20:** "autorizo a leitura DETRAN somente leitura" — leitura DETRAN somente
+  leitura (sob RLS, `security_invoker`) sobre as tabelas publicadas da outbox para estado de entrega,
+  ledger, lista e saúde da fila; segunda exceção nominal à A1 item 4, transitória até a 1.5.x.
+- **Retry manual da fila RENACH:** "Sim, aceito perder temporariamente o retry manual da fila
+  RENACH" — as rotas de retry de operador ficam indisponíveis depois do corte até a 1.5.x.
+- **PR #159 (hotfix B2):** "Ok, pode mesclar" — mesclado com CI verde em `c4d5417c`.
+- **Issues no STYNX:** "Leve esses pedidos ao STYNX através de github issues no repositório STYNX
+  detalhados, seguindo o modelo adotado" — autoriza criar issues em `stynx-nyx/stynx`; não autoriza
+  código, branch ou release no STYNX.
+- **Nova janela:** "Você está autorizado a abrir uma nova janela quando necessário."
+- Pendentes de esclarecimento: OD-R22-08 (matriz proposta), OD-R22-07 (impacto), adenda de critério
+  de OD-R22-12, residual OD-P30, resíduos de R-0021.
