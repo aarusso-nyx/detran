@@ -1,0 +1,34 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0013",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 52,
+      "claim": "The prompt tells the Engineer to take the argv for lint, build and unit_test from the steps of the `check` script. In package.json:15, `check` has six `pnpm --filter <app> lint` steps. It has seven build steps, and `@detran/ui` and `@detran/boat-mobile` each appear twice. It has seven test steps, including `@detran/ui test`. The root `build` script (package.json:21, backend) is not part of the CTG-0004 contract. The prompt does not say whether each kind gets the ordered list of all matching steps or a single step, so the Engineer could pick one app or use the root `build`, and the per-kind link would be incomplete.",
+      "fix": "Add: for each kind, record the ordered list of every `pnpm --filter … lint|build|test` step in `check`, deduplicated, and do not use the root `build` script. If one argv per SensorReading cannot represent the set, mark it `source_pending` and report it. Do not pick a representative step."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 41,
+      "claim": "The prompt forbids running protected verbs during the task (line 51) and requires a consent flag, but it never defines 'protected verb'. Under the registry, running `devai sense run --preset baseline` without `--write` still runs `build` (local-write) and `unit_test` (harness-write). The Engineer could treat `pnpm devai:sense --preset baseline` as a harmless manual check.",
+      "fix": "Define protected verbs as any real call to `devai sense run`/`sense record` and any kind whose effect is not `read`. During the task, validation happens only through `node --test` with an injected `execute` and `pnpm devai:sense` with no parameters. Never run the CLI with `--preset`."
+    }
+  ],
+  "notes": [
+    "Integrity: the prompt's SHA-256 is 19aa18951a1987df10fe1cb5d4142e5e4b643d7d15ede7a1d624a99f7eb3a350. It matches compositions.json (TASK-0013 entry) and PC-19aa18951a1987df in TASK-0013.json at top level and in the executor. The composition diff changes only the sha256 and pc_id fields. Model gpt-5.6-terra and effort medium are unchanged.",
+    "Cycle-1 low 1 (global `pnpm check`) is resolved at line 57. It requires the full chain including `devai:test`/sense.test.mjs, and a failure outside the boundary is a block, not a partial PASS. This matches acceptance_commands [[\"pnpm\",\"check\"]].",
+    "Cycle-1 low 2 (sourced argv) is resolved at line 52. It maps type_check to `pnpm typecheck` (CTG-0004 table), extracts lint/build/unit_test from `check` without running them, keeps the other kinds `source_pending`, lists them per kind in the report, and forbids filling `command` by inference. A residual ambiguity about multiple steps per kind is reported as a low.",
+    "Cycle-1 low 3 (record/consent) is resolved at line 41. The script never calls `sense record` and never adds `--write`/`--publish` implicitly. Protected verbs sit behind a consent flag that is off by default and must be documented. This is consistent with CTG-0004 §Persistência 3 (implicit preset persistence forbidden; `record` belongs to the maestro).",
+    "Cycle-1 low 4 (validator/confidence) is resolved at line 53. There is no new dependency; the Engineer reads the pinned schema and applies additionalProperties:false, `SR-`, SHA-256 and the status enum. The confidence requirement is attributed to CTG-0004 §Persistência 1 and must be checked beyond the schema, which says in its description (line 128/200) that confidence is 'required for stochastic' but does not enforce it. Test line 222 covers this.",
+    "Boundary: only `tools/devai/sense.mjs` and the `devai:sense` script in `package.json` may change. Git, installs, `--write`, `record/` and `.devai/` are forbidden. sense.test.mjs is outside the boundary, and any test change requires a sourced contradiction and RGR to the Architect.",
+    "RED→GREEN: line 59 requires GREEN on the 14 REDs without weakening them. The tests inject `execute: executor(...)` (sense.test.mjs:111-229), so GREEN does not depend on running real sensors.",
+    "Dispatch: yes. The Engineer can be dispatched to implement without running protected sensors once the maestro confirms that TASK-0012 is done and the package.json lock is free (line 46). The acceptance criteria use only `node --test` with an injected executor and `pnpm devai:sense` with no parameters. Real readings stay explicitly unmet until A1-2, the clone rehearsal and the DEVAI release. The lows can be applied before or during dispatch without a new review cycle.",
+    "Hygiene, outside the prompt: the untracked leftovers `reviews/prompt-review-TASK-0013-2.json.formatted.DMYAks` and `.raw.XnCvaW` should be removed by the maestro before committing, so they don't pollute the evidence or `format:check`.",
+    "This review does not assess the delivery and does not authorize a merge."
+  ]
+}

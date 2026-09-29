@@ -1,0 +1,45 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0013",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 55,
+      "claim": "The criterion `pnpm check → exit 0 nos arquivos que esta tarefa pode tocar` narrows a gate that is global. plan.md line 250 and acceptance_commands both require a full `pnpm check` exit 0. The qualifier could be used to excuse a failure outside the boundary. The GREEN requirement itself is still enforced, because `devai:test` (`node --test tools/devai/tests/*.test.mjs`) runs sense.test.mjs.",
+      "fix": "Change it to `pnpm check` → exit 0 (full chain, including `devai:test` with sense.test.mjs), without the file-scope qualifier. If something fails outside the boundary, report it as a block and do not treat it as PASS."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 51,
+      "claim": "CTG-0004 lines 26-48 and 151-152 require TASK-0013 to link the real argv for each applicable kind and record it in `SensorReading.command` and in the report. They also keep lint, build and unit_test as `source_pending` until that link exists. The prompt passes on only 'preparar a chamada ao CLI'. The argv-per-kind duty is only implied by the contract, which the prompt says is binding.",
+      "fix": "Add a definition: map type_check→`pnpm typecheck` and extract lint/build/unit_test from the `check` script in package.json without running anything. Mark every other kind `source_pending`, and list argv per kind in the report."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 41,
+      "claim": "The safety rule only covers running with no parameters. The prompt does not say what the delivered script does with `--preset …`. CTG-0004 §Persistência 3 forbids implicit preset persistence and reserves `sense record` for the maestro. As written, the artifact could call `sense run --write --publish` or `sense record` with no consent gate once the task ends.",
+      "fix": "Require the script to never call `sense record` and never add `--write`/`--publish` implicitly. Any protected verb must sit behind an explicit consent flag that is off by default, and the report must document that flag."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0013.md",
+      "line": 41,
+      "claim": "package.json declares no JSON Schema validator such as ajv, and the prompt forbids installing packages. The prompt does not say that validation has to be built from the pinned schema, whose rules include `additionalProperties:false`, the `SR-` pattern, sha256 and the status enum. The rule that a stochastic reading without `confidence` is rejected comes from CTG-0004 §Persistência 1, not from the schema.",
+      "fix": "State that validation uses only what is already available: read `sensor-reading.schema.json` and apply its rules without new dependencies. Cite CTG-0004 §Persistência 1 as the source for requiring `confidence`."
+    }
+  ],
+  "notes": [
+    "The SHA-256 of the prompt matches `16a6a08e10fe7e21eb3a4f49d2c03274fcd58559f2f852537de3d02ded23247d`. The PC `PC-16a6a08e10fe7e21` matches in compositions.json, in TASK-0013.json and in its executor. The diff only changes the PC/sha fields, the context line, reading items 10-12 and the package.json lock.",
+    "RED→GREEN is preserved. The test file sits outside the write boundary, the prompt says to satisfy the 14 REDs without weakening them or to document a sourced contradiction before any test change, and TASK-0012 reports a RED from a missing module with zero skip/todo.",
+    "The write boundary is sense.mjs plus the `devai:sense` script only. Git, installs, `--write`, `record/` and `.devai/` are forbidden. Binding and persistence stay with the maestro, consistent with the task description and CTG-0004 §Auditor pós-merge.",
+    "A1 is handled correctly. A1-3=B is kept as the merge gate of four real PASS cells. A1-1 and A1-2 stay pending and no floor is presumed. The real-readings/scorecard criterion is explicitly declared not met until A1-2, the clone rehearsal and a published DEVAI release. The upstream `main` route is not treated as a substitute for the 1.5.6 pin.",
+    "The sources are sufficient. The closed list covers the contract, the tests, the schema, the registry, the presets and package.json, and the preset members match the test lists (4/20/49).",
+    "The context line saying R-0017/0018/0019 are sealed agrees with plan.md (R-0017 sealed in PR #147, PC-0017 in record/proofs).",
+    "The Engineer can be dispatched for the independent implementation, with no sensor execution, once the maestro confirms the dependency and a free lock on package.json. The lows can be applied before or during dispatch. This review does not assess the delivery and does not authorize a merge."
+  ]
+}
