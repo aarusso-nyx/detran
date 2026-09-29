@@ -1,6 +1,5 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join, resolve, sep } from 'node:path';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 import {
@@ -19,8 +18,8 @@ import { GeolocationGpsAdapter } from './geolocation-gps.adapter.js';
 import { HomologationAttestationAdapter } from './homologation-attestation.adapter.js';
 import { provideBoatHomologationPorts } from './homologation-port.providers.js';
 
-const PORTS_DIR = fileURLToPath(new URL('.', import.meta.url));
-const SRC_DIR = fileURLToPath(new URL('../../', import.meta.url));
+const PORTS_DIR = import.meta.dirname + sep;
+const SRC_DIR = resolve(import.meta.dirname, '../..') + sep;
 
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {

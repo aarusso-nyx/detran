@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   BOAT_ENCRYPTED_STORE_CRYPTO,
@@ -7,11 +7,9 @@ import {
 } from './browser-encrypted-store.adapter.js';
 
 const TEAT_SOURCE = readFileSync(
-  fileURLToPath(
-    new URL(
-      '../../../../../teat/mobile/src/app/data/local/local-act.store.ts',
-      import.meta.url,
-    ),
+  resolve(
+    import.meta.dirname,
+    '../../../../../teat/mobile/src/app/data/local/local-act.store.ts',
   ),
   'utf8',
 );

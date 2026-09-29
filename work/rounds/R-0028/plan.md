@@ -299,6 +299,12 @@ linha de base `pnpm --filter @detran/boat-mobile test` e `pnpm --filter @detran/
   processo, não OD de produto, e não entra no registro canônico; a numeração de ODs novas fica com
   TASK-0001/0002.
 
+- **A2 — tipo de `getRandomValues` em CTG-0002 (Architect/maestro, 2026-09-29).** A assinatura
+  exata do contrato (`<T extends ArrayBufferView>(array: T) => T`) não compila o dublê
+  `vi.fn(getRandomValues)` do spec de armazenamento. Aceito o superconjunto `BoatRandomValues`
+  adotado por TASK-0004 (continua aceitando a assinatura do contrato; o adaptador só preenche o IV).
+  CTG-0002 não é reescrito; esta adenda prevalece sobre o tipo citado nele.
+
 ## Decisões do maestro
 
 Maestro Opus 5.5 (`claude-opus-5-5`, Claude Code 2.1.283), sessão B da A-C2-15, bootstrap de
@@ -349,6 +355,11 @@ em lock de R-0020/R-0022/R-0023/R-0024.
 ## Bloqueios
 
 ## Triagem
+
+- 2026-09-29 TASK-0004 → `sensor-error`: 2 specs de TASK-0003 não carregavam sob vitest+jsdom
+  (`new URL(…, import.meta.url)` reescrito para `http://`); implementação correta (82/82). Nova
+  tentativa de TASK-0003 com o achado (iteração 2): caminhos por `import.meta.dirname`, sem mudar
+  asserção → 104/104. Nenhuma escalada.
 
 ## Retomada
 
