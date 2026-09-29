@@ -1,0 +1,14 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-check-then-write-races",
+  "cycle": 2,
+  "verdict": "PASS",
+  "resolved": [1],
+  "findings": [],
+  "notes": [
+    "Papel ativo: Auditor (Art. 18); revisão somente leitura.",
+    "A trava por tenant é adquirida no início de cada transação do step(), antes das travas de alerta, e serializa os passos concorrentes do mesmo tenant.",
+    "A prova usa runTenant real, duas sessões e duas chaves em ordem inversa; verifica bloqueio, ausência de 40P01, nenhum passo abortado e um alerta por chave.",
+    "Os resultados de testes e verificações foram informados pelo worker; não os reexecutei."
+  ]
+}
