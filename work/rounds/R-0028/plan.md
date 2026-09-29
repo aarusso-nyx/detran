@@ -115,19 +115,19 @@ PR/CI/evidência/review que viram 1.
   não é ampliada. O critério "sem stubs de comando" (C-0002 §5) é exigível nesta rodada.
 
 - **ODs de TASK-0001 decididas pelo Owner nesta sessão (2026-09-29, A-C2-12; registro canônico por
-  TASK-0002 em §4), todas pela recomendação do Architect:**
-  - OD-R28-007 = (a): guarda web própria pelos papéis de ∩ papéis da rota.
-  - OD-R28-008: negativo nas leituras de sinistro até decisão de produto.
-  - OD-R28-010: negativo em finalizar e relatório até decisão de produto.
+  TASK-0002 em `boat-build-pack.md` §4), todas pela recomendação do Architect:**
+  - OD-R28-007 = (a): guarda web própria pelos papéis de `crash-victim:read` ∩ papéis da rota.
+  - OD-R28-008: `agency-admin` negativo nas leituras de sinistro até decisão de produto.
+  - OD-R28-010: `field-supervisor` negativo em finalizar e relatório até decisão de produto.
   - OD-R28-011 = (b): W-05 somente leitura e fail-closed nesta rodada.
   - OD-R28-013 = (a): S-06/W-05 fail-closed até o Owner confirmar H.44/H.45 para o BOAT.
   - OD-R28-014 = (a): nenhum ato exige atestação nesta rodada.
-  - OD-R28-016 = (a): provisório técnico (sem timeout de GPS, , SHA-256 hex
+  - OD-R28-016 = (a): provisório técnico (sem timeout de GPS, `accept="image/*"`, SHA-256 hex
     minúsculo); valores normativos do órgão depois.
-  - OD-R28-017: nenhuma tela expõe / até decisão de produto.
+  - OD-R28-017: nenhuma tela expõe `archive`/`cancel` até decisão de produto.
 - **ODs de TASK-0001 com decisor Architect** (OD-R28-002/003 fechadas no contrato; 004, 005, 006,
   009, 012, 015, 018, 019): o maestro, como Architect, aceita as recomendações de
-  §ODs novas como provisórias; as de gateway/SSE/modo (005, 015, 019) são
+  `binding-matrix.md` §ODs novas como provisórias; as de gateway/SSE/modo (005, 015, 019) são
   reconferidas após R-0024/R-0022.
 
 ## Estado de partida (verificado em 2026-09-26 sobre `a92ef731`)
