@@ -337,6 +337,14 @@ integrar `origin/main` por merge antes do PR final, sem rebase após o push.
 
 ## Retomada
 
+Checkpoint 2026-09-29: O1–O3 concluídas e publicadas em
+`orchestra/user-docs`. O prompt-review terminou em `PASS`; o gate e os 28
+sensores passaram. `docs:availability:check` permanece fail-closed, com exit 2,
+até a integração dos manifestos. aguardando manifestos da fase D
+(R-0025…R-0029). OD-UD-001 e OD-UD-002 seguem pendentes da decisão do Owner.
+Pare aqui: a próxima atividade autorizável é O4/TASK-0004 após os manifestos
+estarem no branch.
+
 ## Leitura
 
 Base lida: `c325f9b540e0b6696395f3442d7f920909ca3b76` (`origin/main`).
