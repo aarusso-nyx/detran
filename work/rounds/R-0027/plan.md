@@ -20,6 +20,28 @@ empilhar ou aguardar só o CTG-0005). Paralelas da fase D com locks disjuntos: R
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada na **sessão A** (Codex
+> Sol 6; reviewer Opus 5.5), **primeira da sequência**. Tarefas liberadas: **TASK-0001/0002**
+> (matriz de delegação com OD-R27-001 = a e OD-R27-002 = b, ODs e issue) e **TASK-0003/0004**
+> (`BANK_PORT` fail-closed por perfil). A composição fica **dentro de `inf/collection`**, usando a API
+> de perfil existente (`isLocalRuntimeProfile`, `backend/app/src/detran-runtime.ts:87`, somente
+> leitura), sem editar `app.module.ts`/`detran-runtime.ts`. Se o contrato exigir composição no app,
+> TASK-0004 espera R-0022. Também liberada: **TASK-0005** (testes das delegações reais; ficam
+> vermelhos até TASK-0006). Esperam: TASK-0006 (`policy.ts`, R-0023) e TASK-0007 em diante (R-0024).
+>
+> - **Base:** `origin/main`, branch `orchestra/portal-delegations`. Push sem PR ao fim de cada tarefa
+>   liberada; checkpoint em §Retomada com o que falta e o que espera; parada.
+> - **Não tocar:** `backend/app/src/app.module.ts`, `backend/app/src/detran-runtime.ts`, serviços
+>   SSE, `backend/domains/shared/src/policy.ts`, `backend/domains/shared/src/documents`, outbox
+>   (`integration.*`), offline-sync e pin STYNX (R-0022/R-0023); `packages/ui` e shells ou
+>   núcleos dos apps (R-0024); locks de R-0020 (`.github/workflows/`, `.devai/config`,
+>   `law/register`, `record/`).
+> - **Reconferência na retomada:** todo contrato produzido agora é reconferido contra `origin/main`
+>   quando a rodada retomar depois da R-0024. Divergência vira adenda numerada do Architect, sem
+>   reescrever o já aprovado.
+> - Tarefas válidas em `pnpm verify:round-tasks`; um prompt-review no bootstrap cobrindo só as tarefas
+>   liberadas; `acceptance_commands` por tarefa; sem PR e sem delivery-review (OD-C2-005).
+
 **Precedência.** Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre
 qualquer menção a um PR/merge/evidência/delivery-review por CTG neste plano**.
 
