@@ -498,15 +498,36 @@ export class DetranTenantResolver implements TenantResolver {
     });
   }
 
+  /**
+   * Tenant pedido EXPLICITAMENTE pela requisição (cabeçalho `X-Tenant-Id`
+   * e/ou Host mapeado com a consulta ao Host ligada), pela mesma regra de
+   * `resolveTenant` — inclusive a exceção na divergência. `undefined` quando
+   * não há cabeçalho nem Host mapeado (hotfix 2026-09-29, §2.8/OD-P30).
+   */
+  requestedTenant(input: PortalTenantResolutionInput): string | undefined {
+    const session = input.sessionTenantId || undefined;
+    if (!session && !this.mappedTenantFor(input.host)) return undefined;
+    return this.resolveTenant(input);
+  }
+
+  private hostLookupEnabled(): boolean {
+    return (
+      process.env.DETRAN_PORTAL_HOST_RESOLUTION === 'on' ||
+      !isLocalRuntimeProfile(detranRuntimeProfile())
+    );
+  }
+
+  private mappedTenantFor(host: string | undefined): string | undefined {
+    return this.hostLookupEnabled()
+      ? this.directory.tenantIdFor(host)
+      : undefined;
+  }
+
   resolveTenant(input: PortalTenantResolutionInput): string {
     const profile = detranRuntimeProfile();
-    const hostLookup =
-      process.env.DETRAN_PORTAL_HOST_RESOLUTION === 'on' ||
-      !isLocalRuntimeProfile(profile);
+    const hostLookup = this.hostLookupEnabled();
     const session = input.sessionTenantId || undefined;
-    const mapped = hostLookup
-      ? this.directory.tenantIdFor(input.host)
-      : undefined;
+    const mapped = this.mappedTenantFor(input.host);
     if (session && mapped && session !== mapped) {
       throw new DetranError('PORTAL.SESSION_TENANT_MISMATCH', {
         status: 403,

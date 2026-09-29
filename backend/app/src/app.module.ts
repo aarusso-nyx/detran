@@ -23,6 +23,7 @@ import {
   RequestContext,
   RequestContextMutator,
 } from '@stynx-nyx/core';
+import { headerToString } from '@stynx-nyx/contracts';
 import { Database, StynxDataModule } from '@stynx-nyx/data';
 import { StynxHealthModule } from '@stynx-nyx/health';
 import { StynxLoggingModule } from '@stynx-nyx/logging';
@@ -416,6 +417,27 @@ function discardOpportunisticIdentity(request: PortalPublicRequest): void {
   for (const key of OPPORTUNISTIC_AUTH_REQUEST_KEYS) delete mutable[key];
 }
 
+/**
+ * OD-P30 (nunca 401/403 na manifestação): a identidade autenticada só vale se
+ * o tenant pedido pela requisição (`X-Tenant-Id` e/ou Host mapeado, regra de
+ * `DetranTenantResolver`) pertence ao principal; divergência (inclusive a
+ * exceção do resolver) → anônima. Sem tenant pedido, nada muda.
+ */
+function opportunisticTenantMatches(request: PortalPublicRequest): boolean {
+  let requested: string | undefined;
+  try {
+    requested = new DetranTenantResolver().requestedTenant({
+      sessionTenantId: headerToString(request.headers?.['x-tenant-id'])?.trim(),
+      host: portalHostOf(request.headers ?? {}),
+    });
+  } catch {
+    return false;
+  }
+  if (requested === undefined) return true;
+  const principal = getPrincipalFromRequest(request as unknown as RequestLike);
+  return (principal?.tenants ?? []).includes(requested);
+}
+
 async function activatePublicPortalRoute(
   request: PortalPublicRequest,
   authenticate: () => boolean | Promise<boolean>,
@@ -430,7 +452,7 @@ async function activatePublicPortalRoute(
         portalHostOf(request.headers),
         () => authenticate(),
       );
-      if (authenticated) return true;
+      if (authenticated && opportunisticTenantMatches(request)) return true;
     } catch {
       // credencial inválida/expirada ou tenant sem direito: segue anônima (§2.8)
     }
