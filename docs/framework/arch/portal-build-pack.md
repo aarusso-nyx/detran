@@ -305,6 +305,26 @@ dos contratos `work/rounds/R-0009/contracts/CTG-000{1,2}.md`; nenhuma é fechada
 | OD-P107 | Mapa adapter → `PORTAL.*`.         | Sem mapa não vira INTERNAL.                                                                    | Architect-backend               | CTG-0004 §10; `plan.md` A14(f)          |
 | OD-P108 | DELETE de push.                    | Sem rota, não implementar/testar.                                                              | Architect-backend               | CTG-0004 §10; `plan.md` A14(f)          |
 
+### Triagem de delegações — R-0027 (TASK-0001, transcrição)
+
+As decisões do Owner de 2026-09-26 vinculam esta rodada: **OD-R27-001 = (a)**, ator técnico `portal-delegation`, chaves de política próprias `…-portal`, cidadão como requerente e `onBehalfOf` na auditoria, prazo desde `protocolled_at`; chamada in-process sem avaliação de política é vedada. **OD-R27-002 = (b)**, `junta_medica` permanece indisponível nesta rodada e será entregue integralmente em R-0032, com contrato, vínculo, marco de ciência e prazo calculados no servidor. O fechamento registra a junta como exceção declarada ao critério C-0002 §5, nunca como PASS.
+
+| OD     | Situação para R-0027                                                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OD-P05 | Não bloqueante para PIX/boleto; cartão e parcelamento off por `portal.card_payment=false`/`portal.installments=false`, DT-072 ainda pendente.                       |
+| OD-P17 | Não bloqueante; `lgpd_declaracao` fora, 422 preservado.                                                                                                             |
+| OD-P19 | Resolvida para esta rodada por OD-R27-002=b como exceção fail-closed; entrega em R-0032.                                                                            |
+| OD-P28 | Bloqueante para avanço por pagamento; produtor de `PAGAMENTO_CONFIRMADO` não localizado. OD-R27-003 `source_pending`, guia pode ser emitida sem declarar pagamento. |
+| OD-P32 | Não bloqueante da delegação; pré-preenchimento vazio até fonte comprovada.                                                                                          |
+| OD-P41 | Bloqueante para mostrar valor/tier real se cotação nacional e collection não fornecerem fonte; nenhum `amount` inventado.                                           |
+| OD-P43 | Resolvida por fonte RAIT R-0007 para vocabulário de decisão; mapeamento de diligência ainda exige teste.                                                            |
+| OD-P67 | Bloqueante da resposta de diligência; OD-R27-004 segue Owner/LEGAL, manifesto atual não fecha a divergência.                                                        |
+| OD-P72 | Bloqueante para forma de resposta/peça sem contrato; tipos `source_pending`.                                                                                        |
+| OD-P74 | Não bloqueante de PIX/boleto com prevalência do servidor; cartão/parcelamento off.                                                                                  |
+| OD-P76 | Não bloqueante: prorrogação de diligência não faz parte da resposta e permanece indisponível.                                                                       |
+
+**ODs pendentes.** OD-R27-003 = `source_pending` para schema, produtor e correlação do evento de domínio `PAGAMENTO_CONFIRMADO` (decisor: Architect); não converter `inf.payment.confirmed` por suposição. OD-R27-004 = `source_pending`, decisão somente Owner/LEGAL sobre nível de assinatura da resposta de diligência; manter fail-closed até fonte normativa e contrato que preserve texto/anexos. OD-P01/CETRAN-AM e demais lacunas mantêm classificação e texto originais; nenhuma decisão ou valor novo é inferido. `lgpd_declaracao` e `emissao_crlv` seguem indisponíveis (#125); cartão e parcelamento seguem `false`.
+
 ## 5. Mapa entregável → definições
 
 | Entregável            | Definições                                                                                                             |

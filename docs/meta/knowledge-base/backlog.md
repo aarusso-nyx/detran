@@ -105,11 +105,7 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       R-0013 `plan.md`
 - [ ] teat: **`batches/{id}/retransmit` e `GET certificates`** (route contract §4.6) ficam fora por falta de
       entidade de lote de integração em `ops` e de fonte para validade mTLS — OD-T43
-- [ ] portal/rait: **R-0007 `rait-backend` precisa mesclar em `main` para as delegações reais do Portal**
-      (`defesa_previa`, `recurso_jari`, `recurso_cetran`, `indicacao_condutor`, `pagamento`): até lá
-      `POST requests` responde `PORTAL.SERVICE_UNAVAILABLE {unavailableReason:'delegacao_indisponivel_r0007'}`
-      na verificação de elegibilidade e o teste de delegação real com alvo real fica `it.todo` citando
-      R-0007 (`work/rounds/R-0009/plan.md` M8/M23; `portal-build-pack.md` §3)
+- [ ] portal: **frente `portal-delegations` (R-0027; issue a abrir pelo maestro)** — pré-trabalho de TASK-0001/0002 definiu oito delegações e matriz/contratos; a retomada aguarda R-0024 para as tarefas posteriores. OD-R27-001=(a): ator `portal-delegation`, chaves próprias `…-portal`, avaliação de política obrigatória, cidadão em `onBehalfOf` e prazo desde `protocolled_at`. OD-R27-002=(b): junta fail-closed nesta rodada, exceção declarada a C-0002 §5 e entrega integral em R-0032. Defesa, recursos, indicação, pagamento e desistência ficam sujeitos às guardas/contratos e implementação da rodada; resposta de diligência mantém 422 enquanto OD-P67/OD-R27-004 e destino do texto estiverem pendentes. OD-P28/OD-R27-003 bloqueiam avanço do pedido por pagamento até existir produtor comprovado de `PAGAMENTO_CONFIRMADO`; emissão da guia pode ser separada. `lgpd_declaracao` e `emissao_crlv` permanecem indisponíveis (#125); cartão/parcelamento permanecem `false`. Não marcar entrega final como concluída — `work/rounds/R-0027/plan.md`, `delegation-matrix.md`, `contracts/CTG-0002.md` e `contracts/CTG-0003.md`.
 - [ ] portal: **adesão/cancelamento reais de SNE via `SnePort`** (`packages/senatran-adapter`) não
       implementados em R-0009: `portal.sne_enrollment` grava o pedido e publica
       `SNE_ADESAO_SOLICITADA`/`SNE_CANCELAMENTO_SOLICITADO` sem chamar o SNE nacional — OD-P16 (R-0014 WP-P6)

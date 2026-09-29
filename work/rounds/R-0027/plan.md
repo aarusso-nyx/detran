@@ -5,7 +5,7 @@ Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6
 da escada Codex (Sol 6 / Terra / Luna vigentes) por subagentes nativos, reviewer **Opus 5.5** pela
 ponte `tools/orchestra/bridge.sh claude` (C-0002 §4; ids de CLI confirmados no bootstrap). Worktree
 `/Users/aarusso/.codex/worktrees/portal-delegations/detran`, branch `orchestra/portal-delegations`.
-Sem issue: TASK-0002 abre a issue da frente (referenciando `backlog.md:103-107`) no CTG-0001; ela entra no PR final (OD-C2-005).
+Issue da frente: [#164](https://github.com/aarusso-nyx/detran/issues/164), criada pela TASK-0002; ela entra no PR final (OD-C2-005).
 `AUTHORIZATION.md`, `tasks/` e `compositions.json` foram criados no bootstrap da Sessão A.
 **Concorrência:** abre sobre **R-0024 `stynx-dedup`** mesclada ou publicada em
 `origin/orchestra/stynx-dedup` (abertura empilhada, §Execução OD-C2-005; o PR final espera o merge) (cliente de comando, costura SSE, shell
