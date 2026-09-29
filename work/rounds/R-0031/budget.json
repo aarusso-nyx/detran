@@ -4,8 +4,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 465000,
-  "estimated_output_total": 69000,
+  "estimated_input_total": 515000,
+  "estimated_output_total": 79000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -72,6 +72,15 @@
       "output_tokens": 10000,
       "status": "completed",
       "note": "Inspector: caracterização da matriz de autorização e sensores do checker em banco PostgreSQL exclusivo; sensores de integração permanecem RED até a TASK-0003."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 50000,
+      "output_tokens": 10000,
+      "status": "in_progress",
+      "note": "Engineer: checker de contratos, catálogo PEC e geração oficial de clientes."
     }
   ]
 }
