@@ -585,6 +585,26 @@ Fonte: `AUTHORIZATION.md` §Adenda B5; registro em `open-decisions-rait.md` §C-
 - **OD-R22-37:** exceções 403/421 documentadas por TASK-0010 junto de OD-P30.
 - **Pendente:** aprovação da estrutura da matriz de OD-R22-08.
 
+### A5 — conflito com a #306 e matriz de OD-R22-08 (Architect/maestro, 2026-09-29)
+
+Fonte: `AUTHORIZATION.md` §Adenda B6.
+
+- **Texto proposto da emenda à ADR-0002** (transcrito por TASK-0010): "Exceção estreita — controle
+  da outbox da plataforma. As operações `dispatchEventsDue`, `ackEvent` e `recordUnboundAck` do
+  `@stynx-nyx/outbox` podem executar em papel owner/sistema porque só leem e escrevem as tabelas de
+  controle da outbox, nunca dados de domínio. Condições: (1) o despacho roda em job técnico com
+  ator técnico, fora do caminho de requisição; (2) o tenant de um ACK vem de contexto confiável
+  (HMAC verificado), nunca do corpo; (3) qualquer despacho iniciado por operador é filtrado ao tenant
+  do operador; (4) toda execução é auditada. Qualquer outro uso de owner-role no caminho de
+  requisição continua proibido."
+- **TASK-0015** (contrato CTG-0008, adenda do Architect antes do despacho): parte 2 passa a usar
+  job técnico para o despacho (verificar em V-03 se `dispatchEventsDue` aceita filtro por tenant/
+  `entity`; sem filtro, o despacho de operador vira pedido ao job, sem efeito imediato em outro
+  tenant); a rota `POST v1/ch/transmissions/dispatch` preserva status/envelope e passa a solicitar o
+  despacho — a mudança observável é caracterizada por Inspector antes da troca.
+- **OD-R22-08:** estrutura aprovada; o DDL/blueprint da extensão de `inf.signature_policy` e o piso
+  entram no contrato da assinatura (adenda do Architect a CTG-0006 antes de TASK-0009).
+
 ## Bloqueios
 
 - **B1 — prompt-review ciclo 1 = FAIL** (Sol 6 `gpt-6-sol`, 2026-09-29,

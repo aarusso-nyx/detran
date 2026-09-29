@@ -91,3 +91,19 @@ Respostas literais: "Item 5 - Adotar a denda." · "Item 6 - Manter erros." · "I
 - **OD-R22-07:** o **app** grava em `signed-documents` (escritor único, tenant do contexto,
   verificação antes de gravar).
 - Pendente: aprovação da estrutura da matriz de OD-R22-08 (não respondida nesta leva).
+
+## Adenda B6 — conflito com stynx-nyx/stynx#306 e matriz de OD-R22-08 (Owner, 2026-09-29)
+
+Respostas literais: "1. a+b" · "2. Sim, aprovo".
+
+- **OD-R22-41 (conflito #306 × DETRAN ADR-0002 / OD-R22-18):** (a) + (b). (a) O despacho da outbox
+  sai do caminho de requisição e roda em job técnico com ator técnico (UPS-JOB publicado em 1.5.0);
+  a rota de operador de despacho passa a solicitar o despacho. (b) Emenda estreita à ADR-0002 do
+  DETRAN: owner-role admitido **só** para as operações de controle da outbox da plataforma
+  (`dispatchEventsDue`, `ackEvent`, `recordUnboundAck`), que não tocam dados de domínio, com tenant
+  sempre de contexto confiável (sessão do operador ou HMAC verificado), despacho iniciado por
+  operador filtrado ao tenant dele e auditoria. UPS-OBX-06 de stynx-nyx/stynx#316 fica sem objeto.
+- **OD-R22-08:** estrutura da matriz de perfis de confiança aprovada (extensão de
+  `inf.signature_policy` com revisão/vigência, piso nacional como modelo e recusa — nunca fallback
+  —, herança órgão → estado, norma separada do perfil de runtime, fail-closed); valores marcados
+  "proposta" validados depois, UF a UF, com `source_ref` e aprovação.
