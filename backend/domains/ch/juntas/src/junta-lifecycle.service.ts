@@ -235,7 +235,7 @@ export class JuntaLifecycleService {
           (case_id, instance, designated_by, designated_at,
            designation_deadline_rule, designation_deadline_at, decision_deadline_at)
          values ($1, $2, $3, $4, $5, $6,
-                 case when $2 = 'SECOND' then $4::timestamptz + interval '30 days' else null end)
+                 case when $2::varchar = 'SECOND' then $4::timestamptz + interval '30 days' else null end)
          returning *`,
         [
           caseId,
@@ -404,7 +404,7 @@ export class JuntaLifecycleService {
       await tx.query(
         `update ch.junta_case
             set status = $2,
-                finalized_at = case when $2 in ('DECIDED','FINAL_DECIDED') then now() else null end,
+                finalized_at = case when $2::varchar in ('DECIDED','FINAL_DECIDED') then now() else null end,
                 updated_at = now()
           where id = $1`,
         [board.case_id, nextStatus],
