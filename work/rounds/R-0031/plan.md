@@ -418,6 +418,13 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   isolamento A/B real; os outros quinze módulos só leem `pg_class.relrowsecurity`.
   O CTG-0002 não será publicado até a corretiva posterior à semente O6 comprovar
   leitura e mutação A/B no recurso de cada módulo.
+- **O6, agregados e adaptador protegido (2026-09-29):** as 17 suítes CH e as
+  duas execuções da semente `ch` passaram no banco final, mas
+  `backend:test:integration` para em `@detran/inf-ait`, cujo guard exige
+  `detran_r7_ctg1_a2`. `backend:test:ci` chega a `ch-juntas test:unit` e não
+  resolve `@detran/ch-clinical-reports` em `junta-signing.adapter.ts`. A
+  correção tocaria o adaptador de assinatura protegido; fica bloqueada até a
+  migração de R-0022. Nenhum adaptador foi alterado.
 
 ## Triagem
 

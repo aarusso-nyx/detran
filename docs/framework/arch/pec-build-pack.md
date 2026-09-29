@@ -60,7 +60,7 @@ as taxonomias médica e psicológica permanecem distintas.
 | OD-PW-004 | Pendente: namespace i18n `pec.`                                                           | Proposta apenas para i18n; nenhuma chave de parâmetro `pec.*` sem autorização                                                                                                              |
 | OD-PW-005 | Pendente: R-05 fora dos UC atuais                                                         | Ler e usar comandos existentes de `clinical-network`; ação sem UC `bloqueado_por_decisao`                                                                                                  |
 | OD-PW-006 | Decidida pelo Owner em 2026-09-29 (A-R31-01)                                              | Inspector TASK-0015 atualiza primeiro C-01-09 e restringe o regex em `tools/stack/revision.test.mjs` ao nome do slot; Engineer TASK-0017 acrescenta o slot PEC depois, sem alterar o teste |
-| OD-PW-007 | Decidida pelo Owner em 2026-09-29                                                         | Diferir envelopes `PEC.*` até caracterização HTTP viável; contratos, checker e clientes já publicados preservam o comportamento atual. |
+| OD-PW-007 | Decidida pelo Owner em 2026-09-29                                                         | Diferir envelopes `PEC.*` até caracterização HTTP viável; contratos, checker e clientes já publicados preservam o comportamento atual.                                                     |
 
 ## Bloqueios e limites
 

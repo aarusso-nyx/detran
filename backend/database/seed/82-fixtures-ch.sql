@@ -1,0 +1,174 @@
+-- PEC fixtures for R-0031. All identities are synthetic and stable.  The
+-- person identifiers are deliberately invalid CPF-shaped tokens required by
+-- the current database constraint; the Portal consumes the documented
+-- `CPF-SINTETICO-R0032` token only as fixture metadata, never as a CPF.
+select set_config('app.role', 'owner', false);
+
+insert into auth.tenants (id, slug, name) values
+  ('00000000-0000-7000-8000-0000ceca0001', 'pec-clinic-a', 'PEC clínica A'),
+  ('00000000-0000-7000-8000-0000ceca0002', 'pec-clinic-b', 'PEC clínica B')
+on conflict (id) do update set slug = excluded.slug, name = excluded.name;
+
+select set_config('app.tenant_id', '00000000-0000-7000-8000-0000ceca0001', false);
+
+insert into auth.users (id, tenant_id, email, external_subject, display_name) values
+  ('00000000-0000-7000-8000-0000ceca0101', '00000000-0000-7000-8000-0000ceca0001', 'pec-admin-clinic-a@fixture.invalid', 'pec-admin-clinic-a', 'PEC Admin Clínica A'),
+  ('00000000-0000-7000-8000-0000ceca0102', '00000000-0000-7000-8000-0000ceca0001', 'pec-reception-a@fixture.invalid', 'pec-reception-a', 'PEC Recepção A'),
+  ('00000000-0000-7000-8000-0000ceca0103', '00000000-0000-7000-8000-0000ceca0001', 'pec-biometric-tech-a@fixture.invalid', 'pec-biometric-tech-a', 'PEC Técnico Biométrico A'),
+  ('00000000-0000-7000-8000-0000ceca0104', '00000000-0000-7000-8000-0000ceca0001', 'pec-supervisor-a@fixture.invalid', 'pec-supervisor-a', 'PEC Supervisor A'),
+  ('00000000-0000-7000-8000-0000ceca0105', '00000000-0000-7000-8000-0000ceca0001', 'pec-medical-a@fixture.invalid', 'pec-medical-a', 'PEC Médico A'),
+  ('00000000-0000-7000-8000-0000ceca0106', '00000000-0000-7000-8000-0000ceca0001', 'pec-psychology-a@fixture.invalid', 'pec-psychology-a', 'PEC Psicólogo A'),
+  ('00000000-0000-7000-8000-0000ceca0107', '00000000-0000-7000-8000-0000ceca0001', 'pec-manager-a@fixture.invalid', 'pec-manager-a', 'PEC Gestor A'),
+  ('00000000-0000-7000-8000-0000ceca0108', '00000000-0000-7000-8000-0000ceca0001', 'pec-junta-a@fixture.invalid', 'pec-junta-a', 'PEC Junta A'),
+  ('00000000-0000-7000-8000-0000ceca0109', '00000000-0000-7000-8000-0000ceca0001', 'pec-cetran-a@fixture.invalid', 'pec-cetran-a', 'PEC CETRAN A'),
+  ('00000000-0000-7000-8000-0000ceca0110', '00000000-0000-7000-8000-0000ceca0001', 'pec-dpo-a@fixture.invalid', 'pec-dpo-a', 'PEC DPO A'),
+  ('00000000-0000-7000-8000-0000ceca0111', '00000000-0000-7000-8000-0000ceca0001', 'pec-auditor-a@fixture.invalid', 'pec-auditor-a', 'PEC Auditor A'),
+  ('00000000-0000-7000-8000-0000ceca0112', '00000000-0000-7000-8000-0000ceca0001', 'pec-support-a@fixture.invalid', 'pec-support-a', 'PEC Suporte A'),
+  ('00000000-0000-7000-8000-0000ceca0201', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p01@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p01', 'PEC Candidato P-01'),
+  ('00000000-0000-7000-8000-0000ceca0202', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p02@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p02', 'PEC Candidato P-02'),
+  ('00000000-0000-7000-8000-0000ceca0203', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p03@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p03', 'PEC Candidato P-03'),
+  ('00000000-0000-7000-8000-0000ceca0204', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p04@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p04', 'PEC Candidato P-04'),
+  ('00000000-0000-7000-8000-0000ceca0205', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p05@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p05', 'PEC Candidato P-05'),
+  ('00000000-0000-7000-8000-0000ceca0206', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p06@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p06', 'PEC Candidato P-06'),
+  ('00000000-0000-7000-8000-0000ceca0207', '00000000-0000-7000-8000-0000ceca0001', 'pec-candidate-p07@fixture.invalid', 'CPF-SINTETICO-R0032:pec-candidate-p07', 'PEC Candidato P-07')
+on conflict (id) do update set
+  tenant_id = excluded.tenant_id,
+  email = excluded.email,
+  external_subject = excluded.external_subject,
+  display_name = excluded.display_name;
+
+insert into auth.roles (id, tenant_id, key, name) values
+  ('00000000-0000-7000-8000-0000ceca7101', '00000000-0000-7000-8000-0000ceca0001', 'ADMIN_CLINICA', 'Perfil fixture ADMIN_CLINICA'),
+  ('00000000-0000-7000-8000-0000ceca7102', '00000000-0000-7000-8000-0000ceca0001', 'RECEPCAO', 'Perfil fixture RECEPCAO'),
+  ('00000000-0000-7000-8000-0000ceca7103', '00000000-0000-7000-8000-0000ceca0001', 'TECNICO_BIOMETRIA', 'Perfil fixture TECNICO_BIOMETRIA'),
+  ('00000000-0000-7000-8000-0000ceca7104', '00000000-0000-7000-8000-0000ceca0001', 'SUPERVISOR', 'Perfil fixture SUPERVISOR'),
+  ('00000000-0000-7000-8000-0000ceca7105', '00000000-0000-7000-8000-0000ceca0001', 'MEDICO', 'Perfil fixture MEDICO'),
+  ('00000000-0000-7000-8000-0000ceca7106', '00000000-0000-7000-8000-0000ceca0001', 'PSICOLOGO', 'Perfil fixture PSICOLOGO'),
+  ('00000000-0000-7000-8000-0000ceca7107', '00000000-0000-7000-8000-0000ceca0001', 'GESTOR', 'Perfil fixture GESTOR'),
+  ('00000000-0000-7000-8000-0000ceca7108', '00000000-0000-7000-8000-0000ceca0001', 'JUNTA', 'Perfil fixture JUNTA'),
+  ('00000000-0000-7000-8000-0000ceca7109', '00000000-0000-7000-8000-0000ceca0001', 'CETRAN', 'Perfil fixture CETRAN'),
+  ('00000000-0000-7000-8000-0000ceca7110', '00000000-0000-7000-8000-0000ceca0001', 'DPO', 'Perfil fixture DPO'),
+  ('00000000-0000-7000-8000-0000ceca7111', '00000000-0000-7000-8000-0000ceca0001', 'AUDITOR', 'Perfil fixture AUDITOR'),
+  ('00000000-0000-7000-8000-0000ceca7112', '00000000-0000-7000-8000-0000ceca0001', 'SUPORTE', 'Perfil fixture SUPORTE'),
+  ('00000000-0000-7000-8000-0000ceca7113', '00000000-0000-7000-8000-0000ceca0001', 'CANDIDATO', 'Perfil fixture CANDIDATO')
+on conflict (id) do update set key = excluded.key, name = excluded.name;
+
+insert into auth.memberships (id, tenant_id, user_id) values
+  ('00000000-0000-7000-8000-0000ceca8101', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0101'),
+  ('00000000-0000-7000-8000-0000ceca8102', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca8103', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0103'),
+  ('00000000-0000-7000-8000-0000ceca8104', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0104'),
+  ('00000000-0000-7000-8000-0000ceca8105', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0105'),
+  ('00000000-0000-7000-8000-0000ceca8106', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0106'),
+  ('00000000-0000-7000-8000-0000ceca8107', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0107'),
+  ('00000000-0000-7000-8000-0000ceca8108', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0108'),
+  ('00000000-0000-7000-8000-0000ceca8109', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0109'),
+  ('00000000-0000-7000-8000-0000ceca8110', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0110'),
+  ('00000000-0000-7000-8000-0000ceca8111', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0111'),
+  ('00000000-0000-7000-8000-0000ceca8112', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0112'),
+  ('00000000-0000-7000-8000-0000ceca8201', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0201'),
+  ('00000000-0000-7000-8000-0000ceca8202', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0202'),
+  ('00000000-0000-7000-8000-0000ceca8203', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0203'),
+  ('00000000-0000-7000-8000-0000ceca8204', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0204'),
+  ('00000000-0000-7000-8000-0000ceca8205', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0205'),
+  ('00000000-0000-7000-8000-0000ceca8206', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0206'),
+  ('00000000-0000-7000-8000-0000ceca8207', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca0207')
+on conflict (id) do update set user_id = excluded.user_id;
+
+insert into auth.membership_roles (membership_id, role_id) values
+  ('00000000-0000-7000-8000-0000ceca8101', '00000000-0000-7000-8000-0000ceca7101'),
+  ('00000000-0000-7000-8000-0000ceca8102', '00000000-0000-7000-8000-0000ceca7102'),
+  ('00000000-0000-7000-8000-0000ceca8103', '00000000-0000-7000-8000-0000ceca7103'),
+  ('00000000-0000-7000-8000-0000ceca8104', '00000000-0000-7000-8000-0000ceca7104'),
+  ('00000000-0000-7000-8000-0000ceca8105', '00000000-0000-7000-8000-0000ceca7105'),
+  ('00000000-0000-7000-8000-0000ceca8106', '00000000-0000-7000-8000-0000ceca7106'),
+  ('00000000-0000-7000-8000-0000ceca8107', '00000000-0000-7000-8000-0000ceca7107'),
+  ('00000000-0000-7000-8000-0000ceca8108', '00000000-0000-7000-8000-0000ceca7108'),
+  ('00000000-0000-7000-8000-0000ceca8109', '00000000-0000-7000-8000-0000ceca7109'),
+  ('00000000-0000-7000-8000-0000ceca8110', '00000000-0000-7000-8000-0000ceca7110'),
+  ('00000000-0000-7000-8000-0000ceca8111', '00000000-0000-7000-8000-0000ceca7111'),
+  ('00000000-0000-7000-8000-0000ceca8112', '00000000-0000-7000-8000-0000ceca7112'),
+  ('00000000-0000-7000-8000-0000ceca8201', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8202', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8203', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8204', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8205', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8206', '00000000-0000-7000-8000-0000ceca7113'),
+  ('00000000-0000-7000-8000-0000ceca8207', '00000000-0000-7000-8000-0000ceca7113')
+on conflict do nothing;
+
+insert into ch.clinic (id, tenant_id, code, cnpj, name, region_code) values
+  ('00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0001', 'pec-clinic-a', '00000000000001', 'PEC Clínica A', 'source_pending')
+on conflict (id) do update set code = excluded.code, cnpj = excluded.cnpj, name = excluded.name, region_code = excluded.region_code;
+
+insert into ch.professional (id, tenant_id, clinic_id, user_id, person_name, professional_kind, council_type, council_number, council_state) values
+  ('00000000-0000-7000-8000-0000ceca1101', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0102', 'PEC Recepção A', 'RECEPCAO', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca1102', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0103', 'PEC Técnico Biométrico A', 'TECNICO_BIOMETRIA', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca1103', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0104', 'PEC Supervisor A', 'SUPERVISOR', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca1104', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0105', 'PEC Médico A', 'MEDICO', 'CRM', 'FIXTURE-001', 'AM'),
+  ('00000000-0000-7000-8000-0000ceca1105', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0106', 'PEC Psicólogo A', 'PSICOLOGO', 'CRP', 'FIXTURE-001', 'AM')
+on conflict (id) do update set person_name = excluded.person_name, professional_kind = excluded.professional_kind;
+
+insert into ch.patient (id, tenant_id, clinic_id, user_id, national_id, name) values
+  ('00000000-0000-7000-8000-0000ceca2001', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0201', '00000000001', 'PEC Candidato P-01'),
+  ('00000000-0000-7000-8000-0000ceca2002', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0202', '00000000002', 'PEC Candidato P-02'),
+  ('00000000-0000-7000-8000-0000ceca2003', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0203', '00000000003', 'PEC Candidato P-03'),
+  ('00000000-0000-7000-8000-0000ceca2004', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0204', '00000000004', 'PEC Candidato P-04'),
+  ('00000000-0000-7000-8000-0000ceca2005', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0205', '00000000005', 'PEC Candidato P-05'),
+  ('00000000-0000-7000-8000-0000ceca2006', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0206', '00000000006', 'PEC Candidato P-06'),
+  ('00000000-0000-7000-8000-0000ceca2007', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca0207', '00000000007', 'PEC Candidato P-07')
+on conflict (id) do update set name = excluded.name;
+
+insert into ch.appointment (id, tenant_id, clinic_id, patient_id, professional_id, scheduled_at, status, created_by) values
+  ('00000000-0000-7000-8000-0000ceca3001', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2001', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T09:00:00-04:00', 'SCHEDULED', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3002', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2002', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T10:00:00-04:00', 'DONE', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3003', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2003', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T11:00:00-04:00', 'CHECKED_IN', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3004', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2004', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T12:00:00-04:00', 'DONE', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3005', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2005', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T13:00:00-04:00', 'DONE', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3006', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2006', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T14:00:00-04:00', 'DONE', '00000000-0000-7000-8000-0000ceca0102'),
+  ('00000000-0000-7000-8000-0000ceca3007', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2007', '00000000-0000-7000-8000-0000ceca1104', '2026-09-01T15:00:00-04:00', 'DONE', '00000000-0000-7000-8000-0000ceca0102')
+on conflict (id) do update set status = excluded.status;
+
+insert into ch.encounter (id, tenant_id, clinic_id, patient_id, appointment_id, status, closed_at, cancelled_at, cancel_reason) values
+  ('00000000-0000-7000-8000-0000ceca4001', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2001', '00000000-0000-7000-8000-0000ceca3001', 'OPEN', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca4002', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2002', '00000000-0000-7000-8000-0000ceca3002', 'IN_PROGRESS', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca4003', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2003', '00000000-0000-7000-8000-0000ceca3003', 'READY_FOR_SIGNATURE', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca4004', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2004', '00000000-0000-7000-8000-0000ceca3004', 'SIGNED', null, null, null),
+  ('00000000-0000-7000-8000-0000ceca4005', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2005', '00000000-0000-7000-8000-0000ceca3005', 'CLOSED', '2026-09-01T14:00:00-04:00', null, null),
+  ('00000000-0000-7000-8000-0000ceca4006', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2006', '00000000-0000-7000-8000-0000ceca3006', 'CANCELLED', null, '2026-09-01T14:30:00-04:00', 'fixture: percurso cancelado'),
+  ('00000000-0000-7000-8000-0000ceca4007', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca1001', '00000000-0000-7000-8000-0000ceca2007', '00000000-0000-7000-8000-0000ceca3007', 'OPEN', null, null, null)
+on conflict (id) do update set status = excluded.status, closed_at = excluded.closed_at, cancelled_at = excluded.cancelled_at, cancel_reason = excluded.cancel_reason;
+
+insert into ch.restriction_code (id, tenant_id, code, legal_label, annex_version, source_reference, effective_from) values
+  ('00000000-0000-7000-8000-0000ceca5001', '00000000-0000-7000-8000-0000ceca0001', 'source_pending', 'source_pending', 'source_pending', 'source_pending', '2026-01-01')
+on conflict (id) do update set legal_label = excluded.legal_label;
+
+insert into ch.encounter_restriction (id, tenant_id, encounter_id, restriction_code_id, prescribed_by, notes) values
+  ('00000000-0000-7000-8000-0000ceca5002', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca4003', '00000000-0000-7000-8000-0000ceca5001', '00000000-0000-7000-8000-0000ceca1104', 'source_pending')
+on conflict (id) do update set notes = excluded.notes;
+
+insert into ch.retention_case (id, tenant_id, patient_id, custodian, last_record_at, eligible_after, preservation_status, status, block_reasons, assessed_by, assessed_at) values
+  ('00000000-0000-7000-8000-0000ceca6001', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca2007', 'PLATFORM', '2026-09-01T15:00:00-04:00', '2046-09-01', 'PAdES_LTA_REQUIRED', 'ELIGIBLE_BLOCKED', '["PEC-RETENTION-001"]'::jsonb, '00000000-0000-7000-8000-0000ceca0110', '2026-09-01T15:00:00-04:00')
+on conflict (id) do update set status = excluded.status, block_reasons = excluded.block_reasons;
+
+insert into ch.retention_disposition (id, tenant_id, retention_case_id, destination, status, justification, proposed_by, proposed_at, return_offered_at, reviewed_by, reviewed_at) values
+  ('00000000-0000-7000-8000-0000ceca6002', '00000000-0000-7000-8000-0000ceca0001', '00000000-0000-7000-8000-0000ceca6001', 'DELETE', 'BLOCKED', 'PEC-RETENTION-001', '00000000-0000-7000-8000-0000ceca0110', '2026-09-01T15:00:00-04:00', '2026-09-01T14:00:00-04:00', '00000000-0000-7000-8000-0000ceca0110', '2026-09-01T15:00:00-04:00')
+on conflict (id) do update set status = excluded.status, justification = excluded.justification;
+
+select set_config('app.tenant_id', '00000000-0000-7000-8000-0000ceca0002', false);
+
+insert into auth.users (id, tenant_id, email, external_subject, display_name) values
+  ('00000000-0000-7000-8000-0000ceca0208', '00000000-0000-7000-8000-0000ceca0002', 'pec-candidate-b@fixture.invalid', 'pec-candidate-b', 'PEC Candidato B')
+on conflict (id) do update set
+  tenant_id = excluded.tenant_id,
+  email = excluded.email,
+  external_subject = excluded.external_subject,
+  display_name = excluded.display_name;
+
+insert into ch.clinic (id, tenant_id, code, cnpj, name, region_code) values
+  ('00000000-0000-7000-8000-0000ceca1002', '00000000-0000-7000-8000-0000ceca0002', 'pec-clinic-b', '00000000000002', 'PEC Clínica B', 'source_pending')
+on conflict (id) do update set code = excluded.code, cnpj = excluded.cnpj, name = excluded.name, region_code = excluded.region_code;
+
+insert into ch.patient (id, tenant_id, clinic_id, user_id, national_id, name) values
+  ('00000000-0000-7000-8000-0000ceca2008', '00000000-0000-7000-8000-0000ceca0002', '00000000-0000-7000-8000-0000ceca1002', '00000000-0000-7000-8000-0000ceca0208', '00000000008', 'PEC Candidato B')
+on conflict (id) do update set name = excluded.name;
