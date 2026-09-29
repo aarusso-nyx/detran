@@ -23,6 +23,7 @@ import {
   RequestContext,
   RequestContextMutator,
 } from '@stynx-nyx/core';
+import { headerToString } from '@stynx-nyx/contracts';
 import { Database, StynxDataModule } from '@stynx-nyx/data';
 import { StynxHealthModule } from '@stynx-nyx/health';
 import { StynxLoggingModule } from '@stynx-nyx/logging';
@@ -392,6 +393,51 @@ type PortalPublicRequest = PortalPublicRequestLike & {
   originalUrl?: string;
 };
 
+/**
+ * Campos de identidade/tenant que os guards internos (STYNX `AuthContextGuard`
+ * legado e `StynxAuthGuard`) gravam na requisição. O legado grava o principal
+ * ANTES de validar o tenant (entitlement) e só depois recusa; sem limpeza, o
+ * principal recusado sobreviveria à semeadura anônima e seria lido por
+ * `getPrincipalFromRequest` (hotfix 2026-09-29, vazamento entre tenants).
+ */
+const OPPORTUNISTIC_AUTH_REQUEST_KEYS = [
+  'principal',
+  'principalContext',
+  'user',
+  'actor',
+  'tenantId',
+  'stynxClaims',
+  'stynxReadonly',
+  'portalPublic',
+] as const;
+
+/** Fail-closed: autenticação oportunista sem `true` não deixa rastro de identidade. */
+function discardOpportunisticIdentity(request: PortalPublicRequest): void {
+  const mutable = request as unknown as Record<string, unknown>;
+  for (const key of OPPORTUNISTIC_AUTH_REQUEST_KEYS) delete mutable[key];
+}
+
+/**
+ * OD-P30 (nunca 401/403 na manifestação): a identidade autenticada só vale se
+ * o tenant pedido pela requisição (`X-Tenant-Id` e/ou Host mapeado, regra de
+ * `DetranTenantResolver`) pertence ao principal; divergência (inclusive a
+ * exceção do resolver) → anônima. Sem tenant pedido, nada muda.
+ */
+function opportunisticTenantMatches(request: PortalPublicRequest): boolean {
+  let requested: string | undefined;
+  try {
+    requested = new DetranTenantResolver().requestedTenant({
+      sessionTenantId: headerToString(request.headers?.['x-tenant-id'])?.trim(),
+      host: portalHostOf(request.headers ?? {}),
+    });
+  } catch {
+    return false;
+  }
+  if (requested === undefined) return true;
+  const principal = getPrincipalFromRequest(request as unknown as RequestLike);
+  return (principal?.tenants ?? []).includes(requested);
+}
+
 async function activatePublicPortalRoute(
   request: PortalPublicRequest,
   authenticate: () => boolean | Promise<boolean>,
@@ -406,10 +452,12 @@ async function activatePublicPortalRoute(
         portalHostOf(request.headers),
         () => authenticate(),
       );
-      if (authenticated) return true;
+      if (authenticated && opportunisticTenantMatches(request)) return true;
     } catch {
-      // credencial inválida/expirada: a manifestação segue anônima (§2.8)
+      // credencial inválida/expirada ou tenant sem direito: segue anônima (§2.8)
     }
+    // o guard interno pode ter gravado principal/tenant antes de recusar
+    discardOpportunisticIdentity(request);
   }
   // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
   seedPortalPublicRequest(request);

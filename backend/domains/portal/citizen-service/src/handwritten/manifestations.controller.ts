@@ -64,14 +64,20 @@ type CitizenRequest = RequestLike & PortalIdentityRequest;
 const REPLAYED_HEADER = 'Idempotency-Replayed';
 
 /**
- * Identidade oportunista (§2.8): principal autenticado com claims válidas e
- * papel CIDADAO → identificado; qualquer outra situação → anônimo.
+ * Identidade oportunista (§2.8): principal autenticado com claims válidas,
+ * papel CIDADAO e pertencente ao tenant efetivo da requisição → identificado;
+ * qualquer outra situação (inclusive tenant ausente) → anônimo. A checagem de
+ * tenant é defesa em profundidade (hotfix 2026-09-29): um principal de outro
+ * tenant nunca identifica sujeito no tenant semeado pelo cabeçalho.
  */
 export function opportunisticIdentityOf(
   request: RequestLike,
+  tenantId: string | undefined,
 ): PortalIdentityClaims | null {
+  if (!tenantId) return null;
   const principal = getPrincipalFromRequest(request);
   if (!principal) return null;
+  if (!(principal.tenants ?? []).includes(tenantId)) return null;
   const claims = portalIdentityClaims(principal);
   if (!claims) return null;
   return canonicalRoles(principal.roles ?? []).includes('CIDADAO')
@@ -102,7 +108,7 @@ export class PortalManifestationsController {
     @Headers() headers: PortalHeaders,
     @Res({ passthrough: true }) res: ResponseLike,
   ): Promise<ManifestationCreateResponse> {
-    const identity = opportunisticIdentityOf(request);
+    const identity = opportunisticIdentityOf(request, this.effectiveTenantId());
     const response = await this.tx((tx) =>
       this.manifestations.manifest(tx, identity, body, headers),
     );
@@ -152,6 +158,13 @@ export class PortalManifestationsController {
     );
     res.setHeader('ETag', etagOf(result.version));
     return result;
+  }
+
+  /** Tenant efetivo da requisição = o do `RequestContext` (o da transação). */
+  private effectiveTenantId(): string | undefined {
+    return this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot().tenantId
+      : undefined;
   }
 
   /** Transação única de tenant por comando/leitura (§0). */
