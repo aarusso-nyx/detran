@@ -41,6 +41,66 @@
       "output_estimate": 1000,
       "result": "PASS",
       "note": "3º ciclo restrito autorizado pelo Owner (A1); 1 low."
+    },
+    {
+      "id": "TASK-0001",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "raw_tokens_reported": 265926,
+      "input_estimate": 150000,
+      "output_estimate": 30000,
+      "result": "PASS"
+    },
+    {
+      "id": "TASK-0003",
+      "role": "inspector",
+      "model": "claude-sonnet-5",
+      "raw_tokens_reported": 103275,
+      "input_estimate": 55000,
+      "output_estimate": 25000,
+      "result": "PASS (RED esperado)"
+    },
+    {
+      "id": "TASK-0002",
+      "role": "architect",
+      "model": "claude-sonnet-5",
+      "raw_tokens_reported": 91663,
+      "input_estimate": 50000,
+      "output_estimate": 8000,
+      "result": "PASS"
+    },
+    {
+      "id": "TASK-0004",
+      "role": "engineer",
+      "model": "claude-opus-5-5",
+      "raw_tokens_reported": 148460,
+      "input_estimate": 85000,
+      "output_estimate": 20000,
+      "result": "FAIL por sensor-error de spec; PASS após TASK-0003 it.2"
+    },
+    {
+      "id": "TASK-0003-it2",
+      "role": "inspector",
+      "model": "claude-sonnet-5",
+      "raw_tokens_reported": 56509,
+      "input_estimate": 30000,
+      "output_estimate": 3000,
+      "result": "PASS"
+    },
+    {
+      "id": "maestro-checkpoints",
+      "role": "engineer",
+      "model": "claude-opus-5-5",
+      "input_estimate": 60000,
+      "output_estimate": 15000,
+      "note": "Checkpoints, triagem, ODs ao Owner, commits e §Retomada."
     }
-  ]
+  ],
+  "totals": {
+    "input_estimate": 685000,
+    "output_estimate": 133000,
+    "raw_worker_tokens_reported": 665833,
+    "percent_of_window": 97.9,
+    "note": "Estimativa: ≈ 66 % antes do disparo paralelo de TASK-0002/0004; o limiar de 80 % (560 k) foi cruzado durante essas duas tarefas (≈ 85 %). Depois do cruzamento só rodou a nova tentativa de triagem de TASK-0003 (≈ 30 k), necessária para fechar TASK-0004, e os checkpoints; nenhuma tarefa nova foi disparada. Fechamento em ≈ 98 % da janela estimada. A rodada para aqui (checkpoint A-C2-15)."
+  }
 }

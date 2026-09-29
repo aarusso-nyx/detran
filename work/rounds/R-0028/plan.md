@@ -363,4 +363,27 @@ em lock de R-0020/R-0022/R-0023/R-0024.
 
 ## Retomada
 
+**Checkpoint 2026-09-29 (sessão B, A-C2-15) — branch `orchestra/boat-wiring` publicado, sem PR.**
+
+- **Concluídas (commits na branch):** bootstrap `21e930ed`; TASK-0001 `d9ae3ad5` (matriz de
+  vínculo, `contracts/CTG-0002…0004.md`); TASK-0003 `5751e83a` + iteração 2 `3dc39e09` (9 specs de
+  portas); TASK-0002 `5e511d04` (OD-R15-003…006 e OD-R28-001…019 em `boat-build-pack.md` §4,
+  `issue-body.md`, backlog); TASK-0004 `41771ff7` (6 portas de homologação + providers).
+  Gates de tarefa verdes: `@detran/boat-mobile` test (12 arquivos, 104 testes)/typecheck/lint/build,
+  `test:boat-transitions`, `@detran/teat-mobile typecheck`, C-28-2-01…14, `docs:kb:check`.
+- **Prompt-review:** 3 ciclos (REVIEW, REVIEW, PASS; o 3º autorizado pelo Owner, adenda A1).
+- **Esperam:** TASK-0005…0009 (padrão `frontend-wiring-pattern.md` de R-0024; SSE canônico de
+  R-0022 para TASK-0008/0009); TASK-0010 (stack e TASK-0007/0009); TASK-0011 (TASK-0010 e esquema
+  de R-0030 em `main`). Prompts e `tasks/*.json` dessas tarefas ainda não existem (M4): o maestro da
+  retomada os deriva de `contracts/CTG-0003.md`/`CTG-0004.md` e roda um prompt-review sobre eles.
+- **Contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15):**
+  `contracts/CTG-0003.md` (gateway, modo OD-R28-019, providers nos boundaries) e
+  `contracts/CTG-0004.md` (telas web, SSE OD-R28-015); também OD-R28-005 (OpenAPI) e as ODs de
+  papéis (007…010) contra `policy.ts` de R-0023. Divergência → adenda numerada do Architect.
+- **Pendências do maestro:** abrir a issue da frente a partir de `issue-body.md` (com confirmação
+  do Owner, M7); integrar `origin/main` por merge na retomada (inclui #161 A-C2-15, cujo
+  `plan.md` foi trazido aqui).
+- **Orçamento:** `budget.json` ≈ 98 % da janela estimada de 700 k (limiar de 80 % cruzado durante
+  TASK-0002/0004); a retomada abre janela nova.
+
 ## Leitura
