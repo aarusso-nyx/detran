@@ -45,3 +45,37 @@ export {
   subjectRequestSchema,
 } from './lib/forms/schemas.js';
 export { BOAT_GATES } from './lib/forms/gates.js';
+export type {
+  AttestationPort,
+  CameraPort,
+  GpsPort,
+  MobileEncryptedStorePort,
+  SignaturePort,
+  SketchPort,
+} from './lib/ports.js';
+export {
+  BOAT_PORT_ERROR_CODES,
+  BoatPortError,
+  isBoatPortError,
+  type BoatHomologationAdapter,
+  type BoatPortErrorCode,
+  type BoatPortName,
+} from './lib/ports/boat-port-error.js';
+export { GeolocationGpsAdapter } from './lib/ports/geolocation-gps.adapter.js';
+export {
+  FileCaptureCameraAdapter,
+  type BoatImagePicker,
+} from './lib/ports/file-capture-camera.adapter.js';
+export {
+  CanvasSignatureAdapter,
+  type BoatSignatureSurface,
+} from './lib/ports/canvas-signature.adapter.js';
+export { DrawingJsonSketchAdapter } from './lib/ports/drawing-json-sketch.adapter.js';
+export {
+  BOAT_ENCRYPTED_STORE_CRYPTO,
+  BoatBrowserEncryptedStoreAdapter,
+  type BoatSealedRecord,
+  type BoatSealedRecordBackend,
+} from './lib/ports/browser-encrypted-store.adapter.js';
+export { HomologationAttestationAdapter } from './lib/ports/homologation-attestation.adapter.js';
+export { provideBoatHomologationPorts } from './lib/ports/homologation-port.providers.js';
