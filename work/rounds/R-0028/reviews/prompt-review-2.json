@@ -1,0 +1,16 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0028",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0028/prompts/TASK-0001.md",
+      "line": 154,
+      "claim": "A correção do ciclo 1 verifica que cada ID aparece em algum lugar do arquivo, mas não comprova uma linha por ficha na matriz nem detecta duplicatas. O laço dos seis tokens na linha 155 tem a mesma limitação.",
+      "fix": "Extrair os IDs das linhas correspondentes da matriz e do contrato, comparar cada conjunto ordenado com a lista esperada e exigir contagem única por ID."
+    }
+  ],
+  "notes": []
+}

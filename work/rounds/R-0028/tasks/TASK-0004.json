@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0028",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar portas de homologação BOAT",
+  "description": "Implementações web/homologação das 6 portas em apps/boat/mobile/src/lib/ports/ com providers exportados, sem @capacitor e com ports.ts inalterado, até os specs de TASK-0003 passarem.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-mobile-ports"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r28", "a-c2-15", "wp-b5"],
+  "branch": "orchestra/boat-wiring",
+  "worktree_id": "WT-boat-wiring",
+  "prompt_composition_id": "PC-c1f7860f453c01a6",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/boat-mobile", "test"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "typecheck"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "lint"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "build"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "apps/boat/mobile/src/lib/ports",
+      "apps/boat/mobile/src/index.ts"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-c1f7860f453c01a6",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

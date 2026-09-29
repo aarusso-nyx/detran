@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0028",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Registrar ODs BOAT no build pack, issue e backlog",
+  "description": "Migra OD-R15-003…006 e registra OD-R28-nnn em boat-build-pack.md §4, redige o corpo da issue da frente e o handoff no backlog.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-boat-build-pack-od",
+    "MOD-kb-backlog",
+    "MOD-r28-issue-body"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r28", "a-c2-15"],
+  "branch": "orchestra/boat-wiring",
+  "worktree_id": "WT-boat-wiring",
+  "prompt_composition_id": "PC-feb188423a3edc4c",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0028/issue-body.md"],
+    ["pnpm", "docs:kb:check"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "docs/framework/arch/boat-build-pack.md",
+      "docs/meta/knowledge-base/backlog.md",
+      "work/rounds/R-0028/issue-body.md"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-feb188423a3edc4c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

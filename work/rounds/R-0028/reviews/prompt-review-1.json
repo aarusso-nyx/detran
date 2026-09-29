@@ -1,0 +1,96 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0028",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0028/prompts/TASK-0001.md",
+      "line": 53,
+      "claim": "As listas fechadas de TASK-0001…0004 omitem AGENTS.md e CODESTYLE.md e mandam ler o manual primeiro, contrariando a ordem obrigatória de docs/meta/agents/README.md:25-27.",
+      "fix": "Incluir AGENTS.md e CODESTYLE.md antes do manual em cada prompt e posicionar a seção pertinente do build pack antes dos demais artefatos."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0028/prompts/TASK-0003.md",
+      "line": 88,
+      "claim": "O critério manda o worker executar git grep, embora a linha 6 proíba qualquer git. git grep também deixa de inspecionar os specs novos ainda não rastreados.",
+      "fix": "Trocar por uma busca sem git que inclua arquivos novos e explicitar o resultado esperado."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0028/prompts/TASK-0004.md",
+      "line": 77,
+      "claim": "Os critérios nas linhas 77-78 exigem git grep e git diff do Engineer, contrariando a proibição de git na linha 6.",
+      "fix": "Usar busca sem git para imports; deixar a verificação de diff exclusivamente como checkpoint do maestro."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0028/prompts/TASK-0003.md",
+      "line": 65,
+      "claim": "Exigir sucesso para cada uma das seis portas inclui AttestationPort, mas as linhas 70-71 e a decisão OD-R28-002 exigem que a atestação de homologação nunca tenha sucesso válido.",
+      "fix": "Exigir sucesso apenas das cinco portas aplicáveis e, para AttestationPort, testar rejeição ou resultado explicitamente não atestado em todos os ramos."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0028/prompts/TASK-0001.md",
+      "line": 145,
+      "claim": "Contar ≥17 linhas não prova a presença das 17 fichas distintas; a contagem ≥6 da linha 147 também pode repetir um único token.",
+      "fix": "Verificar o conjunto exato de IDs das 17 fichas e dos seis tokens, sem duplicatas ou ausências."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0028/prompts/TASK-0003.md",
+      "line": 84,
+      "claim": "O comando ls passa com um único spec e não comprova que existem todos os arquivos fixados por CTG-0002.",
+      "fix": "Enumerar e verificar cada caminho de spec definido no contrato."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0028/prompts/TASK-0004.md",
+      "line": 76,
+      "claim": "O pipeline retorna sucesso ao encontrar qualquer provider, sem comprovar os seis tokens que o resultado esperado declara.",
+      "fix": "Executar uma verificação por token em arquivo não-spec e exigir seis resultados distintos."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0028/prompts/TASK-0003.md",
+      "line": 82,
+      "claim": "Falta typecheck como critério do Inspector, exigido em docs/meta/agents/orchestra/README.md:101-102; o acceptance_commands de TASK-0003.json também o omite.",
+      "fix": "Adicionar typecheck ao prompt e à tarefa, com RED esperado restrito a imports da implementação ainda ausente."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0028/prompts/TASK-0001.md",
+      "line": 120,
+      "claim": "O contrato CTG-0004 pede apenas papéis de presença/ausência, sem exigir grants positivos e negativas para todos os papéis canônicos omitidos; a lista fechada não inclui a fonte da matriz canônica.",
+      "fix": "Incluir leitura pontual do catálogo de papéis e da política vigente e exigir, por ação, positivos e negativas exaustivas para os papéis canônicos omitidos."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0028/tasks/TASK-0002.json",
+      "line": 11,
+      "claim": "target_modules omite o issue-body.md que TASK-0002 pode criar.",
+      "fix": "Acrescentar o módulo de lock do issue-body.md."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0028/prompts/TASK-0001.md",
+      "line": 57,
+      "claim": "A leitura do boat-build-pack.md inteiro é mais ampla que as seções necessárias para esta tarefa.",
+      "fix": "Restringir a leitura a WP-B4/WP-B5, §4 e ao mapa entregável → definições."
+    }
+  ],
+  "notes": []
+}

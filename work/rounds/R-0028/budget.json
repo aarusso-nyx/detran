@@ -1,0 +1,46 @@
+{
+  "round_id": "R-0028",
+  "unit": "estimated_unique_input_tokens",
+  "window_input_limit": 700000,
+  "checkpoint_input_threshold": 560000,
+  "window_hours": 5,
+  "window_started_at": "2026-09-29T21:05:00.000Z",
+  "scope": "A-C2-15 sessão B: TASK-0001…0004 apenas",
+  "entries": [
+    {
+      "id": "maestro-bootstrap",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "input_estimate": 120000,
+      "output_estimate": 25000,
+      "note": "Leitura da campanha §12–§16, plano, prompts, templates; composição de 4 prompts e tarefas."
+    },
+    {
+      "id": "prompt-review-1",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 60000,
+      "output_estimate": 4000,
+      "result": "REVIEW",
+      "note": "9 high, 2 low; todos corrigidos."
+    },
+    {
+      "id": "prompt-review-2",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 45000,
+      "output_estimate": 2000,
+      "result": "REVIEW",
+      "note": "1 high (conjuntos exatos sem duplicata); corrigido."
+    },
+    {
+      "id": "prompt-review-3",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 30000,
+      "output_estimate": 1000,
+      "result": "PASS",
+      "note": "3º ciclo restrito autorizado pelo Owner (A1); 1 low."
+    }
+  ]
+}

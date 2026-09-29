@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0028",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Especificar portas de homologação BOAT",
+  "description": "Specs por porta (sucesso, permissão recusada, indisponível, rótulo de homologação), atestação nunca bem-sucedida, providers por token e ausência de @capacitor, conforme contracts/CTG-0002.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-mobile-tests-ports"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r28", "a-c2-15", "wp-b5"],
+  "branch": "orchestra/boat-wiring",
+  "worktree_id": "WT-boat-wiring",
+  "prompt_composition_id": "PC-8cc8a13861cd1f73",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/boat-mobile",
+      "exec",
+      "vitest",
+      "run",
+      "src/lib/boat-r0015.spec.ts",
+      "src/lib/forms",
+      "src/lib/navigation"
+    ],
+    ["pnpm", "--filter", "@detran/boat-mobile", "typecheck"],
+    ["pnpm", "exec", "prettier", "--check", "apps/boat/mobile/src/lib/ports"]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-8cc8a13861cd1f73",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

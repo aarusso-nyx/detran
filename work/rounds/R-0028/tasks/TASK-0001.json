@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0028",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Desenhar matriz de ligação, BoatCrashGateway e portas BOAT",
+  "description": "Matriz de vínculo das 17 telas lida dos contratos em disco, desenho do BoatCrashGateway e das 6 portas de homologação, fail-closed de S-06/W-05 sob DT-049 e contratos CTG-0002…0004 (A-C2-15).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r28-binding-matrix"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r28", "a-c2-15", "wp-b4", "wp-b5"],
+  "branch": "orchestra/boat-wiring",
+  "worktree_id": "WT-boat-wiring",
+  "prompt_composition_id": "PC-b28837f1d553c791",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0028/binding-matrix.md"],
+    ["test", "-f", "work/rounds/R-0028/contracts/CTG-0002.md"],
+    ["test", "-f", "work/rounds/R-0028/contracts/CTG-0003.md"],
+    ["test", "-f", "work/rounds/R-0028/contracts/CTG-0004.md"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0028/binding-matrix.md",
+      "work/rounds/R-0028/contracts"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-b28837f1d553c791",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

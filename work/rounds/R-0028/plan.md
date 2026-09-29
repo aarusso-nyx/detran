@@ -24,6 +24,26 @@ Esquema do delta: `work/rounds/R-0030/availability-manifest.schema.md` (R-0030).
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
+> **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada na **sessão B** (Claude
+> Code Opus 5.5; reviewer Sol 6), **primeira da sequência**. Tarefas liberadas: **TASK-0001/0002**
+> (matriz de vínculo, desenho do gateway e das 6 portas, ODs) e **TASK-0003/0004** (specs e
+> implementação das portas de homologação em `apps/boat/mobile/src/lib/ports/`, sem `@capacitor/*`,
+> atestação nunca `true`). Esperam: TASK-0005 em diante (páginas, gateway e telas web dependem do
+> padrão de R-0024 e do SSE de R-0022).
+>
+> - **Base:** `origin/main`, branch `orchestra/boat-wiring`. Push sem PR ao fim de cada tarefa
+>   liberada; checkpoint em §Retomada com o que falta e o que espera; parada.
+> - **Não tocar:** `backend/app/src/app.module.ts`, `backend/app/src/detran-runtime.ts`, serviços
+>   SSE, `backend/domains/shared/src/policy.ts`, `backend/domains/shared/src/documents`, outbox
+>   (`integration.*`), offline-sync e pin STYNX (R-0022/R-0023); `packages/ui` e shells ou
+>   núcleos dos apps (R-0024); locks de R-0020 (`.github/workflows/`, `.devai/config`,
+>   `law/register`, `record/`).
+> - **Reconferência na retomada:** todo contrato produzido agora é reconferido contra `origin/main`
+>   quando a rodada retomar depois da R-0024. Divergência vira adenda numerada do Architect, sem
+>   reescrever o já aprovado.
+> - Tarefas válidas em `pnpm verify:round-tasks`; um prompt-review no bootstrap cobrindo só as tarefas
+>   liberadas; `acceptance_commands` por tarefa; sem PR e sem delivery-review (OD-C2-005).
+
 Esta seção aplica `work/campaigns/C-0002-consolidacao.md` §12 e **prevalece sobre qualquer menção a
 um PR/merge/evidência/delivery-review por CTG neste plano**. Metas, tarefas, locks e critérios de
 aceitação não mudam; muda só o momento dos gates, que rodam no fim da rodada. A exceção são os
@@ -254,9 +274,61 @@ linha de base `pnpm --filter @detran/boat-mobile test` e `pnpm --filter @detran/
 
 ## Adendas
 
+- **A1 — 3º ciclo de prompt-review (Owner, 2026-09-29).** Os ciclos 1 e 2 deram `REVIEW` (9 high;
+  depois 1 high). Pela regra do §5 do prompt do maestro, o 3º ciclo exigia parada e consulta. O
+  Owner respondeu nesta sessão "3º ciclo restrito", limitado ao único achado do ciclo 2. Ciclo 3:
+  `PASS` (`reviews/prompt-review-3.json`), com 1 low (a regex não exige o `|` de fechamento da
+  1ª célula; a comparação por conjunto já detecta ausência e duplicata; mantido como nota para não
+  alterar prompt aprovado). O rótulo "OD-R28-004" usado na pergunta foi só de sessão: é decisão de
+  processo, não OD de produto, e não entra no registro canônico; a numeração de ODs novas fica com
+  TASK-0001/0002.
+
 ## Decisões do maestro
 
+Maestro Opus 5.5 (`claude-opus-5-5`, Claude Code 2.1.283), sessão B da A-C2-15, bootstrap de
+2026-09-29 (Owner datou a autorização de 2026-09-30). Papéis: Architect ao planejar e revisar;
+Engineer ao commitar.
+
+- **M1 — ids de modelo** (reconfirmados com chamada mínima `claude -p --model <id>` e
+  `codex exec -m <id>`; `claude --help`/`codex --help` não listam ids): Opus 5.5 = `claude-opus-5-5`,
+  Sonnet 5 = `claude-sonnet-5`, Sol 6 = `gpt-6-sol` (`codex-cli` 0.157.1). Workers pelos subagentes
+  nativos do projeto (`.claude/agents/*.md`: `architect-blueprint`/`engineer-frontend` com
+  `model: opus`, `inspector-tests`/`transcriber-docs` com `model: sonnet`). Reviewer pela ponte
+  `tools/orchestra/bridge.sh codex gpt-6-sol …`.
+- **M2 — worktree e branch.** `/Volumes/Thiamat II/stech/detran-worktrees/boat-wiring` não existe
+  nesta máquina. A rodada corre na worktree gerida pelo app
+  `/Users/aarusso/Development/detran/.claude/worktrees/maestro-r0028-r0026-5d1771`, branch
+  `orchestra/boat-wiring` criada sobre `origin/main` `38c79714` (A-C2-15: base `origin/main`, sem
+  empilhar em `stynx-dedup`, que não existe).
+- **M3 — texto da A-C2-15.** PR #161 aberto no bootstrap: este `plan.md` foi trazido de
+  `origin/docs/c0002-a-c2-15` (única diferença para `main`: a adenda A-C2-15 em §Execução) e o
+  prompt do Owner vale como texto da adenda.
+- **M4 — escopo das tarefas.** Só TASK-0001…0004 têm `tasks/*.json` e prompts; TASK-0005…0011
+  ficam como proposta na tabela de §Tarefas até a retomada. O prompt-review cobre só as quatro.
+- **M5 — `verify:round-tasks`.** `tools/devai/verify-round-tasks.mjs` só varre R-0003…R-0020; as
+  tarefas desta rodada são validadas por arquivo com
+  `pnpm exec devai check --only schema --schema law/schemas/task.schema.json --instance <task>`
+  (mesmo validador que o script usa), além de `pnpm verify:round-tasks` verde para o conjunto
+  coberto. O script não é alterado aqui (fora da fronteira).
+- **M6 — `src/index.ts` da biblioteca.** Exports aditivos das portas em
+  `apps/boat/mobile/src/index.ts` não tocam shell nem núcleo de app (R-0024): é o barril público da
+  biblioteca BOAT, dentro do lock `MOD-boat-mobile-ports`.
+- **M8 — RED esperado de TASK-0003.** Os `acceptance_commands` de TASK-0003 incluem
+  `typecheck`; no checkpoint do maestro ele é aceito só com erros `TS2307` para os arquivos de
+  implementação de `CTG-0002.md` (prompt-review 1, item 6). O verde integral é exigido em TASK-0004.
+- **M7 — issue da frente.** TASK-0002 só redige `issue-body.md`; abrir a issue no GitHub é ato
+  externo e fica para o maestro na retomada, com confirmação do Owner.
+
 ## Concorrência
+
+Bootstrap 2026-09-29, `origin/main` = `38c79714` (#160 A-C2-14). PR aberto: só #161 (A-C2-15,
+docs). Branches em curso: R-0020 `orchestra/devai-sensors` (`ebf308e7`, parada no CTG-0004),
+R-0022 `orchestra/stynx-sse-tenancy` (`64d1f915`), R-0023 (sem branch publicado ainda), R-0031
+`orchestra/pec-web` (`7c0854f3`), R-0030 `orchestra/user-docs` (`a9e19915`), R-0032 (sem branch
+publicado ainda); R-0021 `orchestra/stynx-canonical` fechada. R-0024 `stynx-dedup` não existe:
+`docs/framework/arch/frontend-wiring-pattern.md` ausente em todo branch. R-0029
+`orchestra/teat-web-wiring` não existe: nenhum conflito de shell. Nenhum arquivo desta sessão cai
+em lock de R-0020/R-0022/R-0023/R-0024.
 
 ## Bloqueios
 
