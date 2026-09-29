@@ -1,0 +1,87 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 7,
+      "claim": "The baseline.json SHA-256 quoted in the proposal is `b21407e916e4d587f58a8cd7acf3e186dfb0eb6c10c0c4ef9c14aa03`. That is 56 hex characters, not 64. The real value (`shasum -a 256 work/rounds/R-0020/baseline.json`) is `b21407e916e4d587f58a8cd7acf3e186dfb0eb6c10c0c4ef1f706a4f9c14aa03`; the proposal drops the segment `1f706a4f`. The frozen source cannot be checked against this pin, and it fails the `sha256` pattern `^[a-f0-9]{64}$` in common-defs.",
+      "fix": "Replace it with the full 64-hex digest `b21407e916e4d587f58a8cd7acf3e186dfb0eb6c10c0c4ef1f706a4f9c14aa03` and recompute the proposal's own SHA-256 for the Owner consultation."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 28,
+      "claim": "The proposal makes `sensor-integrity` with `readings_scanned > 0` a mandatory member 'por PR/CI'. That member reads `.devai/state/sensor-readings` (release-host.js:202467), and `.gitignore:45` ignores `.devai/state/sensor-readings/` (checked with `git check-ignore -v`). In a CI clone or a fresh checkout it scans 0 readings, so the member always fails. The only ways to make it pass are an in-CI sensing step whose effect is not declared in the proposal, or a versioning change the proposal does not mention. A1-2 asks the Owner to approve the 16 members without this dependency on the table.",
+      "fix": "In the members section and in A1-2, state where CI gets its readings: either (a) a `devai sense`/`devai:sense` step in the job before the `check`, with its effect class (read / local-write / harness-write) and the preset it uses, or (b) a separate decision to version the readings, linked to OD-R20-004/Art. 41. Cite `.gitignore:45`. Without this, keep the `readings_scanned > 0` guard only for the round's local measurement and say so explicitly."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 44,
+      "claim": "A1-3 asks the Owner to block CTG-0004 until a 'correção governada/upstream ensaiada'. It leaves three things out. (1) The series order: TASK-0014 depends on 'merge CTG-0004' (plan.md:173), so blocking CTG-0004 also stops CTG-0005 and CTG-0006, and with them the round's closure. (2) Whether the 'escritor/ponte governado' (line 38) may be local at all. Art. 41 (.devai/pin/constitution.md:417) says records 'are written by executing verbs', and plan.md:267 forbids writing `record/` by hand. A local bridge that writes `record/proofs/freshness/readings` would therefore be ruled out, leaving only an upstream fix plus a pin bump. Line 36 says the pin bump is not authorized. (3) What happens to the criterion at plan.md:219 if the fix does not arrive within the round; plan.md:285-286 requires recording a replaced criterion as not met. As written, the Owner is deciding without the options and their consequences.",
+      "fix": "Rewrite A1-3 as concrete options: (a) CTG-0004 merges the wrapper and the persisted readings; the scorecard ≥ A1 criterion is recorded as 'não cumprido/pendente upstream' under plan.md:285-286; CTG-0005 goes ahead; a separate OD covers the future pin bump. (b) The whole chain CTG-0004…0006 waits for the upstream fix. For each option, state its effect on R-0020's closure and on `baseline-final`. State that a local writer to `record/` is barred by Art. 41 and plan.md:267, unless the DEVAI verb itself is what writes it."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 28,
+      "claim": "The proposal says `glob-guards`, `invariant-strategies` and `test-trace` measured `ok: true`. That is correct against baseline.json (glob-guards 89/35, invariant-strategies population 9). But plan.md:56 still lists them as FAIL ('0/35', 'população 0', 'sem trace'), and the proposal does not reconcile the two. Separately, `test-trace` passed vacuously (`files_scanned: 0`, `discovered_test_files: 0`), yet only `sensor-integrity` gets a non-vacuity guard.",
+      "fix": "Add a sentence stating that baseline.json takes precedence over the preliminary table at plan.md:56, citing the counts. Ask the Owner, inside A1-2, whether `test-trace` needs a population > 0 guard like `sensor-integrity`, or record why not."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 30,
+      "claim": "`ci-economy` is described as 'diagnóstico visível' outside the 16 members, but Meta 5 (plan.md:132) puts it in the `evidence-gate` job with 'REVIEW registrado'. Also, `mutation`, `ci-economy` and `dependencies` had `ok: true` at opening (baseline.json checks[18,19,21]), so CTG-0001.md:167 ('membro com ok: true na abertura continua ok: true') still applies to them. The proposal does not say so.",
+      "fix": "State that `ci-economy` runs in the `evidence-gate` job per Meta 5 with REVIEW recorded. State that all three remain under the CTG-0001.md:167 non-regression rule in `baseline-final`, even though they are not among the 16."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 30,
+      "claim": "Plan.md:271-273 requires the upstream issue for the self-applied members to be 'registrada em A1'. The proposal only promises to open it: there is no issue text, link, or reproduction for `action-coverage`/`action-effects`/`cli-reference` (baseline error `scope: self`).",
+      "fix": "Attach the issue text (reproduction with argv and the exit/error payload from baseline.json), or its URL once opened, or mark it `source_pending` with the owner of the action."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 9,
+      "claim": "The citation 'C-0002-consolidacao.md ação 5' does not resolve to an identifiable section. The relevant sources are §3 item 2 'Governança antes do volume' (line 65) and §5 'sensores com PASS medido; a meta é fixada em R-0020' (line 167).",
+      "fix": "Replace it with `work/campaigns/C-0002-consolidacao.md` §3 item 2 (l. 65) and §5 (l. 167)."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 15,
+      "claim": "The four-cell table does not cite the registry emitters (`packages/sensors/src/lint.ts`, `type-check.ts`, `build.ts`, `test.ts`). It also misses the strongest mechanical justification: the four kinds are exactly the members of the `baseline` preset in `sense-presets.json` (`build`, `lint`, `type_check`, `unit_test`).",
+      "fix": "Add an `emitter_module` column and a sentence stating that the minimum = the `baseline` preset in sense-presets.json (SHA 96715fa3…), with each row mapping 1:1 to the registry."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 34,
+      "claim": "The HEAD-provenance condition is correct but incomplete. `computeScorecard` (release-host.js:186618) uses `filterLatestPerKind` with no filter by HEAD or by the commit timestamp of `--at`. `loadReadingsFromDir` (release-host.js:189263) silently discards invalid JSON (`catch {}`). And if the readings are versioned under `record/`, committing them changes the HEAD, so a reading can never share an 'exact tree' with the `--at` it is scored against.",
+      "fix": "Define which HEAD↔reading relationship is accepted, for example 'leitura tomada no pai cujo diff para `--at` toca só caminhos de leitura'. Require checking that every file in the consumed path parses and validates against `sensor-reading.schema.json`, because the scorecard hides files that fail to parse."
+    }
+  ],
+  "notes": [
+    "Checked against the installed DEVAI 1.5.6 registry: the sensor-registry.json SHA matches `0910facf…7806`; there are 59 kinds and 43 reachable cells, with 49 `read` kinds covering 39 cells. `lint`→F2:T5 (read), `type_check`→F2:T8 (read), `build`→F2:T9 (local-write), `unit_test`/`integration_test`/`e2e_test`→F3:T1 (harness-write). The 0/3/1/0/0 minimum is consistent and presented as a target, not as current PASS.",
+    "The two N/A cells are confirmed: F1:T1 comes from `.devai/config/scorecard-na.json` and F4:T5 from `DEGENERATE_CELLS` (release-host.js:186858). baseline.json has 0 PASS, 43 UNKNOWN and 2 N/A.",
+    "The path divergence is confirmed in 1.5.6. `recordSensorReading` (release-host.js:218676) writes to `.devai/state/sensor-readings/<kind>`. `audit scorecard` (197967) and `observe` (189653) read `record/proofs/freshness/readings`, and no writer for that path was found. `sensor-integrity` reads the first path (202467). `record/proofs/freshness` does not exist in the worktree. The v1.6.0 finding was not re-checked here, because this review did no network access.",
+    "The 16 members are a superset of the minimum at plan.md:214-217 (they add `overrides`, `prompt-overlays` and `docs-links`, and include `pr-compliance`). No existing member of `pnpm check` is removed. The `--final`/`--against`/`--out-dir` flags exist in tools/devai/baseline.mjs:46-75.",
+    "OD-C2-005 (single PR per round) applies only to R-0022…R-0032, so it does not conflict with 'um PR por CTG' in R-0020.",
+    "This verdict applies only to releasing the Owner consultation. It does not execute CTG-0004 or change any criterion. The high findings can be fixed by the Architect without changing the plan."
+  ]
+}

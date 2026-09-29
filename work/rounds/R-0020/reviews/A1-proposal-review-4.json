@@ -1,0 +1,15 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The proposal's SHA-256 matches `a8163f498ed784144750ccc71554e3a1e1adbfad2d7f38404d598049981b346b`. This review was read-only. No file was edited, and no `--write`, sensor or `audit scorecard` was run. I did not re-check the runtime line numbers cited in cycle 3; this cycle judged only the fix to the cycle-3 high.",
+    "Cycle-3 high (the `sense run` consent argv) is resolved. Line 32 now uses `devai sense run --preset baseline --repo-root . --as-role engineer --write --publish --format json`. It says `--write` and `--publish` are consents that the verb's authority contract requires, not implicit persistence. It keeps the action as `remote-write` with preset selection aggregated up to `local-write`. It no longer says that `--write` belongs only to `record`.",
+    "`sense record --input <arquivo> --repo-root . --as-role engineer --write --format json` is required 'para cada leitura' (`harness-write`, persisting to `.devai/state/sensor-readings/<kind>`). The order `sense run` → capture → `sense record` → `check --only sensor-integrity` with `readings_scanned > 0` is unchanged.",
+    "Explicit, separate Owner decision: line 32 requires 'aprovação Owner separada e explícita' for `--publish` in CI. Line 52 (A1-2) splits the consents into (i) `--write --publish` for `sense run` in the ephemeral job and (ii) the one-off delegation of `sense record --write` to CI automation despite maestro prompt §1(20). The two are distinct and consistent with line 32.",
+    "Clone rehearsal before CI (line 32): the text requires showing no remote publication, no writes to `record/`, Engineer role accepted and `readings_scanned > 0`. If any point fails, CI and A1-2 stay blocked, and an empty check is not approved. This covers refusal on unexpected publication or writes and on zero readings.",
+    "No material contradiction was introduced by the fix. Line 52 (i) restates only part of the rehearsal condition (zero external publication and zero writes to `record/`). The full condition, including role and `readings_scanned > 0`, is at line 32, and line 52 does not contradict it. The rehearsal needs `sense record --write` in the clone to reach `readings_scanned > 0`, so the 'não escreve em `record/`' check should also cover that verb. This is advisory only, not a finding.",
+    "This is the fourth and last cycle. PASS releases only the A1-1/2/3 consultation with the Owner. It decides nothing for the Owner, opens no gate, does not approve the official CTG-0004 contract and does not change the DEVAI 1.5.6 pin."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "item": 4,
+      "severity": "high",
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 32,
+      "claim": "Introduced by the correction. The CI sensing step the proposal gives as an example, `devai sense run --preset baseline --as-role engineer --write`, will not create any reading in DEVAI 1.5.6, so `sensor-integrity` would still scan 0. The installed runtime shows three problems. First, `sense run` only accepts `--preset`, `--round`, `--repo-root`, `--input`, `--dry-run` and `--human` (release-host.js:219138-219140), plus `--as-role`/`--authority-session` added by the authority boundary (197293); there is no `--write`. Second, `executeResolvedSenseSelection` (219088) only writes the reading to stdout. Its resolution declares `implicit_persistence: false` (191063), and `sense-presets.json` sets `implicit_persistence: \"forbidden\"`. The only writers to `.devai/state/sensor-readings/<kind>` are `sense record --input` (`recordSensorReading`, 218676, effect `harness-write`) and `sense record --rebuild` (218537). Third, the action-level effect of `sense run` is `remote-write` (capabilities `fs:f5-state`, `fs:proofs`, `proc:dynamic`, `net:sensor-runtime`; 12861-12890 and 177610), not the preset's `local-write`/`harness-write` as the text says. The conditional block ('se o verbo não materializar leituras válidas… bloqueados') prevents an empty check from being approved. But A1-2 asks the Owner to approve a step whose command, source and effect class are wrong. That was exactly the subject of cycle-1 high 4.",
+      "fix": "Describe the step as the chain the runtime actually supports: `devai sense run --preset baseline --repo-root . --as-role <papel>` (action effect `remote-write`, aggregate preset effect `local-write`), capturing each member's `SensorReading` from stdout. Then one `devai sense record --input <arquivo> --as-role <papel>` per reading (`harness-write`, writing to `.devai/state/sensor-readings/<kind>`). Only after that, `check --only sensor-integrity` with `readings_scanned > 0`. Remove `--write` from the example. State in A1-2 the effect class of each verb and the role that is allowed to run it in CI. Keep the block clause if the rehearsal does not produce valid readings."
+    },
+    {
+      "item": 5,
+      "severity": "low",
+      "file": "work/rounds/R-0020/contracts/CTG-0004-A1-proposal.md",
+      "line": 36,
+      "claim": "Introduced by the correction for cycle-1 low 5. The citation 'CTG-0001 §Comparação' (and '§Populações/comparação' on line 9) points to a section that does not exist. CTG-0001.md has no heading by that name. The rule 'membro com `ok: true` na abertura continua `ok: true`' is at lines 164-168, under '## Formato determinístico' (l. 97).",
+      "fix": "Cite `contracts/CTG-0001.md` §Formato determinístico, l. 164-169 (regras de não regressão de `checks`)."
+    }
+  ],
+  "notes": [
+    "Proposal SHA-256 matches `4d9718f9c4ea9076634a169bb89bbee3ed5c77bb8cd1df556b26d58df84fc450`. Worktree HEAD is `513a4f4038dbbfe1f562ffb570c0edc7a32d17ec`. Read only; nothing was edited and no `--write` was run.",
+    "Cycle-1 high 1 (full SHA): resolved. Line 7 has the 64-hex value `b21407e9…1f706a4f9c14aa03`, which matches `shasum -a 256 work/rounds/R-0020/baseline.json`.",
+    "Cycle-1 high 4 (CI sensing source): the source part is resolved. Line 32 cites `.gitignore:45` (confirmed), requires a sensing step before `sensor-integrity`, rules out versioning readings by analogy with OD-R20-004, rules out local writes to `record/`, and blocks if the rehearsal produces nothing. The effect and verb part is still defective; see the new high above.",
+    "Cycle-1 high 10 (A1-3): resolved. Line 52 offers options A and B. Each states its effect on CTG-0005/0006, on R-0020 closure (A allows administrative closure with an explicit failure, B holds the chain) and on `baseline-final` (A shows 0 PASS or the real result, B requires four real PASS). Option A applies plan.md:285-286 (a replaced criterion is recorded as not met). Line 46 bars a local writer under Art. 41 and plan.md:266-267. A future pin change needs its own OD. The recommendation of B is explicit and not presumed.",
+    "Cycle-1 low 5 (baseline reconciliation / test-trace): resolved. Line 34 gives baseline.json precedence over the preliminary table and cites the counts (89/35, population 9), which match the raw payloads. It records `files_scanned: 0`/`discovered_test_files: 0` for `test-trace` and puts the positive-population requirement into A1-2.",
+    "Cycle-1 low 10 (`ci-economy` and non-regression): resolved. Line 36 keeps `ci-economy` in `evidence-gate` with REVIEW recorded (plan.md:132). `ci-economy`, `dependencies` and `mutation` stay under non-regression because raw `ok` was true at opening; confirmed in baseline.json (`raw.ok: true`; verdicts review/review/pass). The citation of the rule is imprecise; see the new low.",
+    "Cycle-1 low 10 (issue text): resolved. Line 38 has argv, exit 2 and the payloads. Checked against baseline.json: `action-coverage` has `scope: self`, `claimedCount 0`/`registeredCount 57`; `action-effects` fails ENOENT on `./law/policy/subprocess-effects.json`; `cli-reference` fails ENOENT on `./law/policy/documentation-information-architecture.json`. The URL stays `source_pending` and the forwarding owner is named.",
+    "Cycle-1 low 5 (campaign section): resolved. Line 9 cites C-0002 §3 item 2 and §5; both exist (l. 57-65, l. 161).",
+    "Cycle-1 low 5 (emitters/preset): resolved. The `emitter_module` column was added. The SHA of `sense-presets.json`, `96715fa3…5c12`, matches both the law/policy copy and the runtime copy, and the `baseline` preset is exactly `build`, `lint`, `type_check`, `unit_test`.",
+    "Cycle-1 low 5 (HEAD provenance and per-file validation): resolved. Line 42 requires schema validation of every file in the consumed path (the loader drops invalid JSON silently), recording the parent commit where sensing ran, a diff to `--at` limited to governed persistence, and no claim of the same tree.",
+    "No other new canonical FAIL was found. The 1.6.0 verification on line 44 cites public links. It was not checked again here because this review did no network access. It does not change the pin.",
+    "REVIEW only because of the new high: the command and effect of the CI sensing step. Correcting line 32 and the A1-2 text should be enough to release the A1-1/2/3 consultation. This verdict changes no gate."
+  ]
+}
