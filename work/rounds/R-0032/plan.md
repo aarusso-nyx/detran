@@ -549,8 +549,14 @@ da delegação), OD-R27-002 (junta no catálogo), OD-P17 (`lgpd_declaracao`) e O
 
 - Bootstrap: `pnpm check` interrompido em `pnpm test:stack` (57/58 PASS): sensor `tools/stack/revision.test.mjs:433` usa `/pec/` sobre o comando Docker inteiro e casa o nome da worktree `portal-pec` no caminho absoluto. É `sensor-error` herdado da R-0031 (TASK-0015 corrige o regex do slot na O11 dela). Este lock permanece com R-0031; O1–O2 seguem com gates específicos e não alteram o teste.
 - Preparo reversível do banco isolado `detran_r32_access`: `pnpm backend:db:apply` passou; `SEED_PROFILE=ch bash backend/database/seed.sh` falhou na transação com `rait_priority_consistency(): query returned no rows`, classificado como `plant-bug` de ordem/interação da seed upstream para investigação fora de O1–O2. `SEED_PROFILE=fresh` passou no banco próprio, seguido de `82-fixtures-ch.sql` isolado em transação, também PASS. Os testes de acesso usam apenas esse banco; nenhuma seed canônica foi editada ou gate afrouxado.
+- O2 TASK-0003: baseline de acesso preservada; no DB isolado, e2e focado 4 PASS/1 RED/3 TODO. Projections unit 32 PASS/1 RED, identity unit 50 PASS, clinical-reports unit 34 PASS/1 RED/2 TODO. `@detran/app test:e2e` completo exit 1 com 1566 PASS/13 FAIL/111 SKIP/6 TODO; um FAIL é o novo contrato de dossiê, os outros 12 estão em arquivos fora da TASK-0003. Relatório discrimina o que permanece sem implementação e OD.
+- O2 TASK-0008: `@detran/ui build` local PASS resolveu `TS2307`; `@detran/portal-web typecheck` PASS. `@detran/portal-web test` exit 1 com 119 arquivos PASS/1 FAIL, 1318 testes PASS/2 RED/20 TODO; os dois REDs são o manifesto PEC novo esperando oito rotas da O7/O8. Não classificar como o sensor-error de `test:stack`. Os estados e axe das telas futuras continuam tarefa de TASK-0009; i18n da versão anterior de TASK-0008 aguarda OD-R32-006.
 
 ## Retomada
+
+O1–O2 concluídas; aguardando R-0022 (outbox e eventos `ch`) para O3, R-0027 (delegação) para O6, R-0024 (kit) para O7+.
+
+Checkpoint desta sessão: TASK-0001 e TASK-0002 completadas; TASK-0003 e TASK-0008 entregaram caracterização/specs em estado `checkpoint` porque os novos critérios executáveis seguem RED até implementação e decisão, sem afrouxamento. Branch `orchestra/portal-pec` empilhado em `origin/orchestra/pec-web`, com `origin/main` avançado por merge `--no-edit` após a O1; nenhum PR ou delivery-review nesta janela (OD-C2-005). OD-R32-002…005 continuam pedidas ao Owner e fail-closed; OD-R32-006 mantém o destino do critério i18n original pendente antes da O7. Na retomada, integrar revisões da R-0031 somente por `git merge --no-edit` e revalidar ADR index/ci após upstreams.
 
 ## Leitura
 
