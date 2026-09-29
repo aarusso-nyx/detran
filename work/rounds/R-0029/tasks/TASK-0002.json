@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0029",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever ODs, i18n e fichas novas do TEAT web",
+  "description": "Pré-trabalho documental A-C2-15 da Sessão A; entregar somente a fronteira descrita no prompt.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-build-pack-od", "MOD-teat-web-i18n"],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["r29", "a-c2-15", "session-a"],
+  "branch": "orchestra/teat-web-wiring",
+  "worktree_id": "WT-teat-web-wiring",
+  "prompt_composition_id": "PC-c2458b62b2ceed10",
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "const f=require('node:fs'); const s=f.readFileSync('docs/framework/arch/teat-build-pack.md','utf8'); const x=s.split('## 4.')[1]?.split('## 5.')[0]||''; if(!['OD-R29-001','OD-R29-002','OD-R29-003','OD-R29-004'].every(v=>x.includes(v))) process.exit(1); JSON.parse(f.readFileSync('apps/teat/web/src/app/i18n/teat.pt-BR.json','utf8'))"
+    ],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T22:53:28Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-c2458b62b2ceed10",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0029",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0029/tasks/TASK-0002.json",
+      "line": 14,
+      "claim": "TASK-0002.md:13 now keeps `docs/meta/knowledge-base/backlog.md` out of the write boundary, and plan.md §Concorrência sends the issue to `work/rounds/R-0029/issue-body.md`. However, `target_modules` still declares `MOD-kb-backlog`, which is the same lock that R-0020/23/24 also claim. The same stale module appears in the plan.md:188 row and in the O2 column at plan.md:55 ('backlog'). The prompt is correct and the worker does not write to the backlog, but the declared lock no longer matches the boundary.",
+      "fix": "Remove `MOD-kb-backlog` from `tasks/TASK-0002.json` `target_modules` and from plan.md:188. In plan.md:55, replace 'backlog' with `work/rounds/R-0029/issue-body.md`. The prompt hash and PC ID do not change."
+    }
+  ],
+  "notes": [
+    "Item 1 OK: TASK-0001.md:16 now lists both the query contracts (`BP-INF-AIT-001.openapi.json` and `BP-OPS-{FIELD,OFFLINE-SYNC,EVIDENCE,SNAPSHOTS,PROVISIONING,AGENCY,PARAMETER}-001.openapi.json`) and the command contracts (`BP-INF-AIT-001.commands` and `BP-OPS-{FIELD,OFFLINE-SYNC,EVIDENCE,SNAPSHOTS,PROVISIONING,BOOTSTRAP}-001.commands`). Every one of these files exists in `docs/framework/contracts/`. The line says explicitly that `BP-OPS-AGENCY-001.commands.openapi.json` does not exist, and `source_pending` is used only when an operation is in neither contract.",
+    "Item 2 OK: AUTHORIZATION.md, Escopo paragraph, says 'publicação por push sem PR e sem delivery-review, com checkpoint'.",
+    "Item 3 OK: TASK-0002.md:13 limits the issue to `work/rounds/R-0029/issue-body.md` and forbids changes to `backlog.md` because of the concurrent lock. `backlog.md` stays on the read list (the TEAT section only), which is allowed. plan.md §Concorrência (line 294) records the recheck of the TEAT web i18n catalog against `origin/main` when the round resumes after R-0024.",
+    "Item 4 OK: plan.md:289 (M3) justifies Sol 6 at high effort for TASK-0001: the 61×9 matrix, the new routes, and three CTGs with query and command operations, with cost reserved in `budget.json`. The model and effort agree across compositions.json, TASK-0001.json (executor gpt-6-sol/high), budget.json (task-0001 gpt-6-sol) and plan.md:187.",
+    "Hashes recomputed with `shasum -a 256`: TASK-0001.md is df2b5517dd2e9569e4c56d514975b1dd69bb6ee084e24f69e47c0804a0a15210 and TASK-0002.md is c2458b62b2ceed10a87738f5ff9cc280031cf1d0fa2ac631d05930a669251eca. Both match compositions.json. `pc_id` is PC-df2b5517dd2e9569 / PC-c2458b62b2ceed10, and it matches `prompt_composition_id` at the top level and in `executor` of both tasks.",
+    "The acceptance_commands in both JSON files still match the prompts word for word. Scope stayed at TASK-0001/0002. No files were edited."
+  ]
+}

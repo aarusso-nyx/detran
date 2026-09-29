@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0029",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0029/prompts/TASK-0001.md",
+      "line": 16,
+      "claim": "The TASK-0001 reading list names only the `*.commands.openapi.json` contracts, but the task asks for GET operations by `operationId` (line 26) and says any missing source becomes `source_pending`. Most GETs are in the query specs, which are not listed: `BP-INF-AIT-001.commands` has 1 GET and 17 mutations, while `BP-OPS-FIELD-001.openapi.json` has 26 GETs. `BP-OPS-AGENCY-001.commands.openapi.json` does not exist, but `BP-OPS-AGENCY-001.openapi.json` does. As written, the worker would mark read operations that do exist as `source_pending`, and routes that should be `somente-leitura` would be wrongly classified as `fail-closed-OD`. TASK-0002 would then carry the same gaps into its ODs and screen specs (fichas).",
+      "fix": "Add the query specs `docs/framework/contracts/BP-INF-AIT-001.openapi.json` and `BP-OPS-{FIELD,OFFLINE-SYNC,EVIDENCE,SNAPSHOTS,PROVISIONING,AGENCY,PARAMETER}-001.openapi.json` to the closed reading list. Use `source_pending` only when neither the query spec nor the commands spec exists. Recompute the sha256/pc_id in `compositions.json` and `tasks/TASK-0001.json`."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0029/AUTHORIZATION.md",
+      "line": 9,
+      "claim": "The scope says push without a PR, but it does not say there is no delivery-review in Session A. That rule is only in `plan.md` §Execução OD-C2-005 (last bullet of the A-C2-15 addendum).",
+      "fix": "State in the scope that Session A has no PR and no delivery-review. The single delivery-review stays in the final sequence of the round."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0029/prompts/TASK-0002.md",
+      "line": 13,
+      "claim": "The write boundary includes `docs/meta/knowledge-base/backlog.md` and `apps/teat/web/src/app/i18n/teat.pt-BR.json`. `backlog.md` is also a write target of R-0020 TASK-0018 (plan.md:177), R-0023 TASK-0009 (plan.md:222) and R-0024 O8 (plan.md:46). R-0024 also composes the app catalogs and adds i18n labels to the shell (R-0024 plan.md:129-133). A-C2-15 says no file of R-0020/22/23/24 that is in progress may be touched.",
+      "fix": "Send the front's issue only to `work/rounds/R-0029/issue-body.md` and remove `backlog.md` from the boundary in this session. Record in `plan.md` §Concorrência that the TEAT web i18n catalog may conflict with R-0024, and that it must be rechecked when the round resumes."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0029/tasks/TASK-0001.json",
+      "line": 42,
+      "claim": "The model ladder (`docs/meta/agents/orchestra/model-ladder.md`, 'Escolha por tipo de tarefa' table) puts `architect-blueprint` at the medium tier, which is Terra `gpt-5.6-terra` with high effort. TASK-0001 uses `gpt-6-sol`, the large tier, and neither M1 nor `budget.json` records why. The same deviation appears in `compositions.json:7` and `budget.json:33`.",
+      "fix": "Either use `gpt-5.6-terra` with high effort, or record in `plan.md` §Decisões do maestro why the large tier was chosen (for example, the 61×9 matrix plus three contracts). Keep tasks, compositions and budget consistent."
+    }
+  ],
+  "notes": [
+    "The prompt sha256 values match `compositions.json`, and pc_id equals `PC-` plus the first 16 hex digits. `node tools/devai/verify-round-tasks.mjs --repo-root .` → OK (320 tasks), with no R-0029 errors.",
+    "AUTHORIZATION.md is faithful to A-C2-15 §16: R-0029 has only TASK-0001/0002 released, Session A is Sol 6 with Opus 5.5 as reviewer, and it pushes without a PR and records a checkpoint. It records the local receipt date (2026-09-29) and the source date (2026-09-30) as separate provenance.",
+    "OD-R29-001 = (a) is treated as an Owner decision in both prompts. OD-R29-002…004 are marked as Architect proposals with no Owner decision inferred. CTG-0002+ are declared not released, and each contract must point to the R-0024 recheck.",
+    "Stale text in plan.md §Decisões do Owner says 'O CTG-0002 em diante está liberado'. The A-C2-15 addendum overrides it, and the prompts follow the addendum.",
+    "TASK-0002 requires `artifactIdCount` to be updated in the same batch as any new fichas. `docs:kb:check` compares the count exactly (check.mjs:237) and currently passes at 773. The split on '## 4.'/'## 5.' in the acceptance command hits exactly `teat-build-pack.md:222` and `:239`.",
+    "All `acceptance_commands` are argv arrays with no shell and match the prompts word for word. `pnpm format:check` and the docs:kb scripts exist in `package.json`.",
+    "The `features/sinistros/` lock is respected in both prompts (read/reference only). TASK-0001 only reads `policy.ts`, which is allowed under the R-0022/23 lock."
+  ]
+}

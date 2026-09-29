@@ -1,0 +1,52 @@
+{
+  "round_id": "R-0029",
+  "unit": "estimated_unique_input_tokens",
+  "initial_input_limit": 750000,
+  "authorized_multiplier": 3,
+  "window_input_limit": 2250000,
+  "checkpoint_input_threshold": 1800000,
+  "window_hours": 5,
+  "max_review_cycles_per_item": 2,
+  "window_started_at": "2026-09-29T22:53:28Z",
+  "entries": [
+    {
+      "id": "bootstrap-session-a",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 180000,
+      "output_estimate": 30000,
+      "status": "completed-estimate",
+      "note": "Bootstrap, validação direta de schema e baseline concluídos; consumo estimado, sem medição exata de tokens."
+    },
+    {
+      "id": "prompt-review-session-a",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 60000,
+      "output_estimate": 6000,
+      "status": "completed-estimate",
+      "note": "Um processo com 2 ciclos: REVIEW e PASS; consumo estimado, sem medição exata de tokens."
+    },
+    {
+      "id": "task-0001",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 90000,
+      "output_estimate": 20000,
+      "status": "reserved",
+      "note": "Modelagem da matriz e contratos; não despachado."
+    },
+    {
+      "id": "task-0002",
+      "role": "architect",
+      "model": "gpt-6-luna",
+      "input_estimate": 45000,
+      "output_estimate": 9000,
+      "status": "reserved",
+      "note": "Transcrição após TASK-0001; não despachado."
+    }
+  ],
+  "estimated_unique_input_total": 375000,
+  "estimated_output_total": 65000,
+  "stop_rule": "At 80% of the window input limit, checkpoint and stop; no implicit waiver."
+}

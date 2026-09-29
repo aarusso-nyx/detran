@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0029",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Modelar matriz de rotas e contratos CTG-0002 a CTG-0004",
+  "description": "Pré-trabalho documental A-C2-15 da Sessão A; entregar somente a fronteira descrita no prompt.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r29-route-matrix"],
+  "target_substrates": ["F1", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r29", "a-c2-15", "session-a"],
+  "branch": "orchestra/teat-web-wiring",
+  "worktree_id": "WT-teat-web-wiring",
+  "prompt_composition_id": "PC-df2b5517dd2e9569",
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "const f=require('node:fs'); const b='work/rounds/R-0029/'; for(const p of ['route-matrix.md','contracts/CTG-0002.md','contracts/CTG-0003.md','contracts/CTG-0004.md']) if(!f.statSync(b+p).isFile()) process.exit(1)"
+    ],
+    [
+      "node",
+      "-e",
+      "const f=require('node:fs'); const b='work/rounds/R-0029/'; const m=f.readFileSync(b+'route-matrix.md','utf8'); if(!['ligada','somente-leitura','fail-closed-OD','OD-R29-001','OD-R29-002','OD-R29-003','OD-R29-004'].every(x=>m.includes(x))) process.exit(1); for(const n of [2,3,4]) {const t=f.readFileSync(b+'contracts/CTG-'+String(n).padStart(4,'0')+'.md','utf8'); if(!t.includes('C-29-')||!t.includes('R-0024')) process.exit(1)}"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T22:53:28Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-df2b5517dd2e9569",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
