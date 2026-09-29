@@ -4,12 +4,12 @@
   "status": "active",
   "window_input_budget": 2250000,
   "checkpoint_threshold": 1800000,
-  "estimated_input_total": 650000,
-  "estimated_output_total": 107000,
+  "estimated_input_total": 757000,
+  "estimated_output_total": 125000,
   "prior_window_archive": "work/rounds/R-0020/budget-window-3.json",
   "prior_window_input_total": 2223000,
   "prior_window_output_total": 363000,
-  "note": "Janela 4 ativa sob M11: CTG-0003 mesclado e observado; TASK-0011/0012 do CTG-0004 entregues, TASK-0013 em RGR por enum upstream. A1-3=B; A1-1/2 pendentes. Estimativas posteriores à abertura lançadas em bloco auditável abaixo.",
+  "note": "Janela 4 ativa sob M11: CTG-0003 mesclado e observado; TASK-0011/0012 e A1-PF TASK-0029/0030 do CTG-0004 entregues, TASK-0013 em RGR por enum upstream. A1-3=B; A1-1/2 pendentes. Estimativas posteriores à abertura lançadas em bloco auditável abaixo.",
   "entries": [
     {
       "kind": "reviewer",
@@ -298,6 +298,54 @@
       "input_tokens": 30000,
       "output_tokens": 5000,
       "note": "14 REDs individuais por módulo ausente; maestro repetiu e format:check passou."
+    },
+    {
+      "kind": "engineer",
+      "id": "TASK-0030-A1-PF-initial",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Verificador e script, 14/14 fixtures PASS; pin real FAIL exato."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-PF-delivery-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "PASS com quatro lows de symlink, diagnóstico, argumentos e cobertura."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0029-A1-PF-review-RED",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "23 testes: 17 PASS, 6 RED dirigidos; fixture symlink futura coerente."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0030-A1-PF-review-remediation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "23/23 PASS; pin real segue FAIL exato com diagnósticos estruturados."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-PF-delivery-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 12000,
+      "output_tokens": 2000,
+      "note": "PASS, zero achados, remediação dirigida confirmada."
+    },
+    {
+      "kind": "maestro-gate",
+      "id": "A1-PF-independent-check-and-check-chain",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "23/23 PASS, formatação verde; pnpm check parou no preflight real pelos quatro kinds upstream."
     }
   ]
 }

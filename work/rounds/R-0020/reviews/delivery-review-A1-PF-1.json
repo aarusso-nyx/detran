@@ -1,0 +1,47 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "group": "CTG-0004-A1-PF",
+  "cycle": 1,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "tools/devai/verify-sensor-policy.mjs",
+      "line": 408,
+      "claim": "The script only runs main() when process.argv[1] === fileURLToPath(import.meta.url). This fails open: Node resolves symlinks in import.meta.url but not in argv[1]. If the script is invoked through a path containing a symlink, main() never runs and the process exits 0 with empty stdout, which is a silent green. Sibling tools such as verify-round-tasks.mjs already compare with realpath. The pnpm verify:sensor-policy path runs from the physical cwd and is not affected today.",
+      "fix": "Compare await realpath(process.argv[1]) with fileURLToPath(import.meta.url), as the sibling verifiers do. Alternatively, fail with exit 1 when the entrypoint is not detected."
+    },
+    {
+      "severity": "low",
+      "file": "tools/devai/verify-sensor-policy.mjs",
+      "line": 317,
+      "claim": "Contract invariant 4 requires the diagnostic to identify the registry, the preset(s), the schema and the kind. A SENSOR_KIND_NOT_IN_SCHEMA error carries only the enum path and the kind. It does not say which presets select the kind or where the entry sits in the registry.",
+      "fix": "Add a presets field (names in PRESET_NAMES order) and the registry.entries[i] path, or put both in the message, without changing the order of the errors."
+    },
+    {
+      "severity": "low",
+      "file": "tools/devai/verify-sensor-policy.mjs",
+      "line": 346,
+      "claim": "Explicit paths can be overridden one at a time, so --schema alone mixes the installed registry and presets with an arbitrary schema. The name check uses slice(2) without checking for the '--' prefix. The contract limits these paths to tests, and package.json never passes them, so the default gate is not affected. Still, it is a local way to get a green result on the real pin.",
+      "fix": "Require the '--' prefix. Accept overrides only when all three paths are given together, or label the output as a fixture run (for example source: 'fixture') so it cannot be confused with the default preflight."
+    },
+    {
+      "severity": "low",
+      "file": "tools/devai/tests/sensor-policy.test.mjs",
+      "line": 148,
+      "claim": "The failure cases for omitted member, sweep order, duplicates, wrong exclusion, malformed source and population only assert ok:false. They never check the specific code, so an implementation that fails for the wrong reason would still pass. Some branches have no test at all: duplicate registry kind, preset missing or extra, preset kind not in the registry, round_required false, and the fixed 4/12/20/49 counts when registry tiers and preset change together (the 'future release' case in the contract). The implementation covers all of these today, but the tests would not catch a regression.",
+      "fix": "In a later Inspector cycle, assert the expected code for each case and add the missing ones. This does not block A1-PF."
+    }
+  ],
+  "notes": [
+    "Scope: the diff against f8ca8d3e touches only package.json, with 2 insertions and 1 deletion: the verify:sensor-policy script, plus that script added to check right after law:test and before devai:test. The only other new file is tools/devai/verify-sensor-policy.mjs, within what TASK-0030 allows. The work/rounds/R-0020/reviews/* files are the maestro's scratch files and were not assessed.",
+    "Authorship: the tests are in Inspector commit 79371928 and were not changed afterwards. The contract and the authorization are consistent with the Architect and Owner paths.",
+    "Purity: verifySensorPolicy does not change its inputs and does no I/O. The CLI only uses readFile and stdout, and exits 0 only when ok is true. A source that is missing, unreadable or invalid JSON gives SENSOR_POLICY_SOURCE_UNREADABLE. An invalid structure gives SENSOR_POLICY_SOURCE_MALFORMED and returns early, never as an empty list.",
+    "Checks confirmed: 4 unique presets; no duplicate members or exclusions; preset kinds exist in the registry; enum is a string array with no duplicates. baseline, structural and governed must match the tier set BASELINE, then BASELINE∪TIER2, then BASELINE∪TIER2∪TIER3, in any order, and also the fixed counts 4/12/20. sweep must match the effect:read entries exactly, in registry order (49). excluded must match the non-read entries exactly, in order (10). round_required must be true.",
+    "Missing enum kinds are found by walking the registry in order and checking the kinds any preset selects. Extra enum values are ignored. This is consistent with invariant 4 and with the order the maestro reports: decision_record_integrity, decision_citation_resolution, archive_immutability, round_record_integrity.",
+    "Installed source: 59 entries, all active and with id===kind. Effects are read, local-write, harness-write and remote-write. Every preset has members and excluded. The enum has 60 values. There is no hardcoded list, fallback or skip that could make the 1.5.6 pin green. The RED of pnpm check and CI is by design.",
+    "This PASS covers only the A1-PF delivery. It does not release TASK-0013 or the wrapper, does not answer A1-1/A1-2, does not replace the four real PASS results required by A1-3=B, and does not authorize a PR.",
+    "I did not run tests, sensors, installs, or any git command that writes. The review was a read-only inspection of the files and the installed sources."
+  ]
+}
