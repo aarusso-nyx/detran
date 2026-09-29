@@ -316,7 +316,7 @@ describe('CTG-0004 §1 — jornadas cidadãs (C-4-01…52)', () => {
     expect(r.status).toBe(200);
     expect(asRecord(r.body)).toHaveProperty('legalLabel');
   });
-  it('C-4-36 — dado junta médica quando POST pedido então para em indisponibilidade', async () => {
+  it('C-4-36 — dado junta médica quando POST pedido então 422 fail-closed sob OD-R27-002', async () => {
     const body = {
       serviceKey: 'junta_medica',
       targetKind: 'exam',
@@ -328,10 +328,12 @@ describe('CTG-0004 §1 — jornadas cidadãs (C-4-01…52)', () => {
       .post('/v1/portal/requests')
       .set(key('junta_medica', EXTERNAL.exam, body))
       .send(body);
-    // CTG-0002.md: §2.3 passo 3, catálogo sem junta retorna NOT_FOUND { kind: service }.
-    expect(r.status, bodyText(r.body)).toBe(404);
-    expect(asRecord(r.body).code).toBe('PORTAL.NOT_FOUND');
-    expect(asRecord(asRecord(r.body).context)).toEqual({ kind: 'service' });
+    expect(r.status, bodyText(r.body)).toBe(422);
+    expect(asRecord(r.body).code).toBe('PORTAL.SERVICE_UNAVAILABLE');
+    // CTG-0003 não fixa o campo que carrega a decisão; exige apenas o vínculo.
+    expect(JSON.stringify(asRecord(r.body).context)).toMatch(
+      /OD[-_ ]?R27[-_ ]?002/,
+    );
   });
   it('C-4-37 — dado lacuna OD-P19 quando lista exames então não fabrica exame', async () => {
     const r = await get('/v1/portal/exams', ouro);

@@ -1396,24 +1396,193 @@ describe('CTG-0002 §3.4 — DRAFT_SCHEMAS (C-0002-27)', () => {
 });
 
 describe('CTG-0002 §3.2 — delegações reais (C-0002-28, R-0007)', () => {
-  it.todo(
-    'dado defesa_previa quando submit então delega a inf:rait-case:protocol — R-0007',
-  );
-  it.todo(
-    'dado indicacao_condutor quando submit então delega a inf:infraction:indicate-driver — R-0007',
-  );
-  it.todo(
-    'dado pagamento quando submit então delega a inf:collection:issue — R-0007',
-  );
-  it.todo(
-    'dado diligência quando respond então delega a inf:rait-case:answer-inquiry — R-0007',
-  );
-  it.todo(
-    'dado caso RAIT em curso quando withdraw então delega a inf:rait-case:withdraw — R-0007',
-  );
-  it.todo(
-    'dado AGUARDANDO_PAGAMENTO quando PAGAMENTO_CONFIRMADO então PROTOCOLADO pelo evento de inf/collection — R-0007',
-  );
+  it('dado defesa_previa apta quando submit então persiste externalId do raitCaseProtocol', async () => {
+    const h = harness({
+      catalog: (rows) =>
+        rows.map((row) =>
+          row.service_key === 'defesa_previa'
+            ? { ...row, availability: 'available', unavailable_reason: null }
+            : row,
+        ),
+    });
+    const { requestId } = await createRequest(h, identityOf('prata'), {
+      serviceKey: 'defesa_previa',
+      targetKind: 'ait',
+      targetId: AITS.f2,
+      channel: 'portal',
+    });
+    await h.call(
+      'updateDraft',
+      identityOf('prata'),
+      requestId,
+      {
+        facts: 'fatos comprovados',
+        grounds: 'fundamentos comprovados',
+        attachmentIds: [],
+        requestType: 'cancelamento',
+      },
+      headers({ 'if-match': '"1"' }),
+    );
+
+    const submitted = await h.call<Row>(
+      'submit',
+      identityOf('prata'),
+      requestId,
+      SIGNATURE,
+      headers(),
+    );
+    expect(submitted).toMatchObject({
+      state: 'EM_ANDAMENTO_NO_ORGAO',
+      delegation: { status: 'delegated', externalId: expect.any(String) },
+    });
+    expect(requestRow(h, requestId)).toMatchObject({
+      delegation_command: 'inf:rait-case:protocol',
+      delegation_external_id: expect.any(String),
+    });
+  });
+
+  it('dado indicacao_condutor apta quando submit então persiste externalId do infractionIndicateDriver', async () => {
+    const h = harness({
+      catalog: (rows) =>
+        rows.map((row) =>
+          row.service_key === 'indicacao_condutor'
+            ? { ...row, availability: 'available', unavailable_reason: null }
+            : row,
+        ),
+    });
+    const { requestId } = await createRequest(h, identityOf('prata'), {
+      serviceKey: 'indicacao_condutor',
+      targetKind: 'ait',
+      targetId: AITS.f2,
+      channel: 'portal',
+    });
+    await h.call(
+      'updateDraft',
+      identityOf('prata'),
+      requestId,
+      {
+        driver: {
+          cpf: '55555555555',
+          cnhNumber: '1',
+          cnhUf: 'AM',
+          category: 'B',
+          name: 'n',
+        },
+        signatures: { owner: 'govbr', driver: 'govbr' },
+        consequenceAck: {
+          textVersion: '1',
+          acceptedAt: '2026-09-14T15:00:00.000Z',
+        },
+      },
+      headers({ 'if-match': '"1"' }),
+    );
+
+    const submitted = await h.call<Row>(
+      'submit',
+      identityOf('prata'),
+      requestId,
+      SIGNATURE,
+      headers(),
+    );
+    expect(submitted).toMatchObject({
+      state: 'EM_ANDAMENTO_NO_ORGAO',
+      delegation: { status: 'delegated', externalId: expect.any(String) },
+    });
+    expect(requestRow(h, requestId)).toMatchObject({
+      delegation_command: 'inf:infraction:indicate-driver',
+      delegation_external_id: expect.any(String),
+    });
+  });
+
+  it('dado pagamento PIX apto quando submit então persiste externalId de collectionDocumentIssue', async () => {
+    const h = harness({
+      catalog: (rows) =>
+        rows.map((row) =>
+          row.service_key === 'pagamento'
+            ? { ...row, availability: 'available', unavailable_reason: null }
+            : row,
+        ),
+    });
+    const { requestId } = await createRequest(h, identityOf('prata'), {
+      serviceKey: 'pagamento',
+      targetKind: 'ait',
+      targetId: AITS.f2,
+      channel: 'portal',
+    });
+    await h.call(
+      'updateDraft',
+      identityOf('prata'),
+      requestId,
+      { tier: 'desconto_80', method: 'pix' },
+      headers({ 'if-match': '"1"' }),
+    );
+
+    const submitted = await h.call<Row>(
+      'submit',
+      identityOf('prata'),
+      requestId,
+      SIGNATURE,
+      headers(),
+    );
+    expect(submitted).toMatchObject({
+      state: 'EM_ANDAMENTO_NO_ORGAO',
+      delegation: { status: 'delegated', externalId: expect.any(String) },
+    });
+    expect(requestRow(h, requestId)).toMatchObject({
+      delegation_command: 'inf:collection:issue',
+      delegation_external_id: expect.any(String),
+    });
+  });
+
+  it('dado diligência em andamento quando respond então permanece 422 fail-closed sob OD-R27-004', async () => {
+    const h = harness();
+    const unavailable = await h
+      .call(
+        'respondDiligence',
+        identityOf('qualificada'),
+        REQ.emAndamento,
+        '00000000-0000-7000-8000-000070007308',
+        { text: 'resposta', attachmentIds: [] },
+        headers(),
+      )
+      .then(
+        () => undefined,
+        (error: unknown) =>
+          error as { code?: string; status?: number; context?: unknown },
+      );
+    expect(unavailable).toMatchObject({
+      code: 'PORTAL.SERVICE_UNAVAILABLE',
+      status: 422,
+    });
+    // CTG-0003 não fixa o campo que carrega a decisão; exige apenas o vínculo.
+    expect(JSON.stringify(unavailable?.context)).toMatch(
+      /OD[-_ ]?R27[-_ ]?004/,
+    );
+  });
+
+  it('dado caso RAIT em curso quando withdraw então só marca DESISTIDO depois do raitCaseWithdraw', async () => {
+    const h = harness();
+    await h.call(
+      'withdraw',
+      identityOf('prata'),
+      REQ.emComposicao,
+      { confirm: true },
+      headers({ 'if-match': '"1"' }),
+    );
+    expect(requestRow(h, REQ.emComposicao)).toMatchObject({
+      state: 'DESISTIDO',
+      delegation_command: 'inf:rait-case:withdraw',
+      delegation_external_id: expect.any(String),
+    });
+  });
+
+  it('dado AGUARDANDO_PAGAMENTO sem produtor comprovado quando PAGAMENTO_CONFIRMADO então permanece source_pending sob OD-R27-003', () => {
+    const h = harness();
+    expect(requestRow(h, REQ.aguardandoPagamento)).toMatchObject({
+      state: 'AGUARDANDO_PAGAMENTO',
+    });
+    expect(domainEvents(h, TOPICS.paymentConfirmed)).toEqual([]);
+  });
   it.todo(
     'dado emissao_crlv com débito quando submit então AGUARDANDO_PAGAMENTO — R-0007/R-0014',
   );

@@ -773,11 +773,38 @@ describe('CTG-0002 §2.3 — withdraw, ownership, recibo, decisão, diligência 
     expect(cleanup.status).toBe(200);
   });
 
-  it.todo(
-    'dado caso RAIT em curso (EM_ANDAMENTO_NO_ORGAO) quando withdraw então delega a inf:rait-case:withdraw — R-0007',
-  );
+  it('dado pedido com delegação em curso quando withdraw então o Portal só retorna DESISTIDO após raitCaseWithdraw', async () => {
+    expect(
+      created.bronzeInProgress,
+      'C-0002-67 precisa ter deixado um pedido EM_ANDAMENTO_NO_ORGAO',
+    ).toBeTruthy();
+    setCitizen({ cpf: CPF.bronze, level: 'avancada' });
+    const current = await api()
+      .get(`/v1/portal/requests/${created.bronzeInProgress}`)
+      .set(headers());
+    expect(current.status, JSON.stringify(current.body)).toBe(200);
 
-  it("C-0002-70 — dado request de outro CPF então GET 404 { kind:'request' }; GET receipt com protocolo então 422 'documento_assinado_pendente_r0014'; sem protocolo então 404 { kind:'protocol' }; GET decision então 404 { kind:'decision' }; POST diligences em EM_ANDAMENTO_NO_ORGAO então 422 'delegacao_indisponivel_r0007'", async () => {
+    const withdrawn = await api()
+      .post(`/v1/portal/requests/${created.bronzeInProgress}/withdraw`)
+      .set(headers({ 'if-match': `"${current.body.request.version}"` }))
+      .send({ confirm: true, reason: 'desisti' });
+    expect(withdrawn.status, JSON.stringify(withdrawn.body)).toBe(200);
+    expect(withdrawn.body).toMatchObject({
+      requestId: created.bronzeInProgress,
+      state: 'DESISTIDO',
+    });
+
+    const detail = await api()
+      .get(`/v1/portal/requests/${created.bronzeInProgress}`)
+      .set(headers());
+    expect(detail.status, JSON.stringify(detail.body)).toBe(200);
+    expect(detail.body.request.delegation).toMatchObject({
+      command: 'inf:rait-case:withdraw',
+      externalId: expect.any(String),
+    });
+  });
+
+  it("C-0002-70 — dado request de outro CPF então GET 404 { kind:'request' }; GET receipt com protocolo então 422 'documento_assinado_pendente_r0014'; sem protocolo então 404 { kind:'protocol' }; GET decision então 404 { kind:'decision' }; POST diligences em EM_ANDAMENTO_NO_ORGAO então 422 fail-closed OD-R27-004", async () => {
     expect(
       created.concluded,
       'C-0002-66 precisa ter concluído um pedido',
@@ -846,9 +873,10 @@ describe('CTG-0002 §2.3 — withdraw, ownership, recibo, decisão, diligência 
       .send({ text: 'resposta', attachmentIds: [] });
     expect(diligence.status, JSON.stringify(diligence.body)).toBe(422);
     expect(diligence.body.code).toBe('PORTAL.SERVICE_UNAVAILABLE');
-    expect(diligence.body.context).toMatchObject({
-      unavailableReason: REASON_R0007,
-    });
+    // CTG-0003 não fixa o campo que carrega a decisão; exige apenas o vínculo.
+    expect(JSON.stringify(diligence.body.context)).toMatch(
+      /OD[-_ ]?R27[-_ ]?004/,
+    );
 
     const diligenceWithoutKey = await api()
       .post(
@@ -865,9 +893,24 @@ describe('CTG-0002 §2.3 — withdraw, ownership, recibo, decisão, diligência 
     });
   });
 
-  it.todo(
-    'dado diligência aberta quando POST responses então delega a inf:rait-case:answer-inquiry — R-0007',
-  );
+  it('dado diligência aberta quando POST responses então mantém 422 fail-closed sob OD-R27-004', async () => {
+    expect(
+      created.bronzeInProgress,
+      'C-0002-67 precisa ter deixado um pedido EM_ANDAMENTO_NO_ORGAO',
+    ).toBeTruthy();
+    setCitizen({ cpf: CPF.bronze, level: 'avancada' });
+    const response = await api()
+      .post(
+        `/v1/portal/requests/${created.bronzeInProgress}/diligences/${randomUUID()}/responses`,
+      )
+      .set(headers())
+      .send({ text: 'resposta', attachmentIds: [] });
+    expect(response.status, JSON.stringify(response.body)).toBe(422);
+    expect(response.body.code).toBe('PORTAL.SERVICE_UNAVAILABLE');
+    expect(JSON.stringify(response.body.context)).toMatch(
+      /OD[-_ ]?R27[-_ ]?004/,
+    );
+  });
 });
 
 describe('CTG-0002 §2.3 — política: papel fora da matriz (A3(a))', () => {
