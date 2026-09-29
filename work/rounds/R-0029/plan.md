@@ -1,6 +1,6 @@
 # R-0029 — frente `teat-web-wiring` (ação 6 da C-0002 — TEAT web produtivo no lugar da página genérica JSON)
 
-**Status:** **Sessão A autorizada por A-C2-15; bootstrap CTG-0001 em preparação** (ver `AUTHORIZATION.md`); OD-R29-001 decidida = (a) em 2026-09-26
+**Status:** **Sessão A A-C2-15 concluída; CTG-0001 publicado na branch, sem PR** (ver `AUTHORIZATION.md` e §Retomada); OD-R29-001 decidida = (a) em 2026-09-26
 (escopo de homologação da ADR-0033 sobre o TEAT web). Planejada em 2026-09-26 pelo Architect
 (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6** (Codex CLI), workers da escada
 Codex (Sol 6 / Terra / Luna vigentes) por subagentes nativos, reviewer **Opus 5.5** pela ponte
@@ -288,6 +288,7 @@ o critério C-0002 §5 "sem stubs de comando" entra no closure como não cumprid
 - **M2 — forma do contrato.** `acceptance_commands` são arrays argv sem shell. `compositions.json` vincula SHA-256 dos prompts finais e `PC-` + primeiros 16 hex. As tarefas têm schema `2.0.0`, dependência TASK-0001 → TASK-0002, locks disjuntos e fronteiras estritas. Critérios de CTG-0002+ serão escritos como contratos por TASK-0001, sem despachar sua implementação nesta sessão.
 - **M3 — modelo de TASK-0001.** A escada sugere Terra para `architect-blueprint`; nesta tarefa, Sol 6 com esforço alto cobre a matriz ampliada de 61 × 9 pares de referência, as rotas novas e três CTGs com operações de consulta e comando. O custo está reservado em `budget.json`. TASK-0002 permanece Luna baixo.
 - **M4 — prompt-review da Sessão A.** Um processo restrito a TASK-0001/0002, em dois ciclos via bridge Claude Opus 5.5: `reviews/prompt-review-1.json` = `REVIEW` (contratos de consulta ausentes do prompt e três ajustes de escopo/registro); correções aplicadas; `reviews/prompt-review-2.json` = `PASS` com um achado baixo residual sobre o lock declarado do backlog. O lock e a tabela do plano foram corrigidos depois do PASS, sem mudar os prompts. Não há delivery-review nesta sessão.
+- **M5 — aceite do pré-trabalho.** TASK-0001 passou nos dois comandos Node de aceitação e em `pnpm format:check`; auditoria independente confirmou 52 linhas TEAT publicadas, 13 novas e 122 referências de operação/método/path sem divergência nos OpenAPI. TASK-0002 passou no comando Node, `pnpm docs:kb:check` (786 artefatos), `pnpm docs:kb:publish-check` (201 arquivos em dry run) e `pnpm format:check`; as 177 chaves i18n copiadas coincidem com a semente, os 13 IDs de ficha são únicos e 39 referências de operação das fichas conferem com OpenAPI. Os dois JSONs de tarefa passaram no schema DEVAI diretamente; `pnpm verify:round-tasks` passou para 320 tarefas legadas, mas seu scanner ainda não cobre R-0029.
 
 ## Concorrência
 
@@ -300,7 +301,10 @@ o critério C-0002 §5 "sem stubs de comando" entra no closure como não cumprid
 
 ## Retomada
 
-- Bootstrap da Sessão A e prompt-review concluídos; TASK-0001 e TASK-0002 enfileiradas. Próximo passo: despachar TASK-0001, depois TASK-0002; rodar aceitação por tarefa, publicar por push sem PR e atualizar este checkpoint. TASK-0003+ espera R-0024; contratos da Sessão A serão reconferidos contra `origin/main` na retomada e divergências receberão adenda numerada.
+- **Concluídas:** bootstrap e prompt-review (`92574f1e`); TASK-0001, matriz de 52 rotas TEAT, 13 novas e CTG-0002…0004 prospectivos (`999a092d`); TASK-0002, ODs, 177 chaves i18n, 13 fichas `draft`, `artifactIdCount` 773 → 786 e corpo da issue não publicado (`332582ac`). Branch `orchestra/teat-web-wiring` publicada por push; nenhum PR nem delivery-review nesta Sessão A.
+- **Decisões:** OD-R29-001=(a) é decisão Owner; OD-R29-002=(b), 003=(a) condicional e 004=(a) são propostas Architect registradas em `teat-build-pack.md` §4. OD-T03 (janela), OD-T08 (retenção) e o valor temporal da reserva de OD-T07 continuam `source_pending`; a devolução e transição de OD-T07 seguem H.54.
+- **Esperam:** TASK-0003 em diante aguarda o padrão de frontend de R-0024. CTG-0002 em diante também depende do CTG-0004 web de R-0028 publicado e da integração do lock BOAT; `features/sinistros/` segue intocado. A issue está somente em `issue-body.md`, sem publicação externa. contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15); divergências receberão adenda numerada do Architect.
+- **Orçamento:** `budget.json` registra 375.000 tokens de entrada e 65.000 de saída como estimativas dos quatro itens (bootstrap, prompt-review, TASK-0001 e TASK-0002). Não há telemetria exata por item; a soma estimada fica abaixo do checkpoint de 1.800.000 tokens de entrada.
 
 ## Leitura
 
