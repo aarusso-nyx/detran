@@ -45,3 +45,15 @@ tratar o FAIL como corrigível, aplicar as 17 correções e submeter o ciclo 2 r
 máximo 2 ciclos. Resposta literal do Owner: **"Sim, aplique as 17 correções e submeto o ciclo 2,
 restrito a elas, com no máximo 2 ciclos?"** — lida como autorização. Não dispensa PASS: workers só
 com PASS; FAIL ou REVIEW no último ciclo → parada e novo relato ao Owner.
+
+## Adenda B2/B3 — hotfix e decisões de ODs (Owner, 2026-09-29)
+
+- **B2:** "Corrija em PR próprio contra main." → PR #159 (hotfix fora da rodada).
+- **B3, respostas literais do Owner:** "Item 2. SSE - Aprovo as duas recomendações para OD-R22-04 3
+  OD-R22-05." · "15. Ok" · "16. autorizo uma transferência DETRAN idempotente como exceção explícita
+  à A1." · "outras: adote as recomendações." A leitura do maestro: "outras" abrange todas as ODs
+  OD-R22-01…36 com recomendação apresentada (incluindo OD-R22-02 (a) e OD-R22-13 (a), divergente do
+  contrato); ODs sem recomendação continuam pendentes. Transcrição em
+  `docs/meta/knowledge-base/open-decisions-rait.md` §C-0002 "R-0022 — decisões do Owner".
+- A exceção de OD-R22-16 é única e nominal: não autoriza outro contorno local nem muda a regra de
+  consumo de OD-R22-02 para os demais itens.

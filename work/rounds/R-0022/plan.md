@@ -533,6 +533,26 @@ D-W-01 para CTG-0005).
 `pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
 recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
 
+### A3 — efeito das decisões do Owner de 2026-09-29 (Architect/maestro)
+
+Decisões transcritas em `open-decisions-rait.md` §C-0002 "R-0022 — decisões do Owner" e
+`AUTHORIZATION.md` §Adenda B2/B3. Efeitos no plano (critérios inalterados, salvo os novos C-04/C-05 de
+OD-R22-04/05, a escrever por TASK-0005):
+
+- **SSE:** TASK-0005 recebe no despacho OD-R22-04/05 = corrigir; C-04/C-05 novos para filtro por
+  papel/pool e nomes de evento do RAIT, `id` único e `Retry-After` do DASHBOARD.
+- **Outbox:** parte 1 (OD-R22-15 (a)) e parte 2 com a transferência DETRAN idempotente
+  (OD-R22-16 (a), exceção nominal à A1 item 4). CTG-0008 §8 exige que os leitores #13–#16 continuem
+  legíveis entre a parte 2 e TASK-0007; com OD-R22-17 (b), **a troca de fonte desses quatro arquivos
+  para `OutboxEventStreamSource` entra na parte 2 de TASK-0015** (lock de TASK-0007 cedido só para
+  essa troca; enquadramento, filtros e OD-R22-04/05 continuam em TASK-0007).
+- **Assinatura:** TASK-0009 segue CTG-0008 §8 (depois da parte 2); composição por DI (OD-R22-13 (a))
+  dá a TASK-0009 o lock `MOD-app-module`. A prova M-06-P (OD-R22-12) exige uma tarefa nova de
+  Inspector (TASK-0021) e a adenda ao critério "testes de R-0021 verdes sem edição"; TASK-0021 só é
+  despachada depois de seu prompt passar por prompt-review.
+- **Offline-sync:** TASK-0018 em **checkpoint OD-R22-02** (OD-R22-22/24/25/26/27/30 = checkpoint);
+  pedido consolidado de 1.5.x ao STYNX (fora desta rodada, pelo Owner).
+
 ## Bloqueios
 
 - **B1 — prompt-review ciclo 1 = FAIL** (Sol 6 `gpt-6-sol`, 2026-09-29,
