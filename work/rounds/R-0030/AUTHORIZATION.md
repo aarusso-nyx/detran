@@ -29,5 +29,7 @@ fase D (R-0025…R-0029). Não há delivery-review, PR ou evidência nesta sess�
   verificados e fora do site público.
 - **OD-UD-003:** `REF-CONTRAN-985-1003-MBFT` é fonte fechada para tópicos da
   Parte Geral; fichas individuais continuam `source_pending`.
+- **OD-UD-004:** R-0030 não cria entrada nova em DASHBOARD, TEAT web ou BOAT;
+  integração futura pertence à rodada dona do shell após a R-0024.
 - **OD-UD-005:** reutilizar `portal.screens`, `rait.shell` e `teat.screens`;
   não criar namespace `*.help`.

@@ -125,8 +125,10 @@ confunda o glossário de usuário com `law/glossary/` ou as fichas de produto.
 
 Os pontos existentes são o diálogo de atalhos do RAIT, as páginas explicativas
 do PORTAL e a rota `context-help` do TEAT mobile. O shell de `@detran/ui` só
-recebe ponto de ajuda se R-0024 o oferecer; DASHBOARD, TEAT web e BOAT seguem
-OD-UD-004. O manifesto registra `help.entry` (`nenhum`, `atalhos`, `pagina`,
+recebe ponto de ajuda se R-0024 o oferecer. **OD-UD-004 foi resolvida pelo
+Owner em 2026-09-29:** R-0030 não cria entrada nova nos shells de DASHBOARD,
+TEAT web ou BOAT; uma rodada dona do shell poderá tratar a integração após a
+R-0024. O manifesto registra `help.entry` (`nenhum`, `atalhos`, `pagina`,
 `link`) e `help.key` quando houver rótulo i18n. Uma chave de runtime
 `helpBaseUrl` configurada gera URL para o manual publicado e sua âncora;
 ausente, inválida ou sem página publicável, o app não renderiza link. Não há

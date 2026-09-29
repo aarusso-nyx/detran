@@ -227,8 +227,8 @@ anexada ao relatório; (d) CTG-0004: `pnpm install` só se o lockfile mudar (nã
 - **OD-UD-003** — **resolvida pelo Owner em 2026-09-29:**
   `REF-CONTRAN-985-1003-MBFT` é fonte fechada para tópicos da Parte Geral; fichas individuais
   permanecem `source_pending`.
-- **OD-UD-004** — ponto de ajuda em DASHBOARD, TEAT web e BOAT, que hoje não têm entrada. Padrão:
-  só se o shell de R-0024 oferecer posição; senão fica fora desta rodada.
+- **OD-UD-004** — **resolvida pelo Owner em 2026-09-29:** R-0030 não cria ponto de ajuda em
+  DASHBOARD, TEAT web ou BOAT; uma rodada dona do shell poderá tratá-lo após a R-0024.
 - **OD-UD-005** — **resolvida pelo Architect em 2026-09-29:** reutilizar
   `portal.screens`, `rait.shell` e `teat.screens`; nenhum namespace `*.help` é criado.
 
@@ -344,9 +344,9 @@ até a integração dos manifestos. aguardando manifestos da fase D
 (R-0025…R-0029). O Owner resolveu OD-UD-001 e OD-UD-002 em 2026-09-29:
 `docs/adopters/manuais/` na seção Adotantes e publicação seletiva de cidadão,
 glossário e trecho cidadão do FAQ. OD-UD-003 usa `REF-CONTRAN-985-1003-MBFT`
-para a Parte Geral, e OD-UD-005 reutiliza namespaces i18n existentes. Pare aqui:
-a próxima atividade autorizável é O4/TASK-0004 após os manifestos estarem no
-branch.
+para a Parte Geral; OD-UD-004 não cria novos pontos de entrada; OD-UD-005
+reutiliza namespaces i18n existentes. Pare aqui: a próxima atividade autorizável
+é O4/TASK-0004 após os manifestos estarem no branch.
 
 ## Leitura
 
