@@ -486,6 +486,21 @@ o Engineer). TASK-0009 passa de Sonnet 5 a Opus 5.5 (migração integral, fail-c
 - **TASK-0013** lê uma lista fechada de 34 arquivos de produção que citam
   `integration.outbox`/`delivery_attempt`/`inbox_receipt` (inventário do maestro), sem busca aberta.
 
+**A2.2 — correções do ciclo 2 da prompt-review** (mesma autorização B1; prevalece onde divergir):
+
+- **Art. 10 sem exceção.** O Engineer não inverte nenhum teste. A inversão do `it.fails` do _bearer_
+  do TEAT web passa à **TASK-0020** (Inspector, Sonnet 5/baixo, CTG-0005, depois de TASK-0008);
+  o critério de TASK-0008 no spec de caracterização do TEAT é "exatamente uma falha, a do `it.fails`
+  do _bearer_ que passou". O push cedo do SSE Angular (A-C2-13) sai depois de TASK-0020.
+- **Retirada só com correspondente.** Todo caso retirado (TASK-0019 e Inspectors de migração) tem um
+  C-nn que prova o mesmo comportamento; sem correspondente, não se retira.
+- **Dublês de serviço antes dos stubs.** `CTG-0005.md` fixa a API pública preservada do serviço SSE
+  de cada app; TASK-0019 cria `apps/<app>/web/src/testing/<app>-sse.fake.ts` (rait, dashboard, portal),
+  migra os 16 consumidores dos stubs de transporte (fachadas, páginas, componentes,
+  `facade.stub.ts`) sem perder caso e só então retira os stubs. TASK-0008 pode tocar
+  `apps/rait/web/src/app/data/api/rait-http.ts` (produção que importa o transporte).
+- Ondas: **O5 = TASK-0005 → TASK-0019**; **O6 = TASK-0006 ∥ TASK-0008, depois TASK-0020**.
+
 `pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
 recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
 

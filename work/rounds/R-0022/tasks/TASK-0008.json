@@ -33,7 +33,7 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-4292e519e72e1d55",
+  "prompt_composition_id": "PC-f3b302c9a803b00b",
   "acceptance_commands": [
     [
       "pnpm",
@@ -59,14 +59,6 @@
       "--passWithNoTests=false",
       "src/app/core/realtime.characterization.spec.ts"
     ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/teat-web",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/sse.characterization.spec.ts"
-    ],
     ["pnpm", "--filter", "@detran/rait-web", "test"],
     ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
     ["pnpm", "--filter", "@detran/rait-web", "lint"],
@@ -76,7 +68,6 @@
     ["pnpm", "--filter", "@detran/portal-web", "test"],
     ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
     ["pnpm", "--filter", "@detran/portal-web", "lint"],
-    ["pnpm", "--filter", "@detran/teat-web", "test"],
     ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
     ["pnpm", "--filter", "@detran/teat-web", "lint"],
     ["pnpm", "--filter", "@detran/rait-web", "build"],
@@ -94,7 +85,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-4292e519e72e1d55",
+    "prompt_composition_id": "PC-f3b302c9a803b00b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
