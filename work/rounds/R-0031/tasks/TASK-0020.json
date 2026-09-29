@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0020",
+  "round_id": "R-0031",
+  "status": "in_progress",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Corrigir prova RLS efetiva dos quinze recursos CH restantes",
+  "description": "Depois da semente O6, substitua a prova apenas de metadado nas quinze specs restantes por fixtures sintéticas A/B no recurso do módulo e por leitura e mutação negativas sob role_app_backend. Não altere produção, seed, DDL ou adaptadores de assinatura.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ch-tests-clinical", "MOD-ch-tests-regulatory"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector-corrective",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["pec-web", "o6", "corrective"],
+  "branch": "orchestra/pec-web",
+  "worktree_id": "WT-pec-web",
+  "prompt_composition_id": "PC-47d45e7a279939d2",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db final && pnpm --filter @detran/ch-scheduling test:integration && pnpm --filter @detran/ch-biometrics test:integration && pnpm --filter @detran/ch-encounters test:integration && pnpm --filter @detran/ch-exams test:integration && pnpm --filter @detran/ch-clinical-reports test:integration && pnpm --filter @detran/ch-restrictions test:integration && pnpm --filter @detran/ch-telehealth test:integration && pnpm --filter @detran/ch-clinical-controls test:integration"
+    ],
+    [
+      "bash",
+      "-c",
+      "source work/rounds/R-0031/env-detran-r31.sh && r31_set_db final && pnpm --filter @detran/ch-juntas test:integration && pnpm --filter @detran/ch-retention test:integration && pnpm --filter @detran/ch-toxicology test:integration && pnpm --filter @detran/ch-inconsistencies test:integration && pnpm --filter @detran/ch-clinical-network test:integration && pnpm --filter @detran/ch-operational-controls test:integration && pnpm --filter @detran/ch-process-blocks test:integration"
+    ],
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "backend/domains/ch/*/tests/integration/*.ts"
+    ]
+  ],
+  "created_at": "2026-09-29T16:45:50.532Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-6-sol" },
+    "prompt_composition_id": "PC-47d45e7a279939d2",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -4,8 +4,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 410000,
-  "estimated_output_total": 76000,
+  "estimated_input_total": 510000,
+  "estimated_output_total": 96000,
   "prior_windows": [
     {
       "window": 1,
@@ -160,8 +160,17 @@
       "model": "gpt-6-luna",
       "input_tokens": 30000,
       "output_tokens": 5000,
+      "status": "checkpoint",
+      "note": "Inspector: caracterização positiva de namespace i18n pec. e negativa de chave de parâmetro; positivo fica vermelho até O8."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0020",
+      "model": "gpt-6-sol",
+      "input_tokens": 100000,
+      "output_tokens": 20000,
       "status": "in_progress",
-      "note": "Inspector: caracterização positiva de namespace i18n pec. e negativa de chave de parâmetro."
+      "note": "Inspector corretivo: prova PostgreSQL efetiva de RLS nos quinze recursos CH que O5 deixou somente com metadado."
     }
   ]
 }
