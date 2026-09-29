@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0011",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Hash e vínculos: o SHA-256 recalculado de prompts/TASK-0011.md é 42a151044639578aa06b2276cd0e2883c5e7daaad4e8fae77f2cf9674fc3b1ff, igual ao declarado. compositions.json tem uma única entrada TASK-0011, com sha256 igual e pc_id PC-42a151044639578a, que são os 16 primeiros hex. model gpt-6-sol e effort high não mudaram. Em tasks/TASK-0011.json, prompt_composition_id vale PC-42a151044639578a no nível superior e em executor.prompt_composition_id. Não há referência residual a PC-a8e3f397… nem a PC-a6151099… em prompts/, tasks/ ou compositions.json.",
+    "A correção pedida está feita. prompts/TASK-0011.md:47 agora diz 'OD-R20-001 = (A), OD-R20-002 = (B), OD-R20-003 = (A), OD-R20-005 = aceita e A1-3 = (B); OD-R20-004/006 e A1-1/2 exigem decisão explícita antes do efeito correspondente'. Isso corresponde a plan.md:309 (OD-R20-001 = A, 2026-09-28), plan.md:313 (OD-R20-002 = B, 2026-09-28), plan.md:316 (OD-R20-003 = A), plan.md:320 (OD-R20-005 aceita), plan.md:318 (OD-R20-004 sem decisão), plan.md:322 (OD-R20-006, só manutenção ou supersessão pendente) e plan.md:324 (A1-3 = B aceita; A1-1 e A1-2 aguardam resposta expressa). O achado low do ciclo 2 foi resolvido exatamente como a correção sugerida.",
+    "Todo o resto do diff contra HEAD corresponde ao que o ciclo 2 já aprovou: linhas 11, 25-27, 37, 41, 45, 49 e 55. As linhas 41, 45, 49, 50 e 55 continuam coerentes com a nova linha 47, e o único texto normativo alterado é o estado das ODs. Nenhum critério de aceitação, fronteira ou papel mudou. Limite desta verificação: não tenho a versão a8e3f397… em disco para comparar byte a byte. A conclusão de que só a linha 47 mudou se apoia no diff contra HEAD e nos trechos citados no ciclo 2.",
+    "prettier --check passa em prompts/TASK-0011.md, tasks/TASK-0011.json e compositions.json.",
+    "Nada impede o despacho. O Architect pode ser despachado para redigir somente o contrato condicional contracts/CTG-0004.md, com a proposta A1 como fonte imutável. A1-1 (piso e células) deve entrar como proposta sujeita à decisão, e A1-2 como pendente e sem efeitos. Nenhum pin novo além de 1.5.6 deve ser presumido. plan.md, record/, Git e devai --write ficam fora do escopo. Esta revisão não avalia a entrega nem autoriza merge, troca de pin ou gravação de leituras."
+  ]
+}

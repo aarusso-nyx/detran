@@ -1,0 +1,29 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0011",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0011.md",
+      "line": 47,
+      "claim": "Line 47 still says 'OD-R20-003 = (A) e OD-R20-005 = aceita; OD-R20-001/002/004/006 e A1 exigem decisão explícita'. But plan.md:309 and plan.md:313, which are in the worker's closed reading list as item 5, record OD-R20-001 = (A) and OD-R20-002 = (B) as decided by the Owner on 2026-09-28. The delta did not add this; it predates the change and cycle 1 missed it. It does not affect the CTG-0004 scope, and no sensor effect depends on OD-R20-001/002. Still, the prompt and plan disagree about two Owner decisions. The worker might list those ODs as pending in the contract, or treat the mismatch as a contradiction under rule 5.",
+      "fix": "Rewrite as 'OD-R20-001 = (A), OD-R20-002 = (B), OD-R20-003 = (A) e OD-R20-005 = aceita; OD-R20-004/006, A1-1 e A1-2 exigem decisão explícita antes do efeito correspondente; A1-3 = B' and recompute the SHA/PC. Alternatively, send this to the worker as guidance at dispatch without changing the hash."
+    }
+  ],
+  "notes": [
+    "Hashes: I recomputed the SHA-256 of prompts/TASK-0011.md and got a8e3f397d8075a409b7162aeda9e02d82f0557d8fb09fc80ad28460ee41ceb44, which matches. In the TASK-0011 entry of compositions.json, sha256 is the same hash and pc_id is PC-a8e3f397d8075a40, the first 16 hex characters. Model gpt-6-sol and effort high did not change. The compositions diff touches only sha256 and pc_id.",
+    "TASK links: TASK-0011.json has prompt_composition_id = PC-a8e3f397d8075a40 at top level and in executor.prompt_composition_id. The TASK diff changes only those two fields. The description, the rest of executor, and acceptance_commands are unchanged.",
+    "Low 1 from cycle 1 (A1-1 floor): resolved. Line 41 says four comes from the A1-3 receipt, while the per-substrate minimums and the four named cells belong to A1-1, which is pending, and must appear 'como proposta sujeita à decisão, não como critério decidido'. This matches AUTHORIZATION-A1-3-2026-09-29.md ('Este aceite resolve somente A1-3. A1-1 (piso e células específicas) ... aguardam resposta expressa') and the proposal (line 13: 0/3/1/0/0 and F2:T5/T8/T9, F3:T1). Line 50 ('não invente piso') still holds.",
+    "Low 2 from cycle 1 (R-0017 lock): resolved. Line 11 now says R-0017/0018/0019 are sealed and CTG-0003 was merged by PR #156. Lines 37 and 49 generalize the lock to 'PR concorrente de outra rodada no mesmo lock'. That also covers the R-0021 PR #154 case in plan.md:556.",
+    "Low 3 from cycle 1 (plan.md edits): resolved. plan.md was removed from Pode tocar, and line 37 explicitly says 'Não edite `plan.md`; o maestro registra o status a partir do relatório'. The only writable path is contracts/CTG-0004.md.",
+    "A1-3 = B is kept: line 41 makes four real PASS the merge gate, with no path for option A. This matches the receipt and plan.md:231 ('células PASS ≥ piso A1').",
+    "No new pin is presumed. Line 41 says the scorecard fix exists in DEVAI main (268bb838) but not in 1.6.0, and must not be treated as available to pin 1.5.6. This matches reports/A1-upstream-status-2026-09-29.md.",
+    "A1-2 is represented as pending, and its dependent effects (CI members, --write --publish, sense record --write delegation) are forbidden. Line 36 also blocks devai --write, Git and installs.",
+    "The proposal is preserved: CTG-0004-A1-proposal.md is an immutable source (lines 41 and 45), and the acceptance criterion at line 55 only requires it to be present. That is consistent with the TASK description 'contracts/CTG-0004.md e proposta A1'.",
+    "The closed reading list gained items 11–13, and all three files exist. Prettier --check passes on the three changed files.",
+    "The cycle 1 hash (949a08be…) differs from the HEAD version in the diff (a61510…). Cycle 1 reviewed an intermediate uncommitted version. This does not change the result: the current prompt, composition and TASK are consistent with one another.",
+    "Dispatch: the Architect worker can be dispatched to draft only the conditional contract contracts/CTG-0004.md. It must not assume A1-1, A1-2 or a new pin. The single low does not block dispatch and can be fixed now with a new PC or passed as guidance. This review does not assess the CTG-0004 delivery and does not authorize any merge, pin change or writing of readings."
+  ]
+}

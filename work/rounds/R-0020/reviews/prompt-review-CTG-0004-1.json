@@ -1,0 +1,36 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0011",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0011.md",
+      "line": 42,
+      "claim": "The phrase 'A1-3=B foi aceita: quatro `PASS` reais continuam gate de merge' faithfully reproduces the Owner receipt. However, plan.md §Critérios defines the gate as 'células PASS ≥ piso A1', and the floor itself belongs to A1-1: the 0/3/1/0/0 minimums and the named cells F2:T5/T8/T9 and F3:T1, which are still pending. A worker could write the full proposal floor into CTG-0004 as if it were decided. Line 51 ('não invente piso') softens this but does not name A1-1.",
+      "fix": "Add one sentence: 'O número quatro vem do recibo A1-3; os mínimos por substrato e as quatro células nomeadas são A1-1, pendente, e devem aparecer no contrato como proposta sujeita à decisão, não como critério decidido.'"
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0011.md",
+      "line": 38,
+      "claim": "Lines 38 and 50 keep the conditional R-0017 PR lock. Line 11 and plan.md (lines 30 and 608) already record R-0017 as sealed with no open PR. The text is harmless because the lock only applies 'enquanto houver', but it is old context that the delta was meant to remove.",
+      "fix": "Remove the R-0017 lock mentions, or generalize them to 'PR concorrente de outra rodada no mesmo lock'."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0011.md",
+      "line": 32,
+      "claim": "The prompt allows edits to `work/rounds/R-0020/plan.md` as a whole, even though line 48 calls the plan's criteria immutable and A1-1 and A1-2 are pending. The worker could change §Critérios or §Decisões do Owner. This allowance predates the delta.",
+      "fix": "Limit plan.md edits to a status line in §Retomada or §Bloqueios, and explicitly forbid changes to §Metas, §Critérios and §Decisões do Owner."
+    }
+  ],
+  "notes": [
+    "The SHA-256 of prompts/TASK-0011.md, recomputed now, is 949a08be0b384f4feab6efbf8838b782b0e9f2d94d4f9c71cbc678c3080dc684. In compositions.json, pc_id PC-949a08be0b384f4f is the first 16 hex of that hash, and model gpt-6-sol with effort high matches the executor. The top-level `prompt_composition_id` and `executor.prompt_composition_id` in TASK-0011.json both carry the new PC. The diff touches only those three fields and does not change the original TASK description.",
+    "The scope stays within TASK-0011, the Architect role and plan.md:170. The only deliverable is contracts/CTG-0004.md. The A1 proposal is an immutable source, and the review-4 PASS claim checks out in reviews/A1-proposal-review-4.json. The closed reading list grows only by the three A1 sources, and all of them exist.",
+    "The prompt does not presume A1-1 or A1-2: it requires them to be represented as pending, with no dependent effects. It presumes no new pin: the fix in DEVAI main is treated as unavailable to 1.5.6, and 1.6.0 does not fix it, as confirmed by the upstream report. It presumes no PASS reading: 'falha de comando nunca vira PASS'. It forbids writes to record/, devai --write, Git and installs.",
+    "The A1-3=B gate is kept: four real PASS cells remain the merge gate, and there is no path for option A.",
+    "No blocker: the Architect worker can be dispatched for the conditional contract only. The three lows can be fixed in a later cycle or passed to the worker as guidance. This review does not assess the CTG-0004 delivery contract and does not authorize any merge."
+  ]
+}
