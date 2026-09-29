@@ -224,13 +224,13 @@ anexada ao relatório; (d) CTG-0004: `pnpm install` só se o lockfile mudar (nã
 - **OD-UD-002** — **resolvida pelo Owner em 2026-09-29:** publicação seletiva no site público de
   `cidadao`, `faq` (seção cidadão) e `glossario`; os demais ficam versionados, cobertos pelo gate e
   fora do site.
-- **OD-UD-003** — fonte do conteúdo da ajuda MBFT por tópico (pacote normativo ×
-  `REF-CONTRAN-985-1003-MBFT`). Padrão: tópico + âncora do manual + referência; nenhum texto
-  normativo transcrito sem fonte fechada (`source_pending`).
+- **OD-UD-003** — **resolvida pelo Owner em 2026-09-29:**
+  `REF-CONTRAN-985-1003-MBFT` é fonte fechada para tópicos da Parte Geral; fichas individuais
+  permanecem `source_pending`.
 - **OD-UD-004** — ponto de ajuda em DASHBOARD, TEAT web e BOAT, que hoje não têm entrada. Padrão:
   só se o shell de R-0024 oferecer posição; senão fica fora desta rodada.
-- **OD-UD-005** — namespace i18n dos rótulos de ajuda (novo `*.help` × reuso de namespaces
-  existentes). Decisão do Architect em TASK-0015; linha na allowlist com esta OD.
+- **OD-UD-005** — **resolvida pelo Architect em 2026-09-29:** reutilizar
+  `portal.screens`, `rait.shell` e `teat.screens`; nenhum namespace `*.help` é criado.
 
 ## Convenção herdada por R-0031 (manual PEC)
 
@@ -343,8 +343,10 @@ sensores passaram. `docs:availability:check` permanece fail-closed, com exit 2,
 até a integração dos manifestos. aguardando manifestos da fase D
 (R-0025…R-0029). O Owner resolveu OD-UD-001 e OD-UD-002 em 2026-09-29:
 `docs/adopters/manuais/` na seção Adotantes e publicação seletiva de cidadão,
-glossário e trecho cidadão do FAQ. Pare aqui: a próxima atividade autorizável é
-O4/TASK-0004 após os manifestos estarem no branch.
+glossário e trecho cidadão do FAQ. OD-UD-003 usa `REF-CONTRAN-985-1003-MBFT`
+para a Parte Geral, e OD-UD-005 reutiliza namespaces i18n existentes. Pare aqui:
+a próxima atividade autorizável é O4/TASK-0004 após os manifestos estarem no
+branch.
 
 ## Leitura
 

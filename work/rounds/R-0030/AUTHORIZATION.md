@@ -27,3 +27,7 @@ fase D (R-0025…R-0029). Não há delivery-review, PR ou evidência nesta sess�
 - **OD-UD-002:** Opção A — publicação seletiva: manual `cidadao`, glossário e
   trecho cidadão do FAQ são públicos; manuais internos permanecem versionados,
   verificados e fora do site público.
+- **OD-UD-003:** `REF-CONTRAN-985-1003-MBFT` é fonte fechada para tópicos da
+  Parte Geral; fichas individuais continuam `source_pending`.
+- **OD-UD-005:** reutilizar `portal.screens`, `rait.shell` e `teat.screens`;
+  não criar namespace `*.help`.

@@ -132,9 +132,13 @@ OD-UD-004. O manifesto registra `help.entry` (`nenhum`, `atalhos`, `pagina`,
 ausente, inválida ou sem página publicável, o app não renderiza link. Não há
 URL implícita ou constante de implantação inventada.
 
-Para MBFT, até OD-UD-003 fechar a fonte por tópico, mostre tópico, âncora do
-manual e referência `REF-CONTRAN-985-1003-MBFT`, sem transcrição normativa
-`source_pending`. Rótulos novos obedecem à allowlist de i18n e OD-UD-005.
+**OD-UD-003 foi resolvida pelo Owner em 2026-09-29:**
+`REF-CONTRAN-985-1003-MBFT` é a fonte fechada dos tópicos da Parte Geral. A
+ajuda mostra o tópico, a âncora do manual e a referência; assunto que dependa
+de ficha individual de infração permanece `source_pending` e não recebe texto
+normativo. **OD-UD-005 foi resolvida pelo Architect em 2026-09-29:** rótulos
+de ajuda reutilizam `portal.screens`, `rait.shell` e `teat.screens`, já na
+allowlist i18n; não há namespace `*.help`.
 
 ## 7. Publicação
 
