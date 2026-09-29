@@ -558,12 +558,24 @@ recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7�
 
 ## Retomada
 
-Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1). Concluído: bootstrap (AUTHORIZATION, branch
-`orchestra/stynx-sse-tenancy`, banco e 3 slots, linha de base `pnpm check` exit 0 e
-`backend:rls-smoke` OK, pin escolhido 1.5.0, A2 com ondas O1–O9, 18 tarefas e prompts, PCs).
-Último veredito: prompt-review ciclo 1 FAIL (B1). Em curso: nada. Pendente: todas as tarefas
-(TASK-0001…0018). Próximo passo, se o Owner autorizar: corrigir os 17 achados e submeter o ciclo 2
-restrito a eles; com PASS, disparar O1.
+Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
+tenants). Branch `orchestra/stynx-sse-tenancy` publicada.
+
+- **Concluídas e commitadas:** TASK-0001, 0003, 0011, 0012, 0013, 0016, 0017 (`pre_merge`); TASK-0014
+  com 2 iterações (C-08-01/03/04/13 e parciais 06/12/16 pendentes por leitura; `escalated`).
+- **Parada:** TASK-0002 (`escalated`): `tenancy-context.e2e.spec.ts` e `r22-sse-tenancy.support.ts`
+  não commitados, na worktree (C-01-09 vermelho = vazamento; C-01-01 e C-01-04 precisam de adenda);
+  `sse-conformance.e2e.spec.ts` e teste HTTP do `rait-stream` não escritos.
+- **Pendentes:** TASK-0004 (pin) e seguintes; nenhuma despachada.
+- **Último veredito:** prompt-review ciclo 3 PASS.
+- **Decisões do Owner abertas:** B2 (hotfix fora da rodada × `it.fails` corrigido em CTG-0003 ×
+  parada); OD-R22-04/05 (antes de O5); OD-R22-06…36 (migrações; TASK-0018 com checkpoint provável
+  OD-R22-02; corte de `integration.*` candidato a OD-R22-02).
+- **Próximos passos depois da decisão B2:** adendas do Architect a C-01-01/C-01-04 (e C-01-09
+  conforme a decisão); retomar TASK-0002 (sse-conformance, rait-stream HTTP); TASK-0014 iteração 3
+  com as ampliações pedidas, se autorizada; O4 (pin 1.5.0) só com toda a caracterização verde e
+  commitada.
+- Bancos: slots 1–3 (`~/.cache/detran-r22/env/`), repreparar antes de reusar.
 
 ## Leitura
 
