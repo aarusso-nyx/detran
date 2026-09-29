@@ -322,6 +322,8 @@ ao planejar e revisar; Engineer ao commitar.
   (assinatura; TASK-0011). OD-R22-06…14 bloqueiam só TASK-0009 (O8). OD-R22-15…21 = P-08-1…7 de `contracts/CTG-0008.md`
   (outbox; TASK-0013): 15 bloqueia TASK-0015 parte 1; 16…19 bloqueiam a parte 2 (e, por dependência,
   TASK-0007 e TASK-0018); o corte de `integration.*` sem símbolo publicado é candidato a OD-R22-02.
+  OD-R22-22…32 = P-09-1…11 de `contracts/CTG-0009.md` (offline-sync; TASK-0016); as divergências
+  D-01…D-05, D-08, D-09 da 1.5.0 põem TASK-0018 em checkpoint provável (OD-R22-02).
 
 ## Concorrência
 
