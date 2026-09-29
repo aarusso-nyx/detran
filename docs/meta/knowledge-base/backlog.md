@@ -1,5 +1,13 @@
 # Research backlog (steering queue)
 
+## Handoff R-0028 (boat-wiring, pré-trabalho A-C2-15) (2026-09-30)
+
+- [ ] **Espera R-0024 — TASK-0005…0009:** specs e páginas das 12 telas e 10 componentes mobile, `BoatCrashGateway` (online e offline) e as 5 telas web de `sinistros` dependem de `docs/framework/arch/frontend-wiring-pattern.md`. Fonte: `work/rounds/R-0028/plan.md` §Tarefas (added 2026-09-30).
+- [ ] **Espera R-0022 — SSE canônico:** `crash.changed` em W-01…W-04 e a correção de `sse` em `sinistros.routes.ts` (OD-R28-015; correção documental 10). Fonte: `work/rounds/R-0028/binding-matrix.md` (added 2026-09-30).
+- [ ] **Espera a stack — TASK-0010:** smoke start → record → validate → close → transmit → complement, pelos caminhos real e de homologação, após TASK-0007/TASK-0009 e `pnpm stack:start`/`stack:status` verdes (added 2026-09-30).
+- [ ] **Correções documentais — TASK-0011:** itens 1–6 e 8 de `work/rounds/R-0028/binding-matrix.md` §Correções documentais (`boat-frontends.md`, `apps/boat/mobile/README.md`, `boat-build-pack.md` §WP-B5, H.44/H.45 por OD-R28-013); item 7 (fichas W-01…W-04) é do Owner (added 2026-09-30).
+- [ ] **Reconferência dos contratos após R-0024:** reconferir `binding-matrix.md` e `contracts/CTG-0002…0004.md` contra `origin/main`; divergência vira adenda numerada do Architect (added 2026-09-30).
+
 ## Handoff R-0021 para R-0022 (2026-09-28)
 
 - [ ] **Sensor CI stack smoke — R-0022:** jobs remotos `108792483206` (candidato) e `108793701832` (`main` STYNX 1.3.1) terminaram `stack:smoke` com exit 1, embora a reprodução isolada do SHA `2bc62e7a30270ac5c312656906e0465766811f2a` tenha passado 42/42. Primeiro reter e publicar o sumário de linhas do workflow para identificar o target que falhou; a triagem não expõe a linha/target e não autoriza alterar testes antes disso. Fonte: `work/rounds/R-0021/reports/CTG-0002-stack-smoke-triage.md` (added 2026-09-28).
