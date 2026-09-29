@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0003",
   "round_id": "R-0022",
-  "status": "queued",
+  "status": "pre_merge",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Caracterizar a costura SSE dos quatro apps web sobre 1.4.0",
@@ -27,6 +27,7 @@
       "pnpm",
       "--filter",
       "@detran/rait-web",
+      "run",
       "test",
       "--passWithNoTests=false",
       "src/app/core/sse.characterization.spec.ts"
@@ -35,6 +36,7 @@
       "pnpm",
       "--filter",
       "@detran/dashboard-web",
+      "run",
       "test",
       "--passWithNoTests=false",
       "src/app/core/sse/sse.characterization.spec.ts"
@@ -43,6 +45,7 @@
       "pnpm",
       "--filter",
       "@detran/portal-web",
+      "run",
       "test",
       "--passWithNoTests=false",
       "src/app/core/realtime.characterization.spec.ts"
@@ -51,6 +54,7 @@
       "pnpm",
       "--filter",
       "@detran/teat-web",
+      "run",
       "test",
       "--passWithNoTests=false",
       "src/app/core/sse.characterization.spec.ts"

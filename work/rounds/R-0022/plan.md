@@ -510,6 +510,16 @@ o Engineer). TASK-0009 passa de Sonnet 5 a Opus 5.5 (migração integral, fail-c
   `apps/rait/web/src/app/data/api/rait-http.ts` (produção que importa o transporte).
 - Ondas: **O5 = TASK-0005 → TASK-0019**; **O6 = TASK-0006 ∥ TASK-0008, depois TASK-0020**.
 
+**A2.3 — forma do comando de teste web (triagem `sensor-error`, maestro, 2026-09-29).** Nos apps
+web, `test` é comando embutido do pnpm e `pnpm --filter @detran/<app>-web test --passWithNoTests=false <spec>`
+falha com `Unknown option: 'passWithNoTests'`. Onde os prompts (TASK-0003, TASK-0008, TASK-0019,
+TASK-0020) citam essa forma, o comando executado e aceito é
+`pnpm --filter @detran/<app>-web run test --passWithNoTests=false <spec>` (mesmo `vitest`, mesmos
+argumentos; coleta vazia sai com exit 1, conferido). Os `acceptance_commands` foram corrigidos; os
+prompts revisados ficam intactos (PCs preservados) e o despacho cita esta adenda. C-01-34 recebeu a
+adenda A1 do contrato CTG-0001 (cláusula 401/403 que não era comportamento de 1.4.0; divergência
+D-W-01 para CTG-0005).
+
 `pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
 recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
 
