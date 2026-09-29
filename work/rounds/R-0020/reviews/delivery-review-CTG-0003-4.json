@@ -1,0 +1,40 @@
+{
+  "mode": "delivery-review-final",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "pull_request": "https://github.com/aarusso-nyx/detran/pull/156",
+  "head_sha": "818a5a249cd316f6e55621b98dd8571efb112a7c",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/evidence-CTG-0003.json",
+      "line": 1,
+      "claim": "Cycle-3 pending item (e) asked for explicit exit codes for verify:round-tasks and verify:task-originals, because neither runs in pnpm check or CI until CTG-0005. The evidence gates record only result pass with counts (320 tasks with zero invalid, 144 linked). The PR body gives the same counts without an exit code. The evidence is not wrong. It is just less explicit than the rule asked for.",
+      "fix": "Do not edit the committed evidence or the chain. In the R-0020 closure, or in an append-only note, record argv, exit_code 0 and stdout sha256 for both verifiers on HEAD 818a5a24. Alternatively, add the literal exit 0 to the PR body."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/evidence-CTG-0003.json",
+      "line": 1,
+      "claim": "The versioned evidence and the A3.6 report ee14c827 measure the code commit bcdce88c. The exact-HEAD receipts are the A3.6 report bbb10e60 and the baseline 05016b37. Both are outside the repository in /tmp and are cited only in the PR body. I confirmed both hashes match. The delta after bcdce88c touches only evidence-CTG-0003.json, the A3.6 report and record/proofs, so the risk of drift is minimal. Still, the /tmp artifacts are not durable.",
+      "fix": "Keep the approach of not editing the repository at this HEAD. At the final R-0020 seal, include the two sha256 values and head_sha 818a5a24 in closure.json or in the next append-only proof, and keep the files as external artifacts or in the round archive."
+    }
+  ],
+  "notes": [
+    "HEAD confirmed as 818a5a249cd316f6e55621b98dd8571efb112a7c. The PR is OPEN and MERGEABLE, base origin/main. The worktree has only the untracked prompt files for cycle 4 and the zero-byte bridge temp files, which must not be staged.",
+    "Owner authorization A3.6: commit 793e3124 by DEVAI Owner touches only AUTHORIZATION-A3.6-2026-09-28.md. The contract CTG-0003-A3.6-round-status.md at HEAD hashes to sha256 993dd973ace52c7acb99166f4c5e20dd1ac7a387f4944b88e626096732180438, which matches the accepted value. Cycle-3 low item 2 is resolved: the evidence and the PR body cite the contract with its SHA and the authorization commit.",
+    "Diagnostic: it has a dated 2026-09-28 update line appended without rewriting the earlier text. The line points to the addendum and the authorization, keeps the literal criterion as unmet and n/a, and states that the original seal outputs were not retained. Cycle-3 low item 1 is resolved.",
+    "DECISIONS.md: it has an append-only note dated 2026-09-28 listing the 16 seals by close-state.jsonl path, with no round status PASS claimed and DEVAI #175 cited. The body of commit bcdce88c by DEVAI Architect cites OD-R20-001=A for the preamble and the D-1/D-2 edits. Cycle-1 low item 3 is resolved.",
+    "A3.6 on HEAD: /tmp/r20-ctg3-a36-final-prhead.json has sha256 bbb10e6074ac529f336a9f13d18a817f4ff9f19c2cb80fb7ad917308e157c1e7, matching the value in the prompt. Its head_sha is 818a5a24. It contains 17 closed_rounds and 17 lifecycle replays in each environment (clone and real), 34 in total. The negative R-0020 control shows plan ativa with no close-state, record or PC index entry, and the probe exits 2 with ROUND_RECORD_NOT_FOUND. There are 16 idempotent replays per environment, 32 in total. The work_rounds digests before and after are identical, and git status porcelain is empty before and after (sha of empty). state-index and rounds-index both exit 0.",
+    "Baseline on HEAD: /tmp/r20-ctg3-prhead-baseline/baseline-final.json has sha256 05016b37dec36353bf73c4c23dfa089c8cb11f3035f1361e9bc2d6daeddcaf59, matching the value in the prompt, with head_sha 818a5a24. Axis results: checks REVIEW, scorecard PASS, sensors REVIEW, rounds REVIEW, proofs PASS, tasks PASS, pull_requests REVIEW, mixed_commits REVIEW. Failures is empty, so no axis is FAIL. Cycle-1 low item 4 is resolved. The earlier baseline ebf9fb99 on bcdce88c also exists and matches the evidence.",
+    "DEVAI evidence: HEAD commit 818a5a24 by DEVAI Machine appends only sequence 5 to record/proofs/work/generic/R-0020.jsonl and to chain.json. The payload is the evidence-CTG-0003.json record. I ran devai evidence verify --scope chain locally and it returned valid.",
+    "Limitation of the 15 records: evidence-CTG-0003.json sealed_record_limitations lists R-0003 to R-0016 and R-0019 with isolation and waves source_pending and promotion_requires_governed_correction true. The PR body states the same in the out-of-scope section. Cycle-1 low item 5 is resolved.",
+    "Literal round status: evidence marks it n/a, unmet exit 5 TASK_ROUND_INACTIVE, DEVAI #175. The PR body, the diagnostic and DECISIONS agree. None of them presents it as PASS, and the 1.6.0 pin bump is not presented as a fix.",
+    "The PR body says the original seal outputs were not retained and that the Owner accepted 32 replays as substitute proof, not as original receipts. It declares the pr-compliance gap for a CTG with no product invariant and defers it to CTG-0005. No diff touches apps, backend, packages, law/schemas, .github or .devai/config.",
+    "Merge conditions, separate from this verdict: DETRAN CI run 36516218338 is NOT green. At the time of this review, evidence-gate, boat-documents-real, senatran-mock and senatran-mock-tests passed, stack-smoke was skipped, and foundation and backend-kernel were still pending. The merge requires both to conclude successfully. The final R-0020 seal must retain the original receipt with argv, exit_code, stdout_sha256 and digests before and after, and the closure.json must mark the literal round status as n/a.",
+    "This PASS covers only the CTG-0003 delivery at HEAD 818a5a24. It does not authorize merge while CI is pending, and it does not cover CTG-0004 or the A1-1, A1-2 and A1-3 decisions."
+  ]
+}
