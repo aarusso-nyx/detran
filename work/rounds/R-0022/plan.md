@@ -314,6 +314,13 @@ ao planejar e revisar; Engineer ao commitar.
   partes, o maestro despacha o **mesmo** prompt revisado com o identificador da parte; a parte não
   cria tarefa nova nem prompt novo sem prompt-review.
 
+- **M7 — ODs levantadas pelos workers** (numeração do maestro; registro canônico em
+  `open-decisions-rait.md` §C-0002 no commit da tarefa que as decidir; até a decisão, padrão
+  fail-closed: preservar o comportamento atual e não despachar o que depender delas):
+  OD-R22-04 (SSE RAIT sem filtro por papel/pool; TASK-0001), OD-R22-05 (DASHBOARD: `id` repetido e
+  429 sem `Retry-After`; TASK-0001), OD-R22-06…14 = OD-R22-S01…S09 de `contracts/CTG-0006.md`
+  (assinatura; TASK-0011). OD-R22-06…14 bloqueiam só TASK-0009 (O8).
+
 ## Concorrência
 
 Descoberta de estado (2026-09-29, `origin/main` = `c325f9b5`, merge do PR #157):
