@@ -452,6 +452,8 @@ são partilhados por merge, e seus gates novos passam a valer quando ela mesclar
 
 - A rodada que "para em" grava checkpoint em `plan.md` §Retomada e faz push sem PR. Ao retomar, integra
   os upstreams por merge.
+- **R-0030 com maestro Codex (Owner, 2026-09-29):** maestro Sol 6 e workers Codex; reviewer Opus 5.5
+  via Claude Code. Substitui a coluna "Maestro" de §2 para R-0030.
 - **Pin 1.5.x:** usar a maior 1.5.x final é esclarecimento do Architect sobre OD-C2-004/OD-S15-01
   (mesma minor, patch posterior). A conformidade da §7 da especificação é conferida contra a versão
   fixada.
