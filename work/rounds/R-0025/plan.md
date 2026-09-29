@@ -452,6 +452,33 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 
 ## Retomada
 
+- **Sessão A, checkpoint A-C2-15.** Concluídas e commitadas: TASK-0001
+  (`496a75cc`, matriz 64 e 13 L0), TASK-0002 (`56fd6418`, ODs/i18n),
+  TASK-0003 (`8c90734e`, CTG-0002 F-01…F-05/A-1…A-6) e TASK-0006
+  (`43b861a3`, CTG-0003 F-06…F-16). Bootstrap/autorização: `b8f2d38f`,
+  `e3d54745`; prompt-review REVIEW → PASS: `e21b89d7`. O avanço de
+  `origin/main` por PR #162 foi integrado por merge `a9448324` antes do push.
+- **Esperam:** TASK-0004/0005/0007/0008 dependem do formato de política de
+  R-0023 e do outbox/assinatura de R-0022; TASK-0009 em diante dependem do
+  padrão, kit e shell de R-0024. Os contratos documentais não habilitam
+  endpoints nem comandos. F-01, F-05, F-09 e F-15 ficam sujeitos às
+  OD-R25-006/008/007/011; assinatura segue fail-closed sob OD-R25-004.
+  OD-R25-003/009/013 e fontes indicadas nos CTGs também aguardam decisão.
+  OD-R25-005 já foi resolvida por C-0002 A1; OD-R25-002/010/012/014/015
+  foram decididas pelo Architect e transcritas.
+- **Gates da Sessão A:** linha de base RAIT 4.434 PASS/139 TODO após build
+  local ignorado de `@detran/ui`; `pnpm devai:doctor`,
+  `pnpm verify:parameter-catalogue`, `pnpm docs:kb:check`,
+  `pnpm format:check` e `pnpm verify:round-tasks` PASS. O último script nesta
+  base percorre só as 320 tarefas legadas até R-0020; os quatro JSONs desta
+  rodada foram validados diretamente contra `law/schemas/task.schema.json`
+  com AJV 2020 e os quatro `acceptance_commands` foram executados. Sem PR,
+  delivery-review, CI completo, código backend ou alteração de política.
+- **Orçamento:** `budget.json` registra estimativa de 335.000 tokens únicos de
+  entrada (limiar de checkpoint 520.000) e 54.000 de saída para bootstrap,
+  dois ciclos do mesmo prompt-review e quatro tarefas.
+- contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15).
+
 ## Leitura
 
 - Bootstrap da Sessão A na branch `orchestra/rait-web-wiring`, base
