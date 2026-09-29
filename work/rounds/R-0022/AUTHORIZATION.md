@@ -114,3 +114,15 @@ Resposta literal: "a, autorizo a 3ª iteração". TASK-0014 (caracterização da
 terceira iteração, além do `max_iterations` 2, com a leitura ampliada pedida no relatório da
 iteração 2, para caracterizar C-08-01, 03, 04, 13 e completar 06, 12 e 16 sobre 1.4.0 antes do pin.
 C-08-14/15 seguem pela leitura somente leitura de OD-R22-17 (Adenda B4).
+
+## Adenda B8 — hotfix do escritor clínico e OD-R22-42 (Owner, 2026-09-29)
+
+Resposta literal: "a, hotfix em PR próprio; OD-R22-42 corrigir na TASK-0007".
+
+- **B3 (bloqueio da TASK-0014):** o INSERT em `integration.outbox` de `ReportLifecycleService`
+  (`report-lifecycle.service.ts:186` e `persistSignedAddendum`) usa parâmetros sem tipo em
+  `jsonb_build_object` e falha no PostgreSQL real → hotfix em PR próprio contra `main` (teste de
+  regressão com banco real antes da correção; revisão da outra família; merge com CI verde). Depois,
+  a rodada integra `main` e faz a iteração 4 de TASK-0014.
+- **OD-R22-42:** `Last-Event-ID` não UUID → 500 com página de pilha nos 4 fluxos SSE: corrigir na
+  TASK-0007, com critério C-04 próprio (id malformado tratado como desconhecido, UPS-SSE-04).

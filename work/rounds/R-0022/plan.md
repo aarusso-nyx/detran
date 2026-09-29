@@ -638,6 +638,11 @@ Fonte: `AUTHORIZATION.md` §Adenda B6.
   (`2fad7265`); C-01-09 verde sobre 1.4.0. C-01-01 e C-01-04 resolvidos por adenda A2 do CTG-0001.
   A rodada pode retomar (nova janela).
 
+- **B3 — defeito do escritor clínico da outbox** (2026-09-29; TASK-0014 iteração 3): INSERT com
+  parâmetros sem tipo em `report-lifecycle.service.ts:186` falha no PostgreSQL real; bloqueia
+  C-08-01/03/04/14. Owner: hotfix em PR próprio contra `main` (Adenda B8); depois, iteração 4 de
+  TASK-0014.
+
 ## Retomada
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
