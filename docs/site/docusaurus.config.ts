@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'DETRAN',
-  tagline: 'Governed documentation for the DETRAN consolidation runtime.',
+  tagline: 'Documentação do DETRAN.',
   favicon: 'img/favicon.svg',
   url: 'https://aarusso-nyx.github.io',
   baseUrl: '/detran/',
@@ -22,8 +22,8 @@ const config: Config = {
     },
   },
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'pt-BR',
+    locales: ['pt-BR'],
   },
   presets: [
     [
@@ -51,10 +51,11 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'docsSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'Documentação',
         },
-        { to: '/docs/framework', label: 'Framework', position: 'left' },
-        { to: '/docs/reference', label: 'Reference', position: 'left' },
+        { to: '/docs/adopters', label: 'Manuais', position: 'left' },
+        { to: '/docs/framework', label: 'Arquitetura', position: 'left' },
+        { to: '/docs/reference', label: 'Referências', position: 'left' },
         {
           href: 'https://github.com/aarusso-nyx/detran',
           label: 'GitHub',
@@ -66,24 +67,23 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Authority',
+          title: 'Governança',
           items: [
-            { label: 'Constitution binding', to: '/docs/reference/law' },
-            { label: 'Architecture decisions', to: '/docs/meta/adr' },
-            { label: 'Security', to: '/docs/meta/security' },
+            { label: 'Constituição', to: '/docs/reference/law' },
+            { label: 'Decisões de arquitetura', to: '/docs/meta/adr' },
+            { label: 'Segurança', to: '/docs/meta/security' },
           ],
         },
         {
-          title: 'Engineering',
+          title: 'Engenharia',
           items: [
-            { label: 'Start here', to: '/docs/start' },
-            { label: 'Contracts', to: '/docs/framework/contracts' },
-            { label: 'Operations', to: '/docs/meta/ops' },
+            { label: 'Comece aqui', to: '/docs/start' },
+            { label: 'Contratos', to: '/docs/framework/contracts' },
+            { label: 'Operações', to: '/docs/meta/ops' },
           ],
         },
       ],
-      copyright:
-        'Built with Docusaurus. DETRAN inherits governance from DEVAI and platform substrate from STYNX.',
+      copyright: 'DETRAN herda a governança do DEVAI e a plataforma do STYNX.',
     },
     prism: {
       theme: prismThemes.github,

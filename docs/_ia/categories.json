@@ -2,40 +2,47 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$comment": "DETRAN docs-IA category manifest (shape mirrored from teat's docs/_ia/categories.json per ADR-DOCS-IA and the stynx R15 D-2 lesson). Declares per-directory order + labels for the seven top-level sections and the sub-categories within them. Will be consumed by docs/site/scripts/sync-docs.mjs once the Docusaurus site is consolidated (Phase 6, W6.3); until then it is the authored source of truth for the IA. Editing this manifest is the only authorised way to reorder a published category.",
   "sections": [
-    { "id": "start", "label": "Start here", "position": 1 },
-    { "id": "theory", "label": "Theory", "position": 2 },
-    { "id": "framework", "label": "Framework", "position": 3 },
-    { "id": "roles", "label": "Roles", "position": 4 },
-    { "id": "adopters", "label": "Adopters", "position": 5 },
-    { "id": "reference", "label": "Reference", "position": 6 },
-    { "id": "meta", "label": "Meta", "position": 7 }
+    { "id": "start", "label": "Comece aqui", "position": 1 },
+    { "id": "theory", "label": "Teoria", "position": 2 },
+    { "id": "framework", "label": "Arquitetura", "position": 3 },
+    { "id": "roles", "label": "Papéis", "position": 4 },
+    { "id": "adopters", "label": "Adotantes", "position": 5 },
+    { "id": "reference", "label": "Referências", "position": 6 },
+    { "id": "meta", "label": "Metadados", "position": 7 }
   ],
   "categories": {
-    "framework/arch": { "label": "Architecture", "position": 2 },
-    "framework/contracts": { "label": "Contracts", "position": 3 },
-    "framework/product": { "label": "Product (Owner specs)", "position": 4 },
+    "framework/arch": { "label": "Arquitetura", "position": 2 },
+    "framework/contracts": { "label": "Contratos", "position": 3 },
+    "framework/product": {
+      "label": "Produto (especificações do Owner)",
+      "position": 4
+    },
     "framework/product/domains": {
-      "label": "Domain product specs",
+      "label": "Especificações de produto por domínio",
       "position": 1
     },
     "framework/product/transversal": {
-      "label": "Transversal products",
+      "label": "Produtos transversais",
       "position": 2
     },
-    "framework/product/shared": { "label": "Shared semantics", "position": 3 },
-    "framework/glossary": { "label": "Glossary", "position": 5 },
-    "adopters/integrations": { "label": "Integrations", "position": 2 },
-    "reference/legal": { "label": "Legal corpus", "position": 1 },
+    "framework/product/shared": {
+      "label": "Semântica compartilhada",
+      "position": 3
+    },
+    "framework/glossary": { "label": "Glossário", "position": 5 },
+    "adopters/manuais": { "label": "Manuais de usuário", "position": 1 },
+    "adopters/integrations": { "label": "Integrações", "position": 2 },
+    "reference/legal": { "label": "Acervo legal", "position": 1 },
     "reference/institutional": {
-      "label": "Institutional deliverables",
+      "label": "Entregas institucionais",
       "position": 2
     },
-    "meta/eng": { "label": "Engineering", "position": 2 },
+    "meta/eng": { "label": "Engenharia", "position": 2 },
     "meta/adr": { "label": "ADRs", "position": 3 },
-    "meta/ops": { "label": "Operations", "position": 4 },
-    "meta/security": { "label": "Security", "position": 5 },
+    "meta/ops": { "label": "Operações", "position": 4 },
+    "meta/security": { "label": "Segurança", "position": 5 },
     "meta/knowledge-base": {
-      "label": "Knowledge-base provenance",
+      "label": "Proveniência da base de conhecimento",
       "position": 6
     }
   },

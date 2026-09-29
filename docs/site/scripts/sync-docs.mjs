@@ -24,6 +24,7 @@ const markdownTargets = new Map();
 const assetTargets = new Map();
 const targetOwners = new Map();
 const frontmatterOverrides = new Map();
+const faqProjections = new Map();
 let publicationPolicy;
 let publishedLegalMarkdown;
 
@@ -40,10 +41,52 @@ function repoRelative(path) {
 }
 
 function frontmatterStatus(content) {
+  return frontmatterValue(content, 'status');
+}
+
+function frontmatterValue(content, key) {
   const match = content.match(/^---\n([\s\S]*?)\n---\n/u);
   if (match === null) return undefined;
-  const status = match[1].match(/^status:\s*["']?([^\s"']+)["']?\s*$/mu);
-  return status?.[1];
+  const value = match[1].match(
+    new RegExp(`^${key}:\\s*["']?([^\\s"']+)["']?\\s*$`, 'mu'),
+  );
+  return value?.[1];
+}
+
+function faqProjection(content, faq) {
+  const start = faq.startMarker;
+  const end = faq.endMarker;
+  const startAt = content.indexOf(start);
+  const endAt = content.indexOf(end);
+  if (
+    startAt === -1 ||
+    endAt === -1 ||
+    startAt >= endAt ||
+    content.indexOf(start, startAt + start.length) !== -1 ||
+    content.indexOf(end, endAt + end.length) !== -1
+  ) {
+    return undefined;
+  }
+  return `${content.slice(startAt + start.length, endAt).trim()}\n`;
+}
+
+async function publishUserDoc(source, sourceRelative) {
+  const policy = publicationPolicy.userDocs;
+  if (!isWithin(sourceRelative, policy.root)) return undefined;
+  if (sourceRelative === policy.glossary) return true;
+
+  const content = await fs.readFile(source, 'utf8');
+  if (sourceRelative === policy.faq.source) {
+    const projection = faqProjection(content, policy.faq);
+    if (projection === undefined) return false;
+    faqProjections.set(source, projection);
+    return true;
+  }
+
+  return (
+    frontmatterValue(content, 'perfil') === policy.publicProfiles[0] &&
+    policy.statuses.includes(frontmatterStatus(content))
+  );
 }
 
 function isWithin(relativePath, root) {
@@ -66,6 +109,9 @@ async function publishFile(source) {
     return publishedLegalMarkdown.has(sourceRelative);
   }
   if (!/\.mdx?$/iu.test(sourceRelative)) return true;
+
+  const userDoc = await publishUserDoc(source, sourceRelative);
+  if (userDoc !== undefined) return userDoc;
 
   const content = await fs.readFile(source, 'utf8');
   const status = frontmatterStatus(content);
@@ -206,8 +252,10 @@ function projectFrontmatter(content, overrides, source) {
 async function copyPublishedTrees() {
   for (const [source, target] of markdownTargets.entries()) {
     await fs.mkdir(dirname(target), { recursive: true });
+    const sourceContent =
+      faqProjections.get(source) ?? (await fs.readFile(source, 'utf8'));
     const content = projectFrontmatter(
-      await fs.readFile(source, 'utf8'),
+      sourceContent,
       frontmatterOverrides.get(source),
       source,
     );
@@ -292,17 +340,17 @@ async function ensureDirectoryIndexes(dir = siteDocs) {
   const relDir = toPosix(relative(siteDocs, dir));
   const title =
     relDir.length === 0
-      ? 'DETRAN documentation'
+      ? 'Documentação do DETRAN'
       : relDir.split('/').join(' / ');
   const lines = [`# ${title}`, ''];
   if (indexableDirs.length > 0) {
-    lines.push('## Sections', '');
+    lines.push('## Seções', '');
     for (const name of indexableDirs)
       lines.push(`- [${name}](./${name}/index.md)`);
     lines.push('');
   }
   if (docFiles.length > 0) {
-    lines.push('## Pages', '');
+    lines.push('## Páginas', '');
     for (const name of docFiles) {
       const stem = name.replace(/\.mdx?$/iu, '');
       lines.push(`- [${stem}](./${name})`);
