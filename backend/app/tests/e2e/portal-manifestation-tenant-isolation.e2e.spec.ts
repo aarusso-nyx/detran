@@ -159,7 +159,7 @@ afterAll(async () => {
 });
 
 describe('Hotfix — isolamento de tenant na manifestação oportunista (§2.8)', () => {
-  it('dado cidadão CIDADAO com membership só no tenant local quando POST manifestations com X-Tenant-Id do tenant B então nunca identificado, nunca 500 e nenhum sujeito do cidadão gravado em B', async () => {
+  it('dado cidadão CIDADAO com membership só no tenant local quando POST manifestations com X-Tenant-Id do tenant B então 201 anônima (OD-P30: nunca 401/403) e nenhum sujeito do cidadão gravado em B', async () => {
     setCitizen(citizen);
     // pré-condição: a mesma credencial é recusada em B numa rota autenticada
     const me = await api()
@@ -172,22 +172,17 @@ describe('Hotfix — isolamento de tenant na manifestação oportunista (§2.8)'
       { kind: 'reclamacao', text: 'cruzamento de tenant (hotfix)' },
       { 'x-tenant-id': TENANT_B },
     );
-    expect(response.status, JSON.stringify(response.body)).not.toBe(500);
-    expect(response.body?.anonymous, JSON.stringify(response.body)).not.toBe(
-      false,
+    expect(response.status, JSON.stringify(response.body)).toBe(201);
+    expect(response.body.anonymous, JSON.stringify(response.body)).toBe(true);
+    const row = await manifestationRow(
+      TENANT_B,
+      response.body.manifestationId as string,
     );
-    if (response.status === 201) {
-      expect(response.body.anonymous).toBe(true);
-      const row = await manifestationRow(
-        TENANT_B,
-        response.body.manifestationId as string,
-      );
-      expect(row).toMatchObject({
-        tenant_id: TENANT_B,
-        anonymous: true,
-        subject_id: null,
-      });
-    }
+    expect(row).toMatchObject({
+      tenant_id: TENANT_B,
+      anonymous: true,
+      subject_id: null,
+    });
     if (!preexistingSubject[TENANT_B]) {
       expect(await subjectIdsOf(TENANT_B, cpfHash(citizen.cpf))).toEqual([]);
     }
