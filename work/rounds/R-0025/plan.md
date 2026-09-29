@@ -435,6 +435,14 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
   `acceptance_commands` e a dependência de R-0023. O ciclo 2, restrito a esses
   achados, retornou PASS sem achados. Registros em `reviews/prompt-review-1.json`
   e `reviews/prompt-review-2.json`.
+- **M5 (decisões Architect, 2026-09-29).** Após a matriz de TASK-0001 e a
+  análise §7, OD-R25-002=(a) política + GET do caso sob RLS; OD-R25-010=(a)
+  voto-vista em colunas de `rait_agenda_item`, pois antecede o escrutínio;
+  OD-R25-012=(a) um comando `mandate` com `act` enumerado;
+  OD-R25-014=(a) retirar `create` do CRUD duplicado no blueprint e regenerar;
+  OD-R25-015=(a) chave da rota montada canônica, com remoção das tuplas órfãs
+  na implementação. TASK-0002 transcreve-as no registro canônico. ODs com
+  decisor Owner ou Architect + Owner permanecem pendentes até resposta.
 
 ## Concorrência
 
