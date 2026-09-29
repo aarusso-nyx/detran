@@ -348,6 +348,12 @@ inf/ch tables, ops RLS, SRID-4674 round-trip, audit persistence)`
 
 ## Triagem
 
+- TASK-0002: `plant-bug` (vazamento C-01-09, sem dispensa) → parada B2; `reference-gap` em C-01-01
+  (braço core-antes não atende P2 em 1.4.0) e C-01-04 (UUID inválido → 403, não 400) → adendas do
+  Architect pendentes.
+- TASK-0014 iteração 1: `reference-gap` (leitura fechada insuficiente) → adenda A1 do CTG-0008 e
+  iteração 2 com ampliação concreta.
+
 ## Adendas
 
 ### A1 — transferências integrais de R-0021 (2026-09-27)
@@ -540,6 +546,14 @@ recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7�
 
 - **B1 resolvido** (2026-09-29): ciclo 2 FAIL (17 resolvidos, 3 novos) → correções A2.2 → ciclo 3
   **PASS** sem achados (`reviews/prompt-review-3.json`). Workers liberados.
+
+- **B2 — VAZAMENTO ENTRE TENANTS no comportamento atual (1.4.0), FAIL imediato e parada da rodada**
+  (2026-09-29; TASK-0002, C-01-09; reproduzido pelo maestro). Cidadão com claim e _membership_ só no
+  tenant A envia `POST /v1/portal/manifestations` com `X-Tenant-Id` do tenant B, sem Host mapeado:
+  201, `anonymous:false`, manifestação e `portal.subject` gravados em B com o `cpf_hash` do cidadão.
+  Detalhe em `reports/TASK-0002.md`. Nenhuma tarefa nova é despachada; TASK-0014 (iteração 2) e
+  TASK-0017, só de caracterização e já em curso, terminam e são registradas sem commit de produto.
+  Aguarda decisão do Owner.
 
 ## Retomada
 
