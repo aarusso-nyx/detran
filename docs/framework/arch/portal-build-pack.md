@@ -3,7 +3,7 @@ id: ARCH-PORTAL-BUILD-PACK
 title: Pacote de construção do Portal — definições e pacotes de trabalho para a orquestra (domínio portal, projeções, PWA)
 status: draft
 apps: [portal]
-updated: 2026-09-17
+updated: 2026-09-30
 ---
 
 # Pacote de construção do Portal
@@ -304,6 +304,19 @@ dos contratos `work/rounds/R-0009/contracts/CTG-000{1,2}.md`; nenhuma é fechada
 | OD-P106 | Cancelamento SNE.                  | Local; `cancelNotification` não serve.                                                         | Architect-backend               | CTG-0004 §10; `plan.md` A14(b)          |
 | OD-P107 | Mapa adapter → `PORTAL.*`.         | Sem mapa não vira INTERNAL.                                                                    | Architect-backend               | CTG-0004 §10; `plan.md` A14(f)          |
 | OD-P108 | DELETE de push.                    | Sem rota, não implementar/testar.                                                              | Architect-backend               | CTG-0004 §10; `plan.md` A14(f)          |
+
+### ODs da superfície PEC cidadã (R-0032)
+
+Registro transcrito de `work/rounds/R-0032/contracts/CTG-0001.md` e `plan.md` M3. As
+premissas abaixo não substituem decisão do Owner; pendências permanecem fail-closed.
+
+| ID         | Questão                                             | Estado e efeito nesta etapa                                                                                                                                                                                                                                                                                                     | Decisor                        |
+| ---------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| OD-R32-001 | Vínculo entre cidadão gov.br e candidato PEC        | **Decidida pelo Owner: opção (C).** `portal.entitlement` holder nasce de evento do dono com `subjectCpfHash` correspondente; Portal projeta somente metadados e consulta conteúdo pela porta do dono, sob demanda, com auditoria bilateral. Sem papel novo.                                                                     | Owner (decidida em 2026-09-26) |
+| OD-R32-002 | Nível gov.br por ato PEC                            | **Pendente.** Não ativar linha nova em `portal.act_level_policy`; ausência da linha nega o ato e `legal_basis` permanece `source_pending (OD-R32-002)`. O nível avançado vigente de `junta_medica` é preservado.                                                                                                                | Owner                          |
+| OD-R32-003 | Marco de ciência do resultado para prazo preclusivo | **Pendente.** Sem ciência expressa ou presencial registrada pelo dono, o prazo não começa e não há contador/vencimento. Emissão, recebimento ou disponibilização não são ciência. O dono registra o marco e calcula o prazo.                                                                                                    | Owner                          |
+| OD-R32-004 | Catálogo de serviços PEC no Portal                  | **Pendente.** Serviços novos ficam indisponíveis/bloqueados por decisão; `junta_medica` é a única exceção autorizada nesta rodada por OD-R27-002 = (b), condicionada às guardas e à ciência válida.                                                                                                                             | Owner                          |
+| OD-R32-005 | Conteúdo do dossiê acessível ao titular             | **Pendente.** O contrato delimita o máximo proposto — resultado por trilha, validade/prazo, documentos assinados com nível aplicado, restrições e devolutivas — sem habilitar novo acesso clínico até decisão. Não incluir instrumentos psicológicos, anotações técnicas nem cópia em `portal.*`; `SUPORTE` continua mascarado. | Owner                          |
 
 ## 5. Mapa entregável → definições
 
