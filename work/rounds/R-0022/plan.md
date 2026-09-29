@@ -324,7 +324,8 @@ ao planejar e revisar; Engineer ao commitar.
   TASK-0007 e TASK-0018); o corte de `integration.*` sem símbolo publicado é candidato a OD-R22-02.
   OD-R22-22…32 = P-09-1…11 de `contracts/CTG-0009.md` (offline-sync; TASK-0016); as divergências
   D-01…D-05, D-08, D-09 da 1.5.0 põem TASK-0018 em checkpoint provável (OD-R22-02). OD-R22-33: evidência de
-  decisão (`verifySignatureEvidence`) sem vínculo de tenant em 1.4.0 (TASK-0012).
+  decisão (`verifySignatureEvidence`) sem vínculo de tenant em 1.4.0 (TASK-0012). OD-R22-34…36:
+  prova HTTP do lado B, filtro `device_id` de recibos e `actor.id` não observável (TASK-0017).
 
 ## Concorrência
 
