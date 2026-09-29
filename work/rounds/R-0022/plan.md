@@ -516,6 +516,9 @@ recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7�
   0018←0015, 0010←0007/0008/0009) e `MOD-app-module` em TASK-0007. Nenhum worker foi disparado.
   Pela regra §5 do prompt do maestro, a rodada para e aguarda decisão do Owner.
 
+- **B1 resolvido** (2026-09-29): ciclo 2 FAIL (17 resolvidos, 3 novos) → correções A2.2 → ciclo 3
+  **PASS** sem achados (`reviews/prompt-review-3.json`). Workers liberados.
+
 ## Retomada
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1). Concluído: bootstrap (AUTHORIZATION, branch
