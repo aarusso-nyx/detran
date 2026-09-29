@@ -101,6 +101,16 @@ export class ReserveNumberingCommand {
         return view(existing);
       }
 
+      // Serializa as reservas do turno: a linha do turno é travada antes da
+      // faixa (a mesma ordem do fechamento de turno, que trava o turno e
+      // depois reserva e faixa), então duas reservas do mesmo turno em faixas
+      // diferentes não passam juntas pela checagem abaixo, e nenhuma nasce
+      // no meio da liquidação do fechamento.
+      await query(
+        `select id from ops.ops_shift
+          where tenant_id = $1 and id = $2 for no key update`,
+        [tenantId, input.shift_id ?? null],
+      );
       const range = await this.lockRange(query, tenantId, input);
       const active = await query<{ id: string }>(
         `select id from ops.numbering_reservation

@@ -1,4 +1,4 @@
-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220
+// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:0cecb280a562a6d26c2ea7af68a781de3cfa2ce054d9cae2cc6c1a6c06cc1082
 import { Module } from '@nestjs/common';
 import { AgentProfileController } from './controllers/agent-profile.controller.js';
 import { AgentProfileService } from './services/agent-profile.service.js';

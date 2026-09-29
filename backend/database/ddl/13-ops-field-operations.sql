@@ -1,4 +1,4 @@
--- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220
+-- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:0cecb280a562a6d26c2ea7af68a781de3cfa2ce054d9cae2cc6c1a6c06cc1082
 
 -- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
 
@@ -240,6 +240,7 @@ create table if not exists ops.ops_shift (
 );
 create index if not exists ix_ops_shift_tenant_id_agent_id_started_at on ops.ops_shift (tenant_id, agent_id, started_at);
 create index if not exists ix_ops_shift_tenant_id_status on ops.ops_shift (tenant_id, status);
+create unique index if not exists ux_ops_shift_tenant_id_agent_id_open on ops.ops_shift (tenant_id, agent_id) where status = 'open';
 create index if not exists ix_ops_shift_tenant_id on ops.ops_shift (tenant_id);
 create index if not exists ix_ops_shift_traffic_agency_id on ops.ops_shift (traffic_agency_id);
 create index if not exists ix_ops_shift_agent_id on ops.ops_shift (agent_id);

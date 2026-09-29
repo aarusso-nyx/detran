@@ -922,6 +922,12 @@
           },
           {
             "columns": ["tenant_id", "status"]
+          },
+          {
+            "name": "ux_ops_shift_tenant_id_agent_id_open",
+            "columns": ["tenant_id", "agent_id"],
+            "unique": true,
+            "where": "status = 'open'"
           }
         ],
         "foreignKeys": [
