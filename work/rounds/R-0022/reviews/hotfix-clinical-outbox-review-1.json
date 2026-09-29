@@ -1,0 +1,28 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-clinical-outbox-param-types",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "package.json",
+      "line": 50,
+      "claim": "O novo spec roda pelo pacote, mas @detran/ch-clinical-reports não integra backend:test:integration; a sequência agregada de CI não o executa.",
+      "fix": "Incluir o pacote na sequência de integração e garantir um banco de teste descartável no job."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/domains/ch/telehealth/src/telehealth-lifecycle.service.ts",
+      "line": 127,
+      "claim": "Outro escritor usa $2 sem cast em jsonb_build_object; o padrão merece verificação com PREPARE. Não faz parte deste hotfix.",
+      "fix": "Verificar o comando exato no PostgreSQL e, se falhar, tipar $2::uuid em correção própria."
+    }
+  ],
+  "notes": [
+    "Papel ativo: Auditor. Os três escritores do escopo receberam casts; chaves e valores do payload permanecem iguais, com IDs e kind/outcome como strings e administrativeExhausted como booleano.",
+    "O spec usa role_app_backend no caminho do produto e verifica isolamento A/B. A repetição de create retorna antes do INSERT; a de signAddendum é rejeitada antes dele. Assim, não exercitam ON CONFLICT.",
+    "Nenhum arquivo gerado ou teste existente foi alterado. Não há spec com banco para juntas; os resultados de PREPARE e dos testes foram informados pelo worker e não foram reproduzidos nesta revisão somente leitura."
+  ]
+}
