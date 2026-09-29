@@ -11,6 +11,7 @@ import request from 'supertest';
 import {
   CognitoJwtValidator,
   RedisPermissionCacheBackend,
+  STYNX_PUBLIC_ROUTE,
   StynxJwtValidator,
 } from '@stynx-nyx/auth';
 import {
@@ -81,6 +82,10 @@ type InventoryRow = Route & {
 const observedRows: ObservedRow[] = [];
 const observedInventory: InventoryRow[] = [];
 const handlerProofs = new Set<string>();
+const handlerDenials = new Map<
+  string,
+  { status: 401 | 403; code: string; layer: string }
+>();
 
 function proofKey(route: Route, principal: string): string {
   return [
@@ -136,7 +141,9 @@ function mountedRoutes(container: ModulesContainer): RuntimeRoute[] {
                   string | undefined) ?? null,
               public: Boolean(
                 Reflect.getMetadata('detran:public', target) ??
-                Reflect.getMetadata('detran:public', controller),
+                Reflect.getMetadata('detran:public', controller) ??
+                Reflect.getMetadata(STYNX_PUBLIC_ROUTE, target) ??
+                Reflect.getMetadata(STYNX_PUBLIC_ROUTE, controller),
               ),
               classRef: controller as Type<unknown>,
               handlerRef: target,
@@ -282,10 +289,12 @@ async function probeGuardChain(
   app: Awaited<ReturnType<typeof NestFactory.create>>,
   route: RuntimeRoute,
   authorization?: string,
+  requestedTenantId = '00000000-0000-7000-8000-000000000001',
+  requestedHost = 'unmapped.fixture.test',
 ): Promise<{ status: number; layer: string; code: string | null }> {
   const headers: Record<string, string> = {
-    'x-tenant-id': '00000000-0000-7000-8000-000000000001',
-    host: 'unmapped.fixture.test',
+    'x-tenant-id': requestedTenantId,
+    host: requestedHost,
     'if-match': '"1"',
   };
   if (authorization) headers.authorization = authorization;
@@ -508,6 +517,12 @@ beforeAll(async () => {
   await client.connect();
   try {
     await seedLocalTenant(client);
+    await asOwner(client);
+    await client.query(
+      `insert into auth.tenants (id, slug, name)
+       values ('00000000-0000-7000-8000-000000000102', 'sp', 'DETRAN SP')
+       on conflict (id) do nothing`,
+    );
   } finally {
     await client.end();
   }
@@ -628,6 +643,34 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
     }
   });
 
+  it('dado ADMIN com curinga quando lê alertas DASHBOARD então a camada N0 nega após as guardas', async () => {
+    const previousRole = process.env.DETRAN_LOCAL_ROLES;
+    const route = mountedRoutes(defaultApp.get(ModulesContainer)).find(
+      (candidate) =>
+        candidate.method === 'GET' && candidate.path === '/v1/dashboard/alerts',
+    );
+    expect(route).toBeDefined();
+    try {
+      process.env.DETRAN_LOCAL_ROLES = 'ADMIN';
+      const guard = await probeGuardChain(defaultApp, route!, 'Bearer local');
+      expect(guard.status).toBe(200);
+      const response = await request(defaultApp.getHttpServer())
+        .get(route!.path)
+        .set('Authorization', 'Bearer local')
+        .set('X-Tenant-Id', '00000000-0000-7000-8000-000000000001');
+      expect(response.status, JSON.stringify(response.body)).toBe(403);
+      expect(response.body.code).toBe('DASH.LAYER_FORBIDDEN');
+      handlerDenials.set(proofKey(route!, 'role:ADMIN'), {
+        status: 403,
+        code: 'DASH.LAYER_FORBIDDEN',
+        layer: 'DashboardLayerGate',
+      });
+    } finally {
+      if (previousRole === undefined) delete process.env.DETRAN_LOCAL_ROLES;
+      else process.env.DETRAN_LOCAL_ROLES = previousRole;
+    }
+  });
+
   it('dado Host do tenant A e X-Tenant-Id do B quando cria manifestação oportunista então conserva a linha de base #159', async () => {
     const tenantB = '00000000-0000-7000-8000-000000000102';
     const databaseUrl =
@@ -667,6 +710,13 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
         .send({ kind: 'reclamacao', text: 'R-0023 matriz antes #159' });
       expect(response.status, JSON.stringify(response.body)).toBe(201);
       expect(response.body.anonymous).toBe(true);
+      const route = mountedRoutes(defaultApp.get(ModulesContainer)).find(
+        (candidate) =>
+          candidate.method === 'POST' &&
+          candidate.path === '/v1/portal/manifestations',
+      );
+      expect(route).toBeDefined();
+      handlerProofs.add(proofKey(route!, 'outside-tenant'));
       manifestationId = response.body.manifestationId as string;
       await asOwner(client);
       await client.query("select set_config('app.tenant_id', $1, false)", [
@@ -736,24 +786,40 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
             role,
             decisionBody: undefined as string | undefined,
             authorization: 'Bearer local' as string | undefined,
+            requestedTenantId: undefined as string | undefined,
+            requestedHost: undefined as string | undefined,
           })),
           {
             id: 'none',
             role: undefined,
             decisionBody: undefined,
             authorization: undefined,
+            requestedTenantId: undefined as string | undefined,
+            requestedHost: undefined as string | undefined,
+          },
+          {
+            id: 'outside-tenant',
+            role: 'CIDADAO',
+            decisionBody: undefined,
+            authorization: 'Bearer local',
+            requestedTenantId: '00000000-0000-7000-8000-000000000102',
+            requestedHost: LOCAL_HOSTNAME,
           },
           {
             id: 'role:traffic-authority;decision_body=absent',
             role: 'traffic-authority',
             decisionBody: undefined,
             authorization: 'Bearer local',
+            requestedTenantId: undefined,
+            requestedHost: undefined,
           },
           {
             id: 'role:traffic-authority;decision_body=diretoria-fiscalizacao',
             role: 'traffic-authority',
             decisionBody: 'diretoria-fiscalizacao',
             authorization: 'Bearer local',
+            requestedTenantId: undefined,
+            requestedHost: undefined,
           },
         ];
         for (const variant of variants) {
@@ -768,7 +834,13 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
               app,
               route,
               variant.authorization,
+              variant.requestedTenantId,
+              variant.requestedHost,
             );
+            const denial =
+              result.status === 200
+                ? handlerDenials.get(proofKey(route, variant.id))
+                : undefined;
             observedRows.push({
               method: route.method,
               path: route.path,
@@ -779,9 +851,9 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
               public: route.public,
               principal: variant.id,
               profile: 'local',
-              status: result.status,
-              code: result.code,
-              layer: result.layer,
+              status: denial?.status ?? result.status,
+              code: denial?.code ?? result.code,
+              layer: denial?.layer ?? result.layer,
               ...(result.status === 200 &&
               handlerProofs.has(proofKey(route, variant.id))
                 ? { handlerEvaluated: true }
@@ -798,6 +870,18 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
       }
       expect(failures.slice(0, 25), `${failures.length} failures`).toEqual([]);
       expect(union.size).toBe(1036);
+      expect(
+        observedRows.find(
+          (row) =>
+            row.profile === 'local' &&
+            row.principal === 'outside-tenant' &&
+            row.method === 'GET' &&
+            row.path === '/v1/portal/identity/me',
+        ),
+      ).toMatchObject({
+        status: 403,
+        layer: 'DetranLegacyAuthContextGuard',
+      });
     } finally {
       if (previous === undefined) delete process.env.DETRAN_LOCAL_ROLES;
       else process.env.DETRAN_LOCAL_ROLES = previous;
@@ -889,6 +973,13 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
         1042,
       );
       const union = unionMountedRoutes(completeDefault, completeSpeed);
+      expect(
+        [...union.values()].find(
+          ({ route }) =>
+            route.controller === 'StynxAuthController' &&
+            route.handler === 'createSession',
+        )?.route.public,
+      ).toBe(true);
       observedInventory.push(...inventoryRows(union, 'complete'));
       const failures: string[] = [];
       for (const { app, route } of union.values()) {
