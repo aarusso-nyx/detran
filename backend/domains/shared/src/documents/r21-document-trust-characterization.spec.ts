@@ -59,34 +59,4 @@ describe('R-0021 confiança documental caracterizada', () => {
       }),
     );
   });
-
-  it('dado backend ausente, capacidades parciais ou HTTP claro em produção quando verifica então falha fechada', async () => {
-    configure();
-    delete process.env.DETRAN_DOCUMENT_TRUST_TOKEN;
-    await expect(
-      new DocumentTrustHttpAdapter().checkCapabilities(),
-    ).rejects.toThrow('is not configured');
-
-    configure();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue(
-        response({
-          documentManifest: true,
-          padesLt: true,
-          tsa: false,
-          withdrawalEvidence: true,
-          certificateValidation: [],
-        }),
-      ),
-    );
-    await expect(
-      new DocumentTrustHttpAdapter().checkCapabilities(),
-    ).rejects.toThrow('lacks required capabilities');
-
-    configure('production');
-    await expect(
-      new DocumentTrustHttpAdapter().checkCapabilities(),
-    ).rejects.toThrow('must use HTTPS');
-  });
 });

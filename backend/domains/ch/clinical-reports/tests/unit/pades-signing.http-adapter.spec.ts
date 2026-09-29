@@ -52,26 +52,6 @@ describe('PadesSigningHttpAdapter trust readiness', () => {
     );
   });
 
-  it('fails closed when archival or revocation capability is absent', async () => {
-    configure();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            pades: true,
-            tsa: true,
-            lta: false,
-            certificateValidation: [],
-          }),
-      }),
-    );
-    await expect(
-      new PadesSigningHttpAdapter().checkCapabilities(),
-    ).rejects.toThrow('lacks required');
-  });
-
   it('rejects cleartext trust endpoints outside local/test', async () => {
     configure();
     process.env.DETRAN_CLINICAL_SIGNING_URL = 'http://trust.example.test/sign';

@@ -323,7 +323,8 @@ ao planejar e revisar; Engineer ao commitar.
   (outbox; TASK-0013): 15 bloqueia TASK-0015 parte 1; 16…19 bloqueiam a parte 2 (e, por dependência,
   TASK-0007 e TASK-0018); o corte de `integration.*` sem símbolo publicado é candidato a OD-R22-02.
   OD-R22-22…32 = P-09-1…11 de `contracts/CTG-0009.md` (offline-sync; TASK-0016); as divergências
-  D-01…D-05, D-08, D-09 da 1.5.0 põem TASK-0018 em checkpoint provável (OD-R22-02).
+  D-01…D-05, D-08, D-09 da 1.5.0 põem TASK-0018 em checkpoint provável (OD-R22-02). OD-R22-33: evidência de
+  decisão (`verifySignatureEvidence`) sem vínculo de tenant em 1.4.0 (TASK-0012).
 
 ## Concorrência
 

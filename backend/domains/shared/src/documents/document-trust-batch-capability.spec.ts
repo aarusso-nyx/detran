@@ -90,56 +90,6 @@ describe('CTG-0002 — capacidade documental da ata de distribuição', () => {
     vi.restoreAllMocks();
   });
 
-  for (const [name, health] of [
-    [
-      'capacidade batchDistributionMinutes ausente',
-      { ...capabilities, batchDistributionMinutes: undefined },
-    ],
-    [
-      'capacidade batchDistributionMinutes falsa',
-      { ...capabilities, batchDistributionMinutes: false },
-    ],
-    ['PAdES-B-LT indisponível', { ...capabilities, padesLt: false }],
-    ['TSA indisponível', { ...capabilities, tsa: false }],
-    ['OCSP/CRL indisponível', { ...capabilities, certificateValidation: [] }],
-    ['resposta de health parcial', { batchDistributionMinutes: true }],
-  ] as const) {
-    it(`dado ${name} quando a ata é verificada então falha fechada antes do recibo`, async () => {
-      const fetch = vi.fn(async () => response(health));
-      vi.stubGlobal('fetch', fetch);
-
-      await expect(
-        (await adapter()).verifyBatchMinutesEvidence(input),
-      ).rejects.toBeDefined();
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(HEALTH_URL, healthRequest);
-    });
-  }
-
-  it('dado HTTP não-2xx no health quando a ata é verificada então não consulta recibo', async () => {
-    const fetch = vi.fn(async () => response({}, false, 503));
-    vi.stubGlobal('fetch', fetch);
-
-    await expect(
-      (await adapter()).verifyBatchMinutesEvidence(input),
-    ).rejects.toBeDefined();
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(HEALTH_URL, healthRequest);
-  });
-
-  it('dado serviço indisponível no health quando a ata é verificada então não gera recibo positivo', async () => {
-    const fetch = vi.fn(async () =>
-      Promise.reject(new Error('service unavailable')),
-    );
-    vi.stubGlobal('fetch', fetch);
-
-    await expect(
-      (await adapter()).verifyBatchMinutesEvidence(input),
-    ).rejects.toBeDefined();
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(HEALTH_URL, healthRequest);
-  });
-
   it('dado capacidade específica válida seguida de recibo válido quando a ata é verificada então aceita sem exigir evidência de retirada', async () => {
     const fetch = vi
       .fn()

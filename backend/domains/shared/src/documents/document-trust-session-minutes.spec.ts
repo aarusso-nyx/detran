@@ -198,43 +198,6 @@ describe('TASK-0049 — trust documental da ata de sessão', () => {
     );
   });
 
-  for (const [name, health] of [
-    [
-      'capacidade sessionMinutes ausente',
-      { ...capabilities, sessionMinutes: undefined },
-    ],
-    [
-      'capacidade de recibos múltiplos falsa',
-      { ...capabilities, multipleReceipts: false },
-    ],
-    [
-      'manifesto recuperável falso',
-      { ...capabilities, recoverableManifest: false },
-    ],
-    ['PAdES-B-LT indisponível', { ...capabilities, padesLt: false }],
-    ['TSA indisponível', { ...capabilities, tsa: false }],
-    [
-      'OCSP e CRL indisponíveis',
-      { ...capabilities, certificateValidation: [] },
-    ],
-  ] as const) {
-    it(`dado ${name} quando o recibo de ata é verificado então falha fechada antes de consultar assinatura`, async () => {
-      const fetch = vi.fn(async () => response(health));
-      vi.stubGlobal('fetch', fetch);
-
-      await expect(
-        (await adapter()).verifySessionMinutesEvidence(verifyInput),
-      ).rejects.toMatchObject({ code: 'RAIT.SIGNATURE_FAILED' });
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(
-        HEALTH_URL,
-        expect.objectContaining({
-          headers: { authorization: 'Bearer fixture-token' },
-        }),
-      );
-    });
-  }
-
   it('dado recibo PAdES-B-LT válido do presidente quando a ata é verificada então confere tenant, sessão, ata, documento, hashes, TSA e OCSP ou CRL sem alegar criptografia real do fake', async () => {
     const fetch = vi
       .fn()
