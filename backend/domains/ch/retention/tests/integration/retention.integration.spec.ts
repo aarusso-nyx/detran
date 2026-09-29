@@ -7,10 +7,16 @@ import {
   permissionsForRoles,
   type DetranRole,
 } from '@detran/shared';
+import {
+  assertTableTenantIsolation,
+  createRlsFixture,
+  removeRlsFixture,
+} from '../../../scheduling/tests/integration/tenant-rls-fixture.js';
 
 const { Client } = pg;
 const connectionString = process.env.DETRAN_TEST_DATABASE_URL;
 const client = new Client({ connectionString });
+let fixture: Awaited<ReturnType<typeof createRlsFixture>>;
 const resource = 'retention';
 const action = 'review';
 const policyKey = `ch:${resource}:${action}`;
@@ -22,8 +28,14 @@ const denied = DETRAN_ROLES.filter(
   (role) => !grants.includes(role) && !hasGlobalGrant(role),
 );
 
-beforeAll(async () => client.connect());
-afterAll(async () => client.end());
+beforeAll(async () => {
+  await client.connect();
+  fixture = await createRlsFixture(client, 'retention_case');
+});
+afterAll(async () => {
+  await removeRlsFixture(client, fixture);
+  await client.end();
+});
 
 describe('retention integration', () => {
   it('dado uma disposição bloqueada quando cada papel canônico a revisa então somente DPO é autorizado', () => {
@@ -72,5 +84,14 @@ describe('retention integration', () => {
       { relrowsecurity: true, policy_count: expect.any(Number) },
     ]);
     expect(result.rows[0]?.policy_count).toBeGreaterThan(0);
+  });
+  it('dado casos de retenção A e B quando principal A lê ou muta B então RLS não revela nem altera B', async () => {
+    await expect(
+      assertTableTenantIsolation(client, 'retention_case', fixture),
+    ).resolves.toEqual({
+      crossTenantRead: [],
+      crossTenantMutation: [],
+      ownerRead: [{ id: fixture.targetIdB }],
+    });
   });
 });

@@ -25,6 +25,7 @@ const NAMESPACE_PREFIXES = [
     prefixes.map((prefix) => prefix.slice(0, -1)),
   ),
   'boat',
+  'pec',
 ];
 const NAMESPACE_PATTERN = new RegExp(
   `^(?:${NAMESPACE_PREFIXES.join('|')})\\.[a-z][a-z0-9_]*$`,

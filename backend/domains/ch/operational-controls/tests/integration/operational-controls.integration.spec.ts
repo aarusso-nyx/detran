@@ -7,11 +7,17 @@ import {
   permissionsForRoles,
   type DetranRole,
 } from '@detran/shared';
+import {
+  assertTableTenantIsolation,
+  createRlsFixture,
+  removeRlsFixture,
+} from '../../../scheduling/tests/integration/tenant-rls-fixture.js';
 
 const { Client } = pg;
 const client = new Client({
   connectionString: process.env.DETRAN_TEST_DATABASE_URL,
 });
+let fixture: Awaited<ReturnType<typeof createRlsFixture>>;
 const resource = 'operational-control';
 const action = 'write';
 const policyKey = `ch:${resource}:${action}`;
@@ -20,8 +26,14 @@ const global = (role: DetranRole) => permissionsForRoles([role]).includes('*');
 const denied = DETRAN_ROLES.filter(
   (role) => !grants.includes(role) && !global(role),
 );
-beforeAll(async () => client.connect());
-afterAll(async () => client.end());
+beforeAll(async () => {
+  await client.connect();
+  fixture = await createRlsFixture(client, 'operational_record');
+});
+afterAll(async () => {
+  await removeRlsFixture(client, fixture);
+  await client.end();
+});
 
 describe('operational-controls integration', () => {
   it('dado controle operacional de clínica quando cada papel canônico o escreve então aplica grants e nega todos os demais', () => {
@@ -54,5 +66,14 @@ describe('operational-controls integration', () => {
       { relrowsecurity: true, policy_count: expect.any(Number) },
     ]);
     expect(result.rows[0]?.policy_count).toBeGreaterThan(0);
+  });
+  it('dado controles operacionais A e B quando principal A lê ou muta B então RLS não revela nem altera B', async () => {
+    await expect(
+      assertTableTenantIsolation(client, 'operational_record', fixture),
+    ).resolves.toEqual({
+      crossTenantRead: [],
+      crossTenantMutation: [],
+      ownerRead: [{ id: fixture.targetIdB }],
+    });
   });
 });

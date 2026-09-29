@@ -6,13 +6,18 @@ import {
   isDetranActionAllowed,
   permissionsForRoles,
 } from '../../../../shared/src/policy.js';
-import { verifyClinicalTenantIsolation } from '../../../patients/tests/integration/tenant-rls-harness.js';
 import { DETRAN_ROLES } from '../../../../shared/src/roles.js';
+import {
+  assertTableTenantIsolation,
+  createRlsFixture,
+  removeRlsFixture,
+} from '../../../scheduling/tests/integration/tenant-rls-fixture.js';
 
 const { Client } = pg;
 const client = new Client({
   connectionString: process.env.DETRAN_TEST_DATABASE_URL,
 });
+let fixture: Awaited<ReturnType<typeof createRlsFixture>>;
 const operations = [
   'report:read',
   'report:create',
@@ -47,8 +52,14 @@ function assertPolicy(resource: string, action: string) {
   }
 }
 
-beforeAll(async () => client.connect());
-afterAll(async () => client.end());
+beforeAll(async () => {
+  await client.connect();
+  fixture = await createRlsFixture(client, 'report');
+});
+afterAll(async () => {
+  await removeRlsFixture(client, fixture);
+  await client.end();
+});
 
 describe('clinical-reports PostgreSQL integration', () => {
   it('dado a matriz de laudos quando cada papel canônico solicita laudo, adendo ou assinatura então concede apenas grants explícitos ou globais', () => {
@@ -64,7 +75,13 @@ describe('clinical-reports PostgreSQL integration', () => {
     );
     expect(result.rows).toEqual([{ relrowsecurity: true }]);
   });
-  it('dado fixtures A e B quando principal A lê ou muta dado clínico B então RLS nega a operação', async () => {
-    await verifyClinicalTenantIsolation(process.env.DETRAN_TEST_DATABASE_URL);
+  it('dado laudos A e B quando principal A lê ou muta B então RLS não revela nem altera B', async () => {
+    await expect(
+      assertTableTenantIsolation(client, 'report', fixture),
+    ).resolves.toEqual({
+      crossTenantRead: [],
+      crossTenantMutation: [],
+      ownerRead: [{ id: fixture.targetIdB }],
+    });
   });
 });

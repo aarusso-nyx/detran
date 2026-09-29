@@ -6,13 +6,18 @@ import {
   isDetranActionAllowed,
   permissionsForRoles,
 } from '../../../../shared/src/policy.js';
-import { verifyClinicalTenantIsolation } from '../../../patients/tests/integration/tenant-rls-harness.js';
 import { DETRAN_ROLES, type DetranRole } from '../../../../shared/src/roles.js';
+import {
+  assertTableTenantIsolation,
+  createRlsFixture,
+  removeRlsFixture,
+} from './tenant-rls-fixture.js';
 
 const { Client } = pg;
 const client = new Client({
   connectionString: process.env.DETRAN_TEST_DATABASE_URL,
 });
+let fixture: Awaited<ReturnType<typeof createRlsFixture>>;
 const operations = [
   'appointment:read',
   'appointment:list',
@@ -45,8 +50,14 @@ function assertPolicy(resource: string, action: string) {
     ).toBe(Boolean(grants?.includes(role) || global));
   }
 }
-beforeAll(async () => client.connect());
-afterAll(async () => client.end());
+beforeAll(async () => {
+  await client.connect();
+  fixture = await createRlsFixture(client, 'appointment');
+});
+afterAll(async () => {
+  await removeRlsFixture(client, fixture);
+  await client.end();
+});
 describe('scheduling PostgreSQL integration', () => {
   it('dado a matriz de agenda quando cada papel canônico solicita uma operação então concede apenas grants explícitos ou globais', () => {
     for (const operation of operations) {
@@ -60,7 +71,13 @@ describe('scheduling PostgreSQL integration', () => {
     );
     expect(result.rows).toEqual([{ relrowsecurity: true }]);
   });
-  it('dado fixtures A e B quando principal A lê ou muta dado clínico B então RLS nega a operação', async () => {
-    await verifyClinicalTenantIsolation(process.env.DETRAN_TEST_DATABASE_URL);
+  it('dado appointments A e B quando principal A lê ou muta B então RLS não revela nem altera B', async () => {
+    await expect(
+      assertTableTenantIsolation(client, 'appointment', fixture),
+    ).resolves.toEqual({
+      crossTenantRead: [],
+      crossTenantMutation: [],
+      ownerRead: [{ id: fixture.targetIdB }],
+    });
   });
 });

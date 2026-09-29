@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed
+// Generated from parameter-catalogue.md sha256:81c32b2e0b6a4277332793c518ad62c4023924cb08a4072ed9556b05c2e6ff74
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed';
+  '81c32b2e0b6a4277332793c518ad62c4023924cb08a4072ed9556b05c2e6ff74';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',

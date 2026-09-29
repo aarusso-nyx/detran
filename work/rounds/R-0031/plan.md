@@ -424,11 +424,11 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   `prompts/00-maestro.md` limita a revisão a dois ciclos; o Owner autorizou
   ciclos adicionais pela A-R31-02. O ciclo 3, restrito ao achado residual,
   retornou `PASS` em `reviews/prompt-review-3.json` antes do despacho O1.
-- **O5, cobertura RLS incompleta (2026-09-29):** os dois Inspectors esgotaram
-  suas duas iterações. `patients` prova isolamento A/B real e `billing` prova
-  isolamento A/B real; os outros quinze módulos só leem `pg_class.relrowsecurity`.
-  O CTG-0002 não será publicado até a corretiva posterior à semente O6 comprovar
-  leitura e mutação A/B no recurso de cada módulo.
+- **O5, cobertura RLS corrigida (2026-09-29):** TASK-0020 concluiu a corretiva
+  posterior à semente O6. Além de `patients` e `billing`, os quinze recursos
+  restantes agora provam fixture A/B, leitura e mutação cross-tenant vazias e
+  leitura do dono sob `role_app_backend`. Os dois grupos de aceite passaram no
+  banco final; CTG-0002 está materialmente concluído.
 - **O6, agregados e adaptador protegido (2026-09-29):** as 17 suítes CH e as
   duas execuções da semente `ch` passaram no banco final, mas
   `backend:test:integration` para em `@detran/inf-ait`, cujo guard exige
@@ -453,6 +453,8 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   `pnpm verify:round-tasks` e `pnpm format:check` estão verdes.
 
 ## Retomada
+
+aguardando R-0024: kit `@detran/ui` e `frontend-wiring-pattern.md`
 
 ## Leitura
 
