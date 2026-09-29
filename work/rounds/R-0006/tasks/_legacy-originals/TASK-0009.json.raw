@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Amend contract CTG-0001 §5 with a deadline event port and the T-DIL extension verb",
+  "description": "Close delivery-review-2 findings (b) and (c): specify DeadlineEvents/InMemoryDeadlineEvents, extend(id, reason) with a single extension for T-DIL, error codes, schema change for inf.timer.rescheduled, and cases 19–22 plus the case-12 amendment.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-ctg-0001",
+    "MOD-schemas-events",
+    "MOD-arch-events-contract"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "rait-deadline-engine §2-§3",
+    "RN-RAIT-004",
+    "Res. 900/2022 art. 9º"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "deadlines", "delivery-review-2"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-2dc0fff5f3ba7455",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "work/rounds/R-0006/contracts",
+      "docs/framework/schemas/events"
+    ],
+    ["pnpm", "--filter", "@detran/inf-deadlines", "test"]
+  ],
+  "created_at": "2026-09-14T22:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-2dc0fff5f3ba7455",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

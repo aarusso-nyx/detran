@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0012",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar o contrato do CTG-0002c: 16 formulários (campos, validações, gates), rait-web-forms.md e regras ESLint",
+  "description": "contracts/CTG-0002c.md + docs/framework/arch/rait-web-forms.md a partir de rait-web-frontend.md §6.6/§7/§9, rait-error-catalog.md §3–§4, RN-RAIT citadas e tabelas de transição; AST das regras rait/no-client-deadline-math e rait/no-static-token-i18n-key.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r12-contracts-2c", "MOD-rait-web-forms-doc"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002c",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-e", "architect"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-e941f6553dfb5977",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-e941f6553dfb5977",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

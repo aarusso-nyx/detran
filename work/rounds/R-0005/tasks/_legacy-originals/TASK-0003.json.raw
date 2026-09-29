@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0005",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Specify ops database invariants as tests",
+  "description": "Encode the approved ops checks, foreign keys, RLS, idempotency, and shift states before implementation wiring.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ops-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001", "ADR-0002"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t1", "tests"],
+  "branch": "orchestra/ops-agency",
+  "worktree_id": "WT-ops-agency",
+  "prompt_composition_id": "PC-63b491880bca5968",
+  "acceptance_commands": [
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "backend:rls-smoke"],
+    ["pnpm", "--filter", "@detran/app", "test:integration"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"]
+  ],
+  "created_at": "2026-09-14T05:15:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-63b491880bca5968",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -11,14 +11,21 @@
   "target_modules": ["MOD-teat-mobile-production"],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0004a",
+  "coupled_task_group": "CTG-9006",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0012",
   "db_isolation": "database",
   "iteration_count": 8,
   "max_iterations": 8,
   "priority": 1,
-  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "tags": [
+    "wp-t4",
+    "wp-t5",
+    "wp-t6",
+    "legacy-ctg:CTG-0004a",
+    "legacy-original:tasks/_legacy-originals/TASK-0013.json.raw",
+    "legacy-sha256:59477b8694b96976200b759ad40f9a9c753fd0875270d82a87734d4c72b1e7b4"
+  ],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
   "prompt_composition_id": "PC-1e4b8ce82ab76f36",
@@ -35,10 +42,7 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-terra",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-terra"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
     "prompt_composition_id": "PC-1e4b8ce82ab76f36",
     "max_iterations": 8,
     "capabilities": ["read", "local-write"]

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Raise the three RAIT blueprints to v1.1.0 with the WF-RAIT-004 §10 deltas",
+  "description": "Add rait_unit, rait_schedule/slot, rait_batch/item, rait_substitute_duty, rait_bench, impediment kind, session modality/view/publication and case priority/unit/version/pending/redirect/draft; regenerate DDL 34-36 and contracts; write contracts/CTG-0002-deltas.md with state machines, uniqueness, migration notes and required seed adjustments.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-rait-worklist",
+    "MOD-bp-rait-session",
+    "MOD-bp-rait-case",
+    "MOD-ddl-34",
+    "MOD-ddl-35",
+    "MOD-ddl-36",
+    "MOD-generated-tree"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "WF-RAIT-004 §9-§10",
+    "WF-RAIT-003",
+    "UC-RAIT-027",
+    "UC-RAIT-028",
+    "OD-101…OD-112 (H.57)"
+  ],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-a", "rait", "blueprint", "deltas"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-97ad12ee287bb695",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-14T17:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-97ad12ee287bb695",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -14,11 +14,19 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0075",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "parameter-context"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "parameter-context",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0076.json.raw",
+    "legacy-sha256:2c9deda568cf733716ec71900cd27d41adbf6793bfe13b3258ba75f6d992bf08"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-6817b6b5391054f5",
@@ -36,12 +44,5 @@
   },
   "intent_diff": {
     "summary": "Sensor RED de collection push; implementação fora."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "result": "RED expected",
-    "collection": "26 tests; 25 PASS, context sensor FAIL",
-    "diagnostics": "Three collection literals misclassified while teat.unknown.threshold remained the intentional error"
   }
 }

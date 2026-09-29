@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0012",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as fichas de tela do lote C (gestao, organizacao, integracoes, financeiro, arquivo, auditoria, admin) — IU-RAIT-039…064 e baseline do KB",
+  "description": "Uma ficha por rota com página do lote C, no padrão M6 (módulos pendentes com estado \"indisponível nesta versão\" e dependência da §11), a partir de rait-web-frontend.md §4–§7, §9–§11, jornadas JW-02/09/10/11/12 e catálogo de erros; sobe artifactIdCount 675 → 738 em import-manifest.json.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-rait-screens-C", "MOD-kb-manifest"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-d", "transcricao"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-e0601d286903d400",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-e0601d286903d400",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

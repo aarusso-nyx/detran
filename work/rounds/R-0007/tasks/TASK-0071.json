@@ -22,7 +22,13 @@
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-3"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "final-observation-3",
+    "legacy-original:tasks/_legacy-originals/TASK-0071.json.raw",
+    "legacy-sha256:f62a64703476a7667fd1b88ccd10fd201bf14163e463280de71b886ca4ebc295"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-86b5e8d7d5786c3d",
@@ -43,13 +49,5 @@
   },
   "intent_diff": {
     "summary": "Observação somente; nenhuma correção ou regeneração."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "passed_before_failure": "All integration suites passed; app E2E reached 120 PASS.",
-    "finding": "Two worklist E2E preconditions counted all tenant cases and observed 32 after case-command E2E created 12 isolated cases, instead of counting the closed 20 legacy fixture IDs.",
-    "classification": "Order-coupled sensor precondition; product assertions were not reached in those two suites."
   }
 }

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0012",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar os 16 schemas de formulário e as regras ESLint locais (CTG-0002c) até os testes passarem",
+  "description": "src/app/forms/*.schema.ts com cabeçalho de gate (M11), eslint/local-rules.js e eslint.config.js (M12).",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-web-forms",
+    "MOD-rait-web-lint",
+    "MOD-rait-web-eslint-config"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002c",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-e", "engineer"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-02511793fdeb9ea0",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"],
+    ["pnpm", "--filter", "@detran/rait-web", "build"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-02511793fdeb9ea0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

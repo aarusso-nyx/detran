@@ -10,7 +10,7 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-contract-case"],
   "target_substrates": ["F2"],
-  "target_invariants": ["WF-RAIT-001", "ADR-0015", "OD-309"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": null,
@@ -18,7 +18,16 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "tags": [
+    "wp-b",
+    "wp-c",
+    "attempt-2",
+    "ref:WF-RAIT-001",
+    "ref:ADR-0015",
+    "ref:OD-309",
+    "legacy-original:tasks/_legacy-originals/TASK-0001.json.raw",
+    "legacy-sha256:ad26297c7ed86d8cb03d4ca0307daa0b0f3f9a34aa1ca334d0de8ba98d3a11bf"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-7b0301f97b00e2b6",
@@ -32,10 +41,7 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-terra",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-terra"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
     "prompt_composition_id": "PC-7b0301f97b00e2b6",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

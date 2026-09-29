@@ -14,11 +14,20 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0007",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 2,
   "max_iterations": 2,
   "priority": 5,
-  "tags": ["wp-b4", "wp-b5", "ctg-0002", "prompt-review-correction"],
+  "tags": [
+    "wp-b4",
+    "wp-b5",
+    "ctg-0002",
+    "prompt-review-correction",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0012.json.raw",
+    "legacy-sha256:7f680eb277a868a235934cd5758b1ec960d059e0b8cc35ef49e9a0061ca300cd"
+  ],
   "branch": "orchestra/boat-mobile",
   "worktree_id": "WT-boat-mobile",
   "prompt_composition_id": "PC-97b273cf12fc7fa4",
@@ -32,10 +41,7 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-luna",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-luna"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
     "prompt_composition_id": "PC-97b273cf12fc7fa4",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

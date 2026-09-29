@@ -25,7 +25,9 @@
   "tags": [
     "attempt-2",
     "owner-corrective-16-commands",
-    "final-observation-retry"
+    "final-observation-retry",
+    "legacy-original:tasks/_legacy-originals/TASK-0067.json.raw",
+    "legacy-sha256:6fbb98cf483c2cbb882f3f658070dd92696b28db7998a5b087c44745dd5a4ba2"
   ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
@@ -52,14 +54,5 @@
   },
   "intent_diff": {
     "summary": "Observação somente; nenhuma correção ou regeneração."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "passed_before_failure": "All unit tiers reached the legacy preparation boundary; RAIT shared 323, case 156, worklist 78, session 39 and app 97 passed.",
-    "finding": "The baseline used current DDL36 immutable-minute triggers before the frozen v1.1.0 seed updated published_at at line 172.",
-    "classification": "Historical harness composition defect; product immutability behaved correctly.",
-    "database_restoration": "Mandatory error-path restoration executed by prepareLegacyPriorityV1Baseline."
   }
 }

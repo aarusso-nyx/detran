@@ -18,14 +18,18 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0065",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
   "tags": [
     "attempt-2",
     "owner-corrective-16-commands",
-    "upgrade-compatibility"
+    "upgrade-compatibility",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0066.json.raw",
+    "legacy-sha256:7a3b067165148aa0c21e7496fb1c1a03003ccc48d67e08ce2e6a462d9abe7c9b"
   ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
@@ -49,23 +53,5 @@
   },
   "intent_diff": {
     "summary": "Compatibilidade declarativa de FK; sem reduzir isolamento, alterar fixtures ou runtime."
-  },
-  "execution_evidence": {
-    "role": "Architect",
-    "iteration": "1/1",
-    "result": "PASS",
-    "decision": "A FK diferida declara referencedUniqueIndex; o gerador instala ux_inf_rait_pool_member_tenant_id antes da FK composta sem editar o fixture histórico.",
-    "reproducibility": {
-      "runs": 2,
-      "ddl36_sha256": "e61951078bf5b44d2df690df10bc6a5f958e45ad29d71f82c74da83a445cf0e7",
-      "openapi_sha256": "764bdcac4bd43485c3fd664c1e4438d18c2f1a27be7ad6f07d1b79f474aca5bb"
-    },
-    "gates": {
-      "contracts_check": "PASS",
-      "verify_rls_ddl": "PASS (193 tenant tables)",
-      "session_typecheck": "PASS",
-      "git_diff_check": "PASS",
-      "blueprint_regeneration": "PASS; independent full regeneration completed"
-    }
   }
 }

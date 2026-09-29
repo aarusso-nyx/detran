@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever 17 fichas IU-BOAT-S/W e atualizar o manifesto do KB",
+  "description": "Criar 12 fichas mobile e 5 web a partir do contrato fechado, sem inventar valores, e incrementar artifactIdCount em 17 no mesmo conjunto de entrega.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-boat-screens", "MOD-kb-manifest"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 6,
+  "max_iterations": 6,
+  "priority": 2,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-43bb7d394bd946e8",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-43bb7d394bd946e8",
+    "max_iterations": 6,
+    "capabilities": ["read", "local-write"]
+  }
+}

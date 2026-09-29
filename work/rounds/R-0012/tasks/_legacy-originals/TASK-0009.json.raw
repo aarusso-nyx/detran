@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0012",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar data/ e shared/ de apps/rait/web (CTG-0002b-1) até os testes passarem",
+  "description": "Modelos, 8 clientes, ETag store, list-query, 11 facades + suporte, busca do shell, 26 componentes de shared/; packages/ui só por adenda.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-web-data",
+    "MOD-rait-web-shared",
+    "MOD-rait-web-core-shell-search",
+    "MOD-rait-web-i18n",
+    "MOD-packages-ui"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002b-1",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-f", "engineer"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-08e701d33a123eb5",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"],
+    ["pnpm", "--filter", "@detran/rait-web", "build"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-08e701d33a123eb5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Wire case handwritten runtime through its blueprint",
+  "description": "Apply only the contracted case handwritten hooks after their targets exist, regenerate and close CTG-0001 gates.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-bp-rait-case", "MOD-generated-tree"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["ADR-0007", "WF-RAIT-001"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect-integration",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-9ecc11c275d75836",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-9ecc11c275d75836",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

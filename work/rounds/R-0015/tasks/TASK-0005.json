@@ -14,11 +14,19 @@
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0004",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 3,
   "max_iterations": 2,
   "priority": 4,
-  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "tags": [
+    "wp-b4",
+    "wp-b5",
+    "ctg-0001",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0005.json.raw",
+    "legacy-sha256:66bb8be9e04eb5fe46f1aa1c77a6da9f3e0446d5c08f4a98c6c8de1ad3792dd7"
+  ],
   "branch": "orchestra/boat-mobile",
   "worktree_id": "WT-boat-mobile",
   "prompt_composition_id": "PC-6881b487853505f8",
@@ -35,10 +43,7 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-terra",
     "effort": "low",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-terra"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
     "prompt_composition_id": "PC-6881b487853505f8",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

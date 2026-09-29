@@ -10,29 +10,27 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-shared-roles", "MOD-shared-policy"],
   "target_substrates": ["F2"],
-  "target_invariants": ["RN-DASH-170", "RN-DASH-171", "OD-D01"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0002",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 2,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "reference-gap",
-      "finding": "Align production matrix with corrected 12-role export set excluding read-only AUDITOR and DPO.",
-      "status": "completed"
-    },
-    {
-      "iteration": 3,
-      "classification": "reference-gap",
-      "finding": "Remove integration-operator from dashboard:alert:read production rule.",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-d0", "dashboard", "roles", "policy"],
+  "tags": [
+    "wp-d0",
+    "dashboard",
+    "roles",
+    "policy",
+    "ref:RN-DASH-170",
+    "ref:RN-DASH-171",
+    "ref:OD-D01",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0003.json.raw",
+    "legacy-sha256:34579b671f90b777f184a0d49f6b1167187c2b4bd2bf00da9f38404900ba31ab"
+  ],
   "branch": "orchestra/dash-roles",
   "worktree_id": "WT-dash-roles",
   "prompt_composition_id": "PC-809aed1e172c691b",

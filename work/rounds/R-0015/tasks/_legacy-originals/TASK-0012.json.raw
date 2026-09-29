@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Reconciliar contratos TEAT com as extensões BOAT de CTG-0002",
+  "description": "Transcrever S-12, W-05, mounts, papéis, contagens e runtime i18n a partir de A3/A4 antes do Inspector, sem inventar identidades pendentes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-boat-integration-contracts"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-b4", "wp-b5", "ctg-0002", "prompt-review-correction"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-97b273cf12fc7fa4",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-24T09:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-97b273cf12fc7fa4",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

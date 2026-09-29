@@ -13,12 +13,21 @@
   "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
-  "upstream_task_id": "",
-  "db_isolation": "none",
+  "upstream_task_id": null,
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-d4", "wp-d5", "arquitetura"],
+  "tags": [
+    "wp-d4",
+    "wp-d5",
+    "arquitetura",
+    "legacy-upstream-empty",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0001.json.raw",
+    "legacy-sha256:7bef71116b582a6afc3ea5ff84880438f9bf10f38826b06de22099feb2c43770"
+  ],
   "branch": "orchestra/dashboard-console",
   "worktree_id": "WT-dashboard-console",
   "prompt_composition_id": "PC-dce445c3217fcb49",
@@ -32,10 +41,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-dce445c3217fcb49",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
-  "title": "Escrever os testes de medidas (prazos ≤30/≤15, dois prazos do termo, guarda monitorada por flag), alcoolemia (tabela metrológica, limiares, recusa × impossibilidade, conjunto de sinais), velocidade por flag, SSE e integrações",
+  "title": "Escrever testes de medidas, alcoolemia, velocidade por flag, SSE e integrações",
   "description": "Codificar os critérios do contrato CTG-0004 em testes unit/integration/e2e de inf/measures, inf/alcohol, inf/speed e do stream do app, com a fixture 28-fixtures-teat-measures-alcohol.sql; vermelhos até TASK-0009.",
   "lifecycle": "supported",
   "target_modules": [
@@ -25,7 +25,11 @@
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 8,
-  "tags": ["wp-t2"],
+  "tags": [
+    "wp-t2",
+    "legacy-original:tasks/_legacy-originals/TASK-0008.json.raw",
+    "legacy-sha256:3d599fe0bc329b84bbd8a501d2a5d5cb0494cf4b4cdd38021aa24910787c11e6"
+  ],
   "branch": "orchestra/teat-backend",
   "worktree_id": "WT-teat-backend",
   "prompt_composition_id": "PC-7a796cd929b512fe",
@@ -39,10 +43,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-7a796cd929b512fe",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

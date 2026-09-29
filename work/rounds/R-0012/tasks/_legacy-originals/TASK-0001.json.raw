@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0012",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar o manifesto das 72 rotas e o contrato do núcleo (CTG-0002a) de apps/rait/web",
+  "description": "Transcrever rait-web-frontend.md §3–§5 e §8–§12 em work/rounds/R-0012/route-manifest.md (rota, tela, ficha IU-RAIT-nnn, módulo, papéis, kind, UC, jornadas, resolver, nível M13) e em contracts/CTG-0002a.md (guardas, session facade, shell, SSE, atalhos, error boundary, i18n do núcleo, allowlist, critérios que o Inspector codifica). Decide o que o plano deixou em aberto; nada de código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r12-route-manifest", "MOD-r12-contracts-2a"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002a",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-f", "wp-d", "architect"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-d9d72676b15f9a5e",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "--filter", "@detran/ui", "build"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-d9d72676b15f9a5e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

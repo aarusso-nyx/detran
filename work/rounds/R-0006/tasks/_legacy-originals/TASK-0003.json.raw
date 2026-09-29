@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0006",
+  "status": "escalated",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement @detran/inf-deadlines, infraction guards and events, notification marks, and module wiring",
+  "description": "Make the Inspector tests pass: deadline-engine library with in-memory ports, pure transition guard mirroring infraction_transition_ref, zod event schemas, RN-RAIT-104 acknowledgement marks, AppModule registration and root scripts. No routes, no jobs, no database access in handwritten code.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-deadlines",
+    "MOD-inf-infraction-handwritten",
+    "MOD-inf-notification-handwritten",
+    "MOD-app-module",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "WF-INF-003 §2",
+    "rait-deadline-engine §2-§3",
+    "RN-RAIT-104",
+    "ADR-0016 §2"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-1: mounting InfractionModule/NotificationModule in AppModule exposes generated routes before R-0007. Fix by the maestro (Engineer): AppModule and backend/app/package.json restored to main; root test scripts kept; pnpm install re-run.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-2 FAIL: (a) contract §3.3 says 42 vigente rows, DDL has 43 — fixed by the maestro (Architect); (b) reschedule does not emit TIMER_REPROGRAMADO (contract API §5 has no event port; both workers flagged it as contract gap 1); (c) no extend operation limiting T-DIL to one extension (deferred to R-0007 by the Engineer as a command). (b) and (c) need a contract amendment, new Inspector tests and Engineer work: escalated to the human (second FAIL, window budget exhausted).",
+      "status": "escalated"
+    }
+  ],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "infraction", "deadlines", "engineer"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-661b598fd58663e0",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-deadlines", "test"],
+    ["pnpm", "--filter", "@detran/inf-infraction", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-notification", "test:unit"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "format:check"],
+    ["pnpm", "backend:test:unit"]
+  ],
+  "created_at": "2026-09-14T17:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-661b598fd58663e0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

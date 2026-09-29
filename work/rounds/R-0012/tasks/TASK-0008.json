@@ -15,14 +15,22 @@
   ],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0002b-1",
+  "coupled_task_group": "CTG-9003",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0007",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 3,
   "max_iterations": 2,
   "priority": 4,
-  "tags": ["wp-f", "inspector"],
+  "tags": [
+    "wp-f",
+    "inspector",
+    "legacy-ctg:CTG-0002b-1",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0008.json.raw",
+    "legacy-sha256:9dfbe34150c90f8989dcccffd467270e6039a4e83a2912b50e259961868b0c93"
+  ],
   "branch": "orchestra/rait-web",
   "worktree_id": "WT-rait-web",
   "prompt_composition_id": "PC-6ddec01ca481fb29",
@@ -37,10 +45,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-6ddec01ca481fb29",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

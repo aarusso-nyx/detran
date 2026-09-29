@@ -17,10 +17,7 @@
     "MOD-shared-documents-tests"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "rait-test-strategy §2 Blueprint/DDL",
-    "rait-fixtures.md"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0005",
@@ -29,7 +26,16 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-a", "rait", "tests", "fixtures"],
+  "tags": [
+    "wp-a",
+    "rait",
+    "tests",
+    "fixtures",
+    "ref:rait-test-strategy §2 Blueprint/DDL",
+    "ref:rait-fixtures.md",
+    "legacy-original:tasks/_legacy-originals/TASK-0006.json.raw",
+    "legacy-sha256:035947ad30b566128cb39511da6953f606c8e67048919665c88043982d424bc5"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-33f02a67c59cff6b",
@@ -45,10 +51,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-33f02a67c59cff6b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

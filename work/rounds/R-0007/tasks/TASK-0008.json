@@ -23,7 +23,13 @@
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 8,
-  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "tags": [
+    "wp-b",
+    "wp-c",
+    "attempt-2",
+    "legacy-original:tasks/_legacy-originals/TASK-0008.json.raw",
+    "legacy-sha256:51b8ed5aeeaa3e1d85315c7ecc6222bc80d676ca647d17695375447e21f794f6"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-e542fb94b14c565b",
@@ -41,77 +47,12 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-sol",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-sol"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
     "prompt_composition_id": "PC-e542fb94b14c565b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   },
   "intent_diff": {
     "summary": "Hooks e exports oficiais por blueprint, regeneração determinística e prova estrutural/DDL; runtime manuscrito permanece fora do escopo."
-  },
-  "execution_evidence": {
-    "role": "Architect",
-    "versions": {
-      "BP-INF-RAIT-CASE-001": "1.1.7",
-      "BP-INF-RAIT-WORKLIST-001": "1.4.1",
-      "BP-INF-RAIT-SESSION-001": "1.2.1"
-    },
-    "blueprint_sha256": {
-      "BP-INF-RAIT-CASE-001": "682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154",
-      "BP-INF-RAIT-WORKLIST-001": "fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430",
-      "BP-INF-RAIT-SESSION-001": "fb183f46aa118900da31c0c745c9b36c3c7368f17d78507f9b9469ad56e9400e"
-    },
-    "generated_aggregate_sha256": "06344da4fb582a7758af68608f59c5c9d8751186421eff9722bd2c9ae085d237",
-    "ddl": {
-      "database": "detran_r7_ctg1_a2",
-      "application_order": [
-        "backend/database/ddl/34-inf-rait-case.sql",
-        "backend/database/ddl/35-inf-rait-worklist.sql",
-        "backend/database/ddl/36-inf-rait-session.sql"
-      ],
-      "reapplications": 2,
-      "transactional": true,
-      "fixture_counts_before_and_after": {
-        "cases": 20,
-        "sessions": 4,
-        "agenda_items": 3
-      }
-    },
-    "handler_inventory": {
-      "nominal_handwritten_posts": 20,
-      "generated_post_patch_delete": 0,
-      "oral_argument_http_methods": 0
-    },
-    "passes": [
-      "pnpm blueprints:check",
-      "pnpm contracts:check",
-      "pnpm verify:rls-ddl (193 tenant tables)",
-      "pnpm verify:decorators (814 handlers)",
-      "typecheck case/worklist/session/app",
-      "TASK-0060 focused unit 6/6 and integration 3/3",
-      "TASK-0047/0049 focused unit 34/34 and integration 6/6",
-      "worklist/session audit 18/18",
-      "two official generations byte-identical",
-      "Prettier on the three blueprints and TASK-0008 record",
-      "git diff --check"
-    ],
-    "checkpoint": {
-      "owner": "TASK-0050",
-      "iteration": "2/2",
-      "command": "DETRAN_TEST_TIER=e2e pnpm --filter @detran/app exec vitest run tests/e2e/rait-worklist-production.e2e.spec.ts tests/e2e/rait-session-agenda-production.e2e.spec.ts tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts",
-      "result": "3 suites failed before tests; 16 tests skipped",
-      "error": "Nest can't resolve dependencies of the RaitSessionCommandService (Database, RequestContext, ?, DocumentTrustVerifier). Please make sure that the argument at index [2] is available in the current module.",
-      "runtime_cause": "caseTransitions?: RaitCaseTransitionPort is an optional interface erased at runtime, so Nest receives no injectable token at constructor index 2",
-      "forbidden_workaround_applied": false
-    },
-    "independent_gate_limitation": "pnpm check stops at format:check on ten pre-existing out-of-allowlist R-0007 prompt/task files; TASK-0008 did not modify them."
-  },
-  "closure_reconciliation": {
-    "date": "2026-09-19",
-    "result": "PASS",
-    "basis": "TASK-0061, TASK-0063 e TASK-0066 fecharam blueprint, geracao e compatibilidade de upgrade; duas geracoes foram byte-identicas, pnpm blueprints:check, pnpm contracts:check e pnpm check passaram, e o app E2E passou 123/123."
   }
 }

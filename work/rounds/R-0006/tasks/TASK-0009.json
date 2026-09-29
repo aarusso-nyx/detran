@@ -14,11 +14,7 @@
     "MOD-arch-events-contract"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "rait-deadline-engine §2-§3",
-    "RN-RAIT-004",
-    "Res. 900/2022 art. 9º"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0003",
@@ -27,7 +23,16 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "deadlines", "delivery-review-2"],
+  "tags": [
+    "wp-a",
+    "deadlines",
+    "delivery-review-2",
+    "ref:rait-deadline-engine §2-§3",
+    "ref:RN-RAIT-004",
+    "ref:Res. 900/2022 art. 9º",
+    "legacy-original:tasks/_legacy-originals/TASK-0009.json.raw",
+    "legacy-sha256:867c5895de4a53296c81f7d91adde6cbfae13a79492bbaad59fecfde90ec5a50"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-2dc0fff5f3ba7455",
@@ -46,10 +51,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-2dc0fff5f3ba7455",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

@@ -10,23 +10,23 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-inf-deadlines-tests"],
   "target_substrates": ["F2"],
-  "target_invariants": ["contract CTG-0001 §5.2.9", "M15"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0011",
   "db_isolation": "database",
   "iteration_count": 2,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "sensor-error",
-      "finding": "TS2352 at deadline-engine.spec.ts:768: `extended as Record<string, unknown>` (no index signature on Deadline); fix the cast in the test (as unknown as Record<string, unknown>), matching the nullable variants used for beforeExtend/afterExtend.",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "deadlines", "m15"],
+  "tags": [
+    "wp-a",
+    "deadlines",
+    "m15",
+    "ref:contract CTG-0001 §5.2.9",
+    "ref:M15",
+    "legacy-original:tasks/_legacy-originals/TASK-0012.json.raw",
+    "legacy-sha256:a250c2eebbe91f2fc945eb1a96dd080a98759b24b68a7c2d7ffe942e5fd3995d"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-3508e47fb6695093",
@@ -43,10 +43,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-3508e47fb6695093",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

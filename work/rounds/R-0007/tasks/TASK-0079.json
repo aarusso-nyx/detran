@@ -21,14 +21,25 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0078",
-  "db_isolation": "detran_r7_ctg1_a2",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "final-corrective", "owner-authorized"],
+  "tags": [
+    "attempt-2",
+    "final-corrective",
+    "owner-authorized",
+    "legacy-db-isolation:detran_r7_ctg1_a2",
+    "archival-pc-provenance:reconstructed-v1",
+    "archival-pc-not-historical",
+    "archival-pc-package:work/rounds/R-0007/compositions-archive/TASK-0079.txt",
+    "legacy-prompt-composition:PC-ctg2-final-corrective",
+    "legacy-original:tasks/_legacy-originals/TASK-0079.json.raw",
+    "legacy-sha256:d054ceb7788444724f2431799eeaff10ab85504f496c176e2ce96d313414f4bb"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
-  "prompt_composition_id": "PC-ctg2-final-corrective",
+  "prompt_composition_id": "PC-cc3dc8e959e09510",
   "acceptance_commands": [
     ["pnpm", "backend:test:ci"],
     ["pnpm", "check"]
@@ -40,27 +51,11 @@
     "model": "gpt-5.6-terra",
     "effort": "high",
     "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
-    "prompt_composition_id": "PC-ctg2-final-corrective",
+    "prompt_composition_id": "PC-cc3dc8e959e09510",
     "max_iterations": 1,
     "capabilities": ["read", "local-write"]
   },
   "intent_diff": {
     "summary": "Somente os quatro achados high de TASK-0078; lows não estruturais permanecem fora do bloqueio por direção OWNER good-enough."
-  },
-  "execution_evidence": {
-    "role": "Engineer",
-    "iteration": "1/1",
-    "result": "PASS",
-    "high_findings_closed": [
-      "Imutabilidade de ata protege conteúdo e identidade, permitindo somente o ciclo de assinatura/publicação.",
-      "Aceite transiciona o caso e arma T-VOTO; publicação arma T-R2 na mesma transação.",
-      "Sorteio produz seed, snapshot, atribuições, T-CLAIM e manifesto server-owned.",
-      "ETag numérico emitido e aceito em round-trip por worklist e sessão."
-    ],
-    "real_db_structural_e2e": "2/2 PASS",
-    "app_e2e": "10 files, 125/125 PASS",
-    "upgrade": "18/18 PASS",
-    "backend_test_ci": "PASS integral, exit 0",
-    "pnpm_check": "PASS integral, exit 0"
   }
 }

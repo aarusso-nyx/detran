@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0077",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-tooling",
+  "title": "Classificar coleções locais events e audits",
+  "description": "Reconhecer push explícito de evento/auditoria sem relaxar outros literais.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameter-tooling"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0076",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "parameter-context"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-621b26daac529a64",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-19T20:10:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-621b26daac529a64",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente AST para push events/audits; catálogo e produto intactos."
+  },
+  "execution_evidence": {
+    "role": "Engineer",
+    "iteration": "1/1",
+    "result": "PASS",
+    "parameter_tests": "26/26 PASS",
+    "catalogue_verification": "87 entries, 18 flags, 0 errors",
+    "git_diff_check": "PASS"
+  }
+}

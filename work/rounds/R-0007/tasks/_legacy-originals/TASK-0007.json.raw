@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement worklist session commands and policy",
+  "description": "Implement handwritten worklist and session behavior, policy and root integration wiring against immutable tests. Fontes/decisoes historicamente referidas: WF-RAIT-003; WF-RAIT-004. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-worklist",
+    "MOD-rait-session",
+    "MOD-shared-policy",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-cc1c73e3d3d32181",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "test:integration"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "test:integration"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-cc1c73e3d3d32181",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "Runtime e policy dos 20 comandos foram completados pelos ciclos corretivos TASK-0046, TASK-0048, TASK-0050, TASK-0057, TASK-0062 e TASK-0064; backend:test:ci passou integralmente no candidato final."
+  }
+}

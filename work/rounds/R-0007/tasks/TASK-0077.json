@@ -14,11 +14,19 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0076",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "parameter-context"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "parameter-context",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0077.json.raw",
+    "legacy-sha256:e9c9d21123dde67c0451346796617460b10eff7c9c75a8809f0454ec8d743a8c"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-621b26daac529a64",
@@ -39,13 +47,5 @@
   },
   "intent_diff": {
     "summary": "Somente AST para push events/audits; catálogo e produto intactos."
-  },
-  "execution_evidence": {
-    "role": "Engineer",
-    "iteration": "1/1",
-    "result": "PASS",
-    "parameter_tests": "26/26 PASS",
-    "catalogue_verification": "87 entries, 18 flags, 0 errors",
-    "git_diff_check": "PASS"
   }
 }

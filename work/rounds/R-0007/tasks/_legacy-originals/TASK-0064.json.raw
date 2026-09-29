@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0064",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Reparar E2E de composição de deliberação e ata",
+  "description": "Substituir quatro asserts ambientais anteriores ao controller por prova estrutural exata de ownership/wiring, preservando as negativas funcionais nos sensores unitários e de policy.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-worklist-session", "MOD-app-e2e"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0050",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "sensor-repair"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-ff06d8de5cfde5b7",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"]
+  ],
+  "created_at": "2026-09-19T13:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-ff06d8de5cfde5b7",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente sensor E2E de composição; produção e plataforma imutáveis."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "database": "postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend",
+    "commands": [
+      "DETRAN_TEST_TIER=e2e pnpm --filter @detran/app exec vitest run tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts",
+      "DETRAN_TEST_TIER=e2e pnpm --filter @detran/app exec vitest run tests/e2e/rait-worklist-production.e2e.spec.ts tests/e2e/rait-session-agenda-production.e2e.spec.ts tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts",
+      "pnpm --filter @detran/inf-rait-session test:unit",
+      "pnpm --filter @detran/shared exec vitest run src/policy-ctg2-deliberation-minutes.spec.ts",
+      "pnpm --filter @detran/app exec vitest run src/rait-session-deliberation-minutes-audit.spec.ts",
+      "pnpm --filter @detran/inf-rait-session typecheck",
+      "pnpm --filter @detran/app typecheck",
+      "pnpm exec prettier --check backend/app/tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts work/rounds/R-0007/tasks/TASK-0064.json",
+      "git diff --check"
+    ],
+    "counts": {
+      "e2e_composition": "2/2",
+      "e2e_production_path": "11/11 across 3 suites",
+      "session_unit": "39/39",
+      "policy_task_0049": "37/37",
+      "session_audit": "5/5"
+    },
+    "route_ownership": {
+      "owner": "RaitSessionCommandsController",
+      "exactly_one_post": [
+        "POST /v1/inf/rait/votes",
+        "POST /v1/inf/rait/agenda-items/:id/commands/proclaim",
+        "POST /v1/inf/rait/minutes",
+        "POST /v1/inf/rait/minutes/:id/commands/sign",
+        "POST /v1/inf/rait/minutes/:id/commands/publish"
+      ],
+      "competing_vote_minutes_crud_posts": 0,
+      "oral_argument_routes": 0
+    },
+    "sha256": {
+      "e2e_composition": "195244bdd0f1bfe3f109bfc9cb85501d36ffeb8788a971ca5c7c66b1ddb37109",
+      "e2e_worklist_production": "4a64983bb2c2bad37dde68adb3e10a8775c5d530cc2aadcfb0171535d5b836b1",
+      "e2e_session_agenda_production": "d7ac98e4c3ed3dcb5a33fa2a1af9a7a350b926048d3a9f86ca30e1b19f98cab5",
+      "session_unit_task_0049": "a06f172720872d901d1c9fc193010c7952212c1560f98ef5d927073eeb758586",
+      "policy_task_0049": "5e6f71f11f4475cbf7f4245125472137e16654999134799e8f31ec7112b1cb01",
+      "session_audit_task_0049": "3d1a7ef2180cb8e6609e108729eb1383d745b65d3dbe007d354834e7bb652512"
+    },
+    "environmental_repair": "Os quatro asserts HTTP removidos eram interrompidos pelo rate limit distribuído (503) ou pelo policy guard antes do controller; a prova estrutural do ModulesContainer mede diretamente ownership e ausência de concorrência sem despachar mutações.",
+    "ctg_0002": "Não declarado fechado; gate amplo e revisão independente permanecem do Maestro."
+  }
+}

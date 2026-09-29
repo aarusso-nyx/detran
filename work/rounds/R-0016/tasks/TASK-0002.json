@@ -14,11 +14,18 @@
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0001",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-d4", "transcricao"],
+  "tags": [
+    "wp-d4",
+    "transcricao",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0002.json.raw",
+    "legacy-sha256:cc1c668cca74f2915459c8d7d854c181eb7b6fa8b7e0d0483af809dca3eae520"
+  ],
   "branch": "orchestra/dashboard-console",
   "worktree_id": "WT-dashboard-console",
   "prompt_composition_id": "PC-ac2edb3b323a0941",
@@ -33,10 +40,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "low",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-ac2edb3b323a0941",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

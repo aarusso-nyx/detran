@@ -14,15 +14,25 @@
     "MOD-shared-document-tests"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": ["WF-RAIT-001", "OD-309"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "inspector",
-  "upstream_task_id": "TASK-0001+PREP-CTG1-DEPS+PREP-CTG1-MODEL",
+  "upstream_task_id": "TASK-0001",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-b", "wp-c", "attempt-2", "corrective-cycle-2"],
+  "tags": [
+    "wp-b",
+    "wp-c",
+    "attempt-2",
+    "corrective-cycle-2",
+    "ref:WF-RAIT-001",
+    "ref:OD-309",
+    "legacy-prep-index:tasks/_legacy-originals/prep-prerequisites.json",
+    "legacy-original:tasks/_legacy-originals/TASK-0002.json.raw",
+    "legacy-sha256:f0d71b4cc439f9e3f5379ecb7e8ccf49168b45fbc9ecfbd1ad77a06db2aec6c3"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-12be7876c39ec630",
@@ -38,10 +48,7 @@
     "runtime": "codex-cli",
     "model": "gpt-5.6-terra",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "gpt-5.6-terra"
-    },
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
     "prompt_composition_id": "PC-12be7876c39ec630",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

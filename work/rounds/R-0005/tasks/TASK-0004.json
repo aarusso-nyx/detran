@@ -15,7 +15,7 @@
     "MOD-ddl-20-rls"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": ["ADR-0001", "ADR-0002", "ADR-0007"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0003",
@@ -23,7 +23,15 @@
   "iteration_count": 2,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-t1", "ops-modules"],
+  "tags": [
+    "wp-t1",
+    "ops-modules",
+    "ref:ADR-0001",
+    "ref:ADR-0002",
+    "ref:ADR-0007",
+    "legacy-original:tasks/_legacy-originals/TASK-0004.json.raw",
+    "legacy-sha256:ffcad2181b1f461002ec050be731aae8ceb361b6f54d3461b493e15700d84971"
+  ],
   "branch": "orchestra/ops-agency",
   "worktree_id": "WT-ops-agency",
   "prompt_composition_id": "PC-6555a0f0b3e2d00f",

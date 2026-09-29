@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0070",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Reconciliar inventário RLS exato com CTG-0002",
+  "description": "Enumerar seis novas tabelas tenant e preservar prova fechada RLS 96/17.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-ait-tests", "MOD-rls-contract"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0069",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "rls-sensor"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-d28dd968f7da06fe",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-ait", "test:integration"]
+  ],
+  "created_at": "2026-09-19T19:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-d28dd968f7da06fe",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensor RLS exato 96/17; nenhuma mudança de produto."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "result": "PASS",
+    "collection": "1 suite, 3 tests, 3 PASS",
+    "inventory": "96 tenant tables exact, six CTG-0002 tables nominal, 17 case tables preserved, 10 tenant-less references preserved"
+  }
+}

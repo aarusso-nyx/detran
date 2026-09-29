@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0013",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar o app mobile TEAT",
+  "description": "Implementar o app mobile TEAT conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-mobile-production"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004a",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0012",
+  "db_isolation": "database",
+  "iteration_count": 8,
+  "max_iterations": 8,
+  "priority": 1,
+  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "branch": "orchestra/teat-frontends",
+  "worktree_id": "WT-teat-frontends",
+  "prompt_composition_id": "PC-1e4b8ce82ab76f36",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/teat-mobile", "lint"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "typecheck"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "test"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "build"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-20T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-1e4b8ce82ab76f36",
+    "max_iterations": 8,
+    "capabilities": ["read", "local-write"]
+  }
+}

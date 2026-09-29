@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0009",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar os critérios C-0001-nn em testes (guarda fail-closed, matriz de nível, máquinas de 13 e 9 estados, RLS portal.*, seeds) e escrever 70-fixtures-portal.sql",
+  "description": "Transcrever o contrato CTG-0001 em testes que ficam vermelhos até TASK-0004 e nas fixtures canônicas do Portal; provar seed.sh duas vezes em banco limpo. Nunca tocar em src/ de produção.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-tests-ctg1",
+    "MOD-seed-70",
+    "MOD-app-e2e-portal-identity"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p0", "wp-p1"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-8bf3e4bf50ce5d53",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/seed.sh"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-8bf3e4bf50ce5d53",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "reason": "sensor-error C-0001-20a/C-0001-41; reference-gap C-0001-42 (A3)",
+      "scope": "restrita aos três specs"
+    }
+  ]
+}

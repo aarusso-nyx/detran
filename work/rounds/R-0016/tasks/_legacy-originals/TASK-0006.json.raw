@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0016",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar os 9 schemas de formulário com gates (dashboard-frontends.md §7)",
+  "description": "apps/dashboard/web/src/app/forms/*.schema.ts na forma do Portal (zod + gates), até os testes de TASK-0004 passarem.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-dashboard-web-forms"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-d4", "formularios"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-95bf81d700d8fcdd",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/dashboard-web", "test"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-95bf81d700d8fcdd",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

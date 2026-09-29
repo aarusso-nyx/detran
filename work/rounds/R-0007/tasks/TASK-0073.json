@@ -22,7 +22,13 @@
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-4"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "final-observation-4",
+    "legacy-original:tasks/_legacy-originals/TASK-0073.json.raw",
+    "legacy-sha256:1e29316a2520eaa8a2c35d1b55c2a415a9f4e0a16e57bf988e80c88edf69e458"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-f9fddcbd78d9ef0f",
@@ -43,14 +49,5 @@
   },
   "intent_diff": {
     "summary": "Observação final somente; candidato imutável durante o runner."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "backend_test_ci": "PASS end-to-end including 18/18 upgrade tests and restoration",
-    "broad_gates_before_failure": "format, orchestra bridge, KB, publication, blueprints, contracts and parameter tests PASS",
-    "finding": "verify:parameter-catalogue misclassified event literals passed to typed event/topic parameters as unknown parameters.",
-    "classification": "Tooling sensor-error; event names must not be added to the parameter catalogue."
   }
 }

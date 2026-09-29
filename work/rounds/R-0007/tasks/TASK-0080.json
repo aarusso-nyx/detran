@@ -18,16 +18,29 @@
   "target_substrates": ["F2", "F3", "F5"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
-  "coupled_pipeline_position": "auditor",
+  "coupled_pipeline_position": null,
   "upstream_task_id": "TASK-0079",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "final-corrective", "final-review"],
+  "tags": [
+    "attempt-2",
+    "final-corrective",
+    "final-review",
+    "legacy-pipeline-position:auditor",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "archival-pc-provenance:reconstructed-v1",
+    "archival-pc-not-historical",
+    "archival-pc-package:work/rounds/R-0007/compositions-archive/TASK-0080.txt",
+    "legacy-prompt-composition:PC-ctg2-final-review-fable5-2",
+    "legacy-original:tasks/_legacy-originals/TASK-0080.json.raw",
+    "legacy-sha256:febebf4e60de886dd57343c6ec5779c3e0edb6aabe46e9ac5c2429669295c67a"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
-  "prompt_composition_id": "PC-ctg2-final-review-fable5-2",
+  "prompt_composition_id": "PC-1766eb9f01d0bafa",
   "acceptance_commands": [
     [
       "node",
@@ -47,20 +60,11 @@
     "model": "claude-fable-5",
     "effort": "high",
     "selection": { "mode": "exact", "registry_id": "claude-fable-5" },
-    "prompt_composition_id": "PC-ctg2-final-review-fable5-2",
+    "prompt_composition_id": "PC-1766eb9f01d0bafa",
     "max_iterations": 1,
     "capabilities": ["read"]
   },
   "intent_diff": {
     "summary": "Gate independente final; candidato congelado e nenhuma escrita durante a revisão."
-  },
-  "execution_evidence": {
-    "role": "Auditor",
-    "iteration": "1/1",
-    "result": "REVIEW",
-    "candidate_sha256": "7d5af018eb85768706da0393462ecc3eea352cc7503546917e8a3415da3c84cf",
-    "review": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-2.json",
-    "findings": "2 high, 4 low",
-    "preservation": "Parecer REVIEW preservado; os dois residuos high originaram TASK-0081."
   }
 }
