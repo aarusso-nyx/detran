@@ -570,6 +570,13 @@ export class RaitSessionCommandService {
     input: SessionCommandInput,
     context: { tenantId: string; actorId: string },
   ): Promise<Result> {
+    // `max_per_member` conta os pedidos do membro em todo o tenant (todas as sessões); `for update`
+    // não bloqueia linhas que ainda não existem, então o escopo (tenant, membro) é serializado aqui,
+    // antes de qualquer bloqueio de linha, para manter uma ordem única de locks entre pedidos.
+    await tx.query(
+      "select pg_advisory_xact_lock(hashtextextended('rait.view_request.max_per_member:' || $1 || ':' || $2, 0))",
+      [context.tenantId, context.actorId],
+    );
     const item = await this.lockAgendaItem(tx, input, context);
     await this.requireItemReadiness(tx, context, item, false);
     if (!item.read_at || item.proclaimed_at || item.withdrawn)
