@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0022",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Remover dependências @stynx-nyx declaradas sem import",
+  "description": "Remover dependências @stynx-nyx declaradas sem import (CTG-0002), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0022.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-deps-stynx-unused"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0002", "deps", "after:TASK-0004"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-d48929a83a09dfd4",
+  "acceptance_commands": [
+    ["pnpm", "verify:stynx-pin"],
+    ["pnpm", "typecheck"],
+    ["pnpm", "--filter", "@detran/rait-web", "build"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "build"],
+    ["pnpm", "--filter", "@detran/portal-web", "build"],
+    ["pnpm", "--filter", "@detran/teat-web", "build"],
+    ["pnpm", "--filter", "@detran/ui", "test"],
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "build"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "build"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/portal-web",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/dashboard-web",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-d48929a83a09dfd4",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
