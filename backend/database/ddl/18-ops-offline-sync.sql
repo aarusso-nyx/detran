@@ -1,4 +1,4 @@
--- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
+-- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:ff9d218be3314b511ef2cdab143c94785c99ffe446405136e001f85f8978c1ad
 
 -- Regenerable-only DDL for BP-OPS-OFFLINE-SYNC-001; request-path writes use role_app_backend.
 
@@ -45,6 +45,21 @@ create table if not exists ops.numbering_reservation (
 );
 create index if not exists ix_numbering_reservation_tenant_id_agent_id_device_id_status on ops.numbering_reservation (tenant_id, agent_id, device_id, status);
 create unique index if not exists ux_numbering_reservation_tenant_id_idempotency_key on ops.numbering_reservation (tenant_id, idempotency_key) where idempotency_key is not null;
+do $$
+declare
+  duplicates text;
+begin
+  if to_regclass('ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved') is null then
+    select string_agg(format('tenant_id=%s device_id=%s shift_id=%s linhas=%s', tenant_id, device_id, shift_id, total), '; ')
+      into duplicates
+      from (select tenant_id, device_id, shift_id, count(*) as total from ops.numbering_reservation where status = 'reserved'
+             group by tenant_id, device_id, shift_id having count(*) > 1) duplicate;
+    if duplicates is not null then
+      raise exception 'Indice unico ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved nao pode ser criado: duplicatas em ops.numbering_reservation (status = ''reserved''): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', duplicates;
+    end if;
+  end if;
+end $$;
+create unique index if not exists ux_numbering_reservation_tenant_id_device_id_shift_id_reserved on ops.numbering_reservation (tenant_id, device_id, shift_id) where status = 'reserved';
 create index if not exists ix_numbering_reservation_tenant_id on ops.numbering_reservation (tenant_id);
 create index if not exists ix_numbering_reservation_range_id on ops.numbering_reservation (range_id);
 create index if not exists ix_numbering_reservation_traffic_agency_id on ops.numbering_reservation (traffic_agency_id);

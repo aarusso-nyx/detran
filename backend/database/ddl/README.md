@@ -89,3 +89,44 @@ Application notes (`../apply.sh`):
 `auth.tenants` is the canonical DETRAN tenant table. `tenancy.tenants` is a
 simple, automatically updatable compatibility view exposing the columns used by
 `@stynx-nyx/tenancy`; this prevents a second tenant source of truth.
+
+## Duplicatas antes de índice único parcial
+
+Os índices únicos parciais de "uma linha ativa" são precedidos, na DDL gerada,
+por um bloco de pré-checagem (`precheck: true` no índice do blueprint):
+
+| Índice                                                               | DDL                           | Invariante                                             |
+| -------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------ |
+| `ops.ux_ops_shift_tenant_id_agent_id_open`                           | `13-ops-field-operations.sql` | um turno `open` por agente e tenant (CTG-0002 §5.4)    |
+| `ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved` | `18-ops-offline-sync.sql`     | uma reserva `reserved` por dispositivo e turno (§5.10) |
+
+Se o banco já tiver linhas que o índice recusaria, `apply.sh` falha (a
+transação única é desfeita e nada é aplicado) com a mensagem
+`Indice unico <índice> nao pode ser criado: duplicatas em <tabela> (<filtro>): <chaves> linhas=<n>`,
+que lista cada tenant e agente (ou tenant, dispositivo e turno) duplicado. A
+DDL só detecta: **qual linha manter é decisão da operação**, nunca da DDL.
+
+Procedimento, antes de reaplicar:
+
+1. Liste as duplicatas (papel owner, fora do caminho de requisição):
+
+   ```sql
+   select tenant_id, agent_id, array_agg(id order by started_at) as shifts
+     from ops.ops_shift where status = 'open'
+    group by tenant_id, agent_id having count(*) > 1;
+
+   select tenant_id, device_id, shift_id,
+          array_agg(id order by reserved_at) as reservations
+     from ops.numbering_reservation where status = 'reserved'
+    group by tenant_id, device_id, shift_id having count(*) > 1;
+   ```
+
+2. Leve cada grupo ao responsável operacional do órgão (supervisão de campo),
+   que decide qual turno segue aberto e qual reserva segue vigente.
+3. Aplique a decisão pelos comandos de produção, nunca por `update` direto:
+   turno excedente → `POST /v1/ops/mobile-bootstrap/shifts/{id}/close` (com
+   `reason`); reserva excedente →
+   `POST /v1/ops/offline-sync/numbering-reservations/{id}/cancel` ou `…/block`
+   (a liquidação devolve a cauda à faixa quando cabe e registra o ato em
+   `reconciliation_json.lifecycle`).
+4. Repita as consultas do passo 1 até voltarem vazias e reaplique `apply.sh`.

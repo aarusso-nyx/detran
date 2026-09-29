@@ -155,6 +155,39 @@ function entityFields(entity) {
       : [{ name: 'updated_at', type: 'timestamptz', nullable: true }]),
   ];
 }
+/**
+ * `precheck: true` num índice único: antes do `create unique index`, um bloco
+ * que procura as linhas que o índice recusaria e, havendo, falha com a lista
+ * das chaves duplicadas e o procedimento de `backend/database/ddl/README.md`.
+ * Só detecta: qual linha manter é decisão da operação, nunca da DDL. Com o
+ * índice já presente o bloco não varre a tabela.
+ */
+function uniquePrecheckSql(module, entity, index) {
+  const table = `${module.namespace}.${entity.table}`;
+  const name = index.name;
+  if (!name) throw new Error(`${table}: precheck requires an index name`);
+  const columns = index.columns.join(', ');
+  const labels = index.columns.map((column) => `${column}=%s`).join(' ');
+  const scope = index.where ? ` where ${index.where}` : '';
+  const scopeText = (index.where ? ` (${index.where})` : '').replaceAll(
+    "'",
+    "''",
+  );
+  return `do $$
+declare
+  duplicates text;
+begin
+  if to_regclass('${module.namespace}.${name}') is null then
+    select string_agg(format('${labels} linhas=%s', ${columns}, total), '; ')
+      into duplicates
+      from (select ${columns}, count(*) as total from ${table}${scope}
+             group by ${columns} having count(*) > 1) duplicate;
+    if duplicates is not null then
+      raise exception 'Indice unico ${module.namespace}.${name} nao pode ser criado: duplicatas em ${table}${scopeText}: %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', duplicates;
+    end if;
+  end if;
+end $$;`;
+}
 function tableSql(module, entity) {
   const fields = entityFields(entity);
   const columns = fields.map(
@@ -190,7 +223,7 @@ end $$;`,
       ),
     ...indexes.map(
       (i) =>
-        `create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
+        `${i.unique && i.precheck ? `${uniquePrecheckSql(module, entity, i)}\n` : ''}create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
     ),
     ...indexes
       .filter(

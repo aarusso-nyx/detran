@@ -239,6 +239,13 @@
             "columns": ["tenant_id", "idempotency_key"],
             "unique": true,
             "where": "idempotency_key is not null"
+          },
+          {
+            "name": "ux_numbering_reservation_tenant_id_device_id_shift_id_reserved",
+            "columns": ["tenant_id", "device_id", "shift_id"],
+            "unique": true,
+            "where": "status = 'reserved'",
+            "precheck": true
           }
         ],
         "foreignKeys": [

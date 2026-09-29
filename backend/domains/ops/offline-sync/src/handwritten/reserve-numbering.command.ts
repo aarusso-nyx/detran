@@ -17,7 +17,7 @@ import {
   type OfflineSyncDeps,
 } from './batch-protocol.js';
 import { numberingReservationChangedEvent } from './events.js';
-import { bigintOf, inTransaction } from './numbering-sql.js';
+import { bigintOf, inTransaction, type SqlScope } from './numbering-sql.js';
 
 /** Chave do `parameter-catalogue.md` §TEAT (H.54: 72 horas vigentes). */
 const RESERVATION_TTL_KEY = 'teat.numbering.reservation_ttl_hours';
@@ -65,6 +65,27 @@ function view(row: ReservationRow): ReservationView {
   };
 }
 
+/** Uma reserva `reserved` por dispositivo e turno (§5.10 pré-estado). */
+async function assertNoActiveReservation(
+  query: SqlScope['query'],
+  tenantId: string,
+  input: ReserveNumberingInput,
+): Promise<void> {
+  const active = await query<{ id: string }>(
+    `select id from ops.numbering_reservation
+      where tenant_id = $1 and device_id = $2
+        and shift_id is not distinct from $3 and status = 'reserved'
+      limit 1`,
+    [tenantId, String(input.device_id), input.shift_id ?? null],
+  );
+  if (active.rows[0])
+    throw new DetranError('TEAT.NUMBERING_RESERVATION_ACTIVE_EXISTS', {
+      status: 409,
+      context: { reservationId: active.rows[0].id },
+      message: 'Já existe reserva vigente para o dispositivo e turno.',
+    });
+}
+
 export class ReserveNumberingCommand {
   constructor(private readonly deps: OfflineSyncDeps) {}
 
@@ -105,26 +126,24 @@ export class ReserveNumberingCommand {
       // faixa (a mesma ordem do fechamento de turno, que trava o turno e
       // depois reserva e faixa), então duas reservas do mesmo turno em faixas
       // diferentes não passam juntas pela checagem abaixo, e nenhuma nasce
-      // no meio da liquidação do fechamento.
-      await query(
+      // no meio da liquidação do fechamento. Sem turno `open` do tenant e do
+      // agente pedido não há o que travar nem a quem numerar: 409
+      // `TEAT.SHIFT_NOT_OPEN` (catálogo TEAT, "ato legal sem turno").
+      const shift = await query<{ id: string }>(
         `select id from ops.ops_shift
-          where tenant_id = $1 and id = $2 for no key update`,
-        [tenantId, input.shift_id ?? null],
+          where tenant_id = $1 and id = $2 and agent_id = $3
+            and status = 'open'
+          for no key update`,
+        [tenantId, input.shift_id ?? null, String(input.agent_id)],
       );
-      const range = await this.lockRange(query, tenantId, input);
-      const active = await query<{ id: string }>(
-        `select id from ops.numbering_reservation
-          where tenant_id = $1 and device_id = $2
-            and shift_id is not distinct from $3 and status = 'reserved'
-          limit 1`,
-        [tenantId, String(input.device_id), input.shift_id ?? null],
-      );
-      if (active.rows[0])
-        throw new DetranError('TEAT.NUMBERING_RESERVATION_ACTIVE_EXISTS', {
+      if (!shift.rows[0])
+        throw new DetranError('TEAT.SHIFT_NOT_OPEN', {
           status: 409,
-          context: { reservationId: active.rows[0].id },
-          message: 'Já existe reserva vigente para o dispositivo e turno.',
+          context: { shiftId: input.shift_id ?? null },
+          message: 'Turno não está aberto.',
         });
+      const range = await this.lockRange(query, tenantId, input);
+      await assertNoActiveReservation(query, tenantId, input);
 
       const start = bigintOf(range.next_number);
       const end = start + size - 1;
@@ -152,6 +171,8 @@ export class ReserveNumberingCommand {
             idempotency_key, start_number, end_number, reserved_at, valid_until,
             status)
          values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'reserved')
+         on conflict (tenant_id, device_id, shift_id) where status = 'reserved'
+         do nothing
          returning *`,
         [
           range.id,
@@ -166,7 +187,14 @@ export class ReserveNumberingCommand {
           validUntil,
         ],
       );
-      const row = inserted.rows[0]!;
+      const row = inserted.rows[0];
+      if (!row) {
+        // O índice `ux_numbering_reservation_tenant_id_device_id_shift_id_reserved`
+        // recusou uma reserva gravada fora deste comando (rota CRUD): mesma
+        // recusa de negócio, com o id da reserva vigente.
+        await assertNoActiveReservation(query, tenantId, input);
+        throw new Error('Active reservation conflict without a visible row');
+      }
       await teatEventSink(this.deps.outbox).append(
         transaction,
         numberingReservationChangedEvent(scope, {

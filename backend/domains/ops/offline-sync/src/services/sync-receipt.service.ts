@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:ff9d218be3314b511ef2cdab143c94785c99ffe446405136e001f85f8978c1ad
 import { Injectable } from '@nestjs/common';
 import { SyncReceiptRepository } from '../repositories/sync-receipt.repository.js';
 import type { SyncReceipt } from '../entities/sync-receipt.entity.js';
