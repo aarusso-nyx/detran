@@ -459,10 +459,16 @@ describe('CTG-0002 §5.13 — leituras de recibo e recuperação de ACK perdido 
  * Achado 3 (§4.1 passo 4): sem lote anterior, `last = 0`.
  */
 
-/** Reserva `reserved` do device+turno cobrindo um número específico. */
+/**
+ * Reserva `reserved` do device+turno cobrindo `[number, end]`. §5.10: há no
+ * máximo uma reserva `reserved` por dispositivo e turno, então a reserva
+ * vigente de um caso anterior deste arquivo é liquidada (`consumed`) antes de
+ * a nova nascer — o estado semeado é sempre um que o protocolo admite.
+ */
 async function seedReservationFor(
   deviceId: string,
   number: number,
+  end: number = number,
 ): Promise<string> {
   const id = randomUUID();
   await client.query(`select set_config('app.role', 'owner', false)`);
@@ -470,10 +476,16 @@ async function seedReservationFor(
     tenantId,
   ]);
   await client.query(
+    `update ops.numbering_reservation set status = 'consumed'
+      where tenant_id = $1 and device_id = $2 and shift_id = $3
+        and status = 'reserved'`,
+    [tenantId, deviceId, field.shiftId],
+  );
+  await client.query(
     `insert into ops.numbering_reservation
        (id, tenant_id, range_id, traffic_agency_id, agent_id, device_id, shift_id,
         idempotency_key, start_number, end_number, valid_until, status)
-     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9,
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
              '2026-12-31T23:59:59-04:00', 'reserved')`,
     [
       id,
@@ -485,6 +497,7 @@ async function seedReservationFor(
       field.shiftId,
       `atomicity-${id.slice(0, 8)}`,
       number,
+      end,
     ],
   );
   return id;
@@ -979,14 +992,21 @@ describe('CTG-0002 §14 (c) — replay de lote interrompido completa a materiali
     return { batchId, itemId, receiptId };
   }
 
+  /**
+   * Os dois números dos itens do lote numa só reserva `reserved` do
+   * dispositivo e turno (§5.10 admite uma por dispositivo e turno); o mapa
+   * número → reserva que os casos consomem continua o mesmo.
+   */
   async function seedTwoReservations(
     deviceId: string,
   ): Promise<Map<number, string>> {
-    const map = new Map<number, string>();
-    for (const number of [2026000201, 2026000202]) {
-      map.set(number, await seedReservationFor(deviceId, number));
-    }
-    return map;
+    const numbers = [2026000201, 2026000202];
+    const reservationId = await seedReservationFor(
+      deviceId,
+      numbers[0]!,
+      numbers[1]!,
+    );
+    return new Map(numbers.map((number) => [number, reservationId]));
   }
 
   it('dado um lote interrompido depois do passo 5, com só o primeiro de dois itens materializado, quando reenviado com o mesmo device_batch_id e os mesmos dois itens então 200: o recibo do item já emitido volta sem reaplicar e o item faltante é materializado e aplicado', async () => {

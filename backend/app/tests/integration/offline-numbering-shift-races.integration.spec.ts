@@ -588,6 +588,115 @@ describe('hotfix — corridas de turno e numeração offline sob concorrência (
     expect(untouched.rows).toHaveLength(1);
   });
 
+  // Ciclo 1 da revisão: a serialização da reserva depende de travar a linha do turno; um
+  // `shift_id` sem linha não trava nada. A reserva exige turno do tenant, `open` e do agente
+  // pedido; sem ele, 409 `TEAT.SHIFT_NOT_OPEN` (catálogo TEAT: "ato legal sem turno").
+  it('defeito 2 (turno inexistente) — dado um shift_id sem linha quando duas reservas são pedidas ao mesmo tempo em faixas diferentes então as duas recebem 409 TEAT.SHIFT_NOT_OPEN e nenhuma reserva nasce', async () => {
+    const { tenantId, actorId, field } = await seedTenant('race-no-shift');
+    await ownerScope(tenantId);
+    const otherRangeId = randomUUID();
+    await seeder.query(
+      `insert into ops.ait_numbering_range
+         (id, tenant_id, traffic_agency_id, series, start_number, end_number,
+          next_number, status, usage_mode)
+       values ($1, $2, $3, 'G', 2027000001, 2027001000, 2027000001, 'active',
+               'source_pending')`,
+      [otherRangeId, tenantId, field.agencyId],
+    );
+    const missingShift = randomUUID();
+    const body = (rangeId: string, key: string) => ({
+      traffic_agency_id: field.agencyId,
+      agent_id: field.agentId,
+      device_id: field.deviceId,
+      shift_id: missingShift,
+      idempotency_key: key,
+      range_id: rangeId,
+      requested_size: 10,
+      valid_until: VALID_UNTIL,
+    });
+
+    const { firstOutcome, secondOutcome } = await interleave(
+      (hold) =>
+        new ReserveNumberingCommand(
+          commandDeps(first, tenantId, actorId, hold) as never,
+        ).execute(body(field.rangeId, 'race-no-shift-first')),
+      () =>
+        new ReserveNumberingCommand(
+          commandDeps(second, tenantId, actorId) as never,
+        ).execute(body(otherRangeId, 'race-no-shift-second')),
+    );
+
+    for (const outcome of [firstOutcome, secondOutcome]) {
+      expect(outcome.status).toBe('rejected');
+      if (outcome.status === 'rejected')
+        expect(outcome.reason).toMatchObject({
+          code: 'TEAT.SHIFT_NOT_OPEN',
+          status: 409,
+        });
+    }
+    await ownerScope(tenantId);
+    const created = await seeder.query<{ count: number }>(
+      `select count(*)::integer as count from ops.numbering_reservation
+        where tenant_id = $1 and shift_id = $2`,
+      [tenantId, missingShift],
+    );
+    expect(created.rows[0]!.count).toBe(0);
+    const moved = await seeder.query<{ count: number }>(
+      `select count(*)::integer as count from ops.ait_numbering_range
+        where id = any($1::uuid[]) and next_number <> start_number`,
+      [[field.rangeId, otherRangeId]],
+    );
+    expect(moved.rows[0]!.count).toBe(0);
+  });
+
+  it('defeito 2 (turno fora da regra) — dado um turno fechado ou de outro agente quando a reserva é pedida para ele então 409 TEAT.SHIFT_NOT_OPEN e nenhuma reserva nasce', async () => {
+    const { tenantId, actorId, field } = await seedTenant('reserve-bad-shift');
+    await ownerScope(tenantId);
+    const closedShift = randomUUID();
+    await seeder.query(
+      `insert into ops.ops_shift
+         (id, tenant_id, traffic_agency_id, agent_id, device_id,
+          operational_unit_id, started_at, ended_at, status)
+       values ($1, $2, $3, $4, $5, $6, '2026-09-13T08:00:00-04:00',
+               '2026-09-13T17:00:00-04:00', 'closed')`,
+      [
+        closedShift,
+        tenantId,
+        field.agencyId,
+        field.agentId,
+        field.deviceId,
+        field.unitId,
+      ],
+    );
+    const command = new ReserveNumberingCommand(
+      commandDeps(first, tenantId, actorId) as never,
+    );
+    const body = (shiftId: string, agentId: string) => ({
+      traffic_agency_id: field.agencyId,
+      agent_id: agentId,
+      device_id: field.deviceId,
+      shift_id: shiftId,
+      idempotency_key: `bad-shift-${randomUUID().slice(0, 8)}`,
+      range_id: field.rangeId,
+      requested_size: 1,
+      valid_until: VALID_UNTIL,
+    });
+
+    await expect(
+      command.execute(body(closedShift, field.agentId)),
+    ).rejects.toMatchObject({ code: 'TEAT.SHIFT_NOT_OPEN', status: 409 });
+    await expect(
+      command.execute(body(field.shiftId, randomUUID())),
+    ).rejects.toMatchObject({ code: 'TEAT.SHIFT_NOT_OPEN', status: 409 });
+    await ownerScope(tenantId);
+    const created = await seeder.query<{ count: number }>(
+      `select count(*)::integer as count from ops.numbering_reservation
+        where tenant_id = $1`,
+      [tenantId],
+    );
+    expect(created.rows[0]!.count).toBe(0);
+  });
+
   it('defeito 3 (settle) — dado uma reserva que é a cauda da faixa quando ela é cancelada enquanto o applier aplica um AIT com número dela então o número aplicado nunca volta à faixa', async () => {
     const start = 2026000001;
     const { tenantId, actorId, field } = await seedTenant('race-settle');
