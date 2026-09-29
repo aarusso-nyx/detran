@@ -785,11 +785,12 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
 // do BOAT (BP-EST-CRASH-001.commands.openapi.json) = 160; R-0011 (plan.md M24,
 // TASK-0006) soma 43 do DASHBOARD (BP-DASH-MONITOR-001.commands.openapi.json,
 // CTG-0002 §3, sete controllers manuscritos + o stream) = 203; R-0007
-// CTG-0003/0004 acrescentam 53 operações RAIT/infraction/collection = 256.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=256', async () => {
+// CTG-0003/0004 acrescentam 53 operações RAIT/infraction/collection = 256;
+// R-0031 CTG-0001 acrescenta 82 operações PEC = 338.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=338', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 256);
+  assert.equal(result.operations, 338);
 });
 
 // ---------------------------------------------------------------------------

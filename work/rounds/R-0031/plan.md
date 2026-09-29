@@ -390,6 +390,14 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
 
 ## Bloqueios
 
+- **OD-PW-007 (2026-09-29, aguardando Owner):** a TASK-0002 caracterizou a
+  matriz de autorização, mas não produziu status e corpos HTTP das 82 rotas;
+  a TASK-0003 não pode trocar mensagens livres por envelopes `PEC.*` sem
+  inventar comportamento. `pnpm contracts:check` e `pnpm contracts:test`
+  passam com 338 operações e 87 clientes. Definir se os envelopes ficam
+  explicitamente diferidos até caracterização HTTP viável, ou autorizar a
+  estratégia que a produzirá. `PEC.SIGNING_UNAVAILABLE` continua bloqueado
+  após a migração de R-0022, pois os adaptadores protegidos não foram tocados.
 - **Prompt-review bootstrap (2026-09-29, em resolução):** o ciclo 2 retornou `REVIEW`
   apenas por descrição desatualizada de TASK-0010.json. A descrição foi
   corrigida e `verify:round-tasks`/`format:check` passaram. O §5 de

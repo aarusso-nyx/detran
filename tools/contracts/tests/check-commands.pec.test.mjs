@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
@@ -31,13 +31,11 @@ const CH_COMMAND_MODULES = [
 ];
 
 test('dadas as 15 especificações BP-CH de comandos quando o checker é configurado então varre as raízes manuscritas ch e os controladores pec de composição', async () => {
-  const contracts = await Promise.all(
-    (await readFile(join(root, 'work/rounds/R-0031/route-manifest.md'), 'utf8'))
-      .match(/BP-CH-[A-Z-]+-001\.commands\.openapi\.json/gu)
-      ?.map((name) =>
-        readFile(join(root, 'docs/framework/contracts', name), 'utf8'),
-      ) ?? [],
-  );
+  const contracts = (await readdir(join(root, 'docs/framework/contracts')))
+    .filter((name) =>
+      /BP-CH-[A-Z0-9-]+-001\.commands\.openapi\.json/u.test(name),
+    )
+    .sort();
 
   assert.equal(contracts.length, 15);
   for (const module of CH_COMMAND_MODULES) {

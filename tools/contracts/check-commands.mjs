@@ -47,6 +47,25 @@ export const CONTROLLER_ROOTS = [
   'backend/domains/inf/rait-org/src/handwritten',
   'backend/domains/inf/collection/src/handwritten',
   'backend/domains/inf/rait-integration/src/handwritten',
+  // R-0031 (CTG-0001): the PEC command contracts cover the 15 mounted CH
+  // command surfaces. Scan each module root so generated controllers remain
+  // excluded by `findFilesBelow` while the handwritten command controllers
+  // remain part of the bidirectional contract check.
+  'backend/domains/ch/billing/src',
+  'backend/domains/ch/biometrics/src',
+  'backend/domains/ch/clinical-controls/src',
+  'backend/domains/ch/clinical-network/src',
+  'backend/domains/ch/clinical-reports/src',
+  'backend/domains/ch/encounters/src',
+  'backend/domains/ch/exams/src',
+  'backend/domains/ch/inconsistencies/src',
+  'backend/domains/ch/juntas/src',
+  'backend/domains/ch/operational-controls/src',
+  'backend/domains/ch/process-blocks/src',
+  'backend/domains/ch/restrictions/src',
+  'backend/domains/ch/retention/src',
+  'backend/domains/ch/scheduling/src',
+  'backend/domains/ch/telehealth/src',
   'backend/app/src',
 ];
 
@@ -60,6 +79,7 @@ export const ERROR_CATALOG_PATHS = [
   'docs/framework/arch/boat-error-catalog.md',
   'docs/framework/arch/dashboard-error-catalog.md',
   'docs/framework/arch/rait-error-catalog.md',
+  'docs/framework/arch/pec-error-catalog.md',
 ];
 
 const ERROR_CATALOG_PREFIXES = new Map([
@@ -68,6 +88,7 @@ const ERROR_CATALOG_PREFIXES = new Map([
   ['boat-error-catalog.md', 'BOAT'],
   ['dashboard-error-catalog.md', 'DASH'],
   ['rait-error-catalog.md', 'RAIT'],
+  ['pec-error-catalog.md', 'PEC'],
 ]);
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
@@ -173,7 +194,8 @@ export function scanControllers(controllerRoots) {
         !path.basename(file).startsWith('teat-') &&
         !path.basename(file).startsWith('portal-') &&
         !path.basename(file).startsWith('dashboard-') &&
-        !path.basename(file).startsWith('rait-')
+        !path.basename(file).startsWith('rait-') &&
+        !path.basename(file).startsWith('pec-')
       )
         continue;
       if (flagGated.has(toPosix(file))) continue;
@@ -253,7 +275,7 @@ export function parseErrorCatalog(catalogPath, prefix = undefined) {
   const codes = new Set();
   const expression = prefix
     ? new RegExp(`${prefix}\\.[A-Z0-9_]+`, 'gu')
-    : /(?:TEAT|PORTAL|BOAT|DASH|RAIT)\.[A-Z0-9_]+/gu;
+    : /(?:TEAT|PORTAL|BOAT|DASH|RAIT|PEC)\.[A-Z0-9_]+/gu;
   for (const match of text.matchAll(expression)) codes.add(match[0]);
   return codes;
 }
@@ -275,6 +297,7 @@ function parseErrorCatalogsByPrefix(paths) {
     ['BOAT', new Set()],
     ['DASH', new Set()],
     ['RAIT', new Set()],
+    ['PEC', new Set()],
   ]);
   for (const candidate of paths) {
     if (!fs.existsSync(candidate)) continue;
@@ -287,7 +310,7 @@ function parseErrorCatalogsByPrefix(paths) {
 
 function parseSingleCatalogByPrefix(catalogPath) {
   return new Map(
-    ['TEAT', 'PORTAL', 'BOAT', 'DASH', 'RAIT'].map((prefix) => [
+    ['TEAT', 'PORTAL', 'BOAT', 'DASH', 'RAIT', 'PEC'].map((prefix) => [
       prefix,
       parseErrorCatalog(catalogPath, prefix),
     ]),
