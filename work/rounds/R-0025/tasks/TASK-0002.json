@@ -21,12 +21,12 @@
   "tags": ["r25", "a-c2-15", "session-a"],
   "branch": "orchestra/rait-web-wiring",
   "worktree_id": "WT-rait-web-wiring",
-  "prompt_composition_id": "PC-2e44e03d253592d1",
+  "prompt_composition_id": "PC-375b0098c6700628",
   "acceptance_commands": [
     [
-      "bash",
-      "-lc",
-      "rg -q 'OD-R25-001' docs/meta/knowledge-base/open-decisions-rait.md && rg -q 'OD-R25-002' docs/meta/knowledge-base/open-decisions-rait.md && rg -q 'OD-R25-015' docs/meta/knowledge-base/open-decisions-rait.md && python3 -m json.tool docs/framework/arch/i18n/rait.pt-BR.json >/dev/null"
+      "node",
+      "-e",
+      "const fs=require('fs'); const s=fs.readFileSync('docs/meta/knowledge-base/open-decisions-rait.md','utf8'); if(!s.includes('RAIT-WEB — R-0025')) process.exit(1); for(let n=1;n<=15;n++) if(!s.includes('OD-R25-'+String(n).padStart(3,'0'))) process.exit(1); JSON.parse(fs.readFileSync('docs/framework/arch/i18n/rait.pt-BR.json','utf8'))"
     ],
     ["pnpm", "verify:parameter-catalogue"],
     ["pnpm", "docs:kb:check"],
@@ -42,7 +42,7 @@
       "mode": "exact",
       "registry_id": "gpt-6-luna"
     },
-    "prompt_composition_id": "PC-2e44e03d253592d1",
+    "prompt_composition_id": "PC-375b0098c6700628",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

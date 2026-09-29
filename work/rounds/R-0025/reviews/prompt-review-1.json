@@ -1,0 +1,56 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0025",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0025/prompts/TASK-0006.md",
+      "line": 23,
+      "claim": "The TASK-0006 prompt tells the worker to include MOD-ddl-35 for F-09 (OD-R25-007) and MOD-ddl-39 for F-15 (OD-R25-011). Both ODs are still open. plan.md lists the OD-R25-007 decider as Owner and the OD-R25-011 decider as Architect + Owner, and the only recommendation given is (a). The prompt makes only the suspicion deadline, alternate order, publication state and uncatalogued errors source_pending. It does not treat F-09's decider roles (rait-chair + rait-signing-authority vs. rait-chair alone) as pending, and it does not carry the general rule from TASK-0003.md:27-28 ('não escolha papel, prazo, coluna ou evento por inferência'). A worker could write the Architect's recommendation (a) as fact for the F-09 roles and for the published_at/published_by columns, which item 3 forbids.",
+      "fix": "In TASK-0006.md, add after line 27: 'Decisão do Owner ainda aberta (OD-R25-007 papéis/decisor de F-09; OD-R25-011 forma de publicação de F-15) ou fonte ausente = `source_pending`/fail-closed com a OD; não escolha papel, prazo, coluna ou evento por inferência; a recomendação do Architect não é aprovação.' Then recompute the sha256 and pc_id of TASK-0006 in compositions.json and TASK-0006.json."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0025/prompts/TASK-0002.md",
+      "line": 13,
+      "claim": "The prompt allows only 'namespaces existentes e permitidos' but does not name the source of the allowlist. That source is docs/framework/arch/parameter-catalogue.md §Namespaces i18n (line 134), and plan.md line 79 requires the 'namespaces allowlistados'. A worker running Luna on low effort could read 'existentes' as 'permitidos'.",
+      "fix": "Cite `docs/framework/arch/parameter-catalogue.md` §Namespaces i18n as the source of the allowlist (read-only). Say that a key outside the allowlist stops the task and is recorded as a blocker. Update the hash."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0025/tasks/TASK-0002.json",
+      "line": 29,
+      "claim": "The acceptance command checks only OD-R25-001, 002 and 015, but the prompt (line 26) requires OD-R25-001…015. It also does not check the RAIT-WEB — R-0025 section. TASK-0003 and TASK-0006 likewise check only the endpoints (F-01/F-05/A-6 and F-06/F-16), not every F-nn/A-n.",
+      "fix": "Use a loop: `for n in $(seq -w 1 15); do rg -q \"OD-R25-0$n\" ... || exit 1; done` plus `rg -q 'RAIT-WEB — R-0025'`. Do the same for F-01..F-05, A-1..A-6 and F-06..F-16 in the contracts."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0025/tasks/TASK-0001.json",
+      "line": 27,
+      "claim": "All four JSONs use `bash -lc` in acceptance_commands, but law/schemas/task.schema.json describes this field as 'Literal shell-free argv arrays'. The schema only requires string[], and there is precedent (R-0005…R-0010), so verify:round-tasks passes.",
+      "fix": "Optional: move the checks into shell-free argv (for example `node -e` or a verification script), or record the deviation as a maestro decision in plan.md."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0025/prompts/TASK-0003.md",
+      "line": 25,
+      "claim": "The prompt asks for 'chaves no formato de dados de R-0023', but R-0023 is not in origin/main (d8c5d72a), so no versioned source exists for that format yet.",
+      "fix": "State that the key format follows the R-0023 plan as a proposal marked `source_pending` (R-0023), to be rechecked when the round resumes. Apply the same to TASK-0006.md line 28."
+    }
+  ],
+  "notes": [
+    "Hashes: sha256 of prompts/TASK-0001/0002/0003/0006.md match compositions.json exactly, and every pc_id matches the first 16 hex digits and the prompt_composition_id in the JSONs.",
+    "Scope (item 1): the four prompts write only to work/rounds/R-0025/{command-matrix,route-delta,contracts/CTG-000{1,2,3}}.md, open-decisions-rait.md and rait.pt-BR.json. policy.ts, controllers and DDL are read-only. No R-0020/22/23/24 file is authorized. record/ and .devai/ are forbidden in the prompts. .github/workflows/ and law/register are not written by any task; they are forbidden in plan.md line 56 but not repeated in the prompts. This is not a finding because the write boundaries are closed allowlists.",
+    "Dependencies: 0001→0002→{0003∥0006} are consistent across prompts, JSONs (upstream_task_id) and plan.md M3. Locks (target_modules) match the task table in plan.md and are disjoint between 0003 and 0006.",
+    "Waiting on upstream: AUTHORIZATION.md and the prompts state that contracts will be rechecked against origin/main after R-0024, with a numbered addendum if they diverge (A-C2-15 §16).",
+    "Read-only gates run by the reviewer: `pnpm verify:round-tasks` OK (320 tasks); `pnpm format:check` green.",
+    "Budget: one prompt-review reserved, and no PR/delivery-review in the plan or authorization (item 5 met).",
+    "Reviewer environment: the MCP servers claude.ai Google Drive and claude.ai Mermaid Chart need authorization in the claude.ai connector settings; they were not used in this review."
+  ]
+}

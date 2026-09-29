@@ -1,0 +1,18 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0025",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Item 1 (high finding 1 fixed): TASK-0006.md:26-30 says OD-R25-007 (F-09 roles/decider) and OD-R25-011 (how F-15 is published) have no Owner decision yet. The worker must record the alternatives as `source_pending`/fail-closed and must not infer a role, deadline, column or event. It also says an Architect recommendation is not an approval. The mentions of MOD-ddl-35/39 (lines 23-24) stay as DDL references, and the no-inference rule on lines 28-29 stops the worker from picking columns. Only the leftover line length on lines 25 and 32 remains, and Prettier accepts it.",
+    "Item 2 (low finding 2 fixed): TASK-0002.md:9-11 cites `docs/framework/arch/parameter-catalogue.md` §Namespaces i18n as a read-only allowlist. The section exists at line 134, '## Namespaces i18n (allowlist do verificador)'. Lines 16-17 say to stop and record a blocker if a key falls outside the allowlist.",
+    "Item 3 (low findings 3 and 4 fixed): all four acceptance_commands now use the argv form `node -e` with no bash/shell. TASK-0001 checks that the 3 artifacts are non-empty. TASK-0002 checks the literal 'RAIT-WEB — R-0025' (em dash, same as prompt line 21), loops over OD-R25-001…015 and runs JSON.parse on i18n. TASK-0003 loops over F-01…F-05 and A-1…A-6. TASK-0006 loops over F-06…F-16. Baseline: the KB has neither the RAIT-WEB — R-0025 section nor any OD-R25-nnn today, so TASK-0002's check will not pass before the work is done.",
+    "Residual note, not a finding: the checks use `includes`, so 'A-1' is also satisfied by 'A-10' and similar. This carries little risk because the contracts cover only A-1…A-6 and F-01…F-16.",
+    "Item 4 (low finding 5 fixed): TASK-0003.md:25-26 and TASK-0006.md:31-32 describe the keys as proposed per the R-0023 plan and mark them `source_pending` until upstream is merged into `origin/main`.",
+    "Hashes: the sha256 of prompts/TASK-0001/0002/0003/0006.md (0b170d07…, 375b0098…, 66da0c1f…, a48a8455…) match compositions.json. Each pc_id is PC- plus the first 16 hex digits. Both prompt_composition_id fields (top level and executor) in each TASK-*.json match.",
+    "The diff since e3d54745 touches only the 4 prompts, 4 JSONs and compositions.json in R-0025. Scope, locks and dependencies are unchanged from prompt-review-1.",
+    "Read-only gates run by the reviewer: `pnpm verify:round-tasks` OK (320 tasks). `prettier --check` on R-0025 prompts/tasks/compositions is green.",
+    "Untracked review artifacts (`prompt-review-2.json.formatted.*`, `.raw.*`) are left in work/rounds/R-0025/reviews/. The maestro should clean them up before committing.",
+    "Reviewer environment: the MCP servers claude.ai Google Drive and claude.ai Mermaid Chart need authorization in the claude.ai connector settings. They were not used in this review."
+  ]
+}

@@ -24,9 +24,9 @@
   "prompt_composition_id": "PC-0b170d07b4e8418e",
   "acceptance_commands": [
     [
-      "bash",
-      "-lc",
-      "test -s work/rounds/R-0025/command-matrix.md && test -s work/rounds/R-0025/route-delta.md && test -s work/rounds/R-0025/contracts/CTG-0001.md"
+      "node",
+      "-e",
+      "const fs=require('fs'); for(const p of ['work/rounds/R-0025/command-matrix.md','work/rounds/R-0025/route-delta.md','work/rounds/R-0025/contracts/CTG-0001.md']) if(!fs.existsSync(p)||!fs.statSync(p).size) process.exit(1)"
     ],
     ["pnpm", "format:check"]
   ],

@@ -429,6 +429,12 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 - **M3 (dependências).** TASK-0001 precede TASK-0002; TASK-0002 precede
   TASK-0003 e TASK-0006. Os contratos de TASK-0003 e TASK-0006 têm locks
   disjuntos e podem avançar juntos depois do registro canônico das ODs.
+- **M4 (prompt-review).** O ciclo 1 com `claude-opus-5-5` retornou REVIEW:
+  recomendação de OD-R25-007/011 não podia virar decisão no prompt de
+  TASK-0006. As correções também explicitaram a allowlist i18n, cobertura dos
+  `acceptance_commands` e a dependência de R-0023. O ciclo 2, restrito a esses
+  achados, retornou PASS sem achados. Registros em `reviews/prompt-review-1.json`
+  e `reviews/prompt-review-2.json`.
 
 ## Concorrência
 

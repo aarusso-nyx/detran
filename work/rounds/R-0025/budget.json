@@ -19,7 +19,17 @@
       "model": "claude-opus-5-5",
       "input_estimate": 35000,
       "output_estimate": 5000,
-      "note": "Reservado: um ciclo pela ponte, apenas plano e quatro prompts liberados; ainda não executado."
+      "result": "REVIEW → PASS",
+      "note": "Um prompt-review em dois ciclos pela ponte: correção do achado high sobre ODs pendentes e dos lows do mesmo diff."
+    },
+    {
+      "id": "prompt-review-correction",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 15000,
+      "output_estimate": 3000,
+      "result": "PASS",
+      "note": "Ciclo 2 restrito aos achados do ciclo 1."
     },
     {
       "id": "task-0001",
