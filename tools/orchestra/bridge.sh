@@ -14,6 +14,9 @@ if [[ -z "$family" || -z "$model" || -z "$prompt" || -z "$out" ]]; then
 fi
 [[ -f "$prompt" ]] || { echo "bridge: prompt não encontrado: $prompt" >&2; exit 2; }
 [[ -d "$cwd" ]] || { echo "bridge: worktree não encontrada: $cwd" >&2; exit 2; }
+repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+command -v node >/dev/null || { echo "bridge: ARCHIVAL_PC_GUARD_INTEGRITY: Node ausente" >&2; exit 7; }
+node "$repo_root/tools/devai/assert-archival-prompt-not-dispatchable.mjs" --repo-root "$repo_root" --prompt "$prompt"
 mkdir -p "$(dirname "$out")"
 raw_out="$(mktemp "${out}.raw.XXXXXX")"
 formatted_out="$(mktemp "${out}.formatted.XXXXXX")"

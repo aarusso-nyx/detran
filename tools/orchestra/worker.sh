@@ -17,6 +17,9 @@ if [[ -z "$model" || -z "$effort" || -z "$prompt" || -z "$out" ]]; then
 fi
 [[ -f "$prompt" ]] || { echo "worker: prompt não encontrado: $prompt" >&2; exit 2; }
 [[ -d "$cwd" ]] || { echo "worker: worktree não encontrada: $cwd" >&2; exit 2; }
+repo_root="$(cd "$(dirname "$0")/../.." && pwd)"
+command -v node >/dev/null || { echo "worker: ARCHIVAL_PC_GUARD_INTEGRITY: Node ausente" >&2; exit 7; }
+node "$repo_root/tools/devai/assert-archival-prompt-not-dispatchable.mjs" --repo-root "$repo_root" --prompt "$prompt"
 command -v codex >/dev/null || { echo "worker: codex CLI ausente" >&2; exit 3; }
 mkdir -p "$(dirname "$out")"
 
