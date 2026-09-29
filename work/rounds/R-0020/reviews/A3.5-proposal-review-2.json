@@ -1,0 +1,41 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 11,
+      "claim": "Moving `verify:archival-pc-guard` into `pnpm check` creates a new timing inconsistency. Line 11 has the verifier check exactly the eleven TASKs 'pacote LF canônico… onze sidecars…'. Before migration no package, sidecar or index exists yet. Line 12 requires a manifest with `status: pre-migration` that must always be present. The contract never says which assertions the verifier runs in each state. Taken literally, `check` goes red on main as soon as the verifier lands, because the migration has not run.",
+      "fix": "Make the verifier state-aware, driven by `status` in the manifest. In `pre-migration`, check the 6 prompts and 5 originals against their raw and canonicalized hashes, check that `compositions-archive/` does not exist, and check G0. In `applied`, run the full list on line 11. Any other state, or a disagreement between manifest and disk, fails. Write RED tests for both states and for the invalid transition."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 12,
+      "claim": "The pre-migration manifest records the 'cinco JSON originais' with hashes, and the preflight fails closed on divergence. `reports/A3-source-map.md` and `CTG-0003-A3.1-none-allowlist.json` show that R-0007 TASK-0078…0082 are also targets of the 1A normalization, which has its own sidecar. The contract does not fix the order of 1A and B, or which bytes count as 'original'. If 1A rewrites those JSONs after the manifest is committed, the preflight blocks every orchestra dispatch. If the manifest only covers the post-1A bytes, the pre-1A bytes can still be dispatched.",
+      "fix": "Fix the order: 1A first, then the B migration, or the reverse, stated explicitly. In the manifest, list for each of the five both the pre-1A original bytes (from the A3 sidecar) and the current canonical bytes, and refuse on any of them. Define how the manifest is updated when a later governed normalization changes the eleven, so that neither permanent fail-closed nor a silent gap results."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 26,
+      "claim": "The sentence 'Manifesto/índice apagado ou divergente, fonte arquivística via symlink e `cwd` em outra worktree falham fechados sem falso positivo no prompt comum' can be read as saying a `cwd` in another worktree fails closed. That contradicts item 3 on line 13: the root comes from `$0`, and an ordinary prompt is accepted wherever it lives. It is the case the cycle-1 fix was meant to protect.",
+      "fix": "Split the sentence. Missing or divergent manifest/index and a symlinked archival source fail closed. With `cwd` in another worktree, the manifest is read from the script's root, an ordinary prompt reaches the fake CLI, and an archival prompt is refused with exit 6."
+    }
+  ],
+  "notes": [
+    "(1) Resolved. Line 13 puts the same preflight in worker.sh and bridge.sh before `mkdir`, `mktemp`, the CLI and any output file. That is before worker.sh:21 and bridge.sh:17-19, and covers both branches of bridge.sh:23-33. The Inspector inventory of tools/orchestra is required. Today the folder has only worker.sh, bridge.sh and their *.test.sh files. Suggestion: define the inventory as 'any script that invokes codex/claude', not a list of names.",
+    "(2) Resolved in substance. The manifest is separate from the index and required, and a missing manifest fails closed. It covers the 6 prompts, 5 originals, 11 packages, 11 canonical TASKs and 11 sidecars. `compositions-archive/` together with `pre-migration` fails closed. Deleting the index or manifest after application fails. Recovery works by fail-closed plus verifiable re-run, with manifest promotion as the last step, and no multi-file atomicity is claimed. That is acceptable. The only open points are the ones in the findings above.",
+    "(3) Resolved. Line 15 explicitly takes the 'novo contrato de execução aprovado' branch of the expc clause (line 58) and forbids changing status on the archived records. Line 11 rules out queued/ready/lock_denied. Line 27 requires, for each of the eleven, TASK_QUEUE_STATUS_INVALID before the seal. This is plausible: in DEVAI 1.5.6, `materializeRoundQueueTask` validates the passed `options.task` and fails with TASK_QUEUE_STATUS_INVALID before any backlog or store write (release-host.js:188272-188277), so the rehearsal does not need to populate the store and does not break G0. The contract correctly admits that a rewritten or forged record with `queued` gets through.",
+    "(4) Resolved, apart from the wording on line 26. (5) Resolved: raw hash plus canonicalized hash (BOM, CRLF, trailing whitespace, EOF), with the rewritten-text limit kept. Semantic JSON reformatting also falls under that limit, which is consistent.",
+    "(6) Resolved. It is in `check`. The tests go in worker.test.sh and bridge.test.sh, which `verify:orchestra-bridge` already runs (package.json:32, inside check at package.json:15). Exit 6 is distinct from the current 2/3/4/5. No directory, report, JSONL or record may be created on refusal.",
+    "Plausibility: the preflight needs JSON parsing and SHA-256 in bash. The 'mesma preflight' should be a single shared helper, for example Node invoked by both scripts, that fails closed if the interpreter is missing, before any effect.",
+    "Overall verdict: B1 as repaired satisfies choice 2B under G0 and 3A within the declared boundary. It covers the two orchestra executors, known sources, packages, sidecars and TASKs, and uses the real runtime status barrier. It does not promise refusal by tag in DEVAI 1.5.6 or on the direct Codex/Claude CLI; that is left to the operational ban and the regular seal. B2 is not required. PASS approves only the design for Inspector RED tests and Engineer implementation. It does not apply PCs, does not replace the clone rehearsal or the delivery review, and the three low findings should go into the tests.",
+    "Checked: A3.5 SHA-256 3bc04d15… matches. Read-only session; nothing was written and `--write` was not run."
+  ]
+}

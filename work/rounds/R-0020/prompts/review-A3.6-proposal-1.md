@@ -1,0 +1,7 @@
+# Revisão cruzada da proposta A3.6 — R-0020 CTG-0003
+
+Atue como reviewer Claude Code Opus 5.5, somente leitura. Examine `work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md`, `reports/A3.6-round-seal-verification.json`, `reports/CTG-0003-round-status-diagnostic.md`, `reviews/delivery-review-CTG-0003-1.json`, o plano §Tarefas (c), §Critérios e §Triagem, o código do DEVAI 1.5.6 pinado e os 17 selos/PCs/records/índice reais. A proposta ainda não foi decidida pelo Owner.
+
+Questão central: a adenda preserva o critério literal `round status -> closed` como **não cumprido**, e estabelece verificação equivalente suficiente para o checkpoint de selo sem reescrever fatos? Confira a correspondência byte a byte com as seis chaves de `appendCloseState`, os 17 IDs, PC-0020 da R-0018 e PC-0018 da R-0017, a leitura `round plan` via `governedRoundStatus`, o controle ativo R-0020, os recibos de repetição idempotente versus os selos originais cuja saída individual não foi retida, e os dois índices. Confira se `--write` da leitura não mutou a árvore. Qualquer lacuna alta deve ser descrita concretamente com correção, sem transformar o comando defeituoso em PASS.
+
+Responda somente JSON válido com `mode`, `round`, `ctg`, `verdict` (`PASS` ou `REVIEW`), `findings` (objetos `severity`, `item`, `file`, `line`, `claim`, `fix`) e `notes`. `PASS` exige zero achados high; a proposta deve estar pronta para decisão específica do Owner, sem autorizar por si só aplicação, commit ou PR. Não edite arquivos.

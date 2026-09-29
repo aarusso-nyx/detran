@@ -1,0 +1,17 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "High item 4 (ciclo 1) fechado. `package.json:65` declara `verify:task-originals` como `node tools/devai/verify-task-originals.mjs --repo-root .`, e o `check` (linha 15) não o inclui, como foi declarado. `TASK-0009.md:65` exige o script e exit 0 sobre a árvore real pós-migração antes de TASK-0010 ou de qualquer seal, como gate separado de `pnpm check`. `CTG-0003-A3.md:39`, `CTG-0003.md:67` e `plan.md:228` dizem o mesmo e tornam o gate obrigatório no roteiro do maestro. `verify-task-originals.mjs` ainda não existe, o que é coerente com a entrega pendente do Engineer.",
+    "High item 6 (ciclo 1) fechado. `TASK-0008.md` agora lê `reports/A3-implementation-design.md` (item 13), os três testes existentes (14–16) e os dois módulos atuais (17–18). O critério da linha 64 enumera os casos (a)–(h) do ciclo 1: falha parcial antes da substituição, TASK com outra classe `source_pending` intacta, idempotência, alias divergente ou em colisão, sidecar ausente ou órfão, par de tags duplicado, literal diverso de `none` com caminho/hash admitidos, tags prospectivas e rejeição de projeção A3.2. Como a TASK-0009 é aceita por PASS nesses testes, a ordem sidecar→substituição passa a ter guarda.",
+    "Low item 5 (redação A3.2) fechado. `TASK-0009.md:60` separa as projeções A3.2 proibidas das já autorizadas. As autorizadas são a regra INV não `INV-*` → `ref:` e a bijeção dos seis `TASK-0004-S*` → `TASK-0083…0088`, com upstreams e `aliases.json`.",
+    "Low item 5 (R-0007 TASK-0079/0081) fechado. `TASK-0009.md:60` veda `database` para esses dois arquivos antes da conferência Inspector e da resolução EX/PC.",
+    "Low item 2 fechado. Tarefa (`TASK-0008.md:48`), escopo (`:52`) e critério (`:63–64`) citam os três arquivos de teste. `plan.md:167` e a `description` de `TASK-0008.json` concordam. `plan.md:227` remete aos caminhos do prompt, o que basta.",
+    "Low item 4 (relatório) fechado. `CTG-0003-A3.md:10` e `TASK-0009.md:60` fixam `work/rounds/R-0020/reports/A3-migration-before-after.json`. O relatório é gerado pelo normalizador na execução do maestro e é lido pelo verificador para conferir o hash canônico e o inventário de campos.",
+    "Vínculo PC/hash conferido. SHA-256 de `TASK-0008.md` = `a069391bf9c6ba80…` e de `TASK-0009.md` = `6f10742ed1caff7c…`. Ambos batem com `compositions.json:61,69`, e cada TASK JSON repete o mesmo `PC-*` em `prompt_composition_id` e em `executor.prompt_composition_id`. TASK-0007 (`6ed269d1…`) segue inalterada.",
+    "`AUTHORIZATION-A3.1-2026-09-28.md` não tem diff em relação a `16fa4647`. A allowlist (SHA-256 `6473ae6e…`) continua com 54 entradas, todas com hash igual aos bytes atuais. `proposal_sha256` `7bde5152…` bate com a proposta e com a autorização.",
+    "Resíduo já registrado como nota no ciclo 1, em texto inalterado e sem contradição canônica, portanto não reaberto: a Tarefa e o Escopo de `TASK-0009.md:50,54` e a `description` do JSON ainda dizem 'tasks históricas'. A linha 59 atribui a aplicação ao maestro, e `acceptance_commands` não exige migração."
+  ]
+}

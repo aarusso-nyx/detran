@@ -1,0 +1,61 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 12,
+      "claim": "B1 guards only tools/orchestra/worker.sh. B1's own sufficiency test (line 16) is 'the execution paths that the orchestra controls', and tools/orchestra/bridge.sh is a second one of those paths. bridge.sh sends a prompt to codex or claude (bridge.sh:26,30), and it is the runner that produced the three bridges tied to TASK-0078/0080/0082 (work/rounds/R-0007/reviews/attempt-2/ctg-0002-final*.bridge.json). An archived source or package can be sent through bridge.sh with no check at all.",
+      "fix": "Apply the same preflight to bridge.sh: same index, same list of forbidden sources, same fail-closed behaviour. It must run before mkdir/mktemp (bridge.sh:17-19) and before any CLI call. Add RED tests to tools/orchestra/bridge.test.sh. List worker.sh and bridge.sh in the contract as the complete set of orchestra executors, and have the Inspector confirm that tools/orchestra has no third runner."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 12,
+      "claim": "The preflight fails closed only when the index is 'present but invalid'. If the index is deleted or never written, the guard turns itself off without any error. Separately, the forbidden list has only the 6 S* prompts and the 5 JSON originals. It leaves out the 11 packages compositions-archive/<ID>.txt, which are exactly the bytes the archival PC names (H = SHA-256 of the package). It also leaves out the migrated canonical JSONs and the sidecars, whose bytes differ from the current canonical path once migration runs.",
+      "fix": "Commit a fixed guard manifest next to the preflight, independent of the index, with the SHA-256 of all 6 prompts, all 5 sidecar originals, all 11 packages and all 11 migrated TASK JSONs. The preflight refuses on a match with any of them. If work/rounds/R-0007/compositions-archive/ exists, or the manifest says the migration has happened, a missing or divergent index must fail with ARCHIVAL_PC_DISPATCH_FORBIDDEN or a distinct integrity code. Add Inspector tests for: index deleted, package used as the prompt, and sidecar or migrated JSON used as the prompt."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-expc-reconstruction.md",
+      "line": 58,
+      "claim": "The addendum approved by SHA in 2B (5a7c98…) requires that 'before any future reuse of the TASK, the runtime must reject dispatch carrying archival-pc-provenance:reconstructed-v1 OR require a new approved execution contract'. That clause is a disjunction attached to future reuse, not a precondition for applying the PCs, so B2 is not mandatory. But A3.5 never says which branch B1 takes, and never uses the runtime barrier that already exists and does not depend on the tag. In DEVAI 1.5.6, materializeRoundQueueTask requires status 'queued' (release-host.js:188277) and startRoundTask requires 'queued|ready|lock_denied' (188332) on a record loaded from the store. The store has no .devai/state/tasks today. After migration the eleven TASKs are completed or checkpoint.",
+      "fix": "State in the contract that B1 takes the 'new approved execution contract' branch. Any reuse of the eleven requires a new TASK/contract and never a status change on the archived records. Have verify-archival-pc-guard assert that none of the eleven has status queued, ready or lock_denied. Add a clone rehearsal in which materialize of each migrated TASK, before the seal, fails with TASK_QUEUE_STATUS_INVALID. This is proof through the runtime's status check, not a claim that the runtime refuses the tag."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 25,
+      "claim": "The out-of-repo test is ambiguous. If 'fonte fora do repo … recusam' means refusing every prompt outside the repo, that is a false positive against current use: the cwd argument points to other worktrees, and prompts can live in /tmp. Also, which repo the index is read from is not fixed when cwd is a different worktree.",
+      "fix": "Read the manifest and index from the repo that contains the script, resolved from $0, not from cwd. Hash every prompt no matter where it lives. Refuse on path only when the realpath of a forbidden source leaves the repo or is a symlink. Add a regression test in which an ordinary prompt outside the repo reaches the fake executor."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 12,
+      "claim": "Matching on raw bytes is beaten by a trivial change such as CRLF line endings, a BOM, or trailing whitespace/newline. The contract admits it does not cover rewritten text, but it should at least cover these mechanical changes.",
+      "fix": "Compare a second hash taken after canonicalizing the prompt: strip the BOM, convert CRLF to LF, trim trailing whitespace per line and at end of file. Test CRLF and extra-trailing-newline variants. Keep the stated limit: text that is actually rewritten is covered only by the operational ban, by --task when it is present, and by the seal."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.5-archive-guard.md",
+      "line": 11,
+      "claim": "The contract ties pnpm verify:archival-pc-guard only to the final CTG-0003 gate. It is not in package.json `check`, and not in `verify:orchestra-bridge` (package.json:15,32). CI would not catch a regression in the preflight or the verifier after the round is sealed.",
+      "fix": "Add the verifier to `check`. Put the preflight RED→GREEN tests in worker.test.sh and bridge.test.sh, which verify:orchestra-bridge already runs. Give the refusal a new exit code that does not reuse the existing ones (2/3/4/5). Assert that on refusal the output directory is not created."
+    }
+  ],
+  "notes": [
+    "Decisive anchor: AUTHORIZATION-A3.2-A3.3-PARTIAL-2026-09-28.md line 22 (3A) says 'G0 não bloqueia tools/orchestra/worker.sh; a guarda técnica específica exigida por 2B deve ser desenhada, testada e aprovada antes de aplicar PCs B'. The Owner therefore scoped the specific guard to the gap G0 leaves in the orchestra executors, not to rejection by tag inside DEVAI. Line 21 (2B) asks for a 'specific technical guard + Inspector tests + cross review'. It does not ask for a versioned change to the runtime.",
+    "B2 is not mandatory under 2B+3A. The only runtime-side text (expc-reconstruction line 58) is disjunctive and applies to future reuse. B1 is sufficient within the declared boundary once findings 1–3 are fixed: bridge.sh, fail-closed on a missing index with a complete forbidden list, and the choice of the 'new execution contract' branch plus proof through the status barrier. Direct DEVAI CLI before the seal is technically blocked for the eleven records exactly as migrated (status is not queued and the store is empty). A rewritten record or prompt, or direct codex/claude, remains covered only by the operational ban, which 3A accepted. The contract must not claim otherwise.",
+    "The preflight must come before line 21 (mkdir) in worker.sh and before line 17 in bridge.sh, i.e. before any effect. It is correct that the Inspector writes the RED tests before the Engineer implements. Having no --task is acceptable because the contract does not claim coverage for it.",
+    "Checked: A3.5 hash d61ba57c… matches; the expc (5a7c98…) and gap (236c70…) hashes match the ones cited in the authorization. Tags and schema were not treated as an execution mechanism. Nothing was written."
+  ]
+}

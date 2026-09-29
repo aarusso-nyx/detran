@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "tools/devai/tests/normalize-a32.test.mjs",
+      "line": 450,
+      "claim": "The EV/REC test's fixture set (executionEvidencePaths, lines 127-137, which covers TASK-0064…0082) includes TASK-0078…0082 in R-0007. These are the five archival PC-B JSON files. The test writes them with status 'queued', with no A3.5 manifest and no PC-B batch, and at lines 474-517 it requires the normalizer to exit 0 and apply 1A to them (sidecar, legacy-sha256 tag, EV removed). This conflicts with CTG-0003-A3.5-archive-guard.md:12 ('Não existe etapa autorizada de “1A aplicada, B pendente” para esses cinco arquivos') and with prompts/TASK-0009.md ('os cinco JSON originais 0078…0082 não mudam isoladamente'). It is the same kind of contradiction that stopped the Engineer, now in a different test. A faithful implementation that recognises the eleven by path or identity and fails closed without the manifest (consistent with the case at line 669) fails this test. The only way to make it pass is to detect PC-B by content alone, which lets 1A mutate the five without B.",
+      "fix": "In this test, write fixtures only for the EV/REC paths outside the eleven PC-B files (drop TASK-0078…0082 from the files written), and keep the 31/7/36 counts only as constant assertions. Or add a separate negative case: for TASK-0078…0082 without a manifest, the normalizer fails with the A3.5 message and writes nothing. EV for the five stays covered by the PC-B positive at line 521."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/devai/tests/normalize-a32.test.mjs",
+      "line": 669,
+      "claim": "The missing-manifest case copies neither the A3.1 allowlist nor law/trace.json. The real TASK-0004-S1 also has DB none and INV ADR-0021, so the implementation must check the A3.5 manifest before, or together with, source_pending for the other classes to meet /A3\\.5.*manifest/. This is feasible and not impossible, but the ordering is implicit.",
+      "fix": "Copy the allowlist and trace in this case, so that the missing manifest is the only cause of failure, or document that the manifest check comes first."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "tools/devai/tests/normalize-a32.test.mjs",
+      "line": 96,
+      "claim": "The fourth column of prospectivePc/retainedPc (the approved PC candidates and the historical literals) is never asserted. The positive test only checks PC = PC-+raw_sha256[0:16]. So a package whose bytes drift from the hashed recipe, for example a different field or a different path, would still pass the PC check as long as the guard accepts it. The CTG-0003-A3.2-expc-reconstruction.md table requires the approved candidates and forbids silently replacing them.",
+      "fix": "Assert index.entries[].prompt_composition_id against the table candidates (PC-cc41f39f237dccdd…PC-10b9b527af7d35af) and legacy-prompt-composition:<literal> for the five 0078…0082, without changing the contract."
+    }
+  ],
+  "notes": [
+    "Item 1 OK: the positive case (lines 521-586) copies the real prompts, JSONs and bridges and writes a pre-migration manifest with raw and canonical hashes plus an empty backlog. The guard is required to exit 0 with /pre-migration/. The real manifest CTG-0003-A3.5-guard-manifest.json matches all eleven sources (raw and canonical) in the tree. compositions-archive/ and _legacy-originals/ in R-0007 are absent.",
+    "Item 2 OK: the positive fixture does not pre-create compositions-archive, sidecars, the index or aliases. The earlier TASK-0009 contradiction (status queued from the helper) is fixed: the eleven now use real bytes with status completed/completed_incomplete.",
+    "Item 3 OK for the PC-B case: after normalize the test requires the index with eleven entries, historical_equivalence=false, package/index/TASK PC equality at top level and in executor, sidecars byte-identical to the originals, the six aliases TASK-0083…0088, status completed/checkpoint and never queued/ready/lock_denied, and the final guard exit 0 with /applied/. The output format is compatible with applyFixture in verify-archival-pc-guard.test.mjs:90-267, including legacy-original tags, the aliases table and resolved_path to the sidecar.",
+    "Item 4 OK: the case at line 669 requires a non-zero exit, the A3.5 message and no mutation of the TASK, the prompt, the sidecar or the index.",
+    "Item 5 OK: DB for 0079/0081 comes from A3-source-map.md:17/99/101 (S: detran_r7_ctg1_a2 → database, backed by R-0007/plan.md, which contains the literal 12 times and is copied into the fixture). DB none for 0078/0080/0082 and S1/S2/S2-R1/S4 is covered by the A3.1 allowlist, which is copied. EV of the five follows 1A (archival only, no evidence_refs). POS=P1 and STATUS=checkpoint follow 3A. No new values are invented.",
+    "Item 6 OK: CTG-0003-A3.2-expc-reconstruction.md SHA-256 5a7c9832… and CTG-0003-A3.2-proposal.md 52ac0bc9… match the hashes cited in the Owner authorization. The A3.5 contract has not been touched since the reviews. The pinned normalize-a32.test.mjs SHA-256 c10e3271… matches.",
+    "PASS does not authorize historical application, a seal or a PR. The Engineer should resume only after the fixture at line 450 is corrected and rechecked by the Inspector."
+  ]
+}

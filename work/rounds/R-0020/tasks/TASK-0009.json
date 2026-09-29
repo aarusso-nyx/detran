@@ -2,16 +2,17 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0009",
   "round_id": "R-0020",
-  "status": "queued",
+  "status": "completed",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Normalizar tarefas e criar gate",
-  "description": "normalize-tasks.mjs, verify-round-tasks.mjs, tasks históricas e template",
+  "description": "Normalização integral A3/A3.1/A3.2/A3.3/A3.4-P2, gate e verificador de originais; aplicação histórica e PC-B pelo maestro",
   "lifecycle": "supported",
   "target_modules": [
     "MOD-devai-tools",
     "MOD-round-tasks",
-    "MOD-orchestra-task-template"
+    "MOD-orchestra-task-template",
+    "MOD-root-package-json"
   ],
   "target_substrates": ["F2", "F5"],
   "target_invariants": [],
@@ -30,27 +31,32 @@
   ],
   "branch": "orchestra/devai-sensors",
   "worktree_id": "WT-devai-sensors",
-  "prompt_composition_id": "PC-076fd4afcc59170a",
+  "prompt_composition_id": "PC-21037bc73de8661c",
   "acceptance_commands": [
     [
       "node",
       "--test",
       "tools/devai/tests/normalize-tasks.test.mjs",
-      "tools/devai/tests/verify-round-tasks.test.mjs"
+      "tools/devai/tests/verify-round-tasks.test.mjs",
+      "tools/devai/tests/verify-task-originals.test.mjs",
+      "tools/devai/tests/verify-archival-pc-guard.test.mjs",
+      "tools/devai/tests/normalize-a32.test.mjs",
+      "tools/devai/tests/normalize-a33.test.mjs"
     ],
+    ["pnpm", "verify:archival-pc-guard"],
     ["pnpm", "format:check"]
   ],
   "created_at": "2026-09-27T20:15:24Z",
   "executor": {
     "kind": "agent",
     "runtime": "codex-cli",
-    "model": "gpt-5.6-terra",
-    "effort": "medium",
+    "model": "gpt-6-sol",
+    "effort": "high",
     "selection": {
       "mode": "exact",
-      "registry_id": "gpt-5.6-terra"
+      "registry_id": "gpt-6-sol"
     },
-    "prompt_composition_id": "PC-076fd4afcc59170a",
+    "prompt_composition_id": "PC-21037bc73de8661c",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

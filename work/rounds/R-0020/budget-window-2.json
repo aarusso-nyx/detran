@@ -1,0 +1,500 @@
+{
+  "round": "R-0020",
+  "window": 2,
+  "status": "checkpoint",
+  "window_input_budget": 2250000,
+  "checkpoint_threshold": 1800000,
+  "estimated_input_total": 2237000,
+  "estimated_output_total": 340500,
+  "note": "Retomada por autorização suplementar do Owner em 2026-09-28: orçamento triplicado para 2250000 e checkpoint em 1800000; consumo anterior de 600000 preservado. CTG-0001 mesclado no PR #150; observação reancorada no PR #152 após merge da R-0021; CTG-0002 em execução. Janela 2 encerrada em checkpoint após A3; 13000 tokens de entrada não utilizados.",
+  "entries": [
+    {
+      "kind": "maestro-resume",
+      "id": "main-integration-and-baseline",
+      "model": "gpt-6-sol",
+      "input_tokens": 45000,
+      "output_tokens": 12000,
+      "note": "Estimativa: fetch/rebase, conflito OD, plano, clone e medição oficial; sem telemetria do maestro."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0003-attempt-1",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 65000,
+      "output_tokens": 9000,
+      "note": "Estimativa: implementação inicial; testes 13/13 PASS; revisão revelou validação parcial e round status ausente."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0003-attempt-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 65000,
+      "output_tokens": 8000,
+      "note": "Estimativa: schema/round status; ensaio oficial revelou parser incorreto de result.value."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0003-escalated",
+      "model": "gpt-6-sol",
+      "input_tokens": 115000,
+      "output_tokens": 20000,
+      "note": "Estimativa: parser de 8 eixos, PC/closure, formato determinístico; testes e duas medições temporárias."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 65000,
+      "output_tokens": 9000,
+      "note": "Estimativa: revisão de entrega inicial; REVIEW com cinco achados high e oito low."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0002-delivery-corrections",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: cinco testes RED adicionais e correção da expectativa source_pending."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0003-delivery-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 75000,
+      "output_tokens": 10000,
+      "note": "Estimativa: cinco correções high, comparação de sensores e 18 testes PASS."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "delivery-review-cycle-1-triage",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Estimativa: atualização do plano, orçamento, rastros e verificação da medição oficial."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: revisão restrita aos cinco high; PASS com três observações low."
+    },
+    {
+      "kind": "maestro-followup",
+      "id": "delivery-review-cycle-2-low",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Estimativa: correções low de texto e trilha, integração do PR #149 e validações locais."
+    },
+    {
+      "kind": "maestro-evidence",
+      "id": "CTG-0001-commits-and-proof",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: commits por papel, entrada de evidência, ensaio em clone e prova seq. 1 validada."
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0001-pr-150-merge-observe",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: dois ciclos CI do PR #150 por avanço de main, pnpm check após merge de #146, merge do PR, ensaio e execução de audit observe no SHA integrado, checkpoint."
+    },
+    {
+      "kind": "maestro-resume",
+      "id": "CTG-0001-observation-resume",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Estimativa: retomada do estado, autorização suplementar, lock R-0021 e revisão da observação."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-observation-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: delivery-review da observação pós-merge; PASS com duas observações low."
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0001-observation-reanchor",
+      "model": "gpt-6-sol",
+      "input_tokens": 45000,
+      "output_tokens": 8000,
+      "note": "Estimativa: merge #151, resolução da cadeia por aceitação de main, ensaio/registro da reancoragem e revisão da prova."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-observation-reanchor-bridge-invalid-json",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: reviewer respondeu PASS, mas a ponte recusou a cerca Markdown e não gravou JSON; chamada preservada no orçamento."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0001-observation-reanchor-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 55000,
+      "output_tokens": 7000,
+      "note": "Estimativa: entrega reancorada revisada com PASS e três achados low."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "gpt-6-sol",
+      "input_tokens": 85000,
+      "output_tokens": 12000,
+      "note": "Estimativa: contrato das 52 linhas órfãs e clarificação do gate criptográfico."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 70000,
+      "output_tokens": 9000,
+      "note": "Estimativa: sete cenários RED e correção das fixtures para sequência física contígua."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-contract-and-proof-rehearsal",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: contrato, locks concorrentes, revisão dos testes e ensaio de quatro provas em clone descartável."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 85000,
+      "output_tokens": 12000,
+      "note": "Estimativa: verificador de âncoras, integração package.json e correções após revisão; sete testes PASS, gate real RED por 53 órfãs."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "TASK-0004-A2-proposal",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: proposta A2 exata para a R-0021 seq. 2, sem efeito até aprovação do Owner."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-R21-orphan-rehearsal",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: diagnóstico da linha R-0021 seq. 2, ensaio de cinco provas em clone e preparação de quatro payloads históricos."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-post-152-triage",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: observação pós-merge, ensaio de quatro provas, revisão fail-closed do gate e atualização do plano."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0002-delivery-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 60000,
+      "output_tokens": 9000,
+      "note": "Estimativa: ciclo 1 REVIEW, um high de completude, dois medium de hardening/cobertura e cinco low; correções em curso."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0004-review-hardening",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 3500,
+      "note": "Estimativa: digest canônico das 52 órfãs e proposta A2 segregada."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0005-review-coverage",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 40000,
+      "output_tokens": 6000,
+      "note": "Estimativa: 18 cenários finais de teste e fixtures com baseline canônica."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0006-review-hardening",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: fixação da allowlist, contadores e caso de kind desconhecido."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-review-fixes-and-rehearsal",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: correções de plano e payload, conferência 18/18, ensaio quatro provas em clone."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0002-delivery-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 42000,
+      "output_tokens": 6500,
+      "note": "Estimativa: ciclo 2 REVIEW só por completude; allowlist e diagnósticos aceitos, três low residuais."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-post153-integration-and-proof",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: merge de main após PR153, reancoragem da observação e quatro provas históricas ensaiadas e executadas."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0004-A2-approved",
+      "model": "gpt-6-sol",
+      "input_tokens": 22000,
+      "output_tokens": 3000,
+      "note": "Contrato da exceção A2 aprovada e validação dos hashes."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0005-A2-escalated",
+      "model": "gpt-6-sol",
+      "input_tokens": 38000,
+      "output_tokens": 5500,
+      "note": "Oito testes A2, RED/PASS e fixtures de autorização."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0006-A2-implementation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Validador fail-closed da única exceção aprovada."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-A2-authorization-and-rehearsal",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Registro Owner, JSONL excepcional, payload e ensaio no clone."
+    },
+    {
+      "kind": "worker-prework",
+      "id": "TASK-0007-prework",
+      "model": "gpt-6-sol",
+      "input_tokens": 55000,
+      "output_tokens": 8000,
+      "note": "Estimativa: minuta reversível CTG-0003, mapa 16 PC/closures e achado PC-0015 de R-0018; sem conclusão da tarefa."
+    },
+    {
+      "kind": "worker-prework",
+      "id": "TASK-0007-R18-proposal",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: proposta governada append-only para o FAIL de PC-0015; sem autorização ou escrita de record."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "TASK-0004-A2-baseline-contract",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: regra de baseline física com exceção A2 condicionada ao gate estrito."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0005-A2-baseline-tests",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: testes do comparator A2; 18/19 RED antes, 19/19 PASS depois."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0006-A2-baseline-implementation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: medição anchor_gate read-only e veredito de regressão restrito ao trio A2."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0002-post154-integration-and-baseline",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: merge #154, seis provas ensaiadas e reemitidas, triagem da baseline, status de tarefas e decisões Owner CTG-0003."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0002-delivery-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 45000,
+      "output_tokens": 6000,
+      "note": "Estimativa: ciclo 3 PASS após seis provas, A2 e comparação baseline; três lows de consistência corrigidos antes do commit."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-final",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Estimativa: contrato final, anexos D-1/D-2 e OD001/002."
+    },
+    {
+      "kind": "maestro-followup",
+      "id": "CTG-0003-prompt-refresh-and-checkpoint",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Estimativa: prompts 0007-0010, hashes e checkpoint 80%."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-prompt-review-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: revisão pontual dos quatro prompts após decisão Owner e estado de R17/R18."
+    },
+    {
+      "kind": "maestro-followup",
+      "id": "CTG-0003-prompt-review-3-fixes",
+      "model": "gpt-6-sol",
+      "input_tokens": 18000,
+      "output_tokens": 4000,
+      "note": "Correções de locks, fontes fechadas, escopo TASK10 e hashes após REVIEW."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-prompt-review-4",
+      "model": "claude-opus-5-5",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Ciclo 4 PASS com um low de plano corrigido."
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0002-pr155-merge-observe",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3500,
+      "note": "PR #155 CI verde/merge, ensaio audit observe no clone, observação exata e commit Machine."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0007-reconcile-after-155",
+      "model": "gpt-6-sol",
+      "input_tokens": 12000,
+      "output_tokens": 2500,
+      "note": "Reconciliação sob prompt final após merge do predecessor."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-initial",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Três testes RED iniciais; revisão do maestro pediu ampliar classes do contrato."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0008-hardening",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Seis testes RED finais, incluindo perda de dados, source_pending e gate positivo/negativo."
+    },
+    {
+      "kind": "maestro-governance",
+      "id": "CTG-0003-R18-PC-index-upstream",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "PC-0020 e índice após ensaio, issue upstream DEVAI #169 e triagem do inventário 143/330."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0009-attempt-1",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 75000,
+      "output_tokens": 10000,
+      "note": "Normalizador fail-closed, gate, sete testes PASS e RGR por classes históricas sem fonte."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0008-R20-and-stable-invalid-tests",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "note": "Dois testes de Inspector para escopo R-0020 e candidato inválido com bytes estáveis."
+    },
+    {
+      "kind": "worker-followup",
+      "id": "TASK-0009-R20-and-schema-validation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "Corrigiu escopo do gate, validação de todo candidato e relatório; oito testes PASS."
+    },
+    {
+      "kind": "worker-inspection",
+      "id": "CTG-0003-legacy-task-triage",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Inspeção read-only de 143 TASK inválidas, classes e fontes por rodada; recomendação de RGR."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0003-RGR-and-gates",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Gate real RED 143/330, normalizador sem escrita, formato PASS, RGR/OD-R20-007 e checkpoint."
+    },
+    {
+      "kind": "maestro-governance",
+      "id": "CTG-0003-A3-owner-authorization",
+      "model": "gpt-6-sol",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "note": "Aceite A3 Q1/Q2/Q3 em commit Owner segregado e registro canônico da OD-R20-007."
+    },
+    {
+      "kind": "worker",
+      "id": "CTG-0003-A3-architect-source-map",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Contrato de sidecar/aliases e mapa por fonte dos 143 arquivos inválidos; 54 none permanecem source_pending."
+    },
+    {
+      "kind": "maestro-review",
+      "id": "CTG-0003-A3-contract-initial-review",
+      "model": "gpt-6-sol",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Revisão do contrato, mapa, colissões e escopo da aprovação do Owner."
+    },
+    {
+      "kind": "maestro-governance",
+      "id": "CTG-0003-A3.1-none-proposal",
+      "model": "gpt-6-sol",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "note": "Proposta prospectiva para 54 none após tabela de fontes, submetida ao Owner; sem efeito até decisão."
+    }
+  ]
+}

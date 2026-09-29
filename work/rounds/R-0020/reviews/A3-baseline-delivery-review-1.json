@@ -1,0 +1,31 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "tools/devai/tests/baseline.test.mjs",
+      "line": 681,
+      "claim": "The implementation checks each superseded D1 posterior against the opening in `tools/devai/baseline.mjs:1403`: `openingSources.get(fullCanonical) !== newHash` returns FAIL. No test covers that check. The case 'hash posterior D1 divergente' only changes `posterior_sha256` in the D1 index, and 'hash da abertura divergente' only changes the hash of the old path in migrations[0], which is TASK-0001-D1, a canonical-move. If someone removed the opening-side check, all 35 tests would still pass.",
+      "fix": "Add a case to the negative table that sets `opening.sources.find(s => s.path === 'work/rounds/R-0007/tasks/TASK-0020.json').sha256 = '0'.repeat(64)` and requires `tasks` FAIL. The final sources and the index stay intact."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "tools/devai/tests/baseline.test.mjs",
+      "line": 732,
+      "claim": "The only negative test for the receipt deletes the whole block ('recibo ausente'). The comparator does reject a receipt that is present but partial or malformed: `sidecars.length !== 10` at baseline.mjs:1330, `!artifact.entries` or `sha256 !== digest` at :1313, and a malformed `stdout_sha256` at :1420. None of these refusals is tested with the shape `measureA3Transposition` actually writes when a read fails (`sha256:null, error`).",
+      "fix": "Add three cases. (a) `final.tasks.a3_transposition.sidecars.pop()`. (b) `sidecars[0] = {old_path, sidecar_path, sha256: null, error: 'leitura falhou'}`. (c) `artifacts.d1 = {path, sha256: null, entries: null, error: 'leitura ou JSON inválido'}`. Each must give `tasks` FAIL."
+    }
+  ],
+  "notes": [
+    "(1) Purity: `compareBaseline` stays synchronous. `validateA3Transposition` is a closure that reads only `opening` and `final`, with no I/O or crypto. I extracted it through vm, as the harness does, and replayed it with `work/rounds/R-0020/baseline.json` and `/tmp/detran-task0028-baseline-UUNjti/baseline-final.json` minus `comparison`. The result was identical to the stored one: tasks PASS with the reason 'aceito: dez identidades R-0007 transpostas com recibo A3 íntegro', failures [], overall REVIEW.",
+    "(2) Refusals: the 'aceito:' reason is added only when `validateA3Transposition` returns null. Every other return value goes to `fail()`. A missing set that is not exactly the ten paths fails at baseline.mjs:1290–1294, which covers the subset of nine, an 11th path and a duplicate. An old path still present in `final.sources` fails. If the tasks axis has 'aceito:' and also another reason, the result is still FAIL, because the verdict ignores only 'fonte pendente:' and 'aceito:'.",
+    "(3) I recomputed the SHA-256 of the three frozen artifacts, the ten `.json.raw` sidecars and the ten canonical destinations TASK-0019..0022 and 0083..0088 on the working tree. All match the literals in the comparator and the contract. The opening has TASK-0020/21/22 with hashes ceef…/1111…/dbc9…, equal to `posterior_sha256`. TASK-0019 is absent from the opening, which is correct for canonical-move, and the comparator does not require it there.",
+    "(4) Measurement block: the three artifacts carry path, sha256 of the bytes and entries parsed from the same bytes. The sidecars carry path and sha256. The verifier record has argv normalized to '.', exit 0 and a 64-hex stdout_sha256. The block is written only when a TASK is missing, as the contract requires. `verify-task-originals.mjs` has no write calls, and the output went to /tmp. The verifier is run from the `scriptRoot` copy with `cwd` set to the measured tree. In the real run `scriptRoot` equals `repoRoot`, and TASK-0027/0028 document this convention.",
+    "(5) The diff of the other axes only replaces `fail('TASK removida')` with accumulating `missing` in the tasks axis. The invalid-new-TASK, sameInvalid and sameUnreadable checks remain, and so do the other seven axes. The final measurement shows 335 valid, 0 invalid, 0 unreadable.",
+    "(6) `baseline.test.mjs` has 350 additions and 0 deletions, so the earlier assertions are kept. Each negative case first proves that the intact baseline is accepted, then mutates it. The CLI case checks hashes, entries, sidecars and the verifier result on a disposable fixture. I read the tests but did not run them: this review was read-only. The 169/169, 35/35 and 144-link figures come from TASK-0028."
+  ]
+}

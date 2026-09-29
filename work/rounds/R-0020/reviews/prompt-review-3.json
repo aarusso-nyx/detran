@@ -1,0 +1,73 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0020/tasks/TASK-0007.json",
+      "line": 11,
+      "claim": "O prompt TASK-0007 (linha 70) agora permite tocar `docs/meta/knowledge-base/open-decisions-rait.md`, mas o JSON não mudou. `target_modules` continua `[MOD-r20-contract-seal, MOD-law-register]`, e `description` (linha 9) ainda diz 'quando OD-R20-001/002 decididas'. O plan.md:166 tem a mesma lista de módulos. O registro de ODs é um lock partilhado documentado (plan.md §Concorrência; R-0017/R-0021), e o lock declarado não cobre esse caminho.",
+      "fix": "Acrescentar ao TASK-0007.json e a plan.md §Tarefas o módulo do registro de ODs usado em R-0017/R-0021, ou um MOD novo e declarado. Atualizar `description` e a linha 226 de plan.md para o escopo autorizado (contrato, anexos D-1/D-2, seção R-0020 das ODs). Recompor o SHA/PC se o prompt mudar."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0007.md",
+      "line": 80,
+      "claim": "A tarefa passou a exigir anexos D-1/D-2 por rodada. O contrato CTG-0003.md:9 diz que cada anexo identifica autorização, closure, PC, merge e evidência. Mas a lista fechada (linhas 15–64) não inclui `work/rounds/R-00nn/AUTHORIZATION.md` nem `prompts/00-maestro.md` de nenhuma das 16 rodadas. Os anexos produzidos em law/register/DECISIONS.md afirmam 'é a autorização de abertura' e 'o escopo permanece no 00-maestro.md' para cada rodada. Pelo relatório TASK-0007.md:28, o worker só conseguiu isso usando `rg` fora da lista.",
+      "fix": "Acrescentar à lista fechada os 16 `work/rounds/R-00nn/AUTHORIZATION.md` (R-0003…R-0016, R-0018, R-0019). Outra opção: restringir o texto do anexo a 'caminho existente, conteúdo não transcrito' e acrescentar à Tarefa uma frase que proíba afirmar conteúdo não lido."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0020/prompts/TASK-0010.md",
+      "line": 62,
+      "claim": "Para R-0018, o prompt diz que o worker usará o novo PC 'apenas depois de o maestro fornecer o ID real'. Esse ID não existe na lista fechada nem no prompt fixado por SHA. Pela sequência do contrato (CTG-0003.md:3 e 63; proposta:60), `round close` e emissão do PC ocorrem depois da TASK-0010. O Pode tocar (linha 42) e o critério 'record.md por rodada com PC' (linha 67) ainda incluem R-0018, enquanto CTG-0003.md:9 proíbe antecipar o ID. O worker fica sem instrução determinística: omitir, escrever `source_pending` ou bloquear.",
+      "fix": "Tirar `work/rounds/R-0018/record.md` do Pode tocar e do critério da TASK-0010, com a frase 'R-0018: não criar record.md; o maestro transcreve após round close com o ID emitido'. Alternativa: exigir que o ID real seja gravado por adenda Architect em CTG-0003.md antes do despacho, com condição explícita de parada se ausente. Recompor o PC."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003.md",
+      "line": 59,
+      "claim": "O contrato exige que `title`, `goal`, isolamento, branch, base e waves venham de fonte específica da rodada. Não permite copiar valores de R-0017. Já a TASK-0010 (linha 62) declara a tabela de CTG-0003.md como 'única fonte' e proíbe pesquisar. A lista fechada (linhas 15–24) não contém plan.md nem closure.json das rodadas, e a tabela (linhas 18–35) não tem essas colunas. Os 16 record.md sairiam com `source_pending` em `title` e `goal`, campos validados por record-meta. O seal falharia só depois do ensaio.",
+      "fix": "Acrescentar à tabela do contrato as colunas title/goal/isolation/waves transcritas de cada closure/plan. Alternativa: incluir na lista da TASK-0010 os 16 `work/rounds/R-00nn/closure.json` e `plan.md` e alinhar a frase 'única fonte'."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0003.md",
+      "line": 3,
+      "claim": "A sequência 'TASK-0007 → TASK-0008/0009 → TASK-0010' sugere que 0008 e 0009 correm em paralelo. Os JSONs (upstream 0007→0008→0009) e plan.md:32 fixam a ordem serial.",
+      "fix": "Escrever 'TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010'."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/prompts/TASK-0007.md",
+      "line": 11,
+      "claim": "Os quatro prompts afirmam que R-0021 fechou em main, e ela tem PC-0019 e closure.json. Nem os prompts nem o contrato dizem que R-0021 (sem record.md e sem close-state.jsonl) está fora da fila de seal do CTG-0003. O Architect que 'define o selo das rodadas' pode ampliar o escopo ou ficar em dúvida.",
+      "fix": "Acrescentar no contrato §Guarda e nas Definições: 'R-0021 (PC-0019) fora do escopo do CTG-0003 conforme plan.md §Concorrência; selo próprio não é emitido aqui'."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0020/prompts/TASK-0008.md",
+      "line": 47,
+      "claim": "A frase sobre o ID do PC corretivo de R-0018 'informado pelo maestro' é irrelevante para os testes do Inspector e induz a esperar uma entrada fora da lista.",
+      "fix": "Remover a frase ou trocá-la por 'nenhum teste depende de ID de PC'."
+    }
+  ],
+  "notes": [
+    "Verificado: os SHA-256 dos quatro prompts batem com compositions.json. Em cada caso, pc_id é 'PC-' seguido dos 16 primeiros hex do SHA, e `prompt_composition_id` foi atualizado nos dois campos de cada TASK JSON.",
+    "Verificado: o SHA de CTG-0003-R18-proposal.md é 0aec312a…d20ef1, igual ao citado em AUTHORIZATION-CTG3 e no contrato.",
+    "Verificado: OD-R20-001=A e OD-R20-002=B estão coerentes entre AUTHORIZATION-CTG3, plan.md §Decisões (linhas 289/293), a seção R-0020 de open-decisions-rait.md (425–426), o contrato e os quatro prompts. OD-R20-004/006 e A1 permanecem pendentes, sem presunção.",
+    "Verificado: a cadeia de predecessores é TASK-0006→0007→0008→0009→0010, serial e coerente com plan.md. Os papéis Architect/Inspector/Engineer/Architect(transcrição) seguem a tríade e o model-ladder.",
+    "Verificado: os quatro prompts proíbem `devai ... --write`, Git e `record/` para workers. `render-rounds-index.mjs --write`, `round close` e `round seal` ficam apenas com o maestro, em clone. Os verbos `round close`/`round seal` existem no action-registry do DEVAI 1.5.6. `verify:rounds-index` e `verify:proof-anchors` existem. `verify:round-tasks` será criado pela TASK-0009, com package.json no Pode tocar e condicionado a lock.",
+    "Verificado: Prettier --check passa nos prompts, tasks, compositions e contrato alterados. A falha de `pnpm format:check` citada em reports/TASK-0007.md:33 não se reproduz mais nesses arquivos.",
+    "Processo, para o delivery-review: reports/TASK-0007.md (12:46:55) e CTG-0003.md (12:45:38) foram produzidos antes deste prompt-review e antes do merge do CTG-0002. O relatório (linha 35) registra o PR #155 pendente, e o prompt exige 'após o merge do CTG-0002'. A composição executada precisa ser atestada como PC-d9308ed5e5e9ca15. Se os achados acima mudarem o prompt, a TASK-0007 deve ser reexecutada ou reconciliada pela nova composição.",
+    "CTG-0003-R18-proposal.md:3 e :73 ainda dizem 'sem autorização' e 'OD-R20-001/002 pendentes'. O texto é histórico e fixado por SHA, e AUTHORIZATION-CTG3 prevalece. Não editar; convém uma frase no contrato indicando que a proposta é o texto pré-autorização."
+  ]
+}

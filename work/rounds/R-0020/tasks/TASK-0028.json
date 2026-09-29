@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0028",
+  "round_id": "R-0020",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar comparação da baseline A3",
+  "description": "Comparador da baseline sensível à migração A3 autorizada",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-devai-tools"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0027",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["campaign:C-0002", "round:R-0020", "ctg:CTG-0003", "ref:task-0028"],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-a0ab6ed79d932010",
+  "acceptance_commands": [
+    ["node", "--test", "tools/devai/tests/baseline.test.mjs"],
+    ["pnpm", "devai:test"],
+    ["pnpm", "verify:task-originals"],
+    [
+      "pnpm",
+      "devai:baseline",
+      "--out-dir",
+      "/tmp/r20-ctg3-baseline-final-task0028",
+      "--final",
+      "--against",
+      "work/rounds/R-0020/baseline.json"
+    ],
+    ["node_modules/.bin/prettier", "--check", "tools/devai/baseline.mjs"]
+  ],
+  "created_at": "2026-09-29T01:33:28Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-a0ab6ed79d932010",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

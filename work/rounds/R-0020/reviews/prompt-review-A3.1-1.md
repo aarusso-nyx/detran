@@ -1,0 +1,11 @@
+# Prompt-review A3.1 ciclo 1 — R-0020 CTG-0003
+
+Você é Claude Code Opus 5.5, reviewer da outra família, no papel constitucional Auditor. Trabalhe somente em leitura na worktree `/Users/aarusso/.codex/worktrees/devai-sensors/detran`. Responda apenas JSON puro, sem cerca Markdown.
+
+Este é o primeiro ciclo de revisão **da adenda A3/A3.1**, nova em relação ao `PASS` anterior do ciclo 4 para os prompts originais. Faça revisão exaustiva somente do delta da adenda e de suas consequências de coerência; não reabra trechos antigos sem relação com ela. A rubrica, severidades e formato são os de `docs/meta/agents/orchestra/reviewer-prompt.template.md`. O Owner autorizou até quatro ciclos por item em `AUTHORIZATION-RETAKE-2026-09-28.md`.
+
+Leia, nesta ordem: `docs/meta/agents/orchestra/README.md` §§4–5; `docs/meta/agents/README.md` §Regras comuns; a seção da ação 5 de `work/campaigns/C-0002-consolidacao.md`; `work/rounds/R-0020/plan.md`; `work/rounds/R-0020/AUTHORIZATION-A3-2026-09-28.md`; `work/rounds/R-0020/AUTHORIZATION-A3.1-2026-09-28.md`; `work/rounds/R-0020/contracts/CTG-0003.md`; `work/rounds/R-0020/contracts/CTG-0003-A3.md`; `work/rounds/R-0020/contracts/CTG-0003-A3.1-none-allowlist.json`; `work/rounds/R-0020/reports/A3-source-map.md`; `work/rounds/R-0020/prompts/TASK-0008.md` e `TASK-0009.md`; os JSON correspondentes e `compositions.json`; `work/rounds/R-0020/reviews/prompt-review-4.json`. `contracts/CTG-0003-A3.2-proposal.md` é proposta ainda sem efeito; avalie se os prompts impedem sua aplicação tácita.
+
+Verifique em especial: autoridade e fronteira de escrita, lista fechada suficiente, ordem Architect→Inspector→Engineer, exigência de sidecar e verificador de vínculo antes da migração, uso da allowlist por caminho/hash para exatamente 54 `none`, ausência de alegação histórica de banco, coerência de PC/hash entre prompt/JSON/compositions e critérios de aceite existentes. O normalizador real pode permanecer bloqueado por classes A3.2; a adenda não autoriza afrouxar schema/gate nem selar antes de zero inválidas.
+
+Saída: `{"mode":"prompt-review","round":"R-0020","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"...","line":1,"claim":"...","fix":"..."}],"notes":[]}`.

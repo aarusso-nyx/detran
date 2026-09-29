@@ -1,0 +1,31 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 77,
+      "claim": "O texto chama EX-NOTE=S de 'proposto com fonte A3 §5', o que sugere aplicabilidade sob a autorização A3. Porém a linha 128 inclui EX-NOTE na tabela 'Opções submetidas ao Owner', e `A3-source-map.md` marca os quatro arquivos como PEND: EX. Além disso, a condição 'Inspector verifica que o texto não é obrigação executável ainda ativa' não tem critério definido. O note literal registra a decisão Owner B3 de 2026-09-19 (`R-0014/plan.md:322`): o worker foi executado pelo Codex CLI via `tools/orchestra/worker.sh`. Trata-se de proveniência, não de campo lido pelo runtime, mas a proposta não diz isso.",
+      "fix": "Declarar sem ambiguidade que EX-NOTE exige confirmação específica do Owner (S ou B) antes de mutar os quatro arquivos. Definir o critério Inspector de forma verificável: nenhum consumidor em `tools/` ou no runtime DEVAI pinado lê `executor.note`, e o literal fica íntegro no sidecar e no antes/depois. Citar `R-0014/plan.md` §B3 (linha 322) como fonte do conteúdo."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 487,
+      "claim": "A entrada cronológica ainda diz que 'os onze EX/PC continuam sob busca de recibos'. As entradas 308, 489 e 494 corrigem o estado e indexam `reports/A3.2-expc-receipts.md` e a adenda de reconstrução. Não há contradição material, só texto histórico desatualizado dentro do log.",
+      "fix": "Opcional: acrescentar à linha 487 '(supersedido; ver entradas 308 e 494)' ou deixar como está, por ser log datado."
+    }
+  ],
+  "notes": [
+    "Ciclo 2 limitado às correções do ciclo 1. Todos os sete achados de `A3.2-proposal-review-1.json` estão resolvidos no texto: (1) R-0014 TASK-0010/0011/0012/0022 `executor.note` têm seção própria (proposal:73-77) e linha EX-NOTE na tabela (128); (2) STATUS=B agora é a recomendação, com a semântica runtime de `checkpoint`, o precedente TASK-0038 e as alternativas do enum comparadas (53-55); (3) ROLE ficou sem recomendação, com o conflito Arts. 6/7 exposto para as duas opções e C=pendente (59-61); (4) os caminhos do pacote são repo-relativos e os hashes das três bridges constam na adenda (32) e em receipts:44-46; (5) a ordem real Inspector 0 < Architect 1 < Engineer 2, os ciclos TASK-0004↔S1 e S4↔S5 e o efeito de `null` estão citados do runtime (36, 49); (6) o índice PREP tem caminho, campos, retries e exigência de sucesso final antes do despacho (114); (7) a tabela de decisões consolida PC-B, SELECTION-B, ARCHIVE-GUARD, EX-NOTE e EV-DEST, e `plan.md:308` indexa os recibos e a adenda.",
+    "Verificação independente: SHA-256 das três `.bridge.json` = dc07c754…4583, c6e3fd82…c90d, bff8f502…4980, iguais aos documentos. Apliquei a receita da adenda aos bytes atuais, com caminhos repo-relativos, `historical_pc=NONE` para S*, o literal para 0078…0082 e as bridges só em 0078/0080/0082. Os onze candidatos reproduzem exatamente: cc41f39f237dccdd, cf0578539d9b03e6, 2151b3056f67043d, 8ec9b108bf290ede, d0a290d9320c85b9, 1d975bf1835e7f30, 22b18cc1bd9af201, cc3dc8e959e09510, 1766eb9f01d0bafa, aedea88033f4eb98, 10b9b527af7d35af.",
+    "Runtime pinado conferido em `release-host.js`: TERMINAL={completed,escalated,cancelled} (188749); COUPLED_POSITION inspector 0/architect 1/engineer 2 (188754); `taskDependencies` (188534) só cria aresta por posição quando a posição atual e a do candidato estão definidas, portanto `null` não gera aresta; `orderedPopulation` (188580) ignora nós terminais. Fatos das TASKs conferidos: S1.upstream=TASK-0004, S5.upstream=TASK-0004-S4, TASK-0038 status=checkpoint, TASK-0001 exact/gpt-5.6-terra, TASK-0004 exact/gpt-5.6-luna. Os quatro notes R-0014 têm texto idêntico e PC de 16 hex válido. R-0014 TASK-0012 tem título de 243 caracteres.",
+    "Contexto não bloqueante: `runRoundTasks` (188642) exige rodada ativa (`requireActiveTaskRound`) e faz parse de toda a população com o schema. Isso reduz o risco de despacho de R-0007, mas não substitui a guarda ARCHIVE-GUARD exigida pela proposta. Também não cobre `escalateRoundTask`/`pauseRoundTask`, que não inspecionei quanto à exigência de rodada ativa.",
+    "PASS atesta apenas consistência suficiente para decisão. Não autoriza migrar TASKs, gravar pacotes ou índice arquivístico, emitir PC ou selar rodadas. As aprovações A3 e A3.1 não cobrem A3.2. A recomendação STATUS=B e ROLE pendente não são aprovações implícitas, e o silêncio do Owner não aprova nada.",
+    "Decisões Owner ainda necessárias, cada uma específica e sobre o pacote revisado: CTG (A: dez aliases CTG-9001…9010 para 31 TASKs, ou B); POS (A condicionada à guarda e ao STATUS resolvido, ou B); STATUS (B recomendado, ou A só com guarda efetiva); ROLE (A, B ou C, com o conflito Arts. 6/7 aceito explicitamente em A ou B); EX/PC por arquivo nas onze TASKs R-0007 (A recibo externo, B reconstrução, C pendente); se B, aprovar o método, o índice `compositions-archive/index.json` e cada um dos onze PCs candidatos acima; SELECTION-B prospectiva para as seis S* (Terra para S1/S2/S2-R1, Luna para S3/S4/S5); ARCHIVE-GUARD (autorizar e provar a rejeição de despacho e transição para `archival-pc-provenance:reconstructed-v1`); EX-NOTE para os quatro R-0014 (S ou B, e TASK-0012 depende também de TITLE); EV-DEST/REC/TRAIL por campo e arquivo; TITLE (doze textos editoriais); INV (A ou B); UP (A só após prova temporal da última PREP bem-sucedida antes do despacho de TASK-0002, ou B). Os dois nomes de banco de TASK-0079/0081 continuam sujeitos à conferência Inspector A3."
+  ]
+}

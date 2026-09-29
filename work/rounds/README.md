@@ -34,9 +34,9 @@ the method (no closure; R-0002 has no folder).
 | R-0015 | `boat-mobile` — WP-B4 + WP-B5 (BOAT)                               | fechada           | #107, #116              | PC-0014 | Sol (troca Fable → Sol)   |
 | R-0016 | `dashboard-console` — WP-D4 + WP-D5 (DASHBOARD)                    | fechada           | #80, #103               | PC-0012 | Fable (troca Sol → Fable) |
 | R-0017 | `local-stack` — ação 4                                             | fechada           | #133, #143, #144        | PC-0018 | Sol 6                     |
-| R-0018 | `index-state` — ação 3                                             | fechada           | #128, #129, #130        | PC-0015 | Opus 5.5                  |
+| R-0018 | `index-state` — ação 3                                             | fechada           | #128, #129, #130        | PC-0020 | Opus 5.5                  |
 | R-0019 | `law-corpus` — ação 2                                              | fechada           | #132, #137, #139        | PC-0016 | Sol 6                     |
-| R-0020 | `devai-sensors` — ação 5                                           | proposta (C-0002) | —                       | —       | Opus 5.5                  |
+| R-0020 | `devai-sensors` — ação 5                                           | aberta            | #150, #155              | —       | Codex Sol 6               |
 | S-1.5  | _repositório STYNX_ — release STYNX 1.5.0 (7b/7c)                  | proposta (C-0002) | —                       | —       | governança do STYNX       |
 | R-0021 | `stynx-canonical` — ação 7a                                        | fechada           | #149, #151, #153, #154  | PC-0019 | Sol 6                     |
 | R-0022 | `stynx-sse-tenancy` — ação 7c                                      | proposta (C-0002) | —                       | —       | Opus 5.5                  |
@@ -66,4 +66,5 @@ the method (no closure; R-0002 has no folder).
 | `budget.json`           | token accounting per task and reviewer call                                                                                                                     |
 | `closure.json`          | phase-closure draft for `devai round close`                                                                                                                     |
 
-Seal: `devai round seal` (R-0020) seals R-0003…R-0019; its artefact and path are defined by R-0020.
+Seal: `devai round seal` (R-0020) seals R-0003…R-0016, R-0018 and R-0019;
+R-0017 was sealed in its own round. The seal artefact and path are defined by R-0020.

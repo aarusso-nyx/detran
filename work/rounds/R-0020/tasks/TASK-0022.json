@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0022",
+  "round_id": "R-0020",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar guarda dos PCs arquivísticos de R-0007",
+  "description": "Verificador de manifesto e estado, preflight comum dos executores worker/bridge e gate em pnpm check",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-devai-tools",
+    "MOD-orchestra-bridge",
+    "MOD-root-package-json"
+  ],
+  "target_substrates": ["F2", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0021",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0020",
+    "ctg:CTG-0003",
+    "ref:archive-guard"
+  ],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-2ddb1e7aec530884",
+  "acceptance_commands": [
+    ["pnpm", "verify:archival-pc-guard"],
+    ["pnpm", "verify:orchestra-bridge"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-28T22:03:50Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-2ddb1e7aec530884",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

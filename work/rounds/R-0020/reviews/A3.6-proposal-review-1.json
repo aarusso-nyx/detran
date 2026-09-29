@@ -1,0 +1,68 @@
+{
+  "mode": "proposal-review",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": 1,
+      "file": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+      "line": 1723,
+      "claim": "O item 2 da proposta (contracts/CTG-0003-A3.6-round-status.md:14) diz que o ensaio compara o digest de `work/rounds` antes e depois das leituras `round plan --write` e recusa mutação. O relatório só guarda `work_rounds_digest_before/after` no bloco `idempotent_replay_receipts` (linhas 1361-1362 e 1719-1720). Os 34 registros `clone_lifecycle`/`real_lifecycle` e o `round_plan_probe` de R-0020 não têm digest. A frase de `limitations` que diz que a árvore não mudou não tem medição por trás. O algoritmo do digest também não está definido. A ação `round plan` declara `effect: local-write` com capacidades `fs:proofs` e `fs:f5-state` (release-host.js:12125-12157), então olhar só `work/rounds` não basta. Conferência independente: sem `--declare`/`--scaffold`, o handler chama só `governedRoundStatus`, que é leitura pura (release-host.js:218143-218148 e 187572-187589). Nenhum arquivo em `.devai/` ou `record/` é mais recente que os selos, e `git status` não mostra mudança inesperada fora de `work/rounds`/`tools`. Não há mutação observada, mas a prova exigida pela própria proposta falta.",
+      "fix": "Acrescentar ao relatório, para cada ambiente, `work_rounds_digest_before/after` em volta das 17 leituras `round plan` mais a sonda R-0020. Guardar também o `git status --porcelain` do repositório inteiro antes e depois. Definir o algoritmo no relatório, por exemplo sha256 de `path\\0sha256(conteúdo)` ordenado sobre `git ls-files -co --exclude-standard work/rounds`, excluindo o próprio relatório. Qualquer diferença bloqueia o checkpoint."
+    },
+    {
+      "severity": "medium",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 11,
+      "claim": "O critério literal (plan.md:215-216) vale para R-0003…R-0019 'e para R-0020 no fim'. A adenda define a verificação equivalente só para as 17 rodadas e usa R-0020 apenas como controle negativo. Após o `round seal` final de R-0020 (checkpoint (g), plan.md:207), o `round status` literal vai falhar do mesmo jeito (TASK_ROUND_INACTIVE), e a adenda não diz qual verificação substitui esse trecho do critério.",
+      "fix": "Acrescentar uma cláusula: no fechamento da R-0020, depois de `record.md`, `closure.json` e `round seal --write` pelo maestro, aplicar a R-0020 os itens 1 e 2, com recibo individual `{argv, exit_code, stdout_sha256}` do selo original desta vez retido, mais o digest antes/depois. Outra opção é declarar esse trecho explicitamente fora da A3.6 e sujeito a nova decisão Owner. Em nenhum dos casos isso vale como PASS do comando literal."
+    },
+    {
+      "severity": "medium",
+      "item": 3,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 16,
+      "claim": "O item 4 pede os recibos dos 16 selos originais 'quando disponíveis'. O parágrafo da linha 18 e `limitations` admitem que eles não existem individualmente. A única fonte contemporânea é a narrativa em plan.md:591. Como a aceitação é cumulativa, a condição 'quando disponíveis' permite satisfazer o item 4 só com a repetição, sem que a decisão Owner diga isso de forma expressa. A repetição tem valor forte: `appendCloseState` só sai 0 se os bytes forem idênticos e `assertClosePreconditions` passar agora (PC, gates, índice) (release-host.js:187609-187650). Ainda assim, ela prova o estado atual, não a execução original.",
+      "fix": "Trocar 'quando disponíveis' por uma afirmação direta: os recibos individuais originais não foram retidos. Pedir que a decisão Owner aceite nominalmente a repetição idempotente (32 recibos) como prova substituta. Registrar essa limitação no evidence-CTG-0003.json e no texto `evidence` do critério no closure, sem apresentá-la como recibo original."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 7,
+      "claim": "'`n/a`/não cumprido' é ambíguo. O schema law/schemas/phase-closure.schema.json só admite pass|fail|n/a. Um `fail` impede o selo (ROUND_ARCHIVE_VALIDATION_NOT_GREEN, release-host.js:187628). O precedente PC-0020 usa `verdict: n/a` com evidence 'Critério literal não cumprido… Substituído… por autorização Owner…' e um item `pass` separado para a prova efetiva.",
+      "fix": "Fixar a forma exata: critério literal com `verdict: \"n/a\"` e evidence que comece com 'Critério literal não cumprido (exit 5 TASK_ROUND_INACTIVE, DEVAI #175); substituído por A3.6, AUTHORIZATION-A3.6-…', mais um critério separado da verificação A3.6 com o seu próprio veredito."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 14,
+      "claim": "`governedRoundStatus` calcula `location` apenas a partir de `status` no frontmatter de record.md (release-host.js:187584). Não lê `close-state.jsonl`. `location: closed` vindo de `round plan` só prova que o record está fechado, não que o selo existe. O critério literal pede '(`close-state.jsonl` presente)', e essa metade é coberta só pelo item 1 e pela repetição.",
+      "fix": "Dizer no item 2 que ele prova o record governado fechado e que a presença e os bytes do selo são provados exclusivamente pelos itens 1 e 4. Nenhum item isolado equivale ao critério literal."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+      "line": 1728,
+      "claim": "O relatório não guarda head_sha nem data, e foi medido sobre árvore não commitada. O clone de referência está em /tmp/r20-ctg3-rehearsal.ghBpbv/repo, que é descartável. Os `index_gates` e as leituras dizem 'no candidato real', mas não dá para refazê-los a partir de um commit registrado.",
+      "fix": "Depois dos commits por papel, repetir os itens 1 a 4 e `verify:state-index`/`verify:rounds-index` no head candidato commitado. Registrar head_sha, argv, exit e sha256 do relatório em evidence-CTG-0003.json."
+    }
+  ],
+  "notes": [
+    "O critério literal continua não cumprido: a adenda o declara assim, não o reclassifica e mantém a triagem `sensor-error` (plan.md:402-409). A falha do comando literal não foi contada como PASS nesta revisão.",
+    "DEVAI 1.5.6 instalado conferido: o handler `round status` (release-host.js:218190-218225) chama `roundTaskStatus` sem condição. `requireActiveTaskRound`/`authorizationIsActive` (188222-188232) recusam quando há close-state. O handler `round plan` não chama `roundTaskStatus`. As citações do diagnóstico conferem. A issue #175 existe e está OPEN.",
+    "Byte a byte, verificado de forma independente: as 17 rodadas R-0003…R-0019 têm cada uma exatamente uma linha em close-state.jsonl, igual a JSON.stringify com as seis chaves na ordem de `appendCloseState` (187632-187641), montada a partir de record.md (closed_by, phase_closure, merged_as).",
+    "As sha256 de close-state e de PC do relatório conferem com o disco nas 17 rodadas. O PC de cada uma tem round_id, closing_decision e merged_as iguais ao record, com exatamente uma linha por PC em rounds.md.",
+    "R-0018 → PC-0020 (supersedes PC-0015, merged_as 4bd1d553…). O índice mostra PC-0015 e PC-0020 lado a lado. A sha256 de PC-0015 continua e8fdf1a4…add30. R-0017 → PC-0018 (supersedes PC-0017): close-state commitado em 9790efa6 e inalterado. R-0017 fica fora das 32 repetições.",
+    "Os 17 close-state.jsonl do clone /tmp/r20-ctg3-rehearsal.ghBpbv/repo são byte a byte iguais aos da worktree.",
+    "Controle R-0020: plan.md 'ativa'; sem record.md, sem close-state.jsonl e sem linha R-0020 em rounds.md. A sonda registra exit 2 ROUND_RECORD_NOT_FOUND com stdout vazio (sha e3b0…) e erro em stderr, coerente com error_channel=stderr.",
+    "Repetição idempotente: 16+16 recibos exit 0, stdout igual entre clone e worktree, digests de work/rounds iguais antes e depois em cada ambiente. As 34 leituras de ciclo de vida têm exit 0, location closed e phase_closure igual ao PC.",
+    "Nenhum high encontrado. A proposta está pronta para a decisão específica do Owner, de preferência com os três mediums incorporados antes. Este PASS não autoriza aplicação, AUTHORIZATION-A3.6, commit, evidência nem PR. A revisão de entrega do CTG-0003 continua obrigatória depois da decisão.",
+    "Nenhum arquivo do repositório foi editado. Nenhum comando DEVAI com --write foi executado nesta revisão."
+  ]
+}

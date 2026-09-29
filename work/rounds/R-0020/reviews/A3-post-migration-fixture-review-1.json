@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/reports/TASK-0009.md",
+      "line": 16,
+      "claim": "The report still pins tools/devai/tests/normalize-a32.test.mjs at SHA-256 ffae3393…. The file in the worktree is now 5f30dcfd548a23be1d466cdfa2f88b1082a5e4d22d17778a8f32f5a0c6c84bff. The PASS in A3.5-RGR-fixture-review-4 attests the ffae bytes, and TASK-0024.md:79 cites the same old hash. The delta does not invalidate that PASS. It changes three reads (lines 607, 625, 754) and adds the helper originalPcTaskBytes (hash map plus a SHA-256 assertion before any use). It removes and loosens no assertion. The written trail is still out of date.",
+      "fix": "The Engineer or Inspector records in the TASK-0009 report the new hash 5f30dcfd… for normalize-a32.test.mjs. They cite that it derives from ffae3393… through patch 7741d8af… and reference this review. Only then does the maestro accept the new pin. The same applies to the hashes of the other three changed suites."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "tools/devai/tests/normalize-a33.test.mjs",
+      "line": 134,
+      "claim": "historicalSourceBytes() checks the hash only when expectedHash is truthy. A future caller that passes a TASK path without a hash would accept the raw sidecar with no frozen check and no link to the canonical file. No current call does this. All task-path calls (lines 128 via d1/0020-0022, 284, 561, 1169) pass a literal 64-hex hash, and D1 has 4/4 hashes. The only hash-free call (line 537) reads law/schemas/task.schema.json, which does not match the TASK regex.",
+      "fix": "Optional and non-blocking. Make expectedHash mandatory when taskMatch is present (assert.ok(expectedHash) inside the if (taskMatch) branch)."
+    }
+  ],
+  "notes": [
+    "The patch at /tmp/r20-ctg3-fixture-compatibility.patch was accessible, and its SHA-256 matches 7741d8af…c07e0 (343 lines, four suites). I reverse-applied it to copies in $TMPDIR, outside the repository. The recovered pre-delta files were normalize-a32 = ffae33935a7f…3bee, exactly the hash of review-4; normalize-a33 = f4bf4eb3…; normalize-tasks = 118c57ba…; verify-archival-pc-guard = e6f1c763…. The current files are the pre-delta ones plus this patch and nothing else.",
+    "Item 1. In normalize-a32 (originalPcTaskBytes) and verify-archival-pc-guard (readOriginalTaskBytes), both branches go through assert.equal(digest(bytes), map.get(id)): the .json.raw sidecar and the direct .json on ENOENT. An id outside the map gives undefined and fails. Any error other than ENOENT is rethrown. The eleven frozen hashes (TASK-0004-S1…S5, S2-R1, 0078…0082) match byte for byte the real R-0007/tasks/*.json files in the pre-migration worktree. R-0006/TASK-0003 = ee8fba71… matches the literal used in a33 lines 284 and 1169. The S2/S3 hashes at a33:561 match the table. copySource keeps the redundant second check. No path accepts wrong bytes or skips the hash.",
+    "Item 2. No assertion was removed or loosened in the four suites. The diff only replaces readFile calls with helpers and adds assertions. The PC-B positive (expectedPcCandidates, legacy-prompt-composition tags, pre-migration and applied manifest, guard), the no-manifest negative, D1 (4 hashes), T1 (index plus limit 2), and S2/S3 are unchanged in logic. In verify-archival-pc-guard:421, the sidecar==original comparison now uses readOriginalTaskBytes. That source is itself pinned to the frozen hash, so the comparison is not circular or weaker after migration.",
+    "Item 3. normalize-tasks historicalTaskBytes (lines 118-141) takes the sidecar path only after reading the canonical file and asserting that canonical.tags contains legacy-sha256:<sha256(sidecar)>. A failure there (AssertionError, TypeError for missing tags, JSON parse error) has no code ENOENT, so it is rethrown and fails closed. A missing sidecar falls back to the direct file, the same behaviour as before the delta. That suite never had a frozen hash, so this is not a regression. The general-trail test (line 173) and writeHistoricalTask (lines 111, 282, 332) use this link.",
+    "Item 4. In the worktree, R-0007/tasks/_legacy-originals does not exist, so the pre-migration state uses the direct fallback with a frozen hash. git status shows production files (tools/devai/*.mjs) as untracked but outside the patch. The patch touches only tools/devai/tests/*. No manifest, PC, historical TASK, or chain change is in the diff. I did not run the suite (read-only review). The 153/153 in both states and the 14/153 failure before the delta are the maestro's and Inspector's claims. I did not check them independently, and I did not inspect the clone /tmp/r20-ctg3-rehearsal.ghBpbv.",
+    "Item 5. ffae3393… has no invalidated assertion. The only semantic change is where the bytes come from, and a strictly added SHA-256 check guards it. All the cycle-4 findings (EV/REC counts, the eleven candidates, the negative case with allowlist and trace) keep their lines and logic, shifted by about 62 lines because of the helper insertion.",
+    "This PASS authorizes only re-running the global check in the disposable clone and the later delivery review. It does not apply the migration to the real tree, promote the manifest, seal, or open a PR. Nothing was written in the repository."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 63,
+      "claim": "A3 exige que o verificador de vínculo seja implementado e também exercitado antes de qualquer alegação de cadeia íntegra (CTG-0003-A3.md:39; AUTHORIZATION-A3 Q1). Nenhum critério executa `verify-task-originals.mjs` sobre a árvore real depois da migração. Os critérios da TASK-0009 (linhas 63–65) pedem que o arquivo exista e que os testes Inspector passem. O maestro só é obrigado a rodar `pnpm verify:round-tasks` e `pnpm check`. O roteiro do maestro em CTG-0003.md:67 fala em 'zero tarefas inválidas, pnpm check, cadeia DEVAI e verify:proof-anchors', sem o verificador de vínculo. O `package.json` tem só `verify:round-tasks` (linha 64), sem script para o novo verificador, e o `check` (linha 15) não chama nenhum dos dois. Assim, a migração pode chegar ao checkpoint de zero inválidas com sidecars nunca verificados na árvore real.",
+      "fix": "No critério da TASK-0009, exigir um script em `package.json` (por exemplo `verify:task-originals`: `node tools/devai/verify-task-originals.mjs --repo-root .`) com exit 0 no fixture e no estado pós-migração. No roteiro de CTG-0003.md:67, acrescentar esse comando ao lado de `verify:round-tasks` como condição anterior a TASK-0010 e ao seal. Registrar também se ele entra no `pnpm check`."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0020/prompts/TASK-0008.md",
+      "line": 58,
+      "claim": "A cobertura mínima pedida ao Inspector tem cinco casos: allowlist positiva, hash/caminho não autorizado, sidecar corrompido, escape de caminho e alias divergente. Ficam de fora propriedades que CTG-0003-A3.md:8–13 e :38 e AUTHORIZATION-A3.1:11 tornam obrigatórias. (a) O sidecar precisa estar persistido e verificado antes da substituição da TASK, e uma falha parcial não pode deixar TASK substituída sem `.raw`. (b) Um arquivo com qualquer outra classe `source_pending`, inclusive um dos 54 com CTG/POS/EX/TITLE/UP/ROLE pendentes, fica byte a byte intacto. (c) Idempotência: a segunda execução não muda bytes nem cria sidecar. (d) Colisão de alias/ID. (e) Sidecar ausente ou órfão e exigência de exatamente um par de tags. (f) Caminho e hash batem, mas o literal não é `none`. (g) As tags literais `legacy-db-isolation:none`/`legacy-db-policy:prospective-database` estão presentes. (h) As classes A3.2 continuam `source_pending`, o que impede sua aplicação tácita. Esses casos estão em `reports/A3-implementation-design.md`, que a TASK-0009 lê (item 16), mas que não consta da lista fechada da TASK-0008 (linhas 15–26). Como a TASK-0009 é aceita por 'PASS nos testes do Inspector', a ordem sidecar→substituição, requisito central de A3, pode ficar sem guarda de teste.",
+      "fix": "Incluir `work/rounds/R-0020/reports/A3-implementation-design.md` na lista fechada da TASK-0008 e ampliar o critério da linha 58 com os casos (a)–(h), incluindo um fixture de TASK com classe A3.2 que espera exit ≠ 0/`source_pending` e bytes inalterados. Recompor o hash/PC em compositions.json e nos dois campos do TASK-0008.json."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 59,
+      "claim": "'não implemente conversões CTG/POS/STATUS/ROLE/EX/PC/TITLE/INV/UP sem decisão específica' contradiz, lido ao pé da letra, fontes da própria lista fechada. INV não-`INV-*`→`ref:` já é regra aceita em CTG-0003.md:49 e CTG-0003-A3.md:12. Os cinco `upstream_task_id` para aliases R-0007 foram autorizados por A3 Q3 (CTG-0003-A3.md:34). A3-implementation-design.md:25,28 marca ambos como 'autorizada hoje'. O prompt também não menciona a reserva ID `TASK-0083…0088`/`aliases.json`, que a TASK-0008 deve testar ('alias divergente'). Hoje o impacto prático é nulo, porque os seis alias têm DB/EX/POS pendentes, mas a regra 5 pode levar a um RGR desnecessário ou à remoção da regra INV já existente em normalize-tasks.mjs.",
+      "fix": "Reescrever como: 'não implemente as projeções propostas em A3.2 (CTG, POS, STATUS, ROLE, EX/PC, TITLE, INV externos de R-0005 TASK-0002/0003, UP vazio/composto PREP). INV não-`INV-*`→`ref:` e a bijeção A3 Q3 dos seis IDs, com seus upstreams, estão autorizados.'"
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0008.md",
+      "line": 42,
+      "claim": "A Tarefa (linha 42), o Escopo fechado (linha 46) e o critério de entrega (linha 57) ainda listam só dois arquivos. `verify-task-originals.test.mjs` aparece em Pode tocar (linha 32), no critério da linha 58 e na description do JSON. O mesmo vale para plan.md:167 e plan.md:227. O delivery-review mede pelo critério do plano, como no low do ciclo 4. A lista fechada também não inclui os três arquivos de teste já presentes na worktree, que esta TASK vai alterar, nem os módulos `tools/devai/normalize-tasks.mjs`/`verify-round-tasks.mjs`, cuja interface os testes exercitam.",
+      "fix": "Citar os três arquivos de teste nas linhas 42, 46 e 57 e em plan.md:167/227. Incluir na lista fechada, como leitura, os testes existentes e os dois módulos atuais."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.md",
+      "line": 19,
+      "claim": "A projeção `database` de R-0007 TASK-0079/0081, a partir do nome literal `detran_r7_ctg1_a2`, está 'sujeita à conferência Inspector'. Nenhum prompt atribui essa conferência, e a TASK-0009 não diz se a regra pode ser implementada: a linha 59 só restringe `none`. Hoje os dois arquivos têm EX/PC pendentes e não migram, mas a omissão deixa margem para conversão sem teste.",
+      "fix": "Na TASK-0009, dizer explicitamente que 0079/0081 não recebem `database` até a conferência Inspector e a resolução de EX/PC, ou incluir o caso nos testes da TASK-0008."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 59,
+      "claim": "A TASK-0009 exige 'relatório antes/depois', e AUTHORIZATION-A3.1:9 o torna obrigatório, mas nenhum caminho é fixado para o relatório. O `aliases.json` tem caminho em CTG-0003-A3.md:34. O verificador independente precisa conferir hash canônico e inventário nesse relatório (A3-implementation-design.md:17), e o maestro precisa saber onde ele é gravado e sob qual autoria.",
+      "fix": "Fixar o caminho, por exemplo `work/rounds/R-0020/reports/A3-migration-before-after.{json,md}`, gerado pelo normalizador na execução do maestro, e exigir que o verificador o leia."
+    }
+  ],
+  "notes": [
+    "O vínculo PC/hash confere. O SHA-256 de TASK-0008.md é 176476e03bd18d62… e o de TASK-0009.md é 69531e8108f7610b…; ambos batem com compositions.json. `pc_id` e os dois `prompt_composition_id` de cada TASK JSON coincidem. TASK-0007 (6ed269d1…) e TASK-0010 (1ce4aaca…) seguem inalteradas em relação a compositions.json.",
+    "A allowlist foi conferida por leitura independente. São 54 entradas, 54 caminhos únicos, ordenadas por caminho. Todos os SHA-256 batem com os bytes atuais e todos os arquivos têm `db_isolation: none`. O conjunto é idêntico às 54 linhas `PEND: …DB` do A3-source-map.md e aos 54 `none` enumerados em `work/rounds/*/tasks/TASK-*.json`. `proposal_sha256` bate com CTG-0003-A3.1-none-proposal.md e com AUTHORIZATION-A3.1:5.",
+    "Nenhum dos dois prompts alega uso histórico de banco. TASK-0008.md:52 e TASK-0009.md:59 dizem 'limite prospectivo… sem alegação de isolamento histórico', em linha com AUTHORIZATION-A3.1:9,11 e plan.md:307.",
+    "Os prompts não afrouxam schema nem gate. TASK-0009.md:63–65 mantém o RED até a migração e remete zero inválidas ao maestro. CTG-0003.md:57 e AUTHORIZATION-A3.1:13 proíbem selo antes de zero inválidas. O normalizador pode continuar bloqueado pelas classes A3.2 sem contradição.",
+    "Ordem da tríade: o Architect (A3, source-map, allowlist) vem antes do Inspector (TASK-0008, upstream TASK-0007), que vem antes do Engineer (TASK-0009, upstream TASK-0008, que lê o relatório e o teste do Inspector). O A3-implementation-design.md é análise read-only do Engineer, não implementação, e não inverte a tríade.",
+    "A fronteira de escrita continua disjunta. TASK-0008 toca só os três testes. TASK-0009 toca três .mjs, o template e o package.json (este sob lock). TASKs históricas, sidecars e `aliases.json` são gravados pelo maestro ao executar o normalizador; isso é coerente com TASK-0009.md:58, embora a Tarefa/Escopo (linhas 49/53, texto anterior ao ciclo 4) ainda digam 'tasks históricas'.",
+    "A A3.2 não é aplicada tacitamente. TASK-0009.md:59 a proíbe, e TASK-0008 não lê a proposta A3.2. O achado high 2 pede um teste negativo explícito para travar isso também no nível do gate."
+  ]
+}
