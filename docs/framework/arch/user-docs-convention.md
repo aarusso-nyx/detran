@@ -19,8 +19,9 @@ Os manuais ficam em `docs/adopters/manuais/<perfil>/`, com índice em
 `docs/adopters/manuais/index.md`, FAQ único em `docs/adopters/manuais/faq.md` e
 glossário em `docs/adopters/manuais/glossario.md`. A seção é **Adotantes** na IA de
 sete seções de `docs/_ia/categories.json`; `docs/roles/` permanece reservado aos
-papéis constitucionais dos agentes. Esse caminho é a proposta OD-UD-001 até a
-resposta do Owner. Os perfis `clinico` e `regulatorio` entram em R-0031.
+papéis constitucionais dos agentes. **OD-UD-001 foi resolvida pelo Owner em
+2026-09-29:** o caminho `docs/adopters/manuais/` permanece na seção Adotantes.
+Os perfis `clinico` e `regulatorio` entram em R-0031.
 
 Cada superfície tem um arquivo
 `docs/framework/arch/availability/<surface>.availability.json`, validado pelo
@@ -138,9 +139,10 @@ manual e referência `REF-CONTRAN-985-1003-MBFT`, sem transcrição normativa
 ## 7. Publicação
 
 O site publica a projeção de `docs/`, não o texto bruto do repositório
-(ADR-0011). Até a resposta de OD-UD-001/002, usa a pasta da §1 e publica
-somente manual `cidadao`, glossário e o trecho cidadão do FAQ; manuais
-internos continuam versionados e cobertos pelo gate, fora do site público.
+(ADR-0011). **OD-UD-002 foi resolvida pelo Owner em 2026-09-29:** a publicação
+é seletiva e inclui somente manual `cidadao`, glossário e o trecho cidadão do
+FAQ; manuais internos continuam versionados e cobertos pelo gate, fora do site
+público.
 O publicador deve filtrar por `perfil` e `status` e falhar fechado se os
 marcadores do FAQ não formarem exatamente um par válido. `faq.md` inteiro
 permanece excluído até TASK-0013. Índice e links projetados não devem apontar

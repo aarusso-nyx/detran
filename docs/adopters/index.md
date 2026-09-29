@@ -10,8 +10,9 @@ estaduais e órgãos autuadores.
 
 ## Manuais de usuário
 
-Os manuais por perfil ficam em `docs/adopters/manuais/`. Até a decisão de
-OD-UD-002, o site público publica somente o manual do cidadão e o glossário.
+Os manuais por perfil ficam em `docs/adopters/manuais/`. Pela decisão
+OD-UD-002, o site público publica o manual do cidadão, o glossário e o trecho
+cidadão do FAQ.
 
 - [integrations/](integrations/) — external integration guides (SENATRAN provider
   switching, gov.br federation).

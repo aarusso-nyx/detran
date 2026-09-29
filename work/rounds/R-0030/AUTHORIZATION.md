@@ -20,5 +20,10 @@ anteriores. O branch autorizado é `orchestra/user-docs`, a partir de
 maestro registra o checkpoint de retomada e para, aguardando os manifestos da
 fase D (R-0025…R-0029). Não há delivery-review, PR ou evidência nesta sessão.
 
-As decisões OD-UD-001 e OD-UD-002 são solicitadas ao Owner na O1; até resposta,
-a publicação de manuais de perfis internos segue fail-closed.
+## Decisões do Owner registradas em 2026-09-29
+
+- **OD-UD-001:** Opção A — `docs/adopters/manuais/`, na seção Adotantes da IA
+  de sete seções.
+- **OD-UD-002:** Opção A — publicação seletiva: manual `cidadao`, glossário e
+  trecho cidadão do FAQ são públicos; manuais internos permanecem versionados,
+  verificados e fora do site público.

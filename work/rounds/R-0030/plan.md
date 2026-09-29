@@ -83,7 +83,7 @@ de R-0032.
    `docs:user:check` e a amostra de 10 rotas por perfil. `REVIEW` admite correções restritas aos
    itens apontados, em no máximo 2 ciclos; `FAIL` → `escalated`.
 4. **Um PR** contra `main`, com o corpo pelo template, a tabela CTG → tarefas → commits e o
-   resultado dos gates. O pedido de decisão sobre OD-UD-001/002 vai neste PR.
+   resultado dos gates. Registre as decisões do Owner sobre OD-UD-001/002.
 5. **CI remoto.** Falha de código volta à tarefa responsável. Merge só com CI verde e `PASS`.
 6. **Publicação final:**
    - `evidence-R-0030.json` com os 5 CTGs, `devai evidence record` e `evidence verify`;
@@ -219,11 +219,11 @@ anexada ao relatório; (d) CTG-0004: `pnpm install` só se o lockfile mudar (nã
 
 ## ODs propostas (registro canônico: `docs/meta/knowledge-base/open-issues.md`, no commit do CTG-0001)
 
-- **OD-UD-001** — lugar da seção de manuais. Padrão proposto: `docs/adopters/manuais/`, preservando
-  a IA de 7 seções (DEVAI). Alternativa: 8ª seção `usuarios`.
-- **OD-UD-002** — publicação dos manuais de perfis internos no site público (GitHub Pages).
-  Padrão fail-closed até decisão: publicar `cidadao`, `faq` (seção cidadão) e `glossario`; os
-  demais ficam versionados, cobertos pelo gate e fora do site.
+- **OD-UD-001** — **resolvida pelo Owner em 2026-09-29:** `docs/adopters/manuais/`, preservando a
+  IA de 7 seções (DEVAI).
+- **OD-UD-002** — **resolvida pelo Owner em 2026-09-29:** publicação seletiva no site público de
+  `cidadao`, `faq` (seção cidadão) e `glossario`; os demais ficam versionados, cobertos pelo gate e
+  fora do site.
 - **OD-UD-003** — fonte do conteúdo da ajuda MBFT por tópico (pacote normativo ×
   `REF-CONTRAN-985-1003-MBFT`). Padrão: tópico + âncora do manual + referência; nenhum texto
   normativo transcrito sem fonte fechada (`source_pending`).
@@ -252,7 +252,7 @@ R-0031 **não redefine** nada disto; segue `user-docs-convention.md`:
 - **Valor normativo inventado no manual** (prazos, percentuais, códigos): regra §8 da convenção —
   número só com `REF-*` ou chave de parâmetro citada; U4 prende o texto de tela ao i18n.
 - **Exposição pública de manuais internos** (procedimentos de julgamento e auditoria): OD-UD-002
-  fail-closed.
+  mantém publicação seletiva.
 - **Manifesto da fase D divergente do código**: corrigido aqui como `reference-gap`, só nos campos
   permitidos (anexo §2 regra 3); divergência de selo ou de nível volta à rodada dona como issue.
 - **Volume** (≈ 250 rotas): 6 tarefas de manual em lotes de 3; escrever por módulo, não rota a rota
@@ -341,9 +341,10 @@ Checkpoint 2026-09-29: O1–O3 concluídas e publicadas em
 `orchestra/user-docs`. O prompt-review terminou em `PASS`; o gate e os 28
 sensores passaram. `docs:availability:check` permanece fail-closed, com exit 2,
 até a integração dos manifestos. aguardando manifestos da fase D
-(R-0025…R-0029). OD-UD-001 e OD-UD-002 seguem pendentes da decisão do Owner.
-Pare aqui: a próxima atividade autorizável é O4/TASK-0004 após os manifestos
-estarem no branch.
+(R-0025…R-0029). O Owner resolveu OD-UD-001 e OD-UD-002 em 2026-09-29:
+`docs/adopters/manuais/` na seção Adotantes e publicação seletiva de cidadão,
+glossário e trecho cidadão do FAQ. Pare aqui: a próxima atividade autorizável é
+O4/TASK-0004 após os manifestos estarem no branch.
 
 ## Leitura
 
