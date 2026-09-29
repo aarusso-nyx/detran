@@ -246,8 +246,8 @@ export class RetentionLifecycleService {
           (retention_case_id, destination, status, justification,
            proposed_by, proposed_at, return_offered_at, reviewed_by, reviewed_at)
          values ($1, $2, $3, $4, $5, now(), now(),
-                 case when $3 = 'BLOCKED' then $5 else null end,
-                 case when $3 = 'BLOCKED' then now() else null end)
+                 case when $3::varchar = 'BLOCKED' then $5::uuid else null end,
+                 case when $3::varchar = 'BLOCKED' then now() else null end)
          returning *`,
         [
           retentionCaseId,

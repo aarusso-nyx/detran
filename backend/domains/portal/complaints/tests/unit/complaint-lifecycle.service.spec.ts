@@ -72,7 +72,7 @@ describe('ComplaintLifecycleService', () => {
       }),
     ).resolves.toEqual(closed);
     expect(query.mock.calls[0]?.[0]).toContain(
-      "case when $2 in ('CLOSED','REJECTED') then $4",
+      "case when $2::varchar in ('CLOSED','REJECTED') then $4::uuid",
     );
     expect(query.mock.calls[0]?.[1]).toEqual([
       'complaint-1',
