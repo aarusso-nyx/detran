@@ -4,8 +4,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 70000,
-  "estimated_output_total": 14000,
+  "estimated_input_total": 230000,
+  "estimated_output_total": 43000,
   "prior_windows": [
     {
       "window": 1,
@@ -99,6 +99,33 @@
       "output_tokens": 14000,
       "status": "completed",
       "note": "Architect: fixtures PEC sintéticas e matriz de integração dos 17 módulos CH."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 55000,
+      "output_tokens": 9000,
+      "status": "in_progress",
+      "note": "Inspector: integração Postgres/RLS dos nove módulos clínicos."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 55000,
+      "output_tokens": 9000,
+      "status": "in_progress",
+      "note": "Inspector: integração Postgres/RLS dos oito módulos regulatórios."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "gpt-6-sol",
+      "input_tokens": 50000,
+      "output_tokens": 11000,
+      "status": "in_progress",
+      "note": "Architect: arquitetura dos consoles e contratos para as tarefas de UI futuras."
     }
   ]
 }
