@@ -126,3 +126,16 @@ Resposta literal: "a, hotfix em PR próprio; OD-R22-42 corrigir na TASK-0007".
   a rodada integra `main` e faz a iteração 4 de TASK-0014.
 - **OD-R22-42:** `Last-Event-ID` não UUID → 500 com página de pilha nos 4 fluxos SSE: corrigir na
   TASK-0007, com critério C-04 próprio (id malformado tratado como desconhecido, UPS-SSE-04).
+
+## Adenda B9 — política permanente para defeitos de produto achados na rodada (Owner, 2026-09-29)
+
+Resposta literal: "a, hotfix em PR próprio com varredura do repositório e adote sempre essa solução
+caso encontre issues similares".
+
+- Telehealth (`ch.billing_item`, parâmetro sem tipo) e demais ocorrências do mesmo padrão: hotfix em PR
+  próprio contra `main`, com varredura do repositório.
+- **Política permanente desta rodada:** defeito de produto em `main` achado pela caracterização ou pelos
+  workers → hotfix em PR próprio contra `main`, com varredura do repositório pelo mesmo padrão, teste de
+  regressão vermelho antes da correção (Inspector → Engineer), revisão da outra família e merge com CI
+  verde, sem nova consulta ao Owner. Vazamento entre tenants continua sendo parada imediata e relato
+  (§7 do prompt do maestro); decisões de produto ou de critério continuam com o Owner.
