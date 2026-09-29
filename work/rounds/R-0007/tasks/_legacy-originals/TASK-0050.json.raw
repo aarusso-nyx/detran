@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0050",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar deliberação e ata produtivas",
+  "description": "Engineer implementou votação, proclamação, criação, assinatura multi-signatário e publicação de ata em runtime manuscrito, trust SESSION_MINUTES fail-closed, política nominal e supressão de auditoria HTTP duplicada. Typechecks shared/case/session/app, verify:decorators, policy TASK-0049 (37/37), audit (5/5), integração session (15/15) no banco dedicado detran_r7_ctg1_a2 com role_app_backend, Prettier e diff-check PASS. Trust SESSION_MINUTES: 10/18 PASS; oito REDs são exclusivamente o regex congelado de TASK-0049 que exige uma barra literal: recibo com sessão, ata, documento, hash de conteúdo, hash de snapshot, espécie e signatário divergentes retornam o canônico RAIT.SIGNATURE_FAILED; certificado divergente retorna RAIT.SIGNATURE_CERT_MISMATCH. O unit completo de session tem 38/39 PASS pelo mesmo regex, recebendo RAIT.CASTING_VOTE_NOT_TIED canônico. A regressão shared completa é 308/323: além dos oito regex, sete asserts antigos de policy.spec conflitam com a matriz nominal estrita já presente (schedule publish, batch accept/impede, session adjourn, minutes sign e duas expectativas M17 de global-admin); o único ponto desta tarefa é minutes sign, cuja autorização anterior secretaria/presidente conflita com ADR-0027 e foi substituída por presidente/relator. E2E deliberation-minutes permanece 7/7 RED por hooks/wiring/ownership gerados reservados à TASK-0008; nenhum gerado, blueprint, DDL, teste ou sensor foi alterado. O case-port já era drift preexistente, untracked, SHA-256 55bd2cd6e634186ed5cc24244fb6e754985968df86374767c3085ca8a3f6cb0c, contra 98bd3a676c7f51a237af6600de1d268d39fd42f695831e7fe76e31de3282b361 registrado em TASK-0049; não foi alterado nesta execução. CTG-0002 não é declarado GREEN.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust",
+    "MOD-bp-rait-session"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0049",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "deliberation-minutes"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-ff4cfd6dceb0dd43",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-19T12:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-ff4cfd6dceb0dd43",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Runtime/trust/porta/policy deliberacao e ata; testes, schema, blueprints e gerados imutaveis."
+  },
+  "execution_evidence": {
+    "role": "Engineer",
+    "database": "postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend",
+    "commands": [
+      "pnpm --filter @detran/shared typecheck",
+      "pnpm --filter @detran/inf-rait-case typecheck",
+      "pnpm --filter @detran/inf-rait-session typecheck",
+      "pnpm --filter @detran/app typecheck",
+      "pnpm verify:decorators",
+      "DETRAN_TEST_DATABASE_URL=<dedicated-url> DETRAN_TEST_TIER=integration pnpm --filter @detran/inf-rait-session test:integration",
+      "pnpm --filter @detran/shared exec vitest run src/policy-ctg2-deliberation-minutes.spec.ts",
+      "pnpm --filter @detran/app exec vitest run src/rait-session-deliberation-minutes-audit.spec.ts",
+      "pnpm exec prettier --check <allowlist>",
+      "git diff --check"
+    ],
+    "residual_reds": [
+      "document-trust-session-minutes: 8 regex-only assertions reject canonical RAIT.SIGNATURE_FAILED or RAIT.SIGNATURE_CERT_MISMATCH because the frozen regex expects a literal backslash",
+      "rait-session test:unit: 1 regex-only assertion rejects canonical RAIT.CASTING_VOTE_NOT_TIED for the same frozen-regex defect",
+      "shared test: 7 pre-existing policy.spec compatibility assertions conflict with strict-policy work already in the shared worktree; minutes sign intentionally follows ADR-0027 (chair and rapporteur, not secretary)",
+      "app test:e2e deliberation-minutes: 7/7 RED (handwritten controller/provider hooks, CRUD suppression and route ownership are reserved to TASK-0008)"
+    ]
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "A segunda iteracao foi concluida com a composicao oficial, correcao dos sensores legitimamente defeituosos e decisao OWNER presidente mais relatores dos itens com excecao formal de ausencia. Session unit 39/39, integration 15/15 e app E2E final verdes."
+  }
+}

@@ -1,0 +1,5 @@
+# Revisão cruzada A3.6 — ciclo 2, somente delta
+
+Atue como Claude Code Opus 5.5, somente leitura. A primeira revisão em `work/rounds/R-0020/reviews/A3.6-proposal-review-1.json` deu PASS com seis achados medium/low. Examine **somente** se as correções em `contracts/CTG-0003-A3.6-round-status.md` e `reports/A3.6-round-seal-verification.json` atendem aos itens 1–6, sem reabrir escopo já aprovado. O contrato agora define `verdict: n/a` para o literal, critério A3.6 separado, R-0020 pós-selo, aceitação Owner explícita das repetições como substitutas, prova de não mutação por digest e `git status` nos dois ambientes, além de repetição no HEAD commitado antes do PR. Confirme se o algoritmo exclui somente o relatório autoatualizado e se a prova mede 17 fechadas mais a sonda ativa em clone e worktree.
+
+Responda apenas JSON válido com `mode`, `round`, `ctg`, `verdict` (`PASS` ou `REVIEW`), `findings` (objetos `severity`, `item`, `file`, `line`, `claim`, `fix`) e `notes`. Nenhuma edição, nenhum comando de escrita. PASS significa pronto para decisão específica do Owner; não autoriza aplicação ou PR.

@@ -1,0 +1,15 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Hashes checked: CTG-0003-A3.3-gap-proposal.md is 236c70fa…2542, CTG-0003-A3.4-path-authority.md is 6d6ae318…8a59 and CTG-0003-A3.4-role-matrix.json is 13f039bb…5739. All three match the hashes given in the prompt.",
+    "Item 1 is closed. The contract at contracts/CTG-0003-A3.4-path-authority.md:42 now requires the Owner consultation on P2 to cite the final SHA-256 of both this contract and the candidate JSON index, taken after the reviewer's PASS. Any content change other than the status transition requires a new cross review.",
+    "Item 2 is closed. The role matrix gives each TASK an exact required_tags[] with the three tags. The R-0003 entry has historical-authority-discrepancy:R-0003-TASK-0004 and the R-0005 entry has historical-authority-discrepancy:R-0005-TASK-0009. Both match contract line 26. The top-level status is candidate-not-applied.",
+    "Item 2, continued. Contract line 28 has the verifier fail on a missing tag or on any tag that differs from the index's required_tags[]. After the Owner's P2 decision and PASS, only the maestro changes the status to applied, in the same CTG and after checking the authorized hash. Inspector tests that any other status fails, that candidate-not-applied does not allow projecting R1, and that applied requires exactly the tags for each TASK. Line 42 limits post-decision changes to the candidate-not-applied→applied transition.",
+    "Item 3 is closed. reports/A3.4-path-policy-feasibility.md:15 now separates the installed bundle (node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js) from the embedded source module dist/authority/policy.js. The module exists only as a region inside the bundle, not as a separate file under dist/authority/. I checked this: the '//#region dist/authority/policy.js' marker is at line 194433, the next region (dist/authority/broker.js) starts at 195285, and 'adopter-engineer-packages' is at line 195045.",
+    "Non-blocking nit: the range '~194425–195265' in feasibility report line 15 does not say it counts lines. The measured range is lines 194433–195284. It is approximate but consistent, so it is not a material finding. Adding 'linhas' and correcting the end to 195284 would remove the ambiguity.",
+    "No new material inconsistency found. Facts closed in cycle 2 were not reopened."
+  ]
+}

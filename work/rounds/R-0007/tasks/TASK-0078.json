@@ -16,16 +16,29 @@
   "target_substrates": ["F2", "F3", "F5"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
-  "coupled_pipeline_position": "auditor",
+  "coupled_pipeline_position": null,
   "upstream_task_id": "TASK-0077",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "final-review"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "final-review",
+    "legacy-pipeline-position:auditor",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "archival-pc-provenance:reconstructed-v1",
+    "archival-pc-not-historical",
+    "archival-pc-package:work/rounds/R-0007/compositions-archive/TASK-0078.txt",
+    "legacy-prompt-composition:PC-ctg2-final-review-fable5",
+    "legacy-original:tasks/_legacy-originals/TASK-0078.json.raw",
+    "legacy-sha256:3f9f88d34ee89d7df18d7e1284f02eca01f942dd8a6afe5a9049f7417522c243"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
-  "prompt_composition_id": "PC-ctg2-final-review-fable5",
+  "prompt_composition_id": "PC-22b18cc1bd9af201",
   "acceptance_commands": [
     [
       "node",
@@ -45,20 +58,11 @@
     "model": "claude-fable-5",
     "effort": "high",
     "selection": { "mode": "exact", "registry_id": "claude-fable-5" },
-    "prompt_composition_id": "PC-ctg2-final-review-fable5",
+    "prompt_composition_id": "PC-22b18cc1bd9af201",
     "max_iterations": 1,
     "capabilities": ["read"]
   },
   "intent_diff": {
     "summary": "Revisao independente read-only; nenhuma alteracao do candidato durante o gate."
-  },
-  "execution_evidence": {
-    "role": "Auditor",
-    "iteration": "1/1",
-    "result": "FAIL",
-    "candidate_sha256": "092461e344f108b8a96d531ddf92a69530d77823074eef6f37c7e3a000c1ca75",
-    "review": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final.json",
-    "findings": "4 high, 6 low",
-    "preservation": "Parecer FAIL preservado; originou TASK-0079 sem apagar contadores historicos."
   }
 }

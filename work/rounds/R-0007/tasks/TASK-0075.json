@@ -14,11 +14,19 @@
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0074",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "parameter-context"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "parameter-context",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0075.json.raw",
+    "legacy-sha256:bcb54421d9aba4755d824708292da8e64ef89405e62731733461dd1e580bce3f"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-d6b8a2c885e19a76",
@@ -39,13 +47,5 @@
   },
   "intent_diff": {
     "summary": "Somente classificação AST do verificador; catálogo e produto intactos."
-  },
-  "execution_evidence": {
-    "role": "Engineer",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "parameter_tests": "26/26 PASS",
-    "remaining": "Three literals in effects.events.push/effects.audits.push remained classified as parameters.",
-    "classification": "Additional syntactic context required; typed argument inference itself passed."
   }
 }

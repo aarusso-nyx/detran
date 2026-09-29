@@ -1,0 +1,19 @@
+# Inventário de TASK históricas antes da normalização
+
+**Papel:** Architect. **Estado:** medição read-only no candidato após PC-0020; não modifica tarefas nem decide migração sem fonte.
+
+Comando: `pnpm devai:baseline --out-dir /tmp/r20-ctg3-taskinventory` (exit 0). A saída temporária mediu **330 TASKs: 187 válidas, 143 inválidas, zero ilegíveis** pelo `law/schemas/task.schema.json` 2.0.0. A linha de base de abertura versionada tinha 143 inválidas em 294 tarefas; novas tarefas válidas aumentaram o total, sem diminuir as 143 históricas.
+
+| Classe observada                          |               Ocorrências de erro | Exemplo                                                             | Risco de migração                                                                                                                              |
+| ----------------------------------------- | --------------------------------: | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `db_isolation` fora do enum               |                                56 | `R-0012/TASK-0001` usa `none`; 54 `none`, 2 nomes de DB específicos | O schema só aceita `database`/`cluster`. Uma conversão cega inventaria isolamento; o valor anterior precisa de fonte ou preservação explícita. |
+| `target_invariants` com token não `INV-*` | 35 na posição 0, 29 na 1, 18 na 2 | `R-0003/TASK-0001` tem `RN-DASH-*` e `OD-D01`                       | O contrato permite mover referências comprovadas para tags `ref:*` sem perder o token.                                                         |
+| `execution_evidence` fora do schema       |                                31 | `R-0007/TASK-0008` guarda versões, hashes, DDL, testes e checkpoint | Remover o campo perderia prova histórica; sidecar ou destino canônico precisa de decisão.                                                      |
+| `coupled_task_group` fora do padrão       |                                31 | `R-0012/TASK-0001` usa `CTG-0002a`                                  | Mudar o ID sem mapa da rodada criaria grupo fictício.                                                                                          |
+| `executor` sem variante válida            |                                15 | `R-0007/TASK-0004-S1`                                               | Não inventar runtime, seleção ou composição.                                                                                                   |
+| Título acima do limite                    |                                12 | `R-0008/TASK-0008`                                                  | Truncar apagaria texto histórico.                                                                                                              |
+| `id` fora de `TASK-nnnn`                  |                                 6 | `R-0007/TASK-0004-S1`                                               | O contrato proíbe renumerar; o schema exige quatro dígitos. É contradição estrutural sem adenda governada.                                     |
+
+Outras classes incluem `iteration_trail` sem `started_at`/`verdict`, campos adicionais de classificação/achado/status e `upstream_task_id` não canônico. As contagens são de **erros**, podem incidir no mesmo arquivo e não devem ser somadas como número de TASKs.
+
+Os 143 arquivos inválidos concentram-se em R-0003 (4), R-0005 (9), R-0006 (14), R-0007 (47), R-0008 (1), R-0009 (6), R-0012 (17), R-0013 (8), R-0014 (17), R-0015 (12) e R-0016 (8). TASK-0009 deve implementar apenas transformações justificadas e idempotentes; qualquer classe sem fonte fica `source_pending` com nome de arquivo e sem mutação silenciosa. O gate de zero inválidas e os selos ficam pendentes até reconciliação governada, sem relaxar schema ou remover dados.

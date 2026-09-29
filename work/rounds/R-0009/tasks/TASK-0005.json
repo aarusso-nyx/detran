@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "architect",
   "discipline_specialization": "architect-blueprint",
-  "title": "Declarar o wiring M24 nos quatro blueprints de CTG-0002 (regenerar) e escrever o contrato CTG-0002: um bloco por rota /v1/portal/* (§3–§9), delegação, idempotência, projetores, cache nacional, SSE, matriz portal:* ⇔ rotas, eventos e critérios C-0002-nn",
+  "title": "Declarar wiring M24 nos quatro blueprints e contrato CTG-0002 das rotas portal",
   "description": "Fechar, comando a comando, o contrato das rotas, delegações e projeções a partir de M8–M10, M15–M21 e do portal-route-contract.md, sobre os blueprints gerados por TASK-0002. Nada de código nem teste.",
   "lifecycle": "supported",
   "target_modules": [
@@ -22,7 +22,12 @@
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-p2", "wp-p3"],
+  "tags": [
+    "wp-p2",
+    "wp-p3",
+    "legacy-original:tasks/_legacy-originals/TASK-0005.json.raw",
+    "legacy-sha256:d897c1f1c6e5db96383cf0a3586a13a5dc60bc86feda65b1768520c24a7ed54b"
+  ],
   "branch": "orchestra/portal-backend",
   "worktree_id": "WT-portal-backend",
   "prompt_composition_id": "PC-519f9925f58807a9",
@@ -38,10 +43,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-519f9925f58807a9",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

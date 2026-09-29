@@ -1,0 +1,56 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-baseline-A3.md",
+      "line": 14,
+      "claim": "The contract lets the comparator depend on data the measurement never produces. It says the comparator reads `reports/A3-migration-before-after.json`, `aliases.json`, `d1-superseded-snapshots.json`, the ten `.json.raw` sidecars and the `verify-task-originals` exit code. `sourceEntries` in `tools/devai/baseline.mjs:241` only hashes `tasks/TASK-*.json`, so the `.raw` files are excluded. None of the other artifacts appear in `sources` or in `tasks`, and the verifier is never run during measurement. Today `compareBaseline(opening, final)` at `baseline.mjs:1116` is pure and only sees the two measurements. `prompts/TASK-0028.md:3` then allows either 'comparação assíncrona ou pré-leitura', so the implementation could read the live tree outside the measurement. That gives two problems. (a) A PASS could not be checked again from `baseline.json` plus `baseline-final.json`, which breaks the contract's 'motivo verificável'. The files could also change between the measurement and the comparison. (b) The existing test harness (`tests/baseline.test.mjs:166-172`) extracts `compareBaseline` into `vm.runInNewContext`, which has no fs imports. The prompts do not fix an interface between Inspector and Engineer, so TASK-0027 would write RED tests against a guessed shape. An fs-reading comparator also cannot be tested in that harness. The Engineer would then be pushed to change the tests, which the prompt forbids.",
+      "fix": "Change the contract and prompts TASK-0027 and TASK-0028 to fix one interface. `measureTasks`, or a pre-read in `main` that runs before `compareBaseline`, must write a deterministic block into the final measurement, for example `final.tasks.a3_transposition`. The block holds the sha256 and parsed entries of both indices and the A3 report, restricted to the ten R-0007 entries. It holds the sha256 of each of the ten sidecars from their bytes. It holds the verifier's exact argv (`node tools/devai/verify-task-originals.mjs --repo-root <root>`), its exit_code and an stdout digest. `compareBaseline` stays synchronous and pure, and decides only from `opening` (`sources`/`tasks`) and `final` (`sources`/`tasks`/`a3_transposition`). If the block is missing or malformed, the result is an explicit FAIL. TASK-0027 must test both layers: the pure comparator through vm with injected blocks for every negative, and the measurement through a CLI fixture that writes the block. Recompose the PC hashes."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-baseline-A3.md",
+      "line": 14,
+      "claim": "'Índice alterado' and 'relatório' tampering have no fixed reference. The contract ties `original_sha256` to the opening baseline and fixes the destination IDs in the table. It does not fix the digests of the two indices or of the report. So a consistent edit could go undetected: changing `posterior_sha256`, `disposition` or `ledger_indices` in the D1 index, or changing `canonical_sha256` in the report together with the destination bytes.",
+      "fix": "Pin the current digests in the contract and require an exact match: `aliases.json` 21abf670dc42767c69156e17fefd27e41703b788adf7f4dc07559c573efb009c, `d1-superseded-snapshots.json` fd60307218ac39d5777292bf724fc7be29d487f87f96f430e55235346b0095a2, `A3-migration-before-after.json` 7518fe70f8314f97763dfe37307eb9dc1468806ef71e49d0bc8f4ffc36afc69d. Alternatively, pin a canonical digest of just the ten relevant entries. For the three superseded snapshots, also require `posterior_sha256` in the index = `canonical_sha256` in the report = `final.sources` = the opening `sources` value (ceefd724…, 1111e230…, dbc9ea42…)."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/tasks/TASK-0028.json",
+      "line": 25,
+      "claim": "The `acceptance_commands` do not cover the gates the prompt requires. They have no `devai:test` suite, no `verify:task-originals`, and no real `devai:baseline --final --against work/rounds/R-0020/baseline.json --out-dir <outside the repo>` run with exit 0.",
+      "fix": "Add `[\"pnpm\",\"devai:test\"]`, `[\"pnpm\",\"verify:task-originals\"]` and the real final baseline command with `--out-dir` outside the worktree."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/tasks/TASK-0027.json",
+      "line": 25,
+      "claim": "The Inspector has no formatting gate on the test file. TASK-0024 and TASK-0025 used `prettier --check` on the file they edited.",
+      "fix": "Add `[\"node_modules/.bin/prettier\",\"--check\",\"tools/devai/tests/baseline.test.mjs\"]`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/tasks/TASK-0026.json",
+      "line": 25,
+      "claim": "`node --check tools/devai/baseline.mjs` does not check what the Architect delivered (the contract and `reports/TASK-0026.md`).",
+      "fix": "Replace it with `prettier --check` on `contracts/CTG-0003-baseline-A3.md` and `reports/TASK-0026.md`."
+    }
+  ],
+  "notes": [
+    "Checked all three models against `compositions.json` and `plan.md` rows 185-187: TASK-0026 gpt-6-sol/high, TASK-0027 gpt-5.6-terra/medium, TASK-0028 gpt-6-sol/high. They follow the existing Architect/Inspector/Engineer pattern.",
+    "Each `pc_id` is the prefix of the prompt's current SHA-256: 609e1055…, cd4796ad…, 89765a8d….",
+    "The work is ordered TASK-0026 (completed) → TASK-0027 (ready, upstream 0026) → TASK-0028 (draft, upstream 0027). Write scopes do not overlap (`MOD-devai-tools-tests` vs `MOD-devai-tools`) and the prompts limit edits to one file plus one report each.",
+    "Hash chain for all ten paths: opening `sources` = index `original_sha256` = report `original_sha256` = sha256 of the sidecar bytes. Each `canonical_sha256` in the report matches the current bytes of TASK-0019…0022 and TASK-0083…0088. The six S1 aliases map one-to-one to TASK-0083…0088. The D1 index has one canonical-move (TASK-0019, absent at opening) and three superseded-snapshots (TASK-0020…0022, valid at opening and byte-identical now). None of the ten old paths still exist.",
+    "`verify-task-originals --repo-root .` exits 0 on the current tree ('OK (144 linked task(s))'). The script has no writes.",
+    "The closed rule (exactly this set of ten, no subset or 11th path, no-migration case unchanged, other seven dimensions untouched) introduces no new Owner decision and does not reopen A3.2/A3.3.",
+    "This PASS decision is withheld until finding 1 is fixed. A future PASS authorizes only the Inspector's RED tests, not a PR or merge."
+  ]
+}

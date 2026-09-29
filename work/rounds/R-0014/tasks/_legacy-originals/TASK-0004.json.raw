@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Scaffold de apps/portal/web (@detran/portal-web, M1–M8, M13): Angular 22 + vitest + eslint + PWA, CitizenShell, rotas e manifesto completos, quatro guardas, facades mínimos, extensão de pnpm check e export '.' de @detran/ui, até os specs de TASK-0002 passarem",
+  "description": "Fixar o padrão de app do repositório (R-0012 copia) e entregar o esqueleto navegável do Portal com todas as rotas da spec §4 como páginas placeholder guardadas por nível, vínculo e disponibilidade.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-app", "MOD-package-json"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-a1eb60a840928b6b",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "lint"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/portal-web", "build"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-a1eb60a840928b6b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

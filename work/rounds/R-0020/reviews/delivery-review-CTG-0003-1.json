@@ -1,0 +1,60 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 200,
+      "claim": "Checkpoint (c) at plan.md:200 and the acceptance criterion at plan.md:215 both require `devai round status --round R-nnnn` to return `closed` for every round sealed with a PC. After the seals the literal command exits 5 with TASK_ROUND_INACTIVE (R-0003, and R-0017 before it). The only disposition so far is an Architect diagnostic plus a sensor-error triage entry (plan.md §Triagem, reports/CTG-0003-round-status-diagnostic.md). Maestro rule (12) in prompts/00-maestro.md:82-85 makes acceptance criteria immutable. Any change other than A1 must be a numbered addendum decided by the Owner, and the replaced criterion is recorded as not met, never as PASS. No such addendum or Owner decision exists, so the checkpoint blocks PASS, the commits and the CTG-0003 PR under the current prompt. The command's failure is not credited as PASS in this review.",
+      "fix": "An Architect writes a numbered addendum (e.g. contracts/CTG-0003-A3.6-round-status.md) that defines an equivalent verification for all 17 sealed rounds (R-0003…R-0016, R-0018, R-0019 plus R-0017). It must require: (a) exactly one line in each close-state.jsonl, byte-identical to the six-key serialization produced by appendCloseState, with round_id/status/closing_decision/phase_closure/merged_as matching the PC, record.md and record/derived/indexes/rounds.md; (b) a read-only reading of the governed lifecycle through the pinned runtime (governedRoundStatus or another verb that does not call roundTaskStatus) showing the closed location, recorded with argv, exit code and stdout sha256; (c) a negative control showing R-0020 still active; (d) the receipts of the 16 `round seal --write` runs from both the clone and the worktree, plus verify:state-index and verify:rounds-index. After a cross-family review PASS, the Owner accepts it in an AUTHORIZATION-*.md committed as a segregated Owner commit. The literal criterion stays recorded as not met / n/a in the R-0020 closure.json, never as pass, and the triage entry is kept. Only then repeat the delivery review."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/reports/CTG-0003-round-status-diagnostic.md",
+      "line": 7,
+      "claim": "The diagnostic finds that round status in both v1.5.6 and v1.6.0 calls roundTaskStatus unconditionally, but it links no upstream DEVAI issue. The other gaps in this round each have one (#168, #169), and the R-0017 precedent (R-0017/plan.md:679) already documented the same defect.",
+      "fix": "File an upstream issue in aarusso-nyx/devai describing the unconditional roundTaskStatus call after governedRoundStatus. Cite it in the diagnostic, the triage entry and the addendum from item 1. Do not present the pin bump as a fix."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "law/register/DECISIONS.md",
+      "line": 22,
+      "claim": "The register says 'o selo continua pendente' (line 22) and 'O selo desta rodada não é afirmado' (line 99), but all 16 seals have now been run. The same diff also rewrites the existing preamble and the D-1/D-2 prose in place, while the header says corrections are append-only. The change is semantically equivalent and falls within OD-R20-001=A, but the register now reflects a stale state.",
+      "fix": "The Architect appends a dated note, without rewriting existing text, that records the 16 seals by their close-state.jsonl paths while stating that no seal is represented as passing `round status`. The Architect commit body states that the preamble and D-1/D-2 edits apply OD-R20-001=A (AUTHORIZATION-CTG3-2026-09-28.md)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/reports/TASK-0028.md",
+      "line": 22,
+      "claim": "/tmp/detran-task0028-baseline-UUNjti/baseline-final.json (sha256 32a03b56c29ba0d0efcec4339b1fcd48529009cb3830ccd51363e79103e11884) carries head_sha 513a4f40, but it measured the uncommitted working tree, and the file lives outside the repository. The evidence cannot be reproduced from the recorded head.",
+      "fix": "After the per-role commits and before the PR, rerun `pnpm devai:baseline --final --against work/rounds/R-0020/baseline.json` on the committed candidate head. Record argv, exit code, head_sha and the artifact sha256 in evidence-CTG-0003.json. Keep the rule that no axis may FAIL."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0003/record.md",
+      "line": 15,
+      "claim": "All 15 records from TASK-0010 were sealed with isolation and waves set to \"source_pending\". CTG-0003.md:61 allows that value 'no preparo' (during preparation). The limitation is disclosed in reports/TASK-0010.md but not in the closing evidence of the CTG.",
+      "fix": "Do not edit the sealed records. State in evidence-CTG-0003.json and in the 'fora de escopo' section of the PR that the 15 sealed records keep isolation/waves as source_pending, and that any promotion requires a governed correction."
+    }
+  ],
+  "notes": [
+    "Checkpoint question: yes, the unmet plan.md §Tarefas (c) / §Critérios literal blocks PASS and the CTG-0003 PR under the current prompt. A governed numbered addendum can define equivalent verification, but only through an Owner decision (maestro rule 12) and a cross-family review. The literal command's criterion stays recorded as not met / n/a in the R-0020 closure. Required evidence and decision: see item 1.",
+    "Checked read-only: for all 16 rounds, close-state.jsonl has one line, and phase_closure/merged_as match record.md and rounds.md; R-0018 → PC-0020 supersedes PC-0015. PC-0015 sha256 is still e8fdf1a4…add30. R-0017 is unchanged.",
+    "Checked read-only: 137 `.json.raw` sidecars plus the 10 renamed R-0007 D1/S1 sidecars are byte-identical to the originals at HEAD. The 137 modified plus 7 added TASKs make 144, and the three D1 superseded snapshots are indexed.",
+    "Verifiers rerun in this review: verify:round-tasks OK (320), verify:task-originals OK (144 + 2 A3.4 R1 projections), verify:archival-pc-guard OK (applied).",
+    "No diff touches apps/, backend/, packages/, law/schemas/, .github/, .devai/config/ or record/. worker.sh and bridge.sh both use `set -euo pipefail` and run the archival preflight before dispatch.",
+    "Per the reports, Inspector RED preceded Engineer GREEN for TASK-0021→0022, TASK-0023/0024/0025→0009 and TASK-0027→0028. TASK-0028 did not edit tests; the Inspector fixed the fixtures.",
+    "The final baseline comparison has verdict REVIEW, failures [], and tasks PASS. The a3_transposition receipt has 3 artifacts and 10 sidecars, and the verifier exit code is 0.",
+    "As CTG-0003.md:67 specifies, verify:round-tasks and verify:task-originals are not part of `pnpm check` or CI until CTG-0005. The PR evidence must therefore cite their exit codes explicitly.",
+    "PR hygiene: when staging, add paths explicitly and exclude the 15 untracked CTG-0004-A1 prework files. The zero-byte bridge temp files for this review (reviews/delivery-review-CTG-0003-1.json.{formatted,raw}.*) must not be committed.",
+    "This REVIEW does not authorize commits, evidence, PR or merge. Merge still requires green CI and a later PASS."
+  ]
+}

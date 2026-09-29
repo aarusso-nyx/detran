@@ -28,7 +28,7 @@
     "MOD-blueprints-generated-manifest"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001", "RN-TEAT-003"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0001",
@@ -36,7 +36,15 @@
   "iteration_count": 2,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-t1", "ops-model"],
+  "tags": [
+    "wp-t1",
+    "ops-model",
+    "ref:INV-EVIDENCE-001",
+    "ref:INV-OFFLINE-001",
+    "ref:RN-TEAT-003",
+    "legacy-original:tasks/_legacy-originals/TASK-0002.json.raw",
+    "legacy-sha256:c7598c59a47467a3a21be0f5328b677cf494cd033d66ed76ebda2f22cf2f0336"
+  ],
   "branch": "orchestra/ops-agency",
   "worktree_id": "WT-ops-agency",
   "prompt_composition_id": "PC-e75eb6f37280b623",

@@ -1,0 +1,39 @@
+{
+  "mode": "proposal-review-delta",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+      "line": 1749,
+      "claim": "Contrato linha 14: cada leitura dentro da medição de digest deve guardar `{argv, exit_code, stdout_sha256, location, phase_closure}`. Os 17+17 registros em `lifecycle_integrity.environments.*.lifecycle_replay` guardam só `argv`, `exit_code`, `round_id` e `stdout_sha256`, sem `location` nem `phase_closure`. Na prática, o `stdout_sha256` de cada leitura é idêntico ao do registro correspondente em `closed_rounds[].clone_lifecycle` e `real_lifecycle`, que têm `location: closed` e o PC. Conferi isso nas 17 rodadas e nos dois ambientes. A ligação existe, mas só pelo hash, e o relatório não a declara.",
+      "fix": "Acrescentar `location` e `phase_closure` a cada entrada de `lifecycle_replay`. Outra opção é declarar em `method` que as leituras medidas são as mesmas de `closed_rounds[].*_lifecycle`, ligadas por `stdout_sha256`. Fazer isso na repetição sobre o HEAD commitado."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 14,
+      "claim": "O `git status --porcelain -uall` só compara o estado dos caminhos, não o conteúdo. Uma regravação de um arquivo que já estava sujo fora de `work/rounds` passaria sem ser vista. Hoje o risco é residual: nos dois ambientes, `record/` e `.devai/` (as capacidades `fs:proofs`/`fs:f5-state` da ação) estão limpos no `git_status_before`. Os únicos arquivos sujos fora de `work/rounds` estão em `tools/`, `law/register/DECISIONS.md`, `docs/meta/knowledge-base/open-decisions-rait.md` e `package.json`, e `round plan` não escreve em nenhum deles. Isso não exige mudar o contrato, mas vale como condição para a repetição no HEAD commitado.",
+      "fix": "Na repetição no HEAD commitado, exigir `git status --porcelain -uall` vazio antes da medição, ou registrar isso como pré-condição. Assim a comparação de status passa a detectar qualquer escrita fora de `work/rounds`."
+    }
+  ],
+  "notes": [
+    "Item 1 (prova de não mutação): resolvido. O contrato (linha 14) define o algoritmo, o conjunto de arquivos, a exclusão, o `git status --porcelain -uall` do repositório inteiro e a recusa diante de mutação. O relatório tem `lifecycle_integrity.method` e, para cada ambiente, `work_rounds_digest_before/after` iguais (clone 0abcb864…, worktree 2f36aed6…), `git_status_argv`, sha256 do status antes e depois iguais (clone 3190a3d8…, worktree 71fda1b9…), as listas completas (570 e 527 linhas), 17 leituras e a sonda ativa.",
+    "Reprodução independente no clone /tmp/r20-ctg3-rehearsal.ghBpbv/repo: percorri o sistema de arquivos em `work/rounds` (3061 arquivos), ordenei os caminhos e calculei SHA-256 de `path UTF-8 + NUL + sha256 bruto`, excluindo só `work/rounds/R-0020/reports/A3.6-round-seal-verification.json`. Resultado: 0abcb864…8727, idêntico ao relatório. `git status --porcelain -uall | sha256` deu 3190a3d8…5622, também idêntico. Na worktree o digest atual (ed5e331f…) é outro porque a árvore mudou depois da medição (edições do contrato e revisões). Isso era esperado e reforça a exigência de repetir no HEAD.",
+    "Exclusão: o algoritmo exclui só o relatório autoatualizado. O texto do contrato e o `method` do relatório nomeiam só esse arquivo, e a reprodução com essa única exclusão bate byte a byte no clone. Revisões, contratos e o restante de R-0020 continuam dentro do digest.",
+    "Abrangência da prova: nos dois ambientes (clone e worktree) o par before/after envolve `lifecycle_replay` com exatamente as 17 fechadas (R-0003…R-0019, incluindo R-0017), todas com exit 0, mais `active_probe` de R-0020 (exit 2, `ROUND_RECORD_NOT_FOUND`, stdout vazio e3b0…). O `stdout_sha256` das 17 leituras bate com os 34 registros de `closed_rounds` (location closed, PC correto) nos dois ambientes.",
+    "Item 2 (R-0020 pós-selo): resolvido na linha 20. Depois de `record.md`, `closure.json` e `round seal --write`, os itens 1 e 2 e os dois índices se aplicam a R-0020, com o recibo original do selo retido e digest antes/depois. O controle negativo deixa de valer após o selo, e o critério A3.6 de R-0020 é separado e só pode passar depois do selo.",
+    "Item 3 (repetição como substituta): resolvido na linha 16 e reforçado na linha 18. A frase afirma que os recibos originais não foram retidos. O Owner precisa aceitar expressamente os 32 recibos de repetição como prova substituta, sem tratá-los como originais. A limitação é propagada para `evidence-CTG-0003.json` e para o `evidence` do critério A3.6. O relatório mantém a limitação em `limitations[1]`.",
+    "Item 4 (forma do veredito): resolvido na linha 7. O critério literal fica com `verdict: \"n/a\"`, com `evidence` começando pela frase prescrita, e há um critério A3.6 separado com veredito próprio. É compatível com `phase-closure.schema.json` e com o precedente PC-0020. A linha 20 mantém o `n/a` no fechamento final.",
+    "Item 5 (alcance de `location: closed`): resolvido na linha 14. `location: closed` prova só o record fechado. A presença e os bytes do selo dependem dos itens 1 e 4, e nenhum item isolado equivale ao critério literal.",
+    "Item 6 (HEAD commitado): resolvido. A linha 18 do contrato exige repetir os itens 1–4 e os dois índices no HEAD commitado, com HEAD, argv, exit e SHA-256 do relatório final em `evidence-CTG-0003.json`. O relatório se declara `measurement_state: provisional uncommitted candidate; repeat on committed CTG-0003 HEAD before PR`. A falta de head_sha agora é explícita e fica bloqueada até essa repetição.",
+    "`limitations[2]` (sem mutação em `work/rounds`) agora tem medição por trás. As 32 repetições idempotentes continuam com digest antes/depois igual em cada ambiente (clone 0abcb864…, worktree c3b97a8e…).",
+    "Escopo já aprovado não foi reaberto. O critério literal `round status` continua não cumprido e triado como `sensor-error` (DEVAI #175), sem reclassificação.",
+    "PASS significa pronto para a decisão específica do Owner. Não autoriza aplicar, criar AUTHORIZATION-A3.6, commit, evidência nem PR. A revisão de entrega do CTG-0003 continua obrigatória.",
+    "Nenhum arquivo do repositório foi editado e nenhum comando DEVAI com `--write` foi executado. Para a reprodução do digest foi criado só o script temporário /tmp/dg.mjs, fora do repositório."
+  ]
+}

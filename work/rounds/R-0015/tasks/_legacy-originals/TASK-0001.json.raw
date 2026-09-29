@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar manifesto, contratos e allowlist do BOAT mobile",
+  "description": "Criar a fonte única tela-ficha-rota, fechar os contratos CTG-0001 e CTG-0002 e acrescentar somente os namespaces boat.* à allowlist i18n; nenhum código de feature.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-mobile-arch", "MOD-parameter-catalogue-doc"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-0365cd97e88ca4f8",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-0365cd97e88ca4f8",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

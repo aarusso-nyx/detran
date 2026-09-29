@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0.0",
+  "round_id": "R-0007",
+  "task_id_literal": "TASK-0002",
+  "task_id_canonical": "TASK-0002",
+  "original_task_sha256": "f0d71b4cc439f9e3f5379ecb7e8ccf49168b45fbc9ecfbd1ad77a06db2aec6c3",
+  "original_upstream_literal": "TASK-0001+PREP-CTG1-DEPS+PREP-CTG1-MODEL",
+  "ordering_basis": "budget-entry-order",
+  "budget_path": "work/rounds/R-0007/budget.json",
+  "budget_sha256": "5bcabfb83fa83d44bf0a346b9ac5eb72cc2ef42722e89f4bdd4d678e7ed019a2",
+  "plan_path": "work/rounds/R-0007/plan.md",
+  "plan_sha256": "1068ebf3a7e05d13f372f6dbcfb38616ba72df19c04227b03182a1a404cfc2d2",
+  "prompt_path": "work/rounds/R-0007/prompts/TASK-0002.md",
+  "prompt_sha256": "12be7876c39ec63068b60a8dbaf9c4b374afc57f82b76651a527d6c211eec15c",
+  "ledger_entries": [
+    {
+      "index": 5,
+      "id": "TASK-0002",
+      "status": "completed",
+      "class": "initial"
+    },
+    {
+      "index": 6,
+      "id": "TASK-0002-RETRY-1",
+      "status": "completed",
+      "class": "retry"
+    },
+    {
+      "index": 10,
+      "id": "TASK-0002-ESCALATION-1",
+      "status": "completed",
+      "class": "escalation"
+    },
+    {
+      "index": 16,
+      "id": "PREP-CTG1-DEPS",
+      "status": "completed",
+      "class": "prep"
+    },
+    {
+      "index": 17,
+      "id": "TASK-0002-C2",
+      "status": "completed-incomplete",
+      "class": "corrective"
+    },
+    {
+      "index": 18,
+      "id": "TASK-0002-C2-RETRY-1",
+      "status": "completed-incomplete",
+      "class": "retry"
+    },
+    {
+      "index": 19,
+      "id": "TASK-0002-C2-ESCALATION-1",
+      "status": "completed-incomplete",
+      "class": "escalation"
+    },
+    {
+      "index": 25,
+      "id": "PREP-CTG1-MODEL",
+      "status": "completed",
+      "class": "prep"
+    },
+    {
+      "index": 26,
+      "id": "TASK-0002-C3",
+      "status": "completed",
+      "class": "corrective"
+    }
+  ],
+  "task_0001_reopening": "plan-only; no budget entry",
+  "historical_dispatch_timestamp": "unknown",
+  "final_success_timestamp": "unknown",
+  "preparations": [
+    {
+      "prep_id": "PREP-CTG1-DEPS",
+      "ledger_index": 16,
+      "next_worker_index": 17,
+      "next_worker_id": "TASK-0002-C2"
+    },
+    {
+      "prep_id": "PREP-CTG1-MODEL",
+      "ledger_index": 25,
+      "next_worker_index": 26,
+      "next_worker_id": "TASK-0002-C3"
+    }
+  ]
+}

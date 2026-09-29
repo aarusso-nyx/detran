@@ -1,0 +1,36 @@
+{
+  "mode": "delivery-review-delta",
+  "round": "R-0020",
+  "ctg": "CTG-0003",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/reports/CTG-0003-round-status-diagnostic.md",
+      "line": 13,
+      "claim": "The last paragraph still says the checkpoint stays unsatisfied until a DEVAI fix or a governed equivalent-verification addendum. It does not mention that such an addendum now exists and was authorized in AUTHORIZATION-A3.6-2026-09-28.md, commit 793e3124. It also states that the 16 original round seal --write runs exited 0 without saying that their individual output was not retained. The meaning is still correct, because the literal command remains unmet, but the diagnostic is now behind plan.md lines 208-212 and 330.",
+      "fix": "Before the Architect commit, the Architect appends a dated line to the diagnostic without rewriting existing text. The line points to contracts/CTG-0003-A3.6-round-status.md and AUTHORIZATION-A3.6-2026-09-28.md. It says the literal round status criterion stays unmet and will be n/a in closure.json. It says the 16 original seal exits are supported only by contemporaneous narrative plus the 32 idempotent replays that the Owner accepted as substitute proof."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "line": 3,
+      "claim": "The contract header still reads as a proposal for review that does not yet change the criterion. The file cannot be edited, because its SHA-256 993dd973ace52c7acb99166f4c5e20dd1ac7a387f4944b88e626096732180438 is the exact artifact the Owner accepted. A reader of the contract alone may therefore think it has no effect.",
+      "fix": "Leave the contract bytes unchanged. In evidence-CTG-0003.json and in the PR body, cite the contract together with its SHA-256 and AUTHORIZATION-A3.6-2026-09-28.md at commit 793e3124. That makes the authorization the record of the contract taking effect."
+    }
+  ],
+  "notes": [
+    "Cycle-1 high item 1 is resolved. The Owner authorization is committed on its own in 793e3124 by DEVAI Owner and touches only AUTHORIZATION-A3.6-2026-09-28.md. It accepts the proposal by SHA-256 993dd973. The contract file in the worktree hashes to that same value.",
+    "The authorization explicitly accepts the 32 idempotent replays, 16 in the clone and 16 in the worktree, as substitute proof. It says they are not original receipts, and it requires the original receipt for the final R-0020 seal. It does not waive the commit-HEAD rerun, the index gates, the delivery PASS, the separate CTG-0003 PR, green CI or the CTG-0004 A1 decisions.",
+    "The literal criterion is kept as unmet. plan.md lines 208-212 and 223-225 record the literal round status criterion as not met because of TASK_ROUND_INACTIVE and DEVAI issue 175. They say it will be n/a with that explanation in the final closure.json, never pass, and that A3.6 gets its own separate criterion. The original criterion at plan.md line 221 is kept unchanged. The sensor-error triage entry at plan.md lines 412-419 is kept. DEVAI issue 175 is OPEN and is cited in the plan, the diagnostic and the contract.",
+    "I independently checked the 17 closed rounds R-0003 to R-0019. Each close-state.jsonl has exactly one line. Each is byte-identical to the six-key canonical serialization with closing_decision D-2. Each sha256 matches the report. Each record.md contains the matching PC and merged_as. Each PC file in record/proofs/compliance/closures hashes to the pc_sha256 in the report. R-0018 uses PC-0020, which supersedes PC-0015. R-0017 uses PC-0018, and its close-state has no diff against HEAD.",
+    "Lifecycle reads: 34 round plan --write reads, 17 in the clone and 17 in the worktree, each with exit 0, location closed and the matching phase_closure. Each read records argv and stdout_sha256. The work/rounds digest and the git status porcelain sha256 are unchanged before and after in both environments. Each environment has its own active_probe entry.",
+    "Negative R-0020 control: plan.md status is ativa. There is no record.md, no close-state.jsonl, no R-0020 PC file and no R-0020 row in rounds.md. The round plan probe exits 2 with ROUND_RECORD_NOT_FOUND.",
+    "Replay receipts: 16 in the clone and 16 in the worktree, all with exit 0 and the full round seal --write argv. The work/rounds digests are identical before and after each set. verify:state-index and verify:rounds-index are recorded with exit 0.",
+    "Pending until after the pre-commit review, not claimed as passed. (a) The report has measurement_state set to provisional uncommitted candidate. After the per-role commits, A3.6 items 1 to 4 and both index gates must be rerun on the committed CTG-0003 HEAD. evidence-CTG-0003.json must record that HEAD, the argv, the exit codes and the sha256 of the final report. Any change in bytes, PC, index, location, exit or tree digest keeps the checkpoint blocked. (b) Cycle-1 low item 4: rerun pnpm devai:baseline --final --against work/rounds/R-0020/baseline.json on the committed candidate HEAD, and record argv, exit, head_sha and the artifact sha256 in evidence-CTG-0003.json, with no axis at FAIL. (c) Cycle-1 low item 5: evidence-CTG-0003.json and the out-of-scope section of the PR must state that the 15 sealed records keep isolation and waves as source_pending, and that any promotion needs a governed correction. (d) Cycle-1 low item 3: the Architect appends a dated note to law/register/DECISIONS.md recording the 16 seals by close-state path, without claiming a round status pass. The commit body cites OD-R20-001=A for the preamble and D-1/D-2 edits. (e) The PR evidence must include the verify:round-tasks and verify:task-originals exit codes, because these checks are not in pnpm check or CI until CTG-0005. (f) The final R-0020 seal must keep the original receipt with argv, exit_code, stdout_sha256 and digests before and after.",
+    "PR hygiene: the current git status sha256 differs from the value recorded in the report. That is expected, because plan.md and review files were edited after the measurement. It is another reason the commit-HEAD rerun is required. The zero-byte bridge temp files reviews/delivery-review-CTG-0003-3.json.formatted and .raw must not be staged. Stage paths explicitly.",
+    "This PASS covers only the correction of the cycle-1 high item. It does not authorize merge. Merge still needs the pending conditions above, green CI and the CTG-0004 A1 Owner decisions where they apply."
+  ]
+}

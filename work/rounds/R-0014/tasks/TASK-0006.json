@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "architect",
   "discipline_specialization": "transcriber-docs",
-  "title": "Transcrever o catálogo i18n apps/portal/web/src/app/i18n/portal.pt-BR.json (M9): mapa de tradução portal.situation.*, textos jurídicos portal.legal.*.v1, erros portal.errors.*, rótulos do shell, dos estados e das 27 telas",
+  "title": "Transcrever catálogo i18n do portal: traduções, textos jurídicos, erros e rótulos",
   "description": "Única fonte de rótulos cidadãos do Portal; chaves só nos namespaces da allowlist M10; token interno sem rótulo na fonte fica sem chave e vira OD. Depende dos três lotes de fichas (TASK-0005/0013/0014).",
   "lifecycle": "supported",
   "target_modules": ["MOD-portal-i18n"],
@@ -18,7 +18,11 @@
   "iteration_count": 7,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-p4"],
+  "tags": [
+    "wp-p4",
+    "legacy-original:tasks/_legacy-originals/TASK-0006.json.raw",
+    "legacy-sha256:8e249e176db098c8b4c1d40491c49274f6d2e367110ab20762b2ea532e18f9ea"
+  ],
   "branch": "orchestra/portal-pwa",
   "worktree_id": "WT-portal-pwa",
   "prompt_composition_id": "PC-b9c231f45294e99b",
@@ -32,10 +36,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "low",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-b9c231f45294e99b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

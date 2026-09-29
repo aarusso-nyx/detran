@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0016",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escrever o contrato detalhado do console (contracts/CTG-0002.md §1–§14): scaffold, manifesto TS, rotas, guardas, shell, SSE/frescor, error boundary, componentes §5, páginas L0, i18n, fixtures, critérios C-02-nn",
+  "description": "Completa contracts/CTG-0002.md a partir da §Decisões (TASK-0001) e do padrão R-0012 CTG-0002a: assinaturas de core/, shared/ (18 componentes §5 com input()/output() tipados), features/ (18 páginas L0 com os seis estados), forms/ (9 schemas, avancar-ciclo alinhado a OD-D16-011), src/testing/ (fixtures por transcrição independente) e critérios executáveis para o Inspector (matriz rota × papel 20×36, matriz por comando C-01-11, 18/18 ficha ↔ rota ↔ i18n, 9/9 schemas, freshnessInterceptor, SuppressedCell, SeverityChip/axe, SSE com fallback). Nenhum código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r16-contract-ctg2"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-d5", "arquitetura"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-549e25a2536b1e8d",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-549e25a2536b1e8d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

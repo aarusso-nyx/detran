@@ -626,6 +626,86 @@ async function measureTasks(repoRoot) {
   return { counts, items, source_pending: null };
 }
 
+async function measureA3Transposition(repoRoot) {
+  const artifactPaths = {
+    aliases: 'work/rounds/R-0007/tasks/_legacy-originals/aliases.json',
+    d1: 'work/rounds/R-0007/tasks/_legacy-originals/d1-superseded-snapshots.json',
+    report: 'work/rounds/R-0020/reports/A3-migration-before-after.json',
+  };
+  const oldNames = [
+    'TASK-0001-D1',
+    'TASK-0002-D1',
+    'TASK-0003-D1',
+    'TASK-0004-D1',
+    'TASK-0004-S1',
+    'TASK-0004-S2',
+    'TASK-0004-S2-R1',
+    'TASK-0004-S3',
+    'TASK-0004-S4',
+    'TASK-0004-S5',
+  ];
+  const artifacts = {};
+  for (const [name, path] of Object.entries(artifactPaths)) {
+    try {
+      const bytes = await readFile(resolve(repoRoot, path));
+      artifacts[name] = {
+        path,
+        sha256: sha256(bytes),
+        entries: JSON.parse(bytes),
+      };
+    } catch {
+      artifacts[name] = {
+        path,
+        sha256: null,
+        entries: null,
+        error: 'leitura ou JSON inválido',
+      };
+    }
+  }
+  const sidecars = [];
+  for (const name of oldNames) {
+    const oldPath = `work/rounds/R-0007/tasks/${name}.json`;
+    const sidecarPath = `work/rounds/R-0007/tasks/_legacy-originals/${name}.json.raw`;
+    try {
+      sidecars.push({
+        old_path: oldPath,
+        sidecar_path: sidecarPath,
+        sha256: sha256(await readFile(resolve(repoRoot, sidecarPath))),
+      });
+    } catch {
+      sidecars.push({
+        old_path: oldPath,
+        sidecar_path: sidecarPath,
+        sha256: null,
+        error: 'leitura falhou',
+      });
+    }
+  }
+  const result = run(
+    process.execPath,
+    [
+      resolve(scriptRoot, 'tools/devai/verify-task-originals.mjs'),
+      '--repo-root',
+      repoRoot,
+    ],
+    repoRoot,
+  );
+  return {
+    artifacts,
+    sidecars,
+    verifier: {
+      argv: [
+        'node',
+        'tools/devai/verify-task-originals.mjs',
+        '--repo-root',
+        '.',
+      ],
+      exit_code: result.exitCode,
+      stdout_sha256: sha256(result.stdout),
+    },
+  };
+}
+
 async function measureSensors(repoRoot) {
   const registryPath = resolve(
     repoRoot,
@@ -1114,6 +1194,235 @@ function markdown(baseline) {
 }
 
 function compareBaseline(opening, final) {
+  function validateA3Transposition(missing) {
+    const expected = [
+      [
+        'TASK-0001-D1',
+        'TASK-0019',
+        '07fed96b53f3b69618621658a5f02ee16f556c1091ecbd97ab5188f8c5a79da3',
+        '2e399b65df429e7b15c54bf101bb0836ab572a4aa4850115baa9bda5e4a4424a',
+        'canonical-move',
+      ],
+      [
+        'TASK-0002-D1',
+        'TASK-0020',
+        'e12b7024b1873bb62e26430b42c7191694840a593dd14a771feffe734b39971c',
+        'ceefd7240511a269d4065a378870113eb9acd523e8658155fed127aa08b7f235',
+        'superseded-snapshot',
+      ],
+      [
+        'TASK-0003-D1',
+        'TASK-0021',
+        '78dec1456d50d88c9075bfe7e2e68cb92b36b765ebc95a31839bfb2fc16289a4',
+        '1111e230f99b7e246e93efcdda3584007d3a869056dbb56d7d4f13e9bfc4d845',
+        'superseded-snapshot',
+      ],
+      [
+        'TASK-0004-D1',
+        'TASK-0022',
+        '550bf9088dc64d93541bb9c058574f67a3d7d017df1a8a562add87c617fba163',
+        'dbc9ea42827844fb3dc6b5d4283ab6cca22d35931ed9915ccc28821b78391535',
+        'superseded-snapshot',
+      ],
+      [
+        'TASK-0004-S1',
+        'TASK-0083',
+        '084092c2b3e1cb342d12515e531a7ad84ef71c5023257b79077ff9d4d43e8320',
+        '7eeb33c8ba0b5f5ef636dfec8899a8f68ab5ad065b7f6146786a04fbf0d1175a',
+        'alias',
+      ],
+      [
+        'TASK-0004-S2',
+        'TASK-0084',
+        'b93d22464a2900ad2c04d0f292aa174c18755031b806774d11122c5e6f6cd1f2',
+        '641c2bfa56fba9b984d34f264a399b9277efa6a33f4bf87e1c383f67fef93192',
+        'alias',
+      ],
+      [
+        'TASK-0004-S2-R1',
+        'TASK-0085',
+        '8c2a9478a5039a715ac4df73d9a97d9aefc37248054b87e6cda878c8dba86b68',
+        'd59c83167e2b26c4cde11495edea6d1a9ef1644853941f92492fcdf544d07a2b',
+        'alias',
+      ],
+      [
+        'TASK-0004-S3',
+        'TASK-0086',
+        '861af0dbe8228d83c3d1ad390ad687dcf50bd518ebfd0b0bdb9127e8f074ea72',
+        '33a58305de7b3191685b8893fa63b35424d5c1a5e380ce9d7e39bc460d343629',
+        'alias',
+      ],
+      [
+        'TASK-0004-S4',
+        'TASK-0087',
+        '5f15df733e9c0861e2d43753cf118b197817e47bb65f70118a9e0819610a581e',
+        'eead699a897c7aa1dac8fbfe7131b8cf425941f643ebdd5d3cf3787989175fe5',
+        'alias',
+      ],
+      [
+        'TASK-0004-S5',
+        'TASK-0088',
+        '9266a11250dc38911b9ed42518ccda2a9952f8cc1d146f6586ab166ce5cd0867',
+        '6652ff87bb753fee81ceb047a7869ea34c53a11b0ca1f2607fcfa8e2a56bf6f8',
+        'alias',
+      ],
+    ];
+    const prefix = 'work/rounds/R-0007/';
+    const expectedMissing = expected.map(
+      ([oldId]) => `${prefix}tasks/${oldId}.json`,
+    );
+    if (
+      missing.length !== expected.length ||
+      missing.some((path) => !expectedMissing.includes(path))
+    )
+      return 'A3: conjunto de TASKs removidas difere dos dez caminhos autorizados';
+
+    const receipt = final.tasks?.a3_transposition;
+    if (
+      !receipt ||
+      !receipt.artifacts ||
+      !Array.isArray(receipt.sidecars) ||
+      !receipt.verifier
+    )
+      return 'A3: recibo ausente ou incompleto';
+    const artifactExpected = {
+      aliases: [
+        'work/rounds/R-0007/tasks/_legacy-originals/aliases.json',
+        '21abf670dc42767c69156e17fefd27e41703b788adf7f4dc07559c573efb009c',
+      ],
+      d1: [
+        'work/rounds/R-0007/tasks/_legacy-originals/d1-superseded-snapshots.json',
+        'fd60307218ac39d5777292bf724fc7be29d487f87f96f430e55235346b0095a2',
+      ],
+      report: [
+        'work/rounds/R-0020/reports/A3-migration-before-after.json',
+        '7518fe70f8314f97763dfe37307eb9dc1468806ef71e49d0bc8f4ffc36afc69d',
+      ],
+    };
+    for (const [name, [path, digest]] of Object.entries(artifactExpected)) {
+      const artifact = receipt.artifacts[name];
+      if (
+        artifact?.path !== path ||
+        artifact?.sha256 !== digest ||
+        !artifact.entries
+      )
+        return `A3: artefato congelado ${name} ausente ou divergente`;
+    }
+    const aliases = receipt.artifacts.aliases.entries;
+    const d1 = receipt.artifacts.d1.entries;
+    const report = receipt.artifacts.report.entries;
+    if (
+      !Array.isArray(aliases) ||
+      aliases.length !== 6 ||
+      !Array.isArray(d1?.entries) ||
+      d1.entries.length !== 4 ||
+      !Array.isArray(report?.migrations)
+    )
+      return 'A3: índices ou relatório malformados';
+    const reportRows = report.migrations.filter(
+      (row) =>
+        row?.round_id === 'R-0007' &&
+        expectedMissing.includes(`${prefix}${row.old_path}`),
+    );
+    if (reportRows.length !== 10 || receipt.sidecars.length !== 10)
+      return 'A3: cardinalidade de migrações ou sidecars divergente';
+    if (!Array.isArray(opening.sources) || !Array.isArray(final.sources))
+      return 'A3: fontes ausentes ou malformadas';
+    const openingSources = new Map(
+      opening.sources.map((source) => [source.path, source.sha256]),
+    );
+    const finalSources = new Map(
+      final.sources.map((source) => [source.path, source.sha256]),
+    );
+    const finalTasks = new Map(
+      final.tasks.items.map((item) => [item.path, item]),
+    );
+    for (const [oldId, newId, oldHash, newHash, disposition] of expected) {
+      const oldPath = `tasks/${oldId}.json`;
+      const canonicalPath = `tasks/${newId}.json`;
+      const sidecarPath = `tasks/_legacy-originals/${oldId}.json.raw`;
+      const fullOld = `${prefix}${oldPath}`;
+      const fullCanonical = `${prefix}${canonicalPath}`;
+      const fullSidecar = `${prefix}${sidecarPath}`;
+      const row = reportRows.filter((entry) => entry.old_path === oldPath);
+      const sidecar = receipt.sidecars.filter(
+        (entry) => entry?.old_path === fullOld,
+      );
+      if (
+        row.length !== 1 ||
+        sidecar.length !== 1 ||
+        row[0].round_id !== 'R-0007' ||
+        row[0].old_id !== (disposition === 'alias' ? oldId : newId) ||
+        row[0].new_id !== newId ||
+        row[0].canonical_path !== canonicalPath ||
+        row[0].sidecar_path !== sidecarPath ||
+        row[0].original_sha256 !== oldHash ||
+        row[0].canonical_sha256 !== newHash ||
+        row[0].schema_status !== 'pass'
+      )
+        return `A3: identidade ou hash do relatório divergente para ${oldId}`;
+      if (
+        sidecar[0].sidecar_path !== fullSidecar ||
+        sidecar[0].sha256 !== oldHash ||
+        openingSources.get(fullOld) !== oldHash ||
+        finalSources.has(fullOld)
+      )
+        return `A3: origem ou sidecar divergente para ${oldId}`;
+      if (
+        finalSources.get(fullCanonical) !== newHash ||
+        finalTasks.get(fullCanonical)?.valid !== true ||
+        finalTasks.get(fullCanonical)?.unreadable === true
+      )
+        return `A3: destino canônico ausente, inválido ou divergente para ${oldId}`;
+      if (disposition === 'alias') {
+        const matches = aliases.filter((entry) => entry?.old_path === oldPath);
+        if (
+          matches.length !== 1 ||
+          matches[0].round_id !== 'R-0007' ||
+          matches[0].old_id !== oldId ||
+          matches[0].new_id !== newId ||
+          matches[0].canonical_path !== canonicalPath ||
+          matches[0].sidecar_path !== sidecarPath ||
+          matches[0].original_sha256 !== oldHash
+        )
+          return `A3: alias divergente para ${oldId}`;
+      } else {
+        const matches = d1.entries.filter(
+          (entry) => entry?.old_path === oldPath,
+        );
+        if (
+          matches.length !== 1 ||
+          matches[0].round_id !== 'R-0007' ||
+          matches[0].id !== newId ||
+          matches[0].original_sha256 !== oldHash ||
+          matches[0].sidecar_path !== sidecarPath ||
+          matches[0].disposition !== disposition
+        )
+          return `A3: snapshot D1 divergente para ${oldId}`;
+        if (
+          disposition === 'superseded-snapshot' &&
+          (matches[0].posterior_path !== canonicalPath ||
+            matches[0].posterior_sha256 !== newHash ||
+            openingSources.get(fullCanonical) !== newHash)
+        )
+          return `A3: posterior preexistente divergente para ${oldId}`;
+      }
+    }
+    const verifier = receipt.verifier;
+    if (
+      JSON.stringify(verifier.argv) !==
+        JSON.stringify([
+          'node',
+          'tools/devai/verify-task-originals.mjs',
+          '--repo-root',
+          '.',
+        ]) ||
+      verifier.exit_code !== 0 ||
+      !/^[a-f0-9]{64}$/.test(verifier.stdout_sha256 ?? '')
+    )
+      return 'A3: verificador de originais ausente, negativo ou malformado';
+    return null;
+  }
   const axisNames = [
     'checks',
     'scorecard',
@@ -1281,12 +1590,13 @@ function compareBaseline(opening, final) {
     } else if (axis === 'tasks') {
       const current = new Map(after.items.map((item) => [item.path, item]));
       const priorPaths = new Set(before.items.map((item) => item.path));
+      const missing = [];
       let sameInvalid = 0;
       let sameUnreadable = 0;
       for (const item of before.items) {
         const next = current.get(item.path);
         if (!next) {
-          fail(`${item.path}: TASK removida`);
+          missing.push(item.path);
           continue;
         }
         if (!next.valid && !next.unreadable) sameInvalid += 1;
@@ -1300,6 +1610,14 @@ function compareBaseline(opening, final) {
       for (const item of after.items) {
         if (!priorPaths.has(item.path) && !item.valid)
           fail(`${item.path}: TASK nova inválida`);
+      }
+      if (missing.length > 0) {
+        const problem = validateA3Transposition(missing);
+        if (problem) fail(problem);
+        else
+          reasons.push(
+            'aceito: dez identidades R-0007 transpostas com recibo A3 íntegro',
+          );
       }
     } else if (axis === 'pull_requests') {
       const current = new Map(after.items.map((item) => [item.number, item]));
@@ -1326,7 +1644,8 @@ function compareBaseline(opening, final) {
         `fonte pendente: ${before?.source_pending ?? ''} ${after?.source_pending ?? ''}`.trim(),
       );
     const verdict = reasons.some(
-      (reason) => !reason.startsWith('fonte pendente:'),
+      (reason) =>
+        !reason.startsWith('fonte pendente:') && !reason.startsWith('aceito:'),
     )
       ? 'FAIL'
       : pending
@@ -1391,6 +1710,9 @@ async function main() {
       opening.round_id !== baseline.round_id
     )
       throw new Error('--against não é uma baseline de abertura compatível');
+    const finalPaths = new Set(baseline.tasks.items.map((item) => item.path));
+    if (opening.tasks.items.some((item) => !finalPaths.has(item.path)))
+      baseline.tasks.a3_transposition = await measureA3Transposition(repoRoot);
     baseline.comparison = compareBaseline(opening, baseline);
   }
   await mkdir(outDir, { recursive: true });

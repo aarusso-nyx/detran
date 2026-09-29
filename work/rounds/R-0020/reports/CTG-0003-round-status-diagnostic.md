@@ -1,0 +1,15 @@
+# Diagnóstico — `round status` após selo
+
+**Papel constitucional:** Architect. **Classificação:** `sensor-error` do DEVAI 1.5.6 experimental. **Estado:** diagnóstico, sem troca de critério.
+
+Depois de 16 `round seal` reais com exit 0 e `close-state.jsonl` correspondente, `pnpm exec devai round status --round R-0003 --repo-root . --format json` saiu 5 com `ACTION_PRECONDITION_UNSATISFIED`, contexto `TASK_ROUND_INACTIVE`. A mesma saída ocorreu para R-0017, já selada antes desta rodada, e para R-0020, que ainda está aberta. `round status --help` lista apenas `--repo-root`, `--round` e `--format`; não há opção de omitir o resumo de tarefas.
+
+No pacote instalado `node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js`, o handler de `round status` obtém `governedRoundStatus` e em seguida chama incondicionalmente `roundTaskStatus` (linhas próximas de 218194–218225). A pré-condição de tarefas em `authorizationIsActive` (linhas próximas de 188222–188232) devolve falso quando `close-state.jsonl` existe; também exige marcadores `status: active` e `GRANTED` em `AUTHORIZATION.md`. Assim, uma rodada selada não consegue passar por essa segunda leitura, embora a leitura de estado governado tenha ocorrido. O comando é marcado `Lifecycle: experimental` no help. Nenhuma fonte histórica, selo ou runtime foi editado para contornar o resultado.
+
+A fonte publicada da [versão 1.6.0, `packages/cli/src/commands/round/workflow.ts` linhas 520–550](https://github.com/aarusso-nyx/devai/blob/v1.6.0/packages/cli/src/commands/round/workflow.ts#L520-L550) mantém a chamada incondicional a `roundTaskStatus` após `governedRoundStatus`; a atualização de pin não é apresentada como correção. Essa conferência foi de código fonte do tag, sem ensaio da versão 1.6.0 nesta worktree.
+
+Defeito reportado ao upstream na [issue #175](https://github.com/aarusso-nyx/devai/issues/175), com reprodução, causa e pedido de teste de regressão para rodada selada.
+
+Evidência independente disponível para o fechamento de CTG-0003: cada um dos 16 comandos `round seal --write` saiu 0 no clone e na worktree; os `close-state.jsonl` reais são byte a byte iguais aos do clone; `verify:state-index` e `verify:rounds-index` passaram no check global pós-selo; o `pnpm check` completo pós-selo saiu 0. Esses fatos não são apresentados como saída `round status: closed`. O checkpoint `plan.md` §Tarefas (c) permanece **não satisfeito pelo comando literal** até correção DEVAI ou uma adenda governada de verificação equivalente.
+
+**Atualização de 2026-09-28:** a adenda governada `contracts/CTG-0003-A3.6-round-status.md` foi aceita pelo Owner em `AUTHORIZATION-A3.6-2026-09-28.md` (commit `793e3124`). O comando literal `round status` continua não cumprido e será `n/a` com explicação no `closure.json` final; a prova equivalente recebe critério separado. As saídas individuais dos 16 selos originais não foram retidas: seus exits constam apenas do checkpoint contemporâneo do plano. O Owner aceitou expressamente 32 repetições idempotentes como prova substituta do estado atual, sem tratá-las como recibos originais. A medição final no HEAD commitado ainda é obrigatória.

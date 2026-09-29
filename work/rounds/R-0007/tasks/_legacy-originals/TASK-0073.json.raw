@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0073",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Observar integralmente o candidato final CTG-0002",
+  "description": "Executar runner oficial completo e gates amplos no candidato estabilizado.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-generated-tree",
+    "MOD-backend-ci"
+  ],
+  "target_substrates": ["F2", "F3", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0072",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-4"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-f9fddcbd78d9ef0f",
+  "acceptance_commands": [
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-19T19:30:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-f9fddcbd78d9ef0f",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Observação final somente; candidato imutável durante o runner."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "verdict": "FAIL",
+    "backend_test_ci": "PASS end-to-end including 18/18 upgrade tests and restoration",
+    "broad_gates_before_failure": "format, orchestra bridge, KB, publication, blueprints, contracts and parameter tests PASS",
+    "finding": "verify:parameter-catalogue misclassified event literals passed to typed event/topic parameters as unknown parameters.",
+    "classification": "Tooling sensor-error; event names must not be added to the parameter catalogue."
+  }
+}

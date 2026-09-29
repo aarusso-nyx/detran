@@ -10,39 +10,25 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-inf-collection-tests", "MOD-shared-policy-tests"],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "contract CTG-0002-modules §c",
-    "orchestra README §4 rule 8",
-    "M17"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0007",
   "db_isolation": "database",
   "iteration_count": 2,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "policy-issue",
-      "finding": "delivery-review-CTG-0002-2: criterion re-scoped to non-administrative roles with the two pre-existing grants as named exceptions (OD-309); Inspector cites OD-309 in the test.",
-      "status": "completed"
-    },
-    {
-      "iteration": 3,
-      "classification": "reference-gap",
-      "finding": "delivery-review-CTG-0002-3: criterion text restricted to the generated CRUD keys with the OD-309 pair as the only exceptions; pre-existing command keys declared out of scope (matches the delivered test).",
-      "status": "completed"
-    },
-    {
-      "iteration": 4,
-      "classification": "reference-gap",
-      "finding": "delivery-review-CTG-0002-4: the OD-309 role-key pairs are named grants proved true; criterion sentence amended.",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "collection", "policy", "delivery-review"],
+  "tags": [
+    "wp-a",
+    "collection",
+    "policy",
+    "delivery-review",
+    "ref:contract CTG-0002-modules §c",
+    "ref:orchestra README §4 rule 8",
+    "ref:M17",
+    "legacy-original:tasks/_legacy-originals/TASK-0014.json.raw",
+    "legacy-sha256:be3e541a32d1319a56b490d45b4a4065d6b3b0d95aa0fd9c35f7b6a086e8a3bd"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-8b70ccb5e20c03c0",
@@ -56,10 +42,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-8b70ccb5e20c03c0",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

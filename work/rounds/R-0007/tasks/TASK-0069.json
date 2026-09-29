@@ -22,7 +22,13 @@
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-2"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "final-observation-2",
+    "legacy-original:tasks/_legacy-originals/TASK-0069.json.raw",
+    "legacy-sha256:b5c738e917a36fe15542348170b57efcecd1b00d896a6b33717cc289dcae5d5f"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-abd45837e06a5324",
@@ -47,13 +53,5 @@
   },
   "intent_diff": {
     "summary": "Observação somente; nenhuma correção ou regeneração."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "passed_before_failure": "Unit tiers and upgraded legacy preparation passed; app integration 11/11 passed.",
-    "finding": "inf-rls integration retained the pre-CTG-0002 exact cardinality 90 while six new tenant tables make the closed inventory 96.",
-    "classification": "Stale exact sensor; all observed new tables remain covered by RLS, FORCE, tenant policy and trigger."
   }
 }

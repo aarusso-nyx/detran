@@ -1,0 +1,25 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-baseline-A3.md",
+      "line": 14,
+      "claim": "The contract fixes the recorded argv as `node tools/devai/verify-task-originals.mjs --repo-root .`. It does not say which script copy runs, what the executable is, or what the cwd is. In the Inspector's CLI fixture (`runBaseline` in `tests/baseline.test.mjs:158-163`), `--repo-root` is a temp dir and the cwd is the real repository. The Engineer could run the verifier from `scriptRoot` with `--repo-root <fixture>`, or from inside the fixture (which does not contain the script). The Engineer could also run it through `process.execPath` instead of `node`. Those choices change `exit_code` and `stdout_sha256`, so the CLI test could reject a correct implementation. This does not weaken the fail-closed rule, because the comparator only accepts an exact argv with exit 0.",
+      "fix": "In TASK-0027, fix the expected argv in the CLI fixture as the normalized literal `[\"node\",\"tools/devai/verify-task-originals.mjs\",\"--repo-root\",\".\"]`, with the path normalized the same way the existing `argv` fields do it (`repoRoot` becomes '.'). Only compare `exit_code` and `stdout_sha256` against a run of the same `scriptRoot` script on the fixture root. Otherwise, write down in TASK-0027's report which convention you chose, so TASK-0028 can follow it without changing the tests."
+    }
+  ],
+  "notes": [
+    "Cycle 1, finding 1 (high) is resolved. Contract line 14 and both prompts now fix `final.tasks.a3_transposition` as a receipt written by the final measurement before the comparison. It holds the sha256 and parsed entries of the report and the two indices, the sha256 of each of the ten sidecars, and `{argv, exit_code, stdout_sha256}` from the verifier. `compareBaseline` stays synchronous and pure and only reads opening and final. The Inspector tests the comparator in the `vm.runInNewContext` harness (`tests/baseline.test.mjs:166-172`) with injected blocks, and tests the measurement through a CLI fixture. The earlier wording 'comparação assíncrona ou pré-leitura' is gone from TASK-0028.",
+    "Cycle 1, finding 2 (low) is resolved. Contract line 16 freezes the three full digests. I recomputed them and they match: aliases.json 21abf670…, d1-superseded-snapshots.json fd603072…, A3-migration-before-after.json 7518fe70…. The contract says consistency among tampered artifacts is not enough. Line 18 requires, for each of the three superseded snapshots, that `posterior_sha256` = canonical hash in the report = `final.sources` = `opening.sources`.",
+    "Cycle 1, findings 3, 4 and 5 (low) are resolved. TASK-0028 lists these acceptance commands: node --test, `pnpm devai:test`, `pnpm verify:task-originals`, a real `devai:baseline --final --against` run with `--out-dir /tmp/…` (outside the worktree; `main` refuses a path inside the repo), and prettier on baseline.mjs. `main` exits 1 when the verdict is FAIL, so this command really gates the A3 result. TASK-0027 adds prettier on the test file. TASK-0026 now runs prettier on the contract and on reports/TASK-0026.md.",
+    "The comparator fails closed. It rejects a missing, incomplete or malformed block whenever any opening path is absent. It accepts only the exact set of ten absences, so a subset, an 11th path or a partial match gives FAIL. When nothing is absent, the original rule applies. A new invalid TASK, more invalid or unreadable TASKs in the common set, and regressions in the other seven dimensions still fail. The receipt never produces a PASS by itself: a read failure or a negative verifier result is recorded as a failure.",
+    "The verdict can be reproduced from the two baselines. `opening.sources` has the ten old paths, and each hash equals the sha256 of its current `.json.raw` sidecar; I checked all ten. TASK-0019 is absent at opening, as expected for the canonical-move. TASK-0020…0022 are present at opening with ceefd724…, 1111e230… and dbc9ea42…. Hashing only covers `tasks/TASK-*.json` and the destinations match that pattern, so `final.sources` will contain them. The receipt carries the sidecar hashes and the verifier result, which `sources` does not cover.",
+    "Prompt hashes: TASK-0026 609e1055…, TASK-0027 a1520f54…, TASK-0028 a0ab6ed7…. Each matches its `sha256`/`pc_id` entry in compositions.json and the `prompt_composition_id` in its task JSON. No other R-0020 file outside reviews/ still references the old PCs cd4796ad or 89765a8d. Models match plan.md rows 185-187. Statuses are completed, ready and queued. Write scopes do not overlap.",
+    "`node tools/devai/verify-task-originals.mjs --repo-root .` exits 0 on the current tree, with output 'OK (144 linked task(s))' plus 'A3.4 R1: OK (2 projeções)'.",
+    "I did not reopen A3.2/A3.3 or any other CTG-0003 item. This PASS only authorizes the RED tests in TASK-0027. It does not authorize TASK-0028, a PR or a merge."
+  ]
+}

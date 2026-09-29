@@ -17,7 +17,7 @@
     "MOD-root-scripts"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": ["ADR-0017 §4", "ADR-0003"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0006",
@@ -26,7 +26,16 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-a", "rait", "collection", "engineer"],
+  "tags": [
+    "wp-a",
+    "rait",
+    "collection",
+    "engineer",
+    "ref:ADR-0017 §4",
+    "ref:ADR-0003",
+    "legacy-original:tasks/_legacy-originals/TASK-0007.json.raw",
+    "legacy-sha256:ac1db5798fcbb900242a27ec72a4e2e89d6b0826827c6eca0a1786da7b085e6d"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-fe87d39c963a2a4b",
@@ -45,10 +54,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-fe87d39c963a2a4b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

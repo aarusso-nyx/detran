@@ -1,0 +1,89 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0020/prompts/TASK-0022.md",
+      "line": 38,
+      "claim": "O Engineer grava `contracts/CTG-0003-A3.5-guard-manifest.json`, e o próprio Engineer implementa o verificador e a preflight que usam esse manifesto como referência. O contrato A3.5 (linha 12) define o manifesto como fonte independente, que fixa os onze caminhos, os hashes bruto e canonizado, o status e as contagens. Se quem implementa também define o conjunto proibido e as contagens, fere a separação do Art. 10 (nenhuma disciplina define a própria referência e atua contra ela) e a cadeia do Art. 9 (Contracts > Engineer). Há também um problema de leitura: para gerar o manifesto, o Engineer teria de ler e hashear `work/rounds/R-0007/prompts/TASK-0004-S*.md` e `tasks/TASK-0078…0082.json`, que não estão na leitura fechada (linhas 13-30), e a regra 1 (linha 67) proíbe varrer o repositório.",
+      "fix": "Mover a escrita do manifesto `pre-migration` para o Architect/maestro, antes do disparo da TASK-0021. Ele deve trazer os onze caminhos explícitos e os hashes conferidos contra `reports/A3.2-expc-receipts.md`. Depois, retirar o manifesto do Pode tocar da TASK-0022, incluí-lo na leitura fechada das duas TASKs e ajustar a linha 181 da tabela de `plan.md` (o Engineer passa a só consumir o manifesto). Se o maestro preferir manter a geração mecânica com o Engineer, a TASK-0022 precisa listar os onze caminhos e os hashes de referência, e o Architect/maestro precisa conferir o arquivo antes do merge."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0021.md",
+      "line": 44,
+      "claim": "A interface entre Inspector e Engineer não está fixada nos prompts. A TASK-0021 não informa: o caminho do helper compartilhado (`tools/devai/assert-archival-prompt-not-dispatchable.mjs`, que só aparece na TASK-0022 linha 35); o formato JSON do manifesto (chaves, token `status`, nomes dos campos de hash bruto e canonizado, contagens, forma de representar os pares pré-A3/canônico no estado `applied`); a CLI e os códigos de saída de `verify-archival-pc-guard.mjs`; e o código de saída da preflight para erro de integridade, como manifesto ausente ou divergente (o 6 está reservado à recusa por fonte). Os testes de manifesto apagado e de `cwd` em outra worktree exigem copiar `worker.sh`/`bridge.sh` junto com o helper para uma raiz de fixture, já que a raiz vem de `$0`. Sem o nome e a posição relativa do helper, o Inspector não consegue montar essa fixture. Sem essas definições, o Inspector inventa uma interface e o Engineer é obrigado a segui-la (fere o item 5 e a suficiência dos prompts para workers sem contexto).",
+      "fix": "Incluir nas duas TASKs uma seção 'Interface fechada' com: caminho do helper e sua invocação (`node <raiz>/tools/devai/assert-archival-prompt-not-dispatchable.mjs <prompt>`, com raiz derivada de `$0`), o schema JSON do manifesto com exemplo mínimo `pre-migration`, o exit 0 e o exit ≠0 do verificador, o exit 6 com `ARCHIVAL_PC_DISPATCH_FORBIDDEN` para recusa e um exit distinto já definido (por exemplo 7, com mensagem fixa) para integridade ou manifesto ausente. Indicar também que a fixture copia script e helper sob a mesma estrutura relativa."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/prompts/TASK-0022.md",
+      "line": 56,
+      "claim": "Contradição entre o `pre-migration` GREEN e a regra de falha fechada. A TASK-0022 exige `pnpm check` GREEN na árvore real (linhas 56 e 62), o `pnpm check` roda no CI (`ci.yml` linhas 150 e 402), e o G0 do `pre-migration` exige store e backlog R-0007 vazios. Na worktree real, porém, `.devai/state/tasks/` e `.devai/state/backlog.jsonl` não existem: `.devai/state` só tem `.gitkeep`, `audit-observations/` e `evidence-chain.json`. Ao mesmo tempo, as TASK-0021 linha 48 e TASK-0022 linha 53 determinam que 'estado desconhecido/desacordo com o disco' falhe. Nenhum prompt diz se store ou backlog ausente equivale a vazio ou a estado desconhecido. O caminho do backlog só aparece em `CTG-0003-A3.3-gap-proposal.md` linha 13, que está fora da leitura fechada. Um Engineer consistente com a falha fechada deixaria o gate RED na árvore real e no CI; um Inspector com a leitura oposta escreveria testes incompatíveis.",
+      "fix": "Definir nas duas TASKs os caminhos exatos `.devai/state/tasks/` e `.devai/state/backlog.jsonl`. Ausência verificada (sem symlink) conta como vazio; presença com entrada `round_id` R-0007 falha; arquivo ilegível ou malformado falha. Acrescentar casos RED/GREEN para store ausente, store vazio e backlog com R-0007."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 245,
+      "claim": "A seção §Comandos de aceitação por tarefa (linhas 221-245) termina na TASK-0020 e não traz o resultado esperado de TASK-0021/0022, o que o 00-maestro §3 exige. Os `acceptance_commands` da TASK-0021 (`worker.test.sh`, `bridge.test.sh`, `node --test …verify-archival-pc-guard.test.mjs`) devem sair RED por desenho. O §7 do maestro, porém, trata os `acceptance_commands` como hard gate e manda triagem e nova tentativa em caso de falha. Além disso, os testes bash rodam com `set -euo pipefail` e param na primeira falha, então a contagem RED/PASS por caso pedida na linha 57 não sai desses comandos.",
+      "fix": "Acrescentar ao plan.md as entradas de TASK-0021 e TASK-0022. TASK-0021: `format:check` exit 0; `node --test` com exit ≠0 e somente os casos da guarda em RED, com os demais PASS; `worker.test.sh`/`bridge.test.sh` com as asserções pré-existentes PASS e os casos novos RED isolados por caso (subshell ou contador, sem abortar a suíte). TASK-0022: os três comandos com exit 0. Deixar explícito no prompt da TASK-0021 que os RED esperados não disparam triagem do §7."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0022.md",
+      "line": 62,
+      "claim": "Não há contradição real entre `pnpm check` e o gate histórico de TASKs: `package.json:15` não inclui `verify:round-tasks` nem `verify:task-originals`. Mesmo assim, a frase 'sem ocultar RED remanescente de verify:round-tasks' sugere rodar esse gate, que não está nos `acceptance_commands` e hoje sai 1 (143 inválidas). Consequência que o prompt não registra: depois da TASK-0022, o `pnpm check` congela os bytes dos cinco JSON R-0007. Qualquer retomada da TASK-0009 que aplique 1A a TASK-0078…0082 antes de B deixará o check RED, o que é coerente com o contrato A3.5 linha 12, mas precisa estar escrito no prompt.",
+      "fix": "Dizer que `verify:round-tasks` não é critério da TASK-0022, que fica RED por desenho e que é apenas informativo. Registrar no plan.md §Retomada, e no prompt da TASK-0009 quando ele for revisado, que os cinco JSON só mudam na aplicação conjunta A3/1A/B com a promoção do manifesto."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0022.md",
+      "line": 36,
+      "claim": "A TASK-0022 edita `tools/orchestra/worker.sh`, que pode ser o executor em uso pelo próprio worker. O bash lê o script de forma incremental. Uma edição no lugar enquanto `codex exec` roda (linhas 25-26 do worker.sh) corrompe a verificação de `git` e o registro que vêm depois do retorno da CLI.",
+      "fix": "Disparar a TASK-0022 a partir de uma cópia temporária de `worker.sh` ou de um subagente, ou exigir no prompt que o Engineer substitua os scripts por gravação atômica (arquivo novo seguido de `mv`)."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/prompts/TASK-0021.md",
+      "line": 50,
+      "claim": "Os prompts reduzem o G0 a store/backlog vazios. A autorização 3A e a proposta A3.3 (linha 13) definem o G0 como store, backlog e 'demais caminhos de escrita' de `materialize`/`start`/`run`, com baseline em bytes. Um `pnpm check` GREEN pode ser lido como prova do G0 inteiro.",
+      "fix": "Declarar que o verificador cobre apenas store e backlog, e que as demais superfícies do G0 seguem no ensaio do maestro/Inspector, sem que o PASS do verificador seja alegado como G0 integral."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/prompts/TASK-0021.md",
+      "line": 48,
+      "claim": "O prompt fala em 'onze sidecars' no estado `applied`, mas não traz a nota low da `reviews/A3.5-proposal-review-3.json` (linha 11): os sidecars são os de A3 (`_legacy-originals/<nome>.raw`) e não pode haver um segundo conjunto para TASK-0078…0082.",
+      "fix": "Transcrever essa definição para as duas TASKs e para a fixture `applied`."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0020/prompts/TASK-0022.md",
+      "line": 62,
+      "claim": "O `pnpm check` na árvore real roda builds de vários apps, que geram artefatos (ignorados pelo git) fora do Pode tocar. O worker não pode usar Git para demonstrar que a fronteira foi respeitada.",
+      "fix": "Esclarecer que artefatos de build ignorados pelo git não contam como violação e que o maestro confere `git status` depois da entrega."
+    }
+  ],
+  "notes": [
+    "Hashes conferidos: CTG-0003-A3.5-archive-guard.md f874e0f3…d77f, TASK-0021.md 0be789e0…219b e TASK-0022.md 11bfdaf9…cba1 batem com o pedido. Os PCs `PC-0be789e08aed2f7e` e `PC-11bfdaf94c7fd767` são iguais no topo, no `executor` e em `compositions.json`; o modelo e o esforço também coincidem. `devai check --only schema` deu `ok:true` para os dois JSON. Nenhum arquivo foi escrito.",
+    "Tríade: não há CTG nem PR novo; `plan.md` linha 187 declara o refinamento do CTG-0003, a cadeia é TASK-0007→0021→0022→retomada 0009, com `upstream_task_id` e `coupled_pipeline_position` corretos. A fronteira de escrita entre Inspector (arquivos de teste) e Engineer (scripts, verificador e `package.json`) é disjunta, e a TASK-0022 proíbe tocar nos testes do Inspector. Os locks `MOD-devai-tools-tests`/`MOD-orchestra-bridge-tests` e `MOD-devai-tools`/`MOD-orchestra-bridge`/`MOD-root-package-json` são coerentes. O conflito com a retomada da TASK-0009 está registrado.",
+    "Modelos: `gpt-5.6-terra`/medium para Inspector e `gpt-6-sol`/high para Engineer são compatíveis com `model-ladder.md`.",
+    "Nenhum dos dois workers é autorizado a fazer escrita histórica ou DEVAI: ambos proíbem Git, `--write`, selo, `record/`, `.devai/`, TASKs históricas e `compositions-archive/`, e a TASK-0022 veda gerar o `applied`, os pacotes e as TASKs. Os PCs não são antecipados.",
+    "Entre os estados `pre-migration` e `applied`, fora o G0 ausente (achado high 3), não há contradição: índice ausente só é erro em `applied`, manifesto ausente é sempre erro e pasta de pacotes antecipada falha.",
+    "Saídas de runner x permissão de escrita: os testes existentes usam `mktemp`. Os relatórios `reports/TASK-002x.md` estão no Pode tocar; os `.jsonl` e `.worker.json` são gravados pelo `worker.sh`, não pelo worker, então não há conflito além dos dois achados low de fronteira.",
+    "Inventário de `tools/orchestra`: somente `worker.sh` e `bridge.sh` invocam `codex`/`claude`, além dos respectivos testes com CLI falsa, o que confirma o conjunto do contrato.",
+    "Suficiência sem contexto de conversa: ainda não. Os achados high 2 e 3 obrigariam os workers a inventar a interface ou a semântica do G0, e o high 1 exige ler fontes fora da lista fechada."
+  ]
+}

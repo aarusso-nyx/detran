@@ -16,14 +16,19 @@
   ],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0003c",
+  "coupled_task_group": "CTG-9010",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0017",
   "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 5,
-  "tags": ["wp-p5"],
+  "tags": [
+    "wp-p5",
+    "legacy-ctg:CTG-0003c",
+    "legacy-original:tasks/_legacy-originals/TASK-0018.json.raw",
+    "legacy-sha256:77dcf307106fd4504d108c93cc00a334f6eef14d9f335ebb03006869e4d5aba0"
+  ],
   "branch": "orchestra/portal-pwa",
   "worktree_id": "WT-portal-pwa",
   "prompt_composition_id": "PC-dd7a2e2a47dc9996",
@@ -40,10 +45,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-dd7a2e2a47dc9996",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

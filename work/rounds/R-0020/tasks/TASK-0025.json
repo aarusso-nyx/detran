@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0025",
+  "round_id": "R-0020",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Caracterizar projeções A3.3 3A/4A",
+  "description": "Testes RED de D1/S1/C1/P1/U1/T1, snapshots e índices de proveniência A3.3",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-devai-tools-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0024",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["campaign:C-0002", "round:R-0020", "ctg:CTG-0003", "ref:task-0025"],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-897642b094f3c0e9",
+  "acceptance_commands": [
+    ["node", "--test", "tools/devai/tests/normalize-a33.test.mjs"],
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "tools/devai/tests/normalize-a33.test.mjs"
+    ]
+  ],
+  "created_at": "2026-09-28T22:03:50Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-897642b094f3c0e9",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

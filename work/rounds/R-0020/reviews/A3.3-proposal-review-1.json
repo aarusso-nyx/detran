@@ -1,0 +1,70 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 9,
+      "claim": "The whole G1 argument, and the scheduler risks used for STATUS and POS, assume the pinned runtime loads `work/rounds/R-0007/tasks/*.json`. It does not. In `release-host.js`, `tasksDir` (187162) returns `.devai/state/tasks`, and `loadTask`/`listTasks` (187202–187214) read only that folder. `runRoundTasks` (188643), `roundTaskStatus` and `taskDependencies` get their tasks from there. `plan.md:61` itself says `.devai/state/tasks/` does not exist. So without a seal, `start/finish/escalate/pause/resume` on S2/S3 already fail with 'task not found', and `round status` returns 0 tasks. The negative test in step 2 of the G1 sequence would pass even without a seal, so it proves nothing. The rehearsal also never ran an unsealed baseline in the clone. Only `materializeRoundQueueTask` (188269) can write a TASK into the runtime store, and it is already behind the round guard. The dispatch path this repository really used, `tools/orchestra/worker.sh` (see R-0014 B3), reads prompts directly and does not go through `close-state.jsonl`. The 'Limite' paragraph mentions only a generic 'script/CLI externo'. As written, the Owner is asked to approve a sequence exception to CTG-0003 against a threat that has not been shown to exist.",
+      "fix": "State which runtime path actually reads the round's TASK files and cite `tasksDir`/`listTasks`. Add an unsealed baseline to the clone rehearsal so the rejection can be compared before and after the seal. Show a concrete way an archival TASK could be dispatched (materialize, worker.sh, maestro), or present G1 as defense-in-depth with its real benefit and cost. Name `tools/orchestra/worker.sh` as unguarded. Reassess whether STATUS=S1 needs G1/G2 at all or only a static no-dispatch check in `verify:round-tasks` plus the operational ban."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 32,
+      "claim": "The table (line 56) makes P1 conditional on a 'grafo estático válido', and line 32 requires the Inspector to reject any remaining cycle. That condition cannot be met. `COUPLED_POSITION` (188754) orders inspector 0 < architect 1 < engineer 2, but Art. 24 of the pinned Constitution and the actual TASKs chain Architect→Inspector through `upstream_task_id`. I recomputed the graph after nulling the ten literals: R-0007 still has 28 direct upstream-versus-position 2-cycles. Examples: TASK-0001↔TASK-0002, where U1 keeps exactly the `TASK-0002→TASK-0001` edge, and TASK-0024↔TASK-0025. Across R-0003…R-0021 there are 91, including R-0020 and R-0021. P2 is presented as the option that 'introduz ciclos TASK-0004↔S1 e S4↔S5', which suggests the rest of the graph is acyclic. It is not. The Owner cannot choose P1 with the stated criterion.",
+      "fix": "Report the systemic cycles with counts and an example per round. Separate 'no new cycles introduced by the projection' from 'acyclic graph'. Give the Owner a decision on the cycle criterion, for example: upstream edges only; runtime-position cycles accepted in sealed rounds; or an upstream DEVAI issue about the order conflicting with Art. 24. Remove the promise of a valid static graph for P1, and correct the equivalent statement in A3.2 §49."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 18,
+      "claim": "Step 2 of the G1 sequence asks for a test on 'uma TASK `ready`', but R-0007 has none. The only non-terminal TASKs that are not the target of STATUS are TASK-0038 (`checkpoint`) and three `queued` files, and the proposal ignores them. The three are `TASK-0002-D1.json`, `TASK-0003-D1.json` and `TASK-0004-D1.json`, with internal ids TASK-0020, TASK-0021 and TASK-0022. Those ids duplicate the canonical `TASK-0020/0021/0022.json`. A3 §21 notes 'IDs internos 0019–0022' repeated but gives no disposition. With duplicate ids, an id-keyed graph, the cycle check, the 'zero inválidas' target and the dispatch tests are all undefined. These queued files are also the only real candidates for improper dispatch.",
+      "fix": "Inventory every non-terminal R-0007 TASK (TASK-0038 and the three D1 files) and include them in the negative tests instead of the non-existent 'ready' TASK. Require a separate decision or alias for the duplicated ids before applying P1/S1 or any graph check."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 13,
+      "claim": "G1 transcribes `R-0007/record.md` before TASK-0010, but CTG-0003 §59 gives TASK-0010 all 15 records, R-0007 included. The proposal amends the contract and the maestro sequence, but not the TASK-0010 prompt/JSON (both modified in this worktree) or the count of 15. CTG-0003 §59 step 4 also says 1.5.6 seals 'sem opção `--write`', while A3.3 and the rehearsal use `--write` and exit 0.",
+      "fix": "List the TASK-0010 prompt/task and the '15 record.md' count among the items the G1 amendment touches (14 plus an existing R-0007 to validate, not overwrite). Reconcile the `--write` behaviour between CTG-0003 and A3.3 using the actual CLI result."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 11,
+      "claim": "'O marcador produzido contém exatamente round_id, status, D-2, PC-0011 e o merge' leaves out `schemaVersion: \"1.0.0\"` and the `closing_decision` key written by `appendCloseState` (187640ff).",
+      "fix": "List the six keys literally and require byte-for-byte comparison with the line that the runtime function would produce."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 40,
+      "claim": "The ledger indices 5/16/17/25/26 and all three SHA-256 hashes check out. However: (a) between 5 and 26 there are other TASK-0002 attempts (RETRY-1 at 6, ESCALATION-1 at 10, C2-RETRY-1 at 18, C2-ESCALATION-1 at 19), and C2 at 17 is `completed-incomplete`; (b) `plan.md:1192` says 'TASK-0001 foi reaberta' before MODEL, but the ledger has no TASK-0001 entry between 19 and 26. That weakens keeping `upstream TASK-0001` as the only edge without a source.",
+      "fix": "Make 'tentativas anteriores' an exact list of these indices with the literal ledger statuses. Add the source for the TASK-0001 reopening, or state in the index that it is not in the ledger."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 48,
+      "claim": "T1 is correct: the hashes check out, there is one worker only (budget index 5), and the reviews are idx 6/7. However, the escalation was later handled by TASK-0009…0013 and delivery-review-CTG-0001-3 FAIL / -4 PASS (budget 14–22), and the index does not point to that outcome. Someone reading the index could take the escalation as unresolved. The literal trail also has `iteration: 3` with `max_iterations: 2`, and this is not recorded.",
+      "fix": "Add successor references to the index (TASK IDs and reviews with path/hash) as provenance only, without changing the status or creating a trail. Record the iteration/max_iterations mismatch as a literal fact."
+    }
+  ],
+  "notes": [
+    "Checked and matching: SHA-256 of R-0007 budget, plan and prompt TASK-0002, and of R-0006 TASK-0003, plan, budget and both reviews. Also matching: closure.json D-1/D-2 and merge b662f8af with five gates pass; AUTHORIZATION.md still `active`/`GRANTED`; no record.md or close-state.jsonl.",
+    "Runtime claims verified in the pinned 1.5.6: `assertClosePreconditions` does not read TASKs, `authorizationIsActive` rejects when close-state exists, `TERMINAL={completed,escalated,cancelled}`, `escalateRoundTask`/`pauseRoundTask` accept `checkpoint`, and `null` adds no position edge. `law/schemas/task.schema.json` is byte-identical to the pinned copy (cd799a47…).",
+    "The count of ten POS literals is correct: TASK-0004, six S* and TASK-0078/0080/0082. The schema's `discipline` enum does include `auditor`, so only the position is non-canonical.",
+    "ROLE: R1/R2 respect Art. 7 (no inferred elevation) and state that Art. 6 is not overridden. The prerequisite path matrix is still missing, including `MOD-dashboard-readme`; until it exists neither option can be applied.",
+    "Owner decisions still open: GUARD, STATUS, POS (including the new cycle criterion), UP=U1, ROLE and TRAIL. Per plan.md:496, none has been consulted yet. PASS needs the premise of finding 1 and the graph criterion of finding 2 fixed first."
+  ]
+}

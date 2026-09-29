@@ -10,29 +10,27 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-shared-policy-spec", "MOD-role-gate"],
   "target_substrates": ["F2"],
-  "target_invariants": ["RN-DASH-170", "RN-DASH-171", "OD-D01"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0001",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 2,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "reference-gap",
-      "finding": "Update Inspector expectations after Architect excludes read-only AUDITOR and DPO from dashboard:export:create.",
-      "status": "completed"
-    },
-    {
-      "iteration": 3,
-      "classification": "reference-gap",
-      "finding": "Assert integration-operator cannot read dashboard alerts.",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-d0", "dashboard", "tests", "policy"],
+  "tags": [
+    "wp-d0",
+    "dashboard",
+    "tests",
+    "policy",
+    "ref:RN-DASH-170",
+    "ref:RN-DASH-171",
+    "ref:OD-D01",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0002.json.raw",
+    "legacy-sha256:7f7ca58cf6c597495c61a031d17d29126289b967e20af8b9e9b7bcfcd3652755"
+  ],
   "branch": "orchestra/dash-roles",
   "worktree_id": "WT-dash-roles",
   "prompt_composition_id": "PC-62747d7a93dbdf81",

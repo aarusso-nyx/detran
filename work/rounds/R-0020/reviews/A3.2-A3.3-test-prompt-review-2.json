@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 184,
+      "claim": "The dependency column in the TASK-0025 row still says `TASK-0023 + prompt PASS`. That disagrees with three other places: `tasks/TASK-0025.json` sets `upstream_task_id: TASK-0024`, `prompts/TASK-0025.md:7` says to run after TASK-0024 is delivered under the `MOD-devai-tools-tests` lock, and `plan.md:190` says the two run in series. The shared lock still forces serial execution, so this is a documentation mismatch only and does not block dispatch.",
+      "fix": "Change the dependency cell on line 184 to `TASK-0024 (entrega) + prompt PASS` so the table matches the JSON, the prompt and §190."
+    }
+  ],
+  "notes": [
+    "All four SHA-256 hashes match the declared values: TASK-0024 prompt 6b7080f3…, TASK-0024 JSON 68ff6a72…, TASK-0025 prompt 897642b0…, TASK-0025 JSON 9b423ede…. `compositions.json` has matching `pc_id` values PC-6b7080f3cf5af7af and PC-897642b094f3c0e9, the same model/effort values, and the same PC at the top level and in `executor`. TASK-0009 has `pc_id` PC-21037bc73de8661c and its prompt hash is 21037bc7…, so it matches.",
+    "Repair (a) holds: TASK-0024 and TASK-0025 both have `target_modules: [MOD-devai-tools-tests]`. TASK-0025 names TASK-0024 as `upstream_task_id` and its prompt spells out the serial order. `plan.md:190` and CTG-0003.md:79 say the two run in series.",
+    "Repair (b) holds: each JSON's `acceptance_commands` holds exactly `node --test <file>` plus `node_modules/.bin/prettier --check <file>` for that task's own test file, which matches the Acceptance section of each prompt line for line. Neither one requires `pnpm format:check` globally.",
+    "The RED tests come before TASK-0009: its prompt (line 75) and CTG-0003.md:79-81 list TASK-0024 and TASK-0025 as predecessors. `tasks/TASK-0009.json` includes `normalize-a32.test.mjs` and `normalize-a33.test.mjs` in its `node --test` acceptance command.",
+    "The Owner limits are reproduced faithfully. TASK-0024 covers 1A/2B: 10 CTG aliases across 31 TASKs, 12 exact titles, 4 external INV entries as `ref:`, 4 `executor.note` kept in the sidecar, 31 EV and 7 REC as archival records, and 11 PCs with `historical_equivalence=false` split 6 exact / 5 literal. TASK-0025 covers 3A/4A: D1 without a new ID, S1 as checkpoint and never PASS, P1 with 10 positions set to null, C1 with no new cycles, U1 with unknown timestamps and no invented order, and T1 with no third worker and escalated status kept. These all match the Authorization file and the contracts, whose hashes 52ac0bc9…, 5a7c9832… and 236c70fa… match the ones cited in the Authorization.",
+    "Neither prompt writes to history or weakens a gate. Each one's writable scope is only its new test file plus its report. Both explicitly exclude historical TASKs, `.devai/`, `record/`, `package.json`, DEVAI `--write`, seals and PRs, and both forbid loosening the schema or the gate.",
+    "This PASS releases dispatch of the TASK-0024 and TASK-0025 Inspectors only. It does not cover migration, PC-B, seals or TASK-0009 P2, which was not reopened."
+  ]
+}

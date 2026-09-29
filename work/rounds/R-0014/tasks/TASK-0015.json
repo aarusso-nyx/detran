@@ -11,14 +11,19 @@
   "target_modules": ["MOD-portal-web-tests-appeal"],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0003b",
+  "coupled_task_group": "CTG-9009",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0020",
   "db_isolation": "database",
   "iteration_count": 5,
   "max_iterations": 2,
   "priority": 4,
-  "tags": ["wp-p5"],
+  "tags": [
+    "wp-p5",
+    "legacy-ctg:CTG-0003b",
+    "legacy-original:tasks/_legacy-originals/TASK-0015.json.raw",
+    "legacy-sha256:c8794b8acc3337d75dce7948e3145f75753451216a5764bdd5fb35342cb1ecc5"
+  ],
   "branch": "orchestra/portal-pwa",
   "worktree_id": "WT-portal-pwa",
   "prompt_composition_id": "PC-92eaca1509edfca3",
@@ -33,10 +38,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-92eaca1509edfca3",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

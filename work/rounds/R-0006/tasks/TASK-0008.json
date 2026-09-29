@@ -10,23 +10,23 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-docs"],
   "target_substrates": ["F2"],
-  "target_invariants": ["CODESTYLE §Docs", "conventions.md"],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0007",
   "db_isolation": "database",
   "iteration_count": 1,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "policy-issue",
-      "finding": "delivery-review-CTG-0002: docs/ is the Architect boundary (Constitution); task re-attributed from owner to architect (specialization transcriber-docs), content attested by the maestro as Architect.",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 3,
-  "tags": ["wp-a", "docs", "transcription"],
+  "tags": [
+    "wp-a",
+    "docs",
+    "transcription",
+    "ref:CODESTYLE §Docs",
+    "ref:conventions.md",
+    "legacy-original:tasks/_legacy-originals/TASK-0008.json.raw",
+    "legacy-sha256:8f28d241d24a6f819e36b1a1a714f6306010c156697d1ff428f3dd7265f3a12f"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-d6ef049c8d298d0e",
@@ -41,10 +41,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "low",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-d6ef049c8d298d0e",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

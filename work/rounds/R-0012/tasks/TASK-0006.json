@@ -11,14 +11,22 @@
   "target_modules": ["MOD-rait-web-core", "MOD-parameter-catalogue-doc"],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0002a",
+  "coupled_task_group": "CTG-9001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0005",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 3,
-  "tags": ["wp-f", "engineer"],
+  "tags": [
+    "wp-f",
+    "engineer",
+    "legacy-ctg:CTG-0002a",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "legacy-original:tasks/_legacy-originals/TASK-0006.json.raw",
+    "legacy-sha256:a11cdd78fbc1addeeb2e715827bedb84e534061ef208fe1c670fe8c4d4850879"
+  ],
   "branch": "orchestra/rait-web",
   "worktree_id": "WT-rait-web",
   "prompt_composition_id": "PC-6dba0a347b64ff7d",
@@ -36,10 +44,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-6dba0a347b64ff7d",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

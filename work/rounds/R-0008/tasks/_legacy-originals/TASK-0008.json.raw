@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0008",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes de medidas (prazos ≤30/≤15, dois prazos do termo, guarda monitorada por flag), alcoolemia (tabela metrológica, limiares, recusa × impossibilidade, conjunto de sinais), velocidade por flag, SSE e integrações",
+  "description": "Codificar os critérios do contrato CTG-0004 em testes unit/integration/e2e de inf/measures, inf/alcohol, inf/speed e do stream do app, com a fixture 28-fixtures-teat-measures-alcohol.sql; vermelhos até TASK-0009.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-measures-tests",
+    "MOD-inf-alcohol-tests",
+    "MOD-inf-speed-tests",
+    "MOD-ops-stream-tests",
+    "MOD-seed-teat-measures",
+    "MOD-shared-policy-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-t2"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-7a796cd929b512fe",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/seed.sh"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-7a796cd929b512fe",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

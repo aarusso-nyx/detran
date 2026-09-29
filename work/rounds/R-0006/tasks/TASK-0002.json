@@ -16,11 +16,7 @@
     "MOD-inf-ait-rls-count"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "WF-INF-003 §2",
-    "rait-deadline-engine §7",
-    "rait-test-strategy §3"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0001",
@@ -29,7 +25,17 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "infraction", "tests", "fixtures"],
+  "tags": [
+    "wp-a",
+    "infraction",
+    "tests",
+    "fixtures",
+    "ref:WF-INF-003 §2",
+    "ref:rait-deadline-engine §7",
+    "ref:rait-test-strategy §3",
+    "legacy-original:tasks/_legacy-originals/TASK-0002.json.raw",
+    "legacy-sha256:06d6a09671e046f4e5c134123e90322a89ba0758d45a1a9a33155b63898daae4"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-40519a30bb18d27c",
@@ -45,10 +51,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-40519a30bb18d27c",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

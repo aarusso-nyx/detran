@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0016",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar o manifesto de rotas D-01…D-18, o esquema i18n `dashboard.*` (allowlist) e as decisões do console",
+  "description": "Fonte única rota ↔ ficha ↔ painel ↔ camada ↔ chave de política ↔ papéis ↔ módulo ↔ slug (route-manifest.md); contrato CTG-0001 (esquema i18n M5, allowlist no parameter-catalogue.md, esqueleto das fichas, critérios do teste tela ↔ ficha ↔ rota ↔ i18n); contrato CTG-0002 §Decisões (pastas §9, gráficos sem biblioteca, forma dos schemas, guardas/interceptor/SSE). Nada de código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r16-route-manifest", "MOD-parameter-catalogue-doc"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-d4", "wp-d5", "arquitetura"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-dce445c3217fcb49",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-dce445c3217fcb49",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

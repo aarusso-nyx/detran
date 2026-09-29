@@ -1,0 +1,48 @@
+{
+  "action": "Append correction to CTG-0003 delivery evidence initiator role under maestro prompt section 9",
+  "round": "R-0020",
+  "coupled_task_group": "CTG-0003",
+  "role": "engineer",
+  "readiness_promoting": false,
+  "corrects": {
+    "kind": "generic",
+    "round_id": "R-0020",
+    "sequence": 5,
+    "line_hash": "768a54de18af146f54f617f6d621fe018a1ad46ad3c6b7ede8b73fa6e23ab7fa",
+    "field": "payload.role",
+    "historical_value": "architect",
+    "corrected_delivery_initiator": "engineer",
+    "historical_line_preserved": true
+  },
+  "commits": [
+    "818a5a249cd316f6e55621b98dd8571efb112a7c",
+    "5d4b02578c3b5223d3a4d250e8076d000d3f8fd8"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0020/evidence-CTG-0003.json",
+      "sha256": "cc286cec88579230c1b8a5c71d827bb28c460119c3e274cff04775f9b861236c"
+    },
+    {
+      "path": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+      "sha256": "ee14c827d6286fc7653e612b33beb510caaf4d8e2c44a1da6983acf74351b079"
+    },
+    {
+      "path": "work/rounds/R-0020/reviews/delivery-review-CTG-0003-4.json",
+      "sha256": "ba6b928e525a47badfa740aac93b86aca9e1e72750266dcecc4b9212b45f6fbf"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+      "result": "pass",
+      "note": "valid before corrective append"
+    },
+    {
+      "name": "pnpm verify:proof-anchors",
+      "result": "pass",
+      "note": "83 direct, 53 declared, zero undeclared before corrective append"
+    }
+  ],
+  "scope_limit": "This append corrects delivery-record attribution only. It does not alter sealed rounds, the original sequence 5 payload, A3.6 criteria, TASKs, source code or the reviewer PASS."
+}

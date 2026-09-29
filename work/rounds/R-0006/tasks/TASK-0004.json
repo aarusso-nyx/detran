@@ -18,13 +18,7 @@
     "MOD-generated-tree"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "WF-RAIT-004 §9-§10",
-    "WF-RAIT-003",
-    "UC-RAIT-027",
-    "UC-RAIT-028",
-    "OD-101…OD-112 (H.57)"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0003",
@@ -33,7 +27,19 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-a", "rait", "blueprint", "deltas"],
+  "tags": [
+    "wp-a",
+    "rait",
+    "blueprint",
+    "deltas",
+    "ref:WF-RAIT-004 §9-§10",
+    "ref:WF-RAIT-003",
+    "ref:UC-RAIT-027",
+    "ref:UC-RAIT-028",
+    "ref:OD-101…OD-112 (H.57)",
+    "legacy-original:tasks/_legacy-originals/TASK-0004.json.raw",
+    "legacy-sha256:6a13d1a83608e6c103f6c7f4449c0d91d21f76921632985c44bbdb7470d8edc4"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-97ad12ee287bb695",
@@ -49,10 +55,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-97ad12ee287bb695",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

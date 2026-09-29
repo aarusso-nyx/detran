@@ -1,0 +1,70 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 16,
+      "claim": "A proposta usa `work/rounds/R-0005/evidence-TASK-0009.json` só para provar a escrita em `backend/domains/ops/README.md`. Ela omite que o mesmo recibo registra `\"role\": \"engineer\"` (evidence-TASK-0009.json:5). Esse é um terceiro literal de papel histórico, diferente de `transcriber` no JSON e de 'Owner delegado' no prompt. Com ele, o recibo atribui a um Engineer escritas em cinco caminhos `docs/`, que são Architect/F1 pelo Art. 6. A tabela da linha 14, a marca de 'discrepância de autoria histórica' do P2 e o relatório `reports/A3.3-role-path-audit.md:11` não registram esse literal. Assim, a matriz não representa fielmente o corpus.",
+      "fix": "Acrescentar à linha R-0005 da matriz e à marca de discrepância o literal `role: engineer` do recibo, com caminho e SHA-256. O sidecar/índice deve preservar os três literais (prompt, JSON e recibo) sem escolher entre eles. Deixar explícito que R1 continua sendo apenas o rótulo Owner delegado aceito em 5A. Corrigir também A3.3-role-path-audit.md §Fontes."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 24,
+      "claim": "O P2 diz substituir 'somente' a exigência de política DEVAI materializada. Mas A3.3 §ROLE (CTG-0003-A3.3-gap-proposal.md:102) também exige que o Inspector complete a matriz com 'os arquivos efetivamente tocados no relatório da TASK antes de ROLE=R1/R2'. A própria A3.4 (linha 16) reconhece que o relatório da R-0003 TASK-0004 não está no corpus local. Com a condição mantida, o P2 não pode liberar a R-0003 TASK-0004. Se o P2 for aplicado mesmo assim, a permissão do prompt passa a valer, sem declaração, como prova de escrita.",
+      "fix": "Escolher e declarar uma de três saídas: (i) R-0003 TASK-0004 fica `source_pending` sob P2, e só R-0005 TASK-0009 é projetada; (ii) um recibo contemporâneo fonteado (por exemplo, commit que tocou `apps/dashboard/web/README.md` na branch `orchestra/dash-roles`, com SHA) substitui o relatório; ou (iii) uma segunda substituição explícita e ancorada, com marca `write-evidence:absent`, também submetida à decisão Owner. Não classificar a escrita como efetiva sem prova."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 24,
+      "claim": "A substituição não tem âncora precisa. A A3.3 substituiu A3.2 citando §55/§122 e o SHA. A A3.4 não diz quais cláusulas de A3.3 caem e quais permanecem: a linha 91 ('matriz ... antes da aplicação'), a linha 102 ('política de autoridade vigente') e a linha 120 do quadro ('política de autoridade'). Também não lista os artefatos a revisar antes da aplicação: CTG-0003.md, `R-0020/prompts/TASK-0009.md`, `tasks/TASK-0009.json`, os testes Inspector do verificador de originais e a adenda CTG-0005 exigida por AUTHORIZATION-A3.3-PATHS-2026-09-28.md:13. Resposta a (d): sim, P2 exige decisão Owner nova e específica, como a própria linha 24 reconhece. Também exige revisar o contrato e os prompts antes de aplicar. Nem 1A–5A nem a resposta 6 bastam.",
+      "fix": "Acrescentar uma tabela de substituição com SHA de A3.3, linha e texto substituído versus texto mantido. Listar os prompts/JSON de R-0020 e o contrato que precisam de revisão, com nova revisão cruzada. Exigir que a consulta Owner cite o SHA final da A3.4. Declarar se a própria A3.4 é a adenda CTG-0005 pedida pelo Owner ou se essa adenda será um artefato separado."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 24,
+      "claim": "Os controles do P2 não são verificáveis como estão escritos. `authority-enforcement:pending` não tem literal exato nem local definido (tag da TASK, sidecar ou índice). A marca de discrepância histórica não tem nome. A 'matriz' existe só como tabela Markdown, então o verificador não tem fonte canônica legível por máquina para detectar 'matriz divergir'. Também não há regra de ciclo de vida para a marca: quem pode removê-la, por qual verbo e sob qual decisão quando o CTG-0005 materializar a política. Sem isso, o verificador falha para sempre ou convida a edição manual. Por fim, faltam os testes RED listados por controle e o teste negativo de que `discipline: owner` projetado não é consumido por nenhum cálculo de autoridade ou política.",
+      "fix": "Definir os literais exatos, validados contra o padrão de tags do task.schema: por exemplo `authority-enforcement:pending` e `historical-authority-discrepancy:<id>`. Definir onde cada um fica e um índice JSON da matriz (caminho, classe, papel, fonte e âncora, evidência de escrita, SHA) como fonte do verificador. Especificar a transição governada que remove a marca: só por decisão Owner mais CTG-0005 materializado pelo verbo oficial, com o verificador atualizado pelo Inspector. Listar os testes RED→GREEN por condição, incluindo os negativos: normalizador sem escrita em `apps/`, `backend/` e `docs/`; projeção sem efeito em authority-policy e scheduler; ausência de store/backlog."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 24,
+      "claim": "A frase 'aceitar a matriz aprovada como classificação normativa prospectiva' aplicada a duas escritas passadas pode ser lida como classificação retroativa dessas escritas. A proposta não diz de forma expressa que, na data da escrita, nenhum texto da Constituição ou da política cobria `apps/` ou `backend/`.",
+      "fix": "Acrescentar uma declaração e uma marca (por exemplo `historical-write-authority:unclassified-at-write`) separando a classificação atual do caminho da ausência de grant na data da escrita."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.4-path-authority.md",
+      "line": 13,
+      "claim": "Os dois READMEs são enquadrados como 'README local de implementação' (Engineer/F2), mas nenhum critério é registrado. O prompt R-0003 (TASK-0004.md:48,59) manda o README descrever os blocos A–D e as camadas N0–N3, remetendo ao build pack. Isso pode ser lido como orientação de arquitetura, que a matriz Owner põe em Architect/F1.",
+      "fix": "Registrar o critério que separa 'README local de implementação' de 'especificação de arquitetura' dentro de `apps/` e `backend/`, e aplicá-lo com citação aos dois caminhos."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/reports/A3.4-path-policy-feasibility.md",
+      "line": 15,
+      "claim": "O diagnóstico (b) está correto: as regras são construídas no pacote (release-host.js `coreRules` em ~194636 e `additiveRules` em ~194998–195234, com a extensão `devai-adopter-authority` derivada delas), e `law/schemas/adopter-policy.schema.json` é fechado e não tem `authority`, `authority_extensions` nem `rules`. Mas `selectorMatches` (~161946) usa minimatch, então padrões de sufixo são mecanicamente expressáveis. O limite é a fonte montada no pacote mais o modelo de prefixos do Art. 6, não a capacidade do casador de padrões.",
+      "fix": "Dizer isso explicitamente, para que o ramo 'emenda constitucional' se justifique pelo Art. 6:86 e não por uma suposta incapacidade do runtime."
+    }
+  ],
+  "notes": [
+    "Os SHA-256 de CTG-0003-A3.3-gap-proposal.md (236c70fa…2542) e CTG-0003-A3.4-path-authority.md (01f0548a…19eb) foram conferidos e coincidem.",
+    "(a) A matriz Owner está representada fielmente: README local de implementação em Engineer/F2, `docs/` em Architect/F1, raízes ausentes sem grant. A linha 20 recusa expressamente o grant F2 amplo. `.devai/config/authority-policy.json` confirma que não há regra fs para `apps/` nem `backend/`.",
+    "(c) P1 não é a única rota constitucional, então FAIL não se justifica. O Art. 6 rege escritas pelo runtime. A projeção P2 escreve só em `work/rounds/**`, que a política materializada atribui ao Architect ('Article 6 Architect work-record authority'). A proposta não concede grant a `apps/` nem `backend/`, e o estado fail-closed do runtime não muda, logo o Art. 9 §final não é acionado. O Art. 7 fica preservado pela não ratificação, e o Art. 10 pela divisão Architect/Inspector/Engineer. A exigência de política materializada é uma condição contratual de A3.3, que o Owner pode alterar por decisão expressa. AUTHORIZATION-A3.3-PATHS:13 exige matriz, contrato atualizado e PASS de revisão cruzada, não enforcement materializado.",
+    "Nem o silêncio nem a resposta 6 aprovam P2. Este PASS/REVIEW não aplica P2, não edita política nem TASK histórica e não sela a rodada.",
+    "Rubrica item 6: a ordem Inspector antes de Engineer para os novos controles do verificador precisa estar explícita na revisão dos prompts de R-0020."
+  ]
+}

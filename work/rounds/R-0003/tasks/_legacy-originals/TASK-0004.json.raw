@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0003",
+  "status": "completed",
+  "discipline": "owner-delegated",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcribe WP-D0 completion into governed documentation",
+  "description": "Update only the execution status and backlog records whose underlying WP-D0 implementation has passed its gates.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs-arch", "MOD-dashboard-readme"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["OD-D01"],
+  "coupled_task_group": null,
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-d0", "dashboard", "docs"],
+  "branch": "orchestra/dash-roles",
+  "worktree_id": "WT-dash-roles",
+  "prompt_composition_id": "PC-4e5d8024ddc0a880",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-14T03:28:53.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
+    "prompt_composition_id": "PC-4e5d8024ddc0a880",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

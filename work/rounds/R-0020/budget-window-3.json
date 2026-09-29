@@ -1,0 +1,663 @@
+{
+  "round": "R-0020",
+  "window": 3,
+  "status": "checkpoint",
+  "window_input_budget": 2250000,
+  "checkpoint_threshold": 1800000,
+  "estimated_input_total": 2223000,
+  "estimated_output_total": 363000,
+  "prior_window_archive": "work/rounds/R-0020/budget-window-2.json",
+  "prior_window_input_total": 2237000,
+  "prior_window_output_total": 340500,
+  "note": "Janela 3 aberta na retomada autorizada pelo Owner após aceite A3.1. Limite triplicado por janela conforme M11; histórico nominal da janela 2 preservado em budget-window-2.json. CTG-0003 continua serial e sem seal até gates verdes. Janela 3 encerrada em checkpoint após segundo ensaio CTG-0003; migração real ainda não aplicada.",
+  "entries": [
+    {
+      "kind": "maestro-resume",
+      "id": "A3.1-authorization-and-window-rollover",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "Estimativa: autorização segregada, plano, registro canônico, janela 2 preservada."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.1-allowlist-and-R18-record",
+      "model": "gpt-6-sol",
+      "input_tokens": 13000,
+      "output_tokens": 2500,
+      "note": "Estimativa: 54 hashes conferidos, adenda contratual e record R-0018 preparado sem selo."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "A3.2-Architect-proposal",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Estimativa: proposta de oito classes PEND, sem mutação histórica."
+    },
+    {
+      "kind": "maestro-review",
+      "id": "A3.2-source-review-and-Owner-question",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "note": "Estimativa: revisão da proposta, pergunta assíncrona sobre sete classes; EX/PC reservado para auditoria de recibos."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0008-A3.1-characterization",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: quatro testes RED da allowlist e quatro do verificador de sidecar."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "A3.2-EX-PC-receipts",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 6000,
+      "note": "Estimativa: busca local dos onze casos e três recibos parciais, sem PC canônico."
+    },
+    {
+      "kind": "engineer-analysis",
+      "id": "A3-implementation-design",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 5000,
+      "note": "Estimativa: desenho somente leitura de sidecar, verificador e retomada."
+    },
+    {
+      "kind": "maestro-prompt",
+      "id": "A3.1-prompt-delta",
+      "model": "gpt-6-sol",
+      "input_tokens": 12000,
+      "output_tokens": 3000,
+      "note": "Estimativa: prompts, TASK JSON, composições e revisão de hash para adenda."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-A3.1-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 3000,
+      "note": "Estimativa: REVIEW com dois high e quatro low."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0008-A3.1-review-corrections",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: cobertura ampliada; 7 PASS e 12 RED antes da implementação."
+    },
+    {
+      "kind": "maestro-prompt",
+      "id": "A3.1-review-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Estimativa: gates de sidecar, relatório, prompts e PC recompostos."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-A3.1-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 3000,
+      "note": "Estimativa: PASS, zero achados."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0009-A3.1-implementation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: 23 testes PASS antes de revisão dirigida; nenhuma TASK histórica mutada."
+    },
+    {
+      "kind": "maestro-review",
+      "id": "A3.1-code-review-and-v1.6.0-source",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: detectou sidecar ausente em ref, identidade raw, retomada; tag oficial v1.6.0 mantém lacuna de scorecard."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0008-A3-preservation-corrections",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: 19 PASS/4 RED adicionais para sidecar, identidade e retomada."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0009-A3-preservation-corrections",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Reserva estimada para correção em execução."
+    },
+    {
+      "kind": "architect-prework",
+      "id": "CTG-0004-A1-proposal",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: piso quatro PASS, 16 checks e lacuna confirmada também em v1.6.0; sem efeito oficial CTG-0004."
+    },
+    {
+      "kind": "maestro-gates",
+      "id": "TASK-0009-A3-directed-gates",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: 26 testes PASS, format global PASS, normalizador real source_pending sem escrita e verify:round-tasks RED."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.2-proposal-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: REVIEW com quatro high e três low; pacote A3.2 ainda não apto à decisão."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "A3.2-proposal-review-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 40000,
+      "output_tokens": 7000,
+      "note": "Reserva estimada para correção Architect dos achados do reviewer."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.2-proposal-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: PASS de consistência para decisão, dois lows editoriais; não autoriza migração."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "A3.2-legacy-field-source-audit",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: notes B3, 31 EV, sete REC e trail escalado R-0006 TASK-0003."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "A3.3-status-up-and-early-seal-analysis",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: status runtime, PREP sem tempo verificável e sequência de selo R-0007."
+    },
+    {
+      "kind": "maestro-analysis",
+      "id": "A3.3-R7-clone-seal-and-Owner-questions",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: clone reversível de PC-0011, relatório, plano e consultas parciais A3.2."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.3-proposal-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: REVIEW, três highs e quatro lows sobre premissa runtime, ciclos e D1."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "A3.3-cycle-1-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 40000,
+      "output_tokens": 7000,
+      "note": "Estimativa: G0, ciclos preexistentes, D1 e fontes UP/TRAIL."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.3-proposal-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: REVIEW, um high e três lows; D1 é mesma linhagem, não TASK nova."
+    },
+    {
+      "kind": "architect-followup",
+      "id": "A3.3-cycle-2-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Estimativa: snapshots superseded, G0 completo e basename TASK-0019."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.3-proposal-review-cycle-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: PASS, zero achados; proposta pronta para decisão Owner."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0008-duplicate-identity-RED",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "note": "Estimativa: RED 3/4 para dois arquivos com mesmo round/id."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0009-duplicate-identity-gate",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "note": "Estimativa: gate determinístico; testes dirigidos 27/27 PASS."
+    },
+    {
+      "kind": "maestro-analysis",
+      "id": "A3.3-source-audit-and-Owner-questions",
+      "model": "gpt-6-sol",
+      "input_tokens": 40000,
+      "output_tokens": 6000,
+      "note": "Estimativa: relatório de baseline runtime, plano, fontes D1/Art. 6 e perguntas A3.3."
+    },
+    {
+      "kind": "maestro-analysis",
+      "id": "A3.3-role-path-policy-audit",
+      "model": "gpt-6-sol",
+      "input_tokens": 6000,
+      "output_tokens": 1000,
+      "note": "Estimativa: conferência de Art. 6, extensão materializada e prompts R-0003/R-0005; matriz ROLE ainda pendente."
+    },
+    {
+      "kind": "maestro-analysis",
+      "id": "A3.2-A3.3-five-Owner-choices-and-path-analysis",
+      "model": "gpt-6-sol",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Estimativa: autorização parcial segregada e análise do desdobramento apps/backend de src; questão 6 permanece sem decisão."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.3-Q6-authorization-and-A3.4-feasibility",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: autorização Owner de matriz multistack, auditoria do DEVAI 1.5.6 e proposta A3.4 sem materialização."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.4-proposal-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: REVIEW com quatro high e três low sobre proveniência, emenda e testes."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.4-cycle-1-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: recibos R-0003/R-0005, índice de dez caminhos, tabela de substituição e testes; hashes verificados."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.4-proposal-review-cycle-2-transport-failure",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 3000,
+      "note": "Estimativa: resposta substantiva PASS com dois lows, mas cercada por Markdown e rejeitada pela ponte como JSON inválido."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.4-cycle-2-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: hash duplo, required_tags e estado do índice; sem aplicação de P2."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.4-proposal-review-cycle-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 3000,
+      "note": "Estimativa: PASS zero achados para consulta Owner; não autoriza projeção."
+    },
+    {
+      "kind": "inspector-analysis",
+      "id": "A3.5-PC-B-guard-runtime-audit",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: rotas DEVAI/worker/bridge e limite de guarda por tag; leitura somente."
+    },
+    {
+      "kind": "inspector-analysis",
+      "id": "A3-remaining-projections-audit",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: inventário das classes ainda não implementadas e ordem RED/GREEN; leitura somente."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.5-guard-proposal-and-repairs",
+      "model": "gpt-6-sol",
+      "input_tokens": 50000,
+      "output_tokens": 8000,
+      "note": "Estimativa: proposta B1, manifesto de fronteira, correções de seis achados e três lows; nenhuma TASK histórica escrita."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-proposal-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: REVIEW seis achados sobre dois executores, manifesto e runtime."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-proposal-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: PASS de desenho com três lows de estado/ordem."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-proposal-review-cycle-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Estimativa: PASS zero achados, B1 suficiente sob G0."
+    },
+    {
+      "kind": "maestro-prompt",
+      "id": "A3.5-TASK-0021-0022-and-manifest",
+      "model": "gpt-6-sol",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Estimativa: tríade refinada, prompt/JSON/PC e manifesto Architect de onze fontes."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-prompt-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "note": "Estimativa: REVIEW, quatro high e quatro low."
+    },
+    {
+      "kind": "maestro-prompt",
+      "id": "A3.5-prompt-review-corrections",
+      "model": "gpt-6-sol",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Estimativa: interface fechada, manifesto segregado, G0 e resultados RED no plano."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-prompt-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Estimativa: PASS zero achados; libera Inspector depois de manifesto versionado."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0021-A3.5-Inspector",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa concluída: testes RED e correção de fixture do índice ausente."
+    },
+    {
+      "kind": "worker-attempt",
+      "id": "TASK-0022-A3.5-Engineer",
+      "model": "gpt-6-sol",
+      "input_tokens": 60000,
+      "output_tokens": 10000,
+      "note": "Estimativa concluída: B1 e gates dirigidos GREEN; pnpm check parou em formatação de OD register/RED ROLE concorrentes."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.4-P2-authorization-and-application-delta",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Estimativa: autorização Owner segregada, contrato/prompt/JSON/PC e plano; sem projeção histórica."
+    },
+    {
+      "kind": "reviewer-reservation",
+      "id": "A3.4-application-prompt-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Reserva para revisão cruzada do delta P2 após liberação da ponte."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.4-application-prompt-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "PASS zero achados após correção de modelo, locks e veículo Inspector."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0023-A3.4-Inspector",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Concluída: 23 PASS legados, 19 RED R1; fixtures de quatro/seis caminhos completadas e validadas pelo Architect."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.4-P2-applied-index-and-Inspector-dispatch",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Estimativa: hash candidato conferido, status-only em 513a4f40, TASK-0023 composta e despachada."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A3.2-A3.3-Inspector-refinement",
+      "model": "gpt-6-sol",
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "note": "Estimativa: TASK-0024/0025 prompts, JSON, PC, plano/contrato e ajuste de locks."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.2-A3.3-test-prompt-review-cycle-1-transport-failure",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Resposta substantiva PASS com lows, mas ponte rejeitou prefácio antes do JSON; sem artefato formal."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.2-A3.3-test-prompt-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "PASS formal, um low documental corrigido no plano."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0024-A3.2-Inspector",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "note": "Concluída após dois checkpoints de cobertura Architect: 8 casos, 1 PASS de preservação, 7 RED A3.2; fontes PC sintéticas completas e hashes verificados."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0025-A3.3-Inspector",
+      "model": "gpt-6-sol",
+      "input_tokens": 60000,
+      "output_tokens": 10000,
+      "note": "Concluída: 18 testes, 2 PASS de controle e 16 RED A3.3; fixtures U1/T1 corrigidas contra schema genérico."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-A3.2-A3.3-A3.4-Engineer",
+      "model": "gpt-6-sol",
+      "input_tokens": 160000,
+      "output_tokens": 30000,
+      "note": "Entregue: seis suítes dirigidas 89/89 PASS; formatação e guarda A3.5 PASS. Migração histórica reservada ao maestro."
+    },
+    {
+      "kind": "maestro-review",
+      "id": "RGR-PC-B-fixture-checkpoint",
+      "model": "gpt-6-sol",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "RGR Engineer isolado antes de editar produção; verificação Architect de B1 e da fixture."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0024-RGR-PC-B-correction",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Reserva de correção de fixture B1/EV; reaberta após achado high do reviewer."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-RGR-fixture-review-cycle-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "REVIEW com um high sobre EV/REC PC-B sem manifesto e dois lows de isolamento/IDs; correção em curso."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A3.5-RGR-fixture-review-cycle-4",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "PASS zero achados para suíte SHA ffae3393; Engineer TASK-0009 retomado."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-proposal-review-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "REVIEW: SHA, CI readings e consequências da divergência do scorecard."
+    },
+    {
+      "kind": "maestro-contract",
+      "id": "A1-proposal-corrections-cycles-1-3",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Correções Architect e fonte CLI/registry; consulta ainda sem efeito."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-proposal-review-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "REVIEW: sense run não persiste leituras; correção da cadeia CI."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-proposal-review-cycle-3",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "REVIEW: consentimentos --write/--publish do sense run requeridos."
+    },
+    {
+      "kind": "reviewer",
+      "id": "A1-proposal-review-cycle-4",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Ciclo final em execução, reservado no orçamento."
+    },
+    {
+      "kind": "maestro-gates",
+      "id": "TASK-0009-directed-acceptance",
+      "model": "gpt-6-sol",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Reexecução independente 89/89 PASS, leitura do código e relatório."
+    },
+    {
+      "kind": "maestro-rehearsal-reservation",
+      "id": "CTG-0003-clone-migration",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Reserva do ensaio em clone e triagem imediata antes da árvore real."
+    },
+    {
+      "kind": "maestro-triage",
+      "id": "CTG-0003-clone-ten-schema-gaps",
+      "model": "gpt-6-sol",
+      "input_tokens": 12000,
+      "output_tokens": 2500,
+      "note": "Primeiro clone saiu 1 sem escrita; oito TRAIL e dois upstream vazios diagnosticados via JSON somente no clone."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "TASK-0008-ten-schema-gaps",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Reserva para testes RED de oito TRAIL e dois upstream fonteados."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0009-ten-schema-gaps",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3500,
+      "note": "Reserva de correção após Inspector RED e Architect coverage checkpoint."
+    },
+    {
+      "kind": "engineer-followup",
+      "id": "TASK-0009-JSON-Prettier-output",
+      "model": "gpt-6-sol",
+      "input_tokens": 20000,
+      "output_tokens": 3500,
+      "note": "Formatação na origem de todos os JSONs gerados; 97/97 testes dirigidos e ensaio local idempotente."
+    },
+    {
+      "kind": "maestro-rehearsal",
+      "id": "CTG-0003-second-clone-migration-and-global-check",
+      "model": "gpt-6-sol",
+      "input_tokens": 15000,
+      "output_tokens": 2500,
+      "note": "Clone 144 TASKs, format e guarda PC-B PASS; devai:test encontrou fixture dependente de nome histórico."
+    },
+    {
+      "kind": "inspector-followup",
+      "id": "CTG-0003-post-migration-fixture-compatibility",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Reserva para manter caracterização pré e pós-migração por fonte raw imutável."
+    },
+    {
+      "kind": "maestro-review",
+      "id": "CTG-0003-clone-gates-and-triage",
+      "model": "gpt-6-sol",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Guarda de originais 144 e schema 317 PASS; contrato seal corrigido conforme --help."
+    }
+  ]
+}

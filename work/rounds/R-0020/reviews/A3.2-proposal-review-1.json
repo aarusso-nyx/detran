@@ -1,0 +1,70 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 59,
+      "claim": "A3.2 says it covers all remaining PEND classes from the A3 map (line 3). Its §3 EX/PC only handles eleven R-0007 TASKs. The map also marks four R-0014 files as PEND: EX: TASK-0010, TASK-0011, TASK-0012 (which is also TITLE) and TASK-0022 (A3-source-map.md:141-143,151). All four carry `executor.note`, which `agentExecutor` rejects because it sets `additionalProperties: false`. Their `selection` and `PC-[a-f0-9]{16}` values are valid. Neither A3.2 nor the reconstruction addendum gives these files a projection, a source or an Owner decision, so they stay source_pending and are missing from the decision table.",
+      "fix": "Add a section for these four files. One option is to preserve `executor.note` only in the A3 sidecar and drop it from the canonical projection under A3 §5, with the before/after report recording it. That needs an explicit S or Owner decision. Otherwise declare them source_pending and add a row to the decision table."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 53,
+      "claim": "STATUS=A projects S2 and S3 to `checkpoint` but does not tell the Owner what that status does at runtime. In the pinned runtime (@aarusso-nyx/devai 1.5.6, dist/runtime/index/release-host.js), `TERMINAL = {completed, escalated, cancelled}`. `escalateRoundTask` and `pauseRoundTask` both accept `checkpoint` (lines ~188411-188435). A historical TASK would become a live, non-terminal node that accepts lifecycle transitions. Completed TASK-0004-S2-R1 would then sit downstream of non-terminal S2. The addendum itself admits that no guard currently blocks dispatch or transition of an archival PC (expc-reconstruction.md:58). The proposal also presents this as a 'new convention' without mentioning that R-0007 TASK-0038 already has `status: checkpoint`.",
+      "fix": "Document these runtime semantics and the TASK-0038 precedent in STATUS. Compare them with the alternatives in the enum and their effects on seal and scheduler. Make STATUS=A conditional on a verifiable guard against transition or dispatch, or recommend STATUS=B until that guard exists."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 57,
+      "claim": "ROLE=A would set `discipline: owner`, the governance authority source in the schema, on files whose authority by path is not Owner. Constitution Art. 6 gives `product/` to Owner and `docs/` plus root prose to Architect. R-0003 `prompts/TASK-0004.md` §Pode tocar lists `docs/framework/arch/dashboard-build-pack.md`, `docs/meta/knowledge-base/*` and `apps/dashboard/web/README.md`, and the JSON declares `target_substrates: [F2]`. R-0005 TASK-0009 has `MOD-docs`/F2. The conflict is already provable from the sources, but the proposal hands it to a later Inspector check. It also rules out Architect without showing the Owner that neither option is free of conflict.",
+      "fix": "State the Art. 6/7 conflict explicitly for both options, owner and architect (the later convention 'Architect (transcr.)' in R-0012/R-0016 plan.md). Ask the Owner for a specific decision, for example an archival tag with `legacy-discipline` and an explicit exception or an alternative. Do not recommend A as if it were supported by a source."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-expc-reconstruction.md",
+      "line": 32,
+      "claim": "The package recipe is ambiguous at the bytes that get hashed. Step 3 writes `review_bridge_path` as `reviews/attempt-2/ctg-0002-final{,-2,-3}.bridge.json`, relative to the round, but `source_path` is relative to the repo. The table candidates for 0078, 0080 and 0082 (PC-22b18cc1bd9af201, PC-1766eb9f01d0bafa, PC-10b9b527af7d35af) only reproduce with `work/rounds/R-0007/reviews/attempt-2/…`. Using the literal text of step 3 gives PC-4c3232c4b986f879, PC-3c4dd3f6180955cb and PC-250324630f552b39. Step 3 also requires the bridge hash to be the 'hash exato de reports/A3.2-expc-receipts.md', but that report lists no bridge SHA-256. The actual values are dc07c754…4583, c6e3fd82…c90d and bff8f502…4980.",
+      "fix": "State that every path in the package is relative to the repo root and correct the text of step 3. Add the full SHA-256 of the three `.bridge.json` files to the receipts report, or name the correct source. Recompute the candidates and have Inspector confirm them before they go to the Owner."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 36,
+      "claim": "The proposal calls the positions an 'Architect→Inspector→Engineer triad'. In the runtime, `COUPLED_POSITION` is inspector 0 < architect 1 < engineer 2, and `taskDependencies` adds an edge from every lower position in the same CTG. Under POS=A, TASK-0004 (architect) would depend on S1 (inspector) even though S1.upstream is TASK-0004. S4 (engineer) would depend on S5 (architect) even though S5.upstream is S4. The edges are ignored only while the TASKs are terminal, and STATUS=A would break that. The open question about how `null` is read already has an answer in the code: a null position creates no position edge, and group membership stays.",
+      "fix": "Record the real order and the edges POS=A induces. Tie POS approval to the TASKs staying terminal. Close the question about `null` by citing the runtime instead of leaving it as an open Owner decision."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 98,
+      "claim": "UP=A creates a 'verifiable archival index of non-TASK preconditions' but gives no path, format or verifier. The temporal proof also has to deal with retries. R-0007/plan.md:1311 and 1361-1364 show PREP-CTG1-MODEL conditioned on a gate, plus a sensor-error and a reference-gap before completion.",
+      "fix": "Fix the path and fields of the PREP index: round, literal, plan/prompt reference, completion evidence and a timestamp before TASK-0002 dispatch. Require proof of the final successful occurrence, not just any mention."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.2-proposal.md",
+      "line": 100,
+      "claim": "The decision table leaves out decisions that the addendum and the map still depend on. From the addendum: authorizing B, meaning a new archival PC (per file); prospective `selection` for the six S* TASKs; a runtime dispatch guard for `archival-pc-provenance:reconstructed-v1`; and approval of the eleven candidates. From the map: a destination for EV/REC/TRAIL when the semantics must stay active (A3-source-map.md:13). The plan.md entries (lines 308 and 487) still say EX/PC is 'under receipt search' and do not index `reports/A3.2-expc-receipts.md` or the reconstruction addendum.",
+      "fix": "Consolidate one table of Owner decisions covering A3.2 and the addendum, including the four R-0014 EX files. Update R-0020/plan.md with the paths and state of the receipts and the addendum."
+    }
+  ],
+  "notes": [
+    "Checked and consistent: the ten suffixed CTG literals and their 31 member TASKs match the JSON exactly (R-0012 14, R-0013 8, R-0014 9). No CTG-9001…9010 appears outside the proposal. TASK-0083…0088 are still free in R-0007.",
+    "The SHA-256 of the 11 TASK JSONs and the 6 S* prompts match the receipts report. The prompt, runner and raw hashes of the three review sets also match. compositions.json has 62 entries, 45 of which still match the bytes. There are 349 compositions/TASK files. None of the 11 candidate PCs collides outside the addendum.",
+    "The 12 title lengths (225/252/261/228/209/209/209/272/259/221/243/210) are correct. INV-EVIDENCE-001 and INV-OFFLINE-001 do not appear in law/. The schema contains `checkpoint` and `owner` in its enums and does not constrain `tags`. No finding proposes relaxing the schema or verify:round-tasks.",
+    "The empty upstreams in R-0012 TASK-0001 and R-0016 TASK-0001 are backed by the '—' predecessor in the respective plans (lines 192 and 38).",
+    "Owner decisions still needed before any application: CTG=A; POS=A; STATUS (A/B, after the runtime analysis); ROLE (with the Art. 6 conflict disclosed); TITLE=A (12 texts); INV=A/B; UP=A/B; EX/PC per file (A/B/C), including prospective selection for the six S* and the dispatch guard; the four R-0014 EX files; the EV/REC/TRAIL destination if needed; the final candidate PCs after the bridge path is fixed. Owner silence is not approval. This review does not authorize migration, a PC or a seal."
+  ]
+}

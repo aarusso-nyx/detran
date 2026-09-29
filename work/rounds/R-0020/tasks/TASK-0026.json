@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0026",
+  "round_id": "R-0020",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar adenda da baseline A3",
+  "description": "Contrato fechado para dez TASKs arquivadas da R-0007",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r20-contract-baseline"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["campaign:C-0002", "round:R-0020", "ctg:CTG-0003", "ref:task-0026"],
+  "branch": "orchestra/devai-sensors",
+  "worktree_id": "WT-devai-sensors",
+  "prompt_composition_id": "PC-609e1055f953de0f",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "work/rounds/R-0020/contracts/CTG-0003-baseline-A3.md",
+      "work/rounds/R-0020/reports/TASK-0026.md"
+    ]
+  ],
+  "created_at": "2026-09-29T01:33:28Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    },
+    "prompt_composition_id": "PC-609e1055f953de0f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

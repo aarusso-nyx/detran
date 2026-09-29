@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0084",
+  "round_id": "R-0007",
+  "status": "checkpoint",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-tooling",
+  "title": "Correct parameter usage sensor classification",
+  "description": "Implement syntax-aware classification so parameter usage remains fail-closed without misclassifying event type and i18n messageKey literals.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-parameter-verifier",
+    "MOD-parameter-catalogue-contract"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0083",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": [
+    "wp-a",
+    "attempt-2",
+    "sensor-error",
+    "legacy-status:completed_incomplete",
+    "legacy-pipeline-position:corrective-engineer",
+    "ref:ADR-0021",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "archival-pc-provenance:reconstructed-v1",
+    "archival-pc-not-historical",
+    "archival-pc-package:work/rounds/R-0007/compositions-archive/TASK-0004-S2.txt",
+    "legacy-selection:absent",
+    "archival-selection:prospective-exact",
+    "legacy-original:tasks/_legacy-originals/TASK-0004-S2.json.raw",
+    "legacy-sha256:b93d22464a2900ad2c04d0f292aa174c18755031b806774d11122c5e6f6cd1f2"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "prompt_composition_id": "PC-cf0578539d9b03e6",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" }
+  },
+  "prompt_composition_id": "PC-cf0578539d9b03e6"
+}

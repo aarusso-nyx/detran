@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Encode organisation collection integration SSE policy and checker contracts",
+  "description": "Write all remaining functional sensors, policy matrices, bidirectional route-policy parity and fail-closed checker/client tests. Fontes/decisoes historicamente referidas: WF-RAIT-004; ADR-0017; OD-309. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-org-tests",
+    "MOD-collection-tests",
+    "MOD-rait-integration-tests",
+    "MOD-rait-stream-tests",
+    "MOD-shared-policy-tests",
+    "MOD-policy-routes-tests",
+    "MOD-command-checker-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0013",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 14,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-42b61f40ad271070",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-org", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-collection", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-integration", "test:unit"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["node", "--test", "tools/contracts/tests/*.test.mjs"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-42b61f40ad271070",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "execution_evidence": {
+    "date": "2026-09-22",
+    "result": "PASS",
+    "summary": "Frozen organisation, collection, integration, SSE and checker sensors",
+    "report": "work/rounds/R-0007/reports/TASK-0014.md"
+  }
+}

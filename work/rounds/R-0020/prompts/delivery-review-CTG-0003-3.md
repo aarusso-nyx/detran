@@ -1,0 +1,5 @@
+# R-0020 CTG-0003 delivery review — delta A3.6
+
+Read only. Review the correction of the single high finding in `reviews/delivery-review-CTG-0003-1.json`. The Owner approved `contracts/CTG-0003-A3.6-round-status.md` in `AUTHORIZATION-A3.6-2026-09-28.md`, commit 793e3124, after two Claude Opus 5.5 proposal reviews with PASS. Check the authorization, `reports/A3.6-round-seal-verification.json`, the 17 closed rounds, 32 idempotent replay receipts, negative R-0020 control, `plan.md`, and issue DEVAI #175. The literal round status criterion must remain unmet and get n/a in the final closure. Other cycle-1 lows concern the final measurement on a committed HEAD, evidence and PR text, which are pending until after pre-commit review; state them as exact conditions without claiming they already passed.
+
+Return a JSON object only. Keys: mode, round, ctg, verdict, findings, notes. Verdict is PASS or REVIEW. Each finding has severity, item, file, line, claim, fix. All strings must be ordinary JSON strings. Avoid quotation marks and backticks inside string values. Do not wrap output in Markdown or code fences. Do not edit files or run commands with write effects.

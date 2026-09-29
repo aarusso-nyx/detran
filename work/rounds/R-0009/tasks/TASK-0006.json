@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
-  "title": "Codificar os critérios C-0002-nn em testes: rotas (vínculo 404, idempotência, protocolo antes da validação, SERVICE_UNAVAILABLE com motivo, DELEGATION_FAILED com alvo falso, todo R-0007), replay das projeções, SSE, policy.spec portal:* e policy-routes estendido",
+  "title": "Codificar critérios C-0002-nn em testes de rotas, projeções, SSE e política portal",
   "description": "Transcrever o contrato CTG-0002 em testes que ficam vermelhos até TASK-0007/0008; matriz de política com positivos e negativos exaustivos. Nunca tocar em src/ de produção.",
   "lifecycle": "supported",
   "target_modules": [
@@ -22,7 +22,11 @@
   "iteration_count": 4,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-p2"],
+  "tags": [
+    "wp-p2",
+    "legacy-original:tasks/_legacy-originals/TASK-0006.json.raw",
+    "legacy-sha256:34836191ce575b50bdb1909bf9f059bd88911d13737d6fe0ae9de1f0a4a124eb"
+  ],
   "branch": "orchestra/portal-backend",
   "worktree_id": "WT-portal-backend",
   "prompt_composition_id": "PC-0c41ca7454a22ea1",
@@ -36,26 +40,9 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-0c41ca7454a22ea1",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
-  },
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "reason": "sensor-error C-0002-30/70 + limpeza entre arquivos e2e (triagem TASK-0007)"
-    },
-    {
-      "iteration": 3,
-      "reason": "sensor-error C-0002-77 (parâmetros do tenant local) e C-0002-79 (papel) — A6(d)/(e)"
-    },
-    {
-      "iteration": 4,
-      "reason": "sensor-error: limpeza de linhas do tenant local no afterAll de portal-routes.e2e (idempotência entre arquivos)"
-    }
-  ]
+  }
 }

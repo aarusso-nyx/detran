@@ -22,7 +22,13 @@
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "final-observation",
+    "legacy-original:tasks/_legacy-originals/TASK-0065.json.raw",
+    "legacy-sha256:987c88d06d66bacafeef35dcf517f3cd727f8e7abfb76c166826affdc2f62c23"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-3c856e2cfdb3364d",
@@ -48,80 +54,5 @@
   },
   "intent_diff": {
     "summary": "Observação somente; nenhuma correção ou regeneração."
-  },
-  "execution_evidence": {
-    "role": "Inspector",
-    "iteration": "1/1",
-    "verdict": "FAIL",
-    "database": {
-      "owner_url": "postgresql://aarusso@localhost/detran_r7_ctg1_a2",
-      "request_path_url": "postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend",
-      "request_identity": {
-        "database": "detran_r7_ctg1_a2",
-        "current_user": "role_app_backend",
-        "current_role": "role_app_backend"
-      },
-      "fixture_counts": {
-        "cases": 20,
-        "sessions": 4,
-        "agenda_items": 3
-      },
-      "reset_or_seed_on_candidate": false
-    },
-    "focused_suites": {
-      "shared_unit": "323/323 PASS",
-      "case_unit": "156/156 PASS",
-      "worklist_unit": "78/78 PASS",
-      "session_unit": "39/39 PASS",
-      "app_unit": "97/97 PASS",
-      "case_integration": "28/29 PASS; 1 FAIL",
-      "worklist_integration": "41/42 PASS; 1 FAIL",
-      "session_integration": "15/15 PASS",
-      "app_ctg_0002_e2e": "11/11 PASS across worklist, session-agenda and deliberation-minutes"
-    },
-    "red_findings": [
-      {
-        "command": "DETRAN_TEST_DATABASE_URL=<role_app_backend dedicated URL> DETRAN_RUNTIME_PROFILE=test pnpm --filter @detran/inf-rait-case test:integration --exclude '**/rait-priority-upgrade.integration.spec.ts' --passWithNoTests=false",
-        "file_test": "backend/domains/inf/rait-case/tests/integration/rait-case-deltas-db.integration.spec.ts:341",
-        "observed": "expected 3 rait_pending_content fixtures for tenant 00000000-0000-7000-8000-00000000a001; received 0",
-        "probable_cause": "The dedicated candidate retains 20 cases but lacks the extended CTG case fixture rows; request-path identity and explicit URL were confirmed."
-      },
-      {
-        "command": "DETRAN_TEST_DATABASE_URL=<role_app_backend dedicated URL> DETRAN_RUNTIME_PROFILE=test pnpm --filter @detran/inf-rait-worklist test:integration",
-        "file_test": "backend/domains/inf/rait-worklist/tests/integration/rait-worklist-deltas-db.integration.spec.ts:461",
-        "observed": "expected 3 rait_unit fixtures for tenant 00000000-0000-7000-8000-00000000a001; received 0",
-        "probable_cause": "The dedicated candidate lacks the extended CTG worklist fixture rows; this is not a URL, role, reset, or collection-zero failure."
-      },
-      {
-        "command": "pnpm backend:test:ci",
-        "file_test": "backend/database/tests/prepare-rait-priority-v1-baseline.mjs:107",
-        "observed": "BLOCKED legacy baseline: explicit baseline authorization flag is absent",
-        "probable_cause": "The comprehensive runner requires explicit destructive reset/restore authorization. No authorization was inferred and no reset or seed was performed."
-      }
-    ],
-    "focused_gates": {
-      "blueprints_check": "PASS",
-      "contracts_check": "PASS",
-      "verify_rls_ddl": "PASS (193 tenant tables)",
-      "verify_decorators": "PASS (814 handlers)",
-      "typecheck_shared_case_worklist_session_app": "PASS",
-      "devai_doctor": "PASS",
-      "evidence_chain": "PASS; head a8b1e250f326faa0e6c2d137d3fc18a4dc859e4801f60d3ad237a336b98b5fb4",
-      "git_diff_check": "PASS",
-      "pnpm_check": "FAIL at its mandatory format boundary: pnpm format:check reported this initially queued task record as unformatted; the broad remainder was not a closing PASS."
-    },
-    "static_inspection": {
-      "handwritten_posts": "20 total: 8 worklist plus 12 session; each nominal route is singular.",
-      "generated_schedule_batch_vote_minutes_write_methods": 0,
-      "oral_argument_http_methods": 0,
-      "blueprints": {
-        "case": "1.1.7 / 682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154",
-        "worklist": "1.4.1 / fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430",
-        "session": "1.2.1 / fb183f46aa118900da31c0c745c9b36c3c7368f17d78507f9b9469ad56e9400e",
-        "recorded_generation_aggregate": "06344da4fb582a7758af68608f59c5c9d8751186421eff9722bd2c9ae085d237"
-      },
-      "sensor_hashes": "TASK-0049, TASK-0060 and TASK-0064 final sensor hashes present in the current candidate and matched their task records."
-    },
-    "operational_note": "The observed 503 responses in the session-agenda HTTP probes are the distributed rate-limit behavior already isolated by TASK-0064 structural ownership proof; they are not classified as a CTG-0002 defect. Absence of external document-trust configuration remains a fail-closed operational condition, not a CTG-0002 defect. Neither note cures the two fixture integration REDs or the unauthorized destructive comprehensive runner."
   }
 }

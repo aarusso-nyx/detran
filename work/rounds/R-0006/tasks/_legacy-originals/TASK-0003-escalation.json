@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "round_id": "R-0006",
+  "task_id": "TASK-0003",
+  "original_task_sha256": "ee8fba71002cb436d35b37ef533621ca037f12093f33a9b0194dae788060b0a0",
+  "sidecar_path": "tasks/_legacy-originals/TASK-0003.json.raw",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-1: mounting InfractionModule/NotificationModule in AppModule exposes generated routes before R-0007. Fix by the maestro (Engineer): AppModule and backend/app/package.json restored to main; root test scripts kept; pnpm install re-run.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-2 FAIL: (a) contract §3.3 says 42 vigente rows, DDL has 43 — fixed by the maestro (Architect); (b) reschedule does not emit TIMER_REPROGRAMADO (contract API §5 has no event port; both workers flagged it as contract gap 1); (c) no extend operation limiting T-DIL to one extension (deferred to R-0007 by the Engineer as a command). (b) and (c) need a contract amendment, new Inspector tests and Engineer work: escalated to the human (second FAIL, window budget exhausted).",
+      "status": "escalated"
+    }
+  ],
+  "trail_iteration_3_is_review_cycle_not_worker_dispatch": true,
+  "worker_dispatches": 2,
+  "sources": [
+    {
+      "path": "work/rounds/R-0006/plan.md",
+      "sha256": "aa03e2e01fb060ed37cc0425503e671b1ad3d5bb005e7adcb5b1e644342ddb60"
+    },
+    {
+      "path": "work/rounds/R-0006/budget.json",
+      "sha256": "c28ca54c69bf861e6646cc135693a8eb3a099877494d674cda9f6ee364208e5d"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0001.md",
+      "sha256": "b835a177d4e3b2a19106c0b31eee2519536e51c7e2cb5fb4085a00bfae693ffd"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0001-2.md",
+      "sha256": "913389a30cbdcbfefb573038f04d5b2b8b55cecdb7cfd26ef3699771de720e3d"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0001-3.md",
+      "sha256": "95691f5488363fcfe2fc094212bf3ecd4485f4c0cfcb55792906519a1e8abf1d"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0001-4.md",
+      "sha256": "93f29b22825163b24b836678fd82a2d60f43898ca3f78a75e1562b2770c5fbbf"
+    }
+  ],
+  "review_3_status": "FAIL",
+  "review_4_status": "PASS",
+  "task_status": "escalated"
+}

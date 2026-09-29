@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
-  "title": "Implementar as rotas §4 (autuações), §6 (caixa e SNE), §7 (documentos, veículos, sinistros, exames com cache nacional), §8 (atendimento) e §9 (SSE), os projetores e o replay até todos os testes C-0002 passarem",
+  "title": "Implementar rotas de autuações, caixa, documentos, atendimento, SSE e projetores",
   "description": "Fazer passar o restante dos testes do Inspector (TASK-0006), incluindo policy-routes; leituras nacionais só pelo senatran-adapter; projeções idempotentes por event.id.",
   "lifecycle": "supported",
   "target_modules": [
@@ -25,7 +25,11 @@
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-p2"],
+  "tags": [
+    "wp-p2",
+    "legacy-original:tasks/_legacy-originals/TASK-0008.json.raw",
+    "legacy-sha256:0ac57fbec29ed08c8bf9fe12ef11c375408dead88a1ae6014032b030cc52622f"
+  ],
   "branch": "orchestra/portal-backend",
   "worktree_id": "WT-portal-backend",
   "prompt_composition_id": "PC-c3a5ffcdc96a0adf",
@@ -42,10 +46,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-c3a5ffcdc96a0adf",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

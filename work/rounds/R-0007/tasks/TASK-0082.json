@@ -12,16 +12,29 @@
   "target_substrates": ["F3", "F5"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
-  "coupled_pipeline_position": "auditor",
+  "coupled_pipeline_position": null,
   "upstream_task_id": "TASK-0081",
-  "db_isolation": "none",
+  "db_isolation": "database",
   "iteration_count": 1,
   "max_iterations": 1,
   "priority": 5,
-  "tags": ["attempt-2", "final-review", "etag"],
+  "tags": [
+    "attempt-2",
+    "final-review",
+    "etag",
+    "legacy-pipeline-position:auditor",
+    "legacy-db-isolation:none",
+    "legacy-db-policy:prospective-database",
+    "archival-pc-provenance:reconstructed-v1",
+    "archival-pc-not-historical",
+    "archival-pc-package:work/rounds/R-0007/compositions-archive/TASK-0082.txt",
+    "legacy-prompt-composition:PC-ctg2-final-review-fable5-3",
+    "legacy-original:tasks/_legacy-originals/TASK-0082.json.raw",
+    "legacy-sha256:f09c3bde43bf87aaf89f8cf7d0d3abc4e2e6f5c55284be4a4179a5ce296886e1"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
-  "prompt_composition_id": "PC-ctg2-final-review-fable5-3",
+  "prompt_composition_id": "PC-10b9b527af7d35af",
   "acceptance_commands": [
     [
       "node",
@@ -41,21 +54,11 @@
     "model": "claude-fable-5",
     "effort": "high",
     "selection": { "mode": "exact", "registry_id": "claude-fable-5" },
-    "prompt_composition_id": "PC-ctg2-final-review-fable5-3",
+    "prompt_composition_id": "PC-10b9b527af7d35af",
     "max_iterations": 1,
     "capabilities": ["read"]
   },
   "intent_diff": {
     "summary": "Gate independente final do candidato recongelado; nenhuma escrita durante a revisão."
-  },
-  "execution_evidence": {
-    "role": "Auditor",
-    "iteration": "1/1",
-    "result": "PASS",
-    "candidate_sha256": "066672b53ad41071a56c40b29091a24a24c0deea2cf81fe467395d36dcdfb963",
-    "review": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.json",
-    "bridge": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.bridge.json",
-    "findings": "0 high, 8 low não estruturais",
-    "result_validation": "schema válido, hashes íntegros, referências e linhas válidas, verdict/high coerente"
   }
 }

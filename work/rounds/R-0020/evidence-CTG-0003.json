@@ -1,0 +1,186 @@
+{
+  "action": "Deliver R-0020 CTG-0003 historical round seals and governed task normalization",
+  "round": "R-0020",
+  "coupled_task_group": "CTG-0003",
+  "role": "architect",
+  "readiness_promoting": true,
+  "commits": [
+    "793e3124",
+    "e0cfe07f",
+    "a40af27f",
+    "e5a6d529",
+    "bcdce88cb07936e3889990fd36fde5206c4daaf3"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0020/AUTHORIZATION-A3.6-2026-09-28.md",
+      "sha256": "147fc3141d15d20a23c96d8c28799769ee9f31b4c2735b768a92d4b77899edb1"
+    },
+    {
+      "path": "work/rounds/R-0020/contracts/CTG-0003-A3.6-round-status.md",
+      "sha256": "993dd973ace52c7acb99166f4c5e20dd1ac7a387f4944b88e626096732180438"
+    },
+    {
+      "path": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+      "sha256": "ee14c827d6286fc7653e612b33beb510caaf4d8e2c44a1da6983acf74351b079"
+    },
+    {
+      "path": "work/rounds/R-0020/reports/CTG-0003-round-status-diagnostic.md",
+      "sha256": "4ca907124e67e88eece1679ccef6e73aad165327113c0fc51f8deb3e0e792ea7"
+    },
+    {
+      "path": "law/register/DECISIONS.md",
+      "sha256": "4af41d96d251c384a7cae5d42abfb5dca56d4a98677f7395ebab25e81fde56e7"
+    },
+    {
+      "path": "tools/devai/normalize-tasks.mjs",
+      "sha256": "1ea5fd8ff7432d576fffa42cb3fe904bde31c39b731158add390974f576ad66e"
+    },
+    {
+      "path": "tools/devai/verify-round-tasks.mjs",
+      "sha256": "8604e368b0da671608fea54b632cfdc0094381c131d5033d352b935db4325d93"
+    },
+    {
+      "path": "tools/devai/verify-task-originals.mjs",
+      "sha256": "705e316d2a3f7d1089db90feb017c59c6d0726abc1d8215f8fc7bccbd529d1e9"
+    },
+    {
+      "path": "tools/devai/baseline.mjs",
+      "sha256": "7a522159c9c952d91ab135dfbc07a3b68ff8443fc98b03af16b8d4d25b3c2a66"
+    },
+    {
+      "path": "work/rounds/R-0018/record.md",
+      "sha256": "79452aeb963f4b251a0dfce7e18546be73ba332aacc652ac01bb746889a6ddc9"
+    },
+    {
+      "path": "work/rounds/R-0018/close-state.jsonl",
+      "sha256": "437dd74ab4242edf7eb99a1c4bc06c107dbbed4addbcbc0c3f21d002cd8c4ce3"
+    },
+    {
+      "path": "work/rounds/R-0020/reviews/delivery-review-CTG-0003-3.json",
+      "sha256": "3f0348e0251b0b3d145704789ec1658128f97a964c4950d029e47b37623775f8"
+    }
+  ],
+  "a36_measurement": {
+    "head_sha": "bcdce88cb07936e3889990fd36fde5206c4daaf3",
+    "report_path": "work/rounds/R-0020/reports/A3.6-round-seal-verification.json",
+    "report_sha256": "ee14c827d6286fc7653e612b33beb510caaf4d8e2c44a1da6983acf74351b079",
+    "rounds_closed": 17,
+    "governed_lifecycle_reads": 34,
+    "idempotent_replays": 32,
+    "active_negative_control": "R-0020",
+    "argv": "per-round exact argv recorded in report; final measurement program /tmp/r20_ctg3_final_measure.py",
+    "exit_code": 0,
+    "state_index": {
+      "argv": ["pnpm", "verify:state-index"],
+      "exit_code": 0,
+      "stdout_sha256": "9e26a964fc45c3d08358955224ebb55ff85cda78e0ce087d899f2732fe6ea690",
+      "stdout": "\n> detran@0.0.1 verify:state-index /Users/aarusso/.codex/worktrees/devai-sensors/detran\n> node tools/docs/state-index/check.mjs\n\nverify:state-index OK: 39 ADRs, 3 redirecionamentos, 33 rodadas, 20 closures\n"
+    },
+    "rounds_index": {
+      "argv": ["pnpm", "verify:rounds-index"],
+      "exit_code": 0,
+      "stdout_sha256": "de55a74dab340392577ff76c1177d6900eb1d7c785d97736b3210c06f782085e",
+      "stdout": "\n> detran@0.0.1 verify:rounds-index /Users/aarusso/.codex/worktrees/devai-sensors/detran\n> node tools/devai/render-rounds-index.mjs --check\n\n"
+    },
+    "literal_round_status": "n/a; unmet exit 5 TASK_ROUND_INACTIVE; DEVAI #175"
+  },
+  "baseline_final": {
+    "argv": [
+      "pnpm",
+      "devai:baseline",
+      "--final",
+      "--against",
+      "work/rounds/R-0020/baseline.json",
+      "--out-dir",
+      "/tmp/r20-ctg3-final-baseline"
+    ],
+    "exit_code": 0,
+    "head_sha": "bcdce88cb07936e3889990fd36fde5206c4daaf3",
+    "artifact_sha256": "ebf9fb999f0c7253078c019905f39cf3ef8e364b3d80e30c2fad4898cb555554",
+    "comparison_verdict": "REVIEW",
+    "failures": [],
+    "tasks_verdict": "PASS"
+  },
+  "sealed_record_limitations": {
+    "rounds": [
+      "R-0003",
+      "R-0004",
+      "R-0005",
+      "R-0006",
+      "R-0007",
+      "R-0008",
+      "R-0009",
+      "R-0010",
+      "R-0011",
+      "R-0012",
+      "R-0013",
+      "R-0014",
+      "R-0015",
+      "R-0016",
+      "R-0019"
+    ],
+    "isolation": "source_pending",
+    "waves": "source_pending",
+    "promotion_requires_governed_correction": true
+  },
+  "gates": [
+    {
+      "name": "pnpm devai:test",
+      "result": "pass",
+      "note": "173/173"
+    },
+    {
+      "name": "pnpm verify:round-tasks",
+      "result": "pass",
+      "note": "320 tasks; zero invalid"
+    },
+    {
+      "name": "pnpm verify:task-originals",
+      "result": "pass",
+      "note": "144 linked; A3.4 R1 two projections"
+    },
+    {
+      "name": "pnpm verify:archival-pc-guard",
+      "result": "pass",
+      "note": "applied"
+    },
+    {
+      "name": "pnpm verify:proof-anchors",
+      "result": "pass",
+      "note": "82 direct; 53 declared; zero undeclared, duplicate or invalid"
+    },
+    {
+      "name": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+      "result": "pass",
+      "note": "head 0ca34c0feff89f4f9dd97e806164c69cd117bd11700c57eea32f888462413db5"
+    },
+    {
+      "name": "Claude Opus 5.5 delivery-review cycle 3",
+      "result": "pass",
+      "note": "A3.6 high resolved; final review after committed measurement pending"
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "exit 0 on committed candidate bcdce88cb07936e3889990fd36fde5206c4daaf3; full repository chain including blueprints, contracts, typecheck, app tests and builds"
+    },
+    {
+      "name": "pnpm verify:state-index && pnpm verify:rounds-index",
+      "result": "pass",
+      "note": "20 closures; deterministic rounds index"
+    },
+    {
+      "name": "A3.6 clean committed candidate",
+      "result": "pass",
+      "note": "17 canonical seals, 34 closed lifecycle readings, active R-0020 negative control, 32 idempotent replays; report ee14c827d6286fc7653e612b33beb510caaf4d8e2c44a1da6983acf74351b079"
+    }
+  ],
+  "out_of_scope": [
+    "15 sealed records retain isolation/waves source_pending; governed correction required to promote.",
+    "Literal DEVAI round status criterion remains unmet and must be n/a in R-0020 closure.",
+    "Original individual seal outputs were not retained; Owner accepted 32 idempotent replays as substitute proof of current state.",
+    "DEVAI doctor currently reports Constitution 1.0.1 installed ahead of pin 1.0.0; governed bind is reserved for CTG-0006.",
+    "pr-compliance 1.5.6 has no no-invariant trailer representation for this governance-only CTG; CTG-0005 must resolve before activating that gate."
+  ]
+}

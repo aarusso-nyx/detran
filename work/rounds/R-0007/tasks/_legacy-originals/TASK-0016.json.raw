@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0016",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Wire organisation collection and integration runtime through blueprints",
+  "description": "Apply only contracted hooks after targets exist, regenerate and close runtime wiring gates. Fontes/decisoes historicamente referidas: ADR-0007; ADR-0017. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-rait-org",
+    "MOD-bp-collection",
+    "MOD-bp-rait-integration",
+    "MOD-generated-tree"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 16,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-2632fcb9bf314918",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "build"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-2632fcb9bf314918",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "execution_evidence": {
+    "date": "2026-09-22",
+    "result": "PASS",
+    "summary": "Official CTG-0004 blueprint wiring and deterministic generation",
+    "report": "work/rounds/R-0007/reports/TASK-0016.md"
+  }
+}

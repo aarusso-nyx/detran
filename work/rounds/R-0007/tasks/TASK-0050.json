@@ -22,7 +22,13 @@
   "iteration_count": 2,
   "max_iterations": 2,
   "priority": 5,
-  "tags": ["attempt-2", "owner-corrective-16-commands", "deliberation-minutes"],
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "deliberation-minutes",
+    "legacy-original:tasks/_legacy-originals/TASK-0050.json.raw",
+    "legacy-sha256:bc94db432d278e5b5e99f7b4721b73b0b354065d5bbf12a9e33e2c2c8c9c24a6"
+  ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
   "prompt_composition_id": "PC-ff4cfd6dceb0dd43",
@@ -46,32 +52,5 @@
   },
   "intent_diff": {
     "summary": "Runtime/trust/porta/policy deliberacao e ata; testes, schema, blueprints e gerados imutaveis."
-  },
-  "execution_evidence": {
-    "role": "Engineer",
-    "database": "postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend",
-    "commands": [
-      "pnpm --filter @detran/shared typecheck",
-      "pnpm --filter @detran/inf-rait-case typecheck",
-      "pnpm --filter @detran/inf-rait-session typecheck",
-      "pnpm --filter @detran/app typecheck",
-      "pnpm verify:decorators",
-      "DETRAN_TEST_DATABASE_URL=<dedicated-url> DETRAN_TEST_TIER=integration pnpm --filter @detran/inf-rait-session test:integration",
-      "pnpm --filter @detran/shared exec vitest run src/policy-ctg2-deliberation-minutes.spec.ts",
-      "pnpm --filter @detran/app exec vitest run src/rait-session-deliberation-minutes-audit.spec.ts",
-      "pnpm exec prettier --check <allowlist>",
-      "git diff --check"
-    ],
-    "residual_reds": [
-      "document-trust-session-minutes: 8 regex-only assertions reject canonical RAIT.SIGNATURE_FAILED or RAIT.SIGNATURE_CERT_MISMATCH because the frozen regex expects a literal backslash",
-      "rait-session test:unit: 1 regex-only assertion rejects canonical RAIT.CASTING_VOTE_NOT_TIED for the same frozen-regex defect",
-      "shared test: 7 pre-existing policy.spec compatibility assertions conflict with strict-policy work already in the shared worktree; minutes sign intentionally follows ADR-0027 (chair and rapporteur, not secretary)",
-      "app test:e2e deliberation-minutes: 7/7 RED (handwritten controller/provider hooks, CRUD suppression and route ownership are reserved to TASK-0008)"
-    ]
-  },
-  "closure_reconciliation": {
-    "date": "2026-09-19",
-    "result": "PASS",
-    "basis": "A segunda iteracao foi concluida com a composicao oficial, correcao dos sensores legitimamente defeituosos e decisao OWNER presidente mais relatores dos itens com excecao formal de ausencia. Session unit 39/39, integration 15/15 e app E2E final verdes."
   }
 }

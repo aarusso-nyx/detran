@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0072",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Isolar precondição E2E das vinte fixtures canônicas",
+  "description": "Remover acoplamento à ordem sem relaxar cardinalidade do fixture legado.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-app-e2e", "MOD-rait-worklist-tests"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0071",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "e2e-fixture-scope"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-5f1c77ec7df2c9d8",
+  "acceptance_commands": [["pnpm", "--filter", "@detran/app", "test:e2e"]],
+  "created_at": "2026-09-19T19:20:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-5f1c77ec7df2c9d8",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Escopo de fixture E2E; nenhuma mudança de produto."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "result": "PASS",
+    "collection": "App E2E 9 suites, 123 tests, 123 PASS",
+    "fixture_assertion": "Both worklist suites require exactly the 20 canonical legacy IDs and tolerate unrelated isolated cases."
+  }
+}

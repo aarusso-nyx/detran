@@ -5,7 +5,7 @@
   "status": "completed",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
-  "title": "Implementar PORTAL_RULES em policy.ts e as rotas §3 (identidade) e §5 (pedidos: criação, rascunho, anexos, submit com protocolo imediato e delegação, desistência, leitura, diligências, avaliação) até os testes do escopo passarem",
+  "title": "Implementar PORTAL_RULES e rotas de identidade e pedidos até os testes passarem",
   "description": "Fazer passar os testes do Inspector (TASK-0006) das rotas de identidade e pedidos, sem alterá-los; delegações RAIT/infração/pagamento por UnavailableDelegationTarget (M8/M23).",
   "lifecycle": "supported",
   "target_modules": [
@@ -25,7 +25,11 @@
   "iteration_count": 1,
   "max_iterations": 2,
   "priority": 2,
-  "tags": ["wp-p2"],
+  "tags": [
+    "wp-p2",
+    "legacy-original:tasks/_legacy-originals/TASK-0007.json.raw",
+    "legacy-sha256:6c3f9d052ca1fa13aefabbad95a84f5f65855f3fc3f6c7338bec55b4f3e2b22c"
+  ],
   "branch": "orchestra/portal-backend",
   "worktree_id": "WT-portal-backend",
   "prompt_composition_id": "PC-147fc2c0256f358a",
@@ -44,10 +48,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-147fc2c0256f358a",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

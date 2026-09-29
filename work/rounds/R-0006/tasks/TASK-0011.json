@@ -10,11 +10,7 @@
   "lifecycle": "supported",
   "target_modules": ["MOD-inf-deadlines", "MOD-inf-infraction-handwritten"],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "contract CTG-0001 §5.2",
-    "RAIT.INQUIRY_EXTENSION_LIMIT",
-    "RAIT.DEADLINE_LEGAL_READONLY"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0010",
@@ -23,7 +19,16 @@
   "iteration_trail": [],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "deadlines", "delivery-review-2"],
+  "tags": [
+    "wp-a",
+    "deadlines",
+    "delivery-review-2",
+    "ref:contract CTG-0001 §5.2",
+    "ref:RAIT.INQUIRY_EXTENSION_LIMIT",
+    "ref:RAIT.DEADLINE_LEGAL_READONLY",
+    "legacy-original:tasks/_legacy-originals/TASK-0011.json.raw",
+    "legacy-sha256:1475e2044740069df83618dc30d01d0784c1e4f4d9e9fe94dbd6f6687e45dbe8"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-decb2aaa1d1b9f37",
@@ -38,10 +43,7 @@
     "runtime": "claude-cli",
     "model": "sonnet",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-sonnet-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
     "prompt_composition_id": "PC-decb2aaa1d1b9f37",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

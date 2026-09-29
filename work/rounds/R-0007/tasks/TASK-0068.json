@@ -21,7 +21,9 @@
   "tags": [
     "attempt-2",
     "owner-corrective-16-commands",
-    "historical-session-fixture"
+    "historical-session-fixture",
+    "legacy-original:tasks/_legacy-originals/TASK-0068.json.raw",
+    "legacy-sha256:72bd1ef8290362c6387307a15d08e44ac2b6cc067eac533dc8b1ec757e718997"
   ],
   "branch": "orchestra/rait-backend",
   "worktree_id": "WT-rait-backend",
@@ -40,13 +42,5 @@
   },
   "intent_diff": {
     "summary": "Fixture/harness histórico e composição idempotente do seed atual; produto e imutabilidade final preservados."
-  },
-  "execution_evidence": {
-    "role": "Engineer",
-    "iteration": "1/1",
-    "result": "PASS",
-    "historical_ddl36_sha256": "cf012a4f87fd22d56415c90f34b593839c4291d5a2f8eb0960dd9aceabd567d5",
-    "seed_reconciliation": "published_at is inserted atomically; no post-insert update crosses immutable trigger",
-    "acceptance": "backend:test:prepare-legacy exit 0; 20 cases and priority schema verified after current upgrade"
   }
 }

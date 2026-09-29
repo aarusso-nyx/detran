@@ -1,0 +1,39 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 7,
+      "claim": "The hash-bound prompt (SHA-256 abc5a134…, PC-abc5a134fd7ae0f6) still tells the worker `Modelo gpt-5.6-terra, esforço medium`. This cycle's delta moved every other source to `gpt-6-sol`/`high`: TASK-0009.json executor.model/effort/selection.registry_id, the TASK-0009 entry in compositions.json, and the plan.md:168 table. The contradiction is new. The provenance of the composition that authorizes the P2 dispatch would disagree with the executor declared in the JSON, and the worker would self-declare the wrong model in its report.",
+      "fix": "Change line 7 to `gpt-6-sol`, esforço `high`. Recompute the prompt SHA-256 and PC id, then update TASK-0009.json (prompt_composition_id and executor.prompt_composition_id) and compositions.json. Submit the new hash to a new cross-review cycle."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/prompts/TASK-0009.md",
+      "line": 70,
+      "claim": "`Sequência` names only `predecessor TASK-0008`. plan.md:168 requires `TASK-0008 + TASK-0022`, and the prompt's own acceptance criteria require `verify-archival-pc-guard.test.mjs` and `pnpm verify:archival-pc-guard`, both TASK-0022 deliverables (source 32 is marked `após entrega`). Also, the `package.json` in `Pode tocar` is not covered by any TASK-0009 lock: plan.md:168 and target_modules have no `MOD-root-package-json`, while Retomada says `package.json` stays under TASK-0022's lock. The `lock livre` clause softens this but does not declare the lock.",
+      "fix": "State `predecessores TASK-0008 e TASK-0022 (entregue e verde)` in the prompt. Add `MOD-root-package-json` to TASK-0009's lock in plan.md:168 and to target_modules in the JSON, or explicitly state that the maestro hands the lock over after TASK-0022."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/contracts/CTG-0003.md",
+      "line": 79,
+      "claim": "The mandatory order includes `testes Inspector RED` for ROLE R1, and the P2 authorization requires Architect review of the Inspector tests in `verify-task-originals` before application. But no Inspector TASK or composition has the A3.4 cases in scope. TASK-0008 is `completed` and its criterion (line 64) lists only A3/A3.1/A3.2 cases. TASK-0021 covers PC-B. The current suites contain no case mentioning A3.4/R1/required_tags. This does not block the status transition, but the Inspector vehicle is unassigned.",
+      "fix": "Record in the contract/plan which Inspector dispatch (a TASK-0008 iteration with an updated prompt, or an explicit Inspector sub-assignment) writes the RED tests listed in A3.4 §P2 items 1–7, including `candidate-not-applied`/other status → failure and `applied` → exact tags per TASK. Declare that those tests must be RED and reviewed by the Architect before the TASK-0009 retake."
+    }
+  ],
+  "notes": [
+    "Hashes checked on disk: the A3.4 contract is 6d6ae318…8a59, the matrix 13f039bb…5739, CTG-0003.md 7e2d75e2…6a59 (sic, 7e2d75e2…2cc6 per the prompt: 7e2d75e2ab11…3902e96), TASK-0009.md abc5a134…692f and TASK-0009.json 8c2c6319…bf3c. All match the prompt. compositions.json holds sha256 abc5a134… and pc_id PC-abc5a134fd7ae0f6, consistent with the JSON.",
+    "Item 1 PASS: AUTHORIZATION-A3.4-P2 (Owner commit b5db2530, one file only) cites the literal answer, both final SHA-256 values, the cycle-3 PASS and a scope limited to R-0003/TASK-0004 and R-0005/TASK-0009 (completed). It allows only the candidate-not-applied→applied transition, after hash comparison.",
+    "Item 2 PASS in content: CTG-0003.md:75-79 and prompt:76 limit the substitution to the requirement for a materialized policy before archival projection. They require `status: applied`, the exact three required_tags[], original/prompt/receipt/path/hash matching, `completed` status, and no store/backlog identity. Failure fails closed with no mutation. They forbid deriving grants, policy or dispatch eligibility, and forbid touching apps/, backend/, docs/, the Constitution or .devai/config/.",
+    "Item 3 PASS: the prospective Q6 matrix appears as not materialized; enforcement is a separate artifact in CTG-0005; the A3.5 PC-B guard remains a precondition of TASK-0010 and of any seal. None of these three is conflated with the others.",
+    "Item 5 PASS: no A3.2/A3.3 decision (1A–5A, G0/D1/S1/C1/P1, U1/T1, 2B) or gate criterion is reopened. verify:round-tasks, verify:task-originals and verify:archival-pc-guard remain separate gates alongside pnpm check, and no seal, archival PC or policy-enforcement PASS is declared.",
+    "Suggested order after the fixes: new prompt hash → cycle 2 → hash comparison and status-only transition by the maestro → Inspector RED → Engineer GREEN → clone → gates."
+  ]
+}

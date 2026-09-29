@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import {
   copyFile,
   mkdir,
@@ -19,6 +20,11 @@ const repositoryRoot = resolve(
   '../../..',
 );
 const baseline = resolve(repositoryRoot, 'tools/devai/baseline.mjs');
+const verifier = resolve(
+  repositoryRoot,
+  'tools/devai/verify-task-originals.mjs',
+);
+const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 
 const validTask = {
   schemaVersion: '2.0.0',
@@ -500,3 +506,381 @@ for (const [name, change] of [
     assert.ok(result.failures.some(({ axis }) => axis === 'proofs'));
   });
 }
+
+const a3OldPaths = [
+  'tasks/TASK-0001-D1.json',
+  'tasks/TASK-0002-D1.json',
+  'tasks/TASK-0003-D1.json',
+  'tasks/TASK-0004-D1.json',
+  'tasks/TASK-0004-S1.json',
+  'tasks/TASK-0004-S2.json',
+  'tasks/TASK-0004-S2-R1.json',
+  'tasks/TASK-0004-S3.json',
+  'tasks/TASK-0004-S4.json',
+  'tasks/TASK-0004-S5.json',
+];
+const a3VerifierArgv = [
+  'node',
+  'tools/devai/verify-task-originals.mjs',
+  '--repo-root',
+  '.',
+];
+const a3ArtifactPaths = {
+  aliases: 'work/rounds/R-0007/tasks/_legacy-originals/aliases.json',
+  d1: 'work/rounds/R-0007/tasks/_legacy-originals/d1-superseded-snapshots.json',
+  report: 'work/rounds/R-0020/reports/A3-migration-before-after.json',
+};
+const a3FrozenDigests = {
+  aliases: '21abf670dc42767c69156e17fefd27e41703b788adf7f4dc07559c573efb009c',
+  d1: 'fd60307218ac39d5777292bf724fc7be29d487f87f96f430e55235346b0095a2',
+  report: '7518fe70f8314f97763dfe37307eb9dc1468806ef71e49d0bc8f4ffc36afc69d',
+};
+
+async function a3Artifacts() {
+  const loaded = await Promise.all(
+    Object.entries(a3ArtifactPaths).map(async ([name, path]) => {
+      const bytes = await readFile(resolve(repositoryRoot, path));
+      return [
+        name,
+        { entries: JSON.parse(bytes), path, sha256: sha256(bytes) },
+      ];
+    }),
+  );
+  const artifacts = Object.fromEntries(loaded);
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(artifacts).map(([name, artifact]) => [
+        name,
+        artifact.sha256,
+      ]),
+    ),
+    a3FrozenDigests,
+  );
+  return artifacts;
+}
+
+async function a3ComparisonFixture() {
+  const opening = JSON.parse(
+    await readFile(
+      resolve(repositoryRoot, 'work/rounds/R-0020/baseline.json'),
+      'utf8',
+    ),
+  );
+  const artifacts = await a3Artifacts();
+  const migrations = artifacts.report.entries.migrations.filter(
+    (migration) =>
+      migration.round_id === 'R-0007' &&
+      a3OldPaths.includes(migration.old_path),
+  );
+  assert.equal(migrations.length, a3OldPaths.length);
+  const oldPaths = new Set(
+    a3OldPaths.map((path) => `work/rounds/R-0007/${path}`),
+  );
+  const final = structuredClone(opening);
+  final.sources = final.sources.filter(({ path }) => !oldPaths.has(path));
+  final.tasks.items = final.tasks.items.filter(
+    ({ path }) => !oldPaths.has(path),
+  );
+  for (const migration of migrations) {
+    const canonicalPath = `work/rounds/${migration.round_id}/${migration.canonical_path}`;
+    final.sources = final.sources.filter(({ path }) => path !== canonicalPath);
+    final.sources.push({
+      path: canonicalPath,
+      sha256: migration.canonical_sha256,
+    });
+    final.tasks.items = final.tasks.items.filter(
+      ({ path }) => path !== canonicalPath,
+    );
+    final.tasks.items.push({ path: canonicalPath, valid: true });
+  }
+  final.sources.sort((left, right) => left.path.localeCompare(right.path));
+  final.tasks.items.sort((left, right) => left.path.localeCompare(right.path));
+  final.tasks.a3_transposition = {
+    artifacts,
+    sidecars: migrations.map((migration) => ({
+      old_path: `work/rounds/${migration.round_id}/${migration.old_path}`,
+      sha256: migration.original_sha256,
+      sidecar_path: `work/rounds/${migration.round_id}/${migration.sidecar_path}`,
+    })),
+    verifier: {
+      argv: a3VerifierArgv,
+      exit_code: 0,
+      stdout_sha256: 'a'.repeat(64),
+    },
+  };
+  return { compare: await comparator(), final, migrations, opening };
+}
+
+test('dados os dez caminhos A3 e recibo íntegro quando compara TASKs então aceita somente a transposição autorizada', async () => {
+  const { compare, final, opening } = await a3ComparisonFixture();
+
+  assertA3Accepted(compare, opening, final);
+});
+
+function assertA3Accepted(compare, opening, final) {
+  const result = compare(opening, final);
+  assert.equal(result.axes.tasks.verdict, 'PASS');
+  assert.ok(!result.failures.some(({ axis }) => axis === 'tasks'));
+}
+
+for (const [name, change] of [
+  [
+    'hash da abertura divergente',
+    (final, migrations, opening) => {
+      const migration = migrations[0];
+      const path = `work/rounds/${migration.round_id}/${migration.old_path}`;
+      opening.sources.find((source) => source.path === path).sha256 =
+        '0'.repeat(64);
+    },
+  ],
+  [
+    'hash de abertura do posterior D1 divergente',
+    (final, migrations, opening) => {
+      const source = opening.sources.find(
+        ({ path }) => path === 'work/rounds/R-0007/tasks/TASK-0020.json',
+      );
+      assert.ok(source, 'fonte de abertura TASK-0020 existe');
+      source.sha256 = '0'.repeat(64);
+    },
+  ],
+  [
+    'subconjunto de nove caminhos',
+    (final, migrations) => {
+      const migration = migrations.at(-1);
+      const oldPath = `work/rounds/${migration.round_id}/${migration.old_path}`;
+      final.sources.push({
+        path: oldPath,
+        sha256: migration.original_sha256,
+      });
+      final.tasks.items.push({ path: oldPath, valid: true });
+    },
+  ],
+  [
+    'décimo primeiro caminho',
+    (final) => {
+      const extra = 'work/rounds/R-0007/tasks/TASK-0001.json';
+      final.sources = final.sources.filter(({ path }) => path !== extra);
+      final.tasks.items = final.tasks.items.filter(
+        ({ path }) => path !== extra,
+      );
+    },
+  ],
+  [
+    'hash do sidecar divergente',
+    (final) =>
+      (final.tasks.a3_transposition.sidecars[0].sha256 = '0'.repeat(64)),
+  ],
+  [
+    'sidecar ausente no recibo',
+    (final) => final.tasks.a3_transposition.sidecars.pop(),
+  ],
+  [
+    'leitura de sidecar falha no recibo',
+    (final) =>
+      (final.tasks.a3_transposition.sidecars[0] = {
+        old_path: final.tasks.a3_transposition.sidecars[0].old_path,
+        sidecar_path: final.tasks.a3_transposition.sidecars[0].sidecar_path,
+        sha256: null,
+        error: 'leitura falhou',
+      }),
+  ],
+  [
+    'artefato congelado divergente',
+    (final) =>
+      (final.tasks.a3_transposition.artifacts.report.sha256 = '0'.repeat(64)),
+  ],
+  [
+    'mapeamento analisado de alias divergente',
+    (final) =>
+      (final.tasks.a3_transposition.artifacts.aliases.entries[0].new_id =
+        'TASK-9999'),
+  ],
+  [
+    'mapeamento analisado D1 divergente',
+    (final) =>
+      (final.tasks.a3_transposition.artifacts.d1.entries.entries[0].id =
+        'TASK-9999'),
+  ],
+  [
+    'leitura ou JSON do índice D1 falha no recibo',
+    (final) =>
+      (final.tasks.a3_transposition.artifacts.d1 = {
+        path: final.tasks.a3_transposition.artifacts.d1.path,
+        sha256: null,
+        entries: null,
+        error: 'leitura ou JSON inválido',
+      }),
+  ],
+  [
+    'hash posterior D1 divergente',
+    (final) => {
+      const entry =
+        final.tasks.a3_transposition.artifacts.d1.entries.entries.find(
+          ({ disposition }) => disposition === 'superseded-snapshot',
+        );
+      entry.posterior_sha256 = '0'.repeat(64);
+    },
+  ],
+  [
+    'destino canônico inválido',
+    (final, migrations) => {
+      const migration = migrations[0];
+      const path = `work/rounds/${migration.round_id}/${migration.canonical_path}`;
+      final.tasks.items.find((item) => item.path === path).valid = false;
+    },
+  ],
+  [
+    'destino canônico ausente',
+    (final, migrations) => {
+      const migration = migrations[0];
+      const path = `work/rounds/${migration.round_id}/${migration.canonical_path}`;
+      final.tasks.items = final.tasks.items.filter(
+        (item) => item.path !== path,
+      );
+    },
+  ],
+  [
+    'verificador negativo',
+    (final) => (final.tasks.a3_transposition.verifier.exit_code = 1),
+  ],
+  [
+    'argv do verificador divergente',
+    (final) =>
+      (final.tasks.a3_transposition.verifier.argv = [
+        'node',
+        'tools/devai/verify-task-originals.mjs',
+        '--repo-root',
+        '..',
+      ]),
+  ],
+  [
+    'hash da fonte canônica final divergente',
+    (final, migrations) => {
+      const migration = migrations[0];
+      const path = `work/rounds/${migration.round_id}/${migration.canonical_path}`;
+      final.sources.find((source) => source.path === path).sha256 = '0'.repeat(
+        64,
+      );
+    },
+  ],
+  ['recibo ausente', (final) => delete final.tasks.a3_transposition],
+]) {
+  test(`dada transposição A3 com ${name} quando compara TASKs então falha`, async () => {
+    const { compare, final, migrations, opening } = await a3ComparisonFixture();
+    assertA3Accepted(compare, opening, final);
+    change(final, migrations, opening);
+
+    const result = compare(opening, final);
+
+    assert.equal(result.axes.tasks.verdict, 'FAIL');
+    assert.ok(result.failures.some(({ axis }) => axis === 'tasks'));
+  });
+}
+
+async function writeA3MeasurementFixture(root) {
+  const { report } = await a3Artifacts();
+  const migrations = report.entries.migrations.filter(
+    (migration) =>
+      migration.round_id === 'R-0007' &&
+      a3OldPaths.includes(migration.old_path),
+  );
+  for (const path of Object.values(a3ArtifactPaths)) {
+    const destination = resolve(root, path);
+    await mkdir(dirname(destination), { recursive: true });
+    await copyFile(resolve(repositoryRoot, path), destination);
+  }
+  for (const migration of migrations) {
+    const sourceRoot = resolve(
+      repositoryRoot,
+      'work/rounds',
+      migration.round_id,
+    );
+    const fixtureRoot = resolve(root, 'work/rounds', migration.round_id);
+    const sidecar = resolve(sourceRoot, migration.sidecar_path);
+    const oldTask = resolve(fixtureRoot, migration.old_path);
+    const canonicalTask = resolve(fixtureRoot, migration.canonical_path);
+    await mkdir(dirname(oldTask), { recursive: true });
+    await Promise.all([
+      copyFile(sidecar, oldTask),
+      copyFile(resolve(sourceRoot, migration.canonical_path), canonicalTask),
+      copyFile(sidecar, resolve(fixtureRoot, migration.sidecar_path)),
+    ]);
+  }
+  return migrations;
+}
+
+test('dada fixture A3 sem cópia local do verificador quando mede fechamento então grava recibo normalizado com hashes reais', async () => {
+  await withFixture(async ({ outDir, root }) => {
+    const migrations = await writeA3MeasurementFixture(root);
+    assert.equal(migrations.length, a3OldPaths.length);
+    await assert.rejects(
+      readFile(resolve(root, 'tools/devai/verify-task-originals.mjs'), 'utf8'),
+    );
+    const opening = await runBaseline(root, outDir);
+    assert.equal(opening.status, 0, opening.stderr);
+    await Promise.all(
+      migrations.map((migration) =>
+        rm(
+          resolve(root, 'work/rounds', migration.round_id, migration.old_path),
+        ),
+      ),
+    );
+    const finalOutDir = await mkdtemp(
+      resolve(tmpdir(), 'detran-baseline-a3-final-output-'),
+    );
+    try {
+      await runBaseline(root, finalOutDir, [
+        '--final',
+        '--against',
+        resolve(outDir, 'baseline.json'),
+      ]);
+      const final = JSON.parse(
+        await readFile(resolve(finalOutDir, 'baseline-final.json'), 'utf8'),
+      );
+      const expected = spawnSync(
+        process.execPath,
+        [verifier, '--repo-root', root],
+        { cwd: root, encoding: 'utf8' },
+      );
+      assert.deepEqual(final.tasks.a3_transposition.verifier, {
+        argv: a3VerifierArgv,
+        exit_code: expected.status ?? 1,
+        stdout_sha256: sha256(expected.stdout.trim()),
+      });
+      if ((expected.status ?? 1) !== 0)
+        assert.equal(final.comparison.axes.tasks.verdict, 'FAIL');
+      for (const [name, path] of Object.entries(a3ArtifactPaths)) {
+        const bytes = await readFile(resolve(root, path));
+        assert.equal(final.tasks.a3_transposition.artifacts[name].path, path);
+        assert.equal(
+          final.tasks.a3_transposition.artifacts[name].sha256,
+          sha256(bytes),
+        );
+        assert.deepEqual(
+          final.tasks.a3_transposition.artifacts[name].entries,
+          JSON.parse(bytes),
+        );
+      }
+      for (const migration of migrations) {
+        const sidecar = resolve(
+          root,
+          'work/rounds',
+          migration.round_id,
+          migration.sidecar_path,
+        );
+        const measured = final.tasks.a3_transposition.sidecars.find(
+          ({ old_path }) =>
+            old_path ===
+            `work/rounds/${migration.round_id}/${migration.old_path}`,
+        );
+        assert.deepEqual(measured, {
+          old_path: `work/rounds/${migration.round_id}/${migration.old_path}`,
+          sha256: sha256(await readFile(sidecar)),
+          sidecar_path: `work/rounds/${migration.round_id}/${migration.sidecar_path}`,
+        });
+      }
+    } finally {
+      await rm(finalOutDir, { force: true, recursive: true });
+    }
+  });
+});

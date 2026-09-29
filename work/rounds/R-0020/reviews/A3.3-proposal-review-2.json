@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 25,
+      "claim": "DUP=D1 treats the three queued D1 files as separate planning attempts and gives them new identities TASK-0089…0091 with status `queued`. The sources this proposal already cites show they are the same TASK identity. `R-0007/plan.md:1039-1041`: 'TASK-0002-D1 = TASK-0020; TASK-0003-D1 = TASK-0021; TASK-0004-D1 = TASK-0022. Filenames pedidos permanecem; id/upstream_task_id e compositions usam IDs numéricos'. `plan.md:1324-1325`: 'TASK-0019, PREP-CTG1-D1 e TASK-0020 concluídos'. The R-0007 budget.json ledger records the D1 executions under those same ids: idx 37 TASK-0019, 39 TASK-0020 completed, 40 PREP-CTG1-D1, 41 TASK-0021 completed_iteration_1, 42 TASK-0022 completed-fail. After that come TASK-0020-ITERATION-2…13, a single lineage. `plan.md:378` says the TASK-0020/21/22 JSONs were materialized 'preservando 3/4, 3/4 e 1/4'. Those are exactly the iteration_count/max_iterations of the three D1 stubs (3/4, 3/4, 1/4); the stubs also carry `alias-TASK-000n-D1` and `c4-od-v3` tags and point to the prompts `TASK-002n-V3.md`. So the stubs are superseded snapshots of TASKs that did run and were later rematerialized, not distinct unexecuted TASKs. The proposal's reading ('não prova que os D1 queued foram executados… tentativas de planejamento distintas') leaves out this evidence. Creating 0089…0091 as `queued` invents three unexecuted historical TASKs. Remapping the upstreams TASK-0020→0089 and TASK-0021→0090 invents edges that plan §1040 says point to the numeric identity. The 29/92 cycle counts, the example 0090↔0091, and 'zero ciclos upstream com 91 IDs únicos' all rest on these invented nodes. It also enlarges the dispatch surface: `materializeRoundQueueTask` (release-host.js ~188268) accepts only valid `queued` TASKs in an active round, so under G0 these three would be the only materializable R-0007 TASKs until the seal.",
+      "fix": "Reformulate DUP. The primary option should treat the three D1 files as superseded snapshots of the canonical identities TASK-0020/0021/0022. Preserve them byte-for-byte in the A3 sidecar with an index that cites plan §§378, 1039-1041 and 1324-1325 and ledger idx 37-42 (hash each). Retire the direct paths and do not project any new canonical TASK, alias ID or remapped upstream. Also state that the stubs' `queued` status is a literal from a superseded snapshot. Recompute the cycle counts and the upstream DAG over 88 unique IDs (28/91 as measured in cycle 1). If the Owner does not accept 'superseded snapshot', keep D2 source_pending. Do not offer distinct queued aliases unless a new source shows the D1 files are separate work."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 13,
+      "claim": "G0 checks for non-materialization only in `.devai/state/tasks`. But `materializeRoundQueueTask` (~188268-188300) also writes `.devai/state/backlog.jsonl` (`appendBacklog`, BACKLOG_PATH_REL ~176475) and checks conflicts against it. A materialization attempt that created a backlog entry, or one reverted from the tasks store only, would escape the guard as written. `.devai/state` is versioned (tracked files under `audit-observations/`), so the check is verifiable, but only if it covers every state path the verbs write to.",
+      "fix": "Extend the G0 static guard to every `.devai/state` path the materialize/start/run verbs write (at minimum `tasks/` and `backlog.jsonl`). The Inspector should derive the list from the pinned runtime, and the guard must fail on any R-0007 entry."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 44,
+      "claim": "S1 under G0 relaxes the condition of the frozen A3.2 §55 ('guarda implementada, testada e autorizada que impeça despacho, retomada, pausa ou escalada… sem ela, A não é aplicável') to empty store + static check + operational ban. The relaxation is justified by the premise correction. However, the text does not state it explicitly, unlike §49, which is declared replaced. A3.2 remains the text cited in the Owner consultations.",
+      "fix": "Add an explicit line saying that A3.3 replaces the implemented-guard condition of A3.2 STATUS=A (§55/§122) with G0, and why: no store, and materialization accepts only `queued`. Make sure the future Owner consultation on STATUS cites A3.3 and its SHA, not A3.2 alone."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0020/contracts/CTG-0003-A3.3-gap-proposal.md",
+      "line": 34,
+      "claim": "The verifier rule allows a non-numeric historical basename 'somente via allowlist de três pares' and 'nenhum quarto alias'. But `TASK-0001-D1.json` keeps id `TASK-0019` with basename ≠ id (table line 29: 'Manter ID 0019; nome D1 histórico'). Either the verifier rejects that file, or the allowlist has four entries. The disposition is contradictory.",
+      "fix": "Decide explicitly on TASK-0001-D1.json. Either move it to `TASK-0019.json` with a sidecar, or add it to the basename allowlist. Keep the entry count and the 'no extra alias' rule consistent."
+    }
+  ],
+  "notes": [
+    "Proposal SHA-256 is fe7bfe0e…273e, as expected. Rehearsal report read; hashes cited in the proposal were rechecked: D1 sidecars e12b…/78de…/550b…, R-0007 budget 5bca…, R-0007 plan 1068…, R-0006 reviews 3/4 9569…/93f2….",
+    "Cycle-1 H1 is resolved. The premise is corrected with tasksDir/listTasks, there is an unsealed baseline (0 tasks) next to a sealed one (TASK_ROUND_INACTIVE), and worker.sh is named as unguarded. G1 is demoted to optional defense-in-depth that needs an explicit amendment. Its item (e), a queued TASK materialized in a clone, is required only if a benefit is claimed. I do not require G1 to run: G0 is enough for the archival corpus, provided the D1 finding and the G0 scope in the backlog finding are fixed.",
+    "Cycle-1 H2 is resolved. C1 separates the explicit upstream DAG from runtime-position cycles, P1 no longer promises a DAG, A3.2 §49 is corrected by the addendum, and an upstream issue is proposed. The counts need recomputing without the invented D1 nodes.",
+    "Cycle-1 H3 is partly resolved. The inventory of non-terminal TASKs is correct (TASK-0038 checkpoint plus three queued; no ready), and the uniqueness gate is a precondition. The duplicate-id disposition, though, invents facts (see the D1 finding). Fact confirmed: 91 files and 88 unique IDs, duplicates 0020/0021/0022. The RED test for duplicates exists in `tools/devai/tests/verify-round-tasks.test.mjs:79`. The uniqueness repair should run before any alias/move is applied, not only before the zero-invalid claim.",
+    "Lows L4-L7 from cycle 1 are resolved. TASK-0010 and the 14+1 count are covered, and the `--write` discrepancy with CTG-0003 §68 is recorded. The six close-state keys are listed. The ledger lines 5/6/10/16-19/25/26 are listed exactly, and the TASK-0001 reopening is marked plan-only. T1 has successors 14-22 and the iteration 3 vs max 2 mismatch is recorded. In R-0006 budget.json idx 17 and 22 are 'completed'; the FAIL/PASS verdicts come from the hashed review files.",
+    "U1, ROLE and T1 do not invent facts: timestamps are marked unknown, Art. 6 is not set aside, and the `apps/` and `backend/` paths remain pending classification.",
+    "Owner decisions still pending before any application: GUARD (G0 plus acceptance of the operational ban), DUP (reformulated), STATUS, CYCLE=C1, POS, UP=U1, ROLE (after the path matrix) and TRAIL. Sources still pending: the path-authority matrix for `apps/dashboard/web/README.md` and `backend/domains/ops/README.md`. `reports/TASK-0020-D1.md`, cited in R-0007 plan:1325, is not in `work/rounds/R-0007/reports/`; record this as a missing source in the D1 index. This PASS/REVIEW does not authorize migration, a seal, a PC, a gate change or dispatch."
+  ]
+}

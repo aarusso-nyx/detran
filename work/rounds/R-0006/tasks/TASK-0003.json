@@ -16,34 +16,27 @@
     "MOD-root-scripts"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "WF-INF-003 §2",
-    "rait-deadline-engine §2-§3",
-    "RN-RAIT-104",
-    "ADR-0016 §2"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0002",
   "db_isolation": "database",
   "iteration_count": 2,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "policy-issue",
-      "finding": "delivery-review-1: mounting InfractionModule/NotificationModule in AppModule exposes generated routes before R-0007. Fix by the maestro (Engineer): AppModule and backend/app/package.json restored to main; root test scripts kept; pnpm install re-run.",
-      "status": "completed"
-    },
-    {
-      "iteration": 3,
-      "classification": "reference-gap",
-      "finding": "delivery-review-2 FAIL: (a) contract §3.3 says 42 vigente rows, DDL has 43 — fixed by the maestro (Architect); (b) reschedule does not emit TIMER_REPROGRAMADO (contract API §5 has no event port; both workers flagged it as contract gap 1); (c) no extend operation limiting T-DIL to one extension (deferred to R-0007 by the Engineer as a command). (b) and (c) need a contract amendment, new Inspector tests and Engineer work: escalated to the human (second FAIL, window budget exhausted).",
-      "status": "escalated"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "infraction", "deadlines", "engineer"],
+  "tags": [
+    "wp-a",
+    "infraction",
+    "deadlines",
+    "engineer",
+    "ref:WF-INF-003 §2",
+    "ref:rait-deadline-engine §2-§3",
+    "ref:RN-RAIT-104",
+    "ref:ADR-0016 §2",
+    "legacy-escalation-index:tasks/_legacy-originals/TASK-0003-escalation.json",
+    "legacy-original:tasks/_legacy-originals/TASK-0003.json.raw",
+    "legacy-sha256:ee8fba71002cb436d35b37ef533621ca037f12093f33a9b0194dae788060b0a0"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-661b598fd58663e0",
@@ -63,10 +56,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "medium",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-661b598fd58663e0",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

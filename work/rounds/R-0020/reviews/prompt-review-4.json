@@ -1,0 +1,26 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0020/plan.md",
+      "line": 229,
+      "claim": "O critério de aceitação da TASK-0010 em plan.md §Critérios ainda diz 'entrega `record.md por rodada com PC`'. Lido ao pé da letra, também cobre R-0018, que tem PC-0015. Isso diverge do escopo de 15 records definido no prompt (linhas 85, 89 e 99), no JSON (description) e em plan.md:169. O prompt prevalece para o worker, mas o delivery-review mede a entrega por este critério.",
+      "fix": "Trocar por 'entrega de 15 `record.md` (R-0003…R-0016 e R-0019) presente e limitada aos caminhos do prompt; R-0018 fica com o maestro'."
+    }
+  ],
+  "notes": [
+    "Achado 1 (TASK-0007.json, target_modules) fechado. O JSON (linhas 11–16) e plan.md:166 listam `MOD-r20-contract-seal`, `MOD-law-register`, `MOD-open-decisions` e `MOD-kb-open-decisions`. A description do JSON (linha 9), plan.md:166 e plan.md:226 descrevem o contrato, os anexos D-1/D-2 e a seção R-0020 das ODs. `MOD-open-decisions` segue o precedente de R-0017 (TASK-0010.json:13), e o Pode tocar do prompt (linhas 103–105) está coberto pelo lock declarado.",
+    "Achado 2 (TASK-0007, lista fechada) fechado. As linhas 66–99 do prompt enumeram 32 fontes: `AUTHORIZATION.md` e `prompts/00-maestro.md` de cada uma das 16 rodadas (R-0003…R-0016, R-0018 e R-0019). Todos os 32 arquivos existem na worktree.",
+    "Achado 3 (TASK-0010, R-0018) fechado. `work/rounds/R-0018/record.md` saiu do Pode tocar (linhas 61–75). A Tarefa (linha 85) e as Definições (linhas 89 e 94) instruem de forma determinística a não criar o arquivo, porque o maestro o transcreve após `round close`. O JSON (description), plan.md:169 e CTG-0003.md:59 concordam com isso.",
+    "Achado 4 (fontes de title/goal/isolamento/waves) fechado. A TASK-0010 lista os 15 `closure.json` e os 15 `plan.md` (linhas 28–57), e a frase 'única fonte' deu lugar a 'a tabela… os 15 closure.json e os 15 plan.md… são as fontes fechadas' (linha 94). CTG-0003.md:59 remete a essas mesmas fontes e mantém `source_pending` como saída sem invenção. Todos os 30 arquivos existem.",
+    "Achado 5 (sequência) fechado. CTG-0003.md:3 traz a ordem 'TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010', coerente com os upstreams 0006→0007→0008→0009 dos JSONs.",
+    "Achado 6 (R-0021) fechado. R-0021 (PC-0019) aparece explicitamente fora do CTG-0003 em TASK-0007.md:124 e CTG-0003.md:69. Além disso, CTG-0003.md:12 identifica a proposta R18 como texto anterior à autorização, que prevalece.",
+    "Achado 7 (TASK-0008) fechado. A linha 47 diz agora 'Nenhum teste desta tarefa depende do ID do futuro PC corretivo de R-0018'.",
+    "Hashes conferidos. O SHA-256 dos quatro prompts coincide com compositions.json: 6ed269d1…, 8b55a095…, a8d78b14… e 1ce4aaca…. Em cada caso, pc_id é 'PC-' seguido dos primeiros 16 hex do hash, e `prompt_composition_id` bate nos dois campos de cada TASK JSON.",
+    "Não surgiu achado novo de FAIL em texto inalterado. plan.md:120 continua citando o `round seal` de R-0018 no CTG-0003; isso é coerente, porque esse selo é do maestro e não da TASK-0010."
+  ]
+}

@@ -17,35 +17,27 @@
     "MOD-generated-tree"
   ],
   "target_substrates": ["F2"],
-  "target_invariants": [
-    "WF-INF-003",
-    "WF-INF-002 §9.2",
-    "ADR-0016",
-    "OD-301",
-    "OD-304"
-  ],
+  "target_invariants": [],
   "coupled_task_group": "CTG-0001",
   "coupled_pipeline_position": "architect",
   "upstream_task_id": null,
   "db_isolation": "database",
   "iteration_count": 3,
-  "iteration_trail": [
-    {
-      "iteration": 2,
-      "classification": "policy-issue",
-      "finding": "delivery-review-1: generated PATCH/DELETE on the append-only trail inf.infraction_event (and notice_acknowledgement, notice_delivery_attempt). Fix by the maestro (Architect): api.resources[].operations = list,get,create; blueprints v1.1.1 regenerated.",
-      "status": "completed"
-    },
-    {
-      "iteration": 3,
-      "classification": "reference-gap",
-      "finding": "delivery-review-2: contract §3.3 count 42 → 43 vigente rows corrected by the maestro (Architect).",
-      "status": "completed"
-    }
-  ],
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["wp-a", "infraction", "notification", "blueprint"],
+  "tags": [
+    "wp-a",
+    "infraction",
+    "notification",
+    "blueprint",
+    "ref:WF-INF-003",
+    "ref:WF-INF-002 §9.2",
+    "ref:ADR-0016",
+    "ref:OD-301",
+    "ref:OD-304",
+    "legacy-original:tasks/_legacy-originals/TASK-0001.json.raw",
+    "legacy-sha256:99dbd88f13fb164a08f8c9c80ddb777f52a16dc58555f63e23d45e9d7c3f6ae7"
+  ],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
   "prompt_composition_id": "PC-87011ad23ebf15eb",
@@ -61,10 +53,7 @@
     "runtime": "claude-cli",
     "model": "opus",
     "effort": "high",
-    "selection": {
-      "mode": "exact",
-      "registry_id": "claude-opus-5"
-    },
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
     "prompt_composition_id": "PC-87011ad23ebf15eb",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]

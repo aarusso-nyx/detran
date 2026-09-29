@@ -1,0 +1,9 @@
+Return exactly one JSON object. First character `{`, last character `}`. No Markdown fences or prose outside JSON.
+
+# Revisão cruzada dos prompts TASK-0021/0022, ciclo 2
+
+Você é Claude Code Opus 5.5, reviewer da outra família, Auditor constitucional, somente leitura na worktree `/Users/aarusso/.codex/worktrees/devai-sensors/detran`. Leia `reviews/prompt-review-A3.5-1.json`, `contracts/CTG-0003-A3.5-archive-guard.md` SHA-256 `f874e0f318f472a33087adc3a91de4171e8adeadbe223792430c00004c0dd77f`, `contracts/CTG-0003-A3.5-guard-manifest.json` SHA-256 `4c9c5cfa323c43b16d970c24403325a00d24d539895a0ed69c5cdc924c97b6ea`, `prompts/TASK-0021.md` SHA-256 `dd54cf63d1ba4f419b3b5c5ff967d9e7fc872272a194c5dd270e0ca961667266`, `prompts/TASK-0022.md` SHA-256 `2ddb1e7aec530884ce426bc3aa1598245e3a9b23be9aa862c411e06b9ee01623`, `tasks/TASK-0021.json`, `tasks/TASK-0022.json`, suas entradas em `compositions.json`, `plan.md` §Tarefas e §Comandos de aceitação. Leia `reports/A3.2-expc-receipts.md` apenas para conferir os onze hashes brutos do manifesto. Não escreva arquivos.
+
+Julgue **somente** os quatro highs e quatro lows do ciclo 1 e inconsistência material nova: manifesto produzido/conferido pelo Architect e só consumido pelo Engineer, fontes fechadas; interface helper/verificador/manifesto e códigos de saída fixos para ambos; G0 com store/backlog ausente=vazio e malformado=erro sem alegar demais superfícies; resultados RED esperados por TASK no plano; `verify:round-tasks` separado; self-edit de `worker.sh` evitado por subagente; sidecars A3 únicos; build ignorado e conferência Git pelo maestro. Verifique hashes PC das duas TASKs. `PASS` libera somente Inspector TASK-0021 e depois Engineer TASK-0022, sem projeção histórica. Responda JSON estrito:
+
+{"mode":"prompt-review","round":"R-0020","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"...","line":1,"claim":"...","fix":"..."}],"notes":[]}.
