@@ -302,8 +302,10 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
 - **OD-PW-003** — tempo real em C-01 (fila) e C-11 (transmissão RENACH): tópico `ch` na fonte
   única de SSE de R-0022 × fallback de polling do padrão. Padrão: fallback de polling, sem stream
   novo.
-- **OD-PW-004** — namespace i18n `pec.`: exceção explícita na tabela de superfícies do
-  `parameter-catalogue.md`, como `boat.`. Padrão proposto: aceitar só como namespace i18n.
+- **OD-PW-004** — namespace i18n `pec.`: **decidida pelo Owner em 2026-09-29**.
+  Aceitar exclusivamente `pec.screens`, `pec.forms`, `pec.states`, `pec.errors`
+  e `pec.legal` como namespaces i18n; nenhuma chave ou superfície de parâmetro
+  `pec.*` é autorizada.
 - **OD-PW-005** — R-05 (credenciamento) está fora dos UC atuais. Padrão: tela com a leitura e os
   comandos existentes de `clinical-network`; ação sem UC fica `bloqueado_por_decisao`.
 
@@ -385,6 +387,10 @@ banco limpo (lição 9) e `pnpm backend:test:integration`; (c) CTG-0004: pacote 
   para cumprir o critério original sem conceder uma terceira iteração às
   TASK-0005/0006. O orçamento projetado da janela fica em 510k/700k antes das
   ondas O7/O8; o checkpoint obrigatório continua em 560k.
+- **M9 (2026-09-29, Owner, OD-PW-004):** o Owner autorizou formalmente o
+  namespace `pec.` somente para i18n. A decisão canônica está em
+  `owner-ballots/ballot-09-pec-web.md`; ela permite os cinco namespaces
+  publicados e mantém proibidas chaves e superfícies de parâmetro `pec.*`.
 
 ## Concorrência
 

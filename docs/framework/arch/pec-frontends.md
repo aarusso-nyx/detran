@@ -24,7 +24,7 @@ O alvo é Angular 22, STYNX e `@detran/ui` conforme ADR-0034, com
 `authGuard`, guardas de permissão, componentes standalone `OnPush`, signals,
 facades e clientes gerados de `packages/api-clients`. Tabela, paginação,
 banner, carregamento, erro, diálogo e toast reutilizam o kit. O namespace
-`pec.` é proposta provisória **somente de i18n** (OD-PW-004), nunca prefixo de
+`pec.` é namespace decidido **somente de i18n** (OD-PW-004), nunca prefixo de
 parâmetro. A UI usa mensagens do catálogo; não escreve dados sensíveis em
 URL, armazenamento local, log ou telemetria.
 

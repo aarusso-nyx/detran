@@ -142,75 +142,75 @@ desconhecido — nunca por exclusão de diretório. Para i18n, a origem é `OD-P
 (`docs/meta/agents/orchestra/README.md`); para template documental, a decisão e o catálogo
 autoridade aparecem na própria linha.
 
-| Namespace                  | App                                | Catálogo                                        | Decisão              |
-| -------------------------- | ---------------------------------- | ----------------------------------------------- | -------------------- |
-| `portal.shell`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.common`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.states`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.errors`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.situation`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.screens`           | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.forms`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.legal`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.requests`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.evaluations`       | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.notifications`     | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.documents`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.services`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `portal.a11y`              | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46               |
-| `est.crash`                | `backend/app`                      | `inf.normative_document_template`               | OD-B08               |
-| `boat.screens`             | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46               |
-| `boat.forms`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46               |
-| `boat.states`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46               |
-| `boat.errors`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46               |
-| `boat.legal`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46               |
-| `pec.screens`              | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 (proposta) |
-| `pec.forms`                | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 (proposta) |
-| `pec.states`               | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 (proposta) |
-| `pec.errors`               | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 (proposta) |
-| `pec.legal`                | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 (proposta) |
-| `teat.shell`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.common`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.states`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.errors`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.screens`             | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.forms`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.legal`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.sync`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.readiness`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.navigation`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.a11y`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `teat.provisioning`        | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46               |
-| `dashboard.a11y`           | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.alert_states`   | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.blocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.classification` | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.clocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.common`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.duty_states`    | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.errors`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.forms`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.freshness`      | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.indicators`     | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.layers`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.screens`        | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.severity`       | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.shell`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `dashboard.states`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46               |
-| `rait.action`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.common`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.errors`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.nav`                 | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.role`                | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.instance`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.decision`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.channel`             | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.shell`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.states`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.screens`             | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.forms`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.legal`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
-| `rait.a11y`                | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46               |
+| Namespace                  | App                                | Catálogo                                        | Decisão   |
+| -------------------------- | ---------------------------------- | ----------------------------------------------- | --------- |
+| `portal.shell`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.common`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.states`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.errors`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.situation`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.screens`           | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.forms`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.legal`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.requests`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.evaluations`       | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.notifications`     | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.documents`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.services`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `portal.a11y`              | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46    |
+| `est.crash`                | `backend/app`                      | `inf.normative_document_template`               | OD-B08    |
+| `boat.screens`             | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46    |
+| `boat.forms`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46    |
+| `boat.states`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46    |
+| `boat.errors`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46    |
+| `boat.legal`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46    |
+| `pec.screens`              | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 |
+| `pec.forms`                | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 |
+| `pec.states`               | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 |
+| `pec.errors`               | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 |
+| `pec.legal`                | `apps/pec/web`                     | `docs/framework/arch/i18n/pec.pt-BR.json`       | OD-PW-004 |
+| `teat.shell`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.common`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.states`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.errors`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.screens`             | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.forms`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.legal`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.sync`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.readiness`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.navigation`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.a11y`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `teat.provisioning`        | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46    |
+| `dashboard.a11y`           | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.alert_states`   | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.blocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.classification` | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.clocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.common`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.duty_states`    | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.errors`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.forms`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.freshness`      | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.indicators`     | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.layers`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.screens`        | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.severity`       | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.shell`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `dashboard.states`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46    |
+| `rait.action`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.common`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.errors`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.nav`                 | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.role`                | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.instance`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.decision`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.channel`             | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.shell`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.states`              | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.screens`             | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.forms`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.legal`               | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
+| `rait.a11y`                | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`                  | OD-P46    |
 
 ## Regras do catálogo
 
@@ -263,14 +263,14 @@ texto resultante dessa remoção de markup.
 
 O heading determina a superfície e os únicos prefixos aceitos para suas chaves:
 
-| Heading   | `surface`   | Prefixos literais permitidos                    | Exceções                                                                                               |
-| --------- | ----------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| RAIT      | `rait`      | `rait.`, `collection.`, `deadline.`, `session.` | nenhuma                                                                                                |
-| TEAT      | `teat`      | `teat.`, `sync.`                                | nenhuma                                                                                                |
-| PORTAL    | `portal`    | `portal.`, `privacy.`                           | nenhuma                                                                                                |
-| BOAT      | `est`       | `est.`                                          | `boat.` somente como prefixo de namespace i18n; nunca como chave de parâmetro                          |
-| PEC       | —           | nenhuma                                         | `pec.` somente como prefixo de namespace i18n, provisório sob OD-PW-004; nunca como chave de parâmetro |
-| DASHBOARD | `dashboard` | `dashboard.`                                    | nenhuma                                                                                                |
+| Heading   | `surface`   | Prefixos literais permitidos                    | Exceções                                                                                   |
+| --------- | ----------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| RAIT      | `rait`      | `rait.`, `collection.`, `deadline.`, `session.` | nenhuma                                                                                    |
+| TEAT      | `teat`      | `teat.`, `sync.`                                | nenhuma                                                                                    |
+| PORTAL    | `portal`    | `portal.`, `privacy.`                           | nenhuma                                                                                    |
+| BOAT      | `est`       | `est.`                                          | `boat.` somente como prefixo de namespace i18n; nunca como chave de parâmetro              |
+| PEC       | —           | nenhuma                                         | `pec.` somente como prefixo de namespace i18n sob OD-PW-004; nunca como chave de parâmetro |
+| DASHBOARD | `dashboard` | `dashboard.`                                    | nenhuma                                                                                    |
 
 A chave é literal, não é reescrita e deve começar por um dos prefixos da sua
 linha. `shared` permanece superfície válida do store, mas não tem heading, tabela
@@ -278,9 +278,9 @@ ou linha neste catálogo. Uma exceção futura exige ser acrescentada explicitam
 à coluna **Exceções** desta tabela antes de o parser poder aceitá-la. A exceção BOAT
 `boat.` é exclusivamente de namespace i18n: não altera `surface=est`, não autoriza
 chave de parâmetro `boat.*` e não é tratada como prefixo de chave desta tabela.
-De forma provisória, enquanto OD-PW-004 permanece pendente, `pec.` é exclusivamente
-um prefixo de namespace i18n: não cria uma superfície de parâmetro, não autoriza chave
-de parâmetro `pec.*` e não é tratado como prefixo de chave desta tabela.
+Pela OD-PW-004 decidida pelo Owner em 2026-09-29, `pec.` é exclusivamente um
+prefixo de namespace i18n: não cria uma superfície de parâmetro, não autoriza
+chave de parâmetro `pec.*` e não é tratado como prefixo de chave desta tabela.
 
 `Status` aceita somente `vigente`, `a_confirmar` ou `proposta`. `pend.` e `legal`
 aceitam somente `sim` ou `não`; eles geram respectivamente `source_pending` e
