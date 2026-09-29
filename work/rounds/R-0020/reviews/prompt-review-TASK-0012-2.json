@@ -1,0 +1,27 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0012",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 51,
+      "claim": "The instruction 'Derive ordem e membros dos presets do registry e de `sense-presets.json`' does not say which source wins when the two disagree on order, and in DEVAI 1.5.6 they do disagree. `sense-presets.json` declares `ordering: canonical-sensor-registry-order`. For `sweep`, its 49 members exactly match the registry's `read` entries in registry order. For `baseline`, however, the file lists `build, lint, type_check, unit_test`, while registry order is `type_check, lint, build, unit_test`. For `governed`, the file has `spec_alignment` before `spec_freshness`/`spec_idiomaticity`, while the registry order is `spec_depth, spec_idiomaticity, spec_freshness, test_invariant_alignment, spec_alignment, …`. The worker might pin an order that TASK-0013 cannot satisfy without breaking the other source. It might also take the conflict as a contradiction under rule 5 and stop with an RGR.",
+      "fix": "Add one line. Membership of `baseline` (4), `governed` (20) and `sweep` (49) comes from `sense-presets.json`. The exact order is asserted only for `sweep`, where both sources agree (`sweep` = the registry's `effect=read` entries in registry order). The order of `baseline`/`governed` is `source_pending` (the declared-list order and the registry order differ in 1.5.6), so the test asserts the set and records the divergence in the report. This does not block dispatch, because the worker can already record it as `source_pending` under line 48."
+    }
+  ],
+  "notes": [
+    "Hash and composition confirmed. The SHA-256 of the prompt is b129416e00b1ac34d02f76ffddf2fd24242c9bf10df1d976f146819fb8f98469. PC-b129416e00b1ac34 matches in the TASK-0012 entry of compositions.json and in both `prompt_composition_id` fields of TASK-0012.json. Model gpt-5.6-terra / effort medium is unchanged. The diff against HEAD only changes the hash/PC in the JSONs and the prompt text, and adds no new write scope.",
+    "Cycle-1 high (wrapper interface) is RESOLVED. Line 38 names `tools/devai/sense.mjs`. Line 50 authorizes the Inspector to propose, inside the test, the smallest injection point for the DEVAI executor plus a verifiable return value. The proposal must be recorded in the report for TASK-0013, unsourced parameters are marked `source_pending`, and each case uses a dynamic import or existence check so that RED is reported per case.",
+    "Cycle-1 low (registry/presets sources) is RESOLVED. Items 9–10 of the closed list point to `dist/law/policy/sensor-registry.json` and `sense-presets.json`, the correct installed path; cycle 1 cited `runtime/index`. Line 51 requires 4/20/49 and forbids leaving out any `read` kind. Checked: the registry has 59 entries, 49 of them `read`. The `sweep` preset has 49 members identical to the registry's `read` entries in canonical order, with `round_required: true`. `baseline` has 4 members and `governed` 20.",
+    "Cycle-1 low (repeatability/status/confidence) is RESOLVED at line 40. It covers stable `readings`/IDs/`command_hash`, `review`/`skipped`/`killed`/`error`/`unknown` never counting as PASS, and rejection of a stochastic reading without `confidence`, plus a ban on lowering expectations. This matches CTG-0004 §Persistência 1–2 and §Aceitação 2.",
+    "Cycle-1 low (`pnpm check` RED) is RESOLVED at line 58. `pnpm check` is not a gate for TASK-0012, RED cases are recorded in the report, and `skip`/`todo` are forbidden without a specific OD. `devai:test` (`node --test tools/devai/tests/*.test.mjs`) is part of `pnpm check`, so the maestro must expect `check` to stay red until TASK-0013.",
+    "Cycle-1 low (RAIT manual vs runner) is RESOLVED at line 38. The runner is `node:test` with local fixtures/stubs, and the prompt prevails over the manual on runner and file boundary. Only the dado/quando/então naming rule and the ban on weakening tests are kept from the manual.",
+    "Boundary is correct. Only `tools/devai/tests/sense.test.mjs` may be written (the file does not exist yet, and no competing test is in the folder). There is no Git, install, `--write` or `record/` access, and no editing of `package.json` or CI. The acceptance criteria (`format:check` on its own files, `node --test` on the file with documented RED) are consistent with CTG-0004 §Aceitação 2. The tests use local stubs and do not depend on A1-1/A1-2, the fixed DEVAI release, or the A1-3 measurement.",
+    "Dispatch: the Inspector worker (gpt-5.6-terra/medium) can be dispatched to write RED tests only in `tools/devai/tests/sense.test.mjs`, once the maestro confirms the dependency (the TASK-0011 report is PASS) and that the lock is free. The low finding can be fixed before dispatch or left to the worker as `source_pending`. This review does not assess any delivery and does not authorize a merge.",
+    "A residual non-blocking item from cycle 1 remains: `db_isolation: database` in TASK-0012.json does not fit a `node:test` on tooling.",
+    "The untracked files `prompt-review-TASK-0012-2.json.formatted.*`/`.raw.*` in `work/rounds/R-0020/reviews/` look like leftover bridge temporaries. The maestro should clean them up before committing."
+  ]
+}

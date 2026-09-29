@@ -1,0 +1,51 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 36,
+      "claim": "The prompt asks the Inspector to characterize the wrapper, but it never names the module under test (`tools/devai/sense.mjs` appears only in the contract and plan). It also leaves the interface open. Neither the prompt nor CTG-0004 fixes the wrapper's exports, its CLI/argv, the output format, or how the DEVAI process gets swapped for a local stub (the injection seam). To write RED tests, the worker has to invent that API, and rule 2 (line 56) plus the constitutional definitions (line 44) forbid inventing values. Two likely outcomes follow: a stop with RGR and nothing delivered, or an interface made up without a source that then binds TASK-0013 on the Engineer side.",
+      "fix": "Choose one option. (a) Put the minimal interface in the prompt as an Architect definition: the path `tools/devai/sense.mjs`, the export or CLI form (for example preset selection, an injectable runner or DEVAI binary, and a timeout), and the return format (an array of SensorReading plus the exit code). (b) Explicitly authorize the Inspector to propose the seam inside the test file. It must record that seam in the report as an interface proposal for TASK-0013 and mark any unsourced parameter as `source_pending`. In both options, require a dynamic import or an existence check for each case, so a missing module shows up as individual RED cases rather than one failure for the whole file."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 15,
+      "claim": "The closed reading list leaves out `node_modules/@aarusso-nyx/devai/dist/runtime/index/sensor-registry.json` and `sense-presets.json`. The contract (CTG-0004 lines 41–43) requires `sweep` to select all 49 `read` kinds 'em ordem canônica' (in canonical order), and the contract does not give that order. Without the registry, the Inspector cannot assert the order and cannot check preset membership against DEVAI 1.5.6 without inventing it.",
+      "fix": "Add both installed JSON files to the closed list, with an instruction to derive order and membership from them and compare against the CTG-0004 tables. Alternatively, state that order is `source_pending` and that the tests assert the exact set of 4/20/49 kinds and the exclusion of the ten non-`read` kinds."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 36,
+      "claim": "The task text leaves out two items that CTG-0004 §Aceitação item 2 assigns to TASK-0012: 'execução repetível' (repeatable execution), and the ban on lowering expectations or dropping a `read` member from `sweep`. It also does not repeat that `review`/`skipped` never count as PASS, or that a stochastic reading needs `confidence`.",
+      "fix": "Add to the task: a repeatability case (same input gives the same readings, `command_hash` and ids); explicit cases showing `review`/`skipped`/`killed`/`error`/`unknown` are not counted as PASS; and a stochastic reading without `confidence` is rejected. State that no `read` member of `sweep` may be dropped."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 51,
+      "claim": "`devai:test` globs `tools/devai/tests/*.test.mjs` and is part of `pnpm check`. So once the RED file exists, `pnpm check` stays red until TASK-0013. The prompt does not warn about this, and a worker could 'fix' it by weakening assertions or marking tests skip, which the manual forbids.",
+      "fix": "State that `pnpm check` is not an acceptance criterion for TASK-0012 and that the expected RED is recorded in the report with the list of failing cases. Forbid `skip`/`todo` unless an OD is cited."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 15,
+      "claim": "`docs/meta/agents/inspector-tests.md`, the first required reading, is a RAIT manual. It covers vitest, `tests/**`, fixtures from `rait-fixtures.md`, `vi.useFakeTimers` and pnpm backend verification commands, and it does not include `tools/devai/tests/` in its Pode tocar (may touch) list. The worker may try to follow a runner or reading list that conflicts with the closed prompt.",
+      "fix": "Add one line saying the prompt prevails over the manual: the runner is `node:test`, and fixtures and stubs are local to the file. Of the manual, only the 'dado/quando/então' test-naming rule and the ban on weakening tests apply."
+    }
+  ],
+  "notes": [
+    "Fact checks confirmed: the prompt's SHA-256 is 1d73d9ced21e534d363cd159f4011f25f6536b838bb9770e2ad026d6097050bb. PC-1d73d9ced21e534d matches in compositions.json and in both fields of TASK-0012.json. Model gpt-5.6-terra / medium matches the plan and the executor.",
+    "Decision states are correct: OD-R20-001=A, 002=B, 003=A, 005=aceita (accepted) and A1-3=B. OD-R20-004/006 and A1-1/A1-2 are pending. R-0017/0018/0019 are sealed, and CTG-0003 was merged in #156. All of this is consistent with plan.md and the TASK-0011 report.",
+    "The dependency is met: the TASK-0011 report is PASS and CTG-0004 is present. The write boundary (only `tools/devai/tests/sense.test.mjs`, no Git/`--write`/install) is consistent with the plan, the contract and maestro §6.",
+    "The diff only updates context, decisions, lock wording and the hash/PC. It introduces no new write scope.",
+    "There is no fundamental block tied to decisions or release: tests with local stubs do not depend on A1-1/A1-2 or on the fixed DEVAI release. Dispatch after the interface seam is fixed or explicitly authorized (the high finding).",
+    "`db_isolation: database` in TASK-0012.json does not fit a node:test test on tooling. This is not a blocker."
+  ]
+}

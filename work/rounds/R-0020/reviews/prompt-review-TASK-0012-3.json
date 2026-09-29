@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0012",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0020/prompts/TASK-0012.md",
+      "line": 51,
+      "claim": "The line never says that `baseline` and `governed` also contain kinds whose effect is not `read`. In the installed registry, `build` has effect=local-write and `unit_test` has effect=harness-write. Both appear in `baseline` (4) and in `governed` (20). Next to the words 'os 49 kinds `read`' and 'Nenhum `read` pode ser omitido', a worker could apply the effect=read filter to every preset. It could also write a test requiring all preset members to be `read`. Either way the test would contradict `sense-presets.json`, and TASK-0013 could not satisfy it.",
+      "fix": "Add one sentence. The filter `effect=read` / `selection_effect_rule` applies only to `sweep`. `baseline` and `governed` use the declared set exactly, including `build` (local-write) and `unit_test` (harness-write), and no test may require `effect=read` for those two presets. This does not block dispatch: line 51 already says to take membership from `sense-presets.json`, which lists these kinds explicitly."
+    }
+  ],
+  "notes": [
+    "Cycle-2 low is RESOLVED at line 51. Membership of the presets comes from `sense-presets.json`. Exact order is required only for `sweep`. For `baseline`/`governed`, the test checks the set, marks the order `source_pending`, and records the divergence in the report. This removes the chance of an RGR under rule 5 and of pinning an order TASK-0013 cannot meet.",
+    "Checked against DEVAI 1.5.6 installed in node_modules. The registry has 59 entries, 49 with effect=read. `sweep` has 49 unique members, equal to the registry's `read` entries in registry order. `baseline` has 4 unique members and `governed` 20, all present in the registry, and neither matches registry order. The claims on line 51 are factually correct.",
+    "Composition binding is CONFIRMED. `shasum -a 256` of `work/rounds/R-0020/prompts/TASK-0012.md` = d2a2d9e0b4b88247858fe584ed9b692def784f49a9540ad33913ed645ff6b1bf. The TASK-0012 entry in compositions.json (sha256 and pc_id PC-d2a2d9e0b4b88247) matches, as do both `prompt_composition_id` fields in TASK-0012.json (top level and executor). Model gpt-5.6-terra / effort medium is unchanged, and capabilities stay `read`,`local-write`.",
+    "The diff against HEAD changes only the hash/PC values in the two JSON files and the prompt text; HEAD was PC-31bfd4f7b81eb9b4. The prompt changes are context updates, the source list extended to items 9–10, the interface and RED clauses already approved in cycle 2, the ODs updated, and line 51 corrected. No write scope is added: only `tools/devai/tests/sense.test.mjs` may be written, and that file does not exist yet.",
+    "Earlier resolutions still hold: the wrapper interface is proposed inside the test with a per-case dynamic import (line 50); cases cover repeatability, non-PASS statuses and stochastic readings without `confidence` (line 40); `pnpm check` is not a gate while RED persists, and skip/todo are forbidden without an OD (line 58); `node:test` is used with local stubs (line 38).",
+    "Dispatch: the Inspector worker (gpt-5.6-terra/medium) MAY be dispatched only to write RED characterization tests in `tools/devai/tests/sense.test.mjs`. The predecessor TASK-0011 has a PASS report, and the maestro must confirm the lock is free. The low finding can be fixed before dispatch, or the worker can follow `sense-presets.json` literally. This review does not assess any delivery and does not authorize a merge.",
+    "Non-blocking residuals: `db_isolation: database` in TASK-0012.json does not fit `node:test` on tooling. The untracked files `prompt-review-TASK-0012-3.json.formatted.*`/`.raw.*` are bridge temporaries to clean up before committing."
+  ]
+}

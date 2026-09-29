@@ -1,0 +1,15 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0020",
+  "task_id": "TASK-0012",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The cycle-3 low finding is RESOLVED at line 51. The line now says the `effect=read` filter applies only to `sweep`. It also says `baseline` and `governed` include their declared sets in full, including `build` (`local-write`) and `unit_test` (`harness-write`), and that no test may require `read` for those two presets. I checked this against DEVAI 1.5.6 installed in node_modules. In `sensor-registry.json`, build has effect=local-write and unit_test has effect=harness-write. In `sense-presets.json`, `baseline.members` has 4 entries and `governed.members` has 20, and both contain build and unit_test. `sweep.members` has 49 entries, which matches the 49 registry entries with effect=read. `sweep.excluded` lists build and unit_test. `selection_effect_rule.sweep_members` = 'sensor-registry.entries where effect equals read' and `caller_selected_omission` = 'forbidden'. The prompt's claims are factually correct.",
+    "Composition binding is CONFIRMED. `shasum -a 256` of `work/rounds/R-0020/prompts/TASK-0012.md` = a42f57ba3a1193535a446b9c600f9eaba3782bf33e291e210ae659231685eda4. The TASK-0012 entry in compositions.json matches it (sha256 and pc_id PC-a42f57ba3a119353, model gpt-5.6-terra, effort medium). Both `prompt_composition_id` fields in TASK-0012.json (top level and executor) are PC-a42f57ba3a119353. Capabilities stay `read`,`local-write`.",
+    "The write boundary is unchanged: only `tools/devai/tests/sense.test.mjs` may be written. Git, installs, `--write` and `record/` remain forbidden. The earlier resolutions from cycles 2 and 3 still hold: per-case dynamic import (line 50), repeatability plus non-PASS statuses plus `confidence` (line 40), `pnpm check` not a gate while RED persists, and no skip/todo without an OD (line 58).",
+    "`sense-presets.json` also declares a `structural` preset (12 members). The prompt limits itself to the presets of the CTG-0004 contract (baseline/governed/sweep), so this does not block anything.",
+    "Dispatch is FIT: the Inspector worker (gpt-5.6-terra/medium) may be dispatched to write only RED characterization tests in `tools/devai/tests/sense.test.mjs`. Before dispatch, the maestro must confirm that predecessor TASK-0011 is PASS and that the CTG-0004 lock is free. This review does not assess any delivery and does not authorize a merge.",
+    "Non-blocking residuals carried over: `db_isolation: database` in TASK-0012.json does not fit `node:test` on tooling. The untracked bridge temporaries `prompt-review-TASK-0012-4.json.formatted.*`/`.raw.*` should be cleaned up before committing."
+  ]
+}
