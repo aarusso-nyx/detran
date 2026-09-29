@@ -18,6 +18,7 @@ import { HttpException } from '@nestjs/common';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { BoatCrashCommandsService } from '@detran/est-crash';
 import { teatEventSink } from '@detran/ops-core';
 import {
   SqlTeatEventOutbox,
@@ -30,7 +31,9 @@ import {
   type DispatchResult,
   type RenachAcknowledgementInput,
 } from '../../src/pec-renach-transmission.service.js';
+import { BoatRenaestTransmissionService } from '../../src/boat-renaest-transmission.service.js';
 import { PecToxicologyInboundService } from '../../src/pec-toxicology-inbound.service.js';
+import { TeatIntegrationsService } from '../../src/teat-integrations.service.js';
 import {
   TeatStreamService,
   type OutboxRow,
@@ -129,6 +132,14 @@ function transmissions(
     tenantDatabase(tenant, client) as never,
     tenantContext(tenant) as never,
     port as never,
+  );
+}
+
+/** Lista e saúde da fila de operador (§1 #10). */
+function integrations(tenant: Tenant): TeatIntegrationsService {
+  return new TeatIntegrationsService(
+    tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+    tenantContext(tenant) as never,
   );
 }
 
@@ -276,10 +287,35 @@ beforeAll(async () => {
 afterAll(async () => {
   const all = [...tenants, ...scratch];
   try {
-    // Remoção só de tenants/atores criados aqui; as linhas de integração do
-    // tenant saem pela FK `ON DELETE CASCADE` de `auth.tenants`.
+    // Remoção só do que foi criado aqui. `ch`/`est`/`ops` não têm FK para
+    // `auth.tenants`: saem explicitamente, filhos antes dos pais; as linhas
+    // de integração saem pela FK `ON DELETE CASCADE` de `auth.tenants`.
+    const tenantIds = all.map((tenant) => tenant.tenantId);
+    for (const table of [
+      'ch.registration_block_notice',
+      'ch.report_addendum_approval',
+      'ch.report_addendum',
+      'ch.report',
+      'ch.biometric_check',
+      'ch.biometric_station',
+      'ch.medical_exam',
+      'ch.encounter',
+      'ch.appointment',
+      'ch.toxicology_suspension',
+      'ch.periodic_toxicology_result',
+      'ch.patient',
+      'ch.professional',
+      'ch.clinic',
+      'est.crash_renaest_submission',
+      'est.crash_record',
+      'ops.parameter',
+    ])
+      await owner.query(
+        `delete from ${table} where tenant_id = any($1::uuid[])`,
+        [tenantIds],
+      );
     await owner.query('delete from auth.users where id = any($1::uuid[])', [
-      all.map((tenant) => tenant.actorId),
+      [...all.map((tenant) => tenant.actorId)],
     ]);
     await owner.query('delete from auth.tenants where id = any($1::uuid[])', [
       all.map((tenant) => tenant.tenantId),
@@ -410,12 +446,13 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
     await expect(service.dispatchDue(25)).resolves.toEqual([]);
   });
 
-  it('C-08-05 dado event_id já processado quando reutilizado com corpo divergente então responde 409 sem efeito no item', async () => {
+  it('C-08-05 dado ACK ERROR com mensagem e depois event_id reutilizado com corpo divergente então erro visível com retry de 15 min, 409 e nenhum efeito no item', async () => {
     const tenant = await newTenant('ack-conflict');
     const service = transmissions(tenant, tenant.clients[0] as pg.Client);
     const [item] = await enqueue(tenant, 1);
     const eventId = `r22-ack-${randomUUID()}`;
 
+    const before = await reader(tenant).now();
     await expect(
       ack(service, eventId, {
         idempotencyKey: item!.key,
@@ -424,7 +461,15 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
         providerCode: 'R22-REFUSED',
       }),
     ).resolves.toMatchObject({ status: 'error', duplicate: false });
-    // ERROR com mensagem agenda retry: o item não é reclamado de imediato.
+    const after = await reader(tenant).now();
+    // ERROR com mensagem: erro visível e retry de 15 min; não é reclamado já.
+    const { items } = await integrations(tenant).list({});
+    const errored = items.find((candidate) => candidate.id === item!.id)!;
+    expect(errored).toMatchObject({
+      status: 'error',
+      last_error: 'provider refused fixture',
+    });
+    await expectRetryWindow(errored.available_at, before, after);
     await expect(service.dispatchDue(25)).resolves.toEqual([]);
 
     await expectHttpStatus(
@@ -442,11 +487,17 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
     ).resolves.toMatchObject({ outboxId: item!.id, status: 'error' });
   });
 
-  it('C-08-06 dado itens RENACH dos tenants A e B quando A despacha e confirma com a chave de B então não alcança B e B segue intacto', async () => {
+  it('C-08-06 dado itens RENACH dos tenants A e B quando A lista, despacha e confirma com a chave de B então não alcança B e B segue intacto', async () => {
     const [itemA] = await enqueue(tenantA, 1);
     const [itemB] = await enqueue(tenantB, 1);
     const underA = transmissions(tenantA, tenantA.clients[0] as pg.Client);
     const underB = transmissions(tenantB, tenantB.clients[0] as pg.Client);
+
+    const listedByA = (await integrations(tenantA).list({})).items.map(
+      (item) => item.id,
+    );
+    expect(listedByA).toContain(itemA!.id);
+    expect(listedByA).not.toContain(itemB!.id);
 
     const dispatchedByA = await underA.dispatchDue(25);
     expect(ids(dispatchedByA)).toContain(itemA!.id);
@@ -688,23 +739,309 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
     expect(teatEventSink(canonical)).toBe(canonical);
   });
 
-  it('C-08-16 dado event_id de toxicologia já recebido quando reenviado com corpo divergente então responde 409', async () => {
+  it('C-08-16 dado evento de toxicologia processado quando reenviado igual então é duplicate sem novo efeito, e com corpo divergente responde 409', async () => {
     const tenant = await newTenant('toxicology');
+    const client = tenant.clients[0] as pg.Client;
+    await asTenant(client, tenant, () =>
+      client.query(
+        `insert into ch.patient (tenant_id, national_id, name)
+         values ($1, '11144477735', 'R22 condutor fixture')`,
+        [tenant.tenantId],
+      ),
+    );
     const inbound = new PecToxicologyInboundService(
-      tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+      tenantDatabase(tenant, client) as never,
       tenantContext(tenant) as never,
     );
     const eventId = `r22-tox-${randomUUID()}`;
-    const first = Buffer.from('{"fixture":"r22-first"}');
+    const event = {
+      driverCpf: '11144477735',
+      category: 'C',
+      result: 'NEGATIVE',
+      collectedAt: '2026-09-01T12:00:00.000Z',
+      validUntil: '2026-11-30T12:00:00.000Z',
+      occurredAt: '2026-09-02T12:00:00.000Z',
+      laboratoryCode: 'R22-LAB',
+      sourceReference: 'r22-source-1',
+      driverAlertStatus: 'NOT_REQUIRED',
+    };
+    const body = Buffer.from(JSON.stringify(event));
 
-    await expect(
-      inbound.receive(eventId, first, JSON.parse(first.toString())),
-    ).resolves.toMatchObject({ eventId, duplicate: false });
+    const first = await inbound.receive(eventId, body, event);
+    expect(first).toMatchObject({
+      eventId,
+      status: 'processed',
+      duplicate: false,
+      resultId: expect.any(String),
+    });
+    await expect(inbound.receive(eventId, body, event)).resolves.toEqual({
+      eventId,
+      status: 'processed',
+      duplicate: true,
+      resultId: first.resultId,
+    });
 
-    const divergent = Buffer.from('{"fixture":"r22-divergent"}');
+    const divergent = { ...event, sourceReference: 'r22-source-2' };
     await expectHttpStatus(
-      inbound.receive(eventId, divergent, JSON.parse(divergent.toString())),
+      inbound.receive(
+        eventId,
+        Buffer.from(JSON.stringify(divergent)),
+        divergent,
+      ),
       409,
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Caminho completo pelo escritor real BOAT (`transmit`), provedor falso,
+// lista/saúde e inbox de toxicologia. Fixtures `ch`/`est`/`ops.parameter` são
+// criadas sob `role_app_backend` nos tenants do próprio teste; owner só lê o
+// parâmetro canônico a copiar e limpa.
+
+const CANONICAL_TENANT = '00000000-0000-7000-8000-00000000a001';
+async function insertId(
+  client: pg.Client,
+  sql: string,
+  values: unknown[],
+): Promise<string> {
+  const result = await client.query<{ id: string }>(sql, values);
+  return result.rows[0]!.id;
+}
+
+function pgTime(text: string): number {
+  return new Date(
+    text.replace(' ', 'T').replace(/([+-]\d{2})$/u, '$1:00'),
+  ).getTime();
+}
+
+async function expectRetryWindow(
+  availableAt: string,
+  before: string,
+  after: string,
+): Promise<void> {
+  const fifteen = 15 * 60 * 1000;
+  expect(pgTime(availableAt)).toBeGreaterThanOrEqual(pgTime(before) + fifteen);
+  expect(pgTime(availableAt)).toBeLessThanOrEqual(pgTime(after) + fifteen);
+}
+
+async function boatTenant(label: string): Promise<Tenant> {
+  const tenant = await newTenant(label);
+  const canonical = await owner.query(
+    `select parameter.*
+       from ops.parameter parameter
+       join est.crash_timer_ref timer on timer.parameter_key = parameter.key
+      where timer.code = 'T-BOAT-TRANSM' and parameter.tenant_id = $1
+        and parameter.surface = 'est' and parameter.scope = 'tenant'
+        and parameter.status = 'vigente'
+      order by parameter.effective_from desc, parameter.version desc
+      limit 1`,
+    [CANONICAL_TENANT],
+  );
+  const row = canonical.rows[0] as Record<string, unknown> | undefined;
+  if (!row)
+    throw new Error(
+      'fixture canônica do parâmetro T-BOAT-TRANSM ausente no banco preparado',
+    );
+  const client = tenant.clients[0] as pg.Client;
+  await asTenant(client, tenant, () =>
+    client.query(
+      `insert into ops.parameter
+         (tenant_id, traffic_agency_id, scope, surface, key, value_json,
+          value_type, status, source_pending, legal_readonly, decision_ref,
+          legal_basis, reason, version, effective_from, effective_to, changed_by)
+       values ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $11, $12, $13,
+               $14, $15, $16, $17)`,
+      [
+        tenant.tenantId,
+        row.traffic_agency_id,
+        row.scope,
+        row.surface,
+        row.key,
+        JSON.stringify(row.value_json),
+        row.value_type,
+        row.status,
+        row.source_pending,
+        row.legal_readonly,
+        row.decision_ref,
+        row.legal_basis,
+        row.reason,
+        row.version,
+        row.effective_from,
+        row.effective_to,
+        tenant.actorId,
+      ],
+    ),
+  );
+  return tenant;
+}
+
+/** Sinistro FECHADO sem vítima (valores da fixture canônica `r10-no-victim`). */
+async function closedCrash(tenant: Tenant): Promise<string> {
+  const client = tenant.clients[0] as pg.Client;
+  return asTenant(client, tenant, () =>
+    insertId(
+      client,
+      `insert into est.crash_record
+         (tenant_id, traffic_agency_id, crash_type, severity, state,
+          occurred_at, recorded_at, location_description, municipality_code,
+          uf, road_condition, weather_condition, lighting_condition,
+          signage_condition, source_system, source_local_id)
+       values ($1, $2, 'source_pending', 'SEM_VITIMA', 'FECHADO',
+               '2026-09-14T10:12:00-04:00', '2026-09-14T11:00:00-04:00',
+               'fixture BOAT FECHADO', '1302603', 'AM', 'source_pending',
+               'source_pending', 'source_pending', 'source_pending',
+               'boat-fixture', $3)
+       returning id`,
+      [tenant.tenantId, randomUUID(), `r22-${randomUUID()}`],
+    ),
+  );
+}
+
+async function transmitCrash(tenant: Tenant, crashId: string): Promise<void> {
+  await new BoatCrashCommandsService(
+    tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+    tenantContext(tenant) as never,
+  ).transmit(crashId);
+}
+
+function renaestPort() {
+  return {
+    submitCrash: vi.fn(),
+    complementCrash: vi.fn(),
+    correctCrash: vi.fn(),
+  };
+}
+
+function boat(
+  tenant: Tenant,
+  port = renaestPort(),
+): BoatRenaestTransmissionService {
+  return new BoatRenaestTransmissionService(
+    tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+    tenantContext(tenant) as never,
+    port as never,
+  );
+}
+
+describe('R-0022 CTG-0008 despacho BOAT e saúde da fila', () => {
+  it('C-08-15 dado itens pendentes e com erro quando a saúde da fila é consultada então conta pending, processing e error do tenant', async () => {
+    const tenant = await newTenant('health');
+    await enqueue(tenant, 3);
+    const health = () =>
+      integrations(tenant).health({
+        provider: 'r22-fixture',
+        baseUrl: 'http://r22.invalid',
+      });
+    await expect(health()).resolves.toMatchObject({
+      queue: { pending: 3, processing: 0, error: 0 },
+    });
+    await transmissions(tenant, tenant.clients[0] as pg.Client).dispatchDue(1);
+    await expect(health()).resolves.toMatchObject({
+      queue: { pending: 2, processing: 0, error: 1 },
+    });
+  });
+
+  it('C-08-13 dado sinistro FECHADO transmitido pelo BOAT quando runOnce tem sucesso então o item fica acked com protocolo e o evento crash.renaest.changed é publicado', async () => {
+    const tenant = await boatTenant('boat-ok');
+    const crashId = await closedCrash(tenant);
+    const since = await reader(tenant).now();
+    await transmitCrash(tenant, crashId);
+    const port = renaestPort();
+    port.submitCrash.mockResolvedValue({ protocol: 'R22-RENAEST-1' });
+
+    await expect(boat(tenant, port).runOnce()).resolves.toEqual([
+      {
+        outboxId: expect.any(String),
+        status: 'acked',
+        protocol: 'R22-RENAEST-1',
+      },
+    ]);
+    expect(port.submitCrash).toHaveBeenCalledTimes(1);
+    expect(port.submitCrash.mock.calls[0]?.[1]).toMatchObject({
+      tenantId: tenant.tenantId,
+      metadata: { idempotencyKey: expect.stringMatching(/\S/u) },
+    });
+    const { items } = await integrations(tenant).list({});
+    expect(
+      items.find((item) => item.topic === 'SINISTRO_TRANSMISSAO_PENDENTE'),
+    ).toMatchObject({ status: 'acked', attempts: 1 });
+    const events = await readAll(tenant, since);
+    expect(
+      events.find((row) => row.payload.type === 'crash.renaest.changed')
+        ?.payload,
+    ).toMatchObject({
+      domainEvent: 'SINISTRO_TRANSMITIDO',
+      data: { protocol: 'R22-RENAEST-1' },
+      aggregate: { id: crashId },
+    });
+    await expect(boat(tenant, port).runOnce()).resolves.toEqual([]);
+  });
+
+  it('C-08-13 dado falha do RENAEST quando runOnce roda então o item vai a erro com código traduzido e retry de 15 min', async () => {
+    const tenant = await boatTenant('boat-fail');
+    await transmitCrash(tenant, await closedCrash(tenant));
+    const port = renaestPort();
+    port.submitCrash.mockRejectedValue(new Error('renaest down fixture'));
+
+    const before = await reader(tenant).now();
+    await expect(boat(tenant, port).runOnce()).resolves.toEqual([
+      expect.objectContaining({
+        status: 'error',
+        error: 'BOAT.RENAEST_UNAVAILABLE',
+      }),
+    ]);
+    const after = await reader(tenant).now();
+    const { items } = await integrations(tenant).list({});
+    const item = items.find(
+      (candidate) => candidate.topic === 'SINISTRO_TRANSMISSAO_PENDENTE',
+    )!;
+    expect(item).toMatchObject({
+      status: 'error',
+      attempts: 1,
+      last_error: 'BOAT.RENAEST_UNAVAILABLE: renaest down fixture',
+    });
+    await expectRetryWindow(item.available_at, before, after);
+    await expect(boat(tenant, port).runOnce()).resolves.toEqual([]);
+    expect(port.submitCrash).toHaveBeenCalledTimes(1);
+  });
+
+  it('C-08-13 dado sinistro transmitido no tenant A quando o BOAT roda sob B então B não alcança o item e A segue com ele', async () => {
+    const tenantBoatA = await boatTenant('boat-a');
+    const tenantBoatB = await boatTenant('boat-b');
+    await transmitCrash(tenantBoatA, await closedCrash(tenantBoatA));
+    const portB = renaestPort();
+
+    await expect(boat(tenantBoatB, portB).runOnce()).resolves.toEqual([]);
+    expect(portB.submitCrash).not.toHaveBeenCalled();
+    const portA = renaestPort();
+    portA.submitCrash.mockResolvedValue({ protocol: 'R22-RENAEST-A' });
+    await expect(boat(tenantBoatA, portA).runOnce()).resolves.toEqual([
+      expect.objectContaining({ status: 'acked', protocol: 'R22-RENAEST-A' }),
+    ]);
+  });
+
+  it('C-08-12 dado log com tópicos RENACH, BOAT e não despacháveis quando RENACH e BOAT despacham então cada fila só consome o seu tópico', async () => {
+    const tenant = await boatTenant('topics-boat');
+    const aitEvent = await append(tenant, logEnvelope(tenant));
+    const [renachItem] = await enqueue(tenant, 1);
+    await transmitCrash(tenant, await closedCrash(tenant));
+    const renaest = renaestPort();
+    renaest.submitCrash.mockResolvedValue({ protocol: 'R22-RENAEST-T' });
+    const renach = renachPort();
+
+    const boatResults = await boat(tenant, renaest).runOnce();
+    expect(boatResults).toHaveLength(1);
+    expect(ids(boatResults as DispatchResult[])).not.toContain(renachItem!.id);
+    expect(ids(boatResults as DispatchResult[])).not.toContain(aitEvent);
+    expect(renaest.submitCrash).toHaveBeenCalledTimes(1);
+
+    const renachResults = await transmissions(
+      tenant,
+      tenant.clients[0] as pg.Client,
+      renach,
+    ).dispatchDue();
+    expect(ids(renachResults)).toEqual([renachItem!.id]);
+    expect(renach.submitMedicalExam).not.toHaveBeenCalled();
   });
 });
