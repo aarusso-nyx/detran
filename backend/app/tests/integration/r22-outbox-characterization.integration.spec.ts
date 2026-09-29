@@ -10,12 +10,15 @@
 //   no payload, o despacho falha antes do provedor, o que basta para as
 //   propriedades de fila, ACK e isolamento aqui caracterizadas;
 // - nenhuma asserção lê `integration.*` diretamente: o resultado observado é
-//   o de `dispatchDue`/`recordAcknowledgement`, válido nas duas fases.
+//   o de `dispatchDue`/`recordAcknowledgement`, o do leitor real do log
+//   (`TeatStreamService`, §1 #13) e o de `PecToxicologyInboundService`,
+//   válidos nas duas fases.
 import { randomUUID } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { teatEventSink } from '@detran/ops-core';
 import {
   SqlTeatEventOutbox,
   outboxIdempotencyKey,
@@ -27,6 +30,12 @@ import {
   type DispatchResult,
   type RenachAcknowledgementInput,
 } from '../../src/pec-renach-transmission.service.js';
+import { PecToxicologyInboundService } from '../../src/pec-toxicology-inbound.service.js';
+import {
+  TeatStreamService,
+  type OutboxRow,
+  type StreamCursor,
+} from '../../src/teat-stream.service.js';
 
 const { Client } = pg;
 const connectionString = process.env.DETRAN_TEST_DATABASE_URL;
@@ -93,16 +102,15 @@ function renachPort() {
   };
 }
 
-function transmissions(
-  tenant: Tenant,
-  client: pg.Client,
-  port = renachPort(),
-): PecRenachTransmissionService {
-  const database = {
+function tenantDatabase(tenant: Tenant, client: pg.Client) {
+  return {
     tx: <T>(work: (tx: unknown) => Promise<T>) =>
       asTenant(client, tenant, () => work(sqlTransaction(client))),
   };
-  const requestContext = {
+}
+
+function tenantContext(tenant: Tenant) {
+  return {
     hasActiveContext: () => true,
     snapshot: () => ({
       tenantId: tenant.tenantId,
@@ -110,11 +118,43 @@ function transmissions(
       requestId: `r22-outbox-${randomUUID()}`,
     }),
   };
+}
+
+function transmissions(
+  tenant: Tenant,
+  client: pg.Client,
+  port = renachPort(),
+): PecRenachTransmissionService {
   return new PecRenachTransmissionService(
-    database as never,
-    requestContext as never,
+    tenantDatabase(tenant, client) as never,
+    tenantContext(tenant) as never,
     port as never,
   );
+}
+
+/** Leitor real do log consumido pelo SSE TEAT (§1 #13). */
+function reader(tenant: Tenant): TeatStreamService {
+  return new TeatStreamService(
+    tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+    tenantContext(tenant) as never,
+  );
+}
+
+async function readAll(tenant: Tenant, since: string): Promise<OutboxRow[]> {
+  return reader(tenant).listSince({ createdAt: since, id: null });
+}
+
+function logEnvelope(
+  tenant: Tenant,
+  overrides: Partial<TeatEventEnvelope> = {},
+): TeatEventEnvelope {
+  // Tokens canônicos citados no contrato da porta (`outbox.ts`).
+  return queueEnvelope(tenant, {
+    type: 'ait.changed',
+    domainEvent: 'AIT_FINALIZADO',
+    aggregate: { kind: 'ait', id: randomUUID(), version: 1 },
+    ...overrides,
+  });
 }
 
 function queueEnvelope(
@@ -469,41 +509,202 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
     expect(port.submitPsychologicalEvaluation).not.toHaveBeenCalled();
   });
 
-  it('C-08-07 dado dois eventos do mesmo agregado com versões distintas quando anexados então ambos são preservados com ids distintos e consumidos na ordem de criação', async () => {
+  it('C-08-07 dado dois eventos do mesmo agregado com versões distintas quando anexados então o leitor do log devolve os dois, na ordem (created_at, id)', async () => {
     const tenant = await newTenant('versions');
+    const since = await reader(tenant).now();
     const aggregateId = randomUUID();
     const v1 = await append(
       tenant,
-      queueEnvelope(tenant, {
-        aggregate: { kind: 'ch.report', id: aggregateId, version: 1 },
+      logEnvelope(tenant, {
+        aggregate: { kind: 'ait', id: aggregateId, version: 1 },
       }),
     );
     const v2 = await append(
       tenant,
-      queueEnvelope(tenant, {
-        aggregate: { kind: 'ch.report', id: aggregateId, version: 2 },
+      logEnvelope(tenant, {
+        aggregate: { kind: 'ait', id: aggregateId, version: 2 },
       }),
     );
 
     expect(v2).not.toBe(v1);
-    const dispatched = await transmissions(
-      tenant,
-      tenant.clients[0] as pg.Client,
-    ).dispatchDue(25);
-    expect(ids(dispatched)).toEqual([v1, v2]);
+    const rows = await readAll(tenant, since);
+    expect(rows.map((row) => row.id)).toEqual([v1, v2]);
+    expect(
+      rows.map(
+        (row) =>
+          (row.payload.aggregate as TeatEventEnvelope['aggregate']).version,
+      ),
+    ).toEqual([1, 2]);
   });
 
-  it('C-08-08 dado o mesmo envelope quando anexado de novo em transação posterior então devolve o mesmo id e há um único item', async () => {
+  it('C-08-08 dado o mesmo envelope quando anexado de novo em transação posterior então devolve o mesmo id e o leitor vê um único evento', async () => {
     const tenant = await newTenant('replay');
-    const envelope = queueEnvelope(tenant);
+    const since = await reader(tenant).now();
+    const envelope = logEnvelope(tenant);
     const first = await append(tenant, envelope);
     const replay = await append(tenant, { ...envelope });
 
     expect(replay).toBe(first);
-    const dispatched = await transmissions(
-      tenant,
-      tenant.clients[0] as pg.Client,
-    ).dispatchDue(25);
-    expect(ids(dispatched)).toEqual([first]);
+    const rows = await readAll(tenant, since);
+    expect(rows.map((row) => row.id)).toEqual([first]);
+  });
+
+  it('C-08-09 dado envelope sem id e com tenantId alheio quando anexado então o leitor entrega id = id devolvido e tenantId = tenant do contexto', async () => {
+    const tenant = await newTenant('envelope');
+    const since = await reader(tenant).now();
+    const input = logEnvelope(tenant, { id: '', tenantId: tenantB.tenantId });
+    const id = await append(tenant, input);
+
+    const found = await reader(tenant).findById(id);
+    expect(found?.id).toBe(id);
+    expect(found?.payload).toMatchObject({
+      id,
+      tenantId: tenant.tenantId,
+      type: input.type,
+      domainEvent: input.domainEvent,
+      aggregate: input.aggregate,
+    });
+    const [listed] = await readAll(tenant, since);
+    expect(listed?.payload).toMatchObject({ id, tenantId: tenant.tenantId });
+  });
+
+  it('C-08-10 dado eventos já comitados quando lidos a partir de um cursor (created_at, id) então vêm só os posteriores, sem repetir nem pular entre páginas, com empate desempatado por id', async () => {
+    const tenant = await newTenant('cursor');
+    const since = await reader(tenant).now();
+    const appended: string[] = [];
+    for (let index = 0; index < 4; index += 1)
+      appended.push(await append(tenant, logEnvelope(tenant)));
+
+    const all = await readAll(tenant, since);
+    expect(all.map((row) => row.id)).toEqual(appended);
+
+    const paged: string[] = [];
+    let cursor: StreamCursor = { createdAt: since, id: null };
+    for (;;) {
+      const page = await reader(tenant).listSince(cursor, 1);
+      if (page.length === 0) break;
+      expect(page).toHaveLength(1);
+      const [row] = page as [OutboxRow];
+      paged.push(row.id);
+      cursor = { createdAt: row.created_at, id: row.id };
+    }
+    expect(paged).toEqual(appended);
+
+    const [first, second, third] = all as [OutboxRow, OutboxRow, OutboxRow];
+    await expect(
+      reader(tenant).listSince({ createdAt: first.created_at, id: first.id }),
+    ).resolves.toMatchObject(appended.slice(1).map((id) => ({ id })));
+
+    // Mesmo created_at: a ordem cai no id.
+    const lowest = '00000000-0000-0000-0000-000000000000';
+    const highest = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+    const tieLow = await reader(tenant).listSince({
+      createdAt: second.created_at,
+      id: lowest,
+    });
+    expect(tieLow.map((row) => row.id)).toEqual(appended.slice(1));
+    const tieHigh = await reader(tenant).listSince({
+      createdAt: second.created_at,
+      id: highest,
+    });
+    expect(tieHigh.map((row) => row.id)).toEqual(appended.slice(2));
+    expect(tieHigh[0]?.id).toBe(third.id);
+  });
+
+  it('C-08-11 dado evento do tenant B quando A lê o log então o evento nunca chega a A e o id de B é desconhecido sob A', async () => {
+    const sinceA = await reader(tenantA).now();
+    const fromB = await append(tenantB, logEnvelope(tenantB));
+    const fromA = await append(tenantA, logEnvelope(tenantA));
+
+    await expect(reader(tenantA).findById(fromB)).resolves.toBeUndefined();
+    const seenByA = (await readAll(tenantA, sinceA)).map((row) => row.id);
+    expect(seenByA).toContain(fromA);
+    expect(seenByA).not.toContain(fromB);
+    await expect(reader(tenantB).findById(fromB)).resolves.toMatchObject({
+      id: fromB,
+    });
+  });
+
+  it('C-08-11 dado append sob A com tenantId de B no envelope quando lido então o evento está no log de A e não no de B', async () => {
+    const sinceB = await reader(tenantB).now();
+    const id = await append(
+      tenantA,
+      logEnvelope(tenantA, { tenantId: tenantB.tenantId }),
+    );
+
+    await expect(reader(tenantA).findById(id)).resolves.toMatchObject({
+      id,
+      payload: { tenantId: tenantA.tenantId },
+    });
+    await expect(reader(tenantB).findById(id)).resolves.toBeUndefined();
+    expect((await readAll(tenantB, sinceB)).map((row) => row.id)).not.toContain(
+      id,
+    );
+  });
+
+  it('C-08-19 dado porta injetada não canônica quando teatEventSink anexa então a porta é notificada e o id devolvido é o persistido', async () => {
+    const tenant = await newTenant('sink');
+    const observer = {
+      append: vi.fn(async (_tx: unknown, _envelope: TeatEventEnvelope) => ({
+        id: 'observed-only',
+      })),
+    };
+    const envelope = logEnvelope(tenant);
+    const client = tenant.clients[0] as pg.Client;
+
+    const { id } = await asTenant(client, tenant, () =>
+      teatEventSink(observer).append(sqlTransaction(client) as never, envelope),
+    );
+
+    expect(observer.append).toHaveBeenCalledTimes(1);
+    expect(observer.append.mock.calls[0]?.[1]).toBe(envelope);
+    expect(id).not.toBe('observed-only');
+    await expect(reader(tenant).findById(id)).resolves.toMatchObject({
+      id,
+      payload: { id },
+    });
+    await expect(append(tenant, envelope)).resolves.toBe(id);
+  });
+
+  it('C-08-19 dado persistência no-op (transação sem query) quando teatEventSink anexa então devolve o id observado pela porta injetada', async () => {
+    const tenant = await newTenant('sink-noop');
+    const observer = {
+      append: vi.fn(async (_tx: unknown, _envelope: TeatEventEnvelope) => ({
+        id: 'observed-only',
+      })),
+    };
+
+    await expect(
+      teatEventSink(observer).append(
+        { kind: 'guard-only-double' } as never,
+        logEnvelope(tenant),
+      ),
+    ).resolves.toEqual({ id: 'observed-only' });
+    expect(observer.append).toHaveBeenCalledTimes(1);
+  });
+
+  it('C-08-19 dado SqlTeatEventOutbox injetada quando teatEventSink é composto então devolve a mesma instância', () => {
+    const canonical = new SqlTeatEventOutbox();
+    expect(teatEventSink(canonical)).toBe(canonical);
+  });
+
+  it('C-08-16 dado event_id de toxicologia já recebido quando reenviado com corpo divergente então responde 409', async () => {
+    const tenant = await newTenant('toxicology');
+    const inbound = new PecToxicologyInboundService(
+      tenantDatabase(tenant, tenant.clients[0] as pg.Client) as never,
+      tenantContext(tenant) as never,
+    );
+    const eventId = `r22-tox-${randomUUID()}`;
+    const first = Buffer.from('{"fixture":"r22-first"}');
+
+    await expect(
+      inbound.receive(eventId, first, JSON.parse(first.toString())),
+    ).resolves.toMatchObject({ eventId, duplicate: false });
+
+    const divergent = Buffer.from('{"fixture":"r22-divergent"}');
+    await expectHttpStatus(
+      inbound.receive(eventId, divergent, JSON.parse(divergent.toString())),
+      409,
+    );
   });
 });
