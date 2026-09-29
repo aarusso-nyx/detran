@@ -1,0 +1,12 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-rait-view-request-limit-race",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura. O lock usa o mesmo par tenant/membro da contagem e precede os bloqueios de linha do comando view. O prefixo distingue sua chave das demais chaves usadas pelo serviço; não identifiquei nova ordem circular de locks.",
+    "A prova usa duas transações reais, confirma T1 antes de avaliar o resultado de T2 e verifica o estado persistido. Não executei o teste nesta revisão somente leitura.",
+    "No backend-kernel atual, o usuário postgres pode criar bancos e os tiers e arquivos de teste rodam em sequência, reduzindo o risco de conexão ativa ao banco template. Ainda há dependência dessa exclusividade: uma conexão externa ao template fará CREATE DATABASE falhar. Um banco descartável criado sem copiar o banco em uso, com DDL e seed próprios, seria mais resistente a execuções concorrentes.",
+    "O diff contém apenas a correção e sua prova. Os outros dez defeitos da varredura permanecem fora deste hotfix."
+  ]
+}
