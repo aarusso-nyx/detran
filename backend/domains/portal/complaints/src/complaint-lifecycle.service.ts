@@ -88,8 +88,8 @@ export class ComplaintLifecycleService {
         `update portal.complaint
             set status = $2,
                 assigned_to = coalesce($3, assigned_to),
-                closed_by = case when $2 in ('CLOSED','REJECTED') then $4 else null end,
-                closed_at = case when $2 in ('CLOSED','REJECTED') then now() else null end,
+                closed_by = case when $2::varchar in ('CLOSED','REJECTED') then $4::uuid else null end,
+                closed_at = case when $2::varchar in ('CLOSED','REJECTED') then now() else null end,
                 payload = payload || $5::jsonb,
                 updated_at = now()
           where id = $1
