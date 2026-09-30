@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0026",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Ajustar os specs do TEAT web ao serviço SSE migrado (sessão, fixture EventSource, fallback no tick)",
+  "description": "Ajustar os specs do TEAT web ao serviço SSE migrado (sessão, fixture EventSource, fallback no tick) (CTG-0005), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0026.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-web-tests-sse", "MOD-teat-web-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0005", "sse", "web", "owner-b14", "after:TASK-0019"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-28c89862e1757b16",
+  "acceptance_commands": [
+    [
+      "node",
+      "tools/orchestra/expect-red.mjs",
+      "work/rounds/R-0022/reports/TASK-0008.expected-red.txt",
+      "--",
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse.characterization.spec.ts"
+    ],
+    [
+      "node",
+      "tools/orchestra/expect-red.mjs",
+      "work/rounds/R-0022/reports/TASK-0008.expected-red.txt",
+      "--",
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "run",
+      "test",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse.platform.spec.ts"
+    ],
+    ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/teat-web", "lint"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-28c89862e1757b16",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

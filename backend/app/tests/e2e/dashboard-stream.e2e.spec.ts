@@ -398,7 +398,13 @@ describe('CTG-0002 §11 — GET /v1/dashboard/stream (C-0002-100)', () => {
     opened.close();
   });
 
-  it('C-0002-100 — dado ?topics=duty.changed então só esse tipo chega; integration.health deriva de source.freshness só para teat/adapter', async () => {
+  // Adenda TASK-0025 (CTG-0004 §6, OD-R22-05 e OD-R22-50 = P-04-1 (a)): um
+  // frame por linha, `id` distinto por frame; `integration.health` passa a ser
+  // fato próprio gravado pelo produtor de frescor (linha própria), nunca frame
+  // derivado com o `id` do `source.freshness` (antes: a linha de frescor de
+  // teat/adapter gerava `source.freshness` + `integration.health` com o mesmo
+  // `id`). A prova positiva do fato do produtor é C-04-08 (sse-platform).
+  it('C-0002-100 — dado ?topics=duty.changed então só esse tipo chega; integration.health é linha própria: cada frame tem id distinto e o source.freshness de teat/adapter gera um único frame', async () => {
     const filtered = stream(
       'dash-operator',
       {},
@@ -481,7 +487,9 @@ describe('CTG-0002 §11 — GET /v1/dashboard/stream (C-0002-100)', () => {
     );
     createdOutboxIds.push(pec);
     await poller.firePolling();
-    await health.waitFor(() => health.events.length >= 3);
+    await health.waitFor(() =>
+      [teat, pec].every((id) => health.events.some((event) => event.id === id)),
+    );
     await new Promise((resolve) => setTimeout(resolve, 150));
     const byId = new Map<string, string[]>();
     for (const event of health.events) {
@@ -489,11 +497,15 @@ describe('CTG-0002 §11 — GET /v1/dashboard/stream (C-0002-100)', () => {
       list.push(event.event ?? '');
       byId.set(event.id ?? '', list);
     }
-    expect(byId.get(teat)?.sort()).toEqual([
-      'integration.health',
-      'source.freshness',
-    ]);
+    expect(new Set(health.events.map((event) => event.id)).size).toBe(
+      health.events.length,
+    );
+    expect(byId.get(teat)).toEqual(['source.freshness']);
     expect(byId.get(pec)).toEqual(['source.freshness']);
+    for (const event of health.events.filter(
+      (candidate) => candidate.event === 'integration.health',
+    ))
+      expect([teat, pec]).not.toContain(event.id);
     health.close();
   });
 

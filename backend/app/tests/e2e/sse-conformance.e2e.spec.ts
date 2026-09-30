@@ -234,7 +234,9 @@ const F4: Flow = {
   actor: ACTOR_A,
   allowedRole: 'rait-analyst',
   deniedRole: 'CANDIDATO',
-  expectedEvent: 'case',
+  // Adenda TASK-0025 (CTG-0004 §6, OD-R22-04): `event:` do F4 = `type` do
+  // envelope (antes: 2º segmento do topic, `case`).
+  expectedEvent: 'rait.case.changed',
   target: () => appA,
   scheduler: () => appA.schedulers.rait,
   headers: (role) => sessionHeaders(TENANT_A, role),
@@ -769,7 +771,10 @@ describe('C-01-17 — filtros e projeção no servidor', () => {
     assertNoTenantInData(unfiltered);
   });
 
-  it('C-01-17 — dado F4 com ?topics=case quando chegam rait.case.changed (com tenantId, cpf, cpf_hash e bankData) e rait.assignment.changed então só event: case, sem tenantId/cpf/cpf_hash/bankData; sem topics chega também event: assignment', async () => {
+  // Adenda TASK-0025 (CTG-0004 §6, OD-R22-04): nomes `event:` do F4 = `type`
+  // do envelope (antes: `case`/`assignment`); `?topics=case` continua pelo 2º
+  // segmento do topic.
+  it('C-01-17 — dado F4 com ?topics=case quando chegam rait.case.changed (com tenantId, cpf, cpf_hash e bankData) e rait.assignment.changed então só event: rait.case.changed, sem tenantId/cpf/cpf_hash/bankData; sem topics chega também event: rait.assignment.changed', async () => {
     const filtered = await openReady(F4, { query: '?topics=case' });
     const unfiltered = await openReady(F4, { reset: false });
     const caseRow = await track(
@@ -794,9 +799,12 @@ describe('C-01-17 — filtros e projeção no servidor', () => {
       ),
     );
     expect(eventIds(filtered, [caseRow, assignment])).toEqual([caseRow]);
+    expect(filtered.events.find((event) => event.id === caseRow)?.event).toBe(
+      'rait.case.changed',
+    );
     expect(
       unfiltered.events.find((event) => event.id === assignment)?.event,
-    ).toBe('assignment');
+    ).toBe('rait.assignment.changed');
     for (const stream of [filtered, unfiltered]) {
       assertNoTenantInData(stream);
       for (const event of stream.events) {

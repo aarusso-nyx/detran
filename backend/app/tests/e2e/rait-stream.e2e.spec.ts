@@ -87,7 +87,9 @@ describe('C-01-12 — GET /v1/inf/rait/stream por HTTP (F4)', () => {
     }
   });
 
-  it('C-01-12 — dado rait-analyst no tenant A quando abre o fluxo e chega rait.case.changed então 200 text/event-stream, no-cache, keep-alive, `: connected` primeiro e frame id/event: case/uma linha data JSON sem tenantId; dado CANDIDATO então 403 sem corpo SSE', async () => {
+  // Adenda TASK-0025 (CTG-0004 §6, OD-R22-04): `event:` = `type` do envelope
+  // (antes: `event: case`, 2º segmento do topic).
+  it('C-01-12 — dado rait-analyst no tenant A quando abre o fluxo e chega rait.case.changed então 200 text/event-stream, no-cache, keep-alive, `: connected` primeiro e frame id/event: rait.case.changed/uma linha data JSON sem tenantId; dado CANDIDATO então 403 sem corpo SSE', async () => {
     const scheduler = target.schedulers.rait;
     scheduler.reset();
     const stream = openStream(
@@ -120,7 +122,7 @@ describe('C-01-12 — GET /v1/inf/rait/stream por HTTP (F4)', () => {
     await scheduler.fireReads();
     await stream.waitFor(() => stream.events.some((event) => event.id === id));
     const event = stream.events.find((candidate) => candidate.id === id)!;
-    expect(event.event).toBe('case');
+    expect(event.event).toBe('rait.case.changed');
     expect(event.dataLines).toBe(1);
     expect(JSON.parse(event.data ?? '')).toMatchObject({
       data: { caseId: CASE_07 },
@@ -128,7 +130,9 @@ describe('C-01-12 — GET /v1/inf/rait/stream por HTTP (F4)', () => {
     expect(event.data).not.toContain('tenantId');
     expect(event.data).not.toContain(TENANT_A);
     expect(stream.body()).toMatch(
-      new RegExp(`id: ${id}\\nevent: case\\ndata: \\{[^\\n]*\\}\\n\\n`),
+      new RegExp(
+        `id: ${id}\\nevent: rait\\.case\\.changed\\ndata: \\{[^\\n]*\\}\\n\\n`,
+      ),
     );
     stream.close();
 
