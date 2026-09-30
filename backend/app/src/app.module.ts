@@ -211,7 +211,10 @@ patchTenantContextInterceptorOrdering();
  */
 function patchTenantContextInterceptorOrdering(): void {
   type Internals = {
-    requestContext: { hasActiveContext(): boolean };
+    requestContext: {
+      hasActiveContext(): boolean;
+      snapshot(): { tenantId?: string };
+    };
     requestContextMutator: {
       runWithRequestContext<T>(seed: object, work: () => T): T;
     };
@@ -227,7 +230,14 @@ function patchTenantContextInterceptorOrdering(): void {
   if (prototype.intercept.name === 'detranOrderedTenantContext') return;
   const original = prototype.intercept;
   prototype.intercept = function detranOrderedTenantContext(context, next) {
-    if (this.requestContext.hasActiveContext()) {
+    // STYNX 1.5.0 (UPS-TEN-01 (b)): o middleware do core abre o contexto antes
+    // dos guards, sem tenant. "Contexto ativo" deixou de significar "o
+    // interceptor do core já semeou o tenant"; só um contexto com tenant
+    // delega direto ao interceptor publicado, como em 1.4.0.
+    if (
+      this.requestContext.hasActiveContext() &&
+      this.requestContext.snapshot().tenantId
+    ) {
       return original.call(this, context, next);
     }
     const request = context.switchToHttp().getRequest<{
@@ -347,7 +357,13 @@ export class BoatVictimPurposeInterceptor {
           }),
         ).pipe(mergeMap(() => next.handle()));
       });
-    if (this.requestContext.hasActiveContext()) return work();
+    // Contexto utilizável = ativo e com tenant (o middleware do core 1.5.0
+    // abre o contexto antes de tenant/ator existirem).
+    if (
+      this.requestContext.hasActiveContext() &&
+      this.requestContext.snapshot().tenantId
+    )
+      return work();
     return new Observable((subscriber) => {
       let subscription: { unsubscribe(): void } | undefined;
       this.requestContextMutator.runWithRequestContext(

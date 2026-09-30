@@ -195,5 +195,20 @@ index 3a408124..33c1aa8b 100644
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-generated-billing-invoice-item-routes","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-generated-billing-invoice-item-routes",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

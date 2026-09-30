@@ -13,7 +13,7 @@ blueprint com pré-checagem gerada, antes do índice; violação 23514 → 422 `
 (`shift_id` required) no interceptor; e2e POST/PATCH com `shift_id` null; pré-checagem em clone;
 fixture r21 com turno. Resultados informados: provas 14/14, pacotes, e2e 51 + 22, gates.
 
-```diff
+````diff
 diff --git a/backend/app/src/unique-violation.interceptor.ts b/backend/app/src/unique-violation.interceptor.ts
 index 204ecf30..39cfd976 100644
 --- a/backend/app/src/unique-violation.interceptor.ts
@@ -30,7 +30,7 @@ index 204ecf30..39cfd976 100644
    CallHandler,
 @@ -30,7 +31,10 @@ export interface RejectedWrite {
  }
- 
+
  interface UniqueRule {
 +  /** `23505` (índice único) ou `23514` (restrição `check`). */
 +  sqlState: '23505' | '23514';
@@ -72,13 +72,13 @@ index 204ecf30..39cfd976 100644
 +    },
 +  },
  };
- 
+
  interface PgUniqueViolation {
 -  code: '23505';
 +  code: '23505' | '23514';
    constraint: string;
  }
- 
+
 @@ -121,7 +139,10 @@ export function uniqueViolationOf(
      const candidate = current as Partial<PgUniqueViolation> & {
        cause?: unknown;
@@ -119,7 +119,7 @@ index 6e9570dd..c1470747 100644
    reservationCancelled: randomUUID(),
 +  reservationCancelledNoShift: randomUUID(),
  };
- 
+
  function headers(role: string): Record<string, string> {
 @@ -158,6 +159,23 @@ beforeAll(async () => {
        `uniq-cancelled-${ids.range.slice(0, 8)}`,
@@ -142,7 +142,7 @@ index 6e9570dd..c1470747 100644
 +      `uniq-cancelled-no-shift-${ids.range.slice(0, 8)}`,
 +    ],
 +  );
- 
+
    const { NestFactory: factory } = await import('@nestjs/core');
    const { AppModule } = await import('../../src/app.module.js');
 @@ -264,4 +282,66 @@ describe('rotas CRUD de ops — unicidade de turno aberto e de reserva ativa', (
@@ -247,15 +247,15 @@ index 74df8b2d..c0fe2769 100644
  const PROCEDURE = 'backend/database/ddl/README.md';
 +// Ciclo 2 da revisão: reserva `reserved` exige turno (§5.10) — check com pré-checagem.
 +const SHIFT_REQUIRED_CHECK = 'ck_ops_numbering_reservation_reserved_shift';
- 
+
  type PgClient = InstanceType<typeof Client>;
- 
+
 @@ -77,6 +79,7 @@ let tenantId: string;
  let field: Awaited<ReturnType<typeof seedField>>;
  const extraShift = randomUUID();
  const reservations = [randomUUID(), randomUUID()];
 +const shiftless = randomUUID();
- 
+
  async function owner(): Promise<void> {
    await seeder.query(`select set_config('app.role', 'owner', false)`);
 @@ -197,4 +200,61 @@ describe('hotfix — pré-checagem de duplicatas antes dos índices únicos parc
@@ -327,9 +327,9 @@ index b5014b11..8c8f31ac 100644
 @@ -1,4 +1,4 @@
 --- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:ff9d218be3314b511ef2cdab143c94785c99ffe446405136e001f85f8978c1ad
 +-- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:56d0c4dd4d9f1a20f38bbcc7372af113898d34e435e79b5cccc2ab1e077d0479
- 
+
  -- Regenerable-only DDL for BP-OPS-OFFLINE-SYNC-001; request-path writes use role_app_backend.
- 
+
 @@ -41,8 +41,27 @@ create table if not exists ops.numbering_reservation (
    created_at timestamptz default now() not null,
    updated_at timestamptz,
@@ -363,9 +363,9 @@ index d741d32e..1f6cfc98 100644
 --- a/backend/database/ddl/README.md
 +++ b/backend/database/ddl/README.md
 @@ -92,18 +92,24 @@ simple, automatically updatable compatibility view exposing the columns used by
- 
+
  ## Duplicatas antes de índice único parcial
- 
+
 -Os índices únicos parciais de "uma linha ativa" são precedidos, na DDL gerada,
 -por um bloco de pré-checagem (`precheck: true` no índice do blueprint):
 +Os índices únicos parciais de "uma linha ativa" e a restrição de turno
@@ -373,7 +373,7 @@ index d741d32e..1f6cfc98 100644
 +pré-checagem (`precheck` no índice ou na `check` do blueprint). A restrição vem
 +antes do índice na DDL 18: sem reserva `reserved` sem turno, o agrupamento da
 +pré-checagem do índice e a unicidade do índice tratam as mesmas linhas.
- 
+
 -| Índice                                                               | DDL                           | Invariante                                             |
 -| -------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------ |
 -| `ops.ux_ops_shift_tenant_id_agent_id_open`                           | `13-ops-field-operations.sql` | um turno `open` por agente e tenant (CTG-0002 §5.4)    |
@@ -383,7 +383,7 @@ index d741d32e..1f6cfc98 100644
 +| `ops.ux_ops_shift_tenant_id_agent_id_open`                           | `13-ops-field-operations.sql` | um turno `open` por agente e tenant (CTG-0002 §5.4)                 |
 +| `ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved` | `18-ops-offline-sync.sql`     | uma reserva `reserved` por dispositivo e turno (§5.10)              |
 +| `ops.ck_ops_numbering_reservation_reserved_shift` (check)            | `18-ops-offline-sync.sql`     | reserva `reserved` sempre tem turno (§5.10: `shift_id` obrigatório) |
- 
+
  Se o banco já tiver linhas que o índice recusaria, `apply.sh` falha (a
  transação única é desfeita e nada é aplicado) com a mensagem
  `Indice unico <índice> nao pode ser criado: duplicatas em <tabela> (<filtro>): <chaves> linhas=<n>`,
@@ -392,7 +392,7 @@ index d741d32e..1f6cfc98 100644
 +restrição falha com `Restricao <restrição> nao pode ser criada: linhas que a violam (...)`,
 +listando tenant, dispositivo e id de cada reserva `reserved` sem turno. A
  DDL só detecta: **qual linha manter é decisão da operação**, nunca da DDL.
- 
+
  Procedimento, antes de reaplicar:
 @@ -119,10 +125,15 @@ Procedimento, antes de reaplicar:
            array_agg(id order by reserved_at) as reservations
@@ -403,7 +403,7 @@ index d741d32e..1f6cfc98 100644
 +     from ops.numbering_reservation
 +    where status = 'reserved' and shift_id is null;
     ```
- 
+
  2. Leve cada grupo ao responsável operacional do órgão (supervisão de campo),
 -   que decide qual turno segue aberto e qual reserva segue vigente.
 +   que decide qual turno segue aberto, qual reserva segue vigente e o destino
@@ -477,8 +477,16 @@ index 50d26ce7..96e7b34c 100644
    if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
      alter table ${module.namespace}.${entity.table} add constraint ${check.name} check (${check.expression})${check.notValid ? ' not valid' : ''};
    end if;
-```
+````
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-offline-numbering-shift-races","cycle":3,"verdict":"PASS | REVIEW | FAIL","resolved":[3],"findings":[],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "cycle": 3,
+  "verdict": "PASS | REVIEW | FAIL",
+  "resolved": [3],
+  "findings": [],
+  "notes": ["…"]
+}
 ```

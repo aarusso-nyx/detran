@@ -668,7 +668,10 @@ Fonte: `AUTHORIZATION.md` §Adenda B6.
   (`detran-runtime.ts:829`; rate limit sem tenant → 503 "Distributed rate limit backend unavailable") e
   o _shim_ de tenancy (`app.module.ts`; ramo `portalPublic` não executa → 400 nas rotas públicas do
   Portal). O passo da ordem de prova "caracterização verde sobre 1.5.0 com o _shim_ presente" não vale
-  sem adaptação. Pin commitado localmente, não publicado. Aguarda decisão do Owner.
+  sem adaptação. Pin commitado localmente, não publicado. Owner decidiu (B11): adaptação mínima junto com o pin.
+  **Resolvido** por TASK-0023 (checagem de "contexto utilizável" = ativo com tenant/ator em 6 arquivos;
+  _shim_ mantido; nenhum teste editado). Reexecução independente do maestro: 17/17 passos verdes,
+  `rls-smoke` igual à linha de base (`reports/pin-1.5.0-characterization.log`). Pin publicado.
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
 tenants). Branch `orchestra/stynx-sse-tenancy` publicada.

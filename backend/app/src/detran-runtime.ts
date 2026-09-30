@@ -833,7 +833,11 @@ export class DetranPersistentPipelineStore
     if (!this.requestContext || !this.requestContextMutator) {
       throw new Error('DETRAN pipeline request context is not bound');
     }
-    if (this.requestContext.hasActiveContext()) return work();
+    // STYNX 1.5.0 (UPS-TEN-01 (b)): o core abre o `RequestContext` num
+    // middleware antes dos guards, com tenant/ator ainda ausentes. Só um
+    // contexto com tenant e ator é utilizável; sem eles vale o caminho
+    // "sem contexto" (escopo aberto a partir da decisão), como em 1.4.0.
+    if (this.hasUsableRequestContext()) return work();
     if (!context.tenantId || !context.userId) {
       throw new Error(
         'DETRAN durable pipeline requires tenant and actor context',
@@ -850,6 +854,12 @@ export class DetranPersistentPipelineStore
         work,
       ),
     );
+  }
+
+  private hasUsableRequestContext(): boolean {
+    if (!this.requestContext?.hasActiveContext()) return false;
+    const { tenantId, actorId } = this.requestContext.snapshot();
+    return Boolean(tenantId && actorId);
   }
 }
 

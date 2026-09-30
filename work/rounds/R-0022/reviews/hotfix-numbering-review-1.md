@@ -817,9 +817,9 @@ index fb1ee290..c7cb8818 100644
 @@ -1,4 +1,4 @@
 --- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220
 +-- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:0cecb280a562a6d26c2ea7af68a781de3cfa2ce054d9cae2cc6c1a6c06cc1082
- 
+
  -- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
- 
+
 @@ -240,6 +240,7 @@ create table if not exists ops.ops_shift (
  );
  create index if not exists ix_ops_shift_tenant_id_agent_id_started_at on ops.ops_shift (tenant_id, agent_id, started_at);
@@ -835,7 +835,7 @@ index 6fdf48d3..1c1974b1 100644
 @@ -202,7 +202,12 @@ export class AitSyncApplier implements SyncEntityApplier {
      return parsed.data;
    }
- 
+
 -  /** §4.6 — guarda de numeração, nesta ordem. */
 +  /**
 +   * §4.6 — guarda de numeração, nesta ordem. A reserva é lida `for update`:
@@ -871,7 +871,7 @@ index 0cd60386..3bf87328 100644
 @@ -33,6 +34,28 @@ export interface OpenShiftInput {
    accuracy_m?: number;
  }
- 
+
 +async function assertNoOpenShift(
 +  scope: SqlScope,
 +  tenantId: string,
@@ -896,7 +896,7 @@ index 0cd60386..3bf87328 100644
 +
  export class OpenShiftCommand {
    constructor(private readonly deps: FieldDeps) {}
- 
+
 @@ -55,21 +78,7 @@ export class OpenShiftCommand {
        const agent = await loadAgent(scope, tenantId, actorId);
        const device = await loadDevice(scope, tenantId, deviceId);
@@ -977,7 +977,7 @@ index d3b5309b..4cdfc8a6 100644
 @@ -175,13 +176,22 @@ export class ReconcileNumberingCommand {
      });
    }
- 
+
 +  /**
 +   * `lock` trava a reserva (`for update`) na reconciliação: o applier `ait`
 +   * também a trava antes de gravar o consumo `aplicado`, então a leitura dos
@@ -1005,7 +1005,7 @@ index 6797ae98..f5d32943 100644
 @@ -101,6 +101,16 @@ export class ReserveNumberingCommand {
          return view(existing);
        }
- 
+
 +      // Serializa as reservas do turno: a linha do turno é travada antes da
 +      // faixa (a mesma ordem do fechamento de turno, que trava o turno e
 +      // depois reserva e faixa), então duas reservas do mesmo turno em faixas
@@ -1039,5 +1039,20 @@ index 3c968145..db02c281 100644
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-offline-numbering-shift-races","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

@@ -344,5 +344,20 @@ index 00000000..52cce3dd
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-untyped-sql-parameters-sweep","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-untyped-sql-parameters-sweep",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

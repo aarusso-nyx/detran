@@ -43,7 +43,7 @@ index d6406e79..847a1f77 100644
 @@ -230,6 +230,10 @@ export class PecRenachProcessService {
          );
        }
- 
+
 +      // Mensagem de negócio para o caso sequencial. Não é a garantia: duas
 +      // transações paralelas não se veem aqui; quem serializa é o índice único
 +      // parcial ux_ch_encounter_renach_process_key (tenant_id, chave), cuja
@@ -54,7 +54,7 @@ index d6406e79..847a1f77 100644
 @@ -333,11 +337,15 @@ function requiredTracks(
    return psychologicalRequired ? ['MEDICAL', 'PSYCH'] : ['MEDICAL'];
  }
- 
+
 -function isPostgresUniqueViolation(error: unknown): boolean {
 -  return (
 -    typeof error === 'object' &&
@@ -445,9 +445,9 @@ index 0f4f60bf..90e6510f 100644
 @@ -1,4 +1,4 @@
 --- Generated from BP-CH-ENCOUNTERS-001 v1.2.0 sha256:91731d0164806f1b137025d46dbb65f5fc8ac203fbc84cf8c9affcf81be9a4b5
 +-- Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
- 
+
  -- Regenerable-only DDL for BP-CH-ENCOUNTERS-001; request-path writes use role_app_backend.
- 
+
 @@ -67,7 +67,7 @@ create table if not exists ch.encounter (
  );
  create index if not exists ix_ch_encounter_status on ch.encounter (tenant_id, status);
@@ -572,9 +572,9 @@ index 6c7a19a8..7cea9e19 100644
 -66. `19-rait-priority-verify.sql` — CTG-0001-C4-OD V3.
 +66. `19-rait-priority-enforce.sql` — CTG-0001-C4-OD V3.
 +67. `19-rait-priority-verify.sql` — CTG-0001-C4-OD V3.
- 
+
  Application notes (`../apply.sh`):
- 
+
 @@ -89,3 +92,17 @@ Application notes (`../apply.sh`):
  `auth.tenants` is the canonical DETRAN tenant table. `tenancy.tenants` is a
  simple, automatically updatable compatibility view exposing the columns used by
@@ -598,9 +598,9 @@ index 6712817e..c7497f9d 100644
 --- a/docs/framework/arch/teat-error-catalog.md
 +++ b/docs/framework/arch/teat-error-catalog.md
 @@ -40,20 +40,20 @@ de origem para manter compatibilidade com o cliente móvel já validado.
- 
+
  ## 2. Bootstrap, sessão, dispositivo e turno
- 
+
 -| Código                                                                               | Status                                     | Quando                                                             | `context`                      | UI                                                  |
 -| ------------------------------------------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------------------ | ------------------------------ | --------------------------------------------------- |
 -| `TEAT.MOBILE_BOOTSTRAP_SCOPE_MISMATCH`                                               | 403                                        | tenant/principal/dispositivo não conferem                          | —                              | `device-blocked`                                    |
@@ -629,9 +629,9 @@ index 6712817e..c7497f9d 100644
 +| `TEAT.NORMATIVE_PACKAGE_MISSING` · `…_HASH_MISMATCH`                                 | 422                                        | pacote ausente ou adulterado ([RN-TEAT-003])                                                                                   | `packageId`, `manifestHash`    | reinstalar pacote                                                                |
 +| `TEAT.NORMATIVE_PACKAGE_EXPIRED`                                                     | aviso (`readiness.warnings[]`), nunca erro | pacote vencido em campo sem conectividade (steering E.29)                                                                      | `packageId`, `validUntil`      | banner persistente; o ato registra o pacote usado                                |
 +| `TEAT.OFFLINE_GRANT_EXPIRED` · `…_REVOKED` · `…_LIMIT_REACHED`                       | 403                                        | provisionamento offline (WP-T5)                                                                                                | `grantId`, `limit`             | reconciliar/renovar                                                              |
- 
+
  ## 3. AIT — ciclo de vida, conteúdo e correção
- 
+
 diff --git a/docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json b/docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json
 index 8e8aa622..7c968c17 100644
 --- a/docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json
@@ -685,14 +685,14 @@ index 67d23f30..8edda60f 100644
 --- a/docs/meta/knowledge-base/open-decisions-rait.md
 +++ b/docs/meta/knowledge-base/open-decisions-rait.md
 @@ -433,9 +433,10 @@ decide apenas se a nova ADR a mantém ou a emenda por supersessão.
- 
+
  ## Hotfix B9 — corridas "checa e depois grava" (2026-09-29)
- 
+
 -Registro do Engineer no hotfix fora da R-0022 (Adenda B9). Um item ficou parado porque a
 -correção depende de uma regra de produto sem fonte única.
 +Registro do Engineer no hotfix fora da R-0022 (Adenda B9). Os itens dependiam de regra de produto
 +sem fonte única; o Owner decidiu ambos na Adenda B10 (2026-09-29).
- 
+
 -| ID           | Questão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Estado / premissa até decisão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Decisor | Afeta                                                                                                    |
 -| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------- |
 -| OD-HF-B9-001 | **Unicidade da `renach_process_key`**: única por tenant (um processo RENACH liga um só atendimento, de qualquer paciente) ou única por (tenant, paciente, chave)? O código (`backend/app/src/pec-renach-process.service.ts`) rejeita a chave ligada a atendimento de **outro paciente**, mas a checagem roda sem bloqueio e o índice `ux_ch_encounter_renach_process` inclui `patient_id`: dois vínculos paralelos de pacientes diferentes gravam a mesma chave (prova vermelha no relatório do hotfix). | Pendente; nada alterado. Fontes divergentes: [APP-PEC] §`renach_process_key`, [UC-PEC-001] passo 3 e AC-PEC-001-2 e o glossário de domínio dizem (tenant, paciente, chave); `law/glossary/GE-028.json` diz "chave única" sem escopo; o código aplica unicidade por tenant de forma não atômica. Decidido "por tenant" → índice único parcial `(tenant_id, renach_process_key)` no BP-CH-ENCOUNTERS-001 (Architect) com 23505 → 409 atual. Decidido "por paciente" → retirar do código a checagem entre pacientes. | Owner   | `BP-CH-ENCOUNTERS-001`, `42-ch-encounters.sql`, `pec-renach-process.service.ts`, [UC-PEC-001], [APP-PEC] |
@@ -703,5 +703,20 @@ index 67d23f30..8edda60f 100644
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-renach-process-key-tenant-unique","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-renach-process-key-tenant-unique",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

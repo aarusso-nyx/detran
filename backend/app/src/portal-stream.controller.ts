@@ -110,8 +110,11 @@ export class PortalStreamController {
       : null;
 
     // Fora do contexto da requisição (tick do poller), reabre o escopo capturado.
+    // Contexto utilizável = ativo e com tenant (STYNX 1.5.0 abre o contexto no
+    // middleware, antes de tenant/ator).
     const inScope = <T>(work: () => Promise<T>): Promise<T> =>
-      this.requestContext.hasActiveContext()
+      this.requestContext.hasActiveContext() &&
+      this.requestContext.snapshot().tenantId
         ? work()
         : this.database.withRequestContext(tenantScope, work);
 

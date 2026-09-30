@@ -488,7 +488,7 @@ index cfb6ad12..9596b2cb 100644
 +++ b/backend/domains/dashboard/monitor/src/handwritten/cycle/alert.service.ts
 @@ -387,6 +387,14 @@ export class DashboardAlertService {
        return { kind: 'ignored', reason: 'disconnected' };
- 
+
      // (2) dedupe por chave (tenant, indicator_code, object_kind, object_ref)
 +    // — serializado entre instâncias do sweeper/runner: sem a trava, duas
 +    // transações leem "sem alerta aberto" e ambas inserem.
@@ -650,7 +650,7 @@ index 8aa3efb4..3e764624 100644
        this.assertAllowed(
          ait,
 @@ -903,7 +903,7 @@ export class AitLifecycleService {
- 
+
        let ait: Ait | undefined;
        if (dto.targetAitId) {
 -        ait = await this.repositories.ait.findOne(dto.targetAitId, tx);
@@ -673,11 +673,11 @@ index 8aa3efb4..3e764624 100644
      return this.repositories.ait.transaction(async (tx) => {
 -      const request = await this.getCancelRequestRow(id, tx);
 +      const request = await this.getCancelRequestRow(id, tx, true);
- 
+
        // §13 item 3: a `decision_body` that disagrees with the stored
        // `addressed_to` is rejected before any effect, independent of the
 @@ -1099,7 +1099,7 @@ export class AitLifecycleService {
- 
+
        let ait: Ait | undefined;
        if (request.ait_id) {
 -        ait = await this.repositories.ait.findOne(request.ait_id, tx);
@@ -694,7 +694,7 @@ index 8aa3efb4..3e764624 100644
      this.assertAllowed(ait, allowed, command);
      return ait;
    }
- 
+
 +  /** Leitura do AIT para comando: `for update` antes da checagem de estado,
 +   * para que a transição e o filho gravados depois dela não repitam a de
 +   * uma transação concorrente (READ COMMITTED). */
@@ -995,7 +995,7 @@ index 3b6968c8..5ed03b3e 100644
 @@ -134,6 +134,29 @@ export async function findRow(
    return result.rows[0];
  }
- 
+
 +/**
 + * Leitura do procedimento pai com `for update`: a checagem de estado e a
 + * escrita que dela depende ficam na mesma linha bloqueada (sem ela, dois
@@ -1027,7 +1027,7 @@ index fcfe8990..5dfbda46 100644
 --- a/backend/domains/inf/alcohol/src/handwritten/close-procedure.command.ts
 +++ b/backend/domains/inf/alcohol/src/handwritten/close-procedure.command.ts
 @@ -3,7 +3,7 @@ import { DetranError } from '@detran/shared';
- 
+
  import {
    assertAlcoholAllowed,
 -  findRow,
@@ -1049,7 +1049,7 @@ index 9e9f167b..285f9a2e 100644
 --- a/backend/domains/inf/alcohol/src/handwritten/forward-procedure.command.ts
 +++ b/backend/domains/inf/alcohol/src/handwritten/forward-procedure.command.ts
 @@ -5,7 +5,7 @@ import { DetranError } from '@detran/shared';
- 
+
  import {
    assertAlcoholAllowed,
 -  findRow,
@@ -1059,7 +1059,7 @@ index 9e9f167b..285f9a2e 100644
    patchRow,
 @@ -65,7 +65,7 @@ export class ForwardProcedureCommand {
        });
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
 +      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
@@ -1081,19 +1081,19 @@ index ec510f8b..47f6ec85 100644
    patchRow,
 @@ -50,7 +50,7 @@ export class RecordRefusalCommand {
        });
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
 +      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
        if (!procedure) throw tenantMismatch({ procedureId });
        assertAlcoholAllowed(procedure, procedureId, ALLOWED, 'record-refusal');
- 
+
 diff --git a/backend/domains/inf/alcohol/src/handwritten/record-signs.command.ts b/backend/domains/inf/alcohol/src/handwritten/record-signs.command.ts
 index 84e4dac2..09b1ab30 100644
 --- a/backend/domains/inf/alcohol/src/handwritten/record-signs.command.ts
 +++ b/backend/domains/inf/alcohol/src/handwritten/record-signs.command.ts
 @@ -4,7 +4,7 @@ import { DetranError } from '@detran/shared';
- 
+
  import {
    assertAlcoholAllowed,
 -  findRow,
@@ -1103,7 +1103,7 @@ index 84e4dac2..09b1ab30 100644
    patchRow,
 @@ -65,7 +65,7 @@ export class RecordSignsCommand {
        });
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
 +      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
@@ -1124,13 +1124,13 @@ index 75e14195..5fb2e601 100644
    insertRow,
 @@ -57,7 +58,7 @@ export class RecordTestCommand {
      const testedAt = input.tested_at ?? scope.occurredAt;
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
 +      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
        if (!procedure) throw tenantMismatch({ procedureId });
        assertAlcoholAllowed(procedure, procedureId, ALLOWED, 'record-test');
- 
+
 diff --git a/backend/domains/inf/alcohol/src/handwritten/start-procedure.command.ts b/backend/domains/inf/alcohol/src/handwritten/start-procedure.command.ts
 index c422f8ce..e3279e71 100644
 --- a/backend/domains/inf/alcohol/src/handwritten/start-procedure.command.ts
@@ -1152,7 +1152,7 @@ index c422f8ce..e3279e71 100644
 +      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
        if (!procedure) throw tenantMismatch({ procedureId });
        assertAlcoholAllowed(procedure, procedureId, ALLOWED, 'start');
- 
+
 diff --git a/backend/domains/inf/alcohol/tests/integration/alcohol-race.integration.spec.ts b/backend/domains/inf/alcohol/tests/integration/alcohol-race.integration.spec.ts
 new file mode 100644
 index 00000000..1767883a
@@ -1272,7 +1272,7 @@ index b42e6073..d9ce328c 100644
    measureStateInvalid,
    stringOf,
 @@ -24,7 +24,7 @@ export class CancelMeasureCommand {
- 
+
    async execute(measureId: string, _input: CancelMeasureInput): Promise<never> {
      return inTenantTransaction(this.deps, async (tx) => {
 -      const measure = await findRow(this.deps, tx, 'measures', measureId);
@@ -1317,7 +1317,7 @@ index dd2b6a23..7054e458 100644
    recordHistory,
 @@ -89,7 +89,7 @@ export class IssueTermCommand {
      }
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const measure = await findRow(this.deps, tx, 'measures', measureId);
 +      const measure = await lockRow(this.deps, tx, 'measures', measureId);
@@ -1331,7 +1331,7 @@ index 6a35d8a4..b94a9fb6 100644
 @@ -168,6 +168,29 @@ export async function findRow(
    return result.rows[0];
  }
- 
+
 +/**
 + * Leitura do agregado pai com `for update`: a checagem de estado e a escrita
 + * que dela depende ficam na mesma linha bloqueada (sem ela, dois comandos
@@ -1373,7 +1373,7 @@ index 5cef16a9..2d65a6fc 100644
    recordHistory,
 @@ -51,7 +51,7 @@ export class RecordInventoryCommand {
        });
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const measure = await findRow(this.deps, tx, 'measures', measureId);
 +      const measure = await lockRow(this.deps, tx, 'measures', measureId);
@@ -1394,7 +1394,7 @@ index 9d87ab29..af665789 100644
    patchRow,
 @@ -68,7 +69,7 @@ export class RecordRemovalCommand {
      }
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      let measure = await findRow(this.deps, tx, 'measures', measureId);
 +      let measure = await lockRow(this.deps, tx, 'measures', measureId);
@@ -1406,7 +1406,7 @@ index 26c43527..4703a9fe 100644
 --- a/backend/domains/inf/measures/src/handwritten/record-retention.command.ts
 +++ b/backend/domains/inf/measures/src/handwritten/record-retention.command.ts
 @@ -4,7 +4,7 @@ import { DetranError } from '@detran/shared';
- 
+
  import {
    assertMeasureAllowed,
 -  findRow,
@@ -1416,13 +1416,13 @@ index 26c43527..4703a9fe 100644
    recordHistory,
 @@ -58,7 +58,7 @@ export class RecordRetentionCommand {
      }
- 
+
      return inTenantTransaction(this.deps, async (tx) => {
 -      const measure = await findRow(this.deps, tx, 'measures', measureId);
 +      const measure = await lockRow(this.deps, tx, 'measures', measureId);
        if (!measure) throw tenantMismatch({ measureId });
        assertMeasureAllowed(measure, measureId, ALLOWED, 'register-retention');
- 
+
 diff --git a/backend/domains/inf/measures/src/handwritten/release-retention.command.ts b/backend/domains/inf/measures/src/handwritten/release-retention.command.ts
 index aa059ab7..8e8f2522 100644
 --- a/backend/domains/inf/measures/src/handwritten/release-retention.command.ts
@@ -1442,7 +1442,7 @@ index aa059ab7..8e8f2522 100644
 -      const measure = await findRow(this.deps, tx, 'measures', measureId);
 +      const measure = await lockRow(this.deps, tx, 'measures', measureId);
        if (!measure) throw tenantMismatch({ measureId });
- 
+
        const currentState = stringOf(measure.current_status);
 diff --git a/backend/domains/inf/measures/src/handwritten/start-measure.command.ts b/backend/domains/inf/measures/src/handwritten/start-measure.command.ts
 index 9165b0b9..b7964cab 100644
@@ -1806,5 +1806,20 @@ index 148e46d8..069af01b 100644
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-check-then-write-races","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-check-then-write-races",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

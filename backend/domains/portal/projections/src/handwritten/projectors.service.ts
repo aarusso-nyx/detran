@@ -514,7 +514,9 @@ export class PortalProjectors {
       withTenantContext(this.database, this.requestContext, (tx) =>
         work(tx as unknown as PortalSqlTransaction),
       );
-    if (this.requestContext.hasActiveContext()) return run();
+    // Contexto utilizável = ativo com tenant e ator (STYNX 1.5.0 abre o
+    // contexto no middleware, antes de tenant/ator); senão, caminho do job.
+    if (this.hasUsableRequestContext()) return run();
     const database = this.database as Partial<Database>;
     if (typeof database.withRequestContext === 'function') {
       return database.withRequestContext(
@@ -523,5 +525,11 @@ export class PortalProjectors {
       );
     }
     return run();
+  }
+
+  private hasUsableRequestContext(): boolean {
+    if (!this.requestContext.hasActiveContext()) return false;
+    const { tenantId, actorId } = this.requestContext.snapshot();
+    return Boolean(tenantId && actorId);
   }
 }

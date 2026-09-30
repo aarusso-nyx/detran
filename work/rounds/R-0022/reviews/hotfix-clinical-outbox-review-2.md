@@ -16,5 +16,13 @@ e o texto novo. Diferença: `git diff 3b9d79b4..HEAD` (só `package.json`).
    Fica **fora deste hotfix**, registrado para decisão do Owner (correção própria).
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-clinical-outbox-param-types","cycle":2,"verdict":"PASS | REVIEW | FAIL","resolved":[1,2],"findings":[],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-clinical-outbox-param-types",
+  "cycle": 2,
+  "verdict": "PASS | REVIEW | FAIL",
+  "resolved": [1, 2],
+  "findings": [],
+  "notes": ["…"]
+}
 ```

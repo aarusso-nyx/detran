@@ -409,5 +409,20 @@ index a5357086..81978ff7 100644
 ## Saída (JSON, e nada mais)
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-clinical-outbox-param-types","verdict":"PASS | REVIEW | FAIL","findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-clinical-outbox-param-types",
+  "verdict": "PASS | REVIEW | FAIL",
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

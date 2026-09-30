@@ -7,6 +7,7 @@
 Avalie só a correção dos 4 achados `high` do ciclo 1
 (`/Users/aarusso/Development/detran/.claude/worktrees/r-0022-stynx-sse-tenancy-c949d9/work/rounds/R-0022/reviews/hotfix-numbering-review-1.json`)
 e o texto novo (`git diff 5a227619..HEAD`):
+
 1. interceptor manuscrito global `backend/app/src/unique-violation.interceptor.ts` que traduz só os dois
    índices de "linha ativa" para os 409 existentes (`TEAT.SHIFT_ALREADY_OPEN`,
    `TEAT.NUMBERING_RESERVATION_ACTIVE_EXISTS`) em todas as rotas, com e2e das rotas CRUD;
@@ -19,11 +20,11 @@ e o texto novo (`git diff 5a227619..HEAD`):
 4. ponto de extensão `precheck: true` no gerador: bloco `do $$` antes do índice que lista duplicatas e
    falha com mensagem explícita, procedimento em `backend/database/ddl/README.md`; prova em clone com
    duplicatas.
-Resultados informados: provas 12/12; unit/integration dos pacotes (inclui provisioning 694); e2e 51 + 20;
-`rls-smoke`, `verify:rls-ddl`, `verify:decorators`, `typecheck`, `format:check`, `contracts:check`,
-`blueprints:check`.
+   Resultados informados: provas 12/12; unit/integration dos pacotes (inclui provisioning 694); e2e 51 + 20;
+   `rls-smoke`, `verify:rls-ddl`, `verify:decorators`, `typecheck`, `format:check`, `contracts:check`,
+   `blueprints:check`.
 
-```diff
+````diff
 diff --git a/backend/app/src/app.module.ts b/backend/app/src/app.module.ts
 index e236b561..a6e3173b 100644
 --- a/backend/app/src/app.module.ts
@@ -35,7 +36,7 @@ index e236b561..a6e3173b 100644
 +import { UniqueViolationInterceptorModule } from './unique-violation.interceptor.js';
  import { DetranPolicyErrorGuard } from './detran-policy-error.guard.js';
  import { RaitTransactionalAuditInterceptor } from './rait-transactional-audit.interceptor.js';
- 
+
 @@ -877,6 +878,7 @@ export class AppModule {
          OfflineSyncModule,
          ProvisioningModule,
@@ -537,7 +538,7 @@ index 346ca780..115d4c81 100644
 @@ -588,6 +588,115 @@ describe('hotfix — corridas de turno e numeração offline sob concorrência (
      expect(untouched.rows).toHaveLength(1);
    });
- 
+
 +  // Ciclo 1 da revisão: a serialização da reserva depende de travar a linha do turno; um
 +  // `shift_id` sem linha não trava nada. A reserva exige turno do tenant, `open` e do agente
 +  // pedido; sem ele, 409 `TEAT.SHIFT_NOT_OPEN` (catálogo TEAT: "ato legal sem turno").
@@ -863,9 +864,9 @@ index c7cb8818..39dc77c9 100644
 @@ -1,4 +1,4 @@
 --- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:0cecb280a562a6d26c2ea7af68a781de3cfa2ce054d9cae2cc6c1a6c06cc1082
 +-- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
- 
+
  -- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
- 
+
 @@ -240,6 +240,20 @@ create table if not exists ops.ops_shift (
  );
  create index if not exists ix_ops_shift_tenant_id_agent_id_started_at on ops.ops_shift (tenant_id, agent_id, started_at);
@@ -894,9 +895,9 @@ index f58a0f8a..b5014b11 100644
 @@ -1,4 +1,4 @@
 --- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 +-- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:ff9d218be3314b511ef2cdab143c94785c99ffe446405136e001f85f8978c1ad
- 
+
  -- Regenerable-only DDL for BP-OPS-OFFLINE-SYNC-001; request-path writes use role_app_backend.
- 
+
 @@ -45,6 +45,21 @@ create table if not exists ops.numbering_reservation (
  );
  create index if not exists ix_numbering_reservation_tenant_id_agent_id_device_id_status on ops.numbering_reservation (tenant_id, agent_id, device_id, status);
@@ -997,13 +998,13 @@ index f5d32943..31c58a5d 100644
  import { numberingReservationChangedEvent } from './events.js';
 -import { bigintOf, inTransaction } from './numbering-sql.js';
 +import { bigintOf, inTransaction, type SqlScope } from './numbering-sql.js';
- 
+
  /** Chave do `parameter-catalogue.md` §TEAT (H.54: 72 horas vigentes). */
  const RESERVATION_TTL_KEY = 'teat.numbering.reservation_ttl_hours';
 @@ -65,6 +65,27 @@ function view(row: ReservationRow): ReservationView {
    };
  }
- 
+
 +/** Uma reserva `reserved` por dispositivo e turno (§5.10 pré-estado). */
 +async function assertNoActiveReservation(
 +  query: SqlScope['query'],
@@ -1027,7 +1028,7 @@ index f5d32943..31c58a5d 100644
 +
  export class ReserveNumberingCommand {
    constructor(private readonly deps: OfflineSyncDeps) {}
- 
+
 @@ -105,26 +126,24 @@ export class ReserveNumberingCommand {
        // faixa (a mesma ordem do fechamento de turno, que trava o turno e
        // depois reserva e faixa), então duas reservas do mesmo turno em faixas
@@ -1066,7 +1067,7 @@ index f5d32943..31c58a5d 100644
          });
 +      const range = await this.lockRange(query, tenantId, input);
 +      await assertNoActiveReservation(query, tenantId, input);
- 
+
        const start = bigintOf(range.next_number);
        const end = start + size - 1;
 @@ -152,6 +171,8 @@ export class ReserveNumberingCommand {
@@ -1101,7 +1102,7 @@ index 17383759..b7498f00 100644
 @@ -459,21 +459,33 @@ describe('CTG-0002 §5.13 — leituras de recibo e recuperação de ACK perdido
   * Achado 3 (§4.1 passo 4): sem lote anterior, `last = 0`.
   */
- 
+
 -/** Reserva `reserved` do device+turno cobrindo um número específico. */
 +/**
 + * Reserva `reserved` do device+turno cobrindo `[number, end]`. §5.10: há no
@@ -1145,7 +1146,7 @@ index 17383759..b7498f00 100644
 @@ -979,14 +992,21 @@ describe('CTG-0002 §14 (c) — replay de lote interrompido completa a materiali
      return { batchId, itemId, receiptId };
    }
- 
+
 +  /**
 +   * Os dois números dos itens do lote numa só reserva `reserved` do
 +   * dispositivo e turno (§5.10 admite uma por dispositivo e turno); o mapa
@@ -1167,7 +1168,7 @@ index 17383759..b7498f00 100644
 +    );
 +    return new Map(numbers.map((number) => [number, reservationId]));
    }
- 
+
    it('dado um lote interrompido depois do passo 5, com só o primeiro de dois itens materializado, quando reenviado com o mesmo device_batch_id e os mesmos dois itens então 200: o recibo do item já emitido volta sem reaplicar e o item faltante é materializado e aplicado', async () => {
 diff --git a/backend/domains/ops/provisioning/tests/integration/harness.ts b/backend/domains/ops/provisioning/tests/integration/harness.ts
 index 7ac4ef4e..d0342430 100644
@@ -1306,8 +1307,25 @@ index afc3b7ab..50d26ce7 100644
      ),
      ...indexes
        .filter(
-```
+````
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-offline-numbering-shift-races","cycle":2,"verdict":"PASS | REVIEW | FAIL","resolved":[1,2,3,4],"findings":[{"severity":"high | low","item":1,"file":"…","line":1,"claim":"…","fix":"…"}],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "cycle": 2,
+  "verdict": "PASS | REVIEW | FAIL",
+  "resolved": [1, 2, 3, 4],
+  "findings": [
+    {
+      "severity": "high | low",
+      "item": 1,
+      "file": "…",
+      "line": 1,
+      "claim": "…",
+      "fix": "…"
+    }
+  ],
+  "notes": ["…"]
+}
 ```

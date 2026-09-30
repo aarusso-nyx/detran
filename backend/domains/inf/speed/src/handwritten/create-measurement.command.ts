@@ -107,9 +107,13 @@ export class CreateMeasurementCommand {
   async execute(
     input: CreateSpeedMeasurementInput,
   ): Promise<Record<string, unknown>> {
-    if (!this.deps.requestContext.hasActiveContext())
+    // Contexto utilizável = ativo e com tenant (STYNX 1.5.0 abre o contexto
+    // no middleware, antes de tenant/ator); fail-closed sem tenant.
+    if (
+      !this.deps.requestContext.hasActiveContext() ||
+      !this.deps.requestContext.snapshot().tenantId
+    )
       throw new Error('Um comando de velocidade exige contexto de requisição');
-    this.deps.requestContext.snapshot();
 
     return this.deps.database.tx(async (tx) => {
       // 1. certificado do medidor vigente.

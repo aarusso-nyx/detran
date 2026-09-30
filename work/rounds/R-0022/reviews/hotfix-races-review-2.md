@@ -46,7 +46,7 @@ index f6b64b73..1b6a41bb 100644
 @@ -8,17 +8,26 @@ import { randomUUID } from 'node:crypto';
  import pg from 'pg';
  import { afterAll, beforeAll, describe, expect, it } from 'vitest';
- 
+
 -import type { DetectionCell } from '../../src/handwritten/cycle/index.js';
 +import {
 +  DashboardClockSweeper,
@@ -175,5 +175,13 @@ index f6b64b73..1b6a41bb 100644
 ```
 
 ```json
-{"mode":"delivery-review","scope":"hotfix-check-then-write-races","cycle":2,"verdict":"PASS | REVIEW | FAIL","resolved":[1],"findings":[],"notes":["…"]}
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-check-then-write-races",
+  "cycle": 2,
+  "verdict": "PASS | REVIEW | FAIL",
+  "resolved": [1],
+  "findings": [],
+  "notes": ["…"]
+}
 ```
