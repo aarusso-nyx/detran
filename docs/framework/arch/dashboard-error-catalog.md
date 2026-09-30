@@ -16,17 +16,17 @@ dado.
 
 ## 1. Ciclo do alerta
 
-| Código                                  | Status | Quando                                                                                          | `context`                              | Base                     |
-| --------------------------------------- | ------ | ----------------------------------------------------------------------------------------------- | -------------------------------------- | ------------------------ |
-| `DASH.ALERT_STATE_INVALID`              | 409    | comando fora do estado de [WF-DASH-001]                                                         | `alertId`, `currentState`, `allowed[]` | [WF-DASH-001]            |
-| `DASH.ALERT_ACK_NOT_OWNER`              | 403    | ACK por quem não é dono nem operador em nome do dono                                            | `ownerRole`                            | [UC-DASH-002]            |
-| `DASH.ALERT_ACK_MANUAL_NOTE_REQUIRED`   | 422    | ACK `manual` sem nota                                                                           | —                                      | AC-DASH-002-5            |
-| `DASH.ALERT_CLOSE_WITHOUT_VERIFICATION` | 409    | encerrar antes de `VERIFICADO` (evidência da origem)                                            | `currentState`                         | AC-DASH-002-4            |
-| `DASH.ALERT_EXTINCTION_NOT_CLOSABLE`    | 409    | tentativa de encerrar alerta de trilha de extinção (`CRITICO_EXTINCAO`, `INCIDENTE_REGISTRADO`) | `track`                                | [WF-DASH-001] §Distinção |
-| `DASH.ALERT_BUSINESS_ACT_FORBIDDEN`     | 403    | qualquer comando que tente alterar objeto de domínio pelo painel                                | `attemptedAction`                      | [RN-DASH-101]            |
-| `DASH.ALERT_SOURCE_STALE`               | 409    | comando sobre alerta cuja fonte está `INDISPONIVEL`/`DESATUALIZADO_MARCADO`                     | `indicator`, `freshness`               | [WF-DASH-003]            |
-| `DASH.ALERT_INCIDENT_NOT_FOUND`         | 404    | apuração de incidente inexistente para o alerta                                                 | `alertId`                              | WF-RAIT-002 §4.1         |
-| `DASH.ROOT_CAUSE_CATEGORY_INVALID`      | 400    | categoria fora de transporte/aceite/conteúdo                                                    | `allowed[]`                            | [JRN-DASH-004]           |
+| Código                                  | Status | Quando                                                                                                                                                                               | `context`                              | Base                     |
+| --------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | ------------------------ |
+| `DASH.ALERT_STATE_INVALID`              | 409    | comando fora do estado de [WF-DASH-001]                                                                                                                                              | `alertId`, `currentState`, `allowed[]` | [WF-DASH-001]            |
+| `DASH.ALERT_ACK_NOT_OWNER`              | 403    | ACK por quem não é dono nem operador em nome do dono                                                                                                                                 | `ownerRole`                            | [UC-DASH-002]            |
+| `DASH.ALERT_ACK_MANUAL_NOTE_REQUIRED`   | 422    | ACK `manual` sem nota                                                                                                                                                                | —                                      | AC-DASH-002-5            |
+| `DASH.ALERT_CLOSE_WITHOUT_VERIFICATION` | 409    | encerrar antes de `VERIFICADO` (evidência da origem)                                                                                                                                 | `currentState`                         | AC-DASH-002-4            |
+| `DASH.ALERT_EXTINCTION_NOT_CLOSABLE`    | 409    | tentativa de encerrar alerta de trilha de extinção (`CRITICO_EXTINCAO`, `INCIDENTE_REGISTRADO`)                                                                                      | `track`                                | [WF-DASH-001] §Distinção |
+| `DASH.ALERT_BUSINESS_ACT_FORBIDDEN`     | —      | **retirado (OD-D58, R-0026)**: não é emitido; [RN-DASH-101] é garantido pela ausência de rota de ato de negócio (404) e pelo corpo de comando estrito (400 `DASH.VALIDATION_FAILED`) | —                                      | [RN-DASH-101]            |
+| `DASH.ALERT_SOURCE_STALE`               | 409    | comando sobre alerta cuja fonte está `INDISPONIVEL`/`DESATUALIZADO_MARCADO`                                                                                                          | `indicator`, `freshness`               | [WF-DASH-003]            |
+| `DASH.ALERT_INCIDENT_NOT_FOUND`         | 404    | apuração de incidente inexistente para o alerta                                                                                                                                      | `alertId`                              | WF-RAIT-002 §4.1         |
+| `DASH.ROOT_CAUSE_CATEGORY_INVALID`      | 400    | categoria fora de transporte/aceite/conteúdo                                                                                                                                         | `allowed[]`                            | [JRN-DASH-004]           |
 
 ## 2. Deveres periódicos
 
@@ -60,6 +60,7 @@ dado.
 | `DASH.EXPORT_VOLUME_APPROVAL_REQUIRED`   | 202    | volume acima do limite; fica `pending-approval`                            | `rows`, `limit`, `exportId`    | [RN-DASH-172] regra 5 |
 | `DASH.EXPORT_FORMAT_NOT_OPEN`            | 400    | formato proprietário                                                       | `allowed[]`                    | [RN-DASH-151]         |
 | `DASH.EXPORT_PURPOSE_REQUIRED`           | 400    | exportação N2 sem finalidade                                               | —                              | [RN-DASH-172] regra 2 |
+| `DASH.EXPORT_STATE_INVALID`              | 409    | `approve` de exportação fora de `pending-approval`                         | `exportId`, `currentState`     | OD-D35 (R-0026)       |
 | `DASH.CELL_SUPPRESSED`                   | —      | aviso: células abaixo do limiar suprimidas (primária e secundária)         | `suppressedCells`, `threshold` | [RN-DASH-161]         |
 | `DASH.CELL_THRESHOLD_UNDEFINED`          | 422    | publicação/exportação agregada enquanto o limiar não é decidido            | `parameterKey`                 | DT-029                |
 | `DASH.DATASET_REQUIREMENTS_UNMET`        | 422    | dataset aberto sem um dos sete requisitos                                  | `missing[]`                    | [RN-DASH-151]         |
@@ -68,19 +69,21 @@ dado.
 
 ## 5. Catálogo, relatórios e fontes
 
-| Código                                    | Status | Quando                                                                   | `context`              | Base                      |
-| ----------------------------------------- | ------ | ------------------------------------------------------------------------ | ---------------------- | ------------------------- |
-| `DASH.INDICATOR_NOT_IN_CATALOG`           | 404    | código fora dos 42 indicadores                                           | `code`                 | [APP-DASHBOARD] §Catálogo |
-| `DASH.INDICATOR_CLOCK_CODE_INVALID`       | 400    | letra de relógio fora de A/B/C/D                                         | `allowed[]`            | [RN-DASH-131]             |
-| `DASH.INDICATOR_THRESHOLD_NOT_CALIBRATED` | 422    | publicar configuração de indicador técnico sem limiar (401/402/403/406)  | `code`                 | DT-030 (calibração SRE)   |
-| `DASH.INDICATOR_TARGET_AND_CEILING_MIXED` | 422    | configuração que junta meta operacional e teto legal no mesmo componente | `code`                 | [WF-RAIT-002] §4.5        |
-| `DASH.INDICATOR_LATENCY_INVALID`          | 400    | latência aceitável fora da faixa do bloco                                | `block`, `range`       | [WF-DASH-003]             |
-| `DASH.REPORT_STATE_INVALID`               | 409    | `complete`/`fail` fora de `processing`                                   | `currentState`         | origem `generated-report` |
-| `DASH.REPORT_TYPE_INVALID`                | 400    | `report_type` fora do catálogo                                           | `allowed[]`            | origem                    |
-| `DASH.REPORT_FILE_HASH_MISMATCH`          | 422    | hash do arquivo não confere                                              | —                      | origem `file_hash`        |
-| `DASH.SOURCE_UNAVAILABLE`                 | 503    | leitura direta (fallback) da origem falhou; selo passa a `INDISPONIVEL`  | `source`, `lastSeenAt` | [WF-DASH-003]             |
-| `DASH.SOURCE_HEARTBEAT_UNDEFINED`         | 422    | fonte sem contrato de heartbeat não pode ser marcada `FRESCO`            | `source`               | [WF-DASH-003]             |
-| `DASH.PANEL_BLOCKED_BY_DECISION`          | 423    | painel P-09 (ou parte de P-08) requisitado antes da decisão que o libera | `panel`, `decision`    | DT-029, DT-066            |
+| Código                                    | Status | Quando                                                                                      | `context`                                        | Base                      |
+| ----------------------------------------- | ------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------- |
+| `DASH.INDICATOR_NOT_IN_CATALOG`           | 404    | código fora dos 42 indicadores                                                              | `code`                                           | [APP-DASHBOARD] §Catálogo |
+| `DASH.INDICATOR_CLOCK_CODE_INVALID`       | 400    | letra de relógio fora de A/B/C/D                                                            | `allowed[]`                                      | [RN-DASH-131]             |
+| `DASH.INDICATOR_THRESHOLD_NOT_CALIBRATED` | 422    | publicar configuração de indicador técnico sem limiar (401/402/403/406)                     | `code`                                           | DT-030 (calibração SRE)   |
+| `DASH.INDICATOR_TARGET_AND_CEILING_MIXED` | 422    | configuração que junta meta operacional e teto legal no mesmo componente                    | `code`                                           | [WF-RAIT-002] §4.5        |
+| `DASH.INDICATOR_LATENCY_INVALID`          | 400    | latência aceitável fora da faixa do bloco                                                   | `block`, `range`                                 | [WF-DASH-003]             |
+| `DASH.INDICATOR_CONFIG_STATE_INVALID`     | 409    | `update`/`publish` de configuração de indicador cujo `status` corrente não admite o comando | `indicatorConfigId`, `currentState`, `allowed[]` | OD-D35 (R-0026)           |
+| `DASH.PANEL_STATE_INVALID`                | 409    | `update`/`publish` de painel cujo `status` corrente não admite o comando                    | `panelId`, `currentState`, `allowed[]`           | OD-D35 (R-0026)           |
+| `DASH.REPORT_STATE_INVALID`               | 409    | `complete`/`fail` fora de `processing`                                                      | `currentState`                                   | origem `generated-report` |
+| `DASH.REPORT_TYPE_INVALID`                | 400    | `report_type` fora do catálogo                                                              | `allowed[]`                                      | origem                    |
+| `DASH.REPORT_FILE_HASH_MISMATCH`          | 422    | hash do arquivo não confere                                                                 | —                                                | origem `file_hash`        |
+| `DASH.SOURCE_UNAVAILABLE`                 | 503    | leitura direta (fallback) da origem falhou; selo passa a `INDISPONIVEL`                     | `source`, `lastSeenAt`                           | [WF-DASH-003]             |
+| `DASH.SOURCE_HEARTBEAT_UNDEFINED`         | 422    | fonte sem contrato de heartbeat não pode ser marcada `FRESCO`                               | `source`                                         | [WF-DASH-003]             |
+| `DASH.PANEL_BLOCKED_BY_DECISION`          | 423    | painel P-09 (ou parte de P-08) requisitado antes da decisão que o libera                    | `panel`, `decision`                              | DT-029, DT-066            |
 
 ## 6. Genéricos
 

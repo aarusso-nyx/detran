@@ -104,10 +104,16 @@ retomada, fallback de polling em 30 s). O stream é visão viva das projeções,
 | `dashboard.duty_evidence` (**novo**)          | `DEVER_COMPROVADO` (próprio) e eventos de publicação                                      | 201…209                       |
 | `dashboard.source_freshness` (**novo**)       | heartbeat por fonte; ausência de evento além da latência aceitável                        | 408                           |
 
-Eventos publicados pelo DASHBOARD: `ALERTA_DETECTADO`, `ALERTA_ESCALONADO`,
-`ALERTA_RECONHECIDO`, `ALERTA_ENCERRADO`, `INCIDENTE_REGISTRADO` (espelho), `DEVER_JANELA_ABERTA`,
-`DEVER_ATRASADO`, `DEVER_COMPROVADO`, `EXPORTACAO_REGISTRADA`, `IndicatorConfigChanged`,
-`ReportRequested`, `ReportGenerated`.
+Eventos publicados pelo DASHBOARD: `ALERTA_DETECTADO`, `ALERTA_CLASSIFICADO`,
+`ALERTA_NOTIFICADO`, `ALERTA_ESCALONADO`, `ALERTA_RECONHECIDO`, `ALERTA_EM_TRATAMENTO`,
+`ALERTA_VERIFICADO`, `ALERTA_ENCERRADO`, `ALERTA_CRITICO_EXTINCAO`, `INCIDENTE_REGISTRADO`
+(espelho), `DEVER_JANELA_ABERTA`, `DEVER_ATRASADO`, `DEVER_COMPROVADO`, `FONTE_FRESCOR_ALTERADO`,
+`EXPORTACAO_REGISTRADA`, `IndicatorConfigChanged`, `ReportRequested`, `ReportGenerated`,
+`ReportFailed`. Os sete tokens `ALERTA_CLASSIFICADO`, `ALERTA_NOTIFICADO`,
+`ALERTA_EM_TRATAMENTO`, `ALERTA_VERIFICADO`, `ALERTA_CRITICO_EXTINCAO`, `FONTE_FRESCOR_ALTERADO` e
+`ReportFailed` vêm do contrato de R-0011 CTG-0002 §16 (OD-D33, decidida pelo Architect em R-0026
+CTG-0001). O oitavo token proposto, `DEVER_NAO_CUMPRIDO`, não tem literal em
+`backend/domains/dashboard/monitor/src` e fica fora da lista (OD-R26-040).
 
 ## 7. Contratos de dado pendentes por app
 

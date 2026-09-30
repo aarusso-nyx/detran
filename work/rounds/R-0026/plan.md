@@ -443,6 +443,12 @@ publicado. Nenhum arquivo desta abertura toca locks de R-0020/R-0022/R-0023/R-00
 
 ## Triagem
 
+- 2026-09-29 TASK-0002 → sem falha de aceitação. C-26-1-10 (critério de CTG-0001) acha
+  `DEVER_NAO_CUMPRIDO` sem literal no backend (emissão dinâmica `DEVER_${toState}`, OD-D70); a
+  transcrição aplicou a regra do próprio CTG-0001 §OD-D33 (7 tokens em §6) e abriu OD-R26-040.
+  Decisão provisória do maestro (Architect): manter fora até haver literal; revisitar com OD-D70 na
+  retomada. O worker rodou um `git diff --stat` de leitura (sem efeito), registrado no relatório.
+
 ## Retomada
 
 ## Leitura
