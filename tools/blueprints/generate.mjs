@@ -188,6 +188,31 @@ begin
   end if;
 end $$;`;
 }
+/**
+ * `precheck: { columns }` numa restrição `check` aditiva: antes do `alter table
+ * … add constraint`, um bloco que procura as linhas existentes que a violam e,
+ * havendo, falha listando `columns` de cada uma e o procedimento de
+ * `backend/database/ddl/README.md`. Só detecta; a correção é da operação. Com
+ * a restrição já presente o bloco não varre a tabela.
+ */
+function checkPrecheckSql(module, entity, check) {
+  const table = `${module.namespace}.${entity.table}`;
+  const columns = check.precheck.columns ?? ['id'];
+  const labels = columns.map((column) => `${column}=%s`).join(' ');
+  return `do $$
+declare
+  violations text;
+begin
+  if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${table}'::regclass) then
+    select string_agg(format('${labels}', ${columns.join(', ')}), '; ')
+      into violations
+      from ${table} where not (${check.expression});
+    if violations is not null then
+      raise exception 'Restricao ${table}.${check.name} nao pode ser criada: linhas que a violam (${check.expression.replaceAll("'", "''")}): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', violations;
+    end if;
+  end if;
+end $$;`;
+}
 function tableSql(module, entity) {
   const fields = entityFields(entity);
   const columns = fields.map(
@@ -215,7 +240,9 @@ function tableSql(module, entity) {
     ...(entity.checks ?? [])
       .filter((check) => check.additive)
       .map(
-        (check) => `do $$ begin
+        (
+          check,
+        ) => `${check.precheck ? `${checkPrecheckSql(module, entity, check)}\n` : ''}do $$ begin
   if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
     alter table ${module.namespace}.${entity.table} add constraint ${check.name} check (${check.expression})${check.notValid ? ' not valid' : ''};
   end if;

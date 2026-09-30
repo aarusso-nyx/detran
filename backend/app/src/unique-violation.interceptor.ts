@@ -3,7 +3,8 @@
 //
 // Os comandos (`open-shift`, `reserve-numbering`) já devolvem o código próprio; as rotas CRUD
 // geradas e `FieldOperationsController` gravam direto pela porta de repositório e, sem esta
-// tradução, a violação `23505` chegava ao cliente como 500. O mapa é fechado: só os índices
+// tradução, a violação `23505` chegava ao cliente como 500. A restrição de turno obrigatório
+// da reserva (`23514`) segue o mesmo caminho. O mapa é fechado: só os índices e a restrição
 // listados são traduzidos, e qualquer outro erro segue intocado para os filtros do app.
 import type {
   CallHandler,
@@ -30,7 +31,10 @@ export interface RejectedWrite {
 }
 
 interface UniqueRule {
+  /** `23505` (índice único) ou `23514` (restrição `check`). */
+  sqlState: '23505' | '23514';
   code: string;
+  status: number;
   message: string;
   /** Contexto do catálogo, lido na linha ativa que já ocupa a chave. */
   context(query: Query, write: RejectedWrite): Promise<Record<string, unknown>>;
@@ -69,6 +73,8 @@ async function keyOf(
 /** Índice → recusa de negócio (teat-error-catalog.md). */
 export const ACTIVE_UNIQUE_RULES: Readonly<Record<string, UniqueRule>> = {
   ux_ops_shift_tenant_id_agent_id_open: {
+    sqlState: '23505',
+    status: 409,
     code: 'TEAT.SHIFT_ALREADY_OPEN',
     message: 'Já existe turno aberto para o agente.',
     async context(query, write) {
@@ -86,6 +92,8 @@ export const ACTIVE_UNIQUE_RULES: Readonly<Record<string, UniqueRule>> = {
     },
   },
   ux_numbering_reservation_tenant_id_device_id_shift_id_reserved: {
+    sqlState: '23505',
+    status: 409,
     code: 'TEAT.NUMBERING_RESERVATION_ACTIVE_EXISTS',
     message: 'Já existe reserva vigente para o dispositivo e turno.',
     async context(query, write) {
@@ -105,10 +113,20 @@ export const ACTIVE_UNIQUE_RULES: Readonly<Record<string, UniqueRule>> = {
       return { reservationId: row ? String(row.id) : null };
     },
   },
+  // §5.10 (CTG-0002): reserva `reserved` exige turno.
+  ck_ops_numbering_reservation_reserved_shift: {
+    sqlState: '23514',
+    status: 422,
+    code: 'TEAT.VALIDATION_FAILED',
+    message: 'Dados inválidos para o comando.',
+    async context() {
+      return { fields: [{ path: 'shift_id', rule: 'required' }] };
+    },
+  },
 };
 
 interface PgUniqueViolation {
-  code: '23505';
+  code: '23505' | '23514';
   constraint: string;
 }
 
@@ -121,7 +139,10 @@ export function uniqueViolationOf(
     const candidate = current as Partial<PgUniqueViolation> & {
       cause?: unknown;
     };
-    if (candidate.code === '23505' && typeof candidate.constraint === 'string')
+    if (
+      (candidate.code === '23505' || candidate.code === '23514') &&
+      typeof candidate.constraint === 'string'
+    )
       return candidate as PgUniqueViolation;
     current = candidate.cause;
   }
@@ -164,7 +185,7 @@ export class UniqueViolationInterceptor implements NestInterceptor {
   ): Promise<never> {
     const violation = uniqueViolationOf(error);
     const rule = violation ? ACTIVE_UNIQUE_RULES[violation.constraint] : null;
-    if (!violation || !rule) throw error;
+    if (!violation || !rule || rule.sqlState !== violation.code) throw error;
     const context = await withTenantContext(
       this.database,
       this.requestContext,
@@ -183,7 +204,7 @@ export class UniqueViolationInterceptor implements NestInterceptor {
         ),
     ).catch(() => ({}));
     throw new DetranError(rule.code, {
-      status: 409,
+      status: rule.status,
       context,
       message: rule.message,
       cause: error,

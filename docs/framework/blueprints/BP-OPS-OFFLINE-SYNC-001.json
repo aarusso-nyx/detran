@@ -248,6 +248,14 @@
             "precheck": true
           }
         ],
+        "checks": [
+          {
+            "name": "ck_ops_numbering_reservation_reserved_shift",
+            "expression": "status <> 'reserved' or shift_id is not null",
+            "additive": true,
+            "precheck": { "columns": ["tenant_id", "device_id", "id"] }
+          }
+        ],
         "foreignKeys": [
           {
             "name": "fk_ops_numbering_reservation_range",
