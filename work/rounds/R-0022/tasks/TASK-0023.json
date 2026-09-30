@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0023",
+  "round_id": "R-0022",
+  "status": "in_progress",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Adaptar o app ao middleware de contexto do core 1.5.0 sem mudar comportamento",
+  "description": "Adaptar o app ao middleware de contexto do core 1.5.0 sem mudar comportamento (CTG-0002), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0023.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-app-module",
+    "MOD-app-runtime",
+    "MOD-request-context-adapt"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r22", "ctg-0002", "pin", "owner-b11", "after:TASK-0004"],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-52a930cd2d457fc3",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/tenancy-context.e2e.spec.ts",
+      "tests/e2e/sse-conformance.e2e.spec.ts",
+      "tests/e2e/rait-stream.e2e.spec.ts",
+      "tests/e2e/teat-stream.e2e.spec.ts",
+      "tests/e2e/portal-stream.e2e.spec.ts",
+      "tests/e2e/dashboard-stream.e2e.spec.ts",
+      "tests/e2e/policy-routes.e2e.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/runtime-profiles.e2e.spec.ts",
+      "tests/e2e/r21-trust-profiles.e2e.spec.ts",
+      "tests/e2e/r22-trust-profiles.e2e.spec.ts",
+      "tests/e2e/rait-case-commands.e2e.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/teat-field-sync.e2e.spec.ts",
+      "tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "tests/e2e/r21-offline-sync.e2e.spec.ts",
+      "tests/e2e/r22-offline-sync.e2e.spec.ts"
+    ],
+    ["pnpm", "--filter", "@detran/app", "test:unit", "--passWithNoTests=false"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/pec-pipeline-persistence.integration.spec.ts",
+      "tests/integration/r22-outbox-characterization.integration.spec.ts"
+    ],
+    ["pnpm", "backend:rls-smoke"],
+    ["pnpm", "typecheck"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-52a930cd2d457fc3",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

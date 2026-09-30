@@ -1,0 +1,15 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 6,
+  "scope": ["TASK-0023"],
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Papel declarado: Auditor, em leitura apenas, conforme AGENTS.md:56 e .devai/pin/constitution.md:114-115. O prompt atribui a execução ao Engineer e proíbe edição de testes conforme Art. 10 (prompts/TASK-0023.md:10-15,25-33,100-105).",
+    "A leitura e a escrita estão limitadas aos 25 arquivos de produção com hasActiveContext(); a lista confere com as ocorrências atuais (prompts/TASK-0023.md:60-105). TASK-0023.json:11-15 inclui o lock MOD-app-module.",
+    "Os critérios usam suítes existentes, exigem coleta com --passWithNoTests=false e registram o preparo do banco pelo maestro (prompts/TASK-0023.md:126-144). O log de base confirma coleta de 7, 4 e 4 arquivos e2e e 2 de integração (reports/pin-1.5.0-characterization.log:433-434,1326-1327,3494-3495,3514-3515).",
+    "O prompt exige falha quando faltar tenant, veda shim novo ou cópia STYNX e preserva o shim atual até CTG-0003 (prompts/TASK-0023.md:34-40,57-58,109-119). A ordem de prova coincide com a decisão B11: caracterização verde sobre 1.5.0 com o shim presente antes da publicação do pin (AUTHORIZATION.md:154-161).",
+    "O SHA-256 calculado de prompts/TASK-0023.md é 52a930cd2d457fc373488c039f9dc8602bc157903929e64185a6a6c93a3e27fa, igual a compositions.json:179-184; o PC também coincide com tasks/TASK-0023.json:28."
+  ]
+}

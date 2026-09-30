@@ -150,3 +150,12 @@ Resposta literal: "1. a; 2. a; 3. não exigir".
 - **OD-HF-B9-002 (gate de motivo no fechamento de turno):** (a) manter o protocolo; alinhar o catálogo
   de erros para `received` (contrato §5.5 e código).
 - **Dispositivo da reserva:** não exigir que seja o dispositivo do turno (§5.10 não exige; handoff).
+
+## Adenda B11 — adaptação mínima junto com o pin (Owner, 2026-09-29)
+
+Resposta literal: "a, adaptação mínima junto com o pin". Uma tarefa nova de Engineer (TASK-0023,
+CTG-0002) adapta os trechos locais que assumiam "contexto ativo ⇒ tenant e ator"
+(`DetranPipelineStore.runBound` em `detran-runtime.ts` e a condição do _shim_ de tenancy em
+`app.module.ts`, e ocorrências do mesmo padrão) ao middleware de contexto do core da 1.5.0, sem mudar
+comportamento e sem editar teste; a caracterização tem de ficar verde sobre 1.5.0 com o _shim_ presente
+antes da publicação do pin. A remoção do _shim_ segue em CTG-0003. Critérios inalterados.
