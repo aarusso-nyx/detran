@@ -380,8 +380,9 @@ em lock de R-0020/R-0022/R-0023/R-0024.
   `contracts/CTG-0003.md` (gateway, modo OD-R28-019, providers nos boundaries) e
   `contracts/CTG-0004.md` (telas web, SSE OD-R28-015); também OD-R28-005 (OpenAPI) e as ODs de
   papéis (007…010) contra `policy.ts` de R-0023. Divergência → adenda numerada do Architect.
-- **Pendências do maestro:** abrir a issue da frente a partir de `issue-body.md` (com confirmação
-  do Owner, M7); integrar `origin/main` por merge na retomada (inclui #161 A-C2-15, cujo
+- **Issue da frente:** aberta em 2026-09-29 a pedido do Owner, como
+  [#172](https://github.com/aarusso-nyx/detran/issues/172), a partir de `issue-body.md` (M7).
+- **Pendências do maestro:** integrar `origin/main` por merge na retomada (inclui #161 A-C2-15, cujo
   `plan.md` foi trazido aqui).
 - **Orçamento:** `budget.json` ≈ 98 % da janela estimada de 700 k (limiar de 80 % cruzado durante
   TASK-0002/0004); a retomada abre janela nova.
