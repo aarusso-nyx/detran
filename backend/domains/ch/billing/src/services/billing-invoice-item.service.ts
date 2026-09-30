@@ -10,19 +10,7 @@ export class BillingInvoiceItemService {
   findAll(): Promise<BillingInvoiceItem[]> {
     return this.repository.findAll();
   }
-  findOne(id: string): Promise<BillingInvoiceItem> {
-    return this.repository.findOne(id);
-  }
   create(dto: CreateBillingInvoiceItemDto): Promise<BillingInvoiceItem> {
     return this.repository.create(dto);
-  }
-  update(
-    id: string,
-    dto: Partial<CreateBillingInvoiceItemDto>,
-  ): Promise<BillingInvoiceItem> {
-    return this.repository.update(id, dto);
-  }
-  remove(id: string): Promise<void> {
-    return this.repository.remove(id);
   }
 }

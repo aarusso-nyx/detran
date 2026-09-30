@@ -19,9 +19,6 @@ export class BillingInvoiceItemController {
   @Get() @Action('read') list() {
     return this.service.findAll();
   }
-  @Get(':id') @Action('read') get(@Param('id') id: string) {
-    return this.service.findOne(id);
-  }
   @Post()
   @Action('create')
   @Audit({
@@ -30,26 +27,5 @@ export class BillingInvoiceItemController {
   })
   create(@Body() dto: CreateBillingInvoiceItemDto) {
     return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'CH_BILLING_INVOICE_ITEM_UPDATE',
-    entity: 'ch.billing_invoice_item',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateBillingInvoiceItemDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'CH_BILLING_INVOICE_ITEM_DELETE',
-    entity: 'ch.billing_invoice_item',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }
