@@ -1,0 +1,37 @@
+{
+  "round_id": "R-0026",
+  "unit": "estimated_unique_input_tokens",
+  "window_input_limit": 700000,
+  "checkpoint_input_threshold": 560000,
+  "window_hours": 5,
+  "window_started_at": "2026-09-30T00:30:00.000Z",
+  "scope": "A-C2-15 sessão B: TASK-0001, 0002, 0003 e 0006 apenas (documentos)",
+  "entries": [
+    {
+      "id": "maestro-bootstrap",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "input_estimate": 90000,
+      "output_estimate": 22000,
+      "note": "Leitura do plano, conferência de @stynx-nyx/jobs 1.5.0, 4 prompts, ODs ao Owner."
+    },
+    {
+      "id": "prompt-review-1",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 70000,
+      "output_estimate": 4000,
+      "result": "REVIEW",
+      "note": "7 high; todos corrigidos."
+    },
+    {
+      "id": "prompt-review-2",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 50000,
+      "output_estimate": 2000,
+      "result": "REVIEW",
+      "note": "1 high corrigido; 3º ciclo dispensado pelo Owner (A1)."
+    }
+  ]
+}

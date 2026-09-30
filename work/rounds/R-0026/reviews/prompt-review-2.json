@@ -1,0 +1,18 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0026",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0026/prompts/TASK-0003.md",
+      "line": 58,
+      "claim": "A lista corrigida ainda omite as fontes de duas leituras que a tarefa deve definir: P-09 usa `backend/domains/dashboard/crashes/src/handwritten/dashboard-crashes.projection.ts` (linha 81), e o registro de exportações está em `backend/domains/dashboard/monitor/src/handwritten/surface/export.service.ts` (linha 294). `production.projection.ts` e `report.service.ts` não substituem essas fontes.",
+      "fix": "Incluir os dois arquivos na leitura fechada e exigir que resposta e origem dos novos GET sejam derivadas deles; campos sem fonte viram `source_pending` e OD."
+    }
+  ],
+  "notes": [
+    "As demais correções dos achados do ciclo 1 foram atendidas, inclusive o alinhamento da TASK-0002 à decisão do Owner."
+  ]
+}

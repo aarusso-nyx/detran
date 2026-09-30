@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0026",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Mapear leitura e comandos do console DASHBOARD e triar OD-D16",
+  "description": "read-map (22 rotas, nível-alvo), command-map (16 comandos), triagem OD-D16-001…019 e decisões OD-D33/D35/D58 em contracts/CTG-0001.md (A-C2-15).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r26-read-map", "MOD-r26-command-map"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r26", "a-c2-15", "wp-d5"],
+  "branch": "orchestra/dashboard-wiring",
+  "worktree_id": "WT-dashboard-wiring",
+  "prompt_composition_id": "PC-858e240d054d0d09",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0026/read-map.md"],
+    ["test", "-f", "work/rounds/R-0026/command-map.md"],
+    ["test", "-f", "work/rounds/R-0026/contracts/CTG-0001.md"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0026/read-map.md",
+      "work/rounds/R-0026/command-map.md",
+      "work/rounds/R-0026/contracts/CTG-0001.md"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-858e240d054d0d09",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

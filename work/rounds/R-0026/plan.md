@@ -141,7 +141,20 @@ da remoção de 5 ciclos de PR/CI/evidência e da espera pelo lock partilhado.
   transação do comando, com varredura de bandeira. Lock `MOD-shared-policy` e backend RAIT
   serializados com R-0025 e R-0027. Os ramos "se (b)" deste plano ficam sem efeito.
 
-## Estado de partida (verificado em 2026-09-26 sobre `a92ef731`; o maestro remede no bootstrap)
+- **Decididas pelo Owner nesta sessão (2026-09-29, A-C2-12; registro canônico por TASK-0002 em
+  `dashboard-build-pack.md` §4):**
+  - OD-R26-003 (alvo): o job de relatórios mira `@stynx-nyx/jobs` **1.5.x** com ator técnico
+    (UPS-JOB), conforme o prompt da sessão B.
+  - OD-R26-004 = (a): as leituras sem `GET` próprio (OD-D16-001 exportações; OD-D16-002 radares e
+    P-09) ganham `GET` próprio com chave de leitura, desenhados em `contracts/CTG-0002.md`; a chave
+    em `policy.ts` entra na retomada (lock partilhado, regra de convivência).
+  - OD-R26-005 = (a): manifesto em `docs/framework/arch/availability/dashboard-web.availability.json`
+    (anexo de R-0030 §1); a campanha é corrigida por adenda.
+  - i18n de OD-D16-012: só registro nesta abertura (textos sem fonte; a semente
+    `docs/framework/arch/i18n/dashboard.pt-BR.json` tem paridade testada com
+    `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json` em `i18n.spec.ts`); edição da semente e
+    da cópia na retomada.
+    (verificado em 2026-09-26 sobre `a92ef731`; o maestro remede no bootstrap)
 
 - **App:** `apps/dashboard/web` (R-0016, PC-0012): 18 telas, **22 entradas** em
   `src/app/app.route-manifest.ts` (18 + 2 filhas de detalhe + `sem-permissao` + `auth/callback`),
@@ -340,9 +353,53 @@ as resolver, nunca por inferência.
 
 ## Adendas
 
+- **A1 — dispensa do 3º ciclo de prompt-review (Owner, 2026-09-29).** Ciclo 1: `REVIEW` (7 high);
+  ciclo 2: `REVIEW` com 1 high (TASK-0003 sem `dashboard-crashes.projection.ts` e
+  `export.service.ts` na leitura fechada; as demais correções atendidas). O maestro corrigiu o
+  achado e perguntou ao Owner; resposta nesta sessão: "Seguir sem 3º ciclo". **Desvio registrado:**
+  os workers foram disparados sem veredito `PASS` final; a correção do achado do ciclo 2 foi
+  verificada só pelo maestro (arquivos existem; texto em `prompts/TASK-0003.md` §Leitura 9). Esta
+  dispensa não se estende a outros itens nem a outras rodadas.
+
 ## Decisões do maestro
 
+Maestro Opus 5.5 (`claude-opus-5-5`, Claude Code 2.1.283), sessão B da A-C2-15, segunda rodada da
+sequência (depois de R-0028), 2026-09-29. Papéis: Architect ao planejar e revisar; Engineer ao
+commitar.
+
+- **M1 — ids de modelo:** os mesmos de R-0028 M1, reconfirmados na mesma sessão: Opus 5.5 =
+  `claude-opus-5-5`, Sonnet 5 = `claude-sonnet-5`, Sol 6 = `gpt-6-sol` (`codex-cli` 0.157.1);
+  workers pelos subagentes nativos (`architect-blueprint` `model: opus`, `transcriber-docs`
+  `model: sonnet`); reviewer pela ponte `tools/orchestra/bridge.sh codex gpt-6-sol …`.
+- **M2 — worktree e branch.** Mesma worktree gerida pelo app da sessão
+  (`/Users/aarusso/Development/detran/.claude/worktrees/maestro-r0028-r0026-5d1771`), branch
+  `orchestra/dashboard-wiring` criada sobre `origin/main` `25c95252`.
+- **M3 — texto da A-C2-15.** PR #161 aberto: este `plan.md` veio de `origin/docs/c0002-a-c2-15`.
+- **M4 — escopo.** Só TASK-0001, 0002, 0003 e 0006 têm `tasks/*.json` e prompts; o prompt-review
+  cobre só elas. Os modelos seguem a tabela §Tarefas (TASK-0002 Sonnet; as outras Opus, alto).
+- **M5 — `verify:round-tasks`** varre só R-0003…R-0020: validação por arquivo com
+  `pnpm exec devai check --only schema --schema law/schemas/task.schema.json --instance <task>`.
+- **M6 — `@stynx-nyx/jobs` 1.5.0** conferido no registro: publicado (1.5.0 final) e com o ator
+  técnico de UPS-JOB-01…04 (STYNX #295, fechada como atendida). O pin do repositório segue 1.4.0
+  (troca de R-0022); por isso TASK-0004/0005 esperam.
+- **M7 — faixas de OD.** Para as tarefas paralelas não colidirem: TASK-0001 usa OD-R26-006…019,
+  TASK-0003 OD-R26-020…029, TASK-0006 OD-R26-030…039.
+- **M9 — TASK-0002 sem i18n nesta abertura.** A linha de TASK-0002 em §Tarefas (lock
+  `MOD-dashboard-i18n`, chaves de OD-D16-012 na semente) vale na retomada; nesta abertura prevalece a
+  decisão do Owner de só registrar (prompt-review 1, nota): `tasks/TASK-0002.json` não leva
+  `MOD-dashboard-i18n`.
+- **M8 — ondas desta abertura.** O1: TASK-0001. O2: TASK-0002 ∥ TASK-0003 ∥ TASK-0006 (fronteiras
+  disjuntas: `docs/framework/arch/dashboard-*` e backlog ∥ `contracts/CTG-0002.md` ∥
+  `contracts/CTG-0003.md`).
+
 ## Concorrência
+
+Bootstrap 2026-09-29, `origin/main` = `25c95252` (#166). PR aberto relevante: #161 (A-C2-15,
+docs). R-0028 `orchestra/boat-wiring` publicado nesta sessão (checkpoint; sem lock comum). R-0020
+`orchestra/devai-sensors`, R-0022 `orchestra/stynx-sse-tenancy`, R-0031 `orchestra/pec-web`,
+R-0030 `orchestra/user-docs` em curso/checkpoint; R-0023, R-0024, R-0025, R-0027 sem branch
+publicado. Nenhum arquivo desta abertura toca locks de R-0020/R-0022/R-0023/R-0024; `policy.ts` e
+`backend/domains/inf/rait-*` (locks partilhados com R-0025/R-0027) não são editados agora.
 
 ## Bloqueios
 

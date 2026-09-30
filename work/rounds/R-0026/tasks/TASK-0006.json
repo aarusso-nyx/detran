@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0026",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contratar produtores de eventos RAIT e varredura de bandeira",
+  "description": "contracts/CTG-0003.md: ponto de emissão dos três eventos RAIT, payloads, varredura de bandeira (WF-RAIT-002 §4, H.46), seed/replay; transporte pendente do outbox de R-0022.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r26-contract-ctg3"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r26", "a-c2-15", "od-r26-001"],
+  "branch": "orchestra/dashboard-wiring",
+  "worktree_id": "WT-dashboard-wiring",
+  "prompt_composition_id": "PC-37faa91493bfe4e8",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0026/contracts/CTG-0003.md"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0026/contracts/CTG-0003.md"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-37faa91493bfe4e8",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

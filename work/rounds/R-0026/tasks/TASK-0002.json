@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0026",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever ODs e decisões DASHBOARD no build pack, route contract e catálogo",
+  "description": "Build pack §4 (OD-R26-nnn, triagem OD-D16, OD-D33/D35/D58), route contract §6, catálogo de erros e anotação do backlog; chaves i18n de OD-D16-012 só registradas.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-dashboard-build-pack",
+    "MOD-dashboard-route-contract",
+    "MOD-dashboard-error-catalog",
+    "MOD-kb-backlog"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r26", "a-c2-15"],
+  "branch": "orchestra/dashboard-wiring",
+  "worktree_id": "WT-dashboard-wiring",
+  "prompt_composition_id": "PC-4da36b84c57a7d23",
+  "acceptance_commands": [
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "docs:kb:check"],
+    [
+      "cmp",
+      "docs/framework/arch/i18n/dashboard.pt-BR.json",
+      "apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "docs/framework/arch/dashboard-build-pack.md",
+      "docs/framework/arch/dashboard-route-contract.md",
+      "docs/framework/arch/dashboard-error-catalog.md",
+      "docs/meta/knowledge-base/backlog.md"
+    ]
+  ],
+  "created_at": "2026-09-29T21:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-4da36b84c57a7d23",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

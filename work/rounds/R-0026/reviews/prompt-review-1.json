@@ -1,0 +1,66 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0026",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0026/prompts/TASK-0001.md",
+      "line": 64,
+      "claim": "A leitura de `policy.ts` é limitada a `DASHBOARD_RULES` e `dashboardLayerFor`, mas a matriz exigida nas linhas 100–103 depende também do grant global de `GLOBAL_ADMIN_ROLES` em `permissionsForRoles` e `isDetranActionAllowed` (`policy.ts`:1755, 1888–1890, 1941). Papéis com grant podem ser classificados como negativas.",
+      "fix": "Incluir essas regras na leitura fechada e exigir que a matriz registre os grants globais e as divergências ainda abertas em OD-D76."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0026/prompts/TASK-0003.md",
+      "line": 81,
+      "claim": "O prompt exige grants positivos e negativas exaustivas para chaves de leitura novas, mas não fornece fonte canônica para conceder essas chaves e limita a leitura de `policy.ts` a `DASHBOARD_RULES` (linha 55), omitindo o grant global.",
+      "fix": "Exigir fonte canônica ou OD para cada grant novo; incluir `GLOBAL_ADMIN_ROLES` e as funções efetivas de autorização na leitura fechada."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0026/prompts/TASK-0003.md",
+      "line": 53,
+      "claim": "A tarefa deve definir resposta e origem dos dados das novas rotas GET (linhas 32–35 e 81–83), mas a leitura permite apenas a listagem do diretório de projeções, sem o conteúdo das projeções.",
+      "fix": "Nomear os arquivos de projeção necessários na lista fechada e permitir sua leitura; registrar como OD qualquer campo de resposta sem fonte."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0026/prompts/TASK-0006.md",
+      "line": 50,
+      "claim": "Para fixar o comando de origem de `rait.decision.published`, a lista omite `rait-session-command.service.ts`, cujo `publish` chama `publishSessionDecision` (`rait-session-command.service.ts`:1143–1150), e o serviço de `rait-worklist` relevante ao relógio. A tarefa exige uma linha por evento com comando e método exatos (linhas 72–74).",
+      "fix": "Acrescentar esses arquivos à leitura fechada e orientar a distinguir a publicação da ata, a transição do caso e o novo evento contratado."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0026/prompts/TASK-0006.md",
+      "line": 81,
+      "claim": "A tarefa manda decidir se o padrão exige schemas de evento, mas a leitura fechada não inclui o padrão nem exemplares em `docs/framework/schemas/events/`.",
+      "fix": "Incluir a definição do padrão e schemas exemplares específicos na leitura, ou fixar no prompt a conclusão já verificada pelo maestro."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0026/prompts/TASK-0003.md",
+      "line": 97,
+      "claim": "O critério `grep -c 'reconferir' …` contém reticências no lugar de um arquivo e não é executável como escrito.",
+      "fix": "Substituir `…` pelo caminho completo de `contracts/CTG-0002.md`."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0026/prompts/TASK-0006.md",
+      "line": 97,
+      "claim": "O critério `grep -c 'reconferir' …` contém reticências no lugar de um arquivo e não é executável como escrito.",
+      "fix": "Substituir `…` pelo caminho completo de `contracts/CTG-0003.md`."
+    }
+  ],
+  "notes": [
+    "O plano ainda atribui `MOD-dashboard-i18n` e edição da semente à TASK-0002 (`plan.md`:224), enquanto a decisão posterior do Owner determina apenas o registro das chaves (`plan.md`:153–156). O prompt e o JSON da tarefa seguem a decisão posterior; alinhar a linha do plano evita ambiguidade na retomada."
+  ]
+}
