@@ -17,3 +17,16 @@ publicados de 1.5.0 e das decisões do Owner; revisão e publicação pelo maest
 copiados em `reports/upstream-issues/`. Pontos abertos declarados nas issues: resultados de V-nn
 dependem de TASK-0005; `usage_mode` (UPS-OFS-12) depende da leitura A-3; valores normativos de
 OD-R22-08 pendentes.
+
+## Adenda B12
+
+Autorização do Owner (2026-09-29, `AUTHORIZATION.md` Adenda B12): OD-R22-43 (b) e OD-R22-44 (a) —
+pedido de papel SQL de aplicação configurável e de destino por `entity` na outbox; OD-R22-46 (a) —
+pedido consolidado do cliente SSE Angular. Fonte: spec C-0002 §8.2 (V-02, V-07), `contracts/CTG-0005.md`
+e `contracts/CTG-0008.md`, com o `.js`/`.mjs` publicado de 1.5.0 lido nos pontos citados. Rascunhos
+por agente Architect; revisão e publicação pelo maestro.
+
+| Issue       | Conteúdo                                                                                                                                                              | IDs                    | Corpo publicado                                           |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | -------------------------------------------------- |
+| [#320](https://github.com/stynx-nyx/stynx/issues/320)  | Outbox: papel SQL de aplicação configurável (literal `stynx_app` em `outbox` e `data`, políticas 0021) e destino por `entity` (evento sem destino não vira entrega nem bloqueia o agregado); complementa UPS-OBX-07/08 da #316 | UPS-OBX-10…11          | `upstream-issues/stynx-320.md` |
+| [#321](https://github.com/stynx-nyx/stynx/issues/321)  | Cliente SSE Angular: reabertura ao entrar em _polling_ configurável, fecho pelo servidor como fim de fluxo, comentário como atividade de `live`, `resync$`, último erro e atraso lido do corpo | UPS-NGSSE-11…15        | `upstream-issues/stynx-321.md`    |

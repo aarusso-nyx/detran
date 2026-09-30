@@ -151,15 +151,15 @@ contadores zerados") e UPS-NGSSE-06 (silêncio). Os fluxos DETRAN passam longos 
 
 - `stynx-nyx-angular.mjs:116` e `:125-126` (`FrameParser.feed`): toda linha chama `onActivity()`;
   linha de comentário (`:`) é descartada sem frame.
-- `:250-255`: `onActivity` só rearma o temporizador de silêncio (`armStale`, `:329-332`).
+- `:252-255`: `onActivity` só rearma o temporizador de silêncio (`armStale`, `:329-332`).
 - `:320-323` (`deliver`): só frame de dados com `id` zera `failures`/`consecutiveFailures`, limpa os
   temporizadores de _retry_/_polling_ e marca `live`.
 - `:257`: na abertura, o estado vira `live` **antes** de qualquer linha se não houver falhas
   anteriores; depois de falhas fica `reconnecting`/`polling` até um frame de dados.
 
 **Efeito DETRAN (casos que falham).** W1 C-01-21 (`: heartbeat` → `live` sem evento) e C-01-23
-(casos 2–4: reabertura só com _heartbeat_ deve voltar a `live`, sair de _polling_ e zerar o
-_backoff_; silêncio de 40 s na reabertura conta falha dentro dos 61 s); W2 C-01-28 e C-01-30
+(casos 2–4, segundo CTG-0005 §2: `: heartbeat` não leva a `live` nem zera o _backoff_ na
+reabertura, e o silêncio de 40 s na reabertura conta falha dentro dos 61 s); W2 C-01-28 e C-01-30
 (`: heartbeat` → `live`).
 
 **Comportamento exigido.**
@@ -185,7 +185,7 @@ comentário → falha contada; com `'stale-only'`, o comportamento de 1.5.0.
 continuidade para recarregar o estado por consulta. ID novo.
 
 **Evidência (1.5.0 publicada).** `stynx-nyx-angular.mjs:290-293`: o descarte do cursor em 204 é
-silencioso; a troca de tenant também zera o cursor (`:195-197`). A API pública
+silencioso; a troca de tenant também zera o cursor (`:195`). A API pública
 (`types/stynx-nyx-angular.d.ts:158-162`, `:180-181`) expõe `status`, `polling`, `lastEventId`,
 `events$`, `tick$`, `start`, `stop` — nenhum sinal de _resync_.
 
