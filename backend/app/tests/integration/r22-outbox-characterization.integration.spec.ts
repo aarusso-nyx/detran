@@ -13,11 +13,15 @@
 //   o de `dispatchDue`/`recordAcknowledgement`, o do leitor real do log
 //   (`TeatStreamService`, §1 #13) e o de `PecToxicologyInboundService`,
 //   válidos nas duas fases.
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
 import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import {
+  ReportLifecycleService,
+  ReportRepository,
+} from '@detran/ch-clinical-reports';
 import { BoatCrashCommandsService } from '@detran/est-crash';
 import { teatEventSink } from '@detran/ops-core';
 import {
@@ -315,7 +319,10 @@ afterAll(async () => {
         [tenantIds],
       );
     await owner.query('delete from auth.users where id = any($1::uuid[])', [
-      [...all.map((tenant) => tenant.actorId)],
+      [
+        ...all.map((tenant) => tenant.actorId),
+        ...extraUsers.map((user) => user.id),
+      ],
     ]);
     await owner.query('delete from auth.tenants where id = any($1::uuid[])', [
       all.map((tenant) => tenant.tenantId),
@@ -794,12 +801,73 @@ describe('R-0022 CTG-0008 fila e ACK RENACH', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Caminho completo pelo escritor real BOAT (`transmit`), provedor falso,
-// lista/saúde e inbox de toxicologia. Fixtures `ch`/`est`/`ops.parameter` são
-// criadas sob `role_app_backend` nos tenants do próprio teste; owner só lê o
-// parâmetro canônico a copiar e limpa.
+// Caminho completo pelos escritores reais (#17 laudo/adendo, BOAT
+// `transmit`), provedor falso, ledger, lista/saúde e inbox de toxicologia.
+// Fixtures `ch`/`est`/`ops.parameter` são criadas sob `role_app_backend` nos
+// tenants do próprio teste; owner só lê o parâmetro canônico a copiar,
+// envelhece a coluna de claim (C-08-04, adenda A1 do CTG-0008) e limpa.
 
+const SIGNED_AT = '2026-09-01T12:01:00.000Z';
 const CANONICAL_TENANT = '00000000-0000-7000-8000-00000000a001';
+const extraUsers: Array<{ id: string; tenantId: string }> = [];
+
+function signingDouble() {
+  return {
+    renderAndSign: vi.fn(
+      async (request: { documentType: string; contentSha256: string }) => ({
+        contentSha256: request.contentSha256,
+        storageDocumentId: randomUUID(),
+        artifactSha256: createHash('sha256')
+          .update(`${request.documentType}:${request.contentSha256}`)
+          .digest('hex'),
+        signatureLevel: 'QUALIFIED' as const,
+        signatureFormat: 'PAdES-TSA' as const,
+        signedAt: SIGNED_AT,
+        tsaTime: SIGNED_AT,
+        certificateValidationSource: 'OCSP' as const,
+        certificateValidationStatus: 'GOOD' as const,
+        certificateValidatedAt: SIGNED_AT,
+      }),
+    ),
+  };
+}
+
+function reports(tenant: Tenant): ReportLifecycleService {
+  const client = tenant.clients[0] as pg.Client;
+  return new ReportLifecycleService(
+    new ReportRepository(
+      tenantDatabase(tenant, client) as never,
+      tenantContext(tenant) as never,
+    ),
+    tenantContext(tenant) as never,
+    signingDouble() as never,
+  );
+}
+
+async function asActor<T>(
+  tenant: Tenant,
+  actorId: string,
+  work: () => Promise<T>,
+): Promise<T> {
+  const previous = tenant.actorId;
+  tenant.actorId = actorId;
+  try {
+    return await work();
+  } finally {
+    tenant.actorId = previous;
+  }
+}
+
+async function extraUser(tenant: Tenant, label: string): Promise<string> {
+  const id = randomUUID();
+  await owner.query(
+    'insert into auth.users (id, tenant_id, email, display_name) values ($1, $2, $3, $4)',
+    [id, tenant.tenantId, `${id}@detran.invalid`, `R22 ${label}`],
+  );
+  extraUsers.push({ id, tenantId: tenant.tenantId });
+  return id;
+}
+
 async function insertId(
   client: pg.Client,
   sql: string,
@@ -807,6 +875,109 @@ async function insertId(
 ): Promise<string> {
   const result = await client.query<{ id: string }>(sql, values);
   return result.rows[0]!.id;
+}
+
+/** Atendimento médico pronto para assinatura pelo profissional = ator. */
+async function clinicalFixture(
+  tenant: Tenant,
+): Promise<{ encounterId: string; appointmentId: string }> {
+  const client = tenant.clients[0] as pg.Client;
+  const t = tenant.tenantId;
+  return asTenant(client, tenant, async () => {
+    const clinicId = await insertId(
+      client,
+      `insert into ch.clinic (tenant_id, code, cnpj, name, region_code)
+       values ($1, 'r22-clinic', '12345678000199', 'R22 clínica fixture', 'r22-fixture')
+       returning id`,
+      [t],
+    );
+    const professionalId = await insertId(
+      client,
+      `insert into ch.professional
+         (tenant_id, clinic_id, user_id, person_name, document_cpf,
+          professional_kind, council_type, council_number, council_state)
+       values ($1, $2, $3, 'R22 médico fixture', '52998224725', 'MEDICO', 'CRM', 'R22-1234', 'AM')
+       returning id`,
+      [t, clinicId, tenant.actorId],
+    );
+    const patientId = await insertId(
+      client,
+      `insert into ch.patient (tenant_id, clinic_id, national_id, name, birth_date)
+       values ($1, $2, '11144477735', 'R22 candidato fixture', '1980-01-01')
+       returning id`,
+      [t, clinicId],
+    );
+    const appointmentId = await insertId(
+      client,
+      `insert into ch.appointment (tenant_id, clinic_id, patient_id, professional_id, scheduled_at)
+       values ($1, $2, $3, $4, $5) returning id`,
+      [t, clinicId, patientId, professionalId, OCCURRED_AT],
+    );
+    const encounterId = await insertId(
+      client,
+      `insert into ch.encounter
+         (tenant_id, clinic_id, patient_id, appointment_id, renach_process_key,
+          renach_process_type, current_category, exam_eligible,
+          eligibility_checked_at, status)
+       values ($1, $2, $3, $4, 'R22-PROCESS-1', 'RENEWAL', 'B', true, $5, 'IN_PROGRESS')
+       returning id`,
+      [t, clinicId, patientId, appointmentId, OCCURRED_AT],
+    );
+    await client.query(
+      `insert into ch.medical_exam
+         (tenant_id, encounter_id, professional_id, statutory_valid_until,
+          valid_until, data, result)
+       values ($1, $2, $3, '2031-09-01', '2031-09-01', '{}'::jsonb, 'APTO')`,
+      [t, encounterId, professionalId],
+    );
+    const stationId = await insertId(
+      client,
+      `insert into ch.biometric_station
+         (tenant_id, clinic_id, name, fingerprint_hash, provider_code,
+          device_certificate_fingerprint)
+       values ($1, $2, 'R22 estação fixture', $3, 'r22-provider', $3)
+       returning id`,
+      [t, clinicId, createHash('sha256').update(t).digest('hex')],
+    );
+    await client.query(
+      `insert into ch.biometric_check
+         (tenant_id, encounter_id, clinic_id, station_id,
+          subject_professional_id, kind, modality, passed,
+          evidence_document_id, evidence_sha256, created_by)
+       values ($1, $2, $3, $4, $5, 'MEDICAL', 'FACE', true, $6, $7, $8)`,
+      [
+        t,
+        encounterId,
+        clinicId,
+        stationId,
+        professionalId,
+        randomUUID(),
+        'e'.repeat(64),
+        tenant.actorId,
+      ],
+    );
+    return { encounterId, appointmentId };
+  });
+}
+
+type ReportRow = { id: string; artifact_sha256: string };
+
+async function signedReport(tenant: Tenant): Promise<ReportRow> {
+  const { encounterId } = await clinicalFixture(tenant);
+  return (await reports(tenant).create({
+    encounterId,
+    kind: 'MEDICAL',
+    templateVersion: 'r22-fixture',
+  })) as unknown as ReportRow;
+}
+
+async function listed(tenant: Tenant, aggregateId: string) {
+  const { items } = await integrations(tenant).list({});
+  const item = items.find(
+    (candidate) => candidate.aggregate_id === aggregateId,
+  );
+  expect(item).toBeDefined();
+  return item!;
 }
 
 function pgTime(text: string): number {
@@ -823,6 +994,46 @@ async function expectRetryWindow(
   const fifteen = 15 * 60 * 1000;
   expect(pgTime(availableAt)).toBeGreaterThanOrEqual(pgTime(before) + fifteen);
   expect(pgTime(availableAt)).toBeLessThanOrEqual(pgTime(after) + fifteen);
+}
+
+/**
+ * C-08-04 (adenda A1): owner envelhece só a coluna de claim da fase em curso,
+ * na preparação. 1.4.0: `integration.outbox.dispatched_at`; 1.5.x:
+ * `outbox.event_delivery.lease_until` (0021 publicada), com _lease_ de 15 min.
+ */
+async function ageClaim(itemId: string, secondsAgo: number): Promise<void> {
+  const phase = await owner.query<{ migrated: boolean }>(
+    "select to_regclass('outbox.event_delivery') is not null as migrated",
+  );
+  const result = phase.rows[0]?.migrated
+    ? await owner.query(
+        `update outbox.event_delivery
+            set lease_until = now() - make_interval(secs => $2) + interval '15 minutes'
+          where event_id = $1`,
+        [itemId, secondsAgo],
+      )
+    : await owner.query(
+        `update integration.outbox
+            set dispatched_at = now() - make_interval(secs => $2)
+          where id = $1 and status = 'processing'`,
+        [itemId, secondsAgo],
+      );
+  expect(result.rowCount).toBe(1);
+}
+
+async function ledger(tenant: Tenant, itemId: string) {
+  const client = tenant.clients[0] as pg.Client;
+  return asTenant(client, tenant, async () => {
+    const result = await client.query(
+      `select outbox_id, tenant_id, attempt_number, status, provider_protocol,
+              provider_code, provider_message, request_sha256, response_sha256
+         from integration.delivery_attempt
+        where outbox_id = $1
+        order by attempt_number`,
+      [itemId],
+    );
+    return result.rows;
+  });
 }
 
 async function boatTenant(label: string): Promise<Tenant> {
@@ -924,7 +1135,254 @@ function boat(
   );
 }
 
-describe('R-0022 CTG-0008 despacho BOAT e saúde da fila', () => {
+describe('R-0022 CTG-0008 despacho pelos escritores reais', () => {
+  it('C-08-01 AC-PEC-009-1 dado laudo médico assinado pelo escritor #17 quando despachado então envia payload mínimo com chave durável, correlação e artefato', async () => {
+    const tenant = await newTenant('renach-ok');
+    const report = await signedReport(tenant);
+    const port = renachPort();
+    port.submitMedicalExam.mockResolvedValue({
+      protocol: 'R22-RENACH-1',
+      examId: 'r22-exam',
+      result: 'APTO',
+    });
+
+    const results = await transmissions(
+      tenant,
+      tenant.clients[0] as pg.Client,
+      port,
+    ).dispatchDue();
+
+    expect(results).toEqual([
+      {
+        outboxId: expect.any(String),
+        status: 'acked',
+        providerProtocol: 'R22-RENACH-1',
+      },
+    ]);
+    expect(port.submitMedicalExam).toHaveBeenCalledTimes(1);
+    const [request, context] = port.submitMedicalExam.mock.calls[0] as [
+      Record<string, unknown>,
+      Record<string, unknown>,
+    ];
+    expect(request).toMatchObject({
+      renachNumber: 'R22-PROCESS-1',
+      result: 'APTO',
+      examiner: { cpf: '52998224725', state: 'AM' },
+      signature: { hash: report.artifact_sha256 },
+    });
+    expect(JSON.stringify(request)).not.toMatch(
+      /exam_data|examData|anamnes|content/iu,
+    );
+    expect(context).toMatchObject({
+      tenantId: tenant.tenantId,
+      actorId: tenant.actorId,
+      correlationId: expect.stringMatching(/\S/u),
+      metadata: { idempotencyKey: `ch.report:${report.id}` },
+    });
+    expect(port.submitPsychologicalEvaluation).not.toHaveBeenCalled();
+    await expect(listed(tenant, report.id)).resolves.toMatchObject({
+      status: 'acked',
+      attempts: 1,
+    });
+  });
+
+  it('C-08-01 AC-PEC-007-4 dado adendo assinado pelo escritor #17 quando despachado então retransmite o artefato e o resultado do adendo', async () => {
+    const tenant = await newTenant('renach-addendum');
+    const report = await signedReport(tenant);
+    const port = renachPort();
+    port.submitMedicalExam.mockResolvedValue({ protocol: 'R22-RENACH-2' });
+    const service = transmissions(tenant, tenant.clients[0] as pg.Client, port);
+    await expect(service.dispatchDue()).resolves.toHaveLength(1);
+
+    const professional = tenant.actorId;
+    const supervisor = await extraUser(tenant, 'supervisor');
+    const admin = await extraUser(tenant, 'admin clínica');
+    const requested = (await reports(tenant).requestAddendum(report.id, {
+      reason: 'R22 retificação fixture',
+      content: { result: 'APTO_COM_RESTRICOES' },
+    })) as unknown as { id: string };
+    await asActor(tenant, supervisor, () =>
+      reports(tenant).approveAddendum(requested.id, 'SUPERVISOR'),
+    );
+    await asActor(tenant, admin, () =>
+      reports(tenant).approveAddendum(requested.id, 'ADMIN_CLINICA'),
+    );
+    const signed = (await asActor(tenant, professional, () =>
+      reports(tenant).signAddendum(requested.id),
+    )) as unknown as { id: string; artifact_sha256: string };
+
+    await expect(service.dispatchDue()).resolves.toEqual([
+      expect.objectContaining({
+        status: 'acked',
+        providerProtocol: 'R22-RENACH-2',
+      }),
+    ]);
+    expect(port.submitMedicalExam).toHaveBeenCalledTimes(2);
+    const [request, context] = port.submitMedicalExam.mock.calls[1] as [
+      Record<string, unknown>,
+      Record<string, unknown>,
+    ];
+    expect(signed.artifact_sha256).not.toBe(report.artifact_sha256);
+    expect(request).toMatchObject({
+      result: 'APTO_COM_RESTRICOES',
+      signature: { hash: signed.artifact_sha256 },
+    });
+    expect(context).toMatchObject({
+      metadata: { idempotencyKey: `ch.report-addendum:${signed.id}` },
+    });
+  });
+
+  it('C-08-01 dado item RENACH cuja espécie diverge do laudo quando despachado então falha fechado sem chamar o provedor (fails closed when queue metadata disagrees with the report kind)', async () => {
+    const tenant = await newTenant('renach-kind');
+    const report = await signedReport(tenant);
+    const port = renachPort();
+    port.submitMedicalExam.mockResolvedValue({ protocol: 'R22-RENACH-3' });
+    const service = transmissions(tenant, tenant.clients[0] as pg.Client, port);
+    await expect(service.dispatchDue()).resolves.toHaveLength(1);
+
+    const divergent = await append(tenant, {
+      ...queueEnvelope(tenant),
+      reportId: report.id,
+      kind: 'PSYCH',
+    } as TeatEventEnvelope);
+    await expect(service.dispatchDue()).resolves.toEqual([
+      expect.objectContaining({ outboxId: divergent, status: 'error' }),
+    ]);
+    expect(port.submitMedicalExam).toHaveBeenCalledTimes(1);
+    expect(port.submitPsychologicalEvaluation).not.toHaveBeenCalled();
+  });
+
+  it('C-08-03 AC-PEC-009-2 dado falha do provedor quando despachado então o item fica em erro com tentativa visível e só volta a ser elegível 15 min depois', async () => {
+    const tenant = await newTenant('renach-fail');
+    const report = await signedReport(tenant);
+    const port = renachPort();
+    port.submitMedicalExam.mockRejectedValue(
+      Object.assign(new Error('provider unavailable fixture'), {
+        providerCode: 'R22-UNAVAILABLE',
+      }),
+    );
+    const service = transmissions(tenant, tenant.clients[0] as pg.Client, port);
+
+    const before = await reader(tenant).now();
+    await expect(service.dispatchDue()).resolves.toEqual([
+      expect.objectContaining({
+        status: 'error',
+        error: 'provider unavailable fixture',
+      }),
+    ]);
+    const after = await reader(tenant).now();
+
+    const item = await listed(tenant, report.id);
+    expect(item).toMatchObject({
+      status: 'error',
+      attempts: 1,
+      last_error: 'provider unavailable fixture',
+    });
+    await expectRetryWindow(item.available_at, before, after);
+    await expect(service.dispatchDue()).resolves.toEqual([]);
+    expect(port.submitMedicalExam).toHaveBeenCalledTimes(1);
+  });
+
+  it('C-08-14 dado despacho com sucesso e com falha quando a tentativa é registrada então o ledger guarda número, hashes, protocolo/código/mensagem e vínculo ao item e ao tenant', async () => {
+    const ok = await newTenant('ledger-ok');
+    const okReport = await signedReport(ok);
+    const okPort = renachPort();
+    okPort.submitMedicalExam.mockResolvedValue({ protocol: 'R22-RENACH-4' });
+    const [okResult] = await transmissions(
+      ok,
+      ok.clients[0] as pg.Client,
+      okPort,
+    ).dispatchDue();
+    const okItem = await listed(ok, okReport.id);
+    expect(okResult?.outboxId).toBe(okItem.id);
+    expect(await ledger(ok, okItem.id)).toEqual([
+      expect.objectContaining({
+        outbox_id: okItem.id,
+        tenant_id: ok.tenantId,
+        attempt_number: okItem.attempts,
+        status: 'acked',
+        provider_protocol: 'R22-RENACH-4',
+        request_sha256: expect.stringMatching(/^[0-9a-f]{64}$/u),
+        response_sha256: expect.stringMatching(/^[0-9a-f]{64}$/u),
+      }),
+    ]);
+
+    const failed = await newTenant('ledger-fail');
+    const failedReport = await signedReport(failed);
+    const failedPort = renachPort();
+    failedPort.submitMedicalExam.mockRejectedValue(
+      Object.assign(new Error('provider refused fixture'), {
+        providerCode: 'R22-REFUSED',
+      }),
+    );
+    await transmissions(
+      failed,
+      failed.clients[0] as pg.Client,
+      failedPort,
+    ).dispatchDue();
+    const failedItem = await listed(failed, failedReport.id);
+    expect(await ledger(failed, failedItem.id)).toEqual([
+      expect.objectContaining({
+        outbox_id: failedItem.id,
+        tenant_id: failed.tenantId,
+        attempt_number: failedItem.attempts,
+        status: 'error',
+        provider_code: 'R22-REFUSED',
+        provider_message: 'provider refused fixture',
+        request_sha256: expect.stringMatching(/^[0-9a-f]{64}$/u),
+      }),
+    ]);
+    // Sob o tenant do sucesso, o ledger do outro tenant é invisível.
+    expect(await ledger(ok, failedItem.id)).toEqual([]);
+  });
+
+  it('C-08-04 C-08-15 dado item reclamado e não concluído quando o claim envelhece então volta a ser elegível após 15 min e não antes; a saúde conta o item em processing', async () => {
+    const tenant = await newTenant('renach-lease', 2);
+    const report = await signedReport(tenant);
+    const [first, second] = tenant.clients as [pg.Client, pg.Client];
+    let release: (value: unknown) => void = () => undefined;
+    const hanging = renachPort();
+    hanging.submitMedicalExam.mockImplementation(
+      () => new Promise((resolve) => (release = resolve)),
+    );
+    const stuck = transmissions(tenant, first, hanging).dispatchDue();
+    await vi.waitFor(() =>
+      expect(hanging.submitMedicalExam).toHaveBeenCalledTimes(1),
+    );
+    const item = await listed(tenant, report.id);
+    expect(item.status).toBe('processing');
+    await expect(
+      integrations(tenant).health({
+        provider: 'r22-fixture',
+        baseUrl: 'http://r22.invalid',
+      }),
+    ).resolves.toMatchObject({
+      queue: { pending: 0, processing: 1, error: 0 },
+    });
+
+    const late = renachPort();
+    late.submitMedicalExam.mockResolvedValue({ protocol: 'R22-RENACH-LATE' });
+    const recovery = transmissions(tenant, second, late);
+    await expect(recovery.dispatchDue()).resolves.toEqual([]);
+    await ageClaim(item.id, 14 * 60);
+    await expect(recovery.dispatchDue()).resolves.toEqual([]);
+    await ageClaim(item.id, 15 * 60 + 1);
+    await expect(recovery.dispatchDue()).resolves.toEqual([
+      {
+        outboxId: item.id,
+        status: 'acked',
+        providerProtocol: 'R22-RENACH-LATE',
+      },
+    ]);
+    expect(late.submitMedicalExam).toHaveBeenCalledTimes(1);
+
+    release({ protocol: 'R22-RENACH-STUCK' });
+    await stuck;
+    await expect(listed(tenant, report.id)).resolves.toMatchObject({
+      status: 'acked',
+    });
+  });
+
   it('C-08-15 dado itens pendentes e com erro quando a saúde da fila é consultada então conta pending, processing e error do tenant', async () => {
     const tenant = await newTenant('health');
     await enqueue(tenant, 3);

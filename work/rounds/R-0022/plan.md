@@ -543,6 +543,15 @@ prompts revisados ficam intactos (PCs preservados) e o despacho cita esta adenda
 adenda A1 do contrato CTG-0001 (cláusula 401/403 que não era comportamento de 1.4.0; divergência
 D-W-01 para CTG-0005).
 
+**A2.4 — comando de aceitação da outbox (Architect/maestro, 2026-09-29).** A retirada, com
+correspondentes C-08 verdes, esvaziou `backend/app/src/pec-renach-transmission.spec.ts` e
+`backend/app/src/r21-renach-characterization.spec.ts` (removidos). Nos `acceptance_commands` de
+TASK-0014 e TASK-0015, o comando `test:unit … src/pec-renach-transmission.spec.ts
+src/r21-renach-characterization.spec.ts` é substituído por
+`pnpm --filter @detran/app test:integration --passWithNoTests=false tests/integration/r22-outbox-characterization.integration.spec.ts`,
+e `tests/integration/r21-renach-characterization.integration.spec.ts` (também removido) sai do comando de
+integração. Critérios inalterados (a prova migrou para os casos C-08).
+
 `pnpm backend:rls-smoke` é comparado à linha de base ao fim de cada CTG de O6, O7 e O8. **Janelas
 recalibradas:** ≈ 4 (1: bootstrap, prompt-review, O1–O3; 2: O4–O6; 3: O7–O8; 4: O9 e sequência final).
 

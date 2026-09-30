@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0014",
   "round_id": "R-0022",
-  "status": "in_progress",
+  "status": "pre_merge",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Caracterização ampliada da outbox e do despacho RENACH sobre 1.4.0",
@@ -15,7 +15,7 @@
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0013",
   "db_isolation": "database",
-  "iteration_count": 2,
+  "iteration_count": 3,
   "max_iterations": 2,
   "priority": 1,
   "tags": ["r22", "ctg-0008", "outbox", "characterization"],
@@ -44,19 +44,9 @@
       "pnpm",
       "--filter",
       "@detran/app",
-      "test:unit",
-      "--passWithNoTests=false",
-      "src/pec-renach-transmission.spec.ts",
-      "src/r21-renach-characterization.spec.ts"
-    ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/app",
       "test:integration",
       "--passWithNoTests=false",
-      "tests/integration/pec-pipeline-persistence.integration.spec.ts",
-      "tests/integration/r21-renach-characterization.integration.spec.ts"
+      "tests/integration/pec-pipeline-persistence.integration.spec.ts"
     ],
     [
       "pnpm",
