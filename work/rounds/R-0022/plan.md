@@ -720,6 +720,20 @@ salvo os efeitos abaixo.
   validação de tenancy, revisão da outra família), mantendo R-8 em TASK-0006.
   **Decidido** (Owner B13, OD-R22-58 (a)): hotfix próprio contra `main`; rodada retomada.
 
+Checkpoint 2026-09-30 (maestro Opus 5.5, janela 1), rodada **em curso**, branch publicada até `586505b7`.
+
+- **Concluídas (`pre_merge`):** TASK-0001…0008, 0011…0014, 0016, 0017, 0019, 0020, 0022…0028; TASK-0021 parte 1
+  (casos positivos e de divergência de M-06-P2…P5 aguardam a Adenda C de CTG-0006).
+- **Em curso:** TASK-0029 (D0: blueprint `BP-INF-NORMATIVE-001` 1.2.0 e Adenda C — OD-R22-64, P01…P04).
+- **Checkpoint OD-R22-02:** TASK-0015 (outbox, OD-R22-43/44; stynx-nyx/stynx#320), TASK-0018 (offline-sync, A3;
+  #317), CTG-0005 para RAIT/DASHBOARD/Portal (OD-R22-46; #321), espécies clínicas com LTA (OD-R22-40; #318).
+- **Sequência restante:** TASK-0029 → TASK-0021 complemento da parte 1 → C-06-A (Inspector, tarefa a criar) →
+  TASK-0009 partes D → B → A → TASK-0021 parte 2 → TASK-0010 → CI local completo (inclui C-03-17) →
+  delivery-review → PR único → publicação (A-C2-12).
+- **Hotfixes em `main` nesta janela:** #159, #162, #163, #165…#171, #176 (B7), #177 (B6), #178 (auditoria npm).
+- **Ferramentas do maestro:** `tools/orchestra/expect-red.mjs` (gate de vermelho esperado),
+  `tools/orchestra/validate-blueprints.mjs` (schema de blueprint); gerador de prompts no scratchpad (`gen.py`).
+
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
 tenants). Branch `orchestra/stynx-sse-tenancy` publicada.
 
