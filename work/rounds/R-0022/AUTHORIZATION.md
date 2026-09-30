@@ -189,3 +189,11 @@ Resposta literal: "1. a, hotfix em PR próprio; 2. recomendações".
   `requestId` ao _sink_ de auditoria fica fora desta rodada.
 - **OD-R22-60 (C-03-15 `/info`):** adenda do Architect — o critério passa a ser "resposta independente
   de tenant" enquanto o endpoint estiver desligado no perfil `test`.
+
+## Adenda B14 — _fallback_ do TEAT web no _tick_ da plataforma (Owner, 2026-09-30)
+
+Resposta literal: "c, mantenha o fallback no tick".
+
+- **OD-R22-61:** (c) no modo _polling_ do cliente publicado, a cada `tick$` o serviço fino do TEAT web
+  chama `fallbackUrl` como hoje e emite o resultado; API e comportamento de 1.4.0 preservados; só o
+  temporizador vem da plataforma. Adenda do Architect a CTG-0005.
