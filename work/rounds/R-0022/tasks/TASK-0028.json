@@ -28,7 +28,7 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-e5de9efd2ab956ee",
+  "prompt_composition_id": "PC-ce2bcff4ef64990d",
   "acceptance_commands": [
     [
       "pnpm",
@@ -37,6 +37,24 @@
       "test:e2e",
       "--passWithNoTests=false",
       "tests/e2e/r22-tenancy-platform.e2e.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-tenancy-platform.e2e.spec.ts",
+      "-t",
+      "C-03-18"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/boat-victim-audit-tenant.e2e.spec.ts"
     ],
     ["pnpm", "--filter", "@detran/app", "test:unit", "--passWithNoTests=false"],
     ["pnpm", "--filter", "@detran/app", "typecheck"]
@@ -51,7 +69,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-e5de9efd2ab956ee",
+    "prompt_composition_id": "PC-ce2bcff4ef64990d",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
