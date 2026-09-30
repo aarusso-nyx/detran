@@ -457,3 +457,63 @@ são partilhados por merge, e seus gates novos passam a valer quando ela mesclar
 - **Pin 1.5.x:** usar a maior 1.5.x final é esclarecimento do Architect sobre OD-C2-004/OD-S15-01
   (mesma minor, patch posterior). A conformidade da §7 da especificação é conferida contra a versão
   fixada.
+
+## 15. Adenda A-C2-14: aberturas de R-0023 e R-0032 com R-0020 e R-0022 em curso (Owner, 2026-09-30)
+
+**Estado verificado em 2026-09-30:**
+
+- **R-0020** (`orchestra/devai-sensors`): CTG-0001…0003 mesclados. O CTG-0004 está parado no
+  `reference-gap` da TASK-0013: faltam 4 kinds de sensor `read` no enum de `SensorReading` do DEVAI
+  (1.5.6, v1.6.0 e `main`), relacionado ao DEVAI #168. Os locks dela são CI, `.devai/config`,
+  `law/register` e `record/`.
+- **R-0022** (`orchestra/stynx-sse-tenancy`):
+  - A B2 foi fechada pelo hotfix #159 (mesclado em `c4d5417c`). As decisões OD-R22-01…40 estão
+    registradas (A3, A4; B4/B5).
+  - O pin continua em 1.4.0. As migrações de outbox, offline-sync e assinatura LTA aguardam a STYNX
+    1.5.x (stynx-nyx/stynx #316–#319), em checkpoint OD-R22-02 por item. O restante da rodada segue.
+- **R-0031** (`orchestra/pec-web`): O1–O8 publicadas, em checkpoint à espera de R-0024.
+- **R-0030** (`orchestra/user-docs`): O1–O3 publicadas, em checkpoint à espera da fase D.
+
+**Aberturas autorizadas:**
+
+| Rodada | Maestro                                           | Abre sobre                 | Executa agora                                                            | Para em                                       |
+| ------ | ------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------ | --------------------------------------------- |
+| R-0023 | Codex Sol 6 (reviewer Opus 5.5)                   | `origin/main` (com o #159) | O1: matriz papel × rota × método "antes", gerador e e2e                  | O2 (espera o pin 1.5.x e a tenancy de R-0022) |
+| R-0032 | Codex Sol 6 (troca de família; reviewer Opus 5.5) | `origin/orchestra/pec-web` | O1–O2: mapa, ADR de identidade (C), fichas `IU-PEC-P-*` e caracterização | O3 (eventos `ch` e outbox de R-0022)          |
+
+**Regras comuns:**
+
+- Não tocar os locks de R-0020 nem os arquivos de R-0022 em curso.
+- Tarefas válidas em `pnpm verify:round-tasks`.
+- Push sem PR ao fim de cada onda e checkpoint explícito.
+- Integrar upstreams sempre por merge.
+
+## 16. Adenda A-C2-15: pré-trabalho da fase D (Owner, 2026-09-30)
+
+**Motivo.** Com R-0022 e R-0023 em curso e R-0024 ainda por vir, cerca de 25–30 % de cada rodada da
+fase D (análise, contratos e duas entregas de código isoladas) não depende da plataforma. A
+antecipação encurta a fase D em ≈ 2–3 janelas.
+
+**Tarefas liberadas agora:**
+
+| Rodada | Tarefas liberadas agora                                                                                      | Esperam                                             |
+| ------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| R-0025 | TASK-0001, 0002, 0003, 0006 (matriz e contratos F-01…F-16)                                                   | 0004/0005/0007/0008 (R-0022/R-0023); 0009+ (R-0024) |
+| R-0026 | TASK-0001, 0002, 0003; TASK-0006 com transporte pendente                                                     | 0004/0005, 0007/0008, 0009+                         |
+| R-0027 | TASK-0001, 0002; TASK-0003/0004 (`BANK_PORT` fail-closed dentro de `inf/collection`); TASK-0005 (testes RED) | 0006 (`policy.ts`); 0007+                           |
+| R-0028 | TASK-0001, 0002; TASK-0003/0004 (portas de homologação BOAT)                                                 | 0005+                                               |
+| R-0029 | TASK-0001, 0002                                                                                              | 0003+                                               |
+
+**Execução em duas sessões sequenciais** (famílias de §2 preservadas):
+
+| Sessão | Maestro              | Reviewer | Sequência                |
+| ------ | -------------------- | -------- | ------------------------ |
+| A      | Codex Sol 6          | Opus 5.5 | R-0027 → R-0025 → R-0029 |
+| B      | Claude Code Opus 5.5 | Sol 6    | R-0028 → R-0026          |
+
+**Regras:**
+
+- Cada rodada tem branch própria sobre `origin/main`, `AUTHORIZATION.md`, um prompt-review restrito às
+  tarefas liberadas, push sem PR e checkpoint.
+- Nenhum arquivo de R-0020, R-0022, R-0023 ou R-0024 em curso é tocado. As listas estão nos `plan.md`.
+- Na retomada depois de R-0024, contratos divergentes viram adenda do Architect.

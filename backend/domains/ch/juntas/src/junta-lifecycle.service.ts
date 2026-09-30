@@ -235,7 +235,7 @@ export class JuntaLifecycleService {
           (case_id, instance, designated_by, designated_at,
            designation_deadline_rule, designation_deadline_at, decision_deadline_at)
          values ($1, $2, $3, $4, $5, $6,
-                 case when $2 = 'SECOND' then $4::timestamptz + interval '30 days' else null end)
+                 case when $2::varchar = 'SECOND' then $4::timestamptz + interval '30 days' else null end)
          returning *`,
         [
           caseId,
@@ -404,7 +404,7 @@ export class JuntaLifecycleService {
       await tx.query(
         `update ch.junta_case
             set status = $2,
-                finalized_at = case when $2 in ('DECIDED','FINAL_DECIDED') then now() else null end,
+                finalized_at = case when $2::varchar in ('DECIDED','FINAL_DECIDED') then now() else null end,
                 updated_at = now()
           where id = $1`,
         [board.case_id, nextStatus],
@@ -419,19 +419,20 @@ export class JuntaLifecycleService {
       await tx.query(
         `insert into integration.outbox
           (topic, aggregate_type, aggregate_id, payload, idempotency_key, status, available_at)
-         values ('ch.renach.junta-decision', 'ch.junta_decision', $1,
-                 jsonb_build_object('decisionId', $1, 'caseId', $2, 'outcome', $3,
-                                    'administrativeExhausted', $4,
+         values ('ch.renach.junta-decision', 'ch.junta_decision', $1::text,
+                 jsonb_build_object('decisionId', $1::text, 'caseId', $2::text,
+                                    'outcome', $3::text,
+                                    'administrativeExhausted', $4::boolean,
                                     'remainingAppeal',
                                     case
-                                      when $5 = 'SECOND' and $3 = 'UPHELD'
+                                      when $5::text = 'SECOND' and $3::text = 'UPHELD'
                                       then jsonb_build_object(
                                         'instance', 'SPECIAL',
                                         'designatingAuthority', 'CETRAN',
                                         'filingDeadlineRule', '30_CALENDAR_DAYS')
                                       else null
                                     end),
-                 'ch.junta-decision:' || $1, 'pending', now())`,
+                 'ch.junta-decision:' || $1::text, 'pending', now())`,
         [
           decision.id,
           board.case_id,
