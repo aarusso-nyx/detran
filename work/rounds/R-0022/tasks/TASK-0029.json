@@ -28,12 +28,17 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-e8e82900ecaee691",
+  "prompt_composition_id": "PC-27a45a1a14fb5b7f",
   "acceptance_commands": [
     [
       "sh",
       "-c",
       "d=$(mktemp -d) && BLUEPRINTS_OUTPUT=$d node tools/blueprints/generate.mjs >/dev/null"
+    ],
+    [
+      "node",
+      "tools/orchestra/validate-blueprints.mjs",
+      "BP-INF-NORMATIVE-001.json"
     ],
     [
       "sh",
@@ -53,7 +58,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-e8e82900ecaee691",
+    "prompt_composition_id": "PC-27a45a1a14fb5b7f",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
