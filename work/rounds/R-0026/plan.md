@@ -474,6 +474,9 @@ PR.**
   (transporte pelo outbox migrado; envelope dos produtores atuais OD-R26-036), e as matrizes de
   papéis contra `policy.ts` como dados de R-0023 (OD-D76). Divergência → adenda numerada do
   Architect.
+- **Issue da frente:** aberta em 2026-09-29 a pedido do Owner, como
+  [#173](https://github.com/aarusso-nyx/detran/issues/173), a partir de `issue-body.md` (redigido
+  pelo maestro; a TASK-0002 desta rodada não previa issue).
 - **Pendências para a retomada:** transcrever OD-R26-030…039 em
   `docs/meta/knowledge-base/open-decisions-rait.md`; editar a semente i18n e a cópia do app para
   OD-D16-012 quando o Owner fixar os textos; OD-R26-002 segue aberta (recomendação (a)); a meta do
