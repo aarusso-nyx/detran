@@ -10,6 +10,7 @@ import {
   tenantScope,
   todayOf,
   type FieldDeps,
+  type SqlScope,
 } from './field-runtime.js';
 import { MOBILE_BOOTSTRAP_PROTOCOL_VERSION } from './mobile-bootstrap.service.js';
 import {
@@ -31,6 +32,28 @@ export interface OpenShiftInput {
   latitude?: number;
   longitude?: number;
   accuracy_m?: number;
+}
+
+async function assertNoOpenShift(
+  scope: SqlScope,
+  tenantId: string,
+  agentId: string,
+): Promise<void> {
+  const open = await scope.query<{ id: string; device_id: string }>(
+    `select id, device_id from ops.ops_shift
+      where tenant_id = $1 and agent_id = $2 and status = 'open'
+      limit 1`,
+    [tenantId, agentId],
+  );
+  if (open.rows[0])
+    throw new DetranError('TEAT.SHIFT_ALREADY_OPEN', {
+      status: 409,
+      context: {
+        shiftId: open.rows[0].id,
+        deviceId: open.rows[0].device_id,
+      },
+      message: 'Já existe turno aberto para o agente.',
+    });
 }
 
 export class OpenShiftCommand {
@@ -55,21 +78,7 @@ export class OpenShiftCommand {
       const agent = await loadAgent(scope, tenantId, actorId);
       const device = await loadDevice(scope, tenantId, deviceId);
       const agencyId = String(device.traffic_agency_id);
-      const open = await scope.query<{ id: string; device_id: string }>(
-        `select id, device_id from ops.ops_shift
-          where tenant_id = $1 and agent_id = $2 and status = 'open'
-          limit 1`,
-        [tenantId, agent ? agent.id : actorId],
-      );
-      if (open.rows[0])
-        throw new DetranError('TEAT.SHIFT_ALREADY_OPEN', {
-          status: 409,
-          context: {
-            shiftId: open.rows[0].id,
-            deviceId: open.rows[0].device_id,
-          },
-          message: 'Já existe turno aberto para o agente.',
-        });
+      await assertNoOpenShift(scope, tenantId, agent ? agent.id : actorId);
       await assertShiftReadiness(scope, device, agent, {
         tenantId,
         agencyId,
@@ -87,12 +96,17 @@ export class OpenShiftCommand {
               longitude: input.longitude ?? null,
               accuracy_m: input.accuracy_m ?? null,
             };
+      // Um turno `open` por agente é garantido pelo índice único parcial
+      // `ux_ops_shift_tenant_id_agent_id_open` (DDL 13): a abertura concorrente
+      // espera a outra transação e, se ela confirmou, não insere nada e cai na
+      // mesma recusa de negócio.
       const inserted = await scope.query<Record<string, unknown>>(
         `insert into ops.ops_shift
            (traffic_agency_id, agent_id, device_id, operational_unit_id, team_id,
             patrol_vehicle_id, operation_id, started_at, start_location_json,
             status, offline_periods_count)
          values ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', 0)
+         on conflict (tenant_id, agent_id) where status = 'open' do nothing
          returning *`,
         [
           agencyId,
@@ -106,7 +120,11 @@ export class OpenShiftCommand {
           location ? JSON.stringify(location) : null,
         ],
       );
-      const shift = inserted.rows[0]!;
+      const shift = inserted.rows[0];
+      if (!shift) {
+        await assertNoOpenShift(scope, tenantId, String(agent!.id));
+        throw new Error('Open shift conflict without a visible open shift');
+      }
       await scope.query(
         `insert into ops.ops_device_event
            (device_id, agent_id, event_type, event_at, details_json)
