@@ -1,5 +1,11 @@
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
-import { Catch, HttpException, Injectable, Module } from '@nestjs/common';
+import {
+  Catch,
+  HttpException,
+  Injectable,
+  Module,
+  type NestModule,
+} from '@nestjs/common';
 import { ApplicationConfig, ModuleRef } from '@nestjs/core';
 import { StynxError, StynxErrorFilter } from '@stynx-nyx/core';
 
@@ -43,8 +49,9 @@ const PORTAL_TENANT_CONFLICT_CODES: ReadonlySet<string> = new Set([
 
 /**
  * Filtro fino ao lado de `DetranErrorFilter`: só troca o código dos conflitos
- * acima em `/v1/portal/*`; `DetranError` segue o envelope DETRAN e qualquer
- * outro `StynxError` é entregue, sem mudança, ao `StynxErrorFilter` publicado.
+ * acima em `/v1/portal/*`; qualquer outro `StynxError` (inclusive
+ * `DetranError`) é entregue, sem mudança, ao `StynxErrorFilter` publicado —
+ * o mesmo que hoje responde por eles.
  */
 @Catch(StynxError)
 export class DetranPortalTenantConflictFilter implements ExceptionFilter<StynxError> {
@@ -55,13 +62,6 @@ export class DetranPortalTenantConflictFilter implements ExceptionFilter<StynxEr
   }
 
   catch(exception: StynxError, host: ArgumentsHost): void {
-    const response = host.switchToHttp().getResponse<{
-      status(code: number): { json(body: Record<string, unknown>): void };
-    }>();
-    if (exception instanceof DetranError) {
-      response.status(exception.status).json(body(exception));
-      return;
-    }
     const request = host
       .switchToHttp()
       .getRequest<{ originalUrl?: string; url?: string }>();
@@ -70,11 +70,14 @@ export class DetranPortalTenantConflictFilter implements ExceptionFilter<StynxEr
       PORTAL_TENANT_CONFLICT_CODES.has(exception.code) &&
       isPortalRoutePath(path)
     ) {
-      const translated = new DetranError('PORTAL.SESSION_TENANT_MISMATCH', {
-        status: 403,
-        context: {},
-      });
-      response.status(translated.status).json(body(translated));
+      // Mesmo envelope dos demais `PORTAL.SESSION_TENANT_MISMATCH` (T-10).
+      this.platform.catch(
+        new DetranError('PORTAL.SESSION_TENANT_MISMATCH', {
+          status: 403,
+          context: {},
+        }),
+        host,
+      );
       return;
     }
     this.platform.catch(exception, host);
@@ -83,12 +86,7 @@ export class DetranPortalTenantConflictFilter implements ExceptionFilter<StynxEr
 
 @Injectable()
 class DetranErrorFilterRegistrar {
-  constructor(
-    applicationConfig: ApplicationConfig,
-    tenantConflictFilter: DetranPortalTenantConflictFilter,
-    filter: DetranErrorFilter,
-  ) {
-    applicationConfig.addGlobalFilter(tenantConflictFilter);
+  constructor(applicationConfig: ApplicationConfig, filter: DetranErrorFilter) {
     applicationConfig.addGlobalFilter(filter);
   }
 }
@@ -100,4 +98,21 @@ class DetranErrorFilterRegistrar {
     DetranErrorFilterRegistrar,
   ],
 })
-export class DetranErrorFilterModule {}
+export class DetranErrorFilterModule implements NestModule {
+  constructor(
+    private readonly applicationConfig: ApplicationConfig,
+    private readonly tenantConflictFilter: DetranPortalTenantConflictFilter,
+  ) {}
+
+  /**
+   * O Nest consulta primeiro o último filtro global registrado, e o
+   * `StynxErrorFilter` publicado (captura tudo) entra por `APP_FILTER` depois
+   * de qualquer provider deste módulo. `configure` roda depois dos
+   * `APP_FILTER` e antes do registro das rotas (`NestApplication.init`), então
+   * o tradutor de conflitos fica à frente dele; o que ele não traduz volta ao
+   * `StynxErrorFilter` sem mudança.
+   */
+  configure(): void {
+    this.applicationConfig.addGlobalFilter(this.tenantConflictFilter);
+  }
+}

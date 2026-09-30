@@ -198,7 +198,14 @@ export const detranPostgresReadiness = new DetranPostgresReadiness();
 export const detranSessionReadiness = new DetranSessionReadiness();
 export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
 
-/** BOAT victim health data requires a declared purpose and a dedicated audit. */
+/**
+ * BOAT victim health data requires a declared purpose and a dedicated audit.
+ *
+ * R-0022 B6 (OD-R22-58) com o mecanismo publicado (CTG-0003 R-8): a
+ * auditoria só é gravada depois da validação de tenancy — inclusive a
+ * _membership_ — do `TenantContextInterceptor` publicado, na primeira emissão
+ * do handler; tenancy recusada → nenhuma emissão e nenhuma gravação.
+ */
 @Injectable()
 export class BoatVictimPurposeInterceptor {
   constructor(private readonly requestContext: RequestContext) {}

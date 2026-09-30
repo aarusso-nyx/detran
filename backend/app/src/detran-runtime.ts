@@ -13,6 +13,7 @@ import type {
   TenantResolverContext,
   TokenVerifier,
 } from '@stynx-nyx/contracts';
+import { ForbiddenException } from '@nestjs/common';
 import { CognitoTokenVerifier } from '@stynx-nyx/auth';
 import { headerToString } from '@stynx-nyx/contracts';
 import {
@@ -536,16 +537,15 @@ export class DetranTenantResolver implements TenantResolver {
 export const PORTAL_ROUTE_PREFIX = '/v1/portal/';
 
 /**
- * Ator nominal das rotas `@Public()` de `/v1/portal/*` (CTG-0001 §8: "não há
- * actorId em rota pública"). `Database.tx({ role: 'app' })` do STYNX 1.3.1
- * exige `tenantId` E `actorId` no `RequestContext`
- * (`resolveExecutionContext` → `ActorContextMissingError`), logo a leitura
- * pública de `brand_profile`/`service_catalog` precisa de um ator no
- * contexto. UUID nulo (RFC 9562 §5.9) = "nenhum ator": `uuidOrNull` do sink
- * de auditoria o descarta e nenhuma tabela o referencia. Valor sem fonte no
- * contrato — registrado como OD-P27 (relatório de TASK-0004).
+ * Ator nominal das rotas públicas de `/v1/portal/*` (CTG-0001 §8: "não há
+ * actorId em rota pública"). `Database.tx({ role: 'app' })` exige `tenantId`
+ * E `actorId` no `RequestContext`, logo a leitura pública precisa de um ator no
+ * contexto. OD-R22-62 (a) (Owner, AUTHORIZATION.md Adenda B15): UUIDv7 fixo e
+ * documentado — a `@stynx-nyx/tenancy` 1.5.0 recusa o UUID nulo em
+ * `publicTenant.actorId`. Preserva OD-P27 ("nenhum ator"): o sink de auditoria
+ * o grava como ator nulo (`auditActorOrNull`) e nenhuma tabela o referencia.
  */
-export const PORTAL_PUBLIC_ACTOR_ID = '00000000-0000-0000-0000-000000000000';
+export const PORTAL_PUBLIC_ACTOR_ID = '01a0f0bb-6b7e-74ab-bd54-f1b2761276a2';
 
 export function isPortalRoutePath(path: string): boolean {
   return path.startsWith(PORTAL_ROUTE_PREFIX);
@@ -563,9 +563,14 @@ export function isPortalRoutePath(path: string): boolean {
  * `DetranTenantResolver.resolveTenant`. Sem estado novo: o diretório continua
  * carregado só no bootstrap (OD-P22).
  */
+export type PublicTenantHostResolver = (context: {
+  host?: string;
+  path: string;
+}) => string | undefined;
+
 export function detranPortalPublicTenantHost(
   resolver: DetranTenantResolver = new DetranTenantResolver(),
-): (context: { host?: string; path: string }) => string | undefined {
+): PublicTenantHostResolver {
   return ({ host, path }) =>
     isPortalRoutePath(path)
       ? resolver.resolveTenant({ host: portalHostOf({ host }) })
@@ -654,7 +659,7 @@ export class DetranPersistedAuditSink implements AuditSink {
          )`,
         [
           event.tenantId,
-          uuidOrNull(event.actorId),
+          auditActorOrNull(event.actorId),
           event.actorRole ?? null,
           event.action,
           event.entity,
@@ -666,6 +671,11 @@ export class DetranPersistedAuditSink implements AuditSink {
       );
     });
   }
+}
+
+/** OD-R22-62: o ator nominal das rotas públicas é gravado como ator nulo. */
+function auditActorOrNull(value: string | undefined): string | null {
+  return value === PORTAL_PUBLIC_ACTOR_ID ? null : uuidOrNull(value);
 }
 
 function uuidOrNull(value: string | undefined): string | null {
@@ -740,6 +750,74 @@ export class DetranPipelineSqlExecutor
   }
 }
 
+/**
+ * Predicado de _membership_ ativa de `TenantContextInterceptor` (STYNX
+ * `@stynx-nyx/tenancy` 1.4.0, `hasActiveMembership`), transcrito sem mudança:
+ * mesma fonte (`auth.memberships` + `tenancy.tenants`), mesmas condições.
+ */
+const ACTIVE_MEMBERSHIP_SQL = `select exists (
+    select 1
+      from auth.memberships membership
+      join tenancy.tenants tenant
+        on tenant.id = membership.tenant_id
+     where membership.user_id = $1::uuid
+       and membership.tenant_id = $2::uuid
+       and membership.is_active = true
+       and tenant.is_active = true
+       and coalesce(tenant.state, 'active') = 'active'
+  ) as allowed`;
+
+/**
+ * R-0022 B6 (hotfix, AUTHORIZATION.md Adenda B13, OD-R22-58 (a)): gravações
+ * DETRAN que rodam ANTES do `TenantContextInterceptor` (guards globais e
+ * interceptores registrados fora dele) só escrevem no tenant pedido depois de
+ * confirmar a _membership_ ativa do ator nele. A consulta roda pelo executor
+ * vinculado à requisição (papel `app`, RLS) no contexto do próprio tenant
+ * pedido — o mesmo em que a gravação ocorreria —, nunca em contexto de
+ * sistema. Sem _membership_ → a mesma recusa da tenancy
+ * (`403 TENANT_ACCESS_DENIED`) e nenhuma gravação.
+ */
+export class DetranTenantMembershipVerifier {
+  constructor(
+    private readonly executor: Pick<DetranPipelineSqlExecutor, 'query'>,
+  ) {}
+
+  /** Exige contexto de requisição ativo com `tenantId` = `tenantId`. */
+  async isActiveMember(tenantId: string, actorId: string): Promise<boolean> {
+    const result = await this.executor.query<{ allowed: boolean }>(
+      ACTIVE_MEMBERSHIP_SQL,
+      [actorId, tenantId],
+    );
+    return result.rows[0]?.allowed === true;
+  }
+
+  async assertActiveMember(
+    tenantId: string,
+    actorId: string | undefined,
+  ): Promise<void> {
+    if (!actorId || !(await this.isActiveMember(tenantId, actorId)))
+      throw new ForbiddenException('TENANT_ACCESS_DENIED');
+  }
+}
+
+/**
+ * Rota `@PublicTenantRoute()` reconhecida pelo metadado publicado: o guard de
+ * autenticação STYNX 1.5.0 (`AuthContextGuard`/`StynxAuthGuard`) lê
+ * `STYNX_PUBLIC_TENANT_ROUTE` do handler/classe e marca
+ * `request.publicTenantRoute = true` antes dos demais guards.
+ */
+function isPublicTenantRouteRequest(request: unknown): boolean {
+  return (
+    typeof request === 'object' &&
+    request !== null &&
+    (request as { publicTenantRoute?: unknown }).publicTenantRoute === true
+  );
+}
+
+function missingPipelineContext(): Error {
+  return new Error('DETRAN durable pipeline requires tenant and actor context');
+}
+
 export class DetranPersistentPipelineStore
   implements IdempotencyStore, RateLimitStore
 {
@@ -747,10 +825,15 @@ export class DetranPersistentPipelineStore
   private requestContextMutator: RequestContextMutator | undefined;
   private readonly idempotency: PgIdempotencyStore;
   private readonly rateLimit: PgRateLimitStore;
+  private readonly membership: DetranTenantMembershipVerifier;
 
-  constructor(executor: DetranPipelineSqlExecutor) {
+  constructor(
+    executor: DetranPipelineSqlExecutor,
+    private readonly publicTenantHost: PublicTenantHostResolver = detranPortalPublicTenantHost(),
+  ) {
     this.idempotency = new PgIdempotencyStore({ executor });
     this.rateLimit = new PgRateLimitStore({ executor });
+    this.membership = new DetranTenantMembershipVerifier(executor);
   }
 
   bindRequestContext(
@@ -787,12 +870,24 @@ export class DetranPersistentPipelineStore
   }
 
   consume(context: RateLimitDecisionContext): Promise<RateLimitDecision> {
-    return this.runBound(context, () => this.rateLimit.consume(context));
+    // OD-R22-63: a janela é contada no tenant efetivo do escopo (o do Host,
+    // com o ator nominal, em rota `@PublicTenantRoute` sem tenant na decisão).
+    return this.runBound(context, (scope) =>
+      this.rateLimit.consume({ ...context, ...scope }),
+    );
   }
 
+  /**
+   * Sem contexto ativo, a chamada vem de antes da tenancy (o `RateLimitGuard`
+   * é guard global): o tenant da decisão (claim/cabeçalho) ainda não teve a
+   * _membership_ validada. R-0022 B6: valida-a antes de gravar; sem ela, a
+   * mesma recusa da tenancy e nenhuma janela no tenant pedido.
+   */
   private runBound<T>(
-    context: Pick<IdempotencyDecisionContext, 'tenantId' | 'userId'>,
-    work: () => Promise<T>,
+    context: Pick<IdempotencyDecisionContext, 'tenantId' | 'userId'> & {
+      request?: unknown;
+    },
+    work: (scope: { tenantId?: string; userId?: string }) => Promise<T>,
   ): Promise<T> {
     if (!this.requestContext || !this.requestContextMutator) {
       throw new Error('DETRAN pipeline request context is not bound');
@@ -801,22 +896,60 @@ export class DetranPersistentPipelineStore
     // middleware antes dos guards, com tenant/ator ainda ausentes. Só um
     // contexto com tenant e ator é utilizável; sem eles vale o caminho
     // "sem contexto" (escopo aberto a partir da decisão), como em 1.4.0.
-    if (this.hasUsableRequestContext()) return work();
-    if (!context.tenantId || !context.userId) {
-      throw new Error(
-        'DETRAN durable pipeline requires tenant and actor context',
-      );
+    if (this.hasUsableRequestContext()) return work({});
+    const mutator = this.requestContextMutator;
+    const publicTenantRoute = isPublicTenantRouteRequest(context.request);
+    // R-0022 OD-R22-63 (c), CTG-0003 Adenda B15 (i): rota
+    // `@PublicTenantRoute` sem tenant na decisão → tenant pelo Host com o
+    // mesmo `resolveHost` da composição `publicTenant`, ator nominal, sem
+    // _membership_ (rota pública por desenho); Host não resolvido → a mesma
+    // recusa de sempre (fail-closed).
+    if (publicTenantRoute && !context.tenantId) {
+      return Promise.resolve()
+        .then(() => this.publicTenantOf(context.request))
+        .then((tenantId) => {
+          if (!tenantId) throw missingPipelineContext();
+          return mutator.runWithRequestContext(
+            {
+              requestId: generateRequestId(),
+              tenantId,
+              actorId: PORTAL_PUBLIC_ACTOR_ID,
+              startedAt: new Date(),
+            },
+            () => work({ tenantId, userId: PORTAL_PUBLIC_ACTOR_ID }),
+          );
+        });
     }
+    const { tenantId, userId } = context;
+    if (!tenantId || !userId) throw missingPipelineContext();
+    // Adenda B15 (ii) / hotfix B6: demais casos só gravam no tenant pedido
+    // depois de confirmar a _membership_ ativa do ator nele.
     return Promise.resolve(
-      this.requestContextMutator.runWithRequestContext(
+      mutator.runWithRequestContext(
         {
           requestId: generateRequestId(),
-          tenantId: context.tenantId,
-          actorId: context.userId,
+          tenantId,
+          actorId: userId,
           startedAt: new Date(),
         },
-        work,
+        async () => {
+          await this.membership.assertActiveMember(tenantId, userId);
+          return work({});
+        },
       ),
+    );
+  }
+
+  private publicTenantOf(request: unknown): Promise<string | undefined> {
+    const { headers, originalUrl, url } = (request ?? {}) as {
+      headers?: Record<string, unknown>;
+      originalUrl?: string;
+      url?: string;
+    };
+    const host = headerToString(headers?.['host']);
+    const path = (originalUrl ?? url ?? '/').split('?', 1)[0] || '/';
+    return Promise.resolve(
+      this.publicTenantHost({ ...(host ? { host } : {}), path }),
     );
   }
 
@@ -908,6 +1041,8 @@ export const detranPipelineSqlExecutor = new DetranPipelineSqlExecutor();
 export const detranPersistentPipelineStore = new DetranPersistentPipelineStore(
   detranPipelineSqlExecutor,
 );
+export const detranTenantMembershipVerifier =
+  new DetranTenantMembershipVerifier(detranPipelineSqlExecutor);
 export const detranIdempotencyBackend = new DetranDurableIdempotencyBackend();
 export const detranRateLimitPolicyResolver =
   new DetranRateLimitPolicyResolver();
