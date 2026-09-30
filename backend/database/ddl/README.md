@@ -101,8 +101,10 @@ simple, automatically updatable compatibility view exposing the columns used by
 o número de atendimentos e o de pacientes distintos. A DDL não escolhe qual vínculo manter:
 
 1. Para cada chave listada, identifique no RENACH o paciente titular do processo.
-2. O índice cobre atendimentos em qualquer `status` (inclusive `CANCELLED`): só resolve retirar a
-   chave dos atendimentos que não são do titular. Como fazê-lo (qual atendimento, com que registro
-   e se o processo correto é reaberto) é decisão da operação, nunca da DDL; a retirada limpa
-   `renach_process_key` e `renach_process_type` juntos (`ck_ch_encounter_renach_process_pair`).
+2. O índice cobre atendimentos em qualquer `status` (inclusive `CANCELLED`) e de qualquer paciente:
+   para cada par (tenant, chave), a operação escolhe exatamente um atendimento que fica com a chave
+   e a desassocia de todos os demais, inclusive dos que pertencem ao próprio paciente titular. Qual
+   atendimento manter, com que registro e se o processo correto é reaberto é decisão da operação,
+   nunca da DDL; a desassociação limpa `renach_process_key` e `renach_process_type` juntos
+   (`ck_ch_encounter_renach_process_pair`).
 3. Reaplique a DDL; o bloco não varre a tabela quando o índice já existe.
