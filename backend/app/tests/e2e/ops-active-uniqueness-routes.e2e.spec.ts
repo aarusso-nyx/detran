@@ -42,6 +42,7 @@ const ids = {
   range: randomUUID(),
   reservationReserved: randomUUID(),
   reservationCancelled: randomUUID(),
+  reservationCancelledNoShift: randomUUID(),
 };
 
 function headers(role: string): Record<string, string> {
@@ -158,6 +159,23 @@ beforeAll(async () => {
       `uniq-cancelled-${ids.range.slice(0, 8)}`,
     ],
   );
+  // Reserva liquidada sem turno: estado admitido (a exigência de turno vale para `reserved`).
+  await client.query(
+    `insert into ops.numbering_reservation
+       (id, tenant_id, range_id, traffic_agency_id, agent_id, device_id, shift_id,
+        idempotency_key, start_number, end_number, valid_until, status)
+     values ($1, $2, $3, $4, $5, $6, null, $7, 2029000013, 2029000014,
+             '2026-12-31T23:59:59-04:00', 'cancelled')`,
+    [
+      ids.reservationCancelledNoShift,
+      TENANT_ID,
+      ids.range,
+      AGENCY_ID,
+      ids.agent,
+      ids.device,
+      `uniq-cancelled-no-shift-${ids.range.slice(0, 8)}`,
+    ],
+  );
 
   const { NestFactory: factory } = await import('@nestjs/core');
   const { AppModule } = await import('../../src/app.module.js');
@@ -262,6 +280,68 @@ describe('rotas CRUD de ops — unicidade de turno aberto e de reserva ativa', (
       code: 'TEAT.NUMBERING_RESERVATION_ACTIVE_EXISTS',
       context: { reservationId: ids.reservationReserved },
     });
+    expect(await activeReservations()).toBe(1);
+  });
+
+  // Ciclo 2 da revisão: o índice único trata NULL como distinto, então uma reserva `reserved`
+  // sem turno escaparia da unicidade por dispositivo e turno. §5.10 do CTG-0002 exige
+  // `shift_id` na reserva: `reserved` sem turno é recusada (422 `TEAT.VALIDATION_FAILED`,
+  // `fields: [{ path: 'shift_id', rule: 'required' }]`), nunca gravada.
+  const reservedWithoutShift = () =>
+    count(
+      `select count(*)::integer as count from ops.numbering_reservation
+        where tenant_id = $1 and device_id = $2 and shift_id is null
+          and status = 'reserved'`,
+      [TENANT_ID, ids.device],
+    );
+
+  it('dado um dispositivo quando POST /v1/ops/offline-sync/numbering-reservations cria duas reservas reserved com shift_id null então as duas recebem 422 TEAT.VALIDATION_FAILED em shift_id e nenhuma reserva sem turno nasce', async () => {
+    for (const [index, start] of [2029000015, 2029000017].entries()) {
+      const response = await request(app.getHttpServer())
+        .post('/v1/ops/offline-sync/numbering-reservations')
+        .set(headers('technical-admin'))
+        .send({
+          range_id: ids.range,
+          traffic_agency_id: AGENCY_ID,
+          agent_id: ids.agent,
+          device_id: ids.device,
+          shift_id: null,
+          idempotency_key: `uniq-null-${index}-${randomUUID().slice(0, 8)}`,
+          start_number: start,
+          end_number: start + 1,
+          valid_until: '2026-12-31T23:59:59-04:00',
+          status: 'reserved',
+        });
+      expect(response.status, JSON.stringify(response.body)).toBe(422);
+      expect(response.body).toMatchObject({
+        code: 'TEAT.VALIDATION_FAILED',
+        context: { fields: [{ path: 'shift_id', rule: 'required' }] },
+      });
+    }
+    expect(await reservedWithoutShift()).toBe(0);
+  });
+
+  it('dado reservas do dispositivo quando PATCH /v1/ops/offline-sync/numbering-reservations/:id tira o turno de uma reserved ou reativa uma cancelada sem turno então 422 TEAT.VALIDATION_FAILED em shift_id e nada muda', async () => {
+    const detach = await request(app.getHttpServer())
+      .patch(
+        `/v1/ops/offline-sync/numbering-reservations/${ids.reservationReserved}`,
+      )
+      .set(headers('technical-admin'))
+      .send({ shift_id: null });
+    const reactivate = await request(app.getHttpServer())
+      .patch(
+        `/v1/ops/offline-sync/numbering-reservations/${ids.reservationCancelledNoShift}`,
+      )
+      .set(headers('technical-admin'))
+      .send({ status: 'reserved' });
+    for (const response of [detach, reactivate]) {
+      expect(response.status, JSON.stringify(response.body)).toBe(422);
+      expect(response.body).toMatchObject({
+        code: 'TEAT.VALIDATION_FAILED',
+        context: { fields: [{ path: 'shift_id', rule: 'required' }] },
+      });
+    }
+    expect(await reservedWithoutShift()).toBe(0);
     expect(await activeReservations()).toBe(1);
   });
 });

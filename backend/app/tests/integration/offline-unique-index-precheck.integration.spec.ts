@@ -40,6 +40,8 @@ const SHIFT_INDEX = 'ux_ops_shift_tenant_id_agent_id_open';
 const RESERVATION_INDEX =
   'ux_numbering_reservation_tenant_id_device_id_shift_id_reserved';
 const PROCEDURE = 'backend/database/ddl/README.md';
+// Ciclo 2 da revisão: reserva `reserved` exige turno (§5.10) — check com pré-checagem.
+const SHIFT_REQUIRED_CHECK = 'ck_ops_numbering_reservation_reserved_shift';
 
 type PgClient = InstanceType<typeof Client>;
 
@@ -77,6 +79,7 @@ let tenantId: string;
 let field: Awaited<ReturnType<typeof seedField>>;
 const extraShift = randomUUID();
 const reservations = [randomUUID(), randomUUID()];
+const shiftless = randomUUID();
 
 async function owner(): Promise<void> {
   await seeder.query(`select set_config('app.role', 'owner', false)`);
@@ -196,5 +199,62 @@ describe('hotfix — pré-checagem de duplicatas antes dos índices únicos parc
     expect(applied.status, applied.output).toBe(0);
     expect(await indexExists(SHIFT_INDEX)).toBe(true);
     expect(await indexExists(RESERVATION_INDEX)).toBe(true);
+  }, 180_000);
+
+  it('dado uma reserva reserved sem turno num banco anterior à regra quando a DDL é aplicada então ela falha com mensagem que nomeia a regra, o tenant, o dispositivo, a reserva e o procedimento, e a regra não é criada', async () => {
+    await owner();
+    await seeder.query(
+      `alter table ops.numbering_reservation drop constraint if exists ${SHIFT_REQUIRED_CHECK}`,
+    );
+    await seeder.query(
+      `insert into ops.numbering_reservation
+         (id, tenant_id, range_id, traffic_agency_id, agent_id, device_id,
+          shift_id, idempotency_key, start_number, end_number, valid_until,
+          status)
+       values ($1, $2, $3, $4, $5, $6, null, $7, 2026000009, 2026000009,
+               '2026-12-31T23:59:59-04:00', 'reserved')`,
+      [
+        shiftless,
+        tenantId,
+        field.rangeId,
+        field.agencyId,
+        field.agentId,
+        field.otherDeviceId,
+        `ux-precheck-${shiftless.slice(0, 8)}`,
+      ],
+    );
+
+    const applied = applyDdl();
+
+    expect(applied.status).not.toBe(0);
+    expect(applied.output).toContain(SHIFT_REQUIRED_CHECK);
+    expect(applied.output).toContain(tenantId);
+    expect(applied.output).toContain(field.otherDeviceId);
+    expect(applied.output).toContain(shiftless);
+    expect(applied.output).toContain(PROCEDURE);
+    const present = await seeder.query<{ count: number }>(
+      `select count(*)::integer as count from pg_constraint
+        where conname = $1`,
+      [SHIFT_REQUIRED_CHECK],
+    );
+    expect(present.rows[0]!.count).toBe(0);
+  }, 180_000);
+
+  it('dado a reserva sem turno liquidada pela operação quando a DDL é aplicada então ela conclui e a regra existe', async () => {
+    await owner();
+    await seeder.query(
+      `update ops.numbering_reservation set status = 'cancelled' where id = $1`,
+      [shiftless],
+    );
+
+    const applied = applyDdl();
+
+    expect(applied.status, applied.output).toBe(0);
+    const present = await seeder.query<{ count: number }>(
+      `select count(*)::integer as count from pg_constraint
+        where conname = $1`,
+      [SHIFT_REQUIRED_CHECK],
+    );
+    expect(present.rows[0]!.count).toBe(1);
   }, 180_000);
 });
