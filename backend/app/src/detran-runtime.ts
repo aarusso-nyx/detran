@@ -14,6 +14,7 @@ import type {
   TokenVerifier,
 } from '@stynx-nyx/contracts';
 import { AsyncLocalStorage } from 'node:async_hooks';
+import { ForbiddenException } from '@nestjs/common';
 import { CognitoTokenVerifier } from '@stynx-nyx/auth';
 import { headerToString } from '@stynx-nyx/contracts';
 import {
@@ -776,6 +777,69 @@ export class DetranPipelineSqlExecutor
   }
 }
 
+/**
+ * Predicado de _membership_ ativa de `TenantContextInterceptor` (STYNX
+ * `@stynx-nyx/tenancy` 1.4.0, `hasActiveMembership`), transcrito sem mudança:
+ * mesma fonte (`auth.memberships` + `tenancy.tenants`), mesmas condições.
+ */
+const ACTIVE_MEMBERSHIP_SQL = `select exists (
+    select 1
+      from auth.memberships membership
+      join tenancy.tenants tenant
+        on tenant.id = membership.tenant_id
+     where membership.user_id = $1::uuid
+       and membership.tenant_id = $2::uuid
+       and membership.is_active = true
+       and tenant.is_active = true
+       and coalesce(tenant.state, 'active') = 'active'
+  ) as allowed`;
+
+/**
+ * R-0022 B6 (hotfix, AUTHORIZATION.md Adenda B13, OD-R22-58 (a)): gravações
+ * DETRAN que rodam ANTES do `TenantContextInterceptor` (guards globais e
+ * interceptores registrados fora dele) só escrevem no tenant pedido depois de
+ * confirmar a _membership_ ativa do ator nele. A consulta roda pelo executor
+ * vinculado à requisição (papel `app`, RLS) no contexto do próprio tenant
+ * pedido — o mesmo em que a gravação ocorreria —, nunca em contexto de
+ * sistema. Sem _membership_ → a mesma recusa da tenancy
+ * (`403 TENANT_ACCESS_DENIED`) e nenhuma gravação.
+ */
+export class DetranTenantMembershipVerifier {
+  constructor(
+    private readonly executor: Pick<DetranPipelineSqlExecutor, 'query'>,
+  ) {}
+
+  /** Exige contexto de requisição ativo com `tenantId` = `tenantId`. */
+  async isActiveMember(tenantId: string, actorId: string): Promise<boolean> {
+    const result = await this.executor.query<{ allowed: boolean }>(
+      ACTIVE_MEMBERSHIP_SQL,
+      [actorId, tenantId],
+    );
+    return result.rows[0]?.allowed === true;
+  }
+
+  async assertActiveMember(
+    tenantId: string,
+    actorId: string | undefined,
+  ): Promise<void> {
+    if (!actorId || !(await this.isActiveMember(tenantId, actorId)))
+      throw new ForbiddenException('TENANT_ACCESS_DENIED');
+  }
+}
+
+/**
+ * Rotas públicas do portal (`seedPortalPublicRequest`): tenant resolvido pelo
+ * Host/X-Tenant-Id e ator nominal (OD-P27), sem _membership_ por desenho; a
+ * tenancy também não é chamada para elas (`patchTenantContextInterceptorOrdering`).
+ */
+function isPortalPublicRequest(request: unknown): boolean {
+  return (
+    typeof request === 'object' &&
+    request !== null &&
+    (request as { portalPublic?: unknown }).portalPublic !== undefined
+  );
+}
+
 export class DetranPersistentPipelineStore
   implements IdempotencyStore, RateLimitStore
 {
@@ -783,10 +847,12 @@ export class DetranPersistentPipelineStore
   private requestContextMutator: RequestContextMutator | undefined;
   private readonly idempotency: PgIdempotencyStore;
   private readonly rateLimit: PgRateLimitStore;
+  private readonly membership: DetranTenantMembershipVerifier;
 
   constructor(executor: DetranPipelineSqlExecutor) {
     this.idempotency = new PgIdempotencyStore({ executor });
     this.rateLimit = new PgRateLimitStore({ executor });
+    this.membership = new DetranTenantMembershipVerifier(executor);
   }
 
   bindRequestContext(
@@ -826,28 +892,42 @@ export class DetranPersistentPipelineStore
     return this.runBound(context, () => this.rateLimit.consume(context));
   }
 
+  /**
+   * Sem contexto ativo, a chamada vem de antes da tenancy (o `RateLimitGuard`
+   * é guard global): o tenant da decisão (claim/cabeçalho) ainda não teve a
+   * _membership_ validada. R-0022 B6: valida-a antes de gravar; sem ela, a
+   * mesma recusa da tenancy e nenhuma janela no tenant pedido.
+   */
   private runBound<T>(
-    context: Pick<IdempotencyDecisionContext, 'tenantId' | 'userId'>,
+    context: Pick<IdempotencyDecisionContext, 'tenantId' | 'userId'> & {
+      request?: unknown;
+    },
     work: () => Promise<T>,
   ): Promise<T> {
     if (!this.requestContext || !this.requestContextMutator) {
       throw new Error('DETRAN pipeline request context is not bound');
     }
     if (this.requestContext.hasActiveContext()) return work();
-    if (!context.tenantId || !context.userId) {
+    const { tenantId, userId } = context;
+    if (!tenantId || !userId) {
       throw new Error(
         'DETRAN durable pipeline requires tenant and actor context',
       );
     }
+    const portalPublic = isPortalPublicRequest(context.request);
     return Promise.resolve(
       this.requestContextMutator.runWithRequestContext(
         {
           requestId: generateRequestId(),
-          tenantId: context.tenantId,
-          actorId: context.userId,
+          tenantId,
+          actorId: userId,
           startedAt: new Date(),
         },
-        work,
+        async () => {
+          if (!portalPublic)
+            await this.membership.assertActiveMember(tenantId, userId);
+          return work();
+        },
       ),
     );
   }
@@ -934,6 +1014,8 @@ export const detranPipelineSqlExecutor = new DetranPipelineSqlExecutor();
 export const detranPersistentPipelineStore = new DetranPersistentPipelineStore(
   detranPipelineSqlExecutor,
 );
+export const detranTenantMembershipVerifier =
+  new DetranTenantMembershipVerifier(detranPipelineSqlExecutor);
 export const detranIdempotencyBackend = new DetranDurableIdempotencyBackend();
 export const detranRateLimitPolicyResolver =
   new DetranRateLimitPolicyResolver();
