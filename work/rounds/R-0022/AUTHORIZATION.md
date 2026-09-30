@@ -139,3 +139,14 @@ caso encontre issues similares".
   regressão vermelho antes da correção (Inspector → Engineer), revisão da outra família e merge com CI
   verde, sem nova consulta ao Owner. Vazamento entre tenants continua sendo parada imediata e relato
   (§7 do prompt do maestro); decisões de produto ou de critério continuam com o Owner.
+
+## Adenda B10 — decisões sobre achados dos hotfixes (Owner, 2026-09-29)
+
+Resposta literal: "1. a; 2. a; 3. não exigir".
+
+- **OD-HF-B9-001 (chave RENACH):** (a) única por tenant — índice único parcial
+  `(tenant_id, renach_process_key)` pelo blueprint BP-CH-ENCOUNTERS-001, com pré-checagem de duplicatas
+  e a violação traduzida para o 409 existente; hotfix próprio (política B9).
+- **OD-HF-B9-002 (gate de motivo no fechamento de turno):** (a) manter o protocolo; alinhar o catálogo
+  de erros para `received` (contrato §5.5 e código).
+- **Dispositivo da reserva:** não exigir que seja o dispositivo do turno (§5.10 não exige; handoff).
