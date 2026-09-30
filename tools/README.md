@@ -15,6 +15,12 @@ Checks with their own entry below (the complete gate chain is the `check` script
 - `check-rls-ddl.ts` — static policy coverage for tables carrying `tenant_id`.
 - `check-rls-smoke.ts` — live cross-tenant denial, automatic tenant assignment
   and audit-chain persistence against the `detran` database.
+- `check-sql-param-types.ts` — `PREPARE` (under `role_app_backend`, rolled back)
+  of every SQL command listed in `sql-param-types.manifest.json`, extracted
+  literally from the service source; fails on `could not determine data type`
+  / `inconsistent types deduced` (untyped `pg` parameters). Needs
+  `DETRAN_TEST_DATABASE_URL` (no fallback), so it runs first in
+  `backend:test:integration`, not in `check`.
 - `verify-senatran-boundary.ts` — scans runtime source for direct national base
   URLs, SENATRAN auth headers and provider hosts outside
   `packages/senatran-adapter` (ADR-0003/ADR-0008).
@@ -51,6 +57,7 @@ Scripts of the root `package.json` that call `tools/`:
 | `stack:health`                | `bash tools/detran-stack.sh health`                                                                                                                                                      |
 | `test:stack`                  | `node --test tools/stack/*.test.mjs`                                                                                                                                                     |
 | `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                                                           |
+| `verify:sql-param-types`      | `tsx tools/check-sql-param-types.ts`                                                                                                                                                     |
 | `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                                                                    |
 | `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                                                             |
 | `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                                                     |

@@ -108,3 +108,55 @@ o número de atendimentos e o de pacientes distintos. A DDL não escolhe qual v�
    nunca da DDL; a desassociação limpa `renach_process_key` e `renach_process_type` juntos
    (`ck_ch_encounter_renach_process_pair`).
 3. Reaplique a DDL; o bloco não varre a tabela quando o índice já existe.
+
+## Duplicatas antes de índice único parcial
+
+Os índices únicos parciais de "uma linha ativa" e a restrição de turno
+obrigatório da reserva são precedidos, na DDL gerada, por um bloco de
+pré-checagem (`precheck` no índice ou na `check` do blueprint). A restrição vem
+antes do índice na DDL 18: sem reserva `reserved` sem turno, o agrupamento da
+pré-checagem do índice e a unicidade do índice tratam as mesmas linhas.
+
+| Índice                                                               | DDL                           | Invariante                                                          |
+| -------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------- |
+| `ops.ux_ops_shift_tenant_id_agent_id_open`                           | `13-ops-field-operations.sql` | um turno `open` por agente e tenant (CTG-0002 §5.4)                 |
+| `ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved` | `18-ops-offline-sync.sql`     | uma reserva `reserved` por dispositivo e turno (§5.10)              |
+| `ops.ck_ops_numbering_reservation_reserved_shift` (check)            | `18-ops-offline-sync.sql`     | reserva `reserved` sempre tem turno (§5.10: `shift_id` obrigatório) |
+
+Se o banco já tiver linhas que o índice recusaria, `apply.sh` falha (a
+transação única é desfeita e nada é aplicado) com a mensagem
+`Indice unico <índice> nao pode ser criado: duplicatas em <tabela> (<filtro>): <chaves> linhas=<n>`,
+que lista cada tenant e agente (ou tenant, dispositivo e turno) duplicado; a
+restrição falha com `Restricao <restrição> nao pode ser criada: linhas que a violam (...)`,
+listando tenant, dispositivo e id de cada reserva `reserved` sem turno. A
+DDL só detecta: **qual linha manter é decisão da operação**, nunca da DDL.
+
+Procedimento, antes de reaplicar:
+
+1. Liste as duplicatas (papel owner, fora do caminho de requisição):
+
+   ```sql
+   select tenant_id, agent_id, array_agg(id order by started_at) as shifts
+     from ops.ops_shift where status = 'open'
+    group by tenant_id, agent_id having count(*) > 1;
+
+   select tenant_id, device_id, shift_id,
+          array_agg(id order by reserved_at) as reservations
+     from ops.numbering_reservation where status = 'reserved'
+    group by tenant_id, device_id, shift_id having count(*) > 1;
+
+   select tenant_id, device_id, id
+     from ops.numbering_reservation
+    where status = 'reserved' and shift_id is null;
+   ```
+
+2. Leve cada grupo ao responsável operacional do órgão (supervisão de campo),
+   que decide qual turno segue aberto, qual reserva segue vigente e o destino
+   de cada reserva `reserved` sem turno.
+3. Aplique a decisão pelos comandos de produção, nunca por `update` direto:
+   turno excedente → `POST /v1/ops/mobile-bootstrap/shifts/{id}/close` (com
+   `reason`); reserva excedente →
+   `POST /v1/ops/offline-sync/numbering-reservations/{id}/cancel` ou `…/block`
+   (a liquidação devolve a cauda à faixa quando cabe e registra o ato em
+   `reconciliation_json.lifecycle`).
+4. Repita as consultas do passo 1 até voltarem vazias e reaplique `apply.sh`.

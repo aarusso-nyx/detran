@@ -198,6 +198,7 @@ import { PecUserAdminService } from './pec-user-admin.service.js';
 import { PecCognitoAdminController } from './pec-cognito-admin.controller.js';
 import { PecCognitoAdminService } from './pec-cognito-admin.service.js';
 import { DetranErrorFilterModule } from './detran-error.filter.js';
+import { UniqueViolationInterceptorModule } from './unique-violation.interceptor.js';
 import { DetranPolicyErrorGuard } from './detran-policy-error.guard.js';
 import { RaitTransactionalAuditInterceptor } from './rait-transactional-audit.interceptor.js';
 
@@ -877,6 +878,7 @@ export class AppModule {
         OfflineSyncModule,
         ProvisioningModule,
         DetranErrorFilterModule,
+        UniqueViolationInterceptorModule,
         // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
         // the agency does not operate meters today).
         ...(detranFeatureFlagSet().flags['teat.speed_meters']?.default === true
