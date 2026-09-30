@@ -28,8 +28,20 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-6b600d6018e861d5",
+  "prompt_composition_id": "PC-b49b558c60c9a9dd",
   "acceptance_commands": [
+    [
+      "node",
+      "tools/orchestra/expect-red.mjs",
+      "work/rounds/R-0022/reports/TASK-0024.expected-red.txt",
+      "--",
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-tenancy-platform.e2e.spec.ts"
+    ],
     [
       "pnpm",
       "--filter",
@@ -50,7 +62,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-6b600d6018e861d5",
+    "prompt_composition_id": "PC-b49b558c60c9a9dd",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

@@ -30,7 +30,7 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-747b70d2dd0e46f1",
+  "prompt_composition_id": "PC-8780c46e2a040d66",
   "acceptance_commands": [
     [
       "pnpm",
@@ -51,6 +51,19 @@
       "--passWithNoTests=false",
       "src/app/core/sse.characterization.spec.ts"
     ],
+    [
+      "node",
+      "tools/orchestra/expect-red.mjs",
+      "work/rounds/R-0022/reports/TASK-0019.expected-red.txt",
+      "--",
+      "pnpm",
+      "--filter",
+      "@detran/teat-web",
+      "run",
+      "test",
+      "--passWithNoTests=false",
+      "src/app/core/sse.platform.spec.ts"
+    ],
     ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
     ["pnpm", "--filter", "@detran/teat-web", "lint"],
     ["pnpm", "--filter", "@detran/app", "typecheck"]
@@ -65,7 +78,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-747b70d2dd0e46f1",
+    "prompt_composition_id": "PC-8780c46e2a040d66",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
