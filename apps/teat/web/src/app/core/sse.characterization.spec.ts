@@ -49,8 +49,21 @@ function homologationSetup(port: TeatWebHomologationEvents | null) {
   };
 }
 
+// Robustez (OD-R22-56, P-05-2 (a)): o caminho é comparado sem a query e a query é lida de
+// `urlWithParams`, seja ela `HttpParams` ou parte da string da URL; o spec não exige `Accept`.
+function pathOf(url: string): string {
+  return url.split('?')[0] ?? url;
+}
+
+function queryParam(request: TestRequest, name: string): string | null {
+  return new URL(
+    request.request.urlWithParams,
+    'http://localhost',
+  ).searchParams.get(name);
+}
+
 function streamRequests(http: HttpTestingController): TestRequest[] {
-  return http.match((request) => request.url === STREAM_URL);
+  return http.match((request) => pathOf(request.url) === STREAM_URL);
 }
 
 /** Cadeia STYNX montada como no bootstrap: bearer e `X-Tenant-Id` pelo `HttpClient`. */
@@ -180,7 +193,7 @@ describe('C-01-39 — bearer e X-Tenant-Id no fluxo do TEAT web', () => {
       expect(requests).toHaveLength(1);
       const [request] = requests;
       expect(request?.request.method).toBe('GET');
-      expect(request?.request.params.get('topics')).toBe('ops.refresh');
+      expect(request && queryParam(request, 'topics')).toBe('ops.refresh');
       expect(request?.request.headers.get('Authorization')).toBe(
         `Bearer ${TEST_ACCESS_TOKEN}`,
       );
