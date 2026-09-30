@@ -407,13 +407,18 @@ aceito e sessão ativa ainda retornam 500
 `REQUEST_CONTEXT_MUTATION_FORBIDDEN` antes da política; esses pares estão
 em `notMaterializable` (A-R23-02).
 
-**M3 — TASK-0002 ainda sem aceite (Inspector, O1).** A suíte completa
-`pnpm --filter @detran/app test:e2e` falha em cinco testes sobre banco novo
-com fixtures `fresh`: três Portal, um isolamento OPS e um SSE TEAT. O
-controle anterior sem o spec novo falhou nos mesmos cinco casos; o spec
-novo passa 8/8. O lock SSE pertence à R-0022. Ver `reports/TASK-0002.md`.
-Os `acceptance_commands` permanecem intactos e o branch ainda não será
-publicado.
+**M3 — TASK-0002 ainda sem aceite (Inspector, O1).** Os cinco testes que
+falhavam sobre banco novo com fixtures `fresh` (três Portal, um isolamento
+OPS e um SSE TEAT) tinham uma única causa no ambiente de teste: sem
+`STYNX_APP_DATABASE_URL`, a conexão de app herdava `DATABASE_URL` do
+superusuário `postgres` e contornava RLS. Um login descartável sem
+`BYPASSRLS`, membro de `role_app_backend`, eliminou as cinco falhas: os
+três arquivos afetados passaram 20/20 e a suíte completa não voltou a
+falhar nesses casos. A matriz permaneceu idêntica. A suíte completa ainda
+falha em 3 testes e 5 setups RAIT que exigem o banco dedicado
+`detran_r7_ctg1_a2` e `STYNX_OWNER_DATABASE_URL`; ver
+`reports/TASK-0002.md`. Os `acceptance_commands` permanecem intactos e o
+branch ainda não será publicado.
 
 ## Retomada
 
