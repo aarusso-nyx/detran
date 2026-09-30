@@ -933,3 +933,195 @@ describe('C-03-16 — P1 com Host mapeado divergente do X-Tenant-Id (T-10 regra 
     allowed.close();
   });
 });
+
+interface RateLimitWindow {
+  bucket_key: string;
+  window_start: string;
+  hits: number;
+}
+
+/** Janelas de `integration.rate_limit_windows` de um tenant, lidas pelo owner. */
+async function rateLimitWindows(tenantId: string): Promise<RateLimitWindow[]> {
+  await asOwnerRole(client);
+  return (
+    await client.query<RateLimitWindow>(
+      `select bucket_key, window_start::text as window_start, hits
+         from integration.rate_limit_windows
+        where tenant_id = $1
+        order by bucket_key, window_start`,
+      [tenantId],
+    )
+  ).rows;
+}
+
+const windowKey = (row: RateLimitWindow): string =>
+  `${row.bucket_key}|${row.window_start}`;
+
+const totalHits = (rows: RateLimitWindow[]): number =>
+  rows.reduce((sum, row) => sum + row.hits, 0);
+
+describe('C-03-18 — rate limit de rota pública no tenant do Host (Adenda B15, OD-R22-62/63)', () => {
+  it('C-03-18 — dado Host A mapeado, consulta ligada e o tenant do Host sem janela própria do caso quando POST /v1/portal/manifestations anônimo, com Authorization: Basic e com Bearer então 201 (nunca 503) e a janela de rate limit gravada em integration.rate_limit_windows no tenant do Host; controle P1: principal sem membership em B com X-Tenant-Id: B em POST start de sinistro então 403 e nenhuma janela gravada em B', async () => {
+    const hostBefore = await rateLimitWindows(PORTAL_TENANT_ID);
+    const hostBeforeByKey = new Map(
+      hostBefore.map((row) => [windowKey(row), row.hits]),
+    );
+    const bBefore = await rateLimitWindows(TENANT_B);
+    try {
+      expect(
+        await appRoleControl(claimB.app, TENANT_B, ACTOR_A),
+        'controle de papel da instância de B',
+      ).toEqual({
+        current_user: 'role_app_backend',
+        tenant_id: TENANT_B,
+        actor_id: ACTOR_A,
+      });
+
+      const post = (headers: Record<string, string>, text: string) =>
+        request(plain.getHttpServer())
+          .post('/v1/portal/manifestations')
+          .set(onHostA({ 'idempotency-key': randomUUID(), ...headers }))
+          .send({ kind: 'reclamacao', text });
+
+      withHostResolution(true);
+      const anonymous = await post({}, 'C-03-18 anonima');
+      await trackManifestation(anonymous.body?.manifestationId);
+      expect(anonymous.status, JSON.stringify(anonymous.body)).not.toBe(503);
+      expect(anonymous.status, JSON.stringify(anonymous.body)).toBe(201);
+      expect(anonymous.body.anonymous).toBe(true);
+
+      withHostResolution(true);
+      setCitizen({ cpf: CPF.prata, level: 'avancada' });
+      process.env.DETRAN_LOCAL_ACTOR_ID = PORTAL_ACTOR_ID;
+      const basic = await post({ authorization: 'Basic x' }, 'C-03-18 basic');
+      await trackManifestation(basic.body?.manifestationId);
+      expect(basic.status, JSON.stringify(basic.body)).not.toBe(503);
+      expect(basic.status, JSON.stringify(basic.body)).toBe(201);
+      expect(basic.body.anonymous).toBe(true);
+
+      withHostResolution(true);
+      setCitizen({ cpf: CPF.prata, level: 'avancada' });
+      process.env.DETRAN_LOCAL_ACTOR_ID = PORTAL_ACTOR_ID;
+      const bearer = await post(
+        { authorization: 'Bearer local' },
+        'C-03-18 bearer',
+      );
+      await trackManifestation(bearer.body?.manifestationId);
+      expect(bearer.status, JSON.stringify(bearer.body)).not.toBe(503);
+      expect(bearer.status, JSON.stringify(bearer.body)).toBe(201);
+      expect(bearer.body.anonymous).toBe(false);
+
+      // A janela é gravada no tenant do Host: uma decisão por requisição.
+      const hostAfter = await rateLimitWindows(PORTAL_TENANT_ID);
+      expect(
+        totalHits(hostAfter) - totalHits(hostBefore),
+        JSON.stringify(hostAfter),
+      ).toBe(3);
+      expect(
+        hostAfter.some(
+          (row) => row.hits > (hostBeforeByKey.get(windowKey(row)) ?? 0),
+        ),
+        JSON.stringify(hostAfter),
+      ).toBe(true);
+      // Nenhuma janela nasce em outro tenant por causa dessas requisições.
+      expect(await rateLimitWindows(TENANT_B)).toEqual(bBefore);
+
+      // Controle P1: sem membership em B, a janela não é gravada em B.
+      process.env.DETRAN_LOCAL_ROLES = 'field-agent';
+      process.env.DETRAN_LOCAL_ACTOR_ID = ACTOR_A;
+      const crossed = await request(claimB.app.getHttpServer())
+        .post(`/v1/est/crash/records/${randomUUID()}/start`)
+        .set({
+          authorization: 'Bearer local',
+          'x-tenant-id': TENANT_B,
+          'if-match': '1',
+          'idempotency-key': `c-03-18-${randomUUID()}`,
+        })
+        .send({});
+      expect(crossed.status, JSON.stringify(crossed.body)).toBe(403);
+      await settle(200);
+      expect(await rateLimitWindows(TENANT_B)).toEqual(bBefore);
+    } finally {
+      // Limpeza: remove as janelas criadas pelo caso e devolve as contagens
+      // das janelas que já existiam.
+      await asOwnerRole(client);
+      for (const row of await rateLimitWindows(PORTAL_TENANT_ID)) {
+        const previous = hostBeforeByKey.get(windowKey(row));
+        if (previous === undefined)
+          await client.query(
+            `delete from integration.rate_limit_windows
+              where tenant_id = $1 and bucket_key = $2 and window_start = $3::timestamptz`,
+            [PORTAL_TENANT_ID, row.bucket_key, row.window_start],
+          );
+        else if (previous !== row.hits)
+          await client.query(
+            `update integration.rate_limit_windows set hits = $4
+              where tenant_id = $1 and bucket_key = $2 and window_start = $3::timestamptz`,
+            [PORTAL_TENANT_ID, row.bucket_key, row.window_start, previous],
+          );
+      }
+    }
+  });
+});
+
+describe('C-03-19 — P3 com Bearer, sem Host mapeado e sem consulta ao Host (Adenda TASK-0028; sucessor dos casos do mecanismo oportunista removido)', () => {
+  const postBearer = async (extra: Record<string, string>, text: string) => {
+    withHostResolution(false);
+    setCitizen({ cpf: CPF.prata, level: 'avancada' });
+    process.env.DETRAN_LOCAL_ACTOR_ID = PORTAL_ACTOR_ID;
+    const response = await request(plain.getHttpServer())
+      .post('/v1/portal/manifestations')
+      .set({
+        authorization: 'Bearer citizen-of-a',
+        'idempotency-key': randomUUID(),
+        ...extra,
+      })
+      .send({ kind: 'reclamacao', text });
+    await trackManifestation(response.body?.manifestationId);
+    return response;
+  };
+
+  it('C-03-19a — dado perfil local sem DETRAN_PORTAL_HOST_RESOLUTION e sem Host mapeado quando P3 POST /v1/portal/manifestations com Authorization: Bearer e X-Tenant-Id: B (≠ LOCAL_TENANT_ID) então 403 PORTAL.SESSION_TENANT_MISMATCH e nenhuma manifestação gravada em B nem no tenant local', async () => {
+    const manifestationsB = await manifestationCount(TENANT_B);
+    const manifestationsLocal = await manifestationCount(PORTAL_TENANT_ID);
+    const crossed = await postBearer(
+      { 'x-tenant-id': TENANT_B },
+      'C-03-19a divergente',
+    );
+    expect(crossed.status, JSON.stringify(crossed.body)).toBe(403);
+    expect(codeOf(crossed.body), JSON.stringify(crossed.body)).toBe(
+      SESSION_TENANT_MISMATCH,
+    );
+    expect(await manifestationCount(TENANT_B)).toBe(manifestationsB);
+    expect(await manifestationCount(PORTAL_TENANT_ID)).toBe(
+      manifestationsLocal,
+    );
+  });
+
+  it('C-03-19b — dado perfil local sem DETRAN_PORTAL_HOST_RESOLUTION e sem Host mapeado quando P3 POST /v1/portal/manifestations com Authorization: Bearer e X-Tenant-Id = LOCAL_TENANT_ID então 201 anonymous false gravada no tenant local', async () => {
+    const manifestationsB = await manifestationCount(TENANT_B);
+    const manifestationsLocal = await manifestationCount(PORTAL_TENANT_ID);
+    const created = await postBearer(
+      { 'x-tenant-id': PORTAL_TENANT_ID },
+      'C-03-19b local',
+    );
+    expect(created.status, JSON.stringify(created.body)).toBe(201);
+    expect(created.body.anonymous).toBe(false);
+    expect(await manifestationCount(PORTAL_TENANT_ID)).toBe(
+      manifestationsLocal + 1,
+    );
+    expect(await manifestationCount(TENANT_B)).toBe(manifestationsB);
+  });
+
+  it('C-03-19c — dado perfil local sem DETRAN_PORTAL_HOST_RESOLUTION e sem Host mapeado quando P3 POST /v1/portal/manifestations com Authorization: Bearer e sem X-Tenant-Id então 201 anonymous false gravada no tenant local', async () => {
+    const manifestationsB = await manifestationCount(TENANT_B);
+    const manifestationsLocal = await manifestationCount(PORTAL_TENANT_ID);
+    const created = await postBearer({}, 'C-03-19c sem cabecalho');
+    expect(created.status, JSON.stringify(created.body)).toBe(201);
+    expect(created.body.anonymous).toBe(false);
+    expect(await manifestationCount(PORTAL_TENANT_ID)).toBe(
+      manifestationsLocal + 1,
+    );
+    expect(await manifestationCount(TENANT_B)).toBe(manifestationsB);
+  });
+});
