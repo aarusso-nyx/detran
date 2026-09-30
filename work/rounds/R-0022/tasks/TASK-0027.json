@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0027",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Adenda de CTG-0006 antes da migração da assinatura (OD-R22-07/08/40, M8)",
+  "description": "Adenda de CTG-0006 antes da migração da assinatura (OD-R22-07/08/40, M8) (CTG-0006), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0027.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r22-contracts-c6-adenda"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": [
+    "r22",
+    "ctg-0006",
+    "signature",
+    "adenda",
+    "after:TASK-0005",
+    "after:TASK-0011",
+    "after:TASK-0012"
+  ],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-2a2c01a204b8e235",
+  "acceptance_commands": [
+    [
+      "grep",
+      "-n",
+      "^## Adenda A (R-0022",
+      "work/rounds/R-0022/contracts/CTG-0006.md"
+    ],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-2a2c01a204b8e235",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
