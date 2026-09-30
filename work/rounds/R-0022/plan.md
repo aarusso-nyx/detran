@@ -661,7 +661,14 @@ Fonte: `AUTHORIZATION.md` §Adenda B6.
   gerado `ch/billing/src/repositories/billing-invoice-item.repository.ts:44,69` (BP-CH-BILLING-001,
   `where id` sem coluna `id`; correção no blueprint/gerador).
 
-## Retomada
+- **B5 — caracterização vermelha depois do pin 1.5.0** (2026-09-29; `reports/pin-1.5.0-characterization.log`).
+  Pacotes, web, integração da outbox e `rls-smoke` verdes; e2e do app com 6 + 45 + 74 falhas. Causa única:
+  a 1.5.0 entrega UPS-TEN-01 (b) — o core abre o `RequestContext` num middleware antes dos guards —, e
+  dois trechos locais assumiam "contexto ativo ⇒ tenant e ator": `DetranPipelineStore.runBound`
+  (`detran-runtime.ts:829`; rate limit sem tenant → 503 "Distributed rate limit backend unavailable") e
+  o _shim_ de tenancy (`app.module.ts`; ramo `portalPublic` não executa → 400 nas rotas públicas do
+  Portal). O passo da ordem de prova "caracterização verde sobre 1.5.0 com o _shim_ presente" não vale
+  sem adaptação. Pin commitado localmente, não publicado. Aguarda decisão do Owner.
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
 tenants). Branch `orchestra/stynx-sse-tenancy` publicada.
