@@ -183,7 +183,7 @@ export class PecRenachProcessService {
       command,
       eligibility,
     ).catch((error: unknown) => {
-      if (isPostgresUniqueViolation(error)) {
+      if (isRenachProcessKeyViolation(error)) {
         throw new ConflictException(
           'RENACH process key is already linked to another encounter',
         );
@@ -230,6 +230,10 @@ export class PecRenachProcessService {
         );
       }
 
+      // Mensagem de negócio para o caso sequencial. Não é a garantia: duas
+      // transações paralelas não se veem aqui; quem serializa é o índice único
+      // parcial ux_ch_encounter_renach_process_key (tenant_id, chave), cuja
+      // violação bindProcess traduz para o mesmo 409 (OD-HF-B9-001 = (a)).
       const conflict = await tx.query<{ id: string }>(
         `select id from ch.encounter
           where renach_process_key = $1 and id <> $2
@@ -333,11 +337,15 @@ function requiredTracks(
   return psychologicalRequired ? ['MEDICAL', 'PSYCH'] : ['MEDICAL'];
 }
 
-function isPostgresUniqueViolation(error: unknown): boolean {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    (error as { code?: unknown }).code === '23505'
-  );
+/** Índice único parcial `(tenant_id, renach_process_key)` de
+ * BP-CH-ENCOUNTERS-001: a chave RENACH é única por tenant (OD-HF-B9-001 = (a)). */
+const RENACH_PROCESS_KEY_INDEX = 'ux_ch_encounter_renach_process_key';
+
+function isRenachProcessKeyViolation(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) return false;
+  const { code, constraint } = error as {
+    code?: unknown;
+    constraint?: unknown;
+  };
+  return code === '23505' && constraint === RENACH_PROCESS_KEY_INDEX;
 }
