@@ -155,6 +155,41 @@ da remoção de 5 ciclos de PR/CI/evidência e da espera pelo lock partilhado.
     `apps/dashboard/web/src/app/i18n/dashboard.pt-BR.json` em `i18n.spec.ts`); edição da semente e
     da cópia na retomada.
     (verificado em 2026-09-26 sobre `a92ef731`; o maestro remede no bootstrap)
+- **ODs de TASK-0001 decididas pelo Owner nesta sessão (2026-09-29), todas pela recomendação do
+  Architect:**
+  - OD-R26-009: a decisão técnica fica com o Architect — (a) estender o DTO se o blueprint de
+    `indicator` admitir edição por configuração; senão (b) os três campos saem da tela.
+  - OD-R26-011 = (a): `volumeJustification` sai do corpo de criação; D-17 ganha o formulário
+    `aprovar-exportacao` (`justification` do aprovador).
+  - OD-R26-012 = (a): schema retranscrito ao `TransparencyAuditDto`; `evidences` registrada como
+    lacuna de backend.
+  - OD-R26-014 = (a): D-02 ganha o botão "em tratamento" (`dashboardAlertTreat`), com a ficha
+    atualizada pelo Owner.
+  - OD-R26-015 = (a): a UI trata os códigos do OpenAPI; as fichas são corrigidas.
+  - OD-R26-019 = (a): `bi-panel` sem consumidor nesta rodada; o manifesto marca as 5 operações
+    `indisponivel_nesta_versao` com esta OD.
+- **ODs de TASK-0003/0006 decididas pelo Owner nesta sessão (2026-09-29), todas pela recomendação
+  do Architect:**
+  - OD-R26-020: mantém o comportamento atual da marca d'água até decisão (papel do solicitante só
+    com coluna nova decidida pelo Owner); identidade do ator técnico conferida na retomada.
+  - OD-R26-021: até o Owner fixar formato/armazenamento, a porta de artefato falha explicitamente
+    e o job grava `fail` (nunca `processing` eterno).
+  - OD-R26-026: as chaves de leitura novas recebem o rol da chave provisória de OD-D16-001/002;
+    ampliar grant só com nova decisão do Owner.
+  - OD-R26-030: relógio D = `source_pending`; nenhum evento D; IND-DASH-105 `connected=false`;
+    bloco A no máximo **6/11** (a meta de 7/11 do plano fica condicionada à escada D).
+  - OD-R26-031: no teto a varredura permanece em `CRITICO` e registra o relógio no relatório da
+    execução; nenhum evento de `PRESCRITO_OPERACIONAL`.
+  - OD-R26-033: só a publicação da ata de sessão emite `rait.decision.published`.
+  - OD-R26-037: replay verde basta para `connected=true`; o closure declara que a varredura
+    periódica aguarda R-0022/R-0024.
+  - OD-R26-038: a varredura só grava bandeira e evento; nenhum `rait_clock_alert` nesta rodada.
+- **ODs de TASK-0003/0006 com decisor Architect** (OD-R26-022…025, 027, 028, 032, 034, 035, 036,
+  039): recomendações aceitas pelo maestro como provisórias; 022 e 036 dependem do outbox de R-0022.
+- **ODs de TASK-0001 com decisor Architect** (OD-R26-006, 007, 008, 010, 013, 016, 017, 018; e
+  OD-D33/D35/D58 em `contracts/CTG-0001.md`): o maestro, como Architect, aceita as recomendações
+  como provisórias; as ligadas a SSE, cliente e camada (007, 017, 018) são reconferidas após
+  R-0024/R-0022.
 
 - **App:** `apps/dashboard/web` (R-0016, PC-0012): 18 telas, **22 entradas** em
   `src/app/app.route-manifest.ts` (18 + 2 filhas de detalhe + `sem-permissao` + `auth/callback`),
@@ -388,6 +423,9 @@ commitar.
   `MOD-dashboard-i18n`, chaves de OD-D16-012 na semente) vale na retomada; nesta abertura prevalece a
   decisão do Owner de só registrar (prompt-review 1, nota): `tasks/TASK-0002.json` não leva
   `MOD-dashboard-i18n`.
+- **M10 — TASK-0002 depois de TASK-0003/0006.** Para o build pack §4 receber também as ODs
+  OD-R26-020…039 dos contratos CTG-0002/0003 (lição 13), TASK-0002 corre depois deles, com nota do
+  maestro ampliando a leitura só às seções `## ODs novas` desses dois contratos.
 - **M8 — ondas desta abertura.** O1: TASK-0001. O2: TASK-0002 ∥ TASK-0003 ∥ TASK-0006 (fronteiras
   disjuntas: `docs/framework/arch/dashboard-*` e backlog ∥ `contracts/CTG-0002.md` ∥
   `contracts/CTG-0003.md`).
