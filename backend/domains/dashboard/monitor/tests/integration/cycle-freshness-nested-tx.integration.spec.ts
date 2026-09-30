@@ -13,7 +13,7 @@
 // harness do ciclo (`buildCycle`) mantém `LiveParameters` só como oráculo dos
 // valores esperados. Esperado hoje: os casos "dentro de tx externa" ficam
 // vermelhos SÓ pelo erro de savepoint; o controle (fora de tx) passa.
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { DashboardFreshnessService } from '../../src/handwritten/cycle/index.js';
 import type { DashboardSweepDatabase } from '../../src/handwritten/cycle/index.js';
@@ -94,6 +94,20 @@ beforeAll(async () => {
     ),
   );
 }, 60_000);
+
+// `setPortalSource` volta a fonte a `version = 1`; as linhas de outbox que o
+// caso anterior commitou (chave `<tipo>:<aggregate.id>:<version>`) precisam
+// sair, senão o próximo caso repete a chave de idempotência e o passo do
+// sweeper falha por `outbox_tenant_id_idempotency_key_key`.
+afterEach(async () => {
+  await db.client.query(
+    `delete from integration.outbox
+      where tenant_id = $1 and aggregate_type = 'dashboard.source'
+        and aggregate_id in (select id::text from dashboard.source
+                              where tenant_id = $1 and source_key = $2)`,
+    [FIXTURE_TENANT_ID, SUITE_SOURCE_KEYS.portalOutbox],
+  );
+});
 
 afterAll(async () => {
   await real?.end();
