@@ -6,7 +6,7 @@
   "discipline": "architect",
   "discipline_specialization": "architect-blueprint",
   "title": "Adenda de CTG-0006 antes da migração da assinatura (OD-R22-07/08/40, M8)",
-  "description": "Adenda de CTG-0006 antes da migração da assinatura (OD-R22-07/08/40, M8) (CTG-0006), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0027.md.",
+  "description": "Adenda de CTG-0006 antes da migração da assinatura (OD-R22-07/08/40, M8) (CTG-0006), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0027.md.",
   "lifecycle": "supported",
   "target_modules": ["MOD-r22-contracts-c6-adenda"],
   "target_substrates": ["F2"],
@@ -29,13 +29,12 @@
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-2a2c01a204b8e235",
+  "prompt_composition_id": "PC-950d9418f99757bb",
   "acceptance_commands": [
     [
-      "grep",
-      "-n",
-      "^## Adenda A (R-0022",
-      "work/rounds/R-0022/contracts/CTG-0006.md"
+      "sh",
+      "-c",
+      "test \"$(grep -c '^## Adenda A (R-0022' work/rounds/R-0022/contracts/CTG-0006.md)\" = 1"
     ],
     ["pnpm", "docs:kb:check"],
     ["pnpm", "format:check"]
@@ -50,7 +49,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-2a2c01a204b8e235",
+    "prompt_composition_id": "PC-950d9418f99757bb",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

@@ -1,0 +1,54 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 12,
+  "scope": ["TASK-0027"],
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0027.md",
+      "line": 101,
+      "claim": "A leitura obrigatória exige `.d.ts` instalados de `@stynx-nyx/documents`, mas esse pacote não existe na instalação desta worktree; `signature` e `storage` estão instalados em 1.5.0. A lista fechada obriga o worker a parar.",
+      "fix": "Retirar `documents` da exigência ou indicar uma fonte publicada existente e verificável."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0027.md",
+      "line": 83,
+      "claim": "A lista fechada omite `backend/app/src/detran-runtime.ts`, onde está o `mimeAllowlist` atual de `signed-documents` (linhas 283–286). Ela também pressupõe um blueprint de `storage.objects` que não existe; a tabela está em `backend/database/ddl/04-integration-storage.sql:113`.",
+      "fix": "Incluir `detran-runtime.ts` e a DDL nominalmente na leitura; esclarecer que não há blueprint atual da tabela e como a adenda deve especificar essa lacuna."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0022/tasks/TASK-0027.json",
+      "line": 16,
+      "claim": "O JSON registra apenas TASK-0011 como upstream e não estabelece a adenda como pré-condição de TASK-0021 parte 1 ou TASK-0009. Os prompts dessas tarefas tampouco exigem TASK-0027 concluída, embora TASK-0027.md:54–56 determine essa ordem.",
+      "fix": "Registrar uma trava de despacho verificável para ambas as tarefas downstream, exigindo a adenda concluída e commitada antes da parte 1 e da migração."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0022/prompts/TASK-0027.md",
+      "line": 76,
+      "claim": "A expressão «escritor atual da outbox (itens #17/#18)» classifica incorretamente #18: CTG-0008.md:54–55 identifica #17 como escritor e #18 como leitor de `renach_acked`.",
+      "fix": "Nomear #17 como escritor e #18 como leitor; exigir que a adenda preserve essa distinção."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0022/prompts/TASK-0027.md",
+      "line": 126,
+      "claim": "O `grep -n` retorna sucesso também quando encontra várias seções, portanto não executa o resultado exigido de exatamente uma linha.",
+      "fix": "Usar uma verificação de contagem igual a 1 no prompt e em `tasks/TASK-0027.json`."
+    }
+  ],
+  "notes": [
+    "Papel ativo: Auditor (Art. 7), revisão somente leitura.",
+    "O SHA-256 do prompt confere com `compositions.json:213`; o PC confere com `compositions.json:214` e `tasks/TASK-0027.json:32,53`.",
+    "A fronteira de escrita limita a tarefa à nova seção de adenda em CTG-0006."
+  ]
+}
