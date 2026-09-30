@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0029",
+  "round_id": "R-0022",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Parte D0 da assinatura: blueprint BP-INF-NORMATIVE-001 1.2.0 e leitura dos chamadores RAIT (OD-R22-64)",
+  "description": "Parte D0 da assinatura: blueprint BP-INF-NORMATIVE-001 1.2.0 e leitura dos chamadores RAIT (OD-R22-64) (CTG-0006), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0029.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-normative-bp", "MOD-r22-contracts-c6-adenda"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0006",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0027",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": [
+    "r22",
+    "ctg-0006",
+    "signature",
+    "blueprint",
+    "owner-b16",
+    "after:TASK-0027"
+  ],
+  "branch": "orchestra/stynx-sse-tenancy",
+  "worktree_id": "WT-stynx-sse-tenancy",
+  "prompt_composition_id": "PC-fab293192ce9754c",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    [
+      "sh",
+      "-c",
+      "test \"$(grep -c '^## Adenda C (R-0022' work/rounds/R-0022/contracts/CTG-0006.md)\" = 1"
+    ],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T17:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-fab293192ce9754c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
