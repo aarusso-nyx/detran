@@ -12,12 +12,20 @@
 // `dashboard.source.freshness`/`FONTE_FRESCOR_ALTERADO` (token proposto,
 // OD-D33) a cada mudança de `state`/`hidden` — um por varredura, com o
 // estado final.
+import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import { DetranError } from '@detran/shared';
 import { OpsParameterService } from '@detran/ops-parameter';
 import type { Clock } from '@detran/inf-deadlines';
 
-import { DASHBOARD_EVENT_TYPES, envelopeOf, publish } from './events.js';
+import {
+  DASHBOARD_EVENT_TYPES,
+  envelopeOf,
+  idempotencyKeyOf,
+  publish,
+  topic,
+  type DashboardEventEnvelope,
+} from './events.js';
 import {
   DASHBOARD_CLOCK,
   dashboardParameterKey,
@@ -140,6 +148,64 @@ export const SOURCE_KEY_BY_PROJECTION: Readonly<Record<string, string>> = {
 const ADAPTER_SOURCE_APP = 'senatran-adapter';
 const ADAPTER_SOURCE_KEY = `${ADAPTER_SOURCE_APP}.telemetry`;
 const OWN_SOURCE_KEY = 'dashboard';
+
+/**
+ * OD-R22-50 (P-04-1 (a)) — `integration.health` é fato próprio do produtor de
+ * frescor, gravado na mesma transação da linha `source.freshness` que o
+ * origina, para as fontes de `teat`/adapter e para `teat.offline-sync` (a
+ * regra que o SSE aplicava ao derivar o frame, OD-D54). O `topic` é o da linha
+ * de origem (`dashboard.source.freshness`; escolha registrada para o
+ * Architect, `source_pending`) e o `type` do envelope é o nome SSE
+ * `integration.health`, que o fluxo do DASHBOARD usa como nome do frame.
+ */
+const INTEGRATION_HEALTH_TYPE = topic('integration', 'health');
+const INTEGRATION_HEALTH_APPS: ReadonlySet<string> = new Set([
+  'teat',
+  ADAPTER_SOURCE_APP,
+]);
+const INTEGRATION_HEALTH_SOURCE_KEY = topic('teat', 'offline-sync');
+
+function feedsIntegrationHealth(source: {
+  app: string;
+  source_key: string;
+}): boolean {
+  return (
+    INTEGRATION_HEALTH_APPS.has(source.app) ||
+    source.source_key === INTEGRATION_HEALTH_SOURCE_KEY
+  );
+}
+
+/**
+ * Inserção do fato `integration.health` na outbox, no molde de `publish`
+ * (§12), com `topic` = o da linha de origem e `idempotency_key` do próprio
+ * envelope (`integration.health:<aggregate.id>:<aggregate.version>`), distinta
+ * da chave da linha `source.freshness`.
+ */
+async function publishIntegrationHealth(
+  tx: CycleSqlTransaction,
+  origin: DashboardEventEnvelope,
+): Promise<void> {
+  const envelope: DashboardEventEnvelope = {
+    ...origin,
+    id: randomUUID(),
+    type: INTEGRATION_HEALTH_TYPE,
+    causationId: origin.id,
+  };
+  await query(
+    tx,
+    `insert into integration.outbox
+       (tenant_id, topic, aggregate_type, aggregate_id, payload, idempotency_key, status)
+     values ($1, $2, $3, $4, $5, $6, 'pending')`,
+    [
+      envelope.tenantId,
+      origin.type,
+      `dashboard.${envelope.aggregate.kind}`,
+      envelope.aggregate.id,
+      JSON.stringify(envelope),
+      idempotencyKeyOf(envelope),
+    ],
+  );
+}
 
 /** Bloco por `source_key` (§8.3, coluna "bloco") — reserva quando o tenant
  *  não tem catálogo de indicadores (OD-D63). */
@@ -550,35 +616,36 @@ export class DashboardFreshnessService {
     const version = Number(updated.rows[0]?.version ?? source.version + 1);
     const fromState = announced;
     if (fromState !== next.state || source.hidden !== next.hidden) {
-      await publish(
-        tx,
-        envelopeOf({
-          type: DASHBOARD_EVENT_TYPES.sourceFreshness,
-          domainEvent: 'FONTE_FRESCOR_ALTERADO',
-          tenantId: ctx.tenantId,
-          occurredAt: ctx.now,
-          actor: ctx.actor,
-          correlationId: ctx.requestId,
-          aggregate: { kind: 'source', id: source.id, version },
-          data: {
-            sourceId: source.id,
-            sourceKey: source.source_key,
-            app: source.app,
-            fromState,
-            toState: next.state,
-            hidden: next.hidden,
-            lastSeenAt: source.last_seen_at
-              ? new Date(source.last_seen_at).toISOString()
-              : null,
-            staleSince: next.staleSince ? next.staleSince.toISOString() : null,
-            acceptableLatencyMinutes:
-              source.acceptable_latency_minutes === null
-                ? null
-                : Number(source.acceptable_latency_minutes),
-            occurredAt: ctx.now.toISOString(),
-          },
-        }),
-      );
+      const freshness = envelopeOf({
+        type: DASHBOARD_EVENT_TYPES.sourceFreshness,
+        domainEvent: 'FONTE_FRESCOR_ALTERADO',
+        tenantId: ctx.tenantId,
+        occurredAt: ctx.now,
+        actor: ctx.actor,
+        correlationId: ctx.requestId,
+        aggregate: { kind: 'source', id: source.id, version },
+        data: {
+          sourceId: source.id,
+          sourceKey: source.source_key,
+          app: source.app,
+          fromState,
+          toState: next.state,
+          hidden: next.hidden,
+          lastSeenAt: source.last_seen_at
+            ? new Date(source.last_seen_at).toISOString()
+            : null,
+          staleSince: next.staleSince ? next.staleSince.toISOString() : null,
+          acceptableLatencyMinutes:
+            source.acceptable_latency_minutes === null
+              ? null
+              : Number(source.acceptable_latency_minutes),
+          occurredAt: ctx.now.toISOString(),
+        },
+      });
+      await publish(tx, freshness);
+      if (feedsIntegrationHealth(source)) {
+        await publishIntegrationHealth(tx, freshness);
+      }
     }
     source.state = next.state;
     source.hidden = next.hidden;

@@ -8,6 +8,12 @@
 // camada do papel é N2 mas não houve `X-Purpose` no handshake. Os `topic`
 // técnicos são montados por concatenação (§1.3.8, A14).
 import { Inject, Injectable } from '@nestjs/common';
+import type {
+  EventStreamCursor,
+  EventStreamRow,
+  EventStreamSource,
+  StynxSseScope,
+} from '@stynx-nyx/backend';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -27,7 +33,12 @@ import {
   type DomainScope,
 } from '@detran/dashboard-monitor';
 
-import type { TeatStreamPoller } from './teat-stream.service.js';
+import {
+  CursorTexts,
+  isUuid,
+  type StreamReads,
+  type TeatStreamPoller,
+} from './teat-stream.service.js';
 
 /** Fatia do `Clock` injetado por `DASHBOARD_CLOCK` (relógio do sistema no app; `FixedClock` nos testes). */
 interface ClockLike {
@@ -65,7 +76,12 @@ export const DASHBOARD_STREAM_TYPES = [
 ] as const;
 export type DashboardStreamType = (typeof DASHBOARD_STREAM_TYPES)[number];
 
-/** `topic` técnico do produtor → evento SSE base (§11); `alert.escalated` e `integration.health` derivam por `data`. */
+/**
+ * `topic` técnico do produtor → evento SSE base (§11); `alert.escalated`
+ * deriva do `domainEvent` e `integration.health` é o fato próprio que o
+ * produtor de frescor grava com o `topic` da linha `source.freshness` que o
+ * origina e `type` = `integration.health` (OD-R22-50; um frame por linha).
+ */
 export const DASHBOARD_STREAM_EVENT_BY_TOPIC: Readonly<
   Record<string, DashboardStreamType>
 > = {
@@ -78,15 +94,11 @@ export const DASHBOARD_STREAM_TOPICS: readonly string[] = Object.keys(
   DASHBOARD_STREAM_EVENT_BY_TOPIC,
 );
 
-/** `integration.health` (OD-D54): frescor de `teat`/adapter ou da fonte `teat.offline-sync`. */
-const INTEGRATION_HEALTH_APPS: ReadonlySet<string> = new Set([
-  'teat',
-  'senatran-adapter',
-]);
-const INTEGRATION_HEALTH_SOURCE_KEY = ['teat', 'offline-sync'].join('.');
+/** `type` do envelope do fato próprio `integration.health` (OD-R22-50). */
+const INTEGRATION_HEALTH_TYPE = ['integration', 'health'].join('.');
 
 /** Janela de replay do `Last-Event-ID` (§11). */
-export const REPLAY_WINDOW_MS = 24 * 60 * 60 * 1000;
+export { REPLAY_WINDOW_MS } from './teat-stream.service.js';
 /** Conexões simultâneas por usuário (§11). */
 export const MAX_CONNECTIONS_PER_USER = 5;
 /** Payload máximo de um frame (§11): evento maior é omitido com `: dropped <id>`. */
@@ -115,25 +127,21 @@ function dataOf(payload: Record<string, unknown>): Record<string, unknown> {
     : {};
 }
 
-/** Eventos SSE que uma linha produz (§11 tabela): um `topic` pode render dois frames. */
-export function eventsOf(row: DashboardOutboxRow): DashboardStreamType[] {
+/** Evento SSE de uma linha (§11 tabela; OD-R22-05: um frame por linha); `null` fora do DASHBOARD. */
+export function eventOf(row: DashboardOutboxRow): DashboardStreamType | null {
   const base = DASHBOARD_STREAM_EVENT_BY_TOPIC[row.topic];
-  if (!base) return [];
-  const data = dataOf(row.payload);
+  if (!base) return null;
   if (base === 'alert.changed') {
     return row.payload.domainEvent === 'ALERTA_ESCALONADO'
-      ? ['alert.escalated']
-      : ['alert.changed'];
+      ? 'alert.escalated'
+      : 'alert.changed';
   }
   if (base === 'source.freshness') {
-    const app = typeof data.app === 'string' ? data.app : '';
-    const sourceKey = typeof data.sourceKey === 'string' ? data.sourceKey : '';
-    return INTEGRATION_HEALTH_APPS.has(app) ||
-      sourceKey === INTEGRATION_HEALTH_SOURCE_KEY
-      ? ['source.freshness', 'integration.health']
-      : ['source.freshness'];
+    return row.payload.type === INTEGRATION_HEALTH_TYPE
+      ? 'integration.health'
+      : 'source.freshness';
   }
-  return [base];
+  return base;
 }
 
 /**
@@ -153,21 +161,16 @@ export function reshape(
   return data;
 }
 
-/** Frame SSE (§11 formato); `null` quando excede `MAX_FRAME_BYTES`. */
-export function frameOf(
+/** `data:` do frame (§11 formato): `{ aggregate, domainEvent, data }` sem `tenantId`. */
+export function projectionOf(
   row: DashboardOutboxRow,
-  event: DashboardStreamType,
   scope: DashboardStreamScope,
-): string | null {
-  const body = JSON.stringify({
+): Record<string, unknown> {
+  return {
     aggregate: row.payload.aggregate,
     domainEvent: row.payload.domainEvent,
     data: reshape(row.payload, scope),
-  });
-  if (Buffer.byteLength(body, 'utf8') > MAX_FRAME_BYTES) return null;
-  return [`id: ${row.id}`, `event: ${event}`, `data: ${body}`, '', ''].join(
-    '\n',
-  );
+  };
 }
 
 /** Papel efetivo do handshake (§2.2): o canônico que concede `dashboard:alert:read` com a maior camada. */
@@ -193,28 +196,12 @@ export function effectiveStreamRole(roles: readonly string[]): string {
 
 @Injectable()
 export class DashboardStreamService {
-  private readonly connections = new Map<string, number>();
-
   constructor(
     private readonly database: Database,
     private readonly requestContext: RequestContext,
     private readonly parameters: OpsParameterService,
     @Inject(DASHBOARD_CLOCK) private readonly clock: ClockLike,
   ) {}
-
-  /** Limite de conexões por usuário (§11): contagem em memória, liberada no `close`. */
-  acquire(principalId: string): boolean {
-    const current = this.connections.get(principalId) ?? 0;
-    if (current >= MAX_CONNECTIONS_PER_USER) return false;
-    this.connections.set(principalId, current + 1);
-    return true;
-  }
-
-  release(principalId: string): void {
-    const current = this.connections.get(principalId) ?? 0;
-    if (current <= 1) this.connections.delete(principalId);
-    else this.connections.set(principalId, current - 1);
-  }
 
   /** Catálogo de finalidades (§5.4.1) — o mesmo fallback do `DashboardLayerGate` (OD-D30). */
   async purposes(): Promise<readonly string[]> {
@@ -351,5 +338,78 @@ export class DashboardStreamService {
       );
       return result.rows;
     });
+  }
+}
+
+/** Escopo da conexão do F3 (CTG-0004 §3): tenant/ator + camada, domínios e finalidade. */
+export interface DashboardConnectionScope
+  extends StynxSseScope, DashboardStreamScope {}
+
+/** Linha do F3 no formato publicado; `event` conforme `eventOf` (R-5 (e)). */
+export interface DashboardStreamEvent extends EventStreamRow {
+  /** `false` quando o `topic` não é do DASHBOARD (só avança o cursor). */
+  named: boolean;
+  row: DashboardOutboxRow;
+}
+
+function dashboardEventOf(row: DashboardOutboxRow): DashboardStreamEvent {
+  const event = eventOf(row);
+  return {
+    id: row.id,
+    createdAt: new Date(row.created_at),
+    event: event ?? row.topic,
+    named: event !== null,
+    row,
+  };
+}
+
+/**
+ * CTG-0004 R-5 — fonte DETRAN fina do F3 sobre as leituras atuais de
+ * `DashboardStreamService` (camada e escopo no SQL); uma instância por conexão.
+ */
+export class DashboardStreamSource implements EventStreamSource<
+  DashboardStreamEvent,
+  DashboardConnectionScope
+> {
+  private readonly cursors = new CursorTexts();
+
+  constructor(
+    private readonly service: DashboardStreamService,
+    private readonly reads?: StreamReads,
+  ) {}
+
+  async now(): Promise<Date> {
+    return this.cursors.open(await this.service.now());
+  }
+
+  async findById(id: string): Promise<DashboardStreamEvent | null> {
+    if (!isUuid(id)) return null;
+    const row = await this.service.findById(id);
+    if (!row) return null;
+    this.cursors.remember(row.id, row.created_at);
+    return dashboardEventOf(row);
+  }
+
+  listSince(
+    cursor: EventStreamCursor,
+    scope: DashboardConnectionScope,
+    limit: number,
+  ): Promise<readonly DashboardStreamEvent[]> {
+    const read = this.read(cursor, scope, limit);
+    return this.reads ? this.reads.track(read) : read;
+  }
+
+  private async read(
+    cursor: EventStreamCursor,
+    scope: DashboardConnectionScope,
+    limit: number,
+  ): Promise<readonly DashboardStreamEvent[]> {
+    const rows = await this.service.listSince(
+      this.cursors.resolve(cursor),
+      { layer: scope.layer, domains: scope.domains, purpose: scope.purpose },
+      limit,
+    );
+    this.cursors.retain(cursor, rows);
+    return rows.map(dashboardEventOf);
   }
 }

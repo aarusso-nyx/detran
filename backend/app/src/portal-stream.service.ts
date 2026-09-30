@@ -10,12 +10,23 @@
 // `portal.<x>.<y>`/`rait.<x>.<y>` (tools/parameters/verify.mjs --check-usage;
 // precedente de `ops/offline-sync/src/handwritten/events.ts`).
 import { Injectable } from '@nestjs/common';
+import type {
+  EventStreamCursor,
+  EventStreamRow,
+  EventStreamSource,
+  StynxSseScope,
+} from '@stynx-nyx/backend';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import { NEXT_ACTION_BY_STATE } from '@detran/portal-requests';
 
-import type { TeatStreamPoller } from './teat-stream.service.js';
+import {
+  CursorTexts,
+  isUuid,
+  type StreamReads,
+  type TeatStreamPoller,
+} from './teat-stream.service.js';
 
 export interface PortalOutboxRow {
   [key: string]: unknown;
@@ -76,6 +87,10 @@ export interface PortalStreamScope {
   cpfHash: string;
   subjectId: string;
 }
+
+/** Escopo da conexão do F2 (CTG-0004 §3): tenant/ator + sujeito da sessão. */
+export interface PortalConnectionScope
+  extends StynxSseScope, PortalStreamScope {}
 
 export interface StreamCursor {
   createdAt: string;
@@ -230,5 +245,74 @@ export class PortalStreamService {
       const result = await asQueryable(tx).query<PortalOutboxRow>(sql, values);
       return result.rows;
     });
+  }
+}
+
+/** Linha do F2 no formato publicado; `event` = tipo SSE do `topic` (R-5 (e)). */
+export interface PortalStreamEvent extends EventStreamRow {
+  /** `false` quando o `topic` não tem tipo SSE do Portal (só avança o cursor). */
+  named: boolean;
+  row: PortalOutboxRow;
+}
+
+function portalEventOf(row: PortalOutboxRow): PortalStreamEvent {
+  const event = PORTAL_STREAM_EVENT_BY_TOPIC[row.topic];
+  return {
+    id: row.id,
+    createdAt: new Date(row.created_at),
+    event: event ?? row.topic,
+    named: event !== undefined,
+    row,
+  };
+}
+
+/**
+ * CTG-0004 R-5 — fonte DETRAN fina do F2 sobre as leituras atuais de
+ * `PortalStreamService` (escopo do sujeito no SQL); uma instância por conexão.
+ */
+export class PortalStreamSource implements EventStreamSource<
+  PortalStreamEvent,
+  PortalConnectionScope
+> {
+  private readonly cursors = new CursorTexts();
+
+  constructor(
+    private readonly service: PortalStreamService,
+    private readonly reads?: StreamReads,
+  ) {}
+
+  async now(): Promise<Date> {
+    return this.cursors.open(await this.service.now());
+  }
+
+  async findById(id: string): Promise<PortalStreamEvent | null> {
+    if (!isUuid(id)) return null;
+    const row = await this.service.findById(id);
+    if (!row) return null;
+    this.cursors.remember(row.id, row.created_at);
+    return portalEventOf(row);
+  }
+
+  listSince(
+    cursor: EventStreamCursor,
+    scope: PortalConnectionScope,
+    limit: number,
+  ): Promise<readonly PortalStreamEvent[]> {
+    const read = this.read(cursor, scope, limit);
+    return this.reads ? this.reads.track(read) : read;
+  }
+
+  private async read(
+    cursor: EventStreamCursor,
+    scope: PortalConnectionScope,
+    limit: number,
+  ): Promise<readonly PortalStreamEvent[]> {
+    const rows = await this.service.listSince(
+      this.cursors.resolve(cursor),
+      { cpfHash: scope.cpfHash, subjectId: scope.subjectId },
+      limit,
+    );
+    this.cursors.retain(cursor, rows);
+    return rows.map(portalEventOf);
   }
 }

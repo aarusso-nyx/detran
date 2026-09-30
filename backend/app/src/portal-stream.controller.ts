@@ -1,26 +1,31 @@
 // CTG-0002 §2.7 e §9 (R-0009, TASK-0008; plan M18) — `GET /v1/portal/stream`.
 //
-// Padrão de `teat-stream.controller.ts`: `@Get` com resposta manual em
-// streaming (nunca `@Sse`: o verificador de decoradores e o policy-routes
-// leem `@Resource`/`@Action` num `@Get`), replay de 24 h por `Last-Event-ID`,
-// `: connected` na abertura e `: heartbeat` pelo poller — nenhum `setInterval`
-// aqui. Escopo = sujeito da sessão (`cpf_hash` + `subject.id`, §9.3), aplicado
-// no SQL do serviço; envelope de rait-events-sse-contract.md §1 sem `tenantId`
+// `@Get` com resposta manual em streaming (nunca `@Sse`: o verificador de
+// decoradores e o policy-routes leem `@Resource`/`@Action` num `@Get`).
+// Escopo = sujeito da sessão (`cpf_hash` + `subject.id`, §9.3), aplicado no
+// SQL do serviço; envelope de rait-events-sse-contract.md §1 sem `tenantId`
 // e com `data` reformatado por tipo (RN-PORTAL-112).
 //
-// O tick do poller pode rodar fora do contexto da requisição (poller manual
-// em teste, ou um agendador que não herda o ALS): a transação de tenant é
-// então aberta com o escopo capturado na abertura (`Database.withRequestContext`).
+// R-0022 CTG-0004 (TASK-0007, OD-R22-45): o enquadramento é do
+// `StynxEventStreamService` publicado, uma instância por fluxo construída
+// aqui (R-2) sobre `PORTAL_STREAM_POLLER` (R-3). O serviço reabre o contexto
+// da conexão (tenant, ator) em cada leitura (R-4), sem ALS herdado nem
+// `inScope` local. Passo anterior à abertura que fica aqui: `upsertSubject`.
 import {
   Controller,
   Get,
-  Headers,
   Inject,
   Query,
   Req,
   Res,
   UseGuards,
+  type OnModuleDestroy,
 } from '@nestjs/common';
+import {
+  StynxEventStreamService,
+  type StynxSseRequest,
+  type StynxSseResponse,
+} from '@stynx-nyx/backend';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database } from '@stynx-nyx/data';
 import {
@@ -38,186 +43,98 @@ import {
 } from '@detran/portal-identity';
 
 import {
-  PORTAL_STREAM_EVENT_BY_TOPIC,
   PORTAL_STREAM_POLLER,
   PORTAL_STREAM_TYPES,
   PortalStreamService,
+  PortalStreamSource,
   reshape,
+  type PortalConnectionScope,
   type PortalStreamPoller,
-  type PortalStreamScope,
-  type StreamCursor,
 } from './portal-stream.service.js';
-import { HEARTBEAT_INTERVAL_MS } from './teat-stream.service.js';
+import {
+  HEARTBEAT_INTERVAL_MS,
+  REPLAY_WINDOW_MS,
+  StreamReads,
+  schedulerOf,
+  topicsOf,
+} from './teat-stream.service.js';
 
-const REPLAY_WINDOW_MS = 24 * 60 * 60 * 1000;
+/** Linhas por leitura (CTG-0004 §3: padrão atual de `listSince`). */
+const BATCH_SIZE = 200;
 
-interface ResponseLike {
-  statusCode: number;
-  setHeader(name: string, value: string): unknown;
-  write(chunk: string): unknown;
-  end(chunk?: string): unknown;
-  on(event: 'close', listener: () => void): unknown;
-}
-
-interface RequestWithClose extends RequestLike, PortalIdentityRequest {
-  on(event: 'close', listener: () => void): unknown;
-}
+type StreamRequest = RequestLike & PortalIdentityRequest & StynxSseRequest;
 
 @Controller('v1/portal/stream')
 @UseGuards(PortalCitizenGuard)
 @Resource('portal:stream')
-export class PortalStreamController {
+export class PortalStreamController implements OnModuleDestroy {
+  private readonly reads = new StreamReads();
+  private readonly events: StynxEventStreamService;
+
   constructor(
     private readonly service: PortalStreamService,
     private readonly identity: PortalIdentityService,
     private readonly database: Database,
     private readonly requestContext: RequestContext,
     @Inject(PORTAL_STREAM_POLLER) private readonly poller: PortalStreamPoller,
-  ) {}
+  ) {
+    this.events = new StynxEventStreamService(
+      database,
+      schedulerOf(poller, this.reads),
+    );
+  }
+
+  onModuleDestroy(): void {
+    this.events.onModuleDestroy();
+  }
 
   @Get()
   @Action('read')
   async stream(
-    @Req() req: RequestWithClose,
-    @Res() res: ResponseLike,
-    @Headers('last-event-id') lastEventId: string | undefined,
+    @Req() req: StreamRequest,
+    @Res() res: StynxSseResponse,
     @Query('topics') topics: string | undefined,
   ): Promise<void> {
     const identity = portalIdentityOf(req);
     const context = this.requestContext.snapshot();
-    const tenantScope = {
-      tenantId: context.tenantId ?? '',
-      actorId: context.actorId ?? '',
-    };
     const subject = await withTenantContext(
       this.database,
       this.requestContext,
       (tx) => this.identity.upsertSubject(tx, identity, null),
     );
-    const scope: PortalStreamScope = {
+    const scope: PortalConnectionScope = {
+      tenantId: context.tenantId ?? '',
+      actorId: context.actorId ?? '',
       cpfHash: cpfHashOf(identity.cpf),
       subjectId: subject.subjectId,
     };
-    const topicFilter = topics
+    const requested = topicsOf(topics);
+    const topicFilter = requested
       ? new Set(
-          topics
-            .split(',')
-            .map((entry) => entry.trim())
-            .filter((entry): entry is (typeof PORTAL_STREAM_TYPES)[number] =>
-              (PORTAL_STREAM_TYPES as readonly string[]).includes(entry),
-            ),
+          [...requested].filter((entry) =>
+            (PORTAL_STREAM_TYPES as readonly string[]).includes(entry),
+          ),
         )
       : null;
-
-    // Fora do contexto da requisição (tick do poller), reabre o escopo capturado.
-    // Contexto utilizável = ativo e com tenant (STYNX 1.5.0 abre o contexto no
-    // middleware, antes de tenant/ator).
-    const inScope = <T>(work: () => Promise<T>): Promise<T> =>
-      this.requestContext.hasActiveContext() &&
-      this.requestContext.snapshot().tenantId
-        ? work()
-        : this.database.withRequestContext(tenantScope, work);
-
-    let cursor: StreamCursor;
-    if (lastEventId) {
-      const row = await this.service.findById(lastEventId);
-      if (!row) {
-        cursor = { createdAt: await this.service.now(), id: null };
-      } else {
-        const ageMs = Date.now() - new Date(row.created_at).getTime();
-        if (ageMs > REPLAY_WINDOW_MS) {
-          res.statusCode = 204;
-          res.end();
-          return;
-        }
-        cursor = { createdAt: row.created_at, id: row.id };
-      }
-    } else {
-      cursor = { createdAt: await this.service.now(), id: null };
-    }
-
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.write(': connected\n\n');
-
-    let closed = false;
-    let unsubscribeHeartbeat: () => void = () => undefined;
-    let unsubscribePoller: () => void = () => undefined;
-    // `closed` and the cancellation are kept separate on purpose
-    // (delivery-review-CTG-0002 nota low): a `close` that fires between the
-    // handler registration and the two `schedule` calls below marks the
-    // stream closed while the subscriptions still hold the initial no-ops;
-    // the explicit `cancel()` after scheduling then cancels the real ones.
-    const cancel = (): void => {
-      unsubscribeHeartbeat();
-      unsubscribePoller();
-      unsubscribeHeartbeat = () => undefined;
-      unsubscribePoller = () => undefined;
-    };
-    const cleanup = (): void => {
-      if (closed) return;
-      closed = true;
-      cancel();
-    };
-    req.on('close', cleanup);
-    res.on('close', cleanup);
-
-    // Ticks serializados: um tick pedido durante outro em curso roda logo
-    // depois (nunca dois `listSince` com o mesmo cursor; nada se perde).
-    let ticking = false;
-    let pending = false;
-    const tick = async (): Promise<void> => {
-      if (closed) return;
-      if (ticking) {
-        pending = true;
-        return;
-      }
-      ticking = true;
-      try {
-        do {
-          pending = false;
-          let rows;
-          try {
-            rows = await inScope(() => this.service.listSince(cursor, scope));
-          } catch {
-            return;
-          }
-          if (closed) return;
-          for (const row of rows) {
-            cursor = { createdAt: row.created_at, id: row.id };
-            const event = PORTAL_STREAM_EVENT_BY_TOPIC[row.topic];
-            if (!event) continue;
-            if (topicFilter && !topicFilter.has(event)) continue;
-            const data = reshape(row.topic, row.payload, row);
-            if (!data) continue;
-            const frame = [
-              `id: ${row.id}`,
-              `event: ${event}`,
-              `data: ${JSON.stringify({ aggregate: row.payload.aggregate, data })}`,
-              '',
-              '',
-            ].join('\n');
-            res.write(frame);
-          }
-        } while (pending && !closed);
-      } finally {
-        ticking = false;
-      }
-    };
-
-    unsubscribeHeartbeat = this.poller.schedule(() => {
-      if (!closed) res.write(': heartbeat\n\n');
-    }, HEARTBEAT_INTERVAL_MS);
-    unsubscribePoller = this.poller.schedule(() => {
-      void tick();
-    });
-    if (closed) {
-      cancel();
-      return;
-    }
-
-    await tick();
+    await this.events.open(
+      req,
+      res,
+      new PortalStreamSource(this.service, this.reads),
+      {
+        scope,
+        filter: (event) =>
+          event.named &&
+          (!topicFilter || topicFilter.has(event.event)) &&
+          reshape(event.row.topic, event.row.payload, event.row) !== null,
+        project: (event) => ({
+          aggregate: event.row.payload.aggregate,
+          data: reshape(event.row.topic, event.row.payload, event.row),
+        }),
+        heartbeatMs: HEARTBEAT_INTERVAL_MS,
+        replayWindowMs: REPLAY_WINDOW_MS,
+        tickMs: this.poller.intervalMs,
+        batchSize: BATCH_SIZE,
+      },
+    );
   }
 }

@@ -2,17 +2,31 @@
 //
 // `@Get` com resposta manual em streaming (nota do maestro, item e): o
 // verificador de decoradores lê `@Resource`/`@Action` normalmente num
-// `@Get`, mas não veria a rota se fosse `@Sse` — por isso a resposta é
-// escrita à mão em vez de usar o helper `@Sse` do Nest.
+// `@Get`, mas não veria a rota se fosse `@Sse`.
+//
+// R-0022 CTG-0004 (TASK-0007, OD-R22-45): o enquadramento (cabeçalhos,
+// `: connected`, heartbeat, _ticks_ serializados, janela de _replay_,
+// `Last-Event-ID`, cancelamento) é do `StynxEventStreamService` publicado,
+// uma instância por fluxo construída aqui (R-2) sobre a porta de agendamento
+// `TEAT_STREAM_POLLER` (R-3). Ficam locais só a fonte fina sobre as leituras
+// atuais (R-5), o filtro por tipo/chave de leitura, a projeção sem
+// `tenantId` (R-6) e o escopo explícito da conexão (R-4).
 import {
   Controller,
   Get,
-  Headers,
   Inject,
   Query,
   Req,
   Res,
+  type OnModuleDestroy,
 } from '@nestjs/common';
+import {
+  StynxEventStreamService,
+  type StynxSseRequest,
+  type StynxSseResponse,
+} from '@stynx-nyx/backend';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database } from '@stynx-nyx/data';
 import {
   Action,
   getPrincipalFromRequest,
@@ -22,121 +36,78 @@ import {
 
 import {
   HEARTBEAT_INTERVAL_MS,
-  isTypeReadableBy,
+  REPLAY_WINDOW_MS,
   TEAT_STREAM_POLLER,
   TeatStreamService,
-  type StreamCursor,
+  TeatStreamSource,
+  isTypeReadableBy,
+  StreamReads,
+  schedulerOf,
+  topicsOf,
   type TeatStreamPoller,
+  type TeatStreamScope,
 } from './teat-stream.service.js';
 
-const REPLAY_WINDOW_MS = 24 * 60 * 60 * 1000;
+/** Linhas por leitura (CTG-0004 §3: padrão atual de `listSince`). */
+const BATCH_SIZE = 200;
 
-interface ResponseLike {
-  statusCode: number;
-  setHeader(name: string, value: string): unknown;
-  write(chunk: string): unknown;
-  end(chunk?: string): unknown;
-  on(event: 'close', listener: () => void): unknown;
-}
-
-interface RequestWithClose extends RequestLike {
-  on(event: 'close', listener: () => void): unknown;
-}
+type StreamRequest = RequestLike & StynxSseRequest;
 
 @Controller('v1/ops/stream')
 @Resource('ops:stream')
-export class TeatStreamController {
+export class TeatStreamController implements OnModuleDestroy {
+  private readonly reads = new StreamReads();
+  private readonly events: StynxEventStreamService;
+
   constructor(
     private readonly service: TeatStreamService,
     @Inject(TEAT_STREAM_POLLER) private readonly poller: TeatStreamPoller,
-  ) {}
+    database: Database,
+    private readonly requestContext: RequestContext,
+  ) {
+    this.events = new StynxEventStreamService(
+      database,
+      schedulerOf(poller, this.reads),
+    );
+  }
+
+  onModuleDestroy(): void {
+    this.events.onModuleDestroy();
+  }
 
   @Get()
   @Action('read')
   async stream(
-    @Req() req: RequestWithClose,
-    @Res() res: ResponseLike,
-    @Headers('last-event-id') lastEventId: string | undefined,
+    @Req() req: StreamRequest,
+    @Res() res: StynxSseResponse,
     @Query('topics') topics: string | undefined,
   ): Promise<void> {
-    const principal = getPrincipalFromRequest(req);
-    const topicFilter = topics
-      ? new Set(
-          topics
-            .split(',')
-            .map((entry) => entry.trim())
-            .filter(Boolean),
-        )
-      : null;
-
-    let cursor: StreamCursor;
-    if (lastEventId) {
-      const row = await this.service.findById(lastEventId);
-      if (!row) {
-        cursor = { createdAt: await this.service.now(), id: null };
-      } else {
-        const ageMs = Date.now() - new Date(row.created_at).getTime();
-        if (ageMs > REPLAY_WINDOW_MS) {
-          res.statusCode = 204;
-          res.end();
-          return;
-        }
-        cursor = { createdAt: row.created_at, id: row.id };
-      }
-    } else {
-      cursor = { createdAt: await this.service.now(), id: null };
-    }
-
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.write(': connected\n\n');
-
-    let closed = false;
-    const cleanup = (): void => {
-      if (closed) return;
-      closed = true;
-      unsubscribeHeartbeat();
-      unsubscribePoller();
+    const context = this.requestContext.snapshot();
+    const scope: TeatStreamScope = {
+      tenantId: context.tenantId ?? '',
+      actorId: context.actorId ?? '',
+      principal: getPrincipalFromRequest(req),
     };
-
-    const unsubscribeHeartbeat = this.poller.schedule(() => {
-      if (!closed) res.write(': heartbeat\n\n');
-    }, HEARTBEAT_INTERVAL_MS);
-
-    const tick = async (): Promise<void> => {
-      if (closed) return;
-      let rows;
-      try {
-        rows = await this.service.listSince(cursor);
-      } catch {
-        return;
-      }
-      for (const row of rows) {
-        cursor = { createdAt: row.created_at, id: row.id };
-        const envelope = row.payload;
-        const type = typeof envelope.type === 'string' ? envelope.type : '';
-        if (!type) continue;
-        if (topicFilter && !topicFilter.has(type)) continue;
-        if (!isTypeReadableBy(principal, type)) continue;
-        const frame = [
-          `id: ${row.id}`,
-          `event: ${type}`,
-          `data: ${JSON.stringify({ aggregate: envelope.aggregate, data: envelope.data })}`,
-          '',
-          '',
-        ].join('\n');
-        res.write(frame);
-      }
-    };
-
-    await tick();
-    const unsubscribePoller = this.poller.schedule(() => {
-      void tick();
-    });
-
-    req.on('close', cleanup);
-    res.on('close', cleanup);
+    const topicFilter = topicsOf(topics);
+    await this.events.open(
+      req,
+      res,
+      new TeatStreamSource(this.service, this.reads),
+      {
+        scope,
+        filter: (event, connection) =>
+          event.named &&
+          (!topicFilter || topicFilter.has(event.event)) &&
+          isTypeReadableBy(connection.principal, event.event),
+        project: (event) => ({
+          aggregate: event.row.payload.aggregate,
+          data: event.row.payload.data,
+        }),
+        heartbeatMs: HEARTBEAT_INTERVAL_MS,
+        replayWindowMs: REPLAY_WINDOW_MS,
+        tickMs: this.poller.intervalMs,
+        batchSize: BATCH_SIZE,
+      },
+    );
   }
 }
