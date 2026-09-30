@@ -1,10 +1,12 @@
 // `/v1/portal/manifestations` — manifestação da Lei 13.460 (work/rounds/
 // R-0009/contracts/CTG-0002.md §2.6, §2.8; plan R-0009 M13, M19, M20, adenda
 // A4(b)). `POST` é público com identidade OPORTUNISTA (H.51 "anônimo para
-// manifestar"): o guard de autenticação do app tenta autenticar quando há
-// `Authorization` e prossegue anônimo se falhar; aqui, principal presente com
-// claims válidas e papel CIDADAO → sujeito identificado, senão anônimo —
-// nunca 401/403. As três rotas autenticadas levam `@UseGuards(PortalCitizenGuard)`
+// manifestar"): `@PublicTenantRoute({ optionalAuth: true })` (STYNX 1.5.0;
+// R-0022 CTG-0003 §4) — o guard publicado autentica quando há
+// `Authorization: Bearer` válido e prossegue anônimo sem credencial; aqui,
+// principal presente com claims válidas e papel CIDADAO → sujeito
+// identificado, senão anônimo — nunca 401/403, salvo o conflito de tenant
+// (Host × cabeçalho ou _claim_: 403, OD-R22-37/47). As três rotas autenticadas levam `@UseGuards(PortalCitizenGuard)`
 // por método (a classe não pode, porque `POST` é público).
 import {
   Body,
@@ -19,6 +21,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { PublicTenantRoute } from '@stynx-nyx/auth';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -96,6 +99,7 @@ export class PortalManifestationsController {
 
   @Post()
   @Public()
+  @PublicTenantRoute({ optionalAuth: true })
   @Action('manifest')
   @NoIdempotent()
   @Audit({

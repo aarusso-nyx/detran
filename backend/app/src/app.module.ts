@@ -18,26 +18,19 @@ import {
   StynxAuthorizationModule,
   StynxPlatformPipelineModule,
 } from '@stynx-nyx/backend';
-import {
-  generateRequestId,
-  RequestContext,
-  RequestContextMutator,
-} from '@stynx-nyx/core';
-import { headerToString } from '@stynx-nyx/contracts';
+import { RequestContext, RequestContextMutator } from '@stynx-nyx/core';
+import { STYNX_PUBLIC_TENANT_ROUTE } from '@stynx-nyx/contracts';
 import { Database, StynxDataModule } from '@stynx-nyx/data';
 import { StynxHealthModule } from '@stynx-nyx/health';
 import { StynxLoggingModule } from '@stynx-nyx/logging';
 import { StynxStorageModule } from '@stynx-nyx/storage';
-import {
-  StynxTenancyModule,
-  TenantContextInterceptor,
-} from '@stynx-nyx/tenancy';
+import { StynxTenancyModule } from '@stynx-nyx/tenancy';
 import {
   StynxAuthGuard,
   StynxAuthModule as FullStynxAuthModule,
 } from '@stynx-nyx/auth';
 import { StynxSessionsModule } from '@stynx-nyx/sessions';
-import { defer, from, mergeMap, Observable } from 'rxjs';
+import { concatMap, from, map, Observable, of } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { SefazHttpAdapter } from '@detran/sefaz-adapter';
 import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
@@ -118,11 +111,9 @@ import {
   detranRuntimeProfile,
   detranFeatureFlagSet,
   detranPortalHostnameDirectory,
+  detranPortalPublicTenantHost,
   isLocalRuntimeProfile,
-  portalHostOf,
-  portalRequestHostStorage,
-  seedPortalPublicRequest,
-  type PortalPublicRequestLike,
+  PORTAL_PUBLIC_ACTOR_ID,
 } from './detran-runtime.js';
 import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
 import { BoatDocumentsRuntimeModule } from './boat-documents.js';
@@ -202,105 +193,6 @@ import { UniqueViolationInterceptorModule } from './unique-violation.interceptor
 import { DetranPolicyErrorGuard } from './detran-policy-error.guard.js';
 import { RaitTransactionalAuditInterceptor } from './rait-transactional-audit.interceptor.js';
 
-patchTenantContextInterceptorOrdering();
-
-/**
- * Compatibility for @stynx-nyx/tenancy 1.1.1: its global interceptor may be
- * ordered before the core request-context interceptor. Seed only the missing
- * outer scope, then delegate to the published implementation unchanged.
- * Retain until a later STYNX release proves the platform-level ordering fix.
- */
-function patchTenantContextInterceptorOrdering(): void {
-  type Internals = {
-    requestContext: {
-      hasActiveContext(): boolean;
-      snapshot(): { tenantId?: string };
-    };
-    requestContextMutator: {
-      runWithRequestContext<T>(seed: object, work: () => T): T;
-    };
-  };
-  type Intercept = (
-    this: Internals,
-    context: ExecutionContext,
-    next: CallHandler,
-  ) => Observable<unknown>;
-  const prototype = TenantContextInterceptor.prototype as unknown as {
-    intercept: Intercept;
-  };
-  if (prototype.intercept.name === 'detranOrderedTenantContext') return;
-  const original = prototype.intercept;
-  prototype.intercept = function detranOrderedTenantContext(context, next) {
-    // STYNX 1.5.0 (UPS-TEN-01 (b)): o middleware do core abre o contexto antes
-    // dos guards, sem tenant. "Contexto ativo" deixou de significar "o
-    // interceptor do core já semeou o tenant"; só um contexto com tenant
-    // delega direto ao interceptor publicado, como em 1.4.0.
-    if (
-      this.requestContext.hasActiveContext() &&
-      this.requestContext.snapshot().tenantId
-    ) {
-      return original.call(this, context, next);
-    }
-    const request = context.switchToHttp().getRequest<{
-      principal?: { id?: string };
-      actor?: { id?: string };
-      user?: { id?: string };
-      tenantId?: string;
-      portalPublic?: { tenantId: string; actorId: string };
-    }>();
-    if (request.portalPublic) {
-      // Rotas `@Public()` de `/v1/portal/*` (R-0009 CTG-0001 §8/§9, M11): sem
-      // sessão nem membership, o tenant já foi resolvido pelo Host/X-Tenant-Id
-      // em `seedPortalPublicRequest` (guard de autenticação do app). O
-      // interceptor de tenancy do STYNX exige X-Tenant-Id + ator com
-      // membership ativa — inaplicável a uma leitura pública —, por isso o
-      // contexto é semeado aqui com o ator nominal (OD-P27) e o interceptor
-      // publicado não é chamado para essas rotas.
-      const { tenantId, actorId } = request.portalPublic;
-      return new Observable((subscriber) => {
-        let subscription: { unsubscribe(): void } | undefined;
-        this.requestContextMutator.runWithRequestContext(
-          {
-            requestId: generateRequestId(),
-            startedAt: new Date(),
-            tenantId,
-            actorId,
-          },
-          () => {
-            subscription = next.handle().subscribe({
-              next: (value) => subscriber.next(value),
-              error: (error) => subscriber.error(error),
-              complete: () => subscriber.complete(),
-            });
-          },
-        );
-        return () => subscription?.unsubscribe();
-      });
-    }
-    return new Observable((subscriber) => {
-      let subscription: { unsubscribe(): void } | undefined;
-      const actorId =
-        request.principal?.id ?? request.actor?.id ?? request.user?.id;
-      this.requestContextMutator.runWithRequestContext(
-        {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
-          ...(request.tenantId ? { tenantId: request.tenantId } : {}),
-          ...(actorId ? { actorId } : {}),
-        },
-        () => {
-          subscription = original.call(this, context, next).subscribe({
-            next: (value) => subscriber.next(value),
-            error: (error) => subscriber.error(error),
-            complete: () => subscriber.complete(),
-          });
-        },
-      );
-      return () => subscription?.unsubscribe();
-    });
-  };
-}
-
 export const detranAuditSink = new DetranPersistedAuditSink();
 export const detranPostgresReadiness = new DetranPostgresReadiness();
 export const detranSessionReadiness = new DetranSessionReadiness();
@@ -309,10 +201,7 @@ export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
 /** BOAT victim health data requires a declared purpose and a dedicated audit. */
 @Injectable()
 export class BoatVictimPurposeInterceptor {
-  constructor(
-    private readonly requestContext: RequestContext,
-    private readonly requestContextMutator: RequestContextMutator,
-  ) {}
+  constructor(private readonly requestContext: RequestContext) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<{
@@ -321,9 +210,6 @@ export class BoatVictimPurposeInterceptor {
       params?: Record<string, string | undefined>;
       query?: Record<string, string | undefined>;
       user?: { id?: string; roles?: string[] };
-      principal?: { id?: string };
-      tenantId?: string;
-      headers?: Record<string, string | undefined>;
     }>();
     const path = (request.originalUrl ?? '').split('?', 1)[0];
     if (
@@ -337,148 +223,87 @@ export class BoatVictimPurposeInterceptor {
         status: 400,
         context: {},
       });
-    const work = () =>
-      defer(() => {
-        const snapshot = this.requestContext.snapshot();
-        if (!snapshot.tenantId)
-          throw new DetranError('BOAT.TENANT_MISMATCH', {
-            status: 404,
-            context: {},
-          });
-        return from(
-          detranAuditSink.write({
-            occurredAt: new Date().toISOString(),
-            tenantId: snapshot.tenantId,
-            actorId: snapshot.actorId,
-            actorRole: request.user?.roles?.[0],
-            action: 'EST_CRASH_VICTIM_READ',
-            entity: 'est.crash_victim',
-            entityId: request.params?.id,
-            metadata: { purpose },
-          }),
-        ).pipe(mergeMap(() => next.handle()));
-      });
-    // Contexto utilizável = ativo e com tenant (o middleware do core 1.5.0
-    // abre o contexto antes de tenant/ator existirem).
-    if (
-      this.requestContext.hasActiveContext() &&
-      this.requestContext.snapshot().tenantId
-    )
-      return work();
-    return new Observable((subscriber) => {
-      let subscription: { unsubscribe(): void } | undefined;
-      this.requestContextMutator.runWithRequestContext(
-        {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
-          tenantId: request.tenantId ?? request.headers?.['x-tenant-id'],
-          actorId: request.principal?.id ?? request.user?.id,
-        },
-        () => {
-          subscription = work().subscribe({
-            next: (value) => subscriber.next(value),
-            error: (error) => subscriber.error(error),
-            complete: () => subscriber.complete(),
-          });
-        },
+    // R-0022 CTG-0003 R-8: a auditoria de finalidade só é gravada depois da
+    // validação de tenancy (a ordem entre interceptores globais não é
+    // garantida pelo Nest e o controlador das vítimas é gerado). O tenant e o
+    // ator vêm do `RequestContext` da requisição, já corrigido pelo `patch` do
+    // interceptor de tenancy publicado; tenancy recusada → nenhuma emissão e
+    // nenhuma auditoria; falha na gravação → erro e nenhuma emissão.
+    return next
+      .handle()
+      .pipe(
+        concatMap((value, index) =>
+          index > 0 ? of(value) : this.auditVictimRead(request, purpose, value),
+        ),
       );
-      return () => subscription?.unsubscribe();
-    });
+  }
+
+  private auditVictimRead<T>(
+    request: {
+      params?: Record<string, string | undefined>;
+      user?: { roles?: string[] };
+    },
+    purpose: string,
+    value: T,
+  ): Observable<T> {
+    const snapshot = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    if (!snapshot?.tenantId)
+      throw new DetranError('BOAT.TENANT_MISMATCH', {
+        status: 404,
+        context: {},
+      });
+    return from(
+      detranAuditSink.write({
+        occurredAt: new Date().toISOString(),
+        tenantId: snapshot.tenantId,
+        actorId: snapshot.actorId,
+        actorRole: request.user?.roles?.[0],
+        action: 'EST_CRASH_VICTIM_READ',
+        entity: 'est.crash_victim',
+        entityId: request.params?.id,
+        metadata: { purpose },
+      }),
+    ).pipe(map(() => value));
   }
 }
 
 /**
- * R-0009 CTG-0002 §2.8 (adenda A4(b), OD-P30): a única rota `@Public()` com
- * autenticação OPORTUNISTA é `POST /v1/portal/manifestations` (H.51 "anônimo
- * para manifestar, simples para acompanhar"). Quando o cabeçalho
- * `Authorization` está presente, o guard interno tenta autenticar (principal e
- * tenancy STYNX normais); qualquer falha → segue anônimo
- * (`seedPortalPublicRequest`). Nunca 401/403 nessa rota.
+ * R-0022 CTG-0003 R-5: rota marcada por `@PublicTenantRoute()` (handler ou
+ * classe). O guard interno publicado trata a rota pública e a autenticação
+ * oportunista (`optionalAuth`); o tenant vem do Host pela tenancy publicada.
  */
-export function isPortalOptionalAuthPath(
-  path: string,
-  method: string | undefined,
+function isPublicTenantRoute(
+  reflector: Reflector,
+  context: ExecutionContext,
+): boolean {
+  const marker = reflector.getAllAndOverride<unknown>(
+    STYNX_PUBLIC_TENANT_ROUTE,
+    [context.getHandler(), context.getClass()],
+  );
+  return marker !== undefined && marker !== false;
+}
+
+function isDetranPublicRoute(
+  reflector: Reflector,
+  context: ExecutionContext,
 ): boolean {
   return (
-    (method ?? '').toUpperCase() === 'POST' &&
-    path.split('?', 1)[0] === '/v1/portal/manifestations'
+    reflector.getAllAndOverride<boolean | undefined>(
+      DETRAN_PUBLIC_METADATA_KEY,
+      [context.getHandler(), context.getClass()],
+    ) === true
   );
 }
 
-type PortalPublicRequest = PortalPublicRequestLike & {
-  method?: string;
-  originalUrl?: string;
-};
-
-/**
- * Campos de identidade/tenant que os guards internos (STYNX `AuthContextGuard`
- * legado e `StynxAuthGuard`) gravam na requisição. O legado grava o principal
- * ANTES de validar o tenant (entitlement) e só depois recusa; sem limpeza, o
- * principal recusado sobreviveria à semeadura anônima e seria lido por
- * `getPrincipalFromRequest` (hotfix 2026-09-29, vazamento entre tenants).
- */
-const OPPORTUNISTIC_AUTH_REQUEST_KEYS = [
-  'principal',
-  'principalContext',
-  'user',
-  'actor',
-  'tenantId',
-  'stynxClaims',
-  'stynxReadonly',
-  'portalPublic',
-] as const;
-
-/** Fail-closed: autenticação oportunista sem `true` não deixa rastro de identidade. */
-function discardOpportunisticIdentity(request: PortalPublicRequest): void {
-  const mutable = request as unknown as Record<string, unknown>;
-  for (const key of OPPORTUNISTIC_AUTH_REQUEST_KEYS) delete mutable[key];
-}
-
-/**
- * OD-P30 (nunca 401/403 na manifestação): a identidade autenticada só vale se
- * o tenant pedido pela requisição (`X-Tenant-Id` e/ou Host mapeado, regra de
- * `DetranTenantResolver`) pertence ao principal; divergência (inclusive a
- * exceção do resolver) → anônima. Sem tenant pedido, nada muda.
- */
-function opportunisticTenantMatches(request: PortalPublicRequest): boolean {
-  let requested: string | undefined;
-  try {
-    requested = new DetranTenantResolver().requestedTenant({
-      sessionTenantId: headerToString(request.headers?.['x-tenant-id'])?.trim(),
-      host: portalHostOf(request.headers ?? {}),
-    });
-  } catch {
-    return false;
-  }
-  if (requested === undefined) return true;
-  const principal = getPrincipalFromRequest(request as unknown as RequestLike);
-  return (principal?.tenants ?? []).includes(requested);
-}
-
-async function activatePublicPortalRoute(
-  request: PortalPublicRequest,
-  authenticate: () => boolean | Promise<boolean>,
-): Promise<boolean> {
-  const path = request.path ?? request.originalUrl ?? request.url ?? '';
-  const authorization = request.headers?.authorization;
-  const hasAuthorization =
-    typeof authorization === 'string' && authorization.trim().length > 0;
-  if (isPortalOptionalAuthPath(path, request.method) && hasAuthorization) {
-    try {
-      const authenticated = await portalRequestHostStorage.run(
-        portalHostOf(request.headers),
-        () => authenticate(),
-      );
-      if (authenticated && opportunisticTenantMatches(request)) return true;
-    } catch {
-      // credencial inválida/expirada ou tenant sem direito: segue anônima (§2.8)
-    }
-    // o guard interno pode ter gravado principal/tenant antes de recusar
-    discardOpportunisticIdentity(request);
-  }
-  // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
-  seedPortalPublicRequest(request);
-  return true;
+function isPlatformProbePath(context: ExecutionContext): boolean {
+  const request = context
+    .switchToHttp()
+    .getRequest<{ path?: string; url?: string }>();
+  return /^\/(healthz|readyz|metrics|info)(\?|$)/.test(
+    request.path ?? request.url ?? '',
+  );
 }
 
 @Injectable()
@@ -489,23 +314,13 @@ export class DetranLegacyAuthContextGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
-      DETRAN_PUBLIC_METADATA_KEY,
-      [context.getHandler(), context.getClass()],
-    );
-    const request = context.switchToHttp().getRequest<PortalPublicRequest>();
-    if (isPublic) {
-      return activatePublicPortalRoute(request, () =>
-        this.inner.canActivate(context),
-      );
-    }
-    const path = request.path ?? request.url ?? '';
-    if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
-    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
-    return portalRequestHostStorage.run(portalHostOf(request.headers), () =>
-      this.inner.canActivate(context),
-    );
+    if (isPublicTenantRoute(this.reflector, context))
+      return this.inner.canActivate(context);
+    // `@Public()` DETRAN sem o metadado STYNX: webhooks PEC (autenticação
+    // própria), sem tenant nominal.
+    if (isDetranPublicRoute(this.reflector, context)) return true;
+    if (isPlatformProbePath(context)) return true;
+    return this.inner.canActivate(context);
   }
 }
 
@@ -518,62 +333,47 @@ export class DetranStynxAuthContextGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
-      DETRAN_PUBLIC_METADATA_KEY,
+    if (isPublicTenantRoute(this.reflector, context))
+      return this.inner.canActivate(context);
+    if (isDetranPublicRoute(this.reflector, context)) return true;
+    if (isPlatformProbePath(context)) return true;
+    const request = context.switchToHttp().getRequest<
+      RequestLike & {
+        tenantId?: string;
+        actor?: { id?: string };
+      }
+    >();
+    if (!(await this.inner.canActivate(context))) return false;
+    const resource = this.reflector.getAllAndOverride<string | undefined>(
+      DETRAN_RESOURCE_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    const request = context.switchToHttp().getRequest<
-      PortalPublicRequest &
-        RequestLike & {
-          path?: string;
-          url?: string;
-          tenantId?: string;
-          actor?: { id?: string };
-        }
-    >();
-    if (isPublic) {
-      return activatePublicPortalRoute(request, () =>
-        this.inner.canActivate(context),
-      );
-    }
-    const path = request.path ?? request.url ?? '';
-    if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
-    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
-    return portalRequestHostStorage.run(
-      portalHostOf(request.headers ?? {}),
-      async () => {
-        if (!(await this.inner.canActivate(context))) return false;
-        const resource = this.reflector.getAllAndOverride<string | undefined>(
-          DETRAN_RESOURCE_METADATA_KEY,
-          [context.getHandler(), context.getClass()],
-        );
-        const action = this.reflector.getAllAndOverride<string | undefined>(
-          DETRAN_ACTION_METADATA_KEY,
-          [context.getHandler(), context.getClass()],
-        );
-        if (resource !== 'inf:rait-case' || action !== 'protocol') return true;
-        const principal = getPrincipalFromRequest(request);
-        const tenantId = request.tenantId;
-        if (
-          !principal ||
-          !tenantId ||
-          !principal.id ||
-          !principal.tenants.includes(tenantId) ||
-          (request.actor?.id !== undefined && request.actor.id !== principal.id)
-        )
-          return false;
-        try {
-          const roles = await this.database.withRequestContext(
-            { tenantId, actorId: principal.id },
-            async () =>
-              this.database.tx(
-                async (transaction) => {
-                  const result = await transaction.query<{
-                    role: string;
-                    tenant_id?: string;
-                  }>(
-                    `select distinct role
+    const action = this.reflector.getAllAndOverride<string | undefined>(
+      DETRAN_ACTION_METADATA_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (resource !== 'inf:rait-case' || action !== 'protocol') return true;
+    const principal = getPrincipalFromRequest(request);
+    const tenantId = request.tenantId;
+    if (
+      !principal ||
+      !tenantId ||
+      !principal.id ||
+      !principal.tenants.includes(tenantId) ||
+      (request.actor?.id !== undefined && request.actor.id !== principal.id)
+    )
+      return false;
+    try {
+      const roles = await this.database.withRequestContext(
+        { tenantId, actorId: principal.id },
+        async () =>
+          this.database.tx(
+            async (transaction) => {
+              const result = await transaction.query<{
+                role: string;
+                tenant_id?: string;
+              }>(
+                `select distinct role
                        from (
                          select r.key as role
                            from auth.memberships m
@@ -602,30 +402,27 @@ export class DetranStynxAuthContextGuard implements CanActivate {
                             and r.tenant_id = m.tenant_id
                             and r.key = 'rait-secretary'
                        ) resolved_roles`,
-                    [tenantId, principal.id],
-                  );
-                  const values = result.rows
-                    .filter(
-                      (row) =>
-                        row.tenant_id === undefined ||
-                        row.tenant_id === tenantId,
-                    )
-                    .map((row) => row.role);
-                  return values.length === 1 && values[0] === 'rait-secretary'
-                    ? values
-                    : [];
-                },
-                { role: 'app', readonly: true },
-              ),
-          );
-          if (roles.length !== 1 || roles[0] !== 'rait-secretary') return false;
-          principal.roles = roles;
-          return true;
-        } catch {
-          return false;
-        }
-      },
-    );
+                [tenantId, principal.id],
+              );
+              const values = result.rows
+                .filter(
+                  (row) =>
+                    row.tenant_id === undefined || row.tenant_id === tenantId,
+                )
+                .map((row) => row.role);
+              return values.length === 1 && values[0] === 'rait-secretary'
+                ? values
+                : [];
+            },
+            { role: 'app', readonly: true },
+          ),
+      );
+      if (roles.length !== 1 || roles[0] !== 'rait-secretary') return false;
+      principal.roles = roles;
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
@@ -813,7 +610,14 @@ export class AppModule {
         StynxAuthorizationModule.forRoot({
           policyEvaluator: new DetranPolicyEvaluator(),
         }),
-        StynxTenancyModule.forRoot({}),
+        // R-0022 CTG-0003 R-2: rotas `@PublicTenantRoute()` do Portal pelo
+        // mecanismo publicado; tenant só pelo Host (R-3), ator nominal OD-P27.
+        StynxTenancyModule.forRoot({
+          publicTenant: {
+            resolveHost: detranPortalPublicTenantHost(),
+            actorId: PORTAL_PUBLIC_ACTOR_ID,
+          },
+        }),
         StynxAuditModule.forRoot({ sink: detranAuditSink }),
         StynxStorageModule.forRoot(detranStorageOptions()),
         BoatDocumentsRuntimeModule,

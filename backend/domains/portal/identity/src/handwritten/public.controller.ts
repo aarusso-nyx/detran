@@ -1,11 +1,13 @@
 // Rotas públicas do Portal (work/rounds/R-0009/contracts/CTG-0001.md §8 e §9;
 // portal-route-contract.md §2; plan R-0009 M11, M12). Classe inteira
-// `@Public()`: sem `@Resource`/`@Action`, sem sessão. O tenant vem da
-// resolução pelo Host/`X-Tenant-Id` feita pelo app (detran-runtime.ts §9) e
-// chega pelo `RequestContext`; a transação é `Database.tx({ role: 'app' })`
+// `@Public()`: sem `@Resource`/`@Action`, sem sessão. `@PublicTenantRoute()`
+// (STYNX 1.5.0; R-0022 CTG-0003 §4): o tenant vem só do Host, pela tenancy
+// publicada com o `resolveHost` do app (detran-runtime.ts), e chega pelo
+// `RequestContext`; a transação é `Database.tx({ role: 'app' })`
 // (nunca owner — ADR-0002): `brand_profile` não tem RLS por desenho (M11) e
 // `service_catalog` é lida sob RLS com `app.tenant_id` do contexto.
 import { Controller, Get, Param } from '@nestjs/common';
+import { PublicTenantRoute } from '@stynx-nyx/auth';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import { Public } from '@detran/shared';
@@ -156,6 +158,7 @@ function serviceOf(row: ServiceRow): PortalServiceResponse {
 
 @Controller('v1/portal')
 @Public()
+@PublicTenantRoute()
 export class PortalPublicController {
   constructor(
     private readonly database: Database,
