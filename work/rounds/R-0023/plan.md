@@ -1,6 +1,6 @@
 # R-0023 — frente `authz-unification` (C-0002, ação 7d: autorização com fonte única no STYNX)
 
-**Status:** **aberta para O1 por autorização do Owner de 2026-09-30** (`AUTHORIZATION.md`); O2–O5 aguardam nova sessão após o checkpoint. Planejada em 2026-09-26
+**Status:** **O1 concluída sob autorização do Owner de 2026-09-30** (`AUTHORIZATION.md`); O2–O5 aguardam nova sessão após o checkpoint. Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase C) e da inspeção (d)
 (`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` §4.2–§4.3, lacuna A3, M3, candidatos U6/U7). Nenhum
 `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: nascem no bootstrap, depois da
@@ -407,25 +407,23 @@ aceito e sessão ativa ainda retornam 500
 `REQUEST_CONTEXT_MUTATION_FORBIDDEN` antes da política; esses pares estão
 em `notMaterializable` (A-R23-02).
 
-**M3 — TASK-0002 ainda sem aceite (Inspector, O1).** Os cinco testes que
+**M3 — TASK-0002 aceita (Inspector, O1).** Os cinco testes que
 falhavam sobre banco novo com fixtures `fresh` (três Portal, um isolamento
 OPS e um SSE TEAT) tinham uma única causa no ambiente de teste: sem
 `STYNX_APP_DATABASE_URL`, a conexão de app herdava `DATABASE_URL` do
 superusuário `postgres` e contornava RLS. Um login descartável sem
 `BYPASSRLS`, membro de `role_app_backend`, eliminou as cinco falhas: os
 três arquivos afetados passaram 20/20 e a suíte completa não voltou a
-falhar nesses casos. A matriz permaneceu idêntica. A suíte completa ainda
-falha em 3 testes e 5 setups RAIT que exigem o banco dedicado
-`detran_r7_ctg1_a2` e `STYNX_OWNER_DATABASE_URL`; ver
-`reports/TASK-0002.md`. Os `acceptance_commands` permanecem intactos e o
-branch ainda não será publicado.
+falhar nesses casos. A matriz permaneceu idêntica. O baseline legado de
+20 casos no banco dedicado `detran_r7_ctg1_a2`, com URLs de owner/app
+separadas, satisfez os testes RAIT. O comando integral passou 39/39
+arquivos, 1.692 testes, 3 todos; ver `reports/TASK-0002.md`. Os
+`acceptance_commands` permaneceram intactos.
 
 ## Retomada
 
-O1 permanece **em execução**, TASK-0001 commitada e TASK-0002 ainda sem
-aceite. Não registrar o checkpoint de O1 concluída, nem publicar branch ou
-abrir PR enquanto os gates da TASK-0002 estiverem vermelhos. Prosseguir
-somente na fronteira da O1; O2 continua aguardando R-0022.
+O1 concluída; aguardando R-0022 (pin 1.5.x e tenancy canônica) para O2;
+matriz será regenerada com diff atribuído (A-C2-11).
 
 ## Leitura
 
