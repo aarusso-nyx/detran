@@ -32,6 +32,57 @@
       "output_estimate": 2000,
       "result": "REVIEW",
       "note": "1 high corrigido; 3º ciclo dispensado pelo Owner (A1)."
+    },
+    {
+      "id": "TASK-0001",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "raw_tokens_reported": 307380,
+      "input_estimate": 170000,
+      "output_estimate": 35000,
+      "result": "PASS"
+    },
+    {
+      "id": "TASK-0006",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "raw_tokens_reported": 170571,
+      "input_estimate": 95000,
+      "output_estimate": 22000,
+      "result": "PASS"
+    },
+    {
+      "id": "TASK-0003",
+      "role": "architect",
+      "model": "claude-opus-5-5",
+      "raw_tokens_reported": 224643,
+      "input_estimate": 125000,
+      "output_estimate": 25000,
+      "result": "PASS"
+    },
+    {
+      "id": "TASK-0002",
+      "role": "architect",
+      "model": "claude-sonnet-5",
+      "raw_tokens_reported": 115218,
+      "input_estimate": 60000,
+      "output_estimate": 10000,
+      "result": "PASS"
+    },
+    {
+      "id": "maestro-checkpoints",
+      "role": "engineer",
+      "model": "claude-opus-5-5",
+      "input_estimate": 50000,
+      "output_estimate": 12000,
+      "note": "Checkpoints, 5 lotes de ODs ao Owner, commits e §Retomada."
     }
-  ]
+  ],
+  "totals": {
+    "input_estimate": 710000,
+    "output_estimate": 132000,
+    "raw_worker_tokens_reported": 817812,
+    "percent_of_window": 101.4,
+    "note": "Estimativa: ≈ 61 % depois de TASK-0001; o limiar de 80 % (560 k) foi cruzado durante o par paralelo TASK-0003/0006 (≈ 93 %). Depois do cruzamento rodou só TASK-0002 (transcrição, ≈ 60 k), necessária para o registro canônico das ODs (lição 13), e os checkpoints; nenhuma tarefa além das liberadas. Fechamento ≈ 101 % da janela estimada. A rodada para aqui (checkpoint A-C2-15)."
+  }
 }

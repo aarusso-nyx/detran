@@ -451,4 +451,37 @@ publicado. Nenhum arquivo desta abertura toca locks de R-0020/R-0022/R-0023/R-00
 
 ## Retomada
 
+**Checkpoint 2026-09-29 (sessão B, A-C2-15) — branch `orchestra/dashboard-wiring` publicado, sem
+PR.**
+
+- **Concluídas (commits na branch):** bootstrap `1ad8976c`; TASK-0001 `8a1e8bac` (`read-map.md`,
+  `command-map.md`, `contracts/CTG-0001.md`); TASK-0006 `00fc4b7e` (`contracts/CTG-0003.md`,
+  transporte "pendente do outbox de R-0022 (stynx #316)"); TASK-0003 `a20529ed`
+  (`contracts/CTG-0002.md`, job sobre `@stynx-nyx/jobs` 1.5.x com ator técnico, 5 `GET` novos);
+  TASK-0002 `446c882d` (build pack §4 com OD-D16-001…019 e OD-R26-001…040, route contract §6,
+  catálogo de erros, backlog). Gates de tarefa verdes: prettier, `verify:parameter-catalogue`
+  (0 errors), `docs:kb:check`, paridade i18n semente × app.
+- **Prompt-review:** 2 ciclos (REVIEW, REVIEW); o 3º foi dispensado pelo Owner (adenda A1) depois
+  da correção do último achado — desvio registrado.
+- **Esperam:** TASK-0004/0005 (pin `@stynx-nyx/jobs` 1.5.x de R-0022 e R-0024; o registro do
+  worker pode exigir `app.module.ts`/`detran-runtime.ts`, lock de R-0022/R-0023); TASK-0007/0008
+  (outbox de R-0022, stynx #316; lock `MOD-shared-policy`/`inf/rait-*` partilhado com R-0025/R-0027);
+  TASK-0009 em diante (padrão `frontend-wiring-pattern.md` de R-0024; SSE canônico de R-0022;
+  camada de R-0023). Prompts e `tasks/*.json` dessas tarefas ainda não existem (M4).
+- **Contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15):** `read-map.md`
+  (colunas cliente/facade, SSE, camada), `command-map.md`, `contracts/CTG-0002.md` (API real da
+  1.5.x: atomicidade/deduplicação OD-R26-022; ator técnico OD-R26-020), `contracts/CTG-0003.md`
+  (transporte pelo outbox migrado; envelope dos produtores atuais OD-R26-036), e as matrizes de
+  papéis contra `policy.ts` como dados de R-0023 (OD-D76). Divergência → adenda numerada do
+  Architect.
+- **Pendências para a retomada:** transcrever OD-R26-030…039 em
+  `docs/meta/knowledge-base/open-decisions-rait.md`; editar a semente i18n e a cópia do app para
+  OD-D16-012 quando o Owner fixar os textos; OD-R26-002 segue aberta (recomendação (a)); a meta do
+  bloco A passa a no máximo 6/11 enquanto OD-R26-030 (escada D) estiver `source_pending`; achados de
+  CTG-0003 (payload plano dos produtores atuais, `protocol` com `events: []`, `current_date` do
+  banco na ata) e OD-R26-028 (limiar fixo e supressão secundária de D-13) entram nos testes RED de
+  TASK-0004/0007; integrar `origin/main` por merge (inclui #161).
+- **Orçamento:** `budget.json` ≈ 101 % da janela estimada de 700 k (80 % cruzado durante
+  TASK-0003/0006); a retomada abre janela nova.
+
 ## Leitura
