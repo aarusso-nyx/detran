@@ -199,25 +199,25 @@ export class BoatRenaestTransmissionService {
   }
 
   private async reportInput(source: CrashSource): Promise<CrashReportInput> {
-    const [vehicles, people, victims] = await Promise.all([
-      this.rows<VehicleSource>(
-        `select plate, role, apparent_damage from est.crash_vehicle
+    // Sequencial: leituras concorrentes dentro de uma tx ambiente disputam
+    // savepoints da mesma conexão.
+    const vehicles = await this.rows<VehicleSource>(
+      `select plate, role, apparent_damage from est.crash_vehicle
           where crash_record_id = $1 order by sequence`,
-        [source.id],
-      ),
-      this.rows<PersonSource>(
-        `select id, name, document_number, document_source, role
+      [source.id],
+    );
+    const people = await this.rows<PersonSource>(
+      `select id, name, document_number, document_source, role
            from est.crash_person where crash_record_id = $1 order by created_at`,
-        [source.id],
-      ),
-      this.rows<VictimSource>(
-        `select victim.severity, victim.death_at_scene, victim.death_at::text as death_at,
+      [source.id],
+    );
+    const victims = await this.rows<VictimSource>(
+      `select victim.severity, victim.death_at_scene, victim.death_at::text as death_at,
                 person.name, person.document_number, person.document_source, person.role
            from est.crash_victim victim join est.crash_person person on person.id = victim.crash_person_id
           where victim.crash_record_id = $1 order by victim.created_at`,
-        [source.id],
-      ),
-    ]);
+      [source.id],
+    );
     const position = source.location_json ?? {};
     return {
       occurredAt: source.occurred_at,

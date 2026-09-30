@@ -78,19 +78,29 @@ export async function buildManifest(
   agencyId: string | null,
 ): Promise<NormativeManifest> {
   const catalogId = stringOf(catalog.id);
-  const [
-    framings,
-    validationRules,
-    metrologicalTables,
-    documentTemplates,
-    agencyParameters,
-  ] = await Promise.all([
-    readRows(deps, 'framings', activeOfCatalog(catalogId)),
-    readRows(deps, 'validationRules', activeOfCatalog(catalogId)),
-    readRows(deps, 'metrologicalTables', activeOfCatalog(catalogId)),
-    readRows(deps, 'documentTemplates', activeOfAgency(agencyId)),
-    readRows(deps, 'agencyParameters', activeOfAgency(agencyId)),
-  ]);
+  // Sequencial: leituras concorrentes dentro de uma tx ambiente disputam
+  // savepoints da mesma conexão.
+  const framings = await readRows(deps, 'framings', activeOfCatalog(catalogId));
+  const validationRules = await readRows(
+    deps,
+    'validationRules',
+    activeOfCatalog(catalogId),
+  );
+  const metrologicalTables = await readRows(
+    deps,
+    'metrologicalTables',
+    activeOfCatalog(catalogId),
+  );
+  const documentTemplates = await readRows(
+    deps,
+    'documentTemplates',
+    activeOfAgency(agencyId),
+  );
+  const agencyParameters = await readRows(
+    deps,
+    'agencyParameters',
+    activeOfAgency(agencyId),
+  );
 
   return {
     catalog: strip(catalog),
