@@ -387,6 +387,14 @@ export class DashboardAlertService {
       return { kind: 'ignored', reason: 'disconnected' };
 
     // (2) dedupe por chave (tenant, indicator_code, object_kind, object_ref)
+    // — serializado entre instâncias do sweeper/runner: sem a trava, duas
+    // transações leem "sem alerta aberto" e ambas inserem.
+    await query(
+      tx,
+      `select pg_advisory_xact_lock(hashtextextended(
+         'dashboard.alert:' || $1 || ':' || $2 || ':' || $3 || ':' || $4, 0))`,
+      [ctx.tenantId, cell.indicatorCode, cell.objectKind, cell.objectRef],
+    );
     const transitions = await loadAlertTransitions(tx);
     const latest = await this.latestAlertForKey(tx, ctx.tenantId, cell);
     const open =

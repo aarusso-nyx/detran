@@ -4,7 +4,7 @@ import { DetranError } from '@detran/shared';
 
 import {
   assertMeasureAllowed,
-  findRow,
+  lockRow,
   inTenantTransaction,
   insertRow,
   recordHistory,
@@ -58,7 +58,7 @@ export class RecordRetentionCommand {
     }
 
     return inTenantTransaction(this.deps, async (tx) => {
-      const measure = await findRow(this.deps, tx, 'measures', measureId);
+      const measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });
       assertMeasureAllowed(measure, measureId, ALLOWED, 'register-retention');
 
