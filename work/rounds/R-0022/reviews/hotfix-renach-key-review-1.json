@@ -1,0 +1,20 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-renach-process-key-tenant-unique",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/ddl/README.md",
+      "line": 104,
+      "claim": "O procedimento manda retirar a chave apenas dos atendimentos de pacientes não titulares. A pré-checagem também bloqueia duplicatas em dois atendimentos do mesmo paciente; nesse caso, seguir o procedimento não permite concluir a migração.",
+      "fix": "Orientar a operação a escolher exatamente um atendimento para cada par (tenant, chave) e desassociar os demais, inclusive quando pertencem ao paciente titular."
+    }
+  ],
+  "notes": [
+    "Índice, ordem de aplicação, transação única, tradução restrita do 23505 e inclusão da prova de integração no backend-kernel do CI foram confirmados por leitura.",
+    "Os resultados de testes informados não foram reexecutados nesta revisão somente leitura.",
+    "A divergência remanescente em APP-PEC, UC-PEC-001 e glossário está declarada como pendência do Owner."
+  ]
+}
