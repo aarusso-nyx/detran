@@ -4,7 +4,7 @@
   "module": {
     "name": "Normative",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "30-inf-normative.sql",
     "testAliases": [
       {
@@ -502,7 +502,8 @@
           },
           {
             "name": "traffic_agency_id",
-            "type": "uuid"
+            "type": "uuid",
+            "nullable": true
           },
           {
             "name": "document_kind",
@@ -535,13 +536,117 @@
             "name": "status",
             "type": "varchar(40)",
             "default": "'active'"
+          },
+          {
+            "name": "revision",
+            "type": "integer",
+            "default": "1",
+            "additive": true
+          },
+          {
+            "name": "valid_from",
+            "type": "timestamptz",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "valid_to",
+            "type": "timestamptz",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "minimum_signature_level",
+            "type": "varchar(20)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "require_lta",
+            "type": "boolean",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "revocation",
+            "type": "varchar(20)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "at_time",
+            "type": "varchar(30)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "accepted_policies",
+            "type": "text[]",
+            "nullable": true,
+            "additive": true,
+            "jsonSchema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "trust_anchors_pem",
+            "type": "text[]",
+            "nullable": true,
+            "additive": true,
+            "jsonSchema": { "type": "array", "items": { "type": "string" } }
+          },
+          {
+            "name": "source_ref",
+            "type": "text",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "approved_by",
+            "type": "text",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "approved_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "additive": true
           }
         ],
-        "indexes": [
+        "checks": [
           {
-            "name": "ux_inf_signature_policy_document_kind",
-            "columns": ["tenant_id", "traffic_agency_id", "document_kind"],
-            "unique": true
+            "name": "ck_inf_signature_policy_revision",
+            "expression": "revision >= 1",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_validity",
+            "expression": "valid_to is null or valid_from < valid_to",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_minimum_signature_level",
+            "expression": "minimum_signature_level in ('ADVANCED', 'QUALIFIED')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_pades_level",
+            "expression": "pades_level in ('NONE', 'PAdES-B-LT')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_revocation",
+            "expression": "revocation in ('ocsp', 'crl', 'ocsp-or-crl')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_at_time",
+            "expression": "at_time in ('signing-time', 'trusted-timestamp')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_signature_policy_status",
+            "expression": "status in ('draft', 'active')",
+            "additive": true
           }
         ]
       },
