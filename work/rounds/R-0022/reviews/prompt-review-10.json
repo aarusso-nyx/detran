@@ -1,0 +1,29 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 10,
+  "scope": ["TASK-0026"],
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0022/prompts/TASK-0026.md",
+      "line": 61,
+      "claim": "O prompt atribui createStynxSessionStub e provideStynxSessionStub a @stynx-nyx/angular/testing. Os símbolos são publicados por @stynx-nyx/angular-auth/testing, como mostra sse.platform.spec.ts:20-24.",
+      "fix": "Corrigir o pacote nas linhas 61-62 e incluir os .d.ts de @stynx-nyx/angular-auth/testing na leitura obrigatória da linha 92."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0026.md",
+      "line": 70,
+      "claim": "A opção de retirar qualquer um dos oito casos inclui F005. CTG-0005.md:168-173 determina expressamente que F005 fica para provar o fallback no tick.",
+      "fix": "Exigir a migração de F005 com título e comportamento preservados; limitar a opção de retirada, mediante C-nn correspondente, aos outros sete casos."
+    }
+  ],
+  "notes": [
+    "O hash SHA-256 do prompt confere com compositions.json:203-208 e o PC de TASK-0026.json:24.",
+    "Os dois comandos expect-red usam a lista de TASK-0008 e a forma run test --passWithNoTests=false."
+  ]
+}
