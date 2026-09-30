@@ -1,9 +1,10 @@
 // R-0022 TASK-0003 (Inspector). Caracterização da costura SSE do TEAT web (W4) sobre STYNX
 // 1.4.0: critérios C-01-38 e C-01-39 de `work/rounds/R-0022/contracts/CTG-0001.md`.
 // C-01-38 vale nas duas fases (modo homologação: porta `TEAT_WEB_HOMOLOGATION_EVENTS`, sem HTTP).
-// C-01-39 é o único `it.fails` da frente: defeito conhecido do TEAT web (o fluxo abria um
-// `EventSource` nativo sem bearer nem `X-Tenant-Id`, `sse.service.ts:67`); TASK-0020 (Inspector) o
-// inverte depois de TASK-0008. Relógio falso do vitest; nenhuma rede real.
+// C-01-39 era o único caso de falha esperada da frente (defeito conhecido: o fluxo abria um `EventSource`
+// nativo sem bearer nem `X-Tenant-Id`); TASK-0008 migrou o serviço para `provideStynxEventStream`
+// (requisição pelo `HttpClient`) e TASK-0020 (Inspector) o inverteu para `it` (C-05-05).
+// Relógio falso do vitest; nenhuma rede real.
 // TASK-0026 (Inspector): o `chainSetup` fornece a sessão ativa pelo stub publicado de
 // `@stynx-nyx/angular-auth/testing`; vale nas duas fases (o serviço de 1.4.0 não a injeta).
 import {
@@ -170,7 +171,7 @@ describe('C-01-38 — modo homologação', () => {
 
 describe('C-01-39 — bearer e X-Tenant-Id no fluxo do TEAT web', () => {
   // Controle: prova que a cadeia montada acima aplica bearer e tenant a uma requisição do
-  // `HttpClient`; sem ele o `it.fails` abaixo poderia passar por falha de montagem.
+  // `HttpClient`; sem ele o caso abaixo poderia passar por falha de montagem.
   it('dado a cadeia STYNX quando o HttpClient pede o fluxo então a requisição leva Authorization Bearer e X-Tenant-Id', async () => {
     const { http } = chainSetup();
     TestBed.inject(HttpClient).get(STREAM_URL).subscribe();
@@ -182,31 +183,26 @@ describe('C-01-39 — bearer e X-Tenant-Id no fluxo do TEAT web', () => {
     expect(request?.request.headers.get('X-Tenant-Id')).toBe(FIXTURE_TENANT_ID);
   });
 
-  it.fails(
-    'C-01-39 defeito conhecido (sse.service.ts:67, EventSource sem bearer nem X-Tenant-Id; inversão em TASK-0020): dado fora do modo homologação e EventSource presente quando stream({ topics }) é assinado então uma requisição GET imediata pelo HttpClient com Authorization Bearer, X-Tenant-Id e topics',
-    async () => {
-      class EventSourceDouble {
-        onmessage: unknown = null;
-        onerror: unknown = null;
-        addEventListener = vi.fn();
-        removeEventListener = vi.fn();
-        close = vi.fn();
-      }
-      vi.stubGlobal('EventSource', EventSourceDouble);
-      const { http, service } = chainSetup();
-      service.stream({ topics: ['ops.refresh'] }).subscribe();
-      await vi.advanceTimersByTimeAsync(0);
-      const requests = streamRequests(http);
-      expect(requests).toHaveLength(1);
-      const [request] = requests;
-      expect(request?.request.method).toBe('GET');
-      expect(request && queryParam(request, 'topics')).toBe('ops.refresh');
-      expect(request?.request.headers.get('Authorization')).toBe(
-        `Bearer ${TEST_ACCESS_TOKEN}`,
-      );
-      expect(request?.request.headers.get('X-Tenant-Id')).toBe(
-        FIXTURE_TENANT_ID,
-      );
-    },
-  );
+  it('C-01-39 dado fora do modo homologação e EventSource presente quando stream({ topics }) é assinado então uma requisição GET imediata pelo HttpClient com Authorization Bearer, X-Tenant-Id e topics', async () => {
+    class EventSourceDouble {
+      onmessage: unknown = null;
+      onerror: unknown = null;
+      addEventListener = vi.fn();
+      removeEventListener = vi.fn();
+      close = vi.fn();
+    }
+    vi.stubGlobal('EventSource', EventSourceDouble);
+    const { http, service } = chainSetup();
+    service.stream({ topics: ['ops.refresh'] }).subscribe();
+    await vi.advanceTimersByTimeAsync(0);
+    const requests = streamRequests(http);
+    expect(requests).toHaveLength(1);
+    const [request] = requests;
+    expect(request?.request.method).toBe('GET');
+    expect(request && queryParam(request, 'topics')).toBe('ops.refresh');
+    expect(request?.request.headers.get('Authorization')).toBe(
+      `Bearer ${TEST_ACCESS_TOKEN}`,
+    );
+    expect(request?.request.headers.get('X-Tenant-Id')).toBe(FIXTURE_TENANT_ID);
+  });
 });
