@@ -1,0 +1,13 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "cycle": 3,
+  "verdict": "PASS",
+  "resolved": [3],
+  "findings": [],
+  "notes": [
+    "Papel: Auditor (Art. 18), somente leitura.",
+    "A restrição impede reservas reserved com shift_id NULL; a pré-checagem a antecede na DDL e o interceptor traduz sua violação para 422 TEAT.VALIDATION_FAILED.",
+    "Os testes cobrem POST, PATCH e reaplicação da DDL em clone. Os resultados informados não foram reproduzidos nesta revisão."
+  ]
+}

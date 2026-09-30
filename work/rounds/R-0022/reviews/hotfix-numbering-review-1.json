@@ -1,0 +1,45 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "backend/database/ddl/13-ops-field-operations.sql",
+      "line": 243,
+      "claim": "O índice impede dois turnos abertos, mas as rotas públicas de CRUD de turno continuam propagando 23505 como HTTP 500 ao criar ou atualizar um turno duplicado. Isso altera o contrato de erro.",
+      "fix": "Traduzir a violação desse índice para 409 TEAT.SHIFT_ALREADY_OPEN nas duas superfícies de CRUD e cobrir ambas com teste."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/reserve-numbering.command.ts",
+      "line": 109,
+      "claim": "A trava pode não adquirir linha alguma: shift_id é aceito sem verificar existência, e a reserva não tem FK para ops_shift. Dois pedidos com o mesmo ID inexistente, em faixas diferentes, ainda podem criar reservas ativas duplicadas.",
+      "fix": "Exigir que a consulta trave um turno existente e válido antes de prosseguir; responder com erro de domínio quando não encontrar a linha."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "backend/database/ddl/18-ops-offline-sync.sql",
+      "line": 53,
+      "claim": "O invariante de uma reserva ativa por dispositivo e turno ainda depende do comando: o CRUD público de numbering-reservations pode inserir ou atualizar reservas sem essa trava. Não há restrição única que impeça o estado proibido.",
+      "fix": "Resolver as fixtures e os dados duplicados, declarar a unicidade no blueprint e regenerar a DDL; cobrir também a rota de CRUD."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "backend/database/ddl/13-ops-field-operations.sql",
+      "line": 243,
+      "claim": "CREATE UNIQUE INDEX falha em um ambiente que já contenha dois turnos open para o mesmo tenant e agente. A entrega não traz pré-checagem nem tratamento desses dados, então apply.sh pode bloquear a implantação.",
+      "fix": "Preparar uma migração ou procedimento verificável para identificar e resolver duplicatas antes de aplicar o índice."
+    }
+  ],
+  "notes": [
+    "Papel exercido: Auditor (Art. 18), somente leitura.",
+    "O índice de turno vem do blueprint; não foi identificada edição manual da DDL. A ordem de travas dos comandos examinados não mostrou ciclo.",
+    "Os sete casos estão no padrão incluído por backend:test:integration. Os resultados de execução informados pelo worker não foram reproduzidos nesta revisão.",
+    "A suspensão do item 4 está justificada como decisão de protocolo; o caso apresentado caracteriza os desfechos admitidos."
+  ]
+}
