@@ -177,3 +177,15 @@ Resposta literal: "V-07 b, V-02 a, P-04-3 a, P-05-1 a; demais recomendações". 
 - **OD-R22-47…57:** recomendações dos contratos adotadas (P-03-1 (a), P-03-2 (a), P-03-3 (a), P-04-1
   (a), P-04-2 (a), P-04-4 (a), P-04-5 (a, senão checkpoint da cláusula), P-04-6 (a), P-04-7 (a),
   P-05-2 (a), P-05-3 (b)).
+
+## Adenda B13 — escrita entre tenants na auditoria BOAT e critérios C-03 (Owner, 2026-09-30)
+
+Resposta literal: "1. a, hotfix em PR próprio; 2. recomendações".
+
+- **OD-R22-58 (B6):** (a) hotfix em PR próprio contra `main` (tríade com teste vermelho, varredura do
+  repositório por gravações antes da validação de tenancy, revisão da outra família, merge com CI
+  verde); R-8 continua em TASK-0006 para o mecanismo publicado. Rodada retomada.
+- **OD-R22-59 (C-03-10):** (a) C-03-01 é a prova única da propagação de `requestId`; ligar o
+  `requestId` ao _sink_ de auditoria fica fora desta rodada.
+- **OD-R22-60 (C-03-15 `/info`):** adenda do Architect — o critério passa a ser "resposta independente
+  de tenant" enquanto o endpoint estiver desligado no perfil `test`.

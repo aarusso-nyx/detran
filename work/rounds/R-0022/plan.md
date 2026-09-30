@@ -718,6 +718,7 @@ salvo os efeitos abaixo.
   Regra §7: parada e relato ao Owner; nenhum despacho novo até a decisão (TASK-0025 em curso, só
   testes, termina). Recomendação: hotfix próprio contra `main` (tríade, varredura de gravações antes da
   validação de tenancy, revisão da outra família), mantendo R-8 em TASK-0006.
+  **Decidido** (Owner B13, OD-R22-58 (a)): hotfix próprio contra `main`; rodada retomada.
 
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
 tenants). Branch `orchestra/stynx-sse-tenancy` publicada.
