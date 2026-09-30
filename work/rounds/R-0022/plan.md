@@ -710,6 +710,15 @@ salvo os efeitos abaixo.
   _shim_ mantido; nenhum teste editado). Reexecução independente do maestro: 17/17 passos verdes,
   `rls-smoke` igual à linha de base (`reports/pin-1.5.0-characterization.log`). Pin publicado.
 
+- **B6 — escrita entre tenants na auditoria BOAT** (2026-09-30; TASK-0024 C-03-09; também em
+  `main`). `BoatVictimPurposeInterceptor` (`backend/app/src/app.module.ts` ~357–383) grava
+  `EST_CRASH_VICTIM_READ` com o tenant de `request.tenantId ?? X-Tenant-Id` **antes** da validação de
+  _membership_ da tenancy: principal de A com `X-Tenant-Id: B` recebe 403, mas deixa na trilha de
+  auditoria de B uma linha com o ator de A e o texto livre de `purpose`. Nenhuma leitura de dados de B.
+  Regra §7: parada e relato ao Owner; nenhum despacho novo até a decisão (TASK-0025 em curso, só
+  testes, termina). Recomendação: hotfix próprio contra `main` (tríade, varredura de gravações antes da
+  validação de tenancy, revisão da outra família), mantendo R-8 em TASK-0006.
+
 Checkpoint 2026-09-29 (maestro Opus 5.5, janela 1), rodada **parada por B2** (vazamento entre
 tenants). Branch `orchestra/stynx-sse-tenancy` publicada.
 
