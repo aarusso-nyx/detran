@@ -1,4 +1,4 @@
-// Generated from BP-CH-BILLING-001 v1.0.0 sha256:8814fad00febff6787905872dd30b4f54fe6c33ab4b750bd471093d1e6186fe4
+// Generated from BP-CH-BILLING-001 v1.0.0 sha256:dbb379527f32d359e25dee36e8d7232af006c46466c5c86faef3d22de91db860
 export * from './controllers/federal-exam-public-price.controller.js';
 export * from './dto/create-federal-exam-public-price.dto.js';
 export * from './entities/federal-exam-public-price.entity.js';

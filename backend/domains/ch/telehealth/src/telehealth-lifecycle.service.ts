@@ -124,7 +124,7 @@ export class TelehealthLifecycleService {
             (encounter_id, telehealth_session_id, item_kind, source,
              amount_cents, status, payload, created_by)
            values ($1, $2, 'TELEHEALTH', 'TELEHEALTH', 0, 'ISSUED',
-                   jsonb_build_object('sessionId', $2), $3)`,
+                   jsonb_build_object('sessionId', $2::uuid), $3)`,
           [session.encounter_id, session.id, actorId],
         );
         await tx.query(
