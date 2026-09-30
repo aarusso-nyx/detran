@@ -210,3 +210,17 @@ Resposta literal: "decisions: 1.a; 2.c".
   verificação de _membership_ (rota pública por desenho); rotas não públicas mantêm a verificação de
   _membership_ antes de gravar (hotfix B6, PR #177). Adenda à R-9 de CTG-0003 (libera `runBound` só para
   isso).
+
+## Adenda B16 — decisões da Adenda A de CTG-0006 (Owner, 2026-09-30)
+
+Resposta literal: "3–8 recommendations". Recomendações de `contracts/CTG-0006.md` §"Adenda A" (TASK-0027)
+adotadas, com numeração definitiva:
+
+- **OD-R22-64 (A01):** (a) os bytes assinados chegam ao escritor único pelos chamadores RAIT, depois de
+  leitura ampliada do Architect sobre os arquivos de §1.3.
+- **OD-R22-65 (A02):** (b) só imutabilidade de banco para `signed-documents`; Object Lock do S3 aguarda OD-018.
+- **OD-R22-66 (A03):** (a) âncoras do verificador montado uma vez e desafio de prontidão por perfil a partir do
+  piso nacional lido no _bootstrap_.
+- **OD-R22-67 (A04):** (a) DDL manual do esquema `storage` nesta rodada; lacuna de blueprint registrada.
+- **OD-R22-68 (A05):** (a) `DETRAN_DOCUMENT_TRUST_*` mantidas como portão por chamada.
+- **OD-R22-69 (A06):** (b) retirada `physical_verified` (exige `attestor`) em checkpoint da cláusula.
