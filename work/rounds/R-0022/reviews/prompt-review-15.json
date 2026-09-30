@@ -1,0 +1,22 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 15,
+  "scope": ["TASK-0028"],
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0028.md",
+      "line": 93,
+      "claim": "A permissão para acrescentar «casos C-03 que faltarem para o mapa», repetida na tarefa da linha 104, conflita com a ordem da linha 64 para parar e reportar qualquer caso sem correspondente.",
+      "fix": "Limitar o acréscimo a C-03-18. Para uma lacuna no mapa, exigir parada e adenda do Architect antes de despachar outro teste; atualizar o hash e o PC se o prompt mudar."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura.",
+    "A exigência de mapa individual com condição e relação foi acrescentada; C-03-18 tem coleta por -t, controle P1 no próprio caso e a suíte boat-victim-audit-tenant nos comandos de aceitação.",
+    "SHA-256 do prompt, compositions.json e PC de TASK-0028 coincidem."
+  ]
+}
