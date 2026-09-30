@@ -1,0 +1,28 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 8,
+  "scope": [
+    "TASK-0006",
+    "TASK-0007",
+    "TASK-0008",
+    "TASK-0019",
+    "TASK-0024",
+    "TASK-0025"
+  ],
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "tools/orchestra/expect-red.mjs",
+      "line": 44,
+      "claim": "O gate ignora o status de saída do Vitest após ler o JSON. Se os nomes das falhas coincidirem com a lista, pode retornar 0 mesmo quando o comando também falhar por erro externo às asserções. Isso permite que os novos acceptance_commands aceitem uma falha arbitrária.",
+      "fix": "Verificar o resultado do processo e os erros globais da execução; aceitar saída não zero somente quando ela decorrer exclusivamente das falhas de teste esperadas."
+    }
+  ],
+  "notes": [
+    "As outras seis correções estão presentes: contexto B12/A6, fronteira textual de TASK-0007, coleta dos specs e comando da suíte web completa.",
+    "Os SHA-256 e PC IDs dos seis prompts coincidem com compositions.json e seus tasks/*.json."
+  ]
+}

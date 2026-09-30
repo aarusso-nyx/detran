@@ -5,6 +5,7 @@
 // reporter JSON e sai 0 somente se:
 //   - pelo menos um teste foi coletado e nenhum arquivo falhou ao carregar;
 //   - nenhum teste ficou skipped, todo ou pending;
+//   - o processo termina com exit 0 (sem falhas) ou 1 (com falhas), sem erro fora das asserções;
 //   - o conjunto de testes que falharam (fullName) é exatamente o das linhas não vazias da lista
 //     (linhas iniciadas por `#` são comentário; lista vazia = tudo verde).
 // Um `it.fails` que passa a passar conta como falha, como no vitest.
@@ -38,8 +39,14 @@ const run = spawnSync(
     '--reporter=json',
     `--outputFile.json=${output}`,
   ],
-  { stdio: 'inherit' },
+  {
+    encoding: 'utf8',
+    maxBuffer: 256 * 1024 * 1024,
+    stdio: ['inherit', 'pipe', 'pipe'],
+  },
 );
+process.stdout.write(run.stdout ?? '');
+process.stderr.write(run.stderr ?? '');
 
 let report;
 try {
@@ -70,6 +77,28 @@ for (const file of report.testResults ?? []) {
   }
 }
 if (collected === 0) problems.push('nenhum teste coletado');
+// O exit do processo só pode vir das falhas de asserção: 0 sem falhas, 1 com falhas; nada de sinal,
+// erro de spawn, erro não tratado nem erro de execução fora das asserções.
+if (run.error || run.signal)
+  problems.push(
+    `processo não terminou normalmente: ${run.error?.message ?? run.signal}`,
+  );
+else if (run.status !== (failed.size > 0 ? 1 : 0))
+  problems.push(
+    `exit ${run.status} incompatível com ${failed.size} falha(s) de asserção`,
+  );
+if (
+  /Unhandled (Errors?|Rejection)|^\s*Errors\s+\d+\s+errors?/m.test(
+    `${run.stdout}\n${run.stderr}`,
+  )
+)
+  problems.push(
+    'erros fora das asserções (Unhandled/Errors) na saída do vitest',
+  );
+if ((report.numRuntimeErrorTestSuites ?? 0) > 0)
+  problems.push(
+    `${report.numRuntimeErrorTestSuites} suíte(s) com erro de execução`,
+  );
 for (const name of failed)
   if (!expected.has(name)) problems.push(`falha não esperada: ${name}`);
 for (const name of expected)
