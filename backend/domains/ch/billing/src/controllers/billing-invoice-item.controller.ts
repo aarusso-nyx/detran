@@ -1,4 +1,4 @@
-// Generated from BP-CH-BILLING-001 v1.0.0 sha256:8814fad00febff6787905872dd30b4f54fe6c33ab4b750bd471093d1e6186fe4
+// Generated from BP-CH-BILLING-001 v1.0.0 sha256:dbb379527f32d359e25dee36e8d7232af006c46466c5c86faef3d22de91db860
 import {
   Body,
   Controller,
@@ -16,16 +16,4 @@ import { BillingInvoiceItemService } from '../services/billing-invoice-item.serv
 @Resource('ch:billing-invoice-item')
 export class BillingInvoiceItemController {
   constructor(private readonly service: BillingInvoiceItemService) {}
-  @Get() @Action('read') list() {
-    return this.service.findAll();
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'CH_BILLING_INVOICE_ITEM_CREATE',
-    entity: 'ch.billing_invoice_item',
-  })
-  create(@Body() dto: CreateBillingInvoiceItemDto) {
-    return this.service.create(dto);
-  }
 }
