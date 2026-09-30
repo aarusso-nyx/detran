@@ -175,4 +175,39 @@ describe('PecRenachProcessService', () => {
     ).rejects.toBeInstanceOf(ConflictException);
     expect(query).toHaveBeenCalledTimes(3);
   });
+
+  function bindingRejectedBy(error: object) {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [source] })
+      .mockResolvedValueOnce({ rows: [source] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockRejectedValueOnce(error);
+    const openProcess = vi.fn().mockResolvedValue({
+      renachNumber: 'RN123',
+      processType: 'RENEWAL',
+      openingResult: 'OPENED',
+    });
+    const getExamEligibility = vi.fn().mockResolvedValue(eligibility);
+    return subject(query, { openProcess, getExamEligibility }).openAndBind(
+      'encounter-1',
+      { processType: 'RENEWAL' },
+    );
+  }
+
+  it('OD-HF-B9-001 translates the tenant-wide key index violation into the existing 409', async () => {
+    const binding = bindingRejectedBy({
+      code: '23505',
+      constraint: 'ux_ch_encounter_renach_process_key',
+    });
+    await expect(binding).rejects.toBeInstanceOf(ConflictException);
+    await expect(binding).rejects.toThrow(
+      'RENACH process key is already linked to another encounter',
+    );
+  });
+
+  it('OD-HF-B9-001 does not relabel another unique violation as a key conflict', async () => {
+    const error = { code: '23505', constraint: 'pk_encounter' };
+    await expect(bindingRejectedBy(error)).rejects.toBe(error);
+  });
 });

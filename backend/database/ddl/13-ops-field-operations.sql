@@ -1,4 +1,4 @@
--- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220
+-- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
 
 -- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
 
@@ -240,6 +240,21 @@ create table if not exists ops.ops_shift (
 );
 create index if not exists ix_ops_shift_tenant_id_agent_id_started_at on ops.ops_shift (tenant_id, agent_id, started_at);
 create index if not exists ix_ops_shift_tenant_id_status on ops.ops_shift (tenant_id, status);
+do $$
+declare
+  duplicates text;
+begin
+  if to_regclass('ops.ux_ops_shift_tenant_id_agent_id_open') is null then
+    select string_agg(format('tenant_id=%s agent_id=%s linhas=%s', tenant_id, agent_id, total), '; ')
+      into duplicates
+      from (select tenant_id, agent_id, count(*) as total from ops.ops_shift where status = 'open'
+             group by tenant_id, agent_id having count(*) > 1) duplicate;
+    if duplicates is not null then
+      raise exception 'Indice unico ops.ux_ops_shift_tenant_id_agent_id_open nao pode ser criado: duplicatas em ops.ops_shift (status = ''open''): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', duplicates;
+    end if;
+  end if;
+end $$;
+create unique index if not exists ux_ops_shift_tenant_id_agent_id_open on ops.ops_shift (tenant_id, agent_id) where status = 'open';
 create index if not exists ix_ops_shift_tenant_id on ops.ops_shift (tenant_id);
 create index if not exists ix_ops_shift_traffic_agency_id on ops.ops_shift (traffic_agency_id);
 create index if not exists ix_ops_shift_agent_id on ops.ops_shift (agent_id);

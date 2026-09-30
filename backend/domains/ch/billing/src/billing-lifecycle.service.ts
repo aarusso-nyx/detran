@@ -166,6 +166,14 @@ export class BillingLifecycleService {
       const item = result.rows[0];
       if (!item) throw new Error('Billing item insert returned no row');
       if (item.encounter_id) {
+        // Mesma trava de `validatePayment`: o pagamento do último item não
+        // resolve o FINANCIAL sem ver este item novo, e este insert vê a
+        // resolução já commitada (o índice parcial é só dos ativos).
+        await tx.query(
+          `select pg_advisory_xact_lock(hashtextextended(
+             auth.current_tenant()::text || ':billing-encounter:' || $1, 0))`,
+          [item.encounter_id],
+        );
         await tx.query(
           `insert into ch.process_block
             (encounter_id, block_kind, source_system, message, active, created_by)
@@ -218,6 +226,14 @@ export class BillingLifecycleService {
         [itemId, referenceNumber.trim()],
       );
       if (item.encounter_id) {
+        // Pagamentos do mesmo atendimento em série: o `not exists` abaixo
+        // roda num snapshot novo depois da espera e vê os itens que a outra
+        // transação acabou de pagar (senão o FINANCIAL fica ativo).
+        await tx.query(
+          `select pg_advisory_xact_lock(hashtextextended(
+             auth.current_tenant()::text || ':billing-encounter:' || $1, 0))`,
+          [item.encounter_id],
+        );
         await tx.query(
           `update ch.process_block block
               set active = false, resolved_by = $2, resolved_at = now(), updated_at = now()

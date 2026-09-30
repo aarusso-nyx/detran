@@ -287,6 +287,8 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
         JSON.stringify({
           id: second,
           agent_id: recipientB,
+          // §5.10: uma reserva `reserved` por dispositivo e turno (turno próprio).
+          shift_id: randomUUID(),
           start_number: 2026000007,
           end_number: 2026000011,
           idempotency_key: `${h.prefix}-second-recipient`,
@@ -503,6 +505,8 @@ async function extraGrant(active = true) {
       JSON.stringify({
         id: reservationId,
         range_id: rangeId,
+        // §5.10: uma reserva `reserved` por dispositivo e turno (turno próprio).
+        shift_id: randomUUID(),
         idempotency_key: `${h.prefix}-${reservationId}`,
       }),
       h.reservationId,

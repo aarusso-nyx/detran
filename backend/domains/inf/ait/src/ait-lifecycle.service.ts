@@ -618,7 +618,7 @@ export class AitLifecycleService {
   accept(id: string, actorId?: string): Promise<Ait> {
     // TODO(Phase 3 W3.3 RAIT): accepted AITs become the source for defesa/recurso case intake.
     return this.repositories.ait.transaction(async (tx) => {
-      const ait = await this.repositories.ait.findOne(id, tx);
+      const ait = await this.findAitForUpdate(id, tx);
       this.assertNotConcurrencyPending(ait);
       this.assertAllowed(ait, ['RECEBIDO', 'VALIDANDO', 'CORRIGIDO'], 'accept');
       const accepted = await this.transition(
@@ -694,7 +694,7 @@ export class AitLifecycleService {
         ? actorIdOrLegacyFlag
         : legacyActorId;
     return this.repositories.ait.transaction(async (tx) => {
-      const ait = await this.repositories.ait.findOne(id, tx);
+      const ait = await this.findAitForUpdate(id, tx);
       this.assertNotConcurrencyPending(ait);
       this.assertAllowed(
         ait,
@@ -903,7 +903,7 @@ export class AitLifecycleService {
 
       let ait: Ait | undefined;
       if (dto.targetAitId) {
-        ait = await this.repositories.ait.findOne(dto.targetAitId, tx);
+        ait = await this.findAitForUpdate(dto.targetAitId, tx);
         // §13 item 7: the alleged origin must match the AIT's real state.
         if (dto.originStatus !== ait.current_status) {
           throw new DetranError('TEAT.AIT_STATE_INVALID', {
@@ -984,7 +984,7 @@ export class AitLifecycleService {
     actorId?: string,
   ): Promise<{ id: string; status: string; version: number }> {
     return this.repositories.ait.transaction(async (tx) => {
-      const request = await this.getCancelRequestRow(id, tx);
+      const request = await this.getCancelRequestRow(id, tx, true);
       if (request.status === 'approved' || request.status === 'denied') {
         throw new DetranError('TEAT.AIT_CANCEL_ALREADY_DECIDED', {
           status: 409,
@@ -1034,7 +1034,7 @@ export class AitLifecycleService {
     options: DecideCancelRequestOptions = {},
   ): Promise<DecideCancelRequestResult> {
     return this.repositories.ait.transaction(async (tx) => {
-      const request = await this.getCancelRequestRow(id, tx);
+      const request = await this.getCancelRequestRow(id, tx, true);
 
       // §13 item 3: a `decision_body` that disagrees with the stored
       // `addressed_to` is rejected before any effect, independent of the
@@ -1099,7 +1099,7 @@ export class AitLifecycleService {
 
       let ait: Ait | undefined;
       if (request.ait_id) {
-        ait = await this.repositories.ait.findOne(request.ait_id, tx);
+        ait = await this.findAitForUpdate(request.ait_id, tx);
         // §13 item 4: with `ait_id` present, the AIT must still be in the
         // state the request put it in (draft never moved it; post_final did).
         const allowed: AitStatus[] =
@@ -1297,9 +1297,23 @@ export class AitLifecycleService {
     tx: Transaction,
     command: string,
   ): Promise<Ait> {
-    const ait = await this.repositories.ait.findOne(id, tx);
+    const ait = await this.findAitForUpdate(id, tx);
     this.assertAllowed(ait, allowed, command);
     return ait;
+  }
+
+  /** Leitura do AIT para comando: `for update` antes da checagem de estado,
+   * para que a transição e o filho gravados depois dela não repitam a de
+   * uma transação concorrente (READ COMMITTED). */
+  private async findAitForUpdate(id: string, tx: Transaction): Promise<Ait> {
+    const queryable = asQueryable(tx);
+    if (queryable) {
+      await queryable.query(
+        'select id from inf.ait_ait where id = $1 for update',
+        [id],
+      );
+    }
+    return this.repositories.ait.findOne(id, tx);
   }
 
   private assertAllowed(ait: Ait, allowed: AitStatus[], command: string): void {
@@ -1510,7 +1524,17 @@ export class AitLifecycleService {
   private async getCancelRequestRow(
     id: string,
     tx: Transaction,
+    forUpdate = false,
   ): Promise<AitCancelRequestRow> {
+    // `review`/`decide`: a linha fica bloqueada até o fim do comando, para
+    // que duas decisões concorrentes não passem ambas por `requested`.
+    const lockable = forUpdate ? asQueryable(tx) : undefined;
+    if (lockable) {
+      await lockable.query(
+        'select id from inf.ait_cancel_request where id = $1 for update',
+        [id],
+      );
+    }
     if (this.collaborators.cancelRequests) {
       return this.collaborators.cancelRequests.findOne(id, tx);
     }
