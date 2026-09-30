@@ -1,7 +1,7 @@
 // CTG-0004 §5.1 (R-0008, TASK-0009) — `POST procedures/{id}/start`.
 import {
   assertAlcoholAllowed,
-  findRow,
+  lockRow,
   inTenantTransaction,
   patchRow,
   scopeOf,
@@ -28,7 +28,7 @@ export class StartProcedureCommand {
   ): Promise<Record<string, unknown>> {
     scopeOf(this.deps);
     return inTenantTransaction(this.deps, async (tx) => {
-      const procedure = await findRow(this.deps, tx, 'procedures', procedureId);
+      const procedure = await lockRow(this.deps, tx, 'procedures', procedureId);
       if (!procedure) throw tenantMismatch({ procedureId });
       assertAlcoholAllowed(procedure, procedureId, ALLOWED, 'start');
 

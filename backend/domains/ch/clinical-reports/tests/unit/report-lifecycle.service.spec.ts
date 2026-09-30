@@ -170,7 +170,10 @@ describe('ReportLifecycleService', () => {
     );
     expect(query.mock.calls[3]?.[0]).toContain('integration.outbox');
     expect(query.mock.calls[3]?.[1]).toEqual(['report-1', 'MEDICAL']);
-    const statusSql = query.mock.calls[4]?.[0] as string;
+    // Hotfix B9: a linha do atendimento é travada antes do recálculo.
+    expect(query.mock.calls[4]?.[0]).toContain('for no key update');
+    expect(query.mock.calls[4]?.[1]).toEqual(['encounter-1']);
+    const statusSql = query.mock.calls[5]?.[0] as string;
     expect(statusSql).toContain('not exists');
     expect(statusSql).toContain("else 'READY_FOR_SIGNATURE'");
     expect(statusSql).not.toContain("set status = 'SIGNED'");

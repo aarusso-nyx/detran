@@ -1,4 +1,4 @@
-// Generated from BP-CH-BILLING-001 v1.0.0 sha256:8814fad00febff6787905872dd30b4f54fe6c33ab4b750bd471093d1e6186fe4
+// Generated from BP-CH-BILLING-001 v1.0.0 sha256:dbb379527f32d359e25dee36e8d7232af006c46466c5c86faef3d22de91db860
 import { Injectable } from '@nestjs/common';
 import { BillingInvoiceItemRepository } from '../repositories/billing-invoice-item.repository.js';
 import type { BillingInvoiceItem } from '../entities/billing-invoice-item.entity.js';
@@ -10,19 +10,7 @@ export class BillingInvoiceItemService {
   findAll(): Promise<BillingInvoiceItem[]> {
     return this.repository.findAll();
   }
-  findOne(id: string): Promise<BillingInvoiceItem> {
-    return this.repository.findOne(id);
-  }
   create(dto: CreateBillingInvoiceItemDto): Promise<BillingInvoiceItem> {
     return this.repository.create(dto);
-  }
-  update(
-    id: string,
-    dto: Partial<CreateBillingInvoiceItemDto>,
-  ): Promise<BillingInvoiceItem> {
-    return this.repository.update(id, dto);
-  }
-  remove(id: string): Promise<void> {
-    return this.repository.remove(id);
   }
 }

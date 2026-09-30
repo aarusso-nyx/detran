@@ -187,9 +187,9 @@ export class ReportLifecycleService {
         `insert into integration.outbox
           (topic, aggregate_type, aggregate_id, payload,
            idempotency_key, status, available_at)
-         values ('ch.renach.exam-result', 'ch.report', $1,
-                 jsonb_build_object('reportId', $1, 'kind', $2),
-                 'ch.report:' || $1, 'pending', now())
+         values ('ch.renach.exam-result', 'ch.report', $1::text,
+                 jsonb_build_object('reportId', $1::text, 'kind', $2::text),
+                 'ch.report:' || $1::text, 'pending', now())
          on conflict (tenant_id, idempotency_key) do nothing`,
         [report.id, input.kind],
       );
@@ -417,6 +417,15 @@ export class ReportLifecycleService {
     tx: SqlTransaction,
     encounterId: string,
   ): Promise<void> {
+    // Trava a linha antes de recalcular: o `update` seguinte roda num
+    // snapshot novo e vê o laudo da outra trilha commitado durante a espera
+    // (no mesmo statement, a reavaliação do READ COMMITTED não reexecuta os
+    // subselects). `no key update` não conflita com a `key share` das FKs
+    // que os inserts de laudo já tomaram.
+    await tx.query(
+      'select id from ch.encounter where id = $1 for no key update',
+      [encounterId],
+    );
     await tx.query(
       `update ch.encounter encounter
           set status = case
@@ -498,9 +507,10 @@ export class ReportLifecycleService {
           `insert into integration.outbox
             (topic, aggregate_type, aggregate_id, payload,
              idempotency_key, status, available_at)
-           values ('ch.renach.exam-result', 'ch.report_addendum', $1,
-                   jsonb_build_object('reportId', $2, 'addendumId', $1, 'kind', $3),
-                   'ch.report-addendum:' || $1, 'pending', now())
+           values ('ch.renach.exam-result', 'ch.report_addendum', $1::text,
+                   jsonb_build_object('reportId', $2::text, 'addendumId', $1::text,
+                                      'kind', $3::text),
+                   'ch.report-addendum:' || $1::text, 'pending', now())
            on conflict (tenant_id, idempotency_key) do nothing`,
           [addendum.id, addendum.report_id, source.report_kind],
         );
