@@ -614,6 +614,43 @@ Fonte: `AUTHORIZATION.md` §Adenda B6.
 - **OD-R22-08:** estrutura aprovada; o DDL/blueprint da extensão de `inf.signature_policy` e o piso
   entram no contrato da assinatura (adenda do Architect a CTG-0006 antes de TASK-0009).
 
+### A6 — conformidade real da 1.5.0 (Architect/maestro, 2026-09-29)
+
+Fonte: `AUTHORIZATION.md` §Adenda B12 (OD-R22-43…57); conformidade em
+`work/campaigns/C-0002-stynx-upstream-spec.md` §8.2 (TASK-0005). Critérios dos contratos inalterados,
+salvo os efeitos abaixo.
+
+- **Outbox (CTG-0008):** TASK-0015 partes 1 e 2 em **checkpoint OD-R22-02** (OD-R22-43, papel
+  `stynx_app` literal; OD-R22-44, entrega sem destino). TASK-0018 continua em checkpoint (A3). A troca
+  de fonte dos leitores #13–#16 para `OutboxEventStreamSource` (A3) fica para o desbloqueio.
+- **SSE backend (CTG-0004):** TASK-0007 deixa de depender de TASK-0015 (OD-R22-45): enquadramento
+  pelo `StynxEventStreamService` com a fonte DETRAN fina de CTG-0004 R-5 sobre as leituras atuais, sem
+  log nem cursor novos. Nova **TASK-0025** (Inspector, antes de TASK-0007): `r22-sse-platform.e2e.spec.ts`
+  (C-04-04…14, com C-04-06 por OD-R22-55, C-04-10 por OD-R22-52 e C-04-11 por OD-R22-53) e a adenda
+  dos casos da §6 de CTG-0004 (nome de evento e atribuição de _pool_ por OD-R22-04; `id` único e fato
+  próprio `integration.health` por OD-R22-05/50); esses casos ficam vermelhos até TASK-0007 (tríade,
+  sem `it.fails`). A última linha da §6 (fonte `outbox.events`) fica sem objeto nesta rodada. O
+  produtor de frescor `backend/domains/dashboard/monitor/src/handwritten/cycle/freshness.service.ts`
+  entra na fronteira de TASK-0007 (OD-R22-50).
+- **Tenancy (CTG-0003):** nova **TASK-0024** (Inspector, antes de TASK-0006):
+  `r22-tenancy-platform.e2e.spec.ts` (C-03-04…10, C-03-15, C-03-16; C-03-05 inclui a manifestação com
+  _claim_ ≠ Host → 403 por OD-R22-47; C-03-12 → 403 por OD-R22-48; perfil local por OD-R22-49),
+  vermelho até TASK-0006.
+- **SSE web (CTG-0005):** escopo reduzido ao **TEAT web** (OD-R22-46, checkpoint de RAIT, DASHBOARD e
+  Portal). TASK-0008 migra só o TEAT web (padrões publicados, OD-R22-57). TASK-0019 retira só
+  `teat-stream.service.spec.ts` (CTG-0004 §7), escreve `apps/teat/web/src/app/core/sse.platform.spec.ts`
+  (C-05-09/10 para o TEAT) e aplica a adenda de robustez de OD-R22-56 em W4; nenhum arquivo de RAIT,
+  DASHBOARD ou Portal web muda. C-05-02, C-05-06…08, C-05-11 e a migração dos 16 consumidores ficam no
+  checkpoint. TASK-0020 inalterada.
+- **M8 — assinatura (CTG-0006):** TASK-0009 deixa de esperar a parte 2 da outbox (CTG-0008 §8, O8):
+  parte do escritor atual (#17/#18 de CTG-0008 §8, cujo lock passa a ser só dela); demais
+  pré-condições de A4 (OD-R22-07, OD-R22-08, OD-R22-40) mantidas.
+- **Pedidos à STYNX (GitHub issues, modelo #316–#319):** papel de aplicação configurável (V-07) e
+  destino por `entity` (V-02) na área outbox; cliente Angular (P-05-1) na área NGSSE; índice #319
+  atualizado.
+- **Ordem:** TASK-0024 ∥ TASK-0025 ∥ TASK-0019 → TASK-0006 → TASK-0007 ∥ TASK-0008 → TASK-0020;
+  TASK-0021/TASK-0009 conforme A4 e M8.
+
 ## Bloqueios
 
 - **B1 — prompt-review ciclo 1 = FAIL** (Sol 6 `gpt-6-sol`, 2026-09-29,

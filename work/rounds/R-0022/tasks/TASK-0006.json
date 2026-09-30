@@ -6,7 +6,7 @@
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Tenancy pelo mecanismo publicado; remover o patch de protótipo",
-  "description": "Tenancy pelo mecanismo publicado; remover o patch de protótipo (CTG-0003), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0006.md.",
+  "description": "Tenancy pelo mecanismo publicado; remover o patch de protótipo (CTG-0003), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0006.md.",
   "lifecycle": "supported",
   "target_modules": [
     "MOD-app-module",
@@ -17,15 +17,23 @@
   "target_invariants": [],
   "coupled_task_group": "CTG-0003",
   "coupled_pipeline_position": "engineer",
-  "upstream_task_id": "TASK-0005",
+  "upstream_task_id": "TASK-0024",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
   "priority": 1,
-  "tags": ["r22", "ctg-0003", "tenancy", "after:TASK-0004", "after:TASK-0005"],
+  "tags": [
+    "r22",
+    "ctg-0003",
+    "tenancy",
+    "after:TASK-0004",
+    "after:TASK-0005",
+    "after:TASK-0023",
+    "after:TASK-0024"
+  ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-b3df23cdea63b442",
+  "prompt_composition_id": "PC-b3348b1d7ffa40ca",
   "acceptance_commands": [
     [
       "pnpm",
@@ -39,6 +47,14 @@
       "tests/e2e/portal-identity.e2e.spec.ts",
       "tests/e2e/portal-requests.e2e.spec.ts",
       "tests/e2e/sse-conformance.e2e.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--passWithNoTests=false",
+      "tests/e2e/r22-tenancy-platform.e2e.spec.ts"
     ],
     ["pnpm", "backend:rls-smoke"],
     ["pnpm", "verify:decorators"],
@@ -54,7 +70,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-b3df23cdea63b442",
+    "prompt_composition_id": "PC-b3348b1d7ffa40ca",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

@@ -5,15 +5,10 @@
   "status": "queued",
   "discipline": "engineer",
   "discipline_specialization": "engineer-frontend",
-  "title": "Serviços SSE dos quatro apps web delegando a provideStynxEventStream",
-  "description": "Serviços SSE dos quatro apps web delegando a provideStynxEventStream (CTG-0005), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0008.md.",
+  "title": "Serviço SSE do TEAT web delegando a provideStynxEventStream",
+  "description": "Serviço SSE do TEAT web delegando a provideStynxEventStream (CTG-0005), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0008.md.",
   "lifecycle": "supported",
-  "target_modules": [
-    "MOD-rait-web-sse",
-    "MOD-dashboard-web-sse",
-    "MOD-portal-web-sse",
-    "MOD-teat-web-sse"
-  ],
+  "target_modules": ["MOD-teat-web-sse"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0005",
@@ -28,54 +23,25 @@
     "ctg-0005",
     "sse",
     "web",
+    "owner-b12",
     "after:TASK-0005",
     "after:TASK-0019"
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-f3b302c9a803b00b",
+  "prompt_composition_id": "PC-fe847ab93198842b",
   "acceptance_commands": [
     [
       "pnpm",
       "--filter",
-      "@detran/rait-web",
+      "@detran/teat-web",
       "run",
       "test",
       "--passWithNoTests=false",
-      "src/app/core/sse.characterization.spec.ts"
+      "src/app/core/sse.platform.spec.ts"
     ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/dashboard-web",
-      "run",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/sse/sse.characterization.spec.ts"
-    ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/portal-web",
-      "run",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/realtime.characterization.spec.ts"
-    ],
-    ["pnpm", "--filter", "@detran/rait-web", "test"],
-    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/rait-web", "lint"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "test"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "lint"],
-    ["pnpm", "--filter", "@detran/portal-web", "test"],
-    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/portal-web", "lint"],
     ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
     ["pnpm", "--filter", "@detran/teat-web", "lint"],
-    ["pnpm", "--filter", "@detran/rait-web", "build"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "build"],
-    ["pnpm", "--filter", "@detran/portal-web", "build"],
     ["pnpm", "--filter", "@detran/teat-web", "build"]
   ],
   "created_at": "2026-09-29T17:00:00.000Z",
@@ -88,7 +54,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-f3b302c9a803b00b",
+    "prompt_composition_id": "PC-fe847ab93198842b",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

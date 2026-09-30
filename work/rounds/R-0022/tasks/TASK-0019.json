@@ -5,8 +5,8 @@
   "status": "queued",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
-  "title": "Migrar consumidores para dublês de serviço e retirar specs do mecanismo SSE que sai",
-  "description": "Migrar consumidores para dublês de serviço e retirar specs do mecanismo SSE que sai (CTG-0005), conforme plan.md §Adendas A1/A2 e o prompt work/rounds/R-0022/prompts/TASK-0019.md.",
+  "title": "Retirar o spec do mecanismo SSE do TEAT backend e preparar os specs do TEAT web",
+  "description": "Retirar o spec do mecanismo SSE do TEAT backend e preparar os specs do TEAT web (CTG-0005), conforme plan.md §Adendas A1/A2/A6 e o prompt work/rounds/R-0022/prompts/TASK-0019.md.",
   "lifecycle": "supported",
   "target_modules": ["MOD-r22-sse-spec-retirement"],
   "target_substrates": ["F3"],
@@ -24,12 +24,13 @@
     "ctg-0005",
     "sse",
     "spec-retirement",
+    "owner-b12",
     "after:TASK-0004",
     "after:TASK-0005"
   ],
   "branch": "orchestra/stynx-sse-tenancy",
   "worktree_id": "WT-stynx-sse-tenancy",
-  "prompt_composition_id": "PC-767b85c573a1ce44",
+  "prompt_composition_id": "PC-747b70d2dd0e46f1",
   "acceptance_commands": [
     [
       "pnpm",
@@ -38,39 +39,9 @@
       "test:e2e",
       "--passWithNoTests=false",
       "tests/e2e/sse-conformance.e2e.spec.ts",
-      "tests/e2e/teat-stream.e2e.spec.ts",
-      "tests/e2e/portal-stream.e2e.spec.ts",
-      "tests/e2e/dashboard-stream.e2e.spec.ts",
-      "tests/e2e/rait-stream.e2e.spec.ts"
+      "tests/e2e/teat-stream.e2e.spec.ts"
     ],
     ["pnpm", "--filter", "@detran/app", "test:unit"],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/rait-web",
-      "run",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/sse.characterization.spec.ts"
-    ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/dashboard-web",
-      "run",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/sse/sse.characterization.spec.ts"
-    ],
-    [
-      "pnpm",
-      "--filter",
-      "@detran/portal-web",
-      "run",
-      "test",
-      "--passWithNoTests=false",
-      "src/app/core/realtime.characterization.spec.ts"
-    ],
     [
       "pnpm",
       "--filter",
@@ -80,16 +51,6 @@
       "--passWithNoTests=false",
       "src/app/core/sse.characterization.spec.ts"
     ],
-    ["pnpm", "--filter", "@detran/rait-web", "test"],
-    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/rait-web", "lint"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "test"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "lint"],
-    ["pnpm", "--filter", "@detran/portal-web", "test"],
-    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
-    ["pnpm", "--filter", "@detran/portal-web", "lint"],
-    ["pnpm", "--filter", "@detran/teat-web", "test"],
     ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
     ["pnpm", "--filter", "@detran/teat-web", "lint"],
     ["pnpm", "--filter", "@detran/app", "typecheck"]
@@ -104,7 +65,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-767b85c573a1ce44",
+    "prompt_composition_id": "PC-747b70d2dd0e46f1",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

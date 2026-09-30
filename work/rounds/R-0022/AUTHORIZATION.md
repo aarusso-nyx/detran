@@ -159,3 +159,21 @@ CTG-0002) adapta os trechos locais que assumiam "contexto ativo ⇒ tenant e ato
 `app.module.ts`, e ocorrências do mesmo padrão) ao middleware de contexto do core da 1.5.0, sem mudar
 comportamento e sem editar teste; a caracterização tem de ficar verde sobre 1.5.0 com o _shim_ presente
 antes da publicação do pin. A remoção do _shim_ segue em CTG-0003. Critérios inalterados.
+
+## Adenda B12 — conformidade real da 1.5.0 (Owner, 2026-09-29)
+
+Resposta literal: "V-07 b, V-02 a, P-04-3 a, P-05-1 a; demais recomendações". Fonte:
+`work/campaigns/C-0002-stynx-upstream-spec.md` §8.2 e `contracts/CTG-0003/0004/0005.md` (TASK-0005).
+
+- **OD-R22-43 (V-07, papel `stynx_app` literal na outbox publicada):** (b) checkpoint do CTG-0008
+  (partes 1 e 2 de TASK-0015) e pedido à STYNX de papel de aplicação configurável em 1.5.x; o DETRAN
+  mantém `role_app_backend` (sem mudança de DDL nem de ADR-0002 por este motivo).
+- **OD-R22-44 (V-02, entrega sem destino):** (a) pedido à STYNX de destino por `entity` em 1.5.x.
+- **OD-R22-45 (P-04-3):** (a) TASK-0007 migra o enquadramento SSE ao `StynxEventStreamService` já,
+  com fonte DETRAN fina sobre as leituras atuais (sem log nem cursor novos, A1 item 4); a troca da
+  leitura interna para a outbox publicada fica com TASK-0015 no desbloqueio.
+- **OD-R22-46 (P-05-1):** (a) checkpoint de CTG-0005 para RAIT, DASHBOARD e Portal e pedido
+  consolidado à STYNX; TEAT web migra.
+- **OD-R22-47…57:** recomendações dos contratos adotadas (P-03-1 (a), P-03-2 (a), P-03-3 (a), P-04-1
+  (a), P-04-2 (a), P-04-4 (a), P-04-5 (a, senão checkpoint da cláusula), P-04-6 (a), P-04-7 (a),
+  P-05-2 (a), P-05-3 (b)).
