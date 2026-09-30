@@ -1,5 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import {
+  createEnvironmentInjector,
+  EnvironmentInjector,
+  inject,
+  Injectable,
+  signal,
+} from '@angular/core';
+import {
+  provideStynxEventStream,
+  StynxEventStreamService,
+} from '@stynx-nyx/angular';
+import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { catchError, defer, EMPTY, Observable, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { TEAT_WEB_HOMOLOGATION } from '../shared/homologation-http.interceptor.js';
@@ -10,12 +21,27 @@ const POLLING_INTERVAL_MS = 15_000;
 
 export interface SseStreamOptions {
   readonly topics?: readonly string[];
+  /** Lido a cada `tick$` do _polling_ (OD-R22-61 (c)); padrão: o próprio fluxo. */
   readonly fallbackUrl?: string;
 }
 
+function streamUrl(topics: readonly string[]): string {
+  return topics.length === 0
+    ? STREAM_URL
+    : `${STREAM_URL}?topics=${encodeURIComponent(topics.join(','))}`;
+}
+
+/**
+ * Serviço fino do TEAT web sobre `provideStynxEventStream` (CTG-0005): transporte pelo
+ * `HttpClient` (bearer e `X-Tenant-Id` dos interceptores), reconexão, _polling_, troca de
+ * tenant e fim de sessão são da plataforma, com os padrões publicados (OD-R22-57). Em
+ * _polling_, cada `tick$` lê `fallbackUrl` e emite o resultado, como em 1.4.0 (OD-R22-61 (c)).
+ * Um injetor filho por assinatura, porque a URL do fluxo é fixa por injetor.
+ */
 @Injectable({ providedIn: 'root' })
 export class SseService {
   private readonly http = inject(HttpClient);
+  private readonly injector = inject(EnvironmentInjector);
   private readonly homologation = inject(TEAT_WEB_HOMOLOGATION, {
     optional: true,
   });
@@ -39,48 +65,34 @@ export class SseService {
       );
     }
     return new Observable<unknown>((observer) => {
-      const topics = options.topics ?? [];
-      const streamUrl =
-        topics.length === 0
-          ? STREAM_URL
-          : `${STREAM_URL}?topics=${encodeURIComponent(topics.join(','))}`;
+      const streamInjector = createEnvironmentInjector(
+        [
+          provideStynxEventStream({
+            url: streamUrl(options.topics ?? []),
+            pollingIntervalMs: POLLING_INTERVAL_MS,
+            sessionActive: this.injector.get(StynxSessionService).active,
+          }),
+        ],
+        this.injector,
+      );
+      const platform = streamInjector.get(StynxEventStreamService);
       const fallbackUrl = options.fallbackUrl ?? STREAM_URL;
-      let fallbackStarted = false;
-      let pollingSubscription: Readonly<{ unsubscribe(): void }> | undefined;
-      const startPolling = (): void => {
-        if (fallbackStarted) return;
-        fallbackStarted = true;
-        pollingSubscription = timer(POLLING_INTERVAL_MS, POLLING_INTERVAL_MS)
+      const subscription = platform.events$.subscribe((event) =>
+        observer.next(event.data),
+      );
+      subscription.add(
+        platform.tick$
           .pipe(
             switchMap(() =>
               this.http.get(fallbackUrl).pipe(catchError(() => EMPTY)),
             ),
           )
-          .subscribe(observer);
-      };
-
-      if (typeof EventSource === 'undefined') {
-        startPolling();
-        return () => pollingSubscription?.unsubscribe();
-      }
-
-      const source = new EventSource(streamUrl);
-      const receive = (event: Event): void => {
-        const data = (event as MessageEvent<string>).data;
-        try {
-          observer.next(JSON.parse(data) as unknown);
-        } catch {
-          observer.next(data);
-        }
-      };
-      if (topics.length === 0) source.onmessage = receive;
-      else topics.forEach((topic) => source.addEventListener(topic, receive));
-      source.onerror = startPolling;
-
+          .subscribe((value) => observer.next(value)),
+      );
+      platform.start();
       return () => {
-        topics.forEach((topic) => source.removeEventListener(topic, receive));
-        source.close();
-        pollingSubscription?.unsubscribe();
+        subscription.unsubscribe();
+        streamInjector.destroy();
       };
     });
   }

@@ -1,0 +1,12 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-nested-tx",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Papel declarado: Auditor (Art. 7/18), revisão somente leitura de 72bbf9c0..HEAD; worktree limpa.",
+    "A serialização preserva os valores e a ordem das leituras. O teste usa Database e OpsParameterService reais sob o papel de aplicação; o afterEach remove apenas o outbox da fonte criada pela suíte e não mascara a falha de savepoint.",
+    "A varredura dos Promise.all de produção em backend/app/src e backend/domains não revelou outro caso ativo com transações aninhadas concorrentes. Em normative-lifecycle, o único chamador de produção passa a transação explicitamente.",
+    "A sequência teste vermelho → isolamento → correção consta nos três commits. Os resultados de execução informados pelo maestro e pelo worker não foram reexecutados nesta revisão somente leitura."
+  ]
+}
