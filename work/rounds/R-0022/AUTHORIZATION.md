@@ -197,3 +197,16 @@ Resposta literal: "c, mantenha o fallback no tick".
 - **OD-R22-61:** (c) no modo _polling_ do cliente publicado, a cada `tick$` o serviço fino do TEAT web
   chama `fallbackUrl` como hoje e emite o resultado; API e comportamento de 1.4.0 preservados; só o
   temporizador vem da plataforma. Adenda do Architect a CTG-0005.
+
+## Adenda B15 — ator nominal público e _rate limit_ de rota pública (Owner, 2026-09-30)
+
+Resposta literal: "decisions: 1.a; 2.c".
+
+- **OD-R22-62:** (a) o ator nominal das rotas públicas do Portal passa a ser o UUIDv7 fixo e documentado
+  `01a0f0bb-6b7e-74ab-bd54-f1b2761276a2` (a `@stynx-nyx/tenancy` 1.5.0 recusa o UUID nulo em `publicTenant.actorId`); o _sink_ de
+  auditoria o grava como ator nulo, preservando OD-P27 ("nenhum ator"); nenhuma tabela o referencia.
+- **OD-R22-63:** (c) em rota `@PublicTenantRoute` sem tenant na decisão de _rate limit_, o store DETRAN
+  resolve o tenant pelo Host com o mesmo `resolveHost` e conta nesse tenant sob o ator nominal, sem
+  verificação de _membership_ (rota pública por desenho); rotas não públicas mantêm a verificação de
+  _membership_ antes de gravar (hotfix B6, PR #177). Adenda à R-9 de CTG-0003 (libera `runBound` só para
+  isso).
