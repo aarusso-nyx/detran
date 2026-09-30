@@ -21,7 +21,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { PublicTenantRoute } from '@stynx-nyx/auth';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -29,6 +28,7 @@ import {
   Audit,
   NoIdempotent,
   Public,
+  PublicTenantRoute,
   Resource,
   canonicalRoles,
   etagOf,

@@ -7,10 +7,9 @@
 // (nunca owner — ADR-0002): `brand_profile` não tem RLS por desenho (M11) e
 // `service_catalog` é lida sob RLS com `app.tenant_id` do contexto.
 import { Controller, Get, Param } from '@nestjs/common';
-import { PublicTenantRoute } from '@stynx-nyx/auth';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
-import { Public } from '@detran/shared';
+import { Public, PublicTenantRoute } from '@detran/shared';
 
 import { PortalError } from './errors.js';
 import type { PortalRequiredAssurance } from './identity.service.js';

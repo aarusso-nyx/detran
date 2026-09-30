@@ -26,3 +26,8 @@ export async function withTenantContext<T>(
   }
   return database.tx(work, { ...options, role: 'app' });
 }
+
+// Re-exported so Portal domain packages (`portal/identity`,
+// `portal/citizen-service`) can mark public tenant routes without a direct
+// `@stynx-nyx/auth` dependency in their generated `package.json` (R-0022).
+export { PublicTenantRoute } from '@stynx-nyx/auth';
