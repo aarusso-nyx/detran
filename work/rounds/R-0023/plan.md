@@ -361,6 +361,15 @@ Portal oportunista. Ao concluir TASK-0001/0002, fazer push sem PR e parar.
 Não há delivery-review nesta sessão; só a prompt-review do bootstrap. Não
 editar os locks R-0020 nem os arquivos R-0022 listados em §Concorrência.
 
+**A-R23-05 (Owner, 2026-09-30; decisão nesta sessão).** Adotado o escopo de
+execução do plano para O1: toda tupla materializável percorre a cadeia real
+de guardas; amostras HTTP estratificadas registram o resultado final em
+seção separada da matriz. `pass` significa apenas passagem das guardas,
+jamais `allow` final. O contrato CTG-0001 §Adenda A-R23-05 substitui os
+critérios incompatíveis de execução integral de handler/serviço. Os três
+`acceptance_commands` de TASK-0002 permanecem intactos. A decisão não
+autoriza push antes do aceite nem altera o escopo O1/O2 de A-C2-14.
+
 **A-C2-11 (Owner, 2026-09-27): abertura antecipada do CTG-0001.** Esta rodada pode **abrir antes
 do merge de R-0022**, somente para o CTG-0001, que gera a matriz papel × rota × método e os testes de
 caracterização antes de qualquer troca de guarda.
@@ -389,17 +398,22 @@ caracterização antes de qualquer troca de guarda.
 
 ## Bloqueios
 
-**M2 — TASK-0002 ainda sem aceite (Inspector, O1).** O gerador e o e2e
-direcionado estão no worktree da branch; a matriz sobre `origin/main`
-`c4d5417c` contém 33.974 células observadas e 8.508 pares
-`handlerNotEvaluated`. O modo `verify:authz-matrix` reproduz a fixture byte a
-byte em banco descartável limpo, mas falha corretamente pela incompletude
-(C-01-04/05). Em STYNX 1.4.0, a prova HTTP de token aceito e sessão ativa
-retorna 500 `REQUEST_CONTEXT_MUTATION_FORBIDDEN` antes da política; os pares
-autenticados do perfil completo estão em `notMaterializable` (A-R23-02).
-`pnpm --filter @detran/app test:e2e` falha em cinco testes que falham sem o
-spec novo em outro banco limpo. Ver `reports/TASK-0002.md`. Não há autorização para substituir
-`allow` por passagem de guardas ou para relaxar `acceptance_commands`.
+**M2 — escopo da matriz resolvido pelo Owner (A-R23-05).** O gerador e o e2e
+direcionado produzem, sobre `origin/main` `c4d5417c`, 42.482 células de
+guarda (1.114 `401`, 32.857 `403`, 8.511 `pass`) e 12 amostras HTTP
+separadas. `verify:authz-matrix` regenera a fixture byte a byte e passa.
+`pass` não é `allow` de handler. No perfil completo STYNX 1.4.0, token
+aceito e sessão ativa ainda retornam 500
+`REQUEST_CONTEXT_MUTATION_FORBIDDEN` antes da política; esses pares estão
+em `notMaterializable` (A-R23-02).
+
+**M3 — TASK-0002 ainda sem aceite (Inspector, O1).** A suíte completa
+`pnpm --filter @detran/app test:e2e` falha em cinco testes sobre banco novo
+com fixtures `fresh`: três Portal, um isolamento OPS e um SSE TEAT. O
+controle anterior sem o spec novo falhou nos mesmos cinco casos; o spec
+novo passa 8/8. O lock SSE pertence à R-0022. Ver `reports/TASK-0002.md`.
+Os `acceptance_commands` permanecem intactos e o branch ainda não será
+publicado.
 
 ## Retomada
 
