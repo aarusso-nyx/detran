@@ -1,0 +1,13 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-cross-tenant-write",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Auditor, revisão somente leitura de 70664353..HEAD: o diff contém apenas a correção e o spec B6; o commit vermelho 95eb5e94 contém só o spec.",
+    "No STYNX 1.4.0 instalado, RateLimitDecisionContext.request é obrigatório no types.d.ts; rate-limit.guard.js constrói o contexto com request e o passa a store.consume. Assim, a marca portalPublic chega à isenção.",
+    "A DDL aplica RLS a auth.memberships por tenant_id e a auth.tenants por id. No contexto do tenant pedido, o papel app enxerga a membership do próprio ator; o predicado SQL coincide com o de TenantContextInterceptor.",
+    "As duas gravações agora aguardam a verificação. Ausência de membership lança 403 TENANT_ACCESS_DENIED; membros continuam consumindo o rate limit. O spec cobre ausência de linhas e controles positivos.",
+    "Não executei os testes nesta worktree somente leitura; os resultados de 10/10 e dos demais gates são a evidência informada pelo worker."
+  ]
+}
