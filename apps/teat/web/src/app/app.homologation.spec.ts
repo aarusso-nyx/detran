@@ -11,8 +11,15 @@ import { TestBed } from '@angular/core/testing';
 import type { Provider } from '@angular/core';
 import { provideRouter, Router, type Routes } from '@angular/router';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
+import {
+  createStynxSessionStub,
+  provideStynxSessionStub,
+} from '@stynx-nyx/angular-auth/testing';
 import { StynxI18nService } from '@stynx-nyx/angular-i18n';
-import { TenantContextService } from '@stynx-nyx/angular-tenancy';
+import {
+  provideTenancy,
+  TenantContextService,
+} from '@stynx-nyx/angular-tenancy';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { firstValueFrom, of, throwError } from 'rxjs';
@@ -23,6 +30,7 @@ import { TEAT_ROUTES } from './app.routes';
 import { SseService } from './core/sse.service';
 import catalog from './i18n/teat.pt-BR.json';
 import { expectTeatA11yState } from '../testing/a11y-state.spec-helper';
+import { TeatEventStreamFixture } from '../testing/teat-event-stream.fixture';
 
 const appRoot = process.cwd();
 
@@ -407,31 +415,33 @@ describe('ADR-0033 — SSE não contorna o bloqueio de rede da homologação', (
     },
   );
 
-  it('no perfil comum, stream ainda abre o canal SSE normal', () => {
-    const opened: string[] = [];
-    class FakeEventSource {
-      constructor(url: string) {
-        opened.push(url);
-      }
-      close(): void {}
-      addEventListener(): void {}
-      removeEventListener(): void {}
-    }
-    vi.stubGlobal('EventSource', FakeEventSource);
+  // TASK-0026 (Inspector): migrado ao transporte publicado de STYNX 1.5.0 (CTG-0005); o canal
+  // normal é a conexão do fluxo pelo `HttpClient`, com sessão ativa e tenant (o cliente publicado
+  // não abre o fluxo sem tenant). Tenant canônico das fixtures (`rait-fixtures.md` §1), como em W4.
+  it('no perfil comum, stream ainda abre o canal SSE normal', async () => {
+    const stream = new TeatEventStreamFixture();
+    vi.useFakeTimers();
     try {
       TestBed.configureTestingModule({
         providers: [
-          provideHttpClient(),
+          provideHttpClient(withInterceptors([stream.interceptor])),
           provideHttpClientTesting(),
+          provideTenancy(),
+          provideStynxSessionStub(createStynxSessionStub({ active: true })),
           SseService,
         ],
       });
+      TestBed.inject(TenantContextService).setTenant(
+        '00000000-0000-7000-8000-00000000a001',
+      );
       const subscription = TestBed.inject(SseService).stream().subscribe();
-      expect(opened).toEqual(['/v1/ops/stream']);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(stream.urls()).toEqual(['/v1/ops/stream']);
       subscription.unsubscribe();
+      expect(stream.connections[0]?.cancelled).toBe(true);
       TestBed.inject(HttpTestingController).verify();
     } finally {
-      vi.unstubAllGlobals();
+      vi.useRealTimers();
     }
   });
 });

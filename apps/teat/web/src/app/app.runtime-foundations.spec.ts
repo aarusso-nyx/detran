@@ -1,4 +1,8 @@
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptors,
+} from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
@@ -13,11 +17,19 @@ import {
   type Routes,
 } from '@angular/router';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
+import {
+  createStynxSessionStub,
+  provideStynxSessionStub,
+} from '@stynx-nyx/angular-auth/testing';
 import { STYNX_I18N_OPTIONS, StynxI18nService } from '@stynx-nyx/angular-i18n';
-import { TenantContextService } from '@stynx-nyx/angular-tenancy';
+import {
+  provideTenancy,
+  TenantContextService,
+} from '@stynx-nyx/angular-tenancy';
 import { Observable } from 'rxjs';
 import { afterEach, beforeAll, expect, it, vi } from 'vitest';
 import { expectTeatA11yState } from '../testing/a11y-state.spec-helper';
+import { TeatEventStreamFixture } from '../testing/teat-event-stream.fixture';
 import {
   TEAT_WEB_I18N,
   TEAT_WEB_ROUTE_FIXTURE,
@@ -466,62 +478,17 @@ it('dado um estado renderizado quando auditado então preserva invariantes e axe
   await expectTeatA11yState(fixture.nativeElement as HTMLElement);
 });
 
-class EventSourceFixture {
-  static readonly instances: EventSourceFixture[] = [];
-  private readonly listeners = new Map<
-    string,
-    Set<(event: MessageEvent) => void>
-  >();
-  readonly url: string;
-  onmessage: ((event: MessageEvent) => void) | null = null;
-  onerror: ((event: Event) => void) | null = null;
-  readonly close = vi.fn();
-
-  constructor(url: string | URL) {
-    this.url = String(url);
-    EventSourceFixture.instances.push(this);
-  }
-
-  emitError(): void {
-    this.onerror?.(new Event('error'));
-  }
-
-  addEventListener(
-    type: string,
-    listener: (event: MessageEvent) => void,
-  ): void {
-    const listeners = this.listeners.get(type) ?? new Set();
-    listeners.add(listener);
-    this.listeners.set(type, listeners);
-  }
-
-  removeEventListener(
-    type: string,
-    listener: (event: MessageEvent) => void,
-  ): void {
-    this.listeners.get(type)?.delete(listener);
-  }
-
-  emitNamed(type: string, value: unknown): void {
-    const event = new MessageEvent(type, { data: JSON.stringify(value) });
-    for (const listener of this.listeners.get(type) ?? []) listener(event);
-  }
-
-  emitMessage(value: unknown): void {
-    this.onmessage?.(
-      new MessageEvent('message', { data: JSON.stringify(value) }),
-    );
-  }
-}
-
+// TASK-0026 (Inspector): F005 migrado ao transporte publicado de STYNX 1.5.0 (CTG-0005 Adenda
+// B14, OD-R22-61 (c)). O fluxo sai pelo `HttpClient` até o `FakeStynxEventStreamTransport`; o
+// primeiro `tick$`, e com ele `GET fallbackUrl`, sai 15 000 ms depois da entrada em _polling_;
+// reaberturas do fluxo não contam como _fallback_ (não chegam ao `HttpTestingController`).
 it('F005 dado SSE indisponível quando passam 15 s então usa polling resiliente e limpa recursos', async () => {
   expect(TEAT_WEB_SSE_EVENT_TOPICS).not.toHaveLength(0);
   expect(TEAT_WEB_SSE_TOPICS_BY_PATH['/ux/web/ops-dashboard']).toEqual(
     TEAT_WEB_SSE_EVENT_TOPICS,
   );
   vi.useFakeTimers();
-  EventSourceFixture.instances.length = 0;
-  vi.stubGlobal('EventSource', EventSourceFixture);
+  const stream = new TeatEventStreamFixture();
   let subscription: Readonly<{ unsubscribe(): void }> | undefined;
   try {
     const SseService = exportedTypes(sseModules).find(
@@ -530,29 +497,37 @@ it('F005 dado SSE indisponível quando passam 15 s então usa polling resiliente
     expect(SseService).toBeDefined();
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([stream.interceptor])),
         provideHttpClientTesting(),
+        provideStynxSessionStub(createStynxSessionStub({ active: true })),
         SseService as Type<unknown>,
       ],
     });
+    const received: unknown[] = [];
     subscription = TestBed.inject(
       SseService as Type<{ stream(): Observable<unknown> }>,
     )
       .stream()
-      .subscribe();
-    expect(EventSourceFixture.instances[0]).toBeDefined();
-    expect(EventSourceFixture.instances[0]?.url).toBe('/v1/ops/stream');
-    EventSourceFixture.instances[0]?.emitError();
-    await vi.advanceTimersByTimeAsync(15_000);
+      .subscribe((value) => received.push(value));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(stream.connections[0]).toBeDefined();
+    expect(stream.connections[0]?.request.url).toBe('/v1/ops/stream');
+    await stream.failUntilPolling();
     const http = TestBed.inject(HttpTestingController);
+    await vi.advanceTimersByTimeAsync(15_000 - 1);
+    expect(http.match('/v1/ops/stream')).toHaveLength(0);
+    await vi.advanceTimersByTimeAsync(1);
     const polling = http.match('/v1/ops/stream');
     expect(polling).toHaveLength(1);
     polling[0]?.flush([]);
+    expect(received).toEqual([[]]);
     subscription.unsubscribe();
     subscription = undefined;
-    expect(EventSourceFixture.instances[0]?.close).toHaveBeenCalledOnce();
+    const opened = stream.connections.length;
+    expect(stream.connections.at(-1)?.cancelled).toBe(true);
     await vi.advanceTimersByTimeAsync(30_000);
     expect(http.match('/v1/ops/stream')).toHaveLength(0);
+    expect(stream.connections).toHaveLength(opened);
 
     const service = TestBed.inject(
       SseService as Type<{
@@ -584,18 +559,23 @@ it('F005 dado SSE indisponível quando passam 15 s então usa polling resiliente
       expect
         .soft(data?.['sseTopics'], `${expected.path}: tópicos registrados`)
         .toEqual(topics);
-      const before = EventSourceFixture.instances.length;
+      const before = stream.connections.length;
+      const routeEvents: unknown[] = [];
       subscription = service
         .stream({ topics, fallbackUrl: String(endpoint) })
-        .subscribe();
-      const source = EventSourceFixture.instances[before];
-      expect(source?.url).toBe(
+        .subscribe((value) => routeEvents.push(value));
+      await vi.advanceTimersByTimeAsync(0);
+      const source = stream.connections[before];
+      expect(source?.request.url).toBe(
         `/v1/ops/stream?topics=${encodeURIComponent(topics?.join(',') ?? '')}`,
       );
       for (const topic of topics ?? []) {
-        source?.emitNamed(topic, { type: topic });
+        stream.emitNamed(topic, { type: topic });
       }
-      source?.emitError();
+      expect(routeEvents, `${expected.path}: eventos do fluxo`).toEqual(
+        (topics ?? []).map((topic) => ({ type: topic })),
+      );
+      await stream.failUntilPolling();
       await vi.advanceTimersByTimeAsync(15_000);
       const resourcePolling = http.match(String(endpoint));
       expect(
@@ -605,7 +585,7 @@ it('F005 dado SSE indisponível quando passam 15 s então usa polling resiliente
       resourcePolling[0]?.flush([]);
       subscription.unsubscribe();
       subscription = undefined;
-      expect(source?.close).toHaveBeenCalledOnce();
+      expect(stream.connections.at(-1)?.cancelled).toBe(true);
     }
     http.verify();
   } finally {
@@ -790,10 +770,8 @@ for (const contract of representativeContracts) {
     throw new Error(`Rota representativa ausente: ${contract.path}`);
   }
   it(`F003/F004/F006 dada página produtiva ${representative.module} quando montada então usa integração, reage via DOM e passa axe`, async () => {
-    EventSourceFixture.instances.length = 0;
-    if (representative.sse) {
-      vi.stubGlobal('EventSource', EventSourceFixture);
-    }
+    // TASK-0026 (Inspector): o fluxo SSE da página sai pelo transporte publicado de STYNX 1.5.0.
+    const stream = new TeatEventStreamFixture();
     expect(representative.module).toBe(contract.module);
     expect(representative.client).toBe(contract.client);
     const route = routeByPath.get(representative.path);
@@ -804,13 +782,15 @@ for (const contract of representativeContracts) {
       imports: [RouterHarnessComponent],
       providers: [
         provideRouter(TEAT_ROUTES),
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([stream.interceptor])),
         provideHttpClientTesting(),
         ...activeSessionProviders(
           representative.path === '/ux/web/ait-validation'
             ? 'traffic-authority'
             : representative.allowedRoles[0],
         ),
+        // O cliente publicado acompanha a troca de tenant (UPS-NGSSE-08): tenancy real, mesmo tenant.
+        provideTenancy(),
         ...(['/ux/web/ait-validation', '/ux/web/tech-queues'].includes(
           representative.path,
         )
@@ -831,6 +811,7 @@ for (const contract of representativeContracts) {
         StynxI18nService,
       ],
     });
+    TestBed.inject(TenantContextService).setTenant('tenant-001');
     await TestBed.inject(StynxI18nService).initialize();
     const fixture = TestBed.createComponent(RouterHarnessComponent);
     const router = TestBed.inject(Router);
@@ -1067,12 +1048,12 @@ for (const contract of representativeContracts) {
     ) {
       const topics = (route?.data?.['sseTopics'] ?? []) as readonly string[];
       expect(topics).toEqual(TEAT_WEB_SSE_TOPICS_BY_PATH[representative.path]);
-      expect(EventSourceFixture.instances).toHaveLength(1);
+      expect(stream.connections).toHaveLength(1);
       expect
-        .soft(EventSourceFixture.instances[0]?.url)
+        .soft(stream.connections[0]?.request.url)
         .toBe(`/v1/ops/stream?topics=${encodeURIComponent(topics.join(','))}`);
       for (const [index, topic] of topics.entries()) {
-        EventSourceFixture.instances[0]?.emitNamed(topic, {
+        stream.emitNamed(topic, {
           ...AIT_CHANGED_EVENT,
           type: topic,
         });
@@ -1132,7 +1113,7 @@ for (const contract of representativeContracts) {
         .toBe(false);
 
       vi.useFakeTimers();
-      EventSourceFixture.instances[0]?.emitError();
+      await stream.failUntilPolling();
       await vi.advanceTimersByTimeAsync(15_000);
       const fallback = http.expectOne('/v1/inf/ait/aits');
       fallback.flush([
@@ -1155,12 +1136,12 @@ for (const contract of representativeContracts) {
     ) {
       const topics = (route?.data?.['sseTopics'] ?? []) as readonly string[];
       expect(topics).toEqual(TEAT_WEB_SSE_TOPICS_BY_PATH[representative.path]);
-      expect(EventSourceFixture.instances).toHaveLength(1);
+      expect(stream.connections).toHaveLength(1);
       expect
-        .soft(EventSourceFixture.instances[0]?.url)
+        .soft(stream.connections[0]?.request.url)
         .toBe(`/v1/ops/stream?topics=${encodeURIComponent(topics.join(','))}`);
       for (const topic of topics) {
-        EventSourceFixture.instances[0]?.emitNamed(topic, {
+        stream.emitNamed(topic, {
           ...AIT_CHANGED_EVENT,
           type: topic,
         });
@@ -1181,7 +1162,7 @@ for (const contract of representativeContracts) {
     await expectTeatA11yState(root);
     fixture.destroy();
     if (representative.sse) {
-      expect(EventSourceFixture.instances[0]?.close).toHaveBeenCalledOnce();
+      expect(stream.connections.at(-1)?.cancelled).toBe(true);
     }
     http.verify();
   });

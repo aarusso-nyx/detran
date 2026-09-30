@@ -1,9 +1,11 @@
 // R-0022 TASK-0003 (Inspector). Caracterização da costura SSE do TEAT web (W4) sobre STYNX
 // 1.4.0: critérios C-01-38 e C-01-39 de `work/rounds/R-0022/contracts/CTG-0001.md`.
 // C-01-38 vale nas duas fases (modo homologação: porta `TEAT_WEB_HOMOLOGATION_EVENTS`, sem HTTP).
-// C-01-39 é o único `it.fails` da frente: defeito conhecido do TEAT web (`new EventSource(url)`
-// sem bearer nem `X-Tenant-Id`, `sse.service.ts:67`); TASK-0020 (Inspector) o inverte depois de
-// TASK-0008. Relógio falso do vitest; nenhuma rede real.
+// C-01-39 é o único `it.fails` da frente: defeito conhecido do TEAT web (o fluxo abria um
+// `EventSource` nativo sem bearer nem `X-Tenant-Id`, `sse.service.ts:67`); TASK-0020 (Inspector) o
+// inverte depois de TASK-0008. Relógio falso do vitest; nenhuma rede real.
+// TASK-0026 (Inspector): o `chainSetup` fornece a sessão ativa pelo stub publicado de
+// `@stynx-nyx/angular-auth/testing`; vale nas duas fases (o serviço de 1.4.0 não a injeta).
 import {
   HttpClient,
   provideHttpClient,
@@ -16,6 +18,10 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideStynxDefaults } from '@stynx-nyx/angular';
+import {
+  createStynxSessionStub,
+  provideStynxSessionStub,
+} from '@stynx-nyx/angular-auth/testing';
 import { TenantContextService } from '@stynx-nyx/angular-tenancy';
 import { EMPTY, Subject, type Observable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -81,6 +87,7 @@ function chainSetup() {
         },
       }),
       provideHttpClientTesting(),
+      provideStynxSessionStub(createStynxSessionStub({ active: true })),
     ],
   });
   TestBed.inject(TenantContextService).setTenant(FIXTURE_TENANT_ID);
