@@ -14,7 +14,7 @@ Completar a frente R-0027 (ação 6 da C-0002): delegações de defesa, recursos
 | Indicação de condutor  | `infractionIndicateDriver`; validar AIT, vínculo, prazo, confirmação e duas assinaturas; persistir referência real da infração.                                                 |
 | Pagamento              | `collectionDocumentIssue`; emitir guia PIX/boleto com valor, tier e validade de fonte servidora e ID real; cartão/parcelamento off. Emissão não significa pagamento confirmado. |
 | Junta médica           | Nenhuma chamada a `ch/juntas` em R-0027; responder 422 com OD-R27-002 explícita. Chave reservada para R-0032.                                                                   |
-| Resposta de diligência | `raitInquiryAnswer` permanece 422 enquanto OD-P67/OD-R27-004 e o destino tipado do texto/anexos estiverem pendentes; não descartar conteúdo.                                    |
+| Resposta de diligência | `raitInquiryAnswer` permanece 422 após escolha Owner OD-R27-004=(a) enquanto LEGAL/OD-P67 e o destino tipado do texto/anexos estiverem pendentes; não descartar conteúdo.       |
 | Desistência            | `raitCaseWithdraw`; só marcar Portal como desistido após aceite real do RAIT e persistir a mesma referência externa.                                                            |
 
 ## Decisões e ODs
@@ -23,7 +23,7 @@ OD-R27-001 = **(a), decisão do Owner**: ator técnico `portal-delegation`, chav
 
 OD-R27-002 = **(b), decisão do Owner**: junta indisponível em R-0027 e entregue integralmente em R-0032 com contrato, vínculo, marco de ciência e prazo calculados no servidor. A junta será registrada no fechamento como exceção declarada ao critério C-0002 §5, nunca como PASS.
 
-OD-R27-003 permanece `source_pending` (decisor: Architect): não foi localizado produtor do evento de domínio `PAGAMENTO_CONFIRMADO`. Guia pode ser emitida, mas não avançar o pedido por pagamento sem evento real persistido e consumido idempotentemente. OD-R27-004 permanece `source_pending` (decisor: Owner/LEGAL): nível de assinatura da resposta de diligência; manter fail-closed até fonte normativa e contrato que preserve texto e anexos. As classificações de OD-P05/P17/P19/P28/P32/P41/P43/P67/P72/P74/P76 são as transcritas em `docs/framework/arch/portal-build-pack.md` §4. OD-P01/CETRAN-AM e demais lacunas continuam sem decisão ou valor inferido.
+OD-R27-003 permanece `source_pending` (decisor: Architect): não foi localizado produtor do evento de domínio `PAGAMENTO_CONFIRMADO`. Guia pode ser emitida, mas não avançar o pedido por pagamento sem evento real persistido e consumido idempotentemente. OD-R27-004 recebeu escolha Owner (a) em 2026-09-29: manter nível `simples` do manifesto para a resposta de diligência. A validação LEGAL da OD-P67 permanece `source_pending`; manter fail-closed até ela e até contrato que preserve texto e anexos. As classificações de OD-P05/P17/P19/P28/P32/P41/P43/P67/P72/P74/P76 são as transcritas em `docs/framework/arch/portal-build-pack.md` §4. OD-P01/CETRAN-AM e demais lacunas continuam sem decisão ou valor inferido.
 
 ## Critérios de aceite
 
@@ -41,6 +41,6 @@ OD-R27-003 permanece `source_pending` (decisor: Architect): não foi localizado 
 - `lgpd_declaracao` (parcial conforme OD-P17) e `emissao_crlv` (#125).
 - Cartão, parcelamento e ativação de desconto de 40% sem fonte.
 - Entrega da junta em R-0027; contrato, vínculo, ciência, prazo e habilitação ficam para R-0032.
-- Resposta de diligência enquanto OD-P67/OD-R27-004 e destino do texto/anexos não forem resolvidos por fonte e contrato.
+- Resposta de diligência enquanto LEGAL/OD-P67 e destino do texto/anexos não forem resolvidos por fonte e contrato; a escolha Owner OD-R27-004=(a) não abre o comando.
 - Inventar produtor, schema ou correlação para `PAGAMENTO_CONFIRMADO`, valor/tier, prazo, identificador, nível de assinatura ou conteúdo normativo.
 - Abrir rotas de comando de staff ao login gov.br ou contornar a política com chamada in-process.

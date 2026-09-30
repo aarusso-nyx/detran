@@ -330,12 +330,14 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
 
 ## Decisões pendentes (propostas; TASK-0002 registra em `portal-build-pack.md` §4)
 
+> **Estado atualizado:** OD-R27-004 recebeu escolha do Owner em A-R27-001: opção (a), nível `simples`. A validação LEGAL da OD-P67 e o contrato de texto/anexos seguem pendentes; OD-R27-003 continua decisão técnica do Architect.
+
 | OD         | Pergunta                                                                                                                                                                           | Opções                                                                                                                                                                                                                     | Recomendação do Architect                                                                                       | Decisor                                            |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
 | OD-R27-001 | **Decidida pelo Owner em 2026-09-26 — ver §Decisões do Owner.** Sob que identidade a delegação executa o comando de servidor                                                       | (a) ator técnico `portal-delegation` com chaves próprias em `policy.ts` (auditoria com `onBehalfOf` = cidadão); (b) principal do cidadão com chaves novas `CIDADAO` nos domínios-alvo; (c) chamada in-process sem política | (a): mantém a política como fonte única (R-0023) e a trilha de auditoria; (c) é vetada (contorna a autorização) | Architect (efeito de segurança: reviewer confirma) |
 | OD-R27-002 | **Decidida pelo Owner em 2026-09-26 — ver §Decisões do Owner.** `junta_medica`: rota manuscrita `POST /v1/ch/juntas/cases` sem contrato e fora do catálogo de 15 serviços (OD-P19) | (a) contrato `BP-CH-JUNTAS-001.commands.openapi.json` + serviço no catálogo; (b) manter `fail-closed-OD` até R-0031 (PEC web, ADR-0034)                                                                                    | (b) se o Owner não incluir a junta no catálogo; (a) caso contrário                                              | Owner                                              |
 | OD-R27-003 | Confirmação de pagamento sem produtor de `PAGAMENTO_CONFIRMADO` (OD-P28)                                                                                                           | (a) produtor em `inf/collection` ao reconciliar (`collectionPaymentReconcile`), com esquema de evento; (b) guia emitida e avanço de estado adiado                                                                          | (a), com contrato de evento fixado por TASK-0001                                                                | Architect                                          |
-| OD-R27-004 | Nível de assinatura da resposta de diligência (OD-P67) e das peças (OD-P01: ouro)                                                                                                  | (a) manter o manifesto vigente; (b) elevar                                                                                                                                                                                 | não decidir: segue OD-P67 (Owner/LEGAL); a UI aplica o nível do manifesto                                       | Owner/LEGAL                                        |
+| OD-R27-004 | Nível de assinatura da resposta de diligência (OD-P67) e das peças (OD-P01: ouro)                                                                                                  | (a) manter o manifesto vigente; (b) elevar                                                                                                                                                                                 | Owner escolheu (a), `simples`, em 2026-09-29 (A-R27-001); LEGAL e contrato de texto/anexos ainda pendentes      | Owner/LEGAL                                        |
 
 ## Riscos
 
@@ -368,6 +370,8 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
   nenhum valor normativo inventado (`source_pending`); nenhuma integração externa real.
 
 ## Adendas
+
+- **A-R27-001 — escolha do Owner para OD-R27-004 (2026-09-29).** O Owner respondeu: “manter o nível simples”. Fica escolhida a opção (a), nível `simples` do manifesto vigente para a resposta de diligência. Esta escolha não ratifica, por si, a conformidade LEGAL da OD-P67 nem muda o nível `ouro` das outras peças alcançadas por OD-P01. Até LEGAL fechar o conflito normativo e o contrato tipado preservar texto e anexos, a resposta continua fail-closed/422. Nenhuma implementação ou teste RED da Sessão A é alterado por esta adenda.
 
 ## Decisões do maestro
 
@@ -422,7 +426,7 @@ em §Concorrência. Sob a OD-C2-005, TASK-0006 não espera; o conflito se resolv
   de R-0022; os dois RED de `BANK_PORT` em não local são deliberados. TASK-0006
   (`policy.ts` e alvos reais) espera R-0023 e a retomada da rodada. TASK-0007
   em diante esperam o padrão de R-0024. OD-R27-003 segue Architect
-  `source_pending`; OD-R27-004 segue Owner/LEGAL `source_pending`.
+  `source_pending`; OD-R27-004 tem escolha Owner (a), nível `simples`; validação LEGAL da OD-P67 e contrato de texto/anexos seguem `source_pending`.
 - **Prova disponível:** `@detran/inf-collection test:unit` 10 PASS;
   `@detran/app typecheck` PASS; e2e de perfil 6 PASS + 2 RED `BANK_PORT`;
   `@detran/portal-requests test:unit` 98 PASS + 5 RED + 1 TODO preservado;
