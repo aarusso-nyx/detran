@@ -68,7 +68,6 @@ type ObservedRow = Route & {
   status: number;
   code: string | null;
   layer: string;
-  handlerEvaluated?: boolean;
 };
 
 type InventoryRow = Route & {
@@ -81,20 +80,42 @@ type InventoryRow = Route & {
 
 const observedRows: ObservedRow[] = [];
 const observedInventory: InventoryRow[] = [];
-const handlerProofs = new Set<string>();
-const handlerDenials = new Map<
-  string,
-  { status: 401 | 403; code: string; layer: string }
->();
+const httpSamples: Array<{
+  scenario: string;
+  profile: 'local' | 'complete';
+  method: string;
+  path: string;
+  controller: string;
+  handler: string;
+  principal: string;
+  httpStatus: 200 | 201 | 401 | 403;
+  code: string | null;
+  layer: string;
+}> = [];
 
-function proofKey(route: Route, principal: string): string {
-  return [
-    route.method,
-    route.path,
-    route.controller,
-    route.handler,
+function recordHttpSample(
+  scenario: string,
+  route: Route,
+  principal: string,
+  status: number,
+  code: string | null,
+  layer: string,
+  profile: 'local' | 'complete' = 'local',
+): void {
+  if (![200, 201, 401, 403].includes(status))
+    throw new Error(`Status HTTP fora da amostra de autorização: ${status}`);
+  httpSamples.push({
+    scenario,
+    profile,
+    method: route.method,
+    path: route.path,
+    controller: route.controller,
+    handler: route.handler,
     principal,
-  ].join('\u0000');
+    httpStatus: status as 200 | 201 | 401 | 403,
+    code,
+    layer,
+  });
 }
 
 function paths(value: unknown): string[] {
@@ -591,7 +612,15 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
           .set('Authorization', 'Bearer local')
           .set('X-Tenant-Id', '00000000-0000-7000-8000-000000000001');
         expect(response.status, JSON.stringify(response.body)).toBe(status);
-        if (status === 200) handlerProofs.add(proofKey(route!, `role:${role}`));
+        expect(response.body.code ?? null).toBe(guard.code);
+        recordHttpSample(
+          role === 'ADMIN' ? 'clinic-admin-allow' : 'clinic-field-deny',
+          route!,
+          `role:${role}`,
+          response.status,
+          response.body.code ?? null,
+          status === 200 ? 'handler' : guard.layer,
+        );
       }
     } finally {
       if (previous === undefined) delete process.env.DETRAN_LOCAL_ROLES;
@@ -599,21 +628,46 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
     }
   });
 
-  it('dadas ilhas Portal, provisionamento e webhook quando compara guarda e HTTP então conserva primeiro ponto de negação', async () => {
+  it('dadas ilhas e domínios estratificados quando compara guarda e HTTP então conserva primeiro ponto de negação', async () => {
     const previousRole = process.env.DETRAN_LOCAL_ROLES;
     const routes = mountedRoutes(defaultApp.get(ModulesContainer));
     try {
       for (const sample of [
-        { method: 'GET', path: '/v1/portal/identity/me', role: 'ADMIN' },
         {
+          scenario: 'portal-identity-deny',
+          method: 'GET',
+          path: '/v1/portal/identity/me',
+          role: 'ADMIN',
+        },
+        {
+          scenario: 'provisioning-deny',
           method: 'GET',
           path: '/v1/ops/provisioning/device-keys',
           role: 'ADMIN',
         },
         {
+          scenario: 'webhook-deny',
           method: 'POST',
           path: '/v1/ch/transmissions/callbacks/renach',
           role: 'ADMIN',
+        },
+        {
+          scenario: 'est-policy-deny',
+          method: 'GET',
+          path: '/v1/est/crash/renaest-submissions',
+          role: 'field-agent',
+        },
+        {
+          scenario: 'rait-policy-deny',
+          method: 'GET',
+          path: '/v1/inf/rait/admissibility',
+          role: 'field-agent',
+        },
+        {
+          scenario: 'rait-sse-deny',
+          method: 'GET',
+          path: '/v1/inf/rait/stream',
+          role: 'field-agent',
         },
       ]) {
         const route = routes.find(
@@ -636,6 +690,14 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
           guard.status,
         );
         expect(response.body.code ?? null).toBe(guard.code);
+        recordHttpSample(
+          sample.scenario,
+          route!,
+          `role:${sample.role}`,
+          response.status,
+          response.body.code ?? null,
+          guard.layer,
+        );
       }
     } finally {
       if (previousRole === undefined) delete process.env.DETRAN_LOCAL_ROLES;
@@ -660,11 +722,14 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
         .set('X-Tenant-Id', '00000000-0000-7000-8000-000000000001');
       expect(response.status, JSON.stringify(response.body)).toBe(403);
       expect(response.body.code).toBe('DASH.LAYER_FORBIDDEN');
-      handlerDenials.set(proofKey(route!, 'role:ADMIN'), {
-        status: 403,
-        code: 'DASH.LAYER_FORBIDDEN',
-        layer: 'DashboardLayerGate',
-      });
+      recordHttpSample(
+        'dashboard-downstream-deny',
+        route!,
+        'role:ADMIN',
+        response.status,
+        response.body.code,
+        'DashboardLayerGate',
+      );
     } finally {
       if (previousRole === undefined) delete process.env.DETRAN_LOCAL_ROLES;
       else process.env.DETRAN_LOCAL_ROLES = previousRole;
@@ -704,19 +769,41 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
         .get('/v1/portal/identity/me')
         .set(common);
       expect(me.status, JSON.stringify(me.body)).toBe(403);
+      const routes = mountedRoutes(defaultApp.get(ModulesContainer));
+      const meRoute = routes.find(
+        (candidate) =>
+          candidate.method === 'GET' &&
+          candidate.path === '/v1/portal/identity/me',
+      );
+      expect(meRoute).toBeDefined();
+      recordHttpSample(
+        'portal-cross-tenant-identity-deny',
+        meRoute!,
+        'outside-tenant',
+        me.status,
+        me.body.code ?? null,
+        'DetranLegacyAuthContextGuard',
+      );
       const response = await request(defaultApp.getHttpServer())
         .post('/v1/portal/manifestations')
         .set(common)
         .send({ kind: 'reclamacao', text: 'R-0023 matriz antes #159' });
       expect(response.status, JSON.stringify(response.body)).toBe(201);
       expect(response.body.anonymous).toBe(true);
-      const route = mountedRoutes(defaultApp.get(ModulesContainer)).find(
+      const route = routes.find(
         (candidate) =>
           candidate.method === 'POST' &&
           candidate.path === '/v1/portal/manifestations',
       );
       expect(route).toBeDefined();
-      handlerProofs.add(proofKey(route!, 'outside-tenant'));
+      recordHttpSample(
+        'portal-cross-tenant-manifestation-201',
+        route!,
+        'outside-tenant',
+        response.status,
+        response.body.code ?? null,
+        'handler',
+      );
       manifestationId = response.body.manifestationId as string;
       await asOwner(client);
       await client.query("select set_config('app.tenant_id', $1, false)", [
@@ -837,10 +924,6 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
               variant.requestedTenantId,
               variant.requestedHost,
             );
-            const denial =
-              result.status === 200
-                ? handlerDenials.get(proofKey(route, variant.id))
-                : undefined;
             observedRows.push({
               method: route.method,
               path: route.path,
@@ -851,13 +934,9 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
               public: route.public,
               principal: variant.id,
               profile: 'local',
-              status: denial?.status ?? result.status,
-              code: denial?.code ?? result.code,
-              layer: denial?.layer ?? result.layer,
-              ...(result.status === 200 &&
-              handlerProofs.has(proofKey(route, variant.id))
-                ? { handlerEvaluated: true }
-                : {}),
+              status: result.status,
+              code: result.code,
+              layer: result.layer,
             });
             if (![200, 401, 403].includes(result.status))
               failures.push(
@@ -980,6 +1059,27 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
             route.handler === 'createSession',
         )?.route.public,
       ).toBe(true);
+      const anonymousRoute = [...union.values()].find(
+        ({ route }) =>
+          route.method === 'GET' && route.path === '/v1/ch/patients',
+      )?.route;
+      expect(anonymousRoute).toBeDefined();
+      const anonymousResponse = await request(completeDefault.getHttpServer())
+        .get('/v1/ch/patients')
+        .set('X-Tenant-Id', tenantId);
+      expect(
+        anonymousResponse.status,
+        JSON.stringify(anonymousResponse.body),
+      ).toBe(401);
+      recordHttpSample(
+        'complete-anonymous-deny',
+        anonymousRoute!,
+        'none',
+        anonymousResponse.status,
+        anonymousResponse.body.code ?? null,
+        'DetranStynxAuthContextGuard',
+        'complete',
+      );
       observedInventory.push(...inventoryRows(union, 'complete'));
       const failures: string[] = [];
       for (const { app, route } of union.values()) {
@@ -1038,6 +1138,7 @@ describe('R-0023 — inventário de rotas para a matriz de autorização', () =>
             rows: observedRows,
             inventory: observedInventory,
             policyResources,
+            httpSamples,
           }),
           'utf8',
         );

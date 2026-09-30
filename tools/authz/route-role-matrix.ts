@@ -59,16 +59,8 @@ const ROLES = [
   'CIDADAO',
 ] as const;
 
-type Blocker = {
-  id: string;
-  route: string;
-  point: string;
-  source: string;
-  reason: string;
-};
-
 type Matrix = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   baseline: { ref: string; commit: string; stynx: string };
   profiles: ['local', 'complete'];
   mounts: ['default', 'speed-meters-on'];
@@ -98,7 +90,6 @@ type Matrix = {
     reason: string;
     source: string;
   }>;
-  handlerNotEvaluated: Blocker[];
   cells: Array<{
     method: string;
     path: string;
@@ -109,6 +100,20 @@ type Matrix = {
     public: boolean;
     principal: string;
     profile: 'local' | 'complete';
+    outcome: 'pass' | '401' | '403';
+    code: string | null;
+    layer: string;
+  }>;
+  httpSamples: Array<{
+    scenario: string;
+    profile: 'local' | 'complete';
+    method: string;
+    path: string;
+    controller: string;
+    handler: string;
+    principal: string;
+    guardOutcome: 'pass' | '401' | '403';
+    httpStatus: 200 | 201 | 401 | 403;
     outcome: 'allow' | '401' | '403';
     code: string | null;
     layer: string;
@@ -117,8 +122,12 @@ type Matrix = {
 
 type ProbeRow = Omit<Matrix['cells'][number], 'outcome'> & {
   status: number;
-  handlerEvaluated?: boolean;
 };
+
+type ProbeHttpSample = Omit<
+  Matrix['httpSamples'][number],
+  'guardOutcome' | 'outcome'
+>;
 
 type ProbeInventory = Omit<
   Matrix['routeInventory'][number],
@@ -368,6 +377,33 @@ function validateInventory(inventory: ProbeInventory[]): void {
     throw new Error(`Inventário divergente: ${JSON.stringify(counts)}`);
 }
 
+function validateRouteAlignment(
+  rows: ProbeRow[],
+  inventory: ProbeInventory[],
+): void {
+  const key = (route: {
+    profile: string;
+    method: string;
+    path: string;
+    controller: string;
+    handler: string;
+  }) =>
+    [
+      route.profile,
+      route.method,
+      route.path,
+      route.controller,
+      route.handler,
+    ].join('\u0000');
+  const probed = new Set(rows.map(key));
+  const mounted = new Set(inventory.map(key));
+  if (
+    probed.size !== mounted.size ||
+    [...mounted].some((route) => !probed.has(route))
+  )
+    throw new Error('Inventário e sondas de guardas divergem');
+}
+
 function materializationLimits(
   policyResources: string[],
 ): Matrix['notMaterializable'] {
@@ -416,39 +452,26 @@ export async function generate(): Promise<Matrix> {
     probeMountedRoutes(),
     controllerSources(),
   ]);
-  const { rows: observed, inventory, policyResources } = proof;
+  const {
+    rows: observed,
+    inventory,
+    policyResources,
+    httpSamples: sampled,
+  } = proof;
   validateProbeCoverage(observed);
   validateInventory(inventory);
+  validateRouteAlignment(observed, inventory);
   if (new Set(policyResources).size !== policyResources.length)
     throw new Error('Recursos de política duplicados');
   const cells: Matrix['cells'] = [];
-  const handlerNotEvaluated: Blocker[] = [];
   for (const row of observed) {
-    const { status, handlerEvaluated, ...identity } = row;
+    const { status, ...identity } = row;
     if (status === 200) {
-      if (handlerEvaluated) {
-        cells.push({
-          ...identity,
-          outcome: 'allow',
-          code: null,
-          layer: 'handler',
-        });
-        continue;
-      }
-      const controller = sources.get(row.controller);
-      const route = `${row.method} ${row.path}`;
-      handlerNotEvaluated.push({
-        id: `${row.profile}:${route}:${row.controller}.${row.handler}:${row.principal}`,
-        route,
-        point: `${row.controller}.${row.handler}`,
-        source:
-          controller?.handlerSources[row.handler] ??
-          controller?.source ??
-          'unmapped',
-        reason: controller?.authzFree
-          ? 'APP_GUARD e guardas passaram; cadeia gerada controller/service/repository não contém decisão explícita, mas o handler ainda não foi executado.'
-          : 'APP_GUARD e guardas de classe/método passaram; handler/serviço ainda não foi sondado.',
-      });
+      if (identity.code !== null || identity.layer !== 'guards-passed')
+        throw new Error(
+          `Passagem de guardas inválida: ${row.method} ${row.path}`,
+        );
+      cells.push({ ...identity, outcome: 'pass' });
       continue;
     }
     if (status !== 401 && status !== 403)
@@ -477,7 +500,69 @@ export async function generate(): Promise<Matrix> {
       ].join('\u0000'),
     ),
   );
-  handlerNotEvaluated.sort((left, right) => compare(left.id, right.id));
+  const cellKey = (row: {
+    profile: string;
+    method: string;
+    path: string;
+    controller: string;
+    handler: string;
+    principal: string;
+  }) =>
+    [
+      row.profile,
+      row.method,
+      row.path,
+      row.controller,
+      row.handler,
+      row.principal,
+    ].join('\u0000');
+  const cellByKey = new Map(cells.map((cell) => [cellKey(cell), cell]));
+  const requiredScenarios = [
+    'clinic-admin-allow',
+    'clinic-field-deny',
+    'complete-anonymous-deny',
+    'est-policy-deny',
+    'portal-identity-deny',
+    'provisioning-deny',
+    'rait-policy-deny',
+    'rait-sse-deny',
+    'webhook-deny',
+    'dashboard-downstream-deny',
+    'portal-cross-tenant-identity-deny',
+    'portal-cross-tenant-manifestation-201',
+  ];
+  const actualScenarios = sampled
+    .map((sample) => sample.scenario)
+    .sort(compare);
+  if (
+    JSON.stringify(actualScenarios) !==
+    JSON.stringify(requiredScenarios.sort(compare))
+  )
+    throw new Error(`Amostra HTTP incompleta: ${actualScenarios.join(', ')}`);
+  const httpSamples: Matrix['httpSamples'] = sampled.map((sample) => {
+    const guard = cellByKey.get(cellKey(sample));
+    if (!guard)
+      throw new Error(`Amostra HTTP sem célula de guarda: ${sample.scenario}`);
+    const outcome =
+      sample.httpStatus === 200 || sample.httpStatus === 201
+        ? 'allow'
+        : (String(sample.httpStatus) as '401' | '403');
+    if (
+      guard.outcome !== 'pass' &&
+      (guard.outcome !== outcome ||
+        guard.code !== sample.code ||
+        guard.layer !== sample.layer)
+    )
+      throw new Error(`Amostra HTTP diverge da guarda: ${sample.scenario}`);
+    if (
+      guard.outcome === 'pass' &&
+      (sample.layer === 'guards-passed' ||
+        (outcome === 'allow' && sample.layer !== 'handler'))
+    )
+      throw new Error(`Resultado HTTP sem camada final: ${sample.scenario}`);
+    return { ...sample, guardOutcome: guard.outcome, outcome };
+  });
+  httpSamples.sort((left, right) => compare(left.scenario, right.scenario));
   const routeInventory = inventory
     .map((route) => ({
       ...route,
@@ -511,7 +596,7 @@ export async function generate(): Promise<Matrix> {
       ),
     );
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     baseline: {
       ref: 'origin/main',
       commit: 'c4d5417ccaa510422f5f4ac0d326af2219001799',
@@ -534,8 +619,8 @@ export async function generate(): Promise<Matrix> {
       'role:traffic-authority;decision_body=diretoria-fiscalizacao',
     ].sort(compare),
     notMaterializable: materializationLimits(policyResources),
-    handlerNotEvaluated,
     cells,
+    httpSamples,
   };
 }
 
@@ -562,6 +647,7 @@ async function probeMountedRoutes(): Promise<{
   rows: ProbeRow[];
   inventory: ProbeInventory[];
   policyResources: string[];
+  httpSamples: ProbeHttpSample[];
 }> {
   const directory = await mkdtemp(path.join(tmpdir(), 'detran-authz-matrix-'));
   const output = path.join(directory, 'probes.json');
@@ -602,6 +688,7 @@ async function probeMountedRoutes(): Promise<{
       rows: ProbeRow[];
       inventory: ProbeInventory[];
       policyResources: string[];
+      httpSamples: ProbeHttpSample[];
     };
   } finally {
     await rm(directory, { recursive: true, force: true });
@@ -630,11 +717,8 @@ async function main(): Promise<void> {
     throw new Error('authz-route-role-matrix diverge byte a byte');
   }
   const matrix = JSON.parse(saved) as Matrix;
-  if (matrix.handlerNotEvaluated.length > 0 || matrix.cells.length === 0) {
-    throw new Error(
-      `Matriz incompleta: ${matrix.handlerNotEvaluated.length} camadas sem sonda e ${matrix.cells.length} células avaliadas`,
-    );
-  }
+  if (matrix.cells.length === 0 || matrix.httpSamples.length === 0)
+    throw new Error('Matriz sem células ou amostra HTTP');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
