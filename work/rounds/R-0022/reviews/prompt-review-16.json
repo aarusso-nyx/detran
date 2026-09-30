@@ -1,0 +1,30 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 16,
+  "scope": ["TASK-0029"],
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0029.md",
+      "line": 57,
+      "claim": "O resumo diz que todos os campos novos são anuláveis e sem default, mas CTG-0006.md:490 exige `revision integer not null default 1`.",
+      "fix": "Distinguir os campos normativos novos, anuláveis e sem default, de `revision`, obrigatório e com default 1."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/tasks/TASK-0029.json",
+      "line": 33,
+      "claim": "`blueprints:check` é critério de exit 0, embora o prompt:111 permita divergência até a regeneração da parte D. O comando compara o gerado com a árvore commitada (tools/blueprints/check.mjs:37-48), portanto a edição D0 produz falha esperada.",
+      "fix": "Retirar esse comando dos critérios de aprovação de TASK-0029; registrar a divergência esperada e exigir `blueprints:check` após a regeneração na parte D. Acrescentar um critério executável específico para validar o JSON contra o schema."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor; revisão somente leitura.",
+    "Os caminhos dos chamadores listados existem. A fronteira de escrita limita D0 ao blueprint e à nova Adenda C; a tabela do piso está atribuída à DDL manual em CTG-0006.md:505-522.",
+    "SHA-256 do prompt e PC conferem com compositions.json:227-232 e TASK-0029.json:31,52."
+  ]
+}
