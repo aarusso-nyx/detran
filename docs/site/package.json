@@ -14,12 +14,13 @@
     "clear": "docusaurus clear",
     "deploy": "docusaurus deploy",
     "typecheck": "tsc --noEmit",
-    "security:check": "node scripts/check-image-size-patch.mjs && npm audit --audit-level=moderate"
+    "security:check": "node scripts/check-image-size-patch.mjs && node scripts/check-braces-patch.mjs && npm audit --audit-level=moderate"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
     "@docusaurus/preset-classic": "3.10.2",
     "@mdx-js/react": "^3.0.0",
+    "braces": "file:vendor/braces",
     "clsx": "^2.0.0",
     "image-size": "file:vendor/image-size",
     "prism-react-renderer": "^2.3.0",
@@ -38,10 +39,13 @@
   },
   "overrides": {
     "brace-expansion@1.x": "1.1.21",
+    "braces": "$braces",
+    "compression": "1.8.2",
     "fast-uri@3.x": "3.1.8",
     "gray-matter": {
       "js-yaml": "3.15.1"
     },
+    "http-cache-semantics": "4.3.0",
     "http-proxy-middleware": "2.0.10",
     "image-size": "$image-size",
     "joi": "17.13.8",
@@ -49,8 +53,13 @@
     "launch-editor": "2.14.1",
     "nanoid@3.x": "3.3.18",
     "postcss": "8.5.26",
+    "postcss-selector-parser": "7.1.6",
+    "proxy-addr": "2.0.8",
     "qs": "6.16.0",
     "serialize-javascript": "7.0.5",
+    "shell-quote": "1.12.0",
+    "source-map-js": "1.2.2",
+    "tinypool": "2.2.0",
     "uuid": "11.1.1",
     "webpack-dev-server": "5.2.6"
   }

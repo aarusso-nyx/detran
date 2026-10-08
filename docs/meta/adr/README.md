@@ -52,6 +52,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0037](ADR-0037-rait-legal-priority-owner-policy.md)               | RAIT legal-priority Owner policy (legal validation pending before delivery)             | Accepted | —                                                                                |
 | [ADR-0038](ADR-0038-provisionamento-operacional-offline.md)            | Operational offline provisioning                                                        | Accepted | —                                                                                |
 | [ADR-0039](ADR-0039-platform-latest.md)                                | DEVAI 2.2.0 / Constitution 1.0.2 and STYNX 1.5.3 adoption                               | Accepted | —                                                                                |
+| [ADR-0040](ADR-0040-docs-dependency-audit.md)                          | Documentation dependency audit remediation and bounded braces patch                     | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
