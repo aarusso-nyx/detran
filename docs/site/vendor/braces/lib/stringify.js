@@ -22,7 +22,7 @@ module.exports = (ast, options = {}) => {
 
     if (node.nodes) {
       for (const child of node.nodes) {
-        output += stringify(child, node, depth + 1);
+        output += stringify(child, {}, depth + 1);
       }
     }
     return output;

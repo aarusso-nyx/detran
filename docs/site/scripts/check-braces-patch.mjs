@@ -36,6 +36,22 @@ assert.equal(braces.stringify('docs/{start,dev}'), 'docs/{start,dev}');
 assert.equal(braces.stringify('x'.repeat(1000)), 'x'.repeat(1000));
 assert.equal(braces.stringify('\\{literal\\}'), '{literal}');
 
+// Preserve upstream stringify's default parent for direct AST children.
+assert.equal(
+  braces.stringify(
+    {
+      type: 'brace',
+      invalid: true,
+      nodes: [
+        { type: 'open', value: '{' },
+        { type: 'close', value: '}' },
+      ],
+    },
+    { escapeInvalid: true },
+  ),
+  '{}',
+);
+
 const bounded = (work) =>
   assert.throws(
     work,
