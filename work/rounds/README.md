@@ -2,7 +2,7 @@
 
 **Authority:** Architect (Constitution Article 6).
 
-Governed rounds of this repository (DEVAI 1.5.6). One round per front of the implementation
+Governed rounds of this repository (DEVAI 2.2.0). One round per front of the implementation
 backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022) or of a campaign. Evidence lives in
 `record/proofs/chain.json` (machine-only); this folder holds the human-readable working papers.
 `pnpm verify:state-index` checks this table against `record/proofs/compliance/closures/PC-*.json`:

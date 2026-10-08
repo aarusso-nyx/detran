@@ -1,11 +1,11 @@
 # AGENTS.md — rules for agents working in detran
 
 This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed**
-(`@aarusso-nyx/devai@1.5.6`, Constitution 1.0.0 pinned at
+(`@aarusso-nyx/devai@2.2.0`, Constitution 1.0.2 pinned at
 `.devai/pin/constitution.md`; `.devai/` is the governance root) and built on the
-**STYNX** platform (`@stynx-nyx/*` **1.4.0** from GitHub Packages, Angular 22,
-per ADR-0015 — migrated to 1.3.1 in WP-0 on 2026-09-13 and pinned to 1.4.0 in
-R-0021). The program is
+**STYNX** platform (`@stynx-nyx/*` **1.5.3** from GitHub Packages, Angular 22,
+per ADR-0015 — migrated to 1.3.1 in WP-0, pinned to 1.4.0 in R-0021,
+and updated to 1.5.3 under ADR-0039). The program is
 executed in phases by an orchestrator with worker agents;
 the phase plan and Decisions Ledger live in the orchestrator handoff plan and are
 **binding** — do not re-litigate owner decisions.
@@ -36,7 +36,7 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
 6. **Registry auth:** `export NODE_AUTH_TOKEN="$(gh auth token)"` locally; CI uses
    the `PACKAGES_READ_TOKEN` secret. Never commit tokens.
 7. **Record as you go:** consequential choices get an ADR in `docs/meta/adr/`;
-   evidence records are emitted through the installed DEVAI 1.5.6
+   evidence records are emitted through the installed DEVAI 2.2.0
    `pnpm exec devai evidence record` boundary.
 
 ## Orientation

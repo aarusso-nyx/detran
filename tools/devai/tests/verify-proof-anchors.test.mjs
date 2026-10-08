@@ -795,3 +795,49 @@ test('dado A2 válida quando nova linha R-0020 é declarada então essa linha fa
     },
   );
 });
+
+test('dado historical-gap e generic com a mesma sequência quando verifica então exige namespaces e hash físico distintos', async () => {
+  await withFixture(
+    {
+      baseline: await canonicalBaseline(),
+      lines: [{ roundId: 'R-0001', value: proofLine('R-0001', 1) }],
+      records: [anchor('R-0001', 1)],
+    },
+    async (root) => {
+      const line = JSON.stringify({
+        schemaVersion: '1.0.0',
+        line_type: 'record',
+        round_id: 'R-0001',
+        kind: 'historical-gap',
+        sequence: 1,
+        payload: {},
+      });
+      const dir = path.join(root, 'record/proofs/work/historical-gap');
+      await mkdir(dir, { recursive: true });
+      await writeFile(path.join(dir, 'R-0001.jsonl'), `${line}\n`);
+      const file = path.join(root, 'record/proofs/chain.json');
+      const chain = JSON.parse(await readFile(file, 'utf8'));
+      chain.records.push({
+        ...anchor('R-0001', 1),
+        action: 'evidence.record.historical-gap',
+        proof_path: 'record/proofs/work/historical-gap/R-0001.jsonl',
+        proof_sequence: 1,
+        proof_sha256: sha256(line),
+      });
+      await writeFile(file, JSON.stringify(chain));
+      const result = verify(root);
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /directly anchored: 2/);
+      chain.records[1].proof_sha256 = '0'.repeat(64);
+      await writeFile(file, JSON.stringify(chain));
+      assert.notEqual(verify(root).status, 0);
+      chain.records[1].proof_sha256 = sha256(line);
+      chain.records[1].proof_path = 'record/proofs/work/generic/R-0001.jsonl';
+      await writeFile(file, JSON.stringify(chain));
+      assert.notEqual(verify(root).status, 0);
+      chain.records.pop();
+      await writeFile(file, JSON.stringify(chain));
+      assert.notEqual(verify(root).status, 0);
+    },
+  );
+});
