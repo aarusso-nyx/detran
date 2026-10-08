@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/thresholds.schema.json",
+  "title": "Hard and scored soft gate thresholds",
+  "description": "Hard and scored soft gate thresholds, held canonically in law/policy/thresholds.json and installed for adopters as .devai/config/thresholds.json. coverage, mutation, lint, typecheck and freshness are the original hard thresholds, which ADR-MDL-0004 leaves unchanged; coverage and mutation percentages are never soft thresholds and review confidence is never a rubric score. soft_gate pins the scored soft gate as constants so a candidate cannot lower them: an integer scale 0 to 4, a minimum of 3 for each of the four rubric dimensions compared independently under all-dimensions aggregation, evidence no older than 24 hours with zero future tolerance, an evaluator independent of the working agent, and an observed completed evaluation with no tools or MCP servers. The consumer binds the exact thresholds bytes it applied as thresholds_sha256 in soft-gate evidence; a changed digest or one dimension below its minimum blocks admission even when the verdict is pass.",
+  "schema_version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "coverage",
+    "mutation",
+    "lint",
+    "typecheck",
+    "freshness",
+    "soft_gate"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lines", "branches", "functions", "statements"],
+      "properties": {
+        "lines": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "branches": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "functions": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "statements": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "mutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score_min", "survived_max"],
+      "properties": {
+        "score_min": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "survived_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "lint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_errors", "max_warnings"],
+      "properties": {
+        "max_errors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "max_warnings": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "typecheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_errors"],
+      "properties": {
+        "max_errors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_max_age_hours", "scorecard_failure_max_age_hours"],
+      "properties": {
+        "default_max_age_hours": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 8760
+        },
+        "scorecard_failure_max_age_hours": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 8760
+        }
+      }
+    },
+    "soft_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scale_min",
+        "scale_max",
+        "minimum_scores",
+        "aggregation",
+        "max_age_hours",
+        "future_tolerance_seconds",
+        "require_independent_evaluator",
+        "require_completed_no_tool_mcp"
+      ],
+      "properties": {
+        "scale_min": {
+          "const": 0
+        },
+        "scale_max": {
+          "const": 4
+        },
+        "minimum_scores": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "spec_coherence",
+            "plant_idiomaticity",
+            "test_depth",
+            "traceability_quality"
+          ],
+          "properties": {
+            "spec_coherence": {
+              "const": 3
+            },
+            "plant_idiomaticity": {
+              "const": 3
+            },
+            "test_depth": {
+              "const": 3
+            },
+            "traceability_quality": {
+              "const": 3
+            }
+          }
+        },
+        "aggregation": {
+          "const": "all-dimensions"
+        },
+        "max_age_hours": {
+          "const": 24
+        },
+        "future_tolerance_seconds": {
+          "const": 0
+        },
+        "require_independent_evaluator": {
+          "const": true
+        },
+        "require_completed_no_tool_mcp": {
+          "const": true
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "coverage": {
+        "lines": 70,
+        "branches": 60,
+        "functions": 70,
+        "statements": 70
+      },
+      "mutation": {
+        "score_min": 60,
+        "survived_max": 9007199254740991
+      },
+      "lint": {
+        "max_errors": 0,
+        "max_warnings": 0
+      },
+      "typecheck": {
+        "max_errors": 0
+      },
+      "freshness": {
+        "default_max_age_hours": 168,
+        "scorecard_failure_max_age_hours": 168
+      },
+      "soft_gate": {
+        "scale_min": 0,
+        "scale_max": 4,
+        "minimum_scores": {
+          "spec_coherence": 3,
+          "plant_idiomaticity": 3,
+          "test_depth": 3,
+          "traceability_quality": 3
+        },
+        "aggregation": "all-dimensions",
+        "max_age_hours": 24,
+        "future_tolerance_seconds": 0,
+        "require_independent_evaluator": true,
+        "require_completed_no_tool_mcp": true
+      }
+    }
+  ]
+}

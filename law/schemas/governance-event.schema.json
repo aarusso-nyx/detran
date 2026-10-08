@@ -80,7 +80,8 @@
         "failure_observed",
         "evidence_superseded",
         "round_verdict",
-        "tracking_disabled"
+        "tracking_disabled",
+        "backlog_item_projected"
       ]
     },
     "recorded_at": {
@@ -155,7 +156,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^(?:EV|TXE|RGR|REL)-"
+        "pattern": "^(?:EV|TXE|RGR|REL|BL)-"
       },
       "description": "References to existing hash-chained evidence records. References only; payload bytes are never inlined."
     },

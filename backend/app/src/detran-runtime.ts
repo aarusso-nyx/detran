@@ -907,7 +907,12 @@ export class DetranPersistentPipelineStore
     if (!this.requestContext || !this.requestContextMutator) {
       throw new Error('DETRAN pipeline request context is not bound');
     }
-    if (this.requestContext.hasActiveContext()) return work();
+    const active = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    // STYNX initializes request metadata before guards, without tenant identity.
+    // Only a complete identity can authorize persistence in the active context.
+    if (active?.tenantId && active.actorId) return work();
     const { tenantId, userId } = context;
     if (!tenantId || !userId) {
       throw new Error(
@@ -918,10 +923,10 @@ export class DetranPersistentPipelineStore
     return Promise.resolve(
       this.requestContextMutator.runWithRequestContext(
         {
-          requestId: generateRequestId(),
+          requestId: active?.requestId ?? generateRequestId(),
           tenantId,
           actorId: userId,
-          startedAt: new Date(),
+          startedAt: active?.startedAt ?? new Date(),
         },
         async () => {
           if (!portalPublic)

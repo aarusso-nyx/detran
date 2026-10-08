@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/soft-gate-score.schema.json",
+  "title": "Scored soft gate reply",
+  "schema_version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "verdict", "confidence", "rationale", "scores", "citations"],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "verdict": {
+      "enum": ["pass", "review", "fail", "unknown"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 16384
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spec_coherence", "plant_idiomaticity", "test_depth", "traceability_quality"],
+      "properties": {
+        "spec_coherence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "plant_idiomaticity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "test_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "traceability_quality": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        }
+      }
+    },
+    "citations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spec_coherence", "plant_idiomaticity", "test_depth", "traceability_quality"],
+      "properties": {
+        "spec_coherence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "location", "source_sha256"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)(?!.*[\\u0000-\\u001f])[^/]+(?:/[^/]+)*$"
+              },
+              "location": {
+                "type": "string",
+                "pattern": "^(?:L[1-9][0-9]*(?:-L[1-9][0-9]*)?|#[A-Za-z][A-Za-z0-9_-]*)$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "plant_idiomaticity": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "location", "source_sha256"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)(?!.*[\\u0000-\\u001f])[^/]+(?:/[^/]+)*$"
+              },
+              "location": {
+                "type": "string",
+                "pattern": "^(?:L[1-9][0-9]*(?:-L[1-9][0-9]*)?|#[A-Za-z][A-Za-z0-9_-]*)$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "test_depth": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "location", "source_sha256"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)(?!.*[\\u0000-\\u001f])[^/]+(?:/[^/]+)*$"
+              },
+              "location": {
+                "type": "string",
+                "pattern": "^(?:L[1-9][0-9]*(?:-L[1-9][0-9]*)?|#[A-Za-z][A-Za-z0-9_-]*)$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        },
+        "traceability_quality": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "location", "source_sha256"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)(?!.*[\\u0000-\\u001f])[^/]+(?:/[^/]+)*$"
+              },
+              "location": {
+                "type": "string",
+                "pattern": "^(?:L[1-9][0-9]*(?:-L[1-9][0-9]*)?|#[A-Za-z][A-Za-z0-9_-]*)$"
+              },
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "description": "Separate fully required scored reply, not a widening of review-verdict. Each contained NFC source path and source-byte digest must resolve in the frozen context. Locations resolve to existing lines/anchors; line ranges must be increasing. PASS additionally requires verdict pass; review/fail block admission and unknown or invalid evidence is an evidence error even with four passing scores. Gate checks every dimension independently, actual host completion/isolation and all evidence bindings; confidence/rationale never substitute. Missing observations are an error, not score zero.",
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "verdict": "pass",
+      "confidence": 0.82,
+      "rationale": "Every dimension criterion is observed and cited against the frozen candidate; no contradiction found.",
+      "scores": {
+        "spec_coherence": 3,
+        "plant_idiomaticity": 4,
+        "test_depth": 3,
+        "traceability_quality": 3
+      },
+      "citations": {
+        "spec_coherence": [
+          {
+            "path": "law/adr/ADR-MDL-0004-scored-soft-gate.md",
+            "location": "L41-L47",
+            "source_sha256": "0fc8146d0908e8a4f37e74d4ea3e2c2ed09c60daab71c9a6508848f71eae7d26"
+          }
+        ],
+        "plant_idiomaticity": [
+          {
+            "path": "packages/sensors/src/ci-invariant-gate.ts",
+            "location": "L110-L130",
+            "source_sha256": "c974e17b8e7321ce8c12983de3d0ed4a289821f579bbe0925b0181a4bc8e8d80"
+          }
+        ],
+        "test_depth": [
+          {
+            "path": "packages/schemas/tests/unit/soft-gate-schema.test.ts",
+            "location": "L42-L67",
+            "source_sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ],
+        "traceability_quality": [
+          {
+            "path": "docs/dev/operations/open-issue-closure-campaign/ci-invariant-contract.md",
+            "location": "#threshold-binding",
+            "source_sha256": "cc8321d6375c494d043fdd0260f21bc0ec51dacc9f6abb7f909cdcd3041b78bf"
+          }
+        ]
+      }
+    }
+  ]
+}

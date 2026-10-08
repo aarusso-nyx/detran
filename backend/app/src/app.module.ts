@@ -213,7 +213,15 @@ patchTenantContextInterceptorOrdering();
  */
 function patchTenantContextInterceptorOrdering(): void {
   type Internals = {
-    requestContext: { hasActiveContext(): boolean };
+    requestContext: {
+      hasActiveContext(): boolean;
+      snapshot(): {
+        tenantId?: string;
+        actorId?: string;
+        requestId: string;
+        startedAt: Date;
+      };
+    };
     requestContextMutator: {
       runWithRequestContext<T>(seed: object, work: () => T): T;
     };
@@ -229,7 +237,10 @@ function patchTenantContextInterceptorOrdering(): void {
   if (prototype.intercept.name === 'detranOrderedTenantContext') return;
   const original = prototype.intercept;
   prototype.intercept = function detranOrderedTenantContext(context, next) {
-    if (this.requestContext.hasActiveContext()) {
+    const active = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    if (active?.tenantId && active.actorId) {
       return original.call(this, context, next);
     }
     const request = context.switchToHttp().getRequest<{
@@ -252,8 +263,8 @@ function patchTenantContextInterceptorOrdering(): void {
         let subscription: { unsubscribe(): void } | undefined;
         this.requestContextMutator.runWithRequestContext(
           {
-            requestId: generateRequestId(),
-            startedAt: new Date(),
+            requestId: active?.requestId ?? generateRequestId(),
+            startedAt: active?.startedAt ?? new Date(),
             tenantId,
             actorId,
           },
@@ -274,8 +285,8 @@ function patchTenantContextInterceptorOrdering(): void {
         request.principal?.id ?? request.actor?.id ?? request.user?.id;
       this.requestContextMutator.runWithRequestContext(
         {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
+          requestId: active?.requestId ?? generateRequestId(),
+          startedAt: active?.startedAt ?? new Date(),
           ...(request.tenantId ? { tenantId: request.tenantId } : {}),
           ...(actorId ? { actorId } : {}),
         },
@@ -364,13 +375,16 @@ export class BoatVictimPurposeInterceptor {
             ),
         ).pipe(mergeMap(() => next.handle()));
       });
-    if (this.requestContext.hasActiveContext()) return work();
+    const active = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    if (active?.tenantId && active.actorId) return work();
     return new Observable((subscriber) => {
       let subscription: { unsubscribe(): void } | undefined;
       this.requestContextMutator.runWithRequestContext(
         {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
+          requestId: active?.requestId ?? generateRequestId(),
+          startedAt: active?.startedAt ?? new Date(),
           tenantId: request.tenantId ?? request.headers?.['x-tenant-id'],
           actorId: request.principal?.id ?? request.user?.id,
         },

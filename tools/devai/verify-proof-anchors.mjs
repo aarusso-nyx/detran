@@ -32,8 +32,10 @@ function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex');
 }
 
-function key(roundId, sequence) {
-  return `${roundId}:${sequence}`;
+function key(roundId, sequence, kind = 'generic') {
+  return kind === 'generic'
+    ? `${roundId}:${sequence}`
+    : `${kind}:${roundId}:${sequence}`;
 }
 
 function display(line) {
@@ -137,15 +139,21 @@ async function readProofLines(repositoryRoot) {
           `${relativePath}:${sequence}: round_id ${String(value.round_id)} does not match ${filename}`,
         );
       }
-      if (value.kind !== 'generic') {
+      if (!['generic', 'historical-gap'].includes(value.kind)) {
         fail(
           `${relativePath}:${sequence}: unsupported proof kind ${String(value.kind)}`,
         );
       }
+      if (
+        relativePath !==
+        `record/proofs/work/${value.kind}/${value.round_id}.jsonl`
+      ) {
+        fail(`${relativePath}:${sequence}: proof kind does not match its path`);
+      }
 
       lines.push({
         bytes,
-        key: key(value.round_id, sequence),
+        key: key(value.round_id, sequence, value.kind),
         relativePath,
         roundId: value.round_id,
         sequence,
@@ -223,7 +231,7 @@ async function readAnchors(repositoryRoot, linesByKey) {
       record.action.startsWith('evidence.record.');
 
     if (!notes && !hasProofNotes(record)) {
-      if (record?.action === 'evidence.record.generic') {
+      if (isEvidenceRecord) {
         errors.push(
           `invalid anchor notes in chain record ${String(record.id ?? '(unknown)')}`,
         );
@@ -240,12 +248,27 @@ async function readAnchors(repositoryRoot, linesByKey) {
       continue;
     }
 
-    const anchorKey = key(notes.roundId, notes.sequence);
+    const kind = isEvidenceRecord
+      ? record.action.slice('evidence.record.'.length)
+      : 'generic';
+    const anchorKey = key(notes.roundId, notes.sequence, kind);
     const anchoredLine = linesByKey.get(anchorKey);
     if (!anchoredLine) {
       errors.push(
         `invalid anchor reference ${notes.roundId}:${notes.sequence}`,
       );
+      continue;
+    }
+    // DEVAI 1.9+ uses a separate epoch per kind and binds each new line's
+    // physical bytes. The installed verifier validates historical-gap payloads
+    // and cutoff eligibility in the second half of verify:proof-anchors.
+    if (
+      kind === 'historical-gap' &&
+      (record.proof_path !== anchoredLine.relativePath ||
+        record.proof_sequence !== anchoredLine.sequence ||
+        record.proof_sha256 !== sha256(anchoredLine.bytes))
+    ) {
+      errors.push(`invalid historical-gap anchor for ${display(anchoredLine)}`);
       continue;
     }
 

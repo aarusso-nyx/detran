@@ -111,7 +111,7 @@ describe('CTG-0004 §4.1 — administrative-measures/{id}/start (C-0004-35)', ()
       .post(`/v1/inf/measures/administrative-measures/${MEASURE_RETIDO}/start`)
       .set(headers('field-agent'))
       .send({});
-    expect(response.status).toBe(200);
+    expect(response.status, JSON.stringify(response.body)).toBe(200);
   });
 
   it('C-0004-35 — dado DETRAN_LOCAL_ROLES=traffic-authority quando POST .../start então 403', async () => {
