@@ -11,7 +11,8 @@
   "target_modules": [
     "MOD-arch-frontend-preview-docs",
     "MOD-r33-round",
-    "MOD-kb-open-decisions"
+    "MOD-kb-open-decisions",
+    "MOD-arch-rait-journeys-jw01"
   ],
   "target_substrates": ["F2", "F3"],
   "target_invariants": [],
@@ -25,12 +26,18 @@
   "tags": ["c-0003", "ctg-0001", "preview", "architect"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-d48ff8618decfdc0",
+  "prompt_composition_id": "PC-7c101c8aff4565e3",
   "acceptance_commands": [
     ["test", "-s", "docs/framework/arch/frontend-preview-mode.md"],
     ["test", "-s", "docs/framework/arch/frontend-wiring-pattern.md"],
     ["test", "-s", "work/rounds/R-0033/inventory-rait-web.md"],
     ["test", "-s", "work/rounds/R-0033/issue-frontend-preview.md"],
+    [
+      "grep",
+      "-q",
+      "OD-C3-007",
+      "docs/framework/arch/rait-web-journeys/JW-01-analista.md"
+    ],
     ["pnpm", "docs:kb:check"],
     [
       "pnpm",
@@ -41,7 +48,8 @@
       "docs/framework/arch/frontend-wiring-pattern.md",
       "work/rounds/R-0033/inventory-rait-web.md",
       "work/rounds/R-0033/issue-frontend-preview.md",
-      "docs/meta/knowledge-base/open-decisions-rait.md"
+      "docs/meta/knowledge-base/open-decisions-rait.md",
+      "docs/framework/arch/rait-web-journeys/JW-01-analista.md"
     ]
   ],
   "created_at": "2026-10-15T06:50:00.000Z",
@@ -54,7 +62,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-d48ff8618decfdc0",
+    "prompt_composition_id": "PC-7c101c8aff4565e3",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

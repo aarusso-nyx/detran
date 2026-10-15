@@ -62,3 +62,27 @@ Texto literal, sem correção:
 - Critérios de aceitação C-01…C-10 imutáveis; mudança só por adenda numerada com decisão do Owner.
 - Parada imediata e relato: dado real em fixture; prévia que só funcione com mudança de
   backend/política/pin; timebox de M1 vencido sem shell servível; orçamento da janela a 80 %.
+
+## Adenda B1 — ciclo 3 restrito do prompt-review e OD-C3-007 (Owner, 2026-10-15)
+
+Pergunta do maestro, depois de `reviews/prompt-review-2.json` (Sol 6, FAIL: 11 de 13 achados
+resolvidos, 2 restantes corrigidos pela adenda A2 do `plan.md`): autorizar um terceiro ciclo
+restrito aos 2 itens, ou aceitar A2 sem resubmissão, ou parar. Resposta do Owner, recebida na
+sessão-mãe e transmitida ao maestro, texto literal:
+
+> Owner decision: (a) run prompt-review cycle 3 restricted to the 2 remaining items and proceed
+> to O1/O2 on PASS. OD-C3-007: (a) keep the manifest, rewrite JW-01 steps 9–10.
+
+Efeitos (precedente R-0022 Adenda B1):
+
+- **Ciclo 3 restrito** aos itens 1 (JW-01 passos 9–10) e 10 (prova executável do `ng serve` do
+  portal) do ciclo 2. `PASS` → ondas O1 e O2; `FAIL` ou `REVIEW` → parada e relato ao Owner, sem
+  ciclo 4. Não dispensa PASS.
+- **OD-C3-007 decidida (a):** o manifesto de rotas permanece (`/casos/:id/decisao` só
+  `rait-signing-authority`; `/casos/:id/impedimentos` só `rait-rapporteur`/`rait-chair`); a
+  jornada `docs/framework/arch/rait-web-journeys/JW-01-analista.md` é reescrita nos passos 9–10
+  (o analista não acessa essas rotas; a decisão assinada chega-lhe por outro meio documentado e a
+  declaração de impedimento do analista fica fora da JW-01 até fonte canônica). A reescrita é
+  tarefa de Architect (TASK-0001, lock ampliado pela decisão — adenda A3 do `plan.md`); os SVG
+  gerados dos blocos Mermaid ficam como follow-up (não há gerador no repositório).
+- Permanecem: nenhum push, nenhum PR, nenhuma mudança de código fora dos locks da rodada.

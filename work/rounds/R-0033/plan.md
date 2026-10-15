@@ -174,6 +174,14 @@ vencer sem shell servível, checkpoint, relato ao Owner com a causa (nunca relax
    `work/rounds/R-0033/preview/portal-web/` (TASK-0009; critério de TASK-0007) — sobe o `ng
 serve`, espera `200` em `/` com a raiz de prévia, encerra o processo, sai 0/1.
 
+**A3 — decisão do Owner de 2026-10-15 (`AUTHORIZATION.md` Adenda B1):** ciclo 3 do
+prompt-review autorizado, restrito aos 2 itens do ciclo 2; **OD-C3-007 decidida (a)** — manifesto
+mantido, JW-01 passos 9–10 reescritos. Efeitos nos prompts (v4): TASK-0001 ganha
+`docs/framework/arch/rait-web-journeys/JW-01-analista.md` em "Pode tocar" (só passos 9–10 da
+tabela e do fluxo Mermaid; SVGs como follow-up) e registra OD-C3-007 como **decidida**; para a
+prévia, a JW-01 passa a ter os passos 1–8 (+ prova negativa das duas rotas sob `rait-analyst`);
+C-04 cobre as telas dos passos 1–8 — nada fica `not run` por este motivo.
+
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
 | Critério | Verificação                                                                                                                                                                                                                                           |
@@ -213,17 +221,11 @@ serve`, espera `200` em `/` com a raiz de prévia, encerra o processo, sai 0/1.
 
 ## Bloqueios
 
-- **B1 (2026-10-15, prompt-review):** ciclos 1 e 2 (Sol 6) devolveram FAIL; o ciclo 2 restrito
-  resolveu 11 de 13 achados e os 2 restantes foram corrigidos pela adenda A2 (prompts v3, commit
-  do bootstrap). O método (`prompts/00-maestro.md` §3–5) limita a 2 ciclos e manda parar e relatar
-  ao Owner em FAIL no último; precedente R-0022 Adenda B1 (o Owner autorizou ciclo extra
-  restrito). **Pedido ao Owner:** autorizar o ciclo 3 **restrito aos 2 itens corrigidos** (ou
-  dispensar a nova submissão e aceitar A2 como resolução, a seu critério). Workers **não** foram
-  disparados: nenhum spec, código ou documento de prévia existe ainda.
-- **OD-C3-007 (proposta, a registrar por TASK-0001):** JW-01 passos 9–10 (`/casos/:id/decisao`,
-  `/casos/:id/impedimentos`) × papéis do manifesto. Enquanto pendente, a prévia trata os passos
-  como lacuna bloqueada (A2 item 1). Decidir (a) manter manifesto e reescrever a jornada, ou (b)
-  ampliar `roles` das duas rotas para `rait-analyst` (mudança de código em rodada J).
+- **B1 (2026-10-15, prompt-review) — resolvido pelo Owner (Adenda B1 de `AUTHORIZATION.md`):**
+  ciclos 1 e 2 (Sol 6) FAIL; ciclo 3 **restrito aos 2 itens restantes** autorizado; `FAIL`/`REVIEW`
+  no ciclo 3 → parada e relato, sem ciclo 4.
+- **OD-C3-007 — decidida (a) pelo Owner em 2026-10-15** (registro canônico §C-0003): manifesto
+  mantido; JW-01 passos 9–10 reescritos por TASK-0001 (adenda A3).
 
 OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
 `rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
@@ -241,8 +243,8 @@ OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003)
   (TASK-0003 → TASK-0004 → TASK-0006) → O4a (TASK-0009 ∥ TASK-0008) → O4b (TASK-0007) → sequência
   final OD-C2-005 (merge de `origin/main`, CI local, delivery-review, PR após o merge do #182,
   evidência, `audit observe`, `round close`/`seal`).
-- **Último veredito:** `reviews/prompt-review-2.json` FAIL (2 high, corrigidos em A2; não
-  resubmetido — aguarda autorização do Owner para o ciclo 3 restrito).
+- **Último veredito:** `reviews/prompt-review-2.json` FAIL (2 high, corrigidos em A2); ciclo 3
+  restrito autorizado pelo Owner (Adenda B1) — em execução.
 - **Próximo passo do maestro ao retomar:** com autorização, montar `reviews/prompt-review-3.md`
   restrito aos itens 1 (TASK-0005 l.147) e 10 (TASK-0007.json l.28) do ciclo 2 e rodar
   `tools/orchestra/bridge.sh codex gpt-6-sol …`; com PASS, disparar TASK-0001 (subagente
