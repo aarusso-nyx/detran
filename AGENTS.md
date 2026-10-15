@@ -14,14 +14,14 @@ This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed** (
 
 ## Before you edit: routing table
 
-| If you change…                                | Read first                                                                                                                                   |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| a domain module, DDL, RLS, tenant context     | `docs/meta/adr/ADR-0001…0004`, `DESIGN-DECISIONS.md` entry for that domain                                                                   |
-| anything that touches SENATRAN                | `packages/senatran-adapter` contract, `senatran-mock/`                                                                                       |
-| a frontend app                                | `apps/<app>/README.md`, the STYNX UI package contract it consumes                                                                            |
-| authority, roles, evidence, governance config | the relevant article in `.devai/pin/constitution.md` (`law/constitution.md` is the entrypoint), `.devai/config/project.json`, `law/schemas/` |
-| the build or phase plan                       | `BUILD-PLAN.md` and the binding phase plan                                                                                                   |
-| schemas under `docs/framework/schemas`        | the schema and its consumers (`grep -rl`)                                                                                                    |
+| If you change…                                | Read first                                                                                                                                               |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| a domain module, DDL, RLS, tenant context     | `docs/meta/adr/ADR-0001…0004`, `DESIGN-DECISIONS.md` entry for that domain                                                                               |
+| anything that touches SENATRAN                | `packages/senatran-adapter` contract, `senatran-mock/`                                                                                                   |
+| a frontend app                                | `apps/<app>/README.md`, the STYNX UI package contract it consumes                                                                                        |
+| authority, roles, evidence, governance config | the relevant article in `.devai/pin/constitution.md` (`law/constitution.md` is the entrypoint), `.devai/config/project.json`, `law/adr/`, `law/schemas/` |
+| the build or phase plan                       | `BUILD-PLAN.md` and the binding phase plan                                                                                                               |
+| schemas under `docs/framework/schemas`        | the schema and its consumers (`grep -rl`)                                                                                                                |
 
 Always read the specific file or invariant you intend to edit before editing it. A failed check that names an article is also a read trigger. Layout: `backend/` (app + domains + ddl), `apps/` (frontends only), `packages/` (`api-clients`, `sefaz-adapter`, `senatran-adapter`, `ui` — published as `@detran/*`), `senatran-mock/`, `tools/`, `docs/` (7-section IA per `docs/_ia/categories.json`).
 
