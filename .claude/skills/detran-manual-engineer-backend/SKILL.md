@@ -4,5 +4,8 @@ description: Operating manual for the engineer-backend profile of the RAIT orche
 user-invocable: false
 ---
 
+The operating manual for this role is `docs/meta/agents/engineer-backend.md` and the code style is `CODESTYLE.md`.
+Read both before your first edit if they are not already in context.
+
 @docs/meta/agents/engineer-backend.md
 @CODESTYLE.md

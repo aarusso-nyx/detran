@@ -27,7 +27,7 @@ A failed check that names an article is also a read trigger. Layout: `backend/` 
 
 ## Working
 
-Use the Constitution Article 7 human role your task packet names (Owner for product/business docs; Architect for architecture, contracts, ADRs, security, invariants; Engineer for runtime code, config, dependency wiring; Inspector for tests; Auditor for read-only assessment); Article 6 governs authority by path. State it once only when there is no packet. DEVAI is the governance provider and STYNX the platform substrate; do not introduce a second framework.
+Use the Constitution Article 7 human role your task packet names (Owner for product/business docs; Architect for architecture, contracts, ADRs, security, invariants; Engineer for runtime code, config, dependency wiring; Inspector for tests; Auditor for read-only assessment); Article 6 governs authority by path. Declare the Article 7 role in one line at the start of scoped work (the packet's role when one exists). DEVAI is the governance provider and STYNX the platform substrate; do not introduce a second framework.
 
 Values not found in a canonical document become a question in `docs/meta/knowledge-base/open-decisions-rait.md` when they are domain constants, deadlines, legal rules, state transitions or permissions. Ordinary engineering choices are yours to make and note.
 
