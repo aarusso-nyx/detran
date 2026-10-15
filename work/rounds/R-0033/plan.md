@@ -271,6 +271,20 @@ muda, nenhuma decisão do Owner é reaberta:**
    como meia-noite UTC e formata em America/Manaus; provável em produção; a prévia não converte
    `date` em data-hora, D-06 (2) — follow-up da fase J, backlog por TASK-0008).
 
+**A6 — TASK-0006 (2026-10-15, janela 2):** dois acréscimos ao módulo de prévia, dentro do lock,
+registrados como **D-22** no contrato: inicializador que declara favicon vazio (`data:,`) para o
+navegador não pedir `/favicon.ico` fora de `GET assets/**`; `min-height` no `<p role="status">` da
+faixa. O `axe-report.json` fica em `work/rounds/R-0033/preview/rait-web/captures/axe-report.json`
+(onde `axe.mjs` grava e `check.mjs axe` lê), não na raiz citada pelo prompt — valem os scripts.
+O `head` do `dist-preview.manifest.json` é o commit **pai** do commit de TASK-0006 (o artefato é
+construído da árvore que vira esse commit; `execucao.md` o diz); no fechamento o maestro reconstrói
+a prévia no SHA final e regenera o manifesto antes do `.zip` (D-12). Follow-ups novos para o
+backlog (TASK-0008): rolagem horizontal a 360 px em `table.stynx-table` (`/fila/defesa`) e no
+`rait-deadline-chip` do `rait-inquiry-card`; cabeçalhos da `rait-queue-table` com nomes de campo
+(`features/queue-columns.ts`, OD-R12-028); "Autor" vazio na minuta (`draft.page.ts` não liga
+`authorLabel`); 13 violações axe `moderate` (`landmark-unique` × 4 em `.detran-sidenav > nav`,
+`heading-order` × 9) em kit/`shared/`; "anexar de ofício" sem botão (já OD-R12-027).
+
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
 | Critério | Verificação                                                                                                                                                                                                                                           |

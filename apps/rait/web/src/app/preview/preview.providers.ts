@@ -20,7 +20,13 @@ import {
   withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import type { EnvironmentProviders, Provider } from '@angular/core';
+import {
+  DOCUMENT,
+  inject,
+  provideEnvironmentInitializer,
+  type EnvironmentProviders,
+  type Provider,
+} from '@angular/core';
 import {
   TitleStrategy,
   provideRouter,
@@ -67,6 +73,22 @@ import previewOverlay from './preview.pt-BR.json';
 /** D-13: `{ ...catálogoDoApp, ...preview.pt-BR.json }`. */
 function previewCatalog(): Record<string, string> {
   return { ...appCatalog, ...previewOverlay };
+}
+
+/**
+ * TASK-0006 (contrato §1 item 2, "rede bloqueada"): sem `<link rel="icon">` o navegador pede
+ * `/favicon.ico` por conta própria — requisição fora de `GET assets/**`, que o interceptor não vê,
+ * responde 404 e aparece como `console.error` em toda primeira carga (`capture.mjs` a trata como
+ * violação). A prévia declara um ícone vazio `data:,` (nenhuma requisição) antes do `load`; só
+ * quando o documento não declara ícone algum. `src/index.html` e o bundle `production` não mudam.
+ */
+function declareEmptyFavicon(): void {
+  const document = inject(DOCUMENT);
+  if (document.head.querySelector('link[rel~="icon"]') !== null) return;
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.href = 'data:,';
+  document.head.appendChild(link);
 }
 
 export function providePreviewMode(): Array<Provider | EnvironmentProviders> {
@@ -116,5 +138,6 @@ export function providePreviewMode(): Array<Provider | EnvironmentProviders> {
     { provide: IntegrationClient, useClass: PreviewIntegrationClient },
     { provide: NotificationClient, useClass: PreviewNotificationClient },
     { provide: CollectionClient, useClass: PreviewCollectionClient },
+    provideEnvironmentInitializer(declareEmptyFavicon),
   ];
 }

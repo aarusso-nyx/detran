@@ -87,10 +87,14 @@ function selectValueOf(event: Event): string {
       color: #1a1a1a;
       background: #ffffff;
     }
+    /* TASK-0006: o <p role="status"> vazio (nenhuma ação ainda) mantém uma linha de altura;
+       sem ela a caixa tem altura 0 e os scripts do roteiro (lib.mjs openPreview), que
+       esperam o primeiro [role="status"] visível, nunca concluem a abertura da página. */
     .rait-preview-bar__status {
       margin: 0;
       flex: 1 1 16rem;
       min-width: 0;
+      min-height: 1.5em;
       overflow-wrap: anywhere;
     }
     /* Responsivo básico (TASK-0004): o mesmo ponto de quebra do shell do kit
