@@ -21,7 +21,7 @@ STYNX não é escolhido por esta rodada (OD-C3-005).
 ## Objetivo
 
 Entregar uma **prévia executável, honesta e baseada em fixtures** da superfície classificada pelo
-Owner (OD-C3-002; padrão (a) `rait-web`, jornada JW-01), para revisão UI/UX em paralelo ao
+Owner (OD-C3-002 **decidida: `rait-web`, jornada JW-01**), para revisão UI/UX em paralelo ao
 desenvolvimento, sem expor dado real, sem contornar RLS e sem tocar backend, pin ou política.
 
 Entregáveis:
@@ -137,8 +137,8 @@ vencer sem shell servível, checkpoint, relato ao Owner com a causa (nunca relax
 
 ## Bloqueios
 
-Nenhum para abrir. OD-C3-002 (superfície/jornada) só é necessária em O2 (TASK-0005); até lá vale o
-padrão (a) `rait-web`/JW-01. OD-C3-003 só no fechamento (canal). OD-C3-005 não bloqueia.
+Nenhum. OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
+`rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
 
 ## Retomada
 

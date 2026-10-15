@@ -2,10 +2,10 @@
 
 **Autoridade:** Architect (Constitution Article 6). Revisão 1 de 2026-10-14, redigida a partir da
 diretiva do Owner que **parou** a R-0022 `stynx-sse-tenancy` (C-0002, ação 7c) na mesma data.
-**Status:** **proposta — aguardando autorização do Owner.** Nenhuma rodada desta campanha foi
-aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo
+**Status:** **proposta — decisões OD-C3-001…006 tomadas; aguardando autorização do Owner para
+abrir R-0033.** Nenhuma rodada desta campanha foi aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo
 `prompts/00-maestro.md`. A diretiva está registrada como OD-C3-001; as decisões OD-C3-002…006
-(§10) são pedidas ao Owner, mas **nenhuma delas bloqueia** o inventário e a prévia do shell.
+(§10) foram **decididas pelo Owner em 2026-10-14**, todas pela recomendação (a) do Architect.
 **Governança:** DEVAI 1.5.6, Constituição 1.0.0 (`.devai/pin/constitution.md`), ADR-0022
 (orquestras). Esta campanha **não** cria um segundo sistema de governança e **não** reabre as
 decisões de produto e de segurança já publicadas (ADRs, OD-R22-07/B5, OD-R22-08/B6, OD-R22-66/B16,
@@ -219,17 +219,22 @@ próprio, revisadas. Classificação do Architect (verificação por diff contra
 
 Registro canônico: `docs/meta/knowledge-base/open-decisions-rait.md` §C-0003.
 
-| OD        | Questão                                                                                                                                   | Estado / recomendação do Architect                                                                                                                                                                                                                                                                                      |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OD-C3-001 | Parar a R-0022 e substituir a ordem das fases C/D da C-0002 pela campanha produto-primeiro                                                | **Decidida pelo Owner em 2026-10-14** (§0). Aplicada em A-C2-16 e nesta campanha.                                                                                                                                                                                                                                       |
-| OD-C3-002 | Qual superfície e jornada abrem a prévia e a fase J?                                                                                      | Pendente. Recomendação: **(a) `rait-web`, jornada JW-01 (analista)** — 45 telas L2 já reais, 12 jornadas documentadas com diagramas, fixtures canônicas, 155 specs; (b) `portal-web` (cidadão, PWA) como segunda; (c) `dashboard-web`; (d) `teat-web`. **Não bloqueia** o shell, o contrato de prévia nem o inventário. |
-| OD-C3-003 | Canal de revisão UI/UX                                                                                                                    | Pendente. Recomendação: **(a)** URL local via `pnpm stack:start` (sem backend obrigatório no modo `preview`) + artefato estático `dist/preview/` anexado ao PR da rodada; (b) publicação em `gh-pages` sob `/preview/<sha>/` exige autorização de publicação expressa (fora desta campanha até decisão).                |
-| OD-C3-004 | Reintroduzir na fase H os testes excluídos por B17 (k6, mutation)?                                                                        | Pendente. Recomendação: **(a)** k6 e mutation continuam **não executados e registrados como tal** até o Owner os reabrir em R-0035; (b) reabrir só k6 de fumaça; (c) reabrir ambos.                                                                                                                                     |
-| OD-C3-005 | Linha de base de plataforma: mesclar PR #179 (DEVAI 2.2.0 + STYNX 1.5.3, ADR-0039/0040) antes de R-0033? Numeração dos ADRs do checkpoint | Pendente. Recomendação: **(a)** decidir #179 **antes** de R-0034 e **independentemente** de R-0033 (a prévia não depende do pin); os ADRs do checkpoint são renumerados para os próximos livres quando entrarem (R-0034). R-0033 abre sobre o pin de `main` no dia da abertura.                                         |
-| OD-C3-006 | O PR de registro da parada (R-0022 `work/rounds/`, `scratch/r22-adoption-160`, índices, OD) pode abrir a partir desta worktree?           | Pendente. Recomendação: **(a)** sim, PR só de registro, sem código, revisado pela outra família; (b) incorporar ao PR final de R-0033.                                                                                                                                                                                  |
+| OD        | Questão                                                                                                                                   | Estado / recomendação do Architect                                                                                                                                                                                                                |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OD-C3-001 | Parar a R-0022 e substituir a ordem das fases C/D da C-0002 pela campanha produto-primeiro                                                | **Decidida pelo Owner em 2026-10-14** (§0). Aplicada em A-C2-16 e nesta campanha.                                                                                                                                                                 |
+| OD-C3-002 | Qual superfície e jornada abrem a prévia e a fase J?                                                                                      | **Decidida (a), 2026-10-14:** `rait-web`, jornada JW-01 (analista), abre a prévia e a fase J; seguem `portal-web`, `dashboard-web`, `teat-web`. Base da recomendação: 45 telas L2 reais, 12 jornadas documentadas, fixtures canônicas, 155 specs. |
+| OD-C3-003 | Canal de revisão UI/UX                                                                                                                    | **Decidida (a), 2026-10-14:** URL local (`ng serve --configuration preview` / `pnpm stack:start`) + artefato estático `dist/preview/` anexado ao PR da rodada. Publicação em `gh-pages` permanece sem autorização.                                |
+| OD-C3-004 | Reintroduzir na fase H os testes excluídos por B17 (k6, mutation)?                                                                        | **Decidida (a), 2026-10-14:** k6 e mutation continuam **não executados e registrados como tal** (B17); R-0035 não os reabre sem nova decisão.                                                                                                     |
+| OD-C3-005 | Linha de base de plataforma: mesclar PR #179 (DEVAI 2.2.0 + STYNX 1.5.3, ADR-0039/0040) antes de R-0033? Numeração dos ADRs do checkpoint | **Decidida (a), 2026-10-14:** #179 é decidido **antes** de R-0034 e **independentemente** de R-0033; os ADRs do checkpoint são renumerados para os próximos livres ao entrarem (R-0034). R-0033 abre sobre o pin de `main` no dia da abertura.    |
+| OD-C3-006 | O PR de registro da parada (R-0022 `work/rounds/`, `scratch/r22-adoption-160`, índices, OD) pode abrir a partir desta worktree?           | **Decidida (a), 2026-10-14:** PR só de registro da parada, sem código, a partir da worktree de handoff, revisado pela outra família (§11 passo 0).                                                                                                |
 
 ## 11. Primeira ação executável (depois da autorização)
 
+0. **PR de registro da parada (OD-C3-006 = a):** a partir da worktree de handoff, acrescentar ao
+   commit `18b26b4c` os arquivos de registro do checkpoint (`work/rounds/R-0022/` e
+   `scratch/r22-adoption-160/` de `codex/detran-r22-adoption-160` @ `c22ea63a`, sem código), rodar
+   `pnpm check` local, abrir **um** PR contra `main` sem código, revisão pela outra família, merge só
+   com CI verde. A abertura do PR ainda precisa da autorização de push desta worktree.
 1. `git fetch -q origin --prune && git rev-parse origin/main` — se diferente de `897f0199…`,
    reler §1 e §8 (PR #179 pode ter mesclado: pin 1.5.3 e ADR-0039/0040 em `main`).
 2. Worktree nova `detran-worktrees/frontend-preview` a partir de `origin/main`, branch
@@ -237,7 +242,7 @@ Registro canônico: `docs/meta/knowledge-base/open-decisions-rait.md` §C-0003.
    `pnpm install --frozen-lockfile`.
 3. Bootstrap de R-0033 pelo `prompts/00-maestro.md`: `AUTHORIZATION.md`, `tasks/`, prompt-review
    único, O1 (TASK-0001 inventário/contrato de prévia; TASK-0002 specs do modo prévia).
-4. Em paralelo, o Owner responde OD-C3-002…006; enquanto não responde, a O1 e o shell seguem.
+4. OD-C3-002…006 já decididas (§10); a O1 e o shell seguem sem espera.
 
 ## 12. Fora de escopo (registrado)
 
