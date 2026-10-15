@@ -1,0 +1,39 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "resolved": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0008.md",
+      "line": 71,
+      "claim": "A correção mantém o Engineer autorizado a inverter um teste. O Art. 10 da Constituição proíbe o Engineer de editar testes; o Art. 9 exige emenda constitucional para alterar essa separação. No ciclo 1, a revisão tratou essa exceção como autorizada e apontou apenas as demais edições permitidas.",
+      "fix": "Atribuir a inversão do caso bearer a um Inspector, após a implementação, com dependência e aceitação explícitas.",
+      "refers_to_cycle1": 2
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0022/prompts/TASK-0005.md",
+      "line": 104,
+      "claim": "A nova seção permite retirar um caso com a marca «mecanismo interno sem comportamento observável», sem caso C-01-nn correspondente. A adenda A2.1 exige mapear cada caso retirado a um C-01-nn.",
+      "fix": "Exigir o mapeamento C-01-nn para toda retirada, como determina A2.1.",
+      "refers_to_cycle1": null
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0022/prompts/TASK-0019.md",
+      "line": 75,
+      "claim": "A nova TASK-0019 só permite remoções e deve terminar antes da migração web, mas os stubs propostos para retirada também são importados por specs de fachadas e páginas e por facade.stub.ts. Retirá-los quebra os testes e o typecheck exigidos na própria TASK-0019; mantê-los deixa pendente a retirada dos dublês exigida em TASK-0008.",
+      "fix": "Prever uma tarefa de Inspector, na ordem adequada, para adaptar os testes consumidores antes de retirar os stubs; preservar os testes de fachadas e páginas.",
+      "refers_to_cycle1": null
+    }
+  ],
+  "notes": [
+    "Revisão somente leitura, no papel Auditor. Os 17 achados específicos do ciclo 1 receberam as correções descritas; os achados acima decorrem do texto introduzido ou mantido por essas correções."
+  ]
+}
