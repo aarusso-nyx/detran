@@ -232,29 +232,52 @@ OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003)
 
 ## Retomada
 
-**Checkpoint 2026-10-15 (janela 1, maestro Fable 5.1), HEAD = commit do bootstrap v3.**
+**Checkpoint 2026-10-15 ~10:20Z (janela 1, maestro Fable 5.1) — fim da onda O2; HEAD = commit
+deste checkpoint sobre `5ad1528b`.** Branch `claude/frontend-preview-5281e3` (empilhada sobre
+`claude/detran-r22-handoff-03f872`, PR #182); sem push, sem PR.
 
-- **Concluído:** §1 bootstrap (AUTHORIZATION.md, tasks TASK-0001…0009, budget.json,
-  compositions.json, §Concorrência, §Leitura M1…M5); §3–§4 prompts v3; §5 prompt-review ciclos 1
-  e 2 (FAIL → correções A1/A2); `playwright-core@1.63.0` como devDependency de `apps/rait/web`
-  (pré-condição de TASK-0005; `pnpm-lock.yaml` atualizado, instalação sem download).
-- **Em curso:** nenhuma tarefa de worker.
-- **Pendente:** PASS do prompt-review (B1) → O1 (TASK-0001) → O2 (TASK-0002 ∥ TASK-0005) → O3
-  (TASK-0003 → TASK-0004 → TASK-0006) → O4a (TASK-0009 ∥ TASK-0008) → O4b (TASK-0007) → sequência
-  final OD-C2-005 (merge de `origin/main`, CI local, delivery-review, PR após o merge do #182,
-  evidência, `audit observe`, `round close`/`seal`).
-- **Último veredito:** `reviews/prompt-review-2.json` FAIL (2 high, corrigidos em A2); ciclo 3
-  restrito autorizado pelo Owner (Adenda B1) — em execução.
-- **Próximo passo do maestro ao retomar:** com autorização, montar `reviews/prompt-review-3.md`
-  restrito aos itens 1 (TASK-0005 l.147) e 10 (TASK-0007.json l.28) do ciclo 2 e rodar
-  `tools/orchestra/bridge.sh codex gpt-6-sol …`; com PASS, disparar TASK-0001 (subagente
-  `architect-blueprint`, `claude-opus-5-5`, alto) e seguir as ondas; registrar OD-C3-007 na
-  tabela §C-0003 assim que TASK-0001 a redigir.
+| Tarefa                            | Estado        | Commit                     | Aceitação                                                            |
+| --------------------------------- | ------------- | -------------------------- | -------------------------------------------------------------------- |
+| bootstrap                         | concluído     | `ca2ccbe8`                 | tasks validadas por `devai check --only schema` (M5)                 |
+| prompts                           | concluído     | `d4f38d26` → v4 `1d49aec5` | prompt-review 1 FAIL (13) → 2 FAIL (2) → **3 PASS** (`1ee99cf5`)     |
+| deps                              | concluído     | `75a87d91`                 | `playwright-core@1.63.0` em `apps/rait/web` (pré-condição TASK-0005) |
+| TASK-0001                         | **completed** | `e9daaddf`                 | 7/7 PASS (`reports/TASK-0001.md`)                                    |
+| TASK-0002                         | **completed** | `629e1695`                 | 11/11 PASS; specs vermelhos só por módulo ausente (M3)               |
+| TASK-0005                         | **completed** | `5ad1528b`                 | 14/14 PASS; execução real fica para TASK-0006                        |
+| TASK-0003                         | queued        | —                          | **próxima** (O3, marco M1) — ver OD-C3-008 abaixo                    |
+| TASK-0004, 0006, 0009, 0008, 0007 | queued        | —                          | O3 → O4a → O4b                                                       |
+
+- **Último veredito do reviewer:** `reviews/prompt-review-3.json` PASS (Sol 6, ciclo restrito
+  autorizado pelo Owner, Adenda B1). Nenhuma delivery-review ainda (OD-C2-005: uma só, no fim).
+- **Por que parou aqui:** orçamento da família Claude ≈ 66 % do limite da janela
+  (`budget.json`; TASK-0003, grande, cruzaria o limiar de 80 % a meio) **e** OD-C3-008 (proposta
+  por TASK-0001) pede decisão do Owner antes de TASK-0003: (a) PR próprio de fixture transcrevendo
+  da seed `20-fixtures-rait.sql` para `rait-fixtures.json` as coleções/campos ausentes (partes,
+  documentos, admissibilidade, diligências, eventos; `RaitCase.circuit`, `protocolled_at`…), ou
+  (b) seguir com a JSON atual (26 telas parciais, 5 vazias em `loaded`; `source_pending`/D-06/D-07).
+  O contrato já funciona sob (b); (a) muda a qualidade da prévia da JW-01, não o contrato.
+- **Próximo passo do maestro ao retomar (janela 2):** registrar a decisão OD-C3-008 em
+  `AUTHORIZATION.md` (adenda) e no registro canônico; se (a), aguardar o merge do PR de fixture e
+  integrar `origin/main` por merge; disparar **TASK-0003** (`engineer-frontend`, `claude-opus-5-5`,
+  alto; `prompts/TASK-0003.md`, PC em `compositions.json`) e, verde, TASK-0004 → TASK-0006 (M2);
+  depois O4a (TASK-0009 ∥ TASK-0008, para o qual o maestro gera `commits.md`) → O4b (TASK-0007);
+  sequência final OD-C2-005 (merge de `origin/main`, CI local completo, delivery-review única,
+  PR após o merge do #182, `preview-R-0033.zip` anexado ao PR, evidência, `audit observe`,
+  `round close`/`seal`).
+- **Avisos para TASK-0003 (dos relatórios de O2):** D-01 do contrato (navegação de documento via
+  `PREVIEW_DOCUMENT_NAVIGATE`) prevalece sobre o `queryParamsHandling: 'merge'` do layout do
+  prompt — os specs seguem o contrato; L0 é placeholder com `data-screen` e
+  `rait.states.unavailable_in_version`; `openPreview` dos scripts espera `[data-detran-preview-mark]`
+  e depois `[data-screen]`/`h1`/`[role=alert]`/`[role=status]`; `preview-production-gate.spec.ts`
+  importa `PREVIEW_CATALOG_CONTRACT` do helper; D-12 fixa a ordem dos builds (`preview` antes de
+  `production`, que apaga `dist/`); P-24 (`check.mjs resolve` provando as URLs do inventário)
+  não foi implementado por TASK-0005 — decidir se entra em TASK-0006 ou vira adenda.
 - **Follow-ups fora do lock (não executar nesta rodada):** `tools/devai/verify-round-tasks.mjs`
-  ignora R > 20 (R-0022 e R-0033 nunca são validadas por `pnpm verify:round-tasks`);
-  `apps/{dashboard,teat}/web/angular.json` — conferir se o `serve` tem o mesmo defeito de
-  `buildTarget` do rait-web; diretório `graft/` (cache de ferramenta, não versionado) apareceu na
-  worktree durante a sessão — fora do escopo, não adicionado.
+  ignora R > 20; `apps/{dashboard,teat}/web/angular.json` `serve` (conferir o defeito de
+  `buildTarget`); SVGs `ARCH-RAIT-WEB-j01-*.svg` divergem do Mermaid reescrito (sem gerador);
+  `rait-document:attach-official` sem botão para nenhum papel (OD-R12-027/R-14); fixture JSON sem
+  diligência (`answer`/`extend` não acionáveis); diretório `graft/` (cache de ferramenta) não
+  versionado.
 - **Estimativa revisada da fase J:** ainda não produzida (TASK-0008).
 
 ## Leitura
