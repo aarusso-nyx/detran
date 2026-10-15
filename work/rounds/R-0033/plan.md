@@ -227,6 +227,11 @@ C-04 cobre as telas dos passos 1–8 — nada fica `not run` por este motivo.
 - **OD-C3-007 — decidida (a) pelo Owner em 2026-10-15** (registro canônico §C-0003): manifesto
   mantido; JW-01 passos 9–10 reescritos por TASK-0001 (adenda A3).
 
+- **OD-C3-008 — decidida (a) pelo Owner em 2026-10-15** (`AUTHORIZATION.md` Adenda B2): PR
+  próprio de paridade da fixture (`fix/rait-fixtures-json-parity`, cortado de `origin/main`),
+  antes de TASK-0003; push/PR autorizados só para esse branch. TASK-0003 começa depois do merge e
+  da integração de `origin/main` por merge.
+
 OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
 `rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
 
@@ -256,9 +261,8 @@ deste checkpoint sobre `5ad1528b`.** Branch `claude/frontend-preview-5281e3` (em
   documentos, admissibilidade, diligências, eventos; `RaitCase.circuit`, `protocolled_at`…), ou
   (b) seguir com a JSON atual (26 telas parciais, 5 vazias em `loaded`; `source_pending`/D-06/D-07).
   O contrato já funciona sob (b); (a) muda a qualidade da prévia da JW-01, não o contrato.
-- **Próximo passo do maestro ao retomar (janela 2):** registrar a decisão OD-C3-008 em
-  `AUTHORIZATION.md` (adenda) e no registro canônico; se (a), aguardar o merge do PR de fixture e
-  integrar `origin/main` por merge; disparar **TASK-0003** (`engineer-frontend`, `claude-opus-5-5`,
+- **Próximo passo do maestro ao retomar (janela 2):** OD-C3-008 decidida (a) e registrada
+  (Adenda B2); aguardar o merge do PR de paridade da fixture e integrar `origin/main` por merge; disparar **TASK-0003** (`engineer-frontend`, `claude-opus-5-5`,
   alto; `prompts/TASK-0003.md`, PC em `compositions.json`) e, verde, TASK-0004 → TASK-0006 (M2);
   depois O4a (TASK-0009 ∥ TASK-0008, para o qual o maestro gera `commits.md`) → O4b (TASK-0007);
   sequência final OD-C2-005 (merge de `origin/main`, CI local completo, delivery-review única,

@@ -86,3 +86,28 @@ Efeitos (precedente R-0022 Adenda B1):
   tarefa de Architect (TASK-0001, lock ampliado pela decisão — adenda A3 do `plan.md`); os SVG
   gerados dos blocos Mermaid ficam como follow-up (não há gerador no repositório).
 - Permanecem: nenhum push, nenhum PR, nenhuma mudança de código fora dos locks da rodada.
+
+## Adenda B2 — OD-C3-008 decidida (a): PR próprio de paridade da fixture (Owner, 2026-10-15)
+
+Pergunta do maestro, no relatório da janela 1 (OD-C3-008 proposta por TASK-0001): a fixture
+`docs/framework/arch/fixtures/rait-fixtures.json` não traz coleções nem campos obrigatórios que a
+seed `backend/database/seed/20-fixtures-rait.sql` tem. Resposta do Owner, recebida na sessão-mãe
+e transmitida ao maestro, texto literal:
+
+> Owner decision OD-C3-008: (a) open a separate fixture PR transcribing the missing collections
+> and fields from seed 20-fixtures-rait.sql into rait-fixtures.json with the same ids, before
+> TASK-0003.
+
+Efeitos e leitura do maestro (instrução de aplicação recebida junto da decisão):
+
+- A mudança de fixture é **PR próprio contra `main`**, não empilhado na R-0033: branch cortado de
+  `origin/main` (`51ec27f0` no momento da decisão), transcrevendo da seed para a JSON **exatamente**
+  as coleções e os campos que `work/rounds/R-0033/inventory-rait-web.md` lista como ausentes, com
+  os mesmos ids, nada inventado (`source_pending` onde a seed não tem valor), `rait-fixtures.md`
+  atualizado e os specs que consomem a fixture mantidos verdes. Mudança de contrato de teste
+  (`rait-fixtures.md` §Regras): autoria/verificação por Inspector; revisão pela outra família
+  (Codex) antes do merge.
+- **Push e PR autorizados só para o branch da fixture.** O branch da R-0033
+  (`claude/frontend-preview-5281e3`) continua sem push e sem PR.
+- TASK-0003 só começa depois do merge desse PR e da integração de `origin/main` por merge na
+  branch da rodada.
