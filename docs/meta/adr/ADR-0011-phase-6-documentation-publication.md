@@ -45,27 +45,11 @@ would be an authority error.
    CI job installs the locked site dependencies, runs the site type/build/link
    gate, runs the dependency security gate, and then runs DEVAI doctor as a
    blocking check. CI never publishes documentation.
-6. Transitive Docusaurus dependencies affected by advisories that upstream has
-   not fixed in a published release are closed by vendoring a patched copy of
-   the exact published package surface under `docs/site/vendor/`, bound through
-   `file:` dependencies and `overrides`. A guard script verifies the patched
-   identity, the reviewed fix source and the runtime behaviour before every
-   documentation audit (`security:check`). Each vendored patch is dropped once
-   upstream publishes a release carrying the fix or the advisory is withdrawn
-   from the GitHub Advisory Database. Two patches are in force:
-   - `image-size@2.0.3-devai.1` (`docs/site/vendor/image-size`, guard
-     `docs/site/scripts/check-image-size-patch.mjs`) reuses the exact
-     DEVAI-v1.4.5-reviewed patch (source tree
-     `6fdece3d46e6a3677bd00da9f49cb2e5adf8a73c`) against the ICNS/JXL/HEIF
-     denial-of-service advisories.
-   - `braces@3.0.3-devai.1` (`docs/site/vendor/braces`, guard
-     `docs/site/scripts/check-braces-patch.mjs`; **amended 2026-10-15**, commit
-     `9fa230e8`, aarusso-nyx/detran#181) vendors the published `braces` 3.0.3
-     surface with a parser nesting-depth guard (`MAX_DEPTH` 100, controlled
-     `SyntaxError`, mirroring micromatch/braces#89) for GHSA-vfj7-8cjw-p6xm /
-     CVE-2026-93687, because upstream disputes the advisory and has published no
-     fixed release. Provenance is recorded in
-     `docs/site/vendor/braces/DEVAI-PATCH.md`.
+6. The transitive `image-size` release available to Docusaurus is affected by
+   ICNS/JXL/HEIF denial-of-service advisories. DETRAN reuses the exact
+   DEVAI-v1.4.5-reviewed `image-size@2.0.3-devai.1` patch (source tree
+   `6fdece3d46e6a3677bd00da9f49cb2e5adf8a73c`) and verifies its required fixes
+   before every documentation audit.
 7. The publication identity is `https://aarusso-nyx.github.io/detran/` from the
    `gh-pages` branch. First and subsequent deployments are explicit local effects
    from an accepted exact tree; no Actions workflow receives publish authority.
