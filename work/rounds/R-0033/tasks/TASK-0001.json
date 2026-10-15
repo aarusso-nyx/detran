@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0033",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Inventário rota × fixture × estado do rait-web, contrato do modo prévia e padrão de ligação v0 (CTG-0001)",
+  "description": "Inventariar as 74 entradas do manifesto de rotas do rait-web contra as fixtures canônicas e os cinco estados representativos, publicar docs/framework/arch/frontend-preview-mode.md (contrato normativo do modo prévia, com o layout fixo de src/app/preview/**), docs/framework/arch/frontend-wiring-pattern.md v0 (costuras que as rodadas J usam, descrevendo o código de main), redigir a issue da frente e registrar ODs novas em open-decisions-rait.md §C-0003. Resumo das demais superfícies. Conforme plan.md §Contrato e prompts/TASK-0001.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-arch-frontend-preview-docs",
+    "MOD-r33-round",
+    "MOD-kb-open-decisions"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["c-0003", "ctg-0001", "preview", "architect"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["test", "-s", "docs/framework/arch/frontend-preview-mode.md"],
+    ["test", "-s", "docs/framework/arch/frontend-wiring-pattern.md"],
+    ["test", "-s", "work/rounds/R-0033/inventory-rait-web.md"],
+    ["test", "-s", "work/rounds/R-0033/issue-frontend-preview.md"],
+    ["pnpm", "docs:kb:check"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "docs/framework/arch/frontend-preview-mode.md",
+      "docs/framework/arch/frontend-wiring-pattern.md",
+      "work/rounds/R-0033/inventory-rait-web.md",
+      "work/rounds/R-0033/issue-frontend-preview.md",
+      "docs/meta/knowledge-base/open-decisions-rait.md"
+    ]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

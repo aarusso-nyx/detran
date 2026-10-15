@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0033",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Configuração preview do rait-web: main.preview.ts, interceptor, sessão sintética, seletor de estado/papel, adapters de fixture (CTG-0002)",
+  "description": "Implementar o layout fixo de frontend-preview-mode.md em apps/rait/web: configuração de build/serve preview em angular.json (corrigindo o buildTarget de serve para rait-web), src/main.preview.ts e src/index.preview.html, src/app/preview/** (interceptor de bloqueio de rede, PreviewStateService, sessão sintética com os 13 papéis, relógio das fixtures, transporte SSE de prévia, carregador de fixtures por assets/, adapters para os 8 clientes de data/api, barra de prévia com marca e seletores, catálogo de sobreposição) até os specs de TASK-0002 passarem; production e development sem módulo de prévia. Conforme prompts/TASK-0003.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-web-preview-src", "MOD-rait-web-angular-json"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["c-0003", "ctg-0002", "preview", "engineer"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"],
+    ["pnpm", "--filter", "@detran/rait-web", "build"],
+    [
+      "node",
+      "-e",
+      "const {execFileSync}=require('node:child_process');try{execFileSync('grep',['-rl','DETRAN_PREVIEW_MARK','apps/rait/web/dist/browser'],{stdio:'pipe'});console.error('DETRAN_PREVIEW_MARK presente no bundle production');process.exit(1)}catch(e){if(e.status===1){console.log('production sem marca de prévia: OK');process.exit(0)}throw e}"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/rait-web",
+      "exec",
+      "ng",
+      "build",
+      "--configuration",
+      "preview"
+    ],
+    ["test", "-s", "apps/rait/web/dist/preview/index.html"],
+    ["grep", "-rlq", "DETRAN_PREVIEW_MARK", "apps/rait/web/dist/preview"]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

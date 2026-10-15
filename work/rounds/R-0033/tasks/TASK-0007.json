@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0033",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Shell e estados representativos do portal-web sob preview (CTG-0004, primeira das demais superfícies)",
+  "description": "Aplicar o contrato frontend-preview-mode.md ao apps/portal/web (próxima superfície na ordem do Owner, OD-C3-002): configuração preview, main.preview.ts, interceptor, sessão sintética, adapters sobre as fixtures existentes de src/testing/http-fixtures*.ts, barra de prévia e estados representativos nas rotas do manifesto; dashboard-web e teat-web ficam para tarefas irmãs se o orçamento permitir. Conforme prompts/TASK-0007.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-web-preview-src",
+    "MOD-portal-web-angular-json"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["c-0003", "ctg-0004", "preview", "engineer"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "lint"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "--filter", "@detran/portal-web", "build"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/portal-web",
+      "exec",
+      "ng",
+      "build",
+      "--configuration",
+      "preview"
+    ],
+    ["grep", "-rlq", "DETRAN_PREVIEW_MARK", "apps/portal/web/dist/preview"]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

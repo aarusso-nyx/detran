@@ -1,13 +1,17 @@
 # R-0033 — frente `frontend-preview` (fase P da C-0003 — prévia honesta de frontend baseada em fixtures)
 
-**Status:** **proposta — C-0003 rev. 1, aguardando autorização do Owner.** Planejada em 2026-10-14
-pelo Architect (`work/campaigns/C-0003-produto-primeiro.md` §4, fase P). Maestro **Sol 6** (Codex
-CLI), workers da escada Codex (Sol 6 / Terra / Luna vigentes, `model-ladder.md`), reviewer **Opus
-5.5** pela ponte `tools/orchestra/bridge.sh claude` (OD-C2-003; ids de CLI confirmados no
-bootstrap). Worktree `/Volumes/Thiamat II/stech/detran-worktrees/frontend-preview`, branch
-`orchestra/frontend-preview`, base **`origin/main`** (sem abertura empilhada). Sem issue: TASK-0001
-redige a issue da frente. `AUTHORIZATION.md`, `tasks/` e `compositions.json` só nascem no bootstrap,
-depois da autorização.
+**Status:** **ativa — autorizada pelo Owner em 2026-10-15** (`AUTHORIZATION.md`: texto literal
+"R-0003 authorized. proceed ith ir work while wait for ci", lido como R-0033). Planejada em
+2026-10-14 pelo Architect (`work/campaigns/C-0003-produto-primeiro.md` §4, fase P). **Execução
+(desvio registrado em `AUTHORIZATION.md` §Desvios):** maestro **Fable 5.1** (Claude Code), workers
+da família Claude (`claude-opus-5-5` / `claude-sonnet-5`, `model-ladder.md`), reviewer **Sol 6**
+(`gpt-6-sol`, Codex CLI 0.162.1) pela ponte `tools/orchestra/bridge.sh codex` (OD-C2-003; ids
+confirmados no bootstrap com `codex --help`/`~/.codex/config.toml` e `claude --version` 2.1.292).
+Worktree `.claude/worktrees/frontend-preview-5281e3`, branch `claude/frontend-preview-5281e3`,
+base **`claude/detran-r22-handoff-03f872`** (PR #182, abertura empilhada — o PR da rodada só abre
+depois do merge do #182). Sem issue: TASK-0001 redige a issue da frente em
+`work/rounds/R-0033/issue-frontend-preview.md` (não abre issue no GitHub nesta janela).
+`AUTHORIZATION.md`, `tasks/`, `budget.json` e `compositions.json` criados no bootstrap de 2026-10-15.
 **Concorrência:** nenhum upstream. Locks exclusivos em `apps/<superfície>/` (configuração
 `preview`, `src/main.preview.ts`, `src/app/preview/`), `docs/framework/arch/frontend-preview-mode.md`,
 `docs/framework/arch/frontend-wiring-pattern.md` (v0) e `work/rounds/R-0033/`. Lock partilhado
@@ -15,6 +19,21 @@ depois da autorização.
 `tools/stynx-version.json`, `.github/workflows/`, `.devai/`, `record/`, `law/register`, `policy.ts`.
 Se o PR #179 mesclar durante a rodada, integrar `origin/main` por merge e rebuildar; o pin do
 STYNX não é escolhido por esta rodada (OD-C3-005).
+**Estado verificado no bootstrap (2026-10-15 06:40Z):** `origin/main` = `897f01991a17e20253721ecf7c8592f2123a37f0`
+(merge do PR #177, igual ao esperado por C-0003 §1). PR #179 (`codex/platform-latest`, DEVAI 2.2.0 +
+STYNX 1.5.3) **aberto**, `MERGEABLE`, CI verde — não mesclado; o pin de `main` continua 1.4.0 e esta
+rodada não o altera (OD-C3-005). PR #182 (`claude/detran-r22-handoff-03f872`, registro da parada
+da R-0022) **aberto**, CI em curso (`foundation`/`backend-kernel` em execução, demais verdes).
+Nenhum branch `orchestra/*` nem worktree `detran-worktrees/frontend-preview` existente. Instalação
+`pnpm install --frozen-lockfile` sem alteração do lockfile; `pnpm --filter @detran/ui build` e
+`pnpm --filter @detran/rait-web build` verdes (bundle completo em 8,2 s); `pnpm devai:doctor`
+`ok: true` (DEVAI 1.5.6; nota não bloqueante: constituição instalada 1.0.1 à frente do pin 1.0.0).
+**Defeito pré-existente observado (não é da rodada):** `apps/rait/web/angular.json` `serve` aponta
+`buildTarget` para `portal-web:build:*` — `ng serve` do rait-web nunca funcionou; a configuração
+`preview` de TASK-0003 corrige o alvo (`rait-web:build:*`) porque C-01 exige `ng serve
+--configuration preview`. **Quirk local:** `pnpm test:stack` falha nesta máquina por espaço no
+caminho (`%20`, corrigido em PR #181); não é defeito desta rodada e `pnpm check` completo só é
+exigido no fechamento.
 **Janelas previstas:** 2 (1 = bootstrap + prompt-review + O1/O2 — marco M1, timebox 1–2 dias úteis;
 1 = O3/O4 + fechamento — marco M2). Recalibradas no bootstrap.
 
@@ -152,3 +171,61 @@ Nenhum. OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico �
 `apps/teat/web/src/main.homologation.ts`; `work/rounds/R-0030/availability-manifest.schema.md`
 (para **não** alterar manifestos de disponibilidade); `work/rounds/R-0025/plan.md` e
 `command-gap-analysis.md` (lacunas que a prévia deve mostrar como "não funcional", não esconder).
+
+**Lido pelo maestro no bootstrap (Architect, 2026-10-15, HEAD `101753a4`):** `AGENTS.md`;
+`work/campaigns/C-0003-produto-primeiro.md` (inteira); `docs/meta/agents/orchestra/README.md`,
+`maestro-prompt.template.md`, `worker-prompt.template.md`, `reviewer-prompt.template.md`,
+`task.template.json`, `model-ladder.md`; `work/rounds/R-0022/AUTHORIZATION.md`, `tasks/TASK-0001.json`,
+`compositions.json`, `budget.json` (modelos de bootstrap); `law/schemas/task.schema.json`;
+`tools/devai/verify-round-tasks.mjs`; `tools/orchestra/bridge.sh`; `docs/framework/arch/rait-web-frontend.md`
+§1, §4, §10, §11, §13, §14; `rait-web-journeys/README.md`, `JW-01-analista.md`; `rait-fixtures.md`
+§1–§7 e a forma de `fixtures/rait-fixtures.json` (33 coleções); `detran-ui-guide.md` §1–§2;
+`work/rounds/R-0025/command-gap-analysis.md` §3–§4; `apps/teat/web/src/main.homologation.ts`,
+`shared/homologation-http.interceptor.ts`, `angular.json` (configuração `homologation`);
+`apps/rait/web/{angular.json,package.json,README.md,vitest.config.ts,eslint.config.js,eslint/local-rules.js}`,
+`src/{main.ts,index.html,test-setup.ts}`, `public/runtime-config.js`, `src/app/{app.routes.ts,
+app.route-manifest.ts (cabeçalho), app.scaffold.spec.ts}`, `core/{manifest-routes,session.facade,
+runtime-config,rait-shell.component,stream-transport,sse.service,error-codes,i18n-fallback}.ts`,
+`core/guards/{auth,role}.guard.ts`, `data/api/{rait-http,case.client}.ts`, `data/facades/{read-store,
+command,bundles}.ts`, `shared/page-state.component.ts`, `features/{page-support.ts,static-gates.spec.ts,
+painel/pages/resume-tray.page.ts}`, `src/testing/{stynx-session.stub,session.stub,facade.stub,axe.spec-helper,
+a11y-state.spec-helper,kb}.ts`, `src/app/i18n/{i18n.spec.ts (asserções de contagem),rait.pt-BR.json (rait.states.*, rait.shell.*)}`;
+`docs/meta/knowledge-base/open-decisions-rait.md` §C-0003; `work/rounds/README.md`;
+`docs/meta/agents/{engineer-frontend,inspector-tests,architect-blueprint}.md`; `.gitignore`
+(`reports/` com exceção `work/rounds/*/reports/`). **Não lido** (fica para os workers, com listas
+fechadas): `rait-web-frontend.md` §5–§9 e §12, `rait-error-catalog.md`, `rait-web-journeys/JW-02…12`,
+`portal-frontends.md`, `teat-web-contract.md`, `R-0030/availability-manifest.schema.md` (só o
+princípio "não alterar manifestos" foi levado aos prompts — nota: `docs/framework/arch/availability/`
+ainda não existe em `main`).
+
+**Decisões do maestro no bootstrap (Architect; derivadas das leituras acima, não de valores novos):**
+
+- **M1 — i18n da prévia por sobreposição.** `apps/rait/web/src/app/app.scaffold.spec.ts` (C-2A-60)
+  fixa em 14 os namespaces `rait.*` de `parameter-catalogue.md` e `src/app/i18n/i18n.spec.ts` fixa
+  contagens do catálogo semente; logo a prévia **não** cria namespace novo nem edita
+  `rait.pt-BR.json`/`parameter-catalogue.md`. Os textos da prévia vivem em
+  `src/app/preview/preview.pt-BR.json`, sob namespaces já declarados (`rait.states.preview_*`,
+  `rait.shell.preview_*`), e são sobrepostos ao catálogo do app em `main.preview.ts`
+  (`loadCatalog` = catálogo do app + sobreposição). Nenhum teste existente é editado.
+- **M2 — fronteira de fixtures na camada `data/`.** Os adapters de prévia substituem por
+  `useClass`/`useValue` os clientes `data/api/*.client.ts` (classes `@Injectable`), o
+  `RaitStreamTransport` (SSE: transporte de prévia que emite só heartbeat), `RaitSessionFacade`
+  (sessão sintética) e `RaitClock` (`today` das fixtures, 2026-09-14) — nunca as facades nem as
+  páginas; `RaitHttp` fica inalcançável porque o interceptor bloqueia tudo que não seja `GET
+  assets/`. Comandos continuam `RaitCommandUnavailableError` (M8) → a UI já mostra
+  "indisponível" (`kind 'unavailable'`); a prévia **acrescenta** a marcação "não funcional na
+  prévia" (C-03) sem simular sucesso.
+- **M3 — `typecheck` vermelho entre TASK-0002 e TASK-0003 é estado esperado** (método §4.13, R-0009
+  M24): os specs do Inspector importam módulos de `src/app/preview/**` que só o Engineer cria;
+  por isso `typecheck`/`test` do app são critérios de TASK-0003, e TASK-0002 prova existência,
+  Prettier e lint restrito aos arquivos novos.
+- **M4 — gate de marca.** Positivo: `grep -rl "DETRAN_PREVIEW_MARK" dist/preview` não vazio;
+  negativo: `grep -r "DETRAN_PREVIEW_MARK" dist/browser` vazio após `pnpm --filter @detran/rait-web
+  build` (production). A string `DETRAN_PREVIEW_MARK` aparece no DOM como valor do atributo
+  `data-detran-preview-mark` da faixa (sobrevive à minificação); o texto visível vem de
+  `rait.states.preview_mark` = "PRÉVIA — DADOS FICTÍCIOS".
+- **M5 — `verify:round-tasks` não cobre R-0033.** `tools/devai/verify-round-tasks.mjs` só valida
+  rodadas R-0003…R-0020 (`roundNumber > 20` é ignorado); as tarefas desta rodada são validadas
+  diretamente com `pnpm exec devai check --only schema --schema law/schemas/task.schema.json
+  --instance work/rounds/R-0033/tasks/TASK-000n.json` no bootstrap. A ampliação do verificador é
+  follow-up fora do lock desta rodada (registrado em §Retomada).

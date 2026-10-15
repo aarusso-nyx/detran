@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0033",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Roteiro de revisão da jornada JW-01 e scripts de captura (360/768/1280) e de axe (CTG-0003)",
+  "description": "Escrever work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md (telas, estados, papéis, URLs de prévia, capturas esperadas, por passo da JW-01) e os scripts work/rounds/R-0033/preview/rait-web/capture.mjs e axe.mjs (Playwright já presente no repositório; axe-core 4.13.0) que percorrem o roteiro sobre ng serve --configuration preview, geram as capturas em preview/rait-web/captures/ e o relatório axe em preview/rait-web/axe-report.json com serious/critical = 0 como critério. Conforme prompts/TASK-0005.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r33-preview-scripts"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["c-0003", "ctg-0003", "preview", "inspector"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md",
+      "work/rounds/R-0033/preview/rait-web/capture.mjs",
+      "work/rounds/R-0033/preview/rait-web/axe.mjs"
+    ]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

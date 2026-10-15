@@ -1,0 +1,21 @@
+{
+  "round_id": "R-0033",
+  "unit": "estimated_unique_input_tokens",
+  "window_input_limit": 700000,
+  "checkpoint_input_threshold": 560000,
+  "window_hours": 5,
+  "max_review_cycles_per_item": 2,
+  "window_started_at": "2026-10-15T06:30:00Z",
+  "note": "Convenção model-ladder: tokens únicos estimados (≈ ¼ dos brutos com cache); brutos na nota quando medidos. Janela 1 = Claude Code Fable 5.1 (maestro) + workers Claude (Opus 5.5 / Sonnet 5); reviewer Codex Sol 6 contado à parte por família. Meta da janela: bootstrap + prompt-review + O1/O2 + TASK-0003 (M1); checkpoint a 80 %.",
+  "entries": [
+    {
+      "id": "maestro-bootstrap",
+      "window": "W1",
+      "role": "architect",
+      "model": "claude-fable-5-1",
+      "input_estimate": 120000,
+      "output_estimate": 18000,
+      "note": "Descoberta de estado (origin/main, PR #179/#182), instalação, builds, doctor, leitura obrigatória (00-maestro, plan, C-0003, método, templates, rait-web core/data/testing, TEAT homologation), AUTHORIZATION.md, plan.md §Concorrência/§Leitura/M1…M5, budget.json, 8 tarefas."
+    }
+  ]
+}
