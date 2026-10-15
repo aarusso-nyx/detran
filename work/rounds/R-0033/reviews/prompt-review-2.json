@@ -1,0 +1,117 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0033",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0033/prompts/TASK-0005.md",
+      "line": 147,
+      "claim": "A1 preserva as guardas, mas manda capturar os passos 9–10 sob outros papéis e ainda entregar a JW-01 como jornada completa. OD-C3-002 escolheu expressamente a JW-01 do analista; o roteiro canônico atribui esses passos ao analista. OD-C3-007 ainda é proposta, não decisão do Owner.",
+      "fix": "Registrar os passos 9–10 como lacuna bloqueada da JW-01 do analista e obter decisão do Owner antes de tratá-los como jornada concluída sob outros papéis."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0033/tasks/TASK-0007.json",
+      "line": 19,
+      "claim": "resolvido: TASK-0009 fornece specs de Inspector antes de TASK-0007, com dependência explícita.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0033/tasks/TASK-0003.json",
+      "line": 14,
+      "claim": "resolvido: TASK-0003 e TASK-0004 estão em CTG-0001 com Architect e Inspector; a adenda A1 prevalece sobre a tabela antiga do plano.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "work/rounds/R-0033/prompts/TASK-0006.md",
+      "line": 144,
+      "claim": "resolvido: o manifesto versionado verifica o build local, e A1 atribui ao maestro a geração e anexação do ZIP ao PR.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0003.md",
+      "line": 80,
+      "claim": "resolvido: applyListScenario devolve ListPage tipada por applyListQuery, inclusive no estado empty.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0002.md",
+      "line": 168,
+      "claim": "resolvido: empty esvazia slots de lista e mantém a entidade principal carregada; não cria 404 sintético.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0002.md",
+      "line": 155,
+      "claim": "resolvido: o novo createPreviewHarness aceita Provider e EnvironmentProviders sem editar o harness existente.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0003.md",
+      "line": 76,
+      "claim": "resolvido: o contrato da sessão inclui active$ e exige conferir a superfície pública nas declarações do kit.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0006.json",
+      "line": 50,
+      "claim": "resolvido: a aceitação executa captura, axe e verificações de contagem e impactos.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0007.json",
+      "line": 28,
+      "claim": "O gate negativo e index.html foram acrescentados, e TASK-0009 cobre rotas e estados. Ainda falta em acceptance_commands a prova exigida no prompt de que ng serve --configuration preview responde 200 com portal-preview-root; ela ficou apenas para relato manual.",
+      "fix": "Acrescentar comando de aceitação que inicie o servidor, faça a requisição, confira status e raiz, e encerre o processo."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0033/prompts/TASK-0008.md",
+      "line": 112,
+      "claim": "resolvido: TASK-0008 produz closure.draft.json, sem validá-lo como fechamento canônico antes do merge; o Prettier consta na aceitação.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0033/prompts/TASK-0008.md",
+      "line": 75,
+      "claim": "resolvido: commits.md é fornecido pelo maestro; o worker não executa git.",
+      "fix": "Nenhuma."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0005.json",
+      "line": 25,
+      "claim": "resolvido: lib.mjs e check.mjs são obrigatórios, check.mjs resolve a dependência, e a execução dos scripts é aceita em TASK-0006.",
+      "fix": "Nenhuma."
+    }
+  ],
+  "notes": [
+    "Papel constitucional nesta revisão: Auditor.",
+    "Os nove hashes SHA-256, IDs PC e referências de composição conferem com os prompts.",
+    "O FAIL decorre da substituição, ainda sem decisão do Owner, dos passos 9–10 da JW-01 do analista."
+  ]
+}

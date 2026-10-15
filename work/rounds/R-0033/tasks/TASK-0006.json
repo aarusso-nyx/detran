@@ -25,7 +25,7 @@
   "tags": ["c-0003", "ctg-0003", "preview", "engineer"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-7b8f8faa7f989818",
+  "prompt_composition_id": "PC-5f0a2cc43932b992",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
     ["pnpm", "--filter", "@detran/rait-web", "lint"],
@@ -61,7 +61,8 @@
       "-e",
       "const fs=require('node:fs'),c=require('node:crypto');const m=JSON.parse(fs.readFileSync('work/rounds/R-0033/preview/rait-web/dist-preview.manifest.json','utf8'));let bad=0;for(const f of m.files){const p='apps/rait/web/dist/preview/'+f.path;if(!fs.existsSync(p)){console.error('ausente',p);bad++;continue}const h=c.createHash('sha256').update(fs.readFileSync(p)).digest('hex');if(h!==f.sha256){console.error('sha256 divergente',p);bad++}}console.log(m.files.length+' arquivos conferidos, '+bad+' divergentes');process.exit(bad?1:0)"
     ],
-    ["grep", "-q", "configuration preview", "apps/rait/web/README.md"]
+    ["grep", "-q", "configuration preview", "apps/rait/web/README.md"],
+    ["node", "work/rounds/R-0033/preview/rait-web/smoke.mjs"]
   ],
   "created_at": "2026-10-15T06:50:00.000Z",
   "executor": {
@@ -73,7 +74,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-7b8f8faa7f989818",
+    "prompt_composition_id": "PC-5f0a2cc43932b992",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

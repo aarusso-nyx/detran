@@ -21,17 +21,19 @@
   "tags": ["c-0003", "ctg-0003", "preview", "inspector"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-a59569ed16a98676",
+  "prompt_composition_id": "PC-9359a237f3b36945",
   "acceptance_commands": [
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/lib.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/smoke.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/check.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/README.md"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/lib.mjs"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/rait-web/smoke.mjs"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/check.mjs"],
     ["node", "work/rounds/R-0033/preview/rait-web/check.mjs", "resolve"],
     [
@@ -43,6 +45,7 @@
       "work/rounds/R-0033/preview/rait-web/lib.mjs",
       "work/rounds/R-0033/preview/rait-web/capture.mjs",
       "work/rounds/R-0033/preview/rait-web/axe.mjs",
+      "work/rounds/R-0033/preview/rait-web/smoke.mjs",
       "work/rounds/R-0033/preview/rait-web/check.mjs",
       "work/rounds/R-0033/preview/rait-web/README.md"
     ]
@@ -57,7 +60,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-a59569ed16a98676",
+    "prompt_composition_id": "PC-9359a237f3b36945",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

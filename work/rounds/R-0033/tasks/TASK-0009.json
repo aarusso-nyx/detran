@@ -8,7 +8,11 @@
   "title": "Specs do modo prévia do portal-web e inventário rota × fixture × estado do portal (CTG-0004)",
   "description": "Escrever em apps/portal/web/src/app/preview/*.spec.ts (7 specs + preview.spec-helper.ts) os testes que codificam o contrato frontend-preview-mode.md para o portal-web — cobertura de rotas sem rede, marca, ação não funcional (delegações continuam 'serviço indisponível'), gate estático de production, fonte das fixtures, a11y — e work/rounds/R-0033/inventory-portal-web.md; os specs falham até TASK-0007 (M3). Conforme prompts/TASK-0009.md.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-portal-web-preview-specs", "MOD-r33-round"],
+  "target_modules": [
+    "MOD-portal-web-preview-specs",
+    "MOD-r33-round",
+    "MOD-r33-preview-scripts-portal"
+  ],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0004",
@@ -21,7 +25,7 @@
   "tags": ["c-0003", "ctg-0004", "preview", "inspector"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-6be6071d5511f2c1",
+  "prompt_composition_id": "PC-423eb749a4930593",
   "acceptance_commands": [
     [
       "test",
@@ -48,6 +52,8 @@
     ["test", "-s", "apps/portal/web/src/app/preview/preview-a11y.spec.ts"],
     ["test", "-s", "apps/portal/web/src/app/preview/preview.spec-helper.ts"],
     ["test", "-s", "work/rounds/R-0033/inventory-portal-web.md"],
+    ["test", "-s", "work/rounds/R-0033/preview/portal-web/smoke.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/portal-web/smoke.mjs"],
     [
       "pnpm",
       "exec",
@@ -61,7 +67,8 @@
       "apps/portal/web/src/app/preview/preview-fixture-source.spec.ts",
       "apps/portal/web/src/app/preview/preview-a11y.spec.ts",
       "apps/portal/web/src/app/preview/preview.spec-helper.ts",
-      "work/rounds/R-0033/inventory-portal-web.md"
+      "work/rounds/R-0033/inventory-portal-web.md",
+      "work/rounds/R-0033/preview/portal-web/smoke.mjs"
     ],
     [
       "pnpm",
@@ -82,7 +89,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-6be6071d5511f2c1",
+    "prompt_composition_id": "PC-423eb749a4930593",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

@@ -161,6 +161,19 @@ vencer sem shell servível, checkpoint, relato ao Owner com a causa (nunca relax
     impactos, manifesto), TASK-0007 (gate negativo de production do portal, `index.html` da
     prévia), TASK-0009 (specs + inventário + eslint).
 
+**A2 — correções do prompt-review ciclo 2 (Sol 6, `reviews/prompt-review-2.json`, FAIL: 11 de
+13 resolvidos, 2 `high` restantes):**
+
+1. **JW-01 passos 9–10 são lacuna bloqueada**, não jornada concluída sob outro papel (substitui o
+   item 3 de A1): a prévia exercita só a prova negativa sob `rait-analyst` (`/sem-permissao`);
+   as duas rotas continuam cobertas por C-02 sob os papéis do manifesto, sem rótulo de JW-01;
+   C-04 para essas telas é `not run` (bloqueado) até o Owner decidir **OD-C3-007** (registrada
+   por TASK-0001; recomendação (a) do Architect: manter o manifesto e reescrever a JW-01).
+2. **Prova executável de `ng serve --configuration preview`** (C-01): `smoke.mjs` em
+   `work/rounds/R-0033/preview/rait-web/` (TASK-0005; critério de TASK-0003 e TASK-0006) e em
+   `work/rounds/R-0033/preview/portal-web/` (TASK-0009; critério de TASK-0007) — sobe o `ng
+serve`, espera `200` em `/` com a raiz de prévia, encerra o processo, sai 0/1.
+
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
 | Critério | Verificação                                                                                                                                                                                                                                           |
@@ -200,12 +213,47 @@ vencer sem shell servível, checkpoint, relato ao Owner com a causa (nunca relax
 
 ## Bloqueios
 
-Nenhum. OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
+- **B1 (2026-10-15, prompt-review):** ciclos 1 e 2 (Sol 6) devolveram FAIL; o ciclo 2 restrito
+  resolveu 11 de 13 achados e os 2 restantes foram corrigidos pela adenda A2 (prompts v3, commit
+  do bootstrap). O método (`prompts/00-maestro.md` §3–5) limita a 2 ciclos e manda parar e relatar
+  ao Owner em FAIL no último; precedente R-0022 Adenda B1 (o Owner autorizou ciclo extra
+  restrito). **Pedido ao Owner:** autorizar o ciclo 3 **restrito aos 2 itens corrigidos** (ou
+  dispensar a nova submissão e aceitar A2 como resolução, a seu critério). Workers **não** foram
+  disparados: nenhum spec, código ou documento de prévia existe ainda.
+- **OD-C3-007 (proposta, a registrar por TASK-0001):** JW-01 passos 9–10 (`/casos/:id/decisao`,
+  `/casos/:id/impedimentos`) × papéis do manifesto. Enquanto pendente, a prévia trata os passos
+  como lacuna bloqueada (A2 item 1). Decidir (a) manter manifesto e reescrever a jornada, ou (b)
+  ampliar `roles` das duas rotas para `rait-analyst` (mudança de código em rodada J).
+
+OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
 `rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
 
 ## Retomada
 
-(vazio — preenchido pelo maestro no checkpoint)
+**Checkpoint 2026-10-15 (janela 1, maestro Fable 5.1), HEAD = commit do bootstrap v3.**
+
+- **Concluído:** §1 bootstrap (AUTHORIZATION.md, tasks TASK-0001…0009, budget.json,
+  compositions.json, §Concorrência, §Leitura M1…M5); §3–§4 prompts v3; §5 prompt-review ciclos 1
+  e 2 (FAIL → correções A1/A2); `playwright-core@1.63.0` como devDependency de `apps/rait/web`
+  (pré-condição de TASK-0005; `pnpm-lock.yaml` atualizado, instalação sem download).
+- **Em curso:** nenhuma tarefa de worker.
+- **Pendente:** PASS do prompt-review (B1) → O1 (TASK-0001) → O2 (TASK-0002 ∥ TASK-0005) → O3
+  (TASK-0003 → TASK-0004 → TASK-0006) → O4a (TASK-0009 ∥ TASK-0008) → O4b (TASK-0007) → sequência
+  final OD-C2-005 (merge de `origin/main`, CI local, delivery-review, PR após o merge do #182,
+  evidência, `audit observe`, `round close`/`seal`).
+- **Último veredito:** `reviews/prompt-review-2.json` FAIL (2 high, corrigidos em A2; não
+  resubmetido — aguarda autorização do Owner para o ciclo 3 restrito).
+- **Próximo passo do maestro ao retomar:** com autorização, montar `reviews/prompt-review-3.md`
+  restrito aos itens 1 (TASK-0005 l.147) e 10 (TASK-0007.json l.28) do ciclo 2 e rodar
+  `tools/orchestra/bridge.sh codex gpt-6-sol …`; com PASS, disparar TASK-0001 (subagente
+  `architect-blueprint`, `claude-opus-5-5`, alto) e seguir as ondas; registrar OD-C3-007 na
+  tabela §C-0003 assim que TASK-0001 a redigir.
+- **Follow-ups fora do lock (não executar nesta rodada):** `tools/devai/verify-round-tasks.mjs`
+  ignora R > 20 (R-0022 e R-0033 nunca são validadas por `pnpm verify:round-tasks`);
+  `apps/{dashboard,teat}/web/angular.json` — conferir se o `serve` tem o mesmo defeito de
+  `buildTarget` do rait-web; diretório `graft/` (cache de ferramenta, não versionado) apareceu na
+  worktree durante a sessão — fora do escopo, não adicionado.
+- **Estimativa revisada da fase J:** ainda não produzida (TASK-0008).
 
 ## Leitura
 
