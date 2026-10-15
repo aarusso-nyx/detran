@@ -1699,6 +1699,23 @@ test('C-01-22 dado Estado fora do vocabulário (planned) quando o gate roda ent�
   );
 });
 
+test('C-01-22 dado Estados "parada" e "proposta (C-0003)" (C-0003, A-C2-16) quando o gate roda então não acusa', async () => {
+  await withRoot(
+    (root) => {
+      buildBaseTree(root);
+      writeFile(
+        root,
+        'work/rounds/README.md',
+        `${ROUNDS_README_TEXT}| R-0004 | fixture parada | parada | — | — | — |\n| R-0005 | fixture proposta | proposta (C-0003) | — | — | — |\n`,
+      );
+    },
+    async (root) => {
+      const result = await runGate(root);
+      assert.ok(!findingIds(combined(result)).has('C-01-22'));
+    },
+  );
+});
+
 test('C-01-22 dado uma linha S-… com Estado diferente de "proposta (C-0002)" quando o gate roda então acusa', async () => {
   await withRoot(
     (root) => {

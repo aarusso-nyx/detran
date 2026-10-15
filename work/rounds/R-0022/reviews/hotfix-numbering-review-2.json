@@ -1,0 +1,22 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-offline-numbering-shift-races",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "resolved": [1, 2, 4],
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "backend/database/ddl/18-ops-offline-sync.sql",
+      "line": 62,
+      "claim": "shift_id continua anulável (linha 33), e o índice único trata valores NULL como distintos. O CRUD público aceita shift_id ausente ou null; portanto, pode gravar duas reservas reserved para o mesmo tenant e dispositivo sem turno. A pré-checagem detecta esse grupo, mas o índice não o impede após a implantação.",
+      "fix": "Alinhar blueprint, DDL e pré-checagem: impedir reservas reserved sem turno ou usar unicidade que trate NULL como igual. Cobrir POST e PATCH do CRUD com shift_id null."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18), somente leitura.",
+    "A tradução global dos dois índices, a validação e trava do turno no comando e a pré-checagem de duplicatas estão presentes.",
+    "Os resultados de testes informados não foram reproduzidos nesta revisão."
+  ]
+}

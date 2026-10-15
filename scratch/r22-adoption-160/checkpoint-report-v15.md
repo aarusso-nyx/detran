@@ -1,0 +1,17 @@
+# DETRAN R-0022 STYNX 1.6.1 adoption — v15 local evidence addendum
+
+Status: local Engineer/Inspector evidence only; no stage, commit, push, PR, merge, release or deployment. This addendum supplements v14 and does not replace its 19-ref manifest or synthetic fixture list.
+
+## Verified local test evidence
+
+- Prior v14 evidence remains: published STYNX 1.6.1 package pinned; 242/242 portable pure, 45/45 focused source, 20/20 signature storage, 12/12 synthetic CMS, six TEST_ONLY holder scenarios; emulated public Outbox 1295/1295 and Offline 2178/2178 fresh/repeat/reset; installer 416/416; public A/B concurrency and rollback-only signature SQL probes. These are local test results, not provider acceptance or native CI.
+- An exactly one-use local inert target-Linux runner creation returned `RUNNER_CREATED_PENDING_INSPECTOR_BIRTH_CLOSED` with one creator call. Engineer entry VERDICT sha256:c93acb20189afc1396e07e2e6c034c1443751ff3281026e6c7ae2dddfdcf732f; creator OUTCOME sha256:91d6c0ac40713367bef0bf69ed9e9e4298425bba23ed68a5e8efaee4ccf726e9.
+- Inspector independently closed the actual seven-key runner birth: sha256:575df06c03be069c671b7dd6d60ff2155e6d9aebea44dfad91e09bc1406c5bd0. Eleven read-only diagnostics passed: one stable inert sleep/QEMU process, expected QEMU and Node hashes, exactly three read-only bind mounts, and the empty 0700 host leaf matching creation. Captures 01/02 remain retained UNKNOWN validator failures; they were not accepted birth evidence.
+- Root issued one-use resolver permit sha256:dfe68da3a087d7dea2840a674c2032fc647fc37277e04f0f006f8f68bc378de4 and admission sha256:63d1643df15c533c36d3eb66ec82d6bc9b865e9ca5e938461ee8601de5b732b0 after independent Architect/Inspector artifact reviews. The named Engineer consumed the exact reviewed launch once. The result is **UNKNOWN_QUARANTINE**, not a target-Linux resolution pass: entry VERDICT sha256:dff98da76ce31658c3857f85a5d43472391f74e49be034ea6615ae130411dba4, caller OUTCOME sha256:8efd250fa6da97cbe5ea7091dd0c3fc6d6a841c134c06923f264fa2cdb9b4861. Node exited 1 before package/graph collection with EROFS opening `/proc/self/stat`; stdout was empty. The consumed attempt was not retried. Caller stop exited 0; final same-container inspect showed Running=false/Pid=0/ExitCode=137, which does not prove clean TERM-only exit. No SDK evaluation or SQL command occurred. Inspector closed independent failed-run readback sha256:20e081951c3694464d08d18172914bb0a4835931c9bb32526f497c9b559b8a3e.
+- A process-fence-preserving successor is under source-only design review. There is no new runner, permit, admission or resolver invocation yet.
+
+## Missing external provider and approved trust inputs
+
+The DETRAN signing provider product and custodian are still unknown. No actual provider-signed public test samples, approved normative floor/profile/revision/approver, signer/TSA/archive anchors, or approved algorithm/OID/timestamp/revocation/provenance trust values were supplied. Synthetic TEST_ONLY CMS and holder fixtures cannot establish provider acceptance or production signing. Ordinary public STYNX APIs still lack the atomic legacy ACK/provenance, rich history/scoped SSE, explicit deadlines, and C02/C03 inputs identified in v14. Native CI and publication remain unobserved and outside this local scope.
+
+The v14 report and manifest, and v7 synthetic public fixture inventory, remain linked by the v15 evidence manifest. No private keys or tokens are included.

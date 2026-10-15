@@ -1,0 +1,147 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0007.md",
+      "line": 74,
+      "claim": "O Engineer pode remover casos de teste. Isso contraria o Art. 10 da Constituição e a regra de testes exclusivos do Inspector.",
+      "fix": "Retirar os specs da fronteira do Engineer; atribuir qualquer alteração necessária a um Inspector, com critério contratual explícito."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0008.md",
+      "line": 67,
+      "claim": "O Engineer pode remover specs de transporte além da exceção C-05 nomeada, contrariando o Art. 10.",
+      "fix": "Reservar a edição ou remoção desses specs ao Inspector; manter para o Engineer apenas a inversão C-05 autorizada."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0012.md",
+      "line": 39,
+      "claim": "Casos de paridade ficam em it.fails e o prompt prevê que o maestro os inverta após a migração, sem tarefa de Inspector.",
+      "fix": "Definir no contrato a prova antes e depois e atribuir qualquer inversão necessária ao Inspector."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0022/prompts/TASK-0002.md",
+      "line": 87,
+      "claim": "Se o braço sem shim for it.fails, a migração pode fazê-lo passar e quebrar a suíte; a única edição posterior autorizada é retirar a flag.",
+      "fix": "Definir agora um teste que permaneça válido nas duas fases ou prever uma intervenção específica do Inspector antes da aceitação de TASK-0006."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0022/prompts/TASK-0002.md",
+      "line": 95,
+      "claim": "O negativo de entrega B→A exige RLS real, mas não exige executar a operação sob role_app_backend; uma consulta com owner poderia dar uma prova inválida.",
+      "fix": "Exigir role_app_backend e contexto de tenant na operação testada; restringir owner a preparo e limpeza de fixtures."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0013.md",
+      "line": 72,
+      "claim": "A leitura dita fechada manda descobrir e abrir arquivos de produção por busca dinâmica em todo backend.",
+      "fix": "Fornecer no prompt a lista de caminhos produzida pelo inventário do maestro, ou enumerar um conjunto fechado de arquivos autorizado para a tarefa."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0022/tasks/TASK-0003.json",
+      "line": 26,
+      "claim": "Os comandos de teste web não usam --passWithNoTests=false nem selecionam os quatro novos specs; o verde não comprova sua coleta. TASK-0008 repete a lacuna.",
+      "fix": "Incluir nos acceptance_commands de ambas as tarefas comandos por arquivo com --passWithNoTests=false e contagem de casos coletados."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0022/prompts/TASK-0003.md",
+      "line": 106,
+      "claim": "O comando exato com @detran/{rait,dashboard,portal,teat}-web expande para argumentos que não são filtros pnpm válidos; TASK-0008 repete a forma na linha 90.",
+      "fix": "Escrever comandos separados por app, como nos JSONs das tarefas."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0012.json",
+      "line": 25,
+      "claim": "Os acceptance_commands executam suítes amplas e e2e antigos, sem selecionar os novos r22-signature-* exigidos pelo prompt; os testes novos podem ficar fora da definição de pronto.",
+      "fix": "Após o contrato fixar os nomes, adicionar comandos por spec novo com --passWithNoTests=false à tarefa e à aceitação de TASK-0009."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0014.json",
+      "line": 25,
+      "claim": "A aceitação seleciona somente testes antigos do app e não seleciona nenhum r22-outbox-* de TASK-0014.",
+      "fix": "Adicionar os arquivos novos aos acceptance_commands de TASK-0014 e TASK-0015, com coleta obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0017.json",
+      "line": 25,
+      "claim": "A aceitação e2e seleciona somente arquivos antigos e não garante execução dos r22-offline-*; TASK-0018 herda a mesma lacuna.",
+      "fix": "Adicionar os novos arquivos unitários, de integração e e2e pertinentes aos acceptance_commands de TASK-0017 e TASK-0018."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0004.json",
+      "line": 16,
+      "claim": "O pin declara apenas TASK-0002 como upstream, embora O4 exija também a caracterização web de TASK-0003 commitada e verde sobre 1.4.0.",
+      "fix": "Registrar TASK-0003 como pré-condição explícita de despacho e impedir o pin até a prova e o commit de toda O3."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0016.json",
+      "line": 16,
+      "claim": "TASK-0016 lê CTG-0008.md produzido por TASK-0013, mas seu upstream_task_id é TASK-0000 e o prompt não declara essa dependência.",
+      "fix": "Declarar TASK-0013 como dependência antes de despachar TASK-0016."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0022/tasks/TASK-0015.json",
+      "line": 20,
+      "claim": "TASK-0015 declara só TASK-0014 como upstream, omitindo TASK-0006 exigida pela onda O7 e pela composição do app.",
+      "fix": "Registrar e verificar a conclusão de TASK-0006 como pré-condição adicional de TASK-0015."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0022/tasks/TASK-0018.json",
+      "line": 20,
+      "claim": "TASK-0018 declara só TASK-0017 como upstream, omitindo TASK-0015 embora seus eventos devam usar a outbox já migrada.",
+      "fix": "Registrar e verificar TASK-0015 como pré-condição adicional de TASK-0018."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0022/tasks/TASK-0007.json",
+      "line": 11,
+      "claim": "O prompt permite editar app.module.ts, mas target_modules não contém MOD-app-module; TASK-0009 e TASK-0018 compartilham O8 e esse lock.",
+      "fix": "Se CTG-0004 atribuir app.module.ts a TASK-0007, acrescentar MOD-app-module antes do despacho e serializar as três escritas."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0022/tasks/TASK-0010.json",
+      "line": 16,
+      "claim": "A transcrição lê contratos e relatórios de todas as migrações, mas seu único upstream é TASK-0018; o JSON não expressa a espera por TASK-0007, TASK-0008 e TASK-0009 fixada em A2.",
+      "fix": "Declarar todas as conclusões necessárias como pré-condições de O9 e conferi-las antes do despacho."
+    }
+  ],
+  "notes": [
+    "Auditoria em leitura, no papel Auditor. Os 18 hashes e PC IDs de compositions.json correspondem aos prompts e às tarefas.",
+    "Os scripts pnpm citados existem nos package.json verificados. Os contratos e specs novos ainda dependem das tarefas que os produzirão."
+  ]
+}
