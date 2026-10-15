@@ -1,0 +1,12 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-untyped-sql-parameters-sweep",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Os casts correspondem aos tipos do DDL: varchar para instance/status e uuid para identificadores. Os valores, o payload e a lógica condicional permanecem equivalentes.",
+    "O gate exige DETRAN_TEST_DATABASE_URL, rejeita SQL interpolado ou ambíguo nos cinco comandos do manifesto e é executado no CI com banco antes dos testes de integração; não integra pnpm check.",
+    "A asserção unitária mantém a verificação do trecho SQL e passa a exigir os casts corretos. O diff não altera arquivos gerados nem inclui mudanças alheias ao hotfix.",
+    "A varredura ampla e os resultados 5/5 foram informados pelo worker; esta revisão somente leitura confirmou o código e o encadeamento do CI, sem repetir os PREPAREs. O gate contínuo cobre os cinco comandos do manifesto, não descobre automaticamente novos comandos."
+  ]
+}

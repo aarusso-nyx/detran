@@ -1,0 +1,21 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-generated-billing-invoice-item-key",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/domains/ch/billing/src/controllers/billing-invoice-item.controller.ts",
+      "line": 23,
+      "claim": "O POST gerado permanece fora do contrato e falha porque linked_by é obrigatório, mas não gravável. A rota já existia antes deste PR; não bloqueia a correção da chave.",
+      "fix": "Tratar em hotfix próprio na origem do gerador: remover essa rota ou encaminhar a criação pela guarda do lifecycle, com teste de integração."
+    }
+  ],
+  "notes": [
+    "Os três arquivos gerados são os únicos gerados no diff; seus hashes coincidem com o blueprint. O inventário contém 248 entidades com chave id e uma com chave composta.",
+    "OpenAPI e cliente não mudaram; o contrato não declara rotas de billing-invoice-item.",
+    "O verificador exige DETRAN_TEST_DATABASE_URL, falha se não conseguir preparar o SQL e integra backend:test:integration no job com banco. PREPARE verifica a forma do SQL, mas não detecta a falha 23502 do POST.",
+    "Revisão somente leitura: os resultados e o tempo de execução informados não foram reproduzidos nesta worktree."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-portal-manifestation-tenant-leak",
+  "cycle": 2,
+  "verdict": "PASS",
+  "resolved": [1, 2],
+  "findings": [],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura.",
+    "O achado 5 foi corrigido: antes do retorno autenticado, o caminho Stynx compara o tenant solicitado com os tenants do principal; na divergência A/B, descarta a identidade e segue anônimo em B.",
+    "O achado 4 foi corrigido: o e2e exige 201 e anonymous:true sem condição, e os testes do guard Stynx cobrem o retorno true que antes falhava. Esse teste usa um dublê do guard interno, não um JWT real.",
+    "As divergências entre cabeçalho e Host mapeado e o Host não mapeado com consulta ligada permanecem conforme o residual declarado, fora do escopo deste ciclo.",
+    "Os resultados de testes foram informados pelo worker; não foram reproduzidos nesta revisão."
+  ]
+}

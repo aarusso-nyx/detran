@@ -1,0 +1,5 @@
+# Zod standalone compiler is outside selected O86 calls
+
+Architect/F1. Additive to c03b import-condition and0ca parser-site dispositions; neither previous document is rewritten. Inspector identified the third retained Function-constructor source in the additive ESM graph, v4/core/compile.js. Its published standalone compile() method remains lazy and nonselected: O86 authorizes the frozen AIT schema construction and safeParse chain, not this public compile() method. Record the site/file honestly in graph/disposition, with no generic Function/eval waiver, private imports or product/source alterations. The util empty probe and schemas→Doc.compile selected-parser admission remains exactly0ca. Actual graph reachability is not authority to invoke every exported method.
+
+Exact standalone source: `node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/compile.js` 91611 bytes, SHA256 `df28853593428e5a2a8729b09f43baf0998eaae7f1e37797993035187833b054`. Inspector must bind every actual Function constructor site in the complete source review; any unexpected execution/source/edge remains STOP. No F1 SDK evaluation and no claim standalone compilation was exercised.
