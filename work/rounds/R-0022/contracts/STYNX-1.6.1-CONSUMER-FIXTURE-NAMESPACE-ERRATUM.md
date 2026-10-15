@@ -1,0 +1,15 @@
+# Independent consumer fixture namespace erratum
+
+Architect/F1. Preserve0ab2c84c/ad7d58d4 public realm contracts,710145cb native CI contract,277764c3 pure counterparts, dc6e public subject and the original5d327786 PostGIS packet/readback unchanged. Their new-component fixture locators are corrected prospectively as follows:
+
+- PostGIS packet: `tools/stynx-storage/consumer-fixtures/postgis-runtime/runtime-inputs.json`; its copied Dockerfile, checksums, inventories and historical records use the same fixed consumer-fixtures/postgis-runtime directory.
+- Public realm descriptor: `tools/stynx-storage/consumer-fixtures/public-installed-runtime/descriptor.json`; source indexes/provenance/toolchain/review copies for this descriptor use the same fixed consumer-fixtures/public-installed-runtime directory.
+- Historical pure-plan locator: `tools/stynx-storage/consumer-fixtures/historical-plans/manifest.json`; exact copied small historical plan records use that same directory.
+
+The existing producer/projector own the entire `tools/stynx-storage/fixtures` tree through the independently reviewed441-file policy inventory. Newly adding unrelated PostGIS/public-realm/historical-plan files beneath it creates genuine unknown extras and must refuse. Therefore move only NEW component data, preserving each raw copy byte-for-byte and all old logical historical refs as documentary data; refresh authored operational path/B3 wrappers and actual caller constants with retained before/after path-transition evidence. No old observation, source root, registry hash or baseline digest is rewritten. Existing publication-161/prior-observation/toolchain/policy441 fixtures stay in place; protected944f/publication logical identities stay unchanged.
+
+Root owns the actual move/refreeze. The fixed native CI helper reads only the new PostGIS packet locator and actual refreshed wrapper SHA; public guard reads only the new descriptor locator and reviewed release input SHA; pure resolver reads only the new historical manifest locator. No fallback to either prior new-component path, glob search, caller selector or recreated top-level historical scratch tree.
+
+Producer d0a314/current helper f6ce304/policy177857/original441 inventories and their complete whole-tree unknown-file/link negatives remain unchanged. Neither producer nor projector ignores a new sibling directory under its owned fixture tree. Consumer-fixtures has its own component source/input inventory and exact unknown-file checks; moving data outside the SDK namespace does not admit it for execution.
+
+Final source and operational wrapper hashes must be captured after path refresh/author-only formatting, then independently reviewed. Earlier5d327/b9ef authored wrappers and completed raw-copy reports remain historical, not current caller seals. Inspector's public descriptor observations (nearestManifest exact member/bytes/prefixedSHA and sorted sources/toolchain arrays) must be corrected before final candidate rather than accepted as an alternate DTO. No SDK/SQL/container action is authorized by this locator correction.

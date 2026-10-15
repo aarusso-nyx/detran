@@ -1,0 +1,23 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 17,
+  "scope": ["TASK-0029"],
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0029.md",
+      "line": 113,
+      "claim": "A geração temporária valida apenas parte da forma do blueprint. `tools/blueprints/generate.mjs` não valida o JSON contra `module-blueprint.schema.json`, como exige a linha 62 e como solicitou a revisão anterior.",
+      "fix": "Manter a geração temporária e acrescentar um critério executável de validação contra o schema do repositório."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor; revisão somente leitura.",
+    "Item 1 resolvido: campos normativos anuláveis e sem default estão distintos de `revision integer not null default 1`; `schemaVersion` permanece `1.0.0`.",
+    "`blueprints:check` foi removido de `acceptance_commands` e identificado no prompt como divergência esperada até a parte D.",
+    "SHA-256 do prompt confere com `compositions.json`; o PC confere nas duas referências de `TASK-0029.json`."
+  ]
+}

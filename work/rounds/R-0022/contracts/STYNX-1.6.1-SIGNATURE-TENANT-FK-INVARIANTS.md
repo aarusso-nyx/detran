@@ -1,0 +1,22 @@
+# R-0022 — same-tenant signature foreign-key integrity
+
+Architect/F1. Technical enforcement of already-approved C3/S tenant ownership, no new signature species/policy values/provider trust/Owner decision. Actual Runtime/Store checks are retained; no observed data leak is claimed. Direct app INSERT currently can name a known foreign UUID through id-only FK because referential checks bypass row visibility. Required parent identity is tenant+id, enforced by database constraints as well as request checks.
+
+Root F2 edits only authorized manual06/31; no historical04 or generated30 handwritten edit, no SQL bypass/local runtime repair. Inspector adds pertinent source RED before correction in existing signature source sensor, then actual normal-install/leased direct-role cases in backend/app/tests/integration/r22-stynx-161-signature-storage.integration.spec.ts. No F1 SQL.
+
+Exact additive parent indexes: `storage.ux_storage_objects_tenant_id_id` UNIQUE ON storage.objects(tenant_id,id), defined in06 before child composite FKs; `inf.ux_inf_signature_policy_tenant_id_id` UNIQUE ON inf.signature_policy(tenant_id,id), defined in31 before policy composite FK. Existing primary ids/unique keys/data/RLS/owners remain. These are consumer-owned table integrity additions, not modifications of byte-bound outbox/offline renderer SQL. Same-name wrong owner/definition/keys/validity/predicate/expression must STOP, never accept IF NOT EXISTS as proof. Parent id/tenant columns remain NOT NULL.
+
+Four named composite FKs, ordered local/remote key pairs exactly:
+
+| Name                                         | Child local columns                                       | Parent columns                     |
+| -------------------------------------------- | --------------------------------------------------------- | ---------------------------------- |
+| signature_evidence_original_object_tenant_fk | storage.signature_evidence(tenant_id,original_object_id)  | storage.objects(tenant_id,id)      |
+| signature_evidence_signed_object_tenant_fk   | storage.signature_evidence(tenant_id,signed_object_id)    | storage.objects(tenant_id,id)      |
+| signature_manifest_source_object_tenant_fk   | storage.signature_manifest(tenant_id,source_object_id)    | storage.objects(tenant_id,id)      |
+| signature_evidence_policy_tenant_fk          | storage.signature_evidence(tenant_id,signature_policy_id) | inf.signature_policy(tenant_id,id) |
+
+Keep existing id-only FKs additively; no need drop them or alter original columns. Add objects/source composite constraints in06 and policy one in31 after normative30. All are VALIDATED/enforced/nondeferrable/MATCH SIMPLE, NO ACTION update/delete, with actual relation/key/index identities checked in final catalog admission. No NOT VALID/nullable-tenant branch/CASCADE, no role/operator trust or first-row lookup workaround. New constraints validate all existing rows atomically: existing foreign links abort normal transaction, no deletion/reassignment/backfill to hide them. Late20(after30)→06→31→final privilege order remains, published package guards and signature ALWAYS triggers stay unchanged.
+
+Source negatives cover each absent/composite key order/foreign parent/wrong index definition and validation/deferrability flags; do not merely assert a string exists. Live tests reuse canonical tenant101/102 and existing actors/owned isolated cluster. Owner prepares clearly TEST_ONLY unsigned storage/policy fixtures without approved floor/source identities; real restricted app sessions insert well-formed own evidence/manifest rows. Same-tenant valid pairs may pass SQL integrity; each foreign original/signed/source/policy UUID must produce exact23503 with the expected composite constraint, despite UUID existence and no visible foreign row. Source/schema tests are not real CMS/provider acceptance. Preserve all existing test assertions and SQL raw evidence.
+
+Final S normal-run catalog/ACL/RI inventory must include these indexes/FKs and exact child/parent trigger tuples (including PG18 flags), retain immutable evidence/policy/manifest guards and privilege floors. Actual login SET/inherited/capability closure stays a separate connection admission, not inferred from role_app_backend alone. No generated policy approval, floor seed, per-tenant escape or provider sample is authorized. Final live leases/source reviews remain prerequisites; this record authorizes bounded source/test work under existing S lane.

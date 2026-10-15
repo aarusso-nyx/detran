@@ -12,9 +12,10 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
-const root = resolve(new URL('../..', import.meta.url).pathname);
+const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const mockPath = join(root, 'tools/stack/mocks/sefaz-mock.mjs');
 const smokePath = join(root, 'tools/stack/smoke.mjs');
 const portalFixturePath = join(root, 'tools/stack/portal-fixture.sh');

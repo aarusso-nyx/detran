@@ -14,7 +14,7 @@
     "clear": "docusaurus clear",
     "deploy": "docusaurus deploy",
     "typecheck": "tsc --noEmit",
-    "security:check": "node scripts/check-image-size-patch.mjs && node scripts/check-braces-patch.mjs && npm audit --audit-level=moderate"
+    "security:check": "node scripts/check-image-size-patch.mjs && node scripts/check-braces-patch.mjs && node scripts/check-audit.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

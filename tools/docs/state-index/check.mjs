@@ -1000,7 +1000,14 @@ export function checkStateIndex({ root, config }) {
   }
 
   const seenRoundIds = new Set();
-  const validEstados = ['fechada', 'pré-método', 'aberta', 'proposta (C-0002)'];
+  const validEstados = [
+    'fechada',
+    'pré-método',
+    'aberta',
+    'parada',
+    'proposta (C-0002)',
+    'proposta (C-0003)',
+  ];
   for (const row of roundsRows) {
     if (!/^R-\d{4}$/.test(row.round) && !/^S-\d+\.\d+$/.test(row.round)) {
       findings.push({

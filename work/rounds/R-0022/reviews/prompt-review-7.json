@@ -1,0 +1,77 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 7,
+  "scope": [
+    "TASK-0006",
+    "TASK-0007",
+    "TASK-0008",
+    "TASK-0019",
+    "TASK-0024",
+    "TASK-0025"
+  ],
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0022/prompts/TASK-0007.md",
+      "line": 51,
+      "claim": "O prompt ainda referencia literalmente @stynx-nyx/outbox; a proibição reaparece na linha 99. Isso contraria a fronteira textual exigida para TASK-0007 após B12.",
+      "fix": "Retirar essas referências do prompt e expressar a fronteira como uso exclusivo das leituras atuais e da fonte DETRAN fina."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0022/tasks/TASK-0024.json",
+      "line": 32,
+      "claim": "Os acceptance_commands não coletam r22-tenancy-platform.e2e.spec.ts, embora o prompt exija sua execução e o registro dos vermelhos antes de TASK-0006.",
+      "fix": "Adicionar uma verificação executável que colete o arquivo e valide o resultado esperado antes do Engineer."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0022/tasks/TASK-0025.json",
+      "line": 35,
+      "claim": "O único acceptance_command é typecheck; nem o spec novo r22-sse-platform nem os casos adendados são coletados pelo gate da tarefa.",
+      "fix": "Incluir verificações executáveis para ambos os conjuntos, validando coleta e vermelhos esperados sem tratar uma falha arbitrária como sucesso."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0022/tasks/TASK-0019.json",
+      "line": 34,
+      "claim": "Os acceptance_commands omitem sse.platform.spec.ts, criado nesta tarefa para ficar vermelho antes de TASK-0008.",
+      "fix": "Adicionar ao gate uma verificação de coleta e do vermelho esperado desse arquivo."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0022/tasks/TASK-0008.json",
+      "line": 33,
+      "claim": "Os acceptance_commands coletam sse.platform.spec.ts, mas omitem sse.characterization.spec.ts e sua falha específica esperada para C-01-39, exigida no prompt.",
+      "fix": "Adicionar verificação executável da caracterização que confirme exatamente a falha esperada e zero casos ignorados."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0022/prompts/TASK-0008.md",
+      "line": 93,
+      "claim": "O comando da suíte web completa usa pnpm test sem a forma run test --passWithNoTests=false prescrita por A2.3.",
+      "fix": "Usar pnpm --filter @detran/teat-web run test --passWithNoTests=false."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0022/prompts/TASK-0008.md",
+      "line": 21,
+      "claim": "O contexto comum ainda afirma migração dos quatro apps web e recebimento integral da outbox nesta rodada. O mesmo texto consta nos outros cinco prompts e conflita com os checkpoints de B12, apesar das restrições posteriores.",
+      "fix": "Atualizar o contexto comum dos seis prompts para refletir a migração apenas do TEAT web e o checkpoint da outbox."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura dos seis prompts e respectivos JSONs.",
+    "As fronteiras de escrita, a ordem 0024→0006, 0019→0008 e 0006/0019/0025→0007, e a regra de só acrescentar ao apoio compartilhado estão declaradas.",
+    "Os seis SHA-256 calculados coincidem com compositions.json; os PC IDs dos JSONs também coincidem."
+  ]
+}
