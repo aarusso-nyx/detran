@@ -169,13 +169,49 @@
       "input_estimate": 30000,
       "output_estimate": 9000,
       "note": "Triagem dos bloqueios (helper, specs, contrato, forbidden.page, fixture), adenda A5, emendas do contrato (§2/§3/P-04/D-01/D-07/D-20/D-21), reports/TASK-0003.md (iteração 1), despacho da iteração 2 de TASK-0002 (Inspector)."
+    },
+    {
+      "id": "TASK-0002-i2",
+      "window": "W2",
+      "role": "worker",
+      "model": "claude-opus-5-5",
+      "input_estimate": 62000,
+      "output_estimate": 6200,
+      "note": "brutos do subagente 246149 (71 chamadas, 12,4 min); único ≈ 1/4; specs realinhados à A5 (B1–B4 verdes; 45 testes B5 pendentes do Engineer)"
+    },
+    {
+      "id": "maestro-i2-dispatch",
+      "window": "W2",
+      "role": "engineer",
+      "model": "claude-fable-5-1",
+      "input_estimate": 15000,
+      "output_estimate": 6000,
+      "note": "Correções de redação da A5 (comandos rait-case:answer/extend, painel empty, D-07 Infraction/Notification), reports/TASK-0002.md §Iteração 2, commit 3f632355, despacho da iteração 2 de TASK-0003."
+    },
+    {
+      "id": "TASK-0003-i2",
+      "window": "W2",
+      "role": "worker",
+      "model": "claude-opus-5-5",
+      "input_estimate": 46000,
+      "output_estimate": 6000,
+      "note": "brutos do subagente 185899 (60 chamadas, 10,6 min); único ≈ 1/4; 14 leituras ligadas às coleções novas; 9/9 critérios PASS; M1"
+    },
+    {
+      "id": "maestro-task-0003-gate",
+      "window": "W2",
+      "role": "engineer",
+      "model": "claude-fable-5-1",
+      "input_estimate": 20000,
+      "output_estimate": 6000,
+      "note": "Gate 9/9 (test 4958/0, builds, smoke), fronteira, P-13, A5 (raised_at, defeito de data), reports/TASK-0003.md, commit TASK-0003, despacho de TASK-0004."
     }
   ],
   "window_totals": {
     "window": "W2",
-    "claude_unique_input_estimate": 205000,
+    "claude_unique_input_estimate": 348000,
     "codex_unique_input_estimate": 0,
-    "claude_share_of_limit": 0.293,
+    "claude_share_of_limit": 0.497,
     "checkpoint_reason": null,
     "note": "Totais da janela corrente; janelas anteriores em `windows`."
   },
@@ -190,9 +226,9 @@
     },
     "W2": {
       "started_at": "2026-10-15T15:30:00Z",
-      "claude_unique_input_estimate": 205000,
+      "claude_unique_input_estimate": 348000,
       "codex_unique_input_estimate": 0,
-      "claude_share_of_limit": 0.293,
+      "claude_share_of_limit": 0.497,
       "checkpoint_reason": null
     }
   }

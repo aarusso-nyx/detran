@@ -245,7 +245,8 @@ muda, nenhuma decisão do Owner é reaberta:**
    `rait-case:extend` — as strings M8 de `RAIT_COMMANDS`, `data/models/commands.ts`; a redação
    anterior `rait-inquiry:*` estava errada e foi corrigida pelo Inspector — como não funcionais,
    nunca sucesso). Campos exibidos formatados sem coluna na seed (`attached_at`, `evaluated_at`,
-   `decided_at`, `declared_at`, `assigned_at`) ficam `source_pending` (D-06 (5)) — célula vazia é
+   `decided_at`, `declared_at`, `assigned_at` e, confirmado na iteração 2, `clockAlerts.raised_at`;
+   `created_at` nas 14 coleções) ficam `source_pending` (D-06 (5)) — célula vazia é
    lacuna visível, registrada no roteiro e em §Retomada para a fase J. O Engineer (TASK-0003
    iteração 2) liga as 14 leituras e os `get*` correspondentes às coleções novas.
 6. **Desvios aceitos (contrato §9):** **D-20** `{ provide: STYNX_AUTH_PROVIDER, useValue: null }`
@@ -265,7 +266,10 @@ muda, nenhuma decisão do Owner é reaberta:**
    `withInterceptorsFromDi()` — os interceptors DI do kit (bearer, tenant, request-id) não estão
    ativos em produção, ao contrário do comentário de `rait-http.ts` (relevante para a fase J; vai ao
    backlog por TASK-0008); chaves do kit sem tradução (`ui.confirmDialog.cancel`, `ui.pagination.*`),
-   já em produção.
+   já em produção; **campo `Format: date` exibido com um dia a menos** (`due_on` "2026-09-23" →
+   "22/09/2026" no `rait-inquiry-card` e no `rait-deadline-chip`: `stynxIntlDate` lê `AAAA-MM-DD`
+   como meia-noite UTC e formata em America/Manaus; provável em produção; a prévia não converte
+   `date` em data-hora, D-06 (2) — follow-up da fase J, backlog por TASK-0008).
 
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
