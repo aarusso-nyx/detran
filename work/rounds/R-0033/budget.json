@@ -115,12 +115,39 @@
       "input_estimate": 30000,
       "output_estimate": 9000,
       "note": "Despacho de 3 workers, aceitação ×3, relatórios, 3 commits, §Retomada do checkpoint, relatório final."
+    },
+    {
+      "id": "FIX-0001",
+      "window": "W1",
+      "role": "worker",
+      "model": "claude-opus-5-5",
+      "input_estimate": 47000,
+      "output_estimate": 4700,
+      "note": "brutos do subagente 189504 (51 chamadas, 23,4 min); único ≈ 1/4; PR próprio de fixture (OD-C3-008 a)"
+    },
+    {
+      "id": "fix-0001-delivery-review-1",
+      "window": "W1",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 70000,
+      "output_estimate": 1500,
+      "note": "Ponte codex: PASS, 1 low."
+    },
+    {
+      "id": "maestro-fix-0001",
+      "window": "W1",
+      "role": "engineer",
+      "model": "claude-fable-5-1",
+      "input_estimate": 25000,
+      "output_estimate": 9000,
+      "note": "Adenda B2, worktree da fixture, prompt FIX-0001, gates, review, PR."
     }
   ],
   "window_totals": {
-    "claude_unique_input_estimate": 489000,
-    "codex_unique_input_estimate": 175000,
-    "claude_share_of_limit": 0.7,
-    "checkpoint_reason": "fim da O2; TASK-0003 cruzaria 80 %; OD-C3-008 pendente"
+    "claude_unique_input_estimate": 561000,
+    "codex_unique_input_estimate": 245000,
+    "claude_share_of_limit": 0.8,
+    "checkpoint_reason": "fim da O2 + FIX-0001 (PR de fixture) entregue; TASK-0003 aguarda merge do PR de fixture"
   }
 }

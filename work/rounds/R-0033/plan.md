@@ -228,9 +228,10 @@ C-04 cobre as telas dos passos 1–8 — nada fica `not run` por este motivo.
   mantido; JW-01 passos 9–10 reescritos por TASK-0001 (adenda A3).
 
 - **OD-C3-008 — decidida (a) pelo Owner em 2026-10-15** (`AUTHORIZATION.md` Adenda B2): PR
-  próprio de paridade da fixture (`fix/rait-fixtures-json-parity`, cortado de `origin/main`),
-  antes de TASK-0003; push/PR autorizados só para esse branch. TASK-0003 começa depois do merge e
-  da integração de `origin/main` por merge.
+  próprio de paridade da fixture — **PR #184** (`fix/rait-fixtures-json-parity` sobre
+  `origin/main` 51ec27f0, commit `1727bdc8`; worker Inspector FIX-0001, delivery-review Codex
+  Sol 6 PASS, `reviews/fix-0001-delivery-review-1.json`; gates locais verdes). TASK-0003 começa
+  depois do merge do #184 e da integração de `origin/main` por merge na branch da rodada.
 
 OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
 `rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
