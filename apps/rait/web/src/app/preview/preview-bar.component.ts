@@ -58,6 +58,8 @@ function selectValueOf(event: Event): string {
       z-index: 1000;
     }
     .rait-preview-bar {
+      box-sizing: border-box;
+      max-width: 100%;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -76,14 +78,42 @@ function selectValueOf(event: Event): string {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      min-width: 0;
+      max-width: 100%;
     }
     .rait-preview-bar__field select {
+      min-width: 0;
+      max-width: 100%;
       color: #1a1a1a;
       background: #ffffff;
     }
     .rait-preview-bar__status {
       margin: 0;
       flex: 1 1 16rem;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    /* Responsivo básico (TASK-0004): o mesmo ponto de quebra do shell do kit
+       (packages/ui/styles/index.css, max-width: 48rem), nenhum novo; abaixo dele os
+       controles empilham e os <select> ocupam a largura da faixa, sem rolagem horizontal. */
+    @media (max-width: 48rem) {
+      .rait-preview-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .rait-preview-bar__field {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+      }
+      .rait-preview-bar__field select {
+        width: 100%;
+      }
+      .rait-preview-bar__status {
+        flex: none;
+      }
     }
   `,
   template: `
