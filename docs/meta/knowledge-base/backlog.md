@@ -1,5 +1,25 @@
 # Research backlog (steering queue)
 
+## Handoff R-0033 → fase J (2026-10-15)
+
+- [ ] R-0033 → R-0025: **`main.ts` sem `withInterceptorsFromDi()`** — `provideHttpClient()` deixa inativos os interceptors DI do kit (bearer, tenant, request-id) em produção, ao contrário do comentário de `rait-http.ts`; corrigir antes de ligar qualquer comando (`plan.md` R-0033 A5 item 8) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **`Format: date` exibido um dia antes** — `stynxIntlDate` lê `AAAA-MM-DD` como meia-noite UTC e formata em America/Manaus (`due_on` 2026-09-23 → 22/09/2026 no `rait-inquiry-card` e no `rait-deadline-chip`); provável em produção (A5 item 8) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **chaves do kit sem tradução** — `ui.confirmDialog.cancel`, `ui.pagination.*` aparecem cruas no `rait-web` (A5 item 8) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **rolagem horizontal a 360 px** — `table.stynx-table` em `/fila/defesa` (433 px) e `rait-deadline-chip` do `rait-inquiry-card` (402 px); origem kit/`shared/` (A6) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **cabeçalhos da `rait-queue-table` com nomes de campo** (`protocol_number`, `state`, `flag`, `due_on`) — `features/queue-columns.ts`, OD-R12-028 (A6) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **"Autor" vazio na minuta** — `draft.page.ts` não liga `authorLabel`; texto da minuta é estado local da página, sem `source_pending` visível (A6; `reports/TASK-0004.md`) (added 2026-10-15)
+- [ ] R-0033 → R-0025/R-0035: **13 violações axe `moderate`** na JW-01 — `landmark-unique` × 4 (`.detran-sidenav > nav`) e `heading-order` × 9 (`h3` dos slots vazios, `#rait-dossier-1-requerente`); kit e `shared/` (`preview/rait-web/captures/axe-report.json`) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **`rait-document:attach-official` sem botão** para qualquer papel — chave fora de `RAIT_COMMAND_RULES` (OD-R12-027, R-14) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **8 telas de leitura unitária sem slot `empty`** (`/painel`, `/assinatura/:caseId`, lote, sessão, banca, ata, radar/:caseId, arquivo/casos) — exigiria `emptyWhen` nas facades (`reports/TASK-0004.md`) (added 2026-10-15)
+- [ ] R-0033 → R-0025/R-0027/R-0029: **divergências jornada × manifesto** da classe de OD-C3-007 — JW-02 passos 3–4 (`/gestao/radar*` só `rait-manager`), JW-05 passo 4 (`/gestao/incidentes` só `rait-manager`), JW-08 passo 8 (`/organizacao/jeton` sem `rait-chair`); OD proposta por TASK-0008 (`plan.md` R-0033 §Retomada) (added 2026-10-15)
+- [ ] R-0033 → R-0025: **comandos citados por jornada sem método M8** — `rait-archive:seal` (JW-04) e `rait-incident:open` (JW-09) não estão entre os 64 comandos de `command-gap-analysis.md`; ficha/contrato primeiro (added 2026-10-15)
+- [ ] R-0033 → R-0025: **estimativa revisada da fase J** — tabela por jornada (P/M/G) e por superfície em `work/rounds/R-0033/plan.md` §Retomada; JW-01 (M) como primeira vertical (M3) (added 2026-10-15)
+- [ ] R-0033 → follow-up: **`tools/devai/verify-round-tasks.mjs` ignora R > 20** — tarefas de R-0033 validadas só por `devai check --only schema` (M5) (added 2026-10-15)
+- [ ] R-0033 → R-0026/R-0029: **`serve` de `apps/{dashboard,teat}/web/angular.json`** — conferir o defeito de `buildTarget` corrigido no `rait-web` (added 2026-10-15)
+- [ ] R-0033 → follow-up: **SVGs `ARCH-RAIT-WEB-j01-*.svg` divergentes** do Mermaid reescrito da JW-01 (OD-C3-007 a); não há gerador no repositório (added 2026-10-15)
+- [ ] R-0033 → follow-up: **13 datas herdadas só-data em `rait-fixtures.json`** × timestamp da seed (FIX-0001) — trocar exige alterar valor existente; candidata a OD (added 2026-10-15)
+- [ ] R-0033 → follow-up: **cores literais da faixa de prévia** sem tokens `--detran-*` do guia §3.6; e P-24 (`check.mjs resolve` sobre as URLs do inventário) não implementado (added 2026-10-15)
+
 ## Handoff R-0022 → C-0003 (2026-10-14)
 
 - [ ] **Salvamento do checkpoint R-0022 — R-0034:** `codex/detran-r22-adoption-160` @ `c22ea63a` (85 commits, 3 318 arquivos) é referência, não base; classificação reutilizar/adiar/descartar em `work/campaigns/C-0003-produto-primeiro.md` §9. Nada entra em bloco; cada fatia com teste próprio e lock próprio (added 2026-10-14).

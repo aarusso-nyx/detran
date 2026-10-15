@@ -241,14 +241,32 @@
       "input_estimate": 15000,
       "output_estimate": 6000,
       "note": "Gate 13/13, D-22/A6, relatório, commit, commits.md, §Retomada do checkpoint, relatório final."
+    },
+    {
+      "id": "TASK-0008",
+      "window": "W2",
+      "role": "worker",
+      "model": "claude-opus-5-5",
+      "input_estimate": 60000,
+      "output_estimate": 6000,
+      "note": "brutos do subagente 239654 (47 chamadas, 7,1 min); único ≈ 1/4; §Retomada, estimativa fase J, closure.draft.json, índices, backlog (17 entradas), OD-C3-009 proposta"
+    },
+    {
+      "id": "maestro-checkpoint-w2",
+      "window": "W2",
+      "role": "architect",
+      "model": "claude-fable-5-1",
+      "input_estimate": 8000,
+      "output_estimate": 4000,
+      "note": "Gate 5/5, OD-C3-009 registrada, merge de origin/main (#181), §Concorrência, commit, nota de handover, relatório final."
     }
   ],
   "window_totals": {
     "window": "W2",
-    "claude_unique_input_estimate": 479000,
+    "claude_unique_input_estimate": 547000,
     "codex_unique_input_estimate": 0,
-    "claude_share_of_limit": 0.684,
-    "checkpoint_reason": null,
+    "claude_share_of_limit": 0.781,
+    "checkpoint_reason": "M2 atingido; TASK-0008 concluída; TASK-0009 + TASK-0007 cruzariam 80 % — janela 3: O4b portal-web + sequência final",
     "note": "Totais da janela corrente; janelas anteriores em `windows`."
   },
   "windows": {
@@ -262,10 +280,11 @@
     },
     "W2": {
       "started_at": "2026-10-15T15:30:00Z",
-      "claude_unique_input_estimate": 479000,
+      "claude_unique_input_estimate": 547000,
       "codex_unique_input_estimate": 0,
-      "claude_share_of_limit": 0.684,
-      "checkpoint_reason": null
+      "claude_share_of_limit": 0.781,
+      "checkpoint_reason": "M2 atingido; TASK-0008 concluída; TASK-0009 + TASK-0007 cruzariam 80 % — janela 3: O4b portal-web + sequência final",
+      "closed_at": "2026-10-15T19:30:00Z"
     }
   }
 }

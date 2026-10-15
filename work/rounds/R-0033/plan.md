@@ -42,6 +42,9 @@ mantida a da rodada — e na tabela §C-0003 do registro de ODs, mantida a vers�
 das linhas de `main`). PR #179 continua **aberto** (CI verde, mergeable desconhecido após os
 merges); pin 1.4.0 inalterado (OD-C3-005). PR #181 aberto, `BEHIND`. A base da rodada passa a ser
 `main`: o PR da R-0033 pode abrir contra `main` quando o Owner autorizar push/PR.
+**Fim da janela 2 (2026-10-15 ~19:20Z):** `origin/main` = `9d731f4b` (PR #181, `tools/stack/contract.test.mjs`
+via `fileURLToPath`; sem sobreposição com a rodada) integrado por merge `bc20b90a`; PR #179 e #180
+continuam abertos. O artefato `dist/preview` e seu manifesto (TASK-0006) não dependem de `tools/`.
 **Janelas previstas:** 2 (1 = bootstrap + prompt-review + O1/O2 — marco M1, timebox 1–2 dias úteis;
 1 = O3/O4 + fechamento — marco M2). Recalibradas no bootstrap.
 
@@ -339,54 +342,141 @@ backlog (TASK-0008): rolagem horizontal a 360 px em `table.stynx-table` (`/fila/
 OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003): superfície
 `rait-web`/JW-01; canal = URL local + `dist/preview/` no PR; PR #179 decidido fora desta rodada.
 
+- **Janela 2 (fim, TASK-0008):** nenhum bloqueio novo. As divergências jornada × manifesto de
+  JW-02, JW-05 e JW-08 (proposta em §Retomada) não bloqueiam a R-0033 — a prévia cobre só a JW-01;
+  pesam no bootstrap das rodadas J que abrirem essas jornadas.
+
 ## Retomada
 
-**Checkpoint 2026-10-15 ~10:20Z (janela 1, maestro Fable 5.1) — fim da onda O2; HEAD = commit
-deste checkpoint sobre `5ad1528b`.** Branch `claude/frontend-preview-5281e3` (empilhada sobre
-`claude/detran-r22-handoff-03f872`, PR #182); sem push, sem PR.
+**Checkpoint 2026-10-15 (fim da janela 2, maestro Fable 5.1; redigido por TASK-0008, Architect) —
+HEAD `3832a928` (TASK-0006, M2) + a árvore de TASK-0008 (commit pelo maestro).** Branch
+`claude/frontend-preview-5281e3`; base da rodada = `main` (PR #182 mesclado `57fb8840`; PR #184
+mesclado `7b2accbb`, integrado por merge `77de66ed`). `origin/main` avançou para `9d731f4b` (PR #181) depois
+da integração desta janela e foi integrado por merge `bc20b90a` no fecho do checkpoint. **Sem push, sem PR, sem delivery-review.** Fonte da
+tabela: `work/rounds/R-0033/commits.md` (gerado pelo maestro; o worker não executa `git`).
 
-| Tarefa                            | Estado        | Commit                     | Aceitação                                                            |
-| --------------------------------- | ------------- | -------------------------- | -------------------------------------------------------------------- |
-| bootstrap                         | concluído     | `ca2ccbe8`                 | tasks validadas por `devai check --only schema` (M5)                 |
-| prompts                           | concluído     | `d4f38d26` → v4 `1d49aec5` | prompt-review 1 FAIL (13) → 2 FAIL (2) → **3 PASS** (`1ee99cf5`)     |
-| deps                              | concluído     | `75a87d91`                 | `playwright-core@1.63.0` em `apps/rait/web` (pré-condição TASK-0005) |
-| TASK-0001                         | **completed** | `e9daaddf`                 | 7/7 PASS (`reports/TASK-0001.md`)                                    |
-| TASK-0002                         | **completed** | `629e1695`                 | 11/11 PASS; specs vermelhos só por módulo ausente (M3)               |
-| TASK-0005                         | **completed** | `5ad1528b`                 | 14/14 PASS; execução real fica para TASK-0006                        |
-| TASK-0003                         | queued        | —                          | **próxima** (O3, marco M1) — ver OD-C3-008 abaixo                    |
-| TASK-0004, 0006, 0009, 0008, 0007 | queued        | —                          | O3 → O4a → O4b                                                       |
+| Tarefa                 | Estado        | Commit                                             | Aceitação                                                                         |
+| ---------------------- | ------------- | -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| bootstrap/prompts/deps | concluído     | `ca2ccbe8`, `d4f38d26` → v4 `1d49aec5`, `75a87d91` | prompt-review 1 FAIL (13) → 2 FAIL (2) → **3 PASS** (`1ee99cf5`, Adenda B1)       |
+| TASK-0001              | **completed** | `e9daaddf`                                         | 7/7 PASS (`reports/TASK-0001.md`)                                                 |
+| TASK-0002              | **completed** | `629e1695` (it. 1), `3f632355` (it. 2, A5)         | it. 1 11/11; it. 2 realinhada à A5 (`reports/TASK-0002.md`)                       |
+| TASK-0005              | **completed** | `5ad1528b`                                         | 14/14 PASS                                                                        |
+| FIX-0001 (OD-C3-008 a) | **completed** | PR #184 (`1727bdc8`; merge `7b2accbb`)             | delivery-review Sol 6 PASS (`reviews/fix-0001-delivery-review-1.json`)            |
+| TASK-0003              | **completed** | `52f73e0f` (A5 em `72c0f380`) — **M1**             | gate do maestro 9/9 PASS (test 4958/0; smoke 200)                                 |
+| TASK-0004              | **completed** | `96256370`                                         | gate 7/7 PASS; varredura 64 × 5 = 320 casos conformes                             |
+| TASK-0006              | **completed** | `3832a928` — **M2**                                | gate 15/15 PASS (87 capturas, axe 0 serious/critical, manifesto 48/0)             |
+| TASK-0008              | **completed** | commit seguinte a `bc20b90a` (maestro, janela 2)   | `verify:rounds-index`, `verify:state-index`, `docs:kb:check`, Prettier, `test -s` |
+| TASK-0009 → TASK-0007  | queued        | —                                                  | janela 3 (O4b; `portal-web`)                                                      |
 
-- **Último veredito do reviewer:** `reviews/prompt-review-3.json` PASS (Sol 6, ciclo restrito
-  autorizado pelo Owner, Adenda B1). Nenhuma delivery-review ainda (OD-C2-005: uma só, no fim).
-- **Por que parou aqui:** orçamento da família Claude ≈ 66 % do limite da janela
-  (`budget.json`; TASK-0003, grande, cruzaria o limiar de 80 % a meio) **e** OD-C3-008 (proposta
-  por TASK-0001) pede decisão do Owner antes de TASK-0003: (a) PR próprio de fixture transcrevendo
-  da seed `20-fixtures-rait.sql` para `rait-fixtures.json` as coleções/campos ausentes (partes,
-  documentos, admissibilidade, diligências, eventos; `RaitCase.circuit`, `protocolled_at`…), ou
-  (b) seguir com a JSON atual (26 telas parciais, 5 vazias em `loaded`; `source_pending`/D-06/D-07).
-  O contrato já funciona sob (b); (a) muda a qualidade da prévia da JW-01, não o contrato.
-- **Próximo passo do maestro ao retomar (janela 2):** OD-C3-008 decidida (a) e registrada
-  (Adenda B2); aguardar o merge do PR de paridade da fixture e integrar `origin/main` por merge; disparar **TASK-0003** (`engineer-frontend`, `claude-opus-5-5`,
-  alto; `prompts/TASK-0003.md`, PC em `compositions.json`) e, verde, TASK-0004 → TASK-0006 (M2);
-  depois O4a (TASK-0009 ∥ TASK-0008, para o qual o maestro gera `commits.md`) → O4b (TASK-0007);
-  sequência final OD-C2-005 (merge de `origin/main`, CI local completo, delivery-review única,
-  PR após o merge do #182, `preview-R-0033.zip` anexado ao PR, evidência, `audit observe`,
-  `round close`/`seal`).
-- **Avisos para TASK-0003 (dos relatórios de O2):** D-01 do contrato (navegação de documento via
-  `PREVIEW_DOCUMENT_NAVIGATE`) prevalece sobre o `queryParamsHandling: 'merge'` do layout do
-  prompt — os specs seguem o contrato; L0 é placeholder com `data-screen` e
-  `rait.states.unavailable_in_version`; `openPreview` dos scripts espera `[data-detran-preview-mark]`
-  e depois `[data-screen]`/`h1`/`[role=alert]`/`[role=status]`; `preview-production-gate.spec.ts`
-  importa `PREVIEW_CATALOG_CONTRACT` do helper; D-12 fixa a ordem dos builds (`preview` antes de
-  `production`, que apaga `dist/`); P-24 (`check.mjs resolve` provando as URLs do inventário)
-  não foi implementado por TASK-0005 — decidir se entra em TASK-0006 ou vira adenda.
-- **Follow-ups fora do lock (não executar nesta rodada):** `tools/devai/verify-round-tasks.mjs`
-  ignora R > 20; `apps/{dashboard,teat}/web/angular.json` `serve` (conferir o defeito de
-  `buildTarget`); SVGs `ARCH-RAIT-WEB-j01-*.svg` divergem do Mermaid reescrito (sem gerador);
-  `rait-document:attach-official` sem botão para nenhum papel (OD-R12-027/R-14); fixture JSON sem
-  diligência (`answer`/`extend` não acionáveis); diretório `graft/` (cache de ferramenta) não
-  versionado.
-- **Estimativa revisada da fase J:** ainda não produzida (TASK-0008).
+- **Ondas:** O1, O2 e O3 concluídas; O4a parcial (TASK-0008 feita; TASK-0009 pendente); O4b
+  (TASK-0007) pendente.
+- **Último veredito do reviewer:** `reviews/prompt-review-3.json` PASS (ciclo restrito, Adenda B1)
+  e `reviews/fix-0001-delivery-review-1.json` PASS (PR #184). Nenhuma delivery-review da rodada
+  ainda (OD-C2-005: uma só, na sequência final).
+- **Orçamento:** `budget.json` — W1 fechada a ≈ 561 k únicos Claude (80 %) + ≈ 245 k Codex; W2 ≈
+  479 k únicos Claude (68,4 %) antes de TASK-0008, ≈ 76 % com ela (estimativa do maestro).
+- **Por que parou aqui:** checkpoint de orçamento (limiar de 80 % da janela 2 seria cruzado por
+  TASK-0009 + TASK-0007); M2 atingido.
+- **Próximo passo do maestro (janela 3):** TASK-0009 (Inspector, specs de prévia do `portal-web` +
+  `inventory-portal-web.md`) → TASK-0007 (Engineer, `portal-web`) → sequência final OD-C2-005:
+  (1) `git merge --no-edit origin/main` (o que avançar além de `9d731f4b`, já integrado em `bc20b90a`); (2) `pnpm check`
+  completo (o quirk de `test:stack` por espaço no caminho está em PR #181) e reconstrução da prévia
+  no SHA final com regeneração de `dist-preview.manifest.json` (D-12, A6); (3) **uma**
+  delivery-review (Codex Sol 6) sobre o diff inteiro; (4) **um** PR contra `main` — só com
+  autorização do Owner para push/PR — com `preview-R-0033.zip` e seu sha256 no corpo; (5) CI
+  remoto; (6) `evidence-R-0033.json`, `devai evidence record`/`verify`, `audit observe` no SHA do
+  merge, `closure.json` canônico a partir de `closure.draft.json`, `round close` + `round seal`.
+- **Inventário desatualizado (fora do lock desta janela; A5 item 7 adiado pelo maestro para a
+  janela 3, antes do PR):** `inventory-rait-web.md` §2, §3 e §5.1 ainda dizem "ausente", "sem
+  documentos", "sem Inquiry", "lista vazia" e "34 chaves"; vale A4 (49 coleções), com
+  `roteiro-jw-01.md` e `preview/rait-web/execucao.md`.
+- **ODs:** OD-C3-002…006 decididas (2026-10-14); OD-C3-007 e OD-C3-008 decididas (a) em
+  2026-10-15. **OD-C3-009 registrada (Aberta)** pelo maestro no registro canônico §C-0003 a partir da proposta de TASK-0008: divergências jornada × manifesto da mesma classe de OD-C3-007, achadas por
+  conferência das rotas das jornadas contra os papéis do manifesto (inventário §3) — JW-02 passos
+  3–4 (`/gestao/radar`, `/gestao/radar/:caseId`: manifesto só `rait-manager`; jornada do
+  `rait-coordinator`), JW-05 passo 4 (`/gestao/incidentes`: só `rait-manager`; jornada da
+  `rait-signing-authority`), JW-08 passo 8 (`/organizacao/jeton`: `rait-secretary`, `rait-hr`;
+  jornada do `rait-chair`). Opções como em OD-C3-007: (a) manter o manifesto e reescrever as
+  jornadas; (b) ampliar o manifesto (mudança de papel → `policy.ts`/fichas, decisão do Owner).
+  Recomendação do Architect: decidir antes do bootstrap da rodada J que abre cada jornada.
+- **Avisos que continuam valendo:** D-12 (build `preview` depois do `production`, que apaga
+  `dist/`; `pnpm check` apaga `dist/preview/`); D-01/D-20/D-21/D-22 do contrato; P-24
+  (`check.mjs resolve` provando as URLs do inventário) não implementado — fica como follow-up; o
+  `head` de `dist-preview.manifest.json` é o pai do commit de TASK-0006 (A6).
+- **Follow-ups fora do lock (não executados; entradas `R-0033 →` em `backlog.md`):**
+  `tools/devai/verify-round-tasks.mjs` ignora R > 20 (M5); `serve` de `apps/{dashboard,teat}/web`
+  (conferir o defeito de `buildTarget` corrigido no `rait-web`); SVGs `ARCH-RAIT-WEB-j01-*.svg`
+  divergentes do Mermaid; `rait-document:attach-official` sem botão (OD-R12-027/R-14);
+  `src/main.ts` sem `withInterceptorsFromDi()`; `Format: date` exibido um dia antes; chaves do kit
+  sem tradução (`ui.confirmDialog.cancel`, `ui.pagination.*`); rolagem horizontal a 360 px
+  (`table.stynx-table`, `rait-deadline-chip`); cabeçalhos da `rait-queue-table` com nomes de campo
+  (OD-R12-028); "Autor" vazio na minuta; 13 axe `moderate`; texto da minuta como estado local
+  (sem `source_pending` visível); 8 telas de leitura unitária sem slot `empty`; cores literais da
+  faixa sem tokens `--detran-*`; 13 datas herdadas só-data em `rait-fixtures.json` (FIX-0001);
+  `graft/` não versionado.
+
+### Estimativa revisada da fase J (TASK-0008)
+
+**Fontes:** `command-gap-analysis.md` §2–§5 (64 comandos: 13 alinhados, 35 desalinhados R-01…R-36
+[R-01 é a readequação acoplada a F-01], 16 faltantes F-01…F-16, 3 `fail-closed-assinatura`);
+`inventory-rait-web.md` §3 (rotas, níveis, papéis, comandos por tela) com A4; relatórios de
+TASK-0003/0004/0006 (o que a prévia mostrou); `rait-web-journeys/README.md` e as rotas/comandos
+citados em cada `JW-nn` (leitura por `grep`, fora da lista fechada — declarada no relatório).
+O prompt citava "R-01…R-22, F-01…F-14"; a fonte tem R-01…R-36 e F-01…F-16 — vale a fonte.
+
+**Regra de esforço (derivada das contagens, sem horas):** **P** = nenhum F-nn, nenhuma tela L0 a
+promover e só readequações de path/chave; **M** = 1–2 F-nn, ou 1–2 telas L0/L1 a promover, ou
+readequação de alvo/módulo/corpo; **G** = ≥ 3 F-nn, ou ≥ 3 telas L0 a promover, ou passo principal
+bloqueado por `fail-closed-assinatura` (OD-R25-004) ou por OD aberta do Owner.
+
+**Transversal a todas as jornadas (entra no primeiro CTG de frontend da R-0025, P):**
+`main.ts` com `withInterceptorsFromDi()` (bearer, tenant e request-id do kit inativos em
+produção — sem isso nenhum comando ligado autentica); `Format: date` um dia antes
+(`stynxIntlDate` × `AAAA-MM-DD`); chaves do kit sem tradução; `policy.ts` A-1…A-4 e OD-R25-015
+(chave canônica tupla × rota) antes dos F-nn; `caseAccessGuard` (hoje `true`, OD-R25-002).
+
+| Jornada (papel)                     | Telas (nível)                                                                                                       | Comandos a ligar                                                                                                                                                                                                                                   | Rotas de backend existentes × faltantes               | `policy.ts`                                                                           | Esforço |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------- | ------- |
+| JW-01 (`rait-analyst`)              | 7 L2 na prévia (painel, fila/defesa, triagem, dossiê, diligências, retomar, minuta) + resumo/histórico (9–10)       | claim-next, admit (alinhados); reject R-02, answer R-05, extend R-06, submit-draft R-07 (2 passos), attach-official R-14; triage F-01+R-01, open-inquiry F-02                                                                                      | 7 × 2 (F-01, F-02 em CTG-0002)                        | tuplas existentes para F-01/F-02; R-05/R-06 renomeiam chave; R-14 usa a chave do CRUD | **M**   |
+| JW-02 (`rait-coordinator`)          | radar, radar/:caseId (L2, divergência de papel), produção, capacidade, qualidade, pools (L1), escala (L0)           | reassign R-21, schedule:publish R-22 (2 passos); acknowledge-alert F-13, capacity-plan:publish F-15, quality-sample:review F-16; pool:update F-14 se a tela L1 for promovida                                                                       | 2 × 3–4 (CTG-0003)                                    | tuplas de F-13/F-15/F-16; S de R-22 restringe ao coordenador; OD-R25-011              | **G**   |
+| JW-03 (`rait-secretary`, protocolo) | 6 de `/protocolo/*` + comunicações (7 L2, `loaded` sim/parcial)                                                     | protocol (alinhado); remit-jari R-03, withdraw R-12, resolve-pending-content R-15, redirect R-16                                                                                                                                                   | 5 × 0                                                 | nenhuma chave nova                                                                    | **M**   |
+| JW-04 (`rait-secretary`, colegiado) | distribuição, lote, sessão, banca, ata, arquivo/casos, retenção, remessas (L2); jeton (L0)                          | batch:draw (alinhado); batch:open R-17, batch:approve R-18 (`fail-closed`), receive-judging-body R-04, minutes:generate R-28; attendance F-05/F-06 (banca); jeton:generate (alinhado; colisão CRUD, OD-R25-014); `rait-archive:seal` sem método M8 | 6 × 2 (F-05, F-06) + 1 sem método                     | tuplas novas F-05/F-06 (OD-R25-008/009); OD-R25-015 (`rait-batch:*`)                  | **G**   |
+| JW-05 (`rait-signing-authority`)    | assinatura, assinatura/:caseId, decisão (L2); incidentes (L2, divergência de papel)                                 | sign R-08 (`fail-closed`), return-draft R-09 (OD-R12-044), extinction:declare R-13 (módulo infração); impediment:declare F-07                                                                                                                      | 3 × 1                                                 | F-07 (tupla + S); OD-R25-004 bloqueia o passo principal                               | **G**   |
+| JW-06 (`rait-central-authority`)    | provimentos (L2; `loaded` não — join vazio, `InfractionClient` sem coleção, D-07)                                   | authority-decide R-10, waive R-11 (alvo = agregado infração)                                                                                                                                                                                       | 2 × 0                                                 | nenhuma chave nova                                                                    | **M**   |
+| JW-07 (`rait-rapporteur`)           | fila/recurso, relatoria, voto, sessão, vistas, dossiê (L2)                                                          | batch:accept R-19, batch:impede R-20, vote R-24, view-request R-26; open-inquiry F-02, opinion:register F-03, register-view-vote F-04                                                                                                              | 4 × 3 (CTG-0002)                                      | tupla nova F-04 (OD-R25-010); OD-R25-015                                              | **G**   |
+| JW-08 (`rait-chair`)                | lote, pauta, extraordinária, sessão, banca, ata (L2); jeton (L0, divergência de papel)                              | session:open (alinhado), jeton:approve (alinhado); agenda:close R-23, batch:approve R-18 e minutes:sign R-29 (`fail-closed`), vote R-24, casting-vote R-25, proclaim R-27, convene-extraordinary R-30 (OD-R25-013)                                 | 9 × 0 (impediment:decide F-09 se a jornada a incluir) | A-1 (`rait-minutes:sign`); OD-R25-015; OD-R25-004 bloqueia 2 passos                   | **G**   |
+| JW-09 (`rait-manager`)              | radar, radar/:caseId, incidentes (L2); produção, capacidade, turmas (L1); integrações ×3 (L0)                       | reassign R-21, extinction:declare R-13; acknowledge-alert F-13, capacity-plan:publish F-15, unit:constitute F-11 (+ activate F-12); export:create (alinhado; colisão CRUD); `rait-incident:open` sem método M8                                     | 3 × 4–5 + 1 sem método                                | tuplas F-11/F-12/F-13/F-15; OD-R25-011/014                                            | **G**   |
+| JW-10 (`rait-hr`, `rait-finance`)   | membros (L1); financeiro ×4 e jeton (L0)                                                                            | refund:order R-33, payment:reconcile R-34; member:mandate F-10 (OD-R25-012); collection:issue e debt:handoff (alinhados; colisão CRUD, OD-R25-014)                                                                                                 | 4 × 1                                                 | tupla F-10; OD-R25-014                                                                | **G**   |
+| JW-11 (`integration-operator`)      | integrações ×3 (L0)                                                                                                 | retry R-35 (alvo = item do outbox), reconcile R-36                                                                                                                                                                                                 | 2 × 0                                                 | nenhuma chave nova; outbox era da R-0022 (fase S)                                     | **G**   |
+| JW-12 (`AUDITOR`, `agency-admin`)   | arquivo/busca, arquivo/casos, auditoria/trilha (L2; trilha `loaded` vazia); pools (L1); exportações e admin ×3 (L0) | parameter:update R-31 (contrato OPS A-5), calendar:update R-32 (A-3); export:create e suspension-act:create (alinhados; colisão CRUD); pool:update F-14                                                                                            | 4 × 1                                                 | A-3 (`rait-holiday:*`), A-5; OD-R25-014                                               | **G**   |
+
+**Leitura da tabela para a R-0025:** os 16 F-nn e os 35 R-nn não mudam com a prévia (ela não
+toca backend); o que a prévia muda é (i) a fixture com paridade (#184), que torna as telas da JW-01
+`loaded` com dados da seed, (ii) a prova de que os 8 comandos da JW-01 hoje caem em
+`RaitCommandUnavailableError` sem efeito, e (iii) os defeitos transversais acima, que entram
+**antes** de ligar qualquer comando. A estimativa original da R-0025 (`plan.md` §Execução:
+≈ 4 janelas, O1 ≈ 0,5; O2 ≈ 1; O3 ≈ 0,5–1; O4 ≈ 1; O5 + final ≈ 1) é mantida como referência;
+não há medição nova que a revise em janelas. Sequência sugerida para M3: JW-01 (M) primeiro —
+CTG-0002 F-01/F-02 + R-01/R-02/R-05/R-06/R-07/R-14 + transversais —, depois JW-03 e JW-06 (M, sem
+F-nn), e as jornadas G conforme as ODs do Owner forem decididas.
+
+**Superfícies:**
+
+| Superfície      | O que a prévia já cobre                                                                                 | O que falta para a rodada J                                                                                                                   | Rodada J             |
+| --------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `rait-web`      | 74 entradas, 64 páginas × 5 estados, JW-01 passos 1–8 capturada, 0 `/v1`, `dist/preview/` com manifesto | tabela acima; transversais; ODs R-0025                                                                                                        | R-0025               |
+| `portal-web`    | nada ainda (TASK-0009 → TASK-0007 na janela 3)                                                          | inventário rota × fixture (`inventory-portal-web.md`, TASK-0009); delegações desligadas (`SERVICE_UNAVAILABLE`) dependem do backend de R-0027 | R-0027               |
+| `dashboard-web` | nada (fora do lock; 23 entradas todas L0 — R-0016)                                                      | L0 → L2 inteiro; produtores RAIT pendentes da fase S onde dependiam do outbox da R-0022 (C-0003 §4)                                           | R-0026               |
+| `teat-web`      | nada (fora do lock); já tem build `homologation` sem rede (ADR-0033)                                    | shell no kit não entregue por R-0033 (C-0003 §4: a migração só ocorre se R-0033 entregar); ligação depende do lock de R-0028                  | R-0029 (após R-0028) |
+
+**O que não pôde ser estimado, e por quê:** (1) janelas ou horas por jornada — nenhuma fonte de
+medição; só a estimativa global da R-0025; (2) as jornadas G bloqueadas por OD (OD-R25-004,
+-007…-015, OD-R12-044) — o esforço depende da opção escolhida; (3) `rait-archive:seal` e
+`rait-incident:open` — citados por JW-04/JW-09 sem método M8 entre os 64 comandos (precisam de
+ficha/contrato primeiro); (4) o estado `loaded` das telas de JW-02…12 além do inventário §3, que
+ainda está pré-A4 (refresco na janela 3); (5) `portal-web`, `dashboard-web` e `teat-web` — sem
+inventário desta rodada (só o do portal virá de TASK-0009); (6) o custo backend de cada F-nn além
+da contagem (paths e `operationId` de §5 são propostos, não contratados).
 
 ## Leitura
 
