@@ -202,6 +202,65 @@ telas antes marcadas parciais/vazias por falta de coleção passam a `loaded` co
 `rait-fixtures.md` §10). Nenhum critério muda; o prompt não é reescrito (PC inalterado) — a nota
 vai na mensagem de despacho.
 
+**A5 — divergências spec × contrato × builder apontadas por TASK-0003 (iteração 1, janela 2,
+2026-10-15; relatório em `reports/TASK-0003.md`). Decisões do Architect; nenhum critério C-01…C-10
+muda, nenhuma decisão do Owner é reaberta:**
+
+1. **B1 — parser do inventário.** `readInventoryRows()` de `preview.spec-helper.ts` lia toda linha
+   `| <n> |` do inventário (inclusive §5.1 e §5.2, sem coluna 7). Correção **no helper** (Inspector):
+   só as linhas entre `## 3.` e `## 4.` são lidas (74 entradas). O inventário não muda. Não é
+   enfraquecimento de teste: é o parser cumprindo o que o próprio comentário do helper prometia.
+2. **B2 — `angular.json` × builder Angular 22** (contrato §2 emendado): (i) `assets` da fixture com
+   `input: "src/app/preview/fixtures"`, onde `src/app/preview/fixtures` é um **link simbólico
+   versionado** para `../../../../../../docs/framework/arch/fixtures` (o builder rejeita asset fora
+   da raiz do workspace; o link mantém a fonte única e P-13 byte a byte); (ii) `index: { input:
+"src/index.preview.html", output: "index.html" }` (string geraria `index.preview.html`; C-01 e as
+   aceitações exigem `dist/preview/index.html`); (iii) `serve.preview.host = "127.0.0.1"` (o
+   `smoke.mjs` consulta `127.0.0.1`; o dev-server padrão escuta `localhost` = `::1` no macOS).
+   `preview-production-gate.spec.ts` passa a esperar exatamente isso (Inspector).
+3. **B3 — `/sem-permissao` sem `data-screen`.** `ForbiddenPageComponent` (`rait-forbidden-page`,
+   `core/pages/forbidden.page.ts`) não tem `data-screen` por decisão do app (M14/C-2A-13) e `core/`
+   não é tocado pela prévia. Para a entrada `sem-permissao`, P-04/P-06 provam o host
+   `rait-forbidden-page` (e o pathname) em vez de `[data-screen]` (Inspector: `preview-coverage`,
+   `preview-mark`).
+4. **B4 — `empty` em telas sem slot de lista.** Regra 2 do contrato §3 estendida: o seletor de
+   `empty` aceita `[data-status="empty"]` em qualquer elemento da página (inclui
+   `rait-dossier-viewer`); tela cujas leituras são todas unitárias (painel: `ShiftSummary`, sem
+   `emptyWhen`) **não tem** slot a esvaziar — sob `pv_estado=empty` o host fica `data-status="ready"`
+   e a captura `empty` de C-04 é idêntica à `loaded` (registrado no roteiro, não escondido). O
+   Inspector enumera por tela em `JW01_SCREENS` (lendo o template) quais são os casos.
+5. **B5 — A4 nos specs.** `preview-fixture-source.spec.ts` deixa de fixar as 14 leituras como "sem
+   coleção" e passa a mapeá-las às coleções novas (`parties`, `documents`, `admissibility`,
+   `deadlines`, `inquiries`, `decisions`, `communications`, `caseEvents`, `assignments`,
+   `impediments`, `clockAlerts`, `attendance`, `votes`, `minutes`), com asserções derivadas da JSON
+   (ids e contagens por caso, nunca valores digitados); D-07 fica restrito a coleção realmente
+   ausente (nenhuma do inventário §2 após o PR #184). `preview-not-functional.spec.ts` passo 6:
+   `inquiries` tem 1 registro do caso 08 (`…-000015000001`) → a prova passa a positiva (um
+   `rait-inquiry-card`; "responder"/"prorrogar" acionados registram `rait-inquiry:answer` /
+   `rait-inquiry:extend` — strings M8 conferidas em `RAIT_COMMANDS` — como não funcionais, nunca
+   sucesso). Campos exibidos formatados sem coluna na seed (`attached_at`, `evaluated_at`,
+   `decided_at`, `declared_at`, `assigned_at`) ficam `source_pending` (D-06 (5)) — célula vazia é
+   lacuna visível, registrada no roteiro e em §Retomada para a fase J. O Engineer (TASK-0003
+   iteração 2) liga as 14 leituras e os `get*` correspondentes às coleções novas.
+6. **Desvios aceitos (contrato §9):** **D-20** `{ provide: STYNX_AUTH_PROVIDER, useValue: null }`
+   em `preview.providers.ts` — o `AuthInterceptor` do kit adia toda requisição em
+   `Promise.resolve(getAccessToken())`; sem provedor, `GET assets/**` passa síncrono e sem
+   `Authorization` (mesmo efeito de token nulo; a sessão sintética não tem token). **D-01** passa a
+   dizer que `setState` também mescla `pv_papel` com o papel corrente. **D-21** `adapters/preview-reader.ts`
+   (leitura comum por cenário + `fixtureDateTime`/`sourcePending` de D-06) é acréscimo aceito ao
+   layout.
+7. **Locks desta iteração.** Inspector (TASK-0002 iteração 2): `apps/rait/web/src/app/preview/*.spec.ts`,
+   `preview.spec-helper.ts`, e a coluna "Observação"/expectativas de
+   `work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md` só onde contradizem a fixture atual.
+   Engineer (TASK-0003 iteração 2): o lock original de TASK-0003. Os dois correm em série
+   (Inspector primeiro). `inventory-rait-web.md` §2/§3/§5.1 ("ausente", "sem documentos", "sem
+   Inquiry", "lista vazia") é refrescado por TASK-0008 (Architect) no fechamento; até lá, A4 prevalece.
+8. **Follow-ups fora do lock (relatório do Engineer):** `src/main.ts` usa `provideHttpClient()` sem
+   `withInterceptorsFromDi()` — os interceptors DI do kit (bearer, tenant, request-id) não estão
+   ativos em produção, ao contrário do comentário de `rait-http.ts` (relevante para a fase J; vai ao
+   backlog por TASK-0008); chaves do kit sem tradução (`ui.confirmDialog.cancel`, `ui.pagination.*`),
+   já em produção.
+
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
 | Critério | Verificação                                                                                                                                                                                                                                           |
