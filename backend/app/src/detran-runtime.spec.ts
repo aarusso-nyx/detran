@@ -7,6 +7,7 @@ import {
   DetranDurableIdempotencyBackend,
   DetranPersistedAuditSink,
   DetranPipelineSqlExecutor,
+  DetranPersistentPipelineStore,
   DetranPolicyEvaluator,
   detranDataOptions,
   detranPipelineOptions,
@@ -213,6 +214,54 @@ describe('DETRAN runtime hooks', () => {
       rowCount: 1,
     });
     expect(tx).toHaveBeenCalledWith(expect.any(Function), { role: 'app' });
+  });
+
+  it('validates membership before persistence when middleware has initialized metadata only', async () => {
+    const query = vi.fn().mockImplementation(async (sql: string) => ({
+      rows: sql.includes('select exists')
+        ? [{ allowed: true }]
+        : [{ hitCount: 1 }],
+    }));
+    const store = new DetranPersistentPipelineStore({ query } as never);
+    const seed = { requestId: 'request-1', startedAt: new Date() };
+    const runWithRequestContext = vi.fn(async (_seed, work) => work());
+    store.bindRequestContext(
+      {
+        hasActiveContext: () => true,
+        snapshot: () => seed,
+      } as never,
+      { runWithRequestContext } as never,
+    );
+    const decision = {
+      tenantId: '11111111-1111-4111-8111-111111111111',
+      userId: '22222222-2222-4222-8222-222222222222',
+      bucketKey: 'test',
+      ttlMs: 60_000,
+      scope: 'test',
+      cost: 1,
+      limit: 10,
+    };
+    await expect(store.consume(decision as never)).resolves.toMatchObject({
+      allowed: true,
+    });
+    expect(runWithRequestContext).toHaveBeenCalledWith(
+      {
+        ...seed,
+        tenantId: decision.tenantId,
+        actorId: decision.userId,
+      },
+      expect.any(Function),
+    );
+    expect(query.mock.calls[0]?.[0]).toContain('auth.memberships');
+    expect(query.mock.calls[1]?.[0]).toContain(
+      'integration.rate_limit_windows',
+    );
+    query.mockClear();
+    query.mockResolvedValue({ rows: [{ allowed: false }] });
+    await expect(store.consume(decision as never)).rejects.toThrow(
+      'TENANT_ACCESS_DENIED',
+    );
+    expect(query).toHaveBeenCalledTimes(1);
   });
 
   it('persists audit envelopes and has no unbound/in-memory fallback', async () => {

@@ -1,19 +1,19 @@
 ---
 id: CONSTITUTION
-title: DEVAI Constitution 1.0.0
+title: DEVAI Constitution 1.0.2
 type: constitution
 status: active
-date: 2026-07-25
+date: 2026-09-30
 authority: Architect
 supersedes: null
 superseded_by: null
 ---
 
-# DEVAI Constitution — 1.0.0
+# DEVAI Constitution — 1.0.2
 
 ## Status and scope
 
-**Version:** 1.0.0
+**Version:** 1.0.2
 **Status:** active
 
 This is the immutable axiom set for DEVAI. Every other artifact in the framework — contracts, charters, skills, bootstrap layout, scorecard — derives from these axioms and may not contradict them.
@@ -83,7 +83,7 @@ Some cells in the aspect grid are degenerate (e.g., Inventory × Idiomaticity) a
 
 Authority is enforced by filesystem path for every write performed through the DEVAI runtime. The runtime refuses writes that violate this mapping before mutation. The mutation call-site denominator is mechanically derived; it admits zero unauthorized sites and zero exemptions, and the derivation gate must demonstrably fail on stale fixtures. Editors, shells, and external agents outside the runtime require a declared host-enforcement adapter; DEVAI must report that boundary rather than imply control it does not possess.
 
-Authority is decided by a fixed path prefix of at most two segments — a table lookup, never a wildcard rule with a default remainder:
+Core authority is decided by a fixed path prefix of at most two segments — a table lookup, never a wildcard rule with a default remainder:
 
 - `law/` — Architect (F1-law: constitution, register, ADRs, schemas, invariants, trace, policy sources; `law/glossary/` joint with Owner).
 - `product/` — Owner (F1-business: journeys, use-cases, stories, rules, mandates).
@@ -98,7 +98,7 @@ Authority is decided by a fixed path prefix of at most two segments — a table 
 - Root prose files (`README.md`, `CLAUDE.md`, `AGENTS.md`) — Architect.
 - Host-tool configuration directories (`.changeset/`, `.claude/`, and peers) — path fixed by the toolchain; contents classified by this table per content class (agent permission policy is F5-host under Architect authority; runtime directories are scratch-class).
 
-Clients may extend the path mapping for client-specific disciplines. Extensions are additive; the core mapping is immutable at a given constitution version.
+Clients may extend the path mapping for client-specific disciplines through a declared, versioned, and bound extension. An extension names its roots explicitly; no root is inferred from a directory's existence, and a root never equals or contains a core-table prefix. Under a declared root, authority is decided by path class in a fixed order: the architecture class (schema definitions, blueprints, and the architectural specifications the extension names) is Architect; the test class (test directories and colocated test files) is Inspector; every remaining path under the root, including local implementation documentation, is Engineer. A class rule takes precedence over the root grant, the architecture class over the test class, and two extension rules that would grant different roles at the same precedence are ambiguous: the write is refused. Extensions are additive: they never alter, narrow, or shadow a core row, and the core mapping is immutable at a given constitution version. An extension is materialized only through a registered binding action from a validated, digest-bound source and is verified at every write; an extension whose source is absent, invalid, or unbound fails closed, and no grant survives it.
 
 ---
 
@@ -210,7 +210,7 @@ A merge requires the hard gate fully green. The hard gate is non-negotiable.
 
 ### Article 18. Soft gate
 
-The soft gate is the stochastic component of Error(0). It comprises LLM-judged scorings against documented rubrics for: spec coherence, plant idiomaticity not covered by linters, test depth and non-triviality, spec-to-test traceability quality, and mutation-testing kill rate where applicable.
+The soft gate is the stochastic component of Error(0). It comprises LLM-judged scorings against documented rubrics for: spec coherence, plant idiomaticity not covered by linters, test depth and non-triviality, and spec-to-test traceability quality. Mutation testing is optional external hardening, provided independently by Bedel. It must never execute in CI or gate verification, certification, preparation, export, publication, or adopter governance. Missing, invalid, incomplete, or failing mutation evidence has no effect on delivery eligibility; its disposition is not-required, never a synthetic pass.
 
 Every gate verdict is tri-state: **PASS**, **REVIEW**, or **FAIL**. PASS allows merge; FAIL blocks merge; REVIEW triggers the tie-breaker ladder (Article 23) before resolution. The hard gate emits only PASS or FAIL; the soft gate may emit any of the three.
 
