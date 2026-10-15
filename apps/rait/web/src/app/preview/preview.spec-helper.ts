@@ -92,15 +92,33 @@ export interface InventoryRow {
   readonly previewPath: string;
 }
 
+/** Cabeçalhos que delimitam a tabela §3 do inventário (adenda A5 item 1, B1). */
+const INVENTORY_SECTION_START = /^## 3\./;
+const INVENTORY_SECTION_END = /^## 4\./;
+
 /**
- * Linhas da tabela §3 de `inventory-rait-web.md` (74 entradas, ordem do manifesto). Colunas
- * usadas: 2 (`Rota`) e 7 (`URL de prévia`), ambas entre crases; nenhuma das colunas 1–7 contém
- * `|`.
+ * Linhas da tabela §3 de `inventory-rait-web.md` (74 entradas, ordem do manifesto). Só as linhas
+ * entre os cabeçalhos `## 3.` e `## 4.` são lidas (A5 item 1: as tabelas de §5.1/§5.2 também têm
+ * `| <n> |` e não têm coluna 7). Colunas usadas: 2 (`Rota`) e 7 (`URL de prévia`), ambas entre
+ * crases; nenhuma das colunas 1–7 contém `|`. Linha numerada da §3 sem rota/URL → erro
+ * (fail-closed); §3 ausente ou sem linhas → erro.
  */
 export function readInventoryRows(): readonly InventoryRow[] {
   const text = readFileSync(INVENTORY_PATH, 'utf8');
   const rows: InventoryRow[] = [];
+  let inSection = false;
+  let sawSection = false;
   for (const line of text.split(/\r?\n/)) {
+    if (INVENTORY_SECTION_START.test(line)) {
+      inSection = true;
+      sawSection = true;
+      continue;
+    }
+    if (INVENTORY_SECTION_END.test(line)) {
+      inSection = false;
+      continue;
+    }
+    if (!inSection) continue;
     if (!/^\|\s*\d+\s*\|/.test(line)) continue;
     const cells = line.split('|');
     const routeMatch = /`([^`]+)`/.exec(cells[2] ?? '');
@@ -115,6 +133,9 @@ export function readInventoryRows(): readonly InventoryRow[] {
       previewUrl,
       previewPath: previewUrl.split('?')[0] ?? previewUrl,
     });
+  }
+  if (!sawSection || rows.length === 0) {
+    throw new Error(`${INVENTORY_PATH}: §3 ausente ou sem linhas`);
   }
   return rows;
 }
@@ -136,13 +157,24 @@ export function minimalRoleOf(entry: RaitRouteEntry): RaitRoleCode {
  * Telas da JW-01 na prévia (inventário §5.1, passos 1–8; OD-C3-007 (a), decidida pelo Owner em
  * 2026-10-15). `caseScreen` = a tela tem entidade principal (o caso) que `empty` não esvazia
  * (contrato §3 regra 2). `sourcePendingAllowed` = única tela onde o inventário prevê o texto
- * `source_pending` em `loaded` (passo 8, "texto `source_pending`"; §3 linha 11).
+ * `source_pending` em `loaded` (passo 8, "texto `source_pending`"; §3 linha 11). `emptySlot`
+ * (A5 item 4, B4; lido do template da página) = a página tem slot de lista cujo `data-status`
+ * vira `empty` sob `pv_estado=empty`:
+ * - painel (`shift-dashboard.page.ts`): só `rait-page-state [status]="facade.painel.status()"`
+ *   (`ShiftSummary`, leitura unitária sem `emptyWhen`); as listas curtas são `@if` sem
+ *   `data-status` → **sem slot**;
+ * - fila/defesa (`defense-pool-queue.page.ts`) e painel/retomar (`resume-tray.page.ts`):
+ *   `rait-queue-table [status]` da lista;
+ * - triagem, diligências, minuta (`triage`/`inquiries`/`draft.page.ts`): `rait-page-state
+ *   [status]="status()"` = `combineStatus(caso, <lista>)`, cujo último termo é a lista;
+ * - dossiê (`dossier.page.ts`): `rait-dossier-viewer [status]="facade.documentos.status()"`.
  */
 export interface Jw01Screen {
   readonly step: string;
   readonly route: string;
   readonly caseScreen: boolean;
   readonly sourcePendingAllowed: boolean;
+  readonly emptySlot: boolean;
 }
 
 export const JW01_SCREENS: readonly Jw01Screen[] = [
@@ -151,42 +183,49 @@ export const JW01_SCREENS: readonly Jw01Screen[] = [
     route: 'painel',
     caseScreen: false,
     sourcePendingAllowed: false,
+    emptySlot: false,
   },
   {
     step: '2',
     route: 'fila/defesa',
     caseScreen: false,
     sourcePendingAllowed: false,
+    emptySlot: true,
   },
   {
     step: '3–4',
     route: 'casos/:id/triagem',
     caseScreen: true,
     sourcePendingAllowed: false,
+    emptySlot: true,
   },
   {
     step: '5',
     route: 'casos/:id/dossie',
     caseScreen: true,
     sourcePendingAllowed: false,
+    emptySlot: true,
   },
   {
     step: '6',
     route: 'casos/:id/diligencias',
     caseScreen: true,
     sourcePendingAllowed: false,
+    emptySlot: true,
   },
   {
     step: '7',
     route: 'painel/retomar',
     caseScreen: false,
     sourcePendingAllowed: false,
+    emptySlot: true,
   },
   {
     step: '8',
     route: 'casos/:id/minuta',
     caseScreen: true,
     sourcePendingAllowed: true,
+    emptySlot: true,
   },
 ];
 
@@ -309,6 +348,13 @@ export function previewScreenElement(
   return root.querySelector<HTMLElement>('[data-screen]');
 }
 
+/**
+ * Entrada do manifesto cuja página não tem `data-screen` (A5 item 3, B3): `ForbiddenPageComponent`
+ * (`core/pages/forbidden.page.ts`, M14/C-2A-13). A prova de renderização é o host abaixo.
+ */
+export const FORBIDDEN_ROUTE = 'sem-permissao';
+export const FORBIDDEN_PAGE_SELECTOR = 'rait-forbidden-page';
+
 /** Pathname de `Router.url` (sem query). */
 export function pathnameOf(url: string): string {
   return url.split('?')[0] ?? url;
@@ -323,18 +369,33 @@ export async function settle(harness: RouterTestingHarness): Promise<void> {
   }
 }
 
-/** Slots de lista (`PageState`/`QueueTable`) com `data-status="empty"`. */
-export const EMPTY_LIST_SLOT_SELECTOR =
-  'rait-page-state[data-status="empty"], rait-queue-table[data-status="empty"]';
+/**
+ * Estado `empty` observável (contrato §3 regra 2, emendada por A5 item 4): `data-status="empty"` em
+ * qualquer elemento da página (`PageState`, `QueueTable`, `rait-dossier-viewer`…).
+ */
+export const EMPTY_STATUS_SELECTOR = '[data-status="empty"]';
+
+/** Elementos descendentes do host da página com `data-status="empty"` (slots de lista). */
+export function emptySlotsOf(screen: HTMLElement | null): number {
+  return screen?.querySelectorAll(EMPTY_STATUS_SELECTOR).length ?? 0;
+}
+
+/** Host da página + descendentes com `data-status="empty"` (prova de ausência de `empty`). */
+export function emptyStatusesOf(screen: HTMLElement | null): number {
+  if (!screen) return 0;
+  return (screen.matches(EMPTY_STATUS_SELECTOR) ? 1 : 0) + emptySlotsOf(screen);
+}
 
 /**
  * Espera o estado observável do cenário (contrato §3): `loading`/`error`/`forbidden` no
- * `data-status` do host da página; `empty` = algum slot de lista em `empty`; `loaded` = fixture
- * carregada e detecção estabilizada.
+ * `data-status` do host da página; `empty` = algum slot da página em `empty` quando
+ * `screen.emptySlot` (padrão), ou — tela sem slot de lista (A5 item 4) — host `ready` e nenhum
+ * `data-status="empty"`; `loaded` = fixture carregada e detecção estabilizada.
  */
 export async function waitForScenario(
   harness: RouterTestingHarness,
   state: PreviewScreenState,
+  screenSpec: Pick<Jw01Screen, 'emptySlot'> = { emptySlot: true },
 ): Promise<void> {
   await settle(harness);
   if (state === 'loaded') return;
@@ -342,10 +403,13 @@ export async function waitForScenario(
     harness.detectChanges();
     const screen = previewScreenElement(harness);
     expect(screen).not.toBeNull();
+    if (state === 'empty' && screenSpec.emptySlot) {
+      expect(emptySlotsOf(screen)).toBeGreaterThan(0);
+      return;
+    }
     if (state === 'empty') {
-      expect(
-        screen?.querySelectorAll(EMPTY_LIST_SLOT_SELECTOR).length ?? 0,
-      ).toBeGreaterThan(0);
+      expect(screen?.getAttribute('data-status')).toBe('ready');
+      expect(emptyStatusesOf(screen)).toBe(0);
       return;
     }
     expect(screen?.getAttribute('data-status')).toBe(state);

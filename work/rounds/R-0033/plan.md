@@ -227,18 +227,24 @@ muda, nenhuma decisão do Owner é reaberta:**
    `empty` aceita `[data-status="empty"]` em qualquer elemento da página (inclui
    `rait-dossier-viewer`); tela cujas leituras são todas unitárias (painel: `ShiftSummary`, sem
    `emptyWhen`) **não tem** slot a esvaziar — sob `pv_estado=empty` o host fica `data-status="ready"`
-   e a captura `empty` de C-04 é idêntica à `loaded` (registrado no roteiro, não escondido). O
+   e nenhum `[data-status="empty"]` existe; **medido pelo Inspector:** como `ShiftSummary` soma as
+   listas que o cenário esvazia, o painel em `empty` mostra contagens 0 e sem listas curtas — a
+   captura `empty` difere da `loaded` (a redação inicial desta adenda dizia "idêntica"; corrigida;
+   registrado no roteiro, não escondido). O
    Inspector enumera por tela em `JW01_SCREENS` (lendo o template) quais são os casos.
 5. **B5 — A4 nos specs.** `preview-fixture-source.spec.ts` deixa de fixar as 14 leituras como "sem
    coleção" e passa a mapeá-las às coleções novas (`parties`, `documents`, `admissibility`,
    `deadlines`, `inquiries`, `decisions`, `communications`, `caseEvents`, `assignments`,
    `impediments`, `clockAlerts`, `attendance`, `votes`, `minutes`), com asserções derivadas da JSON
    (ids e contagens por caso, nunca valores digitados); D-07 fica restrito a coleção realmente
-   ausente (nenhuma do inventário §2 após o PR #184). `preview-not-functional.spec.ts` passo 6:
+   ausente — **as 6 leituras de `InfractionClient` e `NotificationClient`** continuam sem coleção na
+   JSON (`rait-fixtures.md` §10; fora do mandato do PR #184); a redação inicial "nenhuma" estava
+   errada e foi corrigida pelo Inspector. `preview-not-functional.spec.ts` passo 6:
    `inquiries` tem 1 registro do caso 08 (`…-000015000001`) → a prova passa a positiva (um
-   `rait-inquiry-card`; "responder"/"prorrogar" acionados registram `rait-inquiry:answer` /
-   `rait-inquiry:extend` — strings M8 conferidas em `RAIT_COMMANDS` — como não funcionais, nunca
-   sucesso). Campos exibidos formatados sem coluna na seed (`attached_at`, `evaluated_at`,
+   `rait-inquiry-card`; "responder"/"prorrogar" acionados registram `rait-case:answer` /
+   `rait-case:extend` — as strings M8 de `RAIT_COMMANDS`, `data/models/commands.ts`; a redação
+   anterior `rait-inquiry:*` estava errada e foi corrigida pelo Inspector — como não funcionais,
+   nunca sucesso). Campos exibidos formatados sem coluna na seed (`attached_at`, `evaluated_at`,
    `decided_at`, `declared_at`, `assigned_at`) ficam `source_pending` (D-06 (5)) — célula vazia é
    lacuna visível, registrada no roteiro e em §Retomada para a fase J. O Engineer (TASK-0003
    iteração 2) liga as 14 leituras e os `get*` correspondentes às coleções novas.

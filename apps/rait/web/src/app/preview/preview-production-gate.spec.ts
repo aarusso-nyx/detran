@@ -5,12 +5,15 @@
 // cobre a entrada; `src/index.preview.html` monta a raiz de prévia; `preview.pt-BR.json` só tem as
 // chaves novas do contrato §4, nenhuma já existente no catálogo do app. Lê arquivos do disco (os
 // de produção da prévia ainda não existem — TASK-0003 — e estes `it` falham até lá). O gate de
-// marca sobre `dist/` (P-01/P-02 por comando) é de TASK-0003/0006.
-import { readdirSync, readFileSync } from 'node:fs';
+// marca sobre `dist/` (P-01/P-02 por comando) é de TASK-0003/0006. Adenda A5 item 2 (B2, contrato
+// §2 emendado): `index` em forma de objeto (saída `index.html`), asset da fixture lido do link
+// simbólico versionado `src/app/preview/fixtures` (fonte única, P-13 byte a byte) e
+// `serve.preview.host = "127.0.0.1"`.
+import { lstatSync, readdirSync, readFileSync, readlinkSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
-import { APP_SRC_ROOT, readAppCatalog } from '../../testing/kb';
+import { APP_SRC_ROOT, FIXTURES_PATH, readAppCatalog } from '../../testing/kb';
 import { PREVIEW_CATALOG_CONTRACT } from './preview.spec-helper';
 
 const APP_ROOT = join(APP_SRC_ROOT, '..');
@@ -67,11 +70,21 @@ const angular = (): AngularJson['projects'][string]['architect'] =>
   readJson<AngularJson>(join(APP_ROOT, 'angular.json')).projects['rait-web']
     .architect;
 
-/** Layout fixo (prompt TASK-0002 §Layout; contrato §2, linha `angular.json`). */
+/** Layout fixo (prompt TASK-0002 §Layout; contrato §2, linha `angular.json`, emendada por A5). */
 const FIXTURE_ASSET = {
   glob: '*.json',
-  input: '../../../docs/framework/arch/fixtures',
+  input: 'src/app/preview/fixtures',
   output: 'assets/preview',
+};
+
+/** A5 item 2 (i): link simbólico versionado do asset da fixture (contrato §2, linha `fixtures`). */
+const FIXTURES_LINK = join(PREVIEW_DIR, 'fixtures');
+const FIXTURES_LINK_TARGET = '../../../../../../docs/framework/arch/fixtures';
+
+/** A5 item 2 (ii): `index` em forma de objeto (a forma string geraria `index.preview.html`). */
+const PREVIEW_INDEX = {
+  input: 'src/index.preview.html',
+  output: 'index.html',
 };
 
 describe('C-01/P-02 — o módulo de prévia não entra em production/development (M4)', () => {
@@ -111,7 +124,7 @@ describe('C-01 — angular.json (layout fixo)', () => {
     const preview = angular().build.configurations['preview'];
     expect(preview).toBeDefined();
     expect(preview?.['browser']).toBe('src/main.preview.ts');
-    expect(preview?.['index']).toBe('src/index.preview.html');
+    expect(preview?.['index']).toEqual(PREVIEW_INDEX);
     expect(preview?.['outputPath']).toEqual({
       base: 'dist/preview',
       browser: '',
@@ -129,10 +142,23 @@ describe('C-01 — angular.json (layout fixo)', () => {
     ]);
   });
 
-  it('dado serve.configurations.preview quando lido então buildTarget rait-web:build:preview', () => {
-    expect(angular().serve.configurations['preview']?.['buildTarget']).toBe(
-      'rait-web:build:preview',
-    );
+  it('dado serve.configurations.preview quando lido então exatamente buildTarget rait-web:build:preview e host 127.0.0.1 (A5 item 2 (iii))', () => {
+    expect(angular().serve.configurations['preview']).toEqual({
+      buildTarget: 'rait-web:build:preview',
+      host: '127.0.0.1',
+    });
+  });
+
+  it(`dado src/app/preview/fixtures quando inspecionado então é link simbólico para ${FIXTURES_LINK_TARGET} (A5 item 2 (i))`, () => {
+    expect(lstatSync(FIXTURES_LINK).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(FIXTURES_LINK)).toBe(FIXTURES_LINK_TARGET);
+  });
+
+  it('dado rait-fixtures.json lido pelo link src/app/preview/fixtures quando comparado com docs/framework/arch/fixtures/rait-fixtures.json então byte a byte igual (P-13)', () => {
+    const viaLink = readFileSync(join(FIXTURES_LINK, 'rait-fixtures.json'));
+    const canonical = readFileSync(FIXTURES_PATH);
+    expect(viaLink.length).toBeGreaterThan(0);
+    expect(viaLink.equals(canonical)).toBe(true);
   });
 
   it('dado serve production/development quando lidos então buildTarget rait-web:build:<config> (defeito pré-existente portal-web corrigido)', () => {

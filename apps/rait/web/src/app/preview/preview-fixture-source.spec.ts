@@ -6,7 +6,12 @@
 // sobrescrito; `PreviewClock.now()` = `Date.parse('2026-09-14T12:00:00-04:00')`, constante;
 // `PreviewStynxSessionService.state().tenantId` = tenant das fixtures; sob `loaded` nenhum texto
 // `source_pending` nas telas da JW-01 exceto a minuta (passo 8, única prevista pelo inventário).
-// Produção (TASK-0003): ainda não existe — falha de módulo esperada nesta entrega.
+// Adenda A5 item 5 (B5, estado A4 da fixture: 49 coleções, PR #184): as 14 leituras antes sem
+// coleção (`listRaitParty` … `listRaitMinutes`) mapeiam às coleções novas; para cada uma, `list*`
+// devolve exatamente os ids da coleção (sem filtro e filtrado pelo pai — caso, sessão, item de
+// pauta, relógio) e `get*` resolve o registro da JSON, tudo derivado da JSON lida do disco. O
+// bloco D-07 fica restrito às leituras cuja coleção não existe na JSON (`InfractionClient`,
+// `NotificationClient`; `rait-fixtures.md` §10: infrações e avisos não são transcritos).
 import type { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
@@ -83,17 +88,17 @@ const CLIENTS: readonly ClientSource[] = [
     preview: PreviewCaseClient,
     lists: {
       listRaitCase: 'cases',
-      listRaitParty: null,
-      listRaitDocument: null,
+      listRaitParty: 'parties',
+      listRaitDocument: 'documents',
       listRaitPendingContent: 'raitPendingContents',
       listRaitRedirect: 'raitRedirects',
-      listRaitAdmissibility: null,
-      listRaitDeadline: null,
-      listRaitInquiry: null,
+      listRaitAdmissibility: 'admissibility',
+      listRaitDeadline: 'deadlines',
+      listRaitInquiry: 'inquiries',
       listRaitDraft: 'raitDrafts',
-      listRaitDecision: null,
-      listRaitCommunication: null,
-      listRaitCaseEvent: null,
+      listRaitDecision: 'decisions',
+      listRaitCommunication: 'communications',
+      listRaitCaseEvent: 'caseEvents',
     },
   },
   {
@@ -108,12 +113,12 @@ const CLIENTS: readonly ClientSource[] = [
       listRaitScheduleSlot: 'raitScheduleSlots',
       listRaitBatch: 'raitBatches',
       listRaitBatchItem: 'raitBatchItems',
-      listRaitAssignment: null,
-      listRaitImpediment: null,
+      listRaitAssignment: 'assignments',
+      listRaitImpediment: 'impediments',
       listRaitSubstituteDuty: 'raitSubstituteDuties',
       listRaitBench: 'raitBenches',
       listRaitClock: 'clocks',
-      listRaitClockAlert: null,
+      listRaitClockAlert: 'clockAlerts',
     },
   },
   {
@@ -123,9 +128,9 @@ const CLIENTS: readonly ClientSource[] = [
     lists: {
       listRaitSession: 'sessions',
       listRaitAgendaItem: 'agendaItems',
-      listRaitAttendance: null,
-      listRaitVote: null,
-      listRaitMinutes: null,
+      listRaitAttendance: 'attendance',
+      listRaitVote: 'votes',
+      listRaitMinutes: 'minutes',
     },
   },
   {
@@ -251,7 +256,241 @@ describe('C-06 — list* com coleção na fixture devolve só ids da coleção (
   });
 });
 
+/**
+ * A5 item 5 (a): as 14 leituras que A4 ligou às coleções novas da JSON. `parent` = campo de
+ * `filtro` do `ListQuerySpec` do cliente real (`data/api/*.client.ts`) e o campo correspondente
+ * do registro da JSON (`rait-fixtures.md` §10, convenção camelCase); `get` = leitura unitária do
+ * cliente real.
+ */
+interface A4Read {
+  readonly client: string;
+  readonly list: string;
+  readonly get: string;
+  readonly collection: string;
+  readonly parent: { readonly filtro: string; readonly fixture: string };
+}
+
+const CASE_PARENT = { filtro: 'case_id', fixture: 'caseId' } as const;
+
+const A4_READS: readonly A4Read[] = [
+  {
+    client: 'CaseClient',
+    list: 'listRaitParty',
+    get: 'getRaitParty',
+    collection: 'parties',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitDocument',
+    get: 'getRaitDocument',
+    collection: 'documents',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitAdmissibility',
+    get: 'getRaitAdmissibility',
+    collection: 'admissibility',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitDeadline',
+    get: 'getRaitDeadline',
+    collection: 'deadlines',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitInquiry',
+    get: 'getRaitInquiry',
+    collection: 'inquiries',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitDecision',
+    get: 'getRaitDecision',
+    collection: 'decisions',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitCommunication',
+    get: 'getRaitCommunication',
+    collection: 'communications',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'CaseClient',
+    list: 'listRaitCaseEvent',
+    get: 'getRaitCaseEvent',
+    collection: 'caseEvents',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'WorklistClient',
+    list: 'listRaitAssignment',
+    get: 'getRaitAssignment',
+    collection: 'assignments',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'WorklistClient',
+    list: 'listRaitImpediment',
+    get: 'getRaitImpediment',
+    collection: 'impediments',
+    parent: CASE_PARENT,
+  },
+  {
+    client: 'WorklistClient',
+    list: 'listRaitClockAlert',
+    get: 'getRaitClockAlert',
+    collection: 'clockAlerts',
+    parent: { filtro: 'clock_id', fixture: 'clockId' },
+  },
+  {
+    client: 'SessionClient',
+    list: 'listRaitAttendance',
+    get: 'getRaitAttendance',
+    collection: 'attendance',
+    parent: { filtro: 'session_id', fixture: 'sessionId' },
+  },
+  {
+    client: 'SessionClient',
+    list: 'listRaitVote',
+    get: 'getRaitVote',
+    collection: 'votes',
+    parent: { filtro: 'agenda_item_id', fixture: 'agendaItemId' },
+  },
+  {
+    client: 'SessionClient',
+    list: 'listRaitMinutes',
+    get: 'getRaitMinutes',
+    collection: 'minutes',
+    parent: { filtro: 'session_id', fixture: 'sessionId' },
+  },
+];
+
+type FixtureRecord = Readonly<Record<string, unknown>> & {
+  readonly id: string;
+};
+
+/** Registros de uma coleção em array de `rait-fixtures.json`, lidos do disco. */
+function fixtureRecordsOf(collection: string): readonly FixtureRecord[] {
+  const value = readFixturesJson()[collection];
+  if (!Array.isArray(value)) {
+    throw new Error(`rait-fixtures.json: ${collection} não é coleção em array`);
+  }
+  return value as readonly FixtureRecord[];
+}
+
+function clientOf(name: string): ClientSource {
+  const client = CLIENTS.find((candidate) => candidate.name === name);
+  if (!client) throw new Error(`cliente ${name} fora de CLIENTS`);
+  return client;
+}
+
+function instanceOf(
+  name: string,
+): Record<string, (arg: unknown) => Promise<unknown>> {
+  return TestBed.inject(clientOf(name).real as Type<object>) as Record<
+    string,
+    (arg: unknown) => Promise<unknown>
+  >;
+}
+
+function sortedIds(items: readonly { readonly id: string }[]): string[] {
+  return items.map((item) => item.id).sort();
+}
+
+describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 item 5 (a))', () => {
+  it('dado A4_READS quando comparado ao mapa CLIENTS então as 14 leituras, cada uma mapeada à sua coleção, e cada coleção é array não vazio na JSON', () => {
+    expect(A4_READS).toHaveLength(14);
+    for (const read of A4_READS) {
+      expect(clientOf(read.client).lists[read.list], read.list).toBe(
+        read.collection,
+      );
+      expect(
+        fixtureRecordsOf(read.collection).length,
+        read.collection,
+      ).toBeGreaterThan(0);
+      expect(
+        readMethodsOf(clientOf(read.client).real, /^get[A-Z]/),
+        `${read.client}.${read.get}`,
+      ).toContain(read.get);
+    }
+  });
+
+  A4_READS.forEach((read) => {
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({}) então os ids são exatamente os de ${read.collection} e total = nº de registros da JSON`, async () => {
+      await configureLoaded();
+      const records = fixtureRecordsOf(read.collection);
+      const page = (await instanceOf(read.client)[read.list]({})) as ListPage<{
+        readonly id: string;
+      }>;
+      expect(sortedIds(page.items)).toEqual(sortedIds(records));
+      expect(page.total).toBe(records.length);
+    });
+
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({ filtro: { ${read.parent.filtro} } }) para cada ${read.parent.fixture} da JSON então os ids são exatamente os registros de ${read.collection} desse pai`, async () => {
+      await configureLoaded();
+      const records = fixtureRecordsOf(read.collection);
+      const parents = [
+        ...new Set(
+          records.map((record) => String(record[read.parent.fixture])),
+        ),
+      ];
+      expect(parents.length).toBeGreaterThan(0);
+      for (const parent of parents) {
+        const expected = records.filter(
+          (record) => String(record[read.parent.fixture]) === parent,
+        );
+        const page = (await instanceOf(read.client)[read.list]({
+          filtro: { [read.parent.filtro]: parent },
+        })) as ListPage<{ readonly id: string }>;
+        expect(sortedIds(page.items), `${read.list} ${parent}`).toEqual(
+          sortedIds(expected),
+        );
+        expect(page.total, `${read.list} ${parent}`).toBe(expected.length);
+      }
+    });
+
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.get}(id) para cada registro de ${read.collection} então resolve o registro (id e ${read.parent.filtro} = ${read.parent.fixture} da JSON)`, async () => {
+      await configureLoaded();
+      for (const record of fixtureRecordsOf(read.collection)) {
+        const found = (await instanceOf(read.client)[read.get](
+          record.id,
+        )) as Readonly<Record<string, unknown>>;
+        expect(found['id'], `${read.get} ${record.id}`).toBe(record.id);
+        expect(found[read.parent.filtro], `${read.get} ${record.id}`).toBe(
+          record[read.parent.fixture],
+        );
+      }
+    });
+  });
+});
+
 describe('C-06 — list* sem coleção na fixture devolve lista vazia, nunca inventada (D-07)', () => {
+  it('dado o mapa CLIENTS após o PR #184 (A4/A5) quando filtradas as leituras sem coleção então só InfractionClient e NotificationClient (nenhuma leitura de CaseClient/WorklistClient/SessionClient/OrgClient/IntegrationClient/CollectionClient fica sem coleção)', () => {
+    const withoutCollection = CLIENTS.filter((client) =>
+      Object.values(client.lists).some((collection) => collection === null),
+    ).map((client) => client.name);
+    expect(withoutCollection).toEqual([
+      'InfractionClient',
+      'NotificationClient',
+    ]);
+    for (const name of withoutCollection) {
+      expect(
+        Object.values(clientOf(name).lists).every(
+          (collection) => collection === null,
+        ),
+        name,
+      ).toBe(true);
+    }
+  });
+
   CLIENTS.forEach((client) => {
     Object.entries(client.lists)
       .filter((entry) => entry[1] === null)

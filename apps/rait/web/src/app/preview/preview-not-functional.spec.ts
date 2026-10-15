@@ -9,7 +9,11 @@
 // nenhuma navegação de sucesso. As ações são acionadas pelo método da página que o botão chama
 // (o botão é provado presente sob `*stynxHasPermission`); `open-inquiry` e `submit-draft` exigem
 // texto livre (assunto, fatos, fundamentos) que nenhuma fonte canônica fornece — o spec não o
-// inventa e aciona o método diretamente. (b) Botões provados por ausência (§5.2/§4 item 3).
+// inventa e aciona o método diretamente. (b) Botões provados por ausência (§5.2/§4 item 3); A5
+// item 5 (b): no passo 6 a coleção `inquiries` (A4) tem registro do caso da URL — a prova passa a
+// positiva: um `rait-inquiry-card` por diligência da JSON desse caso e "responder"/"prorrogar"
+// (`rait-case:answer`/`rait-case:extend`, strings M8 de `RAIT_COMMANDS` usadas por
+// `CaseFacade.answerInquiry`/`extendInquiry`) acionados como não funcionais, nunca sucesso.
 // (c) Cada `Preview<Cliente>Client` estende o cliente real e sobrescreve todo método de comando
 // (lido do protótipo); os 64 métodos registram a string M8 e rejeitam
 // `RaitCommandUnavailableError` com o mesmo `command` (tabela §6). Produção (TASK-0003): ainda não
@@ -65,6 +69,7 @@ import {
   notFunctionalText,
   pathnameOf,
   previewSpecContext,
+  readFixturesJson,
   resetPreviewDocument,
   setPreviewDocument,
   settle,
@@ -268,43 +273,42 @@ function commandErrorOf(facade: Jw01Action['facade']) {
     : TestBed.inject(QueueFacade).command.error();
 }
 
+/** Corpo comum de P-07: aciona, espera `kind 'unavailable'` e confere log, faixa, banner, rede. */
+async function expectNotFunctional(action: Jw01Action): Promise<void> {
+  const { harness, path, barFixture } = await openJw01(action.route);
+  const log = TestBed.inject(PreviewActionLog);
+  const page = pageElementOf(harness, action.page);
+  expect(page.querySelector(action.button)).not.toBeNull();
+
+  action.trigger(harness);
+
+  await vi.waitFor(() => {
+    harness.detectChanges();
+    expect(commandErrorOf(action.facade)?.kind).toBe('unavailable');
+  });
+  expect(commandErrorOf(action.facade)?.command).toBe(action.command);
+  expect(log.entries().map((entry) => entry.command)).toEqual([action.command]);
+
+  barFixture.detectChanges();
+  const status = (barFixture.nativeElement as HTMLElement).querySelector(
+    'p[role="status"]',
+  );
+  expect(status?.textContent?.trim()).toBe(notFunctionalText(action.command));
+
+  const banners = [...page.querySelectorAll('rait-error-banner')].map(
+    (banner) => banner.textContent ?? '',
+  );
+  expect(banners.some((text) => text.includes(UNAVAILABLE_TEXT))).toBe(true);
+  expect(UNAVAILABLE_TEXT).not.toBe(notFunctionalText(action.command));
+
+  expect(pathnameOf(TestBed.inject(Router).url)).toBe(path);
+  expectNoNetwork();
+}
+
 describe('C-03 — ações da JW-01 na prévia: "não funcional na prévia", nunca sucesso (P-07, M6)', () => {
   JW01_ACTIONS.forEach((action) => {
     it(`dado JW-01 passo ${action.step} sob rait-analyst quando ${action.command} é acionado${action.confirm ? ' e confirmado' : ''} então PreviewActionLog registra só "${action.command}", a faixa mostra "${notFunctionalText(action.command)}", a página mostra "${UNAVAILABLE_TEXT}" (kind unavailable) e nenhuma requisição sai`, async () => {
-      const { harness, path, barFixture } = await openJw01(action.route);
-      const log = TestBed.inject(PreviewActionLog);
-      const page = pageElementOf(harness, action.page);
-      expect(page.querySelector(action.button)).not.toBeNull();
-
-      action.trigger(harness);
-
-      await vi.waitFor(() => {
-        harness.detectChanges();
-        expect(commandErrorOf(action.facade)?.kind).toBe('unavailable');
-      });
-      expect(commandErrorOf(action.facade)?.command).toBe(action.command);
-      expect(log.entries().map((entry) => entry.command)).toEqual([
-        action.command,
-      ]);
-
-      barFixture.detectChanges();
-      const status = (barFixture.nativeElement as HTMLElement).querySelector(
-        'p[role="status"]',
-      );
-      expect(status?.textContent?.trim()).toBe(
-        notFunctionalText(action.command),
-      );
-
-      const banners = [...page.querySelectorAll('rait-error-banner')].map(
-        (banner) => banner.textContent ?? '',
-      );
-      expect(banners.some((text) => text.includes(UNAVAILABLE_TEXT))).toBe(
-        true,
-      );
-      expect(UNAVAILABLE_TEXT).not.toBe(notFunctionalText(action.command));
-
-      expect(pathnameOf(TestBed.inject(Router).url)).toBe(path);
-      expectNoNetwork();
+      await expectNotFunctional(action);
     });
   });
 
@@ -331,12 +335,101 @@ describe('C-03 — botões da JW-01 provados por ausência (inventário §4 item
     expect(root.querySelector('[data-action="attach-official"]')).toBeNull();
     expect(TestBed.inject(PreviewActionLog).entries()).toHaveLength(0);
   });
+});
 
-  it('dado JW-01 passo 6 (diligências) sob rait-analyst quando renderizado então nenhum rait-inquiry-card — "responder" e "prorrogar" não são acionáveis (inquiries ausente da fixture) [negativo]', async () => {
-    const { harness } = await openJw01('casos/:id/diligencias');
+// --- passo 6: diligências da fixture (A5 item 5 (b)) ---------------------------------------------
+
+const INQUIRIES_ROUTE = 'casos/:id/diligencias';
+
+interface FixtureInquiry {
+  readonly id: string;
+  readonly caseId: string;
+  readonly subject: string;
+}
+
+/** Diligências de `rait-fixtures.json` (`inquiries`, A4) do caso da URL de prévia do passo 6. */
+function inquiriesOfStep6(): readonly FixtureInquiry[] {
+  const caseId = inventoryRowOf(INQUIRIES_ROUTE).previewPath.split('/')[2];
+  const inquiries = readFixturesJson()[
+    'inquiries'
+  ] as readonly FixtureInquiry[];
+  return inquiries.filter((inquiry) => inquiry.caseId === caseId);
+}
+
+/** Primeira diligência da JSON do caso do passo 6 (id lido do disco, nunca transcrito). */
+function firstInquiryIdOfStep6(): string {
+  const first = inquiriesOfStep6()[0];
+  expect(first).toBeDefined();
+  return (first as FixtureInquiry).id;
+}
+
+/** "responder"/"prorrogar" do `InquiryCard` (ficha 010 §6; `inquiries.page.ts`). */
+const INQUIRY_CARD_ACTIONS: readonly Jw01Action[] = [
+  {
+    step: '6',
+    command: 'rait-case:answer',
+    route: INQUIRIES_ROUTE,
+    page: InquiriesPageComponent,
+    button: 'rait-inquiry-card [data-action="answer"]',
+    facade: 'case',
+    confirm: false,
+    trigger: (harness) => {
+      pageOf(harness, InquiriesPageComponent).answer(firstInquiryIdOfStep6());
+    },
+  },
+  {
+    step: '6',
+    command: 'rait-case:extend',
+    route: INQUIRIES_ROUTE,
+    page: InquiriesPageComponent,
+    button: 'rait-inquiry-card [data-action="extend"]',
+    facade: 'case',
+    confirm: true,
+    trigger: (harness) => {
+      pageOf(harness, InquiriesPageComponent).requestExtend(
+        firstInquiryIdOfStep6(),
+      );
+      confirmDialog(harness);
+    },
+  },
+];
+
+describe('C-03 — passo 6: diligências da fixture e "responder"/"prorrogar" não funcionais (A5 item 5 (b))', () => {
+  it('dado inquiries de rait-fixtures.json quando filtradas pelo caso da URL do passo 6 então há ao menos um registro (A4)', () => {
+    expect(inquiriesOfStep6().length).toBeGreaterThan(0);
+  });
+
+  it('dado JW-01 passo 6 (diligências) sob rait-analyst em loaded quando renderizado então um rait-inquiry-card por diligência da JSON do caso, com o assunto da JSON, e nada registrado no PreviewActionLog', async () => {
+    const expected = inquiriesOfStep6();
+    const { harness } = await openJw01(INQUIRIES_ROUTE);
     const root = harness.routeNativeElement as HTMLElement;
-    expect(root.querySelector('rait-inquiry-card')).toBeNull();
+    const cards = [...root.querySelectorAll('rait-inquiry-card')];
+    expect(cards).toHaveLength(expected.length);
+    expect(
+      cards.map(
+        (card) =>
+          card
+            .querySelector('.rait-inquiry-card__subject')
+            ?.textContent?.trim() ?? '',
+      ),
+    ).toEqual(expected.map((inquiry) => inquiry.subject));
     expect(TestBed.inject(PreviewActionLog).entries()).toHaveLength(0);
+  });
+
+  it('dado as ações do InquiryCard quando lidas então rait-case:answer e rait-case:extend, ambas em RAIT_COMMANDS', () => {
+    expect(INQUIRY_CARD_ACTIONS.map((action) => action.command)).toEqual([
+      'rait-case:answer',
+      'rait-case:extend',
+    ]);
+    for (const action of INQUIRY_CARD_ACTIONS) {
+      expect(RAIT_COMMANDS as readonly string[]).toContain(action.command);
+    }
+  });
+
+  INQUIRY_CARD_ACTIONS.forEach((action) => {
+    it(`dado JW-01 passo 6 sob rait-analyst quando ${action.command} é acionado no rait-inquiry-card${action.confirm ? ' e confirmado' : ''} então PreviewActionLog registra só "${action.command}", a faixa mostra "${notFunctionalText(action.command)}", a página mostra "${UNAVAILABLE_TEXT}" (kind unavailable) e nenhuma requisição sai`, async () => {
+      await expectNotFunctional(action);
+    });
   });
 });
 

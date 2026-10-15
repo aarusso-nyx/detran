@@ -5,8 +5,9 @@
 // contrato, `PREVIEW_CATALOG_CONTRACT`); dois `<select>` nativos com `<label>` associado e opções
 // = `PREVIEW_SCREEN_STATES` / `RAIT_ALL_ROLES`; mudança de `<select>` = navegação de documento
 // (D-01) com `pv_estado`/`pv_papel` na URL; leitura inicial de `location.search` (D-02); a faixa
-// continua presente após navegar para 3 rotas distintas. Produção (TASK-0003): ainda não existe —
-// falha de módulo esperada nesta entrega.
+// continua presente após navegar para 3 rotas distintas. Adenda A5 item 3 (B3): em
+// `/sem-permissao` a página roteada é provada pelo host `rait-forbidden-page` (sem `data-screen`,
+// M14/C-2A-13); a faixa continua exigida em todas.
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -28,6 +29,8 @@ import {
 } from './preview-state.service';
 import {
   configurePreview,
+  FORBIDDEN_PAGE_SELECTOR,
+  FORBIDDEN_ROUTE,
   inventoryRowOf,
   PREVIEW_CATALOG_CONTRACT,
   previewSpecContext,
@@ -134,7 +137,7 @@ describe('C-03 — faixa no PreviewRootComponent (P-06)', () => {
     expect(bar(fixture).querySelector('p[role="status"]')).not.toBeNull();
   });
 
-  const ROUTES = ['painel', 'casos/:id/dossie', 'sem-permissao'] as const;
+  const ROUTES = ['painel', 'casos/:id/dossie', FORBIDDEN_ROUTE] as const;
 
   it(`dado a raiz de prévia sob rait-analyst quando navegada para ${ROUTES.length} rotas distintas (inventário §3) então a faixa continua presente após cada navegação e a página roteada aparece sob ela`, async () => {
     const { fixture } = await renderRoot('/painel', 'rait-analyst', 'loaded');
@@ -145,7 +148,15 @@ describe('C-03 — faixa no PreviewRootComponent (P-06)', () => {
       await fixture.whenStable();
       const root = fixture.nativeElement as HTMLElement;
       expect(root.querySelector(MARK_SELECTOR), path).not.toBeNull();
-      expect(root.querySelector('[data-screen]'), path).not.toBeNull();
+      if (route === FORBIDDEN_ROUTE) {
+        expect(
+          root.querySelector(FORBIDDEN_PAGE_SELECTOR),
+          path,
+        ).not.toBeNull();
+        expect(root.querySelector('[data-screen]'), path).toBeNull();
+      } else {
+        expect(root.querySelector('[data-screen]'), path).not.toBeNull();
+      }
       expect(router.url.split('?')[0]).toBe(path);
     }
   });

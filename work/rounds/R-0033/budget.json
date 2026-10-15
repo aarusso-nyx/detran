@@ -142,13 +142,40 @@
       "input_estimate": 25000,
       "output_estimate": 9000,
       "note": "Adenda B2, worktree da fixture, prompt FIX-0001, gates, review, PR."
+    },
+    {
+      "id": "maestro-w2-open",
+      "window": "W2",
+      "role": "architect",
+      "model": "claude-fable-5-1",
+      "input_estimate": 60000,
+      "output_estimate": 12000,
+      "note": "Leitura obrigatória (AGENTS, 00-maestro, plan, AUTHORIZATION, contrato, relatórios O1/O2, prompt/task TASK-0003), merge de origin/main (#182, #184; 2 conflitos), install/build ui, §Concorrência, A4, budget W2, despacho de TASK-0003."
+    },
+    {
+      "id": "TASK-0003-i1",
+      "window": "W2",
+      "role": "worker",
+      "model": "claude-opus-5-5",
+      "input_estimate": 115000,
+      "output_estimate": 11500,
+      "note": "brutos do subagente 460604 (149 chamadas, 35,3 min); único ≈ 1/4; entregue com 5 bloqueios spec × contrato × builder (B1…B5) → adenda A5"
+    },
+    {
+      "id": "maestro-a5",
+      "window": "W2",
+      "role": "architect",
+      "model": "claude-fable-5-1",
+      "input_estimate": 30000,
+      "output_estimate": 9000,
+      "note": "Triagem dos bloqueios (helper, specs, contrato, forbidden.page, fixture), adenda A5, emendas do contrato (§2/§3/P-04/D-01/D-07/D-20/D-21), reports/TASK-0003.md (iteração 1), despacho da iteração 2 de TASK-0002 (Inspector)."
     }
   ],
   "window_totals": {
     "window": "W2",
-    "claude_unique_input_estimate": 0,
+    "claude_unique_input_estimate": 205000,
     "codex_unique_input_estimate": 0,
-    "claude_share_of_limit": 0.0,
+    "claude_share_of_limit": 0.293,
     "checkpoint_reason": null,
     "note": "Totais da janela corrente; janelas anteriores em `windows`."
   },
@@ -163,9 +190,9 @@
     },
     "W2": {
       "started_at": "2026-10-15T15:30:00Z",
-      "claude_unique_input_estimate": 0,
+      "claude_unique_input_estimate": 205000,
       "codex_unique_input_estimate": 0,
-      "claude_share_of_limit": 0.0,
+      "claude_share_of_limit": 0.293,
       "checkpoint_reason": null
     }
   }
