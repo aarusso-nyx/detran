@@ -212,7 +212,7 @@ ainda não existe em `main`).
   `RaitStreamTransport` (SSE: transporte de prévia que emite só heartbeat), `RaitSessionFacade`
   (sessão sintética) e `RaitClock` (`today` das fixtures, 2026-09-14) — nunca as facades nem as
   páginas; `RaitHttp` fica inalcançável porque o interceptor bloqueia tudo que não seja `GET
-  assets/`. Comandos continuam `RaitCommandUnavailableError` (M8) → a UI já mostra
+assets/`. Comandos continuam `RaitCommandUnavailableError` (M8) → a UI já mostra
   "indisponível" (`kind 'unavailable'`); a prévia **acrescenta** a marcação "não funcional na
   prévia" (C-03) sem simular sucesso.
 - **M3 — `typecheck` vermelho entre TASK-0002 e TASK-0003 é estado esperado** (método §4.13, R-0009
@@ -221,11 +221,11 @@ ainda não existe em `main`).
   Prettier e lint restrito aos arquivos novos.
 - **M4 — gate de marca.** Positivo: `grep -rl "DETRAN_PREVIEW_MARK" dist/preview` não vazio;
   negativo: `grep -r "DETRAN_PREVIEW_MARK" dist/browser` vazio após `pnpm --filter @detran/rait-web
-  build` (production). A string `DETRAN_PREVIEW_MARK` aparece no DOM como valor do atributo
+build` (production). A string `DETRAN_PREVIEW_MARK` aparece no DOM como valor do atributo
   `data-detran-preview-mark` da faixa (sobrevive à minificação); o texto visível vem de
   `rait.states.preview_mark` = "PRÉVIA — DADOS FICTÍCIOS".
 - **M5 — `verify:round-tasks` não cobre R-0033.** `tools/devai/verify-round-tasks.mjs` só valida
   rodadas R-0003…R-0020 (`roundNumber > 20` é ignorado); as tarefas desta rodada são validadas
   diretamente com `pnpm exec devai check --only schema --schema law/schemas/task.schema.json
-  --instance work/rounds/R-0033/tasks/TASK-000n.json` no bootstrap. A ampliação do verificador é
+--instance work/rounds/R-0033/tasks/TASK-000n.json` no bootstrap. A ampliação do verificador é
   follow-up fora do lock desta rodada (registrado em §Retomada).

@@ -31,8 +31,8 @@ Texto literal, sem correção:
   no bootstrap, `acceptance_commands` por tarefa, CI local completo + uma delivery-review + um PR
   no fim).
 - Superfície e jornada: `rait-web`, JW-01 (analista) — OD-C3-002 (a). Canal de revisão: URL local
-  + `dist/preview/` anexado ao PR — OD-C3-003 (a). k6/mutation continuam não executados —
-  OD-C3-004 (a). PR #179 (STYNX 1.5.3) é decidido fora desta rodada; o pin não muda — OD-C3-005 (a).
+  - `dist/preview/` anexado ao PR — OD-C3-003 (a). k6/mutation continuam não executados —
+    OD-C3-004 (a). PR #179 (STYNX 1.5.3) é decidido fora desta rodada; o pin não muda — OD-C3-005 (a).
 
 ## Desvios registrados no bootstrap (2026-10-15)
 
