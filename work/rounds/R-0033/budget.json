@@ -6,7 +6,7 @@
   "window_hours": 5,
   "max_review_cycles_per_item": 2,
   "window_started_at": "2026-10-15T06:30:00Z",
-  "note": "Convenção model-ladder: tokens únicos estimados (≈ ¼ dos brutos com cache); brutos na nota quando medidos. Janela 1 = Claude Code Fable 5.1 (maestro) + workers Claude (Opus 5.5 / Sonnet 5); reviewer Codex Sol 6 contado à parte por família. Meta da janela: bootstrap + prompt-review + O1/O2 + TASK-0003 (M1); checkpoint a 80 %.",
+  "note": "Convenção model-ladder: tokens únicos estimados (≈ ¼ dos brutos com cache); brutos na nota quando medidos. Janela 1 = Claude Code Fable 5.1 (maestro) + workers Claude (Opus 5.5 / Sonnet 5); reviewer Codex Sol 6 contado à parte por família. Meta da janela: bootstrap + prompt-review + O1/O2 + TASK-0003 (M1); checkpoint a 80 %. Janela 2 (aberta 2026-10-15T15:30Z, maestro Fable 5.1): merge de origin/main (#182, #184), TASK-0003 (M1) → TASK-0004 → TASK-0006 (M2) → O4a/O4b se o orçamento permitir; checkpoint a 80 % (560 000 únicos da família Claude na janela).",
   "entries": [
     {
       "id": "maestro-bootstrap",
@@ -145,9 +145,28 @@
     }
   ],
   "window_totals": {
-    "claude_unique_input_estimate": 561000,
-    "codex_unique_input_estimate": 245000,
-    "claude_share_of_limit": 0.8,
-    "checkpoint_reason": "fim da O2 + FIX-0001 (PR de fixture) entregue; TASK-0003 aguarda merge do PR de fixture"
+    "window": "W2",
+    "claude_unique_input_estimate": 0,
+    "codex_unique_input_estimate": 0,
+    "claude_share_of_limit": 0.0,
+    "checkpoint_reason": null,
+    "note": "Totais da janela corrente; janelas anteriores em `windows`."
+  },
+  "windows": {
+    "W1": {
+      "started_at": "2026-10-15T06:30:00Z",
+      "closed_at": "2026-10-15T14:30:00Z",
+      "claude_unique_input_estimate": 561000,
+      "codex_unique_input_estimate": 245000,
+      "claude_share_of_limit": 0.8,
+      "checkpoint_reason": "fim da O2 + FIX-0001 (PR de fixture #184) entregue; TASK-0003 aguardava merge do PR de fixture"
+    },
+    "W2": {
+      "started_at": "2026-10-15T15:30:00Z",
+      "claude_unique_input_estimate": 0,
+      "codex_unique_input_estimate": 0,
+      "claude_share_of_limit": 0.0,
+      "checkpoint_reason": null
+    }
   }
 }

@@ -34,6 +34,14 @@ Nenhum branch `orchestra/*` nem worktree `detran-worktrees/frontend-preview` exi
 --configuration preview`. **Quirk local:** `pnpm test:stack` falha nesta máquina por espaço no
 caminho (`%20`, corrigido em PR #181); não é defeito desta rodada e `pnpm check` completo só é
 exigido no fechamento.
+**Estado verificado na abertura da janela 2 (2026-10-15 15:31Z, maestro Fable 5.1):** PR #182
+(base da rodada) **mesclado** em `main` (`57fb8840`, 14:25Z); PR #184 (paridade da fixture,
+OD-C3-008 a) **mesclado** (`7b2accbb`, 15:04Z); `origin/main` = `7b2accbb` integrado na branch da
+rodada por merge (`77de66ed`; conflitos só em `plan.md` — add/add com a versão proposta do #182,
+mantida a da rodada — e na tabela §C-0003 do registro de ODs, mantida a versão da rodada, superset
+das linhas de `main`). PR #179 continua **aberto** (CI verde, mergeable desconhecido após os
+merges); pin 1.4.0 inalterado (OD-C3-005). PR #181 aberto, `BEHIND`. A base da rodada passa a ser
+`main`: o PR da R-0033 pode abrir contra `main` quando o Owner autorizar push/PR.
 **Janelas previstas:** 2 (1 = bootstrap + prompt-review + O1/O2 — marco M1, timebox 1–2 dias úteis;
 1 = O3/O4 + fechamento — marco M2). Recalibradas no bootstrap.
 
@@ -181,6 +189,18 @@ mantido, JW-01 passos 9–10 reescritos. Efeitos nos prompts (v4): TASK-0001 gan
 tabela e do fluxo Mermaid; SVGs como follow-up) e registra OD-C3-007 como **decidida**; para a
 prévia, a JW-01 passa a ter os passos 1–8 (+ prova negativa das duas rotas sob `rait-analyst`);
 C-04 cobre as telas dos passos 1–8 — nada fica `not run` por este motivo.
+
+**A4 — fixture com paridade (janela 2, 2026-10-15, pós-merge do PR #184):**
+`docs/framework/arch/fixtures/rait-fixtures.json` passou de 33 para **49 coleções** (15 novas:
+`raitPools`, `parties`, `documents`, `admissibility`, `assignments`, `caseEvents`, `deadlines`,
+`inquiries`, `decisions`, `communications`, `impediments`, `clockAlerts`, `attendance`, `votes`,
+`minutes`; campos novos em 15 existentes — `rait-fixtures.md` §10). Onde `prompts/TASK-0003.md`
+e `inventory-rait-web.md` dizem "33 coleções" ou listam coleções como **ausentes**, lê-se o
+estado atual da JSON: `RaitFixturesJson` tipa as 49 coleções pelo mínimo que os adapters usam e as
+telas antes marcadas parciais/vazias por falta de coleção passam a `loaded` com os dados da seed
+(ids iguais). Campos sem coluna na seed continuam `source_pending` (D-06/D-07; tabela em
+`rait-fixtures.md` §10). Nenhum critério muda; o prompt não é reescrito (PC inalterado) — a nota
+vai na mensagem de despacho.
 
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 
