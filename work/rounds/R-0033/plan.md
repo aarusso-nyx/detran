@@ -107,15 +107,59 @@ Branch única `orchestra/frontend-preview`, até 3 workers na mesma worktree, fr
 push sem PR ao fim de cada onda, **um** prompt-review no bootstrap, `acceptance_commands` por
 tarefa, CI local completo + uma delivery-review + um PR no fim.
 
-| Onda | Tarefas em paralelo               | Fronteiras de escrita                                                                                   | Depende de           |
-| ---- | --------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------- |
-| O1   | TASK-0001                         | `docs/framework/arch/frontend-{preview-mode,wiring-pattern}.md`, `work/rounds/R-0033/`, registro de ODs | bootstrap            |
-| O2   | TASK-0002 ∥ TASK-0005             | `apps/<s>/src/**/*.spec.ts` ∥ `work/rounds/R-0033/preview/` (roteiro, scripts)                          | TASK-0001            |
-| O3   | TASK-0003 → TASK-0004 → TASK-0006 | `apps/<s>/angular.json`, `src/main.preview.ts`, `src/app/preview/**`, README do app                     | TASK-0002, TASK-0005 |
-| O4   | TASK-0007 (por app) ∥ TASK-0008   | `apps/<outro>/…` ∥ `work/rounds/R-0033/plan.md` §Retomada                                               | TASK-0003; TASK-0006 |
+| Onda       | Tarefas em paralelo               | Fronteiras de escrita                                                                                                                                         | Depende de                      |
+| ---------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| O1         | TASK-0001                         | `docs/framework/arch/frontend-{preview-mode,wiring-pattern}.md`, `work/rounds/R-0033/`, registro de ODs                                                       | bootstrap                       |
+| O2         | TASK-0002 ∥ TASK-0005             | `apps/<s>/src/**/*.spec.ts` ∥ `work/rounds/R-0033/preview/` (roteiro, scripts)                                                                                | TASK-0001                       |
+| O3         | TASK-0003 → TASK-0004 → TASK-0006 | `apps/<s>/angular.json`, `src/main.preview.ts`, `src/app/preview/**`, README do app                                                                           | TASK-0002, TASK-0005            |
+| O4         | TASK-0007 (por app) ∥ TASK-0008   | `apps/<outro>/…` ∥ `work/rounds/R-0033/plan.md` §Retomada                                                                                                     | TASK-0003; TASK-0006            |
+| O4a/b (A1) | TASK-0009 ∥ TASK-0008 → TASK-0007 | `apps/portal/web/src/app/preview/*.spec.ts` + `inventory-portal-web.md` ∥ §Retomada → `apps/portal/web/{angular.json,src/main.preview.ts,src/app/preview/**}` | TASK-0001; TASK-0006; TASK-0009 |
 
 **Marco M1 (timebox 1–2 dias úteis):** O1 + O2 + TASK-0003 com shell servível. Se o timebox
 vencer sem shell servível, checkpoint, relato ao Owner com a causa (nunca relaxar o contrato).
+
+## Adendas do maestro (Architect; não alteram critérios nem decisões do Owner)
+
+**A1 — correções do prompt-review ciclo 1 (Sol 6, `reviews/prompt-review-1.json`, 2026-10-15,
+13 achados `high`, todos corrigíveis):**
+
+1. **Tríade por CTG.** CTG-0001 = TASK-0001 (Architect) → TASK-0002 (Inspector) → TASK-0003 e
+   TASK-0004 (Engineer); a tabela §Tarefas lia TASK-0003/0004 em CTG-0002 — metadados corrigidos
+   em `tasks/*.json`, ordem inalterada. CTG-0002 fica sem tarefa própria nesta rodada.
+2. **TASK-0009 (Inspector, CTG-0004, nova)** — specs do modo prévia do `portal-web` e
+   `inventory-portal-web.md`, **antes** de TASK-0007 (`upstream_task_id` = TASK-0009; TASK-0001 é
+   o Architect do CTG via `frontend-preview-mode.md` §"como estender a outra superfície"). Onda O4
+   passa a O4a (TASK-0009 ∥ TASK-0008) → O4b (TASK-0007). Nenhum CTG novo.
+3. **JW-01 passos 9–10 × manifesto.** `/casos/:id/decisao` (só `rait-signing-authority`) e
+   `/casos/:id/impedimentos` (só `rait-rapporteur`/`rait-chair`) divergem da jornada do analista.
+   A prévia não amplia papéis nem contorna guardas: specs, roteiro e capturas tratam os passos
+   9–10 sob o papel do manifesto e provam `/sem-permissao` sob `rait-analyst`; TASK-0001 registra
+   **OD-C3-007** (recomendação (a): manter o manifesto e reescrever a JW-01).
+4. **Cenários tipados por operação.** `applyListScenario` (página vazia tipada por
+   `applyListQuery([], query, spec)` em `empty`) e `applyReadScenario` (`empty` não altera leituras
+   unitárias; nunca 404 sintético) substituem o `applyScenario<T>` genérico; `empty` numa tela =
+   slots de lista em `empty`, entidade principal carregada.
+5. **Substituto de `StynxSessionService`** com a superfície pública completa do kit 1.4.0
+   (`state`, `active`, `active$`, `snapshot`, `hasAllPermissions`, `hasAnyPermissions`, `login`,
+   `loginRedirect`, `completeLogin`, `logout`), como `src/testing/stynx-session.stub.ts`.
+6. **Harness dos specs de prévia** próprio do Inspector (`preview.spec-helper.ts`,
+   `createPreviewHarness(Array<Provider | EnvironmentProviders>)`); `createRaitRouterHarness`
+   não é editado.
+7. **Scripts de captura/axe autossuficientes** (`lib.mjs` com servidor estático sobre
+   `dist/preview`, `check.mjs` com verificações determinísticas) para que a aceitação de TASK-0006
+   execute `capture.mjs`, `axe.mjs` e `check.mjs captures|axe`; `playwright-core@1.63.0` entra
+   como devDependency de `apps/rait/web` pelo maestro antes de TASK-0005 (Chrome instalado,
+   `channel: 'chrome'`, sem download).
+8. **Artefato `dist/preview/` (OD-C3-003).** `dist/` é ignorado pelo Git: TASK-0006 versiona
+   `dist-preview.manifest.json` (sha256 por arquivo) e a aceitação confere o manifesto contra o
+   build; no fechamento o maestro gera `preview-R-0033.zip` e o anexa ao PR (upload pelo
+   Owner/maestro na interface do GitHub), com o sha256 do zip no corpo do PR.
+9. **TASK-0008** produz `closure.draft.json` (não o `closure.json` canônico, que exige data e SHA
+   do merge) e recebe `work/rounds/R-0033/commits.md` do maestro em vez de executar `git`.
+10. **Aceitações executáveis** acrescentadas em `tasks/*.json`: TASK-0005 (`check.mjs resolve`,
+    `lib.mjs`/`check.mjs`/`README.md` obrigatórios), TASK-0006 (execução dos scripts, contagem,
+    impactos, manifesto), TASK-0007 (gate negativo de production do portal, `index.html` da
+    prévia), TASK-0009 (specs + inventário + eslint).
 
 ## Critérios de aceitação (imutáveis; mudança só por adenda com decisão do Owner)
 

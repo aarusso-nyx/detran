@@ -6,7 +6,7 @@
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Roteiro de revisão da jornada JW-01 e scripts de captura (360/768/1280) e de axe (CTG-0003)",
-  "description": "Escrever work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md (telas, estados, papéis, URLs de prévia, capturas esperadas, por passo da JW-01) e os scripts work/rounds/R-0033/preview/rait-web/capture.mjs e axe.mjs (Playwright já presente no repositório; axe-core 4.13.0) que percorrem o roteiro sobre ng serve --configuration preview, geram as capturas em preview/rait-web/captures/ e o relatório axe em preview/rait-web/axe-report.json com serious/critical = 0 como critério. Conforme prompts/TASK-0005.md.",
+  "description": "Escrever work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md (telas, estados, papéis, URLs de prévia, capturas esperadas, por passo da JW-01) e os scripts work/rounds/R-0033/preview/rait-web/{lib,capture,axe,check}.mjs (playwright-core 1.63.0 com o Chrome instalado; axe-core 4.13.0) que percorrem o roteiro sobre um servidor estático embutido de dist/preview (ou PREVIEW_BASE_URL), geram as capturas em preview/rait-web/captures/ e o relatório axe em preview/rait-web/axe-report.json com serious/critical = 0 como critério. Conforme prompts/TASK-0005.md.",
   "lifecycle": "supported",
   "target_modules": ["MOD-r33-preview-scripts"],
   "target_substrates": ["F2", "F3"],
@@ -21,21 +21,30 @@
   "tags": ["c-0003", "ctg-0003", "preview", "inspector"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-7aa7fb38d3bd8bea",
+  "prompt_composition_id": "PC-a59569ed16a98676",
   "acceptance_commands": [
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/lib.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
     ["test", "-s", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/check.mjs"],
+    ["test", "-s", "work/rounds/R-0033/preview/rait-web/README.md"],
+    ["node", "--check", "work/rounds/R-0033/preview/rait-web/lib.mjs"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
     ["node", "--check", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/rait-web/check.mjs"],
+    ["node", "work/rounds/R-0033/preview/rait-web/check.mjs", "resolve"],
     [
       "pnpm",
       "exec",
       "prettier",
       "--check",
       "work/rounds/R-0033/preview/rait-web/roteiro-jw-01.md",
+      "work/rounds/R-0033/preview/rait-web/lib.mjs",
       "work/rounds/R-0033/preview/rait-web/capture.mjs",
-      "work/rounds/R-0033/preview/rait-web/axe.mjs"
+      "work/rounds/R-0033/preview/rait-web/axe.mjs",
+      "work/rounds/R-0033/preview/rait-web/check.mjs",
+      "work/rounds/R-0033/preview/rait-web/README.md"
     ]
   ],
   "created_at": "2026-10-15T06:50:00.000Z",
@@ -48,7 +57,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-7aa7fb38d3bd8bea",
+    "prompt_composition_id": "PC-a59569ed16a98676",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

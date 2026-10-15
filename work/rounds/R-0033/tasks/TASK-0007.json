@@ -6,7 +6,7 @@
   "discipline": "engineer",
   "discipline_specialization": "engineer-frontend",
   "title": "Shell e estados representativos do portal-web sob preview (CTG-0004, primeira das demais superfícies)",
-  "description": "Aplicar o contrato frontend-preview-mode.md ao apps/portal/web (próxima superfície na ordem do Owner, OD-C3-002): configuração preview, main.preview.ts, interceptor, sessão sintética, adapters sobre as fixtures existentes de src/testing/http-fixtures*.ts, barra de prévia e estados representativos nas rotas do manifesto; dashboard-web e teat-web ficam para tarefas irmãs se o orçamento permitir. Conforme prompts/TASK-0007.md.",
+  "description": "Aplicar o contrato frontend-preview-mode.md ao apps/portal/web (próxima superfície na ordem do Owner, OD-C3-002): configuração preview, main.preview.ts, interceptor, sessão sintética, adapters sobre as fixtures existentes de src/testing/http-fixtures*.ts, barra de prévia e estados representativos nas rotas do manifesto, até os specs de TASK-0009 (Inspector) passarem; dashboard-web e teat-web ficam para tarefas irmãs se o orçamento permitir. Conforme prompts/TASK-0007.md.",
   "lifecycle": "supported",
   "target_modules": [
     "MOD-portal-web-preview-src",
@@ -16,7 +16,7 @@
   "target_invariants": [],
   "coupled_task_group": "CTG-0004",
   "coupled_pipeline_position": "engineer",
-  "upstream_task_id": "TASK-0003",
+  "upstream_task_id": "TASK-0009",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
@@ -24,12 +24,17 @@
   "tags": ["c-0003", "ctg-0004", "preview", "engineer"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-e5a2cd4b1303f2c0",
+  "prompt_composition_id": "PC-128838a681d28eb4",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
     ["pnpm", "--filter", "@detran/portal-web", "lint"],
     ["pnpm", "--filter", "@detran/portal-web", "test"],
     ["pnpm", "--filter", "@detran/portal-web", "build"],
+    [
+      "node",
+      "-e",
+      "const {execFileSync}=require('node:child_process');try{execFileSync('grep',['-rl','DETRAN_PREVIEW_MARK','apps/portal/web/dist/browser'],{stdio:'pipe'});console.error('DETRAN_PREVIEW_MARK presente no bundle production do portal');process.exit(1)}catch(e){if(e.status===1){console.log('portal production sem marca de prévia: OK');process.exit(0)}throw e}"
+    ],
     [
       "pnpm",
       "--filter",
@@ -40,6 +45,7 @@
       "--configuration",
       "preview"
     ],
+    ["test", "-s", "apps/portal/web/dist/preview/index.html"],
     ["grep", "-rlq", "DETRAN_PREVIEW_MARK", "apps/portal/web/dist/preview"]
   ],
   "created_at": "2026-10-15T06:50:00.000Z",
@@ -52,7 +58,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-e5a2cd4b1303f2c0",
+    "prompt_composition_id": "PC-128838a681d28eb4",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

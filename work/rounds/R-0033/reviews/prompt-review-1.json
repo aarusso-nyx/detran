@@ -1,0 +1,115 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0033",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0033/prompts/TASK-0005.md",
+      "line": 138,
+      "claim": "O roteiro exige `pv_papel=rait-analyst` em todos os passos da JW-01, mas o manifesto restringe `/casos/:id/decisao` a `rait-signing-authority` e `/casos/:id/impedimentos` a `rait-rapporteur` ou `rait-chair`. Os passos 9 e 10 não podem renderizar os estados exigidos com as guardas ativas; o comando do passo 10 tampouco pode ser acionado. A mesma premissa chega aos specs de TASK-0002 e às capturas de TASK-0006.",
+      "fix": "Registrar a divergência entre a jornada canônica e o manifesto como bloqueio para decisão ou adenda do Owner. Não ampliar papéis nem contornar guardas para fazer a prévia passar."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0033/prompts/TASK-0007.md",
+      "line": 122,
+      "claim": "O portal é entregue por Engineer sem testes prévios do Inspector; uma tarefa irmã futura é apenas condicional. Isso contraria a tríade obrigatória do método da orquestra (§4.1).",
+      "fix": "Preceder TASK-0007 por contrato e tarefa de Inspector com specs de prévia do portal, ou retirar TASK-0007 desta rodada."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0033/tasks/TASK-0003.json",
+      "line": 14,
+      "claim": "A implementação da tríade TASK-0001 → TASK-0002 → TASK-0003 foi colocada em CTG-0002, enquanto Architect e Inspector estão em CTG-0001. O método §4.1 exige o mesmo `coupled_task_group` para os três papéis.",
+      "fix": "Corrigir os metadados dos CTGs e suas posições sem alterar a ordem Architect → Inspector → Engineer."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0033/prompts/TASK-0006.md",
+      "line": 142,
+      "claim": "A tarefa apenas gera `dist/preview/` e registra seu hash. `dist/` é ignorado pelo Git, e não há passo para anexar o artefato ao PR, exigido por OD-C3-003.",
+      "fix": "Definir no fechamento um meio verificável de anexar o build estático ao PR e incluir a comprovação na aceitação."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0003.md",
+      "line": 78,
+      "claim": "`applyScenario<T>` promete `Promise<T>`, mas especifica `[]` para listas. Os clientes retornam `ListPage<T>`; a lista vazia precisa de `{items,total,page,pageSize}`. O `[]` quebraria as facades e impediria o estado `empty`.",
+      "fix": "Fixar no contrato uma saída vazia tipada por operação, usando `emptyPage(query)` ou `applyListQuery([], query, spec)` para listas."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0003.md",
+      "line": 78,
+      "claim": "Para leitura unitária, `empty` produz HTTP 404; `readStatusFor` converte isso em `not_found`. TASK-0002 exige `data-status=empty` nas telas da JW-01. Contrato, spec e comportamento existente não podem passar juntos.",
+      "fix": "Definir por tela como apresentar `empty` sem transformar 404 em `empty` globalmente nem editar as facades fora do lock; reconciliar contrato e spec antes da implementação."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0002.md",
+      "line": 155,
+      "claim": "O spec manda passar `providePreviewMode(): Array<Provider | EnvironmentProviders>` a `createRaitRouterHarness(providers: Provider[])`. A assinatura do harness não aceita esse array; o typecheck dos specs falhará.",
+      "fix": "Definir um helper novo dentro da fronteira do Inspector que aceite `EnvironmentProviders`, ou ajustar a montagem dos providers do spec sem editar o harness existente."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0033/prompts/TASK-0003.md",
+      "line": 75,
+      "claim": "O substituto de `StynxSessionService` omite membros usados pelo kit, especialmente `active$`, assinado pela diretiva de permissão. A forma prescrita pode falhar em runtime apesar de `state()` e `active` estarem presentes.",
+      "fix": "Fixar no layout a interface pública necessária do substituto com base nas declarações STYNX 1.4.0 e no stub existente, incluindo `active$` e os métodos consumidos no bootstrap."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0006.json",
+      "line": 29,
+      "claim": "`acceptance_commands` só verifica a existência do diretório de capturas e do relatório axe. Não executa os scripts nem prova a contagem de capturas ou zero violações `serious`/`critical`, embora esses resultados sejam a definição de pronto do prompt.",
+      "fix": "Adicionar comandos de execução e verificações determinísticas da contagem e dos impactos do relatório."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0007.json",
+      "line": 28,
+      "claim": "A aceitação do portal não prova ausência da marca no bundle production, servidor local funcional, nem a tabela rota × estado exigida pelo prompt.",
+      "fix": "Adicionar gates executáveis para production, inicialização da prévia e cobertura das rotas e estados."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0033/prompts/TASK-0008.md",
+      "line": 112,
+      "claim": "O prompt manda criar `closure.json` antes do merge com `closed_at` e `merged_as` iguais a `source_pending`. O esquema `phase-closure` exige data válida e SHA; o registro produzido seria inválido. O `acceptance_commands` também omite `closure.json` do Prettier pedido no prompt.",
+      "fix": "Produzir apenas um rascunho antes do merge; gerar e validar `closure.json` canônico após haver decisão de fechamento, data e SHA, alinhando prompt e comandos."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0033/prompts/TASK-0008.md",
+      "line": 75,
+      "claim": "A leitura obrigatória manda o worker executar `git log` e `git diff`, embora a regra comum dos prompts proíba qualquer `git` para workers.",
+      "fix": "O maestro fornece a lista de commits e o diff de referência como entrada da tarefa; o worker não executa Git."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0033/tasks/TASK-0005.json",
+      "line": 25,
+      "claim": "Os comandos aceitam scripts apenas por existência e sintaxe. `lib.mjs` é obrigatório no corpo do prompt, mas não é verificado; `node --check` não resolve imports nem prova que os scripts executam.",
+      "fix": "Exigir `lib.mjs` nos arquivos e adicionar uma verificação de importação/resolução, mantendo a execução real para TASK-0006 quando a prévia existir."
+    }
+  ],
+  "notes": [
+    "Os oito SHA-256 e IDs PC de `compositions.json` coincidem com os prompts.",
+    "As fronteiras de escrita de O2 e O4 são disjuntas. Os achados de papéis e de tríade sustentam o veredito FAIL; os demais são correções que o maestro pode preparar."
+  ]
+}

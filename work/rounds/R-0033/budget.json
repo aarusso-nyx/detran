@@ -16,6 +16,24 @@
       "input_estimate": 120000,
       "output_estimate": 18000,
       "note": "Descoberta de estado (origin/main, PR #179/#182), instalação, builds, doctor, leitura obrigatória (00-maestro, plan, C-0003, método, templates, rait-web core/data/testing, TEAT homologation), AUTHORIZATION.md, plan.md §Concorrência/§Leitura/M1…M5, budget.json, 8 tarefas."
+    },
+    {
+      "id": "maestro-prompts",
+      "window": "W1",
+      "role": "architect",
+      "model": "claude-fable-5-1",
+      "input_estimate": 60000,
+      "output_estimate": 22000,
+      "note": "Leitura complementar (clientes, facades, stubs, specs de invariantes, kit STYNX .d.ts), layout fixo M1…M6, 8 prompts (1798 linhas), compositions.json, prompt-review-1.md."
+    },
+    {
+      "id": "prompt-review-1",
+      "window": "W1",
+      "role": "auditor",
+      "model": "gpt-6-sol",
+      "input_estimate": 70000,
+      "output_estimate": 4000,
+      "note": "Ponte codex (tools/orchestra/bridge.sh codex gpt-6-sol); veredito em reviews/prompt-review-1.json."
     }
   ]
 }

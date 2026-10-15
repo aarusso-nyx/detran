@@ -6,7 +6,7 @@
   "discipline": "engineer",
   "discipline_specialization": "engineer-frontend",
   "title": "Prévia da jornada JW-01 completa, capturas versionadas, artefato dist/preview e instruções no README (CTG-0003)",
-  "description": "Garantir que cada tela do roteiro de TASK-0005 renderiza sob preview nos estados loaded/empty/error/forbidden com dados das fixtures canônicas (source_pending visível onde faltar), executar capture.mjs e axe.mjs (0 serious/critical), versionar capturas e relatório em work/rounds/R-0033/preview/rait-web/, gerar dist/preview/ e documentar a execução em apps/rait/web/README.md. Conforme prompts/TASK-0006.md.",
+  "description": "Garantir que cada tela do roteiro de TASK-0005 renderiza sob preview nos estados loaded/empty/error/forbidden com dados das fixtures canônicas (source_pending visível onde faltar), executar capture.mjs e axe.mjs (0 serious/critical), versionar capturas, relatório axe e dist-preview.manifest.json (sha256 de cada arquivo de dist/preview/, prova do artefato OD-C3-003) em work/rounds/R-0033/preview/rait-web/, gerar dist/preview/ e documentar a execução em apps/rait/web/README.md. Conforme prompts/TASK-0006.md.",
   "lifecycle": "supported",
   "target_modules": [
     "MOD-rait-web-preview-src",
@@ -25,7 +25,7 @@
   "tags": ["c-0003", "ctg-0003", "preview", "engineer"],
   "branch": "claude/frontend-preview-5281e3",
   "worktree_id": "WT-frontend-preview-5281e3",
-  "prompt_composition_id": "PC-a7477ef266c4253e",
+  "prompt_composition_id": "PC-7b8f8faa7f989818",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
     ["pnpm", "--filter", "@detran/rait-web", "lint"],
@@ -47,8 +47,20 @@
       "preview"
     ],
     ["grep", "-rlq", "DETRAN_PREVIEW_MARK", "apps/rait/web/dist/preview"],
-    ["test", "-d", "work/rounds/R-0033/preview/rait-web/captures"],
-    ["test", "-s", "work/rounds/R-0033/preview/rait-web/axe-report.json"],
+    ["node", "work/rounds/R-0033/preview/rait-web/capture.mjs"],
+    ["node", "work/rounds/R-0033/preview/rait-web/check.mjs", "captures"],
+    ["node", "work/rounds/R-0033/preview/rait-web/axe.mjs"],
+    ["node", "work/rounds/R-0033/preview/rait-web/check.mjs", "axe"],
+    [
+      "test",
+      "-s",
+      "work/rounds/R-0033/preview/rait-web/dist-preview.manifest.json"
+    ],
+    [
+      "node",
+      "-e",
+      "const fs=require('node:fs'),c=require('node:crypto');const m=JSON.parse(fs.readFileSync('work/rounds/R-0033/preview/rait-web/dist-preview.manifest.json','utf8'));let bad=0;for(const f of m.files){const p='apps/rait/web/dist/preview/'+f.path;if(!fs.existsSync(p)){console.error('ausente',p);bad++;continue}const h=c.createHash('sha256').update(fs.readFileSync(p)).digest('hex');if(h!==f.sha256){console.error('sha256 divergente',p);bad++}}console.log(m.files.length+' arquivos conferidos, '+bad+' divergentes');process.exit(bad?1:0)"
+    ],
     ["grep", "-q", "configuration preview", "apps/rait/web/README.md"]
   ],
   "created_at": "2026-10-15T06:50:00.000Z",
@@ -61,7 +73,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5-5"
     },
-    "prompt_composition_id": "PC-a7477ef266c4253e",
+    "prompt_composition_id": "PC-7b8f8faa7f989818",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
