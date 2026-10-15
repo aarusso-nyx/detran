@@ -1,0 +1,47 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 4,
+  "scope": ["TASK-0021", "TASK-0022"],
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0021.md",
+      "line": 62,
+      "claim": "A leitura é fechada, mas omite vários specs da classe P que o Inspector deve examinar antes de retirar casos. Eles estão identificados em contracts/CTG-0006.md:282-293.",
+      "fix": "Incluir nominalmente na leitura todos os specs da classe P abrangidos pela fronteira de escrita."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/tasks/TASK-0021.json",
+      "line": 16,
+      "claim": "A tarefa registra apenas TASK-0012 como predecessora e uma lista única de comandos de aceitação. O prompt exige dois despachos: parte 1 antes de TASK-0009 com casos deliberadamente vermelhos e parte 2 depois de TASK-0009 com exit 0 (TASK-0021.md:49-58,118-119). O JSON não representa essa transição.",
+      "fix": "Registrar os dois marcos de despacho e critérios por parte: coleta e falhas esperadas na parte 1; dependência de TASK-0009 e comandos verdes na parte 2."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0022/tasks/TASK-0021.json",
+      "line": 85,
+      "claim": "O comando e2e da parte 2 omite tests/e2e/r22-trust-profiles.e2e.spec.ts, exigido pelo prompt em TASK-0021.md:119. Assim, a aceitação registrada não cobre integralmente o critério.",
+      "fix": "Acrescentar o spec ao comando e2e da parte 2."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0022/prompts/TASK-0022.md",
+      "line": 91,
+      "claim": "A aceitação compila os apps cujos manifestos mudam, mas não executa seus testes. Os três apps web têm script test; plan.md:536-541 determina a forma `run test --passWithNoTests=false` para coleta efetiva.",
+      "fix": "Acrescentar testes dos apps web alterados com `run test --passWithNoTests=false` e exigir contagem de testes coletados; espelhar os comandos no tasks/TASK-0022.json."
+    }
+  ],
+  "notes": [
+    "Papel ativo: Auditor (Art. 18), revisão somente leitura.",
+    "Papéis e fronteiras de escrita de produção/teste respeitam o Art. 10.",
+    "TASK-0022 lista exatamente dez remoções e depende de TASK-0004; os comandos atualmente declarados existem nos package.json.",
+    "SHA-256 e PC de ambos os prompts coincidem com compositions.json e com os respectivos tasks/*.json."
+  ]
+}

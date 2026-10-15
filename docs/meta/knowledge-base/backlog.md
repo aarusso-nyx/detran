@@ -1,5 +1,13 @@
 # Research backlog (steering queue)
 
+## Handoff R-0022 → C-0003 (2026-10-14)
+
+- [ ] **Salvamento do checkpoint R-0022 — R-0034:** `codex/detran-r22-adoption-160` @ `c22ea63a` (85 commits, 3 318 arquivos) é referência, não base; classificação reutilizar/adiar/descartar em `work/campaigns/C-0003-produto-primeiro.md` §9. Nada entra em bloco; cada fatia com teste próprio e lock próprio (added 2026-10-14).
+- [ ] **Custódia de processo em Linux alvo — R-0034, timebox 1 janela:** duas sondas QEMU falharam `UNKNOWN_QUARANTINE` (`EROFS` em `/proc/self/stat` e `/proc/108/stat`; v15/v16, hashes conferidos). Sem retry autorizado; alternativa é ambiente nativo amd64 provisionado explicitamente. Nunca relaxar verificação de identidade nem bloquear a prévia por isso (added 2026-10-14).
+- [ ] **Insumos de provedor/confiança — R-0034/R-0035:** produto/custodiante do provedor de assinatura, amostras públicas reais, piso/perfil/revisão/aprovador, âncoras signer/TSA/arquivo, algoritmo/OID/timestamp/revogação/proveniência: todos ausentes; fixtures `TEST_ONLY` não os substituem. Custodiante e data a obter do Owner (added 2026-10-14).
+- [ ] **Lacunas de API pública do STYNX — R-0034/R-0023/R-0024:** ACK/proveniência atômica legada, histórico rico/SSE por escopo, deadlines explícitos, insumos C02/C03; acompanhar por issues no STYNX ou adapter DETRAN explicitamente delimitado, nunca comportamento local não documentado (added 2026-10-14).
+- [ ] **Colisão ADR-0039/0040 — antes de R-0034:** PR #179 (`platform-latest`, `docs-dependency-audit`) × checkpoint (`r22-published-stynx-1-6-0-bounded-adoption`, `r22-stynx-1-6-1-forward-custody`). Decisão OD-C3-005; os do checkpoint são renumerados ao entrar (added 2026-10-14).
+
 ## Handoff R-0021 para R-0022 (2026-09-28)
 
 - [ ] **Sensor CI stack smoke — R-0022:** jobs remotos `108792483206` (candidato) e `108793701832` (`main` STYNX 1.3.1) terminaram `stack:smoke` com exit 1, embora a reprodução isolada do SHA `2bc62e7a30270ac5c312656906e0465766811f2a` tenha passado 42/42. Primeiro reter e publicar o sumário de linhas do workflow para identificar o target que falhou; a triagem não expõe a linha/target e não autoriza alterar testes antes disso. Fonte: `work/rounds/R-0021/reports/CTG-0002-stack-smoke-triage.md` (added 2026-09-28).

@@ -1,0 +1,28 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-portal-manifestation-tenant-leak",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/app/src/app.module.ts",
+      "line": 433,
+      "claim": "No perfil de produção, StynxAuthGuard pode retornar true para um JWT do tenant A mesmo com X-Tenant-Id do tenant B. O retorno antecipado impede o fallback anônimo; depois, TenantContextInterceptor rejeita a divergência com 403. O vazamento não ocorre nesse caminho, mas OD-P30 é violado. A afirmação de que o guard só grava o principal no sucesso é correta, porém não resolve essa falha posterior.",
+      "fix": "Verificar a compatibilidade entre tenant autenticado e tenant solicitado antes do retorno antecipado; em caso de divergência, descartar a identidade e seguir pelo caminho anônimo."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/e2e/portal-manifestation-tenant-isolation.e2e.spec.ts",
+      "line": 175,
+      "claim": "O teste negativo aceita 401, 403 e outros status: exige apenas que a resposta não seja 500 e só verifica a gravação quando recebe 201. Assim, pode ficar verde com a quebra de OD-P30 descrita acima.",
+      "fix": "Exigir 201 e anonymous:true incondicionalmente no caso negativo e acrescentar cobertura do caminho Stynx em produção com JWT do tenant A e X-Tenant-Id do tenant B."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente de leitura.",
+    "A limpeza cobre os campos de identidade lidos por getPrincipalFromRequest e RequestContextInterceptor nos caminhos de falha dos dois guards; a checagem do tenant no RequestContext é fail-closed.",
+    "O controle positivo local está presente. As demais rotas @Public() inspecionadas não usam a autenticação oportunista deste caminho."
+  ]
+}

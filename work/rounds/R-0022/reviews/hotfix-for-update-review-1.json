@@ -1,0 +1,13 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-for-update-with-aggregates",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura.",
+    "As subconsultas preservam as linhas sujeitas a FOR UPDATE e as contagens. Com zero presenças, o agrupamento não retorna linha e permanece RAIT.SESSION_QUORUM_MISSING.",
+    "Os testes chamam o serviço de produção em PostgreSQL, com a operação sob role_app_backend. O teste integra backend:test:integration e o gate backend-kernel do CI.",
+    "A varredura AST e as provas LockRows/NOWAIT são críveis conforme o relatório do worker, mas não foram reproduzidas nesta revisão.",
+    "A corrida entre primeiros pedidos de vista é preexistente e merece registro como defeito técnico separado. OD nova só seria necessária para uma decisão do Owner de aceitar esse risco."
+  ]
+}

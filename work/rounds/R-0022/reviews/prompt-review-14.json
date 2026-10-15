@@ -1,0 +1,38 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0022",
+  "cycle": 14,
+  "scope": ["TASK-0028"],
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0022/prompts/TASK-0028.md",
+      "line": 57,
+      "claim": "O mapa sugerido não demonstra equivalência caso a caso para os 10 testes. Os seis cenários com X-Tenant-Id B esperam anonimato em B, enquanto C-03-05 exige recusa 403; os dois cenários autenticados sem Host são P3, enquanto C-03-06 e C-03-05 (OD-R22-49) exercitam P2.",
+      "fix": "Exigir tabela individual dos 10 casos com a condição e o comportamento sucessor efetivamente provados. Se faltar correspondente, manter o caso até haver critério aprovado e teste verde."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0022/prompts/TASK-0028.md",
+      "line": 61,
+      "claim": "A instrução para criar um novo C-03 quando faltar correspondente não tem caminho para registrar esse critério no CTG-0003: a fronteira permite editar somente testes, e o Inspector não pode editar a especificação pelo Art. 10.",
+      "fix": "Determinar que o worker pare e reporte a lacuna para adenda do Architect ao contrato; depois, despachar o teste correspondente ao Inspector."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0022/prompts/TASK-0028.md",
+      "line": 109,
+      "claim": "A suíte aceita pode sair com exit 0 pelos 12 casos existentes sem coletar C-03-18. Ela também não executa o controle negativo existente em boat-victim-audit-tenant.e2e.spec.ts, caso o worker apenas o cite.",
+      "fix": "Exigir execução e contagem explícitas de C-03-18, incluindo o controle P1 no próprio caso, ou acrescentar a suíte do controle negativo aos comandos de aceitação."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18); revisão somente leitura.",
+    "A fronteira exclui src/ de produção e atribui os testes ao Inspector.",
+    "O SHA-256 do prompt confere com compositions.json:221; o PC coincide com tasks/TASK-0028.json:31."
+  ]
+}

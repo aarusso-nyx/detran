@@ -1,0 +1,5 @@
+# Pure-counterpart manifest locator erratum
+
+Architect/F1. Preserve277764c3603413f57629bb1a959c0f71621092a47caa250549458aba53bd5501 unchanged. Its illustrative `portable-ci/retention-03/inputs/producer-manifest.json` spelling is incorrect. The existing fixed actual producer manifest locator is exactly `scratch/r22-adoption-161/portable-ci/retention-03/inputs/metadata/portable-input-manifest.json`.
+
+Pure counterparts discover only that source-bound locator and verify the actual platform invocation/output against canonical policy and full file/link topology. The scratch component is the fixed new producer output location, not a historical input fallback or reconstructed Mac custody tree. Clean native CI runs its own actual producer at the same fixed relative output path with absent output and current platform/Node/root identity. Historical Mac1429 observations remain genuine immutable data; their actual source/policy/kernel boundaries are unchanged. No alias, search fallback, old retention generation or caller-selected manifest is introduced.

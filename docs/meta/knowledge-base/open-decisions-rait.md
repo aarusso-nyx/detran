@@ -392,6 +392,28 @@ leituras do smoke passem pela tenancy/RLS normal. Isso nao amplia a decisao
 OD-R17-004: nenhuma role, grupo, permissao, policy, fixture canonica ou
 banco fora de `detran_local_stack` e alterado.
 
+## C-0003 — parada da R-0022 e campanha produto-primeiro (2026-10-14)
+
+Registro canônico. Fonte: diretiva do Owner de 2026-10-14 (relatório de parada da R-0022, 21:18
+BRT), transcrita pelo Architect em `work/campaigns/C-0003-produto-primeiro.md` §0 e em
+`work/campaigns/C-0002-consolidacao.md` §14 (A-C2-16). As decisões da R-0022 (OD-R22-01…69, B1…B17)
+permanecem fechadas; a transcrição não as reabre.
+
+| ID        | Questão                                                                                                                                            | Decisão do Owner e efeito / recomendação do Architect                                                                                                                                                                                                                                           | Estado  |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| OD-C3-001 | Parar a R-0022 e substituir a ordem das fases C/D da C-0002 por uma campanha produto-primeiro (prévia → jornadas → costuras → endurecimento)       | **Decidida pelo Owner em 2026-10-14.** R-0022 parada no checkpoint `c22ea63a` (`codex/detran-r22-adoption-160`, sem PR, sem close/seal). Campanha C-0003 proposta; A-C2-16 aplicada. Não autoriza push, PR, merge, release, deploy, escrita em irmãos ou valores de confiança.                  | Fechada |
+| OD-C3-002 | Qual superfície e jornada abrem a prévia (R-0033) e a fase J?                                                                                      | **Decidida pelo Owner em 2026-10-14: (a)** `rait-web`, jornada JW-01 (analista) abre a prévia (R-0033) e a fase J (R-0025 primeiro). Ordem seguinte das superfícies: `portal-web`, `dashboard-web`, `teat-web`.                                                                                 | Fechada |
+| OD-C3-003 | Canal de revisão UI/UX da prévia                                                                                                                   | **Decidida pelo Owner em 2026-10-14: (a)** URL local (`ng serve --configuration preview` / `pnpm stack:start`) + artefato estático `dist/preview/` anexado ao PR da rodada. Publicação em `gh-pages` continua sem autorização.                                                                  | Fechada |
+| OD-C3-004 | Reintroduzir na fase H (R-0035) os testes excluídos por B17 (k6, mutation)?                                                                        | **Decidida pelo Owner em 2026-10-14: (a)** k6 e mutation continuam não executados e registrados como tal (B17); R-0035 não os reabre sem nova decisão.                                                                                                                                          | Fechada |
+| OD-C3-005 | Linha de base de plataforma: mesclar PR #179 (DEVAI 2.2.0 + STYNX 1.5.3; ADR-0039/0040) antes de R-0033? Numeração dos ADR-0039/0040 do checkpoint | **Decidida pelo Owner em 2026-10-14: (a)** o PR #179 é decidido antes de R-0034 e independentemente de R-0033 (a prévia não depende do pin); os ADR-0039/0040 do checkpoint são renumerados para os próximos livres ao entrarem (R-0034). R-0033 abre sobre o pin de `main` no dia da abertura. | Fechada |
+| OD-C3-006 | PR de registro da parada (R-0022 `work/rounds/`, `scratch/r22-adoption-160`, índices, esta seção) pode abrir a partir da worktree de handoff?      | **Decidida pelo Owner em 2026-10-14: (a)** PR só de registro da parada (sem código), a partir da worktree de handoff, revisado pela outra família.                                                                                                                                              | Fechada |
+
+**Fronteira de autorização:** OD-C3-002…006 foram decididas pelo Owner em 2026-10-14 pela resposta
+literal "go with all recommended options for all questions". Nenhuma destas decisões abre rodada
+(o `AUTHORIZATION.md` de R-0033 nasce com a autorização do `prompts/00-maestro.md`), autoriza
+publicação além do PR de registro de OD-C3-006, ou altera critérios de aceitação de rodadas já
+planejadas; adendas A-C3-0n nascem no bootstrap de cada rodada.
+
 ## C-0002 — STYNX e escopo revisto de R-0021 (2026-09-27)
 
 Registro canônico das decisões já tomadas pelo **Owner**. A transcrição pelo Architect não
