@@ -1,0 +1,96 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@nestjs/schedule",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:13.813000Z",
+    "selection": "versions[6.1.3]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 152163,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/ec/a3/0b5cba5f23600bf3900f02c6463c1ea348c2aea532e811b5f990481913653229370a867ea395f49995a77204bcc14a183c91cfb5d3b0e2ff6de5bcf10bb8",
+    "sourceSha256": "sha256:d35516b21be5e3e1ff7dd8f2a3edc7c32a7a18dc6594e0a0a2c090046b0e5056"
+  },
+  "version": "6.1.3",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@nestjs/schedule@6.1.3",
+    "_nodeVersion": "20.18.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/schedule_6.1.3_1776251535065_0.16779358366768093"
+    },
+    "_npmUser": { "email": "admin@kamilmysliwiec.com", "name": "nestjscore" },
+    "_npmVersion": "10.8.2",
+    "author": { "name": "Kamil Mysliwiec" },
+    "bugs": { "url": "https://github.com/nestjs/schedule/issues" },
+    "dependencies": { "cron": "4.4.0" },
+    "description": "Nest - modern, fast, powerful node.js web framework (@schedule)",
+    "devDependencies": {
+      "@commitlint/cli": "20.5.0",
+      "@commitlint/config-angular": "20.5.0",
+      "@nestjs/common": "11.1.19",
+      "@nestjs/core": "11.1.19",
+      "@nestjs/platform-express": "11.1.19",
+      "@nestjs/testing": "11.1.19",
+      "@types/node": "24.12.2",
+      "husky": "9.1.7",
+      "lint-staged": "16.4.0",
+      "oxlint": "1.60.0",
+      "prettier": "3.8.3",
+      "reflect-metadata": "0.2.2",
+      "release-it": "19.2.4",
+      "rimraf": "6.1.3",
+      "rxjs": "7.8.2",
+      "typescript": "6.0.2",
+      "vite": "8.0.8",
+      "vitest": "4.1.4"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 42,
+      "integrity": "sha512-RflMFOpR16Dwd1jAUbeB4mfGTCh65fvEdL4mSjQPJChpkRGRjIXjb+6YQcK2faQrVT60c9DmLmoVR7/ONCtuYQ==",
+      "shasum": "24a1decf216e5881bed9d8e751573ac450c7d04b",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIEGNk4FwQWkMseDJ1T9pvMP1GYiFNOQdkygXTfr5ibueAiBwQNxLKWKQ52ScaB6l7UrZjlC3ZvVPYSMDvkuTpmDy3w=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@nestjs/schedule/-/schedule-6.1.3.tgz",
+      "unpackedSize": 53229
+    },
+    "gitHead": "557730ee8b898a0e2b03cdd5b207e176b60f8b1e",
+    "homepage": "https://github.com/nestjs/schedule#readme",
+    "husky": { "hooks": { "pre-commit": "lint-staged" } },
+    "license": "MIT",
+    "lint-staged": { "*.ts": ["prettier --write"] },
+    "maintainers": [
+      { "email": "admin@kamilmysliwiec.com", "name": "nestjscore" },
+      { "email": "mail@kamilmysliwiec.com", "name": "kamilmysliwiec" }
+    ],
+    "name": "@nestjs/schedule",
+    "peerDependencies": {
+      "@nestjs/common": "^10.0.0 || ^11.0.0",
+      "@nestjs/core": "^10.0.0 || ^11.0.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/nestjs/schedule.git"
+    },
+    "scripts": {
+      "build": "rimraf -rf dist && tsc -p tsconfig.json",
+      "format": "prettier **/**/*.ts --ignore-path ./.prettierignore --write",
+      "lint": "oxlint lib/",
+      "prepublish:next": "npm run build",
+      "prepublish:npm": "npm run build",
+      "prerelease": "npm run build",
+      "publish:next": "npm publish --access public --tag next",
+      "publish:npm": "npm publish --access public",
+      "release": "release-it",
+      "test:integration": "vitest run"
+    },
+    "types": "./index.d.ts",
+    "url": "https://github.com/nestjs/schedule#readme",
+    "version": "6.1.3"
+  }
+}

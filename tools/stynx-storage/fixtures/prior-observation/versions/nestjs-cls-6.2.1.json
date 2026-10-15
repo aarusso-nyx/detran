@@ -1,0 +1,125 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "nestjs-cls",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[6.2.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 242292,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/nestjs-cls-6.2.1.json",
+    "sourceSha256": "sha256:dd7640795c0a1f569dd3d9cdaf6d71b2752a6ae57f155fd4e2f92ce4c12e3765"
+  },
+  "version": "6.2.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "nestjs-cls@6.2.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/nestjs-cls_6.2.1_1779737544137_0.3558340094401158"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:5969787b-55f9-4d98-8f5d-ef51705788c0"
+      }
+    },
+    "author": "papooch",
+    "description": "A continuation-local storage module compatible with NestJS's dependency injection.",
+    "devDependencies": {
+      "@apollo/server": "^5.5.0",
+      "@as-integrations/express5": "^1.1.2",
+      "@nestjs/apollo": "^13.2.5",
+      "@nestjs/cli": "^11.0.19",
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/common10": "npm:@nestjs/common@10.4.15",
+      "@nestjs/core": "^11.1.19",
+      "@nestjs/core10": "npm:@nestjs/core@10.4.15",
+      "@nestjs/graphql": "^13.2.5",
+      "@nestjs/mercurius": "^13.2.5",
+      "@nestjs/platform-express": "^11.1.19",
+      "@nestjs/platform-express10": "npm:@nestjs/platform-express@10.4.15",
+      "@nestjs/platform-fastify": "^11.1.19",
+      "@nestjs/platform-fastify10": "npm:@nestjs/platform-fastify@10.4.15",
+      "@nestjs/platform-ws": "^11.1.19",
+      "@nestjs/schematics": "^11.0.10",
+      "@nestjs/testing": "^11.1.19",
+      "@nestjs/testing10": "npm:@nestjs/testing@10.4.15",
+      "@nestjs/websockets": "^11.1.19",
+      "@types/express": "^5.0.6",
+      "@types/jest": "^30.0.0",
+      "@types/node": "^22.19.7",
+      "@types/supertest": "^6.0.3",
+      "@types/ws": "^8.18.1",
+      "graphql": "^16.13.2",
+      "jest": "^30.2.0",
+      "mercurius": "^16.9.0",
+      "reflect-metadata": "^0.2.2",
+      "rimraf": "^6.1.2",
+      "rxjs": "^7.8.2",
+      "supertest": "^7.2.2",
+      "superwstest": "^2.1.1",
+      "ts-jest": "^29.4.6",
+      "ts-loader": "^9.5.4",
+      "ts-node": "^10.9.2",
+      "tsconfig-paths": "^4.2.0",
+      "typescript": "5.9.3",
+      "ws": "^8.19.0"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 81,
+      "integrity": "sha512-LTVvreuhH132+rjP4MwnykUS3byBAuN6WQzh2QA3YSYCjy9GfgRyoiSKE5qrzQe+uCB1/TUNHPCxEMYgR3tRlg==",
+      "shasum": "8d2d5c20d61144868c6a6be2a761243aac3b3f25",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIGV2diqt72SuZBi0NnQ2Tsq9N2yMeDBiFbwueQoykbuuAiB1Hepy3+wZ6DuKAMNMVpzRC8VGlnVOU2jJnUg1mHBFLw=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/nestjs-cls/-/nestjs-cls-6.2.1.tgz",
+      "unpackedSize": 129787
+    },
+    "engines": { "node": ">=18" },
+    "gitHead": "a5ae45459773c08d62f54e04a09e5bc6d481567a",
+    "homepage": "https://papooch.github.io/nestjs-cls/",
+    "keywords": [
+      "nest",
+      "nestjs",
+      "cls",
+      "continuation-local-storage",
+      "als",
+      "AsyncLocalStorage",
+      "async_hooks",
+      "request context",
+      "async context"
+    ],
+    "license": "MIT",
+    "main": "dist/src/index.js",
+    "maintainers": [{ "email": "papoochcz@gmail.com", "name": "papooch" }],
+    "name": "nestjs-cls",
+    "peerDependencies": {
+      "@nestjs/common": ">= 10 < 12",
+      "@nestjs/core": ">= 10 < 12",
+      "reflect-metadata": "*",
+      "rxjs": ">= 7"
+    },
+    "publishConfig": { "access": "public" },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Papooch/nestjs-cls.git"
+    },
+    "scripts": {
+      "build": "tsc",
+      "prebuild": "rimraf dist",
+      "prepack": "cp ../../LICENSE ./LICENSE && cp ../../README.md ./README.md",
+      "test": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --experimental-vm-modules\" jest",
+      "test:cov": "jest --coverage",
+      "test:watch": "jest --watch"
+    },
+    "types": "dist/src/index.d.ts",
+    "version": "6.2.1"
+  }
+}

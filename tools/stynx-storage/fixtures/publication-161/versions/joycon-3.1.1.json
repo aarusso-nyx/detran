@@ -1,0 +1,73 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "joycon",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:28.819000Z",
+    "selection": "versions[3.1.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 76542,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/8d/4c/40b459f115f58ad53d5956d694ed78f41af3c7ee453aa90be3d9a1807922540f93b476b0ae5bf9e30d5836df154e227f31821f710c8784aa3a59d9b09654",
+    "sourceSha256": "sha256:4c39f9f46ba959e54a4b82ae7fa4073aff2299093b0e1f14e37d6b468d97d6cb"
+  },
+  "version": "3.1.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "joycon@3.1.1",
+    "_nodeVersion": "16.13.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages",
+      "tmp": "tmp/joycon_3.1.1_1638384972440_0.8810577031010782"
+    },
+    "_npmUser": { "email": "0x142857@gmail.com", "name": "egoist" },
+    "_npmVersion": "7.24.2",
+    "author": { "email": "0x142857@gmail.com", "name": "egoist" },
+    "bugs": { "url": "https://github.com/egoist/joycon/issues" },
+    "description": "Load config with ease.",
+    "devDependencies": {
+      "@babel/cli": "^7.13.10",
+      "@babel/core": "^7.13.10",
+      "@babel/preset-env": "^7.13.10",
+      "@egoist/prettier-config": "^0.1.0",
+      "@types/node": "^14.14.33",
+      "babel-jest": "^26.6.3",
+      "babel-plugin-sync": "^0.1.0",
+      "jest-cli": "^26.6.3",
+      "prettier": "^2.2.1"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 5,
+      "integrity": "sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==",
+      "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.13\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJhp8VMCRA9TVsSAnZWagAA7BwP/ix5gzC3V353YGxTTytH\nCLGaM22sDc7dohKbZ5+bLLhAhcl2zuxZS1Q0xlllr9TKWGsjDgwDM2ujmQQR\noO44uzApzRcF8vcv8ECBgEjIvPwGuAngxZxMwdYc2cst9PWtm37AvdpmL4Ts\nlMc7b6idhzhQleDkeTIIimVP4vdFxD9UPr3LSlgq5ZOq2W52rIdOv6ZfQZYa\nxz8SZHalT7zjEJkCjs1kAu9ufxfq/GfqrYf2V7i8GE8057fYIMxhobYa8sX0\nEzxUmZJOBhog1eXPd0Wk+zXinVkZzMfyHFdidRqKDnGFcE/prSQgUH9zPhLK\nvgeIopW+QeQdY7SE2uQP4c24DBl60llW/XGb97AL8jnLE8Zn6VLzUKfPHmJf\nLU1ukbO5K9Nuk5Km70TuLg21t6T5QsGmjQGfwoJ4bUAM73GGRL5XggJ4jjQM\nrOXKyloYbRBG0kkUugDjlKmvPrnT25iDrYo1xSMt66byZaRocvDGKY6qSaIC\nGElLfGDHO3FFGARqS5osprPwnR/TktCXP3MNQPNMJKTxZfUAzB+LTd8uS1LS\nuHXSj/RGda3cPQSCSFT+L028Ez8pTnv/YoBKoV/LpQEufnqLJYpIzRw6WPcr\nu/jaAk9R7ikhueK/YWbwzWgLL9qvlZDt+pcr1VBfhTO6sb4rF8MJpDplka0/\ndr9m\r\n=bIpo\r\n-----END PGP SIGNATURE-----\r\n",
+      "shasum": "bce8596d6ae808f8b68168f5fc69280996894f03",
+      "signatures": [
+        {
+          "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+          "sig": "MEUCIQDOQjFj5T+79AtXRL+WfuE8dgG/Uz+GuNu5I0prCpemUgIgBuXVNRDenVc/xeOT9o8UkQXrKcyhvFFB02iPI1xebSA="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/joycon/-/joycon-3.1.1.tgz",
+      "unpackedSize": 14010
+    },
+    "engines": { "node": ">=10" },
+    "gitHead": "4c1e87691bfe0b3b5ffc46f5ac546ed4c710a9d2",
+    "homepage": "https://github.com/egoist/joycon#readme",
+    "jest": { "testEnvironment": "node" },
+    "license": "MIT",
+    "main": "lib/index.js",
+    "maintainers": [{ "email": "0x142857@gmail.com", "name": "egoist" }],
+    "name": "joycon",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/egoist/joycon.git"
+    },
+    "scripts": {
+      "build": "babel src -d lib --no-comments",
+      "prepublishOnly": "npm run build",
+      "test": "jest --testPathPattern tests"
+    },
+    "types": "types/index.d.ts",
+    "version": "3.1.1"
+  }
+}

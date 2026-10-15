@@ -1,0 +1,16 @@
+--- 
++++ 
+@@ -75,11 +75,11 @@
+    with self.assertRaises(RuntimeError):m.ready(m.output_frame(x),NONCE,m.SCRIPT_SHA)
+   with self.assertRaises(RuntimeError):m.ready(b'{"kind":"x","kind":"x"}\n',NONCE,m.SCRIPT_SHA)
+  def test_absolute_deadline_and_phase_order(self):
+-  for bad_start in (float('inf'),float('nan'),-1,True,1e308):
++  for bad_start in (float('inf'),float('nan'),-1,True,1e308,10**1000):
+    with self.subTest(start=bad_start),self.assertRaises(RuntimeError):
+     m.PureRendezvous(NONCE,CID,m.SCRIPT_SHA,bad_start,helper_authority())
+   r=m.PureRendezvous(NONCE,CID,m.SCRIPT_SHA,100.0,helper_authority())
+-  for bad_now in (-1,float('nan'),float('inf'),True):
++  for bad_now in (-1,float('nan'),float('inf'),True,10**1000):
+    with self.subTest(now=bad_now),self.assertRaises(RuntimeError):
+     r.accept_ready(m.output_frame(ready_value()),bad_now)
+   with self.assertRaises(RuntimeError):r.start(100.1)

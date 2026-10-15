@@ -1,0 +1,58 @@
+{
+  "kind": "architect-independent-frozen-public-runtime-data-review",
+  "actor": "/root/architect_adoption_160",
+  "role": "Architect",
+  "disposition": "ACCEPTED_DATA_AND_SELECTED_SOURCE_ONLY",
+  "freeze": {
+    "path": "scratch/r22-adoption-161/public-runtime-data-freeze-01/ROOT-DATA-FREEZE.json",
+    "bytes": 3916,
+    "sha256": "sha256:add8b6d880d8b7d0f715c3c11f06dbb848fbbf5955d3ff7446476ed51ea3de9f"
+  },
+  "descriptor": {
+    "path": "tools/stynx-storage/consumer-fixtures/public-installed-runtime/descriptor.DRAFT-NOT-ADMISSION.json",
+    "bytes": 3674993,
+    "sha256": "sha256:e1a198360c6148e48d93487ae8f641e77e487b772286c5daa554720e738563c9"
+  },
+  "counts": {
+    "frozenInputRefs": 13,
+    "physicalPeerContexts": 241,
+    "genuineArchives": 161,
+    "selectedFiles": 2606,
+    "literalBfsFiles": 2439,
+    "additionalManifests": 167,
+    "sourceLiteralSites": 6449,
+    "uniqueEdges": 6277,
+    "duplicateSitesRetainedInRaw": 172,
+    "seeds": 3,
+    "optionalMisses": 6,
+    "dynamicSites": 5
+  },
+  "checks": [
+    "Frozen descriptor copy and all inputs rehashed; source/toolchain arrays sorted unique.",
+    "Full pnpm snapshot identities independently reconstructed and all actual roots matched; primary source excerpts byte-equal.",
+    "Independent three-seed BFS and exact deduplicated edge set match the raw graph.",
+    "All 161 archive SHA256/SHA1/SHA512 SRI and 2606 installed/archive bytes match; nearest manifests selected by upward search.",
+    "Six misses and five dynamic sites match the graph; reviews and independentAdmission are null."
+  ],
+  "siteDisposition": {
+    "selectedCaughtMisses": [
+      "@nestjs/websockets/socket-module",
+      "@nestjs/microservices/microservices-module"
+    ],
+    "otherFourMisses": "NONSELECTED_REFUSE_IF_REQUESTED",
+    "dynamicSites": "No blanket request or code-generation authority; finite selected literal edges only.",
+    "zodCjsContract": {
+      "path": "work/rounds/R-0022/contracts/STYNX-1.6.1-PUBLIC-ZOD-CJS-SITE-DISPOSITION.md",
+      "sha256": "sha256:924b7876ae66c00601a4138131e0eabde63ca1dbd4597e108c413624c9f5fb6c"
+    }
+  },
+  "limits": {
+    "sdkExecuted": false,
+    "sqlExecuted": false,
+    "guardSourceReviewed": false,
+    "runtimeAdmission": false,
+    "productionReadiness": false,
+    "previousUnretainedDraftNotInvented": true
+  },
+  "auditErratum": "Earlier local readers omitted empty-map snapshot declarations and stripped all final peer separators; corrected source-derived reader only, no input changes."
+}

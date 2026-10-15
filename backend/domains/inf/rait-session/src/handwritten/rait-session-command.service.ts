@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -221,11 +221,13 @@ export class RaitSessionCommandService {
   constructor(
     private readonly database: Database,
     private readonly requestContext: RequestContext,
+    @Optional()
+    @Inject(DocumentTrustHttpAdapter)
+    private readonly trust: DocumentTrustHttpAdapter = new DocumentTrustHttpAdapter(),
   ) {}
 
   private readonly caseTransitions = new RaitCaseTransitionPort();
   private readonly deadlines = new RaitDeadlineEngineFactory();
-  private readonly trust = new DocumentTrustHttpAdapter();
 
   async execute(input: SessionCommandInput): Promise<Result> {
     validateEnvelope(input);

@@ -1,0 +1,402 @@
+{
+  "formatVersion": 1,
+  "kind": "actual-cluster02-generation03-creation",
+  "systemIdentifier": "7696293464811719840",
+  "identity": {
+    "dataDirectory": "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/db-rehearsal/cluster-02/data",
+    "port": "65462",
+    "listenAddresses": "127.0.0.1",
+    "unixSockets": "",
+    "serverVersionNum": "180002",
+    "currentUser": "postgres",
+    "sessionUser": "postgres",
+    "readOnly": "on",
+    "systemIdentifier": "7696293464811719840",
+    "pidfile": "64859\n/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/db-rehearsal/cluster-02/data\n1791932961\n65462\n\n127.0.0.1\n1024803721    327682\nready   \n",
+    "sqlUtc": "2026-10-13T23:09:21.873466Z"
+  },
+  "identityObservationLimit": "Base identity was revalidated by actual guarded SQL immediately before CREATE; creation stdout records actual current roles, memberships, OIDs and SQL UTC. Original identity timestamps remain historical.",
+  "endpoint": {
+    "host": "127.0.0.1",
+    "port": 65462
+  },
+  "dataDirectory": "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/db-rehearsal/cluster-02/data",
+  "postmaster": {
+    "pid": 64859,
+    "command": "/Applications/Postgres.app/Contents/Versions/18/bin/postgres -D /Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/db-rehearsal/cluster-02/data -h 127.0.0.1 -p 65462 -c unix_socket_directories=",
+    "pidfileSha256": "6ddd0f8522567a1fa4ef1ad9cf7c1a0f3193dd1b5cdfc675b1c51ea43641bc7f"
+  },
+  "subjects": [
+    {
+      "owner": "postgres",
+      "databaseOid": "18765",
+      "databaseName": "detran_r22_161_g03_ref160",
+      "clusterSystemIdentifier": "7696293464811719840"
+    },
+    {
+      "owner": "postgres",
+      "databaseOid": "18766",
+      "databaseName": "detran_r22_161_g03_refprefix8",
+      "clusterSystemIdentifier": "7696293464811719840"
+    },
+    {
+      "owner": "postgres",
+      "databaseOid": "18767",
+      "databaseName": "detran_r22_161_g03_upgrade",
+      "clusterSystemIdentifier": "7696293464811719840"
+    }
+  ],
+  "actualCreationReadback": {
+    "roles": [
+      {
+        "oid": "4544",
+        "rolname": "pg_checkpoint",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6304",
+        "rolname": "pg_create_subscription",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6171",
+        "rolname": "pg_database_owner",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "4571",
+        "rolname": "pg_execute_server_program",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6337",
+        "rolname": "pg_maintain",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "3373",
+        "rolname": "pg_monitor",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6181",
+        "rolname": "pg_read_all_data",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "3374",
+        "rolname": "pg_read_all_settings",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "3375",
+        "rolname": "pg_read_all_stats",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "4569",
+        "rolname": "pg_read_server_files",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6392",
+        "rolname": "pg_signal_autovacuum_worker",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "4200",
+        "rolname": "pg_signal_backend",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "3377",
+        "rolname": "pg_stat_scan_tables",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "4550",
+        "rolname": "pg_use_reserved_connections",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "6182",
+        "rolname": "pg_write_all_data",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "4570",
+        "rolname": "pg_write_server_files",
+        "rolsuper": false,
+        "rolinherit": true,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "10",
+        "rolname": "postgres",
+        "rolsuper": true,
+        "rolinherit": true,
+        "rolcanlogin": true,
+        "rolcreatedb": true,
+        "rolbypassrls": true,
+        "rolconnlimit": -1,
+        "rolcreaterole": true,
+        "rolvaliduntil": null,
+        "rolreplication": true
+      },
+      {
+        "oid": "16394",
+        "rolname": "role_app_backend",
+        "rolsuper": false,
+        "rolinherit": false,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "16395",
+        "rolname": "role_auditor_min",
+        "rolsuper": false,
+        "rolinherit": false,
+        "rolcanlogin": false,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      },
+      {
+        "oid": "16396",
+        "rolname": "role_r22_161_app",
+        "rolsuper": false,
+        "rolinherit": false,
+        "rolcanlogin": true,
+        "rolcreatedb": false,
+        "rolbypassrls": false,
+        "rolconnlimit": -1,
+        "rolcreaterole": false,
+        "rolvaliduntil": null,
+        "rolreplication": false
+      }
+    ],
+    "sqlUtc": "2026-10-13T23:47:39.031235Z",
+    "subjects": [
+      {
+        "owner": "postgres",
+        "databaseOid": "18765",
+        "databaseName": "detran_r22_161_g03_ref160"
+      },
+      {
+        "owner": "postgres",
+        "databaseOid": "18766",
+        "databaseName": "detran_r22_161_g03_refprefix8"
+      },
+      {
+        "owner": "postgres",
+        "databaseOid": "18767",
+        "databaseName": "detran_r22_161_g03_upgrade"
+      }
+    ],
+    "memberships": [
+      {
+        "oid": "10308",
+        "member": "3373",
+        "roleid": "3374",
+        "grantor": "10",
+        "set_option": true,
+        "admin_option": false,
+        "inherit_option": true
+      },
+      {
+        "oid": "10309",
+        "member": "3373",
+        "roleid": "3375",
+        "grantor": "10",
+        "set_option": true,
+        "admin_option": false,
+        "inherit_option": true
+      },
+      {
+        "oid": "10310",
+        "member": "3373",
+        "roleid": "3377",
+        "grantor": "10",
+        "set_option": true,
+        "admin_option": false,
+        "inherit_option": true
+      },
+      {
+        "oid": "16397",
+        "member": "16396",
+        "roleid": "16394",
+        "grantor": "10",
+        "set_option": true,
+        "admin_option": false,
+        "inherit_option": false
+      }
+    ]
+  },
+  "creationLeaseSha256": "e57b4ab5b42ccf44605230395ef5140ae8f387cd43bc3028a61467d3af313de4",
+  "creationReturnSha256": "77dafc666ca9f55e3be9a7847921c9d32f28a2c7cf08d7278eed2c336fd67eb7",
+  "binaries": [
+    {
+      "name": "initdb",
+      "path": "/Applications/Postgres.app/Contents/Versions/18/bin/initdb",
+      "sha256": "d103626d91c90af601aa1e8356b383b983cbac000e3310d6c3e951db54e7337a",
+      "version": "initdb (PostgreSQL) 18.2 (Postgres.app)"
+    },
+    {
+      "name": "pg_ctl",
+      "path": "/Applications/Postgres.app/Contents/Versions/18/bin/pg_ctl",
+      "sha256": "9e13ce199a5ddf82b0d868fc82b12f016035ca2d5646b623d9c3ac69516c40cd",
+      "version": "pg_ctl (PostgreSQL) 18.2 (Postgres.app)"
+    },
+    {
+      "name": "postgres",
+      "path": "/Applications/Postgres.app/Contents/Versions/18/bin/postgres",
+      "sha256": "e5ced2a1cf0375859196ccd15172bcbdf263c6b4fde5a83da93a92d67d63732c",
+      "version": "postgres (PostgreSQL) 18.2 (Postgres.app)"
+    },
+    {
+      "name": "psql",
+      "path": "/Applications/Postgres.app/Contents/Versions/18/bin/psql",
+      "sha256": "6118e2b9d262ea230c5401382a2ff795c65ae87e99d06418a9a979075cd41591",
+      "version": "psql (PostgreSQL) 18.2 (Postgres.app)"
+    }
+  ],
+  "sdkExecuted": false,
+  "rolesCreated": false,
+  "productSchemaCreated": false,
+  "seeded": false,
+  "independentPristineReview": "pending"
+}

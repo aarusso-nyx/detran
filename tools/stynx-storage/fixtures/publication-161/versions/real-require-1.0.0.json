@@ -1,0 +1,74 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "real-require",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:28.782000Z",
+    "selection": "versions[1.0.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 10846,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/e3/a4/c6496637a785038cbd6b6581f17d299a4f73914f4c9b03660fd27c43109d2378f2bac71b01b624e3ec5335eab4a30125676a89a344948a1def7b8402c5b3",
+    "sourceSha256": "sha256:8a7b7081b581d91bc94c8ba7a0d2cad67012865859b42940020e0db443423bf4"
+  },
+  "version": "1.0.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "real-require@1.0.0",
+    "_nodeVersion": "24.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/real-require_1.0.0_1773509309770_0.20256428368024748"
+    },
+    "_npmUser": { "email": "james.sumners@gmail.com", "name": "jsumners" },
+    "_npmVersion": "11.9.0",
+    "author": { "email": "shogun@cowtech.it", "name": "Paolo Insogna" },
+    "bugs": { "url": "https://github.com/pinojs/real-require/issues" },
+    "contributors": [
+      { "name": "Paolo Insogna", "url": "https://github.com/ShogunPanda" }
+    ],
+    "description": "Keep require and import consistent after bundling or transpiling",
+    "devDependencies": {
+      "borp": "^1.0.0",
+      "c8": "^8.0.0",
+      "eslint": "^9.39.4",
+      "neostandard": "^0.13.0"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 4,
+      "integrity": "sha512-P4nbQYQfePJxRSmY+v/KINxVucm4NF3p3s7pJveMTtom52FR4YGltUQLB8idDXwDDWW+eYrWDFbuzUnjoWHF7g==",
+      "shasum": "e4f0a3737e8060c513b60c2652c58b8ef56bc8a9",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIDFrFAmG5YF+lKnoFZ3UmHPWjnOPc85BrIJ8jaDHI7RgAiAsvM678xpY4LqSCHPToF51qZNR7P7cs9Z8KVe7f/cabA=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/real-require/-/real-require-1.0.0.tgz",
+      "unpackedSize": 3929
+    },
+    "gitHead": "c732a11f880ba6876649b090c6374f0e4065b2b4",
+    "homepage": "https://github.com/pinojs/real-require",
+    "license": "MIT",
+    "main": "src/index.js",
+    "maintainers": [
+      { "email": "hello@matteocollina.com", "name": "matteo.collina" },
+      { "email": "james.sumners@gmail.com", "name": "jsumners" },
+      { "email": "w@tson.dk", "name": "watson" },
+      { "email": "paolo@cowtech.it", "name": "shogun_panda" }
+    ],
+    "name": "real-require",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pinojs/real-require.git"
+    },
+    "scripts": {
+      "ci": "npm run lint && npm run test:ci",
+      "lint": "eslint .",
+      "lint:fix": "eslint --fix .",
+      "test": "c8 --reporter=text --reporter=html borp 'test/*.test.js'",
+      "test:ci": "c8 --reporter=text --reporter=json --check-coverage --branches 90 --functions 90 --lines 90 --statements 90 borp 'test/*.test.js'"
+    },
+    "version": "1.0.0"
+  }
+}

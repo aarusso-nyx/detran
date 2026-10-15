@@ -1,0 +1,74 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/idempotency",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:35.969773+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 191501,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-idempotency-1.6.1.json",
+    "sourceSha256": "sha256:9b5b106a0042813ce16b964c566765ff0ae2a31d2be45c105f72c370797734ce"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/contracts": "1.6.1",
+      "@stynx-nyx/data": "1.6.1",
+      "redis": "^6.0.0",
+      "rxjs": "^7.8.2"
+    },
+    "description": "Idempotency primitives for stynx",
+    "devDependencies": {
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-Ig8VI7HxyUrZhTtw95XbkFFokyRU7MY02NIObD2DqJcevmpGXo3eehlflzTzbjQK6GVwiyrun+CbNIJrywrJ7g==",
+      "shasum": "7588ed1ce1438b1fe7993e272ea9564f4b50be7f",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/idempotency/1.6.1/7588ed1ce1438b1fe7993e272ea9564f4b50be7f"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/idempotency/src/index.js",
+    "name": "@stynx-nyx/idempotency",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/idempotency` — replay-safe writes via `Idempotency-Key` header + interceptor\n\n`@stynx-nyx/idempotency` is the idempotency-key interceptor. Mark a write endpoint with `@Idempotent()`, and the interceptor reads the client's `Idempotency-Key` header on each call: a fresh key proceeds and stores the response; a repeated key replays the stored response without re-executing the handler. Stores: in-memory (dev), Postgres-table (default; transactional with your business writes), Redis (lower latency).\n\n## Purpose\n\nPOST/PUT/PATCH endpoints often retry — flaky network, mobile app reconnect, queue redelivery. Without idempotency keys, retries cause duplicate side-effects (double charge, double order). `@stynx-nyx/idempotency` resolves this with a tiny decorator + the right store choice.\n\nYou reach for it on every mutating endpoint whose duplicate execution is unsafe. Wired globally via `StynxPlatformPipelineModule` from `@stynx-nyx/backend`.\n\nWhat it does NOT do: it doesn't make a non-idempotent operation idempotent (it caches the response only). It doesn't replay streaming responses. It doesn't deduplicate across actors with the same key (keys are scoped to actor by default).\n\n## Audience\n\nBackend developers building POST/PUT/PATCH endpoints, mobile-facing APIs, queue consumers.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/idempotency\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { StynxIdempotencyModule } from '@stynx-nyx/idempotency';\n\nStynxIdempotencyModule.forRoot({\n  defaultTtlMs: 24 * 60 * 60_000,\n  store: { kind: 'pg' },\n});\n```\n\n```ts\nimport { Idempotent } from '@stynx-nyx/idempotency';\n\n@Controller('orders')\nexport class OrdersController {\n  @Post()\n  @Idempotent()\n  create(@Body() body: CreateOrderDto) {\n    /* ... */\n  }\n}\n```\n\nNow `POST /orders` with header `Idempotency-Key: abc123` replays the cached response on subsequent identical-key requests.\n\n## Public API surface\n\n### Modules\n\n| Export                   | Signature                                          | Description                            |\n| ------------------------ | -------------------------------------------------- | -------------------------------------- |\n| `StynxIdempotencyModule` | `.forRoot(options: StynxIdempotencyModuleOptions)` | Registers interceptor, store, metrics. |\n\n### Services / Injectables\n\n| Export                        | Description                                                                                |\n| ----------------------------- | ------------------------------------------------------------------------------------------ |\n| `IdempotencyInterceptor`      | The `APP_INTERCEPTOR` registered globally (via `StynxPlatformPipelineModule` or directly). |\n| `IdempotencyStore` (DI alias) | The active store; resolved from `options.store.kind`.                                      |\n| `PgIdempotencyStore`          | Default. Transactional with the business write (same DB connection).                       |\n| `DatabaseIdempotencyStore`    | Generic-DB variant.                                                                        |\n| `RedisIdempotencyBackend`     | Redis-backed store.                                                                        |\n| `IdempotencyMetrics`          | Hit/miss/stored counters.                                                                  |\n\n### Decorators\n\n| Export                             | Targets        | Description                                                                                      |\n| ---------------------------------- | -------------- | ------------------------------------------------------------------------------------------------ |\n| `@Idempotent(headerName?, ttlMs?)` | Method + class | Mark a route as idempotency-protected. Default header is `Idempotency-Key`.                      |\n| `@NoIdempotent()`                  | Method + class | Opt-out — used when the global default applies idempotency but this specific route shouldn't be. |\n\n### Types / Interfaces\n\n| Export                          | Description                                                                |\n| ------------------------------- | -------------------------------------------------------------------------- |\n| `StynxIdempotencyModuleOptions` | `forRoot()` options.                                                       |\n| `IdempotencyRecord`             | Persisted shape: `{ key, actorId, requestHash, responseBody, expiresAt }`. |\n\n## Configuration\n\n### `StynxIdempotencyModule.forRoot()` options\n\n| Option               | Type                              | Default                                            | Description          |\n| -------------------- | --------------------------------- | -------------------------------------------------- | -------------------- |\n| `defaultTtlMs`       | `number`                          | `86_400_000` (24h)                                 | Key TTL.             |\n| `store.kind`         | `'in-memory' \\| 'pg' \\| 'redis'`  | `'in-memory'` (dev) / `'pg'` (prod recommendation) | Backend.             |\n| `store.redis`        | `RedisOptions`                    | n/a                                                | Redis config.        |\n| `store.pg.tableName` | `string`                          | `'stynx_idempotency'`                              | Postgres table name. |\n| `scope`              | `'actor' \\| 'tenant' \\| 'global'` | `'actor'`                                          | Key scoping.         |\n| `headerName`         | `string`                          | `'Idempotency-Key'`                                | Header to read.      |\n\n## Examples\n\n### Example 1 — different TTL per endpoint\n\n```ts\n@Post('charge')\n@Idempotent('Idempotency-Key', 60 * 60_000)  // 1h\ncharge() { /* ... */ }\n```\n\n### Example 2 — opt-out on a fully-idempotent route\n\n```ts\n@StynxPlatformPipelineModule.forRoot({ idempotency: {} })  // global default applies\n// ...\n@Get('search')\n@NoIdempotent()  // GETs are naturally idempotent; skip\nsearch() { /* ... */ }\n```\n\n### Example 3 — per-tenant scoping\n\n```ts\nStynxIdempotencyModule.forRoot({ scope: 'tenant', store: { kind: 'pg' } });\n```\n\nSame key can be reused across tenants without colliding.\n\n## Common pitfalls\n\n- **Different request bodies, same key** — the store rejects with 409 (request-hash mismatch). Either the client used the wrong key or the request body legitimately changed; client must use a fresh key.\n- **Replaying a streamed response** — currently unsupported; the interceptor buffers the full response before storing. Don't use `@Idempotent()` on streaming endpoints.\n- **TTL too short** — legitimate retries (e.g. user opens app the next day on flaky network) miss the cache and re-execute. Tune by use case.\n- **`@Idempotent()` without the interceptor wired** — the decorator's metadata is set but doesn't enforce. Wire via `StynxPlatformPipelineModule` or `StynxIdempotencyModule.forRoot()`.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` for the actor scope.\n- [`@stynx-nyx/data`](/docs/packages/data/) — provides the Postgres store's DB connection.\n- [`@stynx-nyx/ratelimit`](/docs/packages/ratelimit/) — adjacent (replay+limit are often paired).\n- [`backend/idempotency`](/docs/packages/backend/idempotency/) — `@stynx-nyx/backend` submodule that wraps wiring.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-idempotency/`](/docs/api-reference/stynx-idempotency/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/contracts`: `workspace:*`\n- `@stynx-nyx/data`: `workspace:*`\n- `redis`: `^6.0.0`\n- `rxjs`: `^7.8.2`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/idempotency",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

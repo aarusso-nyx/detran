@@ -1,0 +1,43 @@
+# Architect — retained official Node control-plane evidence
+
+2026-10-13, F1 read-only independent review. Inputs: retention manifest
+1e44a93cecf09f5ba1458c4d07e7473945a11c5c18528e1e166931ee88a9cf33;
+Linux custody0faa4d0da2ad69dac425716591f92c72c408f0e95b05afaa3805b126bc184a0f;
+retained official SHASUMS256.txt
+c614a913a302d35d1c3a1348d07d84c52e28dceb0b97fd91e4ade05906ca2bd7.
+No SDK, Linux binary, container, test or DB executed by this reviewer.
+
+Independently checked both archive sizes/hashes against the retained official
+checksum entries, streamed each actual regular bin/node tar member and compared
+its bytes/hash/mode with the retained non-executable extracted binary. Linux-x64
+archive31838904 bytes SHA2f2c0da162318f0de47665410c7c8c2ed3d36c8f3105de4bbc61176c70a7cbf2;
+binary126458664 bytes SHA89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7.
+Darwin-arm64 archive27358644 bytes
+SHAb7bf7707070b950ba1ec5f1af3bb6de0f2b1962c5033973d94068ab021ef3014;
+binary121911744 bytes SHA9d050fd455b56426e25d4d603c7c501cbb2630348e836cf221dcce748e90588a.
+Actual pinned host binary matches the latter. Both tar members mode493; retained
+binary files are non-executable. This is retained HTTPS/checksum provenance,
+not an unperformed signature-verification claim.
+
+All six custody-listed files were independently size/hash checked. Read the
+actual observer source (only fs/crypto/process native-source observation), both
+attempt outputs and stderr. Attempt1 exit126/noexec has empty stdout and remains
+rejected. Attempt2 exit0 records actual Node24.20.0/linux/x64/executable identity;
+four pthread_getschedparam stderr warnings remain retained. Its three embedded
+sources match retained Darwin loader manifest71d1e77d3dc95a8901df03a7356b5fb6cce55c34f4260b9e5aaef4123431e5a2:
+
+- cjs loader a3e3ee095d409597bf224522411607aa7d2f4747cf42b5329179bf3b4b5528ed;
+- customization hooks02cf07c29fd2c4701ccc19395d5d0b11968aee34a9aefb37b5684f7248c457f7;
+- helpers3d6d6d7c7257610dcee83c76f29d6314ba56af5560faf50650a025fd9a56bbb3.
+
+Producer reports image5516d5fc594e536e38db7cd4c2576efe709db385bad92e1c656e4d0ff31e3d7a,
+amd64 emulation on ARM64 daemon, network none, readonly root/proof mount and
+executable ephemeral tmpfs. This reviewer read retained custody/logs, did not
+independently recreate or inspect the running container boundary. Future portable
+execution retains exact commands/inspection and actual platform-specific toolchain
+admission; it cannot infer Linux SDK/CI PASS from this record.
+
+Disposition: exact official Linux/Darwin executable constants and observed loader
+compatibility are suitable inputs to the separately reviewed portable producer.
+Target/prior graph reconstruction, actual Linux public SDK/sensor execution and
+required CI remain unproved here. macOS seals are not portable trust substitutes.

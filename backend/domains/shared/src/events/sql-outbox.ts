@@ -5,6 +5,10 @@
 // transaction is already open (CODESTYLE "Concurrency: … evento(s) gravados
 // na mesma transação").
 import type { Transaction } from '@stynx-nyx/data';
+import {
+  OutboxEventTransactionError,
+  type OutboxService,
+} from '@stynx-nyx/outbox';
 
 import { outboxIdempotencyKey, type TeatEventEnvelope } from './outbox.js';
 
@@ -24,6 +28,50 @@ function asQueryable(tx: Transaction): QueryableTransaction | undefined {
 }
 
 export class SqlTeatEventOutbox {
+  constructor(
+    private readonly native?: Pick<OutboxService, 'appendInTransaction'>,
+  ) {
+    if (
+      native !== undefined &&
+      (!native || typeof native.appendInTransaction !== 'function')
+    )
+      throw new OutboxEventTransactionError('transaction_role');
+  }
+
+  /** Public native append; the caller's transaction owns the complete effect. */
+  private async appendNative(
+    tx: Transaction,
+    envelope: TeatEventEnvelope,
+  ): Promise<{ id: string }> {
+    if (!tx || (typeof tx !== 'object' && typeof tx !== 'function'))
+      throw new OutboxEventTransactionError('transaction_role');
+    const queryable = asQueryable(tx);
+    if (!queryable) throw new OutboxEventTransactionError('transaction_role');
+    const result = await queryable.query<{ tenant_id: string | null }>(
+      'select auth.current_tenant() as tenant_id',
+    );
+    const tenantId = result.rows[0]?.tenant_id;
+    if (
+      result.rows.length !== 1 ||
+      typeof tenantId !== 'string' ||
+      !tenantId.trim()
+    )
+      throw new OutboxEventTransactionError('tenant');
+    const resolvedEnvelope: TeatEventEnvelope = { ...envelope, tenantId };
+    const row = await this.native!.appendInTransaction(tx, {
+      entity: resolvedEnvelope.type,
+      entityId: resolvedEnvelope.aggregate.id,
+      idempotencyKey: outboxIdempotencyKey(resolvedEnvelope),
+      payload: { ...resolvedEnvelope },
+      metadata: { aggregateType: resolvedEnvelope.aggregate.kind },
+    });
+    if (!row || row.tenantId !== tenantId)
+      throw new OutboxEventTransactionError('tenant');
+    if (typeof row.id !== 'string' || !row.id.trim())
+      throw new OutboxEventTransactionError();
+    return { id: row.id };
+  }
+
   /**
    * Inserts `envelope` into `integration.outbox` and returns the real id of
    * the row (CTG-0001 §13 item 5): the id is generated in a CTE and embedded
@@ -44,6 +92,7 @@ export class SqlTeatEventOutbox {
     tx: Transaction,
     envelope: TeatEventEnvelope,
   ): Promise<{ id: string }> {
+    if (this.native !== undefined) return this.appendNative(tx, envelope);
     const queryable = asQueryable(tx);
     if (!queryable) return { id: '' };
     const tenantRow = await queryable.query<{ tenant_id: string | null }>(

@@ -1,0 +1,68 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "pg-cloudflare",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[1.4.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 24594,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/pg-cloudflare-1.4.0.json",
+    "sourceSha256": "sha256:c3300d418ff6fb628d53e9bb78826fe55054438740270349f2a191949337da63"
+  },
+  "version": "1.4.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "pg-cloudflare@1.4.0",
+    "_nodeVersion": "24.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/pg-cloudflare_1.4.0_1779105618327_0.8236658972908555"
+    },
+    "_npmUser": { "email": "brian.m.carlson@gmail.com", "name": "brianc" },
+    "_npmVersion": "lerna/3.22.1/node@v24.14.0+arm64 (darwin)",
+    "bugs": { "url": "https://github.com/brianc/node-postgres/issues" },
+    "description": "A socket implementation that can run on Cloudflare Workers using native TCP connections.",
+    "devDependencies": { "ts-node": "^8.5.4", "typescript": "^6.0.3" },
+    "directories": {},
+    "dist": {
+      "fileCount": 13,
+      "integrity": "sha512-Vo7z/6rrQYxpNRylp4Tlob2elzbh+N/MOQbxFVWCxS7oEx6jF53GTJFxK2WWpKuBRkmiin4Mt+xofFDjx09R0A==",
+      "shasum": "4b4c20e6d8ae531d400730f4804571a8d62f1497",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIDVI2fYp7Jvwu8M4OgDvygQebV76pvbCTS4IWkpF70OlAiEAy064Kua9Sgvdm/VbkK1KgUA9temsTU71Ein+ipEbBCI="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/pg-cloudflare/-/pg-cloudflare-1.4.0.tgz",
+      "unpackedSize": 23542
+    },
+    "exports": {
+      ".": {
+        "default": "./dist/empty.js",
+        "workerd": { "import": "./esm/index.mjs", "require": "./dist/index.js" }
+      },
+      "./package.json": "./package.json"
+    },
+    "gitHead": "544b1ce8152bc280e398dc1e8a66920abe6a640e",
+    "homepage": "https://github.com/brianc/node-postgres#readme",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "maintainers": [{ "email": "brian.m.carlson@gmail.com", "name": "brianc" }],
+    "name": "pg-cloudflare",
+    "repository": {
+      "directory": "packages/pg-cloudflare",
+      "type": "git",
+      "url": "git://github.com/brianc/node-postgres.git"
+    },
+    "scripts": {
+      "build": "tsc",
+      "build:watch": "tsc --watch",
+      "prepublish": "yarn build",
+      "test": "echo e2e test in pg package"
+    },
+    "types": "dist/index.d.ts",
+    "version": "1.4.0"
+  }
+}

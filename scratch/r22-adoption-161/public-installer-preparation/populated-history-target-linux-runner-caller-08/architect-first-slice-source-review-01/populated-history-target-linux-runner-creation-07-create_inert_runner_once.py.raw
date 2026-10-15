@@ -1,0 +1,45 @@
+"""NOT_ADMISSION: source-only keeper05 creation contract; all entry points refuse.
+
+The prior keeper04 creator is historical. No Docker/volume/leaf effect is available
+from this source. A future one-use creator must separately be implemented and
+reviewed against the exact external rendezvous method and actual helper tools.
+"""
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[4]
+BASE = Path(__file__).resolve().parent
+DESIGN = ROOT / 'scratch/r22-adoption-161/public-installer-preparation/populated-history-external-process-rendezvous-design-01/ARCHITECT-EXTERNAL-LIVE-PID-RENDEZVOUS-PLAN.NOT_ADMISSION.md'
+DESIGN_SHA = '5dcca56caf8ad0e9f61da30c0085173e33316e84bd59fb72940186da8a80e5d8'
+PREDECESSOR_CREATOR = ROOT / 'scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-creation-06/create_inert_runner_once.py'
+PREDECESSOR_CREATOR_SHA = '08c682bfbd90f0dc22707c231b4ee4c75266d8fcf5db8b1617351c1b187064f3'
+RUNNER = 'detran-r22-161-target-resolver-keeper05'
+IMAGE_DATA = BASE / 'empty-image-pgdata'
+IMAGE = 'sha256:88dfc24521607f7695d0eb0ee6f908dacb84b8e6cd31ee67a37a09aeedf513e8'
+NODE_SOURCE = ROOT / 'scratch/r22-adoption-161/linux-portable-preparation/node-linux-x64-executable'
+NODE_SHA = '89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7'
+MOUNT_TARGETS = ('/repo', '/usr/local/bin/node', '/var/lib/postgresql')
+MOUNT_TYPES = ('bind', 'bind', 'bind')
+MOUNT_READ_ONLY = (True, True, True)
+NETWORK = 'none'
+USER = '999:999'
+CAP_DROP = ('ALL',)
+PRIVILEGED = False
+NO_NEW_PRIVILEGES = True
+ROOT_READ_ONLY = True
+PERMIT = BASE / 'ROOT-RUNNER-CREATION-PERMIT-ISSUED.json'
+OUT = BASE / 'actual-one-use-creation'
+
+
+def source_contract():
+    return {'runner': RUNNER, 'image': IMAGE, 'imageData': str(IMAGE_DATA),
+            'mountTargets': MOUNT_TARGETS, 'mountTypes': MOUNT_TYPES,
+            'readOnly': MOUNT_READ_ONLY, 'network': NETWORK, 'user': USER,
+            'capDrop': CAP_DROP, 'privileged': PRIVILEGED,
+            'noNewPrivileges': NO_NEW_PRIVILEGES, 'rootReadOnly': ROOT_READ_ONLY}
+
+
+def run_once(*_args, **_kwargs):
+    raise RuntimeError('KEEPER05_CREATION_REFUSED:SOURCE_ONLY_UNISSUED_NO_EFFECTS')
+
+if __name__ == '__main__':
+    run_once()

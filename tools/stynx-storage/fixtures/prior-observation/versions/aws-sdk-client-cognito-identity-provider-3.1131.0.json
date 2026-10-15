@@ -1,0 +1,105 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/client-cognito-identity-provider",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[3.1131.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 3346008,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/aws-sdk-client-cognito-identity-provider-3.1131.0.json",
+    "sourceSha256": "sha256:63fd310b64f11512e1bd6ff69a737b6baf1a06cc283a0c6298c34be3f8cd3243"
+  },
+  "version": "3.1131.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/client-cognito-identity-provider@3.1131.0",
+    "_nodeVersion": "24.19.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/client-cognito-identity-provider_3.1131.0_1789153076567_0.3619493198086883"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": { "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.browser" },
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": {
+      "@aws-sdk/core": "^3.978.0",
+      "@aws-sdk/credential-provider-node": "^3.972.83",
+      "@aws-sdk/types": "^3.974.5",
+      "@smithy/core": "^3.33.3",
+      "@smithy/fetch-http-handler": "^5.7.2",
+      "@smithy/node-http-handler": "^4.11.3",
+      "@smithy/types": "^4.17.2",
+      "tslib": "^2.6.2"
+    },
+    "description": "AWS SDK for JavaScript Cognito Identity Provider Client for Node.js, Browser and React Native",
+    "devDependencies": {
+      "@tsconfig/node20": "20.1.8",
+      "@types/node": "^20.14.8",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 499,
+      "integrity": "sha512-g2p+549Z9C4nb6oo6/lJJ0aH8oO3q7FvAL+ayXrnXnoAiqk8ZglAfQUA9FeOPPq+O9i9FJ/HK6HrhSVKbuaPXQ==",
+      "shasum": "454981a9b33ca200d6f42ebf5053006a021cc2b9",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIBGHSYvP7BFOS+qDGg20F47ttEyCzTOU3zEsHkTy/V3nAiEAob6hk6cV+xrWd15T8sdsXGd2mSlkNE2mvUjOi0kfmn8="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIAI3GqkfJb8pQPZbVWiS7BzAeyvbo7H68TOd+uUwoNKeAiEA/fRSBMgSsxjZwfZVM7+yOpUIDaz31Y4wCyntrC3zrzw="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/client-cognito-identity-provider/-/client-cognito-identity-provider-3.1131.0.tgz",
+      "unpackedSize": 2872269
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-cognito-identity-provider",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/client-cognito-identity-provider",
+    "react-native": {
+      "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.native"
+    },
+    "repository": {
+      "directory": "clients/client-cognito-identity-provider",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "generate:client": "node ../../scripts/generate-clients/single-service",
+      "test:index": "tsc -p tsconfig.test.json && node ./test/index-objects.spec.mjs"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.1131.0"
+  }
+}

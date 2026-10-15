@@ -766,3 +766,22 @@ task.template.json}`, `orchestra/README.md` §9; `C-0002-consolidacao.md` §11�
 `backend/database/tests/run-backend-ci.mjs`, `prepare-rait-priority-upgraded-legacy.mjs` (ambiente),
 `.github/workflows/ci.yml` (job `backend-kernel`). Código alvo lido só por inventário de caminhos e
 tamanhos; a leitura detalhada fica com os Architects de O1/O2/O5 (listas fechadas nos prompts).
+
+### A7 — retomada delimitada sobre STYNX 1.6.0 (Architect, 2026-10-12)
+
+Fonte prospectiva: `AUTHORIZATION.md` B17; contrato complementar
+[STYNX-1.6.0-ADOPTION-ADDENDUM.md](contracts/STYNX-1.6.0-ADOPTION-ADDENDUM.md), D-160.
+Prevalece sobre a restrição 1.5.x apenas para o pin exato 1.6.0 final publicado.
+
+1. Architect fixa o contrato complementar; Inspector define observações/negativos sem
+   enfraquecer C-06/C-08/C-09/HTTP/SSE; Engineer adapta pin, wiring e instalação aditiva;
+   Inspector executa a caracterização e review independente segue a autoridade vigente.
+2. Storage renderizado/verificado pelo pacote instalado com `auth.tenants(id)`,
+   `role_app_backend` e owner explícito. Não copiar nem reparar manualmente o mecanismo
+   da plataforma. A instalação pode avançar antes do corte, em banco descartável exclusivo.
+3. CTG-0009 conserva checkpoint OD-R22-02 para V-03/04/07/08/10/13; V-05 exige mapeamento
+   por lookups/listas. Nenhum PASS inferido da release ou da existência de símbolo.
+4. CTG-0006 conserva os bloqueios de amostra real do provedor, valores normativos aprovados,
+   prontidão por revisão e caminho de bytes de C.0; fixtures PKI locais são somente testes.
+5. Não executar k6/mutation. Não fixar 1.6.1 antes de publicação verificada e autorização
+   própria. Sem fechamento de R-0022 ou promoção de readiness nesta retomada parcial.

@@ -1,0 +1,106 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "token-types",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.100000Z",
+    "selection": "versions[6.1.2]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 155133,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/c9/57/ce294e9dcc900a856cdf35a2b807fd31a4a828d2b4b95402e38df3f86ec0a901899aa10e974ef1701d08efbbd2e9b5ce284cd80c54d560505ee7ead90533",
+    "sourceSha256": "sha256:fe77b76838a1b520c41fe404aa0651650a399b5a2e620610db19b53c0b48097e"
+  },
+  "version": "6.1.2",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "token-types@6.1.2",
+    "_nodeVersion": "22.21.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/token-types_6.1.2_1767278600361_0.0670334469411844"
+    },
+    "_npmUser": { "email": "borewit@xs4all.nl", "name": "borewit" },
+    "_npmVersion": "10.9.4",
+    "author": { "name": "Borewit", "url": "https://github.com/Borewit" },
+    "bugs": { "url": "https://github.com/Borewit/token-types/issues" },
+    "dependencies": {
+      "@borewit/text-codec": "^0.2.1",
+      "@tokenizer/token": "^0.3.0",
+      "ieee754": "^1.2.1"
+    },
+    "description": "Common token types for decoding and encoding numeric and string values",
+    "devDependencies": {
+      "@biomejs/biome": "2.3.10",
+      "@types/chai": "^5.2.2",
+      "@types/mocha": "^10.0.10",
+      "@types/node": "^25.0.3",
+      "c8": "^10.1.3",
+      "chai": "^6.2.2",
+      "del-cli": "^6.0.0",
+      "mocha": "^11.7.5",
+      "remark-cli": "^12.0.1",
+      "remark-preset-lint-recommended": "^7.0.0",
+      "source-map-support": "^0.5.21",
+      "ts-node": "^10.9.1",
+      "typescript": "^5.9.3"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 5,
+      "integrity": "sha512-dRXchy+C0IgK8WPC6xvCHFRIWYUbqqdEIKPaKo/AcTUNzwLTK6AH7RjdLWsEZcAN/TBdtfUw3PYEgPr5VPr6ww==",
+      "shasum": "18d0fd59b996d421f9f83914d6101c201bd08129",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDhvFzSV3V3ws2rgzNunKIgKmv6duHgTjjvizPVULRU2gIgeeUPmbAER7mDwqSs+/gtAH6BzQoX03v5b5i4MOxrVJw="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/token-types/-/token-types-6.1.2.tgz",
+      "unpackedSize": 22231
+    },
+    "engines": { "node": ">=14.16" },
+    "exports": "./lib/index.js",
+    "funding": {
+      "type": "github",
+      "url": "https://github.com/sponsors/Borewit"
+    },
+    "gitHead": "2278d7e43fc56702d39d10c4e2b89f9cdcef7cf2",
+    "homepage": "https://github.com/Borewit/token-types#readme",
+    "keywords": [
+      "token",
+      "integer",
+      "unsigned",
+      "numeric",
+      "float",
+      "IEEE",
+      "754",
+      "strtok3"
+    ],
+    "license": "MIT",
+    "maintainers": [{ "email": "borewit@xs4all.nl", "name": "borewit" }],
+    "name": "token-types",
+    "packageManager": "yarn@4.9.2",
+    "remarkConfig": { "plugins": ["preset-lint-recommended"] },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Borewit/token-types.git"
+    },
+    "scripts": {
+      "build": "npm run compile",
+      "clean": "del-cli 'lib/**/*.js' 'lib/***.js.map' 'test/**/*.d.ts' 'test/**/*.js' 'test/**/*.js.map'",
+      "compile": "npm run compile-src && npm run compile-test",
+      "compile-src": "tsc --p lib --sourceMap false",
+      "compile-test": "tsc --p test",
+      "lint": "npm run lint:md && npm run lint:ts",
+      "lint:md": "remark -u preset-lint-recommended .",
+      "lint:ts": "biome check",
+      "send-codacy": "c8 report --reports-dir=./.coverage --reporter=text-lcov | codacy-coverage",
+      "test": "mocha",
+      "test-coverage": "c8 npm run test",
+      "update-biome": "yarn add -D --exact @biomejs/biome && npx @biomejs/biome migrate --write"
+    },
+    "type": "module",
+    "types": "lib/index.d.ts",
+    "version": "6.1.2"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "raw-body",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[3.0.2]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 120042,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/raw-body-3.0.2.json",
+    "sourceSha256": "sha256:18e7c27a4a522162dbd5b4389884932fd5f5f8630a2291c4e9d4431539559070"
+  },
+  "version": "3.0.2",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "raw-body@3.0.2",
+    "_nodeVersion": "22.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/raw-body_3.0.2_1763758047358_0.7691869388192776"
+    },
+    "_npmUser": { "email": "bjohansebas@gmail.com", "name": "bsebas" },
+    "_npmVersion": "10.9.2",
+    "author": {
+      "email": "me@jongleberry.com",
+      "name": "Jonathan Ong",
+      "url": "http://jongleberry.com"
+    },
+    "bugs": { "url": "https://github.com/stream-utils/raw-body/issues" },
+    "contributors": [
+      {
+        "email": "doug@somethingdoug.com",
+        "name": "Douglas Christopher Wilson"
+      },
+      { "email": "raynos2@gmail.com", "name": "Raynos" }
+    ],
+    "dependencies": {
+      "bytes": "~3.1.2",
+      "http-errors": "~2.0.1",
+      "iconv-lite": "~0.7.0",
+      "unpipe": "~1.0.0"
+    },
+    "description": "Get and validate the raw body of a readable stream.",
+    "devDependencies": {
+      "@stylistic/eslint-plugin": "^5.1.0",
+      "@stylistic/eslint-plugin-js": "^4.1.0",
+      "bluebird": "3.7.2",
+      "eslint": "^9.0.0",
+      "mocha": "10.7.0",
+      "neostandard": "^0.12.0",
+      "nyc": "17.0.0",
+      "readable-stream": "2.3.7",
+      "safe-buffer": "5.2.1"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 5,
+      "integrity": "sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==",
+      "shasum": "3e3ada5ae5568f9095d84376fd3a49b8fb000a51",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQD39cid5UfBSNgHiycsRklChTYYYiTGcSTFadB/cAm7OAIgPn9RDIk8N3rEp707ZfVBHzvPrWIa2jvLshGjX0a1WTM="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/raw-body/-/raw-body-3.0.2.tgz",
+      "unpackedSize": 18495
+    },
+    "engines": { "node": ">= 0.10" },
+    "gitHead": "4cf8e0a2591802e01f05f93e39a6a5b3610a183c",
+    "homepage": "https://github.com/stream-utils/raw-body#readme",
+    "license": "MIT",
+    "maintainers": [
+      { "email": "bjohansebas@gmail.com", "name": "bsebas" },
+      { "email": "doug@somethingdoug.com", "name": "dougwilson" },
+      { "email": "jonathanrichardong@gmail.com", "name": "jongleberry" },
+      { "email": "ljharb@gmail.com", "name": "ljharb" }
+    ],
+    "name": "raw-body",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/stream-utils/raw-body.git"
+    },
+    "scripts": {
+      "lint": "eslint",
+      "lint:fix": "eslint --fix",
+      "test": "mocha --trace-deprecation --reporter spec --check-leaks test/",
+      "test:ci": "nyc --reporter=lcovonly --reporter=text npm test",
+      "test:cov": "nyc --reporter=html --reporter=text npm test",
+      "version": "node scripts/version-history.js && git add HISTORY.md"
+    },
+    "types": "./index.d.ts",
+    "version": "3.0.2"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "role": "Architect",
+  "actor": "/root/architect_adoption_160",
+  "verdict": "HELD_EXACT_DISABLED_VALIDATOR_SOURCE; PROSPECTIVE_PROCESS_ONLY_DIRECTION_PRESERVED",
+  "family": [
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-resolution-03/test_external_wire_pure.mjs",
+      "bytes": 3928,
+      "sha256": "sha256:52b925f2f8b7560c6692c8d64acda609cc13ed3271b08c0fe9229ed6022d728c"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-resolution-03/verify_external_live_process.mjs",
+      "bytes": 8031,
+      "sha256": "sha256:e865aba70609dd010525c0f4bf7329cee680d6904b78f36d3dcd4fa61a77f9a1"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/EXTERNAL-RENDEZVOUS-01-PROTOCOL.NOT_ADMISSION.md",
+      "bytes": 2420,
+      "sha256": "sha256:2560fb8447eb24229f2c3227131d853249cf9b34777435b35ee83b6aa7581ba6"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/ROOT-EXTERNAL-PROCESS-ADMISSION.UNISSUED-TEMPLATE.json",
+      "bytes": 849,
+      "sha256": "sha256:86c7756697ccd18821fa95be8a2a0e9eacfa90c34cec984757bad123a5dfa753"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/ROOT-EXTERNAL-PROCESS-PERMIT.UNISSUED-TEMPLATE.json",
+      "bytes": 1632,
+      "sha256": "sha256:3d96a5e8c3bcab2893ab5dca7c689519c6b6ab8b770bd2351fea8de34eed11de"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/run_external_process_admitted.py",
+      "bytes": 2562,
+      "sha256": "sha256:2627f2d12d26b94b16571ef0ce8b9feee4868dcd6e3694edd6f9c0c5cbddbc43"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/run_external_process_once.py",
+      "bytes": 17757,
+      "sha256": "sha256:873a1ccf94e3a6687fc5426b53b6b048401c4bd2be7186a8a9a549d13ae3166c"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/test_entry_pure.py",
+      "bytes": 1875,
+      "sha256": "sha256:cb51e29803c412864eef078adb7aade3abdb08407c11ef101add01ce8312dcb3"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/test_external_process_pure.py",
+      "bytes": 6611,
+      "sha256": "sha256:080af62f046e48a090e29457153af7a8921754b5134d46088f611852ec03cd91"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-creation-07/create_inert_runner_once.py",
+      "bytes": 2229,
+      "sha256": "sha256:2c2be97c993f4bd2b18127771381602d97bb9406e0f01fd3d1032c551d382577"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-creation-07/test_creation_contract_pure.py",
+      "bytes": 1315,
+      "sha256": "sha256:7e44f97db7d0bff8948d4217004dc03302c716d571377bcf862e4697bafb2be2"
+    }
+  ],
+  "sourceDriftAtClosing": [],
+  "scope": "Source/builtin TEST_ONLY only; no Docker, target Node, SDK, SQL, runner creation, permit/admission or rendezvous collection. All original snapshots preserved before findings.",
+  "tests": {
+    "originalHostPython": {
+      "passed": 7,
+      "failed": 0
+    },
+    "originalHostNodePure": {
+      "passed": 5,
+      "failed": 0
+    },
+    "independentWitnesses": {
+      "falseAccepted": 3,
+      "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/architect-first-slice-source-review-01/ARCHITECT-EXTERNAL873-TYPED-TIME-RED-WITNESSES.json",
+      "sha256": "sha256:76fea2e353be0aa6ee8fb7f31d745f44b5d7b789578c79dc786c7c0afde3385d"
+    }
+  },
+  "findings": [
+    {
+      "id": "H1",
+      "source": "run_external_process_once.py PureRendezvous.__init__/check",
+      "observed": "Synthetic startinf accepted READY atnow1e300; finite start100 acceptednow-1 beforeorigin. Constructor time type/finite/range and monotonic progression are unvalidated.",
+      "fix": "Strict numeric nonbool finite nonnegative started/now; fixed900 monotonic deadline; reject now<origin or previous accepted now; no resetting budget. Preserve old RED bodies as new negatives."
+    },
+    {
+      "id": "H2",
+      "source": "run_external_process_once.py attestation",
+      "observed": "Exact closed proof dict with cidforeign,pidTrue,ppidstr,ticks-1,nondigestexe and badnonce is emitted as closed18 attestation. Keyset alone does not meet S1 closed typed authority.",
+      "fix": "Validate closed18 typed identity/phase/prefixhashes/bounds, expected READY and actual rawREADY equality/currentNode/script/nonce/CID/kernelidentity and finite helper summaries/authority. Prefer source-bound builder from validated rawbracket plus independent attestation validator; no caller-supplied malformedproof laundering."
+    }
+  ],
+  "correctlyImplemented": "Normal wire model binds RESULT.readySha/startFrameSha/preAttestation/runtimeFence to exact retained READY/sent START/output attestation and ordered five-field compact UTF8 object. Node builtin main uses no ownproc/package/SDK/SQL; all Python creation/caller/entry refuse. New keeper05/leafscope distinct and oldfailed attempts unchanged.",
+  "remainingPrerequisites": [
+    "S2 actual fixed helpers/tool bytes/source/env/namespace/complete actualtuple acquisition unimplemented. Current six tuple inventory includes exactlyPID1+candidate+helper. Capture feasibility needs a concrete finite recipe: proving helper while still alive may require another observing process, which cannot be silently omitted from inventory. BASHPID prefix alone not authority.",
+    "Helper argv schema currently permits only strings beginning slash; proposed Bash -c/program/flags cannot fit. Source-specific observed exact argv grammar must replace this condition when actualhelper recipe is selected; no wildcard authority.",
+    "Root method/template references are UNISSUED/null; source-only functions do not implement Popen/IO/rawretention/deadline/cleanup or full exact entry/counters/host/env/fourreports/effective returned reconciliation. These remain explicit later implementation/review gates, not current false runtimeclaims.",
+    "Fresh creator07 exact mkdir/CID ownership/oneuse/source-bound entry and independent actual keeper05 birth, helper provenance, active sibling/newpermits/admission/outer must be reviewed beforeeffects. No previous consumed keeper reused."
+  ],
+  "nextAction": "One source-only bounded H1/H2 successor retaining frozen11family and inert RED witnesses; then complete source review. No creation/invocation or claimed cure."
+}

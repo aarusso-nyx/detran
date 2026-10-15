@@ -1,0 +1,83 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "pg-protocol",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[1.16.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 59407,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/pg-protocol-1.16.0.json",
+    "sourceSha256": "sha256:2c940ae17e23523446c20f74d49604cb822184e8e1625ebf0d6d4257c03fa1dd"
+  },
+  "version": "1.16.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "pg-protocol@1.16.0",
+    "_nodeVersion": "22.16.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/pg-protocol_1.16.0_1786217163782_0.3396811077627704"
+    },
+    "_npmUser": { "email": "brian.m.carlson@gmail.com", "name": "brianc" },
+    "_npmVersion": "lerna/3.22.1/node@v22.16.0+arm64 (darwin)",
+    "bugs": { "url": "https://github.com/brianc/node-postgres/issues" },
+    "description": "The postgres client/server binary protocol, implemented in TypeScript",
+    "devDependencies": {
+      "@types/chai": "^4.2.7",
+      "@types/mocha": "^10.0.10",
+      "@types/node": "^16",
+      "chai": "^4.2.0",
+      "mocha": "^11.7.5",
+      "ts-node": "^8.5.4",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 42,
+      "integrity": "sha512-sILXutLVjCLjcDuOmvhX5e2Z4cS5qG/6Bu3VkpFwdf/633ElGLpEh9bgmuI5I4sqKqkifQiGyiCcx1HdtrK7tg==",
+      "shasum": "cffb008826561ee9770a8a15dc21f269d731b305",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQCVC3lJgzyRiV97Yo0Hq6Nh8Z81458er71oNAt0WrWRgAIhAI6nS+NW7w8/ic1tz7JaNBB6ifnxNWy5tu0hhaVZGi61"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDRiM+nGILs8B2weWXWfqCWhA5biyG7EV8Y4aHoA8VXNwIgc0a8LCC7yQFn8OHzWg60PP+GEmlcs0xOiaiCVSmMRSk="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/pg-protocol/-/pg-protocol-1.16.0.tgz",
+      "unpackedSize": 200886
+    },
+    "exports": {
+      ".": {
+        "default": "./dist/index.js",
+        "import": "./esm/index.js",
+        "require": "./dist/index.js"
+      },
+      "./dist/*": "./dist/*.js",
+      "./dist/*.js": "./dist/*.js"
+    },
+    "gitHead": "df274d1ba9ad9d11a8f1079314faeafde7208207",
+    "homepage": "https://github.com/brianc/node-postgres#readme",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "maintainers": [{ "email": "brian.m.carlson@gmail.com", "name": "brianc" }],
+    "name": "pg-protocol",
+    "repository": {
+      "directory": "packages/pg-protocol",
+      "type": "git",
+      "url": "git://github.com/brianc/node-postgres.git"
+    },
+    "scripts": {
+      "build": "tsc",
+      "build:watch": "tsc --watch",
+      "prepublish": "yarn build",
+      "pretest": "yarn build",
+      "test": "mocha dist/**/*.test.js"
+    },
+    "types": "dist/index.d.ts",
+    "version": "1.16.0"
+  }
+}

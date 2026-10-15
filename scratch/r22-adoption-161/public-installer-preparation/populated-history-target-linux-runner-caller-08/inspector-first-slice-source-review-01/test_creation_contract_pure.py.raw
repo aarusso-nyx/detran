@@ -1,0 +1,25 @@
+"""TEST_ONLY source contract witness; never creates a runner or leaf."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+SOURCE=Path(__file__).with_name('create_inert_runner_once.py')
+spec=importlib.util.spec_from_file_location('keeper05_disabled_creator',SOURCE)
+m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+
+class CreationContractPure(unittest.TestCase):
+    def test_fresh_identity_and_exact_three_readonly_binds(self):
+        value=m.source_contract()
+        self.assertEqual(value['runner'],'detran-r22-161-target-resolver-keeper05')
+        self.assertEqual(value['imageData'],str(m.BASE/'empty-image-pgdata'))
+        self.assertEqual(value['mountTargets'],('/repo','/usr/local/bin/node','/var/lib/postgresql'))
+        self.assertEqual(value['mountTypes'],('bind','bind','bind'))
+        self.assertEqual(value['readOnly'],(True,True,True))
+        self.assertEqual((value['network'],value['user'],value['capDrop']),('none','999:999',('ALL',)))
+        self.assertFalse(value['privileged'])
+        self.assertTrue(value['noNewPrivileges'] and value['rootReadOnly'])
+        self.assertFalse(m.IMAGE_DATA.exists())
+        with self.assertRaisesRegex(RuntimeError,'SOURCE_ONLY_UNISSUED_NO_EFFECTS'):
+            m.run_once()
+
+if __name__=='__main__': unittest.main()

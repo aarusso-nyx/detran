@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -411,11 +411,13 @@ function fixtureApproveBatch(
 export class RaitWorklistCommandService {
   private readonly deadlines = new RaitDeadlineEngineFactory();
   private readonly caseTransitions = new RaitCaseTransitionPort();
-  private readonly trust = new DocumentTrustHttpAdapter();
 
   constructor(
     private readonly database: Database,
     private readonly requestContext: RequestContext,
+    @Optional()
+    @Inject(DocumentTrustHttpAdapter)
+    private readonly trust: DocumentTrustHttpAdapter = new DocumentTrustHttpAdapter(),
   ) {}
 
   async execute(input: WorklistCommandInput): Promise<Result> {
@@ -741,7 +743,7 @@ export class RaitWorklistCommandService {
       !manifest.prepared_at
     )
       fail('RAIT.SIGNATURE_FAILED', 502);
-    const trust = new DocumentTrustHttpAdapter();
+    const trust = this.trust;
     const prepared = await trust.getBatchMinutesManifest({
       tenantId: context.tenantId,
       batchId: batch.id,

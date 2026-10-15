@@ -1,0 +1,1120 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import {
+  archivePayload,
+  checkDownloaded,
+  ArchiveValidationError,
+  checkPackageDependencyMetadata,
+  PackageDependencyMetadataError,
+} from './stynx-storage-ci-validation.mjs';
+import { spawnSync } from 'node:child_process';
+
+// Retention only. Policy activation requires independent review of actual inputs.
+const POLICY_SHA256 =
+  '17785709f052acff861dabe70a4a0be87786e80a3d2f9d55adadf125c3f36108';
+const POLICY_PATH = 'tools/stynx-storage/fixtures/ci-admission-policy.json';
+const OUTPUT_PATH = 'scratch/r22-adoption-161/portable-ci/retention-03/inputs';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const reasons = new Set([
+  'invalid-cli',
+  'ambient-loader',
+  'policy-unavailable',
+  'policy-identity',
+  'invalid-document',
+  'input-identity',
+  'archive-integrity',
+  'payload-inventory',
+  'path-topology',
+  'toolchain-identity',
+  'output-exists',
+  'unavailable-input',
+  'unexpected-effect',
+]);
+class Refusal extends Error {
+  constructor(reason) {
+    super(reason);
+    this.reason = reason;
+  }
+}
+function requireThat(condition, reason) {
+  if (!condition) throw new Refusal(reason);
+}
+const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
+const canonical = (v) =>
+  Array.isArray(v)
+    ? `[${v.map(canonical).join(',')}]`
+    : v !== null && typeof v === 'object'
+      ? `{${Object.keys(v)
+          .sort()
+          .map((k) => `${JSON.stringify(k)}:${canonical(v[k])}`)
+          .join(',')}}`
+      : JSON.stringify(v);
+function closed(value, names) {
+  requireThat(
+    value !== null &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      canonical(Object.keys(value).sort()) === canonical([...names].sort()),
+    'invalid-document',
+  );
+}
+function unicode(value) {
+  for (let i = 0; i < value.length; i++) {
+    const u = value.charCodeAt(i);
+    if (u >= 0xd800 && u <= 0xdbff) {
+      const next = value.charCodeAt(++i);
+      requireThat(next >= 0xdc00 && next <= 0xdfff, 'invalid-document');
+    } else requireThat(u < 0xdc00 || u > 0xdfff, 'invalid-document');
+  }
+}
+// Validate duplicate decoded keys and numeric precision before JSON.parse discards them.
+function strictJson(bytes) {
+  const text = bytes.toString('utf8');
+  requireThat(Buffer.from(text, 'utf8').equals(bytes), 'invalid-document');
+  let at = 0;
+  const space = () => {
+    while (/[ \t\r\n]/u.test(text[at] ?? 'x')) at++;
+  };
+  const string = () => {
+    requireThat(text[at] === '"', 'invalid-document');
+    const start = at++;
+    while (at < text.length) {
+      const c = text[at++];
+      if (c === '\\') at++;
+      else if (c === '"') {
+        let v;
+        try {
+          v = JSON.parse(text.slice(start, at));
+        } catch {
+          throw new Refusal('invalid-document');
+        }
+        unicode(v);
+        return v;
+      }
+    }
+    throw new Refusal('invalid-document');
+  };
+  const value = () => {
+    space();
+    if (text[at] === '{') {
+      at++;
+      space();
+      const keys = new Set();
+      if (text[at] === '}') {
+        at++;
+        return;
+      }
+      for (;;) {
+        space();
+        const k = string();
+        requireThat(!keys.has(k), 'invalid-document');
+        keys.add(k);
+        space();
+        requireThat(text[at++] === ':', 'invalid-document');
+        value();
+        space();
+        const c = text[at++];
+        if (c === '}') return;
+        requireThat(c === ',', 'invalid-document');
+      }
+    }
+    if (text[at] === '[') {
+      at++;
+      space();
+      if (text[at] === ']') {
+        at++;
+        return;
+      }
+      for (;;) {
+        value();
+        space();
+        const c = text[at++];
+        if (c === ']') return;
+        requireThat(c === ',', 'invalid-document');
+      }
+    }
+    if (text[at] === '"') {
+      string();
+      return;
+    }
+    const token =
+      /^(?:true|false|null|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)/u.exec(
+        text.slice(at),
+      );
+    requireThat(token, 'invalid-document');
+    if (/^-?\d/u.test(token[0]))
+      requireThat(
+        /^-?(?:0|[1-9]\d*)$/u.test(token[0]) &&
+          Number.isSafeInteger(Number(token[0])),
+        'invalid-document',
+      );
+    at += token[0].length;
+  };
+  value();
+  space();
+  requireThat(at === text.length, 'invalid-document');
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Refusal('invalid-document');
+  }
+}
+function internalPath(relative, absent = false) {
+  requireThat(
+    typeof relative === 'string' &&
+      relative.length > 0 &&
+      !relative.includes('\\') &&
+      !relative.includes('\0') &&
+      !path.isAbsolute(relative) &&
+      relative
+        .split('/')
+        .every((part) => part && part !== '.' && part !== '..'),
+    'path-topology',
+  );
+  let current = root;
+  for (const part of relative.split('/')) {
+    current = path.join(current, part);
+    try {
+      const stat = fs.lstatSync(current);
+      requireThat(!stat.isSymbolicLink(), 'path-topology');
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      requireThat(absent, 'unavailable-input');
+    }
+  }
+  return current;
+}
+function boundBytes(ref) {
+  closed(ref, ['path', 'bytes', 'sha256']);
+  requireThat(
+    Number.isSafeInteger(ref.bytes) &&
+      ref.bytes >= 0 &&
+      /^sha256:[a-f0-9]{64}$/u.test(ref.sha256),
+    'invalid-document',
+  );
+  const filename = internalPath(ref.path);
+  requireThat(fs.statSync(filename).isFile(), 'path-topology');
+  const bytes = fs.readFileSync(filename);
+  requireThat(
+    bytes.length === ref.bytes && 'sha256:' + hash(bytes) === ref.sha256,
+    'input-identity',
+  );
+  return bytes;
+}
+function checkedInventory(ref) {
+  const inventory = strictJson(boundBytes(ref));
+  closed(inventory, ['formatVersion', 'kind', 'files', 'links']);
+  requireThat(
+    inventory.formatVersion === 1 &&
+      inventory.kind === 'detran-stynx-historical-fixture-inventory' &&
+      Array.isArray(inventory.files) &&
+      Array.isArray(inventory.links),
+    'invalid-document',
+  );
+  const names = new Set();
+  let previous = '';
+  for (const item of inventory.files) {
+    requireThat(
+      item.path > previous && !names.has(item.path),
+      'invalid-document',
+    );
+    previous = item.path;
+    names.add(item.path);
+    boundBytes(item);
+  }
+  previous = '';
+  for (const link of inventory.links) {
+    closed(link, ['path', 'target', 'resolvedPath']);
+    requireThat(
+      link.path > previous &&
+        !names.has(link.path) &&
+        typeof link.target === 'string' &&
+        !path.posix.isAbsolute(link.target) &&
+        !link.target.includes('\\') &&
+        !link.target.includes('\0'),
+      'path-topology',
+    );
+    previous = link.path;
+    names.add(link.path);
+    requireThat(
+      typeof link.path === 'string' &&
+        link.path
+          .split('/')
+          .every((part) => part && part !== '.' && part !== '..') &&
+        !path.isAbsolute(link.path) &&
+        !link.path.includes('\\') &&
+        !link.path.includes('\0'),
+      'path-topology',
+    );
+    internalPath(path.posix.dirname(link.path));
+    const file = path.join(root, link.path);
+    requireThat(
+      file.startsWith(root + '/') &&
+        fs.lstatSync(file).isSymbolicLink() &&
+        fs.readlinkSync(file) === link.target,
+      'path-topology',
+    );
+    const resolved = internalPath(link.resolvedPath);
+    requireThat(
+      fs.realpathSync(file) === resolved &&
+        (fs.statSync(resolved).isFile() || fs.statSync(resolved).isDirectory()),
+      'path-topology',
+    );
+  }
+  const actual = new Set();
+  const fixtureRoot = internalPath('tools/stynx-storage/fixtures');
+  function walk(directory) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const file = path.join(directory, entry.name);
+      const relative = path.relative(root, file);
+      if (entry.isDirectory()) walk(file);
+      else {
+        requireThat(entry.isFile() || entry.isSymbolicLink(), 'path-topology');
+        if (relative !== POLICY_PATH && relative !== ref.path)
+          actual.add(relative);
+      }
+    }
+  }
+  walk(fixtureRoot);
+  requireThat(
+    actual.size === names.size && [...actual].every((name) => names.has(name)),
+    'payload-inventory',
+  );
+  return inventory;
+}
+function policy() {
+  requireThat(POLICY_SHA256 !== null, 'policy-unavailable');
+  const file = internalPath(POLICY_PATH);
+  const bytes = fs.readFileSync(file);
+  requireThat(hash(bytes) === POLICY_SHA256, 'policy-identity');
+  const p = strictJson(bytes);
+  closed(p, [
+    'formatVersion',
+    'kind',
+    'publication',
+    'targetLock',
+    'targetRetention',
+    'priorObservation',
+    'fixtureInventory',
+    'toolchains',
+    'modulePolicy',
+  ]);
+  requireThat(
+    p.formatVersion === 1 && p.kind === 'detran-stynx-portable-ci-policy',
+    'invalid-document',
+  );
+  for (const k of [
+    'publication',
+    'targetLock',
+    'targetRetention',
+    'priorObservation',
+    'modulePolicy',
+  ])
+    boundBytes(p[k]);
+  requireThat(
+    p.publication.sha256 ===
+      'sha256:46815c17be9dbcd2080a3a0c08db958bd42390d8766c64ef40bebd5017074318',
+    'input-identity',
+  );
+  checkedInventory(p.fixtureInventory);
+  const modulePolicy = strictJson(boundBytes(p.modulePolicy));
+  closed(modulePolicy, [
+    'formatVersion',
+    'kind',
+    'seedRequests',
+    'graph',
+    'sourceInventory',
+    'boundaryDisposition',
+    'loaderRules',
+    'forbiddenEffects',
+  ]);
+  requireThat(
+    modulePolicy.formatVersion === 1 &&
+      modulePolicy.kind === 'detran-portable-public-storage-module-policy',
+    'invalid-document',
+  );
+  requireThat(
+    modulePolicy.graph.sha256 ===
+      'sha256:716cfa56cdd8c2203edc472ea03fcc215110070a42d839b1854b66a19997e66e' &&
+      modulePolicy.sourceInventory.sha256 ===
+        'sha256:e8e592cc85e8e932c5648160da542d60272fc1410bd5e381a3be6b209430d4ef' &&
+      modulePolicy.boundaryDisposition.sha256 ===
+        'sha256:04da818d6fb898998dd8f6b97fab40c498a99939d82ac49c1e6efba14118ce6c',
+    'input-identity',
+  );
+  for (const field of [
+    'graph',
+    'sourceInventory',
+    'boundaryDisposition',
+    'loaderRules',
+  ])
+    boundBytes(modulePolicy[field]);
+  requireThat(
+    Array.isArray(modulePolicy.seedRequests) &&
+      modulePolicy.seedRequests.length === 2,
+    'invalid-document',
+  );
+  for (const seed of modulePolicy.seedRequests) {
+    closed(seed, ['specifier', 'from', 'to']);
+    requireThat(
+      seed.from === 'package.json' &&
+        ['@stynx-nyx/offline-sync', '@stynx-nyx/outbox'].includes(
+          seed.specifier,
+        ),
+      'invalid-document',
+    );
+    safeRelative(seed.to);
+  }
+  requireThat(
+    new Set(modulePolicy.seedRequests.map((seed) => seed.specifier)).size ===
+      2 &&
+      Array.isArray(modulePolicy.forbiddenEffects) &&
+      canonical([...modulePolicy.forbiddenEffects].sort()) ===
+        canonical(
+          [
+            'sdk-network',
+            'sql',
+            'sdk-vm-transform',
+            'arbitrary-child-process',
+            'arbitrary-worker',
+            'ambient-loader',
+          ].sort(),
+        ),
+    'invalid-document',
+  );
+  closed(p.toolchains, ['linuxX64', 'darwinArm64']);
+  for (const proof of Object.values(p.toolchains)) boundBytes(proof);
+  return p;
+}
+function safeRelative(value) {
+  requireThat(
+    typeof value === 'string' &&
+      value.length &&
+      !path.isAbsolute(value) &&
+      !/[\\\0\r\n]/u.test(value) &&
+      value.split('/').every((p) => p && p !== '.' && p !== '..'),
+    'path-topology',
+  );
+  return value;
+}
+function descriptor(value) {
+  closed(value, ['url', 'destination', 'bytes', 'sha256', 'integrity']);
+  safeRelative(value.destination);
+  requireThat(
+    Number.isSafeInteger(value.bytes) &&
+      value.bytes > 0 &&
+      /^sha256:[a-f0-9]{64}$/u.test(value.sha256),
+    'invalid-document',
+  );
+  const url = new URL(value.url);
+  requireThat(
+    url.protocol === 'https:' &&
+      !url.username &&
+      !url.password &&
+      !url.hash &&
+      ['npm.pkg.github.com', 'registry.npmjs.org', 'nodejs.org'].includes(
+        url.hostname,
+      ),
+    'invalid-document',
+  );
+  requireThat(
+    value.integrity === null ||
+      /^sha(?:512|256|1)-[A-Za-z0-9+/]+={0,2}$/u.test(value.integrity),
+    'invalid-document',
+  );
+}
+async function download(expected) {
+  descriptor(expected);
+  let url = new URL(expected.url);
+  for (let redirects = 0; redirects <= 5; redirects++) {
+    const headers = {};
+    if (url.hostname === 'npm.pkg.github.com' && process.env.NODE_AUTH_TOKEN)
+      headers.authorization = 'Bearer ' + process.env.NODE_AUTH_TOKEN;
+    const response = await fetch(url, {
+      headers,
+      redirect: 'manual',
+      signal: AbortSignal.timeout(120000),
+    });
+    if ([301, 302, 303, 307, 308].includes(response.status)) {
+      const next = new URL(response.headers.get('location'), url);
+      requireThat(
+        next.protocol === 'https:' &&
+          !next.username &&
+          !next.password &&
+          [
+            'npm.pkg.github.com',
+            'registry.npmjs.org',
+            'nodejs.org',
+            'pkg-containers.githubusercontent.com',
+            'pkg-npm.githubusercontent.com',
+          ].includes(next.hostname),
+        'unexpected-effect',
+      );
+      url = next;
+      continue;
+    }
+    requireThat(response.ok, 'unavailable-input');
+    const bytes = Buffer.from(await response.arrayBuffer());
+    checkDownloaded(bytes, expected);
+    return bytes;
+  }
+  throw new Refusal('unavailable-input');
+}
+function repositoryHead() {
+  let directory = path.join(root, '.git');
+  if (fs.statSync(directory).isFile()) {
+    const line = fs.readFileSync(directory, 'utf8').trim();
+    requireThat(line.startsWith('gitdir: '), 'unavailable-input');
+    directory = path.resolve(root, line.slice(8));
+  }
+  const head = fs.readFileSync(path.join(directory, 'HEAD'), 'utf8').trim();
+  if (/^[a-f0-9]{40}$/u.test(head)) return head;
+  requireThat(/^ref: refs\/[A-Za-z0-9_./-]+$/u.test(head), 'unavailable-input');
+  const ref = head.slice(5);
+  let common = directory;
+  if (fs.existsSync(path.join(directory, 'commondir')))
+    common = path.resolve(
+      directory,
+      fs.readFileSync(path.join(directory, 'commondir'), 'utf8').trim(),
+    );
+  for (const base of [directory, common]) {
+    const filename = path.join(base, ref);
+    if (fs.existsSync(filename)) {
+      const sha = fs.readFileSync(filename, 'utf8').trim();
+      requireThat(/^[a-f0-9]{40}$/u.test(sha), 'unavailable-input');
+      return sha;
+    }
+  }
+  for (const line of fs
+    .readFileSync(path.join(common, 'packed-refs'), 'utf8')
+    .split('\n')) {
+    const [sha, name] = line.split(' ');
+    if (name === ref) {
+      requireThat(/^[a-f0-9]{40}$/u.test(sha), 'unavailable-input');
+      return sha;
+    }
+  }
+  throw new Refusal('unavailable-input');
+}
+async function retain(p) {
+  const executableSources = [
+    'tools/stynx-storage-ci-inputs.mjs',
+    'tools/stynx-storage-ci-validation.mjs',
+  ].map((relative) => {
+    const bytes = fs.readFileSync(internalPath(relative));
+    return {
+      path: relative,
+      bytes: bytes.length,
+      sha256: 'sha256:' + hash(bytes),
+    };
+  });
+  const key =
+    process.platform === 'linux' && process.arch === 'x64'
+      ? 'linuxX64'
+      : process.platform === 'darwin' && process.arch === 'arm64'
+        ? 'darwinArm64'
+        : null;
+  requireThat(key, 'toolchain-identity');
+  const proof = strictJson(boundBytes(p.toolchains[key]));
+  closed(proof, [
+    'formatVersion',
+    'kind',
+    'version',
+    'platform',
+    'arch',
+    'archive',
+    'executable',
+    'officialSums',
+    'loaders',
+    'review',
+  ]);
+  requireThat(
+    proof.formatVersion === 1 &&
+      proof.kind === 'detran-official-node-retention' &&
+      proof.version === '24.20.0' &&
+      proof.platform === process.platform &&
+      proof.arch === process.arch,
+    'toolchain-identity',
+  );
+  boundBytes(proof.review);
+  const officialNode =
+    key === 'linuxX64'
+      ? {
+          archive:
+            '2f2c0da162318f0de47665410c7c8c2ed3d36c8f3105de4bbc61176c70a7cbf2',
+          executable:
+            '89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7',
+          member: 'node-v24.20.0-linux-x64/bin/node',
+        }
+      : {
+          archive:
+            'b7bf7707070b950ba1ec5f1af3bb6de0f2b1962c5033973d94068ab021ef3014',
+          executable:
+            '9d050fd455b56426e25d4d603c7c501cbb2630348e836cf221dcce748e90588a',
+          member: 'node-v24.20.0-darwin-arm64/bin/node',
+        };
+  requireThat(
+    proof.archive.sha256 === 'sha256:' + officialNode.archive &&
+      proof.executable.sha256 === 'sha256:' + officialNode.executable &&
+      proof.executable.member === officialNode.member &&
+      process.version === 'v24.20.0' &&
+      hash(fs.readFileSync(process.execPath)) === officialNode.executable,
+    'toolchain-identity',
+  );
+  descriptor(proof.archive);
+  descriptor(proof.officialSums);
+  closed(proof.executable, ['member', 'destination', 'bytes', 'sha256']);
+  safeRelative(proof.executable.destination);
+  const outputRoot = internalPath(OUTPUT_PATH, true);
+  requireThat(!fs.existsSync(outputRoot), 'output-exists');
+  const written = new Map(),
+    links = new Map();
+  function destination(relative) {
+    safeRelative(relative);
+    const full = path.join(outputRoot, relative);
+    requireThat(full.startsWith(outputRoot + '/'), 'path-topology');
+    internalPath(path.relative(root, path.dirname(full)), true);
+    return full;
+  }
+  function put(relative, bytes, mode = 0o644) {
+    const full = destination(relative);
+    requireThat(
+      !written.has(relative) && !links.has(relative),
+      'payload-inventory',
+    );
+    fs.mkdirSync(path.dirname(full), { recursive: true });
+    fs.writeFileSync(full, bytes, { flag: 'wx', mode });
+    const record = {
+      path: path.relative(root, full),
+      bytes: bytes.length,
+      sha256: 'sha256:' + hash(bytes),
+    };
+    written.set(relative, record);
+    return record;
+  }
+  const produceJson = (relative, obj) =>
+    put(relative, Buffer.from(JSON.stringify(obj, null, 2) + '\n'));
+  const historical = new Map();
+  const inventory = checkedInventory(p.fixtureInventory);
+  // Exact admitted source data is copied without reformatting or interpreting old execution identities.
+  for (const file of inventory.files)
+    historical.set(file.path, put('historical/' + file.path, boundBytes(file)));
+  requireThat(inventory.links.length === 0, 'path-topology');
+  const existingHistorical = (file) => {
+    boundBytes(file);
+    requireThat(historical.has(file.path), 'input-identity');
+    return historical.get(file.path);
+  };
+  const archiveBytes = new Map();
+  async function retainedArchive(arc) {
+    descriptor(arc);
+    let bytes = archiveBytes.get(arc.sha256);
+    if (!bytes) {
+      bytes = await download(arc);
+      archiveBytes.set(arc.sha256, bytes);
+    } else checkDownloaded(bytes, arc);
+    if (!written.has(arc.destination)) put(arc.destination, bytes);
+    else
+      requireThat(
+        written.get(arc.destination).sha256 === arc.sha256,
+        'archive-integrity',
+      );
+    return bytes;
+  }
+  async function realm(ref, realm) {
+    const w = strictJson(boundBytes(ref));
+    closed(w, [
+      'formatVersion',
+      'kind',
+      'release',
+      'originalEvidence',
+      'packages',
+      'regularInventory',
+      'links',
+      'generatedFiles',
+      'inputFiles',
+      'review',
+    ]);
+    requireThat(
+      w.formatVersion === 1 &&
+        w.kind ===
+          (realm === 'target'
+            ? 'detran-portable-target-retention'
+            : 'detran-portable-prior-observation') &&
+        w.release === (realm === 'target' ? '1.6.1' : '1.6.0'),
+      'invalid-document',
+    );
+    boundBytes(w.review);
+    requireThat(
+      Array.isArray(w.packages) &&
+        w.packages.length === (realm === 'target' ? 211 : 176),
+      'payload-inventory',
+    );
+    for (const evidence of w.originalEvidence) existingHistorical(evidence);
+    const expected = strictJson(boundBytes(w.regularInventory));
+    requireThat(
+      Array.isArray(expected) &&
+        expected.length === (realm === 'target' ? 30091 : 21618),
+      'payload-inventory',
+    );
+    const grouped = new Map();
+    let previous = '';
+    for (const item of expected) {
+      closed(item, ['context', 'path', 'bytes', 'sha256']);
+      safeRelative(item.context);
+      safeRelative(item.path);
+      const key = item.context + '\0' + item.path;
+      requireThat(
+        key > previous &&
+          Number.isSafeInteger(item.bytes) &&
+          item.bytes >= 0 &&
+          /^sha256:[a-f0-9]{64}$/u.test(item.sha256),
+        'invalid-document',
+      );
+      previous = key;
+      if (!grouped.has(item.context)) grouped.set(item.context, new Map());
+      grouped.get(item.context).set(item.path, item);
+    }
+    const packageRecords = [],
+      stynxNames = new Set(),
+      archives = new Set();
+    previous = '';
+    for (const entry of w.packages) {
+      closed(entry, [
+        'context',
+        'name',
+        'version',
+        'root',
+        'registryVersion',
+        'archive',
+        'manifest',
+      ]);
+      requireThat(entry.context > previous, 'payload-inventory');
+      previous = entry.context;
+      safeRelative(entry.context);
+      safeRelative(entry.root);
+      requireThat(
+        entry.root ===
+          (realm === 'target' ? 'target/runtime/' : 'prior/') + entry.context,
+        'path-topology',
+      );
+      const registry = strictJson(boundBytes(entry.registryVersion));
+      closed(registry, [
+        'formatVersion',
+        'kind',
+        'package',
+        'version',
+        'sourceObservation',
+        'versionRecord',
+      ]);
+      requireThat(
+        registry.formatVersion === 1 &&
+          registry.kind === 'detran-retained-registry-version' &&
+          registry.package === entry.name &&
+          registry.version === entry.version &&
+          registry.versionRecord.name === entry.name &&
+          registry.versionRecord.version === entry.version &&
+          registry.versionRecord.dist.integrity === entry.archive.integrity &&
+          registry.versionRecord.dist.tarball === entry.archive.url,
+        'input-identity',
+      );
+      closed(registry.sourceObservation, [
+        'sourcePath',
+        'sourceBytes',
+        'sourceSha256',
+        'observedAt',
+        'selection',
+        'serialization',
+      ]);
+      safeRelative(registry.sourceObservation.sourcePath);
+      requireThat(
+        Number.isSafeInteger(registry.sourceObservation.sourceBytes) &&
+          registry.sourceObservation.sourceBytes > 0 &&
+          /^sha256:[a-f0-9]{64}$/u.test(
+            registry.sourceObservation.sourceSha256,
+          ) &&
+          (registry.sourceObservation.observedAt === null ||
+            (typeof registry.sourceObservation.observedAt === 'string' &&
+              Number.isFinite(
+                Date.parse(registry.sourceObservation.observedAt),
+              ))) &&
+          registry.sourceObservation.selection ===
+            'versions[' + entry.version + ']' &&
+          registry.sourceObservation.serialization ===
+            'UTF16-key-sorted-json-array-order-preserved',
+        'invalid-document',
+      );
+      if (entry.name.startsWith('@stynx-nyx/')) {
+        requireThat(entry.version === w.release, 'input-identity');
+        stynxNames.add(entry.name);
+      }
+      const bytes = await retainedArchive(entry.archive),
+        payload = archivePayload(bytes),
+        wanted = grouped.get(entry.context);
+      requireThat(wanted && payload.size === wanted.size, 'payload-inventory');
+      archives.add(entry.archive.sha256);
+      for (const [name, value] of payload) {
+        const check = wanted.get(name);
+        requireThat(
+          check &&
+            value.bytes.length === check.bytes &&
+            'sha256:' + hash(value.bytes) === check.sha256,
+          'payload-inventory',
+        );
+        put(entry.root + '/' + name, value.bytes, value.mode);
+      }
+      closed(entry.manifest, ['path', 'bytes', 'sha256']);
+      requireThat(entry.manifest.path === 'package.json', 'payload-inventory');
+      const manifestRecord = written.get(entry.root + '/package.json');
+      requireThat(
+        manifestRecord.bytes === entry.manifest.bytes &&
+          manifestRecord.sha256 === entry.manifest.sha256,
+        'payload-inventory',
+      );
+      const manifest = strictJson(payload.get('package.json').bytes);
+      requireThat(
+        manifest.name === entry.name && manifest.version === entry.version,
+        'input-identity',
+      );
+      checkPackageDependencyMetadata(manifest, registry.versionRecord);
+      packageRecords.push({
+        name: entry.name,
+        version: entry.version,
+        context: entry.context,
+        registry: existingHistorical(entry.registryVersion),
+        archive: written.get(entry.archive.destination),
+        manifest: manifestRecord,
+        root: path.relative(root, path.join(outputRoot, entry.root)),
+      });
+    }
+    requireThat(
+      stynxNames.size === (realm === 'target' ? 27 : 11) &&
+        archives.size === (realm === 'target' ? 210 : 176),
+      'payload-inventory',
+    );
+    const historicalPrefix =
+      'tools/stynx-storage/fixtures/' +
+      (realm === 'target' ? 'publication-161' : 'prior-observation') +
+      '/historical/scratch/r22-adoption-161/' +
+      (realm === 'target' ? 'package-admission/runtime/' : 'prior-runtime/');
+    const copySource = (file) => {
+      requireThat(
+        file.path.startsWith(historicalPrefix) && file.path.endsWith('.raw'),
+        'path-topology',
+      );
+      existingHistorical(file);
+      return put(
+        (realm === 'target' ? 'target/runtime/' : 'prior/') +
+          file.path.slice(historicalPrefix.length, -4),
+        boundBytes(file),
+      );
+    };
+    for (const file of w.inputFiles) copySource(file);
+    for (const generated of w.generatedFiles) {
+      closed(generated, ['file', 'origin', 'disposition']);
+      requireThat(
+        generated.disposition === 'nonexecuted-installer-bin-shim',
+        'payload-inventory',
+      );
+      closed(generated.origin, ['context', 'member', 'sha256']);
+      const origin = w.packages.find(
+        (item) => item.context === generated.origin.context,
+      );
+      requireThat(origin, 'payload-inventory');
+      const target = written.get(
+        origin.root + '/' + safeRelative(generated.origin.member),
+      );
+      requireThat(
+        target?.sha256 === generated.origin.sha256,
+        'payload-inventory',
+      );
+      copySource(generated.file);
+    }
+    for (const link of w.links) {
+      closed(link, ['path', 'target', 'resolvedPath']);
+      safeRelative(link.path);
+      safeRelative(link.resolvedPath);
+      requireThat(
+        link.path.startsWith(realm + '/') &&
+          link.resolvedPath.startsWith(realm + '/') &&
+          typeof link.target === 'string' &&
+          !path.isAbsolute(link.target) &&
+          !/[\\\0\r\n]/u.test(link.target) &&
+          path.posix.normalize(
+            path.posix.join(path.posix.dirname(link.path), link.target),
+          ) === link.resolvedPath,
+        'path-topology',
+      );
+      requireThat(
+        !written.has(link.path) && !links.has(link.path),
+        'path-topology',
+      );
+      const full = destination(link.path);
+      fs.mkdirSync(path.dirname(full), { recursive: true });
+      fs.symlinkSync(link.target, full);
+      requireThat(
+        fs.realpathSync(full) === path.join(outputRoot, link.resolvedPath),
+        'path-topology',
+      );
+      links.set(link.path, {
+        path: path.relative(root, full),
+        target: link.target,
+        resolvedPath: path.relative(
+          root,
+          path.join(outputRoot, link.resolvedPath),
+        ),
+      });
+    }
+    return {
+      version: w.release,
+      retention: ref,
+      packages: packageRecords.sort((a, b) =>
+        a.context < b.context ? -1 : a.context > b.context ? 1 : 0,
+      ),
+      files: [...written.entries()]
+        .filter(([key]) => key.startsWith(realm + '/'))
+        .map(([, record]) => record)
+        .sort((a, b) => (a.path < b.path ? -1 : 1)),
+      links: [...links.entries()]
+        .filter(([key]) => key.startsWith(realm + '/'))
+        .map(([, record]) => record)
+        .sort((a, b) => (a.path < b.path ? -1 : 1)),
+    };
+  }
+  const target = await realm(p.targetRetention, 'target'),
+    prior = await realm(p.priorObservation, 'prior');
+  await retainedArchive(proof.archive);
+  const sums = await retainedArchive(proof.officialSums);
+  requireThat(
+    proof.officialSums.sha256 ===
+      'sha256:c614a913a302d35d1c3a1348d07d84c52e28dceb0b97fd91e4ade05906ca2bd7' &&
+      sums
+        .toString('utf8')
+        .split('\n')
+        .some(
+          (line) =>
+            line ===
+            officialNode.archive +
+              '  ' +
+              path.posix.basename(new URL(proof.archive.url).pathname),
+        ),
+    'toolchain-identity',
+  );
+  closed(proof.executable, ['member', 'destination', 'bytes', 'sha256']);
+  const extracted = spawnSync(
+    '/usr/bin/tar',
+    ['-xJOf', destination(proof.archive.destination), officialNode.member],
+    {
+      env: { LANG: 'C', LC_ALL: 'C', TZ: 'UTC' },
+      maxBuffer: 160 * 1024 * 1024,
+    },
+  );
+  requireThat(
+    !extracted.error &&
+      extracted.status === 0 &&
+      !extracted.signal &&
+      extracted.stdout.length === proof.executable.bytes &&
+      'sha256:' + hash(extracted.stdout) === proof.executable.sha256,
+    'toolchain-identity',
+  );
+  const executable = put(proof.executable.destination, extracted.stdout, 0o755);
+  const source =
+    "const a=['internal/modules/cjs/loader','internal/modules/customization_hooks','internal/modules/helpers'];process.stdout.write(JSON.stringify({version:process.version,platform:process.platform,arch:process.arch,sources:Object.fromEntries(a.map(k=>[k,process.binding('natives')[k]]))}));";
+  const node = spawnSync(
+    path.join(root, executable.path),
+    ['--input-type=module', '-e', source],
+    {
+      env: { LANG: 'C', LC_ALL: 'C', TZ: 'UTC' },
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024,
+    },
+  );
+  requireThat(
+    !node.error && node.status === 0 && !node.signal,
+    'toolchain-identity',
+  );
+  const observation = JSON.parse(node.stdout);
+  requireThat(
+    observation.version === 'v24.20.0' &&
+      observation.platform === process.platform &&
+      observation.arch === process.arch,
+    'toolchain-identity',
+  );
+  requireThat(
+    Array.isArray(proof.loaders) && proof.loaders.length === 3,
+    'toolchain-identity',
+  );
+  const loaderFiles = [];
+  for (const item of proof.loaders) {
+    closed(item, ['id', 'bytes', 'sha256', 'destination']);
+    requireThat(
+      typeof observation.sources[item.id] === 'string',
+      'toolchain-identity',
+    );
+    const bytes = Buffer.from(observation.sources[item.id]);
+    requireThat(
+      bytes.length === item.bytes && 'sha256:' + hash(bytes) === item.sha256,
+      'toolchain-identity',
+    );
+    loaderFiles.push(put(item.destination, bytes));
+  }
+  const loaderInventory = produceJson('toolchain/loader-inventory.json', {
+    kind: 'actual-official-node-embedded-loader-source-observation',
+    version: observation.version,
+    platform: observation.platform,
+    arch: observation.arch,
+    executable,
+    files: loaderFiles,
+    sdkExecuted: false,
+  });
+  // Every produced regular file/link is enumerated; an unknown entry cannot hide behind a recomputed manifest.
+  const seenFiles = new Set(),
+    seenLinks = new Set();
+  function walk(dir) {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name),
+        relative = path.relative(outputRoot, full),
+        stat = fs.lstatSync(full);
+      if (stat.isSymbolicLink()) {
+        const record = links.get(relative);
+        requireThat(
+          record &&
+            fs.readlinkSync(full) === record.target &&
+            fs.realpathSync(full) === path.join(root, record.resolvedPath),
+          'path-topology',
+        );
+        seenLinks.add(relative);
+      } else if (stat.isDirectory()) walk(full);
+      else {
+        requireThat(
+          stat.isFile() && written.has(relative),
+          'payload-inventory',
+        );
+        const rec = written.get(relative),
+          bytes = fs.readFileSync(full);
+        requireThat(
+          bytes.length === rec.bytes && 'sha256:' + hash(bytes) === rec.sha256,
+          'payload-inventory',
+        );
+        seenFiles.add(relative);
+      }
+    }
+  }
+  walk(outputRoot);
+  requireThat(
+    seenFiles.size === written.size && seenLinks.size === links.size,
+    'payload-inventory',
+  );
+  for (const source of executableSources) boundBytes(source);
+  policy(); // Revalidate the complete independently bound input tree after asynchronous retention.
+  const executionObservation = produceJson(
+    'metadata/retention-execution-observation.json',
+    {
+      kind: 'actual-portable-retention-control-plane-observation',
+      pid: process.pid,
+      sources: executableSources,
+      node: {
+        version: process.version,
+        platform: process.platform,
+        arch: process.arch,
+        executablePath: process.execPath,
+        executableSha256: 'sha256:' + hash(fs.readFileSync(process.execPath)),
+      },
+      officialToolchainProof: p.toolchains[key],
+      embeddedLoaderChild: {
+        pid: node.pid,
+        exitCode: node.status,
+        signal: node.signal,
+      },
+      sdkExecuted: false,
+      databaseAccessed: false,
+      ciAcceptance: false,
+    },
+  );
+  walk(outputRoot);
+  requireThat(
+    seenFiles.size === written.size && seenLinks.size === links.size,
+    'payload-inventory',
+  );
+  const policyRecord = {
+    path: POLICY_PATH,
+    bytes: fs.statSync(internalPath(POLICY_PATH)).size,
+    sha256: 'sha256:' + POLICY_SHA256,
+  };
+  const manifest = {
+    formatVersion: 1,
+    kind: 'detran-stynx-portable-ci-inputs',
+    phase: 'RETENTION_READY_FOR_GRAPH_REVIEW',
+    repository: { root, head: repositoryHead(), lock: p.targetLock },
+    policy: policyRecord,
+    publication: p.publication,
+    target,
+    prior,
+    historicalFixtures: {
+      inventory: p.fixtureInventory,
+      files: [...historical.values()].sort((a, b) =>
+        a.path < b.path ? -1 : 1,
+      ),
+      links: [],
+    },
+    toolchain: {
+      platform: process.platform,
+      arch: process.arch,
+      version: '24.20.0',
+      executable,
+      archive: written.get(proof.archive.destination),
+      officialSums: written.get(proof.officialSums.destination),
+      loaderInventory,
+    },
+    modulePolicy: p.modulePolicy,
+    outputs: [executionObservation, loaderInventory],
+    limits: {
+      sdkExecuted: false,
+      databaseAccessed: false,
+      ciAcceptance: false,
+      providerAdmission: false,
+      approvedTrustAdmission: false,
+    },
+  };
+  manifest.recordSha256 = 'sha256:' + hash(canonical(manifest));
+  const ref = produceJson('metadata/portable-input-manifest.json', manifest);
+  process.stdout.write(
+    JSON.stringify({
+      status: 'RETENTION_READY_FOR_GRAPH_REVIEW',
+      manifest: ref,
+    }) + '\n',
+  );
+}
+
+try {
+  requireThat(
+    process.argv.length === 3 &&
+      process.argv[2] === root &&
+      fs.realpathSync(root) === root,
+    'invalid-cli',
+  );
+  requireThat(process.execArgv.length === 0, 'ambient-loader');
+  for (const [key, value] of Object.entries(process.env))
+    if (
+      value &&
+      /^(?:NODE_OPTIONS|NODE_PATH|NODE_PG_FORCE_NATIVE|DYLD_.*|LD_.*|ESBUILD_BINARY_PATH|ROLLDOWN_.*)$/u.test(
+        key,
+      )
+    )
+      throw new Refusal('ambient-loader');
+  const output = internalPath(OUTPUT_PATH, true);
+  requireThat(!fs.existsSync(output), 'output-exists');
+  await retain(policy());
+} catch (error) {
+  const reason =
+    (error instanceof Refusal ||
+      error instanceof ArchiveValidationError ||
+      error instanceof PackageDependencyMetadataError) &&
+    reasons.has(error.reason)
+      ? error.reason
+      : 'unavailable-input';
+  process.stderr.write('R22_CI_INPUTS_REFUSED:' + reason + '\n');
+  process.exitCode = 1;
+}

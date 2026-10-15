@@ -1,0 +1,96 @@
+{
+  "actor": "/root/inspector_adoption_160",
+  "boundedImplementationRequirements": [
+    {
+      "finiteDerivation": "Per-role helper stdout ceiling can be explicit READY bound + admitted OBS count*OBS bound. B transcript has14 entries (READY,PEERS,6commands,6observations), C10. Exact totals/READY limits must be fixed in source/protocol and tested, not inferred by runtime broadening.",
+      "id": "P1",
+      "requirement": "Freeze role-specific cumulative stdin/stdout/stderr limits and counter/retention behavior consistent with the new finite transcript. B produces6 OBSERVATION frames, C4; old128KiB diagnostic stdout cap must not be blindly applied to1MiB-per-observation helper framing. Reject oversize immediately without truncating or discarding partial custody. Candidate A ordinary limits remain unchanged."
+    },
+    {
+      "id": "P2",
+      "qualification": "Source implementation detail under current contract; no Docker command performed by this review.",
+      "requirement": "Freeze the actual final PID1-only observation mechanism. A fixed pinned host-side Docker top/inspect after all3 waits can observe without adding an in-container fifth process; retain exact argv/status/raw inventory correlated to birth. Do not run an unaccounted cat/ps/Node observer or merely assume child exits establish complete inventory."
+    }
+  ],
+  "clarification": {
+    "bytes": 2464,
+    "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-external-helper-contract-02/ARCHITECT-S2-ROOT-AUTHORITY-AND-DIGEST-CLARIFICATION.NOT_ADMISSION.md",
+    "sha256": "sha256:dfbfc038f2f3aab70db6837f50b4a52ed74c9792bf75e86e8c11c7833c674c70"
+  },
+  "closingInputs": {
+    "bytes": 2433,
+    "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-external-helper-contract-02/inspector-prospective-review-01/CLOSING-REHASHED-INPUTS.json",
+    "sha256": "sha256:acef47b13470f37ffa1f066db040ef8176a3f4e78b5f0cad1b84e0d1e4d4be73"
+  },
+  "closingRehash": "MATCH",
+  "contract": {
+    "bytes": 17317,
+    "path": "scratch/r22-adoption-161/public-installer-preparation/populated-history-external-helper-contract-02/ARCHITECT-S2-PEER-ACQUISITION-AND-DISABLED-ORCHESTRATION.NOT_ADMISSION.md",
+    "sha256": "sha256:9e84e6df63e8cc6d2a52e62ad381e9a864d0f49e4f7eaf118ce2fb5627e44eef"
+  },
+  "deadlinesAndPartialLaunch": {
+    "accepted": [
+      "900s starts before first of3 Popen calls, no reset on role/phase",
+      "Observation min30s/remaining total and250ms polls; actor self-timers cannot extend host deadline",
+      "Failure after onlyB/BC or A spawn failure consumes that attempt; no later missing-role completion",
+      "Three typed attempted/returned counters, partial raw streams, signal poisoning and qualified same-CID cleanup",
+      "All helpers remain connected/alive through both rounds and after A exit, then finite FINAL+EOF+wait/stop/final inspect"
+    ]
+  },
+  "disposition": "ACCEPTED_PROSPECTIVE_S2_SOURCE_PREPARATION_ONLY",
+  "exclusions": [
+    "No Docker, Node, SDK, SQL, creation, orchestration or runtime invoked",
+    "No old keeper/consumed authority reused, no source/contract rewrite",
+    "No native CI/graph/Outbox/populated-history/provider/trust/adoption readiness claim"
+  ],
+  "implementability": {
+    "persistentInventory": "B/C persistent actors eliminate the unaccounted ephemeral observer from the prior six-tool model. New current-phase inventory is PID1 plus admitted live roles; once A is present it must be exactly[1,A,B,C], all distinct.",
+    "scopeChange": "New role authority explicitly admits A,B,C each max1, not a retry/waiver under any old single-process permit.",
+    "sourceOnly": "Implementable as disabled pure byte/schema/state validators and fake stream tests, then separately reviewed disabled orchestration. None of this authorizes runtime.",
+    "tenStepRounds": [
+      "C reads B1",
+      "B reads C1",
+      "B reads A",
+      "C reads B2",
+      "B reads C2",
+      "Same five ordered operations after RESULT before EXIT"
+    ]
+  },
+  "nonCircularity": {
+    "acceptedCondition": "Independent host-pinned source/Node/image/birth and actual connected Popen/nonce/READY correlation authorize each actor before the mutually observed data can be admitted. B/C agreement never grants actor authority. Host validates raw facts conjunctively against independently fixed authority.",
+    "basis": [
+      "Distinct fixed B/C scripts, builtin-only reads, no own proc/fork/exec/tools/SDK/SQL/writes",
+      "Each role READY from its one actual connected launch, exact common nonce/source/runtime/argv/env bound independently",
+      "Mutual brackets and complete inventory correlate proposed PIDs with actual kernel tuples; source and connected stream continuity are additional conjuncts",
+      "Failure of any actor/proof/sample/source/stream closes UNKNOWN; no replacement PID or agreement-based repair"
+    ],
+    "qualification": "This is source-design reasoning within the trusted owned host/toolchain boundary, not proof against a compromised host/kernel or actual external-proc feasibility."
+  },
+  "referencesRehashed": 8,
+  "repoState": {
+    "head": "9af7682479fd338b0c81bf56548d21b3021cdf76",
+    "headBehindOriginMain": 0,
+    "originMain": "897f01991a17e20253721ecf7c8592f2123a37f0",
+    "originMainBehindHead": 84,
+    "pauseReconciliation": "Root paused then explicitly resumed after ancestor correction; Inspector verified 0/84 and made no source mutation during pause."
+  },
+  "role": "Inspector",
+  "scopeStatus": "CLOSED",
+  "sourceAcceptanceAdversaries": [
+    "Mutually consistent but wrong script/source/Node/loader/stream/nonce must refuse against host authority",
+    "Swap B/C roles or READYs, duplicate PID, peer PID1/self/arbitrary target, mismatched raw peer-command/source digest",
+    "Wrong PRE/POST combined order, premature/duplicate frame or EOF, extra/missing inventory member",
+    "PID reuse/reexec/death or changed immutable tuple; mutable peer authority change; no reacquisition",
+    "Late signal at every spawn/frame/fsync/return/handler restoration; partial write and double cleanup error preserve truthful counters/raw bytes",
+    "Budget reset/backward/nonfinite/huge clock values and valid-shaped altered peerRound/transcript hashes",
+    "Per-role frame/total bounds and complete final inventory observer accounting"
+  ],
+  "testStatus": "Prospective review only; listed adversarial vectors were not executed. Current011c previous9 inert PASS is historical validator evidence, not S2 test proof.",
+  "unprovenFacts": [
+    "Actual3 Node processes/peer proc visibility/QEMU representation and full4-process inventory",
+    "Actual helper sources/initialization/effects/pipe timing and byte retention",
+    "Fresh creator07 acknowledgement/source/permit/entry/outer and keeper05 independent initial birth",
+    "Complete live orchestration + new exact entry/current4 reports + issued method/admission/outer artifacts",
+    "Actual one-shot external fence/qualified stop/independent CLOSED classification"
+  ]
+}

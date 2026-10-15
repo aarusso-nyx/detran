@@ -245,6 +245,7 @@ export function detranDataOptions(): StynxDataModuleOptions {
   }
 
   return {
+    appRoleName: 'role_app_backend',
     connections: {
       owner: {
         connectionString: owner,

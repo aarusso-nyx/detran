@@ -1,0 +1,72 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/search",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[6.2.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 93858,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/redis-search-6.2.1.json",
+    "sourceSha256": "sha256:ffa27ab59fe8f45593f86186a5ed9c07dde6d6a068a0ad8598113dce1253903b"
+  },
+  "version": "6.2.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/search@6.2.1",
+    "_nodeVersion": "22.23.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/search_6.2.1_1786442675631_0.03245428775857584"
+    },
+    "_npmUser": {
+      "email": "david.maier@redis.com",
+      "name": "dmaier-redislabs"
+    },
+    "_npmVersion": "10.9.8",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "description": "This package provides support for the [RediSearch](https://redis.io/docs/interact/search-and-query/) module, which adds indexing and querying support for data stored in Redis Hashes or as JSON documents with the [RedisJSON](https://redis.io/docs/data-type",
+    "devDependencies": { "@redis/test-utils": "*" },
+    "directories": {},
+    "dist": {
+      "fileCount": 162,
+      "integrity": "sha512-2vfOAOyYFE7UUw3sBBlkqqruBtOUS4HRY5MtW4hp83llrwvtrTE4r22CEqXddlV+54zkLxBE4nmsIJ/dpezQrQ==",
+      "shasum": "0c83c6611dc387fde102828bd200cd5d459f4be9",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCrTpZGCZWzHkqG9rvyfLFnxNyB5wvHh4dBAtWbWxwjnQIgZl/2u8jNQCYePz19QnsrfJubn1Yi/OBjsC+mYe38qOQ="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDXnr33+ufstN7XiCFGtH/lyvb8JcTdy1gJUbd5hWPDcAIgMaz8srH2fgRifsutkx5GHFOzimcEAA/+43P+2x0f/6E="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/search/-/search-6.2.1.tgz",
+      "unpackedSize": 438074
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "85d70384c7a418d9e85c0668ab7f32e33d0b8d79",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/search",
+    "keywords": ["redis", "RediSearch"],
+    "license": "MIT",
+    "main": "./dist/lib/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/search",
+    "peerDependencies": { "@redis/client": "^6.2.1" },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "release": "release-it",
+      "test": "nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit  './lib/**/*.spec.ts'",
+      "test-sourcemap": "mocha -r ts-node/register/transpile-only './lib/**/*.spec.ts'"
+    },
+    "types": "./dist/lib/index.d.ts",
+    "version": "6.2.1"
+  }
+}

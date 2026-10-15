@@ -1,0 +1,100 @@
+{
+  "kind": "root-owned-emulated-projector-container-create-02",
+  "issuer": "/root",
+  "role": "Engineer",
+  "id": "7213322fa4a0964d388df5facdc7078379293dddcaa432c353723b490cc8ebb7",
+  "name": "detran-r22-161-projector-keeper01",
+  "imageDigest": "postgres@sha256:d32327f755bcd7d850eddf4880835c93d2294a2de1989e7123f5866ff0072f96",
+  "priorContainer": "aa0967f090d63387aa6babe8e413e0311914bde76fa3d0ec3cabc3502ae8b22d",
+  "priorExtraAnonymousMountRemoved": true,
+  "ownedReadOnlyImageVolume": "detran-r22-161-projector-pgdata01",
+  "records": [
+    {
+      "label": "remove-inert-keeper-and-anonymous-volume",
+      "argv": [
+        "/usr/local/bin/docker",
+        "rm",
+        "-f",
+        "-v",
+        "aa0967f090d63387aa6babe8e413e0311914bde76fa3d0ec3cabc3502ae8b22d"
+      ],
+      "exit": 0,
+      "stdoutSha256": "76ab6b416176af439475c86fab200581231a3560f9e4621cd2b2068a70c8e47e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "create-owned-ro-pgdata",
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "create",
+        "detran-r22-161-projector-pgdata01"
+      ],
+      "exit": 0,
+      "stdoutSha256": "bd3203d11b021fa1af0eab828ecc8493585eefb191a180c91410f42f939485d7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "create",
+      "argv": [
+        "/usr/local/bin/docker",
+        "create",
+        "--name",
+        "detran-r22-161-projector-keeper01",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        "999:999",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--mount",
+        "type=volume,source=detran-r22-161-projector-source01,target=/repo,readonly",
+        "--mount",
+        "type=volume,source=detran-r22-161-projector-output01,target=/repo/scratch/r22-adoption-161/portable-ci/retention-03",
+        "--mount",
+        "type=bind,source=/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-projector-preparation/actual-inputs,target=/repo/scratch/r22-adoption-161/portable-ci/retention-03/inputs,readonly",
+        "--mount",
+        "type=bind,source=/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-portable-preparation/node-linux-x64-executable,target=/node,readonly",
+        "--mount",
+        "type=volume,source=detran-r22-161-projector-pgdata01,target=/var/lib/postgresql,readonly",
+        "--entrypoint",
+        "/bin/sleep",
+        "postgres@sha256:d32327f755bcd7d850eddf4880835c93d2294a2de1989e7123f5866ff0072f96",
+        "infinity"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e461ac899d0a16afd0071f198482c8c6f462b8b28c7d6a9108a40e3948e54793",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "start",
+      "argv": [
+        "/usr/local/bin/docker",
+        "start",
+        "7213322fa4a0964d388df5facdc7078379293dddcaa432c353723b490cc8ebb7"
+      ],
+      "exit": 0,
+      "stdoutSha256": "e461ac899d0a16afd0071f198482c8c6f462b8b28c7d6a9108a40e3948e54793",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "7213322fa4a0964d388df5facdc7078379293dddcaa432c353723b490cc8ebb7"
+      ],
+      "exit": 0,
+      "stdoutSha256": "a066478855b656f1ad3d2c178da8f60ccac929553f86b192af27ac90942c05af",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "nodeExecuted": false,
+  "sdkExecuted": false,
+  "sqlExecuted": false
+}

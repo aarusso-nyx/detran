@@ -1,0 +1,104 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "pvutils",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:29.415000Z",
+    "selection": "versions[1.2.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 55627,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/65/a8/995d2b5a8732302adfe719ed0dd7d00505695d90aeff86685ae4e9a35340ca51d1793c698f8e4825119d7ad5cee0ab5282ac75f94d10447881e21299026c",
+    "sourceSha256": "sha256:80fda16002506c7c3623e71f4c47be3d410a9eba93ab24688abd9eeee0822f8d"
+  },
+  "version": "1.2.0",
+  "versionRecord": {
+    "_from": "file:release-package/pvutils-1.2.0.tgz",
+    "_hasShrinkwrap": false,
+    "_id": "pvutils@1.2.0",
+    "_integrity": "sha512-BbubeCEyTuQjVMakvJQ/Sxbc93F2pwmbsxONT/ZRrwU7Ua38d8unYTwXpTVLAKJ4BDuH9IGztCjQcd/N/39Dvg==",
+    "_nodeVersion": "24.18.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/pvutils_1.2.0_1785926471007_0.0409870458420476"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:7e22d148-31bf-485a-932c-0b2cd44b15f7"
+      }
+    },
+    "_npmVersion": "11.16.0",
+    "_resolved": "/home/runner/work/pvutils/pvutils/release-package/pvutils-1.2.0.tgz",
+    "author": { "email": "yury@strozhevsky.com", "name": "Yury Strozhevsky" },
+    "bugs": { "url": "https://github.com/PeculiarVentures/pvutils/issues" },
+    "contributors": [
+      { "email": "rmh@unmitigatedrisk.com", "name": "Ryan Hurst" },
+      { "email": "microshine@mail.ru", "name": "Miroshin Stepan" }
+    ],
+    "description": "Common utilities for products from Peculiar Ventures",
+    "devDependencies": {
+      "@types/node": "^26.1.2",
+      "@vitest/coverage-v8": "^4.1.10",
+      "oxfmt": "^0.61.0",
+      "oxlint": "^1.76.0",
+      "rollup": "^4.62.3",
+      "rollup-plugin-dts": "^6.4.1",
+      "rollup-plugin-typescript2": "^0.37.0",
+      "typescript": "^6.0.3",
+      "vitest": "^4.1.10"
+    },
+    "devEngines": {
+      "packageManager": { "name": "npm", "onFail": "error", "version": ">=10" }
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/pvutils@1.2.0"
+      },
+      "fileCount": 6,
+      "integrity": "sha512-BbubeCEyTuQjVMakvJQ/Sxbc93F2pwmbsxONT/ZRrwU7Ua38d8unYTwXpTVLAKJ4BDuH9IGztCjQcd/N/39Dvg==",
+      "shasum": "4b5487a9cccd52d275b0538775790a3ca982bc22",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIHBuhl3cW1TcuixQvfmtVcfI3eJbcPy8zCc1ASbv1XxsAiBLNOqxa60RRADFPoM3aatL/JOpPbRGyH95MMA6D7Tv8g=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDcWUn6KkHI+GT+s0jGwowS1ZgmwGnkscyuOBsctXfoSQIhAOVqBHSXUmJF4x0mwFvltxMmbCndgKRtbZO3S91exz8A"
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/pvutils/-/pvutils-1.2.0.tgz",
+      "unpackedSize": 31508
+    },
+    "engines": { "node": ">=16.0.0" },
+    "homepage": "https://github.com/PeculiarVentures/pvutils#readme",
+    "license": "MIT",
+    "main": "./build/utils.js",
+    "maintainers": [
+      { "email": "info@peculiarventures.com", "name": "peculiarventures" },
+      { "email": "microshine@mail.ru", "name": "microshine" }
+    ],
+    "module": "./build/utils.es.js",
+    "name": "pvutils",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/PeculiarVentures/pvutils.git"
+    },
+    "scripts": {
+      "build": "rollup -c",
+      "coverage": "vitest run --coverage",
+      "format": "oxfmt",
+      "format:check": "oxfmt --check",
+      "lint": "oxlint",
+      "lint:fix": "oxlint --fix",
+      "prepare": "npm run build",
+      "test": "vitest run"
+    },
+    "types": "./build/index.d.ts",
+    "version": "1.2.0"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/angular-ui",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:35.365149+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 176813,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-angular-ui-1.6.1.json",
+    "sourceSha256": "sha256:b030a80de781554a3e78a465aa1ca967c3aecad42ad89208552364f06e37ab86"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/angular": "1.6.1",
+      "@stynx-nyx/angular-i18n": "1.6.1",
+      "rxjs": "^7.8.2"
+    },
+    "description": "Angular 20/21 UI primitives for stynx web apps",
+    "devDependencies": {
+      "@angular/common": "22.2.1",
+      "@angular/compiler": "22.2.1",
+      "@angular/compiler-cli": "22.2.1",
+      "@angular/core": "22.2.1",
+      "@angular/platform-browser": "22.2.1",
+      "@angular/router": "22.2.1",
+      "@types/node": "24.13.4",
+      "jsdom": "^29.0.2",
+      "ng-packagr": "22.1.1",
+      "tslib": "^2.8.1",
+      "typescript": "6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-LrAdqpwwPv0CXBmuHXPsXcOIVCI0Lzs8dpni97QlMO+l9U9/GYqyYgMGDFSIvyAckhrKKtJh8+Y+brojzk0hQQ==",
+      "shasum": "2d566243ff35504a7061fcb566ca19b3350baf19",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/angular-ui/1.6.1/2d566243ff35504a7061fcb566ca19b3350baf19"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "name": "@stynx-nyx/angular-ui",
+    "peerDependencies": {
+      "@angular/common": ">=22.0.0 <23",
+      "@angular/core": ">=22.0.0 <23",
+      "@angular/router": ">=22.0.0 <23"
+    },
+    "readme": "# `@stynx-nyx/angular-ui` — shared Angular UI primitives (tables, dialogs, toasts, banners)\n\n`@stynx-nyx/angular-ui` is STYNX's shared component library — the design-system surface every STYNX frontend draws from. Standalone Angular components: data tables with pagination, confirmation dialogs, loading spinners, banners, icons, toast notifications. All themeable via CSS custom properties, all standalone (no NgModule required).\n\n## Purpose\n\nEvery STYNX frontend needs the same UI primitives: a paginated table, a confirm-before-delete dialog, a loading spinner, toast notifications. Rebuilding these per app produces inconsistent UX. `@stynx-nyx/angular-ui` provides them once, themeable.\n\nYou reach for it whenever you build STYNX frontend screens — it's the visual vocabulary.\n\nWhat it does NOT do: it's not a full design system (no form controls library — use Angular Material or your own for inputs). It doesn't impose a router or layout shell.\n\n## Audience\n\nAngular frontend developers building STYNX UIs.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/angular-ui\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { Component } from '@angular/core';\nimport { TableComponent, ConfirmDialogComponent } from '@stynx-nyx/angular-ui';\n\n@Component({\n  standalone: true,\n  imports: [TableComponent, ConfirmDialogComponent],\n  template: ` <stynx-table [rows]=\"users\" [columns]=\"columns\" [pageSize]=\"20\" /> `,\n})\nexport class UsersPage {}\n```\n\n## Public API surface\n\n### Components\n\n| Selector                  | Component                                                     | Key inputs / outputs                              | Description                                                 |\n| ------------------------- | ------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------- |\n| `<stynx-table>`           | `TableComponent`                                              | `[rows]`, `[columns]`, `[pageSize]`; `(rowClick)` | Data table with built-in pagination.                        |\n| `<stynx-pagination>`      | `PaginationComponent`                                         | `[total]`, `[pageSize]`, `[page]`; `(pageChange)` | Standalone pagination control.                              |\n| `<stynx-confirm-dialog>`  | `ConfirmDialogComponent`                                      | `[title]`, `[message]`; `(confirm)`, `(cancel)`   | Confirm-before-action modal.                                |\n| `<stynx-loading-spinner>` | `LoadingSpinnerComponent`                                     | `[size]`, `[label]`                               | Loading indicator.                                          |\n| `<stynx-banner>`          | `BannerComponent`                                             | `[type]`, `[message]`, `[dismissible]`            | Inline banner (info / warn / error).                        |\n| `<stynx-icon>`            | `IconComponent`                                               | `[name]`, `[size]`                                | Icon renderer.                                              |\n| `<stynx-toast-container>` | `ToastContainerComponent`                                     | —                                                 | Mount once at app root; renders toasts from `ToastService`. |\n| `<stynx-empty-state>`     | `EmptyStateComponent` (re-exported from `@stynx-nyx/angular`) | `[message]`                                       | Empty-state placeholder.                                    |\n\n### Services\n\n| Export         | Description                                                                 |\n| -------------- | --------------------------------------------------------------------------- |\n| `ToastService` | Programmatically push toasts. `.success(msg)`, `.error(msg)`, `.info(msg)`. |\n\n## Configuration\n\nTheming is via CSS custom properties — no module config. Override design tokens at the app root:\n\n| CSS variable            | Default       | Description               |\n| ----------------------- | ------------- | ------------------------- |\n| `--stynx-color-primary` | (brand blue)  | Primary action color.     |\n| `--stynx-color-danger`  | (red)         | Destructive action color. |\n| `--stynx-density`       | `comfortable` | `comfortable \\| compact`. |\n| `--stynx-radius`        | `6px`         | Corner radius.            |\n\n## Examples\n\n### Example 1 — confirm dialog\n\n```html\n<stynx-confirm-dialog\n  *ngIf=\"showDelete\"\n  title=\"Delete user?\"\n  message=\"This cannot be undone.\"\n  (confirm)=\"onDelete()\"\n  (cancel)=\"showDelete = false\"\n/>\n```\n\n### Example 2 — toasts\n\n```ts\nimport { ToastService } from '@stynx-nyx/angular-ui';\n\n@Component({/* ... */})\nexport class SaveButton {\n  private readonly toast = inject(ToastService);\n  async save() {\n    await this.api.save();\n    this.toast.success('Saved');\n  }\n}\n```\n\nMount `<stynx-toast-container>` once at the app root for toasts to render.\n\n### Example 3 — theming\n\n```css\n:root {\n  --stynx-color-primary: #6d28d9;\n  --stynx-density: compact;\n}\n```\n\n## Common pitfalls\n\n- **Forgetting `<stynx-toast-container>` at root** — `ToastService.success()` pushes a toast but nothing renders it. Mount the container once.\n- **Importing components into an NgModule app** — these are standalone components; import them into the `imports` array of a standalone component or NgModule, not declare them.\n- **Table with huge datasets** — `<stynx-table>` paginates client-side by default; for server-side data, drive `[rows]` from a paged API call + `(pageChange)`.\n\n## Related packages\n\n- [`@stynx-nyx/angular`](/docs/packages-web/angular/) — the foundation; provides `ToastService`'s underlying mechanism + the empty-state component.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-web-angular-ui/`](/docs/api-reference/stynx-web-angular-ui/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/angular`: `workspace:*`\n- `@stynx-nyx/angular-i18n`: `workspace:*`\n- `rxjs`: `^7.8.2`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@angular/common`: `>=22.0.0 <23`\n- `@angular/core`: `>=22.0.0 <23`\n- `@angular/router`: `>=22.0.0 <23`\n\n### Development-only dependencies\n\n- `@angular/common`: `22.2.1`\n- `@angular/compiler`: `22.2.1`\n- `@angular/compiler-cli`: `22.2.1`\n- `@angular/core`: `22.2.1`\n- `@angular/platform-browser`: `22.2.1`\n- `@angular/router`: `22.2.1`\n- `@types/node`: `24.13.4`\n- `jsdom`: `^29.0.2`\n- `ng-packagr`: `22.1.1`\n- `tslib`: `^2.8.1`\n- `typescript`: `6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages-web/angular-ui",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "ng-packagr -p ng-package.json && pnpm run normalize:dist-exports",
+      "build:tsc": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/angular.mjs \"src/**/*.ts\"",
+      "normalize:dist-exports": "node -e \"const fs=require('node:fs');const path='dist/package.json';const pkg=JSON.parse(fs.readFileSync(path,'utf8'));pkg.exports['./catalogs/en.json']={default:'./catalogs/en.json'};pkg.exports['./catalogs/pt-BR.json']={default:'./catalogs/pt-BR.json'};fs.writeFileSync(path, JSON.stringify(pkg,null,2)+'\\n');\"",
+      "stryker": "NODE_OPTIONS=\"--disable-warning=ExperimentalWarning --experimental-vm-modules\" pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "typecheck": "tsc -p tsconfig.spec.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

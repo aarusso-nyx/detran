@@ -1,0 +1,103 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/node-http-handler",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.551000Z",
+    "selection": "versions[4.12.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 360030,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/5f/60/68b8edb5656ed374ae198cc1024a2d0f1b660ae0dc900ac6e2133263f5ef6b8d68395be56e0d8d0621a9b47be11d759c4906ce180d6537bb4e2940ebcd05",
+    "sourceSha256": "sha256:56a18070f57e4d2fb4eeff90e008ad392c77f35a5d501e7d1ce01110dfcceea8"
+  },
+  "version": "4.12.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/node-http-handler@4.12.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/node-http-handler_4.12.1_1788460818238_0.5921417037491814"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:5a4d02f6-3fd0-4ab9-bd7b-0f6af958b155"
+      }
+    },
+    "author": {
+      "email": "",
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "dependencies": {
+      "@smithy/core": "^3.33.3",
+      "@smithy/types": "^4.18.0",
+      "tslib": "^2.6.2"
+    },
+    "description": "Provides a way to make requests",
+    "devDependencies": {
+      "@smithy/abort-controller": "^4.4.2",
+      "@types/node": "^18.11.9",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2fnode-http-handler@4.12.1"
+      },
+      "fileCount": 56,
+      "integrity": "sha512-ThMkboGeONWXAelq9FvGsuJC4rOi+qyC4/zhUF58xYpxUg5sQKx2VXZYJmtNjr4dSuBJ1HeJXETQILCz3wOHvw==",
+      "shasum": "e4da9379d228517ba85845081e4e6758ca315c5d",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIHrX6PHWhDuVo1gyXNq361y+4XYkWtHGqCbq8jyoiI1nAiAXMgfthhmPDrD7t4L1cSxZGMiY9iJwCNbuem8SCgRp0g=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCBSKRaIx5vQ+cPuGyjhHOG4axGWp5cLrX5y3ttEiQZdgIgENE7lL5bldYVFd1hAvezNcXzHu6zcE3zM9FGV1BuZtE="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/node-http-handler/-/node-http-handler-4.12.1.tgz",
+      "unpackedSize": 128867
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "9aeb60e0938487407968d4c65e0ca04fbcf2d790",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/node-http-handler",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/node-http-handler",
+    "repository": {
+      "directory": "packages/node-http-handler",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "4.12.1"
+  }
+}

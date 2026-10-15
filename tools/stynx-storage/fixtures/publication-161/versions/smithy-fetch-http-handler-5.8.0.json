@@ -1,0 +1,103 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/fetch-http-handler",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.579000Z",
+    "selection": "versions[5.8.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 361855,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/56/59/ec840ac1f5dad53d7d627634e2fbb2ec4ed211f02550f0a31f4ecae5b7b64684807494e5ce2b1fe11f9cd7e773dbf2b3d518faad0eaf1addd5af381c117f",
+    "sourceSha256": "sha256:f29384bb6026ca4764c75fcbad752c0325eb37719dbfc52afdb154af3010e34d"
+  },
+  "version": "5.8.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/fetch-http-handler@5.8.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/fetch-http-handler_5.8.0_1788460798133_0.5379911693061077"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:73948ca0-33e7-4710-9164-a05ba2ce42b4"
+      }
+    },
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "dependencies": {
+      "@smithy/core": "^3.33.3",
+      "@smithy/types": "^4.18.0",
+      "tslib": "^2.6.2"
+    },
+    "description": "Provides a way to make requests",
+    "devDependencies": {
+      "@smithy/abort-controller": "^4.4.2",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2ffetch-http-handler@5.8.0"
+      },
+      "fileCount": 17,
+      "integrity": "sha512-ycSJu3tFAQ4v04CBB0agqFMVsSQ1iG3yw+SpgxRqKfaURpQD4CZ8Wn0zPMmSnOuTpTh65Vz+EA0rMrw089wvkA==",
+      "shasum": "349464e31682d739a74efa42362756be49eb2883",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCw+LZjxQkrALHrGdt9OrhglyHJFgO6HC6dBiq39PwN1QIgUoRRY12cSF5fO6fOGOCVN3VMT5v8vw9+HCh6DUTKpqg="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDM2UXUe2YAFB+43XbiG5ef4v4FB2p/eeb4J7iOwdLvwAIgeq71YKa2m1UBzRn4i9SjwpnRi+acU2CPx7m94+gFQe8="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/fetch-http-handler/-/fetch-http-handler-5.8.0.tgz",
+      "unpackedSize": 50303
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "9aeb60e0938487407968d4c65e0ca04fbcf2d790",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/fetch-http-handler",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/fetch-http-handler",
+    "repository": {
+      "directory": "packages/fetch-http-handler",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run && yarn test:browser",
+      "test:browser": "yarn g:vitest run -c vitest.config.browser.mts",
+      "test:browser:watch": "yarn g:vitest watch -c vitest.config.browser.mts",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "5.8.0"
+  }
+}

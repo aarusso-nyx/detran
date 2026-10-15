@@ -1,0 +1,66 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/sdk",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:59:02.515444+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 159242,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-sdk-1.6.1.json",
+    "sourceSha256": "sha256:7e764857aac4284e516537140e956fc33de536ffd4dafe02232aa4a582dbae52"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "description": "Framework-agnostic TypeScript SDK for stynx APIs",
+    "devDependencies": {
+      "@angular/compiler": "22.2.1",
+      "@angular/compiler-cli": "22.2.1",
+      "@stynx-nyx/core": "1.6.1",
+      "@types/node": "24.13.4",
+      "ng-packagr": "22.1.1",
+      "openapi-typescript-codegen": "^0.31.0",
+      "tslib": "^2.8.1",
+      "typescript": "6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-dqMnRI8prPzd/qw7mWuaW000FgLPYGEHrltUKjztBjTDjjYd3x1wjj74Fm+x5kqDMjDId89LAMwXoK0RNc4UHA==",
+      "shasum": "7c8a2b3135f12ccaecc2cbb7c133df3737119634",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/sdk/1.6.1/7c8a2b3135f12ccaecc2cbb7c133df3737119634"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "name": "@stynx-nyx/sdk",
+    "readme": "# `@stynx-nyx/sdk` — the generated TypeScript REST client for the STYNX backend\n\n`@stynx-nyx/sdk` is the TypeScript client for STYNX's REST surface. The bulk of it — the per-operation methods + DTO types — is **auto-generated** from the backend's OpenAPI contract (`@stynx-nyx/flow` and the other `@Controller`-carrying packages). On top of the generated core, it adds hand-authored helpers: an auth provider, a session manager, token store, tenant provider, JWT helpers, and a configurable transport. Used by every `@stynx-nyx/*` package to call the backend.\n\n> **This README is a navigation page, not a symbol catalog.** The SDK has 700+ exports across 250+ files, almost all generated. Enumerating them here would be noise and would go stale on every regeneration. For symbol-level reference use the [TypeDoc](/docs/api-reference/stynx-web-sdk/). The sections below describe the SDK's _shape_ and how to _use_ it.\n\n## Purpose\n\nA frontend talking to the STYNX backend needs a typed client: every endpoint as a method, every DTO as a type, with auth + tenant + error handling threaded through. Hand-writing this drifts from the backend; generating it from the OpenAPI contract keeps it in lockstep. `@stynx-nyx/sdk` is that generated client plus the auth/session/transport glue the generation can't express.\n\nYou reach for it indirectly — `@stynx-nyx/angular` wires it, and the other `@stynx-nyx/*` packages consume it. You call it directly when writing a component that hits a backend endpoint.\n\nWhat it does NOT do: it's not Angular-specific (it's framework-agnostic TypeScript; `@stynx-nyx/angular` adapts it to Angular DI). It doesn't manage UI state.\n\n## Audience\n\nAngular frontend developers calling the STYNX backend. Most interaction is through generated operation methods + the auth/session helpers.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/sdk\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { OpenAPI } from '@stynx-nyx/sdk';\n// Set the base URL (usually done for you by provideStynxAngular)\nOpenAPI.BASE = 'https://api.example.com';\n\n// Call a generated operation\nimport { FlowService } from '@stynx-nyx/sdk';\nconst forms = await FlowService.listForms();\n```\n\nIn an Angular app you rarely set `OpenAPI.BASE` yourself — `provideStynxAngular({ apiBaseUrl })` does it.\n\n## Public API surface\n\n**Generated (from OpenAPI):** per-controller service classes (e.g. `FlowService`, `AuthService`, `TenancyService`) with one method per endpoint, plus the request/response DTO types. These mirror the backend exactly — see the backend package docs ([`@stynx-nyx/flow`](/docs/packages/flow/), etc.) for what each endpoint does, and the [TypeDoc](/docs/api-reference/stynx-web-sdk/) for the symbol-level signatures.\n\n**Hand-authored helpers:**\n\n| Area      | Exports                                     | Description                                                                        |\n| --------- | ------------------------------------------- | ---------------------------------------------------------------------------------- |\n| Transport | `api-client`, `client`, `http`, `transport` | The configurable HTTP layer the generated code calls through.                      |\n| Auth      | `auth`, `auth-provider`, `authorization`    | Auth-token plumbing + the provider interface `@stynx-nyx/angular-auth` implements. |\n| Session   | `session-manager`, `token-store`            | Session lifecycle + token storage abstraction.                                     |\n| Identity  | `cognito`, `jwt`                            | Cognito + JWT helpers.                                                             |\n| Tenant    | `tenant-provider`                           | Tenant-context provider interface.                                                 |\n| Errors    | `errors`                                    | Typed error classes mapping the STYNX error envelope.                              |\n\n## Configuration\n\n| Surface           | Description                                                                     |\n| ----------------- | ------------------------------------------------------------------------------- |\n| `OpenAPI.BASE`    | The backend base URL. Set by `provideStynxAngular()` or manually.               |\n| `OpenAPI.TOKEN`   | The bearer token resolver. Wired by `@stynx-nyx/angular-auth`.                  |\n| `OpenAPI.HEADERS` | Default headers (tenant, locale). Wired by `@stynx-nyx/angular`'s interceptors. |\n\n## Examples\n\n### Example 1 — calling an operation directly\n\n```ts\nimport { TenancyService } from '@stynx-nyx/sdk';\nconst tenants = await TenancyService.listTenants();\n```\n\n### Example 2 — handling a STYNX error envelope\n\n```ts\nimport { StynxApiError } from '@stynx-nyx/sdk';\ntry {\n  await FlowService.createForm({ name: 'X' });\n} catch (e) {\n  if (e instanceof StynxApiError) {\n    console.error(e.code, e.status); // structured envelope fields\n  }\n}\n```\n\n### Example 3 — regenerating the SDK after a backend contract change\n\n```bash\npnpm sdk:codegen   # from the workspace root\n```\n\nThis re-runs OpenAPI codegen against the backend's contract. Commit the regenerated `src/generated/`.\n\n## Common pitfalls\n\n- **Stale generated client** — the SDK is generated; if the backend contract changes and you don't regenerate, runtime calls hit endpoints that have moved or DTOs that changed shape. Re-run `pnpm sdk:codegen` after backend contract changes.\n- **Setting `OpenAPI.BASE` after the first call** — the base URL is read per-request, but inconsistent setting leads to some calls hitting the wrong origin. Set it once at bootstrap (via `provideStynxAngular`).\n- **Editing generated files by hand** — your edits are overwritten on the next codegen. Customize via the hand-authored helper layer, not the generated core.\n\n## Related packages\n\n- [`@stynx-nyx/flow`](/docs/packages/flow/) — the largest source of the SDK's generated operations (20 controllers).\n- [`@stynx-nyx/angular`](/docs/packages-web/angular/) — wires the SDK into Angular DI.\n- [`@stynx-nyx/angular-auth`](/docs/packages-web/angular-auth/) — implements the auth provider the SDK consumes.\n\n## TypeDoc reference\n\nFull symbol-level API (the authoritative source for the generated surface): [`/docs/api-reference/stynx-web-sdk/`](/docs/api-reference/stynx-web-sdk/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n_None._\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n_None._\n\n### Development-only dependencies\n\n- `@angular/compiler`: `22.2.1`\n- `@angular/compiler-cli`: `22.2.1`\n- `@stynx-nyx/core`: `workspace:*`\n- `@types/node`: `24.13.4`\n- `ng-packagr`: `22.1.1`\n- `openapi-typescript-codegen`: `^0.31.0`\n- `tslib`: `^2.8.1`\n- `typescript`: `6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages-web/sdk",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "pnpm run codegen && ng-packagr -p ng-package.json",
+      "build:tsc": "pnpm run codegen && tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "codegen": "node ./scripts/codegen.mjs",
+      "lint": "eslint --config ../../tools/eslint-config/lib.mjs \"src/**/*.ts\" --ignore-pattern \"src/generated/**\"",
+      "stryker": "NODE_OPTIONS=\"--disable-warning=ExperimentalWarning --experimental-vm-modules\" pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "strtok3",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.104000Z",
+    "selection": "versions[10.5.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 428900,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/4c/2b/a20cb6f2df54985df1056c857fbdb2d0f460b68c7b6e537402d14cd91aa5149dd240461a638127e03b6a195ec81eca5e7eaefa1b6377c5c4e65d43b9e185",
+    "sourceSha256": "sha256:7822a960309b0fea2ad0a1dbae9670186e971aa8d4d3508dfc638f21e7c64aeb"
+  },
+  "version": "10.5.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "strtok3@10.5.0",
+    "_nodeVersion": "22.23.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/strtok3_10.5.0_1791907086430_0.023210426620090097"
+    },
+    "_npmUser": { "email": "borewit@xs4all.nl", "name": "borewit" },
+    "_npmVersion": "10.9.9",
+    "author": { "name": "Borewit", "url": "https://github.com/Borewit" },
+    "bugs": { "url": "https://github.com/Borewit/strtok3/issues" },
+    "dependencies": { "@tokenizer/token": "^0.3.0" },
+    "description": "A promise based streaming tokenizer",
+    "devDependencies": {
+      "@biomejs/biome": "2.5.15",
+      "@types/chai": "^5.2.2",
+      "@types/chai-as-promised": "^8.0.2",
+      "@types/debug": "^4.1.12",
+      "@types/mocha": "^10.0.10",
+      "@types/node": "^24.19.1",
+      "c8": "^12.0.0",
+      "chai": "^6.3.0",
+      "chai-as-promised": "^8.0.2",
+      "del-cli": "^7.0.0",
+      "mocha": "^11",
+      "node-readable-to-web-readable-stream": "^0.4.2",
+      "remark-cli": "^12.0.1",
+      "remark-preset-lint-recommended": "^7.0.1",
+      "token-types": "^6.1.2",
+      "tsx": "^4.23.15",
+      "typescript": "^7.0.2",
+      "uint8array-extras": "^1.6.0"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 43,
+      "integrity": "sha512-PgAsgIuizbZN/r4+g4UNvbVCTpJWdoIdI71kIWwKmdIH0vJ0q7ylMVGU8PWj2s9O98y4MtFWiDTIrtNukZMMgQ==",
+      "shasum": "fcc4387817fb2f0a12ee03ae1c3c54490fd180c6",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIGMM3lXPVB34VoCbJhuS99hhJLJvpEGOzldoxhcyiUNtAiBNfAOLt3H1kmK7eejDD9QNPHn4k/EZe1XUF50U5IdBMg=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIDc0ZNzPvHXWSWo+ujzQNCiiM2eMFusNHnwty8KzGexnAiA+89z458LDH0QEkAvu6Qpud8PDfpkgr45g54ZJ9HRVIg=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/strtok3/-/strtok3-10.5.0.tgz",
+      "unpackedSize": 94014
+    },
+    "engines": { "node": ">=18" },
+    "exports": {
+      ".": { "default": "./lib/core.js", "node": "./lib/index.js" },
+      "./core": "./lib/core.js"
+    },
+    "funding": {
+      "type": "github",
+      "url": "https://github.com/sponsors/Borewit"
+    },
+    "gitHead": "7ea99b99f932c51cdc132b7f675d48289ff12c46",
+    "homepage": "https://github.com/Borewit/strtok3#readme",
+    "keywords": [
+      "tokenizer",
+      "reader",
+      "token",
+      "async",
+      "promise",
+      "parser",
+      "decoder",
+      "binary",
+      "endian",
+      "uint",
+      "stream",
+      "streaming"
+    ],
+    "license": "MIT",
+    "maintainers": [{ "email": "borewit@xs4all.nl", "name": "borewit" }],
+    "name": "strtok3",
+    "packageManager": "yarn@4.18.1",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Borewit/strtok3.git"
+    },
+    "scripts": {
+      "build": "yarn run clean && yarn run compile",
+      "bun:test": "bun run --bun test",
+      "clean": "del-cli 'lib/**/*.js' 'lib/**/*.js.map' 'lib/**/*.d.ts' 'test/**/*.js' 'test/**/*.js.map'",
+      "compile": "yarn run compile-src && yarn run compile-test",
+      "compile-src": "tsc -p lib  --sourceMap false",
+      "compile-test": "tsc -p test",
+      "eslint": "eslint lib test",
+      "fix": "yarn run lint:ts:fix",
+      "lint": "yarn run lint:md && yarn run lint:ts",
+      "lint:md": "remark -u preset-lint-recommended .",
+      "lint:ts": "biome check",
+      "lint:ts:fix": "biome check --write",
+      "prepublishOnly": "yarn run build",
+      "send-codacy": "c8 report --reporter=text-lcov | codacy-coverage",
+      "start": "yarn run compile && yarn run lint && yarn run cover-test",
+      "test": "mocha",
+      "test-coverage": "c8 yarn run test",
+      "update-biome": "yarn add -D --exact @biomejs/biome && npx @biomejs/biome migrate --write"
+    },
+    "type": "module",
+    "types": "lib/index.d.ts",
+    "version": "10.5.0"
+  }
+}

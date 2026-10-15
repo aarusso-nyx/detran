@@ -1,0 +1,88 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/client",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[6.2.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 156206,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/redis-client-6.2.1.json",
+    "sourceSha256": "sha256:c7d769304bfa7c54aed96aab7848a5c1ad9f57188db5f5f5c04995f4d36801f9"
+  },
+  "version": "6.2.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/client@6.2.1",
+    "_nodeVersion": "22.23.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/client_6.2.1_1786442597075_0.8996525244954201"
+    },
+    "_npmUser": {
+      "email": "david.maier@redis.com",
+      "name": "dmaier-redislabs"
+    },
+    "_npmVersion": "10.9.8",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "dependencies": { "cluster-key-slot": "1.1.2" },
+    "description": "The source code and documentation for this package are in the main [node-redis](https://github.com/redis/node-redis) repo.",
+    "devDependencies": {
+      "@node-rs/xxhash": "1.7.6",
+      "@opentelemetry/api": "^1.9.0",
+      "@opentelemetry/sdk-metrics": "^2.2.0",
+      "@redis/test-utils": "*",
+      "@types/sinon": "^17.0.3",
+      "sinon": "^17.0.1"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 1935,
+      "integrity": "sha512-LzxBY7SIBvvJiyCgcaJZZakE3fJrZZ++i24+EDW9fKpCl68D35uJcKFpZZwCfOoG9WZTbyZlMzMeM0gtOAMU9Q==",
+      "shasum": "202d6c6bc88f1ed791fc50604d6d792ddf75438b",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQD9/bzLMRtCZ1eRghKSkBn1RxJikNp+QTtdHG9yixaCeAIgLobQbKM+DJyTI+C5dIJ19I/i34dTqOkPcpm6FaOjAyM="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIE2hewrTDrC6RF+jFpxgsBTusktSszircVVR6aNrRahWAiAvXea7NeyVz8Z0bMwbD09QREDI1TSgNrJMcp7KYUatbA=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/client/-/client-6.2.1.tgz",
+      "unpackedSize": 5211572
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "ba1b90b9ce00f47af4330a1614c7fac6bcd94384",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/client",
+    "keywords": ["redis"],
+    "license": "MIT",
+    "main": "./dist/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/client",
+    "peerDependencies": {
+      "@node-rs/xxhash": "^1.1.0",
+      "@opentelemetry/api": ">=1 <2"
+    },
+    "peerDependenciesMeta": {
+      "@node-rs/xxhash": { "optional": true },
+      "@opentelemetry/api": { "optional": true }
+    },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "generate:metadata": "tsx ./scripts/generate-command-metadata-data.ts",
+      "release": "release-it",
+      "test": "npm run test:types && nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit './lib/**/*.spec.ts'",
+      "test:types": "tsc -p tsconfig.types-test.json"
+    },
+    "types": "./dist/index.d.ts",
+    "version": "6.2.1"
+  }
+}

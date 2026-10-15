@@ -1,0 +1,107 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/client-ssm",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[3.1116.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 3280884,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/aws-sdk-client-ssm-3.1116.0.json",
+    "sourceSha256": "sha256:5e5da3a4f2e5dc12eed7e643d16e1938f252c7715afd93235262ad47f1b48537"
+  },
+  "version": "3.1116.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/client-ssm@3.1116.0",
+    "_nodeVersion": "24.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/client-ssm_3.1116.0_1787339797468_0.8732521269216795"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": { "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.browser" },
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": {
+      "@aws-sdk/core": "^3.977.9",
+      "@aws-sdk/credential-provider-node": "^3.972.81",
+      "@aws-sdk/types": "^3.974.5",
+      "@smithy/core": "^3.33.3",
+      "@smithy/fetch-http-handler": "^5.7.2",
+      "@smithy/node-http-handler": "^4.11.3",
+      "@smithy/types": "^4.17.2",
+      "tslib": "^2.6.2"
+    },
+    "description": "AWS SDK for JavaScript Ssm Client for Node.js, Browser and React Native",
+    "devDependencies": {
+      "@tsconfig/node20": "20.1.8",
+      "@types/node": "^20.14.8",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 694,
+      "integrity": "sha512-AWYIQBmwNL+2rZW/eIirBSvoo9kKMv3pgWhcGiySHnD4xu/fbNM/ArbhkcHWwDLk1Emk5/sMqU4SEDsBDXmgFA==",
+      "shasum": "4934083965d284c24d27a84c3325c35ede0b11e5",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIFjNwZq4qsLgzMtk+YVWVkGT7y/qgRv2pNYeDtnQD2Q2AiAKvPNkF/pU2ExuEFSKK6zhnAA243OKnv8nRkHmx9h6Iw=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDF6VsPrylWBp0sC6W9daEZMDpSzlpIUktLP5RHjZiwZAIgA4WnO3g+zBpWmNtT5Zqxb4gng6vpN7vOq0pZpWTmPZE="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/client-ssm/-/client-ssm-3.1116.0.tgz",
+      "unpackedSize": 3454669
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-ssm",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/client-ssm",
+    "react-native": {
+      "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.native"
+    },
+    "repository": {
+      "directory": "clients/client-ssm",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "generate:client": "node ../../scripts/generate-clients/single-service",
+      "test:e2e": "yarn g:vitest run -c vitest.config.e2e.mts",
+      "test:e2e:watch": "yarn g:vitest watch -c vitest.config.e2e.mts",
+      "test:index": "tsc -p tsconfig.test.json && node ./test/index-objects.spec.mjs"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.1116.0"
+  }
+}

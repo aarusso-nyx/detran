@@ -1,0 +1,44 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-portable-public-storage-module-policy",
+  "seedRequests": [
+    {
+      "specifier": "@stynx-nyx/offline-sync",
+      "from": "package.json",
+      "to": "node_modules/@stynx-nyx/offline-sync/dist/offline-sync/src/index.js"
+    },
+    {
+      "specifier": "@stynx-nyx/outbox",
+      "from": "package.json",
+      "to": "node_modules/@stynx-nyx/outbox/dist/outbox/src/index.js"
+    }
+  ],
+  "graph": {
+    "path": "tools/stynx-storage/fixtures/publication-161/historical/scratch/r22-adoption-161/package-admission/runtime/static-module-graph.json.raw",
+    "bytes": 3129934,
+    "sha256": "sha256:716cfa56cdd8c2203edc472ea03fcc215110070a42d839b1854b66a19997e66e"
+  },
+  "sourceInventory": {
+    "path": "tools/stynx-storage/fixtures/publication-161/historical/scratch/r22-adoption-161/package-admission/runtime/resolved-packages.json.raw",
+    "bytes": 6763900,
+    "sha256": "sha256:e8e592cc85e8e932c5648160da542d60272fc1410bd5e381a3be6b209430d4ef"
+  },
+  "boundaryDisposition": {
+    "path": "tools/stynx-storage/fixtures/publication-161/historical/scratch/r22-adoption-161/package-admission/runtime/module-boundary-disposition.json.raw",
+    "bytes": 28669,
+    "sha256": "sha256:04da818d6fb898998dd8f6b97fab40c498a99939d82ac49c1e6efba14118ce6c"
+  },
+  "loaderRules": {
+    "path": "tools/stynx-storage/fixtures/publication-161/historical/scratch/r22-adoption-161/package-admission/project-published-storage.mjs.raw",
+    "bytes": 38086,
+    "sha256": "sha256:fee708d8829ea1e7bfb742ad20c5e46339db48a4539654882b9272343e320d50"
+  },
+  "forbiddenEffects": [
+    "sdk-network",
+    "sql",
+    "sdk-vm-transform",
+    "arbitrary-child-process",
+    "arbitrary-worker",
+    "ambient-loader"
+  ]
+}

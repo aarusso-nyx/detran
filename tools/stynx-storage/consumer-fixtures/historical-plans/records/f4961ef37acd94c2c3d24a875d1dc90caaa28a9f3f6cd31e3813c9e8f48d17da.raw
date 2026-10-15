@@ -1,0 +1,94 @@
+# F1 analysis of immutable retained evidence only; no SDK, database or product tests.
+import json, re, hashlib, datetime
+from pathlib import Path
+root=Path.cwd(); g=root/'scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03'; run=g/'reference-proof'; cur=g/'reference-current-readback'
+load=lambda p:json.loads(p.read_text())
+proof=load(run/'phase-09-capture-raw-and-compare.json'); snapshots=proof['snapshots']; traces=load(run/'phase-08-exercise-controlled-behavior.json'); clock=load(run/'business-clock.json')
+assert snapshots==load(run/'raw-package-snapshots.json')
+raw_tables=0; fresh_rows=0
+for s in snapshots:
+ data=load(cur/(s['subject']['databaseName']+'.json'))
+ tables={e['schema']+'.'+e['table']:e['rows'] for e in data if e.get('kind')=='table-rows'}
+ for name,rows in s['tables'].items():
+  assert tables[name]==[r['raw'] for r in rows], name
+  raw_tables+=1
+ seq={e['schema']+'.'+e['sequence']:e['state'] for e in data if e.get('kind')=='sequence-state'}; assert seq==s['sequences']
+ rows=next((e['rows'] for e in data if e.get('kind')=='original-fresh-receipts'),[])
+ if s['subject']['databaseOid']=='18766': assert rows==[]
+ else:
+  name='prior-fresh' if s['subject']['databaseOid']=='18765' else 'upgrade-source'
+  original=load(run/(name+'-fresh-rows-candidate.json'))['rows']
+  assert [{k:r[k] for k in original[0]} for r in rows]==original
+  fresh_rows+=len(rows)
+assert raw_tables==72 and fresh_rows==4
+for s in snapshots[1:]:assert s['catalogs']==snapshots[0]['catalogs']
+checks=0
+for phase in ['phase-06-verify-prior-before.json','phase-10-verify-prior-after.json']:
+ for s in load(run/phase):
+  for p,r in s['reports'].items():
+   assert r['supported'] is True and r['packageVersion']=='1.6.0' and all(c['status']=='pass' for c in r['checks'])
+   assert len(r['checks'])==(1295 if p=='outbox' else 2040); checks+=len(r['checks'])
+keys=proof['logicalKeys']; generated=proof['generatedIdentityFields']; differences=[]
+def micro(v):
+ t=datetime.datetime.fromisoformat(v.replace('Z','+00:00')); d=t-datetime.datetime(1970,1,1,tzinfo=datetime.timezone.utc)
+ return (d.days*86400+d.seconds)*1000000+d.microseconds
+public=[r'public\.(?:create-range|cancel-range)\.(?:createdAt|updatedAt|cancelledAt)',r'public\.range-list-a\.items\.\d+\.(?:createdAt|updatedAt|cancelledAt)',r'public\.(?:manual-action-history|final-action-history)\.items\.\d+\.createdAt',r'public\.conflict-list\.items\.\d+\.(?:createdAt|resolvedAt)',r'public\.outbox-events\.items\.\d+\.createdAt',r'public\.outbox-events\.nextCursor\.createdAt',r'public\.(?:batch-list|item-list)\.items\.\d+\.(?:createdAt|receivedAt)']
+for n,right in enumerate(snapshots[1:],1):
+ left=snapshots[0]; mapping={}; reverse={}; used=[]
+ def pair(table):
+  a=left['tables'][table];b=right['tables'][table];assert len(a)==len(b)
+  if not a:return []
+  assert table in keys
+  def key(row):return tuple(mapping.get(row[k],row[k]) if isinstance(row[k],str) else row[k] for k in keys[table])
+  by={key(x['value']):x['value'] for x in b};assert len(by)==len(b)
+  return [(x['value'],by[key(x['value'])]) for x in a]
+ for table,fields in generated.items():
+  for a,b in pair(table):
+   for f in fields:
+    if a[f] is None or b[f] is None:assert a[f]==b[f];continue
+    assert isinstance(a[f],str) and isinstance(b[f],str) and a[f] not in mapping and b[f] not in reverse
+    mapping[a[f]]=b[f];reverse[b[f]]=a[f]
+ report=proof['comparisons'][n-1];assert [{'left':a,'right':b} for a,b in mapping.items()]==report['bijections']
+ times={schema+'.'+e['name'] for schema,cat in left['catalogs'].items() for e in cat if e['kind']=='column' and e['value']['type']=='timestamptz'}
+ times.update('offline.numbering_ranges.creation_receipt.'+k for k in ['createdAt','updatedAt','cancelledAt'])
+ def compare(a,b,address):
+  if type(a)==type(b) and a==b:return
+  if isinstance(a,str) and a in mapping:assert mapping[a]==b,address;return
+  if (address in times or any(re.fullmatch(p,address) for p in public)) and isinstance(a,str) and isinstance(b,str):
+   x,y=micro(a),micro(b);business,until=micro(clock['now']),micro(clock['validUntil']);field=address.split('.')[-1]
+   if x==business or y==business or field in ['valid_until','validUntil']:assert x==y and x==(until if field.startswith('valid') else business),address
+   else:assert business<=x<=micro(left['finishedAt']) and business<=y<=micro(right['finishedAt']),address
+   used.append((address,a,b));return
+  if address.endswith('.response_body_bytes') and isinstance(a,str) and isinstance(b,str):
+   assert a.startswith('\\x') and b.startswith('\\x');compare(json.loads(bytes.fromhex(a[2:])),json.loads(bytes.fromhex(b[2:])),address+'.decodedOriginalResponse');return
+  if address=='outbox.tenant_clock.last_ms':
+   assert str(a).isdigit() and str(b).isdigit();assert micro(clock['now'])-999<=int(a)*1000<=micro(left['finishedAt']) and micro(clock['now'])-999<=int(b)*1000<=micro(right['finishedAt']);used.append((address,a,b));return
+  if address=='offline.numbering_reservations.idempotency_fingerprint':
+   assert re.fullmatch('sha256:[a-f0-9]{64}',a) and re.fullmatch('sha256:[a-f0-9]{64}',b);used.append((address,a,b));return
+  if isinstance(a,list) or isinstance(b,list):
+   assert isinstance(a,list) and isinstance(b,list) and len(a)==len(b),address
+   for i,(x,y) in enumerate(zip(a,b)):compare(x,y,address+'.'+str(i))
+   return
+  if isinstance(a,dict) or isinstance(b,dict):
+   assert isinstance(a,dict) and isinstance(b,dict) and set(a)==set(b),address
+   for k in a:compare(a[k],b[k],address+'.'+k)
+   return
+  raise AssertionError('Unexplained difference '+address)
+ for table in left['tables']:
+  for a,b in pair(table):
+   schema,name=table.split('.');fields={e['name'][len(name)+1:] for e in left['catalogs'][schema] if e['kind']=='column' and e['name'].startswith(name+'.')};assert set(a)==set(b)==fields;compare(a,b,table)
+ assert left['sequences']==right['sequences']
+ a,b=traces[0]['witnesses'],traces[n]['witnesses'];assert [x['name'] for x in a]==[x['name'] for x in b]
+ for x,y in zip(a,b):compare(x['value'],y['value'],'public.'+x['name'])
+ assert sorted(used,key=str)==sorted([(x['address'],x['left'],x['right']) for x in report['causalFieldPairs']],key=str)
+ differences.append({'rightOid':right['subject']['databaseOid'],'bijections':len(mapping),'declaredCausalDifferences':len(used),'unexplainedDifferences':0})
+fingerprints=0
+for s,t in zip(snapshots,traces):
+ w={x['name']:x['value'] for x in t['witnesses']}
+ for e in s['tables']['offline.numbering_reservations']:
+  row=e['value'];inp=w['close-reservation-original-input'] if row['idempotency_key']=='reservation-close' else w['reservation-original-input']
+  normal=datetime.datetime.fromisoformat(inp['validUntil'].replace('Z','+00:00')).isoformat(timespec='milliseconds').replace('+00:00','Z')
+  v={'agentId':row['agent_id'],**{k:inp[k] for k in ['orgUnitId','deviceId','shiftId','entityType','requestedSize','rangeId','series']},'validUntil':normal}
+  actual='sha256:'+hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest();assert actual==row['idempotency_fingerprint'];fingerprints+=1
+result={'kind':'architect-retained-evidence-analysis-not-db-execution','rawTableArraysMatched':raw_tables,'originalFreshRowsMatched':fresh_rows,'publicVerifierPassingChecks':checks,'rawCatalogsEqual':3,'comparisons':differences,'independentlyRecomputedActualRequestFingerprints':fingerprints,'sdkExecuted':False,'databaseAccessed':False,'baselineAdmission':False}
+print(json.dumps(result,indent=2));(Path(__file__).parent/'analysis.json').write_text(json.dumps(result,indent=2)+'\n')

@@ -6,3 +6,5 @@ export * from './signature-policy.js';
 export * from './documents-facade.js';
 export * from './document-trust.js';
 export * from './document-trust.http-adapter.js';
+export * from './signature-trust-runtime.js';
+export * from './signed-document-store.js';

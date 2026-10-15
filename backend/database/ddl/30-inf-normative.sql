@@ -1,4 +1,4 @@
--- Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:41cbbec5aa5c5c6aa56495204f1b421d456abe78852bb03fd76a03715cbde6b1
+-- Generated from BP-INF-NORMATIVE-001 v1.2.0 sha256:ce4605cd48d6677dc9c5dd6373c5e2500e57fbd2f114d497422e06914a937588
 
 -- Regenerable-only DDL for BP-INF-NORMATIVE-001; request-path writes use role_app_backend.
 
@@ -134,7 +134,7 @@ create index if not exists ix_normative_document_template_traffic_agency_id on i
 create table if not exists inf.signature_policy (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
-  traffic_agency_id uuid not null,
+  traffic_agency_id uuid,
   document_kind varchar(80) not null,
   required_signers_json jsonb not null,
   pades_level varchar(40) not null,
@@ -142,11 +142,76 @@ create table if not exists inf.signature_policy (
   pdfa_required boolean default false not null,
   govbr_level varchar(40),
   status varchar(40) default 'active' not null,
+  revision integer default 1 not null,
+  valid_from timestamptz,
+  valid_to timestamptz,
+  minimum_signature_level varchar(20),
+  require_lta boolean,
+  revocation varchar(20),
+  at_time varchar(30),
+  accepted_policies text[],
+  trust_anchors_pem text[],
+  source_ref text,
+  approved_by text,
+  approved_at timestamptz,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
-  constraint pk_signature_policy primary key (id)
+  constraint pk_signature_policy primary key (id),
+  constraint ck_inf_signature_policy_revision check (revision >= 1),
+  constraint ck_inf_signature_policy_validity check (valid_to is null or valid_from < valid_to),
+  constraint ck_inf_signature_policy_minimum_signature_level check (minimum_signature_level in ('ADVANCED', 'QUALIFIED')),
+  constraint ck_inf_signature_policy_pades_level check (pades_level in ('NONE', 'PAdES-B-LT')),
+  constraint ck_inf_signature_policy_revocation check (revocation in ('ocsp', 'crl', 'ocsp-or-crl')),
+  constraint ck_inf_signature_policy_at_time check (at_time in ('signing-time', 'trusted-timestamp')),
+  constraint ck_inf_signature_policy_status check (status in ('draft', 'active'))
 );
-create unique index if not exists ux_inf_signature_policy_document_kind on inf.signature_policy (tenant_id, traffic_agency_id, document_kind);
+alter table inf.signature_policy add column if not exists revision integer default 1 not null;
+alter table inf.signature_policy add column if not exists valid_from timestamptz;
+alter table inf.signature_policy add column if not exists valid_to timestamptz;
+alter table inf.signature_policy add column if not exists minimum_signature_level varchar(20);
+alter table inf.signature_policy add column if not exists require_lta boolean;
+alter table inf.signature_policy add column if not exists revocation varchar(20);
+alter table inf.signature_policy add column if not exists at_time varchar(30);
+alter table inf.signature_policy add column if not exists accepted_policies text[];
+alter table inf.signature_policy add column if not exists trust_anchors_pem text[];
+alter table inf.signature_policy add column if not exists source_ref text;
+alter table inf.signature_policy add column if not exists approved_by text;
+alter table inf.signature_policy add column if not exists approved_at timestamptz;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_revision' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_revision check (revision >= 1);
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_validity' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_validity check (valid_to is null or valid_from < valid_to);
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_minimum_signature_level' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_minimum_signature_level check (minimum_signature_level in ('ADVANCED', 'QUALIFIED'));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_pades_level' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_pades_level check (pades_level in ('NONE', 'PAdES-B-LT'));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_revocation' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_revocation check (revocation in ('ocsp', 'crl', 'ocsp-or-crl'));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_at_time' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_at_time check (at_time in ('signing-time', 'trusted-timestamp'));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_signature_policy_status' and conrelid = 'inf.signature_policy'::regclass) then
+    alter table inf.signature_policy add constraint ck_inf_signature_policy_status check (status in ('draft', 'active'));
+  end if;
+end $$;
 create index if not exists ix_signature_policy_tenant_id on inf.signature_policy (tenant_id);
 create index if not exists ix_signature_policy_traffic_agency_id on inf.signature_policy (traffic_agency_id);
 

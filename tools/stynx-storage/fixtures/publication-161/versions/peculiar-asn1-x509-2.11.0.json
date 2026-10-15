@@ -1,0 +1,100 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@peculiar/asn1-x509",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:29.409000Z",
+    "selection": "versions[2.11.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 199262,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/62/2a/fe7717abe1637278eb1ff103804e85bbc882394b4d411355aedd974b74ba4e599eff391caa3c13f80abf15a3346c9117bd1b8458de3eb39a36da27a3f671",
+    "sourceSha256": "sha256:c22abb167c0de9095d17bc3e34be87045edd6b101f6f5f851a5f3347f9cf6834"
+  },
+  "version": "2.11.0",
+  "versionRecord": {
+    "_from": "file:.release/tarballs/peculiar-asn1-x509-2.11.0.tgz",
+    "_hasShrinkwrap": false,
+    "_id": "@peculiar/asn1-x509@2.11.0",
+    "_integrity": "sha512-J1sHAwGNlk+8J+FeR1eLVc6Gq0T9f9ITc3HWyPYgJraoW6U8AJuQiWVJ3SCEpltfTdpOY7fHdHT5oKAsbK/jww==",
+    "_nodeVersion": "24.21.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/asn1-x509_2.11.0_1791829593886_0.7921996713090167"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "0be4d551-d9f7-480f-bd13-dac86d18e377"
+      }
+    },
+    "_npmVersion": "11.19.0",
+    "_resolved": "/home/runner/work/asn1-schema/asn1-schema/.release/tarballs/peculiar-asn1-x509-2.11.0.tgz",
+    "author": { "name": "PeculiarVentures, LLC" },
+    "bugs": { "url": "https://github.com/PeculiarVentures/asn1-schema/issues" },
+    "dependencies": {
+      "@peculiar/asn1-schema": "^2.11.0",
+      "@peculiar/utils": "^2.0.2",
+      "asn1js": "^3.0.10",
+      "tslib": "^2.8.1"
+    },
+    "description": "ASN.1 schema for X.509 certificates, certificate revocation lists, and related profile structures defined in RFC 5280.",
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@peculiar%2fasn1-x509@2.11.0"
+      },
+      "fileCount": 132,
+      "integrity": "sha512-J1sHAwGNlk+8J+FeR1eLVc6Gq0T9f9ITc3HWyPYgJraoW6U8AJuQiWVJ3SCEpltfTdpOY7fHdHT5oKAsbK/jww==",
+      "shasum": "d7357c86df92e8682edec5c596d1400d4fdb215e",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIA/7qvODkL/utQ9kpXvEX6kzyp3XxsuGzKsKA8RQyLwTAiBy709llCR01wXhcBHn7Rlk63rycYAu46Nrs7wBuz3UMg=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIHAKXutv2k/zQyzrnOEoAce4Tp0l1fVGz2P0XI2deM3jAiEAlg0Y+DlEFx2Kp9VPyX+Atcj15tbSW15FwEjnAPgcV3g="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@peculiar/asn1-x509/-/asn1-x509-2.11.0.tgz",
+      "unpackedSize": 171517
+    },
+    "engines": { "node": ">=14" },
+    "homepage": "https://github.com/PeculiarVentures/asn1-schema/tree/master/packages/x509#readme",
+    "keywords": ["asn", "asn1", "x509", "certificate", "crl", "rfc5280"],
+    "license": "MIT",
+    "main": "build/cjs/index.js",
+    "maintainers": [
+      { "email": "ryan_hurst@hotmail.com", "name": "rmhrisk" },
+      { "email": "microshine@mail.ru", "name": "microshine" },
+      { "email": "yury@strozhevsky.com", "name": "yury.strozhevsky" },
+      { "email": "info@peculiarventures.com", "name": "peculiarventures" },
+      { "email": "apilguk@gmail.com", "name": "apilguk" },
+      { "email": "donskovdmitriyv@gmail.com", "name": "donskov" },
+      { "email": "mihailzachepilo@gmail.com", "name": "worldthirteen" }
+    ],
+    "module": "build/es2015/index.js",
+    "name": "@peculiar/asn1-x509",
+    "publishConfig": { "access": "public" },
+    "repository": {
+      "directory": "packages/x509",
+      "type": "git",
+      "url": "git+https://github.com/PeculiarVentures/asn1-schema.git"
+    },
+    "scripts": {
+      "build": "npm run build:module && npm run build:types",
+      "build:cjs": "tsc -p tsconfig.compile.json --removeComments --module commonjs --outDir build/cjs",
+      "build:es2015": "tsc -p tsconfig.compile.json --removeComments --module ES2015 --outDir build/es2015",
+      "build:module": "npm run build:cjs && npm run build:es2015",
+      "build:types": "tsc -p tsconfig.compile.json --outDir build/types --declaration --emitDeclarationOnly",
+      "clear": "rimraf build",
+      "prebuild:types": "rimraf build/types",
+      "rebuild": "npm run clear && npm run build"
+    },
+    "types": "build/types/index.d.ts",
+    "version": "2.11.0"
+  }
+}

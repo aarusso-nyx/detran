@@ -1,0 +1,95 @@
+{
+  "formatVersion": 1,
+  "kind": "reviewed-emulated-projector-runtime-proof",
+  "issuer": "/root",
+  "role": "Engineer",
+  "status": "ADMITTED_ONE_EMULATED_PROJECTION",
+  "maximumInvocations": 1,
+  "sourceBeforeProof": {
+    "path": "tools/stynx-storage/retained-observations/projector-emulated-disabled-source.mjs.raw",
+    "bytes": 71623,
+    "sha256": "sha256:193b8d3157922ff032609c7c84c39f25034398555a7c129623d8f15d1f21ed70"
+  },
+  "probeEvidence": [
+    {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-probe/diagnosis.json.raw",
+      "bytes": 3207,
+      "sha256": "sha256:688829b3b465980c6a44e492f5a71acbdeefffc3e4814e6d0e4468a9e686cadb"
+    },
+    {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-probe/stderr.log.raw",
+      "bytes": 102281,
+      "sha256": "sha256:df5cfcdab7cac8b441714dcc17b638ed1a23c925a7d87491db6d4714929a6d5f"
+    },
+    {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-probe/invocation.json.raw",
+      "bytes": 1750,
+      "sha256": "sha256:92908bce39ebfe0b194161ccbbb89d1fd1933ffe6a8419c1662253acb05d6d06"
+    },
+    {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-probe/node.json.raw",
+      "bytes": 788,
+      "sha256": "sha256:e25a4e2a78184d83abdf1638c4994b68aa81fe3890f56dc31fd3a70e4cd91cde"
+    },
+    {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-probe/container-inspect.json.raw",
+      "bytes": 10633,
+      "sha256": "sha256:3dda157668c79e5096fc61473b44dddda7d5eca35f33d239d0c269ab8e0449a8"
+    }
+  ],
+  "container": {
+    "id": "7213322fa4a0964d388df5facdc7078379293dddcaa432c353723b490cc8ebb7",
+    "imageId": "sha256:570db3b6276873f9cd226ce399a53f04e8191b69906e0df694cedaa25bc1e3cb",
+    "imageDigest": "postgres@sha256:d32327f755bcd7d850eddf4880835c93d2294a2de1989e7123f5866ff0072f96",
+    "inspect": {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-projector-container-inspect.json.raw",
+      "bytes": 12399,
+      "sha256": "sha256:a066478855b656f1ad3d2c178da8f60ccac929553f86b192af27ac90942c05af"
+    },
+    "hostname": "7213322fa4a0",
+    "hostArchitecture": "aarch64",
+    "guestArchitecture": "x86_64"
+  },
+  "processExpected": {
+    "repositoryRoot": "/repo",
+    "hostname": "7213322fa4a0",
+    "executablePath": "/node",
+    "nodeVersion": "v24.20.0",
+    "nodeSha256": "89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7",
+    "platform": "linux",
+    "arch": "x64",
+    "uid": 999,
+    "gid": 999,
+    "loaders": {
+      "internal/modules/cjs/loader": "a3e3ee095d409597bf224522411607aa7d2f4747cf42b5329179bf3b4b5528ed",
+      "internal/modules/customization_hooks": "02cf07c29fd2c4701ccc19395d5d0b11968aee34a9aefb37b5684f7248c457f7",
+      "internal/modules/helpers": "3d6d6d7c7257610dcee83c76f29d6314ba56af5560faf50650a025fd9a56bbb3"
+    }
+  },
+  "invocation": {
+    "argvTemplate": [
+      "/node",
+      "/repo/tools/stynx-storage-project-published.mjs",
+      "/repo"
+    ],
+    "workingDirectory": "/repo",
+    "environmentTemplate": {
+      "LANG": "C",
+      "LC_ALL": "C",
+      "TZ": "UTC",
+      "DETRAN_STYNX_PROJECTOR_EXECUTION_SHA": "<sha256-of-this-record>"
+    },
+    "createRecord": {
+      "path": "tools/stynx-storage/retained-observations/linux-emulated-projector-create-record.json.raw",
+      "bytes": 3824,
+      "sha256": "sha256:a9663e8652d5a081f33b1e98bac5c17ffe6a68afc2aa390344c359b9b642b920"
+    }
+  },
+  "limits": {
+    "nativeCiAcceptance": false,
+    "productionAdmission": false,
+    "sdkExecutedInProbe": false,
+    "sqlAccess": false,
+    "capabilityOrSeccompChange": false
+  }
+}

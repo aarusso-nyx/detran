@@ -1,0 +1,803 @@
+{
+  "formatVersion": 1,
+  "kind": "static-optional-dynamic-boundary-review-input",
+  "sdkExecuted": false,
+  "staticGraph": {
+    "path": "static-module-graph.json",
+    "sha256": "716cfa56cdd8c2203edc472ea03fcc215110070a42d839b1854b66a19997e66e"
+  },
+  "sites": [
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/common/utils/load-package.util.js",
+      "line": 9,
+      "column": 40,
+      "expression": "packageName",
+      "fileSha256": "8fc26b273fe5499285e25355b4368fe8e1527ae217ede53144219c17cf1aa721",
+      "sourceWindow": [
+        {
+          "line": 5,
+          "text": "const MISSING_REQUIRED_DEPENDENCY = (name, reason) => `The \"${name}\" package is missing. Please, make sure to install it to take advantage of ${reason}.`;"
+        },
+        {
+          "line": 6,
+          "text": "const logger = new logger_service_1.Logger('PackageLoader');"
+        },
+        {
+          "line": 7,
+          "text": "function loadPackage(packageName, context, loaderFn) {"
+        },
+        {
+          "line": 8,
+          "text": "    try {"
+        },
+        {
+          "line": 9,
+          "text": "        return loaderFn ? loaderFn() : require(packageName);"
+        },
+        {
+          "line": 10,
+          "text": "    }"
+        },
+        {
+          "line": 11,
+          "text": "    catch (e) {"
+        },
+        {
+          "line": 12,
+          "text": "        logger.error(MISSING_REQUIRED_DEPENDENCY(packageName, context));"
+        },
+        {
+          "line": 13,
+          "text": "        logger_service_1.Logger.flush();"
+        },
+        {
+          "line": 14,
+          "text": "        process.exit(1);"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "dynamic-import",
+      "from": "node_modules/load-esm/index.js",
+      "line": 2,
+      "column": 26,
+      "expression": "module",
+      "fileSha256": "ec22997053215428e98d2de3d9a89f8a98366452fe95d5e2b8d5a2924f41eead",
+      "sourceWindow": [
+        {
+          "line": 1,
+          "text": "module.exports = {"
+        },
+        {
+          "line": 2,
+          "text": "    loadEsm: (module) => import(module)"
+        },
+        {
+          "line": 3,
+          "text": "};"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/helpers/optional-require.js",
+      "line": 6,
+      "column": 40,
+      "expression": "packageName",
+      "fileSha256": "c8a109dab1b2461e866fe04b8be5988ccc199a2239c730abc05fc28c0f85d7f2",
+      "sourceWindow": [
+        {
+          "line": 2,
+          "text": "Object.defineProperty(exports, \"__esModule\", { value: true });"
+        },
+        {
+          "line": 3,
+          "text": "exports.optionalRequire = optionalRequire;"
+        },
+        {
+          "line": 4,
+          "text": "function optionalRequire(packageName, loaderFn) {"
+        },
+        {
+          "line": 5,
+          "text": "    try {"
+        },
+        {
+          "line": 6,
+          "text": "        return loaderFn ? loaderFn() : require(packageName);"
+        },
+        {
+          "line": 7,
+          "text": "    }"
+        },
+        {
+          "line": 8,
+          "text": "    catch (e) {"
+        },
+        {
+          "line": 9,
+          "text": "        return {};"
+        },
+        {
+          "line": 10,
+          "text": "    }"
+        },
+        {
+          "line": 11,
+          "text": "}"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/helpers/load-adapter.js",
+      "line": 9,
+      "column": 40,
+      "expression": "defaultPlatform",
+      "fileSha256": "7970867a441f356a2e257a12e43dbb8022b58631b3076f298058abb46270009a",
+      "sourceWindow": [
+        {
+          "line": 5,
+          "text": "const MISSING_REQUIRED_DEPENDENCY = (defaultPlatform, transport) => `No driver (${transport}) has been selected. In order to take advantage of the default driver, please, ensure to install the \"${defaultPlatform}\" package ($ npm install ${defaultPlatform}).`;"
+        },
+        {
+          "line": 6,
+          "text": "const logger = new common_1.Logger('PackageLoader');"
+        },
+        {
+          "line": 7,
+          "text": "function loadAdapter(defaultPlatform, transport, loaderFn) {"
+        },
+        {
+          "line": 8,
+          "text": "    try {"
+        },
+        {
+          "line": 9,
+          "text": "        return loaderFn ? loaderFn() : require(defaultPlatform);"
+        },
+        {
+          "line": 10,
+          "text": "    }"
+        },
+        {
+          "line": 11,
+          "text": "    catch (e) {"
+        },
+        {
+          "line": 12,
+          "text": "        logger.error(MISSING_REQUIRED_DEPENDENCY(defaultPlatform, transport));"
+        },
+        {
+          "line": 13,
+          "text": "        process.exit(1);"
+        },
+        {
+          "line": 14,
+          "text": "    }"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/common/serializer/class-serializer.interceptor.js",
+      "line": 25,
+      "column": 111,
+      "specifier": "class-transformer",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "6d61ad18b762fd3092927b0463b195a5bc63900dc64561e3b335353b27466322",
+      "sourceWindow": [
+        {
+          "line": 21,
+          "text": "        this.reflector = reflector;"
+        },
+        {
+          "line": 22,
+          "text": "        this.defaultOptions = defaultOptions;"
+        },
+        {
+          "line": 23,
+          "text": "        classTransformer ="
+        },
+        {
+          "line": 24,
+          "text": "            defaultOptions?.transformerPackage ??"
+        },
+        {
+          "line": 25,
+          "text": "                (0, load_package_util_1.loadPackage)('class-transformer', 'ClassSerializerInterceptor', () => require('class-transformer'));"
+        },
+        {
+          "line": 26,
+          "text": "        if (!defaultOptions?.transformerPackage) {"
+        },
+        {
+          "line": 27,
+          "text": "            require('class-transformer');"
+        },
+        {
+          "line": 28,
+          "text": "        }"
+        },
+        {
+          "line": 29,
+          "text": "    }"
+        },
+        {
+          "line": 30,
+          "text": "    intercept(context, next) {"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/common/serializer/class-serializer.interceptor.js",
+      "line": 27,
+      "column": 13,
+      "specifier": "class-transformer",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "6d61ad18b762fd3092927b0463b195a5bc63900dc64561e3b335353b27466322",
+      "sourceWindow": [
+        {
+          "line": 23,
+          "text": "        classTransformer ="
+        },
+        {
+          "line": 24,
+          "text": "            defaultOptions?.transformerPackage ??"
+        },
+        {
+          "line": 25,
+          "text": "                (0, load_package_util_1.loadPackage)('class-transformer', 'ClassSerializerInterceptor', () => require('class-transformer'));"
+        },
+        {
+          "line": 26,
+          "text": "        if (!defaultOptions?.transformerPackage) {"
+        },
+        {
+          "line": 27,
+          "text": "            require('class-transformer');"
+        },
+        {
+          "line": 28,
+          "text": "        }"
+        },
+        {
+          "line": 29,
+          "text": "    }"
+        },
+        {
+          "line": 30,
+          "text": "    intercept(context, next) {"
+        },
+        {
+          "line": 31,
+          "text": "        const contextOptions = this.getContextOptions(context);"
+        },
+        {
+          "line": 32,
+          "text": "        const options = {"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/common/pipes/validation.pipe.js",
+      "line": 43,
+      "column": 93,
+      "specifier": "class-validator",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "8aa8641bab63472b38b8233742fb74c04cbb35cd654e7850c23662ed79b8300f",
+      "sourceWindow": [
+        {
+          "line": 39,
+          "text": "        classTransformer = this.loadTransformer(transformerPackage);"
+        },
+        {
+          "line": 40,
+          "text": "    }"
+        },
+        {
+          "line": 41,
+          "text": "    loadValidator(validatorPackage) {"
+        },
+        {
+          "line": 42,
+          "text": "        return (validatorPackage ??"
+        },
+        {
+          "line": 43,
+          "text": "            (0, load_package_util_1.loadPackage)('class-validator', 'ValidationPipe', () => require('class-validator')));"
+        },
+        {
+          "line": 44,
+          "text": "    }"
+        },
+        {
+          "line": 45,
+          "text": "    loadTransformer(transformerPackage) {"
+        },
+        {
+          "line": 46,
+          "text": "        return (transformerPackage ??"
+        },
+        {
+          "line": 47,
+          "text": "            (0, load_package_util_1.loadPackage)('class-transformer', 'ValidationPipe', () => require('class-transformer')));"
+        },
+        {
+          "line": 48,
+          "text": "    }"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/common/pipes/validation.pipe.js",
+      "line": 47,
+      "column": 95,
+      "specifier": "class-transformer",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "8aa8641bab63472b38b8233742fb74c04cbb35cd654e7850c23662ed79b8300f",
+      "sourceWindow": [
+        {
+          "line": 43,
+          "text": "            (0, load_package_util_1.loadPackage)('class-validator', 'ValidationPipe', () => require('class-validator')));"
+        },
+        {
+          "line": 44,
+          "text": "    }"
+        },
+        {
+          "line": 45,
+          "text": "    loadTransformer(transformerPackage) {"
+        },
+        {
+          "line": 46,
+          "text": "        return (transformerPackage ??"
+        },
+        {
+          "line": 47,
+          "text": "            (0, load_package_util_1.loadPackage)('class-transformer', 'ValidationPipe', () => require('class-transformer')));"
+        },
+        {
+          "line": 48,
+          "text": "    }"
+        },
+        {
+          "line": 49,
+          "text": "    async transform(value, metadata) {"
+        },
+        {
+          "line": 50,
+          "text": "        if (this.expectedType) {"
+        },
+        {
+          "line": 51,
+          "text": "            metadata = { ...metadata, metatype: this.expectedType };"
+        },
+        {
+          "line": 52,
+          "text": "        }"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/nest-application.js",
+      "line": 19,
+      "column": 108,
+      "specifier": "@nestjs/websockets/socket-module",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "330de92d0d136aae933fde9f6c5021b0e9d91a8df319c49a88a2c920940e2dc2",
+      "sourceWindow": [
+        {
+          "line": 15,
+          "text": "const middleware_module_1 = require(\"./middleware/middleware-module\");"
+        },
+        {
+          "line": 16,
+          "text": "const utils_1 = require(\"./middleware/utils\");"
+        },
+        {
+          "line": 17,
+          "text": "const nest_application_context_1 = require(\"./nest-application-context\");"
+        },
+        {
+          "line": 18,
+          "text": "const routes_resolver_1 = require(\"./router/routes-resolver\");"
+        },
+        {
+          "line": 19,
+          "text": "const { SocketModule } = (0, optional_require_1.optionalRequire)('@nestjs/websockets/socket-module', () => require('@nestjs/websockets/socket-module'));"
+        },
+        {
+          "line": 20,
+          "text": "const { MicroservicesModule } = (0, optional_require_1.optionalRequire)('@nestjs/microservices/microservices-module', () => require('@nestjs/microservices/microservices-module'));"
+        },
+        {
+          "line": 21,
+          "text": "/**"
+        },
+        {
+          "line": 22,
+          "text": " * @publicApi"
+        },
+        {
+          "line": 23,
+          "text": " */"
+        },
+        {
+          "line": 24,
+          "text": "class NestApplication extends nest_application_context_1.NestApplicationContext {"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/nest-application.js",
+      "line": 20,
+      "column": 125,
+      "specifier": "@nestjs/microservices/microservices-module",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "330de92d0d136aae933fde9f6c5021b0e9d91a8df319c49a88a2c920940e2dc2",
+      "sourceWindow": [
+        {
+          "line": 16,
+          "text": "const utils_1 = require(\"./middleware/utils\");"
+        },
+        {
+          "line": 17,
+          "text": "const nest_application_context_1 = require(\"./nest-application-context\");"
+        },
+        {
+          "line": 18,
+          "text": "const routes_resolver_1 = require(\"./router/routes-resolver\");"
+        },
+        {
+          "line": 19,
+          "text": "const { SocketModule } = (0, optional_require_1.optionalRequire)('@nestjs/websockets/socket-module', () => require('@nestjs/websockets/socket-module'));"
+        },
+        {
+          "line": 20,
+          "text": "const { MicroservicesModule } = (0, optional_require_1.optionalRequire)('@nestjs/microservices/microservices-module', () => require('@nestjs/microservices/microservices-module'));"
+        },
+        {
+          "line": 21,
+          "text": "/**"
+        },
+        {
+          "line": 22,
+          "text": " * @publicApi"
+        },
+        {
+          "line": 23,
+          "text": " */"
+        },
+        {
+          "line": 24,
+          "text": "class NestApplication extends nest_application_context_1.NestApplicationContext {"
+        },
+        {
+          "line": 25,
+          "text": "    constructor(container, httpAdapter, config, graphInspector, appOptions = {}) {"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/nest-application.js",
+      "line": 128,
+      "column": 121,
+      "specifier": "@nestjs/microservices",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "330de92d0d136aae933fde9f6c5021b0e9d91a8df319c49a88a2c920940e2dc2",
+      "sourceWindow": [
+        {
+          "line": 124,
+          "text": "        this.routesResolver.registerNotFoundHandler();"
+        },
+        {
+          "line": 125,
+          "text": "        this.routesResolver.registerExceptionHandler();"
+        },
+        {
+          "line": 126,
+          "text": "    }"
+        },
+        {
+          "line": 127,
+          "text": "    connectMicroservice(microserviceOptions, hybridAppOptions = {}) {"
+        },
+        {
+          "line": 128,
+          "text": "        const { NestMicroservice } = (0, load_package_util_1.loadPackage)('@nestjs/microservices', 'NestFactory', () => require('@nestjs/microservices'));"
+        },
+        {
+          "line": 129,
+          "text": "        const { inheritAppConfig } = hybridAppOptions;"
+        },
+        {
+          "line": 130,
+          "text": "        const applicationConfig = inheritAppConfig"
+        },
+        {
+          "line": 131,
+          "text": "            ? this.config"
+        },
+        {
+          "line": 132,
+          "text": "            : new application_config_1.ApplicationConfig();"
+        },
+        {
+          "line": 133,
+          "text": "        const instance = new NestMicroservice(this.container, microserviceOptions, this.graphInspector, applicationConfig);"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/nest-factory.js",
+      "line": 58,
+      "column": 121,
+      "specifier": "@nestjs/microservices",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "79a2d69a3816102b76a9fbee99c9d9619189cabfb2eb76da1dfa715935cba593",
+      "sourceWindow": [
+        {
+          "line": 54,
+          "text": "     * @returns A promise that, when resolved,"
+        },
+        {
+          "line": 55,
+          "text": "     * contains a reference to the NestMicroservice instance."
+        },
+        {
+          "line": 56,
+          "text": "     */"
+        },
+        {
+          "line": 57,
+          "text": "    async createMicroservice(moduleCls, options) {"
+        },
+        {
+          "line": 58,
+          "text": "        const { NestMicroservice } = (0, load_package_util_1.loadPackage)('@nestjs/microservices', 'NestFactory', () => require('@nestjs/microservices'));"
+        },
+        {
+          "line": 59,
+          "text": "        const applicationConfig = new application_config_1.ApplicationConfig();"
+        },
+        {
+          "line": 60,
+          "text": "        const container = new container_1.NestContainer(applicationConfig, options);"
+        },
+        {
+          "line": 61,
+          "text": "        const graphInspector = this.createGraphInspector(options, container);"
+        },
+        {
+          "line": 62,
+          "text": "        this.setAbortOnError(options);"
+        },
+        {
+          "line": 63,
+          "text": "        this.registerLoggerConfiguration(options);"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/@nestjs/core/nest-factory.js",
+      "line": 175,
+      "column": 110,
+      "specifier": "@nestjs/platform-express",
+      "guardedByTryCatch": false,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "79a2d69a3816102b76a9fbee99c9d9619189cabfb2eb76da1dfa715935cba593",
+      "sourceWindow": [
+        {
+          "line": 171,
+          "text": "        }"
+        },
+        {
+          "line": 172,
+          "text": "        this.autoFlushLogs = autoFlushLogs ?? true;"
+        },
+        {
+          "line": 173,
+          "text": "    }"
+        },
+        {
+          "line": 174,
+          "text": "    createHttpAdapter(httpServer) {"
+        },
+        {
+          "line": 175,
+          "text": "        const { ExpressAdapter } = (0, load_adapter_1.loadAdapter)('@nestjs/platform-express', 'HTTP', () => require('@nestjs/platform-express'));"
+        },
+        {
+          "line": 176,
+          "text": "        return new ExpressAdapter(httpServer);"
+        },
+        {
+          "line": 177,
+          "text": "    }"
+        },
+        {
+          "line": 178,
+          "text": "    isHttpServer(serverOrOptions) {"
+        },
+        {
+          "line": 179,
+          "text": "        return !!(serverOrOptions && serverOrOptions.patch);"
+        },
+        {
+          "line": 180,
+          "text": "    }"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "require",
+      "from": "node_modules/pg/lib/native/client.js",
+      "line": 7,
+      "column": 12,
+      "specifier": "pg-native",
+      "guardedByTryCatch": true,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "53d4a4756bb7a33b08154c08047c48421216297bf9033a31445bbb24dc233ebe",
+      "sourceWindow": [
+        {
+          "line": 3,
+          "text": "var Native"
+        },
+        {
+          "line": 4,
+          "text": "// eslint-disable-next-line no-useless-catch"
+        },
+        {
+          "line": 5,
+          "text": "try {"
+        },
+        {
+          "line": 6,
+          "text": "  // Wrap this `require()` in a try-catch to avoid upstream bundlers from complaining that this might not be available since it is an optional import"
+        },
+        {
+          "line": 7,
+          "text": "  Native = require('pg-native')"
+        },
+        {
+          "line": 8,
+          "text": "} catch (e) {"
+        },
+        {
+          "line": 9,
+          "text": "  throw e"
+        },
+        {
+          "line": 10,
+          "text": "}"
+        },
+        {
+          "line": 11,
+          "text": "const TypeOverrides = require('../type-overrides')"
+        },
+        {
+          "line": 12,
+          "text": "const EventEmitter = require('events').EventEmitter"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    },
+    {
+      "kind": "dynamic-import",
+      "from": "node_modules/@redis/client/dist/lib/utils/digest.js",
+      "line": 8,
+      "column": 34,
+      "specifier": "@node-rs/xxhash",
+      "guardedByTryCatch": true,
+      "code": "MODULE_NOT_FOUND",
+      "fileSha256": "a04fc03ab1778527ba4b65bdfa5750ac9b9b6686fc572011cf07c244cbf3251b",
+      "sourceWindow": [
+        {
+          "line": 4,
+          "text": "let xxh3Cache = null;"
+        },
+        {
+          "line": 5,
+          "text": "async function getXxh3() {"
+        },
+        {
+          "line": 6,
+          "text": "    if (!xxh3Cache) {"
+        },
+        {
+          "line": 7,
+          "text": "        try {"
+        },
+        {
+          "line": 8,
+          "text": "            const module = await import('@node-rs/xxhash');"
+        },
+        {
+          "line": 9,
+          "text": "            xxh3Cache = module.xxh3;"
+        },
+        {
+          "line": 10,
+          "text": "        }"
+        },
+        {
+          "line": 11,
+          "text": "        catch {"
+        },
+        {
+          "line": 12,
+          "text": "            throw new Error('The \"digest\" function requires the \"@node-rs/xxhash\" package, but it was not found.');"
+        },
+        {
+          "line": 13,
+          "text": "        }"
+        }
+      ],
+      "disposition": "pending-independent-F1-F3-review"
+    }
+  ],
+  "relatedSources": [
+    {
+      "path": "node_modules/@nestjs/core/helpers/optional-require.js",
+      "sha256": "c8a109dab1b2461e866fe04b8be5988ccc199a2239c730abc05fc28c0f85d7f2",
+      "source": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.optionalRequire = optionalRequire;\nfunction optionalRequire(packageName, loaderFn) {\n    try {\n        return loaderFn ? loaderFn() : require(packageName);\n    }\n    catch (e) {\n        return {};\n    }\n}\n"
+    },
+    {
+      "path": "node_modules/pg/lib/index.js",
+      "sha256": "3fad6e6d3d976edbabe0cbc9e1d39f4340bcb719bbbb186a0d3a24f3dbd4a94c",
+      "source": "'use strict'\n\nconst Client = require('./client')\nconst defaults = require('./defaults')\nconst Connection = require('./connection')\nconst Result = require('./result')\nconst utils = require('./utils')\nconst Pool = require('pg-pool')\nconst TypeOverrides = require('./type-overrides')\nconst { DatabaseError } = require('pg-protocol')\nconst { escapeIdentifier, escapeLiteral } = require('./utils')\n\nconst poolFactory = (Client) => {\n  return class BoundPool extends Pool {\n    constructor(options) {\n      super(options, Client)\n    }\n  }\n}\n\nconst PG = function (clientConstructor) {\n  this.defaults = defaults\n  this.Client = clientConstructor\n  this.Query = this.Client.Query\n  this.Pool = poolFactory(this.Client)\n  this._pools = []\n  this.Connection = Connection\n  this.types = require('pg-types')\n  this.DatabaseError = DatabaseError\n  this.TypeOverrides = TypeOverrides\n  this.escapeIdentifier = escapeIdentifier\n  this.escapeLiteral = escapeLiteral\n  this.Result = Result\n  this.utils = utils\n}\n\nlet clientConstructor = Client\n\nlet forceNative = false\ntry {\n  forceNative = !!process.env.NODE_PG_FORCE_NATIVE\n} catch {\n  // ignore, e.g., Deno without --allow-env\n}\n\nif (forceNative) {\n  clientConstructor = require('./native')\n}\n\nmodule.exports = new PG(clientConstructor)\n\n// lazy require native module...the native module may not have installed\nObject.defineProperty(module.exports, 'native', {\n  configurable: true,\n  enumerable: false,\n  get() {\n    let native = null\n    try {\n      native = new PG(require('./native'))\n    } catch (err) {\n      if (err.code !== 'MODULE_NOT_FOUND') {\n        throw err\n      }\n    }\n\n    // overwrite module.exports.native so that getter is never called again\n    Object.defineProperty(module.exports, 'native', {\n      value: native,\n    })\n\n    return native\n  },\n})\n"
+    },
+    {
+      "path": "node_modules/@redis/client/dist/lib/utils/digest.js",
+      "sha256": "a04fc03ab1778527ba4b65bdfa5750ac9b9b6686fc572011cf07c244cbf3251b",
+      "source": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.digest = void 0;\nlet xxh3Cache = null;\nasync function getXxh3() {\n    if (!xxh3Cache) {\n        try {\n            const module = await import('@node-rs/xxhash');\n            xxh3Cache = module.xxh3;\n        }\n        catch {\n            throw new Error('The \"digest\" function requires the \"@node-rs/xxhash\" package, but it was not found.');\n        }\n    }\n    return xxh3Cache;\n}\n/**\n * Computes a deterministic 64-bit XXH3 digest of the input.\n *\n * This produces the same digest that Redis computes internally via the `DIGEST` command,\n * allowing you to use it with conditional SET and DELEX operations (`IFDEQ`, `IFDNE`).\n *\n * @param value - The value to compute the digest for (string or Buffer)\n * @returns A 16-character lowercase hexadecimal digest\n * @throws If the `@node-rs/xxhash` package is not found\n */\nasync function digest(value) {\n    const xxh3 = await getXxh3();\n    const data = typeof value === 'string' ? value : new Uint8Array(value);\n    const hash = xxh3.xxh64(data);\n    return hash.toString(16).padStart(16, '0');\n}\nexports.digest = digest;\n//# sourceMappingURL=digest.js.map"
+    },
+    {
+      "path": "node_modules/load-esm/index.js",
+      "sha256": "ec22997053215428e98d2de3d9a89f8a98366452fe95d5e2b8d5a2924f41eead",
+      "source": "module.exports = {\n    loadEsm: (module) => import(module)\n};"
+    },
+    {
+      "path": "node_modules/@nestjs/common/utils/load-package.util.js",
+      "sha256": "8fc26b273fe5499285e25355b4368fe8e1527ae217ede53144219c17cf1aa721",
+      "source": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.loadPackage = loadPackage;\nconst logger_service_1 = require(\"../services/logger.service\");\nconst MISSING_REQUIRED_DEPENDENCY = (name, reason) => `The \"${name}\" package is missing. Please, make sure to install it to take advantage of ${reason}.`;\nconst logger = new logger_service_1.Logger('PackageLoader');\nfunction loadPackage(packageName, context, loaderFn) {\n    try {\n        return loaderFn ? loaderFn() : require(packageName);\n    }\n    catch (e) {\n        logger.error(MISSING_REQUIRED_DEPENDENCY(packageName, context));\n        logger_service_1.Logger.flush();\n        process.exit(1);\n    }\n}\n"
+    },
+    {
+      "path": "node_modules/@nestjs/core/helpers/load-adapter.js",
+      "sha256": "7970867a441f356a2e257a12e43dbb8022b58631b3076f298058abb46270009a",
+      "source": "\"use strict\";\nObject.defineProperty(exports, \"__esModule\", { value: true });\nexports.loadAdapter = loadAdapter;\nconst common_1 = require(\"@nestjs/common\");\nconst MISSING_REQUIRED_DEPENDENCY = (defaultPlatform, transport) => `No driver (${transport}) has been selected. In order to take advantage of the default driver, please, ensure to install the \"${defaultPlatform}\" package ($ npm install ${defaultPlatform}).`;\nconst logger = new common_1.Logger('PackageLoader');\nfunction loadAdapter(defaultPlatform, transport, loaderFn) {\n    try {\n        return loaderFn ? loaderFn() : require(defaultPlatform);\n    }\n    catch (e) {\n        logger.error(MISSING_REQUIRED_DEPENDENCY(defaultPlatform, transport));\n        process.exit(1);\n    }\n}\n"
+    }
+  ],
+  "status": "awaiting-independent-disposition"
+}

@@ -58,7 +58,7 @@ services:
       DATABASE_URL: postgres://postgres:postgres@db:5432/senatran
       AUTH_CERT_SIMULATION: 'on'
     ports:
-      - '3000:3000'
+      - '127.0.0.1:3000:3000'
     healthcheck:
       test:
         - CMD

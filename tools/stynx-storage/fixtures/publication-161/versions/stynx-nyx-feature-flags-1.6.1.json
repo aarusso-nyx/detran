@@ -1,0 +1,55 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/feature-flags",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:35.818968+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 135257,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-feature-flags-1.6.1.json",
+    "sourceSha256": "sha256:d83f475ad1c26c4206029fba4e1fae46415c013dab6113c6e51045ea907dfec0"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "description": "Tenant and environment scoped feature flag provider for stynx",
+    "devDependencies": { "@types/node": "24.13.4", "typescript": "^6.0.3" },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-oOUXsghvcoa34AsQ+B8UXA+aDNoPSEN6rqQI5VQjGBVFmKXlj7GS8jJcgCRRULPCBputRLbxwnkru8NQpOcZ1A==",
+      "shasum": "10968d6a4959f7202f6b2a09429eee3f21c4160c",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/feature-flags/1.6.1/10968d6a4959f7202f6b2a09429eee3f21c4160c"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/feature-flags/src/index.js",
+    "name": "@stynx-nyx/feature-flags",
+    "readme": "# `@stynx-nyx/feature-flags` — minimal feature-flag contract with in-memory default + pluggable providers\n\n`@stynx-nyx/feature-flags` is a minimal feature-flag contract. It exposes `FeatureFlagProvider.evaluate(flag, context)` returning a typed `FlagEvaluation`. Default provider reads from a static `FlagSet` (in-memory + file-backed). Custom providers (LaunchDarkly, Unleash, your own) implement the interface.\n\n## Purpose\n\nFeature flags + experimentation tooling is a big ecosystem; most STYNX apps don't need a full platform. `@stynx-nyx/feature-flags` provides the _contract_ so per-app feature toggles use a consistent shape, while leaving the provider implementation open for swap-in if/when you scale to a hosted service.\n\nYou reach for it any time you want to gate a code path behind a flag. Start with the in-memory provider; swap to LaunchDarkly later without touching call sites.\n\nWhat it does NOT do: it doesn't run experiments (no A/B + analytics). It doesn't ship a UI for managing flags. It doesn't ship adapters for hosted services (you implement that adapter against the provider contract).\n\n## Audience\n\nBackend developers gating new code paths.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/feature-flags\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { InMemoryFeatureFlagProvider } from '@stynx-nyx/feature-flags';\n\nconst provider = new InMemoryFeatureFlagProvider({\n  flags: {\n    'new-checkout-flow': { value: false, rolloutPct: 10 },\n  },\n});\n\nconst evalResult = await provider.evaluate('new-checkout-flow', {\n  actorId: 'user-1',\n  tenantId: 'tenant-a',\n});\nif (evalResult.value) {\n  /* show new flow */\n}\n```\n\n## Public API surface\n\n### Types / Interfaces\n\n| Export                | Description                                                                         |\n| --------------------- | ----------------------------------------------------------------------------------- |\n| `FeatureFlagProvider` | The provider contract: `evaluate(flag, context): Promise<FlagEvaluation>`.          |\n| `FlagDefinition`      | `{ value, rolloutPct?, predicate? }`.                                               |\n| `FlagEvaluation`      | `{ value: FlagValue, reason: 'static' \\| 'rollout' \\| 'predicate' \\| 'fallback' }`. |\n| `FlagContext`         | Per-evaluation context: `{ actorId, tenantId, attrs? }`.                            |\n| `FlagSet`             | `Record<string, FlagDefinition>`.                                                   |\n| `FlagValue`           | `boolean \\| string \\| number`.                                                      |\n\n### Default impl\n\n| Export                        | Description                                                                              |\n| ----------------------------- | ---------------------------------------------------------------------------------------- |\n| `InMemoryFeatureFlagProvider` | Reads from a static `FlagSet`. Supports rollout-percentage via deterministic actor hash. |\n| `loadFlagSet`                 | `(path: string): Promise<FlagSet>` — load a JSON file into a `FlagSet`.                  |\n\n## Configuration\n\nThis package exposes no NestJS module — providers are instantiated and injected manually (or via your own DI registration). Typical pattern:\n\n```ts\n@Module({\n  providers: [\n    {\n      provide: 'FeatureFlags',\n      useFactory: async () =>\n        new InMemoryFeatureFlagProvider({\n          flags: await loadFlagSet(process.env.FLAGS_PATH ?? './flags.json'),\n        }),\n    },\n  ],\n  exports: ['FeatureFlags'],\n})\nexport class FeatureFlagsModule {}\n```\n\n## Examples\n\n### Example 1 — boolean flag with rollout\n\n```ts\nflags: {\n  'new-flow': { value: true, rolloutPct: 25 },\n}\n// Evaluates to true for ~25% of actors (deterministic by actorId hash)\n```\n\n### Example 2 — predicate flag\n\n```ts\nflags: {\n  'admin-features': {\n    value: false,\n    predicate: (ctx) => ctx.attrs?.role === 'admin',\n  },\n}\n```\n\n### Example 3 — custom provider (LaunchDarkly-style)\n\n```ts\nclass LaunchDarklyProvider implements FeatureFlagProvider {\n  async evaluate(flag: string, ctx: FlagContext): Promise<FlagEvaluation> {\n    const value = await ldClient.variation(flag, { key: ctx.actorId }, false);\n    return { value, reason: 'static' };\n  }\n}\n```\n\n## Common pitfalls\n\n- **Flag context not derived from request** — if your code doesn't pass actor + tenant, rollouts behave as anonymous. Wire via `@stynx-nyx/core`'s `RequestContext` at the controller layer.\n- **File-backed flag refresh latency** — `loadFlagSet()` reads once. For runtime updates, swap the provider or wrap with a TTL-cached refresher.\n- **Rollout percentage drift across instances** — `InMemoryFeatureFlagProvider` uses a deterministic hash of `actorId`; same actor sees same flag value across instances. If you change the hash strategy, the cohort shifts.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` for `FlagContext` projection.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-feature-flags/`](/docs/api-reference/stynx-feature-flags/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n_None._\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n_None._\n\n### Development-only dependencies\n\n- `@types/node`: `24.13.4`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/feature-flags",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

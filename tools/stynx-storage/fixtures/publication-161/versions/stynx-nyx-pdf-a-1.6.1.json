@@ -1,0 +1,60 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/pdf-a",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.371164+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 142709,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-pdf-a-1.6.1.json",
+    "sourceSha256": "sha256:c80745292bff6299a212d9c88dbce8fd257d7cda39e93294004e1686c8001bf0"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "description": "PDF/A validation contract and stubs for stynx",
+    "devDependencies": {
+      "@stynx-nyx/logging": "1.6.1",
+      "@types/node": "24.13.4",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-g3sk7t0gZSJ1+32lN6qEdDQJKRKW1dbEKEXo0hdidMvKa3LlmWaWq07Jbh/rZGRRmrL0eyRO3tytLH+QcYDSFg==",
+      "shasum": "9abb4b86f48e9d3e8054134ef32cda6d67f774b7",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/pdf-a/1.6.1/9abb4b86f48e9d3e8054134ef32cda6d67f774b7"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/pdf-a/src/index.js",
+    "name": "@stynx-nyx/pdf-a",
+    "peerDependencies": { "@stynx-nyx/logging": "^1.6.1" },
+    "readme": "# `@stynx-nyx/pdf-a` — the PDF/A conformance-adapter contract (pure types)\n\n`@stynx-nyx/pdf-a` is the pure-types contract package for PDF/A conformance validation. It defines the `PdfAValidator` interface, the version/conformance enums (`PdfAVersion`, `PdfAConformance`), the validation result + rule-location shapes, telemetry counter names, and two stub implementations (`noop` and `strict`) for tests. The concrete validator lives in [`@stynx-nyx/pdf-a-vera-docker`](/docs/packages/pdf-a-vera-docker/); `@stynx-nyx/pdf` consumes the contract via its `pdfAAdapter` slot.\n\n## Purpose\n\nPDF/A conformance (the archival PDF standard — A-1/A-2/A-3/A-4 with b/u/a conformance levels) needs a validator, but the validator implementation is heavyweight (veraPDF, a Docker container). Separating the _contract_ (this package) from the _implementation_ lets `@stynx-nyx/pdf` depend on a tiny types package and lets you swap validators (veraPDF-Docker, a hosted service, a stub for tests) without touching `@stynx-nyx/pdf`.\n\nYou reach for `@stynx-nyx/pdf-a` when authoring a custom PDF/A validator adapter, or when you need the type shapes for handling validation results.\n\nWhat it does NOT do: it doesn't validate anything (pure types + stubs). The real validation is in `@stynx-nyx/pdf-a-vera-docker`.\n\n## Audience\n\nBackend developers authoring or consuming PDF/A validators. Most apps consume the veraPDF adapter rather than implementing their own.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/pdf-a\n```\n\n**No runtime peer dependencies** — pure types + lightweight stubs.\n\n## Quick start\n\n```ts\nimport type { PdfAValidator, PdfAValidationResult } from '@stynx-nyx/pdf-a';\n\n// Implement a custom validator\nexport class MyPdfAValidator implements PdfAValidator {\n  async validate(bytes: Uint8Array, options): Promise<PdfAValidationResult> {\n    // ... your validation logic\n    return { valid: true, version: 'A-2', conformance: 'b', failures: [] };\n  }\n}\n```\n\n## Public API surface\n\n### Types / Interfaces\n\n| Export                 | Description                                                              |\n| ---------------------- | ------------------------------------------------------------------------ |\n| `PdfAValidator`        | The contract: `validate(bytes, options): Promise<PdfAValidationResult>`. |\n| `PdfAValidateOptions`  | `{ version?: PdfAVersion; conformance?: PdfAConformance }`.              |\n| `PdfAValidationResult` | `{ valid, version, conformance, failures }`.                             |\n| `PdfAVersion`          | `'A-1' \\| 'A-2' \\| 'A-3' \\| 'A-4'`.                                      |\n| `PdfAConformance`      | `'b' \\| 'u' \\| 'a'`.                                                     |\n| `PdfARuleLocation`     | Where in the document a rule failed.                                     |\n| `PdfAValidationLogger` | Optional logging hook.                                                   |\n\n### Telemetry constants\n\n| Export                            | Description                          |\n| --------------------------------- | ------------------------------------ |\n| `PDF_A_VALIDATION_ATTEMPTS_TOTAL` | Counter name: validation attempts.   |\n| `PDF_A_VALIDATION_DURATION_MS`    | Histogram name: validation duration. |\n| `PDF_A_VALIDATION_ERRORS_TOTAL`   | Counter name: validation errors.     |\n\n### Stubs (for tests)\n\n| Export                | Description                                                                |\n| --------------------- | -------------------------------------------------------------------------- |\n| `NoopPdfAValidator`   | Always returns `valid: true`. For tests that don't care about conformance. |\n| `StrictPdfAValidator` | Always returns `valid: false`. For asserting the failure path.             |\n\n## Configuration\n\nNo runtime configuration — pure types. The implementing adapter (`@stynx-nyx/pdf-a-vera-docker`) carries the config.\n\n## Examples\n\n### Example 1 — wiring a validator into `@stynx-nyx/pdf`\n\n```ts\nimport { StynxPdfModule } from '@stynx-nyx/pdf';\nimport { VeraPdfDockerValidator } from '@stynx-nyx/pdf-a-vera-docker';\n\nStynxPdfModule.forRoot({ pdfAAdapter: new VeraPdfDockerValidator({}) });\n```\n\n### Example 2 — noop stub in tests\n\n```ts\nimport { NoopPdfAValidator } from '@stynx-nyx/pdf-a';\n\nStynxPdfModule.forRoot({ pdfAAdapter: new NoopPdfAValidator() });\n// PDF/A requests succeed without invoking the heavyweight validator\n```\n\n### Example 3 — asserting the failure path\n\n```ts\nimport { StrictPdfAValidator } from '@stynx-nyx/pdf-a';\n\nconst renderer = new PdfRenderer(backend, { pdfAAdapter: new StrictPdfAValidator() });\nawait expect(renderer.render({ output: { profile: 'pdf-a' }, ... })).rejects.toThrow();\n```\n\n## Common pitfalls\n\n- **Confusing the contract with the validator** — this package validates nothing. Use `@stynx-nyx/pdf-a-vera-docker` for real validation.\n- **Conformance level mismatch** — requesting `A-2 a` (accessible) requires tagged PDF; most HTML→PDF output is `A-2 b` (basic). Default to `b` unless you've ensured accessibility tagging.\n\n## Related packages\n\n- [`@stynx-nyx/pdf`](/docs/packages/pdf/) — consumes this contract via its `pdfAAdapter` slot.\n- [`@stynx-nyx/pdf-a-vera-docker`](/docs/packages/pdf-a-vera-docker/) — the concrete veraPDF-backed implementation.\n- [STYNX framework — ADR-PDF-A-VALIDATOR-CONTRACT](/docs/meta/adr/ADR-PDF-A-VALIDATOR-CONTRACT/) — the contract decision.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-pdf-a/`](/docs/api-reference/stynx-pdf-a/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n_None._\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@stynx-nyx/logging`: `^1.6.1`\n\n### Development-only dependencies\n\n- `@stynx-nyx/logging`: `workspace:*`\n- `@types/node`: `24.13.4`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/pdf-a",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

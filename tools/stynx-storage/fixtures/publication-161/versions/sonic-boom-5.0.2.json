@@ -1,0 +1,86 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "sonic-boom",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:28.791000Z",
+    "selection": "versions[5.0.2]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 176331,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/f7/60/ebfaa5994b9bc82d8e87e1e2c3bccc63e8487a9c418f8493ad9ddd01fce672b9b9f1b83584545055cf157f23e8e86c412e78d11dd4dc3ce007673057b934",
+    "sourceSha256": "sha256:11fb2889393ca05633ffdc8e8ddef4ab34e0a1d34a3a6d7be38e4d7f16b63afc"
+  },
+  "version": "5.0.2",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "sonic-boom@5.0.2",
+    "_nodeVersion": "24.21.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/sonic-boom_5.0.2_1791378056683_0.6949494183995137"
+    },
+    "_npmUser": {
+      "email": "hello@matteocollina.com",
+      "name": "matteo.collina"
+    },
+    "_npmVersion": "11.19.0",
+    "author": { "email": "hello@matteocollina.com", "name": "Matteo Collina" },
+    "bugs": { "url": "https://github.com/pinojs/sonic-boom/issues" },
+    "dependencies": { "atomic-sleep": "^1.0.0" },
+    "description": "Extremely fast utf8 only stream implementation",
+    "devDependencies": {
+      "@sinonjs/fake-timers": "^15.0.0",
+      "@types/node": "^26.0.1",
+      "borp": "^1.0.0",
+      "eslint": "^9.39.4",
+      "fastbench": "^1.0.1",
+      "neostandard": "^0.13.0",
+      "proxyquire": "^2.1.3",
+      "tsd": "^0.33.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 26,
+      "integrity": "sha512-/JEruzo6yhNVhsLblTRchgTQHIt7SsdJP0YyrfWaNKjIOQDfrdZv9gwYraYCAsmKV39/LAdV31FLL5NCDpoL/A==",
+      "shasum": "a2ce0c7c70e71f5ef1d5511f67063b0bbaf41705",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIAnE2UOPfhoXdHmg85kp+Qh3g5vmL2FFSqyfm2XHwWAvAiEA0eBG4dfWB+AHpL4cwflkylDlOLHJM091H6Skaf2e2us="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDJ302W7gOZBmvorVRIEzd77jqeQ4ODQQC4wALdXc6xygIgGNIxoFlTdJNS5FFbvK/FnKValS4ZkuwaepvkdgmkROg="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/sonic-boom/-/sonic-boom-5.0.2.tgz",
+      "unpackedSize": 123700
+    },
+    "gitHead": "8595727c93d9f2ca78b366d19e22e27c2c8fb82f",
+    "homepage": "https://github.com/pinojs/sonic-boom#readme",
+    "keywords": ["stream", "fs", "net", "fd", "file", "descriptor", "fast"],
+    "license": "MIT",
+    "main": "index.js",
+    "maintainers": [
+      { "email": "hello@matteocollina.com", "name": "matteo.collina" },
+      { "email": "james.sumners@gmail.com", "name": "jsumners" }
+    ],
+    "name": "sonic-boom",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pinojs/sonic-boom.git"
+    },
+    "scripts": {
+      "lint": "eslint .",
+      "lint:fix": "eslint --fix .",
+      "test": "npm run test:types && npm run lint && npm run test:unit",
+      "test:types": "tsc && tsd",
+      "test:unit": "borp --timeout=240000 'test/*.test.js'"
+    },
+    "tsd": { "directory": "./types" },
+    "type": "commonjs",
+    "types": "types/index.d.ts",
+    "version": "5.0.2"
+  }
+}

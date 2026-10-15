@@ -1,0 +1,79 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/tenancy",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.736695+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 206138,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-tenancy-1.6.1.json",
+    "sourceSha256": "sha256:9bc3f682a9cf4df00968342acae977450ae5b481f216e53710a1da71a319684b"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/contracts": "1.6.1",
+      "@stynx-nyx/core": "1.6.1",
+      "@stynx-nyx/data": "1.6.1",
+      "@stynx-nyx/idempotency": "1.6.1",
+      "zod": "^4.3.6"
+    },
+    "description": "Tenant resolution, membership validation, and tenant lifecycle services for stynx",
+    "devDependencies": {
+      "@nestjs/platform-express": "^11.1.26",
+      "@nestjs/testing": "^11.1.26",
+      "@stynx-nyx/testing": "1.6.1",
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "ts-node": "^10.9.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-eIFnM1o11raPKCqA5/EbhsvJSZ6P2Say3EHeS3loh4M1Aos0gXs4/uyFGoIiZCdMbkFAagCnVSzbZKfUVZypUg==",
+      "shasum": "d72ddc816a703a5430d09097c527435702247b35",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/tenancy/1.6.1/d72ddc816a703a5430d09097c527435702247b35"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/tenancy/src/index.js",
+    "name": "@stynx-nyx/tenancy",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/tenancy` — multi-tenant context, membership, platform-admin guard\n\n`@stynx-nyx/tenancy` is STYNX's multi-tenant substrate. It resolves the active tenant per request (from header, JWT claim, or route param), enforces tenant membership (the principal must belong to the tenant), caches membership lookups, exposes platform-admin endpoints for tenant lifecycle (archive/restore/suspend), and bridges into `@stynx-nyx/data`'s request-scoped DB context for RLS-aware queries. The `tenant-context.interceptor` writes the resolved tenant id into `RequestContext` so every downstream package sees it.\n\n## Purpose\n\nMulti-tenant apps need a canonical answer to \"which tenant is this request acting under?\" and a canonical answer to \"is this principal allowed to act under that tenant?\" — both decisions need to happen early, deterministically, with caching for the membership check. `@stynx-nyx/tenancy` centralises this.\n\nYou reach for `@stynx-nyx/tenancy` whenever the app has multiple tenants — typically immediately after `@stynx-nyx/auth`.\n\nWhat it does NOT do: it doesn't define your tenant schema (your migrations do), doesn't enforce RLS policies (your Postgres policies do, with the `tenantId` this package writes), doesn't manage cross-tenant data access (use platform-admin endpoints for that).\n\n## Audience\n\nBackend developers building multi-tenant apps. Most use is configuration + decorators; direct service interaction is rare.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/tenancy\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { StynxTenancyModule } from '@stynx-nyx/tenancy';\n\nStynxTenancyModule.forRoot({\n  source: 'jwt-claim',\n  claimName: 'custom:tenant_id',\n  enforcement: 'strict',\n});\n```\n\nEvery request now has `RequestContext.tenantId` populated from the JWT claim; the membership check is performed once per request and cached.\n\n## Public API surface\n\n### Modules\n\n| Export               | Signature                                | Description                                                                |\n| -------------------- | ---------------------------------------- | -------------------------------------------------------------------------- |\n| `StynxTenancyModule` | `.forRoot(options: StynxTenancyOptions)` | Registers controller, interceptor, membership cache, platform-admin guard. |\n\n### Services / Injectables\n\n| Export                      | Description                                                                                      |\n| --------------------------- | ------------------------------------------------------------------------------------------------ |\n| `StynxTenancyService`       | High-level tenant ops: lookup, archive, restore, suspend.                                        |\n| `MembershipCache`           | Caches `(principal × tenant) → entitled?` lookups.                                               |\n| `TenantContextInterceptor`  | Resolves tenant per request and writes to `RequestContext`.                                      |\n| `TenantSystemOperationSink` | Records tenant lifecycle events (archive/restore) for audit.                                     |\n| `StynxPlatformAdminGuard`   | Protects platform-admin endpoints — requires elevated permission separate from per-tenant roles. |\n\n### Endpoints (1 controller — platform admin)\n\n| Method  | Path                           | Auth           | Description                                                                       |\n| ------- | ------------------------------ | -------------- | --------------------------------------------------------------------------------- |\n| `GET`   | `/tenancy/tenants`             | platform-admin | List tenants.                                                                     |\n| `GET`   | `/tenancy/tenants/:id`         | platform-admin | Get a tenant.                                                                     |\n| `POST`  | `/tenancy/tenants`             | platform-admin | Create a tenant.                                                                  |\n| `PATCH` | `/tenancy/tenants/:id`         | platform-admin | Update tenant metadata.                                                           |\n| `POST`  | `/tenancy/tenants/:id/suspend` | platform-admin | Suspend a tenant.                                                                 |\n| `POST`  | `/tenancy/tenants/:id/archive` | platform-admin | Archive (soft-delete) a tenant; cascades per `@stynx-nyx/data` soft-delete rules. |\n\n### Types / Interfaces\n\n| Export                | Description             |\n| --------------------- | ----------------------- |\n| `StynxTenancyOptions` | `forRoot()` options.    |\n| `TenantRecord`        | Persisted tenant shape. |\n\n## Configuration\n\n### `StynxTenancyModule.forRoot()` options\n\n| Option                  | Type                                       | Default         | Description                                                                                |\n| ----------------------- | ------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------ |\n| `source`                | `'header' \\| 'jwt-claim' \\| 'route-param'` | `'jwt-claim'`   | Where the tenant id comes from.                                                            |\n| `headerName`            | `string`                                   | `'X-Tenant-Id'` | Header name when `source: 'header'`.                                                       |\n| `claimName`             | `string`                                   | `'tenant_id'`   | JWT claim name when `source: 'jwt-claim'`.                                                 |\n| `enforcement`           | `'strict' \\| 'permissive'`                 | `'strict'`      | Strict: throw 403 if principal isn't entitled to the tenant. Permissive: log and continue. |\n| `membershipCache.ttlMs` | `number`                                   | `60_000`        | Membership cache TTL.                                                                      |\n\n## Examples\n\n### Example 1 — header-based tenant\n\n```ts\nStynxTenancyModule.forRoot({\n  source: 'header',\n  headerName: 'X-Tenant-Id',\n  enforcement: 'strict',\n});\n```\n\nUse this when the JWT doesn't carry the tenant claim (e.g. multi-tenant user belongs to multiple tenants).\n\n### Example 2 — fallback resolver\n\n```ts\nStynxTenancyModule.forRoot({\n  source: 'header',\n  fallback: 'jwt-claim',\n  claimName: 'custom:default_tenant',\n});\n```\n\n### Example 3 — entitlement check on a custom route\n\n```ts\nimport { StynxPlatformAdminGuard } from '@stynx-nyx/tenancy';\n\n@Controller('admin-stuff')\n@UseGuards(StynxPlatformAdminGuard)\nexport class AdminController {\n  /* ... */\n}\n```\n\n## Common pitfalls\n\n- **Empty tenant claim** silently treated as `undefined` — your downstream RLS policies may then leak across tenants. Either enforce `claim required` at the JWT level or use `enforcement: 'strict'`.\n- **Membership cache stale after a tenant suspension** — a suspended tenant's existing sessions still pass membership for up to `ttlMs`. Either lower TTL or explicitly invalidate on suspend.\n- **`StynxPlatformAdminGuard` on a regular route** — the guard requires a platform-admin permission. Don't use it for tenant-scoped routes; use `@Permission()` instead.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContextMutator`; this package writes `tenantId` to the request frame.\n- [`@stynx-nyx/auth`](/docs/packages/auth/) — resolves the principal whose tenant claim this package reads.\n- [`@stynx-nyx/data`](/docs/packages/data/) — consumes the resolved `tenantId` for RLS-aware DB sessions.\n- [`@stynx-nyx/angular-tenancy`](/docs/packages-web/angular-tenancy/) — Angular pair: tenant switcher + context display.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-tenancy/`](/docs/api-reference/stynx-tenancy/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/contracts`: `workspace:*`\n- `@stynx-nyx/core`: `workspace:*`\n- `@stynx-nyx/data`: `workspace:*`\n- `@stynx-nyx/idempotency`: `workspace:*`\n- `zod`: `^4.3.6`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@nestjs/platform-express`: `^11.1.26`\n- `@nestjs/testing`: `^11.1.26`\n- `@stynx-nyx/testing`: `workspace:*`\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `ts-node`: `^10.9.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/tenancy",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

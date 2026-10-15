@@ -224,3 +224,45 @@ adotadas, com numeração definitiva:
 - **OD-R22-67 (A04):** (a) DDL manual do esquema `storage` nesta rodada; lacuna de blueprint registrada.
 - **OD-R22-68 (A05):** (a) `DETRAN_DOCUMENT_TRUST_*` mantidas como portão por chamada.
 - **OD-R22-69 (A06):** (b) retirada `physical_verified` (exige `attestor`) em checkpoint da cláusula.
+
+## Adenda B17 — adoção delimitada da STYNX 1.6.0 publicada (Owner, 2026-10-12)
+
+Transcrição prospectiva pelo **Architect**, a partir da instrução humana conferida pelo
+maestro no chat STYNX `01a123cf-5329-7942-80a8-59200e78497d`. Fonte de 2026-10-12,
+turno `01a132b8-f47a-76a3-a358-00c7816dd74f`, texto literal:
+
+> Proceed with the 1.6.1 plan. Fix the offline-sync gaps and evidence collection first,
+> then get as many scorecard cells green as practical. No k6 or mutation tests. Keep
+> DETRAN adoption moving in parallel.
+
+O plano humano anteriormente aprovado nesse mesmo chat (2026-10-10, turno
+`01a12613-91dc-7580-a0d1-c07066ea24e5`) inclui literalmente:
+
+> Deliver STYNX 1.6.0, adopt it in DETRAN R-0022...
+
+> Maintain Engineer, Architect, Inspector and Auditor session separation. Record amendments
+> ... DETRAN’s permission to leave its current 1.5.x restriction.
+
+Os dois trechos de 2026-10-10 são excertos do plano, com omissões indicadas; não são uma nova
+instrução nem uma autorização independente de publicação. A ordem de 2026-10-12 foi
+verificada e encaminhada a esta sessão pelo maestro. A adenda registra sua aplicação
+**somente ao DETRAN**; a execução da 1.6.1 pertence ao chat STYNX.
+
+- Substitui prospectivamente a restrição de versão **1.5.x** de A-C2-13 apenas pelo pin
+  **exato 1.6.0 final publicado**, em `tools/stynx-version.json` e no grupo fixo instalado.
+  Não autoriza RC, `latest` flutuante, pacote de workspace STYNX nem 1.6.1 não publicada.
+- Entrada da retomada: campanha `orchestra/stynx-sse-tenancy` em
+  `9af7682479fd338b0c81bf56548d21b3021cdf76`; trabalho isolado em
+  `codex/detran-r22-adoption-160`. Preservar o checkout primário sujo e PR #179.
+- Autoriza o escopo aditivo de adapters finos, instalação/verificação do storage com
+  `auth.tenants` e `role_app_backend`, observações com login restrito/segundo tenant/ator SQL
+  e caracterização definido em [D-160](contracts/STYNX-1.6.0-ADOPTION-ADDENDUM.md).
+  Instalar objetos novos não autoriza cortar o protocolo ou migrar dados sem os critérios
+  completos do CTG consumidor. Lacunas V-03/04/07/08/10/13 continuam em checkpoint upstream.
+- OD-R22-07/B5, OD-R22-08/B6 e OD-R22-66/B16 continuam decididas. Não há aprovação de valores
+  normativos, OIDs, âncoras ou amostra real do provedor por esta adenda.
+- **Não executar k6 nem mutation tests.** A não execução permanece registrada como tal;
+  não equivale a PASS. Preservar testes, limiares, gates restantes e evidência histórica.
+- Separação de papéis, review independente e integração por PR permanecem vinculantes.
+  Esta adenda não concede dispensa de reviewer/família/modelo, push/merge automático,
+  fechamento/selagem, publicação, deploy, integração externa real ou escrita no STYNX.

@@ -1,0 +1,77 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/logging",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.198096+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 234887,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-logging-1.6.1.json",
+    "sourceSha256": "sha256:fc83bed981d095f7ad130d2d7649ce50aaebe982f87340e055290e6ee3fa3815"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/core": "1.6.1",
+      "pino": "^10.3.1",
+      "pino-pretty": "^13.1.3",
+      "zod": "^4.3.6"
+    },
+    "description": "Structured logging primitives for stynx",
+    "devDependencies": {
+      "@nestjs/platform-express": "^11.1.26",
+      "@nestjs/testing": "^11.1.26",
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "ts-node": "^10.9.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-2H7Kk8H7Z0GGmpLTmg9x/wpeoB1GBvQBjj2Uv+/pBbA3XaZoiA8DFLHlUJFcl3j1Sva3VCgYkVk34P+g/UjboA==",
+      "shasum": "cbd9921031214982e5080fb435b934a2be9b6c61",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/logging/1.6.1/cbd9921031214982e5080fb435b934a2be9b6c61"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/logging/src/index.js",
+    "name": "@stynx-nyx/logging",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/logging` — Pino-backed structured logging with request-context awareness\n\n`@stynx-nyx/logging` is the structured-logging substrate. It wraps Pino with three additions: (1) automatic request-context fields (`requestId`, `tenantId`, `actorId`) injected on every log line via integration with `@stynx-nyx/core`'s `RequestContext`; (2) HTTP request-logging middleware that emits a single start + end log per request with timing; (3) a duplicate-log dedupe layer that suppresses repeated identical log lines within a sliding window (useful for guarding against tight-loop floods). Wire `StynxLoggingModule.forRoot()` once and inject `StynxLogger` everywhere.\n\n## Purpose\n\nStructured logging without context is half-useful: you see the message but not which request, tenant, or actor caused it. Pulling the context manually from every log site is repetitive + error-prone. `@stynx-nyx/logging` resolves this by reading `@stynx-nyx/core`'s `RequestContext` at log time and decorating every emitted record automatically. The Pino factory produces a logger pinned to the canonical schema (level / time / requestId / tenantId / actorId + message + structured fields), so all `@stynx-nyx/*` packages emit a consistent shape downstream consumers can parse.\n\nYou reach for `@stynx-nyx/logging` immediately after `@stynx-nyx/core`, when you want any kind of operational visibility above `console.log`. The HTTP middleware adds the per-request start/end markers; the `StynxLogger` service is what you inject into your own services.\n\nWhat it does NOT do: it does not own log routing/sinks (Pino handles that — point its transport at stdout, a file, CloudWatch, Datadog, whatever). It does not own metrics (use `@stynx-nyx/health` for that). It does not transform logs at sink-time (use a separate Pino transport for processing).\n\n## Audience\n\nNestJS backend developers who want structured + context-aware logs from day one. Typical scenario: you bootstrap a STYNX app, mount `StynxLoggingModule.forRoot()` after `@stynx-nyx/core`, inject `StynxLogger` into your services, and your log aggregator immediately sees per-request correlation.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/logging\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n**Node:** 24.x.\n\n## Quick start\n\n```ts\n// src/app.module.ts\nimport { Module } from '@nestjs/common';\nimport { StynxCoreModule } from '@stynx-nyx/core';\nimport { StynxLoggingModule } from '@stynx-nyx/logging';\n\n@Module({\n  imports: [\n    StynxCoreModule.forRoot({ appName: 'my-app', schema: ConfigSchema }),\n    StynxLoggingModule.forRoot({\n      level: 'info',\n      // Optional dedupe to suppress identical messages within 5s\n      dedupe: { windowMs: 5000 },\n    }),\n  ],\n})\nexport class AppModule {}\n```\n\n```ts\n// src/orders/orders.service.ts\nimport { Injectable } from '@nestjs/common';\nimport { StynxLogger } from '@stynx-nyx/logging';\n\n@Injectable()\nexport class OrdersService {\n  constructor(private readonly log: StynxLogger) {}\n\n  async createOrder(input: CreateOrderInput) {\n    this.log.log('Creating order', { fields: { orderId: input.id } });\n    // ... your logic\n    this.log.log('Order created', { fields: { orderId: input.id, total: input.total } });\n  }\n}\n```\n\nEach log line carries `requestId`, `tenantId`, `actorId` automatically — pulled from `@stynx-nyx/core`'s `RequestContext`.\n\n## Public API surface\n\n### Modules\n\n| Export               | Signature                                 | Description                                                                                                                                     |\n| -------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |\n| `StynxLoggingModule` | `.forRoot(options?: StynxLoggingOptions)` | Registers the Pino logger, `StynxLogger`, `RequestLoggingMiddleware`, and `LoggingDedupeService`. The middleware is auto-applied to all routes. |\n\n### Services / Injectables\n\n| Export                     | Description                                                                                                                                                                                  |\n| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `StynxLogger`              | The injectable logger. Methods: `log(msg, ctx?)`, `warn`, `debug`, `verbose`, `error(msg, ctx?, error?)`. Each method reads the current `RequestContext` and decorates the emitted log line. |\n| `RequestLogFieldFactory`   | Lower-level: factory that builds the per-log structured fields from `RequestContext` + caller-supplied fields. Exposed for advanced use (e.g. building a custom logger).                     |\n| `RequestLoggingMiddleware` | NestJS middleware that emits a start + end log per HTTP request with method + path + status + duration. Registered automatically.                                                            |\n| `LoggingDedupeService`     | Sliding-window dedupe over (level + message + context-hash). Suppresses repeated identical lines. Configurable via `dedupe.windowMs`.                                                        |\n\n### Functions\n\n| Export             | Signature                                  | Description                                                                             |\n| ------------------ | ------------------------------------------ | --------------------------------------------------------------------------------------- |\n| `createPinoLogger` | `(options: StynxLoggingOptions) => Logger` | Standalone Pino factory used by the module. Exposed for tests + advanced custom wiring. |\n\n### Types / Interfaces\n\n| Export                   | Description                                                                                |\n| ------------------------ | ------------------------------------------------------------------------------------------ |\n| `StynxLoggingOptions`    | `forRoot()` options shape: `{ level?, redact?, dedupe?, transports?, ... }`.               |\n| `LogContext`             | What you pass to `StynxLogger.log()`: a string label OR a `RequestScopedLogFields` object. |\n| `RequestScopedLogFields` | `{ fields?: Record<string, unknown>, requestId?, tenantId?, actorId? }`.                   |\n\n### Tokens\n\n| Export                  | Used to                                                                                  |\n| ----------------------- | ---------------------------------------------------------------------------------------- |\n| `STYNX_LOGGING_OPTIONS` | Inject the raw options.                                                                  |\n| `STYNX_PINO_LOGGER`     | Inject the underlying `pino.Logger` directly (rarely needed; use `StynxLogger` instead). |\n\n## Configuration\n\n### `StynxLoggingModule.forRoot()` options\n\n| Option        | Type                                                                       | Default     | Description                                               |\n| ------------- | -------------------------------------------------------------------------- | ----------- | --------------------------------------------------------- |\n| `level`       | `'fatal' \\| 'error' \\| 'warn' \\| 'info' \\| 'debug' \\| 'trace' \\| 'silent'` | `'info'`    | Pino log level.                                           |\n| `redact`      | `string[]`                                                                 | `[]`        | Pino redact paths (e.g. `['req.headers.authorization']`). |\n| `dedupe`      | `{ windowMs: number; maxSize?: number }`                                   | disabled    | Sliding-window dedupe.                                    |\n| `transports`  | `pino.TransportTargetOptions[]`                                            | stdout JSON | Pino transports (`pino-pretty`, file rotation, etc.).     |\n| `prettyPrint` | `boolean`                                                                  | `false`     | Shorthand for `pino-pretty` in dev.                       |\n\n## Examples\n\n### Example 1 — adding structured fields\n\n```ts\nthis.log.log('Charge captured', {\n  fields: { amountCents: 1999, currency: 'USD', stripeChargeId: 'ch_...' },\n});\n```\n\nThe emitted JSON has `amountCents`, `currency`, `stripeChargeId` as top-level structured fields, alongside `requestId` + `tenantId` from `RequestContext`.\n\n### Example 2 — dev-mode pretty printing\n\n```ts\nStynxLoggingModule.forRoot({\n  level: 'debug',\n  prettyPrint: process.env.NODE_ENV !== 'production',\n});\n```\n\n### Example 3 — error with cause\n\n```ts\ntry {\n  await something();\n} catch (err) {\n  this.log.error('Something failed', { fields: { orderId } }, err);\n}\n```\n\n`StynxLogger.error()` accepts the error as the third arg and serialises it via Pino's err-serialiser (stack, message, code).\n\n## Common pitfalls\n\n- **Logging outside an active request frame** (cron job, queue consumer) — request-scoped fields will be undefined. This is benign: the log line still emits, just without `requestId` etc. If you want to mark these as system operations, use `SystemContext` from `@stynx-nyx/core`.\n- **High-volume tight loops** can flood your log aggregator. Either enable `dedupe.windowMs`, or move to a debug level + sampling.\n- **Pretty printing in production** noticeably degrades throughput. `prettyPrint` should be false in prod.\n- **`StynxLogger.log()` instead of `console.log`** in tests — set `level: 'silent'` in tests OR use a Pino transport that buffers to memory; otherwise tests are very loud.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides the `RequestContext` that this package's middleware reads on every request.\n- [`@stynx-nyx/audit`](/docs/packages/audit/) — emits audit events through a separate sink, but the audit-event metadata mirrors logging's request-scoped fields.\n- [`@stynx-nyx/health`](/docs/packages/health/) — for operational metrics that don't belong in logs.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-logging/`](/docs/api-reference/stynx-logging/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/core`: `workspace:*`\n- `pino`: `^10.3.1`\n- `pino-pretty`: `^13.1.3`\n- `zod`: `^4.3.6`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@nestjs/platform-express`: `^11.1.26`\n- `@nestjs/testing`: `^11.1.26`\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `ts-node`: `^10.9.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/logging",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

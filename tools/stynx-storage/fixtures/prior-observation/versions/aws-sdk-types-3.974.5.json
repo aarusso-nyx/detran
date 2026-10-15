@@ -1,0 +1,92 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/types",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[3.974.5]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 554443,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/aws-sdk-types-3.974.5.json",
+    "sourceSha256": "sha256:c8c81a2547133abcb57743c04f538b96b18dfbe7657981049b8ea91da76d48e5"
+  },
+  "version": "3.974.5",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/types@3.974.5",
+    "_nodeVersion": "24.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/types_3.974.5_1787339271747_0.5172501024784146"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": {},
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": { "@smithy/types": "^4.17.2", "tslib": "^2.6.2" },
+    "description": "Types for the AWS SDK",
+    "devDependencies": {
+      "@tsconfig/recommended": "1.0.1",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 124,
+      "integrity": "sha512-LkwLL2BLbC6wNNm4JaH9mbEqBMdOZCct6VAYqhdN4U1xrWM+fUJQEfbHwQgDypapOWTRtlk25akb5afM0P8CIQ==",
+      "shasum": "a52691531738d191b8b3fd1ae7757c2eeec7afee",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCupEOgTcv/N4aFVFYGwYdlXG+H2J5RcZ062exod+RK1wIgaUlCBIU5zpJDGpazH+9OwLm6fkX5brmAH+4aRqUNlF8="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIAO5ZEfOwy8/cS2JaiHoX134BZmy0D2EOwMHrgnQtvpsAiAXydv+XIMb2YJr46UOGwTM5vSlPa90EHkJ9qCK2Jb0QQ=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/types/-/types-3.974.5.tgz",
+      "unpackedSize": 53709
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/types",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/types",
+    "react-native": {},
+    "repository": {
+      "directory": "packages-internal/types",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "tsc -p tsconfig.test.json"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.974.5"
+  }
+}

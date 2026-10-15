@@ -1,0 +1,111 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@peculiar/asn1-schema",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:29.384000Z",
+    "selection": "versions[2.11.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 187785,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/37/ce/65419ddd5848413ec3086265f74163391ae6e0978bb672ec0a10a425c714c7d7bb748604028a2defd41c3ee01754d46fd41db9142b09c0c085c49ff49ed3",
+    "sourceSha256": "sha256:eb92aae98c3bfd525582e6267da657bbec8767552006b219695c6d2e411fe887"
+  },
+  "version": "2.11.0",
+  "versionRecord": {
+    "_from": "file:.release/tarballs/peculiar-asn1-schema-2.11.0.tgz",
+    "_hasShrinkwrap": false,
+    "_id": "@peculiar/asn1-schema@2.11.0",
+    "_integrity": "sha512-8xh4avo53/vXO6UEv9yaoJ83hY581geaLTygf61NPIXP5AeIZCPjJhpTaYU23IZkG+NpLN/C9FYzWp7hphIT9A==",
+    "_nodeVersion": "24.21.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/asn1-schema_2.11.0_1791829523922_0.8605206494611493"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "f2543879-b77e-437e-907f-edbc0cfa52b3"
+      }
+    },
+    "_npmVersion": "11.19.0",
+    "_resolved": "/home/runner/work/asn1-schema/asn1-schema/.release/tarballs/peculiar-asn1-schema-2.11.0.tgz",
+    "author": { "name": "PeculiarVentures, LLC" },
+    "bugs": { "url": "https://github.com/PeculiarVentures/asn1-schema/issues" },
+    "contributors": [
+      { "email": "rmh@unmitigatedrisk.com", "name": "Ryan Hurst" },
+      { "email": "microshine@mail.ru", "name": "Miroshin Stepan" }
+    ],
+    "dependencies": {
+      "@peculiar/utils": "^2.0.2",
+      "asn1js": "^3.0.10",
+      "tslib": "^2.8.1"
+    },
+    "description": "Decorators and helper APIs for declaring ASN.1 schemas in TypeScript.",
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@peculiar%2fasn1-schema@2.11.0"
+      },
+      "fileCount": 54,
+      "integrity": "sha512-8xh4avo53/vXO6UEv9yaoJ83hY581geaLTygf61NPIXP5AeIZCPjJhpTaYU23IZkG+NpLN/C9FYzWp7hphIT9A==",
+      "shasum": "701ec588b25ff74f50ebb069dd9ae668957c074e",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIGXV9IU8LOOVqV/alE3Cdfg7T2OfL4a9UO0Hu9VUb3zyAiAEHNDse0q0E1kerh9ApGnTNOQqQOv8fp2aiCndxxbcIw=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIDo3Wd0/RoQhq+HaAQ7TAXPlnpaIPSzQfQhFvoWDFCkqAiAaVw8r9liM2Kd4nEaJ9w/WH4tL/vxvCbfcvNvd3qyn+Q=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@peculiar/asn1-schema/-/asn1-schema-2.11.0.tgz",
+      "unpackedSize": 110247
+    },
+    "engines": { "node": ">=14" },
+    "homepage": "https://github.com/PeculiarVentures/asn1-schema/tree/master/packages/schema#readme",
+    "keywords": [
+      "asn",
+      "asn1",
+      "schema",
+      "serialize",
+      "parse",
+      "decorator",
+      "der"
+    ],
+    "license": "MIT",
+    "main": "build/cjs/index.js",
+    "maintainers": [
+      { "email": "ryan_hurst@hotmail.com", "name": "rmhrisk" },
+      { "email": "microshine@mail.ru", "name": "microshine" },
+      { "email": "yury@strozhevsky.com", "name": "yury.strozhevsky" },
+      { "email": "info@peculiarventures.com", "name": "peculiarventures" },
+      { "email": "apilguk@gmail.com", "name": "apilguk" },
+      { "email": "donskovdmitriyv@gmail.com", "name": "donskov" },
+      { "email": "mihailzachepilo@gmail.com", "name": "worldthirteen" }
+    ],
+    "module": "build/es2015/index.js",
+    "name": "@peculiar/asn1-schema",
+    "publishConfig": { "access": "public" },
+    "repository": {
+      "directory": "packages/schema",
+      "type": "git",
+      "url": "git+https://github.com/PeculiarVentures/asn1-schema.git"
+    },
+    "scripts": {
+      "build": "npm run build:module && npm run build:types",
+      "build:cjs": "tsc -p tsconfig.compile.json --removeComments --module commonjs --outDir build/cjs",
+      "build:es2015": "tsc -p tsconfig.compile.json --removeComments --module ES2015 --outDir build/es2015",
+      "build:module": "npm run build:cjs && npm run build:es2015",
+      "build:types": "tsc -p tsconfig.compile.json --outDir build/types --declaration --emitDeclarationOnly",
+      "clear": "rimraf build",
+      "prebuild:types": "rimraf build/types",
+      "rebuild": "npm run clear && npm run build"
+    },
+    "types": "build/types/index.d.ts",
+    "version": "2.11.0"
+  }
+}

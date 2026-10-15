@@ -1,0 +1,100 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/signature-v4",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[5.7.3]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 320605,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/smithy-signature-v4-5.7.3.json",
+    "sourceSha256": "sha256:0bd8047eb6a4c78229d9631472339609c6d6ae1ddb045f2543edde9f7b20d9be"
+  },
+  "version": "5.7.3",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/signature-v4@5.7.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/signature-v4_5.7.3_1787241822418_0.8134050776662463"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:8e51e47a-1cd1-4c2b-aa08-494578546331"
+      }
+    },
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "dependencies": {
+      "@smithy/core": "^3.33.3",
+      "@smithy/types": "^4.17.2",
+      "tslib": "^2.6.2"
+    },
+    "description": "A standalone implementation of the AWS Signature V4 request signing algorithm",
+    "devDependencies": {
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2fsignature-v4@5.7.3"
+      },
+      "fileCount": 47,
+      "integrity": "sha512-7ImGm+FkHRLcBaRttIAMZ6bzJZWb2cJGoYjq46F2UjycujWzrL9GEN9h4w7eQyXJYnltrUhxbbieBAIRrdqpow==",
+      "shasum": "76603bf1ac9aa44e1d2f4f358b0cc0cf84961e46",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCdOPCYkjA7CP6NPC9h/AS9l6T2Cc8IsnvqE5lkaOwoNQIgRPa+fKUku4gad2tg8xX2R8nuTyIX0lAH7/150uUoQMI="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIHsT3NYa+qyYZOlqCs63NSii0dbOaTFxjtcLYShyhGCfAiEAlSbSxt5fwU/8r5WvVFS5xrwk+5dcluRIJ+XK99Fk5yI="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/signature-v4/-/signature-v4-5.7.3.tgz",
+      "unpackedSize": 105849
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "e9151f3e043a19032caad09b05937a4962c5bd13",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/signature-v4",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/signature-v4",
+    "repository": {
+      "directory": "packages/signature-v4",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "5.7.3"
+  }
+}

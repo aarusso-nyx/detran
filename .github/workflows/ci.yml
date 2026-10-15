@@ -56,7 +56,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - name: Install dependencies
@@ -132,13 +132,27 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - name: Install dependencies
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: pnpm install --frozen-lockfile
+
+      - name: Verify official native STYNX Node and tracked fixture custody
+        run: node tools/ci/verify-stynx-native-node.mjs "$GITHUB_WORKSPACE"
+
+      - name: Retain fresh native published STYNX inputs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: node tools/ci/run-native-stynx.mjs "$GITHUB_WORKSPACE" producer
+
+      - name: Execute ordinary native public storage projector
+        run: node tools/ci/run-native-stynx.mjs "$GITHUB_WORKSPACE" projector
+
+      - name: Run every portable STYNX storage assertion
+        run: node tools/ci/run-native-stynx.mjs "$GITHUB_WORKSPACE" tests
 
       - name: Install documentation dependencies
         run: npm ci --prefix docs/site
@@ -163,6 +177,22 @@ jobs:
       - name: Whitespace check
         run: git diff --check
 
+      - name: Retain bounded native STYNX evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-stynx-foundation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            scratch/r22-adoption-161/native-ci/*.json
+            scratch/r22-adoption-161/native-ci/*.log
+            scratch/r22-adoption-161/portable-ci/retention-03/inputs/metadata/*.json
+            scratch/r22-adoption-161/portable-ci/retention-03/projection/*.json
+            scratch/r22-adoption-161/portable-ci/retention-03/projection/attempt-01/*.json
+            scratch/r22-adoption-161/portable-ci/retention-03/projection/attempt-01/*.log
+          if-no-files-found: error
+          include-hidden-files: false
+          retention-days: 14
+
   # Phase-2 unified backend kernel gate (ADR-0005). This is intentionally a
   # separate architecture-named job so database/RLS failures are distinguishable
   # from the general foundation floor. Recommended for branch protection after
@@ -175,17 +205,6 @@ jobs:
     permissions:
       contents: read
       checks: write
-    services:
-      postgres:
-        image: postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5
-        env:
-          POSTGRES_DB: detran
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd "pg_isready -U postgres -d detran"
-          --health-interval 10s --health-timeout 5s --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
       DETRAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
@@ -217,7 +236,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - name: Install dependencies
@@ -225,8 +244,46 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: pnpm install --frozen-lockfile
 
+      - name: Verify official native STYNX Node and tracked fixture custody
+        run: node tools/ci/verify-stynx-native-node.mjs "$GITHUB_WORKSPACE"
+
+      - name: Prepare exact owned PG18.2 PostGIS image
+        run: node tools/ci/stynx-postgis-runtime.mjs "$GITHUB_WORKSPACE" prepare
+
+      - name: Start and verify actual owned PG18.2 PostGIS server
+        run: node tools/ci/stynx-postgis-runtime.mjs "$GITHUB_WORKSPACE" start
+
+      - name: Start fresh owned custody rollback companion
+        run: node tools/ci/stynx-custody-probe.mjs "$GITHUB_WORKSPACE" start
+
       - name: Run complete remote backend-kernel fallback
         run: pnpm ci:backend-full
+
+      - name: Clean up only job-owned STYNX PostgreSQL resources
+        if: always()
+        run: |
+          status=0
+          node tools/ci/stynx-custody-probe.mjs "$GITHUB_WORKSPACE" cleanup || status=1
+          node tools/ci/stynx-postgis-runtime.mjs "$GITHUB_WORKSPACE" cleanup || status=1
+          exit "$status"
+
+      - name: Retain bounded actual PG18.2 backend evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-stynx-backend-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            scratch/r22-adoption-161/native-ci/*.json
+            ${{ runner.temp }}/detran-stynx-postgis-${{ github.run_id }}-${{ github.run_attempt }}/*.json
+            ${{ runner.temp }}/detran-stynx-postgis-${{ github.run_id }}-${{ github.run_attempt }}/*.log
+            backend/database/.stynx-install-custody/**/*.json
+            scratch/r22-adoption-161/live-custody-probe/**/*.json
+            scratch/r22-adoption-161/live-custody-probe/**/*.sql
+            scratch/r22-adoption-161/live-custody-probe/**/*.stdout
+            scratch/r22-adoption-161/live-custody-probe/**/*.stderr
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Publish exact-candidate fallback check
         if: always()
@@ -259,7 +316,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -389,7 +446,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - name: Install dependencies (workspace root)
@@ -421,7 +478,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: '24'
+          node-version: '24.20.0'
           cache: pnpm
 
       - name: Install dependencies

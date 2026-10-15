@@ -1,0 +1,6 @@
+    var crypto5 = __importStar3(require_lib9());
+    var fs_1 = __importDefault2(require("fs"));
+    var rfc4648_1 = require_rfc4648();
+    function createBase32Hash(str) {
+      return rfc4648_1.base32.stringify(crypto5.hash("md5", str, "buffer")).replace(/(=+)$/, "").toLowerCase();
+    }

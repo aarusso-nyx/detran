@@ -1,0 +1,104 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/token-providers",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.889000Z",
+    "selection": "versions[3.1150.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 1486458,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/1e/55/553641a4637b47a3c9d2d4cb3e4d26d6b4b62d15ee68e1fbb9d2a119d0f1dc5f3f3e4824cc236f6c034d02d1275c92149cae453298a5f63ab131df05544f",
+    "sourceSha256": "sha256:ea82e5ba1a5d05779469153934821e2a98110dc3fb28e0d6dee617e963c82c61"
+  },
+  "version": "3.1150.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/token-providers@3.1150.0",
+    "_nodeVersion": "24.19.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/token-providers_3.1150.0_1791830401785_0.222323079394545"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": {},
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": {
+      "@aws-sdk/core": "^3.978.3",
+      "@aws-sdk/nested-clients": "^3.997.48",
+      "@aws-sdk/types": "^3.974.6",
+      "@smithy/core": "^3.35.2",
+      "@smithy/types": "^4.19.0",
+      "tslib": "^2.6.2"
+    },
+    "description": "A collection of token providers",
+    "devDependencies": {
+      "@tsconfig/recommended": "1.0.1",
+      "@types/node": "^20.14.8",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 37,
+      "integrity": "sha512-wDU36ofhabZYu+d2KSriyDbwzxNoaOp+4dG0p3qkabk7HeALR5nIWyQbjoyJZLn3iqWkv/xNdyUfbfevDVDzzg==",
+      "shasum": "2cb4ab889905bb5616dfc0576662fc4ad457b642",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQC5ir6Fh2ACxQSF28MgGMH6b56HFnNdemORujoclIUzTAIhAJ0jY7jp/z4hq1midz6YDaIReEx+adPHEB9ETBRlNWcb"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCICAzRc+zPO/wCYXYuJxMfuGYcuzu25IyHjk1TMUGWG/gAiEAgotugzOUd6gVysRYHldZuBaVDYNcx6i7RY3q/pKpBWM="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/token-providers/-/token-providers-3.1150.0.tgz",
+      "unpackedSize": 38250
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages/token-providers",
+    "keywords": ["aws", "token"],
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/token-providers",
+    "react-native": {},
+    "repository": {
+      "directory": "packages/token-providers",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run",
+      "test:integration": "yarn g:vitest run -c vitest.config.integ.mts",
+      "test:integration:watch": "yarn g:vitest watch -c vitest.config.integ.mts",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.1150.0"
+  }
+}

@@ -1,0 +1,38 @@
+--- 
++++ 
+@@ -47,6 +47,14 @@
+ def number(value, lower, upper, code):
+     demand(type(value) is int and lower <= value <= upper, code)
+     return value
++
++def finite_nonnegative_time(value):
++    if type(value) not in (int, float) or value < 0:
++        return False
++    try:
++        return math.isfinite(value)
++    except OverflowError:
++        return False
+ 
+ def pairs_unique(pairs):
+     out = {}
+@@ -294,9 +302,8 @@
+         demand(type(nonce_value) is str and HEX.fullmatch(nonce_value) and
+                type(cid) is str and HEX.fullmatch(cid) and type(script_sha) is str and
+                script_sha == SCRIPT_SHA and HEX.fullmatch(script_sha), 'constructor-identity')
+-        demand(type(started_monotonic) in (int, float) and
+-               math.isfinite(started_monotonic) and started_monotonic >= 0 and
+-               math.isfinite(started_monotonic + 900) and
++        demand(finite_nonnegative_time(started_monotonic) and
++               finite_nonnegative_time(started_monotonic + 900) and
+                started_monotonic + 900 > started_monotonic,
+                'start-monotonic')
+         demand(type(helper_authority) is dict and set(helper_authority) == set(HELPER_ROLES),
+@@ -313,7 +320,7 @@
+     def _helper_authority(self):
+         return json.loads(self._helper_authority_raw)
+     def check(self, now):
+-        demand(type(now) in (float,int) and math.isfinite(now) and
++        demand(finite_nonnegative_time(now) and
+                self.origin <= now and self.last_now <= now and now < self.deadline,
+                'absolute-deadline')
+         self.last_now = now

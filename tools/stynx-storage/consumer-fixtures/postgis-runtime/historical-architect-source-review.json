@@ -1,0 +1,61 @@
+{
+  "formatVersion": 1,
+  "kind": "architect-postgis-candidate02-pre-build-review",
+  "actor": "/root/architect_adoption_160",
+  "role": "Architect",
+  "plan": {
+    "path": "scratch/r22-adoption-161/linux-postgis-preparation/POSTGIS-CANDIDATE-PLAN-02.json",
+    "bytes": 5605,
+    "sha256": "sha256:ab7fe7b0a5bb4b75170d8e3876ae1929dd0ff2460744d3b52744e3c27985b2b5"
+  },
+  "freeze": {
+    "path": "scratch/r22-adoption-161/linux-postgis-preparation/ENGINEER-POSTGIS-CANDIDATE02-FREEZE.json",
+    "bytes": 1768,
+    "sha256": "sha256:d3e269fe5ed888e999f76ee7f8d42d2e0cb26790d21a5ec96c604e8bce5bc217"
+  },
+  "priorFreeze": {
+    "path": "scratch/r22-adoption-161/linux-postgis-preparation/ENGINEER-POSTGIS-FREEZE.json",
+    "bytes": 32507,
+    "sha256": "sha256:bdf30566213ee2624790fe61065a16721fed4bfe6fc39ebf5c2208c4a6db28c5"
+  },
+  "recipe": {
+    "path": "scratch/r22-adoption-161/linux-postgis-preparation/Dockerfile.candidate-02.NOT_EXECUTED",
+    "bytes": 456,
+    "sha256": "sha256:a00a8bf5f9f5890abcd86e8f5d15609f65dbfe9855ec693eb602d814025c4ae2"
+  },
+  "counts": {
+    "archivePackages": 83,
+    "archiveBytes": 49306764,
+    "dataRecordsMatched": 1832,
+    "dataRegularFilesMatched": 861,
+    "controlProgramTextsMatched": 94,
+    "frozenFilesRehashed": 145
+  },
+  "delegatedMysqlHelper": {
+    "path": "usr/share/mysql-common/configure-symlinks",
+    "mode": 493,
+    "type": "file",
+    "bytes": 276,
+    "sha256": "419ac4047b731bed214486fc0e00da54be6d935fe1974ed2eb22f7dbcfed8caa"
+  },
+  "disposition": "SOURCE_INPUT_CONCURRENCE_FOR_ROOT_OFFLINE_DERIVED_IMAGE_BUILD_ONLY",
+  "findings": [
+    "All83 actual ar/control/data archives matched exact retained hashes and control/data file/link inventories using independent stdlib parsing; all94 maintainer/debconf program bytes matched including prior omitted fontconfig config.",
+    "Actual selected83 version/architecture/SHA/size/Depends/PreDepends records match retained signed package indexes; four compressed/uncompressed indexes match, signed release plaintext includes exact compressed hash/size; retained successful gpg verification reviewed, not reexecuted by Architect.",
+    "Selected new programs perform ldconfig activation, fixed alternatives/configuration/font Debconf only; no PostgreSQL server package/postinstall cluster creation, service-start, initdb, psql or SQL in the reviewed programs. Mysql helper only fixed alternatives; no mysql server installation.",
+    "Candidate02 recipe changes only noninteractive Debconf environment, pins originalamd64 image, checks allDEBs and fourPG binaries before unpack/configure and afterward, uses networknone build, finalUID999/entrypointfalse.",
+    "No base package upgrade/removal per actual offline solver; zero overlap with actual base payload inventory; direct ELF dependencies are source evidence, not full ABI/load/runtime proof."
+  ],
+  "nextRequiredEvidence": [
+    "Actual offline build logs/image/config/digest and exact4PGbinary unchanged hashes; preserve any build failure without retry inference.",
+    "Actual postgis alternatives literal/resolved identity, complete extension controls/library/SQL hashes and transitive loader/ABI proof in derived image.",
+    "Separate fresh Linux cluster/subject/lease and actual extension SQL proof; no cluster or SQL authorized by this source review."
+  ],
+  "claims": {
+    "architectBuildExecuted": false,
+    "architectPackageScriptsExecuted": false,
+    "architectSqlExecuted": false,
+    "imageBuilt": false,
+    "postgisRuntimePassed": false
+  }
+}

@@ -1,0 +1,18 @@
+node:fs:484
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: EROFS: read-only file system, open '/proc/self/stat'
+    at Object.readFileSync (node:fs:484:20)
+    at collect (file:///repo/scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-01/resolve_target_linux02.READ_ONLY.mjs:87:25)
+    at file:///repo/scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-01/resolve_target_linux02.READ_ONLY.mjs:150:39
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -30,
+  code: 'EROFS',
+  syscall: 'open',
+  path: '/proc/self/stat'
+}
+
+Node.js v24.20.0

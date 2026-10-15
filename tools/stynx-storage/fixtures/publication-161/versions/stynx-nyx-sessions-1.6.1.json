@@ -1,0 +1,81 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/sessions",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.675694+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 241419,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-sessions-1.6.1.json",
+    "sourceSha256": "sha256:3f3eb2e5eb86b522efe9c50871d4679d77347dc9fe7cefec0fefdd70c2a89ef4"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/core": "1.6.1",
+      "@stynx-nyx/data": "1.6.1",
+      "@stynx-nyx/idempotency": "1.6.1",
+      "jose": "^6.2.2",
+      "redis": "^6.0.0",
+      "uuid": "^14.0.1",
+      "zod": "^4.3.6"
+    },
+    "description": "Redis-backed sessions, refresh rotation, and JWKS signing for stynx",
+    "devDependencies": {
+      "@nestjs/platform-express": "^11.1.26",
+      "@nestjs/testing": "^11.1.26",
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "testcontainers": "^12.0.2",
+      "ts-node": "^10.9.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-JzU9iuGp440yegtUPtbmqpBwOut5K0XNx9GBBZllDTXALwf5PcvvrTPy9ojO+PHjoXmKVGh5eWBARglHomzj4Q==",
+      "shasum": "d722cd7199e1598ee061e4366f249b8a50e7c5d5",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/sessions/1.6.1/d722cd7199e1598ee061e4366f249b8a50e7c5d5"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/sessions/src/index.js",
+    "name": "@stynx-nyx/sessions",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/sessions` — STYNX session lifecycle, JWT signing, key rotation, JWKS endpoint\n\n`@stynx-nyx/sessions` issues + manages STYNX-side session JWTs. It signs access tokens with a rotation-friendly key set, exposes a JWKS endpoint so consumers can verify, supports in-memory + Redis session stores for pin/revoke flows, and mirrors session events to an external writer for audit/observability. Paired with `@stynx-nyx/auth` which exchanges an upstream Cognito token for one of these sessions and verifies them on subsequent requests.\n\n## Purpose\n\nA STYNX app needs short-lived access tokens it controls (not directly Cognito tokens), with: rotation of the signing key without downtime, revocation by session-id (for \"log out everywhere\"), session pinning to a device, and a JWKS endpoint so client SDKs and other services can verify tokens.\n\nYou reach for `@stynx-nyx/sessions` whenever `@stynx-nyx/auth` is wired — the two packages work as a unit. You configure the signing key set (active kid + retired kids still trusted for verification) and the store backend.\n\nWhat it does NOT do: it doesn't verify upstream Cognito tokens (`@stynx-nyx/auth` does), doesn't manage user accounts (admin endpoints live in `backend/identity-admin`), doesn't issue refresh tokens — STYNX sessions are short-lived and re-issued by a fresh Cognito exchange.\n\n## Audience\n\nBackend developers wiring authentication. Direct interaction is unusual — most use goes through `@stynx-nyx/auth`'s session-exchange. You configure this package; you rarely call it.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/sessions\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n**Node:** 24.x.\n\n## STYNX 1.5.0 configuration and migration\n\nThe current module options are `StynxSessionsModuleOptions`. The module uses\nRedis by default and requires an issuer, Redis URL, and JWT signing key set\n(or a secret ID resolved by the host):\n\n```ts\nimport { StynxSessionsModule } from '@stynx-nyx/sessions';\n\nStynxSessionsModule.forRoot({\n  issuer: 'https://api.example.com',\n  redis: { url: 'redis://redis.internal:6379' },\n  jwt: { keySet: { currentKid: '2026-09', keys: [loadSigningKey()] } },\n  singleSession: { mode: 'revoke-existing' },\n  strongFactor: { claimName: 'amr', acceptedValues: ['mfa'] },\n});\n```\n\n`singleSession.mode` defaults to `off`. Its other values are\n`revoke-existing` and `reject-new`; conflicts are scoped to the same user\nand target tenant. A tenant switch atomically revokes the originating\nsession and creates the target session, even when the mode is `off`.\n`SessionConflictError.code` is `SESSION_CONFLICT` when `reject-new`\nfinds an active conflict. It is a `StynxError` with status 409, so\n`StynxErrorFilter` returns HTTP 409.\n\nEvery custom `SessionStore` must implement\n`createWithPolicy(record, { mode, now, priorSessionId? })` before upgrading.\n`SessionService` checks this at module startup even with mode `off`,\nbecause tenant switching requires an atomic transition. The bundled\n`RedisSessionStore` and `InMemorySessionStore` implement it. The Redis\npolicy script supports standalone Redis; Redis Cluster and routing proxies\nare not supported by this script.\n\n`strongFactor` is disabled by default. When enabled, `claimName` defaults\nto `amr`; `acr` or a custom verified claim can be selected. Accepted\nvalues are trimmed and compared without case. Blank values are discarded,\nand an empty resulting list fails at startup. Missing or unmatched verified\nclaims raise `StrongFactorRequiredError` with code\n`STRONG_FACTOR_REQUIRED`, a `StynxError` with status 403. Factor values must come from a validated\nidentity token through `verifiedFactorClaims`, never from request body\nmetadata. A valid prior session carries its verified factor through an\natomic tenant switch.\n\nFor health readiness, compose\n`createSessionStoreReadinessIndicator(store, { timeoutMs?: number })`\nwith `StynxHealthModule.forRoot(options, indicators)`. The default probe\ntimeout is 500 ms. A custom store may implement `probeReadiness()`; otherwise\nthe indicator uses a read-only lookup of a nonexistent session ID.\n\nThe JWKS endpoint is `GET /.well-known/jwks.json`.\n\n## Legacy configuration examples\n\nThe examples below describe an earlier STYNX API. Use the 1.5.0 options\nabove when configuring a current host.\n\n## Quick start\n\n```ts\nimport { StynxSessionsModule } from '@stynx-nyx/sessions';\n\nStynxSessionsModule.forRoot({\n  signing: {\n    activeKid: 'kid-2026-06',\n    keys: {\n      'kid-2026-06': {/* EC P-256 private key */},\n      'kid-2026-04': {/* retired but still verifying */},\n    },\n    accessTokenTtl: '15m',\n  },\n  store: { kind: 'redis', redis: { host: 'redis.internal' } },\n});\n```\n\nThe `/sessions/jwks.json` endpoint becomes publicly available (verifiers fetch it to validate tokens).\n\n## Public API surface\n\n### Modules\n\n| Export                | Signature                                 | Description                                                           |\n| --------------------- | ----------------------------------------- | --------------------------------------------------------------------- |\n| `StynxSessionsModule` | `.forRoot(options: StynxSessionsOptions)` | Registers the JWKS controller, signing service, store, mirror writer. |\n\n### Services / Injectables\n\n| Export                     | Description                                                                                              |\n| -------------------------- | -------------------------------------------------------------------------------------------------------- |\n| `StynxSessionsService`     | High-level operations: create session, revoke session, list active sessions for a user.                  |\n| `SessionJwtSigningService` | Signs access tokens with the active kid; throws `SessionSigningKeyError` if active kid is not in `keys`. |\n| `InMemorySessionStore`     | Default store. Single-instance only.                                                                     |\n| `RedisSessionStore`        | Multi-instance store.                                                                                    |\n| `SessionMirrorWriter`      | Mirrors session events (create/revoke) to a configured downstream (e.g. SQS, EventBridge).               |\n\n### Endpoints (1 controller)\n\n| Method | Path                  | Auth   | Description                                                                              |\n| ------ | --------------------- | ------ | ---------------------------------------------------------------------------------------- |\n| `GET`  | `/sessions/jwks.json` | public | JSON Web Key Set for the active + retired kids. Verifiers fetch this to validate tokens. |\n\n### Errors\n\n| Export                   | Code                            | Description                                   |\n| ------------------------ | ------------------------------- | --------------------------------------------- |\n| `SessionSigningKeyError` | `SESSION_SIGNING_KEY_NOT_FOUND` | `activeKid` is not present in `keys` map.     |\n| `SessionNotFoundError`   | `SESSION_NOT_FOUND`             | Operation on a session-id that doesn't exist. |\n| `SessionRevokedError`    | `SESSION_REVOKED`               | Session was revoked.                          |\n\n### Types / Interfaces\n\n| Export                 | Description                                                                                         |\n| ---------------------- | --------------------------------------------------------------------------------------------------- |\n| `StynxSessionsOptions` | `forRoot()` options.                                                                                |\n| `SessionRecord`        | Persisted session metadata: `{ id, userId, tenantId?, issuedAt, expiresAt, kid, devicePin?, ... }`. |\n\n## Configuration\n\n### `StynxSessionsModule.forRoot()` options\n\n| Option                   | Type                           | Default       | Description                                                            |\n| ------------------------ | ------------------------------ | ------------- | ---------------------------------------------------------------------- |\n| `signing.activeKid`      | `string`                       | (required)    | Kid used to sign new tokens.                                           |\n| `signing.keys`           | `Record<kid, JWK>`             | (required)    | Map of kid → key. Retired kids stay here so older tokens still verify. |\n| `signing.accessTokenTtl` | `string`                       | `'15m'`       | TTL for issued access tokens.                                          |\n| `store.kind`             | `'in-memory' \\| 'redis'`       | `'in-memory'` | Store backend.                                                         |\n| `store.redis`            | `RedisOptions`                 | n/a           | Redis config when `kind: 'redis'`.                                     |\n| `mirror.writer`          | `SessionMirrorWriter \\| false` | `false`       | Optional event mirror (SQS, EventBridge).                              |\n| `pinning.enabled`        | `boolean`                      | `false`       | Require client to send device-fingerprint on each request.             |\n\n## Examples\n\n### Example 1 — basic config\n\n```ts\nStynxSessionsModule.forRoot({\n  signing: {\n    activeKid: 'kid-2026-06',\n    keys: { 'kid-2026-06': loadJwkFromSecret() },\n    accessTokenTtl: '15m',\n  },\n});\n```\n\n### Example 2 — key rotation (zero-downtime)\n\n```ts\n// Step 1: deploy with both old and new kid; active=old\nsigning: { activeKid: 'kid-2026-04', keys: { 'kid-2026-04': old, 'kid-2026-06': new } }\n\n// Step 2: deploy with active flipped to new; old still in map (verifies in-flight tokens)\nsigning: { activeKid: 'kid-2026-06', keys: { 'kid-2026-04': old, 'kid-2026-06': new } }\n\n// Step 3: after all old tokens expire, remove old kid\nsigning: { activeKid: 'kid-2026-06', keys: { 'kid-2026-06': new } }\n```\n\n### Example 3 — mirroring session events\n\n```ts\nmirror: {\n  writer: {\n    async writeCreated(session) { await sqs.send({ ... }); },\n    async writeRevoked(sessionId) { await sqs.send({ ... }); },\n  },\n}\n```\n\n## Common pitfalls\n\n- **`SessionSigningKeyError` at startup** — `activeKid` isn't in `keys`. Common during rotation if you flip activeKid but forgot to ship the new private key.\n- **In-memory store across multiple instances** — each instance has its own session set; revoke on one instance leaves the session valid on others. Use Redis in any multi-instance deploy.\n- **JWKS endpoint cached too aggressively** — verifiers may cache the JWKS for hours. Plan rotation timelines accordingly.\n- **Mirror writer blocking session creation** — if your `mirror.writer` is slow (or down), session creation stalls. Wrap the mirror in a try/catch or use a queue for back-pressure isolation.\n\n## Related packages\n\n- [`@stynx-nyx/auth`](/docs/packages/auth/) — exchanges upstream tokens for STYNX sessions via this package; verifies sessions on subsequent requests.\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` for session-bound request metadata.\n- [`@stynx-nyx/angular-sessions`](/docs/packages-web/angular-sessions/) — Angular pair: session-list UI + revoke-other-sessions action.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-sessions/`](/docs/api-reference/stynx-sessions/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/core`: `workspace:*`\n- `@stynx-nyx/data`: `workspace:*`\n- `@stynx-nyx/idempotency`: `workspace:*`\n- `jose`: `^6.2.2`\n- `redis`: `^6.0.0`\n- `uuid`: `^14.0.1`\n- `zod`: `^4.3.6`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@nestjs/platform-express`: `^11.1.26`\n- `@nestjs/testing`: `^11.1.26`\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `testcontainers`: `^12.0.2`\n- `ts-node`: `^10.9.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/sessions",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "rm -rf dist && tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

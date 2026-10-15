@@ -1,0 +1,95 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/types",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[4.17.2]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 219866,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/smithy-types-4.17.2.json",
+    "sourceSha256": "sha256:28bb74b07892ca1cc64a6791a7c98a715e524b5564442df0b22ea317c898bfa6"
+  },
+  "version": "4.17.2",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/types@4.17.2",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/types_4.17.2_1786814685361_0.8741295232565041"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:2554139c-925b-4e2b-9a2c-4fb43a11b9e1"
+      }
+    },
+    "author": {
+      "email": "",
+      "name": "AWS Smithy Team",
+      "url": "https://smithy.io"
+    },
+    "dependencies": { "tslib": "^2.6.2" },
+    "devDependencies": {
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2ftypes@4.17.2"
+      },
+      "fileCount": 224,
+      "integrity": "sha512-FOKpVZob9MPTn2znRzGrnsMHv7BOsKVw3XiP/cOyYLDVZ9qKp4nifIiSCuUU/fIj5Vu0UOAxCFr+qRAtG0NUkA==",
+      "shasum": "ad71f6f62460a6409f0e8efc173e2e0f883ea4e6",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIA77flJWWhLjJ2jPUvbNWAg9DtrcqSLt+Gow2LyXTjYmAiEA0O/DNVptV8TIHXka7hzVFven/lDqg7M/Alz37AM1KCU="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIAd9Ry5/qvi85exCbkx8CMajauoRsSSSeTuJZrPZIJTYAiBlt0flx7TsrUPQbgC9slf9QX9C9x1MaqyJ3oY3XUytTA=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/types/-/types-4.17.2.tgz",
+      "unpackedSize": 314856
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "6bb59af4bbb9506fcef4af76add81eff064b99ec",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/types",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/types",
+    "repository": {
+      "directory": "packages/types",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4 && node scripts/downlevel",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:tsc -p tsconfig.test.json"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<=4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "4.17.2"
+  }
+}

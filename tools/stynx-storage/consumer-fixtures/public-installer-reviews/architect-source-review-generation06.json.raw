@@ -1,0 +1,86 @@
+{
+  "formatVersion": 1,
+  "kind": "architect-public-installer-readonly-phase-source-delta-review",
+  "actor": "/root/architect_adoption_160",
+  "role": "Architect",
+  "disposition": "SOURCE_DELTA_ACCEPTED_FOR_NEW_RELEASE06_CLOSURE",
+  "currentIntermediateSource": {
+    "path": "tools/stynx-storage-public-install.mjs",
+    "bytes": 48914,
+    "sha256": "sha256:300962e198f537276c550b7516eae2d557fb2f7c1edf46728086dfc136871f7e"
+  },
+  "sourceBeforeSeal": {
+    "path": "scratch/r22-adoption-161/public-installer-preparation/candidate-readonly-transition/main-generation06-null.mjs.raw",
+    "bytes": 48843,
+    "sha256": "sha256:790cc7734de1a023c5409cf9ba140adbd74545882ffd13026a97067fa466135a"
+  },
+  "priorReviewedNullSource": {
+    "path": "scratch/r22-adoption-161/public-installer-preparation/release-candidate-05/main-before-null.inverse.mjs.raw",
+    "bytes": 48213,
+    "sha256": "sha256:47b937958c3120125995290283518e54d7ad7ac3eb666d4bf73e8a546353246a"
+  },
+  "previousRelease": {
+    "path": "tools/stynx-storage/public-install-release-admission.json",
+    "bytes": 31367,
+    "sha256": "sha256:5e7c36c21d5ce7c73a1b60d20741c386968bd308e950418bf7c0cbee32a06100"
+  },
+  "unchangedInputCount": 156,
+  "unchangedOtherSourceCount": 4,
+  "inverse": {
+    "singleDeclaration": "publicReleaseSha256",
+    "currentOldSeal": "sha256:5e7c36c21d5ce7c73a1b60d20741c386968bd308e950418bf7c0cbee32a06100",
+    "newNullSha256": "sha256:790cc7734de1a023c5409cf9ba140adbd74545882ffd13026a97067fa466135a",
+    "exactDeltaRemovalRestoresPriorNull": true
+  },
+  "reviewedDelta": [
+    "One sixteen-line insertion only: actual SET TRANSACTION READ ONLY on existing target; same-target SELECT reads actual on/owner; typed requireFact validates both; retained candidate/read-only-mode.json records those actual values and previously admitted subject.",
+    "Insertion follows final inspect/repeat admission and all writes, and precedes both unchanged genuine public candidate verifier calls. No new BEGIN/reconnect/early COMMIT/result adapter exists.",
+    "Full subsequent target path inspected: verifier SELECTs, snapshot catalog/data/sequence SELECTs, rolegraph SELECT, writerfootprint SELECT, then COMMIT. Failure retains existing ROLLBACK/recovery behavior.",
+    "Precommit manifest files includes new mode record; verifier reports/candidate snapshot are retained before COMMIT. Separate postcommit read-only verifier and snapshot equality unchanged.",
+    "Mode record intentionally contains actual owner/on only; same-client continuity is source-bound. It does not pretend to contain newly observed backendPID/UTC/context fields. Existing admitted subject/transaction and guarded context remain unchanged."
+  ],
+  "actualProbeInputs": [
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/probe.sql",
+      "bytes": 458,
+      "sha256": "sha256:d33979d5547809fbdd6e03156f9a3b173f06ba70875cb8213e789b64947c1e26"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/argv.json",
+      "bytes": 477,
+      "sha256": "sha256:3cf625f7e1a51850635c6bce4710e0037b966d7ce4ee8cabc815521651e38b9a"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/outcome.json",
+      "bytes": 1084,
+      "sha256": "sha256:d83495bb273448330973386c62d5567296e08d0ba417d95553816e2ecd821c30"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/stdout.log",
+      "bytes": 52,
+      "sha256": "sha256:d0fd1b116e4426deed72f669d5ad6b81d326fca196c97d163e4f198bea52bd28"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/stderr.log",
+      "bytes": 0,
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/read-only-phase-probe-01/ROOT-PROBE-LEASE-RETURNED.json",
+      "bytes": 1645,
+      "sha256": "sha256:87a1f668ffa9fb7710a258b68a4d612c3c3fd18aa9bdfce5327f40e890249b8d"
+    }
+  ],
+  "actualProbeReadback": [
+    "Exact raw BEGIN/CREATE/INSERT/off/SET/on|1/ROLLBACK, exit0 and empty stderr independently read and hashed. Returned record reports postgres/sysid7696398307396182058/no clients/temp absence; this latter observation is Root provenance, not new Architect SQL.",
+    "Probe establishes lawful mode change plus own uncommitted temporary row visibility. It is not persistent storage verifier/commit success."
+  ],
+  "release06Requirements": [
+    "Canonical copy of this completed Architect review and independent Inspector review; five exact source refs with new main null790cc and unchanged other four, all156 current inputs.",
+    "Reset stale intermediate release05 seal to null or integrate exact new release only after full closure review; current changed main with old seal is not executable admitted release05.",
+    "One anchored new declaration integration plus exact inverse to790cc, new exclusive single-invocation owned-subject lease and fresh identity/pristine/runner/source checks. Returned attempt03/probe leases not reusable."
+  ],
+  "sourceOnly": true,
+  "sdkEvaluatedByReviewer": false,
+  "sqlExecutedByReviewer": false
+}

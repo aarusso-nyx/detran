@@ -1,0 +1,105 @@
+{
+  "role": "Inspector",
+  "actor": "/root/inspector_adoption_160",
+  "result": "PASS_INDEPENDENT_VERSION_AND_RETENTION_CANDIDATE_BYTES",
+  "versionCandidate": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/version-selection-candidate.json",
+    "sha256": "sha256:3e2e5d7b7660d4bf5972e14fafd48051cd1ddf7a5088c74108d536a57ffa7862"
+  },
+  "custodyCandidate": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/retention-wrapper-input-custody-candidate.json",
+    "sha256": "sha256:f937566cd3cca1c9f856ce780b91db398afb88c56859122b578c92990c817c0a"
+  },
+  "versionSelections": {
+    "target": 210,
+    "prior": 176
+  },
+  "historicalSourceBytesRehashed": 331437835,
+  "fullSelectedVersionObjectsExactlyEqual": true,
+  "actualTargetObservationTimesIndependentlyMatched": 210,
+  "priorObservationTimeUnknownPreserved": 176,
+  "actualArchiveFileLocationsCompared": 386,
+  "uniqueArchivePayloadDigests": 351,
+  "historicalCopiesExactlyEqual": 28,
+  "actualRetainedLinksCurrentlyReadBack": 464,
+  "generatedShimTargetsMatchActualBinDeclarations": 3,
+  "wrappers": [
+    {
+      "realm": "target",
+      "contexts": 211,
+      "payloads": 30091,
+      "links": 9,
+      "generated": 0,
+      "inputs": 5,
+      "stynxContexts": 27,
+      "wrapper": {
+        "path": "scratch/r22-adoption-161/portable-ci-preparation/target-retention-wrapper-candidate.json",
+        "bytes": 228055,
+        "sha256": "sha256:c9af21cda702d2ad09bde9605c4749a9a4742cf9f3e13133aa53ff6d136f71f3"
+      }
+    },
+    {
+      "realm": "prior",
+      "contexts": 176,
+      "payloads": 21618,
+      "links": 455,
+      "generated": 3,
+      "inputs": 4,
+      "stynxContexts": 11,
+      "wrapper": {
+        "path": "scratch/r22-adoption-161/portable-ci-preparation/prior-retention-wrapper-candidate.json",
+        "bytes": 361288,
+        "sha256": "sha256:d997355216bb636f65b30f79d22c128b99c813d0ce399b3a73630513c7767503"
+      }
+    }
+  ],
+  "priorCountDisposition": "21618 tar payloads +3 installer shims +3 capture inputs =21624; separate prior source input adds1 =21625. checkedInstalledPackageFiles21621 includes3shims.",
+  "sdkExecuted": false,
+  "databaseAccessed": false,
+  "networkUsed": false,
+  "policyAdmission": false,
+  "limits": [
+    "Exact actual small derivative and wrapper candidate review, not producer/SDK/Linux/CI execution. Wrapper reviews remain null and require actual subsequent pinned review records.",
+    "Full mutable historical source bodies are locally rehashed provenance; clean CI cannot claim reconstruction of omitted packuments."
+  ],
+  "independentArchitectInputReviews": [
+    {
+      "path": "scratch/r22-adoption-161/portable-ci-preparation/ARCHITECT-VERSION-SELECTION-REVIEW.json",
+      "bytes": 251958,
+      "sha256": "sha256:087972a1037502b381fd309605448d803e2047f46f79ea078e7990bde005076d"
+    },
+    {
+      "path": "scratch/r22-adoption-161/portable-ci-preparation/ARCHITECT-RETENTION-WRAPPER-INPUT-REVIEW.json",
+      "bytes": 2245,
+      "sha256": "sha256:49c58bd48a0f8e34f10188529728d171ec3aef16688644ee8c5db6c6c0115976"
+    },
+    {
+      "path": "scratch/r22-adoption-161/portable-ci-preparation/ARCHITECT-RETENTION-LINK-READBACK.json",
+      "bytes": 471,
+      "sha256": "sha256:27e47400a2174c69cbc95de16b1198cb0cb91bc6578dca4c522fa6149c28cd82"
+    }
+  ],
+  "payloadInventories": [
+    {
+      "path": "tools/stynx-storage/fixtures/publication-161/archive-payload-inventory.json",
+      "bytes": 6354555,
+      "sha256": "sha256:40301f94a3895426433b12c2b734a7fdadaa7e989457d6dc86d04969e6a0aa08"
+    },
+    {
+      "path": "tools/stynx-storage/fixtures/prior-observation/archive-payload-inventory.json",
+      "bytes": 6331932,
+      "sha256": "sha256:999c705098745df1eceba1f6e6c1ae8094794435d5f9b9a15392195ca3b76657"
+    }
+  ],
+  "ownCheckProducer": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/inspector-review-retention.py",
+    "bytes": 11541,
+    "sha256": "sha256:bec006ad2ca300fe2d84a72a6a127d5bc90efb52b7c2d3572a0d6aba662aa15b"
+  },
+  "ownCheckLog": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/inspector-review-retention-with-links.log",
+    "bytes": 216,
+    "sha256": "sha256:0e0b9bc3b93f5f4de23405a4e807805f88918a290c6ba14826ffb6ada383f9a6"
+  },
+  "disposition": "accepted-candidate-input-custody-only"
+}

@@ -119,23 +119,45 @@ const workflows = fs
     name,
     text: fs.readFileSync(path.join(root, '.github/workflows', name), 'utf8'),
   }));
-const approvedArtifactUse = {
-  workflow: 'devai-local-rc-verify.yml',
-  reference: 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',
-};
+const uploadReference =
+  'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02';
+const approvedArtifactUses = [
+  { workflow: 'devai-local-rc-verify.yml', reference: uploadReference },
+  { workflow: 'ci.yml', reference: uploadReference },
+  { workflow: 'ci.yml', reference: uploadReference },
+];
 const artifactUses = workflows.flatMap(({ name, text }) =>
   [...text.matchAll(/actions\/upload-artifact@[^\s#]+/gu)].map((match) => ({
     workflow: name,
     reference: match[0],
   })),
 );
+const orderedUses = (uses: typeof artifactUses) =>
+  uses.map(({ workflow, reference }) => `${workflow}|${reference}`).sort();
+const devaiWorkflow = workflows.find(
+  ({ name }) => name === 'devai-local-rc-verify.yml',
+)?.text;
+const foundationWorkflow = workflows.find(
+  ({ name }) => name === 'ci.yml',
+)?.text;
 if (
-  artifactUses.length !== 1 ||
-  artifactUses[0]?.workflow !== approvedArtifactUse.workflow ||
-  artifactUses[0]?.reference !== approvedArtifactUse.reference
+  JSON.stringify(orderedUses(artifactUses)) !==
+    JSON.stringify(orderedUses(approvedArtifactUses)) ||
+  !devaiWorkflow?.includes(
+    'name: verified-local-rc-${{ env.CANDIDATE_SHA }}',
+  ) ||
+  !devaiWorkflow.includes(
+    'path: ${{ runner.temp }}/devai-local-rc/verification-summary.json',
+  ) ||
+  !foundationWorkflow?.includes(
+    'name: native-stynx-foundation-${{ github.run_id }}-${{ github.run_attempt }}',
+  ) ||
+  !foundationWorkflow.includes(
+    'name: native-stynx-backend-${{ github.run_id }}-${{ github.run_attempt }}',
+  )
 ) {
   failures.push(
-    'PEC PR #35 is not superseded: expected exactly the immutable DEVAI verification-summary upload',
+    'PEC PR #35 is not superseded: expected the immutable DEVAI verification-summary upload and exactly two pinned native STYNX evidence uploads',
   );
 }
 

@@ -1,0 +1,80 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/search",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.743000Z",
+    "selection": "versions[6.3.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 93858,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/b8/b2/abf133f366ea0ee256ffa7f848456c34aab5a6ecc3a5ab7da4857aa2b22f10372293f9ea9455745256b022244c2d01a000f569459ffdf6a999d376f03b08",
+    "sourceSha256": "sha256:ffa27ab59fe8f45593f86186a5ed9c07dde6d6a068a0ad8598113dce1253903b"
+  },
+  "version": "6.3.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/search@6.3.0",
+    "_nodeVersion": "22.23.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/search_6.3.0_1790765991926_0.24646962277804252"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "fd0380b5-2809-4c39-b210-6d4eccf2cf5b"
+      }
+    },
+    "_npmVersion": "11.20.0",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "description": "This package provides support for the [RediSearch](https://redis.io/docs/interact/search-and-query/) module, which adds indexing and querying support for data stored in Redis Hashes or as JSON documents with the [RedisJSON](https://redis.io/docs/data-type",
+    "devDependencies": { "@redis/test-utils": "*" },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@redis%2fsearch@6.3.0"
+      },
+      "fileCount": 162,
+      "integrity": "sha512-RPXAZmKjZZG7Tm7m1w9keFdXzbL91PiSHQBfQRe9xwW40jNsTRbG0FwhIz4QlHPU4gKDAsCy8IQHj4yZl4H9rw==",
+      "shasum": "c153c125d0f791af78c145299f8ba4f7fc0eb0f8",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDOVtI9uV0Thypi54ifRfW3hqk6p0CXCURBPcWZ/1euxwIhANmz9yFHWv5P90PpnUWrPnXg8rmYqFxKjx4477iFStMj"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCICO9RLDopD0ZKLRnWakaWHbd3EAHtP8rW6DTHfW/QNW3AiEAmSpNSoqZuvTzT4O+ICC1pXM3WKqrBbqmpOGYMTVHBbg="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/search/-/search-6.3.0.tgz",
+      "unpackedSize": 468674
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "6b63940d1b53b84a78be47a009a8d03a57068b9b",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/search",
+    "keywords": ["redis", "RediSearch"],
+    "license": "MIT",
+    "main": "./dist/lib/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/search",
+    "peerDependencies": { "@redis/client": "^6.3.0" },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "release": "release-it",
+      "test": "nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit  './lib/**/*.spec.ts'",
+      "test-sourcemap": "mocha -r ts-node/register/transpile-only './lib/**/*.spec.ts'"
+    },
+    "types": "./dist/lib/index.d.ts",
+    "version": "6.3.0"
+  }
+}

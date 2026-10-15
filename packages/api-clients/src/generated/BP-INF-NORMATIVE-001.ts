@@ -561,19 +561,42 @@ export interface components {
       /** Format: uuid */
       tenant_id: string;
       /** Format: uuid */
-      traffic_agency_id: string;
+      traffic_agency_id?: string | null;
       document_kind: string;
       required_signers_json: {
         [key: string]: unknown;
       };
-      pades_level: string;
+      /** @enum {string} */
+      pades_level: 'NONE' | 'PAdES-B-LT';
       /** @default false */
       tsa_required: boolean;
       /** @default false */
       pdfa_required: boolean;
       govbr_level?: string | null;
-      /** @default 'active' */
-      status: string;
+      /**
+       * @default 'active'
+       * @enum {string}
+       */
+      status: 'draft' | 'active';
+      /** @default 1 */
+      revision: number;
+      /** Format: date-time */
+      valid_from?: string | null;
+      /** Format: date-time */
+      valid_to?: string | null;
+      /** @enum {string|null} */
+      minimum_signature_level?: 'ADVANCED' | 'QUALIFIED' | null;
+      require_lta?: boolean | null;
+      /** @enum {string|null} */
+      revocation?: 'ocsp' | 'crl' | 'ocsp-or-crl' | null;
+      /** @enum {string|null} */
+      at_time?: 'signing-time' | 'trusted-timestamp' | null;
+      accepted_policies?: string[] | null;
+      trust_anchors_pem?: string[] | null;
+      source_ref?: string | null;
+      approved_by?: string | null;
+      /** Format: date-time */
+      approved_at?: string | null;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -581,19 +604,32 @@ export interface components {
     };
     CreateSignaturePolicyDto: {
       /** Format: uuid */
-      traffic_agency_id: string;
+      traffic_agency_id?: string | null;
       document_kind: string;
       required_signers_json: {
         [key: string]: unknown;
       };
-      pades_level: string;
+      /** @enum {string} */
+      pades_level: 'NONE' | 'PAdES-B-LT';
       /** @default false */
       tsa_required: boolean;
       /** @default false */
       pdfa_required: boolean;
       govbr_level?: string | null;
-      /** @default 'active' */
-      status: string;
+      /** Format: date-time */
+      valid_from?: string | null;
+      /** Format: date-time */
+      valid_to?: string | null;
+      /** @enum {string|null} */
+      minimum_signature_level?: 'ADVANCED' | 'QUALIFIED' | null;
+      require_lta?: boolean | null;
+      /** @enum {string|null} */
+      revocation?: 'ocsp' | 'crl' | 'ocsp-or-crl' | null;
+      /** @enum {string|null} */
+      at_time?: 'signing-time' | 'trusted-timestamp' | null;
+      accepted_policies?: string[] | null;
+      trust_anchors_pem?: string[] | null;
+      source_ref?: string | null;
     };
     MobileNormativePackage: {
       /**

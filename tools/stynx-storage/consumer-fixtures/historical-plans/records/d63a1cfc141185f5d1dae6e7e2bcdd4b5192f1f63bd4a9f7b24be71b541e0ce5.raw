@@ -1,0 +1,55 @@
+{
+  "role": "Inspector",
+  "result": "PASS",
+  "scope": "g03 creation and privilege readback only",
+  "sqlMode": "Four fresh REPEATABLE READ READ ONLY captures, local UTC/row_security on/search_path pg_catalog, explicit ROLLBACK; all psql exited0.",
+  "sdkExecuted": false,
+  "writesExecuted": false,
+  "subjects": [
+    {
+      "subject": "detran_r22_161_g03_ref160",
+      "databaseOid": "18765",
+      "observedAtUtc": "2026-10-13T23:49:05.855928Z",
+      "identity": "PASS",
+      "fullPristineCatalog": "PASS",
+      "rolesMembershipUnchanged": "PASS",
+      "setInheritClosure": "PASS",
+      "noOtherClientSession": "PASS"
+    },
+    {
+      "subject": "detran_r22_161_g03_refprefix8",
+      "databaseOid": "18766",
+      "observedAtUtc": "2026-10-13T23:49:05.904797Z",
+      "identity": "PASS",
+      "fullPristineCatalog": "PASS",
+      "rolesMembershipUnchanged": "PASS",
+      "setInheritClosure": "PASS",
+      "noOtherClientSession": "PASS"
+    },
+    {
+      "subject": "detran_r22_161_g03_upgrade",
+      "databaseOid": "18767",
+      "observedAtUtc": "2026-10-13T23:49:05.957331Z",
+      "identity": "PASS",
+      "fullPristineCatalog": "PASS",
+      "rolesMembershipUnchanged": "PASS",
+      "setInheritClosure": "PASS",
+      "noOtherClientSession": "PASS"
+    },
+    {
+      "subject": "postgres",
+      "databaseOid": "5",
+      "observedAtUtc": "2026-10-13T23:49:06.004815Z",
+      "identity": "PASS",
+      "fullPristineCatalog": "PASS",
+      "rolesMembershipUnchanged": "PASS",
+      "setInheritClosure": "PASS",
+      "noOtherClientSession": "PASS"
+    }
+  ],
+  "limits": [
+    "No package install, SDK, seed, storage verifier, equivalence or baseline admission.",
+    "Original cluster01/02 reference databases were not queried or altered.",
+    "No generic production or approved provider/trust claim."
+  ]
+}

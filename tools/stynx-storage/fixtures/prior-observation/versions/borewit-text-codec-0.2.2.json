@@ -1,0 +1,104 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@borewit/text-codec",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[0.2.2]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 15427,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/borewit-text-codec-0.2.2.json",
+    "sourceSha256": "sha256:f59201aed1fa0beec8bc4163aee9e1694cbd36ad4aac62c742d0480eb6e88120"
+  },
+  "version": "0.2.2",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@borewit/text-codec@0.2.2",
+    "_nodeVersion": "22.21.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/text-codec_0.2.2_1773260113446_0.695235941988475"
+    },
+    "_npmUser": { "email": "borewit@xs4all.nl", "name": "borewit" },
+    "_npmVersion": "10.9.4",
+    "author": { "name": "Borewit", "url": "https://github.com/Borewit" },
+    "bugs": { "url": "https://github.com/Borewit/text-codec/issues" },
+    "description": "Text Decoder",
+    "devDependencies": {
+      "@biomejs/biome": "2.4.6",
+      "@types/chai": "^5.2.2",
+      "@types/mocha": "^10.0.10",
+      "chai": "^6.2.2",
+      "mocha": "^11.7.5",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.9.3"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 5,
+      "integrity": "sha512-DDaRehssg1aNrH4+2hnj1B7vnUGEjU6OIlyRdkMd0aUdIUvKXrJfXsy8LVtXAy7DRvYVluWbMspsRhz2lcW0mQ==",
+      "shasum": "75025f735c0983b3a871668804a57387e3649375",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIBFow/HEhh2YpLoe2emkwfvrJfPhYiIADcYgV90osSQEAiAeLzK+HxceSbi02WwG7DT6JXkmoJ7LCzWYxKU4q+hp9w=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@borewit/text-codec/-/text-codec-0.2.2.tgz",
+      "unpackedSize": 17838
+    },
+    "exports": "./lib/index.js",
+    "funding": {
+      "type": "github",
+      "url": "https://github.com/sponsors/Borewit"
+    },
+    "gitHead": "c2ce9c502abb9276e832220ee6e4fa9c4105301a",
+    "homepage": "https://github.com/Borewit/text-codec#readme",
+    "keywords": [
+      "TextDecoder",
+      "TextEncoder",
+      "decoder",
+      "decoding",
+      "encod",
+      "encoding",
+      "decode",
+      "text",
+      "ascii",
+      "utf-8",
+      "utf8",
+      "utf-16le",
+      "latin1",
+      "iso-8859-1",
+      "windows-1252",
+      "charset",
+      "encoding",
+      "decoding",
+      "polyfill",
+      "character-set",
+      "latin",
+      "hermes",
+      "react"
+    ],
+    "license": "MIT",
+    "maintainers": [{ "email": "borewit@xs4all.nl", "name": "borewit" }],
+    "name": "@borewit/text-codec",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Borewit/text-codec.git"
+    },
+    "scripts": {
+      "build": "npm run compile",
+      "clean": "del-cli lib/**/*.js lib/***.js.map test/**/*.d.ts test/**/*.js test/**/*.js.map",
+      "compile": "npm run compile:src && npm run compile:test",
+      "compile:src": "tsc --p lib --sourceMap false",
+      "compile:test": "tsc --p test",
+      "lint": "biome check",
+      "prepublishOnly": "npm run build",
+      "test": "mocha",
+      "update-biome": "npm install --save-dev --save-exact @biomejs/biome@latest && npx @biomejs/biome migrate --write"
+    },
+    "type": "module",
+    "types": "lib/index.d.ts",
+    "version": "0.2.2"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/client-cognito-identity-provider",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:13.580000Z",
+    "selection": "versions[3.1151.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 3346008,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/07/97/e5ef9d05d7ad875ed53aa4bad7ebfcd02c6b01ddbd8bdd491487c347b7c52fa774e2d56d32094296b9ba18a68d63503425767e942f13502fec10916e9ea1",
+    "sourceSha256": "sha256:63fd310b64f11512e1bd6ff69a737b6baf1a06cc283a0c6298c34be3f8cd3243"
+  },
+  "version": "3.1151.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/client-cognito-identity-provider@3.1151.0",
+    "_nodeVersion": "24.19.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/client-cognito-identity-provider_3.1151.0_1791918081322_0.01600412561631348"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": { "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.browser" },
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": {
+      "@aws-sdk/core": "^3.978.3",
+      "@aws-sdk/credential-provider-node": "^3.972.86",
+      "@aws-sdk/types": "^3.974.6",
+      "@smithy/core": "^3.35.2",
+      "@smithy/fetch-http-handler": "^5.8.0",
+      "@smithy/node-http-handler": "^4.12.1",
+      "@smithy/types": "^4.19.0",
+      "tslib": "^2.6.2"
+    },
+    "description": "AWS SDK for JavaScript Cognito Identity Provider Client for Node.js, Browser and React Native",
+    "devDependencies": {
+      "@tsconfig/node20": "20.1.8",
+      "@types/node": "^20.14.8",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 499,
+      "integrity": "sha512-o+Qkc6+t5MYbxglAVliTCwIcrzIVTz/X7nxGd91CkV35yKdbPA3FhM8mH1UL++2O24Vx4wnqlUthQP10yMDVfQ==",
+      "shasum": "304b91d2d28628fb464d52c8ab0ab4482ebe54fc",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIGymuysKu3LxA82r+cr8P14YReBwZASyqQ2LdKr5bVeMAiEA6BnA/3uHdQxcFQCnWnr+PTvtDyYjlvyrIYxCh7zJ2gE="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIHwEVxliqAL3f7ifztG6gpcqqK7dNxgFTpHv1/VTGC7mAiEA6ZCTxKiBVZYQOeglmpet7zqz++gMffvPlDmCSSB9w4w="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/client-cognito-identity-provider/-/client-cognito-identity-provider-3.1151.0.tgz",
+      "unpackedSize": 2920183
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-cognito-identity-provider",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/client-cognito-identity-provider",
+    "react-native": {
+      "./dist-es/runtimeConfig": "./dist-es/runtimeConfig.native"
+    },
+    "repository": {
+      "directory": "clients/client-cognito-identity-provider",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "generate:client": "node ../../scripts/generate-clients/single-service",
+      "test:index": "tsc -p tsconfig.test.json && node ./test/index-objects.spec.mjs"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.1151.0"
+  }
+}

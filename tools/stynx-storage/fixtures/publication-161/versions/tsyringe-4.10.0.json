@@ -1,0 +1,99 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "tsyringe",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:29.346000Z",
+    "selection": "versions[4.10.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 107081,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/78/89/22ee89c6a0d8bd80ba82f8bda01480e6f17b3654bb2c742a5e5d51841ae2a9e6ae237ed2be0524b9ebb9db6a1e2616c280fa7ebaa7c7a9da031d620fec2d",
+    "sourceSha256": "sha256:4d12b04a4a2489f570369d8ef75ed373ca872c0cc9dd6ca3ef5487952699dded"
+  },
+  "version": "4.10.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "tsyringe@4.10.0",
+    "_nodeVersion": "22.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/tsyringe_4.10.0_1744771634087_0.10155273502208595"
+    },
+    "_npmUser": { "email": "xapphire13@live.com", "name": "xapphire13" },
+    "_npmVersion": "10.9.2",
+    "author": { "name": "Steven Hobson-Campbell" },
+    "bugs": { "url": "https://github.com/Microsoft/tsyringe/issues" },
+    "dependencies": { "tslib": "^1.9.3" },
+    "description": "Lightweight dependency injection container for JavaScript/TypeScript",
+    "devDependencies": {
+      "@types/jest": "^24.0.21",
+      "@types/node": "^8.10.16",
+      "@typescript-eslint/eslint-plugin": "^2.6.0",
+      "@typescript-eslint/parser": "^2.6.0",
+      "eslint": "^6.6.0",
+      "eslint-config-prettier": "^6.5.0",
+      "eslint-plugin-prettier": "^3.1.1",
+      "husky": "^3.0.0",
+      "jest": "^24.7.1",
+      "prettier": "1.18.2",
+      "reflect-metadata": "^0.1.12",
+      "rimraf": "^3.0.0",
+      "ts-jest": "^24.0.2",
+      "typescript": "^3.1.6"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 168,
+      "integrity": "sha512-axr3IdNuVIxnaK5XGEUFTu3YmAQ6lllgrvqfEoR16g/HGnYY/6We4oWENtAnzK6/LpJ2ur9PAb80RBt7/U4ugw==",
+      "shasum": "d0c95815d584464214060285eaaadd94aa03299c",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDOFHx5iuGHdPnPg0/8K7iFumbXKRhJy5jSt9/52FYh8QIhAKQB1a8c9KPd0vw2zJrn0GZHX15j7ox8RvD89iiCmpYP"
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/tsyringe/-/tsyringe-4.10.0.tgz",
+      "unpackedSize": 148573
+    },
+    "engines": { "node": ">= 6.0.0" },
+    "es2015": "./dist/esm2015/index.js",
+    "gitHead": "e033769d97cfb6cc4a8569e2b50eb32015453302",
+    "homepage": "https://github.com/Microsoft/tsyringe#readme",
+    "keywords": [
+      "dependency injection",
+      "dependency",
+      "injection",
+      "ioc",
+      "container",
+      "javascript",
+      "typescript"
+    ],
+    "license": "MIT",
+    "main": "dist/cjs/index.js",
+    "maintainers": [
+      { "email": "feldspar@gmail.com", "name": "meltingmosaic" },
+      { "email": "xapphire13@live.com", "name": "xapphire13" }
+    ],
+    "module": "./dist/esm5/index.js",
+    "name": "tsyringe",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Microsoft/tsyringe.git"
+    },
+    "scripts": {
+      "build": "yarn clean && yarn build:cjs && yarn build:es5 && yarn build:es2015 && yarn build:types",
+      "build:cjs": "tsc",
+      "build:es2015": "tsc -p ./typescript/tsconfig.esm2015.json",
+      "build:es5": "tsc -p ./typescript/tsconfig.esm5.json",
+      "build:types": "tsc -p ./typescript/tsconfig.types.json",
+      "clean": "rimraf ./dist",
+      "lint": "eslint --ext \".js,.jsx,.ts,.tsx\" \"./src\"",
+      "lint:fix": "eslint --fix --ext \".js,.jsx,.ts,.tsx\" \"./src\"",
+      "test": "yarn lint && jest --config test/jest.config.js",
+      "test:coverage": "jest --config test/jest.config.js --coverage",
+      "test:inspect": "yarn lint && node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --config test/jest.config.js"
+    },
+    "typings": "./dist/typings/index.d.ts",
+    "version": "4.10.0"
+  }
+}

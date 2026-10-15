@@ -1,0 +1,32 @@
+test_absolute_deadline_and_phase_order (TEST_ONLY_test_external_process_pure.py.ExternalPure.test_absolute_deadline_and_phase_order) ... ok
+test_frame_duplicate_and_wrong_runtime (TEST_ONLY_test_external_process_pure.py.ExternalPure.test_frame_duplicate_and_wrong_runtime) ... ok
+test_reuse_wrong_result_and_disabled_entry (TEST_ONLY_test_external_process_pure.py.ExternalPure.test_reuse_wrong_result_and_disabled_entry) ... ok
+test_stat_and_raw_tuple_hostile (TEST_ONLY_test_external_process_pure.py.ExternalPure.test_stat_and_raw_tuple_hostile) ... ok
+test_closed_admission_and_duplicate_refusal (TEST_ONLY_test_entry_pure.py.EntryPure.test_closed_admission_and_duplicate_refusal) ... ok
+test_exact_source_buffer_and_hard_refusal (TEST_ONLY_test_entry_pure.py.EntryPure.test_exact_source_buffer_and_hard_refusal) ... ok
+test_fresh_identity_and_exact_three_readonly_binds (TEST_ONLY_test_creation_contract_pure.py.CreationContractPure.test_fresh_identity_and_exact_three_readonly_binds) ... ok
+test_helper_authority_change_between_brackets_must_refuse (__main__.InspectorFalseAcceptWitness.test_helper_authority_change_between_brackets_must_refuse) ... FAIL
+test_truncated_stat_must_refuse (__main__.InspectorFalseAcceptWitness.test_truncated_stat_must_refuse) ... FAIL
+
+======================================================================
+FAIL: test_helper_authority_change_between_brackets_must_refuse (__main__.InspectorFalseAcceptWitness.test_helper_authority_change_between_brackets_must_refuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/inspector-first-slice-source-review-01/test_inspector_external_first_slice_inert.py", line 26, in test_helper_authority_change_between_brackets_must_refuse
+    with self.assertRaisesRegex(RuntimeError,'authority|helper'):r.attest_after(after,5,True)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_truncated_stat_must_refuse (__main__.InspectorFalseAcceptWitness.test_truncated_stat_must_refuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/public-installer-preparation/populated-history-target-linux-runner-caller-08/inspector-first-slice-source-review-01/test_inspector_external_first_slice_inert.py", line 17, in test_truncated_stat_must_refuse
+    with self.assertRaisesRegex(RuntimeError,'stat'):m.parse_stat(truncated,108)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.007s
+
+FAILED (failures=2)

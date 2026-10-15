@@ -504,6 +504,38 @@ OD-R22-16 exceção explícita à A1; "outras: adote as recomendações"), trans
 | OD-R22-68 | Destino de `DETRAN_DOCUMENT_TRUST_*` (A05)                                                                     | **(a)** mantidas como portão por chamada (Owner, 2026-09-30, Adenda B16).                                                                                                                                                                                                                                                                                                                                                                          |
 | OD-R22-69 | Retirada `physical_verified` exige `attestor` (A06)                                                            | **(b)** checkpoint da cláusula (Owner, 2026-09-30, Adenda B16).                                                                                                                                                                                                                                                                                                                                                                                    |
 
+### R-0022 — registro técnico local da adoção 1.6.1 (Architect, 2026-10-14)
+
+Esta nota reconcilia implementação e evidência; **não é nova decisão do Owner**,
+não reabre nem encerra as ODs da tabela acima. A retomada publicada1.6.1 e os
+contratos específicos coexistem com os registros históricos1.5.x/1.6.0, sem
+reescrever o resultado ou a autoridade desses registros.
+
+A [ADR-0040](../adr/ADR-0040-r22-stynx-1-6-1-forward-custody.md) permanece
+**Proposed** e agora distingue os resultados locais de gates pendentes. Foram
+observados baseline/upgrade package-only g03, fresh/repeat/full/repeat da
+substituição e concorrência pública fresh/repeat em sujeitos próprios, além de
+negativos SQL S com rollback e cohorts TEST_ONLY. O signoff local de concorrência
+é `sha256:12c13e0872670573023f351435da33bad713689c2170e2b0032c89e11d4f23c3`;
+o de replica/ACL S é
+`sha256:f8424e9d2476f967899e2cab3e6e8b83d1b0261733c847370cedae037520b419`.
+A ADR registra seus caminhos e limites. Não houve identidade bruta de catálogo
+entre repeats: somente as mudanças finitas enumeradas foram aceitas. Negócio
+vazio não prova preservação de histórico populado; owner READ ONLY não prova
+bootstrap do app; guest Linux emulado não é execução nativa de CI.
+
+Permanecem trabalho local: counterparts live das 23 intenções ordinárias,
+histórico A/B populado, faults genuínos do installer, composição Outbox/reader
+antes do corte e checks/evidência do candidato final. Settings22 e Outbox32
+passaram somente como testes puros TEST_ONLY. A preparação do novo gate populado
+está desativada, com grafo parcial e sem autoridade de execução.
+
+Permanecem gates distintos: limites publicados1.6.1 para ACK ordinário/proveniência
+atômica, deadline passado/igual e história/consultas exigidas; fonte C02/C03;
+amostra de provedor e valores/piso/âncoras de confiança aprovados; execução nativa
+de CI e autoridade de integração/publicação. Nada nesta nota promove readiness,
+aceita adoção integral, autoriza commit/push/PR/merge ou altera a cadeia de provas.
+
 ## R-0020 — sensores DEVAI (C-0002, ação 5)
 
 As decisões já tomadas permanecem fechadas. A ADR-0022 foi aceita pela OD-R18-002; a OD-R20-006

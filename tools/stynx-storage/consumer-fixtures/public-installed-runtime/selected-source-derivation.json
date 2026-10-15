@@ -1,0 +1,86 @@
+{
+  "kind": "source-only-selected-public-runtime-derivation",
+  "sourceRefs": [
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/public-installed-runtime/workspace-installed-capture.json.raw",
+      "bytes": 14262614,
+      "sha256": "sha256:d237d2e33c48d0b5572517d6730ef29be37dd209c9516cebcdcd5d6da34d5e5a"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/public-installed-runtime/workspace-static-module-graph.json.raw",
+      "bytes": 4331567,
+      "sha256": "sha256:b8ac160ee31817ab6315541eec4c91a610640c1025bce6d5dbbca87b9cfb63bf"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/public-installed-runtime/workspace-package-provenance.json.raw",
+      "bytes": 301804,
+      "sha256": "sha256:2da8c1c03eabb132463897234555e79dea131d9144849808c3b3cb34d33f0484"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/public-installed-runtime/workspace-tar-payload-check.json.raw",
+      "bytes": 58531,
+      "sha256": "sha256:67c9f5a80f25951d67bf3fd21a8fc78a1b6a05ddf268e9bbb83765386e2ec642"
+    }
+  ],
+  "threePhysicalSeeds": [
+    "node_modules/.pnpm/@stynx-nyx+outbox@1.6.1_@nestjs+common@11.2.1_class-transformer@0.5.1_class-validator@0.15.1__4eyqa3lws7cnvzfi3xedxzkciu/node_modules/@stynx-nyx/outbox/dist/outbox/src/index.js",
+    "node_modules/.pnpm/@stynx-nyx+offline-sync@1.6.1_@nestjs+common@11.2.1_class-transformer@0.5.1_class-validator@0_muegcfprxntyq5qwxx4hxc6ec4/node_modules/@stynx-nyx/offline-sync/dist/offline-sync/src/index.js",
+    "node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/index.js"
+  ],
+  "literalSelectedFiles": 2439,
+  "additionalNearestAndRootManifests": 167,
+  "selectedPackages": 161,
+  "dynamicSites": [
+    {
+      "from": {
+        "packageId": "@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)",
+        "member": "utils/load-package.util.js"
+      },
+      "line": 9,
+      "column": 40,
+      "kind": "require",
+      "expression": "packageName"
+    },
+    {
+      "from": {
+        "packageId": "@nestjs/core@11.2.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)",
+        "member": "helpers/optional-require.js"
+      },
+      "line": 6,
+      "column": 40,
+      "kind": "require",
+      "expression": "packageName"
+    },
+    {
+      "from": {
+        "packageId": "@nestjs/core@11.2.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)",
+        "member": "helpers/load-adapter.js"
+      },
+      "line": 9,
+      "column": 40,
+      "kind": "require",
+      "expression": "defaultPlatform"
+    },
+    {
+      "from": {
+        "packageId": "load-esm@1.0.3",
+        "member": "index.js"
+      },
+      "line": 2,
+      "column": 26,
+      "kind": "dynamic-import",
+      "expression": "module"
+    },
+    {
+      "from": {
+        "packageId": "express@5.2.1",
+        "member": "lib/view.js"
+      },
+      "line": 81,
+      "column": 14,
+      "kind": "require",
+      "expression": "mod"
+    }
+  ],
+  "independentAdmission": null
+}

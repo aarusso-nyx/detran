@@ -1,0 +1,76 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/health",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:35.918566+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 151753,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-health-1.6.1.json",
+    "sourceSha256": "sha256:7a54b39c17f1d787284fb3453022c6cc29691832a07cb41a27eaf99b61a117fb"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@nestjs/terminus": "^11.1.1",
+      "@stynx-nyx/core": "1.6.1",
+      "prom-client": "^15.1.3"
+    },
+    "description": "Health and observability endpoints for stynx",
+    "devDependencies": {
+      "@nestjs/platform-express": "^11.1.26",
+      "@nestjs/testing": "^11.1.26",
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "ts-node": "^10.9.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-Amk3a9Gj+2LekDTG/yXpnL5jwBINmwOYtUkMyknsUipBn6Fb5Sdumz5xJSP9GOUDtxpXRMl/FPgNC4OP4ty0Dg==",
+      "shasum": "cfd003cac2f99dc67736f5f70350e61372a6a2c0",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/health/1.6.1/cfd003cac2f99dc67736f5f70350e61372a6a2c0"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/health/src/index.js",
+    "name": "@stynx-nyx/health",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/health` — `/health` + `/readiness` endpoints with pluggable dependency checks\n\n`@stynx-nyx/health` exposes Kubernetes-style liveness and readiness probes. `/health` returns 200 if the process is alive (no dep checks). `/readiness` runs registered checks (DB, Redis, S3, custom) and returns 200 only if all pass.\n\n## Purpose\n\nEvery production container needs `/health` + `/readiness` for orchestration probes (Kubernetes, ECS, etc.). Hand-rolling per app drifts. `@stynx-nyx/health` provides the structure + a pluggable check registry.\n\nYou reach for it on every STYNX app deployed to a container orchestrator.\n\nWhat it does NOT do: it's not metrics (use `@stynx-nyx/logging` for logs and a separate metrics layer for Prom-style). It doesn't run automatic alerting.\n\n## Audience\n\nBackend developers + ops. The endpoints are consumed by Kubernetes liveness/readiness probes or your orchestrator's equivalent.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/health\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { StynxHealthModule } from '@stynx-nyx/health';\n\nStynxHealthModule.forRoot({\n  checks: [\n    { name: 'db', check: async () => ({ ok: true }) },\n    { name: 'redis', check: async () => ({ ok: await ping() }) },\n  ],\n});\n```\n\n```bash\n# K8s liveness probe\ncurl http://app:3000/health\n# → 200 {\"status\":\"ok\"}\n\n# K8s readiness probe\ncurl http://app:3000/readiness\n# → 200 {\"status\":\"ok\",\"checks\":{\"db\":\"ok\",\"redis\":\"ok\"}}\n```\n\n## Public API surface\n\n### Modules\n\n| Export              | Signature                               | Description                     |\n| ------------------- | --------------------------------------- | ------------------------------- |\n| `StynxHealthModule` | `.forRoot(options: StynxHealthOptions)` | Registers controller, services. |\n\n### Services / Injectables\n\n| Export           | Description                                                                               |\n| ---------------- | ----------------------------------------------------------------------------------------- |\n| `HealthService`  | Runs registered checks.                                                                   |\n| `MetricsService` | Lightweight metric capture (request count, error rate); exposed at `/metrics` if enabled. |\n\n### Guards\n\n| Export      | Description                                                                   |\n| ----------- | ----------------------------------------------------------------------------- |\n| `InfoGuard` | Protects `/info` and `/metrics` if exposed (requires `info:read` permission). |\n\n### Endpoints (1 controller)\n\n| Method | Path         | Auth                              | Description                                              |\n| ------ | ------------ | --------------------------------- | -------------------------------------------------------- |\n| `GET`  | `/health`    | public                            | Liveness probe. Always returns 200 if the process is up. |\n| `GET`  | `/readiness` | public                            | Readiness probe. Returns 200 only if all checks pass.    |\n| `GET`  | `/info`      | bearer + `info:read` (if guarded) | App info (version, commit).                              |\n| `GET`  | `/metrics`   | bearer + `info:read` (if enabled) | Prometheus-style metrics.                                |\n\n### Types / Interfaces\n\n| Export               | Description                                                                  |\n| -------------------- | ---------------------------------------------------------------------------- |\n| `StynxHealthOptions` | `forRoot()` options.                                                         |\n| `HealthCheck`        | `{ name: string; check: () => Promise<{ ok: boolean; detail?: unknown }> }`. |\n\n## Configuration\n\n### `StynxHealthModule.forRoot()` options\n\n| Option               | Type            | Default | Description        |\n| -------------------- | --------------- | ------- | ------------------ |\n| `checks`             | `HealthCheck[]` | `[]`    | Registered checks. |\n| `exposeInfo`         | `boolean`       | `false` | Mount `/info`.     |\n| `exposeMetrics`      | `boolean`       | `false` | Mount `/metrics`.  |\n| `readinessTimeoutMs` | `number`        | `2_000` | Per-check timeout. |\n\n## Examples\n\n### Example 1 — DB check\n\n```ts\nchecks: [\n  {\n    name: 'postgres',\n    check: async () => {\n      try {\n        await this.db.execute('SELECT 1');\n        return { ok: true };\n      } catch (e) {\n        return { ok: false, detail: e.message };\n      }\n    },\n  },\n],\n```\n\n### Example 2 — Kubernetes probe spec\n\n```yaml\nlivenessProbe:\n  httpGet: { path: /health, port: 3000 }\n  initialDelaySeconds: 10\nreadinessProbe:\n  httpGet: { path: /readiness, port: 3000 }\n  initialDelaySeconds: 5\n```\n\n### Example 3 — guarded info endpoint\n\n```ts\nStynxHealthModule.forRoot({ exposeInfo: true });\n// Then mount InfoGuard at /info via your auth wiring\n```\n\n## Common pitfalls\n\n- **Slow check blocks readiness rollouts** — keep checks under 500ms. Use `readinessTimeoutMs` to bound.\n- **Mixing liveness + readiness semantics** — liveness should NOT check downstream deps; readiness should. Don't put a DB check on liveness or your pod gets restarted when the DB hiccups.\n- **Exposing `/metrics` without auth** in a public service — leaks operational data. Use `InfoGuard`.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` (rarely used here, but consistent).\n- [`@stynx-nyx/logging`](/docs/packages/logging/) — pair the metrics with structured logs.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-health/`](/docs/api-reference/stynx-health/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@nestjs/terminus`: `^11.1.1`\n- `@stynx-nyx/core`: `workspace:*`\n- `prom-client`: `^15.1.3`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@nestjs/platform-express`: `^11.1.26`\n- `@nestjs/testing`: `^11.1.26`\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `ts-node`: `^10.9.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/health",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

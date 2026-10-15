@@ -1,0 +1,94 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/xml-builder",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.805000Z",
+    "selection": "versions[3.972.41]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 397885,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/5f/a6/4f35819eb59319cf31331b06fe8b6bc97fa5915f42641c4da7284a4fd11372172400d832f84d647cb0a1b13bc0f4572aa3df5db12be94179f54114881110",
+    "sourceSha256": "sha256:2afc3eb53f3f64a2588e31ef734b66487de18e9f4e9cf1b32798fd9036bb95a6"
+  },
+  "version": "3.972.41",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/xml-builder@3.972.41",
+    "_nodeVersion": "24.19.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/xml-builder_3.972.41_1790102948700_0.74346214085796"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "browser": { "./dist-es/xml-parser": "./dist-es/xml-parser.browser" },
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": { "@smithy/types": "^4.19.0", "tslib": "^2.6.2" },
+    "description": "XML utilities for the AWS SDK",
+    "devDependencies": {
+      "@tsconfig/recommended": "1.0.1",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 28,
+      "integrity": "sha512-ctjVSyCMegrWfXlx6VqzSBFI6UqmQ5ZlnfMhdLIiWmhoH8UAQxSCP5N3OpG7X3k4LnS7ou74C4mt20+bfTW2aQ==",
+      "shasum": "d3154d8893c3a85f58ce629b70a17ce70e0a1137",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIAV0SiPzocIAavWProQd9GVRo5fBEeP/aCMb3y46S+XlAiAeEvgdIfqlKtZQ1qrmp5mygoJQMMdCzs414nFXt5lw7A=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIEb9KwJZeCSOYp+YbBVKf40FL4SQ0hWkBPIgyOhJ1okAAiAyfbAjIdcoARO2Nx9L7P70kLamCe5yOzGPHBIxiBo6xA=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/xml-builder/-/xml-builder-3.972.41.tgz",
+      "unpackedSize": 41741
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/xml-builder",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/xml-builder",
+    "react-native": { "./dist-es/xml-parser": "./dist-es/xml-parser.browser" },
+    "repository": {
+      "directory": "packages-internal/xml-builder",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "profile": "node --inspect-brk ./scripts/benchmark",
+      "test": "yarn g:vitest run",
+      "test:fuzz": "jazzer tests/xml-parser.fuzz.js corpus --sync -i xml-parser -- -max_total_time=300",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.972.41"
+  }
+}

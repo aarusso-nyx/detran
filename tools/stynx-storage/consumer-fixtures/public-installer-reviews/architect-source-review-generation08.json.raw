@@ -1,0 +1,71 @@
+{
+  "formatVersion": 1,
+  "kind": "architect-public-installer-release08-guard-rehash-source-delta-review",
+  "actor": "/root/architect_adoption_160",
+  "role": "Architect",
+  "disposition": "SOURCE_DELTA_ACCEPTED_FOR_NEW_RELEASE08_CLOSURE",
+  "currentGuard": {
+    "path": "tools/stynx-storage-public-runtime-guard.mjs",
+    "bytes": 36311,
+    "sha256": "sha256:025ffb30e107f0c592196961e503ef1b259e8591c9d6ebbb25dc71c54707b80a"
+  },
+  "oldGuardExactProjectionInverse": {
+    "path": "scratch/r22-adoption-161/public-installer-preparation/candidate-guard-rehash-projection/guard-before-025ff-projection.inverse.raw",
+    "bytes": 36257,
+    "sha256": "sha256:12fb7533f7522a718eaeb02270fdcb98775971b9cfbf96eb5c73a0dafc5bae57"
+  },
+  "mainNullBeforeSeal": {
+    "path": "tools/stynx-storage-public-install.mjs",
+    "bytes": 49225,
+    "sha256": "sha256:967ff8730419c26b1341d8f6e3bb9f6af1fc7c225e6e514f05f0b4aede43fd79"
+  },
+  "previousRelease": {
+    "path": "tools/stynx-storage/public-install-release-admission.json",
+    "bytes": 31373,
+    "sha256": "sha256:da552481438f663ad2d7cf387c5cc1c184f9d565b38288b077a59c35ae942a74"
+  },
+  "actualCandidateVerifiers": [
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/owned-linux-fresh-preparation/reentry-05/execution-05/actual-custody-attempt05/reports/candidate-outbox-verifier.json",
+      "bytes": 254535,
+      "sha256": "sha256:3ec3e2d4bbbb0d8523bdcdd6949fd2ce0f6a5d58079267496a9c17e7c9dbfdc5"
+    },
+    {
+      "path": "scratch/r22-adoption-161/public-installer-preparation/owned-linux-fresh-preparation/reentry-05/execution-05/actual-custody-attempt05/reports/candidate-offline-verifier.json",
+      "bytes": 466566,
+      "sha256": "sha256:9beed1ac6d188e62d252d20d0ad9ee40d926482b3481af7e02a443ba90fd4cea"
+    }
+  ],
+  "actualStoppedDisposition": {
+    "path": "scratch/r22-adoption-161/public-installer-preparation/owned-linux-fresh-preparation/reentry-05/execution-05/actual-custody-attempt05/disposition.json",
+    "bytes": 329,
+    "sha256": "sha256:832f63f887d73b5365aba02daa1f7e7312c7f1cead0024fd4919686a05b42eff"
+  },
+  "actualPoisonedGuardObservation": {
+    "path": "scratch/r22-adoption-161/public-installer-preparation/owned-linux-fresh-preparation/reentry-05/execution-05/actual-custody-attempt05/reports/public-runtime-guard-final.json",
+    "bytes": 505886,
+    "sha256": "sha256:de64cb44ebea01cded42ff328ad555641b0007f3917f17faeb00a3caf50661f9"
+  },
+  "findings": [
+    "Actual candidate Outbox1295 and Offline2178 checks allPASS/supported true. Attempt still STOPped beforeCOMMIT at guard rehash; this is candidate-only verification evidence, not installed success.",
+    "fileFor(logical) deliberately requires exactly packageId/member. Edge from/to, seed target and unresolved from sites pass those exact locator records. Only rehash passed full descriptor.files row containing bytes/sha256/nearestManifest extra fields.",
+    "Corrected rehash explicitly constructs fresh {packageId:item.packageId,member:item.member} locator, then calls unchanged verify on resolved physical file. Full record is still independently looked up in the fixed physicalFiles map, retaining expected file bytes/hash/context/package and nearest manifest checks.",
+    "All2606 descriptor file rows remain visited, loaded file rehash remains, before-eval hooks/effects/edge identity/poison closed fields remain unchanged. No fields or files are omitted from validation.",
+    "Exact reverse of only one call-site projection restores old guard12fb bytes. Otherfour source identities (main via null967ff) and all156 input bytes freshly match prior admitted release07."
+  ],
+  "checked": {
+    "exactOldGuardInverse": true,
+    "allOtherFileForCallsitesAreClosedLocatorRecords": true,
+    "sameDescriptorWholeRoster2606": true,
+    "all156InputsUnchanged": true,
+    "otherFourSourcesUnchanged": true
+  },
+  "next": [
+    "Copy actual completed independent reviews canonical, build release08 five sources with guard025ff and unchanged mainnull967ff/otherthree, same156 inputs.",
+    "Final closure review and one anchored release08 main constant/inverse; new separately reviewed one-invocation owned subject lease with fresh pristine identity/runner checks.",
+    "Preserve attempt05 candidate reports/guard STOP/rollback/lease evidence. Never suppress or clear guard poison to reuse the failed process or consumed lease."
+  ],
+  "sdkEvaluated": false,
+  "sqlExecuted": false,
+  "productSourceEdited": false
+}

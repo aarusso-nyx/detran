@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/storage",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:37.088322+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 205354,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-storage-1.6.1.json",
+    "sourceSha256": "sha256:b92bfe73d43b5b446d4cc71a175f19975325465880c4746f796f8700f8f6e6c8"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@aws-sdk/client-s3": "^3.1068.0",
+      "@aws-sdk/s3-request-presigner": "^3.1068.0",
+      "@nestjs/schedule": "^6.1.3",
+      "@stynx-nyx/contracts": "1.6.1",
+      "@stynx-nyx/core": "1.6.1",
+      "@stynx-nyx/data": "1.6.1",
+      "drizzle-orm": "^0.45.2",
+      "zod": "^4.3.6"
+    },
+    "description": "Storage adapters and document primitives for stynx",
+    "devDependencies": {
+      "@nestjs/platform-express": "^11.1.26",
+      "@nestjs/testing": "^11.1.26",
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "testcontainers": "^12.0.2",
+      "ts-node": "^10.9.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-bReH7gTC+HFVRnLI4HtgpQhjdiHGLN1bLF3tEWEl2A+ouxcUsnNxeN5BTcPvNmzev6kyRcblS28oF6U06fpBjQ==",
+      "shasum": "bf62f83bb7fffa5f88bf8c99a1f4639cc68864bd",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/storage/1.6.1/bf62f83bb7fffa5f88bf8c99a1f4639cc68864bd"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/storage/src/index.js",
+    "name": "@stynx-nyx/storage",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/storage` — S3-backed object storage with presign + document-metadata persistence\n\n`@stynx-nyx/storage` is STYNX's object-storage substrate. It implements `@stynx-nyx/contracts`'s `ObjectStorageService` against S3 (production) or LocalStack (dev), exposes presigned upload/download URLs (so client browsers can talk directly to S3 without the API in the data path), and persists document metadata (filename, size, content-type, uploader) via a `DocumentMetadataRepository` so app code can list/lookup documents without re-querying S3.\n\n## Purpose\n\nFile uploads in multi-tenant apps need: tenant-scoped key prefixes, presigned URLs (clients don't proxy through the API), KMS encryption knobs, and a metadata repo so the app can list user files without hitting S3 every time. `@stynx-nyx/storage` provides all of this.\n\nYou reach for it whenever your app stores user files (documents, avatars, exports).\n\nWhat it does NOT do: it doesn't run a virus scanner (use an S3 event + Lambda). It doesn't auto-resize images (use Lambda@Edge or CloudFront image-optim). It doesn't proxy uploads through the API (use presigned URLs — proxying defeats S3's scaling).\n\n## Audience\n\nBackend developers building file-upload features.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/storage @aws-sdk/client-s3 @aws-sdk/s3-request-presigner\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { StynxStorageModule } from '@stynx-nyx/storage';\n\nStynxStorageModule.forRoot({\n  s3: { region: 'us-east-1', bucket: 'my-app-docs' },\n  keyStrategy: 'tenant-prefixed',\n  presignTtl: '15m',\n});\n```\n\n```ts\nimport { StorageService } from '@stynx-nyx/storage';\n\n@Injectable()\nexport class DocumentsService {\n  constructor(private readonly storage: StorageService) {}\n\n  async getUploadUrl(filename: string, contentType: string) {\n    return this.storage.presignUpload({ key: filename, contentType });\n  }\n}\n```\n\n## Public API surface\n\n### Modules\n\n| Export               | Signature                                | Description                                                   |\n| -------------------- | ---------------------------------------- | ------------------------------------------------------------- |\n| `StynxStorageModule` | `.forRoot(options: StynxStorageOptions)` | Registers S3 client, presign service, document metadata repo. |\n\n### Services / Injectables\n\n| Export                                             | Description                                                                                                                                    |\n| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |\n| `StorageService` (the `ObjectStorageService` impl) | `presignUpload(req): PresignedUploadResponse`, `presignDownload(req): PresignedDownloadResponse`, `exists(key): boolean`, `delete(key): void`. |\n| `DocumentsService`                                 | Persists `DocumentMetadataRecord` rows. `create(record)`, `getById(id)`, `deleteById(id)`.                                                     |\n| `ObjectStoreService`                               | Lower-level S3 wrapper; rarely used directly.                                                                                                  |\n| `S3Service`                                        | Even-lower S3 client; for direct S3 ops outside the presign flow.                                                                              |\n\n### Errors\n\n| Export                     | Code                    | Description                                  |\n| -------------------------- | ----------------------- | -------------------------------------------- |\n| `ObjectNotFoundError`      | `OBJECT_NOT_FOUND`      | `exists()` returned false / `getObject` 404. |\n| `StorageAccessDeniedError` | `STORAGE_ACCESS_DENIED` | IAM rejection.                               |\n| `PresignFailedError`       | `PRESIGN_FAILED`        | Could not produce a presigned URL.           |\n\n### Types / Interfaces\n\n| Export                | Description                                              |\n| --------------------- | -------------------------------------------------------- |\n| `StynxStorageOptions` | `forRoot()` options.                                     |\n| `KeyStrategy`         | `'tenant-prefixed' \\| 'flat' \\| ((req, ctx) => string)`. |\n\n## Configuration\n\n### `StynxStorageModule.forRoot()` options\n\n| Option                       | Type          | Default             | Description                         |\n| ---------------------------- | ------------- | ------------------- | ----------------------------------- |\n| `s3.bucket`                  | `string`      | (required)          | Bucket name.                        |\n| `s3.region`                  | `string`      | `'us-east-1'`       | AWS region.                         |\n| `s3.endpoint`                | `string`      | n/a                 | Custom endpoint (LocalStack dev).   |\n| `s3.kmsKeyId`                | `string`      | n/a                 | KMS key for server-side encryption. |\n| `keyStrategy`                | `KeyStrategy` | `'tenant-prefixed'` | How keys are computed.              |\n| `presignTtl`                 | `string`      | `'15m'`             | Default presign TTL.                |\n| `documentMetadata.tableName` | `string`      | `'stynx_documents'` | Metadata table.                     |\n\n## Examples\n\n### Example 1 — direct-to-S3 upload flow\n\n```ts\n// Client requests a presigned URL from your API\nconst presign = await api.getUploadUrl({ filename: 'invoice.pdf', contentType: 'application/pdf' });\n\n// Client uploads directly to S3\nawait fetch(presign.url, { method: 'PUT', body: file, headers: presign.headers });\n\n// Client notifies your API the upload completed; you write metadata\nawait api.confirmUpload({ storageKey: presign.key, filename: 'invoice.pdf' });\n```\n\n### Example 2 — LocalStack dev\n\n```ts\nStynxStorageModule.forRoot({\n  s3: {\n    endpoint: 'http://localhost:4566',\n    region: 'us-east-1',\n    bucket: 'my-app-docs',\n    forcePathStyle: true,\n  },\n});\n```\n\n### Example 3 — KMS encryption\n\n```ts\nStynxStorageModule.forRoot({\n  s3: { region: 'us-east-1', bucket: 'my-app-docs', kmsKeyId: 'arn:aws:kms:...' },\n});\n```\n\n## Common pitfalls\n\n- **Tenant prefix collision** with the `'flat'` strategy across tenants — use `'tenant-prefixed'` (default) or a custom function.\n- **Presign TTL too short** — clients with slow networks fail; bump to 30m+ for large uploads.\n- **Forgetting CORS on the bucket** — direct-to-S3 PUT fails the browser preflight. Configure bucket CORS to allow the API's origin.\n- **Returning the storage key to clients as the canonical identifier** — couples your URLs to S3's key shape. Return the metadata record's `id` instead.\n- **`StorageService.delete()` without checking existence** — silently no-ops if the object is gone; some callers expect an error. Wrap with `exists()` first.\n\n## Related packages\n\n- [`@stynx-nyx/contracts`](/docs/packages/contracts/) — defines `ObjectStorageService` + `PresignedUploadRequest`/`Response`.\n- [`@stynx-nyx/tenancy`](/docs/packages/tenancy/) — provides tenant-prefix data for `keyStrategy: 'tenant-prefixed'`.\n- [`@stynx-nyx/privacy`](/docs/packages/privacy/) — uses this package for export packaging.\n- [`@stynx-nyx/angular-storage`](/docs/packages-web/angular-storage/) — Angular pair: file-upload widget consuming the presign flow.\n- [`backend/storage`](/docs/packages/backend/storage/) — `@stynx-nyx/backend` submodule.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-storage/`](/docs/api-reference/stynx-storage/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@aws-sdk/client-s3`: `^3.1068.0`\n- `@aws-sdk/s3-request-presigner`: `^3.1068.0`\n- `@nestjs/schedule`: `^6.1.3`\n- `@stynx-nyx/contracts`: `workspace:*`\n- `@stynx-nyx/core`: `workspace:*`\n- `@stynx-nyx/data`: `workspace:*`\n- `drizzle-orm`: `^0.45.2`\n- `zod`: `^4.3.6`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@nestjs/platform-express`: `^11.1.26`\n- `@nestjs/testing`: `^11.1.26`\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `testcontainers`: `^12.0.2`\n- `ts-node`: `^10.9.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/storage",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

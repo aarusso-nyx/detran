@@ -1,0 +1,100 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "prom-client",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:13.258000Z",
+    "selection": "versions[15.1.3]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 253738,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/a1/f0/2f56d9af91f97bed749c4a91613e15a453e58d17cd157b8f9516836a57f78c7af5fc625f291c78e9069934759cd86830b099acc46fc585a641bf321d1b37",
+    "sourceSha256": "sha256:42896e4e671b96299b40a331eb413f15e976299339d05f29e28ddc7a625cab33"
+  },
+  "version": "15.1.3",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "prom-client@15.1.3",
+    "_nodeVersion": "20.11.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages",
+      "tmp": "tmp/prom-client_15.1.3_1719480607644_0.4660091009333074"
+    },
+    "_npmUser": { "email": "sbekkhus91@gmail.com", "name": "simenb" },
+    "_npmVersion": "10.2.3",
+    "author": { "name": "Simon Nyberg" },
+    "bugs": { "url": "https://github.com/siimon/prom-client/issues" },
+    "dependencies": { "@opentelemetry/api": "^1.4.0", "tdigest": "^0.1.1" },
+    "deprecated": "prom-client has been replaced by @prometheus-io/client",
+    "description": "Client for prometheus",
+    "devDependencies": {
+      "@clevernature/benchmark-regression": "^1.0.0",
+      "@typescript-eslint/eslint-plugin": "^6.21.0",
+      "@typescript-eslint/parser": "^6.21.0",
+      "eslint": "^8.32.0",
+      "eslint-config-prettier": "^9.1.0",
+      "eslint-plugin-n": "^16.0.0",
+      "eslint-plugin-prettier": "^5.0.1",
+      "express": "^4.13.3",
+      "husky": "^9.0.0",
+      "jest": "^29.3.1",
+      "lint-staged": "^13.1.0",
+      "nock": "^13.0.5",
+      "prettier": "3.3.2",
+      "typescript": "^5.0.4"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 36,
+      "integrity": "sha512-6ZiOBfCywsD4k1BN9IX0uZhF+tJkV8q8llP64G5Hajs4JOeVLPCwpPVcpXy3BwYiUGgyJzsJJQeOIv7+hDSq8g==",
+      "shasum": "69fa8de93a88bc9783173db5f758dc1c69fa8fc2",
+      "signatures": [
+        {
+          "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+          "sig": "MEUCIQDlNedt/B27r8dFDTSsOt32P8YEmcFACLhVOy3JYwqHJAIgWkK0VyKT0WPfph5g/r4pm1cacr3RJmtfDdQwDbcw5oI="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/prom-client/-/prom-client-15.1.3.tgz",
+      "unpackedSize": 126441
+    },
+    "engines": { "node": "^16 || ^18 || >=20" },
+    "gitHead": "c1d76c5d497ef803f6bd90c56c713c3fa811c3e0",
+    "homepage": "https://github.com/siimon/prom-client",
+    "jest": { "testEnvironment": "node", "testRegex": ".*Test\\.js$" },
+    "keywords": ["Prometheus", "Metrics", "Client"],
+    "license": "Apache-2.0",
+    "lint-staged": {
+      "*.{js,ts}": "eslint --fix",
+      "*.{md,json,yml}": "prettier --write",
+      ".travis.yml": "prettier --write"
+    },
+    "main": "index.js",
+    "name": "prom-client",
+    "prettier": {
+      "arrowParens": "avoid",
+      "endOfLine": "auto",
+      "overrides": [
+        { "files": "*.md", "options": { "useTabs": false } },
+        { "files": ".eslintrc", "options": { "parser": "json" } }
+      ],
+      "singleQuote": true,
+      "trailingComma": "all",
+      "useTabs": true
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com/siimon/prom-client.git"
+    },
+    "scripts": {
+      "benchmarks": "node ./benchmarks/index.js",
+      "check-prettier": "npm run run-prettier -- --check",
+      "compile-typescript": "tsc --project .",
+      "lint": "eslint .",
+      "prepare": "husky",
+      "run-prettier": "prettier . .eslintrc",
+      "test": "npm run lint && npm run check-prettier && npm run compile-typescript && npm run test-unit",
+      "test-unit": "jest"
+    },
+    "types": "./index.d.ts",
+    "version": "15.1.3"
+  }
+}

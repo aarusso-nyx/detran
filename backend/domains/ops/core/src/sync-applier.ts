@@ -7,8 +7,8 @@ import type { Transaction } from '@stynx-nyx/data';
 
 /**
  * O item já materializado em `ops.sync_queue_item`, com o recibo já criado.
- * Não carrega o payload: o applier o lê de `sync_queue_item.payload_json`
- * pela própria transação do item (CTG-0002 §4.3 passo 4).
+ * No caminho legado o applier lê `sync_queue_item.payload_json` na transação
+ * do item. O handoff trusted CTG9 fornece o payload original explicitamente.
  */
 export interface SyncEntityApplierItem {
   id: string;
@@ -25,6 +25,25 @@ export interface SyncEntityApplierItem {
   concurrencySuspect: boolean;
   /** Id da linha de `ops.sync_receipt` já criada para o item. */
   receiptId: string;
+  /** Trusted internal handoff from the public CTG9 item transaction. */
+  storageMode?: 'stynx-ctg9';
+  payloadJson?: Readonly<Record<string, unknown>>;
+  /** Original optional native selection, only in the trusted CTG9 handoff. */
+  reservationId?: string;
+}
+
+export interface SyncEntityApplierResult {
+  serverEntityId: string;
+  detailsJson?: Record<string, unknown>;
+}
+
+export interface SyncAitNumberingRulePort {
+  assertAitNumbering(
+    item: SyncEntityApplierItem,
+    tx: Transaction,
+    number: number,
+    shiftId: string,
+  ): Promise<void>;
 }
 
 /** Recusa de forma: `code` do catálogo e os caminhos do payload que falharam. */
@@ -39,7 +58,7 @@ export interface SyncEntityApplier {
   apply(
     item: SyncEntityApplierItem,
     tx: Transaction,
-  ): Promise<{ serverEntityId: string }>;
+  ): Promise<SyncEntityApplierResult>;
 }
 
 /** Token multi-provider da lista de appliers (CTG-0002 §4.8). */

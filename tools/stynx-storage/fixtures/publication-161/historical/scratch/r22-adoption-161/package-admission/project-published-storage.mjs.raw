@@ -1,0 +1,1163 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { spawnSync } from 'node:child_process';
+
+// F1 Stage A: an exact retained observation, not an installer or general runner.
+const publication = {
+  candidate: '3e3da1f7ceb6dd4a7dd2f9d6e0dc704437e262a0',
+  tree: 'e2ce9989249d1bc13403dc21f5a421b24178ef29',
+  workflowRun: '38445937806',
+};
+const seals = {
+  protected: '46815c17be9dbcd2080a3a0c08db958bd42390d8766c64ef40bebd5017074318',
+  retention: '56e2e6438b8ef505eca99357e8e219e30ceb170f68f7b5779fff6f997c8a98ac',
+  closure: 'f372c94bb51ce4939b0e4d4069434b4e0e7ac68ac7136f9e648273fa4b108fde',
+  packages: 'e8e592cc85e8e932c5648160da542d60272fc1410bd5e381a3be6b209430d4ef',
+  graph: '716cfa56cdd8c2203edc472ea03fcc215110070a42d839b1854b66a19997e66e',
+  boundary: '04da818d6fb898998dd8f6b97fab40c498a99939d82ac49c1e6efba14118ce6c',
+  lock: '076090fca892c8b3235a7e0f66cc969b59b6e87fc060c5fd312e988282b80ad5',
+};
+const binding = {
+  ownerRole: 'postgres',
+  appRole: 'role_app_backend',
+  readerRole: null,
+  tenantTable: { schema: 'auth', table: 'tenants', column: 'id' },
+};
+const migrationNames = [
+  '0001_offline_sync.sql',
+  '0002_durable_sync.sql',
+  '0003_reservation_idempotency.sql',
+  '0004_pending_state_and_conflict_actions.sql',
+  '0005_initial_queue_status.sql',
+  '0006_nullable_active_reservations.sql',
+  '0007_range_administration.sql',
+  '0008_import_receipts.sql',
+  '0009_numbering_reconciliations.sql',
+];
+const rawMigrationHashes = [
+  'e8c61245343dd0bb58f49e259b9384bc0fa06b81b1211b19fc6a37de275069c1',
+  'bb2c7685a2092d92ecb7ce80b7a61e54714a55cbb5e1a222d0e71d3a4b2b8983',
+  'c947e341e1617c983fc559317f32a724aeaef07094e41334e41bc517621a534f',
+  '435e064cf61fe1a3b76c49cc9b495616a5125ba92b480d75807fd4a1dabba0c6',
+  'dc3a8ee136406c749214f29251a7314990ce7c402e5bb4120111518fd2a15c0e',
+  '942822d271a6ea5e6b82e1bea831bcbac9e8169003294c60b28d977fe6b23db5',
+  '63ab4d83807c8cd7ec031085ac3344eef2ba611611b92418fdcfde4220d21836',
+  'b700c1db62fd9a3d0e1f43000c61aa64d7b2b6d28cb288f148b73c8a3a8bbf5a',
+  '7167a3d32e5048c56b453bb6cc5868a5c1c67f2aeab721a2832f13e4af1ca1fd',
+];
+
+function refuse(message) {
+  throw new Error(message);
+}
+function check(condition, message) {
+  if (!condition) refuse(message);
+}
+const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
+const canonical = (value) => {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+  if (value !== null && typeof value === 'object')
+    return `{${Object.keys(value)
+      .sort()
+      .map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`)
+      .join(',')}}`;
+  return JSON.stringify(value);
+};
+const equal = (left, right) => canonical(left) === canonical(right);
+
+// Detect duplicate decoded keys before JSON.parse can discard them. JSON.parse
+// then supplies the ordinary grammar checks; no input code/getter is evaluated.
+function strictJson(bytes, label) {
+  const text = bytes.toString('utf8');
+  check(Buffer.from(text, 'utf8').equals(bytes), `${label}: invalid UTF-8`);
+  let position = 0;
+  const space = () => {
+    while (/[ \t\r\n]/u.test(text[position] ?? 'x')) position++;
+  };
+  const string = () => {
+    check(text[position] === '"', `${label}: JSON string required`);
+    const start = position++;
+    while (position < text.length) {
+      const unit = text[position++];
+      if (unit === '\\') position++;
+      else if (unit === '"') return JSON.parse(text.slice(start, position));
+    }
+    refuse(`${label}: unterminated JSON string`);
+  };
+  const value = () => {
+    space();
+    if (text[position] === '{') {
+      position++;
+      space();
+      const keys = new Set();
+      if (text[position] === '}') {
+        position++;
+        return;
+      }
+      for (;;) {
+        space();
+        const key = string();
+        check(!keys.has(key), `${label}: duplicate JSON key`);
+        keys.add(key);
+        space();
+        check(text[position++] === ':', `${label}: JSON colon required`);
+        value();
+        space();
+        const delimiter = text[position++];
+        if (delimiter === '}') return;
+        check(delimiter === ',', `${label}: JSON object delimiter required`);
+      }
+    }
+    if (text[position] === '[') {
+      position++;
+      space();
+      if (text[position] === ']') {
+        position++;
+        return;
+      }
+      for (;;) {
+        value();
+        space();
+        const delimiter = text[position++];
+        if (delimiter === ']') return;
+        check(delimiter === ',', `${label}: JSON array delimiter required`);
+      }
+    }
+    if (text[position] === '"') {
+      string();
+      return;
+    }
+    const match =
+      /^(?:true|false|null|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)/u.exec(
+        text.slice(position),
+      );
+    check(match, `${label}: malformed JSON value`);
+    position += match[0].length;
+  };
+  value();
+  space();
+  check(position === text.length, `${label}: trailing JSON data`);
+  return JSON.parse(text);
+}
+function keys(value, names, label) {
+  check(
+    value &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      equal(Object.keys(value).sort(), [...names].sort()),
+    `${label}: closed fields differ`,
+  );
+}
+function safePath(root, relative, { absent = false } = {}) {
+  check(
+    typeof relative === 'string' &&
+      relative.length &&
+      !relative.includes('\\') &&
+      !relative.includes('\0') &&
+      !path.isAbsolute(relative) &&
+      relative
+        .split('/')
+        .every((part) => part && part !== '.' && part !== '..'),
+    'Unsafe retained path',
+  );
+  let current = root;
+  for (const part of relative.split('/')) {
+    current = path.join(current, part);
+    if (!fs.existsSync(current)) {
+      // existsSync follows links; lstat also catches dangling links.
+      try {
+        check(
+          !fs.lstatSync(current).isSymbolicLink(),
+          'Retained symlink refused',
+        );
+      } catch (error) {
+        if (error.code !== 'ENOENT') throw error;
+      }
+      check(absent, `Missing retained path: ${relative}`);
+      continue;
+    }
+    check(
+      !fs.lstatSync(current).isSymbolicLink(),
+      `Retained symlink refused: ${relative}`,
+    );
+  }
+  check(current.startsWith(root + path.sep), 'Retained path escaped root');
+  return current;
+}
+function bytesAt(root, relative) {
+  const file = safePath(root, relative);
+  check(
+    fs.statSync(file).isFile(),
+    `Regular retained file required: ${relative}`,
+  );
+  return fs.readFileSync(file);
+}
+function fileRecord(root, record) {
+  keys(record, ['path', 'bytes', 'sha256'], 'File record');
+  const bytes = bytesAt(root, record.path);
+  check(
+    bytes.length === record.bytes && sha(bytes) === record.sha256,
+    `Retained bytes differ: ${record.path}`,
+  );
+  return bytes;
+}
+function sealedJson(root, relative, seal) {
+  const bytes = bytesAt(root, relative);
+  const value = strictJson(bytes, relative);
+  check(sha(bytes) === seal, `Reviewed input seal differs: ${relative}`);
+  return value;
+}
+function sri(bytes, integrity, label) {
+  const match = /^(sha512|sha256|sha1)-([A-Za-z0-9+/]+={0,2})$/u.exec(
+    integrity,
+  );
+  check(
+    match && createHash(match[1]).update(bytes).digest('base64') === match[2],
+    `${label}: integrity differs`,
+  );
+}
+
+function preflight(root) {
+  const proof = sealedJson(
+    root,
+    'protected-publication-verification.json',
+    seals.protected,
+  );
+  check(
+    proof.ok === true &&
+      proof.version === '1.6.1' &&
+      proof.candidate === publication.candidate &&
+      proof.tree === publication.tree &&
+      proof.workflowRun === publication.workflowRun &&
+      proof.packages.length === 44,
+    'Protected publication differs',
+  );
+  const roster = new Map(proof.packages.map((item) => [item.name, item]));
+  check(roster.size === 44, 'Protected roster is not unique');
+  const retained = sealedJson(root, 'retention-manifest.json', seals.retention);
+  keys(
+    retained,
+    [
+      'formatVersion',
+      'kind',
+      'phase',
+      'targetVersion',
+      'publication',
+      'consumer',
+      'packages',
+      'limits',
+    ],
+    'Retention manifest',
+  );
+  check(
+    retained.formatVersion === 1 &&
+      retained.targetVersion === '1.6.1' &&
+      retained.packages.length === 27,
+    'Retention target differs',
+  );
+  check(
+    equal(
+      Object.fromEntries(
+        Object.keys(publication).map((key) => [key, retained.publication[key]]),
+      ),
+      publication,
+    ),
+    'Retention publication differs',
+  );
+  const retainedNames = new Set();
+  for (const item of retained.packages) {
+    keys(
+      item,
+      [
+        'name',
+        'version',
+        'direct',
+        'registryMetadata',
+        'dist',
+        'archive',
+        'extraction',
+        'packageManifest',
+        'publicTargets',
+        'stynxDependencies',
+        'gitHead',
+      ],
+      'Retained package',
+    );
+    check(!retainedNames.has(item.name), 'Retained package repeated');
+    retainedNames.add(item.name);
+    const protectedItem = roster.get(item.name);
+    check(
+      protectedItem && item.version === '1.6.1',
+      'Package outside protected roster',
+    );
+    const metadataBytes = fileRecord(root, {
+      path: item.registryMetadata.path,
+      bytes: item.registryMetadata.bytes,
+      sha256: item.registryMetadata.sha256,
+    });
+    const packument = strictJson(metadataBytes, item.registryMetadata.path);
+    const metadata = packument.versions?.['1.6.1'];
+    check(
+      packument.name === item.name &&
+        metadata?.name === item.name &&
+        metadata.version === '1.6.1' &&
+        metadata.dist.integrity === protectedItem.integrity &&
+        metadata.dist.shasum === protectedItem.shasum,
+      'Live retained version metadata differs',
+    );
+    check(
+      item.dist.integrity === protectedItem.integrity &&
+        item.dist.shasum === protectedItem.shasum &&
+        item.dist.tarball === metadata.dist.tarball,
+      'Retained dist identity differs',
+    );
+    const archive = fileRecord(root, item.archive);
+    sri(archive, protectedItem.integrity, item.name);
+    check(
+      sha(archive) === protectedItem.tarballSha256 &&
+        archive.length === protectedItem.bytes &&
+        createHash('sha1').update(archive).digest('hex') ===
+          protectedItem.shasum,
+      'Protected tarball bytes differ',
+    );
+    for (const entry of item.extraction.regularFiles)
+      fileRecord(root, {
+        path: `${item.extraction.root}/${entry.path}`,
+        bytes: entry.bytes,
+        sha256: entry.sha256,
+      });
+    const packageManifest = strictJson(
+      bytesAt(root, item.packageManifest.path),
+      item.packageManifest.path,
+    );
+    check(
+      sha(bytesAt(root, item.packageManifest.path)) ===
+        item.packageManifest.sha256 &&
+        packageManifest.name === item.name &&
+        packageManifest.version === '1.6.1',
+      'Retained package manifest differs',
+    );
+    for (const section of [
+      'dependencies',
+      'optionalDependencies',
+      'peerDependencies',
+    ])
+      check(
+        equal(packageManifest[section] ?? {}, metadata[section] ?? {}),
+        'Published dependency declarations differ',
+      );
+    for (const target of item.publicTargets)
+      safePath(
+        root,
+        `${item.extraction.root}/package/${target.path.replace(/^\.\//u, '')}`,
+      );
+    check(
+      item.gitHead === null || item.gitHead === publication.candidate,
+      'Unverified source replacement',
+    );
+  }
+  check(
+    equal([...retainedNames].sort(), retained.consumer.targetMetadataClosure),
+    'Retained dependency closure differs',
+  );
+  const runtime = safePath(root, 'runtime');
+  const closure = sealedJson(runtime, 'closure-manifest.json', seals.closure);
+  keys(
+    closure,
+    [
+      'formatVersion',
+      'kind',
+      'phase',
+      'publication',
+      'admissionInputs',
+      'runtime',
+      'node',
+      'loader',
+      'packages',
+      'graph',
+      'boundaryReview',
+      'limits',
+    ],
+    'Runtime closure',
+  );
+  check(
+    equal(closure.publication, publication) &&
+      closure.admissionInputs.retentionManifest.sha256 === seals.retention &&
+      closure.admissionInputs.protectedVerification.sha256 === seals.protected,
+    'Runtime admission linkage differs',
+  );
+  keys(
+    closure.runtime,
+    [
+      'observedRoot',
+      'packageManifest',
+      'lockfile',
+      'npmrc',
+      'installLog',
+      'installer',
+      'hiddenLock',
+      'binLinks',
+    ],
+    'Runtime topology',
+  );
+  for (const key of [
+    'packageManifest',
+    'lockfile',
+    'npmrc',
+    'installLog',
+    'hiddenLock',
+  ])
+    fileRecord(runtime, closure.runtime[key]);
+  check(closure.runtime.lockfile.sha256 === seals.lock, 'Runtime lock differs');
+  const lock = strictJson(
+    bytesAt(runtime, closure.runtime.lockfile.path),
+    'Runtime lock',
+  );
+  const packageIndex = sealedJson(
+    runtime,
+    closure.packages.path,
+    seals.packages,
+  );
+  keys(packageIndex, ['formatVersion', 'packages'], 'Resolved package index');
+  check(
+    packageIndex.packages.length === 211 &&
+      closure.packages.sha256 === seals.packages,
+    'Resolved package count differs',
+  );
+  const graph = sealedJson(runtime, closure.graph.path, seals.graph);
+  const boundary = sealedJson(
+    runtime,
+    closure.boundaryReview.path,
+    seals.boundary,
+  );
+  check(
+    closure.graph.sha256 === seals.graph &&
+      closure.boundaryReview.sha256 === seals.boundary &&
+      boundary.sites.length === 15,
+    'Import graph authority differs',
+  );
+  const actualFiles = new Set([closure.runtime.hiddenLock.path]);
+  const fileRecords = new Map();
+  const actualLinks = new Map();
+  const declaredBins = new Map();
+  const selectedNames = new Set();
+  for (const item of packageIndex.packages) {
+    const manifestBytes = fileRecord(runtime, item.packageManifest);
+    const manifest = strictJson(manifestBytes, item.packageManifest.path);
+    check(
+      manifest.name === item.name &&
+        manifest.version === item.version &&
+        lock.packages[item.path]?.version === item.version &&
+        lock.packages[item.path]?.integrity === item.integrity &&
+        lock.packages[item.path]?.resolved === item.resolved,
+      'Installed package/lock identity differs',
+    );
+    const archive = fileRecord(runtime, item.archive);
+    sri(archive, item.integrity, item.name);
+    if (item.name.startsWith('@stynx-nyx/')) {
+      check(
+        item.version === '1.6.1' &&
+          roster.has(item.name) &&
+          !selectedNames.has(item.name),
+        'STYNX runtime selection differs',
+      );
+      selectedNames.add(item.name);
+      check(
+        sha(archive) === roster.get(item.name).tarballSha256 &&
+          item.integrity === roster.get(item.name).integrity,
+        'Runtime archive is not protected publication',
+      );
+    }
+    check(item.links.length === 0, 'Unexpected package-internal link');
+    for (const entry of item.files) {
+      fileRecord(runtime, entry);
+      check(!actualFiles.has(entry.path), 'Installed file repeated');
+      actualFiles.add(entry.path);
+      fileRecords.set(entry.path, entry);
+    }
+    const bins =
+      typeof manifest.bin === 'string'
+        ? { [manifest.name.split('/').at(-1)]: manifest.bin }
+        : (manifest.bin ?? {});
+    for (const [name, relative] of Object.entries(bins)) {
+      const target = path.relative(
+        runtime,
+        path.resolve(runtime, item.path, relative),
+      );
+      const entries = declaredBins.get(name) ?? new Set();
+      entries.add(target);
+      declaredBins.set(name, entries);
+    }
+  }
+  check(
+    equal([...selectedNames].sort(), [...retainedNames].sort()),
+    'Installed STYNX closure differs',
+  );
+  for (const link of closure.runtime.binLinks) {
+    keys(
+      link,
+      ['path', 'target', 'resolvedPath', 'bytes', 'sha256', 'disposition'],
+      'Bin link',
+    );
+    check(
+      link.path.startsWith('node_modules/.bin/') &&
+        !path.isAbsolute(link.target) &&
+        link.disposition === 'nonexecuted-npm-bin-link',
+      'Bin topology differs',
+    );
+    const file = path.join(runtime, link.path);
+    check(
+      fs.lstatSync(file).isSymbolicLink() &&
+        fs.readlinkSync(file) === link.target,
+      'Bin link changed',
+    );
+    const target = safePath(runtime, link.resolvedPath);
+    check(
+      fs.realpathSync(file) === target &&
+        declaredBins.get(path.basename(file))?.has(link.resolvedPath),
+      'Bin target escaped declaration',
+    );
+    fileRecord(runtime, {
+      path: link.resolvedPath,
+      bytes: link.bytes,
+      sha256: link.sha256,
+    });
+    actualLinks.set(link.path, link.target);
+  }
+  check(
+    actualLinks.size === 9 && actualFiles.size === 30092,
+    'Physical closure count differs',
+  );
+  const walk = (directory) => {
+    for (const item of fs.readdirSync(directory, { withFileTypes: true })) {
+      const file = path.join(directory, item.name),
+        relative = path.relative(runtime, file),
+        stat = fs.lstatSync(file);
+      if (stat.isSymbolicLink())
+        check(
+          actualLinks.has(relative) &&
+            fs.readlinkSync(file) === actualLinks.get(relative),
+          'Unexpected or escaping runtime link',
+        );
+      else if (stat.isDirectory()) walk(file);
+      else
+        check(
+          stat.isFile() && actualFiles.has(relative),
+          `Unrecorded runtime file: ${relative}`,
+        );
+    }
+  };
+  walk(path.join(runtime, 'node_modules'));
+  const allowed = {};
+  const nearestPackages = {};
+  for (const entry of graph.files) {
+    fileRecord(runtime, {
+      path: entry.path,
+      bytes: entry.bytes,
+      sha256: entry.sha256,
+    });
+    check(actualFiles.has(entry.path), 'Graph file outside installed custody');
+    allowed[entry.path] = { bytes: entry.bytes, sha256: entry.sha256 };
+    if (entry.path.endsWith('.js')) {
+      let directory = path.posix.dirname(entry.path);
+      while (
+        directory !== '.' &&
+        path.posix.basename(directory) !== 'node_modules'
+      ) {
+        const packagePath = `${directory}/package.json`;
+        const record = fileRecords.get(packagePath);
+        if (record) {
+          nearestPackages[entry.path] = {
+            path: packagePath,
+            sha256: record.sha256,
+          };
+          break;
+        }
+        directory = path.posix.dirname(directory);
+      }
+    }
+  }
+  const requireRuntime = createRequire(path.join(runtime, 'package.json'));
+  for (const entry of closure.loader.roots) {
+    const resolved = fs.realpathSync(requireRuntime.resolve(entry.name));
+    check(
+      resolved === safePath(runtime, entry.path) &&
+        allowed[entry.path]?.sha256 === entry.sha256,
+      'Public root resolved outside admitted runtime',
+    );
+  }
+  check(
+    process.version === closure.node.version &&
+      sha(fs.readFileSync(process.execPath)) === closure.node.sha256 &&
+      fs.realpathSync(process.execPath) === closure.node.realpath,
+    'Node executable/loader identity differs',
+  );
+  const builtins = [
+    ...new Set(
+      graph.edges
+        .filter((edge) => edge.builtin)
+        .map((edge) => edge.specifier.replace(/^node:/u, '')),
+    ),
+  ].sort();
+  return {
+    runtime,
+    closure,
+    allowed,
+    builtins,
+    edges: graph.edges,
+    nearestPackages,
+  };
+}
+
+// This fixed source runs in one fresh, environment-clean Node child. It exposes
+// no SDK/SQL selector and is reviewed with this program before any SDK execution.
+async function observeChild(config) {
+  function isCanonicalUnspecifiedCjsFormat(
+    file,
+    nearestPackage,
+    context,
+    result,
+  ) {
+    if (!file || !nearestPackage || !context || !result) return false;
+    const normalized = (value) =>
+      typeof value === 'string' &&
+      !value.includes('\\') &&
+      value.split('/').every((part) => part && part !== '.' && part !== '..');
+    const digest = (value) =>
+      typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
+    if (
+      !normalized(file.relativePath) ||
+      !file.relativePath.endsWith('.js') ||
+      !normalized(file.nearestPackageJsonPath) ||
+      !file.nearestPackageJsonPath.endsWith('/package.json') ||
+      file.nearestPackageJsonPath !== nearestPackage.relativePath ||
+      !file.relativePath.startsWith(
+        file.nearestPackageJsonPath.slice(0, -'package.json'.length),
+      ) ||
+      !digest(file.expectedSha256) ||
+      !digest(file.actualSha256) ||
+      file.expectedSha256 !== file.actualSha256 ||
+      !digest(file.nearestPackageJsonSha256) ||
+      !digest(nearestPackage.actualSha256) ||
+      file.nearestPackageJsonSha256 !== nearestPackage.actualSha256 ||
+      !nearestPackage.manifest ||
+      typeof nearestPackage.manifest !== 'object' ||
+      Array.isArray(nearestPackage.manifest) ||
+      Object.hasOwn(nearestPackage.manifest, 'type') ||
+      context.format !== undefined ||
+      result.format !== undefined ||
+      !Array.isArray(context.conditions) ||
+      !context.conditions.every((condition) => typeof condition === 'string') ||
+      !context.conditions.includes('require') ||
+      context.conditions.includes('import')
+    )
+      return false;
+    return true;
+  }
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const crypto = await import('node:crypto');
+  const module = await import('node:module');
+  const url = await import('node:url');
+  const root = config.runtime;
+  const hash = (bytes) =>
+    crypto.createHash('sha256').update(bytes).digest('hex');
+  const violations = [],
+    loaded = new Set(),
+    resolved = new Set(),
+    optionalMisses = [];
+  const fail = (boundary) => {
+    violations.push(boundary);
+    throw new Error(`Observation STOP: ${boundary}`);
+  };
+  const assertClean = () => {
+    if (violations.length)
+      throw new Error(`Observation STOP: ${violations[0]}`);
+  };
+  const allowedBuiltins = new Set(config.builtins);
+  const anchor = path.join(root, 'package.json');
+  const admittedEdges = new Map();
+  const admit = (parent, specifier, target) => {
+    const key = JSON.stringify([parent, specifier]);
+    if (!admittedEdges.has(key)) admittedEdges.set(key, new Set());
+    admittedEdges.get(key).add(target);
+  };
+  for (const edge of config.edges)
+    admit(
+      edge.from,
+      edge.specifier,
+      edge.builtin ? `node:${edge.specifier.replace(/^node:/u, '')}` : edge.to,
+    );
+  for (const entry of config.roots) admit('__anchor__', entry.name, entry.path);
+  const knownMisses = new Set([
+    'node_modules/@nestjs/core/nest-application.js|@nestjs/websockets/socket-module',
+    'node_modules/@nestjs/core/nest-application.js|@nestjs/microservices/microservices-module',
+  ]);
+  const verify = (file) => {
+    const relative = path.relative(root, file);
+    if (
+      !file.startsWith(root + path.sep) ||
+      relative.startsWith('..') ||
+      !config.allowed[relative]
+    )
+      fail('unknown/outside module file');
+    let current = root;
+    for (const part of relative.split(path.sep)) {
+      current = path.join(current, part);
+      if (fs.lstatSync(current).isSymbolicLink()) fail('module symlink');
+    }
+    const bytes = fs.readFileSync(file),
+      record = config.allowed[relative];
+    if (
+      fs.realpathSync(file) !== file ||
+      bytes.length !== record.bytes ||
+      hash(bytes) !== record.sha256
+    )
+      fail('module bytes differ before evaluation');
+    return relative;
+  };
+  // Importing a module is distinct from permission to start an effect. Every
+  // denied attempt leaves a flag even when a library catches the exception.
+  const deny = (name) =>
+    function (..._args) {
+      return fail(`prohibited ${name}`);
+    };
+  const writeObservation = fs.writeFileSync;
+  for (const [name, methods] of [
+    [
+      'node:child_process',
+      [
+        'spawn',
+        'spawnSync',
+        'exec',
+        'execSync',
+        'execFile',
+        'execFileSync',
+        'fork',
+      ],
+    ],
+    ['node:net', ['connect', 'createConnection', 'createServer']],
+    ['node:tls', ['connect', 'createServer']],
+    ['node:http', ['request', 'get', 'createServer']],
+    ['node:https', ['request', 'get', 'createServer']],
+    ['node:dgram', ['createSocket']],
+    ['node:dns', ['lookup', 'resolve', 'resolve4', 'resolve6']],
+    ['node:worker_threads', ['Worker']],
+  ]) {
+    const object = module.createRequire(anchor)(name);
+    for (const method of methods)
+      if (typeof object[method] === 'function')
+        object[method] = deny(`${name}.${method}`);
+    if (name === 'node:net')
+      object.Socket.prototype.connect = deny('net.Socket.connect');
+  }
+  const fsObject = module.createRequire(anchor)('node:fs');
+  for (const method of [
+    'writeFile',
+    'writeFileSync',
+    'appendFile',
+    'appendFileSync',
+    'rm',
+    'rmSync',
+    'rmdir',
+    'rmdirSync',
+    'unlink',
+    'unlinkSync',
+    'rename',
+    'renameSync',
+    'mkdir',
+    'mkdirSync',
+    'truncate',
+    'truncateSync',
+    'copyFile',
+    'copyFileSync',
+    'cp',
+    'cpSync',
+    'chmod',
+    'chmodSync',
+    'chown',
+    'chownSync',
+    'link',
+    'linkSync',
+    'symlink',
+    'symlinkSync',
+    'createWriteStream',
+    'watch',
+    'watchFile',
+  ])
+    if (typeof fsObject[method] === 'function')
+      fsObject[method] = deny(`fs.${method}`);
+  for (const method of [
+    'writeFile',
+    'appendFile',
+    'rm',
+    'rmdir',
+    'unlink',
+    'rename',
+    'mkdir',
+    'truncate',
+    'copyFile',
+    'cp',
+    'chmod',
+    'chown',
+    'link',
+    'symlink',
+  ])
+    if (typeof fsObject.promises[method] === 'function')
+      fsObject.promises[method] = deny(`fs.promises.${method}`);
+  globalThis.fetch = deny('fetch');
+  if (globalThis.WebSocket) globalThis.WebSocket = deny('WebSocket');
+  module.syncBuiltinESMExports();
+  const hooks = module.registerHooks({
+    resolve(specifier, context, nextResolve) {
+      const parent = context.parentURL?.startsWith('file:')
+        ? url.fileURLToPath(context.parentURL)
+        : null;
+      const parentKey =
+        parent === anchor ? '__anchor__' : parent ? verify(parent) : null;
+      const key = `${parentKey}|${specifier}`;
+      const expected = admittedEdges.get(
+        JSON.stringify([parentKey, specifier]),
+      );
+      const optionalMiss = knownMisses.has(key);
+      if (!expected && !optionalMiss) fail('unadmitted module edge');
+      const builtin = specifier.replace(/^node:/u, '');
+      if (module.isBuiltin(specifier) && !allowedBuiltins.has(builtin))
+        fail('unadmitted builtin');
+      let result;
+      try {
+        result = nextResolve(specifier, context);
+      } catch (error) {
+        if (
+          optionalMiss &&
+          ['MODULE_NOT_FOUND', 'ERR_MODULE_NOT_FOUND'].includes(error.code)
+        ) {
+          optionalMisses.push(key);
+          throw error;
+        }
+        fail('unadmitted missing/dynamic module request');
+      }
+      if (optionalMiss) fail('unexpected optional module resolution');
+      if (result.url.startsWith('node:')) {
+        if (
+          !allowedBuiltins.has(result.url.slice(5)) ||
+          !expected.has(result.url)
+        )
+          fail('unadmitted builtin resolution');
+      } else {
+        if (!result.url.startsWith('file:')) fail('non-file module resolution');
+        const relative = verify(url.fileURLToPath(result.url));
+        if (!expected.has(relative)) fail('module edge target differs');
+        resolved.add(relative);
+      }
+      return result;
+    },
+    load(address, context, nextLoad) {
+      if (address.startsWith('node:')) {
+        if (!allowedBuiltins.has(address.slice(5)))
+          fail('unadmitted builtin load');
+        return nextLoad(address, context);
+      }
+      if (!address.startsWith('file:')) fail('non-file module load');
+      const file = url.fileURLToPath(address),
+        relative = verify(file);
+      const result = nextLoad(address, context);
+      let actualSha256 = hash(fs.readFileSync(file));
+      if (result.source !== undefined && result.source !== null) {
+        const bytes =
+          typeof result.source === 'string'
+            ? Buffer.from(result.source)
+            : Buffer.from(
+                result.source.buffer ?? result.source,
+                result.source.byteOffset ?? 0,
+                result.source.byteLength,
+              );
+        actualSha256 = hash(bytes);
+        if (actualSha256 !== config.allowed[relative].sha256)
+          fail('transformed module source');
+      }
+      if (!['commonjs', 'module', 'json'].includes(result.format)) {
+        const nearest = config.nearestPackages[relative];
+        let nearestPackage = null;
+        if (nearest) {
+          const packageFile = path.join(root, nearest.path);
+          let current = root;
+          for (const part of nearest.path.split('/')) {
+            current = path.join(current, part);
+            if (fs.lstatSync(current).isSymbolicLink())
+              fail('nearest package symlink');
+          }
+          const packageBytes = fs.readFileSync(packageFile);
+          if (
+            fs.realpathSync(packageFile) !== packageFile ||
+            hash(packageBytes) !== nearest.sha256
+          )
+            fail('nearest package bytes differ');
+          let manifest;
+          try {
+            manifest = JSON.parse(packageBytes.toString('utf8'));
+          } catch {
+            fail('nearest package manifest malformed');
+          }
+          nearestPackage = {
+            relativePath: nearest.path,
+            actualSha256: hash(packageBytes),
+            manifest,
+          };
+        }
+        if (
+          !isCanonicalUnspecifiedCjsFormat(
+            {
+              relativePath: relative,
+              expectedSha256: config.allowed[relative].sha256,
+              actualSha256,
+              nearestPackageJsonPath: nearest?.path,
+              nearestPackageJsonSha256: nearest?.sha256,
+            },
+            nearestPackage,
+            context,
+            result,
+          )
+        )
+          fail(
+            `unadmitted module format: ${relative} (${String(result.format)})`,
+          );
+      }
+      loaded.add(relative);
+      return result;
+    },
+  });
+  try {
+    const requireRuntime = module.createRequire(anchor);
+    const outbox = requireRuntime('@stynx-nyx/outbox');
+    assertClean();
+    const offline = requireRuntime('@stynx-nyx/offline-sync');
+    assertClean();
+    for (const [api, name] of [
+      [outbox, 'renderOutboxStorage'],
+      [offline, 'renderOfflineStorage'],
+      [offline, 'renderOfflineStorageMigrations'],
+    ])
+      if (typeof api[name] !== 'function') fail('missing public renderer');
+    const render = () => ({
+      outbox: outbox.renderOutboxStorage(config.binding),
+      offline: offline.renderOfflineStorage(config.binding),
+      offlineMigrations: offline.renderOfflineStorageMigrations(config.binding),
+    });
+    const result = render();
+    assertClean();
+    if (JSON.stringify(render()) !== JSON.stringify(result))
+      fail('nondeterministic public renderers');
+    assertClean();
+    for (const file of Object.keys(requireRuntime.cache)) verify(file);
+    for (const relative of new Set([...loaded, ...resolved]))
+      verify(path.join(root, relative));
+    assertClean();
+    writeObservation(
+      1,
+      JSON.stringify({
+        result,
+        observation: {
+          loaded: [...loaded].sort(),
+          resolved: [...resolved].sort(),
+          optionalMisses: [...new Set(optionalMisses)].sort(),
+        },
+      }),
+    );
+  } finally {
+    hooks.deregister();
+  }
+}
+
+function projection(root, runtimeInputs) {
+  const executable = runtimeInputs.closure.node.realpath;
+  check(
+    sha(fs.readFileSync(executable)) === runtimeInputs.closure.node.sha256,
+    'Child executable changed',
+  );
+  const config = {
+    runtime: runtimeInputs.runtime,
+    allowed: runtimeInputs.allowed,
+    builtins: runtimeInputs.builtins,
+    edges: runtimeInputs.edges,
+    nearestPackages: runtimeInputs.nearestPackages,
+    roots: runtimeInputs.closure.loader.roots.map(({ name, path }) => ({
+      name,
+      path,
+    })),
+    binding,
+  };
+  const child = spawnSync(executable, ['--input-type=module', '-'], {
+    cwd: runtimeInputs.runtime,
+    env: { LANG: 'C', LC_ALL: 'C', TZ: 'UTC' },
+    input: `await (${observeChild.toString()})(${JSON.stringify(config)});\n`,
+    encoding: 'utf8',
+    timeout: 60000,
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  check(
+    !child.error && child.status === 0,
+    `Fixed observation child refused: ${child.error?.code ?? child.stderr.slice(0, 1200)}`,
+  );
+  const observed = strictJson(Buffer.from(child.stdout), 'Fixed child output');
+  keys(observed, ['result', 'observation'], 'Fixed child result');
+  keys(
+    observed.result,
+    ['outbox', 'offline', 'offlineMigrations'],
+    'Public result set',
+  );
+  const { outbox, offline, offlineMigrations } = observed.result;
+  for (const artifact of [outbox, offline]) {
+    keys(
+      artifact,
+      [
+        'contractVersion',
+        'packageVersion',
+        'binding',
+        'objectsSql',
+        'roleBindingsSql',
+        'manifest',
+      ],
+      'Public fresh artifact',
+    );
+    check(
+      artifact.packageVersion === '1.6.1' &&
+        artifact.contractVersion === '1.0.0' &&
+        equal(artifact.binding, binding) &&
+        typeof artifact.objectsSql === 'string' &&
+        typeof artifact.roleBindingsSql === 'string',
+      'Public artifact binding/version differs',
+    );
+  }
+  keys(
+    offlineMigrations,
+    ['contractVersion', 'packageVersion', 'binding', 'migrations'],
+    'Public ordered artifact',
+  );
+  check(
+    offlineMigrations.packageVersion === '1.6.1' &&
+      offlineMigrations.contractVersion === '1.0.0' &&
+      equal(offlineMigrations.binding, binding) &&
+      offlineMigrations.migrations.length === 9,
+    'Public migration inventory differs',
+  );
+  const migrationDigests = offlineMigrations.migrations.map(
+    (migration, index) => {
+      keys(migration, ['source', 'sql', 'sqlSha256'], 'Public migration');
+      keys(migration.source, ['path', 'sha256'], 'Public migration source');
+      const filename = migrationNames[index],
+        expectedPath = `packages/offline-sync/migrations/${filename}`;
+      const raw = bytesAt(
+        root,
+        `extracted/stynx-nyx-offline-sync-1.6.1/package/migrations/${filename}`,
+      );
+      check(
+        migration.source.path === expectedPath &&
+          migration.source.sha256 === rawMigrationHashes[index] &&
+          sha(raw) === rawMigrationHashes[index] &&
+          typeof migration.sql === 'string' &&
+          sha(migration.sql) === migration.sqlSha256,
+        'Raw/bound migration provenance differs',
+      );
+      return {
+        sourcePath: expectedPath,
+        rawSqlSha256: sha(raw),
+        boundSqlSha256: sha(migration.sql),
+      };
+    },
+  );
+  const artifactDigests = (artifact) => ({
+    objectsSqlSha256: sha(artifact.objectsSql),
+    roleBindingsSqlSha256: sha(artifact.roleBindingsSql),
+    manifestSha256: sha(canonical(artifact.manifest)),
+  });
+  return {
+    document: {
+      formatVersion: 1,
+      publication: {
+        ...publication,
+        protectedVerification: {
+          path: 'protected-publication-verification.json',
+          sha256: seals.protected,
+        },
+      },
+      binding,
+      inputs: {
+        retentionManifestSha256: seals.retention,
+        runtimeClosureManifestSha256: seals.closure,
+      },
+      outbox,
+      offline,
+      offlineMigrations,
+      digests: {
+        outbox: artifactDigests(outbox),
+        offline: artifactDigests(offline),
+        offlineMigrations: migrationDigests,
+      },
+    },
+    observation: observed.observation,
+  };
+}
+
+try {
+  check(
+    process.argv.length === 3 && !process.argv[2].startsWith('-'),
+    'Usage: node project-published-storage.mjs <admission-root>',
+  );
+  check(!process.execArgv.length, 'External Node preload/loader flags refused');
+  for (const key of ['NODE_OPTIONS', 'NODE_PATH', 'NODE_PG_FORCE_NATIVE'])
+    check(!Object.hasOwn(process.env, key), `Ambient ${key} refused`);
+  const root = fs.realpathSync(path.resolve(process.argv[2]));
+  check(fs.statSync(root).isDirectory(), 'Admission root must be a directory');
+  const directory = safePath(root, 'projection', { absent: true });
+  const output = safePath(root, 'projection/public-storage-projection.json', {
+    absent: true,
+  });
+  const observationFile = safePath(root, 'projection/import-observation.json', {
+    absent: true,
+  });
+  const inputs = preflight(root);
+  const result = projection(root, inputs);
+  // Rehash the same complete inputs after observation before accepting output.
+  preflight(root);
+  const bytes = Buffer.from(JSON.stringify(result.document, null, 2) + '\n');
+  fs.mkdirSync(directory, { recursive: true });
+  safePath(root, 'projection');
+  const temporary = safePath(
+    root,
+    `projection/.public-storage-projection-${process.pid}.tmp`,
+    { absent: true },
+  );
+  check(!fs.existsSync(temporary), 'Temporary output already exists');
+  fs.writeFileSync(temporary, bytes, { flag: 'wx' });
+  // Actual load observations are operational metadata, kept separate from the
+  // deterministic eight-field public document and never treated as DB evidence.
+  const observationTemporary = safePath(
+    root,
+    `projection/.import-observation-${process.pid}.tmp`,
+    { absent: true },
+  );
+  check(
+    !fs.existsSync(observationTemporary),
+    'Temporary metadata already exists',
+  );
+  fs.writeFileSync(
+    observationTemporary,
+    JSON.stringify(result.observation, null, 2) + '\n',
+    { flag: 'wx' },
+  );
+  fs.renameSync(observationTemporary, observationFile);
+  fs.renameSync(temporary, output);
+  console.log(
+    JSON.stringify({
+      output: 'projection/public-storage-projection.json',
+      sha256: sha(bytes),
+      loadedModules: result.observation.loaded.length,
+      loadedModulesSha256: sha(canonical(result.observation)),
+    }),
+  );
+} catch (error) {
+  console.error(`published-storage-observation: ${error.message}`);
+  process.exitCode = 1;
+}

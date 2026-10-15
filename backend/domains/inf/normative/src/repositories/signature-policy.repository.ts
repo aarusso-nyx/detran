@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:41cbbec5aa5c5c6aa56495204f1b421d456abe78852bb03fd76a03715cbde6b1
+// Generated from BP-INF-NORMATIVE-001 v1.2.0 sha256:ce4605cd48d6677dc9c5dd6373c5e2500e57fbd2f114d497422e06914a937588
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -20,7 +20,15 @@ const WRITABLE_FIELDS = new Set<string>([
   'tsa_required',
   'pdfa_required',
   'govbr_level',
-  'status',
+  'valid_from',
+  'valid_to',
+  'minimum_signature_level',
+  'require_lta',
+  'revocation',
+  'at_time',
+  'accepted_policies',
+  'trust_anchors_pem',
+  'source_ref',
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */

@@ -1,0 +1,70 @@
+{
+  "kind": "actual-builtin-only-QEMU-scheduler-trace-diagnosis",
+  "invocation": {
+    "path": "scratch/r22-adoption-161/linux-node-scheduler-preparation/qemu-trace-01/invocation-outcome.json",
+    "bytes": 1750,
+    "sha256": "sha256:92908bce39ebfe0b194161ccbbb89d1fd1933ffe6a8419c1662253acb05d6d06"
+  },
+  "rawTrace": {
+    "path": "scratch/r22-adoption-161/linux-node-scheduler-preparation/qemu-trace-01/raw-qemu-stderr.log",
+    "bytes": 102281,
+    "sha256": "sha256:df5cfcdab7cac8b441714dcc17b638ed1a23c925a7d87491db6d4714929a6d5f"
+  },
+  "nodeObservation": {
+    "path": "scratch/r22-adoption-161/linux-node-scheduler-preparation/qemu-trace-01/stdout.json",
+    "bytes": 788,
+    "sha256": "sha256:e25a4e2a78184d83abdf1638c4994b68aa81fe3890f56dc31fd3a70e4cd91cde"
+  },
+  "exactSchedulerLines": [
+    {
+      "line": 718,
+      "text": "1 sched_getparam(9,275044076784,1,8,0,112720624) = -1 errno=38 (Function not implemented)"
+    },
+    {
+      "line": 719,
+      "text": "1 sched_getscheduler(9,275044076784,1,8,0,112720624) = -1 errno=38 (Function not implemented)"
+    },
+    {
+      "line": 720,
+      "text": "[mutex.cc : 955] RAW: pthread_getschedparam failed: 1"
+    },
+    {
+      "line": 732,
+      "text": "1 sched_getparam(9,275044076784,1,2352579085593,0,48) = -1 errno=38 (Function not implemented)"
+    },
+    {
+      "line": 733,
+      "text": "1 sched_getscheduler(9,275044076784,1,2352579085593,0,48) = -1 errno=38 (Function not implemented)"
+    },
+    {
+      "line": 734,
+      "text": "[mutex.cc : 955] RAW: pthread_getschedparam failed: 1"
+    }
+  ],
+  "guestErrno": 38,
+  "guestError": "ENOSYS / Function not implemented",
+  "EPERMObservedForScheduler": false,
+  "interpretation": "The actual guest-visible scheduling read calls return ENOSYS just before the Abseil diagnostic. The diagnostic numeric1 is not evidence of syscall EPERM. SYS_NICE did not fix it; upstream Moby20.10.11 allows these read calls. This narrows the issue to the emulated/runtime path but does not establish vendor effective BPF or exact QEMU build source. No seccomp/capability waiver is supported.",
+  "sourceProof": {
+    "officialNodeSha256": "89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7",
+    "embeddedSources": {
+      "internal/modules/cjs/loader": "a3e3ee095d409597bf224522411607aa7d2f4747cf42b5329179bf3b4b5528ed",
+      "internal/modules/customization_hooks": "02cf07c29fd2c4701ccc19395d5d0b11968aee34a9aefb37b5684f7248c457f7",
+      "internal/modules/helpers": "3d6d6d7c7257610dcee83c76f29d6314ba56af5560faf50650a025fd9a56bbb3"
+    },
+    "effectiveProcessStatus": [
+      "CapInh:\t0000000000000000",
+      "CapPrm:\t0000000000000000",
+      "CapEff:\t0000000000000000",
+      "CapBnd:\t0000000000000000",
+      "CapAmb:\t0000000000000000",
+      "NoNewPrivs:\t1",
+      "Seccomp:\t2",
+      "Seccomp_filters:\t1"
+    ]
+  },
+  "productionProjectionPolicyChanged": false,
+  "nextReviewedOption": "Investigate actual emulator version/implementation or an actual native-amd64 execution environment; no toolchain upgrade, stderr suppression or broad syscall permission is admitted by this result.",
+  "sdkPackagesTestsSqlNetworkExecuted": false,
+  "probeRemoved": true
+}

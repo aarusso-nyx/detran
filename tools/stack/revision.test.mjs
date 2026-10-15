@@ -241,6 +241,7 @@ test('C-01-05 dado o banco próprio quando apply full não recebe autorização 
     /requires explicit.*local.*stack|local.*stack.*authorization/i,
   );
   assert.doesNotMatch(result.calls, /^psql /m);
+  assert.doesNotMatch(result.calls, /^node /m);
 });
 
 test('C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed', () => {
@@ -252,21 +253,33 @@ test('C-01-05 dado o banco próprio quando apply full recebe a autorização pr�
       [fullAuthorization]: '1',
       PATH: '/intentionally-untrusted-path',
     },
-    { psql: 'printf "%s\\n" psql-called' },
+    {
+      node: 'input=$(cat); printf "%s\\n" "$input" >> "$DETRAN_TEST_STUB_CALLS"; printf "%s\\n" node-public-transport-received',
+    },
   );
   assert.equal(result.status, 0, `${result.stdout}${result.stderr}`);
-  assert.match(result.stdout, /psql-called/);
-  assert.match(result.calls, /^psql /m);
+  assert.match(result.stdout, /node-public-transport-received/);
+  assert.match(result.calls, /^node /m);
+  assert.match(result.calls, /runStorageApply/);
+  assert.match(result.calls, /tools\/stynx-storage-public-install\.mjs/);
+  assert.doesNotMatch(
+    result.calls,
+    /runStorageInstall|tools\/stynx-storage-install\.mjs/,
+  );
+  assert.doesNotMatch(result.calls, /^psql /m);
   assert.match(applySource, new RegExp(fullAuthorization));
 });
 
 test('C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais', () => {
-  const match = ciSource.match(/image:\s*(postgis\/postgis@sha256:[^\s]+)/);
+  const match = ciSource.match(
+    /expected='(postgis\/postgis@sha256:[a-f0-9]{64})'/,
+  );
   assert.ok(match);
   assert.match(
     stackSource,
     new RegExp(match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
   );
+  assert.match(ciSource, /\.database\.image == \$expected/);
   assert.match(stackSource, /--platform linux\/amd64/);
 });
 

@@ -1,0 +1,108 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "check-disk-space",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:28.701000Z",
+    "selection": "versions[3.4.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 42607,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/62/5e/22281d734867f21b2d261929ea7c7904ca36162f07194c3404a14952cb6284bb472f00c09719034b31dea9415046c35b1677a5685492819d6460e944434d",
+    "sourceSha256": "sha256:0f8430a40df72839913dba1f499311b6eebbe22a24156a6e914662db1fe7ef61"
+  },
+  "version": "3.4.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "check-disk-space@3.4.0",
+    "_nodeVersion": "20.2.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages",
+      "tmp": "tmp/check-disk-space_3.4.0_1684678282729_0.13079654886842107"
+    },
+    "_npmUser": { "email": "demodealex@gmail.com", "name": "alex-d" },
+    "_npmVersion": "9.6.6",
+    "author": {
+      "email": "contact@alex-d.fr",
+      "name": "Alex-D",
+      "url": "https://alex-d.fr"
+    },
+    "ava": {
+      "extensions": ["ts"],
+      "files": ["test/**", "!test/__helpers__/**"],
+      "require": [
+        "tsconfig-paths/register",
+        "ts-node/register",
+        "source-map-support/register"
+      ]
+    },
+    "bugs": { "url": "https://github.com/Alex-D/check-disk-space/issues" },
+    "description": "Light multi-platform disk space checker without third party for Node.js",
+    "devDependencies": {
+      "@alex-d/eslint-config": "2.2.0",
+      "@istanbuljs/nyc-config-typescript": "1.0.2",
+      "@rollup/plugin-typescript": "11.1.1",
+      "@types/node": "16.11.7",
+      "@typescript-eslint/eslint-plugin": "5.59.6",
+      "@typescript-eslint/parser": "5.59.6",
+      "ava": "5.2.0",
+      "eslint": "8.41.0",
+      "eslint-plugin-ava": "14.0.0",
+      "eslint-plugin-import": "2.27.5",
+      "eslint-plugin-simple-import-sort": "10.0.0",
+      "npm-run-all": "4.1.5",
+      "nyc": "15.1.0",
+      "rollup": "3.22.0",
+      "rollup-plugin-dts": "5.3.0",
+      "source-map-support": "0.5.21",
+      "ts-node": "10.9.1",
+      "tsconfig-paths": "4.2.0",
+      "tslib": "2.5.2",
+      "typescript": "5.0.4"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 6,
+      "integrity": "sha512-drVkSqfwA+TvuEhFipiR1OC9boEGZL5RrWvVsOthdcvQNXyCCuKkEiTOTXZ7qxSf/GLwq4GvzfrQD/Wz325hgw==",
+      "shasum": "eb8e69eee7a378fd12e35281b8123a8b4c4a8ff7",
+      "signatures": [
+        {
+          "keyid": "SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA",
+          "sig": "MEUCIHKRH0lQqP7MmDhGgKVpFksmzokH9FLb+kLiuHzuOs/KAiEAqK7Vi64/62PqAMNOdXci22k41IdqOet/hrUTwbXYrsQ="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/check-disk-space/-/check-disk-space-3.4.0.tgz",
+      "unpackedSize": 20585
+    },
+    "engines": { "node": ">=16" },
+    "exports": {
+      "import": "./dist/check-disk-space.mjs",
+      "require": "./dist/check-disk-space.cjs",
+      "types": "./dist/check-disk-space.d.ts"
+    },
+    "gitHead": "c33e12edfd2eee441ea897838c1103e8a84fd46f",
+    "homepage": "https://github.com/Alex-D/check-disk-space#readme",
+    "keywords": ["disk", "space", "hdd", "free"],
+    "license": "MIT",
+    "main": "./dist/check-disk-space.cjs",
+    "maintainers": [{ "email": "demodealex@gmail.com", "name": "alex-d" }],
+    "module": "./dist/check-disk-space.mjs",
+    "name": "check-disk-space",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Alex-D/check-disk-space.git"
+    },
+    "scripts": {
+      "build": "npm-run-all build:lib build:dts",
+      "build:dts": "rollup --config rollup.dts.config.mjs",
+      "build:lib": "rollup --config",
+      "lint": "eslint . --cache",
+      "lint:fix": "eslint --fix .",
+      "test": "npm-run-all test:coverage lint typecheck",
+      "test:coverage": "nyc --reporter=lcov --reporter=text npm run test:unit --silent",
+      "test:unit": "NODE_ENV=test TS_NODE_PROJECT='tsconfig.test.json' ava",
+      "typecheck": "tsc --noEmit"
+    },
+    "types": "./dist/check-disk-space.d.ts",
+    "version": "3.4.0"
+  }
+}

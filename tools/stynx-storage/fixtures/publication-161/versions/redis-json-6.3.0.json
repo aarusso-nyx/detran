@@ -1,0 +1,79 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/json",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.712000Z",
+    "selection": "versions[6.3.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 77883,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/bc/b1/79d002551b45281ef2dbb59c8b404d46c4fe59e63d062e4127bdf5c64ae177f909a23520993c76004d783718151dbefcf06362b2cc2fe5310736f2026820",
+    "sourceSha256": "sha256:9f143d685efbafe1053c330fbcbd7436c783aeac01ec7b710d17e8cb49d9f536"
+  },
+  "version": "6.3.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/json@6.3.0",
+    "_nodeVersion": "22.23.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/json_6.3.0_1790766002432_0.5112601683036933"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "a89fadfc-48a3-40df-96ba-d4dbf3798372"
+      }
+    },
+    "_npmVersion": "11.20.0",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "description": "This package provides support for the [RedisJSON](https://redis.io/docs/latest/develop/data-types/json/) module, which adds JSON as a native data type to Redis.",
+    "devDependencies": { "@redis/test-utils": "*" },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@redis%2fjson@6.3.0"
+      },
+      "fileCount": 106,
+      "integrity": "sha512-yt6vRfPBXtW/3qm53cF81TSQpLMjWdW4/2E9WQ2GgbvsKkuCKCFQIcMiKlil1ZMnezK+IQuS795xKU5psbaegw==",
+      "shasum": "e2d928f6785eb57bb721a9764057dcef69aeb1af",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDfv2F3fRVo8n4ZcfjJV1zoqZmRIfi3eeTHli5unlQvmgIhAJR4Xwi9nTPoba7XuAU2JcI/uDinYDSbMADWAUQ4ctmH"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQC64YB/z+ITX1NLL2gWJ9Uqb6RHZcAPX2WObQsqou3oTAIhAKYNc6g5uymu4nC+pmS+kTcNYQ3RFzspall4vY5D32TY"
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/json/-/json-6.3.0.tgz",
+      "unpackedSize": 161188
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "7b732cdd48ce93cbe4d4904cf402f4c63639a24d",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/json",
+    "keywords": ["redis", "RedisJSON"],
+    "license": "MIT",
+    "main": "./dist/lib/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/json",
+    "peerDependencies": { "@redis/client": "^6.3.0" },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "release": "release-it",
+      "test": "nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit  './lib/**/*.spec.ts'"
+    },
+    "types": "./dist/lib/index.d.ts",
+    "version": "6.3.0"
+  }
+}

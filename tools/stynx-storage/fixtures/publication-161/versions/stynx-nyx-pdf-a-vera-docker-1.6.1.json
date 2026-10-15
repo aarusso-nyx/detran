@@ -1,0 +1,63 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/pdf-a-vera-docker",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.482356+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 166084,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-pdf-a-vera-docker-1.6.1.json",
+    "sourceSha256": "sha256:25dd5dc515093b4fb5cb651d660af9d4789eb311785c04075fa664501bad53d3"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": { "@stynx-nyx/pdf-a": "1.6.1" },
+    "description": "veraPDF Docker adapter for the stynx PDF/A validator contract",
+    "devDependencies": {
+      "@stynx-nyx/logging": "1.6.1",
+      "@types/node": "24.13.4",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-Zp+bEsHmcP1dWLTOyyVFj9tfwOg3xtxqOgxpdiifVNI28uzlUSuXKENcammP7JkwrPioCTQtwJFe9usE6PCX/g==",
+      "shasum": "52b862df12453a6f21d62f8a6ac82998793f7d43",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/pdf-a-vera-docker/1.6.1/52b862df12453a6f21d62f8a6ac82998793f7d43"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/pdf-a-vera-docker/src/index.js",
+    "name": "@stynx-nyx/pdf-a-vera-docker",
+    "peerDependencies": { "@stynx-nyx/logging": "^1.6.1" },
+    "readme": "# `@stynx-nyx/pdf-a-vera-docker` — veraPDF-Docker PDF/A validator implementing the `@stynx-nyx/pdf-a` contract\n\n`@stynx-nyx/pdf-a-vera-docker` is the concrete PDF/A conformance validator. It implements `@stynx-nyx/pdf-a`'s `PdfAValidator` interface by shelling out to the [veraPDF](https://verapdf.org/) industry-standard validator running in a Docker container. It builds the `docker run` invocation, parses veraPDF's JSON report, and maps it to the contract's `PdfAValidationResult`. Plug it into `@stynx-nyx/pdf`'s `pdfAAdapter` slot to make `profile: 'pdf-a'` requests work.\n\n## Purpose\n\nPDF/A conformance must be validated by an authoritative tool — veraPDF is the reference implementation. Running it as a Docker container avoids a heavyweight JVM dependency in your app. This package wraps the container invocation behind the `@stynx-nyx/pdf-a` contract.\n\nYou reach for it when your app produces archival/legal PDFs that must conform to PDF/A-2b (or another profile) and you want authoritative validation.\n\nWhat it does NOT do: it doesn't render PDFs (that's `@stynx-nyx/pdf`). It doesn't run without Docker (the validator IS a container).\n\n## Audience\n\nBackend developers + ops in regulated domains producing archival PDFs.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/pdf-a-vera-docker @stynx-nyx/pdf-a\n# Docker must be available at runtime\ndocker pull verapdf/cli\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference). **Docker required at runtime.**\n\n## Quick start\n\n```ts\nimport { StynxPdfModule } from '@stynx-nyx/pdf';\nimport { VeraPdfDockerValidator } from '@stynx-nyx/pdf-a-vera-docker';\n\nStynxPdfModule.forRoot({\n  pdfAAdapter: new VeraPdfDockerValidator({\n    image: 'verapdf/cli',\n    flavour: '2b',\n    timeoutMs: 60_000,\n  }),\n});\n```\n\nNow `pdf.render({ output: { profile: 'pdf-a' }, ... })` validates the output through veraPDF.\n\n## Public API surface\n\n### Validator\n\n| Export                   | Description                                                                                                  |\n| ------------------------ | ------------------------------------------------------------------------------------------------------------ |\n| `VeraPdfDockerValidator` | The `PdfAValidator` impl. `validate(bytes, options)` runs veraPDF in Docker and returns the contract result. |\n| `flavourFrom`            | Map a `(version, conformance)` pair to a veraPDF flavour string (e.g. `'2b'`).                               |\n\n### Docker plumbing\n\n| Export                                                       | Description                                                      |\n| ------------------------------------------------------------ | ---------------------------------------------------------------- |\n| `runVeraPdfDocker`                                           | Execute the veraPDF container against a file; return raw output. |\n| `buildVeraPdfDockerArgs`                                     | Build the `docker run` argument array.                           |\n| `VeraPdfDockerRunner` (type)                                 | The runner interface (swappable for tests).                      |\n| `VeraPdfDockerRunRequest` / `VeraPdfDockerRunResult` (types) | Run IO shapes.                                                   |\n| `parseVeraPdfJson`                                           | Parse veraPDF's JSON report into the contract result.            |\n\n### Errors\n\n| Export                    | Description                                                                   |\n| ------------------------- | ----------------------------------------------------------------------------- |\n| `VeraPdfDockerError`      | The container invocation failed (Docker not running, image missing, timeout). |\n| `VeraPdfReportParseError` | veraPDF produced output that couldn't be parsed.                              |\n\n### Constants\n\n| Export                       | Description                |\n| ---------------------------- | -------------------------- |\n| `DEFAULT_VERAPDF_IMAGE`      | `'verapdf/cli'`.           |\n| `DEFAULT_VERAPDF_TIMEOUT_MS` | Default container timeout. |\n\n### Options\n\n| Export                          | Description                                  |\n| ------------------------------- | -------------------------------------------- |\n| `VeraPdfDockerValidatorOptions` | `{ image?, flavour?, timeoutMs?, runner? }`. |\n\n## Configuration\n\n| Option      | Type                  | Default                      | Description                                |\n| ----------- | --------------------- | ---------------------------- | ------------------------------------------ |\n| `image`     | `string`              | `'verapdf/cli'`              | Docker image (pin a digest in production). |\n| `flavour`   | `string`              | derived from request         | veraPDF flavour (`'2b'`, `'2u'`, etc.).    |\n| `timeoutMs` | `number`              | `DEFAULT_VERAPDF_TIMEOUT_MS` | Per-validation timeout.                    |\n| `runner`    | `VeraPdfDockerRunner` | the real docker runner       | Swap for a mock in tests.                  |\n\n## Examples\n\n### Example 1 — pin the image digest in production\n\n```ts\nnew VeraPdfDockerValidator({\n  image: 'verapdf/cli@sha256:20202b4bcc2410a25db1f637c7b461a2e0dda1d97dd8a6df658286b30d56c842',\n  flavour: '2b',\n});\n```\n\n### Example 2 — mock runner in tests\n\n```ts\nnew VeraPdfDockerValidator({\n  runner: {\n    async run() {\n      return { stdout: '{\"jobs\":[{\"validationResult\":[{\"compliant\":true}]}]}', exitCode: 0 };\n    },\n  },\n});\n```\n\n## Common pitfalls\n\n- **Docker daemon not running** — `validate()` throws `VeraPdfDockerError`. This is the pre-existing R15 finding for the conformance test suites. Ensure Docker is up.\n- **Cold-start latency** — the first `docker run` after a fresh pull is slow (image load). Pre-pull the image at deploy time.\n- **Container resource limits** — veraPDF is JVM-based; under-resourced containers OOM. Allocate adequate memory.\n- **Unpinned image tag** — `verapdf/cli` (latest) can change validation behaviour between deploys. Pin a digest.\n\n## Related packages\n\n- [`@stynx-nyx/pdf-a`](/docs/packages/pdf-a/) — the contract this package implements.\n- [`@stynx-nyx/pdf`](/docs/packages/pdf/) — consumes this via its `pdfAAdapter` slot.\n- [STYNX framework — ADR-PDF-A-CONFORMANCE](/docs/meta/adr/ADR-PDF-A-CONFORMANCE/) — the conformance decision.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-pdf-a-vera-docker/`](/docs/api-reference/stynx-pdf-a-vera-docker/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/pdf-a`: `workspace:*`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@stynx-nyx/logging`: `^1.6.1`\n\n### Development-only dependencies\n\n- `@stynx-nyx/logging`: `workspace:*`\n- `@types/node`: `24.13.4`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/pdf-a-vera-docker",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "bench": "vitest run --config ./vitest.config.ts test/bench/throughput.bench.ts",
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.coverage.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

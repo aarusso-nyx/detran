@@ -1,0 +1,103 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/node-http-handler",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[4.11.3]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 360030,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/smithy-node-http-handler-4.11.3.json",
+    "sourceSha256": "sha256:56a18070f57e4d2fb4eeff90e008ad392c77f35a5d501e7d1ce01110dfcceea8"
+  },
+  "version": "4.11.3",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/node-http-handler@4.11.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/node-http-handler_4.11.3_1787241704450_0.43648424723003987"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:5a4d02f6-3fd0-4ab9-bd7b-0f6af958b155"
+      }
+    },
+    "author": {
+      "email": "",
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "dependencies": {
+      "@smithy/core": "^3.33.3",
+      "@smithy/types": "^4.17.2",
+      "tslib": "^2.6.2"
+    },
+    "description": "Provides a way to make requests",
+    "devDependencies": {
+      "@smithy/abort-controller": "^4.4.2",
+      "@types/node": "^18.11.9",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2fnode-http-handler@4.11.3"
+      },
+      "fileCount": 56,
+      "integrity": "sha512-2jY1tSpERfPfWqyBV2pH+iGFaghVsIJszJNsT7hxtQYhVJpWDyc0LqOWI+nXOxOAHaEfZ4PXXtp1wW1TGpHhkA==",
+      "shasum": "27e91a61b6de8a13e9b552f22975d7dd369cb397",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEMCIB+t9aBdFV+aEnN0znJOqOa1RXv0jhqfktq7ykeWj83pAh8yeZh5bc4b46ww12JqGcFAvAayA3BxMbVTPgQZbdFh"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIFt6qmdlU3bMEluM5Bp3t6fYJqgEe8REkg0q+pMgjXnFAiAGzmf6H+v/UalxY3Vrtc0I5lKf4iRk335rI6dM2Ydrxg=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/node-http-handler/-/node-http-handler-4.11.3.tgz",
+      "unpackedSize": 127830
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "e9151f3e043a19032caad09b05937a4962c5bd13",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/node-http-handler",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/node-http-handler",
+    "repository": {
+      "directory": "packages/node-http-handler",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "4.11.3"
+  }
+}

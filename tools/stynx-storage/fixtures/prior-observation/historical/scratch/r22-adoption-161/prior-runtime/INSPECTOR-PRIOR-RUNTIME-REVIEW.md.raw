@@ -1,0 +1,25 @@
+# Inspector — prior 1.6.0 runtime retention review
+
+**PASS for retention bytes, package provenance, internal topology and static graph only. No prior SDK evaluation, verifier, renderer, bin, DB or pin operation was performed.** Review follows Stage A3c retention-only authority frozen4cf901c5; it does not admit arbitrary dynamic package methods or database execution.
+
+Independent checks verified all 176 package contexts and registry records, each archive SHA-256/SHA-1/SRI against retained metadata and exact pnpm lock resolutions. All 21,618 installed archive payload files match their real tar members. The three historical root tar identities (data/outbox/offline-sync) match the separately retained published1.6.0 preparation input1bb213a1. Tar paths are unique, safe regular/directory members, without archive links.
+
+All 21,624 capture regular-file records rehash with recorded modes; that includes three installer-derived pnpm executable shims and three original input copies. The separate prior-package-retention.json is bound explicitly by closure, giving 21,625 actual runtime/input regular files in total, with no unexplained file. All 455 actual relative symlinks match their recorded targets and resolve internally. All three nonexecuted bin shims match observed installed bytes and real upstream bin declarations/target hashes. They remain installer-derived artifacts, not tar payload or permission to execute a bin; no portability claim for shim execution is made.
+
+Independent AST traversal and actual Node resolver checks match all 6,437 sites in 2,435 retained graph files: 6,426 literal edges, five dynamic sites and six missing sites, with zero outside-runtime resolutions. The two public roots resolve to retained1.6.0 entrypoints. Node executable hash matches retainedv24.20.0 identity. Capture records 454 retained dependency resolutions and29 explicit missing-optional resolutions; no missing required dependency is hidden.
+
+Dynamic sites include Nest loaders, load-esm and Express view-engine loading. Missing sites include optional Nest websocket/microservice, pg-native and Redis xxhash paths. This report preserves those exact source/graph observations without importing SDK or granting a universal runtime-method disposition. Future prior verifier execution requires its own F1/loader/context/lease admission. No target-bound baseline, production subject, equivalence, migration or provider/trust approval follows.
+
+The audit initially counted the separately bound prior custody input as an extra capture file; the corrected count keeps it separate from the unchanged capture21624 inventory. A control-plane audit path/key setup error was corrected without changing any custody input. Final byte/lock/AST reports below contain the independently verified results.
+
+## Exact evidence identities
+
+- `retention-manifest.json`: `c597aa0ae326054a3bd9294f9e95410b9d23d2e3da19ae0238b388ba1be8a894`
+- `closure-manifest.json`: `55454077278d8c60ac6abcb8b829fcc8bbcaa88efe09e1a2f0e07eb26f879f5d`
+- `installed-capture.json`: `f3a6ca2044a0716c4383a39d727b29f47b2fb3881cffc80fc9d3cc9c7a221375`
+- `package-provenance.json`: `4294a74a451a3c97dfcce4e1170f3303a3f2974c1f4f66a3df67ec8204a3732c`
+- `tar-payload-check.json`: `82de6ed61fa7493717d6aebd47263e51f35754369acdc3c8a060eefae86c1648`
+- `static-module-graph.json`: `074bca4904f5143a84a48644b275b575704615b335ef5224e0a61c0197f34494`
+- `inspector-prior-byte-audit.json`: `156775b94128177cb752b23e3148fce55bea47384c47664330e5140e0a7a6da7`
+- `inspector-prior-lock-audit.json`: `78a864c9aa5656f2ad6e80d6f0c7e4c9132241ea0c134ee9d8411123b921cccd`
+- `inspector-prior-static-graph-audit.json`: `442517fef8c941b02c87c7ad955419a1436a688bcc7977d17b238606ea1d9add`

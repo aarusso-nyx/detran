@@ -1,0 +1,23 @@
+    function depPathToFilename(depPath, maxLengthWithoutHash) {
+      let filename = depPathToFilenameUnescaped(depPath).replace(/[\\/:*?"<>|]/g, "+");
+      if (filename.includes("(")) {
+        filename = filename.replace(/\)$/, "").replace(/(\)\()|\(|\)/g, "_");
+      }
+      if (filename.length > maxLengthWithoutHash || filename !== filename.toLowerCase() && !filename.startsWith("file+")) {
+        return `${filename.substring(0, maxLengthWithoutHash - 27)}_${(0, crypto_base32_hash_1.createBase32Hash)(filename)}`;
+      }
+      return filename;
+    }
+    function depPathToFilenameUnescaped(depPath) {
+      if (depPath.indexOf("file:") !== 0) {
+        if (depPath[0] === "/") {
+          depPath = depPath.substring(1);
+        }
+        const index = depPath.indexOf("@", 1);
+        if (index === -1)
+          return depPath;
+        return `${depPath.substring(0, index)}@${depPath.slice(index + 1)}`;
+      }
+      return depPath.replace(":", "+");
+    }
+    function createPeersDirSuffix(peerIds, maxLength = 1e3) {

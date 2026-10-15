@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "sonic-boom",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:28.791000Z",
+    "selection": "versions[4.2.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 176331,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/f7/60/ebfaa5994b9bc82d8e87e1e2c3bccc63e8487a9c418f8493ad9ddd01fce672b9b9f1b83584545055cf157f23e8e86c412e78d11dd4dc3ce007673057b934",
+    "sourceSha256": "sha256:11fb2889393ca05633ffdc8e8ddef4ab34e0a1d34a3a6d7be38e4d7f16b63afc"
+  },
+  "version": "4.2.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "sonic-boom@4.2.1",
+    "_nodeVersion": "24.13.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/sonic-boom_4.2.1_1770731969568_0.19758398740121663"
+    },
+    "_npmUser": {
+      "email": "hello@matteocollina.com",
+      "name": "matteo.collina"
+    },
+    "_npmVersion": "11.6.2",
+    "author": { "email": "hello@matteocollina.com", "name": "Matteo Collina" },
+    "bugs": { "url": "https://github.com/pinojs/sonic-boom/issues" },
+    "dependencies": { "atomic-sleep": "^1.0.0" },
+    "description": "Extremely fast utf8 only stream implementation",
+    "devDependencies": {
+      "@fastify/pre-commit": "^2.1.0",
+      "@sinonjs/fake-timers": "^15.0.0",
+      "@types/node": "^25.0.3",
+      "fastbench": "^1.0.1",
+      "proxyquire": "^2.1.3",
+      "standard": "^17.0.0",
+      "tap": "^18.2.0",
+      "tsd": "^0.31.0",
+      "typescript": "~5.9.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 25,
+      "integrity": "sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==",
+      "shasum": "28598250df4899c0ac572d7e2f0460690ba6a030",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQCn9BfaaG/P5td5Bctjay+1xLy1+rvqZm1CV0UfJK/vJgIgNWpknu64NdORXJB57RbDOS35X8QzhnovSVGOnDmtSWk="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/sonic-boom/-/sonic-boom-4.2.1.tgz",
+      "unpackedSize": 86740
+    },
+    "gitHead": "ada84a68dfccfe9cf1b34f4b3170b6907dd4c468",
+    "homepage": "https://github.com/pinojs/sonic-boom#readme",
+    "keywords": ["stream", "fs", "net", "fd", "file", "descriptor", "fast"],
+    "license": "MIT",
+    "main": "index.js",
+    "maintainers": [
+      { "email": "hello@matteocollina.com", "name": "matteo.collina" },
+      { "email": "james.sumners@gmail.com", "name": "jsumners" },
+      { "email": "w@tson.dk", "name": "watson" }
+    ],
+    "name": "sonic-boom",
+    "pre-commit": ["test"],
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pinojs/sonic-boom.git"
+    },
+    "scripts": {
+      "test": "npm run test:types && standard && npm run test:unit",
+      "test:types": "tsc && tsd",
+      "test:unit": "tap"
+    },
+    "tsd": { "directory": "./types" },
+    "type": "commonjs",
+    "types": "types/index.d.ts",
+    "version": "4.2.1"
+  }
+}

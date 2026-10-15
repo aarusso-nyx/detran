@@ -1,0 +1,51 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-prior-runtime-retention",
+  "sourceVersion": "1.6.0",
+  "closure": {
+    "path": "closure-manifest.json",
+    "bytes": 4526,
+    "sha256": "55454077278d8c60ac6abcb8b829fcc8bbcaa88efe09e1a2f0e07eb26f879f5d"
+  },
+  "programs": [
+    {
+      "path": "capture-installed-runtime.mjs",
+      "bytes": 9540,
+      "sha256": "f790f03c3bade37386c92384d41b94721261321782ccd7de2efb952f9593aa97"
+    },
+    {
+      "path": "retain-package-provenance.mjs",
+      "bytes": 5498,
+      "sha256": "41d54cfd549e9d283e51cadeec6b4157198174d19b80313522de35c8f2ff143c"
+    },
+    {
+      "path": "capture-static-graph.mjs",
+      "bytes": 3833,
+      "sha256": "586e002cfae8423b23e6270a1ac6e54b0ce76be71190e23c63d51a3983ad6ea6"
+    },
+    {
+      "path": "verify-tar-payloads.py",
+      "bytes": 4671,
+      "sha256": "7285490fc5c739f1f1164dc1c3be983b84ee64ee06d74427f284bcc0c5cd6a66"
+    }
+  ],
+  "captureHistory": {
+    "path": "history/initial-capture/installed-capture.json",
+    "bytes": 11916018,
+    "sha256": "eb5f3c774a28891a73297fb9c395367da2bb709bf007e002b4f67bade5a4efa1"
+  },
+  "tarDifferences": {
+    "path": "installed-tar-differences.json",
+    "bytes": 1190,
+    "sha256": "cc763a1c5660049dd777d95b5dbea6d4e554e4475e959061bfc1c8378f56e503"
+  },
+  "limits": {
+    "sdkExecuted": false,
+    "databaseAccessed": false,
+    "pinChanged": false,
+    "activeInstallChanged": false,
+    "binExecutionPermitted": false,
+    "universalDynamicClosureClaim": false,
+    "independentInspectorAdmission": false
+  }
+}

@@ -1,0 +1,596 @@
+{
+  "role": "Inspector",
+  "result": "PASS_CURRENT_REFERENCE_READBACK",
+  "subjects": [
+    {
+      "subject": {
+        "clusterSystemIdentifier": "7696293464811719840",
+        "databaseOid": "18765",
+        "databaseName": "detran_r22_161_g03_ref160",
+        "owner": "postgres"
+      },
+      "sqlUtc": "2026-10-14T00:12:55.875967Z",
+      "rawPackageTables": [
+        {
+          "table": "outbox.ack_quarantine",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.acknowledgements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_acks",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_attempts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_delivery",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_retirements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.events",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "033f020e4aa45a731397b418e5113f2d40ce7d7f3b464983943a9a783580a730",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_event_map",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_ownership",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "95802961a275a6fe6b7cb9e17aa1d5397d195fb9b2e40fa2fc199adfe77faf70",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.messages",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.tenant_clock",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "9758bb69cfa63ba36160136850cc286b770c4dddcdfe9d7bf8633106a1410a9f",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_consumption",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_ranges",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "f8822ab1660191caaaa52169416b413d937190db481c7bf61024d45cc73d682a",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservation_scopes",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "18d8c3728692a33d97bbed91646f4503b220c4e44abbc7bcb5fc7616e60278a7",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservations",
+          "rows": 3,
+          "lengthFramedRawRowSha256": "d10a23e0799922f637bd5128d5076805832fc824b3815fa3cc29d8ec5202028c",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batch_transport_keys",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "941fe48975afe243cfa92d2de3425875b77f2e7ad29d5310afd6b09f0ab59caf",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batches",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "e6e0915a3d25d3e6c6093ee835e2f46c78e648633d6e9a0bdc56e3f523b313e6",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_actions",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "30fe1f9ce544b010ac37daeb1e767babbcdbb35a873fd47aa6d77179218c8dfc",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_evidence",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "f63a9cf5cc6b1f3fdbc7b371eced674754a2a8fb09af2ea2a51810d1419ee951",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflicts",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "dc1f32f5528faec67511ae23afd543a09357673f3bc310e3b24305efb78e625b",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_import_receipts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_attempts",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "9f8b727c26d8e9098de8982250affbbf873b0b95c85f9ea062810b9dfddfef72",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_receipts",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "5de4abcdada066ca238832319c03805e65ad58364cb21928c1b6b2317f4a596f",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_queue_items",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "4c2d144bace3c5fe10ca1ab1818973b2f3537bbcb129e9e1f802b4d1b56d1c50",
+          "rawStringsExactlyEqual": true
+        }
+      ],
+      "sequences": {
+        "outbox.event_order_seq": {
+          "is_called": true,
+          "last_value": "1"
+        }
+      },
+      "originalFreshRowsExactlyEqual": true,
+      "originalFreshSqlTimes": [
+        "2026-10-14T00:08:24.530369Z",
+        "2026-10-14T00:08:24.530369Z"
+      ],
+      "catalogFieldChecks": [
+        {
+          "schema": "outbox",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 24,
+            "policy": 11,
+            "relation": 12
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        },
+        {
+          "schema": "offline",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 38,
+            "policy": 12,
+            "relation": 13
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        }
+      ],
+      "roleGraphUnchanged": true,
+      "safeSetClosure": true,
+      "noOtherClients": true
+    },
+    {
+      "subject": {
+        "clusterSystemIdentifier": "7696293464811719840",
+        "databaseOid": "18766",
+        "databaseName": "detran_r22_161_g03_refprefix8",
+        "owner": "postgres"
+      },
+      "sqlUtc": "2026-10-14T00:12:55.941887Z",
+      "rawPackageTables": [
+        {
+          "table": "outbox.ack_quarantine",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.acknowledgements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_acks",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_attempts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_delivery",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_retirements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.events",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "9f2f9a7edff7ee9832104f827d5c365fe6902ab2ea3be1fb48d01018e0a5b1ec",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_event_map",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_ownership",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "95802961a275a6fe6b7cb9e17aa1d5397d195fb9b2e40fa2fc199adfe77faf70",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.messages",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.tenant_clock",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "8b92f240ecb47466efc018008e8012e6c23caab232f29b4e626d41aaced137c9",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_consumption",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_ranges",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "63f2ac11d35a054f1b30c0c4194b01115be19aba1171371708355bd149f63efb",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservation_scopes",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "f7c4405ff7d4e532a535a07954d00ae3211d9c8d02fa28778c6f59125f1c7ed1",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservations",
+          "rows": 3,
+          "lengthFramedRawRowSha256": "4ebaee1d9e198c69ebf616222c5802a3fc0b54083cc08b36cda0efe9a3df7d73",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batch_transport_keys",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "ebb4141db5210c82b76dcd2e83a4486bb7fa6de3c5e1f91394ae8888d3d7dd8c",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batches",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "f67d256b634fccc84e6a7bb5bd780f71f3883f16108f146875edd58a2f1a4295",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_actions",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "4e929ffd188c6af310a68c0b9a9336fb3fb55a113536b7c9c1e0202859645b4d",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_evidence",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "a060b0fe40150ce21a7f24221c1905a616574fdebaf30f54b0511e7b4f2c2fb2",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflicts",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "549ec53a53565243b34bd0905dc9d7453bfa312431a21dfb4595786321117749",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_import_receipts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_attempts",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "9f8b727c26d8e9098de8982250affbbf873b0b95c85f9ea062810b9dfddfef72",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_receipts",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "ba1517f27235b059954f279f2e30c131548aa3ded674fd3b970ee9bbbcf8c88e",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_queue_items",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "f6cf07701d390e2110033864dd1b093432b361987ef8add59f667226ffeb79c1",
+          "rawStringsExactlyEqual": true
+        }
+      ],
+      "sequences": {
+        "outbox.event_order_seq": {
+          "is_called": true,
+          "last_value": "1"
+        }
+      },
+      "originalFreshRowsExactlyEqual": "prefix: no synthetic ledger",
+      "originalFreshSqlTimes": [],
+      "catalogFieldChecks": [
+        {
+          "schema": "outbox",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 24,
+            "policy": 11,
+            "relation": 12
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        },
+        {
+          "schema": "offline",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 38,
+            "policy": 12,
+            "relation": 13
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        }
+      ],
+      "roleGraphUnchanged": true,
+      "safeSetClosure": true,
+      "noOtherClients": true
+    },
+    {
+      "subject": {
+        "clusterSystemIdentifier": "7696293464811719840",
+        "databaseOid": "18767",
+        "databaseName": "detran_r22_161_g03_upgrade",
+        "owner": "postgres"
+      },
+      "sqlUtc": "2026-10-14T00:12:55.993242Z",
+      "rawPackageTables": [
+        {
+          "table": "outbox.ack_quarantine",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.acknowledgements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_acks",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_attempts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_delivery",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.event_retirements",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.events",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "abd3089b4492b908a680163ede9e562216dbefe10a194d1ee47ba98804bb695b",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_event_map",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.legacy_ownership",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "95802961a275a6fe6b7cb9e17aa1d5397d195fb9b2e40fa2fc199adfe77faf70",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.messages",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "outbox.tenant_clock",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "be5925e43ce3b0d177caf7340d9ef48f45a143e0167bcd67b7bda5e4d6202c03",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_consumption",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_ranges",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "2ec87477bc51e61d3701240299fb97cfc1542335bd42429f6ce825c4897f1d23",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservation_scopes",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "286e028a06681c4511919c11a94b2cb9cbc12000ad73f715be7592d5a9d0363a",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.numbering_reservations",
+          "rows": 3,
+          "lengthFramedRawRowSha256": "e2b34df9b7afa5c0da31b4a3dc28fd3144ce820866fe3df8afaf0015e7bcc3fb",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batch_transport_keys",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "a639d581cd6b3509273413d5026cdbd790db607981adfa57e5f2f80e68815d4c",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_batches",
+          "rows": 6,
+          "lengthFramedRawRowSha256": "a93299a87c15b12d5e85b7636a77609956e3eb88fdf6bebef5c1f32418888290",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_actions",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "79cd056c1ad7d7d1b6cd0b0f784f0ed4a3c38c749e808c9c23667473b16ab46c",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflict_evidence",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "672f923277050ee341046db33a3e1bed2a8497dbefd7a3ac0a65cc0e9b9c32fd",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_conflicts",
+          "rows": 2,
+          "lengthFramedRawRowSha256": "cd29563f88cef3d9007ab6fae90fd396e44b7dcd446b63b7c6fade0a91b89bc4",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_import_receipts",
+          "rows": 0,
+          "lengthFramedRawRowSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_attempts",
+          "rows": 1,
+          "lengthFramedRawRowSha256": "9f8b727c26d8e9098de8982250affbbf873b0b95c85f9ea062810b9dfddfef72",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_item_receipts",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "d2fa53228ef28cfe47639422b4539cd1b501fce3464a1eee29b235c791e4ace8",
+          "rawStringsExactlyEqual": true
+        },
+        {
+          "table": "offline.sync_queue_items",
+          "rows": 5,
+          "lengthFramedRawRowSha256": "caab5e7010bdf86a38df549f705d87b149679d2e2bff7d891dc9f136129e82a7",
+          "rawStringsExactlyEqual": true
+        }
+      ],
+      "sequences": {
+        "outbox.event_order_seq": {
+          "is_called": true,
+          "last_value": "1"
+        }
+      },
+      "originalFreshRowsExactlyEqual": true,
+      "originalFreshSqlTimes": [
+        "2026-10-14T00:08:24.594910Z",
+        "2026-10-14T00:08:24.594910Z"
+      ],
+      "catalogFieldChecks": [
+        {
+          "schema": "outbox",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 24,
+            "policy": 11,
+            "relation": 12
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        },
+        {
+          "schema": "offline",
+          "liveCatalogFieldsCompared": {
+            "function": 4,
+            "index": 38,
+            "policy": 12,
+            "relation": 13
+          },
+          "rawCatalogCaptureRetained": true,
+          "policyScope": "Exact USING/WITH CHECK expressions; raw pg_policies roles are retained separately (reserved public displays lowercase vs public SDK uppercase). No raw whole-catalog equality claim."
+        }
+      ],
+      "roleGraphUnchanged": true,
+      "safeSetClosure": true,
+      "noOtherClients": true
+    }
+  ],
+  "maintenanceNoOtherClients": true,
+  "producerCompletedPhases": 12,
+  "producerControlledWitnessesPerSubject": 49,
+  "producerInternalLogicalComparisons": 2,
+  "proofFilesIndependentlyRehashed": true,
+  "sqlMode": "Four fresh REPEATABLE READ READ ONLY captures, UTC/row_security on, explicit ROLLBACK, all psql0/closed.",
+  "sdkExecuted": false,
+  "writesExecuted": false,
+  "limits": [
+    "No baseline admission/target suffix/production/provider claim.",
+    "Current raw row strings and sequences equal within each subject to producer snapshots; cross-subject equality is only declared logical comparison, not raw identity equality.",
+    "Manual current catalog captures independently compare relation owner/RLS/FORCE, exact index/function definitions and policy expressions; no current public SDK verifier invocation.",
+    "Original failed01/02 subjects untouched."
+  ]
+}

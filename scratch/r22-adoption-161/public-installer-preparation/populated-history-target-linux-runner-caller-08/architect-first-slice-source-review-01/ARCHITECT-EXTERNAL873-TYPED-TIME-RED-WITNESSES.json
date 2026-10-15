@@ -1,0 +1,106 @@
+[
+  {
+    "case": "infinite_start_accepts_unbounded_now",
+    "accepted": true,
+    "error": null,
+    "scope": "TEST_ONLY synthetic numeric input; no clock/runtime subprocess"
+  },
+  {
+    "case": "backward_clock_accepts_before_origin",
+    "accepted": true,
+    "error": null,
+    "scope": "TEST_ONLY synthetic numeric input; no clock/runtime subprocess"
+  },
+  {
+    "case": "untyped_closed_attestation_accepts_impossible_identity",
+    "accepted": true,
+    "returnedAttestation": {
+      "kind": "EXTERNAL_PROCESS_ATTESTATION",
+      "phase": "PRE_START",
+      "cid": "foreign",
+      "pid": true,
+      "ppid": "not-numeric",
+      "startTicks": -1,
+      "nonce": "bad-nonce",
+      "readySha256": "sha256:ee7b80a8dcac0e5a742a17612bfb60df6a3ea2c94e2d6ff60b7f27c0650ab693",
+      "scriptSha256": "sha256:e865aba70609dd010525c0f4bf7329cee680d6904b78f36d3dcd4fa61a77f9a1",
+      "nodeSha256": "sha256:89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7",
+      "cmdlineSha256": "sha256:587eb484e365a61a704f72f00c8d2ecb0df523514e2ba792b705be13e0e060fa",
+      "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+      "exeLink": "/usr/bin/qemu-x86_64",
+      "exeSha256": "not-a-digest",
+      "statBeforeSha256": "sha256:f1d9c90368e97390d12bce9630dfc6846ce8fc45fccb33dbe092cdb7e859e914",
+      "statAfterSha256": "sha256:986befd5589ece30895997211aba8cbeab9752a4736318078f4f0e3b13beb5ae",
+      "helperAuthoritySha256": "sha256:0aa37515ea368edc026b513a51deb00a28b910245224d8377c5022ea4b700c89",
+      "helperTuples": [
+        {
+          "role": "statBefore",
+          "pid": 201,
+          "ppid": 1,
+          "startTicks": 1000,
+          "statBeforeSha256": "sha256:d7ac868f485a6bb81b5937801e666026eff2cc1d207abceae63492abff8c19a0",
+          "statAfterSha256": "sha256:bee39b6b167ea1566773dcef5fce3a216c1e6b4b749acc7c9c1177674f8d2904",
+          "cmdlineSha256": "sha256:aa7dda04da9d7fb6e6600ecefd1e23dd65a01fb0ff0745d9812519eab9baea17",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "role": "cmdline",
+          "pid": 202,
+          "ppid": 1,
+          "startTicks": 1001,
+          "statBeforeSha256": "sha256:a4a647f0b2a914a1f02da4831ca978f1f87cb92f87acd78496c213ae0b2b0fba",
+          "statAfterSha256": "sha256:967266b5b65c2693eb5cb8d42c356f0bfd252e67c3635ab78e67d413aa6cb20e",
+          "cmdlineSha256": "sha256:e2e1fdb2e19af082ba90ade870b81fcfc05d5b29d65123ca04cc86e411e2f729",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "role": "environ",
+          "pid": 203,
+          "ppid": 1,
+          "startTicks": 1002,
+          "statBeforeSha256": "sha256:2bb22d847f5fcd701ad7520c0d589b7beb179087ddb8020473e8b89d840ad2bc",
+          "statAfterSha256": "sha256:25cf28ca5540a8d4c667257b63dd5f22ce7a4f318a0d4d9103db1c3ac3dd2069",
+          "cmdlineSha256": "sha256:f3b46d682c0bbd0963cff964c2eef74a9bcbb0c7ec7f1ee53a636f5a5da16dde",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "role": "exeLink",
+          "pid": 204,
+          "ppid": 1,
+          "startTicks": 1003,
+          "statBeforeSha256": "sha256:18c10651898ec6b4e425ced3c1883a5d85ff312935a4b94469fd7c4218965d26",
+          "statAfterSha256": "sha256:2ae3fd71d8ad5c145bd95855428f3e370ce9c77c7eaed349f7905999e2f9ac7f",
+          "cmdlineSha256": "sha256:97d8e381d2bcd9670d57a7d371a7fff4711c2d73bc1c258c73ebfd8c9a615962",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "role": "exeHash",
+          "pid": 205,
+          "ppid": 1,
+          "startTicks": 1004,
+          "statBeforeSha256": "sha256:08b012306262db317c23f2b58e4f515c154b42b1dc19db714d9dc89ecddb005f",
+          "statAfterSha256": "sha256:d179db8ee69d1c668ee8cdf7f88739d2eab65d4a0edd0777a0e0ed1b1aabcc3e",
+          "cmdlineSha256": "sha256:4b210ccc02185fe2784f015a6818c16546227f950908f2eb5f106482fe400087",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "role": "statAfter",
+          "pid": 206,
+          "ppid": 1,
+          "startTicks": 1005,
+          "statBeforeSha256": "sha256:586bf24d93f7dfa711a1c6c092331a88ecc0e1c6cfc515b9a5ba345372d94f07",
+          "statAfterSha256": "sha256:e0dff996f750f7470cb33d78a0c3abb1541400d22bf7de12e83ccdaeb74d90f9",
+          "cmdlineSha256": "sha256:88529d044db00476f34e322becabccb4a4db609596be699f741a0a47d03c3b71",
+          "environSha256": "sha256:050d9c03041f39012fc30b9020cbb561cda19cfbf81748965e8b61f02577c003",
+          "exeSha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ]
+    },
+    "scope": "TEST_ONLY fake proof; no actual attestation/readback"
+  }
+]

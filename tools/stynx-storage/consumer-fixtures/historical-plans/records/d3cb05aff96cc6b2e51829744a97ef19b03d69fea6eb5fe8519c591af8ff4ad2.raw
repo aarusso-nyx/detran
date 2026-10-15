@@ -1,0 +1,7 @@
+Inspector g03 creation readback: PASS
+
+The three actual new subjects18765/18766/18767 and maintenance postgres were independently observed in four fresh REPEATABLE READ READ ONLY transactions. Each explicitly rolled back and its psql process exited0. Actual cluster system identifier7696293464811719840, PID64859/pidfile, data directory, TCP127.0.0.1:65462 and PostgreSQL18.2 matched the issued lease. SQL UTC timestamps are retained at full six-digit precision.
+
+All four catalogs are pristine: only public schema with pg_database_owner and standard UC/U ACL, bootstrap plpgsql, no user relations/functions/types/event triggers/default ACL/role settings/foreign objects/publications/subscriptions. Complete role and membership inventories exactly equal the producer pre-CREATE observations. Actual SET/USAGE/MEMBER closure admits only self and restricted login→role_app_backend with SET true/inheritance false; no privileged capability or database/public CREATE. Only this capture session existed at each activity observation; no abandoned harness client was present.
+
+No old reference subject was queried or changed; no SDK, seed, installation, schema/role mutation or repair. This is creation/pristine evidence, not package equivalence or baseline admission. Producer manifests remain unchanged. See machine report and READBACK-MANIFEST.json for actual source/log/lease identities.

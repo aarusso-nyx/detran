@@ -90,7 +90,11 @@
     "senatran-adapter:test:ci": "pnpm --filter @detran/senatran-adapter test:ci",
     "verify:rounds-index": "node tools/devai/render-rounds-index.mjs --check",
     "test:rounds-index": "node --test tools/devai/tests/render-rounds-index.test.mjs",
-    "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human"
+    "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+    "generate:stynx-storage": "node tools/generate-stynx-storage.mjs",
+    "verify:stynx-storage": "node tools/generate-stynx-storage.mjs --check",
+    "test:rls-ddl": "node --test tools/rls-ddl/tests/*.test.mjs",
+    "test:stynx-storage-install": "node --test tools/stynx-storage/tests/*.test.mjs"
   },
   "devDependencies": {
     "@aarusso-nyx/devai": "1.5.6",

@@ -1,0 +1,100 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@smithy/signature-v4",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.811000Z",
+    "selection": "versions[5.7.4]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 320605,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/cf/b4/087be392b70bb820a0f5a9ffa311162e467a9c199994eb96a52f037681463f18d3511e96fb7372e73e999e2a63969af6604baae9388b13097b18d8f17a91",
+    "sourceSha256": "sha256:0bd8047eb6a4c78229d9631472339609c6d6ae1ddb045f2543edde9f7b20d9be"
+  },
+  "version": "5.7.4",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@smithy/signature-v4@5.7.4",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/signature-v4_5.7.4_1790365700265_0.7672066347940987"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:8e51e47a-1cd1-4c2b-aa08-494578546331"
+      }
+    },
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "dependencies": {
+      "@smithy/core": "^3.35.0",
+      "@smithy/types": "^4.19.0",
+      "tslib": "^2.6.2"
+    },
+    "description": "A standalone implementation of the AWS Signature V4 request signing algorithm",
+    "devDependencies": {
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@smithy%2fsignature-v4@5.7.4"
+      },
+      "fileCount": 47,
+      "integrity": "sha512-tHy0K0VtqNd5Y7Y41h0a0Lhh0L1GzC08dTWg0F7vRJWFtTENg7IZikf3wQkanYIRdb7ngoIPMTmqgUi401fEeQ==",
+      "shasum": "f188be5238ddb5c5b3117f6fb75d36a38f8b033f",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQDOVNb8NN6VMesKTl4TUoE7gZjfRNdCf8vD8KuhB4fOaAIhAJ7X6vaLNtCuEJVgpSAQpiiNfJvFN5aRHnDAJTTdcLPU"
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCICoxg4dcGDFvrPhGHriPcxLt7KQDmdZVZ5aMqe2YSy5bAiB2tEksjnsjuHDQ3P3WcKqgs7Wodp9gIzIgmjYaoOWCUA=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@smithy/signature-v4/-/signature-v4-5.7.4.tgz",
+      "unpackedSize": 106103
+    },
+    "engines": { "node": ">=18.0.0" },
+    "gitHead": "67b94cc461a7fea6a4ffe1e4b03a54841af39c21",
+    "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/signature-v4",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      {
+        "email": "aws-javascript-sdk-team+npm@amazon.com",
+        "name": "smithy-team"
+      },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@smithy/signature-v4",
+    "repository": {
+      "directory": "packages/signature-v4",
+      "type": "git",
+      "url": "https://github.com/smithy-lang/smithy-typescript.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es:cjs'",
+      "build:es:cjs": "node ../../scripts/compilation/es_cjs.js",
+      "build:types": "premove dist-types && yarn g:tsc -p tsconfig.types.json",
+      "build:types:downlevel": "premove dist-types/ts3.4 && downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "extract:docs": "api-extractor run --local",
+      "test": "yarn g:vitest run",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "5.7.4"
+  }
+}

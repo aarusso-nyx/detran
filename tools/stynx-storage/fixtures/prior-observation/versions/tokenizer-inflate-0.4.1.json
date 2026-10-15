@@ -1,0 +1,102 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@tokenizer/inflate",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[0.4.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 39524,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/tokenizer-inflate-0.4.1.json",
+    "sourceSha256": "sha256:a7550b1b08b02f52ebb2d2f36272b07dc6c269a5aa867e80ed5af6711a95f3fc"
+  },
+  "version": "0.4.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@tokenizer/inflate@0.4.1",
+    "_nodeVersion": "22.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/inflate_0.4.1_1763503579223_0.867366004445489"
+    },
+    "_npmUser": { "email": "borewit@xs4all.nl", "name": "borewit" },
+    "_npmVersion": "10.9.2",
+    "author": { "name": "Borewit", "url": "https://github.com/Borewit" },
+    "bugs": { "url": "hhttps://github.com/Borewit/tokenizer-inflate/issues" },
+    "dependencies": { "debug": "^4.4.3", "token-types": "^6.1.1" },
+    "description": "Tokenized zip support",
+    "devDependencies": {
+      "@aws-sdk/client-s3": "^3.934.0",
+      "@biomejs/biome": "2.3.6",
+      "@tokenizer/s3": "^1.0.1",
+      "@types/chai": "^5.2.3",
+      "@types/debug": "^4",
+      "@types/mocha": "^10.0.10",
+      "@types/node": "^24.10.1",
+      "chai": "^6.2.1",
+      "del-cli": "^7.0.0",
+      "file-type": "^21.1.0",
+      "mocha": "^11.7.5",
+      "strtok3": "^10.3.4",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.9.3"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 11,
+      "integrity": "sha512-2mAv+8pkG6GIZiF1kNg1jAjh27IDxEPKwdGul3snfztFerfPGI1LjDezZp3i7BElXompqEtPmoPx6c2wgtWsOA==",
+      "shasum": "fa6cdb8366151b3cc8426bf9755c1ea03a2fba08",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDzm+kLnTSccuIHO5mB/h3HjiGzoSHKoZ/Y0r+C3Qh22AIgamS5s0mvryb1AtiGgYarFmtQ7AoySq1M/CsDCjFpUXQ="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.4.1.tgz",
+      "unpackedSize": 28506
+    },
+    "engines": { "node": ">=18" },
+    "exports": "./lib/index.js",
+    "funding": {
+      "type": "github",
+      "url": "https://github.com/sponsors/Borewit"
+    },
+    "gitHead": "192e9f1db9f432270c21372a8c0dd0cdd0c8ab8a",
+    "homepage": "https://github.com/Borewit/tokenizer-inflate#readme",
+    "keywords": [
+      "zip",
+      "unzip",
+      "decompress",
+      "inflate",
+      "strtok3",
+      "tokenizer",
+      "stream",
+      "S3"
+    ],
+    "license": "MIT",
+    "maintainers": [{ "email": "borewit@xs4all.nl", "name": "borewit" }],
+    "name": "@tokenizer/inflate",
+    "packageManager": "yarn@4.9.1",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Borewit/tokenizer-inflate.git"
+    },
+    "scripts": {
+      "build": "yarn run clean && yarn run compile",
+      "clean": "del-cli 'lib/**/*.js' 'lib/**/*.js.map' 'lib/**/*.d.ts' 'test/**/*.js' 'test/**/*.js.map'",
+      "compile": "yarn run compile-src && yarn run compile-test",
+      "compile-src": "tsc -p lib",
+      "compile-test": "tsc -p test",
+      "eslint": "eslint lib test",
+      "fix": "yarn run biome lint --write",
+      "lint:md": "remark -u preset-lint-recommended .",
+      "lint:ts": "biome check",
+      "prepublishOnly": "yarn run build",
+      "start": "yarn run compile && yarn run lint && yarn run cover-test",
+      "test": "mocha",
+      "update-biome": "yarn add -D --exact @biomejs/biome && npx @biomejs/biome migrate --write"
+    },
+    "type": "module",
+    "version": "0.4.1"
+  }
+}

@@ -1,0 +1,9 @@
+# Fixed PostgreSQL 18.2/PostGIS runtime inputs
+
+This packet is separate from the portable SDK producer's 441-file policy inventory. It contains no DEB archives, credentials, mutable package selectors, or production connection. Each of the 83 official HTTPS downloads is fixed by URL, size and SHA-256 in `runtime-inputs.json`.
+
+`Dockerfile`, the checksum files, selected dependency metadata, payload/control inventory and four retained signed Release bodies are copies of actual reviewed preparation bytes. `historical-*` records preserve the original local review and emulated image observation; their scratch paths are documentary data, never runtime discovery paths or current CI subjects. CI admission is null until source/inventory review and the normal guarded execution boundary are complete.
+
+The owning CI helper creates an exclusive build context, verifies every packet input, fetches only the exact declared archives without credentials, verifies size/SHA before offline unpack, uses the pinned amd64 base, and runs the copied recipe with `--network none --pull=false`. No APT resolver, upgrade, service start or SQL occurs during the build. A newly built image may have a different image ID; admit its actual ID only after the four original PostgreSQL executable hashes, all critical PostGIS control/library/SQL bytes, actual ordered dpkg exclusions and resolved library graph have been captured. Historical image IDs are not current acceptance.
+
+The final recipe has UID 999:999 and ENTRYPOINT `/bin/false`. CI initialization must explicitly invoke the pinned base's actual `/usr/local/bin/docker-entrypoint.sh` on a newly owned empty data volume, after reviewing/hash-binding that script and exact environment/argv. This is a separate creation step, never an implicit side effect of building or probing the image.

@@ -1,0 +1,128 @@
+// Process-only numeric /proc fence. No package roots, SDK, network, SQL or writes.
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+
+const NODE = '/usr/local/bin/node';
+const SCRIPT = '/repo/scratch/r22-adoption-161/public-installer-preparation/populated-history-process-fence-diagnostic-01/verify_numeric_process_fence.mjs';
+const QEMU = '/usr/bin/qemu-x86_64';
+const NODE_SHA = '89af8424dd53e560b1933f87ba650d8bf57c83ca5a04600eefb31f416aabbae7';
+const QEMU_SHA = '937686079f6a4ea5cf38c4bf488c2966811e7e0858d6cbe3d77deeddb55297f4';
+const LOADERS = Object.freeze({
+  'internal/modules/cjs/loader': 'a3e3ee095d409597bf224522411607aa7d2f4747cf42b5329179bf3b4b5528ed',
+  'internal/modules/customization_hooks': '02cf07c29fd2c4701ccc19395d5d0b11968aee34a9aefb37b5684f7248c457f7',
+  'internal/modules/helpers': '3d6d6d7c7257610dcee83c76f29d6314ba56af5560faf50650a025fd9a56bbb3',
+});
+const sha = raw => createHash('sha256').update(raw).digest('hex');
+function demand(ok, code) { if (!ok) throw Error('NUMERIC_PROCESS_FENCE_REFUSED:' + code); }
+
+export function validatePid(pid) {
+  demand(Number.isSafeInteger(pid) && typeof pid === 'number' &&
+    pid > 1 && pid <= 2147483647, 'own-pid');
+  return pid;
+}
+
+export function parseStat(raw, ownPid) {
+  validatePid(ownPid);
+  demand(Buffer.isBuffer(raw) && raw.length > 0 && raw.length <= 8192 &&
+    !raw.includes(0), 'stat-bytes');
+  const text = raw.toString('utf8');
+  demand(Buffer.from(text, 'utf8').equals(raw), 'stat-utf8');
+  const separator = text.lastIndexOf(') ');
+  demand(separator > 2 && text[separator + 2] !== undefined, 'stat-comm');
+  const prefix = text.slice(0, separator + 1);
+  const pidToken = prefix.slice(0, prefix.indexOf(' '));
+  demand(/^[1-9][0-9]*$/.test(pidToken) && prefix.startsWith(pidToken + ' (') &&
+    Number(pidToken) === ownPid, 'stat-own-pid');
+  const fields = text.slice(separator + 2).trimEnd().split(' ');
+  demand(fields.length >= 20 && fields.every(field => field.length > 0) &&
+    /^[A-Za-z]$/.test(fields[0]) && !['Z', 'X', 'x'].includes(fields[0]), 'stat-state-fields');
+  const ppidToken = fields[1], ticksToken = fields[19];
+  demand(/^(0|[1-9][0-9]*)$/.test(ppidToken) && /^[1-9][0-9]*$/.test(ticksToken),
+    'stat-decimal-fields');
+  const ppid = Number(ppidToken), startTicks = Number(ticksToken);
+  demand(Number.isSafeInteger(ppid) && ppid >= 0 && ppid <= 2147483647 &&
+    Number.isSafeInteger(startTicks) && startTicks > 0, 'stat-integer-fields');
+  return { pid: ownPid, ppid, startTicks, state: fields[0],
+    rawBase64: raw.toString('base64'), bytes: raw.length, sha256: 'sha256:' + sha(raw) };
+}
+
+export function validateCmdline(raw) {
+  demand(Buffer.isBuffer(raw) && raw.length > 0 && raw.length <= 65536 &&
+    raw[raw.length - 1] === 0, 'cmdline-nul-bound');
+  const expected = Buffer.from([QEMU, NODE, SCRIPT].join('\0') + '\0', 'utf8');
+  demand(raw.equals(expected), 'cmdline-exact-qemu-node-script');
+  return { rawBase64: raw.toString('base64'), bytes: raw.length,
+    sha256: 'sha256:' + sha(raw), argv: [QEMU, NODE, SCRIPT] };
+}
+
+export function validateEnvironment(env) {
+  demand(env !== null && typeof env === 'object' &&
+    !Array.isArray(env) &&
+    JSON.stringify(Object.keys(env).sort()) === JSON.stringify(['LANG', 'LC_ALL', 'TZ']) &&
+    env.LANG === 'C.UTF-8' && env.LC_ALL === 'C.UTF-8' && env.TZ === 'UTC',
+    'closed-process-env');
+  return { LANG: env.LANG, LC_ALL: env.LC_ALL, TZ: env.TZ };
+}
+
+export function validateBracket(before, after, ownPid) {
+  validatePid(ownPid);
+  demand(before && after &&
+    Number.isSafeInteger(before.pid) && Number.isSafeInteger(after.pid) &&
+    Number.isSafeInteger(before.ppid) && Number.isSafeInteger(after.ppid) &&
+    Number.isSafeInteger(before.startTicks) && Number.isSafeInteger(after.startTicks) &&
+    before.pid === ownPid && after.pid === ownPid &&
+    before.ppid >= 0 && before.ppid <= 2147483647 &&
+    before.ppid === after.ppid && before.startTicks === after.startTicks &&
+    before.startTicks > 0 &&
+    typeof before.state === 'string' && /^[A-Za-z]$/.test(before.state) &&
+    typeof after.state === 'string' && /^[A-Za-z]$/.test(after.state) &&
+    !['Z', 'X', 'x'].includes(before.state) &&
+    !['Z', 'X', 'x'].includes(after.state), 'bracket-identity');
+  return { pid: ownPid, ppid: before.ppid, startTicks: before.startTicks };
+}
+
+function collect() {
+  demand(process.argv.length === 2 && process.argv[1] === SCRIPT &&
+    process.execArgv.length === 0 && process.cwd() === '/repo', 'fixed-invocation');
+  demand(process.platform === 'linux' && process.arch === 'x64' &&
+    process.version === 'v24.20.0' && process.execPath === NODE &&
+    process.getuid() === 999 && process.geteuid() === 999 &&
+    process.getgid() === 999 && process.getegid() === 999, 'official-node-process');
+  const processEnv = validateEnvironment(process.env);
+  const pid = validatePid(process.pid);
+  const prefix = '/proc/' + String(pid);
+  const before = parseStat(fs.readFileSync(prefix + '/stat'), pid);
+  const cmdline = validateCmdline(fs.readFileSync(prefix + '/cmdline'));
+  const exeLink = fs.readlinkSync(prefix + '/exe');
+  demand(exeLink === QEMU, 'magic-exe-link');
+  const exeBytes = fs.readFileSync(prefix + '/exe');
+  demand(exeBytes.length > 0 && exeBytes.length <= 33554432 &&
+    sha(exeBytes) === QEMU_SHA, 'magic-exe-bytes');
+  const after = parseStat(fs.readFileSync(prefix + '/stat'), pid);
+  const identity = validateBracket(before, after, pid);
+  demand(sha(fs.readFileSync(NODE)) === NODE_SHA, 'official-node-bytes');
+  const sourceBytes = fs.readFileSync(SCRIPT);
+  demand(sourceBytes.length > 0 && sourceBytes.length <= 262144 &&
+    fs.realpathSync(SCRIPT) === SCRIPT, 'source-bytes-path');
+  const natives = process.binding('natives');
+  const embeddedLoaders = Object.fromEntries(Object.entries(LOADERS).map(([name, expected]) => {
+    demand(typeof natives[name] === 'string' &&
+      sha(Buffer.from(natives[name], 'utf8')) === expected, 'loader:' + name);
+    return [name, 'sha256:' + expected];
+  }));
+  return { kind: 'numeric-own-pid-process-only-diagnostic',
+    status: 'NUMERIC_PROCESS_FENCE_ONLY_NO_SDK_EVALUATION',
+    node: { path: NODE, sha256: 'sha256:' + NODE_SHA, version: process.version,
+      platform: process.platform, arch: process.arch, uid: process.getuid(),
+      euid: process.geteuid(), gid: process.getgid(), egid: process.getegid(),
+      execArgv: [] },
+    processEnv, sourceSha256: 'sha256:' + sha(sourceBytes),
+    kernel: { layout: 'emulated', identity, statBefore: before, statAfter: after,
+      cmdline, exeLink, exeBytes: exeBytes.length, exeSha256: 'sha256:' + QEMU_SHA },
+    embeddedLoaders, sdkEvaluated: false, sqlCommands: 0, dockerCommands: 0 };
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  process.stdout.write(JSON.stringify(collect()) + '\n');
+}

@@ -1,0 +1,79 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/time-series",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.746000Z",
+    "selection": "versions[6.3.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 78003,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/50/bd/4385fdc821574d67cfaa6de4dfae4b6bab09112086ef457b88570c325b1aeabd730940c65ffac808f5857755a07b7fd0ecec0d9075628a87e71b4184c239",
+    "sourceSha256": "sha256:2290db84d9c7e459bcd648180b988b6dc816e4a5c6dd23dbcb29fa3b24e318a8"
+  },
+  "version": "6.3.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/time-series@6.3.0",
+    "_nodeVersion": "22.23.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/time-series_6.3.0_1790766739817_0.4901893802175341"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "c6fd0e27-4386-4220-b25d-e95706c7bf9b"
+      }
+    },
+    "_npmVersion": "11.20.0",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "description": "This package provides support for the [RedisTimeSeries](https://redis.io/docs/data-types/timeseries/) module, which adds a time series data structure to Redis.",
+    "devDependencies": { "@redis/test-utils": "*" },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@redis%2ftime-series@6.3.0"
+      },
+      "fileCount": 186,
+      "integrity": "sha512-+fJOB8mN1z5WRakCJNh5lVdz1KqvHGSOistsKeitD24QsCtPwyRQXWC0iq6T/i/ubLE/YcguZqPm8F598MKk4A==",
+      "shasum": "d21c1113ec607e0de5329f5bb799688e4e8cb940",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIGWVcgn8uOoh5+OgfO8jGaHiAfA98FzvR70B22opRmEvAiEAgL+RMi7Iqd7Rkx4DbvKvBERVQheZaOLY5VFEcNXzxFA="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIBhGO8FZVAbSnrWRJp70mM4tnnV3SEbPeuU5ptPpnbNJAiBmeU47tDBm1MuACbqQl/fJRtQHFb3OUCK+d00T0G4z0Q=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/time-series/-/time-series-6.3.0.tgz",
+      "unpackedSize": 552903
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "3843988541aed0a7d0b6ff89eef889db7090e411",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/time-series",
+    "keywords": ["redis", "RedisTimeSeries"],
+    "license": "MIT",
+    "main": "./dist/lib/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/time-series",
+    "peerDependencies": { "@redis/client": "^6.3.0" },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "release": "release-it",
+      "test": "nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit  './lib/**/*.spec.ts'"
+    },
+    "types": "./dist/lib/index.d.ts",
+    "version": "6.3.0"
+  }
+}

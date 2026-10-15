@@ -1,0 +1,55 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/integration-adapter",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.091963+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 182765,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-integration-adapter-1.6.1.json",
+    "sourceSha256": "sha256:d7bbc829710724df3c6c377b82c8cda0a3edb61c61b7e66d632782e0c8d47b39"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "description": "Retry, timeout, idempotency, and circuit-breaker framework for stynx integrations",
+    "devDependencies": { "@types/node": "24.13.4", "typescript": "^6.0.3" },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-0/VS25+RvXMfEWrh1ncjrVbad9/NbpuZ4BBFKhZ5A1aWgTEZUcxdCWu8pejF5XY9EQ6cfApGTHZIlSX9f+SWfA==",
+      "shasum": "3fb2d70383c3026c9e6e1695a025f189cc223df9",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/integration-adapter/1.6.1/3fb2d70383c3026c9e6e1695a025f189cc223df9"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/integration-adapter/src/index.js",
+    "name": "@stynx-nyx/integration-adapter",
+    "readme": "# `@stynx-nyx/integration-adapter` — outbound adapters and signed inbound webhooks\n\n`@stynx-nyx/integration-adapter` supplies shared outbound adapter contracts and\nruntime helpers, plus raw-body HMAC verification for inbound webhooks. Domain\npackages and applications own their provider-specific request and response\ntypes.\n\n## Purpose\n\nSTYNX 1.5 also provides `verifyWebhookSignature` for inbound signed webhooks.\nPass the original `rawBody: Buffer`, Node's lowercase `headers`, a secret,\nclock, maximum timestamp skew, namespace, and a shared atomic replay store.\nThe default signature is `sha256=<64 hex digits>` over\n`<Unix-seconds timestamp>.<raw body>`. A successful result carries the\ntimestamp and reserved replay key; a rejection carries a stable reason.\nConfigure `message` when authenticated tenant or event fields must be covered\nby the HMAC. Keep the replay store shared across instances.\n\nApps making 3rd-party HTTP calls accumulate bespoke retry + circuit-break + idempotency-cache code. Each implementation has subtly different semantics, observability output, and failure modes. `@stynx-nyx/integration-adapter` resolves it by providing the contract and the typed telemetry event shape; implementations wrap their HTTP client (axios, undici, native fetch) in the contract.\n\nYou reach for it when authoring a new outbound integration in your STYNX app.\n\nWhat it does NOT do: it doesn't ship a default HTTP client (you bring your own). It doesn't ship default retry/circuit-break policies (the type is yours to instantiate). It doesn't proxy or do service-mesh duties.\n\n## Audience\n\nBackend developers building outbound integrations to 3rd-party APIs (payment processors, SMS providers, regulatory endpoints, etc.).\n\n## Install\n\n```bash\npnpm add @stynx-nyx/integration-adapter\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference). **No HTTP client dependency** — bring your own.\n\n## Quick start\n\n```ts\nimport type {\n  IntegrationAdapter,\n  IntegrationContext,\n  RetryPolicy,\n  CircuitBreakerPolicy,\n} from '@stynx-nyx/integration-adapter';\n\nconst retryPolicy: RetryPolicy = { maxAttempts: 3, backoffMs: 200 };\nconst cbPolicy: CircuitBreakerPolicy = { failureThreshold: 5, resetMs: 30_000 };\n\nexport class StripeAdapter implements IntegrationAdapter<StripeRequest, StripeResponse> {\n  async call(req: StripeRequest, ctx: IntegrationContext): Promise<StripeResponse> {\n    // ... your impl using axios/undici/fetch\n    // retry per retryPolicy, circuit-break per cbPolicy, telemetry on each event\n  }\n}\n```\n\n## Public API surface\n\n### Types / Interfaces\n\n| Export                                    | Description                                                                                                                                                               |\n| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `IntegrationAdapter<TRequest, TResponse>` | The contract: `call(request, ctx): Promise<response>`.                                                                                                                    |\n| `IntegrationAdapterOptions`               | Per-adapter config shape: retry, circuit-break, telemetry, idempotency.                                                                                                   |\n| `IntegrationContext`                      | Per-call context: `{ requestId, tenantId, actorId, correlationId }` — typically projected from `@stynx-nyx/core`'s `RequestContext`.                                      |\n| `RetryPolicy`                             | `{ maxAttempts, backoffMs, jitter?, retryableErrors? }`.                                                                                                                  |\n| `CircuitBreakerPolicy`                    | `{ failureThreshold, resetMs, halfOpenProbes? }`.                                                                                                                         |\n| `CircuitBreaker`                          | Stateful breaker the adapter holds (or borrows from a registry).                                                                                                          |\n| `CircuitSnapshot`                         | Observable state: `{ state: 'closed'\\|'open'\\|'half-open', failureCount, openedAt? }`.                                                                                    |\n| `IntegrationTelemetryEvent`               | Structured event type emitted at every call boundary: `'call_started'`, `'call_succeeded'`, `'call_failed'`, `'retry_scheduled'`, `'circuit_opened'`, `'circuit_closed'`. |\n| `IdempotencyStore`                        | Re-exported from `@stynx-nyx/contracts`; outbound idempotency-cache contract (rarely used — usually upstream idempotency is enough).                                      |\n\n## Configuration\n\nOutbound runtime configuration is per adapter. Recommended convention: each\nadapter accepts an `IntegrationAdapterOptions` in its constructor. Inbound\nverification receives explicit `WebhookVerificationOptions` on each call;\n`@stynx-nyx/backend` provides the Nest guard and module wiring.\n\n## Examples\n\n### Example 1 — minimal axios adapter\n\n```ts\nimport axios from 'axios';\n\nexport class SmsProviderAdapter implements IntegrationAdapter<SendSmsReq, SendSmsRes> {\n  constructor(private readonly options: IntegrationAdapterOptions) {}\n\n  async call(req: SendSmsReq, ctx: IntegrationContext): Promise<SendSmsRes> {\n    let attempt = 0;\n    while (attempt < this.options.retry.maxAttempts) {\n      try {\n        const r = await axios.post('https://sms.example/send', req, {\n          headers: { 'x-correlation-id': ctx.correlationId },\n        });\n        this.emit({ kind: 'call_succeeded', attempt, durationMs: r.duration });\n        return r.data;\n      } catch (e) {\n        attempt += 1;\n        if (attempt >= this.options.retry.maxAttempts) throw e;\n        await sleep(this.options.retry.backoffMs);\n      }\n    }\n  }\n}\n```\n\n### Example 2 — telemetry event observation\n\n```ts\nadapter.on('integration:event', (event: IntegrationTelemetryEvent) => {\n  logger.log(event.kind, { fields: event });\n});\n```\n\n### Example 3 — wiring with `@stynx-nyx/core`'s `RequestContext`\n\n```ts\n@Injectable()\nexport class PaymentService {\n  constructor(\n    private readonly adapter: StripeAdapter,\n    private readonly ctx: RequestContext,\n  ) {}\n\n  async charge(req: ChargeReq) {\n    return this.adapter.call(req, {\n      requestId: this.ctx.requestId,\n      tenantId: this.ctx.tenantId,\n      actorId: this.ctx.actorId,\n      correlationId: req.idempotencyKey,\n    });\n  }\n}\n```\n\n## Common pitfalls\n\n- **Retrying non-idempotent operations** — a half-failed POST that does fire the side-effect remotely, but you retry, causes double-action. Either use the provider's idempotency mechanism (`Idempotency-Key` header) or do not retry non-idempotent calls.\n- **Open circuit breaker silently failing downstream requests** — make sure your telemetry surfaces `circuit_opened` events to your monitoring; otherwise the breaker is invisible.\n- **Sharing one breaker across multiple tenants** — a single tenant's failures open the breaker for all. Consider per-(tenant, integration) breakers if your traffic shape requires.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` used to build `IntegrationContext`.\n- [`@stynx-nyx/contracts`](/docs/packages/contracts/) — defines `IdempotencyStore`.\n- [`@stynx-nyx/logging`](/docs/packages/logging/) — receive telemetry events for log routing.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-integration-adapter/`](/docs/api-reference/stynx-integration-adapter/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n_None._\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n_None._\n\n### Development-only dependencies\n\n- `@types/node`: `24.13.4`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/integration-adapter",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

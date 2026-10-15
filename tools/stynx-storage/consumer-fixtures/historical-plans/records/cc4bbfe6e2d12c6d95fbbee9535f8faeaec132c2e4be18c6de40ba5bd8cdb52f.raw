@@ -1,0 +1,11 @@
+ALTER TABLE offline.numbering_reservations ADD COLUMN idempotency_key text
+  CONSTRAINT numbering_reservations_idempotency_key_check
+  CHECK (idempotency_key IS NULL OR octet_length(idempotency_key) BETWEEN 1 AND 255);
+
+ALTER TABLE offline.numbering_reservations ADD COLUMN idempotency_fingerprint text;
+
+ALTER TABLE offline.numbering_reservations ADD CONSTRAINT numbering_reservations_idempotency_pair_check
+  CHECK ((idempotency_key IS NULL) = (idempotency_fingerprint IS NULL));
+
+CREATE UNIQUE INDEX numbering_reservations_tenant_idempotency_uq
+  ON offline.numbering_reservations (tenant_id, idempotency_key) WHERE idempotency_key IS NOT NULL;

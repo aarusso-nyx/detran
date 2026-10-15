@@ -1,0 +1,851 @@
+[
+  {
+    "package": "fontconfig-config",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 6596,
+    "sha256": "165122035bb1d47cb53e06dec2d77817b46c28368495e9c7f87a576ebc6d2d47",
+    "text": "#!/bin/sh\n\nset -e\n\n. /usr/share/debconf/confmodule\n\nCONFAVAIL=/usr/share/fontconfig/conf.avail\nCONFDIR=/etc/fonts/conf.d\n\n# Check if this is the initial configuration and not an upgrade of an\n# existing configuration\n# Usage: if is_initial_configuration \"$@\"; then ... fi from top level\nis_initial_configuration() {\n    # Plain installation\n    if [ \"$1\" = configure ] && [ -z \"$2\" ]; then\n        return 0\n    fi\n    # Configuration via dpkg-reconfigure\n    if [ \"$1\" = reconfigure ] || [ \"$DEBCONF_RECONFIGURE\" ]; then\n        return 0\n    fi\n    return 1\n}\n\n# Create /etc/fonts/conf.d/10-hinting-slight.conf symlink on upgrade, this is\n# upstream default\nif [ \"$1\" = \"configure\" ] && dpkg --compare-versions \"$2\" le-nl \"2.12.3-0.2~\"; then\n    test -e $CONFDIR/10-hinting-slight.conf || \\\n        ln -s $CONFAVAIL/10-hinting-slight.conf $CONFDIR/10-hinting-slight.conf\nfi\n\nif is_initial_configuration \"$@\"; then\n    db_get fontconfig/hinting_type\n    hinting_type=\"$RET\"\n\n    unhinted=\"10-unhinted.conf\"\n    autohint=\"10-autohint.conf\"\n\n    if [ -h $CONFDIR/$unhinted ]; then\n    \trm $CONFDIR/$unhinted\n    fi\n    if [ -h $CONFDIR/$autohint ]; then\n    \trm $CONFDIR/$autohint\n    fi\n\n    case \"$hinting_type\" in\n    \"Native\")\n    \t;;\n    \"Autohinter\")\n    \tln -s $CONFAVAIL/$autohint $CONFDIR/$autohint\n    \t;;\n    \"None\")\n    \tln -s $CONFAVAIL/$unhinted $CONFDIR/$unhinted\n    \t;;\n    esac\n\n    db_get fontconfig/hinting_style\n    hinting_style=\"$RET\"\n\n    hintnone=\"10-hinting-none.conf\"\n    hintslight=\"10-hinting-slight.conf\"\n    hintmedium=\"10-hinting-medium.conf\"\n    hintfull=\"10-hinting-full.conf\"\n\n    if [ -h $CONFDIR/$hintnone ]; then\n    \trm $CONFDIR/$hintnone\n    fi\n    if [ -h $CONFDIR/$hintslight ]; then\n    \trm $CONFDIR/$hintslight\n    fi\n    if [ -h $CONFDIR/$hintmedium ]; then\n    \trm $CONFDIR/$hintmedium\n    fi\n    if [ -h $CONFDIR/$hintfull ]; then\n    \trm $CONFDIR/$hintfull\n    fi\n\n    case \"$hinting_style\" in\n    \"hintnone\")\n    \tln -s $CONFAVAIL/$hintnone $CONFDIR/$hintnone\n    \t;;\n    \"hintslight\")\n    \tln -s $CONFAVAIL/$hintslight $CONFDIR/$hintslight\n    \t;;\n    \"hintmedium\")\n    \tln -s $CONFAVAIL/$hintmedium $CONFDIR/$hintmedium\n    \t;;\n    \"hintfull\")\n    \tln -s $CONFAVAIL/$hintfull $CONFDIR/$hintfull\n    \t;;\n    esac\n\n    db_get fontconfig/subpixel_rendering\n    subpixel_rendering=\"$RET\"\n\n    subpixel=\"10-sub-pixel-rgb.conf\"\n    no_subpixel=\"10-no-sub-pixel.conf\"\n\n    if [ -h $CONFDIR/$subpixel ]; then\n    \trm $CONFDIR/$subpixel\n    fi\n\n    if [ -h $CONFDIR/$no_subpixel ]; then\n    \trm $CONFDIR/$no_subpixel\n    fi\n\n    case \"$subpixel_rendering\" in\n    \"Automatic\")\n    \t;;\n    \"Always\")\n    \tln -s $CONFAVAIL/$subpixel $CONFDIR/$subpixel\n    \t;;\n    \"Never\")\n    \tln -s $CONFAVAIL/$no_subpixel $CONFDIR/$no_subpixel\n    \t;;\n    esac\n\n\n    db_get fontconfig/enable_bitmaps\n    enable_bitmaps=\"$RET\"\n\n    yes_bitmaps=\"70-yes-bitmaps.conf\"\n    no_bitmaps=\"70-no-bitmaps.conf\"\n\n    if [ -h $CONFDIR/$yes_bitmaps ]; then\n    \trm $CONFDIR/$yes_bitmaps\n    fi\n\n    if [ -h $CONFDIR/$no_bitmaps ]; then\n    \trm $CONFDIR/$no_bitmaps\n    fi\n\n    case \"$enable_bitmaps\" in\n    \"true\")\n    \tln -s $CONFAVAIL/$yes_bitmaps $CONFDIR/$yes_bitmaps\n    \t;;\n    *)\n    \tln -s $CONFAVAIL/$no_bitmaps $CONFDIR/$no_bitmaps\n    \t;;\n    esac\nfi # end changes applied only for initial config / reconfiguration\n\n# Create /usr/local/share/fonts\nLOCALDIR=/usr/local/share/fonts\nif [ ! -d $LOCALDIR ]; then\n  if mkdir $LOCALDIR 2>/dev/null ; then\n    chmod 2775 $LOCALDIR\n    chown root:staff $LOCALDIR\n  fi\nfi\n\n# fontconfig-config 2.11.0-5 (and earlier) created /etc/fonts.conf.d by mistake\n# remove it\n\nif [ -d /etc/fonts.conf.d ]; then\n    rmdir --ignore-fail-on-non-empty /etc/fonts.conf.d\nfi\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-autohint.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-no-sub-pixel.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-bgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-rgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vbgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vrgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-unhinted.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-default.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-legacy.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-light.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-fix-globaladvance.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-unhint-small-vera.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/25-unhint-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-metric-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-urw-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/40-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/45-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/49-sansserif.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/50-user.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/51-local.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/60-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-fonts-persian.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-khmer.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/69-unifont.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-force-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-no-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-yes-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/80-delicious.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/90-synthetic.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/fonts.dtd 2.10 -- \"$@\"\n# End automatically added section\n\n"
+  },
+  {
+    "package": "fontconfig-config",
+    "path": "postrm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 4140,
+    "sha256": "e3e3398dbcb5e698b1fc360b7bd8daa437f2e54b06e8d116347f1508a2b79b41",
+    "text": "#! /bin/sh\n\nset -e\n\nCONF=/etc/fonts/local.conf\n\n# Duplicate list of all possible links in /etc/fonts/conf.d created\n# in postinst\nunhinted=\"10-unhinted.conf\"\nautohint=\"10-autohint.conf\"\nhintnone=\"10-hinting-none.conf\"\nhintslight=\"10-hinting-slight.conf\"\nhintmedium=\"10-hinting-medium.conf\"\nhintfull=\"10-hinting-full.conf\"\nsubpixel=\"10-sub-pixel-rgb.conf\"\nno_subpixel=\"10-no-sub-pixel.conf\"\nyes_bitmaps=\"70-yes-bitmaps.conf\"\nno_bitmaps=\"70-no-bitmaps.conf\"\n\nCONFFILES=\"$unhinted $autohint $hintnone $hintslight $hintmedium $hintfull $subpixel $no_subpixel $yes_bitmaps $no_bitmaps\"\nCONFDIR=/etc/fonts/conf.d\n\ncase \"$1\" in\n\tpurge)\n\t    if which ucf >/dev/null 2>&1; then\n\t\tucf --purge $CONF\n\t    fi\n\t    rm -f $CONF\n\n\t    # Remove any files linked in postinst\n\t    for c in $CONFFILES; do\n\t\trm -f $CONFDIR/$c\n\t    done\n\n\t    # Remove an empty local fonts directory\n\t    rmdir /usr/local/share/fonts 2>/dev/null || true\n\n\t    # Purge debconf database\n\t    if [ -e /usr/share/debconf/confmodule ]; then\n\t\t. /usr/share/debconf/confmodule\n\t\tdb_purge\n\t    fi\n\t    ;;\nesac\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-autohint.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-no-sub-pixel.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-bgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-rgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vbgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vrgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-unhinted.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-default.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-legacy.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-light.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-fix-globaladvance.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-unhint-small-vera.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/25-unhint-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-metric-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-urw-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/40-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/45-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/49-sansserif.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/50-user.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/51-local.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/60-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-fonts-persian.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-khmer.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/69-unifont.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-force-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-no-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-yes-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/80-delicious.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/90-synthetic.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/fonts.dtd 2.10 -- \"$@\"\n# End automatically added section\n# Automatically added by dh_installdebconf/13.11.4\nif [ \"$1\" = purge ] && [ -e /usr/share/debconf/confmodule ]; then\n\t. /usr/share/debconf/confmodule\n\tdb_purge\nfi\n# End automatically added section\n\n"
+  },
+  {
+    "package": "fontconfig-config",
+    "path": "preinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 2893,
+    "sha256": "c0cf60c3e63723761d8e006a45558c1dadc5b5debefeda0b32b820718b6eb8a6",
+    "text": "#!/bin/sh\nset -e\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-autohint.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-no-sub-pixel.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-bgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-rgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vbgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vrgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-unhinted.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-default.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-legacy.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-light.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-fix-globaladvance.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-unhint-small-vera.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/25-unhint-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-metric-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-urw-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/40-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/45-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/49-sansserif.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/50-user.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/51-local.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/60-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-fonts-persian.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-khmer.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/69-unifont.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-force-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-no-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-yes-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/80-delicious.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/90-synthetic.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/fonts.dtd 2.10 -- \"$@\"\n# End automatically added section\n"
+  },
+  {
+    "package": "fontconfig-config",
+    "path": "prerm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 2893,
+    "sha256": "c0cf60c3e63723761d8e006a45558c1dadc5b5debefeda0b32b820718b6eb8a6",
+    "text": "#!/bin/sh\nset -e\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-autohint.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-no-sub-pixel.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-bgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-rgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vbgr.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-sub-pixel-vrgb.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/10-unhinted.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-default.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-legacy.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/11-lcdfilter-light.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-fix-globaladvance.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/20-unhint-small-vera.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/25-unhint-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-metric-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/30-urw-aliases.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/40-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/45-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/49-sansserif.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/50-user.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/51-local.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/60-latin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-fonts-persian.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-khmer.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/65-nonlatin.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/69-unifont.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-force-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-no-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/70-yes-bitmaps.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/80-delicious.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/conf.avail/90-synthetic.conf 2.10 -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/fonts/fonts.dtd 2.10 -- \"$@\"\n# End automatically added section\n"
+  },
+  {
+    "package": "libaec0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libaom3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libblas3",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 197,
+    "sha256": "cb37abedcfff80c3e67139c572baf4164625f927a9b537d9448817d608f05948",
+    "text": "#!/bin/sh\n\nset -e\n\nupdate-alternatives --install /usr/lib/x86_64-linux-gnu/libblas.so.3 \\\n                    libblas.so.3-x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/blas/libblas.so.3 10\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "libblas3",
+    "path": "preinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 217,
+    "sha256": "a76cb84cb509f595ab5a050ede9511e6e4ec4f9ed914950cf473edaf2106cde0",
+    "text": "#!/bin/sh\n\nset -e\n\n# Cleanup pre-multiarch alternative\nif [ \"$1\" = \"upgrade\" ] && dpkg --compare-versions \"$2\" lt 3.7.1-2~\nthen\n    update-alternatives --remove libblas.so.3 /usr/lib/libblas/libblas.so.3\nfi\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "libblas3",
+    "path": "prerm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 195,
+    "sha256": "60d4daf7e8c362648f79fd06e965cf0ec1116e92ca1d6bb2424cee4bc96f534a",
+    "text": "#!/bin/sh\n\nset -e\n\nif [ \"$1\" != \"upgrade\" ]\nthen\n    update-alternatives --remove libblas.so.3-x86_64-linux-gnu \\\n                        /usr/lib/x86_64-linux-gnu/blas/libblas.so.3\nfi\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "libblas3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libquadmath0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgfortran5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "liblapack3",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 220,
+    "sha256": "387b3bfeec0558b47dc7b5dc60298ffcead6050497d6b8a09045733da04f7b7f",
+    "text": "#!/bin/sh\n\nset -e\n\nupdate-alternatives --install /usr/lib/x86_64-linux-gnu/liblapack.so.3 \\\n                    liblapack.so.3-x86_64-linux-gnu \\\n\t            /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3 10\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "liblapack3",
+    "path": "preinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 220,
+    "sha256": "214ad3d6f7925f23e7b1280d181aa9a402b0a58fb0e443e0e2c91c3957d9e6ae",
+    "text": "#!/bin/sh\n\nset -e\n\n# Cleanup pre-multiarch alternative\nif [ \"$1\" = \"upgrade\" ] && dpkg --compare-versions \"$2\" lt 3.7.1-2~\nthen\n    update-alternatives --remove liblapack.so.3 /usr/lib/lapack/liblapack.so.3\nfi\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "liblapack3",
+    "path": "prerm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 201,
+    "sha256": "eaecad807f19fd1d549f72c39a77f5c5f72047959a0395c8319accb2dcca2c61",
+    "text": "#!/bin/sh\n\nset -e\n\nif [ \"$1\" != \"upgrade\" ]\nthen\n    update-alternatives --remove liblapack.so.3-x86_64-linux-gnu \\\n                        /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3\nfi\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "liblapack3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libarpack2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libsuperlu5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libarmadillo11",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "613b61f67e38b5d739458663db88be221ea6dd9b66d926cd0cceec10bfd7e0f1",
+    "text": "# Triggers added by dh_makeshlibs/13.10.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libsnappy1v5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libblosc1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "86b7d09e8c72f6d7a2198cdcae33b778a2b344f0c548e4e8fbc9b07c3a9a645f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.3\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libboost-serialization1.74.0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libbrotli1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libnghttp2-14",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libpsl5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "librtmp1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 65,
+    "sha256": "14c435e960914bc38155cbc0f53132e8a5743247db7e9db8119481fe73d7a8d6",
+    "text": "# Triggers added by dh_makeshlibs/13.2\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libssh2-1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libcurl3-gnutls",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libcfitsio10",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "86b7d09e8c72f6d7a2198cdcae33b778a2b344f0c548e4e8fbc9b07c3a9a645f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.3\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libcurl4",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libdav1d6",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libde265-0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libdeflate0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libexpat1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libpng16-16",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libfreetype6",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libfontconfig1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libfreexl1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libfyba0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgeos3.11.1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "613b61f67e38b5d739458663db88be221ea6dd9b66d926cd0cceec10bfd7e0f1",
+    "text": "# Triggers added by dh_makeshlibs/13.10.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgeos-c1v5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "613b61f67e38b5d739458663db88be221ea6dd9b66d926cd0cceec10bfd7e0f1",
+    "text": "# Triggers added by dh_makeshlibs/13.10.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libjbig0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libjpeg62-turbo",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "liblerc4",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 66,
+    "sha256": "51f5be62283c451f6f4bff5aa7129619a928165707426bd1ad0d5335586a0116",
+    "text": "# Triggers added by dh_makeshlibs/13.10\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libwebp7",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libtiff6",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libproj25",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 74,
+    "sha256": "a22f6d07e555c433305b3e01ca883f9c12558b49637745a7c488c20ee420f066",
+    "text": "# Triggers added by dh_makeshlibs/13.23~bpo12+1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgeotiff5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgif7",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libtirpc3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 65,
+    "sha256": "cac85cde5d75b8eb737d273122a43adc5a0c9e9275312e35cd592b97f8ada54b",
+    "text": "# Triggers added by dh_makeshlibs/13.8\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libhdf4-0-alt",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libsz2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libhdf5-103-1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "86b7d09e8c72f6d7a2198cdcae33b778a2b344f0c548e4e8fbc9b07c3a9a645f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.3\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libx265-199",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libheif1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libjson-c5",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libminizip1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "liburiparser1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libkmlbase1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libkmldom1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libkmlengine1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "mysql-common",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 2237,
+    "sha256": "fa64c9d92537b14f7b0ad62687b2f18db31f6ba485ebea7a65f4ce9479a20496",
+    "text": "#!/bin/sh\nset -e\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/mysql/conf.d/.keepme 5.6.22-1\\~ mysql-common -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/mysql/my.cnf 5.6.22-1\\~ mysql-common -- \"$@\"\n# End automatically added section\n\n\n# This code needs to go after the debhelper snippets so that it runs after\n# dpkg-maintscript-helper rm_conffile on /etc/mysql/my.cnf. As a one off, if\n# my.cnf.dpkg-bak exists after this stage then we rename it to\n# /etc/mysql/my.cnf.migrated, add an explanatory note to the top and add it is\n# a high priority alternative so it gets used in favour of any other my.cnf\n# shipped by variants. The /etc/mysql/my.cnf.migrated file will not be owned by\n# any package (just like /etc/mysql/my.cnf.dpkg-bak would have been) but we\n# rename it since it will be in active use, the user may not expect a .dpkg-bak\n# file to be in use and we do not want to surprise the user.\n\nif [ \"$1\" = \"configure\" ] && [ -f /etc/mysql/my.cnf.fallback ]; then\n    # Low priority fallback for client use when no server is installed.\n    update-alternatives --install /etc/mysql/my.cnf my.cnf /etc/mysql/my.cnf.fallback 100\nfi\n\nif [ \"$1\" = \"configure\" -a -f /etc/mysql/my.cnf.dpkg-bak ] && dpkg --compare-versions \"$2\" le \"5.6.19-1~exp1ubuntu2~\"; then\n    echo \"Moving /etc/mysql/my.cnf.dpkg-bak to /etc/mysql/my.cnf.migrated\"\n    cat - /etc/mysql/my.cnf.dpkg-bak <<EOT > /etc/mysql/my.cnf.migrated\n# This file has been automatically moved from your previous\n# /etc/mysql/my.cnf, with just this comment added at the top, to maintain MySQL\n# operation using your previously customised configuration.\n\n# To switch to the new packaging configuration for automated management of\n# /etc/mysql/my.cnf across multiple variants:\n#\n# 1. Move your customisations from this file to /etc/mysql/conf.d/ and\n#    to /etc/mysql/<variant>.conf.d/ as appropriate.\n# 2. Run \"update-alternatives --remove my.cnf /etc/mysql/my.cnf.migrated\"\n# 3. Remove the file /etc/mysql/my.cnf.migrated\n\nEOT\n    rm /etc/mysql/my.cnf.dpkg-bak\n    echo \"Using your previous configuration through /etc/mysql/my.cnf.migrated\"\n    update-alternatives --install /etc/mysql/my.cnf my.cnf /etc/mysql/my.cnf.migrated 300\nfi\n"
+  },
+  {
+    "package": "mysql-common",
+    "path": "postrm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 610,
+    "sha256": "d9aefb78684ca44bc758af45e6972354f40476f951daef35165e8187deebc4c9",
+    "text": "#!/bin/sh\nset -e\n\nif [ \"$1\" = \"purge\" ]; then\n  update-alternatives --remove my.cnf /etc/mysql/my.cnf.migrated\n  rm -f /etc/mysql/my.cnf.migrated  # created by mysql-common from our obsolete conffile my.cnf\n  rm -f /etc/mysql/my.cnf.old       # created by mariadb-common from our obsolete conffile my.cnf\n  rmdir /etc/mysql 2>/dev/null || true\nfi\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/mysql/conf.d/.keepme 5.6.22-1\\~ mysql-common -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/mysql/my.cnf 5.6.22-1\\~ mysql-common -- \"$@\"\n# End automatically added section\n\n"
+  },
+  {
+    "package": "mysql-common",
+    "path": "preinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 1819,
+    "sha256": "9835b5b9c78d98a136b0abaeb9097ff9257860dd4479dc00cb2e1939e5000ea1",
+    "text": "#!/bin/sh\nset -e\n\nif [ \"$1\" = \"install\" ] || [ \"$1\" = \"upgrade\" ]; then\n    if dpkg --compare-versions \"$2\" lt-nl \"5.6.25-3~\" ; then\n\n        # revert fallback my.cnf symlink setup performed by mariadb-common\n        # from 10.0.17-1~exp2 upto 10.0.20-2\n        if [ -L /etc/mysql/my.cnf ] && [ -f /etc/mysql/my.cnf.old ]; then\n            if [ \"$(readlink /etc/mysql/my.cnf)\" = \"mariadb.cnf\" ]; then\n                echo \"Reverting my.cnf -> mariadb.cnf symlink setup by mariadb-common\"\n                rm /etc/mysql/my.cnf\n                mv /etc/mysql/my.cnf.old /etc/mysql/my.cnf\n            fi\n        fi\n\n        # recover from mysql-common 5.6.25-2 turning this symlinked\n        # mariadb.cnf into my.cnf.migrated\n        if [ -f /etc/mysql/my.cnf.migrated ]; then\n            if [ \"$(md5sum /etc/mysql/my.cnf.migrated | awk '{ print $1 }')\" = \"4720bbc1a03252fbb9eb83b55f0b6e10\" ]; then\n                # unmodified mariadb.cnf with the migration header prepended\n                # by mysql-common.postinst\n                echo \"Removing incorrect /etc/mysql/my.cnf.migrated that was actually mariadb.cnf\"\n                rm /etc/mysql/my.cnf.migrated\n                if [ -f /etc/mysql/my.cnf.old ]; then\n                    echo \"Renaming (possibly unmodified) /etc/mysql/my.cnf.old to /etc/mysql/my.cnf.migrated\"\n                    mv /etc/mysql/my.cnf.old /etc/mysql/my.cnf.migrated\n                else\n                    update-alternatives --remove my.cnf /etc/mysql/my.cnf.migrated\n                fi\n            fi\n        fi\n\n    fi\nfi\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/mysql/conf.d/.keepme 5.6.22-1\\~ mysql-common -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/mysql/my.cnf 5.6.22-1\\~ mysql-common -- \"$@\"\n# End automatically added section\n\n"
+  },
+  {
+    "package": "mysql-common",
+    "path": "prerm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 378,
+    "sha256": "18d84963371c03fa2929fee0a1bfcedf9d02777c74e3bb20891203e1778133a0",
+    "text": "#!/bin/sh\nset -e\n\nif [ \"$1\" = \"remove\" ]; then\n  update-alternatives --remove my.cnf /etc/mysql/my.cnf.fallback\nfi\n\n# Automatically added by dh_installdeb/13.11.4\ndpkg-maintscript-helper rm_conffile /etc/mysql/conf.d/.keepme 5.6.22-1\\~ mysql-common -- \"$@\"\ndpkg-maintscript-helper rm_conffile /etc/mysql/my.cnf 5.6.22-1\\~ mysql-common -- \"$@\"\n# End automatically added section\n\n"
+  },
+  {
+    "package": "mariadb-common",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 1550,
+    "sha256": "bb07e8096d0da7d05195c8d3e1ad4fd1a991ae70e02d329ed2b030e53932a484",
+    "text": "#!/bin/sh\n\nset -e\n\ncase \"$1\" in\n  configure)\n    # New packaging paradigm for my.cnf handling among MySQL variants\n    # Used in Ubuntu since Dec-2014 and in Debian since Jul-2015\n    #\n    # If the new mysql-common package does not provide\n    # the update-alternatives facility, notify user about manual fall back\n    if [ -f /usr/share/mysql-common/configure-symlinks ]\n    then\n      /usr/share/mysql-common/configure-symlinks install mariadb \"/etc/mysql/mariadb.cnf\"\n    else\n      # As configure can be called many times, don't re-create the symlink\n      # if it is there already\n      if [ ! -L /etc/mysql/my.cnf ]\n      then\n        echo \"Notice: configure-symlinks trigger could not be called.\"\n        echo \"Please manually create symlinks by running: \"\n        echo \"  mv -f /etc/mysql/my.cnf /etc/mysql/my.cnf.old\"\n        echo \"  ln -sf mariadb.cnf /etc/mysql/my.cnf\"\n      fi\n    fi\n\n    # Note that MySQL in Debian runs the configure-symlinks from the\n    # mysql-server-x.x.postinst and postrm files, while the MySQL.com (and\n    # Percona.com) packaging triggers update-alternatives directly form the\n    # mysql-common (and percona-x-common) package using priority 200.\n    #\n    # Thus, we need to ensure here that mariadb.cnf indeed became the primary\n    # alternative and override with priority 500 if needed.\n    if ! update-alternatives --query my.cnf | grep --quiet \"Value: /etc/mysql/mariadb.cnf\"\n    then\n      update-alternatives --install /etc/mysql/my.cnf my.cnf \"/etc/mysql/mariadb.cnf\" 500 || true\n    fi\n  ;;\nesac\n\n\n"
+  },
+  {
+    "package": "mariadb-common",
+    "path": "postrm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 361,
+    "sha256": "04d19aa515772c7cca07304d8a4586894e63f43eb562cd9cded77d94337c68b9",
+    "text": "#!/bin/sh\n\nset -e\n\ncase \"$1\" in\n  remove|disappear)\n    # New packaging paradigm for my.cnf handling among MySQL variants\n    # Used in Ubuntu since Dec-2014 and in Debian since Jul-2015\n    if [ -f /usr/share/mysql-common/configure-symlinks ]\n    then\n      /usr/share/mysql-common/configure-symlinks remove mariadb \"/etc/mysql/mariadb.cnf\"\n    fi\n  ;;\nesac\n\n\n"
+  },
+  {
+    "package": "mariadb-common",
+    "path": "preinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 624,
+    "sha256": "a3549c81d14c14b51b97e7eb8a0bb5afe03283021760b2a22f9b8a14429ee6ff",
+    "text": "#!/bin/sh\nset -e\n\nif [ \"$1\" = \"install\" ] || [ \"$1\" = \"upgrade\" ]; then\n    if dpkg --compare-versions \"$2\" lt-nl \"10.0.20-3~\" ; then\n\n        # revert fallback my.cnf symlink setup performed by mariadb-common\n        # from 10.0.17-1~exp2 upto 10.0.20-2\n        if [ -L /etc/mysql/my.cnf ] && [ -f /etc/mysql/my.cnf.old ]; then\n            if [ \"$(readlink /etc/mysql/my.cnf)\" = \"mariadb.cnf\" ]; then\n                echo \"Reverting my.cnf -> mariadb.cnf symlink setup by mariadb-common\"\n                rm /etc/mysql/my.cnf\n                mv /etc/mysql/my.cnf.old /etc/mysql/my.cnf\n            fi\n        fi\n\n    fi\nfi\n\n\n"
+  },
+  {
+    "package": "libmariadb3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libhdf5-hl-100",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "86b7d09e8c72f6d7a2198cdcae33b778a2b344f0c548e4e8fbc9b07c3a9a645f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.3\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libnetcdf19",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 65,
+    "sha256": "cac85cde5d75b8eb737d273122a43adc5a0c9e9275312e35cd592b97f8ada54b",
+    "text": "# Triggers added by dh_makeshlibs/13.8\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libltdl7",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libodbc2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "unixodbc-common",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 127,
+    "sha256": "27a2fe942a739bd9f1d1904f73312160a3f7e645fe16b0945ebef2e6ad9ef8dd",
+    "text": "#!/bin/sh\n\nset -e\n\nif [ \"$1\" = configure ] && [ -z \"$2\" ] && [ ! -e /etc/odbcinst.ini ]; then\n    touch /etc/odbcinst.ini\nfi\n\n\n"
+  },
+  {
+    "package": "unixodbc-common",
+    "path": "postrm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 78,
+    "sha256": "b0e1d683e0752fe3c281baa8a13f33bcb0499eedd8da59fdacd65cfb8d8c1725",
+    "text": "#!/bin/sh\n\nset -e\n\nif [ \"$1\" = purge ]; then\n    rm -f /etc/odbcinst.ini\nfi\n\n\n"
+  },
+  {
+    "package": "libodbcinst2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libogdi4.1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libopenjp2-7",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "liblcms2-2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libnspr4",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libnss3",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libpoppler126",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libqhull-r8.0",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c1aee977a9732756bca6a8f47562b10e422b9e2d0103d5e2bb1aca7352ed2748",
+    "text": "# Triggers added by dh_makeshlibs/13.7.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "librttopo1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libspatialite7",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libxerces-c3.2",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "86b7d09e8c72f6d7a2198cdcae33b778a2b344f0c548e4e8fbc9b07c3a9a645f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.3\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgdal32",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libgmpxx4ldbl",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 67,
+    "sha256": "c7e165d8d60fbf5fb602cb11d51cb67bf14590b69fdc9af6c56670288e5fa613",
+    "text": "# Triggers added by dh_makeshlibs/13.9.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libmpfr6",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "0a19ada1c65348b986992096777df4232177012e2f12b3612cce1c4f675365de",
+    "text": "# Triggers added by dh_makeshlibs/13.11.4\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libprotobuf-c1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "libsfcgal1",
+    "path": "triggers",
+    "mode": 420,
+    "type": "file",
+    "bytes": 68,
+    "sha256": "c65b84673e3ee8dbf3064c3d53feb7017aae6a7e327ae5fc6322e5f87fd0bb3f",
+    "text": "# Triggers added by dh_makeshlibs/13.11.1\nactivate-noawait ldconfig\n"
+  },
+  {
+    "package": "postgresql-18-postgis-3-scripts",
+    "path": "postinst",
+    "mode": 493,
+    "type": "file",
+    "bytes": 1418,
+    "sha256": "0e28ce0b2f1b159b8acab026f8742260a40fc67bfac0a6f00490d9a19f854edc",
+    "text": "#!/bin/sh\n\nset -eu\n\nMAJOR_VERSION=\"3\"\nPGVERSION=\"18\"\nDIR=\"/usr/share/postgresql/$PGVERSION/extension\"\n\ncase $1 in\n  configure)\n    # install our alternatives (priority is \"30\" for compatibility with 2.5, \"25\")\n    update-alternatives \\\n    --install $DIR/postgis.control                      postgresql-$PGVERSION-postgis.control                      $DIR/postgis-$MAJOR_VERSION.control ${MAJOR_VERSION}0 \\\n      --slave $DIR/postgis_raster.control               postgresql-$PGVERSION-postgis_raster.control               $DIR/postgis_raster-$MAJOR_VERSION.control \\\n      --slave $DIR/postgis_sfcgal.control               postgresql-$PGVERSION-postgis_sfcgal.control               $DIR/postgis_sfcgal-$MAJOR_VERSION.control \\\n      --slave $DIR/postgis_tiger_geocoder.control       postgresql-$PGVERSION-postgis_tiger_geocoder.control       $DIR/postgis_tiger_geocoder-$MAJOR_VERSION.control \\\n      --slave $DIR/postgis_topology.control             postgresql-$PGVERSION-postgis_topology.control             $DIR/postgis_topology-$MAJOR_VERSION.control \\\n      --slave $DIR/address_standardizer.control         postgresql-$PGVERSION-address_standardizer.control         $DIR/address_standardizer-$MAJOR_VERSION.control \\\n      --slave $DIR/address_standardizer_data_us.control postgresql-$PGVERSION-address_standardizer_data_us.control $DIR/address_standardizer_data_us-$MAJOR_VERSION.control\n\n    ;;\nesac\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "postgresql-18-postgis-3-scripts",
+    "path": "prerm",
+    "mode": 493,
+    "type": "file",
+    "bytes": 284,
+    "sha256": "cabf3f2b8b334153cd08ceb00de0c037477896f46374472fd164dd19aaa1c906",
+    "text": "#!/bin/sh\n\nset -eu\n\nMAJOR_VERSION=\"3\"\nPGVERSION=\"18\"\nDIR=\"/usr/share/postgresql/$PGVERSION/extension\"\n\ncase $1 in\n  remove)\n    # remove our alternatives\n    update-alternatives --remove postgresql-$PGVERSION-postgis.control $DIR/postgis-$MAJOR_VERSION.control\n\n    ;;\nesac\n\n\n\nexit 0\n"
+  },
+  {
+    "package": "fontconfig-config",
+    "version": "2.14.1-4",
+    "archiveSha256": "281c66e46b95f045a0282a6c7a03b33de0e9a08d016897a759aaf4a04adfddbe",
+    "path": "config",
+    "bytes": 2361,
+    "mode": 493,
+    "sha256": "99706332449f942b3cae861c9ad5909623be8285301a4a99bc9805c4df82797e",
+    "text": "#! /bin/sh\n\nset -e\n\n. /usr/share/debconf/confmodule\n\nCONFDIR=/etc/fonts/conf.d\n\nhinting_type=\"Native\"\n\nunhinted_2_3=\"10-debconf-unhinted.conf\"\nunhinted_2_4=\"10-unhinted.conf\"\nautohint_2_3=\"10-debconf-autohint.conf\"\nautohint_2_4=\"10-autohint.conf\"\n\nif [ -h $CONFDIR/$unhinted_2_4 -o -h $CONFDIR/$unhinted_2_3 ]; then\n        hinting_type=\"None\"\nfi\nif [ -h $CONFDIR/$autohint_2_4 -o -h $CONFDIR/$autohint_2_3 ]; then\n        hinting_type=\"Autohinter\"\nfi\n\ndb_set fontconfig/hinting_type \"$hinting_type\"\n\n\nhinting_style=\"hintslight\"\n\nhintnone=\"10-hinting-none.conf\"\nhintslight=\"10-hinting-slight.conf\"\nhintmedium=\"10-hinting-medium.conf\"\nhintfull=\"10-hinting-full.conf\"\n\nif [ -h $CONFDIR/$hintnone ]; then\n    hinting_style=\"hintnone\"\nfi\nif [ -h $CONFDIR/$hintslight ]; then\n    hinting_style=\"hintslight\"\nfi\nif [ -h $CONFDIR/$hintmedium ]; then\n    hinting_style=\"hintmedium\"\nfi\nif [ -h $CONFDIR/$hintfull ]; then\n    hinting_style=\"hintfull\"\nfi\n\ndb_set fontconfig/hinting_style \"$hinting_style\"\n\n\nsubpixel_rendering=\"Automatic\"\n\nsubpixel_2_3=\"20-debconf-sub-pixel.conf\"\nsubpixel_2_4=\"10-sub-pixel-rgb.conf\"\nno_subpixel_2_3=\"20-debconf-no-sub-pixel.conf\"\nno_subpixel_2_4=\"10-no-sub-pixel.conf\"\n\nif [ -h $CONFDIR/$subpixel_2_4 -o -h $CONFDIR/$subpixel_2_3 ]; then\n        subpixel_rendering=\"Always\"\nfi\n\nif [ -h $CONFDIR/$no_subpixel_2_4 -o -h $CONFDIR/$no_subpixel_2_3 ]; then\n        subpixel_rendering=\"Never\"\nfi\n\ndb_set fontconfig/subpixel_rendering \"$subpixel_rendering\"\n\n\nenable_bitmaps=\"dunno\"\n\nyes_bitmaps_2_3=\"30-debconf-yes-bitmaps.conf\"\nyes_bitmaps_2_4=\"70-yes-bitmaps.conf\"\nno_bitmaps_2_3=\"30-debconf-no-bitmaps.conf\"\nno_bitmaps_2_4=\"70-no-bitmaps.conf\"\n\nif [ -h $CONFDIR/$yes_bitmaps_2_4 -o -h $CONFDIR/$yes_bitmaps_2_3 ]; then\n        enable_bitmaps=\"true\"\nfi\n\nif [ -h $CONFDIR/$no_bitmaps_2_4 -o -h $CONFDIR/$no_bitmaps_2_3 ]; then\n        enable_bitmaps=\"false\"\nfi\n\n# Versions prior to 2.6.0-2 are broken and leave us with no symbolic \n# link, so we have to re-ask the user his choice :(\nif [ \"$enable_bitmaps\" = \"dunno\" ]; then\n\tdb_fset fontconfig/enable_bitmaps seen false\n\tenable_bitmaps=\"false\"\nfi\ndb_set fontconfig/enable_bitmaps \"$enable_bitmaps\"\n\ndb_input low fontconfig/hinting_type || true\ndb_input low fontconfig/hinting_style || true\ndb_input low fontconfig/subpixel_rendering || true\ndb_input low fontconfig/enable_bitmaps || true\ndb_go\n",
+    "classification": "Debconf configuration program; executable control-archive input, distinct from postinst/preinst/prerm/postrm/triggers. Static font preference/db_* settings; no PostgreSQL/service/network operation found by F1 source review, actual execution remains held.",
+    "executed": false
+  }
+]

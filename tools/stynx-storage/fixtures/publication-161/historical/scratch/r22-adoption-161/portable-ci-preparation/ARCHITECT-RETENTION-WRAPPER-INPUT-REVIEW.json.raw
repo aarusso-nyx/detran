@@ -1,0 +1,54 @@
+{
+  "role": "Architect",
+  "actor": "/root/architect_adoption_160",
+  "result": "PASS_ACTUAL_WRAPPER_INPUT_CUSTODY_NOT_POLICY_ADMISSION",
+  "candidate": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/retention-wrapper-input-custody-candidate.json",
+    "bytes": 20363,
+    "sha256": "sha256:f937566cd3cca1c9f856ce780b91db398afb88c56859122b578c92990c817c0a"
+  },
+  "copiesComparedExactly": 28,
+  "checks": [
+    {
+      "realm": "target",
+      "wrapper": {
+        "path": "scratch/r22-adoption-161/portable-ci-preparation/target-retention-wrapper-candidate.json",
+        "bytes": 228055,
+        "sha256": "sha256:c9af21cda702d2ad09bde9605c4749a9a4742cf9f3e13133aa53ff6d136f71f3"
+      },
+      "contexts": 211,
+      "genuineArchivePayloads": 30091,
+      "links": 9,
+      "nonexecutedGeneratedFiles": 0,
+      "observationalInputs": 5,
+      "reviewStillNull": true
+    },
+    {
+      "realm": "prior",
+      "wrapper": {
+        "path": "scratch/r22-adoption-161/portable-ci-preparation/prior-retention-wrapper-candidate.json",
+        "bytes": 361288,
+        "sha256": "sha256:d997355216bb636f65b30f79d22c128b99c813d0ce399b3a73630513c7767503"
+      },
+      "contexts": 176,
+      "genuineArchivePayloads": 21618,
+      "links": 455,
+      "nonexecutedGeneratedFiles": 3,
+      "observationalInputs": 4,
+      "reviewStillNull": true
+    }
+  ],
+  "uniqueActualArchivePayloadsRead": 351,
+  "derivativeReview": {
+    "path": "scratch/r22-adoption-161/portable-ci-preparation/ARCHITECT-VERSION-SELECTION-REVIEW.json",
+    "sha256": "sha256:087972a1037502b381fd309605448d803e2047f46f79ea078e7990bde005076d"
+  },
+  "limits": [
+    "Actual original tar SRI/size/hash and complete member sets independently compared, no extraction/evaluation or SDK/network/SQL.",
+    "Historical original bodies/observations remain unchanged and .raw copies exact; current payload vs shim/input classifications preserved.",
+    "Wrapper.review null remains NOT_ADMISSION; actual final wrapper review/policy/toolchain/module proof must be independently pinned before producer execution.",
+    "Historical Mac context/link data do not authorize actual Linux executable/SQL identities."
+  ],
+  "sdkExecuted": false,
+  "databaseAccessed": false
+}

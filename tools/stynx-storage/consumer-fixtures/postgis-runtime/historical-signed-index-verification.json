@@ -1,0 +1,90 @@
+[
+  {
+    "repository": "pgdg",
+    "argv": [
+      "gpgv",
+      "--homedir",
+      "scratch/r22-adoption-161/linux-postgis-preparation/gnupg",
+      "--status-fd",
+      "1",
+      "--keyring",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/pgdg-key.gpg",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/pgdg.InRelease"
+    ],
+    "exitCode": 0,
+    "status": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8 0\n[GNUPG:] SIG_ID xMjQt33+qWMRWDrl6055f1UxTew 2026-10-11 1791711002\n[GNUPG:] GOODSIG 7FCC7D46ACCC4CF8 PostgreSQL Debian Repository\n[GNUPG:] VALIDSIG B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8 2026-10-11 1791711002 0 4 0 1 10 01 B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8\n",
+    "diagnostic": "gpgv: Assinatura feita em dom 11 out 06:30:02 2026 -03\ngpgv:        usando a chave RSA de B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8\ngpgv: Assinatura v\u00e1lida de \"PostgreSQL Debian Repository\"\n",
+    "compressedIndexHashMatchesSignedRelease": true,
+    "index": {
+      "path": "main/binary-amd64/Packages.gz",
+      "sha256": "4557dd82892f9316b66d4bd7da48ee810c13a881d4b712ba058418203082a18f",
+      "bytes": 1208865
+    }
+  },
+  {
+    "repository": "debian",
+    "argv": [
+      "gpgv",
+      "--homedir",
+      "scratch/r22-adoption-161/linux-postgis-preparation/gnupg",
+      "--status-fd",
+      "1",
+      "--keyring",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/debian-archive-keyring.gpg",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/debian.InRelease"
+    ],
+    "exitCode": 0,
+    "status": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED B8B80B5B623EAB6AD8775C45B7C5D7D6350947F8 0\n[GNUPG:] SIG_ID AgpdPZ7z8h3tPdbJ5G8ASdhxELQ 2026-07-11 1783765031\n[GNUPG:] GOODSIG 6ED0E7B82643E131 Debian Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG 4CB50190207B4758A3F73A796ED0E7B82643E131 2026-07-11 1783765031 0 4 0 1 8 01 B8B80B5B623EAB6AD8775C45B7C5D7D6350947F8\n[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 04B54C3CDCA79751B16BC6B5225629DF75B188BD 0\n[GNUPG:] SIG_ID TQxV8Cnwv/qDvqns4Br64vioxl0 2026-07-11 1783765032\n[GNUPG:] GOODSIG 78DBA3BC47EF2265 Debian Archive Automatic Signing Key (13/trixie) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG B8E5F13176D2A7A75220028078DBA3BC47EF2265 2026-07-11 1783765032 0 4 0 1 8 01 04B54C3CDCA79751B16BC6B5225629DF75B188BD\n[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 4D64FEC119C2029067D6E791F8D2585B8783D481 0\n[GNUPG:] SIG_ID Gl4sdUCMYWRx29C3McjkiwtuFHQ 2026-07-11 1783765141\n[GNUPG:] GOODSIG F8D2585B8783D481 Debian Stable Release Key (12/bookworm) <debian-release@lists.debian.org>\n[GNUPG:] VALIDSIG 4D64FEC119C2029067D6E791F8D2585B8783D481 2026-07-11 1783765141 0 4 0 22 8 01 4D64FEC119C2029067D6E791F8D2585B8783D481\n",
+    "diagnostic": "gpgv: Assinatura feita em s\u00e1b 11 jul 07:17:11 2026 -03\ngpgv:        usando a chave RSA de 4CB50190207B4758A3F73A796ED0E7B82643E131\ngpgv: Assinatura v\u00e1lida de \"Debian Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\"\ngpgv: Assinatura feita em s\u00e1b 11 jul 07:17:12 2026 -03\ngpgv:        usando a chave RSA de B8E5F13176D2A7A75220028078DBA3BC47EF2265\ngpgv: Assinatura v\u00e1lida de \"Debian Archive Automatic Signing Key (13/trixie) <ftpmaster@debian.org>\"\ngpgv: Assinatura feita em s\u00e1b 11 jul 07:19:01 2026 -03\ngpgv:        usando a chave EDDSA de 4D64FEC119C2029067D6E791F8D2585B8783D481\ngpgv: Assinatura v\u00e1lida de \"Debian Stable Release Key (12/bookworm) <debian-release@lists.debian.org>\"\n",
+    "compressedIndexHashMatchesSignedRelease": true,
+    "index": {
+      "path": "main/binary-amd64/Packages.xz",
+      "sha256": "9e0b5aabb2465b3d2e7a7fe27f9913846277833f7a2826e7767acccff5b588c5",
+      "bytes": 8790396
+    }
+  },
+  {
+    "repository": "updates",
+    "argv": [
+      "gpgv",
+      "--homedir",
+      "scratch/r22-adoption-161/linux-postgis-preparation/gnupg",
+      "--status-fd",
+      "1",
+      "--keyring",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/debian-archive-keyring.gpg",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/updates.InRelease"
+    ],
+    "exitCode": 0,
+    "status": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED B8B80B5B623EAB6AD8775C45B7C5D7D6350947F8 0\n[GNUPG:] SIG_ID UANhnCKew9uoHO1znXw5q1T0a6s 2026-10-14 1791943747\n[GNUPG:] GOODSIG 6ED0E7B82643E131 Debian Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG 4CB50190207B4758A3F73A796ED0E7B82643E131 2026-10-14 1791943747 0 4 0 1 8 01 B8B80B5B623EAB6AD8775C45B7C5D7D6350947F8\n[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 04B54C3CDCA79751B16BC6B5225629DF75B188BD 0\n[GNUPG:] SIG_ID bNLf/3KqMUbG1cLvV30murkeu9k 2026-10-14 1791943762\n[GNUPG:] GOODSIG 78DBA3BC47EF2265 Debian Archive Automatic Signing Key (13/trixie) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG B8E5F13176D2A7A75220028078DBA3BC47EF2265 2026-10-14 1791943762 0 4 0 1 8 01 04B54C3CDCA79751B16BC6B5225629DF75B188BD\n",
+    "diagnostic": "gpgv: Assinatura feita em ter 13 out 23:09:07 2026 -03\ngpgv:        usando a chave RSA de 4CB50190207B4758A3F73A796ED0E7B82643E131\ngpgv: Assinatura v\u00e1lida de \"Debian Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\"\ngpgv: Assinatura feita em ter 13 out 23:09:22 2026 -03\ngpgv:        usando a chave RSA de B8E5F13176D2A7A75220028078DBA3BC47EF2265\ngpgv: Assinatura v\u00e1lida de \"Debian Archive Automatic Signing Key (13/trixie) <ftpmaster@debian.org>\"\n",
+    "compressedIndexHashMatchesSignedRelease": true,
+    "index": {
+      "path": "main/binary-amd64/Packages.xz",
+      "sha256": "87e7e94047fb7fb6f4ceecc7022d4bee55b66031cc2a7666d3196f3e0aabb846",
+      "bytes": 6924
+    }
+  },
+  {
+    "repository": "security",
+    "argv": [
+      "gpgv",
+      "--homedir",
+      "scratch/r22-adoption-161/linux-postgis-preparation/gnupg",
+      "--status-fd",
+      "1",
+      "--keyring",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/debian-archive-keyring.gpg",
+      "/Users/aarusso/.codex/worktrees/detran-r22-adoption-160/detran/scratch/r22-adoption-161/linux-postgis-preparation/security.InRelease"
+    ],
+    "exitCode": 0,
+    "status": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED AC530D520F2F3269F5E98313A48449044AAD5C5D 0\n[GNUPG:] SIG_ID GP4r2xaDA5bAVwvMRDr5P9VmvTY 2026-10-13 1791876777\n[GNUPG:] GOODSIG 54404762BBB6E853 Debian Security Archive Automatic Signing Key (11/bullseye) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG ED541312A33F1128F10B1C6C54404762BBB6E853 2026-10-13 1791876777 0 4 0 1 8 01 AC530D520F2F3269F5E98313A48449044AAD5C5D\n[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 05AB90340C0C5E797F44A8C8254CF3B5AEC0A8F0 0\n[GNUPG:] SIG_ID 34XCPgtzjZOk56nFaxmvWTJmgGk 2026-10-13 1791876777\n[GNUPG:] GOODSIG BDE6D2B9216EC7A8 Debian Security Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\n[GNUPG:] VALIDSIG B0CAB9266E8C3929798B3EEEBDE6D2B9216EC7A8 2026-10-13 1791876777 0 4 0 1 8 01 05AB90340C0C5E797F44A8C8254CF3B5AEC0A8F0\n",
+    "diagnostic": "gpgv: Assinatura feita em ter 13 out 04:32:57 2026 -03\ngpgv:        usando a chave RSA de ED541312A33F1128F10B1C6C54404762BBB6E853\ngpgv: Assinatura v\u00e1lida de \"Debian Security Archive Automatic Signing Key (11/bullseye) <ftpmaster@debian.org>\"\ngpgv: Assinatura feita em ter 13 out 04:32:57 2026 -03\ngpgv:        usando a chave RSA de B0CAB9266E8C3929798B3EEEBDE6D2B9216EC7A8\ngpgv: Assinatura v\u00e1lida de \"Debian Security Archive Automatic Signing Key (12/bookworm) <ftpmaster@debian.org>\"\n",
+    "compressedIndexHashMatchesSignedRelease": true,
+    "index": {
+      "path": "main/binary-amd64/Packages.xz",
+      "sha256": "816aa77b2d8d70c7f17494007692511bc6848598909cff4ee8fc642231c40007",
+      "bytes": 349200
+    }
+  }
+]

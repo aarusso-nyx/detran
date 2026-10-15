@@ -1,0 +1,117 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws/lambda-invoke-store",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[0.3.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 43203,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/aws-lambda-invoke-store-0.3.0.json",
+    "sourceSha256": "sha256:75b390d6174f7551b23f51c97eb56a52c6a80b80e918f37981496f9e6e3f348f"
+  },
+  "version": "0.3.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws/lambda-invoke-store@0.3.0",
+    "_nodeVersion": "24.17.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/lambda-invoke-store_0.3.0_1782923163804_0.051146244995354806"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:bbc058d4-6ae3-455f-9782-2aa7cdf4f9e9"
+      }
+    },
+    "_npmVersion": "11.13.0",
+    "author": { "name": "Amazon Web Services", "url": "http://aws.amazon.com" },
+    "bugs": {
+      "url": "https://github.com/awslabs/aws-lambda-invoke-store/issues"
+    },
+    "description": "Invoke scoped data storage for AWS Lambda Node.js Runtime Environment",
+    "devDependencies": {
+      "@changesets/cli": "^2.29.6",
+      "@rollup/plugin-node-resolve": "^16.0.3",
+      "@rollup/plugin-typescript": "^12.3.0",
+      "@tsconfig/node18": "^18.2.4",
+      "@types/node": "^18.19.130",
+      "rollup": "^4.52.5",
+      "tslib": "^2.8.1",
+      "typescript": "^5.9.3",
+      "vitest": "^3.1.1"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@aws%2flambda-invoke-store@0.3.0"
+      },
+      "fileCount": 7,
+      "integrity": "sha512-sl4Bm6yiMNYrZKkqqDFWN0UfnWhlS8ivKxrYl+6t0gCLrqr8y3B2IqZZbFRkfaVVp7C/baApyh71P+LeE1A2sQ==",
+      "shasum": "708802d987f8e17bdf4af4de1031660ce1cdd65f",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEYCIQCmGyMLTByawMk5Fc88U0jGR0b2VNkZPLx+uGVNu8U6LQIhAIGSEvuSTu4DAujJhzzcC8xdLT6kRLePFz8C2t0f4c6Y"
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws/lambda-invoke-store/-/lambda-invoke-store-0.3.0.tgz",
+      "unpackedSize": 29557
+    },
+    "engines": { "node": ">=18.0.0" },
+    "exports": {
+      ".": {
+        "import": "./dist-es/invoke-store.js",
+        "module": "./dist-es/invoke-store.js",
+        "node": "./dist-cjs/invoke-store.js",
+        "require": "./dist-cjs/invoke-store.js",
+        "types": "./dist-types/invoke-store.d.ts"
+      }
+    },
+    "gitHead": "4b2c7152b3f48975059585a09a59c8007ab008fa",
+    "homepage": "https://github.com/awslabs/aws-lambda-invoke-store",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/invoke-store.js",
+    "maintainers": [
+      { "email": "aws-sdk-js@amazon.com", "name": "aws-sdk-team" },
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" },
+      { "email": "aws-xray-sdk-node@amazon.com", "name": "awsxray" },
+      { "email": "aws-sdk-common-runtime@amazon.com", "name": "aws-iot-sdk" },
+      { "email": "aws-amplify@amazon.com", "name": "aws-amplify-ops" },
+      {
+        "email": "bedrock-agentcore-npm@amazon.com",
+        "name": "bedrock-agentcore-npm"
+      },
+      {
+        "email": "amazon-q-developer-cli@amazon.com",
+        "name": "amazon-q-cli-bot"
+      },
+      {
+        "email": "aws-apm-synthetics-npm@amazon.com",
+        "name": "aws-apm-synthetics-npm"
+      }
+    ],
+    "module": "./dist-es/invoke-store.js",
+    "name": "@aws/lambda-invoke-store",
+    "packageManager": "yarn@4.9.4",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/awslabs/aws-lambda-invoke-store.git"
+    },
+    "scripts": {
+      "build": "yarn clean && yarn build:types && node ./scripts/build-rollup.js",
+      "build:types": "tsc -p tsconfig.types.json",
+      "clean": "rm -rf dist-types dist-cjs dist-es",
+      "release": "yarn build && changeset publish",
+      "test": "vitest run --reporter verbose",
+      "test:watch": "vitest watch"
+    },
+    "types": "./dist-types/invoke-store.d.ts",
+    "version": "0.3.0"
+  }
+}

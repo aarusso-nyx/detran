@@ -1,0 +1,11 @@
+# Engineer inert Linux runner creator05
+
+Status: **SOURCE ONLY, UNISSUED, NOT ADMISSION**. Direct entry refuses. No Docker, Node, SQL, SDK, installer, runner or operational directory creation was invoked. Creator04 and caller06 remain frozen historical source.
+
+This successor retains the Architect's exact operational leaf at `.../populated-history-target-linux-runner-creation-03/empty-image-pgdata`; creator05 holds only new source/receipts. It binds the exclusive-directory amendment SHA `1e4c8eca…`, Inspector amendment review SHA `a0b1ff62…`, and the frozen predecessor HELD reports. The unissued Root template has no creator/review hashes or actual host identity. A separate exact source-buffer entry and one-use permit are required before any effect.
+
+The source requires exact container-name absence and lstat absence of the fixed leaf, including dangling links. It records an ordered no-symlink ROOT-through-leaf-parent chain with source/device/inode/UID/GID/mode. CONSUMING is durable before one `mkdir(mode=0700, exist_ok=False)`. A handled signal after timestamp preparation is checked immediately before that syscall; `directoryCreateAttempted` remains 0 if the guard refuses and becomes 1 only at the syscall boundary. Failed mkdir never establishes directory ownership. Successful creation requires lstat/O_DIRECTORY|O_NOFOLLOW fstat, realpath, host UID **and GID**, exact0700, positive device/inode, and an empty sorted listing. The full parent chain and leaf identity are rechecked before container create, before start, before birth, and at closure; the directory is retained on all paths.
+
+Exactly three read-only bind mounts cover repository, official Node and the fixed empty host leaf at `/var/lib/postgresql`. No Docker volume, nonce, delete, alternate path or retry is available. A clean full-CID acknowledgement plus independent exact-CID/control inspect is required for container ownership; ambiguous name diagnostics remain unowned. Cleanup may stop only an identity-rechecked owned running CID. Already-stopped and late unresolved-running states are distinct. Raw command, source and directory receipts are retained and rehashed across effect boundaries.
+
+Independent Inspector CLOSED birth and a separately reviewed caller07 one-use permit are required before resolver execution. This source grants no database or fixture authority.

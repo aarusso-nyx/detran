@@ -1,0 +1,124 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "asn1js",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:13.450000Z",
+    "selection": "versions[3.0.10]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 127835,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/72/db/880c5f18c991e88c1acbfd5ab8e3ccdb8eb8d4bcf2658ff728a57327f7370ed2831fb5064dd0f675bc18eaa35fec1a4a59eab30cfb4025bc840eba4859c7",
+    "sourceSha256": "sha256:24b6f6f83587122b0031acd9ce35c85462fdd484ef378a9e79df28cd5434ddb7"
+  },
+  "version": "3.0.10",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "asn1js@3.0.10",
+    "_nodeVersion": "24.14.1",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/asn1js_3.0.10_1776698123863_0.4229927147556647"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:8463e990-37cf-4914-90ff-ef263d0243e4"
+      }
+    },
+    "_npmVersion": "11.11.0",
+    "author": { "email": "yury@strozhevsky.com", "name": "Yury Strozhevsky" },
+    "bugs": { "url": "https://github.com/PeculiarVentures/ASN1.js/issues" },
+    "contributors": [
+      { "email": "rmh@unmitigatedrisk.com", "name": "Ryan Hurst" }
+    ],
+    "dependencies": {
+      "pvtsutils": "^1.3.6",
+      "pvutils": "^1.1.5",
+      "tslib": "^2.8.1"
+    },
+    "description": "asn1js is a pure JavaScript library implementing this standard. ASN.1 is the basis of all X.509 related data structures and numerous other protocols used on the web",
+    "devDependencies": {
+      "@peculiar/eslint-config-base": "^0.2.9",
+      "@types/jest": "^30.0.0",
+      "@types/node": "^25.6.0",
+      "asn1-test-suite": "^1.0.2",
+      "eslint": "^10.2.1",
+      "jest": "^30.3.0",
+      "rollup": "^4.60.2",
+      "rollup-plugin-dts": "^6.4.1",
+      "rollup-plugin-typescript2": "^0.37.0",
+      "ts-jest": "^29.4.9",
+      "typescript": "^5.6.3",
+      "typescript-eslint": "^8.58.2"
+    },
+    "devEngines": {
+      "packageManager": {
+        "name": "npm",
+        "onFail": "warn",
+        "version": "11.7.0"
+      },
+      "runtime": { "name": "node", "onFail": "warn", "version": ">=24.5.0" }
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/asn1js@3.0.10"
+      },
+      "fileCount": 6,
+      "integrity": "sha512-S2s3aOytiKdFRdulw2qPE51MzjzVOisppcVv7jVFR+Kw0kxwvFrDcYA0h7Ndqbmj0HkMIXYWaoj7fli8kgx1eg==",
+      "shasum": "df26c874c8a8b41ca605efea47b2ad07551013dd",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIDN5fXA5zpv3lh1ZkmtBU3FvfIySZYRAUTh2s3JhmrZHAiB94dwHlnrVOh7TFS2JwH2q7KHMKVHb6w2tuB1gwwwq2A=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/asn1js/-/asn1js-3.0.10.tgz",
+      "unpackedSize": 288975
+    },
+    "engines": { "node": ">=12.0.0" },
+    "gitHead": "0722d026be6f4480638d72ebf93fd7771beb7a0c",
+    "homepage": "https://github.com/PeculiarVentures/ASN1.js#readme",
+    "keywords": [
+      "asn1",
+      "parser",
+      "asn.1",
+      "ber",
+      "der",
+      "sequence",
+      "set",
+      "bitstring",
+      "octetstring",
+      "utctime",
+      "utf8string",
+      "bmpstring",
+      "universalstring",
+      "generalizedtime"
+    ],
+    "license": "BSD-3-Clause",
+    "main": "build/index.js",
+    "maintainers": [
+      { "email": "info@peculiarventures.com", "name": "peculiarventures" },
+      { "email": "microshine@mail.ru", "name": "microshine" }
+    ],
+    "module": "build/index.es.js",
+    "name": "asn1js",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/PeculiarVentures/ASN1.js.git"
+    },
+    "scripts": {
+      "build": "rollup -c",
+      "coverage": "jest --coverage",
+      "lint": "eslint . --ext .ts",
+      "lint:fix": "eslint --fix . --ext .ts",
+      "prepublishOnly": "npm run build",
+      "test": "jest"
+    },
+    "types": "build/index.d.ts",
+    "version": "3.0.10"
+  }
+}

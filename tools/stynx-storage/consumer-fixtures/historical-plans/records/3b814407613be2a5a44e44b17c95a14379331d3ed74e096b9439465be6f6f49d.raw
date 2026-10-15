@@ -1,0 +1,65 @@
+{
+  "formatVersion": 1,
+  "kind": "independent-baseline-input-sql-text-review-supplement",
+  "actor": "/root/architect_adoption_160",
+  "role": "Architect",
+  "disposition": "REVIEWED_INPUTS_ONLY",
+  "subject": {
+    "owner": "postgres",
+    "databaseOid": "18767",
+    "databaseName": "detran_r22_161_g03_upgrade",
+    "clusterSystemIdentifier": "7696293464811719840"
+  },
+  "references": [
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/baseline-input-review/ARCHITECT-BASELINE-INPUT-REVIEW.json",
+      "bytes": 9516,
+      "sha256": "sha256:4ef09e7ac9de6ae71334775d48aecc5d17e84e7e0dcb7bdec58ee51451fad470"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/baseline-input-review/INSPECTOR-BASELINE-INPUT-SQL-TEXT-SUPPLEMENT.json",
+      "bytes": 1828,
+      "sha256": "sha256:b660fe9b75d92da7d988538685d22d07f649c2f185f80157d79595d70182fa95"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/fresh-receipt-sql-text-readback/INSPECTOR-FRESH-SQL-TEXT.json",
+      "bytes": 267967,
+      "sha256": "sha256:2f36f1696ba1f502a6a16de8511c4b8b503d882be551508099fe524ae525960a"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/fresh-receipt-sql-text-readback/capture.json",
+      "bytes": 267790,
+      "sha256": "sha256:e30df63386b4306e439290ccc0458427ec9815047f2faa4b201a4fe5aea3d91c"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/fresh-receipt-sql-text-readback/capture.sql",
+      "bytes": 2100,
+      "sha256": "sha256:815f9fb571a1141ad87f4737eb9112c02eb751faca3b9a17d7cf16ecab60a404"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/fresh-receipt-sql-text-readback/READBACK-MANIFEST.json",
+      "bytes": 1110,
+      "sha256": "sha256:16f1fba22e8a57162eaa65c74c6690130ec08b8799281b0f06af73b3340f5bb9"
+    },
+    {
+      "path": "scratch/r22-adoption-161/db-rehearsal/cluster-02/generation-03/fresh-receipt-sql-text-readback/lease-returned-inspector.json",
+      "bytes": 536,
+      "sha256": "sha256:54815808b5891ca74735e2fae51190790d40c9f8db877f4ea028e0645110caa2"
+    }
+  ],
+  "findings": [
+    "Read/rehashed actual direct installed_at::text query/raw capture and lease return, not a lexical conversion.",
+    "Both recorded installed_at_sql_text values are actual2026-10-14 00:08:24.59491+00; original identity SQL text/actor/UTC6 exactly equal retained candidates.",
+    "B8 installed_at_sql receives the captured installed_at_sql_text value unchanged; alias mapping only.",
+    "Original4ef09/fad671 reviews remain historical unchanged; this supplement binds their previously unavailable representation.",
+    "Baseline.review.independent should reference this complete additive input review; its refs preserve original review and actual facts."
+  ],
+  "baselineAccepted": false,
+  "sdkExecuted": false,
+  "databaseAccessed": false,
+  "limits": [
+    "No final baseline hash/receipt/approval is fabricated. Final Inspector detached review and F1 exact seal still required.",
+    "No F1 SDK/compiler/tests/SQL execution; Inspector actual read-only result is separately retained.",
+    "Old01/02 failure subjects/original fresh rows stay untouched."
+  ]
+}

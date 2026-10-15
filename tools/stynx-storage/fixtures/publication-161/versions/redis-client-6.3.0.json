@@ -1,0 +1,96 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@redis/client",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.740000Z",
+    "selection": "versions[6.3.0]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 156206,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/93/d2/7d81f95fc9a18a55c1ad1560588ae3fa1a06d2883ac00d03a7a8675d4563da9d655107cc489c5236898b51c0bed27273466b67d7219e71ba0abb17a47541",
+    "sourceSha256": "sha256:c7d769304bfa7c54aed96aab7848a5c1ad9f57188db5f5f5c04995f4d36801f9"
+  },
+  "version": "6.3.0",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@redis/client@6.3.0",
+    "_nodeVersion": "22.23.3",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/client_6.3.0_1790766068403_0.309112764886754"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "dff3be1f-a753-4d82-a31f-42eb1e6ca349"
+      }
+    },
+    "_npmVersion": "11.20.0",
+    "bugs": { "url": "https://github.com/redis/node-redis/issues" },
+    "dependencies": {},
+    "description": "The source code and documentation for this package are in the main [node-redis](https://github.com/redis/node-redis) repo.",
+    "devDependencies": {
+      "@node-rs/xxhash": "1.7.6",
+      "@opentelemetry/api": "^1.9.0",
+      "@opentelemetry/sdk-metrics": "^2.2.0",
+      "@redis/test-utils": "*",
+      "@types/sinon": "^17.0.3",
+      "sinon": "^17.0.1"
+    },
+    "directories": {},
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@redis%2fclient@6.3.0"
+      },
+      "fileCount": 1955,
+      "integrity": "sha512-fHrjwGCBvAANGi+TuRuwKi83sIOzgHr8eh+Uf48w3fSX7Hhrz174NrWqfJhAC2vnN0d/tfaZpdr6+o6JC3QHwg==",
+      "shasum": "b8501b8d39eb1d4d9d2d1c6bd75cf441bea259b2",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIHGx/dk0SyepUzcYqalEo5ND6Lsd/krnT441RdQOs+fYAiBSgGafYMrx5AZk/nLJkmwC9EzvLJ4ayzgt3IsDNniYaA=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCICHgvx/u0844+jkrH8LtNwy6c62ApR9krwGDgz+tvl8hAiEA0wkcIG40VnKD5zVGlXy63wraf91GfhELboOb11SIMqA="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@redis/client/-/client-6.3.0.tgz",
+      "unpackedSize": 5336137
+    },
+    "engines": { "node": ">= 20.0.0" },
+    "gitHead": "bfdd485b0bb24eab1a99aeb0de96b2285e4b26e1",
+    "homepage": "https://github.com/redis/node-redis/tree/master/packages/client",
+    "keywords": ["redis"],
+    "license": "MIT",
+    "main": "./dist/index.js",
+    "maintainers": [
+      { "email": "david.maier@redis.com", "name": "dmaier-redislabs" },
+      { "email": "nkaradzhov89@gmail.com", "name": "nkaradzhov" }
+    ],
+    "name": "@redis/client",
+    "peerDependencies": {
+      "@node-rs/xxhash": "^1.1.0",
+      "@opentelemetry/api": ">=1 <2"
+    },
+    "peerDependenciesMeta": {
+      "@node-rs/xxhash": { "optional": true },
+      "@opentelemetry/api": { "optional": true }
+    },
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/redis/node-redis.git"
+    },
+    "scripts": {
+      "generate:metadata": "tsx ./scripts/generate-command-metadata-data.ts",
+      "release": "release-it",
+      "test": "npm run test:types && nyc -r text-summary -r lcov mocha -r tsx --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporter-config.json --exit './lib/**/*.spec.ts'",
+      "test:types": "tsc -p tsconfig.types-test.json"
+    },
+    "types": "./dist/index.d.ts",
+    "version": "6.3.0"
+  }
+}

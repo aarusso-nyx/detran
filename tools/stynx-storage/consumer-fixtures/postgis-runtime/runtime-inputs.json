@@ -1,0 +1,940 @@
+{
+  "formatVersion": 1,
+  "kind": "reviewed-postgis-runtime-ci-inputs",
+  "platform": "linux/amd64",
+  "baseImage": "postgres@sha256:d32327f755bcd7d850eddf4880835c93d2294a2de1989e7123f5866ff0072f96",
+  "postgresVersion": "18.2",
+  "postgisVersion": "3.6.4+dfsg-2.pgdg12+1",
+  "archives": [
+    {
+      "name": "fonts-dejavu-core",
+      "version": "2.37-6",
+      "architecture": "all",
+      "url": "https://deb.debian.org/debian/pool/main/f/fonts-dejavu/fonts-dejavu-core_2.37-6_all.deb",
+      "bytes": 1067728,
+      "sha256": "sha256:8892669e51aab4dc56682c8e39d8ddb7d70fad83c369344e1e240bf3ca22bb76",
+      "destination": "debs/fonts-dejavu-core_2.37-6_all.deb"
+    },
+    {
+      "name": "fontconfig-config",
+      "version": "2.14.1-4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig-config_2.14.1-4_amd64.deb",
+      "bytes": 314864,
+      "sha256": "sha256:281c66e46b95f045a0282a6c7a03b33de0e9a08d016897a759aaf4a04adfddbe",
+      "destination": "debs/fontconfig-config_2.14.1-4_amd64.deb"
+    },
+    {
+      "name": "gdal-data",
+      "version": "3.13.2+dfsg-1.pgdg12+1",
+      "architecture": "all",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/g/gdal/gdal-data_3.13.2+dfsg-1.pgdg12+1_all.deb",
+      "bytes": 465868,
+      "sha256": "sha256:bd0b3e4564221b967236f09d18ac2a0400d594515d42dd821bd7daf622049ea5",
+      "destination": "debs/gdal-data_3.13.2+dfsg-1.pgdg12+1_all.deb"
+    },
+    {
+      "name": "gdal-plugins",
+      "version": "3.13.2+dfsg-1.pgdg12+1",
+      "architecture": "amd64",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/g/gdal/gdal-plugins_3.13.2+dfsg-1.pgdg12+1_amd64.deb",
+      "bytes": 235820,
+      "sha256": "sha256:b9076833ec27daa69a46510be3f687eaeef27a796492b95ae7ec7bd65943a7d5",
+      "destination": "debs/gdal-plugins_3.13.2+dfsg-1.pgdg12+1_amd64.deb"
+    },
+    {
+      "name": "libaec0",
+      "version": "1.0.6-1+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libaec/libaec0_1.0.6-1+b1_amd64.deb",
+      "bytes": 21144,
+      "sha256": "sha256:8a403015309664cff739053569062eb99fa92646029191d056a587a3fabd1845",
+      "destination": "debs/libaec0_1.0.6-1+b1_amd64.deb"
+    },
+    {
+      "name": "libaom3",
+      "version": "3.6.0-1+deb12u3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/a/aom/libaom3_3.6.0-1+deb12u3_amd64.deb",
+      "bytes": 1851316,
+      "sha256": "sha256:0d306f250a365d5309f0f616c5327ebe7cb80cc48332dd3a7fe18c036056f874",
+      "destination": "debs/libaom3_3.6.0-1+deb12u3_amd64.deb"
+    },
+    {
+      "name": "libblas3",
+      "version": "3.11.0-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/l/lapack/libblas3_3.11.0-2_amd64.deb",
+      "bytes": 148592,
+      "sha256": "sha256:9aae8058b8d02b800bdafc5b340614df1442a2d2abbc2d351947c0fdd67aa08a",
+      "destination": "debs/libblas3_3.11.0-2_amd64.deb"
+    },
+    {
+      "name": "libquadmath0",
+      "version": "12.2.0-14+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/gcc-12/libquadmath0_12.2.0-14+deb12u1_amd64.deb",
+      "bytes": 144616,
+      "sha256": "sha256:3f0c9a4c730da2fdab001cae596625438598fd2996d29d888feeb4c1cdc9011f",
+      "destination": "debs/libquadmath0_12.2.0-14+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libgfortran5",
+      "version": "12.2.0-14+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/gcc-12/libgfortran5_12.2.0-14+deb12u1_amd64.deb",
+      "bytes": 792696,
+      "sha256": "sha256:63d38775d20c425c1f00914b52167ae0e3b4639facdb0aa734877279fb716fbb",
+      "destination": "debs/libgfortran5_12.2.0-14+deb12u1_amd64.deb"
+    },
+    {
+      "name": "liblapack3",
+      "version": "3.11.0-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/l/lapack/liblapack3_3.11.0-2_amd64.deb",
+      "bytes": 2322744,
+      "sha256": "sha256:4cb4ba9c36ee0242d91c8bcd69286db59a6a0c86f8c522b72f5eb0053e127d7d",
+      "destination": "debs/liblapack3_3.11.0-2_amd64.deb"
+    },
+    {
+      "name": "libarpack2",
+      "version": "3.8.0-3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/a/arpack/libarpack2_3.8.0-3_amd64.deb",
+      "bytes": 102036,
+      "sha256": "sha256:949773b357e8f4c74fbc585f2fbee452adb2931c3d36a5baf8eae49f7d45bede",
+      "destination": "debs/libarpack2_3.8.0-3_amd64.deb"
+    },
+    {
+      "name": "libsuperlu5",
+      "version": "5.3.0+dfsg1-2+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/s/superlu/libsuperlu5_5.3.0+dfsg1-2+b1_amd64.deb",
+      "bytes": 169604,
+      "sha256": "sha256:01d98cfa0cee738b4d0fd36d3c2af08005b14a2768db56f3b007aca2e2657b13",
+      "destination": "debs/libsuperlu5_5.3.0+dfsg1-2+b1_amd64.deb"
+    },
+    {
+      "name": "libarmadillo11",
+      "version": "1:11.4.2+dfsg-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/a/armadillo/libarmadillo11_11.4.2+dfsg-1_amd64.deb",
+      "bytes": 98876,
+      "sha256": "sha256:41c40f8f59a90812bf4a3d62cb75b725f50f1950761e24cd5cd1ce2e8cad2748",
+      "destination": "debs/libarmadillo11_11.4.2+dfsg-1_amd64.deb"
+    },
+    {
+      "name": "libsnappy1v5",
+      "version": "1.1.9-3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/s/snappy/libsnappy1v5_1.1.9-3_amd64.deb",
+      "bytes": 25964,
+      "sha256": "sha256:a2ec50d0f92864e7524c96352bc2c62221126ee1ef58f77af7bf369c60b6e98f",
+      "destination": "debs/libsnappy1v5_1.1.9-3_amd64.deb"
+    },
+    {
+      "name": "libblosc1",
+      "version": "1.21.3+ds-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/c/c-blosc/libblosc1_1.21.3+ds-1_amd64.deb",
+      "bytes": 49264,
+      "sha256": "sha256:8c5badfdc1c726958b932b6607b4b455ccb828451f88cd00281a2424c00cdf44",
+      "destination": "debs/libblosc1_1.21.3+ds-1_amd64.deb"
+    },
+    {
+      "name": "libboost-serialization1.74.0",
+      "version": "1.74.0+ds1-21",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/b/boost1.74/libboost-serialization1.74.0_1.74.0+ds1-21_amd64.deb",
+      "bytes": 317476,
+      "sha256": "sha256:6fc2bbb606cee07d9177e517e7900165d32a084cec483693b06428e427ff232b",
+      "destination": "debs/libboost-serialization1.74.0_1.74.0+ds1-21_amd64.deb"
+    },
+    {
+      "name": "libbrotli1",
+      "version": "1.0.9-2+b6",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/b/brotli/libbrotli1_1.0.9-2+b6_amd64.deb",
+      "bytes": 275248,
+      "sha256": "sha256:563b4caec1aa5e876bd3355b36e7a38e1484baf5a293b48d1e8bd22db786e4d7",
+      "destination": "debs/libbrotli1_1.0.9-2+b6_amd64.deb"
+    },
+    {
+      "name": "libnghttp2-14",
+      "version": "1.52.0-1+deb12u3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/n/nghttp2/libnghttp2-14_1.52.0-1+deb12u3_amd64.deb",
+      "bytes": 72404,
+      "sha256": "sha256:5a5736cee57e51c1baed869979e6ecdbc6495e939e33203d6cfe3b6e5a149e3f",
+      "destination": "debs/libnghttp2-14_1.52.0-1+deb12u3_amd64.deb"
+    },
+    {
+      "name": "libpsl5",
+      "version": "0.21.2-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpsl/libpsl5_0.21.2-1_amd64.deb",
+      "bytes": 58684,
+      "sha256": "sha256:4f0d35610204e4e754b057748719744114621f2f6f4202d846c314860a981afb",
+      "destination": "debs/libpsl5_0.21.2-1_amd64.deb"
+    },
+    {
+      "name": "librtmp1",
+      "version": "2.4+20151223.gitfa8646d.1-2+b2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/r/rtmpdump/librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb",
+      "bytes": 60824,
+      "sha256": "sha256:e1f69020dc2c466e421ec6a58406b643be8b5c382abf0f8989011c1d3df91c87",
+      "destination": "debs/librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb"
+    },
+    {
+      "name": "libssh2-1",
+      "version": "1.10.0-3+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libs/libssh2/libssh2-1_1.10.0-3+deb12u1_amd64.deb",
+      "bytes": 175976,
+      "sha256": "sha256:fff72a194e493f88e100a2567e22472bb4ab828d429c2956965c6f2f134f1b3a",
+      "destination": "debs/libssh2-1_1.10.0-3+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libcurl3-gnutls",
+      "version": "7.88.1-10+deb12u15",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/c/curl/libcurl3-gnutls_7.88.1-10+deb12u15_amd64.deb",
+      "bytes": 386008,
+      "sha256": "sha256:bf430ecf80f7808704e0187cddc582fd57fc98789ea356d4797651edad387ef3",
+      "destination": "debs/libcurl3-gnutls_7.88.1-10+deb12u15_amd64.deb"
+    },
+    {
+      "name": "libcfitsio10",
+      "version": "4.2.0-3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/c/cfitsio/libcfitsio10_4.2.0-3_amd64.deb",
+      "bytes": 563236,
+      "sha256": "sha256:1fd66f2dd32991902c4e728493e516ff4c9a7894cdd1ce7678eb444740eab54f",
+      "destination": "debs/libcfitsio10_4.2.0-3_amd64.deb"
+    },
+    {
+      "name": "libcurl4",
+      "version": "7.88.1-10+deb12u15",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/c/curl/libcurl4_7.88.1-10+deb12u15_amd64.deb",
+      "bytes": 392184,
+      "sha256": "sha256:3042904de01f9c4fbdcf1452b8f81abedcf2b015f9b9deba109063322b5bd68b",
+      "destination": "debs/libcurl4_7.88.1-10+deb12u15_amd64.deb"
+    },
+    {
+      "name": "libdav1d6",
+      "version": "1.0.0-2+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/d/dav1d/libdav1d6_1.0.0-2+deb12u1_amd64.deb",
+      "bytes": 513432,
+      "sha256": "sha256:197f08108242177aeae4c04aac11825c39b7d18598191ab769f910687ccb387f",
+      "destination": "debs/libdav1d6_1.0.0-2+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libde265-0",
+      "version": "1.0.11-1+deb12u3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libd/libde265/libde265-0_1.0.11-1+deb12u3_amd64.deb",
+      "bytes": 186436,
+      "sha256": "sha256:72c3edb400c3494974181e9ca75a11d859c715c9685c38fb251783c7c8841afe",
+      "destination": "debs/libde265-0_1.0.11-1+deb12u3_amd64.deb"
+    },
+    {
+      "name": "libdeflate0",
+      "version": "1.14-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libd/libdeflate/libdeflate0_1.14-1_amd64.deb",
+      "bytes": 61416,
+      "sha256": "sha256:3d4b39f94317b64a860db8a7a8b581b555124cd461fe07ec0d347edbdb9f6683",
+      "destination": "debs/libdeflate0_1.14-1_amd64.deb"
+    },
+    {
+      "name": "libexpat1",
+      "version": "2.5.0-1+deb12u4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/e/expat/libexpat1_2.5.0-1+deb12u4_amd64.deb",
+      "bytes": 105852,
+      "sha256": "sha256:ed010cc41577d75ab01cccc6afa93496d9a99f1e16bd469caf58e1b81fddae80",
+      "destination": "debs/libexpat1_2.5.0-1+deb12u4_amd64.deb"
+    },
+    {
+      "name": "libpng16-16",
+      "version": "1.6.39-2+deb12u6",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libp/libpng1.6/libpng16-16_1.6.39-2+deb12u6_amd64.deb",
+      "bytes": 277048,
+      "sha256": "sha256:940b91d40d51c825de7f7aa133aecff1ffa25a91f12cb6aa6926c9ad55cd640c",
+      "destination": "debs/libpng16-16_1.6.39-2+deb12u6_amd64.deb"
+    },
+    {
+      "name": "libfreetype6",
+      "version": "2.12.1+dfsg-5+deb12u4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/libfreetype6_2.12.1+dfsg-5+deb12u4_amd64.deb",
+      "bytes": 397736,
+      "sha256": "sha256:8043e479f73f29992d652e3f9dfe8b17f9780c7ea6330afe379ec5f9f188ac44",
+      "destination": "debs/libfreetype6_2.12.1+dfsg-5+deb12u4_amd64.deb"
+    },
+    {
+      "name": "libfontconfig1",
+      "version": "2.14.1-4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/libfontconfig1_2.14.1-4_amd64.deb",
+      "bytes": 385664,
+      "sha256": "sha256:16ee38d374e064f534116dc442b086ef26f9831f1c0af7e5fb4fe4512e700649",
+      "destination": "debs/libfontconfig1_2.14.1-4_amd64.deb"
+    },
+    {
+      "name": "libfreexl1",
+      "version": "1.0.6-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/f/freexl/libfreexl1_1.0.6-2_amd64.deb",
+      "bytes": 29372,
+      "sha256": "sha256:c528dd35a660c034c41925c3610950c36c49acbef195182da69bf0fbf9584854",
+      "destination": "debs/libfreexl1_1.0.6-2_amd64.deb"
+    },
+    {
+      "name": "libfyba0",
+      "version": "4.1.1-8",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/f/fyba/libfyba0_4.1.1-8_amd64.deb",
+      "bytes": 112276,
+      "sha256": "sha256:79f3f5058ee5edbcb03cbc5561449399ca7264403f07fe688e451e892979acc9",
+      "destination": "debs/libfyba0_4.1.1-8_amd64.deb"
+    },
+    {
+      "name": "libgeos3.11.1",
+      "version": "3.11.1-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/geos/libgeos3.11.1_3.11.1-1_amd64.deb",
+      "bytes": 751592,
+      "sha256": "sha256:c7d9b3ec22fe9a5d6f8fa3572bfbe504224c8b2a8a0fc3ebb000581114c47660",
+      "destination": "debs/libgeos3.11.1_3.11.1-1_amd64.deb"
+    },
+    {
+      "name": "libgeos-c1v5",
+      "version": "3.11.1-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/geos/libgeos-c1v5_3.11.1-1_amd64.deb",
+      "bytes": 83244,
+      "sha256": "sha256:93651aef73ee0f154213010e48fad6a6fc5c3b4e1f916b748aa7ac0dd59b64ff",
+      "destination": "debs/libgeos-c1v5_3.11.1-1_amd64.deb"
+    },
+    {
+      "name": "proj-data",
+      "version": "9.8.1-1.pgdg12+1",
+      "architecture": "all",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/proj/proj-data_9.8.1-1.pgdg12+1_all.deb",
+      "bytes": 6339300,
+      "sha256": "sha256:e22837316b5b1ac37f49852afe81fdc312433559cc5a18496e4ce86f6a0b1718",
+      "destination": "debs/proj-data_9.8.1-1.pgdg12+1_all.deb"
+    },
+    {
+      "name": "libjbig0",
+      "version": "2.1-6.1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/j/jbigkit/libjbig0_2.1-6.1_amd64.deb",
+      "bytes": 31704,
+      "sha256": "sha256:6b07c77b700a615642888a82ba92a7e7c429d04b9c8669c62b2263f15c4c4059",
+      "destination": "debs/libjbig0_2.1-6.1_amd64.deb"
+    },
+    {
+      "name": "libjpeg62-turbo",
+      "version": "1:2.1.5-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_2.1.5-2_amd64.deb",
+      "bytes": 166332,
+      "sha256": "sha256:95ec30140789a342add8f8371ed018924de51b539056522b66f207b25cba9cad",
+      "destination": "debs/libjpeg62-turbo_2.1.5-2_amd64.deb"
+    },
+    {
+      "name": "liblerc4",
+      "version": "4.0.0+ds-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/l/lerc/liblerc4_4.0.0+ds-2_amd64.deb",
+      "bytes": 170368,
+      "sha256": "sha256:771f5c47ca69f24ca61e4be0c98c5912b182ce442f921697d17a472f3ded5c9c",
+      "destination": "debs/liblerc4_4.0.0+ds-2_amd64.deb"
+    },
+    {
+      "name": "libwebp7",
+      "version": "1.2.4-0.2+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libw/libwebp/libwebp7_1.2.4-0.2+deb12u1_amd64.deb",
+      "bytes": 285512,
+      "sha256": "sha256:7259b7ce46444694ce536360ad53acb68eb3b47a7ff81d7b1b8a3939b2ac9918",
+      "destination": "debs/libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libtiff6",
+      "version": "4.5.0-6+deb12u4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/t/tiff/libtiff6_4.5.0-6+deb12u4_amd64.deb",
+      "bytes": 316172,
+      "sha256": "sha256:255cd1d9f204355c366638ee21756234a8d43c03a3de18a5af6cdd94765b5053",
+      "destination": "debs/libtiff6_4.5.0-6+deb12u4_amd64.deb"
+    },
+    {
+      "name": "libproj25",
+      "version": "9.8.1-1.pgdg12+1",
+      "architecture": "amd64",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/proj/libproj25_9.8.1-1.pgdg12+1_amd64.deb",
+      "bytes": 1449748,
+      "sha256": "sha256:50ee31126a137c9bdc6b8ce1b5417e6bf8d0418caffedb5ac2079afedae1dac7",
+      "destination": "debs/libproj25_9.8.1-1.pgdg12+1_amd64.deb"
+    },
+    {
+      "name": "libgeotiff5",
+      "version": "1.7.1-2+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libg/libgeotiff/libgeotiff5_1.7.1-2+b1_amd64.deb",
+      "bytes": 68512,
+      "sha256": "sha256:3337d645707b881166180c9eeab419c77b18976ed17ecfe0ec8a0afcf2efdfae",
+      "destination": "debs/libgeotiff5_1.7.1-2+b1_amd64.deb"
+    },
+    {
+      "name": "libgif7",
+      "version": "5.2.1-2.5+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/giflib/libgif7_5.2.1-2.5+deb12u1_amd64.deb",
+      "bytes": 42956,
+      "sha256": "sha256:9131bc6c90b3d9695c8b1811ca2f42a65f3611aaba10d71a5c7ad14f04a3ab71",
+      "destination": "debs/libgif7_5.2.1-2.5+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libtirpc-common",
+      "version": "1.3.3+ds-1",
+      "architecture": "all",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtirpc/libtirpc-common_1.3.3+ds-1_all.deb",
+      "bytes": 14048,
+      "sha256": "sha256:3e3ef129b4bf61513144236e15e1b4ec57fa5ae3dc8a72137abdbefb7a63af85",
+      "destination": "debs/libtirpc-common_1.3.3+ds-1_all.deb"
+    },
+    {
+      "name": "libtirpc3",
+      "version": "1.3.3+ds-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtirpc/libtirpc3_1.3.3+ds-1_amd64.deb",
+      "bytes": 85192,
+      "sha256": "sha256:2a46d5a5e9486da11ffeff5740931740d6deae4f92cd6098df060dc5dff1e1c7",
+      "destination": "debs/libtirpc3_1.3.3+ds-1_amd64.deb"
+    },
+    {
+      "name": "libhdf4-0-alt",
+      "version": "4.2.15-5",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libh/libhdf4/libhdf4-0-alt_4.2.15-5_amd64.deb",
+      "bytes": 269936,
+      "sha256": "sha256:b9b56b6578c88ccc2e31838432813ce1ae22876daffdb2c216058ec44ea056ca",
+      "destination": "debs/libhdf4-0-alt_4.2.15-5_amd64.deb"
+    },
+    {
+      "name": "libsz2",
+      "version": "1.0.6-1+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libaec/libsz2_1.0.6-1+b1_amd64.deb",
+      "bytes": 7804,
+      "sha256": "sha256:a8513083422773f2862cff32e43feb4b2133b4aaad6f9633ba31eb34530580a9",
+      "destination": "debs/libsz2_1.0.6-1+b1_amd64.deb"
+    },
+    {
+      "name": "libhdf5-103-1",
+      "version": "1.10.8+repack1-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/h/hdf5/libhdf5-103-1_1.10.8+repack1-1_amd64.deb",
+      "bytes": 1236980,
+      "sha256": "sha256:25d7c1c734f054b8f3f94f2d4e12484462b058ebc81ced239d2abe97a301ab23",
+      "destination": "debs/libhdf5-103-1_1.10.8+repack1-1_amd64.deb"
+    },
+    {
+      "name": "libx265-199",
+      "version": "3.5-2+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/x/x265/libx265-199_3.5-2+b1_amd64.deb",
+      "bytes": 1150056,
+      "sha256": "sha256:9cd87d1b0c56f34f51bcbe8bdb55ebb45dd08ce6c0c6ff2dc77378bac3f64cc0",
+      "destination": "debs/libx265-199_3.5-2+b1_amd64.deb"
+    },
+    {
+      "name": "libheif1",
+      "version": "1.15.1-1+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libh/libheif/libheif1_1.15.1-1+deb12u1_amd64.deb",
+      "bytes": 215348,
+      "sha256": "sha256:13a0a3a6e22ddf5eb891b7c7873ace79f13f2c96473576e5f7da2ae3228a2113",
+      "destination": "debs/libheif1_1.15.1-1+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libjson-c5",
+      "version": "0.16-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/j/json-c/libjson-c5_0.16-2_amd64.deb",
+      "bytes": 44120,
+      "sha256": "sha256:d0e1ed8637d1c26b9720f6057d6355f18378bba5cc2553e459d1632783c00d70",
+      "destination": "debs/libjson-c5_0.16-2_amd64.deb"
+    },
+    {
+      "name": "libminizip1",
+      "version": "1.1-8+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/m/minizip/libminizip1_1.1-8+deb12u1_amd64.deb",
+      "bytes": 20136,
+      "sha256": "sha256:b2999b980cbb9e6dcaa2d5154c9d1f1b9d55f5a0ca8166699de7ab47afaf4a36",
+      "destination": "debs/libminizip1_1.1-8+deb12u1_amd64.deb"
+    },
+    {
+      "name": "liburiparser1",
+      "version": "0.9.7+dfsg-2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/u/uriparser/liburiparser1_0.9.7+dfsg-2_amd64.deb",
+      "bytes": 43812,
+      "sha256": "sha256:67e8bfa4433b1f6053a1b6e2cf26517b9b91655fea2dd45c9dec2423dfdc9a90",
+      "destination": "debs/liburiparser1_0.9.7+dfsg-2_amd64.deb"
+    },
+    {
+      "name": "libkmlbase1",
+      "version": "1.3.0-10",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libkml/libkmlbase1_1.3.0-10_amd64.deb",
+      "bytes": 46532,
+      "sha256": "sha256:fb1561e8c722ab706fae5d44c64d80da5327db576cc67840eb0a10f3ac6e4533",
+      "destination": "debs/libkmlbase1_1.3.0-10_amd64.deb"
+    },
+    {
+      "name": "libkmldom1",
+      "version": "1.3.0-10",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libkml/libkmldom1_1.3.0-10_amd64.deb",
+      "bytes": 153316,
+      "sha256": "sha256:3f18a1599576f962a8164aac4abd6e53c020dc0134722200dfae2848c527f6bf",
+      "destination": "debs/libkmldom1_1.3.0-10_amd64.deb"
+    },
+    {
+      "name": "libkmlengine1",
+      "version": "1.3.0-10",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libkml/libkmlengine1_1.3.0-10_amd64.deb",
+      "bytes": 74428,
+      "sha256": "sha256:86855dd154eaa2aa7ad2c7dbd949cc5f80b49c4ba38ce37588f0a4ca465e1407",
+      "destination": "debs/libkmlengine1_1.3.0-10_amd64.deb"
+    },
+    {
+      "name": "mysql-common",
+      "version": "5.8+1.1.0",
+      "architecture": "all",
+      "url": "https://deb.debian.org/debian/pool/main/m/mysql-defaults/mysql-common_5.8+1.1.0_all.deb",
+      "bytes": 6636,
+      "sha256": "sha256:4ed466bda89528440ba41f46dbac4336aef2a0fcc074645c3320d82b114a2741",
+      "destination": "debs/mysql-common_5.8+1.1.0_all.deb"
+    },
+    {
+      "name": "mariadb-common",
+      "version": "1:10.11.18-0+deb12u1",
+      "architecture": "all",
+      "url": "https://deb.debian.org/debian/pool/main/m/mariadb/mariadb-common_10.11.18-0+deb12u1_all.deb",
+      "bytes": 27040,
+      "sha256": "sha256:9c6218e7a85f388dfab90660a2ba089fb798b72116f1693534547fcd20b429c6",
+      "destination": "debs/mariadb-common_10.11.18-0+deb12u1_all.deb"
+    },
+    {
+      "name": "libmariadb3",
+      "version": "1:10.11.18-0+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/m/mariadb/libmariadb3_10.11.18-0+deb12u1_amd64.deb",
+      "bytes": 176244,
+      "sha256": "sha256:85a6c4f9aa64a1878a494c7c54419a543a0568d5333a90f55bd28e5e8d73bff2",
+      "destination": "debs/libmariadb3_10.11.18-0+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libhdf5-hl-100",
+      "version": "1.10.8+repack1-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/h/hdf5/libhdf5-hl-100_1.10.8+repack1-1_amd64.deb",
+      "bytes": 67788,
+      "sha256": "sha256:537517ed259bb6178454530f9c54ea06279acc9d80c1760572dfb9603d6e747d",
+      "destination": "debs/libhdf5-hl-100_1.10.8+repack1-1_amd64.deb"
+    },
+    {
+      "name": "libnetcdf19",
+      "version": "1:4.9.0-3+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/n/netcdf/libnetcdf19_4.9.0-3+b1_amd64.deb",
+      "bytes": 476208,
+      "sha256": "sha256:2c56049b6b3f643cba49cee7a3d96643a7f30c710db1b284039e34972ef55d4b",
+      "destination": "debs/libnetcdf19_4.9.0-3+b1_amd64.deb"
+    },
+    {
+      "name": "libltdl7",
+      "version": "2.4.7-7~deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtool/libltdl7_2.4.7-7~deb12u1_amd64.deb",
+      "bytes": 393000,
+      "sha256": "sha256:8070b550321d4bd1c298f52f75374898d39112b709026d2ea5362ef1277b775a",
+      "destination": "debs/libltdl7_2.4.7-7~deb12u1_amd64.deb"
+    },
+    {
+      "name": "libodbc2",
+      "version": "2.3.11-2+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/u/unixodbc/libodbc2_2.3.11-2+deb12u1_amd64.deb",
+      "bytes": 150120,
+      "sha256": "sha256:0af106cc7545f86bfa2d6f4fe644b98470704e73568feb395e07d5d60eeaefe4",
+      "destination": "debs/libodbc2_2.3.11-2+deb12u1_amd64.deb"
+    },
+    {
+      "name": "unixodbc-common",
+      "version": "2.3.11-2+deb12u1",
+      "architecture": "all",
+      "url": "https://deb.debian.org/debian/pool/main/u/unixodbc/unixodbc-common_2.3.11-2+deb12u1_all.deb",
+      "bytes": 8172,
+      "sha256": "sha256:3e212d254f50c0310406255dc71e038682b0a02b66aed06df323273be53d9123",
+      "destination": "debs/unixodbc-common_2.3.11-2+deb12u1_all.deb"
+    },
+    {
+      "name": "libodbcinst2",
+      "version": "2.3.11-2+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/u/unixodbc/libodbcinst2_2.3.11-2+deb12u1_amd64.deb",
+      "bytes": 34216,
+      "sha256": "sha256:416463622a35f7e981577f0c817a3d6148a7eb99225d5f9cf433187be3f91c33",
+      "destination": "debs/libodbcinst2_2.3.11-2+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libogdi4.1",
+      "version": "4.1.0+ds-6",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/o/ogdi-dfsg/libogdi4.1_4.1.0+ds-6_amd64.deb",
+      "bytes": 223240,
+      "sha256": "sha256:a00c5312870742d177c2773096cffae579966b4c5a90a2dac0555aa2bbb181a9",
+      "destination": "debs/libogdi4.1_4.1.0+ds-6_amd64.deb"
+    },
+    {
+      "name": "libopenjp2-7",
+      "version": "2.5.0-2+deb12u3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openjpeg2/libopenjp2-7_2.5.0-2+deb12u3_amd64.deb",
+      "bytes": 189312,
+      "sha256": "sha256:a127e2f1741d66bdddb6393a718e3cbec327d53f88c89b859b1f8d73f64cf635",
+      "destination": "debs/libopenjp2-7_2.5.0-2+deb12u3_amd64.deb"
+    },
+    {
+      "name": "liblcms2-2",
+      "version": "2.14-2+deb12u1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/lcms2/liblcms2-2_2.14-2+deb12u1_amd64.deb",
+      "bytes": 153540,
+      "sha256": "sha256:333efe13d165b8a98194d95e72fd10b502ebbee4dc2eb43fc2ab83e2b53e5f17",
+      "destination": "debs/liblcms2-2_2.14-2+deb12u1_amd64.deb"
+    },
+    {
+      "name": "libnspr4",
+      "version": "2:4.35-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/n/nspr/libnspr4_4.35-1_amd64.deb",
+      "bytes": 113108,
+      "sha256": "sha256:6cca09767e94e4b5d2888ef31ad797bd3e7cec27fbbe98b49b10d4884746ce77",
+      "destination": "debs/libnspr4_4.35-1_amd64.deb"
+    },
+    {
+      "name": "libnss3",
+      "version": "2:3.87.1-1+deb12u4",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/n/nss/libnss3_3.87.1-1+deb12u4_amd64.deb",
+      "bytes": 1330556,
+      "sha256": "sha256:666bce4768414a6a79d2dacb1549f922cedb1facd373790a477e12739878284e",
+      "destination": "debs/libnss3_3.87.1-1+deb12u4_amd64.deb"
+    },
+    {
+      "name": "libpoppler126",
+      "version": "22.12.0-2+deb12u3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/poppler/libpoppler126_22.12.0-2+deb12u3_amd64.deb",
+      "bytes": 1856352,
+      "sha256": "sha256:f2a2737ea92f37f760d8d562d9ddc722ffb6072391987f36a3334c592df51818",
+      "destination": "debs/libpoppler126_22.12.0-2+deb12u3_amd64.deb"
+    },
+    {
+      "name": "libqhull-r8.0",
+      "version": "2020.2-5",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/q/qhull/libqhull-r8.0_2020.2-5_amd64.deb",
+      "bytes": 248100,
+      "sha256": "sha256:230f779769a141bb9d94b7a8e3f971dabbb11e71e6e47c73bb5f9b559d11a1d8",
+      "destination": "debs/libqhull-r8.0_2020.2-5_amd64.deb"
+    },
+    {
+      "name": "librttopo1",
+      "version": "1.1.0-3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/libr/librttopo/librttopo1_1.1.0-3_amd64.deb",
+      "bytes": 178192,
+      "sha256": "sha256:da320960fbab3b2736548f56acf5aeae7a6aa94e0157e77861f7ed0b4579381b",
+      "destination": "debs/librttopo1_1.1.0-3_amd64.deb"
+    },
+    {
+      "name": "libspatialite7",
+      "version": "5.0.1-3",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/s/spatialite/libspatialite7_5.0.1-3_amd64.deb",
+      "bytes": 1782240,
+      "sha256": "sha256:f308c15464687df780afbc12e4ed29c276c213676451b810e590870f99829429",
+      "destination": "debs/libspatialite7_5.0.1-3_amd64.deb"
+    },
+    {
+      "name": "libxerces-c3.2",
+      "version": "3.2.4+debian-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/x/xerces-c/libxerces-c3.2_3.2.4+debian-1_amd64.deb",
+      "bytes": 874256,
+      "sha256": "sha256:0d0efc62471a32efe18db66f039a3c41406abf314730f9d8c41093d05cd9b5f1",
+      "destination": "debs/libxerces-c3.2_3.2.4+debian-1_amd64.deb"
+    },
+    {
+      "name": "libgdal32",
+      "version": "3.6.2+dfsg-1+b2",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/gdal/libgdal32_3.6.2+dfsg-1+b2_amd64.deb",
+      "bytes": 7670436,
+      "sha256": "sha256:8f0598b0c16834a37dff627d6bd3d21de64c5e50e61638e3cd59ee29c2b1b30d",
+      "destination": "debs/libgdal32_3.6.2+dfsg-1+b2_amd64.deb"
+    },
+    {
+      "name": "libgmpxx4ldbl",
+      "version": "2:6.2.1+dfsg1-1.1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/g/gmp/libgmpxx4ldbl_6.2.1+dfsg1-1.1_amd64.deb",
+      "bytes": 338440,
+      "sha256": "sha256:7ded88b1fa365fb63d2ff46cdcefb3766aa6d52d98ff084f63d3e62e8511c76b",
+      "destination": "debs/libgmpxx4ldbl_6.2.1+dfsg1-1.1_amd64.deb"
+    },
+    {
+      "name": "libmpfr6",
+      "version": "4.2.0-1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/m/mpfr4/libmpfr6_4.2.0-1_amd64.deb",
+      "bytes": 700900,
+      "sha256": "sha256:37b7a2b4e78890b6a074777f27b96c84f58e81558ba08410c2b6c0ca4a4ad77b",
+      "destination": "debs/libmpfr6_4.2.0-1_amd64.deb"
+    },
+    {
+      "name": "libprotobuf-c1",
+      "version": "1.4.1-1+b1",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/p/protobuf-c/libprotobuf-c1_1.4.1-1+b1_amd64.deb",
+      "bytes": 27492,
+      "sha256": "sha256:e99b3091938bfbd55b24e95587b868ba735e38e4adbcb9942c6993f2de3ba1bf",
+      "destination": "debs/libprotobuf-c1_1.4.1-1+b1_amd64.deb"
+    },
+    {
+      "name": "libsfcgal1",
+      "version": "1.4.1-5",
+      "architecture": "amd64",
+      "url": "https://deb.debian.org/debian/pool/main/s/sfcgal/libsfcgal1_1.4.1-5_amd64.deb",
+      "bytes": 2137664,
+      "sha256": "sha256:edfaad2ee84b096da15b87f4377240d3a368f68758f696f90367f13a8b2560d6",
+      "destination": "debs/libsfcgal1_1.4.1-5_amd64.deb"
+    },
+    {
+      "name": "postgresql-18-postgis-3-scripts",
+      "version": "3.6.4+dfsg-2.pgdg12+1",
+      "architecture": "all",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgis/postgresql-18-postgis-3-scripts_3.6.4+dfsg-2.pgdg12+1_all.deb",
+      "bytes": 1298376,
+      "sha256": "sha256:002022de82d0b6f05e3366b339ff8d66b5f9d8df03f5050d42f5fdc60f80395f",
+      "destination": "debs/postgresql-18-postgis-3-scripts_3.6.4+dfsg-2.pgdg12+1_all.deb"
+    },
+    {
+      "name": "postgresql-18-postgis-3",
+      "version": "3.6.4+dfsg-2.pgdg12+1",
+      "architecture": "amd64",
+      "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgis/postgresql-18-postgis-3_3.6.4+dfsg-2.pgdg12+1_amd64.deb",
+      "bytes": 3595584,
+      "sha256": "sha256:c12fe97f4abd7bf021a0818fb72227409bca7c01cb1344c19afc402b6b386390",
+      "destination": "debs/postgresql-18-postgis-3_3.6.4+dfsg-2.pgdg12+1_amd64.deb"
+    }
+  ],
+  "archiveCount": 83,
+  "archiveBytes": 49306764,
+  "inputs": [
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/Dockerfile",
+      "bytes": 456,
+      "sha256": "sha256:a00a8bf5f9f5890abcd86e8f5d15609f65dbfe9855ec693eb602d814025c4ae2",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/Dockerfile.candidate-02.NOT_EXECUTED",
+        "bytes": 456,
+        "sha256": "sha256:a00a8bf5f9f5890abcd86e8f5d15609f65dbfe9855ec693eb602d814025c4ae2"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/selected-deb-closure.json",
+      "bytes": 49706,
+      "sha256": "sha256:5660938329d0f6d81aa26c0b99a1aed2c3daaba1889c0af1ae64245c7d98d8bd",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/selected-deb-closure.json",
+        "bytes": 49706,
+        "sha256": "sha256:5660938329d0f6d81aa26c0b99a1aed2c3daaba1889c0af1ae64245c7d98d8bd"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/debs.sha256",
+      "bytes": 8861,
+      "sha256": "sha256:57eb9cd2130728ba32100fd11bdfb8ce7b6be825ee0f192e4074095b25f37634",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/debs.sha256",
+        "bytes": 8861,
+        "sha256": "sha256:57eb9cd2130728ba32100fd11bdfb8ce7b6be825ee0f192e4074095b25f37634"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/core-binaries.sha256",
+      "bytes": 400,
+      "sha256": "sha256:ff70291010c8fdbaef5197b5987ef55a9ac72e2b58658df42f8f4df1d8a826ad",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/core-binaries.sha256",
+        "bytes": 400,
+        "sha256": "sha256:ff70291010c8fdbaef5197b5987ef55a9ac72e2b58658df42f8f4df1d8a826ad"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/historical-signed-index-verification.json",
+      "bytes": 8208,
+      "sha256": "sha256:daf29281eb778474a74207a7c3493fe9171d944ef6250f6a8d5e3b782bc3ff56",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/signed-index-verification.json",
+        "bytes": 8208,
+        "sha256": "sha256:daf29281eb778474a74207a7c3493fe9171d944ef6250f6a8d5e3b782bc3ff56"
+      },
+      "classification": "historical-observation"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/pgdg.InRelease.raw",
+      "bytes": 188825,
+      "sha256": "sha256:0edfc69e3e4445de11d3741e4eae574d4b896046403182be13b922097f7c1a53",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/pgdg.InRelease",
+        "bytes": 188825,
+        "sha256": "sha256:0edfc69e3e4445de11d3741e4eae574d4b896046403182be13b922097f7c1a53"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/debian.InRelease.raw",
+      "bytes": 151075,
+      "sha256": "sha256:77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/debian.InRelease",
+        "bytes": 151075,
+        "sha256": "sha256:77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/updates.InRelease.raw",
+      "bytes": 55403,
+      "sha256": "sha256:7103c2f449dadfa5a584f548eb21842cc203b3dcb9b3261709674dafd0ad8549",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/updates.InRelease",
+        "bytes": 55403,
+        "sha256": "sha256:7103c2f449dadfa5a584f548eb21842cc203b3dcb9b3261709674dafd0ad8549"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/security.InRelease.raw",
+      "bytes": 34770,
+      "sha256": "sha256:9e5050b09604010af7190f3e8391739d9fc7dc11616d1a25e90c7e25565e4f92",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/security.InRelease",
+        "bytes": 34770,
+        "sha256": "sha256:9e5050b09604010af7190f3e8391739d9fc7dc11616d1a25e90c7e25565e4f92"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/deb-payload-inventory.json",
+      "bytes": 556020,
+      "sha256": "sha256:0d20198841a3d7a784df4b3dfb096e552f72852287c537e6b3bd9a4fda862859",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/deb-payload-inventory.json",
+        "bytes": 556020,
+        "sha256": "sha256:0d20198841a3d7a784df4b3dfb096e552f72852287c537e6b3bd9a4fda862859"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/postgis-extension-payload.json",
+      "bytes": 11165,
+      "sha256": "sha256:28ea384fb2be292dadfa3211813cd06de51a8df8177506855b316d6714eb5e9a",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/postgis-extension-payload.json",
+        "bytes": 11165,
+        "sha256": "sha256:28ea384fb2be292dadfa3211813cd06de51a8df8177506855b316d6714eb5e9a"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/maintainer-programs-static-94.json",
+      "bytes": 56641,
+      "sha256": "sha256:5e0152489677379f20005fe1bb2343c9e594fd3ae691e224b3c1d7d49e1d54cd",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/maintainer-programs-static-94.json",
+        "bytes": 56641,
+        "sha256": "sha256:5e0152489677379f20005fe1bb2343c9e594fd3ae691e224b3c1d7d49e1d54cd"
+      },
+      "classification": "reviewed-runtime-build-input"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/historical-architect-source-review.json",
+      "bytes": 3529,
+      "sha256": "sha256:230bcde19d461683a398d9e0ab8a7c5b08862bb4624936001e4c54547da20dc8",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/ARCHITECT-POSTGIS-CANDIDATE02-SOURCE-INPUT-REVIEW.json",
+        "bytes": 3529,
+        "sha256": "sha256:230bcde19d461683a398d9e0ab8a7c5b08862bb4624936001e4c54547da20dc8"
+      },
+      "classification": "historical-observation"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/historical-inspector-source-review.json",
+      "bytes": 1911,
+      "sha256": "sha256:cef3ed3ca0da7e5bf6fd0372cc7b79883c6a039e11037e78d0adb3dc712c1bb9",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/INSPECTOR-POSTGIS-CANDIDATE02-SOURCE-INPUT-REVIEW.json",
+        "bytes": 1911,
+        "sha256": "sha256:cef3ed3ca0da7e5bf6fd0372cc7b79883c6a039e11037e78d0adb3dc712c1bb9"
+      },
+      "classification": "historical-observation"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/historical-derived-runtime-custody.json",
+      "bytes": 22362,
+      "sha256": "sha256:fee756fed6b14494d0c57deed3ea4bf8b8aeffa1694d34816e43ce2fd3274de4",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/ROOT-ACTUAL-DERIVED-RUNTIME-CUSTODY.json",
+        "bytes": 22362,
+        "sha256": "sha256:fee756fed6b14494d0c57deed3ea4bf8b8aeffa1694d34816e43ce2fd3274de4"
+      },
+      "classification": "historical-observation"
+    },
+    {
+      "path": "tools/stynx-storage/consumer-fixtures/postgis-runtime/historical-architect-runtime-review.json",
+      "bytes": 6509,
+      "sha256": "sha256:07a94c4ad7a3b2b61e360dd0dd97f8f5759f2e50f04b14371ed495f4b99dca2a",
+      "source": {
+        "path": "scratch/r22-adoption-161/linux-postgis-preparation/ARCHITECT-ACTUAL-DERIVED-RUNTIME-CUSTODY-REVIEW.json",
+        "bytes": 6509,
+        "sha256": "sha256:07a94c4ad7a3b2b61e360dd0dd97f8f5759f2e50f04b14371ed495f4b99dca2a"
+      },
+      "classification": "historical-observation"
+    }
+  ],
+  "ciAdmission": null,
+  "historicalLocalImage": "sha256:88dfc24521607f7695d0eb0ee6f908dacb84b8e6cd31ee67a37a09aeedf513e8",
+  "historicalLimit": "Local emulated build/input custody only. Historical paths, actors, process identities and review references remain documentary; native CI independently captures its own image, toolchain, cluster and SQL truth."
+}

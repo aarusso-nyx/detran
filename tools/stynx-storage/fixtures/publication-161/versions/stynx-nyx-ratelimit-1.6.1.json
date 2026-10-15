@@ -1,0 +1,74 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@stynx-nyx/ratelimit",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T18:57:36.497019+00:00",
+    "selection": "versions[1.6.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 195937,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/registry/stynx-nyx-ratelimit-1.6.1.json",
+    "sourceSha256": "sha256:7d464e53128920e89bdb27fb266ddc5d82e954cb52469859fd7720bde830ca6b"
+  },
+  "version": "1.6.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "",
+    "_nodeVersion": "24.21.0",
+    "_npmUser": { "name": "aarusso-nyx" },
+    "_npmVersion": "11.19.0",
+    "author": {
+      "email": "aarusso@nyxk.com.br",
+      "name": "Antonio Augusto Russo"
+    },
+    "bugs": { "url": "https://github.com/stynx-nyx/stynx/issues" },
+    "dependencies": {
+      "@stynx-nyx/auth": "1.6.1",
+      "@stynx-nyx/contracts": "1.6.1",
+      "@stynx-nyx/data": "1.6.1",
+      "redis": "^6.0.0"
+    },
+    "description": "Rate limiting primitives for stynx",
+    "devDependencies": {
+      "@types/node": "24.13.4",
+      "@types/supertest": "^7.2.0",
+      "supertest": "^7.2.2",
+      "typescript": "^6.0.3"
+    },
+    "directories": {},
+    "dist": {
+      "integrity": "sha512-JG+/z5+62x8EfEsZm5Y79+VuQc1aU0U01s/z/k6WYfGi924cDFV0bGQxtXDwmcwXdSlO/aR4C/4rycNjllJ0rQ==",
+      "shasum": "08a85b37c18b2d3b6b5926ac62ba80b7ae226346",
+      "tarball": "https://npm.pkg.github.com/download/@stynx-nyx/ratelimit/1.6.1/08a85b37c18b2d3b6b5926ac62ba80b7ae226346"
+    },
+    "engines": { "node": ">=24 <25" },
+    "files": ["dist"],
+    "homepage": "https://github.com/stynx-nyx/stynx#readme",
+    "license": "BUSL-1.1",
+    "main": "dist/ratelimit/src/index.js",
+    "name": "@stynx-nyx/ratelimit",
+    "peerDependencies": {
+      "@nestjs/common": "^11.1.19",
+      "@nestjs/core": "^11.1.19",
+      "reflect-metadata": "^0.2.2",
+      "rxjs": "^7.8.2"
+    },
+    "readme": "# `@stynx-nyx/ratelimit` — sliding-window rate limit with per-route policy + Redis/Postgres stores\n\n`@stynx-nyx/ratelimit` is the sliding-window rate-limit primitive. Apply per-route policy via `@RateLimit({ window, max, key })`, and the global `RateLimitGuard` (mounted by `StynxPlatformPipelineModule` from `@stynx-nyx/backend`, or directly by this module) rejects with 429 when the window's limit is exceeded. Stores: in-memory (dev), Postgres-table (lower throughput, simple), Redis (production, single-digit-ms latency).\n\n## Purpose\n\nProduction APIs need rate limits per-route per-key (per-actor, per-tenant, per-IP). Doing this with a single global limit isn't fine-grained enough; doing it per-route by hand is error-prone. `@stynx-nyx/ratelimit` provides a single decorator + store abstraction with the sliding-window algorithm baked in.\n\nYou reach for it any time you expose a public or semi-public endpoint that could be flooded. The `StynxPlatformPipelineModule` wires it globally; you only annotate routes.\n\nWhat it does NOT do: not a circuit breaker (use `@stynx-nyx/integration-adapter` for outbound calls), not DDoS protection (use upstream WAF), no jittering/exponential-backoff hints (client-side concern).\n\n## Audience\n\nBackend developers protecting endpoints from abuse, runaway clients, or noisy neighbours.\n\n## Install\n\n```bash\npnpm add @stynx-nyx/ratelimit\n```\n\n**Dependencies and version ranges:** see [Generated dependency reference](#generated-dependency-reference).\n\n## Quick start\n\n```ts\nimport { StynxRateLimitModule } from '@stynx-nyx/ratelimit';\n\nStynxRateLimitModule.forRoot({\n  default: { window: '1m', max: 60, key: 'actor' },\n  store: { kind: 'redis', redis: { host: 'redis.internal' } },\n});\n```\n\n```ts\nimport { RateLimit } from '@stynx-nyx/ratelimit';\n\n@Controller('orders')\nexport class OrdersController {\n  @Post()\n  @RateLimit({ window: '1m', max: 30, key: 'actor' })\n  create() {\n    /* ... */\n  }\n}\n```\n\n## Public API surface\n\n### Modules\n\n| Export                 | Signature                                        | Description                                      |\n| ---------------------- | ------------------------------------------------ | ------------------------------------------------ |\n| `StynxRateLimitModule` | `.forRoot(options: StynxRateLimitModuleOptions)` | Registers guard, store, policy service, metrics. |\n\n### Services / Injectables\n\n| Export                   | Description                                                                                     |\n| ------------------------ | ----------------------------------------------------------------------------------------------- |\n| `RateLimitGuard`         | The `CanActivate` guard. Registers as `APP_GUARD` when wired via `StynxPlatformPipelineModule`. |\n| `RateLimitPolicyService` | Reads route metadata + module defaults to derive the effective policy.                          |\n| `RateLimitMetrics`       | Allowed/blocked counters; sliding-window observation.                                           |\n| `PgRateLimitStore`       | Postgres-backed store.                                                                          |\n| `RedisRateLimitStore`    | Redis-backed store (preferred for production).                                                  |\n\n### Decorators\n\n| Export                                     | Targets        | Description                                                                                                                                                                               |\n| ------------------------------------------ | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `@RateLimit({ window, max, key, scope? })` | Method + class | Per-route policy. `window`: e.g. `'1m'`, `'10s'`. `max`: requests allowed. `key`: identity dimension (`'actor'`, `'tenant'`, `'ip'`, or `(req) => string`). `scope`: optional sub-bucket. |\n\n### Types / Interfaces\n\n| Export                        | Description                 |\n| ----------------------------- | --------------------------- |\n| `StynxRateLimitModuleOptions` | `forRoot()` options.        |\n| `RateLimitMetadata`           | Decorator's metadata shape. |\n| `RateLimitStore`              | Store interface.            |\n\n## Configuration\n\n### `StynxRateLimitModule.forRoot()` options\n\n| Option         | Type                             | Default                                   | Description                            |\n| -------------- | -------------------------------- | ----------------------------------------- | -------------------------------------- |\n| `default`      | `RateLimitMetadata`              | `{ window: '1m', max: 60, key: 'actor' }` | Default policy for unannotated routes. |\n| `store.kind`   | `'in-memory' \\| 'pg' \\| 'redis'` | `'in-memory'`                             | Backend.                               |\n| `store.redis`  | `RedisOptions`                   | n/a                                       | Redis config.                          |\n| `store.pg`     | `{ tableName }`                  | `'stynx_rate_limit'`                      | Postgres table name.                   |\n| `keyResolvers` | `Record<string, KeyResolver>`    | built-ins                                 | Add custom key resolvers.              |\n\n## Examples\n\n### Example 1 — per-tenant limit\n\n```ts\n@RateLimit({ window: '1m', max: 100, key: 'tenant' })\n```\n\n100 requests per tenant per minute.\n\n### Example 2 — class-level + per-method override\n\n```ts\n@Controller('webhooks')\n@RateLimit({ window: '1s', max: 10, key: 'ip' }) // default for all methods\nexport class WebhooksController {\n  @Post('high-priority')\n  @RateLimit({ window: '1s', max: 100, key: 'ip' }) // override for this method\n  highPriority() {\n    /* ... */\n  }\n}\n```\n\n### Example 3 — custom key resolver\n\n```ts\nStynxRateLimitModule.forRoot({\n  keyResolvers: {\n    apiKey: (req) => req.headers['x-api-key'] ?? 'anon',\n  },\n  default: { window: '1m', max: 60, key: 'apiKey' },\n});\n```\n\n## Common pitfalls\n\n- **In-memory store across multiple instances** — each instance has its own counter; effective limit is `max × instances`. Use Redis in prod.\n- **Clock skew across nodes** with the Redis store — the sliding window uses node-local time. NTP sync mitigates.\n- **`@RateLimit` decorator without `StynxRateLimitModule.forRoot()` or `StynxPlatformPipelineModule`** — metadata is set, guard isn't wired; limit doesn't apply.\n- **Key collisions when migrating** — switching `key: 'ip'` → `key: 'actor'` mid-deploy: existing in-flight buckets still count under the old key. Either drain or accept transient over-limit.\n\n## Related packages\n\n- [`@stynx-nyx/core`](/docs/packages/core/) — provides `RequestContext` for the `actor` / `tenant` key resolvers.\n- [`backend/rate-limit`](/docs/packages/backend/rate-limit/) — `@stynx-nyx/backend` submodule that wraps wiring.\n- [`@stynx-nyx/idempotency`](/docs/packages/idempotency/) — adjacent concern (replay protection); both registered by `StynxPlatformPipelineModule`.\n\n## TypeDoc reference\n\nFull symbol-level API: [`/docs/api-reference/stynx-ratelimit/`](/docs/api-reference/stynx-ratelimit/)\n\n<!-- stynx:generated-dependencies:start -->\n\n## Generated dependency reference\n\nThis section is generated from `package.json`. Run `pnpm package-readmes:write` to update it.\n\n### Runtime dependencies\n\n- `@stynx-nyx/auth`: `workspace:*`\n- `@stynx-nyx/contracts`: `workspace:*`\n- `@stynx-nyx/data`: `workspace:*`\n- `redis`: `^6.0.0`\n\n### Optional dependencies\n\n_None._\n\n### Peer dependencies\n\n- `@nestjs/common`: `^11.1.19`\n- `@nestjs/core`: `^11.1.19`\n- `reflect-metadata`: `^0.2.2`\n- `rxjs`: `^7.8.2`\n\n### Development-only dependencies\n\n- `@types/node`: `24.13.4`\n- `@types/supertest`: `^7.2.0`\n- `supertest`: `^7.2.2`\n- `typescript`: `^6.0.3`\n\n<!-- stynx:generated-dependencies:end -->\n",
+    "repository": {
+      "directory": "packages/ratelimit",
+      "type": "git",
+      "url": "git+https://github.com/stynx-nyx/stynx.git"
+    },
+    "scripts": {
+      "build": "tsc -p tsconfig.json",
+      "clean": "rm -rf dist coverage",
+      "lint": "eslint --config ../../tools/eslint-config/nest.mjs \"src/**/*.ts\"",
+      "stryker": "pnpm exec stryker run stryker.conf.mjs",
+      "test": "vitest run --config ./vitest.config.ts",
+      "test:coverage": "vitest run --config ./vitest.config.ts --coverage --coverage.reporter=json --coverage.reporter=json-summary",
+      "test:int": "vitest run --config ./vitest.int.config.ts",
+      "typecheck": "tsc -p tsconfig.json --noEmit"
+    },
+    "version": "1.6.1"
+  }
+}

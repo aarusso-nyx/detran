@@ -1,0 +1,99 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@aws-sdk/signature-v4-multi-region",
+  "sourceObservation": {
+    "observedAt": null,
+    "selection": "versions[3.996.46]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 981771,
+    "sourcePath": "scratch/r22-adoption-161/prior-runtime/registry/aws-sdk-signature-v4-multi-region-3.996.46.json",
+    "sourceSha256": "sha256:b47fef4937baffb3bc68ca9422fb33d44fcd2dcdb0c13581d43b8a6b6cdd80d1"
+  },
+  "version": "3.996.46",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@aws-sdk/signature-v4-multi-region@3.996.46",
+    "_nodeVersion": "24.14.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/signature-v4-multi-region_3.996.46_1787339280347_0.20134315460368768"
+    },
+    "_npmUser": {
+      "email": "aws-sdk-js-automation@amazon.com",
+      "name": "aws-sdk-bot"
+    },
+    "_npmVersion": "11.7.0",
+    "author": {
+      "name": "AWS SDK for JavaScript Team",
+      "url": "https://aws.amazon.com/sdk-for-javascript/"
+    },
+    "bugs": { "url": "https://github.com/aws/aws-sdk-js-v3/issues" },
+    "dependencies": {
+      "@aws-sdk/types": "^3.974.5",
+      "@smithy/signature-v4": "^5.6.12",
+      "@smithy/types": "^4.17.2",
+      "tslib": "^2.6.2"
+    },
+    "description": "[![NPM version](https://img.shields.io/npm/v/@aws-sdk/signature-v4-multi-region/latest.svg)](https://www.npmjs.com/package/@aws-sdk/signature-v4-multi-region) [![NPM downloads](https://img.shields.io/npm/dm/@aws-sdk/signature-v4-multi-region.svg)](https:/",
+    "devDependencies": {
+      "@tsconfig/recommended": "1.0.1",
+      "concurrently": "7.0.0",
+      "downlevel-dts": "0.10.1",
+      "premove": "4.0.0",
+      "typescript": "~7.0.2"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 16,
+      "integrity": "sha512-L+2xZTye/2T96f3lwCws0Zw6GG2JHZW9e8FpVgGBeeExSKyeoZ6CWRpBml/7DNiK/O26jrgPM9F+Ay8VkgzUWQ==",
+      "shasum": "ee57afe5282da4b57968061ef8706d32890267ab",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIH8rdBOroQCcxvg/kvtDT4lKgpUayEHx/Ys5oxOFIWkrAiEAvpgn6Fz5Dw2Pe8tAQ4qAG3lrKVMUFBoy4LW7Yf2Xvw4="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIQDLlhwrE2x83IcW0wljqbbYIbdSdcdlnVydovaAMy0xCgIgWywHeDuv/A42dw1aQ8jUBm5jQGlMuV/Z9mv51AFY7ew="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@aws-sdk/signature-v4-multi-region/-/signature-v4-multi-region-3.996.46.tgz",
+      "unpackedSize": 38618
+    },
+    "engines": { "node": ">=20.0.0" },
+    "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages/signature-v4-multi-region",
+    "license": "Apache-2.0",
+    "main": "./dist-cjs/index.js",
+    "maintainers": [
+      { "email": "osa-3p@amazon.com", "name": "amzn-oss" },
+      { "email": "aws-sdk-js-automation@amazon.com", "name": "aws-sdk-bot" }
+    ],
+    "module": "./dist-es/index.js",
+    "name": "@aws-sdk/signature-v4-multi-region",
+    "repository": {
+      "directory": "packages/signature-v4-multi-region",
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-sdk-js-v3.git"
+    },
+    "scripts": {
+      "build": "concurrently 'yarn:build:types' 'yarn:build:es' && yarn build:cjs",
+      "build:browser": "node ./test-browser/browser-build/esbuild",
+      "build:cjs": "node ../../scripts/compilation/inline",
+      "build:es": "premove dist-es && tsc -p tsconfig.es.json",
+      "build:include:deps": "yarn g:turbo run build -F=\"$npm_package_name\"",
+      "build:types": "premove dist-types && tsc -p tsconfig.types.json",
+      "build:types:downlevel": "downlevel-dts dist-types dist-types/ts3.4",
+      "clean": "premove dist-cjs dist-es dist-types",
+      "test": "yarn g:vitest run",
+      "test:browser": "yarn build:browser && yarn g:vitest run -c vitest.config.browser.mts",
+      "test:e2e": "yarn g:vitest run -c vitest.config.e2e.mts",
+      "test:e2e:watch": "yarn g:vitest watch -c vitest.config.e2e.mts",
+      "test:watch": "yarn g:vitest watch"
+    },
+    "sideEffects": false,
+    "types": "./dist-types/index.d.ts",
+    "typesVersions": { "<4.5": { "dist-types/*": ["dist-types/ts3.4/*"] } },
+    "version": "3.996.46"
+  }
+}

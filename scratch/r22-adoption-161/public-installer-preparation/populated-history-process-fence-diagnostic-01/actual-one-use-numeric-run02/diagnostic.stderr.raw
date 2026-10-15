@@ -1,0 +1,19 @@
+node:fs:622
+  return binding.open(
+                 ^
+
+Error: EROFS: read-only file system, open '/proc/108/stat'
+    at Object.openSync (node:fs:622:18)
+    at Object.readFileSync (node:fs:488:35)
+    at collect (file:///repo/scratch/r22-adoption-161/public-installer-preparation/populated-history-process-fence-diagnostic-01/verify_numeric_process_fence.mjs:95:31)
+    at file:///repo/scratch/r22-adoption-161/public-installer-preparation/populated-history-process-fence-diagnostic-01/verify_numeric_process_fence.mjs:127:39
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -30,
+  code: 'EROFS',
+  syscall: 'open',
+  path: '/proc/108/stat'
+}
+
+Node.js v24.20.0

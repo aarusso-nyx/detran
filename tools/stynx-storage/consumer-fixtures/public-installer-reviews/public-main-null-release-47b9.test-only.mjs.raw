@@ -1,0 +1,1465 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { isDeepStrictEqual } from 'node:util';
+import { createStorageDdlPlan } from './stynx-storage-ddl-plan.mjs';
+import { loadInstalledStorageArtifacts } from './rls-ddl-coverage.mjs';
+import { installPublicStorageRuntimeGuard } from './stynx-storage-public-runtime-guard.mjs';
+import {
+  canonicalJson,
+  recordDigest,
+  parseClosedJson,
+  parseStorageCustodyDocument,
+  hashBytes,
+  requireFact,
+  sourceManifestSha256,
+  ownerAssertionSql,
+  ledgerAssertionSql,
+  ledgerFinalPrivilegesSql,
+  custodyFinalPrivilegesSql,
+  utcContextSql,
+  captureRoleGraph,
+  readWriterFootprint,
+  assertPristineTarget,
+  readStorageSnapshot,
+  readFreshRows,
+  custodyRows,
+  groupColumns,
+  custodyProjection,
+} from './stynx-storage-public-custody.mjs';
+
+// Deliberately unavailable until actual independent release reviews and exact
+// acyclic pre-seal/inverse readback have been retained. Local hashes cannot admit it.
+const publicReleaseSha256 = null;
+const releasePath = 'tools/stynx-storage/public-install-release-admission.json';
+const sourcePath = 'tools/stynx-storage-public-install.mjs';
+const ledger = 'integration.stynx_storage_installations';
+const groupRelation = 'integration.stynx_storage_target_admissions';
+const custodyRelations = [
+  'integration.stynx_offline_baseline_custody',
+  'integration.stynx_offline_forward_receipts',
+  groupRelation,
+];
+const fixedBinding = {
+  ownerRole: 'postgres',
+  appRole: 'role_app_backend',
+  readerRole: null,
+  tenantTable: { schema: 'auth', table: 'tenants', column: 'id' },
+};
+const publicationFiles = {
+  verification: {
+    path: path.posix.join(
+      'tools/stynx-storage/fixtures/publication-161/historical',
+      'scratch',
+      'r22-adoption-161',
+      'package-admission',
+      'protected-publication-verification.json.raw',
+    ),
+    sha256:
+      'sha256:46815c17be9dbcd2080a3a0c08db958bd42390d8766c64ef40bebd5017074318',
+  },
+  packageAdmission: {
+    path: path.posix.join(
+      'tools/stynx-storage/fixtures/publication-161/historical',
+      'scratch',
+      'r22-adoption-161',
+      'package-admission',
+      'retention-manifest.json.raw',
+    ),
+    sha256:
+      'sha256:56e2e6438b8ef505eca99357e8e219e30ceb170f68f7b5779fff6f997c8a98ac',
+  },
+  projection: {
+    path: path.posix.join(
+      'tools/stynx-storage/fixtures/publication-161/historical',
+      'scratch',
+      'r22-adoption-161',
+      'package-admission',
+      'projection',
+      'public-storage-projection.json.raw',
+    ),
+    sha256:
+      'sha256:944f0041700de5e2c31ebf0e71b7999df999d76cc6645b3bec38ddfc0f692388',
+  },
+};
+const fullAuthorizations = {
+  detran_local_stack: 'DETRAN_LOCAL_STACK_FULL_AUTHORIZED',
+  detran_r7_ctg1_a2: 'DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED',
+  detran_r13: 'DETRAN_R13_FULL_AUTHORIZED',
+};
+const sourceFiles = [
+  sourcePath,
+  'tools/stynx-storage-ddl-plan.mjs',
+  'tools/stynx-storage-public-custody.mjs',
+  'tools/stynx-storage-public-runtime-guard.mjs',
+  'tools/rls-ddl-coverage.mjs',
+];
+const realmDescriptorPath =
+  'tools/stynx-storage/consumer-fixtures/public-installed-runtime/descriptor.json';
+const realmAuthorityInputs = [
+  'pnpm-base32-hash-source.js.raw',
+  'pnpm-dependency-path-source.js.raw',
+  'pnpm-locator-source-proof.json',
+  'pnpm-package-version.json.raw',
+  'pnpm-rfc4648-source.js.raw',
+  'selected-source-derivation.json',
+  'workspace-installed-capture.json.raw',
+  'workspace-package-provenance.json.raw',
+  'workspace-static-module-graph.json.raw',
+  'workspace-tar-payload-check.json.raw',
+].map(
+  (member) =>
+    'tools/stynx-storage/consumer-fixtures/public-installed-runtime/' + member,
+);
+const requiredInputs = [
+  'backend/database/apply.sh',
+  'backend/database/stynx-storage.json',
+  'package.json',
+  'pnpm-lock.yaml',
+  'pnpm-workspace.yaml',
+  'tools/stynx-version.json',
+  realmDescriptorPath,
+  ...realmAuthorityInputs,
+  'tools/stynx-storage/fixtures/toolchain/node-darwin-arm64-proof.json',
+  'tools/stynx-storage/fixtures/toolchain/node-linux-x64-proof.json',
+  ...Object.values(publicationFiles).map((r) => r.path),
+];
+
+const workspaceManifestFiles = [
+  'apps/boat/mobile/package.json',
+  'apps/dashboard/web/package.json',
+  'apps/portal/web/package.json',
+  'apps/rait/web/package.json',
+  'apps/teat/mobile/package.json',
+  'apps/teat/web/package.json',
+  'backend/app/package.json',
+  'backend/domains/ch/billing/package.json',
+  'backend/domains/ch/biometrics/package.json',
+  'backend/domains/ch/clinical-controls/package.json',
+  'backend/domains/ch/clinical-network/package.json',
+  'backend/domains/ch/clinical-reports/package.json',
+  'backend/domains/ch/encounters/package.json',
+  'backend/domains/ch/exams/package.json',
+  'backend/domains/ch/inconsistencies/package.json',
+  'backend/domains/ch/juntas/package.json',
+  'backend/domains/ch/operational-controls/package.json',
+  'backend/domains/ch/patients/package.json',
+  'backend/domains/ch/process-blocks/package.json',
+  'backend/domains/ch/restrictions/package.json',
+  'backend/domains/ch/retention/package.json',
+  'backend/domains/ch/scheduling/package.json',
+  'backend/domains/ch/telehealth/package.json',
+  'backend/domains/ch/toxicology/package.json',
+  'backend/domains/dashboard/crashes/package.json',
+  'backend/domains/dashboard/monitor/package.json',
+  'backend/domains/est/crash/package.json',
+  'backend/domains/inf/ait/package.json',
+  'backend/domains/inf/alcohol/package.json',
+  'backend/domains/inf/collection/package.json',
+  'backend/domains/inf/infraction/package.json',
+  'backend/domains/inf/measures/package.json',
+  'backend/domains/inf/normative/package.json',
+  'backend/domains/inf/notification/package.json',
+  'backend/domains/inf/rait-case/package.json',
+  'backend/domains/inf/rait-integration/package.json',
+  'backend/domains/inf/rait-org/package.json',
+  'backend/domains/inf/rait-session/package.json',
+  'backend/domains/inf/rait-worklist/package.json',
+  'backend/domains/inf/speed/package.json',
+  'backend/domains/integration/renaest-mirror/package.json',
+  'backend/domains/ops/agency/package.json',
+  'backend/domains/ops/core/package.json',
+  'backend/domains/ops/evidence/package.json',
+  'backend/domains/ops/example/package.json',
+  'backend/domains/ops/field/package.json',
+  'backend/domains/ops/offline-sync/package.json',
+  'backend/domains/ops/parameter/package.json',
+  'backend/domains/ops/provisioning/package.json',
+  'backend/domains/ops/snapshots/package.json',
+  'backend/domains/portal/citizen-service/package.json',
+  'backend/domains/portal/complaints/package.json',
+  'backend/domains/portal/identity/package.json',
+  'backend/domains/portal/inbox/package.json',
+  'backend/domains/portal/projections/package.json',
+  'backend/domains/portal/requests/package.json',
+  'backend/domains/shared/package.json',
+  'packages/senatran-adapter/package.json',
+  'packages/ui/package.json',
+];
+
+function closed(value, names) {
+  requireFact(
+    value !== null &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      [Object.prototype, null].includes(Object.getPrototypeOf(value)),
+    'Expected data record',
+  );
+  const d = Object.getOwnPropertyDescriptors(value);
+  const ownKeys = Reflect.ownKeys(d);
+  requireFact(
+    ownKeys.every((key) => typeof key === 'string'),
+    'Symbol fields refused',
+  );
+  requireFact(
+    isDeepStrictEqual(ownKeys.sort(), [...names].sort()) &&
+      Object.values(d).every((x) => Object.hasOwn(x, 'value') && x.enumerable),
+    'Missing, extra or accessor fields',
+  );
+}
+function safeFile(root, name) {
+  requireFact(
+    typeof name === 'string' &&
+      name !== '' &&
+      !name.includes('\\') &&
+      !name.includes('\0') &&
+      !path.posix.isAbsolute(name) &&
+      name.split('/').every((x) => x !== '' && x !== '.' && x !== '..'),
+    'Unsafe retained path',
+  );
+  let current = root;
+  for (const part of name.split('/')) {
+    current = path.join(current, part);
+    const s = fs.lstatSync(current);
+    requireFact(
+      !s.isSymbolicLink() &&
+        (current === path.join(root, name) ? s.isFile() : s.isDirectory()),
+      'Nonregular or escaping retained path',
+    );
+  }
+  requireFact(
+    fs.realpathSync(current).startsWith(root + path.sep),
+    'Retained path escaped root',
+  );
+  return current;
+}
+function readRef(root, ref, sized = false) {
+  closed(ref, sized ? ['path', 'bytes', 'sha256'] : ['path', 'sha256']);
+  requireFact(
+    /^sha256:[a-f0-9]{64}$/u.test(ref.sha256),
+    'Invalid retained digest',
+  );
+  const bytes = fs.readFileSync(safeFile(root, ref.path));
+  requireFact(
+    (!sized ||
+      (Number.isSafeInteger(ref.bytes) && ref.bytes === bytes.length)) &&
+      'sha256:' + hashBytes(bytes) === ref.sha256,
+    'Retained byte identity differs: ' + ref.path,
+  );
+  return bytes;
+}
+function json(bytes) {
+  return parseClosedJson(
+    new TextDecoder('utf-8', { fatal: true }).decode(bytes),
+  );
+}
+function sourceInverse(bytes) {
+  const raw = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  const pattern =
+    /^const publicReleaseSha256 =\s*(['"])(sha256:[0-9a-f]{64})\1;/gmu;
+  const matches = [...raw.matchAll(pattern)];
+  requireFact(
+    matches.length === 1 && matches[0][2] === publicReleaseSha256,
+    'Exact public source inverse seam differs',
+  );
+  return Buffer.from(raw.replace(pattern, 'const publicReleaseSha256 = null;'));
+}
+function readRelease(root, ddl) {
+  if (publicReleaseSha256 === null)
+    throw Object.assign(
+      new Error('Reviewed public installer release is unavailable'),
+      { code: 'STYNX_PUBLIC_INSTALL_RELEASE_UNAVAILABLE' },
+    );
+  const releaseRef = { path: releasePath, sha256: publicReleaseSha256 };
+  const release = json(readRef(root, releaseRef));
+  closed(release, ['formatVersion', 'kind', 'sources', 'inputs', 'reviews']);
+  requireFact(
+    release.formatVersion === 1 &&
+      release.kind === 'reviewed-stynx-storage-public-install-release',
+    'Wrong public release record',
+  );
+  const validateList = (list) => {
+    requireFact(Array.isArray(list) && list.length > 0, 'Release list missing');
+    requireFact(
+      isDeepStrictEqual(
+        list.map((x) => x.path),
+        [...new Set(list.map((x) => x.path))].sort(),
+      ),
+      'Release list duplicate or unordered',
+    );
+    for (const ref of list) {
+      closed(ref, ['path', 'bytes', 'sha256']);
+      // The sole constant inverse is the reviewed pre-seal source identity.
+      if (ref.path === sourcePath) {
+        const inverse = sourceInverse(
+          fs.readFileSync(safeFile(root, sourcePath)),
+        );
+        requireFact(
+          inverse.length === ref.bytes &&
+            'sha256:' + hashBytes(inverse) === ref.sha256,
+          'Public pre-seal source differs',
+        );
+      } else readRef(root, ref, true);
+    }
+  };
+  validateList(release.sources);
+  validateList(release.inputs);
+  requireFact(
+    isDeepStrictEqual(
+      release.sources.map((x) => x.path),
+      [...sourceFiles].sort(),
+    ),
+    'Release source closure differs',
+  );
+  const realm = json(
+    readRef(
+      root,
+      release.inputs.find((ref) => ref.path === realmDescriptorPath) ?? {
+        path: realmDescriptorPath,
+        sha256: null,
+      },
+      true,
+    ),
+  );
+  closed(realm, [
+    'formatVersion',
+    'kind',
+    'lock',
+    'sources',
+    'packages',
+    'files',
+    'edges',
+    'seeds',
+    'optionalMisses',
+    'toolchain',
+    'reviews',
+  ]);
+  closed(realm.reviews, ['inspector', 'independent']);
+  const expected = [
+    ...requiredInputs,
+    realm.reviews.inspector.report.path,
+    realm.reviews.independent.report.path,
+    ...workspaceManifestFiles,
+    ...ddl.files.keys(),
+  ]
+    .map((name) =>
+      ddl.files.has(name) ? 'backend/database/ddl/' + name : name,
+    )
+    .sort();
+  requireFact(
+    isDeepStrictEqual(
+      release.inputs.map((x) => x.path),
+      expected,
+    ),
+    'Release input closure differs',
+  );
+  requireFact(
+    new Set([...release.sources, ...release.inputs].map((x) => x.path)).size ===
+      release.sources.length + release.inputs.length,
+    'Release source/input overlap',
+  );
+  closed(release.reviews, ['inspector', 'independent']);
+  for (const [role, review] of Object.entries(release.reviews)) {
+    closed(review, ['actor', 'report']);
+    requireFact(
+      typeof review.actor === 'string' &&
+        review.actor.trim() !== '' &&
+        review.actor !==
+          release.reviews[role === 'inspector' ? 'independent' : 'inspector']
+            .actor,
+      'Distinct actual reviewers required',
+    );
+    readRef(root, review.report, true);
+  }
+  return { release, ref: releaseRef };
+}
+function settingsFor(full) {
+  const e = process.env;
+  requireFact(
+    ['DB_NAME', 'DB_HOST', 'DB_PORT', 'DB_USER'].every(
+      (k) => Object.hasOwn(e, k) && typeof e[k] === 'string' && e[k] !== '',
+    ),
+    'Explicit DB_NAME/HOST/PORT/USER required',
+  );
+  requireFact(
+    /^[A-Za-z_][A-Za-z0-9_]*$/u.test(e.DB_NAME) &&
+      !/^detran_r22_/u.test(e.DB_NAME),
+    'Invalid or reserved rehearsal database',
+  );
+  requireFact(
+    /^\d+$/u.test(e.DB_PORT) &&
+      Number(e.DB_PORT) >= 1 &&
+      Number(e.DB_PORT) <= 65535 &&
+      e.DB_USER === 'postgres' &&
+      !/[\0\r\n]/u.test(e.DB_HOST) &&
+      !/[\0\r\n]/u.test(e.DB_PASSWORD ?? ''),
+    'Invalid explicit owner connection fields',
+  );
+  requireFact(
+    !['NODE_OPTIONS', 'NODE_PATH', 'NODE_PG_FORCE_NATIVE'].some((k) => e[k]),
+    'Ambient loader/native overrides refused',
+  );
+  if (full)
+    requireFact(
+      Object.hasOwn(fullAuthorizations, e.DB_NAME) &&
+        e[fullAuthorizations[e.DB_NAME]] === '1',
+      '--full is not authorized for database: ' + e.DB_NAME,
+    );
+  return {
+    database: e.DB_NAME,
+    host: e.DB_HOST,
+    port: Number(e.DB_PORT),
+    user: e.DB_USER,
+    password: e.DB_PASSWORD ?? '',
+    ssl: false,
+    options: '-c row_security=on -c search_path=pg_catalog,public',
+    client_encoding: 'UTF8',
+  };
+}
+function storagePlan(root) {
+  const artifacts = loadInstalledStorageArtifacts(root);
+  const packages = ['19-stynx-outbox.sql', '19-stynx-offline.sql'].map((n) =>
+    artifacts.get(n),
+  );
+  return {
+    packages,
+    ordered: artifacts.get('19-stynx-offline.sql').orderedArtifact,
+  };
+}
+function identity(item) {
+  return {
+    ...item.metadata,
+    sourceManifestSha256: sourceManifestSha256(item.metadata.manifest),
+  };
+}
+async function verify(client, root, plan, retained, phase) {
+  requireFact(
+    ['pre', 'candidate', 'post', 'recovery'].includes(phase),
+    'Unknown private verification phase',
+  );
+  const requireApp = createRequire(path.join(root, 'backend/app/package.json'));
+  const reports = [];
+  for (const item of plan.packages) {
+    const api = requireApp(item.metadata.package);
+    const report = await api[
+      item.schema === 'outbox' ? 'verifyOutboxStorage' : 'verifyOfflineStorage'
+    ](client, fixedBinding);
+    retained.write('reports/' + phase + '-' + item.schema + '-verifier.json', {
+      phase,
+      report,
+    });
+    reports.push(report);
+    requireFact(
+      report.supported === true &&
+        Array.isArray(report.checks) &&
+        report.checks.every((c) => c.status === 'pass'),
+      'Public storage verifier STOP: ' + item.schema,
+    );
+  }
+  return reports;
+}
+function validateWriterRole(graph) {
+  const rows = graph.roles.filter(
+    (row) => row.rolname === 'role_rait_priority_writer',
+  );
+  requireFact(rows.length <= 1, 'Writer role identity duplicates');
+  if (rows.length === 0) return;
+  const row = rows[0];
+  requireFact(
+    isDeepStrictEqual(row, {
+      oid: row.oid,
+      rolname: 'role_rait_priority_writer',
+      rolsuper: false,
+      rolinherit: true,
+      rolcreaterole: false,
+      rolcreatedb: false,
+      rolcanlogin: false,
+      rolreplication: false,
+      rolbypassrls: false,
+      rolconnlimit: -1,
+      rolvaliduntil: null,
+    }),
+    'Existing writer role flags differ',
+  );
+}
+function validateRoleChanges(entry, actual) {
+  validateWriterRole(entry);
+  validateWriterRole(actual);
+  requireFact(
+    isDeepStrictEqual(entry.memberships, actual.memberships) &&
+      isDeepStrictEqual(entry.settings, actual.settings),
+    'Global membership/settings changed',
+  );
+  const allowed = new Map([
+    ['role_app_backend', false],
+    ['role_auditor_min', false],
+    ['role_rait_priority_writer', true],
+  ]);
+  for (const prior of entry.roles)
+    requireFact(
+      isDeepStrictEqual(
+        actual.roles.find((r) => r.oid === prior.oid),
+        prior,
+      ),
+      'Existing global role changed: ' + prior.rolname,
+    );
+  const additions = actual.roles.filter(
+    (r) => !entry.roles.some((e) => e.oid === r.oid),
+  );
+  for (const r of additions)
+    requireFact(
+      allowed.has(r.rolname) &&
+        !entry.roles.some((e) => e.rolname === r.rolname) &&
+        isDeepStrictEqual(r, {
+          oid: r.oid,
+          rolname: r.rolname,
+          rolsuper: false,
+          rolinherit: allowed.get(r.rolname),
+          rolcreaterole: false,
+          rolcreatedb: false,
+          rolcanlogin: false,
+          rolreplication: false,
+          rolbypassrls: false,
+          rolconnlimit: -1,
+          rolvaliduntil: null,
+        }),
+      'Undeclared global role addition',
+    );
+  requireFact(
+    actual.roles.length === entry.roles.length + additions.length,
+    'Role inventory changed',
+  );
+  const oldNames = new Set(entry.roles.map((r) => r.rolname));
+  requireFact(
+    isDeepStrictEqual(
+      actual.reachability.filter(
+        (r) => oldNames.has(r.principal) && oldNames.has(r.reachable),
+      ),
+      entry.reachability,
+    ),
+    'Existing SET/inherited reachability changed',
+  );
+  for (const name of allowed.keys())
+    requireFact(
+      actual.roles.some((r) => r.rolname === name),
+      'Canonical operational role missing',
+    );
+}
+async function subjectFacts(client, databaseName) {
+  const rows = (
+    await client.query(
+      `SELECT d.datname AS "databaseName",d.oid::text AS "databaseOid",pg_get_userbyid(d.datdba) owner,
+    (SELECT system_identifier::text FROM pg_control_system()) AS "clusterSystemIdentifier",
+    session_user AS "sessionUser",current_user AS "currentUser",current_setting('server_version_num') AS "serverVersionNum",
+    current_setting('port') port,inet_server_addr()::text AS address,inet_server_port() AS "serverPort",
+    transaction_timestamp()::text AS "atSql",to_char(transaction_timestamp() AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "atUtc"
+    FROM pg_database d WHERE datname=$1`,
+      [databaseName],
+    )
+  ).rows;
+  requireFact(
+    rows.length === 1 &&
+      rows[0].owner === 'postgres' &&
+      rows[0].sessionUser === 'postgres' &&
+      rows[0].currentUser === 'postgres' &&
+      /^[1-9][0-9]*$/u.test(rows[0].clusterSystemIdentifier) &&
+      /^\d+$/u.test(rows[0].databaseOid),
+    'Actual subject/owner identity unavailable',
+  );
+  requireFact(
+    Number(rows[0].serverVersionNum) >= 180000 &&
+      Number(rows[0].serverVersionNum) < 190000,
+    'Supported PostgreSQL18 catalog required',
+  );
+  return rows[0];
+}
+function asSubject(f) {
+  return {
+    databaseName: f.databaseName,
+    databaseOid: f.databaseOid,
+    clusterSystemIdentifier: f.clusterSystemIdentifier,
+    owner: f.owner,
+  };
+}
+function sameSubject(actual, expected) {
+  requireFact(
+    isDeepStrictEqual(asSubject(actual), expected),
+    'Actual database identity changed',
+  );
+}
+function retention(root, subject, attemptId = randomUUID()) {
+  const relative = path.posix.join(
+    'backend/database/.stynx-install-custody',
+    subject.clusterSystemIdentifier,
+    subject.databaseOid,
+    'attempt-' + attemptId,
+  );
+  const syncDirectory = (directory) => {
+    const fd = fs.openSync(directory, fs.constants.O_RDONLY);
+    try {
+      fs.fsyncSync(fd);
+    } finally {
+      fs.closeSync(fd);
+    }
+  };
+  let current = root;
+  const parts = relative.split('/');
+  for (const [index, part] of parts.entries()) {
+    const parent = current;
+    current = path.join(parent, part);
+    if (index === parts.length - 1 || !fs.existsSync(current)) {
+      fs.mkdirSync(current, { mode: 0o700 });
+      syncDirectory(parent);
+    }
+    const stat = fs.lstatSync(current);
+    requireFact(
+      stat.isDirectory() && !stat.isSymbolicLink(),
+      'Custody directory escaped',
+    );
+    if (index >= 2)
+      requireFact(
+        stat.uid === process.getuid() && (stat.mode & 0o077) === 0,
+        'Custody directory is not exclusively owned',
+      );
+  }
+  for (const name of ['candidate', 'reports']) {
+    fs.mkdirSync(path.join(current, name), { mode: 0o700 });
+    syncDirectory(current);
+  }
+  const files = [];
+  const write = (name, value, raw = false) => {
+    requireFact(
+      /^(?:candidate\/|reports\/)?[a-z0-9-]+[.]json$/u.test(name),
+      'Unknown custody output',
+    );
+    const bytes = raw
+      ? Buffer.from(value)
+      : Buffer.from(canonicalJson(value) + '\n');
+    const file = path.join(current, name);
+    const fd = fs.openSync(
+      file,
+      fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        fs.constants.O_WRONLY |
+        fs.constants.O_NOFOLLOW,
+      0o600,
+    );
+    try {
+      fs.writeFileSync(fd, bytes);
+      fs.fsyncSync(fd);
+    } finally {
+      fs.closeSync(fd);
+    }
+    const dir = fs.openSync(path.dirname(file), fs.constants.O_RDONLY);
+    try {
+      fs.fsyncSync(dir);
+    } finally {
+      fs.closeSync(dir);
+    }
+    const ref = {
+      path: path.relative(root, file).split(path.sep).join('/'),
+      sha256: 'sha256:' + hashBytes(bytes),
+    };
+    files.push({ ...ref, bytes: bytes.length });
+    return ref;
+  };
+  return { directory: current, attemptId, write, files };
+}
+function verifyHistoricalRefs(root, group) {
+  const refs = [
+    ...Object.values(group.targetPublication).filter(
+      (v) => v && typeof v === 'object',
+    ),
+    group.outbox.artifact,
+    group.offline.artifact,
+    group.freshReceipts.outbox.rowArtifact,
+    group.freshReceipts.offline.rowArtifact,
+    ...Object.values(group.evidence).filter(Boolean),
+  ];
+  refs.forEach((r) => readRef(root, r));
+  const execution = json(readRef(root, group.evidence.executionPlan));
+  requireFact(
+    isDeepStrictEqual(execution.release, group.evidence.reviewedCandidate),
+    'Historical execution/review release differs',
+  );
+  const release = json(readRef(root, execution.release));
+  closed(release, ['formatVersion', 'kind', 'sources', 'inputs', 'reviews']);
+  requireFact(
+    release.formatVersion === 1 &&
+      release.kind === 'reviewed-stynx-storage-public-install-release',
+    'Historical reviewed release kind differs',
+  );
+  closed(release.reviews, ['inspector', 'independent']);
+  requireFact(
+    release.reviews.inspector.actor !== release.reviews.independent.actor,
+    'Historical reviewer separation differs',
+  );
+  const expected = [
+    ...release.sources,
+    ...release.inputs,
+    ...Object.values(release.reviews).map((r) => r.report),
+  ];
+  requireFact(
+    Array.isArray(execution.releaseCopies) &&
+      execution.releaseCopies.length === expected.length &&
+      expected.length > 0,
+    'Historical release closure missing',
+  );
+  requireFact(
+    new Set(expected.map((r) => r.path)).size === expected.length,
+    'Historical release input duplicates',
+  );
+  for (const [index, pair] of execution.releaseCopies.entries()) {
+    closed(pair, ['original', 'retained']);
+    requireFact(
+      isDeepStrictEqual(pair.original, expected[index]),
+      'Historical release closure differs',
+    );
+    readRef(root, pair.retained, true);
+    requireFact(
+      pair.retained.sha256 === pair.original.sha256 &&
+        pair.retained.bytes === pair.original.bytes,
+      'Historical release copy differs',
+    );
+  }
+}
+async function inspect(client, root, plan, subject, custodyAssertion) {
+  await client.query(ownerAssertionSql);
+  const existence = (
+    await client.query(`SELECT to_regclass('${ledger}') IS NOT NULL ledger,
+    to_regprocedure('${ledger}_immutable()') IS NOT NULL guard,
+    EXISTS(SELECT FROM pg_namespace WHERE nspname IN ('outbox','offline')) storage,
+    ${custodyRelations.map((r, i) => `to_regclass('${r}') IS NOT NULL r${i}`).join(',')}`)
+  ).rows[0];
+  if (!existence.ledger) {
+    requireFact(
+      Object.values(existence).every((v) => v === false),
+      'Partial/unreceipted storage refuses',
+    );
+    await assertPristineTarget(client);
+    return { mode: 'fresh-1.6.1', rows: [], group: null };
+  }
+  await client.query(ledgerAssertionSql);
+  const rows = await readFreshRows(client);
+  requireFact(
+    rows.length === 2 &&
+      plan.packages.every((item) =>
+        rows.some(
+          (r) =>
+            r.package === item.metadata.package &&
+            r.installed_by === 'postgres' &&
+            isDeepStrictEqual(r.identity, identity(item)),
+        ),
+      ),
+    'Unknown, partial or old fresh receipt identity refuses',
+  );
+  requireFact(
+    custodyRelations.every((_, i) => existence['r' + i]),
+    'Required prior custody unavailable',
+  );
+  await client.query(custodyAssertion);
+  const baselines = await custodyRows(client, 'baseline'),
+    forwards = await custodyRows(client, 'forward'),
+    groups = await custodyRows(client, 'group');
+  requireFact(
+    baselines.length === 0 && forwards.length === 0 && groups.length === 1,
+    'Public fresh custody cardinality differs',
+  );
+  const group = groups[0].document;
+  requireFact(
+    group.mode === 'fresh-1.6.1' &&
+      isDeepStrictEqual(group.subject, subject) &&
+      group.bindingDigest === recordDigest(fixedBinding),
+    'Actual fresh group identity differs',
+  );
+  verifyHistoricalRefs(root, group);
+  for (const [key, name] of [
+    ['outbox', 'outbox'],
+    ['offline', 'offline-sync'],
+  ]) {
+    const row = rows.find((r) => r.package === '@stynx-nyx/' + name),
+      entry = group.freshReceipts[key];
+    requireFact(
+      entry.rowDigest === recordDigest(row) && entry.version === '1.6.1',
+      'Historical fresh row digest differs',
+    );
+    const retained = json(readRef(root, entry.rowArtifact));
+    requireFact(
+      Array.isArray(retained.rows) && isDeepStrictEqual(retained.rows, rows),
+      'Historical whole fresh rows differ',
+    );
+    requireFact(
+      isDeepStrictEqual(
+        json(readRef(root, group[key].artifact)),
+        plan.packages.find((p) => p.schema === key).artifact,
+      ),
+      'Historical public artifact differs',
+    );
+  }
+  return { mode: 'repeat-1.6.1', rows, group };
+}
+async function insertGroup(
+  client,
+  root,
+  plan,
+  facts,
+  rows,
+  retained,
+  executionPlan,
+  reviewRef,
+  publication,
+) {
+  const rowArtifact = retained.write('candidate/fresh-rows.json', { rows });
+  const outbox = retained.write(
+    'candidate/outbox-artifact.json',
+    canonicalJson(plan.packages[0].artifact),
+    true,
+  );
+  const offline = retained.write(
+    'candidate/offline-artifact.json',
+    canonicalJson(plan.packages[1].artifact),
+    true,
+  );
+  const document = {
+    formatVersion: 'detran-stynx-storage-target-group/1',
+    kind: 'target-group-admission',
+    mode: 'fresh-1.6.1',
+    subject: asSubject(facts),
+    targetPackageVersion: '1.6.1',
+    targetPublication: publication,
+    binding: fixedBinding,
+    bindingDigest: recordDigest(fixedBinding),
+    freshReceipts: Object.fromEntries(
+      [
+        ['outbox', 'outbox'],
+        ['offline', 'offline-sync'],
+      ].map(([key, name]) => [
+        key,
+        {
+          package: '@stynx-nyx/' + name,
+          version: '1.6.1',
+          rowDigest: recordDigest(
+            rows.find((r) => r.package === '@stynx-nyx/' + name),
+          ),
+          rowArtifact,
+        },
+      ]),
+    ),
+    outbox: { mode: 'fresh-artifact', artifact: outbox },
+    offline: {
+      mode: 'fresh-artifact',
+      artifact: offline,
+      coveredSources: plan.ordered.migrations.map((m, index) => ({
+        ordinal: index + 1,
+        sourcePath: m.source.path,
+        rawSha256: m.source.sha256,
+      })),
+      migrationExecution: 'none',
+    },
+    admission: { by: facts.currentUser, atUtc: facts.atUtc },
+    evidence: {
+      priorState: null,
+      equivalence: null,
+      executionPlan,
+      reviewedCandidate: reviewRef,
+    },
+  };
+  document.recordSha256 = recordDigest(document);
+  const parsed = parseStorageCustodyDocument(canonicalJson(document), 'group');
+  retained.write('candidate/group.json', parsed.canonicalJson, true);
+  const columns = groupColumns(document),
+    names = Object.keys(columns);
+  const result = await client.query(
+    `INSERT INTO ${groupRelation} AS t (${names.join(',')},document) VALUES (${names.map((_, i) => '$' + (i + 1)).join(',')},$${names.length + 1}::jsonb) RETURNING ${custodyProjection('group')}`,
+    [...Object.values(columns), parsed.canonicalJson],
+  );
+  requireFact(
+    result.rows.length === 1 &&
+      result.rows[0].by === facts.currentUser &&
+      result.rows[0].at_sql === facts.atSql &&
+      result.rows[0].at_utc === facts.atUtc &&
+      isDeepStrictEqual(json(Buffer.from(result.rows[0].columns)), columns) &&
+      isDeepStrictEqual(
+        json(Buffer.from(result.rows[0].document_text)),
+        document,
+      ),
+    'Group defaulted INSERT RETURNING differs',
+  );
+  retained.write('group-row-returning.json', result.rows);
+  return document;
+}
+function assertPackageHistory(before, after) {
+  for (const row of before.records.filter(
+    (r) => r.kind === 'S' || /^(outbox|offline)[.]/u.test(r.relation),
+  ))
+    requireFact(
+      isDeepStrictEqual(
+        after.records.find((r) => r.relation === row.relation),
+        row,
+      ),
+      'Existing package history/sequence changed: ' + row.relation,
+    );
+}
+
+/** Canonical entry: no caller SQL, callbacks, binding, package or task authority. */
+export async function runStorageApply(root, options) {
+  closed(options, ['full']);
+  const full = options.full;
+  requireFact(
+    typeof full === 'boolean' && typeof root === 'string' && root !== '',
+    'Closed root/boolean options required',
+  );
+  root = fs.realpathSync(path.resolve(root));
+  const settings = settingsFor(full),
+    ddl = createStorageDdlPlan(root, full),
+    admitted = readRelease(root, ddl);
+  const realm = installPublicStorageRuntimeGuard(
+    root,
+    admitted.release,
+    settings,
+  );
+  const plan = storagePlan(root);
+  const rehash = () => {
+    realm.rehash();
+    readRelease(root, ddl);
+    const current = createStorageDdlPlan(root, full);
+    requireFact(
+      isDeepStrictEqual([...current.files], [...ddl.files]),
+      'DDL changed',
+    );
+    requireFact(
+      isDeepStrictEqual(storagePlan(root), plan),
+      'Installed public artifacts changed',
+    );
+  };
+  for (const item of plan.packages)
+    requireFact(
+      item.metadata.packageVersion === '1.6.1' &&
+        isDeepStrictEqual(item.metadata.binding, fixedBinding),
+      'Current package version/binding differs',
+    );
+  const custodySql = fs.readFileSync(
+    safeFile(root, 'backend/database/ddl/19-stynx-offline-custody.sql'),
+    'utf8',
+  );
+  const marker = 'DO $custody_catalog$';
+  requireFact(
+    custodySql.split(marker).length === 2,
+    'Custody assertion seam differs',
+  );
+  const custodyAssertion = custodySql.slice(custodySql.indexOf(marker));
+  const { Client } = createRequire(path.join(root, 'package.json'))('pg');
+  const maintenance = new Client({ ...settings, database: 'postgres' });
+  let target = null,
+    retained = null,
+    subject = null,
+    entry = null,
+    entryRoles = null,
+    beforeCommit = null,
+    bridgeAcquired = false,
+    maintenanceClosed = false,
+    maintenanceEnd = null,
+    began = false,
+    commitAttempted = false,
+    committed = false,
+    destructiveAttempted = false,
+    interrupted = null,
+    mainError = null,
+    outcome = null;
+  const cleanupErrors = [];
+  const endMaintenance = () =>
+    (maintenanceEnd ??= maintenance.end().then(() => {
+      maintenanceClosed = true;
+    }));
+  const checkSignal = () =>
+    requireFact(!interrupted, 'Interrupted: ' + interrupted);
+  const onSignal = (s) => {
+    interrupted = s;
+    if (!bridgeAcquired)
+      void endMaintenance().catch((e) => cleanupErrors.push(e.message));
+    if (target) void target.end().catch((e) => cleanupErrors.push(e.message));
+  };
+  const handlers = ['SIGINT', 'SIGTERM', 'SIGHUP'].map((s) => {
+    const h = () => onSignal(s);
+    process.on(s, h);
+    return [s, h];
+  });
+  const closeTarget = async () => {
+    if (target) {
+      const c = target;
+      await c.end();
+      if (target === c) target = null;
+    }
+  };
+  const readOnly = async (recovery = false) => {
+    if (!recovery) checkSignal();
+    await closeTarget();
+    if (!recovery) checkSignal();
+    target = new Client(settings);
+    await target.connect();
+    try {
+      await target.query('BEGIN READ ONLY');
+      await target.query(utcContextSql);
+      const facts = await subjectFacts(target, settings.database);
+      sameSubject(facts, subject);
+      const snapshot = await readStorageSnapshot(target);
+      let state = null,
+        reports = [],
+        admissionError = null;
+      try {
+        state = await inspect(target, root, plan, subject, custodyAssertion);
+        if (state.mode === 'repeat-1.6.1')
+          reports = await verify(
+            target,
+            root,
+            plan,
+            retained,
+            recovery ? 'recovery' : committed ? 'post' : 'pre',
+          );
+      } catch (e) {
+        if (!recovery) throw e;
+        admissionError = e.message;
+      }
+      await target.query('COMMIT');
+      return { facts, snapshot, state, reports, admissionError };
+    } finally {
+      await closeTarget();
+    }
+  };
+  try {
+    checkSignal();
+    checkSignal();
+    await maintenance.connect();
+    checkSignal();
+    await maintenance.query(
+      "SET TIME ZONE 'UTC'; SET row_security=on; SET search_path=pg_catalog,public",
+    );
+    await maintenance.query(ownerAssertionSql);
+    const maintenanceFacts = await subjectFacts(maintenance, 'postgres');
+    await maintenance.query('SELECT pg_advisory_lock(7007,1600)');
+    bridgeAcquired = true;
+    checkSignal();
+    entryRoles = await captureRoleGraph(maintenance);
+    validateWriterRole(entryRoles);
+    const existence = (
+      await maintenance.query(
+        'SELECT oid::text AS "databaseOid",pg_get_userbyid(datdba) owner FROM pg_database WHERE datname=$1',
+        [settings.database],
+      )
+    ).rows;
+    requireFact(
+      existence.length === 1 && existence[0].owner === 'postgres',
+      'Requested actual owner database must exist',
+    );
+    const initial = await subjectFacts(maintenance, settings.database);
+    requireFact(
+      initial.clusterSystemIdentifier ===
+        maintenanceFacts.clusterSystemIdentifier,
+      'Target cluster differs',
+    );
+    subject = asSubject(initial);
+    retained = retention(root, subject);
+    retained.write('entry-global-role-graph.json', entryRoles);
+    retained.write('initial-subject.json', {
+      facts: initial,
+      endpoint: { host: settings.host, port: settings.port },
+      full,
+    });
+    const releaseCopy = retained.write(
+      'reports/release.json',
+      readRef(root, admitted.ref),
+      true,
+    );
+    const releaseCopies = [];
+    for (const [i, input] of [
+      ...admitted.release.sources,
+      ...admitted.release.inputs,
+      ...Object.values(admitted.release.reviews).map((r) => r.report),
+    ].entries()) {
+      let bytes = fs.readFileSync(safeFile(root, input.path));
+      if (input.path === sourcePath) bytes = sourceInverse(bytes);
+      requireFact(
+        bytes.length === input.bytes &&
+          'sha256:' + hashBytes(bytes) === input.sha256,
+        'Release immutable copy identity differs',
+      );
+      const copied = retained.write(
+        'reports/input-' + i + '.json',
+        bytes,
+        true,
+      );
+      releaseCopies.push({
+        original: input,
+        retained: { ...copied, bytes: bytes.length },
+      });
+    }
+    if (full) {
+      checkSignal();
+      const foreign = (
+        await maintenance.query(
+          'SELECT pid,usename,application_name,state FROM pg_stat_activity WHERE datname=$1',
+          [settings.database],
+        )
+      ).rows;
+      requireFact(
+        foreign.length === 0,
+        'Full reset refuses active foreign target clients',
+      );
+      target = new Client(settings);
+      checkSignal();
+      await target.connect();
+      await target.query('BEGIN READ ONLY');
+      await target.query(utcContextSql);
+      sameSubject(await subjectFacts(target, settings.database), subject);
+      const old = await readStorageSnapshot(target);
+      await target.query('COMMIT');
+      await closeTarget();
+      const oldState = retained.write('full-prior-state.json', {
+        subject,
+        snapshot: old,
+        admissionClaimed: false,
+      });
+      const identifier = '"' + settings.database.replaceAll('"', '""') + '"';
+      checkSignal();
+      requireFact(
+        (
+          await maintenance.query(
+            'SELECT pid FROM pg_stat_activity WHERE datname=$1',
+            [settings.database],
+          )
+        ).rows.length === 0,
+        'Foreign client appeared before DROP',
+      );
+      checkSignal();
+      destructiveAttempted = true;
+      const drop = await maintenance.query('DROP DATABASE ' + identifier);
+      const dropRef = retained.write('full-drop.json', {
+        sql: 'DROP DATABASE ' + identifier,
+        subject,
+        command: drop.command,
+        rowCount: drop.rowCount,
+        at: (await maintenance.query('SELECT clock_timestamp()::text at'))
+          .rows[0].at,
+      });
+      checkSignal();
+      const create = await maintenance.query(
+        'CREATE DATABASE ' + identifier + ' OWNER postgres',
+      );
+      const replacement = await subjectFacts(maintenance, settings.database);
+      requireFact(
+        replacement.databaseOid !== subject.databaseOid &&
+          replacement.clusterSystemIdentifier ===
+            subject.clusterSystemIdentifier,
+        'Full reset replacement identity differs',
+      );
+      const lifecycle = retained.write('full-recreation.json', {
+        originalSubject: subject,
+        originalFacts: initial,
+        originalState: oldState,
+        drop: dropRef,
+        release: releaseCopy,
+        replacementSubject: asSubject(replacement),
+        replacementFacts: replacement,
+        createSql: 'CREATE DATABASE ' + identifier + ' OWNER postgres',
+        create: { command: create.command, rowCount: create.rowCount },
+        at: replacement.atUtc,
+        recreationRollbackClaimed: false,
+      });
+      const oldOid = subject.databaseOid;
+      const afterReset = await captureRoleGraph(maintenance);
+      const resetExpected = {
+        ...entryRoles,
+        settings: entryRoles.settings.filter(
+          (r) => String(r.setdatabase) !== oldOid,
+        ),
+      };
+      requireFact(
+        isDeepStrictEqual(afterReset, resetExpected),
+        'Full reset changed unrelated global role graph',
+      );
+      entryRoles = resetExpected;
+      subject = asSubject(replacement);
+      retained = retention(root, subject);
+      retained.write('full-predecessor.json', { lifecycle });
+    }
+    const pre = await readOnly();
+    retained.write('pre-verifiers.json', pre);
+    checkSignal();
+    target = new Client(settings);
+    checkSignal();
+    await target.connect();
+    await target.query('BEGIN');
+    began = true;
+    await target.query('SELECT pg_advisory_xact_lock(7007,1)');
+    await target.query(utcContextSql);
+    await target.query(ownerAssertionSql);
+    const facts = await subjectFacts(target, settings.database);
+    sameSubject(facts, subject);
+    entry = await readStorageSnapshot(target);
+    retained.write('entry-state.json', entry);
+    retained.write('transaction-facts.json', facts);
+    const state = await inspect(target, root, plan, subject, custodyAssertion);
+    requireFact(
+      state.mode === pre.state.mode,
+      'State changed under locked admission',
+    );
+    const publication = {
+      version: '1.6.1',
+      commit: '3e3da1f7ceb6dd4a7dd2f9d6e0dc704437e262a0',
+      tree: 'e2ce9989249d1bc13403dc21f5a421b24178ef29',
+      workflowRun: '38445937806',
+    };
+    for (const [key, ref] of Object.entries(publicationFiles))
+      publication[key] = retained.write(
+        'candidate/publication-' + key.toLowerCase() + '.json',
+        readRef(root, ref),
+        true,
+      );
+    const executionPlan = retained.write('execution-plan.json', {
+      formatVersion: 1,
+      kind: 'public-stynx-storage-execution-plan',
+      subject,
+      mode: state.mode,
+      steps: ddl.steps.map(({ name, kind, sha256 }) => ({
+        name,
+        kind,
+        sha256,
+      })),
+      legacyComparisons: 11,
+      release: releaseCopy,
+      releaseCopies,
+    });
+    await target.query(ddl.preflight);
+    for (const step of ddl.steps) {
+      checkSignal();
+      if (step.kind === 'storage') {
+        await target.query('SET LOCAL search_path=pg_catalog,public');
+        if (state.mode === 'fresh-1.6.1') {
+          await target.query(ddl.files.get('19-stynx-storage-ledger.sql').sql);
+          for (const item of plan.packages) {
+            await target.query(item.artifact.objectsSql);
+            await target.query(item.artifact.roleBindingsSql);
+            const inserted = (
+              await target.query(
+                `INSERT INTO ${ledger} (package,identity) VALUES ($1,$2::jsonb) RETURNING package,installed_by::text,installed_at::text`,
+                [item.metadata.package, canonicalJson(identity(item))],
+              )
+            ).rows;
+            requireFact(
+              inserted.length === 1 &&
+                inserted[0].installed_by === facts.currentUser &&
+                inserted[0].installed_at === facts.atSql,
+              'Fresh defaulted INSERT RETURNING differs',
+            );
+          }
+          await target.query(
+            'SET LOCAL row_security=on; SET LOCAL search_path=pg_catalog,public',
+          );
+          await target.query(custodySql);
+        } else
+          for (const item of plan.packages)
+            await target.query(item.artifact.roleBindingsSql);
+        await target.query(
+          'SET LOCAL row_security=on; SET LOCAL search_path=public,pg_catalog',
+        );
+      } else await target.query(step.sql);
+    }
+    await target.query(ledgerFinalPrivilegesSql);
+    await target.query(custodyFinalPrivilegesSql);
+    await target.query(ownerAssertionSql);
+    await target.query(ledgerAssertionSql);
+    await target.query(custodyAssertion);
+    const rows = await readFreshRows(target);
+    if (state.mode === 'repeat-1.6.1')
+      requireFact(
+        isDeepStrictEqual(rows, state.rows),
+        'Immutable fresh rows changed',
+      );
+    else {
+      requireFact(
+        rows.length === 2 &&
+          rows.every(
+            (r) =>
+              r.installed_by === facts.currentUser &&
+              r.installed_at_sql === facts.atSql &&
+              r.installed_at_utc === facts.atUtc,
+          ),
+        'Fresh SQL default facts differ',
+      );
+      await insertGroup(
+        target,
+        root,
+        plan,
+        facts,
+        rows,
+        retained,
+        executionPlan,
+        releaseCopy,
+        publication,
+      );
+    }
+    const final = await inspect(target, root, plan, subject, custodyAssertion);
+    requireFact(final.mode === 'repeat-1.6.1', 'Final group not admitted');
+    const candidateReports = await verify(
+      target,
+      root,
+      plan,
+      retained,
+      'candidate',
+    );
+    beforeCommit = await readStorageSnapshot(target);
+    const beforeCommitRef = retained.write(
+      'candidate/before-commit-state.json',
+      beforeCommit,
+    );
+    const candidateVerifierRef = retained.write(
+      'candidate/verifier-reports.json',
+      candidateReports,
+    );
+    if (state.mode === 'repeat-1.6.1')
+      assertPackageHistory(entry, beforeCommit);
+    validateRoleChanges(entryRoles, await captureRoleGraph(target));
+    const writer = await readWriterFootprint(target);
+    requireFact(
+      writer.subjectFootprint === 'full-consumer-footprint' &&
+        writer.fullViolations.length === 0,
+      'Canonical writer footprint differs',
+    );
+    retained.write('candidate/manifest.json', {
+      subject,
+      group: final.group.recordSha256,
+      files: [...retained.files],
+      candidateBeforeCommit: true,
+      beforeCommit: beforeCommitRef,
+      candidateVerifiers: candidateVerifierRef,
+    });
+    rehash();
+    checkSignal();
+    commitAttempted = true;
+    await target.query('COMMIT');
+    committed = true;
+    began = false;
+    await closeTarget();
+    const post = await readOnly();
+    retained.write('postcommit-verifiers.json', post);
+    retained.write('postcommit-locked-readback.json', post);
+    requireFact(
+      isDeepStrictEqual(post.snapshot, beforeCommit),
+      'Postcommit catalog/data/sequence differs',
+    );
+    rehash();
+    realm.assertHealthy();
+    retained.write(
+      'reports/public-runtime-guard-postcommit.json',
+      realm.observation(),
+    );
+    outcome = {
+      disposition: 'committed-verified',
+      subject,
+      group: final.group.recordSha256,
+    };
+  } catch (error) {
+    mainError = error;
+    let rollbackConfirmed = false;
+    if (began && !commitAttempted && target)
+      try {
+        await target.query('ROLLBACK');
+        began = false;
+        rollbackConfirmed = true;
+      } catch (e) {
+        cleanupErrors.push(e.message);
+      }
+    if (bridgeAcquired && retained && subject)
+      try {
+        const recovery = await readOnly(true);
+        retained.write('recovery-locked-readback.json', recovery);
+        if (entry && !commitAttempted)
+          requireFact(
+            rollbackConfirmed && isDeepStrictEqual(recovery.snapshot, entry),
+            'Rollback whole state equality unproved',
+          );
+      } catch (e) {
+        cleanupErrors.push(e.message);
+      }
+    outcome = {
+      disposition: committed
+        ? 'postcommit-stop'
+        : commitAttempted
+          ? 'commit-unknown'
+          : destructiveAttempted
+            ? 'full-lifecycle-stop'
+            : 'stopped-before-commit',
+      message: error.message,
+      rollbackConfirmed,
+      recreationRollbackClaimed: false,
+      destructiveAttempted,
+      subject,
+    };
+  } finally {
+    try {
+      await closeTarget();
+    } catch (e) {
+      cleanupErrors.push(e.message);
+    }
+    try {
+      if (bridgeAcquired) {
+        requireFact(
+          (
+            await maintenance.query(
+              'SELECT pg_advisory_unlock(7007,1600) unlocked',
+            )
+          ).rows[0].unlocked === true,
+          'Maintenance unlock unconfirmed',
+        );
+        bridgeAcquired = false;
+      }
+    } catch (e) {
+      cleanupErrors.push(e.message);
+    }
+    try {
+      await endMaintenance();
+    } catch (e) {
+      cleanupErrors.push(e.message);
+    }
+    for (const [s, h] of handlers) process.removeListener(s, h);
+  }
+  if (interrupted) {
+    mainError ??= new Error('Installation interrupted: ' + interrupted);
+    outcome = {
+      ...outcome,
+      interrupted,
+      disposition: committed
+        ? 'postcommit-stop'
+        : commitAttempted
+          ? 'commit-unknown'
+          : destructiveAttempted
+            ? 'full-lifecycle-stop'
+            : 'stopped-before-commit',
+    };
+  }
+  try {
+    realm.assertHealthy();
+  } catch (e) {
+    cleanupErrors.push('Final public runtime guard: ' + e.message);
+  }
+  if (cleanupErrors.length && outcome?.disposition === 'committed-verified')
+    outcome.disposition = 'postcommit-stop';
+  if (retained) {
+    retained.write(
+      'reports/public-runtime-guard-final.json',
+      realm.observation(),
+    );
+    retained.write('cleanup.json', {
+      targetClosed: target === null,
+      maintenanceClosed,
+      bridgeReleased: !bridgeAcquired,
+      interrupted,
+      cleanupErrors,
+    });
+    retained.write('disposition.json', outcome);
+  }
+  if (mainError || cleanupErrors.length)
+    throw mainError ?? new Error('Public installer cleanup STOP');
+  console.log(`apply.sh: done (full=${full ? 1 : 0} db=${settings.database})`);
+}

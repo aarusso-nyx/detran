@@ -1,0 +1,9 @@
+# Engineer caller07 target-Linux resolver successor
+
+Status: **SOURCE ONLY, UNISSUED, NOT ADMISSION**. Direct entry refuses. No Docker, Node, SDK, SQL, resolver or runner command was invoked. Caller06 remains frozen historical source.
+
+The fixed `imageDataSource` stays `.../populated-history-target-linux-runner-creation-03/empty-image-pgdata`, while this caller pins creator05 source and an exact creator05 original outcome ref. A linked `INTERRUPTION-AFTER-OUTCOME.json` at that creator output location, including a dangling-link candidate, refuses the original success before any next phase. The completed independent Inspector birth must be under caller07's fresh birth path. Its exactly seven keys bind actual CID/image, three real read-only bind Source strings, one-process inventory, and the host directory's seven-field identity. Host owner/inode/device come from actual creator and Inspector evidence, not guest UID999 or guessed values.
+
+Host reads retain ordered ROOT-through-parent device/inode/UID/GID/mode tuples and lstat/O_NOFOLLOW fstat/empty-listing identity before first command, immediately before resolver, and after resolution. The chain must equal the retained creator05 outcome. Runner inspect requires exact image, name, labels, UID, root/network/capability/security/namespace/device controls, exactly three requested and actual read-only bind mounts, strict boolean `RW is False`, and a positive non-bool process PID. Old volume/birth schema, moved third source, integer RW0/PIDTrue, linked creator correction, altered parent, and nonempty leaf refuse.
+
+Caller04's bounded command/raw retention, corrected signal handler restoration and additive outcome behavior remain. The fixed resolver02 is builtin-only and performs no SDK or SQL evaluation. Source/review/permit admission and independent CLOSED birth are still absent; no full graph, optional branch, init/effect, fixture, ACL, native CI or provider/trust claim follows from this packet.

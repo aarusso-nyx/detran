@@ -1,0 +1,35 @@
+    function stringify2(data, encoding, opts) {
+      if (opts === void 0) {
+        opts = {};
+      }
+      var _opts = opts, _opts$pad = _opts.pad, pad = _opts$pad === void 0 ? true : _opts$pad;
+      var mask = (1 << encoding.bits) - 1;
+      var out = "";
+      var bits = 0;
+      var buffer = 0;
+      for (var i = 0; i < data.length; ++i) {
+        buffer = buffer << 8 | 255 & data[i];
+        bits += 8;
+        while (bits > encoding.bits) {
+          bits -= encoding.bits;
+          out += encoding.chars[mask & buffer >> bits];
+        }
+      }
+      if (bits) {
+        out += encoding.chars[mask & buffer << encoding.bits - bits];
+      }
+      if (pad) {
+        while (out.length * encoding.bits & 7) {
+          out += "=";
+        }
+      }
+      return out;
+    }
+    var base16Encoding = {
+      chars: "0123456789ABCDEF",
+      bits: 4
+    };
+    var base32Encoding = {
+      chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567",
+      bits: 5
+    };

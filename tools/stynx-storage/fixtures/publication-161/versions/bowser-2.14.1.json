@@ -1,0 +1,127 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "bowser",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:18.799000Z",
+    "selection": "versions[2.14.1]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 197673,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/1f/f6/acc6957c10a73525bdb5e45c2e624b04664287f040cab1bbdfa06a2c29126c6c3e73e4a8485638de0dfa821eff4cd483039bbe17d58021e2cef4d87cb894",
+    "sourceSha256": "sha256:62fc8d3c9292d24b89b33a18de0ea2edaead3ab44282fea06dec4f98b02f3c9a"
+  },
+  "version": "2.14.1",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "bowser@2.14.1",
+    "_nodeVersion": "20.20.0",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/bowser_2.14.1_1770588275672_0.43542074831755473"
+    },
+    "_npmUser": {
+      "email": "npm-oidc-no-reply@github.com",
+      "name": "GitHub Actions",
+      "trustedPublisher": {
+        "id": "github",
+        "oidcConfigId": "oidc:83c76f4b-4aa7-48dc-acde-7640ab3a85e0"
+      }
+    },
+    "_npmVersion": "11.9.0",
+    "author": {
+      "email": "dustin@dustindiaz.com",
+      "name": "Dustin Diaz",
+      "url": "http://dustindiaz.com"
+    },
+    "ava": { "require": ["@babel/register"] },
+    "browser": "es5.js",
+    "bugs": { "url": "https://github.com/bowser-js/bowser/issues" },
+    "contributors": [
+      { "name": "Denis Demchenko", "url": "http://twitter.com/lancedikson" },
+      { "name": "Naor Peled", "url": "https://github.com/naorpeled" }
+    ],
+    "description": "Lightweight browser detector",
+    "devDependencies": {
+      "@babel/cli": "^7.11.6",
+      "@babel/core": "^7.8.0",
+      "@babel/polyfill": "^7.8.3",
+      "@babel/preset-env": "^7.8.2",
+      "@babel/register": "^7.8.3",
+      "ava": "^3.0.0",
+      "babel-eslint": "^10.0.3",
+      "babel-loader": "^8.0.6",
+      "babel-plugin-add-module-exports": "^1.0.2",
+      "babel-plugin-istanbul": "^6.0.0",
+      "compression-webpack-plugin": "^4.0.0",
+      "coveralls": "^3.0.6",
+      "docdash": "^1.1.1",
+      "eslint": "^6.5.1",
+      "eslint-config-airbnb-base": "^13.2.0",
+      "eslint-plugin-ava": "^10.0.0",
+      "eslint-plugin-import": "^2.18.2",
+      "gh-pages": "^3.0.0",
+      "jsdoc": "^3.6.3",
+      "nyc": "^15.0.0",
+      "sinon": "^9.0.0",
+      "testem": "^3.0.0",
+      "webpack": "^4.41.0",
+      "webpack-bundle-analyzer": "^3.5.2",
+      "webpack-cli": "^3.3.9",
+      "yamljs": "^0.3.0"
+    },
+    "directories": { "test": "test" },
+    "dist": {
+      "attestations": {
+        "provenance": { "predicateType": "https://slsa.dev/provenance/v1" },
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/bowser@2.14.1"
+      },
+      "fileCount": 14,
+      "integrity": "sha512-tzPjzCxygAKWFOJP011oxFHs57HzIhOEracIgAePE4pqB3LikALKnSzUyU4MGs9/iCEUuHlAJTjTc5M+u7YEGg==",
+      "shasum": "4ea39bf31e305184522d7ad7bfd91389e4f0cb79",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEUCIDGqNp+oNJVbkWZKnRbiJfMaaAWgSBGD5/slG20C1sBVAiEAkSiAGLUvFPB7HIc2PP5qHUmpTdmUN+5aUatDkH/jAYc="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/bowser/-/bowser-2.14.1.tgz",
+      "unpackedSize": 258293
+    },
+    "homepage": "https://github.com/bowser-js/bowser",
+    "keywords": [
+      "browser",
+      "useragent",
+      "user-agent",
+      "parser",
+      "ua",
+      "detection",
+      "ender",
+      "sniff"
+    ],
+    "license": "MIT",
+    "main": "es5.js",
+    "maintainers": [
+      { "email": "lancedikson@gmail.com", "name": "lancedikson" }
+    ],
+    "module": "src/bowser.js",
+    "name": "bowser",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/bowser-js/bowser.git"
+    },
+    "scripts": {
+      "build": "webpack --config webpack.config.js",
+      "coverage": "nyc report --reporter=text-lcov | coveralls",
+      "generate-and-deploy-docs": "npm run generate-docs && gh-pages --dist docs --dest docs",
+      "generate-docs": "jsdoc -c jsdoc.json",
+      "lint:check": "eslint ./src",
+      "lint:fix": "eslint --fix ./src",
+      "test": "nyc --reporter=html --reporter=text ava",
+      "test:watch": "ava --watch",
+      "testem": "testem",
+      "watch": "webpack --watch --config webpack.config.js"
+    },
+    "types": "index.d.ts",
+    "version": "2.14.1"
+  }
+}

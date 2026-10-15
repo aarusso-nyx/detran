@@ -23,6 +23,7 @@ import { STYNX_PUBLIC_TENANT_ROUTE } from '@stynx-nyx/contracts';
 import { Database, StynxDataModule } from '@stynx-nyx/data';
 import { StynxHealthModule } from '@stynx-nyx/health';
 import { StynxLoggingModule } from '@stynx-nyx/logging';
+import { StynxOfflineSyncModule } from '@stynx-nyx/offline-sync';
 import { StynxStorageModule } from '@stynx-nyx/storage';
 import { StynxTenancyModule } from '@stynx-nyx/tenancy';
 import {
@@ -117,6 +118,7 @@ import {
 } from './detran-runtime.js';
 import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
 import { BoatDocumentsRuntimeModule } from './boat-documents.js';
+import { DetranSignatureModule } from './detran-signature.js';
 import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
 import { PortalStreamController } from './portal-stream.controller.js';
 // R-0011 CTG-0002 §11/§13.3 (TASK-0013): SSE do DASHBOARD e wiring do sweeper.
@@ -613,6 +615,8 @@ export class AppModule {
           redactPaths: ['authorization', 'cookie', 'set-cookie'],
         }),
         StynxDataModule.forRoot(detranDataOptions()),
+        // D-160 A160-04c: providers only; legacy routes/store remain active.
+        StynxOfflineSyncModule.forRoot({ mountControllers: false }),
         ...authImports,
         StynxAuthorizationModule.forRoot({
           policyEvaluator: new DetranPolicyEvaluator(),
@@ -627,6 +631,7 @@ export class AppModule {
         }),
         StynxAuditModule.forRoot({ sink: detranAuditSink }),
         StynxStorageModule.forRoot(detranStorageOptions()),
+        DetranSignatureModule,
         BoatDocumentsRuntimeModule,
         StynxPlatformPipelineModule.forRoot(detranPipelineOptions()),
         StynxHealthModule.forRoot(

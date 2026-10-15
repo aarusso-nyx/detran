@@ -535,13 +535,15 @@
           {
             "name": "status",
             "type": "varchar(40)",
-            "default": "'active'"
+            "default": "'active'",
+            "writable": false
           },
           {
             "name": "revision",
             "type": "integer",
             "default": "1",
-            "additive": true
+            "additive": true,
+            "writable": false
           },
           {
             "name": "valid_from",
@@ -603,13 +605,15 @@
             "name": "approved_by",
             "type": "text",
             "nullable": true,
-            "additive": true
+            "additive": true,
+            "writable": false
           },
           {
             "name": "approved_at",
             "type": "timestamptz",
             "nullable": true,
-            "additive": true
+            "additive": true,
+            "writable": false
           }
         ],
         "checks": [

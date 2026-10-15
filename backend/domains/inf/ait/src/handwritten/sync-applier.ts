@@ -7,6 +7,7 @@ import {
   teatEventSink,
   type SqlQueryable,
   type SyncApplierRejection,
+  type SyncAitNumberingRulePort,
   type SyncEntityApplier,
   type SyncEntityApplierItem,
 } from '@detran/ops-core';
@@ -109,6 +110,7 @@ export interface AitSyncApplierDeps {
   };
   outbox?: TeatEventOutbox;
   clock?: Clock;
+  numberingRules?: SyncAitNumberingRulePort;
 }
 
 interface ReservationRow extends Record<string, unknown> {
@@ -152,15 +154,46 @@ export class AitSyncApplier implements SyncEntityApplier {
     const queryable = asQueryable(tx);
     if (!queryable)
       throw new Error('The ait sync applier requires a SQL transaction');
-    const payload = await this.payloadOf(queryable, item);
+    const trusted =
+      Object.hasOwn(item, 'storageMode') || Object.hasOwn(item, 'payloadJson');
+    let payload: AitSyncPayload;
+    if (trusted) {
+      const parsed = aitSyncPayload.safeParse(item.payloadJson);
+      if (
+        item.storageMode !== 'stynx-ctg9' ||
+        !z.uuid().safeParse(item.receiptId).success ||
+        !parsed.success
+      )
+        throw new DetranError('TEAT.SYNC_INVALID_CANONICAL_AIT', {
+          status: 422,
+          context: { fields: parsed.success ? [] : fieldsOf(parsed.error) },
+          message: 'Handoff canônico do AIT inválido.',
+        });
+      if (!this.deps.numberingRules)
+        throw new DetranError('TEAT.SYNC_DESTINATION_NOT_WIRED', {
+          status: 422,
+          context: { entityType: this.entityType },
+        });
+      payload = parsed.data;
+    } else payload = await this.payloadOf(queryable, item);
     const ait = payload.ait;
     const number = Number(ait.ait_number);
-    const reservation = await this.guardNumbering(queryable, item, ait, number);
+    const reservation = trusted
+      ? null
+      : await this.guardNumbering(queryable, item, ait, number);
+    if (trusted)
+      await this.deps.numberingRules!.assertAitNumbering(
+        item,
+        tx,
+        number,
+        ait.shift_id,
+      );
     const serverEntityId = await this.insertAit(queryable, item, payload);
     await this.insertSatellites(queryable, serverEntityId, payload);
     await this.insertHistory(queryable, item, serverEntityId, ait);
-    await queryable.query(
-      `insert into ops.numbering_consumption
+    if (reservation)
+      await queryable.query(
+        `insert into ops.numbering_consumption
          (reservation_id, range_id, number, local_entity_id, idempotency_key,
           server_entity_id, finalized_at, status, reconciled_at)
        values ($1, $2, $3, $4, $5, $6, $7, 'aplicado', now())
@@ -170,16 +203,16 @@ export class AitSyncApplier implements SyncEntityApplier {
                      server_entity_id = excluded.server_entity_id,
                      finalized_at = excluded.finalized_at,
                      status = 'aplicado', updated_at = now()`,
-      [
-        reservation.id,
-        reservation.range_id,
-        number,
-        item.localEntityId,
-        item.idempotencyKey,
-        serverEntityId,
-        ait.issued_at,
-      ],
-    );
+        [
+          reservation.id,
+          reservation.range_id,
+          number,
+          item.localEntityId,
+          item.idempotencyKey,
+          serverEntityId,
+          ait.issued_at,
+        ],
+      );
     await this.publish(tx, item, serverEntityId);
     return { serverEntityId };
   }

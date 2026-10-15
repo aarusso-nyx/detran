@@ -24,6 +24,8 @@ interface SyncEntityApplierItem {
   createdLocallyAt: string;
   concurrencySuspect: boolean;
   receiptId: string;
+  storageMode?: 'stynx-ctg9';
+  payloadJson?: Readonly<Record<string, unknown>>;
 }
 interface SyncApplierRejection {
   code: string;
@@ -35,7 +37,7 @@ interface SyncEntityApplier {
   apply(
     item: SyncEntityApplierItem,
     tx: Transaction,
-  ): Promise<{ serverEntityId: string }>;
+  ): Promise<{ serverEntityId: string; detailsJson?: Record<string, unknown> }>;
 }
 type Payload = {
   record: Record<string, unknown>;
@@ -134,17 +136,38 @@ export class CrashSyncApplier implements SyncEntityApplier {
   async apply(
     item: SyncEntityApplierItem,
     tx: Transaction,
-  ): Promise<{ serverEntityId: string }> {
+  ): Promise<{
+    serverEntityId: string;
+    detailsJson?: Record<string, unknown>;
+  }> {
     const query = asQueryable(tx);
     if (!query)
       throw new Error('The crash sync applier requires a SQL transaction');
-    const payload = await this.payload(query, item.id);
+    const trusted =
+      Object.hasOwn(item, 'storageMode') || Object.hasOwn(item, 'payloadJson');
+    let payload: Payload;
+    if (trusted) {
+      const parsed = parse(item.payloadJson);
+      if (
+        item.storageMode !== 'stynx-ctg9' ||
+        typeof item.receiptId !== 'string' ||
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/iu.test(
+          item.receiptId,
+        ) ||
+        !parsed.data
+      )
+        throw new DetranError('BOAT.SYNC_INVALID_CRASH_RECORD', {
+          status: 422,
+          context: { fields: parsed.fields },
+        });
+      payload = parsed.data;
+    } else payload = await this.payload(query, item.id);
     this.guardVictims(payload);
     const inserted = await this.insertRecord(query, item, payload);
     const id = inserted.id;
     await this.satellites(query, id, payload);
     const warnings = await this.warnings(query, item, payload);
-    if (warnings.length)
+    if (warnings.length && !trusted)
       await query.query(
         `update ops.sync_receipt
             set details_json = $2::jsonb
@@ -165,7 +188,10 @@ export class CrashSyncApplier implements SyncEntityApplier {
       data: { state: 'RASCUNHO', localEntityId: item.localEntityId },
     };
     await this.outbox.append(tx, event);
-    return { serverEntityId: id };
+    return {
+      serverEntityId: id,
+      ...(trusted && warnings.length ? { detailsJson: { warnings } } : {}),
+    };
   }
 
   private async payload(query: SqlQueryable, itemId: string): Promise<Payload> {

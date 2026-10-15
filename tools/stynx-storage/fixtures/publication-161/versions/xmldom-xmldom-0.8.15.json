@@ -1,0 +1,104 @@
+{
+  "formatVersion": 1,
+  "kind": "detran-retained-registry-version",
+  "package": "@xmldom/xmldom",
+  "sourceObservation": {
+    "observedAt": "2026-10-13T19:07:13.398000Z",
+    "selection": "versions[0.8.15]",
+    "serialization": "UTF16-key-sorted-json-array-order-preserved",
+    "sourceBytes": 178126,
+    "sourcePath": "scratch/r22-adoption-161/package-admission/runtime/.npm-cache/_cacache/content-v2/sha512/d5/ab/197dcfe7ffd31cb850dab3e62401c3ad762cdd1c08944f84349b6d0f80b9087189193b217c5c66ef428883cb3276776b7ce4104c76c4e3a0ef5521512435",
+    "sourceSha256": "sha256:23051b6b2e0b6c953257017066e123d8b64c8d0f2dc9434f350d7639c5df9c84"
+  },
+  "version": "0.8.15",
+  "versionRecord": {
+    "_hasShrinkwrap": false,
+    "_id": "@xmldom/xmldom@0.8.15",
+    "_nodeVersion": "18.20.8",
+    "_npmOperationalInternal": {
+      "host": "s3://npm-registry-packages-npm-production",
+      "tmp": "tmp/xmldom_0.8.15_1787350829832_0.7765946334849114"
+    },
+    "_npmUser": { "email": "coder@karfau.de", "name": "karfau" },
+    "_npmVersion": "10.8.2",
+    "auto-changelog": {
+      "prepend": true,
+      "remote": "upstream",
+      "tagPrefix": "",
+      "template": "./auto-changelog.hbs"
+    },
+    "bugs": { "url": "https://github.com/xmldom/xmldom/issues" },
+    "config": { "test_stack_size": 256 },
+    "dependencies": {},
+    "description": "A pure JavaScript W3C standard-based (XML DOM Level 2 Core) DOMParser and XMLSerializer module.",
+    "devDependencies": {
+      "@stryker-mutator/core": "5.6.1",
+      "auto-changelog": "2.4.0",
+      "eslint": "8.25.0",
+      "eslint-config-prettier": "8.5.0",
+      "eslint-plugin-es5": "1.5.0",
+      "eslint-plugin-prettier": "4.2.1",
+      "get-stream": "6.0.1",
+      "jest": "27.5.1",
+      "nodemon": "2.0.20",
+      "np": "9.2.0",
+      "prettier": "2.7.1",
+      "xmltest": "1.5.0",
+      "yauzl": "2.10.0"
+    },
+    "directories": {},
+    "dist": {
+      "fileCount": 13,
+      "integrity": "sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==",
+      "shasum": "71ebf80729e4e95221d519ac9b1e1eaea7784907",
+      "signatures": [
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIAmiiMcrPJz282BABl1wOLdsVhMnPX3r8OcDem70hiRBAiBj3Zxdko/ddAwxSoyXFADahHGiofQs+kK/yVnYQ6julg=="
+        },
+        {
+          "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+          "sig": "MEQCIB3P9Q2d6DfwPoqbnWFew7v2OG1Y6TP7w2vJFYAmAawWAiBfkaQxznJNZ9PFeHjVRM8FDsbx0ciTzcLv5V08ojQezg=="
+        }
+      ],
+      "tarball": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz",
+      "unpackedSize": 217513
+    },
+    "engines": { "node": ">=10.0.0" },
+    "gitHead": "b5b8fb5b579ae1183b34e74b3bc39d7eb50a226a",
+    "homepage": "https://github.com/xmldom/xmldom",
+    "keywords": [
+      "w3c",
+      "dom",
+      "xml",
+      "parser",
+      "javascript",
+      "DOMParser",
+      "XMLSerializer",
+      "ponyfill"
+    ],
+    "license": "MIT",
+    "main": "lib/index.js",
+    "maintainers": [{ "email": "coder@karfau.de", "name": "karfau" }],
+    "name": "@xmldom/xmldom",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/xmldom/xmldom.git"
+    },
+    "scripts": {
+      "changelog": "auto-changelog --unreleased-only",
+      "format": "prettier --write test",
+      "format:check": "prettier --check test",
+      "lint": "eslint lib test",
+      "release": "np --no-yarn --test-script testrelease --branch release-0.8.x patch",
+      "start": "nodemon --watch package.json --watch lib --watch test --exec 'npm --silent run test && npm --silent run lint'",
+      "stryker": "stryker run",
+      "stryker:dry-run": "stryker run -m '' --reporters progress",
+      "test": "node --stack-size=$npm_package_config_test_stack_size ./node_modules/.bin/jest",
+      "testrelease": "npm test && eslint lib",
+      "version": "./changelog-has-version.sh"
+    },
+    "types": "index.d.ts",
+    "version": "0.8.15"
+  }
+}
