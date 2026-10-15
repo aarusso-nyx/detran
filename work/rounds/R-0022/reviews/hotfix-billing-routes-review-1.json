@@ -1,0 +1,12 @@
+{
+  "mode": "delivery-review",
+  "scope": "hotfix-generated-billing-invoice-item-routes",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Como Auditor, confirmei que o OpenAPI não declara a rota e que closeInvoice grava o vínculo e linked_by sob a guarda do lifecycle.",
+    "A origem foi corrigida no blueprint. No diff da branch, o controller perde apenas os handlers GET e POST; os outros 27 arquivos gerados mudam apenas o hash do cabeçalho.",
+    "O teste verifica os metadados de rota do BillingModule e inclui uma rota existente como controle. Os resultados dos checks foram informados na entrega; não os reexecutei nesta revisão somente leitura.",
+    "O serviço e o repositório gerados permanecem sem uso, conforme a rubrica."
+  ]
+}
