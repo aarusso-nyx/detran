@@ -10,7 +10,7 @@ This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed** (
 4. **Gates are law.** Never weaken a test to pass; never use `paths`/`paths-ignore` on content a required check consumes (an absent required check blocks merges silently). The governed evidence chain is `record/proofs/chain.json` with per-round proof lines under `record/proofs/work/`; `.devai/state/evidence-chain.json` is the superseded legacy chain, tracked and read-only. The governed chain is verified in CI; the legacy chain is not currently checked there. Preserve both without rewriting history.
 5. **Architecture boundaries.** No app or domain module calls SENATRAN directly — everything goes through `packages/senatran-adapter` (ADR-0003). Backend domain modules are workspace packages with explicit deps — no deep relative imports (ADR-0001). One backend deployable, one Postgres, schema-per-domain, RLS on the request path via tenant context — never owner-role system context (ADR-0002).
 6. **Registry auth.** `export NODE_AUTH_TOKEN="$(gh auth token)"` locally; CI uses the `PACKAGES_READ_TOKEN` secret. Never commit tokens.
-7. **Record consequential choices.** Architecture, contract, security and data-model decisions get an ADR in `docs/meta/adr/`; routine implementation choices do not. Evidence records are emitted through `pnpm exec devai evidence record`.
+7. **Record consequential choices.** Consequential choices — architecture, contract, security, data-model and operational decisions with lasting effect — get an ADR in `docs/meta/adr/`; routine implementation choices do not. Evidence records are emitted through `pnpm exec devai evidence record`.
 
 ## Before you edit: routing table
 
@@ -23,7 +23,7 @@ This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed** (
 | the build or phase plan                       | `BUILD-PLAN.md` and the binding phase plan                                                                                                   |
 | schemas under `docs/framework/schemas`        | the schema and its consumers (`grep -rl`)                                                                                                    |
 
-A failed check that names an article is also a read trigger. Layout: `backend/` (app + domains + ddl), `apps/` (frontends only), `packages/` (`api-clients`, `sefaz-adapter`, `senatran-adapter`, `ui` — published as `@detran/*`), `senatran-mock/`, `tools/`, `docs/` (7-section IA per `docs/_ia/categories.json`).
+Always read the specific file or invariant you intend to edit before editing it. A failed check that names an article is also a read trigger. Layout: `backend/` (app + domains + ddl), `apps/` (frontends only), `packages/` (`api-clients`, `sefaz-adapter`, `senatran-adapter`, `ui` — published as `@detran/*`), `senatran-mock/`, `tools/`, `docs/` (7-section IA per `docs/_ia/categories.json`).
 
 ## Working
 
