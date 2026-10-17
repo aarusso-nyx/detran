@@ -8,6 +8,7 @@
 // estado testável de acessibilidade como qualquer outro, já coberto por estado nos specs de
 // página deste par).
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { StynxI18nModule, StynxI18nService } from '@stynx-nyx/angular-i18n';
 import { SwPush } from '@angular/service-worker';
@@ -67,7 +68,11 @@ function sessionStubFor(access: PortalAccess) {
   }
 }
 
-async function mountRoute(url: string, access: PortalAccess) {
+async function mountRoute(
+  url: string,
+  access: PortalAccess,
+  serviceStatus: 'available' | 'unavailable' = 'available',
+) {
   const transport = createPortalStreamTransportStub();
   const swPush = createSwPushStub({ isEnabled: true });
   const harness = await createPortalRouterHarness(PORTAL_ROUTES, [
@@ -75,7 +80,7 @@ async function mountRoute(url: string, access: PortalAccess) {
     { provide: EntitlementFacade, useValue: createEntitlementFacadeStub(true) },
     {
       provide: ServiceCatalogFacade,
-      useValue: createServiceCatalogFacadeStub({ status: 'available' }),
+      useValue: createServiceCatalogFacadeStub({ status: serviceStatus }),
     },
     {
       provide: StynxSessionService,
@@ -118,6 +123,30 @@ describe('a11y (axe-core) das 38 rotas do manifesto (§7.3; B1 — gate do WP-P5
       await expectNoSeriousA11yViolations(root!);
     });
   }
+});
+
+describe('a11y — serviço junta_medica indisponível', () => {
+  it('redireciona o cidadão habilitado para a página de indisponibilidade sem violações serious/critical', async () => {
+    const entry = PORTAL_ROUTE_MANIFEST_FIXTURE.find(
+      (item) => item.path === 'exames/:examId/junta/nova',
+    );
+    expect(entry, 'rota junta_medica ausente do manifesto').toBeDefined();
+    const harness = await mountRoute(
+      `/${substituteRouteParams(entry!.path)}`,
+      entry!.access,
+      'unavailable',
+    );
+    expect(
+      TestBed.inject(ServiceCatalogFacade).availability,
+    ).toHaveBeenCalledWith('junta_medica');
+    expect(TestBed.inject(Router).url).toBe(
+      '/servico-indisponivel/junta_medica',
+    );
+    const root = harness.harness.routeNativeElement as HTMLElement | null;
+    expect(root).not.toBeNull();
+    expect(root!.tagName.toLowerCase()).toBe('portal-service-unavailable-page');
+    await expectNoSeriousA11yViolations(root!);
+  });
 });
 
 describe('a11y — AlternativeChannelNote em toda tela de ato do par (RN-105; inv. 6)', () => {
