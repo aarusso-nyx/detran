@@ -22,7 +22,7 @@
     "verify:stynx-pin": "tsx tools/check-stynx-pin.ts",
     "test:stynx-pin": "node --test tools/stynx-pin/tests/*.test.mjs",
     "verify:decorators": "tsx tools/verify-controller-decorators.ts",
-    "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
+    "verify:rls-ddl": "node --test tools/rls-ddl/tests/*.test.mjs && tsx tools/check-rls-ddl.ts",
     "verify:role-catalog": "tsx tools/check-role-catalog.ts",
     "verify:lifecycle-vocabulary": "tsx tools/check-lifecycle-vocabulary.ts",
     "verify:senatran-boundary": "tsx tools/verify-senatran-boundary.ts",
