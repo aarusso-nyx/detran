@@ -48,3 +48,7 @@ não é prova criptográfica IdP. OD-R25-017 mantém acesso individual intratena
 sem fonte; OD-R25-016 mantém a divergência claim/instrução. Claim, instrução,
 minuta, demais comandos/jornadas e aceitação integral continuam pendentes.
 Review e testes deste recorte não promovem JW-01/R-0025 a completas.
+
+
+PR [#193](https://github.com/aarusso-nyx/detran/pull/193) aberto contra main;
+CI remoto iniciado, ainda sem resultado final. Merge/close/seal não executados.

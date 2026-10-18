@@ -175,7 +175,7 @@ PASS; frontend5085 PASS/133 TODO existentes; produção/preview/smoke PASS.
 Browser real confirma ADMITIDO12 e NAO_CONHECIDO12 sem depender de SSE.
 Delivery original REVIEW→PASS e browser delta PASS sem achados; hashes da ponte
 verificados. Recibo consolidado reports/JW01-maestro-verification.md.
-PR em preparação; merge/close/seal não autorizados. Aceitação integral continua
+PR #193 aberto; merge/close/seal não autorizados. Aceitação integral continua
 pendente, incluindo claim/instrução/minuta e OD-R25-016/017. Histórico abaixo preservado.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
