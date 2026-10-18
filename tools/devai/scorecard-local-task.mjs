@@ -7,7 +7,7 @@ const image =
   'postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5';
 const container = `detran-scorecard-${process.pid}-${Date.now()}`;
 const mode = process.argv[2];
-if (!['migration', 'unit', 'integration', 'e2e'].includes(mode))
+if (!['migration', 'unit', 'integration', 'e2e', 'perf'].includes(mode))
   throw new Error('Unknown scorecard task');
 let failed = false;
 function run(argv, env = process.env) {
@@ -200,13 +200,29 @@ if (mode === 'unit') {
           SENATRAN_PROVIDER: 'mock',
           SENATRAN_MOCK_BASE_URL: url,
         };
-        run(['pnpm', 'backend:test:e2e'], backendEnv);
-        run(['pnpm', 'backend:test:upgrade'], backendEnv);
-        run(['pnpm', '--filter', '@detran/senatran-adapter', 'test:e2e'], {
-          ...env,
-          SENATRAN_MOCK_BASE_URL: url,
-        });
-        run(['pnpm', '--filter', 'senatran-mock', 'test:e2e'], mockEnv);
+        if (mode === 'perf') {
+          run(
+            [
+              'pnpm',
+              '--filter',
+              '@detran/app',
+              'exec',
+              'vitest',
+              'run',
+              '--config',
+              'vitest.performance.config.ts',
+            ],
+            backendEnv,
+          );
+        } else {
+          run(['pnpm', 'backend:test:e2e'], backendEnv);
+          run(['pnpm', 'backend:test:upgrade'], backendEnv);
+          run(['pnpm', '--filter', '@detran/senatran-adapter', 'test:e2e'], {
+            ...env,
+            SENATRAN_MOCK_BASE_URL: url,
+          });
+          run(['pnpm', '--filter', 'senatran-mock', 'test:e2e'], mockEnv);
+        }
       }
     }
   } finally {
