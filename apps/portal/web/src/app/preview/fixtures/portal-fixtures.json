@@ -1,0 +1,1019 @@
+{
+  "TENANT_ID": "00000000-0000-7000-8000-00000000a001",
+  "SUBJECT_PRATA_ID": "00000000-0000-7000-8000-000070000002",
+  "AIT_ID": "00000000-0000-7000-8000-0000f0000002",
+  "REQUEST_COMPOSICAO_ID": "00000000-0000-7000-8000-000070400005",
+  "REQUEST_DESISTIDO_ID": "00000000-0000-7000-8000-00007040000c",
+  "REPRESENTATION_ID": "00000000-0000-7000-8000-000070100001",
+  "FIXED_CLOCK_ISO": "2026-09-14T12:00:00-04:00",
+  "FIXED_CLOCK_DATE": "2026-09-14T16:00:00.000Z",
+  "ME_RESPONSE_FIXTURE": {
+    "subjectId": "00000000-0000-7000-8000-000070000002",
+    "name": "Cidadã Prata (fixture)",
+    "assuranceLevel": "avancada",
+    "actRequirements": [
+      {
+        "actKey": "defesa_previa",
+        "minimumAssurance": "avancada",
+        "allowed": true
+      },
+      {
+        "actKey": "consulta_multas",
+        "minimumAssurance": "simples",
+        "allowed": false
+      }
+    ],
+    "representations": [
+      {
+        "id": "00000000-0000-7000-8000-000070100001",
+        "representedName": "Cidadã Prata (fixture)",
+        "scope": "ait",
+        "validUntil": "2027-09-14"
+      }
+    ],
+    "preferences": null,
+    "heldDataSummary": []
+  },
+  "REQUEST_CREATED_FIXTURE": {
+    "requestId": "00000000-0000-7000-8000-000070400005",
+    "state": "PEDIDO_EM_COMPOSICAO",
+    "prefilled": {
+      "placa": "ABC1D23"
+    },
+    "requirements": ["Conta gov.br"],
+    "minimumAssurance": "avancada",
+    "version": 1
+  },
+  "DRAFT_SAVED_FIXTURE": {
+    "requestId": "00000000-0000-7000-8000-000070400005",
+    "version": 2,
+    "savedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "REQUEST_SUBMITTED_FIXTURE": {
+    "requestId": "00000000-0000-7000-8000-000070400005",
+    "state": "EM_ANDAMENTO_NO_ORGAO",
+    "protocol": {
+      "number": "AM-FIXTURES-2026-0000005",
+      "issuedAt": "2026-09-05T12:00:00-04:00",
+      "channel": "portal"
+    },
+    "delegation": {
+      "status": "delegated",
+      "externalId": null
+    },
+    "version": 2
+  },
+  "REQUEST_WITHDRAWN_FIXTURE": {
+    "requestId": "00000000-0000-7000-8000-00007040000c",
+    "state": "DESISTIDO",
+    "withdrawnAt": "2026-09-14T12:00:00-04:00",
+    "version": 2
+  },
+  "REQUEST_EM_ANDAMENTO_ID": "00000000-0000-7000-8000-000070400009",
+  "REQUEST_RESULTADO_ID": "00000000-0000-7000-8000-00007040000a",
+  "REQUEST_CONCLUIDO_ID": "00000000-0000-7000-8000-00007040000c",
+  "PROTOCOL_NUMBER_FIXTURE": "AM-FIXTURES-2026-0000002",
+  "CASE_EXTERNAL_ID_FIXTURE": "00000000-0000-7000-8000-000070e00001",
+  "DILIGENCE_ID_FIXTURE": "did-1",
+  "AIT_LIST_PAGE_FIXTURE": {
+    "items": [
+      {
+        "aitId": "00000000-0000-7000-8000-0000f0000002",
+        "aitNumber": "FIX-0000001",
+        "plate": "FIX2E01",
+        "occurredAt": "2026-05-01T12:00:00-04:00",
+        "framingLabel": "fixture",
+        "amount": 195.23,
+        "situation": "aguardando_defesa",
+        "deadlines": [],
+        "pointsStatus": "none",
+        "actions": []
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  },
+  "AIT_DETAIL_FIXTURE": {
+    "aitId": "00000000-0000-7000-8000-0000f0000002",
+    "aitNumber": "FIX-0000001",
+    "plate": "FIX2E01",
+    "occurredAt": "2026-05-01T12:00:00-04:00",
+    "framingLabel": "fixture",
+    "amount": 195.23,
+    "situation": "aguardando_defesa",
+    "deadlines": [],
+    "pointsStatus": "none",
+    "actions": [],
+    "notices": [],
+    "payment": {
+      "tiers": [],
+      "paid": false,
+      "paidTier": null
+    },
+    "openRequestId": null,
+    "evidenceAvailable": false
+  },
+  "AIT_DEADLINE_FIXTURE": {
+    "kind": "T-DEF",
+    "dueOn": "2026-10-14",
+    "ownedBy": "citizen"
+  },
+  "PAYMENT_TIERS_FIXTURE": [
+    {
+      "code": "desconto_80",
+      "percent": 80,
+      "amount": 156.18,
+      "availableUntil": "2026-09-30",
+      "requiresSne": false,
+      "waivesAppeal": false
+    },
+    {
+      "code": "desconto_60_reconhecimento",
+      "percent": 60,
+      "amount": 117.14,
+      "availableUntil": "2026-09-30",
+      "requiresSne": true,
+      "waivesAppeal": true
+    },
+    {
+      "code": "desconto_40_fora_sne",
+      "percent": 60,
+      "amount": 117.14,
+      "availableUntil": "2026-09-30",
+      "requiresSne": false,
+      "waivesAppeal": true
+    },
+    {
+      "code": "integral_juros",
+      "percent": 100,
+      "amount": 197.18,
+      "availableUntil": null,
+      "requiresSne": false,
+      "waivesAppeal": false
+    }
+  ],
+  "PAYMENT_INFO_FIXTURE": {
+    "tiers": [
+      {
+        "code": "desconto_80",
+        "percent": 80,
+        "amount": 156.18,
+        "availableUntil": "2026-09-30",
+        "requiresSne": false,
+        "waivesAppeal": false
+      },
+      {
+        "code": "desconto_60_reconhecimento",
+        "percent": 60,
+        "amount": 117.14,
+        "availableUntil": "2026-09-30",
+        "requiresSne": true,
+        "waivesAppeal": true
+      },
+      {
+        "code": "desconto_40_fora_sne",
+        "percent": 60,
+        "amount": 117.14,
+        "availableUntil": "2026-09-30",
+        "requiresSne": false,
+        "waivesAppeal": true
+      },
+      {
+        "code": "integral_juros",
+        "percent": 100,
+        "amount": 197.18,
+        "availableUntil": null,
+        "requiresSne": false,
+        "waivesAppeal": false
+      }
+    ],
+    "paid": false,
+    "paidTier": null
+  },
+  "AIT_DETAIL_WITH_PAYMENT_FIXTURE": {
+    "aitId": "00000000-0000-7000-8000-0000f0000002",
+    "aitNumber": "FIX-0000001",
+    "plate": "FIX2E01",
+    "occurredAt": "2026-05-01T12:00:00-04:00",
+    "framingLabel": "fixture",
+    "amount": 195.23,
+    "situation": "aguardando_defesa",
+    "deadlines": [],
+    "pointsStatus": "none",
+    "actions": [],
+    "notices": [],
+    "payment": {
+      "tiers": [
+        {
+          "code": "desconto_80",
+          "percent": 80,
+          "amount": 156.18,
+          "availableUntil": "2026-09-30",
+          "requiresSne": false,
+          "waivesAppeal": false
+        },
+        {
+          "code": "desconto_60_reconhecimento",
+          "percent": 60,
+          "amount": 117.14,
+          "availableUntil": "2026-09-30",
+          "requiresSne": true,
+          "waivesAppeal": true
+        },
+        {
+          "code": "desconto_40_fora_sne",
+          "percent": 60,
+          "amount": 117.14,
+          "availableUntil": "2026-09-30",
+          "requiresSne": false,
+          "waivesAppeal": true
+        },
+        {
+          "code": "integral_juros",
+          "percent": 100,
+          "amount": 197.18,
+          "availableUntil": null,
+          "requiresSne": false,
+          "waivesAppeal": false
+        }
+      ],
+      "paid": false,
+      "paidTier": null
+    },
+    "openRequestId": null,
+    "evidenceAvailable": false
+  },
+  "AIT_POINTS_FIXTURE": {
+    "aitId": "00000000-0000-7000-8000-0000f0000002",
+    "pointsStatus": "none",
+    "points": null
+  },
+  "POINTS_SUMMARY_FIXTURE": {
+    "definitivePoints": 3,
+    "disputedPoints": 4,
+    "byVehicle": [],
+    "last12Months": [],
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "REQUEST_LIST_PAGE_FIXTURE": {
+    "items": [
+      {
+        "requestId": "00000000-0000-7000-8000-000070400009",
+        "protocol": "AM-FIXTURES-2026-0000002",
+        "serviceKey": "adesao_sne",
+        "targetLabel": null,
+        "situation": "EM_ANDAMENTO_NO_ORGAO",
+        "nextAction": {
+          "by": "agency",
+          "label": "portal.requests.nextAction.EM_ANDAMENTO_NO_ORGAO",
+          "dueOn": null
+        },
+        "updatedAt": "2026-09-14T12:00:00-04:00"
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  },
+  "REQUEST_DETAIL_FIXTURE": {
+    "request": {
+      "requestId": "00000000-0000-7000-8000-000070400009",
+      "state": "EM_ANDAMENTO_NO_ORGAO",
+      "serviceKey": "adesao_sne",
+      "targetKind": "none",
+      "targetId": null,
+      "channel": "portal",
+      "minimumAssurance": "avancada",
+      "delegation": {
+        "status": "delegated",
+        "domain": "portal",
+        "command": "portal:sne-enrollment:enroll",
+        "externalId": null,
+        "error": null
+      },
+      "protocol": {
+        "number": "AM-FIXTURES-2026-0000002",
+        "issuedAt": "2026-09-02T12:00:00-04:00",
+        "channel": "portal",
+        "receiptHash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "draft": null,
+      "withdrawnAt": null,
+      "createdAt": "2026-09-02T12:00:00-04:00",
+      "updatedAt": "2026-09-02T12:00:00-04:00",
+      "version": 1
+    },
+    "timeline": [],
+    "deadlines": [],
+    "documents": [],
+    "diligences": [],
+    "decision": null,
+    "actions": {
+      "canRespondDiligence": false,
+      "canWithdraw": false,
+      "withdrawalBlockedReason": "estado_nao_admite",
+      "canAppeal": false,
+      "nextInstanceServiceKey": null
+    }
+  },
+  "REQUEST_DETAIL_WITH_DILIGENCE_FIXTURE": {
+    "request": {
+      "requestId": "00000000-0000-7000-8000-00007040000a",
+      "state": "EM_ANDAMENTO_NO_ORGAO",
+      "serviceKey": "adesao_sne",
+      "targetKind": "exam",
+      "targetId": "00000000-0000-7000-8000-00007ff00002",
+      "channel": "portal",
+      "minimumAssurance": "avancada",
+      "delegation": {
+        "status": "delegated",
+        "domain": "portal",
+        "command": "portal:sne-enrollment:enroll",
+        "externalId": null,
+        "error": null
+      },
+      "protocol": {
+        "number": "AM-FIXTURES-2026-0000002",
+        "issuedAt": "2026-09-02T12:00:00-04:00",
+        "channel": "portal",
+        "receiptHash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "draft": null,
+      "withdrawnAt": null,
+      "createdAt": "2026-09-02T12:00:00-04:00",
+      "updatedAt": "2026-09-02T12:00:00-04:00",
+      "version": 1
+    },
+    "timeline": [],
+    "deadlines": [
+      {
+        "kind": "diligencia",
+        "dueOn": "2026-10-14",
+        "ownedBy": "citizen"
+      }
+    ],
+    "documents": [
+      {
+        "documentId": "doc-1",
+        "title": "Parecer",
+        "kind": null,
+        "issuedAt": "2026-09-05",
+        "downloadUrl": "https://storage.invalid/p.pdf"
+      }
+    ],
+    "diligences": [
+      {
+        "diligenceId": "did-1",
+        "requestText": "Envie o laudo",
+        "dueOn": "2026-10-14",
+        "status": "open",
+        "outcome": null
+      }
+    ],
+    "decision": null,
+    "actions": {
+      "canRespondDiligence": true,
+      "canWithdraw": true,
+      "withdrawalBlockedReason": null,
+      "canAppeal": true,
+      "nextInstanceServiceKey": "recurso_cetran"
+    }
+  },
+  "DECISION_DEFERIDO_FIXTURE": {
+    "outcome": "deferido",
+    "summary": null,
+    "publishedOn": "2026-09-10",
+    "documentUrl": null,
+    "nextStep": {
+      "kind": "none",
+      "serviceKey": null,
+      "dueOn": null
+    },
+    "refundDue": false,
+    "finalInstance": true
+  },
+  "AIT_SNE_ID": "00000000-0000-7000-8000-0000f0000002",
+  "REQUEST_ADESAO_SNE_ID": "00000000-0000-7000-8000-000070400009",
+  "INBOX_SNE_ITEM_ID": "00000000-0000-7000-8000-000070c00001",
+  "INBOX_PROCESS_ITEM_ID": "00000000-0000-7000-8000-000070c00002",
+  "SNE_ENROLLMENT_ID": "00000000-0000-7000-8000-000070e00001",
+  "MANIFESTATION_ANONYMOUS_ID": "00000000-0000-7000-8000-000070700001",
+  "MANIFESTATION_EM_ANALISE_ID": "00000000-0000-7000-8000-000070700003",
+  "MANIFESTATION_INFO_SOLICITADA_ID": "00000000-0000-7000-8000-000070700004",
+  "MANIFESTATION_CIENCIA_ID": "00000000-0000-7000-8000-000070700006",
+  "MANIFESTATION_ENCERRADA_ID": "00000000-0000-7000-8000-000070700007",
+  "MANIFESTATION_AVALIACAO_OFERECIDA_ID": "00000000-0000-7000-8000-000070700008",
+  "MANIFESTATION_EXTENSION_ID": "00000000-0000-7000-8000-000070800001",
+  "CRASH_ID": "00000000-0000-7000-8000-00007ff00003",
+  "EXAM_ID": "00000000-0000-7000-8000-00007ff00002",
+  "VEHICLE_ID": "00000000-0000-7000-8000-0000f0000101",
+  "VEHICLE_OTHER_ID": "00000000-0000-7000-8000-0000f0000102",
+  "INBOX_LIST_FIXTURE": {
+    "items": [
+      {
+        "id": "00000000-0000-7000-8000-000070c00001",
+        "kind": "acao_necessaria",
+        "source": "sne",
+        "category": "SNE",
+        "subjectLine": "Notificação de autuação disponível",
+        "summary": "fixture",
+        "aitId": "00000000-0000-7000-8000-0000f0000002",
+        "requestId": null,
+        "availableOn": "2026-09-01",
+        "readOn": null,
+        "fictitiousAcknowledgementOn": "2026-10-01",
+        "deadline": {
+          "dueOn": "2026-10-01",
+          "ownedBy": "citizen"
+        }
+      },
+      {
+        "id": "00000000-0000-7000-8000-000070c00002",
+        "kind": "informativo",
+        "source": "portal",
+        "category": "PROCESSO",
+        "subjectLine": "Pedido em andamento",
+        "summary": "fixture",
+        "aitId": null,
+        "requestId": "00000000-0000-7000-8000-000070400009",
+        "availableOn": "2026-09-10",
+        "readOn": "2026-09-11",
+        "fictitiousAcknowledgementOn": null,
+        "deadline": null
+      }
+    ],
+    "total": 2,
+    "page": 1,
+    "pageSize": 20
+  },
+  "INBOX_READ_RESULT_FIXTURE": {
+    "id": "00000000-0000-7000-8000-000070c00001",
+    "readOn": "2026-09-14",
+    "acknowledgementEvidence": null
+  },
+  "SNE_ENROLLMENT_ADERIDO_FIXTURE": {
+    "enrolled": true,
+    "since": "2026-08-01",
+    "channel": "email",
+    "cancelable": true
+  },
+  "SNE_ENROLLMENT_NAO_ADERIDO_FIXTURE": {
+    "enrolled": false,
+    "since": null,
+    "channel": null,
+    "cancelable": false
+  },
+  "SNE_ENROLLED_FIXTURE": {
+    "enrolled": true,
+    "since": "2026-09-14T12:00:00-04:00",
+    "channel": "email",
+    "cancelable": true
+  },
+  "SNE_CANCELLED_FIXTURE": {
+    "enrolled": false,
+    "since": null,
+    "channel": "email",
+    "cancelable": false,
+    "cancelledAt": "2026-09-14T12:00:00-04:00"
+  },
+  "PUSH_SUBSCRIPTION_CREATED_FIXTURE": {
+    "id": "push-sub-fixture-1",
+    "endpoint": "https://push.invalid/fixture-1",
+    "createdAt": "2026-09-14T12:00:00-04:00"
+  },
+  "CNH_READ_FIXTURE": {
+    "license": {
+      "status": "valida",
+      "validUntil": null,
+      "categories": [],
+      "restrictions": []
+    },
+    "qrVerification": null,
+    "documentBytes": null,
+    "category": "C",
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "VEHICLE_LIST_FIXTURE": {
+    "items": [
+      {
+        "vehicleId": "00000000-0000-7000-8000-0000f0000101",
+        "plate": "FIX3E01",
+        "model": "Fixture Model"
+      }
+    ],
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "VEHICLE_LIST_EMPTY_FIXTURE": {
+    "items": [],
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "VEHICLE_CLEARANCE_BLOCKED_FIXTURE": {
+    "items": [
+      {
+        "kind": "multa",
+        "amount": 195.23,
+        "status": "em_aberto",
+        "blocking": true,
+        "reason": null
+      }
+    ],
+    "restrictions": [],
+    "suspendedEnforceability": [
+      {
+        "aitId": "00000000-0000-7000-8000-0000f0000002"
+      }
+    ],
+    "canIssue": false,
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "VEHICLE_CLEARANCE_CLEAR_FIXTURE": {
+    "items": [],
+    "restrictions": [],
+    "suspendedEnforceability": [],
+    "canIssue": true,
+    "cachedAt": "2026-09-14T12:00:00-04:00"
+  },
+  "CRLV_ISSUED_FIXTURE": {
+    "documentBytes": null,
+    "qrVerification": "qr-fixture",
+    "issuedAt": "2026-09-14T12:00:00-04:00",
+    "validUntil": "2027-01-01",
+    "vehicleId": "00000000-0000-7000-8000-0000f0000101"
+  },
+  "CRASH_LIST_FIXTURE": {
+    "items": [
+      {
+        "crashId": "00000000-0000-7000-8000-00007ff00003",
+        "stateLabel": "em elaboração de boletim (fixture)",
+        "thirdPartyFieldsSuppressed": false,
+        "summary": {
+          "dinamica": "colisão traseira (fixture)"
+        }
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  },
+  "CRASH_DETAIL_FIXTURE": {
+    "crashId": "00000000-0000-7000-8000-00007ff00003",
+    "stateLabel": "em elaboração de boletim (fixture)",
+    "summary": {
+      "dinamica": "colisão traseira (fixture)",
+      "gravidade": "leve"
+    },
+    "thirdPartyFieldsSuppressed": false
+  },
+  "CRASH_DETAIL_SUPPRESSED_FIXTURE": {
+    "crashId": "00000000-0000-7000-8000-00007ff00003",
+    "stateLabel": "concluído (fixture)",
+    "summary": {
+      "dinamica": "colisão (fixture)"
+    },
+    "thirdPartyFieldsSuppressed": true
+  },
+  "EXAM_LIST_FIXTURE": {
+    "items": [
+      {
+        "examId": "00000000-0000-7000-8000-00007ff00002",
+        "legalLabel": "apto com restrições",
+        "validUntil": "2031-05-01",
+        "boardDueOn": null
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  },
+  "EXAM_DETAIL_FIXTURE": {
+    "examId": "00000000-0000-7000-8000-00007ff00002",
+    "legalLabel": "inapto",
+    "validUntil": null,
+    "boardDueOn": "2026-10-14"
+  },
+  "MANIFESTATION_LIST_FIXTURE": {
+    "items": [
+      {
+        "manifestationId": "00000000-0000-7000-8000-000070700003",
+        "state": "EM_ANALISE",
+        "protocol": "AM-FIXTURES-2026-0000007",
+        "kind": "sugestao",
+        "receivedAt": "2026-09-01T12:00:00-04:00",
+        "deadlines": {
+          "agencyDueOn": "2026-10-01",
+          "extended": null
+        },
+        "decision": null,
+        "evaluationOffered": false,
+        "evaluated": false
+      }
+    ],
+    "total": 1,
+    "page": 1,
+    "pageSize": 20
+  },
+  "MANIFESTATION_ENCERRADA_FIXTURE": {
+    "manifestationId": "00000000-0000-7000-8000-000070700007",
+    "state": "ENCERRADA",
+    "protocol": "AM-FIXTURES-2026-000000b",
+    "kind": "reclamacao",
+    "receivedAt": "2026-07-20T12:00:00-04:00",
+    "deadlines": {
+      "agencyDueOn": "2026-08-19",
+      "extended": {
+        "justification": "fixture: prorrogação justificada",
+        "on": "2026-08-15",
+        "newDueOn": "2026-09-18"
+      }
+    },
+    "decision": {
+      "text": "fixture",
+      "decidedAt": "2026-09-05T12:00:00-04:00"
+    },
+    "evaluationOffered": false,
+    "evaluated": false,
+    "text": "Texto da manifestação (fixture)",
+    "confidential": false
+  },
+  "MANIFESTATION_CIENCIA_FIXTURE": {
+    "manifestationId": "00000000-0000-7000-8000-000070700006",
+    "state": "CIENCIA_AO_USUARIO",
+    "protocol": "AM-FIXTURES-2026-000000a",
+    "kind": "elogio",
+    "receivedAt": "2026-08-10T12:00:00-04:00",
+    "deadlines": {
+      "agencyDueOn": "2026-09-09",
+      "extended": null
+    },
+    "decision": {
+      "text": "fixture",
+      "decidedAt": "2026-09-01T12:00:00-04:00"
+    },
+    "evaluationOffered": false,
+    "evaluated": false,
+    "text": "Texto da manifestação (fixture)",
+    "confidential": false
+  },
+  "MANIFESTATION_EM_ANALISE_FIXTURE": {
+    "manifestationId": "00000000-0000-7000-8000-000070700003",
+    "state": "EM_ANALISE",
+    "protocol": "AM-FIXTURES-2026-0000007",
+    "kind": "sugestao",
+    "receivedAt": "2026-09-01T12:00:00-04:00",
+    "deadlines": {
+      "agencyDueOn": "2026-10-01",
+      "extended": null
+    },
+    "decision": null,
+    "evaluationOffered": false,
+    "evaluated": false,
+    "text": "Texto da manifestação (fixture)",
+    "confidential": false
+  },
+  "MANIFESTATION_CREATED_FIXTURE": {
+    "manifestationId": "00000000-0000-7000-8000-000070700001",
+    "protocol": "AM-FIXTURES-2026-000000e",
+    "receivedAt": "2026-09-14T12:00:00-04:00",
+    "state": "COMPROVANTE_EMITIDO",
+    "agencyDueOn": "2026-10-14",
+    "anonymous": false
+  },
+  "MANIFESTATION_ACKNOWLEDGED_FIXTURE": {
+    "manifestationId": "00000000-0000-7000-8000-000070700006",
+    "state": "AVALIACAO_OFERECIDA",
+    "acknowledgedAt": "2026-09-14T12:00:00-04:00",
+    "evaluationOffered": true,
+    "version": 2
+  },
+  "EVALUATION_CREATED_FIXTURE": {
+    "evaluationId": "evaluation-fixture-1",
+    "subjectKind": "request",
+    "subjectId": "00000000-0000-7000-8000-000070400009",
+    "state": "AVALIADA",
+    "submittedAt": "2026-09-14T12:00:00-04:00",
+    "publicNotice": "portal.evaluations.publicIndicator"
+  },
+  "PORTAL_SERVICE_CATALOG_FIXTURE": [
+    {
+      "serviceKey": "consulta_multas",
+      "path": "/servicos/consulta-multas",
+      "category": "fixture",
+      "title": "consulta_multas (fixture)",
+      "summary": "consulta_multas (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "defesa_previa",
+      "path": "/servicos/defesa-previa",
+      "category": "fixture",
+      "title": "defesa_previa (fixture)",
+      "summary": "defesa_previa (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "recurso_jari",
+      "path": "/servicos/recurso-jari",
+      "category": "fixture",
+      "title": "recurso_jari (fixture)",
+      "summary": "recurso_jari (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "recurso_cetran",
+      "path": "/servicos/recurso-cetran",
+      "category": "fixture",
+      "title": "recurso_cetran (fixture)",
+      "summary": "recurso_cetran (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "indicacao_condutor",
+      "path": "/servicos/indicacao-condutor",
+      "category": "fixture",
+      "title": "indicacao_condutor (fixture)",
+      "summary": "indicacao_condutor (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "pagamento",
+      "path": "/servicos/pagamento",
+      "category": "fixture",
+      "title": "pagamento (fixture)",
+      "summary": "pagamento (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "partially_available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "adesao_sne",
+      "path": "/servicos/adesao-sne",
+      "category": "fixture",
+      "title": "adesao_sne (fixture)",
+      "summary": "adesao_sne (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "avancada",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "cancelamento_sne",
+      "path": "/servicos/cancelamento-sne",
+      "category": "fixture",
+      "title": "cancelamento_sne (fixture)",
+      "summary": "cancelamento_sne (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "avancada",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "consulta_cnh",
+      "path": "/servicos/consulta-cnh",
+      "category": "fixture",
+      "title": "consulta_cnh (fixture)",
+      "summary": "consulta_cnh (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "emissao_crlv",
+      "path": "/servicos/emissao-crlv",
+      "category": "fixture",
+      "title": "emissao_crlv (fixture)",
+      "summary": "emissao_crlv (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "consulta_bat",
+      "path": "/servicos/consulta-bat",
+      "category": "fixture",
+      "title": "consulta_bat (fixture)",
+      "summary": "consulta_bat (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "consulta_exame",
+      "path": "/servicos/consulta-exame",
+      "category": "fixture",
+      "title": "consulta_exame (fixture)",
+      "summary": "consulta_exame (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "manifestar",
+      "path": "/servicos/manifestar",
+      "category": "fixture",
+      "title": "manifestar (fixture)",
+      "summary": "manifestar (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "avaliar",
+      "path": "/servicos/avaliar",
+      "category": "fixture",
+      "title": "avaliar (fixture)",
+      "summary": "avaliar (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "available",
+      "unavailableReason": null,
+      "alternativeChannelNote": null,
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    },
+    {
+      "serviceKey": "lgpd_declaracao",
+      "path": "/servicos/lgpd-declaracao",
+      "category": "fixture",
+      "title": "lgpd_declaracao (fixture)",
+      "summary": "lgpd_declaracao (fixture)",
+      "requirements": [],
+      "deliveryChannel": "portal",
+      "legalDeadline": "source_pending (OD-P26)",
+      "cost": "gratuito",
+      "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+      "responsibleParty": "DETRAN-AM",
+      "normativeReference": "fixture",
+      "availability": "partially_available",
+      "unavailableReason": null,
+      "alternativeChannelNote": "Somente confirmação de tratamento; declaração completa pendente (OD-P17)",
+      "minimumAssurance": "simples",
+      "version": 1,
+      "effectiveFrom": "2026-01-01"
+    }
+  ],
+  "SERVICE_DEFESA_PREVIA_UNAVAILABLE_FIXTURE": {
+    "serviceKey": "defesa_previa",
+    "path": "/servicos/defesa-previa",
+    "category": "fixture",
+    "title": "Defesa prévia (fixture)",
+    "summary": "Defesa prévia (fixture)",
+    "requirements": [],
+    "deliveryChannel": "portal",
+    "legalDeadline": "source_pending (OD-P26)",
+    "cost": "gratuito",
+    "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+    "responsibleParty": "DETRAN-AM",
+    "normativeReference": "fixture",
+    "availability": "unavailable",
+    "unavailableReason": "delegacao_indisponivel_r0007",
+    "alternativeChannelNote": "Atendimento presencial (fixture)",
+    "minimumAssurance": "avancada",
+    "version": 1,
+    "effectiveFrom": "2026-01-01"
+  }
+}

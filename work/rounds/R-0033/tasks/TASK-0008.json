@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0033",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Estimativa revisada da fase J, §Retomada, delta de docs e fechamento da rodada (CTG-0005)",
+  "description": "Consolidar as lacunas rota × API por jornada observadas na prévia (inventory-rait-web.md, command-gap-analysis.md) numa estimativa revisada da fase J em plan.md §Retomada; atualizar work/rounds/README.md (linha R-0033), docs/meta/agents/orchestra/waves.md §Histórico e docs/meta/knowledge-base/backlog.md; preparar closure.draft.json (rascunho; o closure.json canônico nasce após o merge) com C-01…C-10 pass/fail/not run com evidência; o maestro fornece commits.md (o worker não executa git). Conforme prompts/TASK-0008.md.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r33-round",
+    "MOD-rounds-readme",
+    "MOD-orchestra-waves",
+    "MOD-kb-backlog"
+  ],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["c-0003", "ctg-0005", "preview", "architect"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-6432cd38c66f6250",
+  "acceptance_commands": [
+    ["pnpm", "verify:rounds-index"],
+    ["pnpm", "verify:state-index"],
+    ["pnpm", "docs:kb:check"],
+    ["test", "-s", "work/rounds/R-0033/closure.draft.json"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0033/plan.md",
+      "work/rounds/README.md",
+      "docs/meta/agents/orchestra/waves.md",
+      "docs/meta/knowledge-base/backlog.md",
+      "work/rounds/R-0033/closure.draft.json"
+    ]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-6432cd38c66f6250",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

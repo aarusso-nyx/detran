@@ -56,6 +56,31 @@
               "outputHashing": "none",
               "sourceMap": true,
               "extractLicenses": false
+            },
+            "preview": {
+              "browser": "src/main.preview.ts",
+              "index": {
+                "input": "src/index.preview.html",
+                "output": "index.html"
+              },
+              "outputPath": {
+                "base": "dist/preview",
+                "browser": ""
+              },
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public"
+                },
+                {
+                  "glob": "*.json",
+                  "input": "src/app/preview/fixtures",
+                  "output": "assets/preview"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -64,10 +89,14 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-web:build:production"
+              "buildTarget": "rait-web:build:production"
             },
             "development": {
-              "buildTarget": "portal-web:build:development"
+              "buildTarget": "rait-web:build:development"
+            },
+            "preview": {
+              "buildTarget": "rait-web:build:preview",
+              "host": "127.0.0.1"
             }
           },
           "defaultConfiguration": "development"
