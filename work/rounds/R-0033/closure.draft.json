@@ -35,7 +35,7 @@
       "id": "CTG-0004",
       "roles": ["Inspector", "Engineer"],
       "commit": "0b11e91a",
-      "headline": "W3: TASK-0009 Inspector aceita (61282b66); TASK-0007 Engineer aceita (0b11e91a), reports/TASK-0007.md e W3-portal-all-tests.log. Browser inicial Inspector (ee3dca5a); repetição final após rebuild pendente."
+      "headline": "W3: TASK-0009 Inspector aceita (61282b66), TASK-0007 Engineer aceita (0b11e91a). Browser final da reconstrução source3eeb95ca PASS, reports/W3-final-gates.md; ensaio inicial ee3dca5a preservado como histórico."
     }
   ],
   "gates": {
@@ -56,8 +56,14 @@
       "detail": "W3 pnpm check integral exit 0, sessão do maestro 11592; reports/W3-pnpm-check.log. RAIT 163 arquivos PASS/1 skipped, 4958 testes PASS/139 todo; Portal 125 arquivos/1551 PASS/14 todo. Contratos, blueprints, proof gates, workspace typecheck e lint/test/build production dos apps PASS. Primeira tentativa infra Compose preservada em W3-pnpm-check-compose-missing.log; ambiente corrigido via DOCKER_CONFIG temporário com Compose 5.6 instalado, sem mudança de configuração persistente."
     },
     "cross-family-delivery-review": {
-      "status": "skipped",
-      "detail": "NOT RUN W3: planejada Claude via alias CLI opus, maestro Codex. prompts/delivery-review-W3.md exige revisão da entrega inteira e arquivos finais; nenhum modelo exato inferido do alias."
+      "status": "pass",
+      "detail": "Claude alias CLI opus, ciclo1 somente leitura sobre HEAD40741b11a7053df98d6b914c9389d60faba6a36e. reviews/delivery-review-W3-1.json PASS; dois achados low tratados documentalmente, sem mudança runtime ou condição adicional de PR. Registro reviews/delivery-review-W3-1.bridge.json. C10 permanece parcial.",
+      "family": "claude",
+      "model_alias": "opus",
+      "prompt_sha256": "f8061926301a83c05fa7e3db510583ed70af1b8d71a8f1a268910283d3a8231b",
+      "output_sha256": "f33130a3e6b4e279e47dc0bdb39246f0c0eaa50e754a411a31d332d043db1aab",
+      "started_at": "2026-10-18T06:17:14Z",
+      "ended_at": "2026-10-18T06:22:06Z"
     },
     "remote-ci": {
       "status": "skipped",
@@ -90,7 +96,7 @@
     {
       "criterion": "C-02: Spec de cobertura: toda entrada `page` do manifesto renderiza sob `preview` com interceptor de rede bloqueando `/v1` (0 requisições) e sem erro no console",
       "verdict": "pass",
-      "evidence": "Verificação final da reconstrução: RAIT 64 páginas nos specs, 87 capturas e 2 contraprovas; Portal38 rotas, 2 contraprovas e zero /v1, console/page errors PASS. Todos32 assets browser Portal correspondem por SHA ao manifesto. Junta médica preserva redirecionamento real indisponível. Fontes: reports/W3-final-gates.md, W3-portal-browser.json."
+      "evidence": "Verificação final da reconstrução: RAIT 64 páginas nos specs, 87 capturas e 2 contraprovas; Portal38 rotas, 2 contraprovas e zero /v1, console/page errors PASS. Todos32 assets browser Portal correspondem por SHA ao manifesto. Junta médica preserva redirecionamento real indisponível. Fontes: reports/W3-final-gates.md, W3-portal-browser.json. Limite: browser Portal observa apenas /v1; bloqueio geral provado pelo interceptor e specs HTTP/mock/stream/auth boundary, conforme review low2. Sensor browser mais amplo fica como follow-up, não condição de PR."
     },
     {
       "criterion": "C-03: Faixa \"PRÉVIA — DADOS FICTÍCIOS\" presente em 100 % das páginas; toda ação de comando exibe \"não funcional na prévia\" ao ser acionada (spec por ação do catálogo da jornada)",
@@ -130,12 +136,12 @@
     {
       "criterion": "C-10: Delivery-review PASS (Opus 5.5); evidência `evidence-R-0033.json`; `round close` + `round seal`",
       "verdict": "fail",
-      "evidence": "NOT RUN: review Claude planejada, PR autorizado por B3 em preparação, CI remoto pendente. Evidência e round close/seal pendentes; merge/close/seal requerem autorização própria. Nenhuma closure canônica, merge ou selo declarado."
+      "evidence": "PARCIAL: delivery-review Claude opus ciclo1 PASS sobre40741b11, reviews/delivery-review-W3-1.json e .bridge.json; dois low documentais tratados. PR, CI remoto, upload (autenticação browser), merge, evidência pós-integração, auditoria exata, close/seal pendentes. B3 não concede efeitos de integração/fechamento; C10 não integralmente satisfeita."
     }
   ],
   "closed_at": null,
   "merged_as": null,
-  "pending_reason": "Gates locais, artefatos e browser finais PASS. Review Claude, upload do ZIP (autenticação GitHub browser pendente), PR e CI remoto pendentes. Runtime source3eeb95ca; recibos posteriores apenas metadados. Merge/close/seal não autorizados; id/closed_at/merged_as null.",
+  "pending_reason": "Gates locais, artefatos/browser e review Claude PASS. PR, CI remoto e upload do ZIP (autenticação GitHub browser pendente) ainda pendentes. Runtime source3eeb95ca; recibos posteriores apenas metadados. Merge/close/seal não autorizados; id/closed_at/merged_as null.",
   "release_disposition": "none-needed",
   "notes": "D-1: autorização de 2026-10-15, B1/B2 e continuação B3 de 2026-10-18. Maestro W3 Codex; reviewer Claude via alias opus planejado. Configurações históricas de executores e PC preservadas. Inventário RAIT refrescado A4/A5. Resultados iniciais não provam SHA final. Sem release/deploy; dashboard/TEAT preview não entregues.",
   "historical_w1_w2": {

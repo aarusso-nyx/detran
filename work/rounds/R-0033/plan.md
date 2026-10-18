@@ -101,10 +101,11 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   14 todo; 7 arquivos/234 testes preview, typecheck, lint, production/preview,
   marcas negativa/positiva e smoke HTTP 200 PASS. Registro tipado das 15 chaves
   da sobreposição de prévia preserva catálogo, scanner e testes base.
-- **Portal browser inicial:** Inspector, commit `ee3dca5a`; 38 rotas, 96 PNG,
+- **Portal browser inicial (histórico, superado pelo recibo final abaixo):** Inspector, commit `ee3dca5a`; 38 rotas, 96 PNG,
   32 verificações axe, zero serious/critical, 6 violações menores listadas e
   2 contraprovas de guarda; zero `/v1`, console/page errors. Fonte:
-  `reports/W3-portal-browser.json`. Repetição após rebuild final pendente.
+  `reports/W3-portal-browser.json` agora contém a repetição final PASS; a pendência
+  do ensaio inicial foi superada pelo recibo final abaixo.
   Chaves `ui.pagination.previous`, `ui.pagination.pageStatus`, `ui.pagination.next`
   permanecem sem tradução na produção base; follow-up do kit/fase J, sem alteração
   do catálogo nesta prévia.
@@ -133,7 +134,20 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   menores PASS. Os 32 assets Portal observados no browser correspondem por SHA
   ao manifesto, em verificação independente. Ambos os smokes `ng serve` HTTP 200
   PASS com limpeza dos processos. Consolidado: `reports/W3-final-gates.md`.
-- **Entrega pendente:** review Claude, abertura do PR e CI remoto. O upload do ZIP
+- **Delivery-review W3 PASS:** Claude via alias CLI `opus`, somente leitura sobre
+  HEAD `40741b11a7053df98d6b914c9389d60faba6a36e`; ciclo 1 em
+  `reviews/delivery-review-W3-1.json` e registro `reviews/delivery-review-W3-1.bridge.json`.
+  Prompt SHA256 `f8061926301a83c05fa7e3db510583ed70af1b8d71a8f1a268910283d3a8231b`;
+  saída SHA256 `f33130a3e6b4e279e47dc0bdb39246f0c0eaa50e754a411a31d332d043db1aab`.
+  Dois achados low: coerência documental corrigida e limitação de escopo do sensor
+  de rede explicitada; nenhuma correção de código exigida para abrir PR.
+- **Limite do sensor browser Portal:** observa `/v1` e seus descendentes; zero
+  `/v1` não é medição de toda origem/URL. A restrição geral é sustentada pelo
+  interceptor, specs HTTP com `expectNoNetwork()`, stream substituído, provedor
+  de autenticação nulo e override de `uploadToSignedUrl`. Follow-up de sensor:
+  ampliar observação browser para toda requisição fora dos documentos/bundles
+  e `assets/**` da própria origem; não bloqueia PR nesta revisão.
+- **Entrega pendente:** abertura do PR e CI remoto. O upload do ZIP
   aguarda autenticação GitHub no browser solicitada ao Owner; ainda sem resposta.
   Artefato local verificado não equivale a anexo publicado. Merge, evidência
   pós-integração, close e seal permanecem pendentes, sem declarar toda C-10.

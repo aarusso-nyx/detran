@@ -67,7 +67,22 @@ CRC check passes; its SHA256 and local path are in `W3-artifacts.json`. It is an
 ignored build artifact, not a committed static bundle. Upload awaits the GitHub
 browser sign-in requested from the Owner; CLI authentication is already usable.
 
-Cross-family delivery review: pending, through `tools/orchestra/bridge.sh claude opus`
-and `prompts/delivery-review-W3.md`. PR and remote CI: pending. Merge, governed
-round evidence recording, exact-merge audit, round close and round seal remain
-post-integration steps; no completion of C-10 or round closure is claimed.
+Cross-family delivery review: **PASS**, Claude via CLI alias `opus`, cycle 1,
+read-only against `40741b11a7053df98d6b914c9389d60faba6a36e`. Receipt:
+`../reviews/delivery-review-W3-1.json`; bridge: `../reviews/delivery-review-W3-1.bridge.json`.
+Prompt SHA256 `f8061926301a83c05fa7e3db510583ed70af1b8d71a8f1a268910283d3a8231b`;
+output SHA256 `f33130a3e6b4e279e47dc0bdb39246f0c0eaa50e754a411a31d332d043db1aab`.
+The two low findings are addressed by clarifying the final browser status and
+network observation scope; neither requires runtime changes or another review.
+
+The Portal browser network sensor observes `/v1` and descendants only. Its zero
+requests result does not independently measure every origin or URL. The broader
+restriction is supported by the preview interceptor, HTTP mock/unit specs with
+`expectNoNetwork()`, replacement stream transport, null auth provider and
+`uploadToSignedUrl` override. A future browser sensor should observe all requests
+outside same-origin documents, bundles and `assets/**`; this follow-up is not a
+condition for opening this PR (delivery-review low finding 2).
+
+PR, remote CI and ZIP upload remain pending. Merge, governed round evidence
+recording, exact-merge audit, round close and round seal remain post-integration
+steps requiring their own authority; C-10 remains partial and no round closure is claimed.
