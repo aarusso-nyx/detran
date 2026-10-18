@@ -1,5 +1,11 @@
 # R-0028 — frente `boat-wiring` (ação 6 da C-0002 — BOAT: telas ligadas a `est/crash`, portas nativas atrás de interfaces)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/boat-wiring` @ `d79b6f02`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26 pelo
 Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Opus 5.5** (Claude Code),
 workers da escada Claude (Opus 5.5 grande/médio, Sonnet 5 pequeno) por subagentes nativos, reviewer

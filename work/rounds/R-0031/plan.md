@@ -1,5 +1,11 @@
 # R-0031 — frente `pec-web` (ação 8 da C-0002, ADR-0034: contratos e fixtures PEC, consoles clínico e regulatório, manual PEC)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/pec-web` @ `7c0854f3`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
 pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2 fase F, §3.7; decisão do Owner
 OD-C2-002 e `docs/meta/adr/ADR-0034-pec-web-frontend.md`, vinculantes). Maestro previsto: **Sol 6**

@@ -1,5 +1,133 @@
 # Research backlog (steering queue)
 
+## Reconciliação em 2026-10-18 — fila de execução atual
+
+**Autoridade:** Architect; reconciliação solicitada pelo Owner nesta sessão. Esta seção
+separa implementação, integração, registros obsoletos e decisões; não abre rodadas, não
+muda aceitação e não concede autorização de execução/publicação. As seções anteriores
+cronologicamente continuam abaixo como diário de origem. Checkboxes históricos não são
+um contador de funcionalidades por implementar.
+
+### Base e regra de leitura
+
+- `main` local e remoto: `06b4a584cb1686b647661855d379ea3161e0666e` (2026-10-17).
+- DEVAI `2.2.0`, Constituição `1.0.2`, STYNX `1.5.3`; fontes: `package.json`,
+  `.devai/config/project.json`, `tools/stynx-version.json` e PR #179 já mesclado.
+- Heads remotos abaixo conferidos com `git ls-remote --heads origin` em 2026-10-18;
+  arquivos inspecionados com `git show <head>:<path>`, sem checkout ou execução dos branches.
+- GitHub consultado na mesma data: 26 issues abertas, zero PRs abertos. Issue aberta
+  não prova ausência de implementação. Número de commits ausentes de `main` não mede
+  trabalho único: branches empilhados compartilham commits.
+- **Implementação pendente:** falta entrega funcional ou comprovação de aceitação.
+  **Aguardando integração:** há material preservado fora de `main`, ainda sujeito a
+  revisão, atualização de base e gates; pode ser só contrato/teste, inclusive RED.
+  **Obsoleto:** texto superado por merge, fonte capturada ou decisão posterior.
+  **Decisão/dependência adiada:** exige Owner, LEGAL, instituição ou provedor; não
+  equivale a autorização para inventar valores ou retomar trabalho parado.
+- Uma rodada pode ter as duas primeiras classes simultaneamente. `completed` descreve
+  a tarefa registrada; não significa merge, jornada funcional, CI verde ou rodada fechada.
+  Sem nova medição, resultados de teste no branch são evidência histórica, não PASS atual.
+
+### Trabalho preservado aguardando integração e implementação restante
+
+Os caminhos `work/rounds/R-nnnn/{plan.md,tasks,reports,AUTHORIZATION.md}` abaixo são
+lidos **no head indicado**, não necessariamente existem em `main`. Counts incluem
+somente JSONs em `tasks/`, não o trabalho futuro ainda não instanciado.
+
+| Rodada          | Branch preservado / head                      | Tarefas no branch                     | Material aguardando avaliação/integração                                                                                      | Implementação ou fechamento restante                                                                                                                                 |
+| --------------- | --------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R-0020          | `orchestra/devai-sensors` @ `ebf308e7`        | 22 completed, 1 rgr_pending, 7 queued | Contratos/decisões A1, preflight de política de sensores e testes                                                             | TASK-0013 bloqueada em RGR; TASK-0014…0020 gates CI, autoridade, documentação e testes; close/seal ausentes                                                          |
+| R-0020 RGR      | `rgr/TASK-0013` @ `28262392`                  | 20 completed, 1 in_progress, 7 queued | Tentativa do wrapper de sensores e testes RED                                                                                 | Conciliar com o head maestro; não somar tarefas como outra rodada; verificar compatibilidade do DEVAI atual antes de reutilizar                                      |
+| R-0022          | `codex/detran-r22-adoption-160` @ `c22ea63a`  | 24 pre_merge, 1 checkpoint, 4 queued  | Checkpoint de 85 commits ausentes de main, tenancy/SSE, contratos e preparação de assinatura/outbox/offline                   | **Parada**, OD-C3-001; salvamento seletivo em R-0034, não merge integral; critérios de provedor/custódia não satisfeitos                                             |
+| R-0022 anterior | `orchestra/stynx-sse-tenancy` @ `9af76824`    | 24 pre_merge, 1 checkpoint, 4 queued  | Linha anterior preservada; não constitui segunda entrega independente                                                         | Usar o checkpoint de parada como referência de salvamento; diferenças/ancestralidade a conferir por fatia                                                            |
+| R-0023          | `orchestra/authz-unification` @ `9ee0deb1`    | 1 completed, 1 in_progress            | Inventário/contrato; `tools/authz/route-role-matrix.ts` e teste e2e de matriz                                                 | Matriz em andamento; migração de autorização e O2–O5 restantes; não entregue em main                                                                                 |
+| R-0024          | sem branch dedicado no inventário remoto      | sem tarefas em main                   | Plano de deduplicação                                                                                                         | Kit compartilhado, padrão definitivo e dedup backend/frontend ainda por executar                                                                                     |
+| R-0025          | `orchestra/rait-web-wiring` @ `9e69d867`      | 4 completed                           | Matriz de 64 comandos, contratos F-01…F-16 e ODs; nenhum delta de runtime                                                     | Endpoints novos, ajustes de chamadas/policy, ligação dos comandos, guardas e aceitação                                                                               |
+| R-0026          | `orchestra/dashboard-wiring` @ `01e6afc2`     | 4 pre_merge                           | Inventário, decisões e contratos de backend/produtores; nenhum delta de runtime                                               | Console L0→L2, produtores RAIT, job, rotas GET, reconciliação policy/SSE/i18n                                                                                        |
+| R-0027          | `orchestra/portal-delegations` @ `d64ec29a`   | 4 completed, 1 checkpoint             | Contratos e testes de perfis/delegações, com REDs intencionais                                                                | Alvos reais, policy, formulários e jornadas; o checkpoint BANK_PORT não é solução entregue nem autorização de retomar candidato descartado                           |
+| R-0028          | `orchestra/boat-wiring` @ `d79b6f02`          | 4 pre_merge                           | Contratos e adapters de homologação: câmera, GPS, desenho, assinatura, armazenamento, attestation; testes                     | Ligação de telas/gateway, jornadas reais; adapters de homologação não comprovam runtime nativo nem RENAEST produtivo                                                 |
+| R-0029          | `orchestra/teat-web-wiring` @ `679f68db`      | 2 completed                           | Matriz/contratos, fichas e i18n                                                                                               | Páginas produtivas, facades e integração; depende do lock de shell/sinistros da R-0028                                                                               |
+| R-0030          | `orchestra/user-docs` @ `a9e19915`            | 5 completed, 13 queued                | Convenção, schema/checker de disponibilidade e testes, site pt-BR, glossário                                                  | Manifestos, manuais por perfil, FAQ/índices, ajuda contextual e gate final; grande parte do diff de tools são fixtures, não funcionalidade de app                    |
+| R-0031          | `orchestra/pec-web` @ `7c0854f3`              | 10 completed, 3 checkpoint, 7 queued  | Contratos/clientes, erros, seed/testes de integração, fichas e i18n PEC                                                       | Fechar checkpoints de integração; scaffold e 19 telas, slot da stack, manifesto e aceitação; `apps/pec/web` em main só tem README                                    |
+| R-0032          | `orchestra/portal-pec` @ `3a492978`           | 2 completed, 2 checkpoint, 10 queued  | Contratos/fichas, caracterização de acesso e specs de telas; inclui trabalho empilhado da R-0031                              | Eventos/projeções, porta do dossiê, comandos e páginas cidadãs, persona, smoke/a11y, manual/manifesto                                                                |
+| R-0033          | `claude/frontend-preview-5281e3` @ `aca40880` | 7 completed, 2 queued                 | Prévia RAIT/JW-01, configuração/adapters, 87 capturas, contrato/padrão v0; fixture parity já integrada separadamente por #184 | TASK-0009 specs Portal → TASK-0007 prévia Portal; sequência final de gates, delivery-review, integração e close/seal; dashboard/teat preview sem entrega demonstrada |
+| R-0034 / R-0035 | somente mapa C-0003, sem pastas de rodada     | não instanciadas                      | Escopo de salvamento/costuras e hardening definido na campanha                                                                | Abrir sob escopo/autorização aplicável; não presumir execução porque os IDs aparecem no mapa                                                                         |
+
+A R-0033 já tem autorização histórica em `AUTHORIZATION.md` do branch (2026-10-15).
+O texto de `main` que a chama de “aguardando autorização para abrir” está desatualizado.
+O rascunho `closure.draft.json` desse branch registra `pnpm-check`, delivery-review,
+CI e evidence-chain como não executados. A frase “sem push” do checkpoint também é
+histórica: o head hoje existe no remoto; continua sem PR aberto na consulta acima.
+
+### Fila funcional confirmada em main
+
+| Frente / responsável                  | Pendência e evidência atual                                                                                                                                                                  | Destino                                                                                          |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| RAIT / Architect + Engineer           | 64 `throw new RaitCommandUnavailableError` em `apps/rait/web/src/app/data/api/*.ts`; `caseAccessGuard` devolve `true`. Análise R-0025: 13 alinhados, 35 desalinhados, 16 endpoints faltantes | R-0025, issue #122; o contrato do branch deve ser reconferido no pin atual                       |
+| PORTAL / Architect + Engineer         | `backend/app/src/portal-delegation.providers.ts` mantém `UnavailableDelegationTarget` e motivos de privacidade/documento assinado pendentes                                                  | R-0027, #164 e #125; merge R-0007 já ocorreu e não resolve sozinho essa ligação                  |
+| DASHBOARD / Architect + Engineer      | Console L0; exemplo `features/reports/pages/exportacoes.page.ts` inicia em `UNAVAILABLE_IN_VERSION`                                                                                          | R-0026; #123/#124/#173 agrupam a mesma frente, não três implementações; produtores #96, job #99  |
+| TEAT/BOAT / Architect + Engineer      | Console TEAT e ligação BOAT ainda com preparações fora de main                                                                                                                               | R-0028/R-0029, #172/#174; separar do gate de produção mobile #108…#112                           |
+| PEC / Architect + Engineer            | Domínios CH já portados; frontend PEC ainda ausente em main                                                                                                                                  | R-0031/R-0032; reutilizar contratos/testes preservados antes de reimplementar                    |
+| Docs / Architect                      | Manuais, manifestos e ajuda contextual ainda incompletos                                                                                                                                     | R-0030; integrar fundação do branch antes do conteúdo restante                                   |
+| Docs segurança / Engineer + Inspector | Exceção `braces` ainda presente em `docs/site/security/audit-exceptions.json`                                                                                                                | #186: remover exceção sem uso e detectar exceções sem uso; não alterar gates nesta reconciliação |
+
+### Entradas obsoletas ou duplicadas — disposição
+
+| Registro de origem                                                                                                                                                                                                    | Disposição e fonte que prevalece                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C-0002 “nenhuma rodada foi aberta”; R-0023…0033 “proposta”                                                                                                                                                            | Histórico de planejamento, superado pelos checkpoints/autorizações acima. R-0024 continua proposta; R-0022 continua parada                                                                         |
+| Dependência obrigatória R-0022→R-0023→R-0024 antes de toda fase J                                                                                                                                                     | Ordem superada por A-C2-16/C-0003 §4: prévia, depois jornadas sobre main; atualização dos contratos/locks no bootstrap continua necessária                                                         |
+| R-0021 TASK-0001…0004/0015 `pre_merge`, TASK-0014 `queued`                                                                                                                                                            | Status de arquivo defasado: PC-0019, `closure.json` e waves registram conclusão/merge. TASK-0005…0013 canceladas/transferidas; não ressuscitar nem reescrever JSON histórico                       |
+| R-0006 TASK-0003 `escalated`; R-0007 checkpoints/cancelamentos                                                                                                                                                        | Preservar trilha arquivística; rounds formalmente fechadas (PC-0004/PC-0011). Status isolado não cria nova fila; eventual lacuna funcional exige evidência atual própria                           |
+| S-1.5 / alvo STYNX 1.5.0                                                                                                                                                                                              | Alvo numérico superado pelo pin 1.5.3 em main; publicação não comprova todos os MUST da spec upstream. Manter aceitação/capacidades em verificação por fatia, sem marcar a rodada externa entregue |
+| DT-001 / #121 “registry impede construir RAIT”                                                                                                                                                                        | Bloqueador genérico obsoleto: main consome pacotes publicados STYNX 1.5.3. DT-002/evidência RC upstream é assunto separado, não comprovado encerrado pelo pin                                      |
+| #185 decisão do pin / #179 aberto                                                                                                                                                                                     | #179 já mesclado; DEVAI 2.2.0 e STYNX 1.5.3 em main. Título da issue desatualizado; não encerrar outras obrigações WS-5b por inferência                                                            |
+| `docs/meta/decisions/README.md`: CH/EST/PORTAL/DASHBOARD vazios                                                                                                                                                       | Descrição temporal superada pelo código em `backend/domains/{ch,est,portal,dashboard}` e fechamentos das rodadas                                                                                   |
+| `apps/pec/web/README.md` / handoff original: PEC “não planejado”                                                                                                                                                      | Superado por ADR-0034 e OD-PW-001, R-0031/R-0032. README é dívida de transcrição; ausência de frontend implementado permanece verdadeira                                                           |
+| Backlog: obter novamente PDF CETRAN-RS 88/2014                                                                                                                                                                        | Captura já feita: DT-067 resolvido e `docs/reference/legal/other-states/REF-CETRAN-RS-88-2014.{pdf,txt}`                                                                                           |
+| Backlog: capturar 927, 789, 1009, CFP 01/2019, Portaria 005/2021, Lei 13.787, CFM 1.821, MP 2.200-2, Lei 14.063                                                                                                       | Fontes presentes em `docs/reference/legal/{contran,conselhos,detran-am,leis}`; não recapturar. Existência da fonte não fecha validação jurídica/atualidade normativa                               |
+| Captura SENATRAN 968/2022, 495/2025, 1.515/2018, 2.145/2020                                                                                                                                                           | Parcial: 968/495 presentes; não encerrar o grupo inteiro nem presumir captura das outras duas                                                                                                      |
+| Perguntas repetidas: bodycam, guarda monitorada, transmissão mensal, correção nacional, PEC P2, rótulo CONDICIONADO, retenção/plataforma, toxicológico, junta, termo 40%, CRLV-e, WCAG/eMAG, limiar agregado, alertas | Decisões registradas em DT-014/015/017/020…030 e ledgers por produto; não perguntar de novo. Aplicação no código, retenção/bodycam, parecer e integração continuam separados                       |
+| Candidatos de recuperação: teste de serviço indisponível e checker RLS lexical                                                                                                                                        | Já integrados por #187/#188 em main; não incluir novamente como candidatos de integração                                                                                                           |
+| R-0007 “precisa mesclar” / rebase anterior a sua conclusão                                                                                                                                                            | Precondição já cumprida por #69/#94, PC-0011; delegações/timers/relógios remanescentes exigem verificação própria, não nova execução da antiga rodada                                              |
+| CHECKBOX “sem ação pendente além do registro” (OD-D16-018)                                                                                                                                                            | Registro já existe; não contar como implementação                                                                                                                                                  |
+
+### Decisões e dependências adiadas — não confundir com código a escrever
+
+| Fonte / itens                          | Estado reconciliado e próximo responsável                                                                                                                                                                                                                                                                                                 |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DT-002, DT-003                         | Verificação externa ainda necessária: evidência RC STYNX e arquivamento da origem. Não executados nesta reconciliação; não modificar repos irmãos                                                                                                                                                                                         |
+| DT-012/016/019                         | Desconto fora SNE desligado; calibração de concorrência aguarda dados; premissa de remoção já adotada, parecer ainda separado. Owner + LEGAL/instituição                                                                                                                                                                                  |
+| DT-040…053                             | Pareceres/validações e publicidade/retention/LGPD; decisões H.44…H.56 já registradas não substituem parecer ou execução. DT-050 já tem norma localizada e DT-051 já tem premissa; não tratá-los como pergunta de produto sem resposta                                                                                                     |
+| DT-060/061/064/066/068/069/070/071/072 | Documentos/manuais, capacidade, adesão, signatário, medidores, investidura, composição e autorização institucional; ofícios redigidos não provam envio nem resposta                                                                                                                                                                       |
+| DT-080…086                             | Pesquisa/corpus ainda não encerrados no registro; conferir captura/escopo antes de novo levantamento. Não são sete features de runtime                                                                                                                                                                                                    |
+| DT-104/111                             | Alegações de engenharia legadas (CANCELLED e FK crash_record_id), ainda sem diagnóstico atual conclusivo nesta reconciliação; triagem técnica antes de planejar correção                                                                                                                                                                  |
+| OD-R20-004/006                         | Retenção das observações e destino da ADR-0022 continuam questões registradas; não decidir por limpeza de backlog                                                                                                                                                                                                                         |
+| A1 de R-0020                           | **Decisões existentes no branch** `ebf308e7`: A1-1/A1-2 aceitas em `6c4bc3b5`, A1-3=B. Não perguntar o mesmo piso/consentimento novamente. Bloqueio histórico de enum/scorecard era do pin antigo; verificar DEVAI 2.2.0 e reaplicar gates antes de declarar resolvido ou ainda reproduzível. Consentimento CI não autoriza sensing local |
+| OD-C3-007/008                          | Decididas no branch R-0033; #184 já integrou fixture parity. Jornada JW-01 reescrita/limites de papel permanecem; diagramas são follow-up                                                                                                                                                                                                 |
+| OD-C3-009                              | **Aberta no branch R-0033**: divergências jornada×papel JW-02/05/08; decidir antes da respectiva jornada, sem ampliar policy por inferência                                                                                                                                                                                               |
+| R-0034/R-0035                          | Provedor/confiança, amostras reais, custódia nativa e APIs upstream: requisitos sem aceitação demonstrada. QEMU parado; nenhum retry é autorizado por esta reconciliação                                                                                                                                                                  |
+| Escopo futuro                          | Bodycam e modelagem de guarda monitorada adiadas; pagamentos executados, suspensão de CNH, scanning e RENAVAM mantêm limites das decisões originais. Exceção explícita: frontend PEC passou a planejado pela ADR-0034                                                                                                                     |
+
+### Uso do diário e próximos passos
+
+Na entrada desta reconciliação o diário tinha **183 checkboxes abertas e 77 marcadas**;
+`open-issues.md` tinha **38 linhas DT sem tachado**. São populações documentais sobrepostas,
+não total de entregas restantes. Os itens legados sem evidência conclusiva acima ficam em
+**triagem**, não são marcados implementados, descartados ou juridicamente validados.
+Entradas repetidas referem a frente/DT/OD existente; não gerar outra tarefa para cada repetição.
+
+1. Retomar a prévia R-0033 a partir do branch preservado: Portal, sequência final,
+   revisão e integração; não recriar a prévia RAIT existente.
+2. Seguir C-0003 §4 para jornadas e locks; conciliar os contratos/testes já iniciados
+   nas branches com as costuras atuais de main antes de implementar.
+3. Tratar R-0020 em continuação própria, conciliando maestro/RGR e o pin instalado;
+   preservação de branch não é aprovação de sua tentativa nem resultado dos gates atuais.
+4. Salvar fatias elegíveis da R-0022 em R-0034 conforme §9 da campanha; hardening
+   em R-0035. Não fundir a campanha antiga inteira nem reabrir decisões fechadas.
+5. Revalidar títulos duplicados/obsoletos das issues antes de eventual atualização
+   no GitHub; esta mudança reconcilia os arquivos locais e não encerra issues externas.
+
 ## Handoff R-0022 → C-0003 (2026-10-14)
 
 - [ ] **Salvamento do checkpoint R-0022 — R-0034:** `codex/detran-r22-adoption-160` @ `c22ea63a` (85 commits, 3 318 arquivos) é referência, não base; classificação reutilizar/adiar/descartar em `work/campaigns/C-0003-produto-primeiro.md` §9. Nada entra em bloco; cada fatia com teste próprio e lock próprio (added 2026-10-14).
@@ -13,9 +141,9 @@
 - [ ] **Sensor CI stack smoke — R-0022:** jobs remotos `108792483206` (candidato) e `108793701832` (`main` STYNX 1.3.1) terminaram `stack:smoke` com exit 1, embora a reprodução isolada do SHA `2bc62e7a30270ac5c312656906e0465766811f2a` tenha passado 42/42. Primeiro reter e publicar o sumário de linhas do workflow para identificar o target que falhou; a triagem não expõe a linha/target e não autoriza alterar testes antes disso. Fonte: `work/rounds/R-0021/reports/CTG-0002-stack-smoke-triage.md` (added 2026-09-28).
 - [ ] **Migrações STYNX transferidas — R-0022:** assinatura, outbox (incluindo despacho RENACH) e offline-sync aguardam suporte upstream compatível; preservar A1 e os requisitos originais ainda não cumpridos. Inventariar dependências STYNX sem import em R-0022. Notificações aguardam o produtor de OD-P40; não montar o módulo sem ele. Fonte: `work/rounds/R-0021/contracts/CTG-0001.md`, `AUTHORIZATION.md` e `work/campaigns/C-0002-stynx-upstream-spec.md` (added 2026-09-28).
 
-> **Pendências consolidadas vivem em [`open-issues.md`](./open-issues.md)** (72 itens, tipados e
-> priorizados, exportáveis para issues com `_meta/issues-export.py`). Este arquivo continua sendo
-> o diário das rodadas; o registro é a lista de trabalho.
+> **Leitura atual:** a reconciliação de 2026-10-18 acima separa a fila de implementação e
+> integração das decisões. [`open-issues.md`](./open-issues.md) retém o registro DT histórico;
+> as seções seguintes são o diário das rodadas, com repetições e textos superados.
 
 Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
 
