@@ -9,6 +9,7 @@ import {
   appendEvent,
   assertMeasureAllowed,
   findRow,
+  lockRow,
   inTenantTransaction,
   patchRow,
   recordHistory,
@@ -41,7 +42,7 @@ export class StartMeasureCommand {
   ): Promise<StartMeasureResult> {
     const scope = scopeOf(this.deps);
     return inTenantTransaction(this.deps, async (tx) => {
-      const measure = await findRow(this.deps, tx, 'measures', measureId);
+      const measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });
       const currentState = assertMeasureAllowed(
         measure,

@@ -339,6 +339,9 @@ export class ProofHarness {
         }),
       ],
     );
+    // §5.10 (CTG-0002): uma reserva `reserved` por dispositivo e turno, garantida
+    // no banco. O provisioning não lê o turno; cada reserva copiada da canônica
+    // (…e6000001, de outro dispositivo e agente) recebe turno próprio.
     await this.owner.query(
       `insert into ops.numbering_reservation select (jsonb_populate_record(null::ops.numbering_reservation, to_jsonb(r) || $1::jsonb)).* from ops.numbering_reservation r where id='00000000-0000-7000-8000-0000e6000001'`,
       [
@@ -348,6 +351,7 @@ export class ProofHarness {
           device_id: this.deviceId,
           traffic_agency_id: AGENCY_A,
           agent_id: AGENT_A,
+          shift_id: randomUUID(),
           idempotency_key: this.prefix,
           status: 'reserved',
           valid_until: '2026-09-22T00:00:00Z',
@@ -394,6 +398,7 @@ export class ProofHarness {
         JSON.stringify({
           id: this.issuanceReservationId,
           range_id: this.issuanceRangeId,
+          shift_id: randomUUID(),
           start_number: 2026000002,
           end_number: 2026000011,
           idempotency_key: `${this.prefix}-fresh-interval`,

@@ -193,7 +193,19 @@ export class DashboardClockSweeper implements OnModuleInit, OnModuleDestroy {
     work: (tx: CycleSqlTransaction) => Promise<void>,
   ): Promise<void> {
     try {
-      await this.deps.database.tx(work);
+      await this.deps.database.tx(async (tx) => {
+        // Primeira trava de toda transação do sweeper: serializa os passos
+        // do mesmo tenant entre instâncias. Os passos 1 e 4 tomam várias
+        // travas de alerta em ordens independentes (timers por `due_at`,
+        // células por tabela); sem esta trava, A→B × B→A = deadlock.
+        await query(
+          tx,
+          `select pg_advisory_xact_lock(hashtextextended(
+             'dashboard.sweeper:' || $1, 0))`,
+          [report.tenantId],
+        );
+        await work(tx);
+      });
     } catch {
       report.skipped += 1;
     }

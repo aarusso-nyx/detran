@@ -1,4 +1,4 @@
--- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
+-- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:56d0c4dd4d9f1a20f38bbcc7372af113898d34e435e79b5cccc2ab1e077d0479
 
 -- Regenerable-only DDL for BP-OPS-OFFLINE-SYNC-001; request-path writes use role_app_backend.
 
@@ -41,10 +41,44 @@ create table if not exists ops.numbering_reservation (
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_numbering_reservation primary key (id),
+  constraint ck_ops_numbering_reservation_reserved_shift check (status <> 'reserved' or shift_id is not null),
   constraint fk_ops_numbering_reservation_range foreign key (range_id) references ops.ait_numbering_range (id)
 );
+do $$
+declare
+  violations text;
+begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_ops_numbering_reservation_reserved_shift' and conrelid = 'ops.numbering_reservation'::regclass) then
+    select string_agg(format('tenant_id=%s device_id=%s id=%s', tenant_id, device_id, id), '; ')
+      into violations
+      from ops.numbering_reservation where not (status <> 'reserved' or shift_id is not null);
+    if violations is not null then
+      raise exception 'Restricao ops.numbering_reservation.ck_ops_numbering_reservation_reserved_shift nao pode ser criada: linhas que a violam (status <> ''reserved'' or shift_id is not null): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', violations;
+    end if;
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_ops_numbering_reservation_reserved_shift' and conrelid = 'ops.numbering_reservation'::regclass) then
+    alter table ops.numbering_reservation add constraint ck_ops_numbering_reservation_reserved_shift check (status <> 'reserved' or shift_id is not null);
+  end if;
+end $$;
 create index if not exists ix_numbering_reservation_tenant_id_agent_id_device_id_status on ops.numbering_reservation (tenant_id, agent_id, device_id, status);
 create unique index if not exists ux_numbering_reservation_tenant_id_idempotency_key on ops.numbering_reservation (tenant_id, idempotency_key) where idempotency_key is not null;
+do $$
+declare
+  duplicates text;
+begin
+  if to_regclass('ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved') is null then
+    select string_agg(format('tenant_id=%s device_id=%s shift_id=%s linhas=%s', tenant_id, device_id, shift_id, total), '; ')
+      into duplicates
+      from (select tenant_id, device_id, shift_id, count(*) as total from ops.numbering_reservation where status = 'reserved'
+             group by tenant_id, device_id, shift_id having count(*) > 1) duplicate;
+    if duplicates is not null then
+      raise exception 'Indice unico ops.ux_numbering_reservation_tenant_id_device_id_shift_id_reserved nao pode ser criado: duplicatas em ops.numbering_reservation (status = ''reserved''): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', duplicates;
+    end if;
+  end if;
+end $$;
+create unique index if not exists ux_numbering_reservation_tenant_id_device_id_shift_id_reserved on ops.numbering_reservation (tenant_id, device_id, shift_id) where status = 'reserved';
 create index if not exists ix_numbering_reservation_tenant_id on ops.numbering_reservation (tenant_id);
 create index if not exists ix_numbering_reservation_range_id on ops.numbering_reservation (range_id);
 create index if not exists ix_numbering_reservation_traffic_agency_id on ops.numbering_reservation (traffic_agency_id);

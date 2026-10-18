@@ -202,7 +202,12 @@ export class AitSyncApplier implements SyncEntityApplier {
     return parsed.data;
   }
 
-  /** §4.6 — guarda de numeração, nesta ordem. */
+  /**
+   * §4.6 — guarda de numeração, nesta ordem. A reserva é lida `for update`:
+   * cancelar, bloquear, fechar, reconciliar e liquidar no fechamento de turno
+   * também a travam, então a guarda e o consumo `aplicado` gravado adiante
+   * nunca se intercalam com a liquidação que devolve a cauda à faixa.
+   */
   private async guardNumbering(
     queryable: SqlQueryable,
     item: SyncEntityApplierItem,
@@ -215,7 +220,8 @@ export class AitSyncApplier implements SyncEntityApplier {
         where tenant_id = $1 and device_id = $2
           and $3::bigint between start_number and end_number
         order by reserved_at desc
-        limit 1`,
+        limit 1
+        for update`,
       [item.tenantId, item.deviceId, number],
     );
     const reservation = found.rows[0];

@@ -132,8 +132,9 @@ beforeAll(async () => {
   await client.query(
     `insert into ops.numbering_reservation
        (id, tenant_id, range_id, traffic_agency_id, agent_id, device_id,
-        idempotency_key, start_number, end_number, valid_until, status)
-     values ($1, $2, $3, $4, $5, $6, $7, 2027000001, 2027000001,
+        shift_id, idempotency_key, start_number, end_number, valid_until,
+        status)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, 2027000001, 2027000001,
              '2026-12-31T23:59:59-04:00', 'reserved')`,
     [
       tenantBReservationId,
@@ -141,6 +142,8 @@ beforeAll(async () => {
       tenantBRangeId,
       randomUUID(),
       randomUUID(),
+      randomUUID(),
+      // §5.10: reserva `reserved` sempre tem turno.
       randomUUID(),
       `r21-http-b-reservation-${randomUUID().slice(0, 8)}`,
     ],

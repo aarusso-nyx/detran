@@ -233,3 +233,28 @@ src/testing/              stubs e harness dos specs (Inspector)
   desconectado — A12(a)); nenhuma facade lê `navigator`; indisponibilidades do backend (M15)
   mostradas com motivo e canal, nunca simuladas. A regra §3.9 da rota funcional vive em
   `core/functional-route.ts` (`functionalRouteFor`), usada pela Carta de Serviços e pela home.
+
+## Prévia
+
+`pnpm --filter @detran/portal-web exec ng serve --configuration preview` serve a
+prévia local. Para o artefato estático, execute
+`pnpm --filter @detran/portal-web exec ng build --configuration preview` e sirva
+`apps/portal/web/dist/preview/` com fallback para `index.html`.
+
+A faixa **PRÉVIA — DADOS FICTÍCIOS** oferece os estados
+`loaded|empty|loading|error|forbidden` e os perfis
+`anonimo|simples|avancada|qualificada`, por `pv_estado` e `pv_papel` na URL.
+Trocar um controle recarrega o documento e reexecuta as guardas reais. O perfil
+padrão é `avancada`; use `simples` para examinar a elevação de nível.
+
+As leituras vêm das transcrições de `src/testing/http-fixtures*.ts` em
+`src/app/preview/fixtures/portal-fixtures.json`. A conta usa a fixture sem CPF;
+nenhum campo de identidade é inventado. Só GET local de `assets/**` é permitido.
+Comandos, autenticação e downloads anunciam **não funcional na prévia**; nenhuma
+submissão, elevação ou delegação produz sucesso fictício. A junta médica permanece
+indisponível pelo catálogo canônico. `empty` esvazia listas e preserva entidades;
+as páginas estáticas e de ação mantêm seu contexto.
+
+O build normal continua em `dist/browser/` e não importa módulos de prévia.
+Como o build normal apaga `dist/`, reconstrua a prévia depois dele quando precisar
+do artefato estático.

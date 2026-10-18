@@ -1,5 +1,12 @@
 # Campanha C-0002: consolidação pós-R-0016
 
+> **Estado reconciliado em 2026-10-18:** campanha parcialmente entregue: R-0017/18/19/21
+> fechadas; R-0020 aberta com checkpoint e RGR; R-0022 parada. R-0023 e R-0025…0032
+> têm preparações/entregas preservadas em branches, R-0024 continua proposta.
+> “Nenhuma rodada foi aberta” abaixo é o status da revisão 2, não o estado atual.
+> A-C2-16/C-0003 §4 governa a nova ordem de execução. Ver
+> [reconciliação](../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Autoridade:** Architect (Constitution Article 6). Revisão 2 de 2026-09-26, com as decisões do Owner
 OD-C2-001…004 incorporadas (§7).
 **Status:** proposta com as decisões do Owner aplicadas. Nenhuma rodada foi aberta. O
@@ -517,3 +524,32 @@ antecipação encurta a fase D em ≈ 2–3 janelas.
   tarefas liberadas, push sem PR e checkpoint.
 - Nenhum arquivo de R-0020, R-0022, R-0023 ou R-0024 em curso é tocado. As listas estão nos `plan.md`.
 - Na retomada depois de R-0024, contratos divergentes viram adenda do Architect.
+
+## 14. Adenda A-C2-16 — parada da R-0022 e campanha substituta C-0003 (Owner, 2026-10-14)
+
+**Decisão do Owner (OD-C3-001), 2026-10-14:** parar a R-0022 `stynx-sse-tenancy`, commitar o
+trabalho como checkpoint e passar a uma campanha substituta que entregue **primeiro** superfícies de
+frontend para trabalho UI/UX em paralelo, depois completude de funcionalidades, endurecimento,
+certificação e formalidades. Registro completo em `work/campaigns/C-0003-produto-primeiro.md` §0 e
+no registro canônico de ODs (§C-0003).
+
+Efeitos sobre esta campanha:
+
+- **R-0022** fica **parada** no checkpoint `c22ea63a9f2c949a18a9877c66d241235af68ac2`
+  (`codex/detran-r22-adoption-160`, 85 commits sobre `origin/main` `897f0199`, sem PR). Não há
+  `round close`, selo, release ou deploy. As adendas B1…B17 do seu `AUTHORIZATION.md` continuam
+  sendo as decisões do Owner vigentes para o que elas decidem (OD-R22-07/08/66, B17, política B9);
+  o checkpoint é branch de salvamento/referência, não base de rodada (C-0003 §9).
+- **A ordem das fases C e D é substituída** pela de C-0003 §4: a fase D (R-0025…R-0029) abre depois
+  da prévia (R-0033), sobre `origin/main`, sem esperar R-0022 → R-0023 → R-0024. Cada rodada D
+  recebe no bootstrap uma adenda A-C3-0n reconciliando base, dependências e "Não tocar". Critérios
+  de aceitação não mudam; o que dependia da fase C aparece no fechamento como não cumprido ou é
+  transferido por adenda com decisão do Owner.
+- **R-0023, R-0024** passam para a fase S de C-0003, depois de R-0034 `platform-seams`, que faz o
+  salvamento delimitado do checkpoint. **R-0030, R-0031, R-0032** continuam como planejadas.
+- §3.3 ("plataforma antes dos frontends") deixa de valer como ordem; o risco de dupla migração dos
+  apps é **aceito pelo Owner** em troca de prévias e jornadas mais cedo. §4, §5 e §12 continuam
+  valendo. A estimativa "≈ 25 janelas" de §3 fica histórica.
+- Nada nesta adenda autoriza push, PR, merge, release, deploy, escrita em repositórios irmãos,
+  reescrita de cadeia de provas ou valores de confiança de produção. A A-C2-15 (abertura
+  antecipada "só análise" das rodadas D) é subsumida por C-0003 §4.

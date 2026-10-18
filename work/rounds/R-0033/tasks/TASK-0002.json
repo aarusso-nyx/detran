@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0033",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Specs do modo prévia do rait-web: cobertura de rotas sem rede, marca, ação não funcional, gate de production, permissões, fixtures e a11y (CTG-0001)",
+  "description": "Escrever em apps/rait/web/src/app/preview/*.spec.ts os testes que codificam C-02, C-03, C-05, C-06 e a metade estática de C-01 sobre o layout fixo de frontend-preview-mode.md: toda entrada page do manifesto renderiza sob os providers de prévia sem requisição HTTP e sem console.error; faixa presente com data-detran-preview-mark; cada ação de comando da JW-01 exibe \"não funcional na prévia\"; interceptor bloqueia tudo que não seja GET assets/; main.ts/app.routes.ts/core não importam preview; permissões sintéticas iguais a RAIT_COMMAND_RULES; dados dos adapters rastreáveis a rait-fixtures.json; axe sem serious/critical. Os specs falham até TASK-0003 (M3). Conforme prompts/TASK-0002.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-web-preview-specs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["c-0003", "ctg-0001", "preview", "inspector"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-9d59b9563d48ab2d",
+  "acceptance_commands": [
+    [
+      "test",
+      "-s",
+      "apps/rait/web/src/app/preview/preview-http-block.interceptor.spec.ts"
+    ],
+    ["test", "-s", "apps/rait/web/src/app/preview/preview-mark.spec.ts"],
+    ["test", "-s", "apps/rait/web/src/app/preview/preview-coverage.spec.ts"],
+    [
+      "test",
+      "-s",
+      "apps/rait/web/src/app/preview/preview-not-functional.spec.ts"
+    ],
+    [
+      "test",
+      "-s",
+      "apps/rait/web/src/app/preview/preview-production-gate.spec.ts"
+    ],
+    ["test", "-s", "apps/rait/web/src/app/preview/preview-permissions.spec.ts"],
+    [
+      "test",
+      "-s",
+      "apps/rait/web/src/app/preview/preview-fixture-source.spec.ts"
+    ],
+    ["test", "-s", "apps/rait/web/src/app/preview/preview-a11y.spec.ts"],
+    ["test", "-s", "apps/rait/web/src/app/preview/preview.spec-helper.ts"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "apps/rait/web/src/app/preview/preview-http-block.interceptor.spec.ts",
+      "apps/rait/web/src/app/preview/preview-mark.spec.ts",
+      "apps/rait/web/src/app/preview/preview-coverage.spec.ts",
+      "apps/rait/web/src/app/preview/preview-not-functional.spec.ts",
+      "apps/rait/web/src/app/preview/preview-production-gate.spec.ts",
+      "apps/rait/web/src/app/preview/preview-permissions.spec.ts",
+      "apps/rait/web/src/app/preview/preview-fixture-source.spec.ts",
+      "apps/rait/web/src/app/preview/preview-a11y.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/rait-web",
+      "exec",
+      "eslint",
+      "src/app/preview/preview-http-block.interceptor.spec.ts",
+      "src/app/preview/preview-mark.spec.ts",
+      "src/app/preview/preview-coverage.spec.ts",
+      "src/app/preview/preview-not-functional.spec.ts",
+      "src/app/preview/preview-production-gate.spec.ts",
+      "src/app/preview/preview-permissions.spec.ts",
+      "src/app/preview/preview-fixture-source.spec.ts",
+      "src/app/preview/preview-a11y.spec.ts"
+    ]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-9d59b9563d48ab2d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "spawned_at": "2026-10-15T09:50:00.000Z",
+  "completed_at": "2026-10-15T10:10:00.000Z"
+}

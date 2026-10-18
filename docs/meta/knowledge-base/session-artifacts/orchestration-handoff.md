@@ -1,5 +1,13 @@
 # HANDOFF PROMPT — DETRAN Monorepo Consolidation & New Apps (BOAT, RAIT, PORTAL, DASHBOARD)
 
+> **Nota de leitura — reconciliação de 2026-10-18:** este handoff preserva a missão,
+> as decisões e os gates originais. Versões, caminhos e estado de execução são
+> históricos. Para abrir trabalho use o addendum de `BUILD-PLAN.md`, C-0003 §4 e a
+> [fila reconciliada](../backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+> A antiga exclusão do frontend PEC foi superada por ADR-0034/OD-PW-001;
+> demais decisões não são reabertas. Não executar novamente etapas já portadas
+> nem descartar checkpoints porque uma rodada ainda aparece como proposta em main.
+
 > Copy everything below this line into a fresh, pristine orchestrator agent (Claude or Codex). It assumes zero prior context.
 
 ---

@@ -4,7 +4,7 @@
   "module": {
     "name": "Encounters",
     "namespace": "ch",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "ddlFile": "42-ch-encounters.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
@@ -35,7 +35,7 @@
       }
     ],
     "owners": ["detran-ch"],
-    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel."
+    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel. A chave de processo RENACH e unica por tenant (um processo RENACH pertence a um so paciente; OD-HF-B9-001 = (a), Owner 2026-09-29): indice unico parcial ux_ch_encounter_renach_process_key, com pre-checagem de duplicatas no DDL manuscrito 19-ch-encounter-renach-key.sql."
   },
   "database": {
     "entities": [
@@ -300,8 +300,8 @@
             "columns": ["tenant_id", "patient_id"]
           },
           {
-            "name": "ux_ch_encounter_renach_process",
-            "columns": ["tenant_id", "patient_id", "renach_process_key"],
+            "name": "ux_ch_encounter_renach_process_key",
+            "columns": ["tenant_id", "renach_process_key"],
             "unique": true,
             "where": "renach_process_key is not null"
           }

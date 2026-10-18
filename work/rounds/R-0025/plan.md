@@ -1,5 +1,11 @@
 # R-0025 — frente `rait-web-wiring` (ação 6 da C-0002 — RAIT web: 64 comandos, `caseAccessGuard`, SSE canônico, formulários e rotas L0)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/rait-web-wiring` @ `9e69d867`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** pré-trabalho da Sessão A autorizado pela A-C2-15; somente
 TASK-0001/0002/0003/0006 liberadas. A rodada integral aguarda os upstreams.
 Planejada em 2026-09-26

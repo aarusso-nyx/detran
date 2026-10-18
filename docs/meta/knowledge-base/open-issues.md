@@ -4,8 +4,23 @@ title: Registro consolidado de pendências do programa DETRAN
 status: draft
 apps: [rait, teat, boat, pec, portal, dashboard]
 sources: []
-updated: 2026-08-28
+updated: 2026-10-18
 ---
+
+## Leitura atual — reconciliação de 2026-10-18
+
+O registro DT abaixo é histórico e retém as decisões e fontes. A
+[fila reconciliada](backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual)
+separa implementação pendente, material em branches, registros obsoletos e decisões.
+As 38 linhas sem tachado na entrada da reconciliação não equivalem a 38 features:
+DT-001 tem bloqueador de registry superado pelo pin publicado 1.5.3; DT-002/003
+precisam de verificação externa; DT-012/016/019 e DT-040…086 incluem pareceres,
+premissas e dependências institucionais/pesquisa; DT-104/111 precisam de diagnóstico
+atual antes de programar correção. Itens respondidos/transferidos não são reabertos.
+
+Issues abertas podem duplicar frentes (#124/#173) ou ter título superado (#185/#179
+já mesclado); #121 mistura registry superado com evidência RC não demonstrada encerrada.
+A reconciliação não encerra issues, certifica produção nem marca os pareceres como obtidos.
 
 Registro único das pendências abertas do programa, consolidado de `_meta/backlog.md`, das seções
 §Residual dos `APP.md` e das decisões de steering. Existe para que possam ser criadas como issues

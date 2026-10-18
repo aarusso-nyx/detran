@@ -417,6 +417,15 @@ export class ReportLifecycleService {
     tx: SqlTransaction,
     encounterId: string,
   ): Promise<void> {
+    // Trava a linha antes de recalcular: o `update` seguinte roda num
+    // snapshot novo e vê o laudo da outra trilha commitado durante a espera
+    // (no mesmo statement, a reavaliação do READ COMMITTED não reexecuta os
+    // subselects). `no key update` não conflita com a `key share` das FKs
+    // que os inserts de laudo já tomaram.
+    await tx.query(
+      'select id from ch.encounter where id = $1 for no key update',
+      [encounterId],
+    );
     await tx.query(
       `update ch.encounter encounter
           set status = case

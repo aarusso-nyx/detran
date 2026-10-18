@@ -1,4 +1,4 @@
--- Generated from BP-CH-ENCOUNTERS-001 v1.2.0 sha256:91731d0164806f1b137025d46dbb65f5fc8ac203fbc84cf8c9affcf81be9a4b5
+-- Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
 
 -- Regenerable-only DDL for BP-CH-ENCOUNTERS-001; request-path writes use role_app_backend.
 
@@ -67,7 +67,7 @@ create table if not exists ch.encounter (
 );
 create index if not exists ix_ch_encounter_status on ch.encounter (tenant_id, status);
 create index if not exists ix_ch_encounter_patient on ch.encounter (tenant_id, patient_id);
-create unique index if not exists ux_ch_encounter_renach_process on ch.encounter (tenant_id, patient_id, renach_process_key) where renach_process_key is not null;
+create unique index if not exists ux_ch_encounter_renach_process_key on ch.encounter (tenant_id, renach_process_key) where renach_process_key is not null;
 create index if not exists ix_encounter_tenant_id on ch.encounter (tenant_id);
 create index if not exists ix_encounter_clinic_id on ch.encounter (clinic_id);
 create index if not exists ix_encounter_patient_id on ch.encounter (patient_id);

@@ -3,7 +3,7 @@ id: ARCH-RAIT-FIXTURES
 title: Fixtures canônicas do RAIT — personas, tenant, casos por estado, sessões, relógios e calendário
 status: draft
 apps: [rait, teat]
-updated: 2026-09-16
+updated: 2026-10-15
 ---
 
 # Fixtures canônicas
@@ -111,7 +111,8 @@ bash backend/database/seed.sh                     # fixtures (idempotente)
 ```
 
 Testes `integration`/`e2e` assumem a seed aplicada; testes `unit` e do frontend importam
-`docs/framework/arch/fixtures/rait-fixtures.json`. Para tenant de isolamento em testes de RLS,
+`docs/framework/arch/fixtures/rait-fixtures.json`. Desde 2026-10-15 a JSON traz todas as
+coleções e colunas de `20-fixtures-rait.sql`, com os mesmos ids (§10). Para tenant de isolamento em testes de RLS,
 crie um segundo tenant efêmero com `randomUUID()` (padrão de `audit-persistence.integration.spec.ts`);
 nunca altere o tenant das fixtures.
 
@@ -204,3 +205,77 @@ Arquivos: `26-fixtures-teat-field.sql` (campo/turno/numeração/sincronização)
 o que `25-fixtures-teat.sql` semeia (dispositivos, faixa, reservas, pacote normativo `…e7000001`);
 `27-fixtures-teat-evidence.sql` (evidência/custódia/snapshots/catálogo normativo);
 `28-fixtures-teat-measures-alcohol.sql` (medidas/alcoolemia/velocidade).
+
+## 10. Forma JSON: paridade com a seed (2026-10-15)
+
+Decisão do Owner OD-C3-008 (a) (R-0033, FIX-0001): `./fixtures/rait-fixtures.json` transcreve
+de `backend/database/seed/20-fixtures-rait.sql` todas as linhas `insert into inf.rait_*`, com os
+mesmos ids e os mesmos valores. A transcrição só acrescenta: nenhuma chave, id ou valor que já
+existia mudou. A paridade é provada por `apps/rait/web/src/testing/fixtures-parity.spec.ts`, que
+lê a seed do disco.
+
+**Convenção.** Coleção em camelCase no plural; campo = coluna em camelCase (`case_id` →
+`caseId`); `tenant_id` omitido (o tenant está em `tenant`); datas e timestamps exatamente como na
+seed (`'2026-09-14T09:00:00-04:00'` → `"2026-09-14T09:00:00-04:00"`); `null` → `null`; booleanos
+→ `true`/`false`; inteiros → números; `'…'::jsonb` → o valor JSON correspondente (`payload`,
+`content`, `missingItems`). Cada registro só traz as colunas que o seu próprio `insert` traz: sem
+coluna na seed, não há campo na JSON (nada completado por analogia). Os três `update` da seed
+(linhas 17, 170 e 171) são aplicados: membro de pool 10 com `status` `ADVERTIDO`,
+`lateOpinionCount` 2 e `isSubstitute` `true`; impedimento 1 com `kind` e `legalBasis`.
+
+**Nomes herdados.** Os campos que a JSON já tinha com outro nome e o mesmo valor da coluna ficam
+como estavam e valem pela coluna: `poolMembers.pool` (`pool_id`), `poolMembers.userId`
+(`person_id`), `cases.protocol` (`protocol_number`), `clocks.code` (`clock_code`),
+`sessions.body` (`judging_body`), `agendaItems.session` (`session_id`). `cases.protocolledOn` é só
+da JSON e é a data de `protocolledAt`. O mapa `pools` (`instância → id`) continua como está; os
+registros de `rait_pool` estão na coleção nova `raitPools`, porque `pools` não é uma lista.
+
+**Formas herdadas que divergem da seed.** Treze campos que já existiam trazem só a data
+(`AAAA-MM-DD`) de um timestamp da seed. Como a transcrição não muda valores existentes, eles
+continuam assim, e o spec confere que cada um é exatamente o prefixo de data da seed:
+`raitBatches` `…28000002.drawnAt`, `…28000003.drawnAt` e `.acceptedAt`; `raitBatchItems`
+`…28010003.declinedAt`, `…28010004.acceptedAt`; `raitSubstituteDuties` `…29000001.designatedAt` e
+`.convenedAt`, `…29000002.designatedAt`; `raitBenches` `…35000002.confirmedAt`,
+`…35000003.insufficientAt`, `…35000004.confirmedAt`; `raitPendingContents` `…36000002.closedAt`,
+`…36000003.closedAt`. Para trocá-los pelo timestamp completo é preciso mudar um valor existente,
+o que fica fora desta transcrição.
+
+| Coleção JSON            | Tabela da seed (linhas)                    | Nº  | Campos acrescentados                                                                                                                                                                                                                                       | `source_pending` (obrigatório no modelo, sem coluna na seed)             |
+| ----------------------- | ------------------------------------------ | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `raitPools` (nova)      | `rait_pool` (3, um `insert` com 3 tuplas)  | 3   | `id`, `name`, `instance`, `circuit`, `strategy`                                                                                                                                                                                                            | `active`, `priority_policy`, `created_at`                                |
+| `poolMembers`           | `rait_pool_member` (4–16; `update` 17/170) | 13  | `memberRole` já existia; + `status`, `mandateStartsOn`, `mandateEndsOn`; no membro 10, + `lateOpinionCount`, `isSubstitute`                                                                                                                                | `unjustified_absence_count`, `created_at`                                |
+| `cases`                 | `rait_case` (18–75, intercaladas)          | 20  | + `circuit`, `intakeChannel`, `protocolledAt`, `lastMovementAt` e, conforme o caso, `admittedAt`, `suspensiveEffect`, `remittedAt`, `judgeBodyReceivedAt`, `decidedAt`, `communicatedAt`, `closedAt`, `archived`, `nonAdmissionReason`, `cetranReceivedAt` | `pending_completion`, `version`, `created_at`                            |
+| `parties` (nova)        | `rait_party` (19–76, intercaladas)         | 20  | `id`, `caseId`, `role`, `legitimacyBasis`, `personName`, `documentNumber`, `contactEmail`                                                                                                                                                                  | `representation_verified`, `created_at`                                  |
+| `documents` (nova)      | `rait_document` (20–77, intercaladas)      | 20  | `id`, `caseId`, `kind`, `origin`, `storageKey`, `filename`, `contentHash`, `digitisedFromPaper`, `attachedBy`                                                                                                                                              | `attached_at`, `created_at`                                              |
+| `admissibility` (nova)  | `rait_admissibility` (78–105)              | 28  | `id`, `caseId`, `criterion`, `verdict`, `reason`, `evaluatedBy`                                                                                                                                                                                            | `evaluated_at`, `created_at`                                             |
+| `deadlines` (nova)      | `rait_deadline` (106–112)                  | 7   | `id`, `caseId`, `timerCode`, `startBasis`, `startedOn`, `rawDueOn`, `dueOn`, `businessDays`, `legalBasis`                                                                                                                                                  | `extension_count`, `created_at`                                          |
+| `inquiries` (nova)      | `rait_inquiry` (113)                       | 1   | `id`, `caseId`, `addressee`, `subject`, `requestedAt`, `requestedBy`, `dueOn`                                                                                                                                                                              | `extension_count`, `created_at`                                          |
+| `decisions` (nova)      | `rait_decision` (114–118)                  | 5   | `id`, `caseId`, `circuit`, `decisionKind`, `grounds`, `decidedBy`, `sessionId`, `signatureKind`, `signatureRef`, `publishedAt`                                                                                                                             | `decided_at`, `created_at`                                               |
+| `communications` (nova) | `rait_communication` (119–121)             | 3   | `id`, `caseId`, `decisionId`, `channel`, `sentAt`, `effectiveOn`, `nextDeadlineOn`, `authorityAppealNotice`, `contentRef`                                                                                                                                  | `created_at`                                                             |
+| `caseEvents` (nova)     | `rait_case_event` (122–126)                | 5   | `id`, `caseId`, `eventType`, `fromState`, `toState`, `occurredAt`, `actorId`, `payload`                                                                                                                                                                    | `created_at`                                                             |
+| `assignments` (nova)    | `rait_assignment` (127–136)                | 10  | `id`, `caseId`, `poolId`, `memberId`, `assignedBy`, `active`; no registro liberado, + `releasedAt`, `releaseReason`                                                                                                                                        | `assigned_at`, `created_at`                                              |
+| `impediments` (nova)    | `rait_impediment` (137; `update` 171)      | 1   | `id`, `caseId`, `memberId`, `basis`, `kind`, `legalBasis`                                                                                                                                                                                                  | `declared_at`, `created_at`                                              |
+| `clocks`                | `rait_clock` (138–143)                     | 6   | + `startedOn`, `legalBasis`                                                                                                                                                                                                                                | `flag_changed_at`, `created_at`                                          |
+| `clockAlerts` (nova)    | `rait_clock_alert` (144–148)               | 5   | `id`, `clockId`, `level`, `notifiedRole`, `incidentRef`                                                                                                                                                                                                    | `raised_at`, `created_at`                                                |
+| `sessions`              | `rait_session` (149–152)                   | 4   | + `scheduledFor`, `quorumRequired`, `chairMemberId` e, conforme a sessão, `agendaClosedAt`, `convenedAt`, `openedAt`, `closedAt`, `quorumObserved`                                                                                                         | `extraordinary`, `modality`, `short_notice_ack`, `version`, `created_at` |
+| `agendaItems`           | `rait_agenda_item` (153–155)               | 3   | + `position`, `priority`, `rapporteurMemberId`, `opinionSummary`, `opinionAnalysis`, `opinionVote`, `opinionRegisteredAt` e, nos itens 2 e 3, `readAt`, `proclaimedAt`                                                                                     | `withdrawn`, `version`, `created_at`                                     |
+| `attendance` (nova)     | `rait_attendance` (156–162)                | 7   | `id`, `sessionId`, `memberId`, `present`, `isChair`, `absenceJustified`                                                                                                                                                                                    | `is_chair_substitute`, `created_at`                                      |
+| `votes` (nova)          | `rait_vote` (163–166)                      | 4   | `id`, `agendaItemId`, `memberId`, `vote`, `castAt`                                                                                                                                                                                                         | `casting_vote`, `created_at`                                             |
+| `minutes` (nova)        | `rait_minutes` (167)                       | 1   | `id`, `sessionId`, `content`, `generatedAt`, `signedAt`, `signedBy`, `signatureKind`, `signatureRef`, `documentHash`, `publishedAt`                                                                                                                        | `version`, `created_at`                                                  |
+| `raitUnits`             | `rait_unit` (174–176)                      | 3   | + `coordinatorMemberId` (`null`) nas turmas 2 e 3                                                                                                                                                                                                          | `created_at`                                                             |
+| `raitSchedules`         | `rait_schedule` (178–180)                  | 3   | + `poolId`, `wipLimit`, `publishedAt`, `publishedBy`; `absenceReason` (`null`) onde faltava                                                                                                                                                                | `version`, `created_at`                                                  |
+| `raitScheduleSlots`     | `rait_schedule_slot` (182–186)             | 5   | + `absenceReason` (`null`) onde faltava                                                                                                                                                                                                                    | `created_at`                                                             |
+| `raitBatches`           | `rait_batch` (188–190)                     | 3   | + `seed`, `openedBy`, `homologatedAt`, `homologatedBy`; `drawnAt`/`acceptedAt` (`null`) onde faltavam                                                                                                                                                      | `opened_at`, `version`, `created_at`                                     |
+| `raitBatchItems`        | `rait_batch_item` (192–195)                | 4   | + `memberId`, `claimDueOn`, `acceptedAt`, `declinedAt`, `declineKind` onde faltavam                                                                                                                                                                        | `created_at`                                                             |
+| `raitSubstituteDuties`  | `rait_substitute_duty` (197–198)           | 2   | + `convenedAt` (`null`) no registro 2                                                                                                                                                                                                                      | `created_at`                                                             |
+| `raitBenches`           | `rait_bench` (200–203)                     | 4   | + `parityObserved`, `confirmedAt`, `insufficientAt` onde faltavam                                                                                                                                                                                          | `created_at`                                                             |
+| `raitPendingContents`   | `rait_pending_content` (205–207)           | 3   | + `missingItems`, `openedBy`; `closedAt`/`outcome` (`null`) no registro 1                                                                                                                                                                                  | `opened_at`, `created_at`                                                |
+| `raitRedirects`         | `rait_redirect` (209–210)                  | 2   | + `aitNumber`, `counterpartAgency`, `counterpartRenainfCode`, `redirectedAt`, `redirectedBy`; `caseId`, `originProtocolledOn`, `deadlineRestored` onde faltavam                                                                                            | `created_at`                                                             |
+| `raitDrafts`            | `rait_draft` (212–215)                     | 4   | + `authorId`, `contentHash`, `submittedAt`, `returnedAt`, `returnGuidance`, `returnCount` (onde faltava), `documentId` (nos 3 registros que a seed traz)                                                                                                   | `created_at`                                                             |
+
+A coluna `source_pending` lista os campos obrigatórios do tipo gerado (`@detran/api-clients`,
+`BP-INF-RAIT-*-001`) que a seed 20 não fixa. A JSON não os traz, e quem a consome (a prévia,
+`frontend-preview-mode.md` D-06) os marca `source_pending`. Fixá-los é trabalho da seed, não da
+JSON. Ficam fora desta seção as coleções que não vêm da seed 20 (`raitHolidays` … `raitReconciliations`,
+seeds 40–60) e as infrações, timers e avisos (`30-fixtures-infraction.sql`), que a JSON ainda não
+transcreve.

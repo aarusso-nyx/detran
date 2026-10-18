@@ -1,5 +1,11 @@
 # R-0030 — frente `user-docs` (ação 1 da C-0002: documentação de usuário por perfil, FAQ, glossário, ajuda contextual, site pt-BR)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/user-docs` @ `a9e19915`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
 pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2 fase E, §3.6). Maestro previsto:
 **Opus 5.5** (Claude Code), workers pela escada Claude (Opus 5.5 grande e médio, Sonnet 5 pequeno)

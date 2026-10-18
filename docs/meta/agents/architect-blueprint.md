@@ -1,6 +1,6 @@
 # Manual — Architect-blueprint
 
-Papel: **Architect** (Art. 6). Responsável por blueprints, contratos, ADRs, invariantes e guardas
+Papel: **Architect** (Art. 7; autoridade por caminho: Art. 6). Responsável por blueprints, contratos, ADRs, invariantes e guardas
 de estado. Não escreve código de feature; escreve o que gera código e o que restringe código.
 
 ## Leitura obrigatória

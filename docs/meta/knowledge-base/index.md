@@ -14,4 +14,6 @@ dashboard). This in-repository corpus holds the **why and the law** beside the c
 - Owner decisions log: [steering.md](./steering.md) (§H = implementation-gate ballots, 2026-09-13); open items: [open-issues.md](./open-issues.md).
 - Implementation gate and closure: [implementation-gate-2026-09-13.md](./implementation-gate-2026-09-13.md), [decision-closure-plan.md](./decision-closure-plan.md), [open-decisions-rait.md](./open-decisions-rait.md), ballots and letters in [owner-ballots/](./owner-ballots/README.md).
 
+- Inventário técnico dos produtos: [product brief atualizado em 2026-10-18](session-artifacts/product-brief-2026-10-18.md), com limites de integração e evidência histórica.
+
 Internal corpus. Publication is controlled by `docs/_ia/publication.json` and fails closed.

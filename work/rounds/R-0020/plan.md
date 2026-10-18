@@ -1,5 +1,11 @@
 # R-0020 — frente `devai-sensors` (ação 5 da C-0002: sensores DEVAI com o máximo de PASS)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/devai-sensors` @ `ebf308e7`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **ativa — autorizada pelo Owner em 2026-09-27.** Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` (§2 fase B, §3.2, §4, §5) e da
 inspeção somente leitura de 2026-09-25 (relatório (e), `work/campaigns/C-0002-inspecao-2026-09-25/e-devai.md`, versionado com

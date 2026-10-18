@@ -1,0 +1,448 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/sensor-inputs.schema.json",
+  "title": "Sensor inputs declaration",
+  "description": "One adopter-owned declaration of the inputs its sensors read and the plant surfaces it has, materialized at .devai/config/sensor-inputs.json from the law default under law/policy/adopter-defaults/sensor-inputs.json (ADR-SCR-0005, ADR-SCR-0003). Every entry under inputs is keyed by a registered sensor kind from law/policy/sensor-registry.json and carries only the inputs that kind reads: test roots, the decision record directory, the invariants directory, the coverage report path with its measured population and exclusion list (ADR-SCR-0007), the effects tsconfig path, the type check argv, the unit, integration, and end-to-end suite argv, the performance suite argv or legacy script name, the build argv and optional working directory, the reusable-workflow threshold, the plant depth exclusion globs, and the CI population of the three harness sensors (workflow, event, head and base branch, attempts, cancelled runs, lookback, minimum sample, excluded workflow-and-job pairs; ADR-SCR-0010). A kind that declares nothing keeps the sensor's own default; the build input is admitted only when test-tasks.json has no build node, and a build declaration whose argv differs from that node reads error with BUILD_ARGV_CONFLICT (ADR-AUT-0002); sense run refuses a key this schema does not list, a kind the registry does not hold, and a path that leaves the repository root, and merges an explicit --input for the same key over the declaration for one run only. The surfaces object names which of the four plant surfaces the repository has (http, database, rbac, actions), each true or false; a sensor bound only to surfaces declared absent emits a skipped reading carrying the declaration as its reason, the scorecard composer records a cell whose readings are all skipped as N/A with that reason, and a sensor that finds a surface declared absent reports review. Declaring an input never changes a threshold or a verdict rule.",
+  "schema_version": "1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "inputs"],
+  "$defs": {
+    "repository_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\.\\.(?:/|$))(?!.*/\\.\\.(?:/|$))[A-Za-z0-9_.@-][A-Za-z0-9_.@/-]*$",
+      "description": "Repository-relative path without a leading slash, a wildcard, or a parent segment. The sensor resolves it against the repository root and refuses a resolved path outside it."
+    },
+    "repository_root_glob": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\.\\.(?:/|$))(?!.*/\\.\\.(?:/|$))[A-Za-z0-9_.@*-][A-Za-z0-9_.@*/-]*$",
+      "description": "Repository-relative directory, or a directory pattern with one wildcard segment such as packages/*/tests, without a leading slash or a parent segment. Each expansion is walked recursively for *.test.* and *.spec.* files."
+    },
+    "repository_exclude_glob": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\.\\.(?:/|$))(?!.*/\\.\\.(?:/|$))[A-Za-z0-9_.@*-][A-Za-z0-9_.@*/-]*$",
+      "description": "Repository-relative file glob without a leading slash or a parent segment, matched against each file's repository-relative path: * matches within one path segment and a ** segment matches any number of segments, so packages/cli/src/generated/** matches every file below that directory."
+    },
+    "argv": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Exact argument vector the sensor executes from the repository root, executable first, never joined through a shell."
+    },
+    "script_name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:._-]*$",
+      "description": "Name of a script in the root package.json that the sensor runs through the package manager."
+    },
+    "test_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "testGlobs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/repository_root_glob"
+          },
+          "description": "Test roots the pattern walker expands and walks instead of the sensor default of packages/*/test and packages/*/src."
+        }
+      }
+    },
+    "spec_depth_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "adrDir": {
+          "$ref": "#/$defs/repository_path",
+          "description": "Directory holding the decision records the sensor counts, instead of the sensor default of docs/meta/adr."
+        },
+        "invariantsDir": {
+          "$ref": "#/$defs/repository_path",
+          "description": "Directory holding the invariant files the sensor tallies, instead of the sensor default of law/invariants."
+        }
+      }
+    },
+    "test_coverage_depth_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "coveragePath": {
+          "$ref": "#/$defs/repository_path",
+          "description": "Istanbul per-file coverage report (coverage-final.json shape) the sensor normalizes, instead of the sensor default of coverage/coverage-final.json. When the report is absent the sensor runs the declared producer for the population and reads the report it writes; a producer that exits non-zero reads FAIL with its exit code, and a report still missing after a zero exit reads FAIL with COVERAGE_REPORT_MISSING (ADR-SCR-0007)."
+        },
+        "population": {
+          "type": "string",
+          "enum": ["local", "rc"],
+          "description": "Name of the test population the report measures (ADR-SCR-0007): local is the LOCAL_INCLUDE population produced by tests/config/local.coverage.config.ts without a database; rc is the full population the RC coverage gate produces behind DEVAI_DB_TESTS. The producer writes a population.json sidecar beside the report naming its population, include globs, excluded suites, and measured file count; the sensor refuses a report whose sidecar names another population, so a stale report of one population is never read as the measurement of another, and every reading states the population it measured in metrics and in its finding text."
+        },
+        "exclusions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/repository_path"
+          },
+          "description": "Repository-relative test files the declared population leaves out, named one by one (ADR-SCR-0007): for the local population, the RC-only and database-bound suites that tests/config/local.config.ts lists as RC_ONLY. The sensor refuses a report whose sidecar lists a different exclusion set with the mismatch named. Declaring an exclusion changes the denominator the reading states, never a threshold."
+        }
+      }
+    },
+    "action_effect_inference_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "tsconfigPath": {
+          "$ref": "#/$defs/repository_path",
+          "description": "TypeScript project the effect analyzer loads, instead of the sensor default of tsconfig.effects.json at the repository root."
+        }
+      }
+    },
+    "type_check_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "argv": {
+          "$ref": "#/$defs/argv",
+          "description": "Type check command the sensor executes instead of its default of npx tsc --noEmit against the root tsconfig; its diagnostics are parsed the same way."
+        }
+      }
+    },
+    "test_suite_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "argv": {
+          "$ref": "#/$defs/argv",
+          "description": "Test suite command the sensor executes, without a shell, and grades by exit code and the vitest summary line, instead of the sensor default of pnpm vitest run --config tests/config/t1.unit.config.ts, t3.integration.config.ts, or t5.e2e.config.ts for the unit, integration, or end-to-end suite. Under sense run the broker admits only the governed shape of template pnpm-vitest-run-governed-config in law/policy/subprocess-effects.json; the framework's e2e_test declares tests/config/rc.e2e.config.ts, whose own include selects tests/e2e, with no test path appended (ADR-SCR-0007)."
+        }
+      }
+    },
+    "build_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv"],
+      "properties": {
+        "argv": {
+          "$ref": "#/$defs/argv",
+          "description": "Build command the sensor executes, without a shell, and grades by exit code, for an adopter whose repository has no test-tasks.json build node (ADR-AUT-0002). When the descriptor carries a build node that node's argv and cwd are the command and this declaration is not admitted; a declaration whose argv differs from the node is a declaration defect read as error with BUILD_ARGV_CONFLICT. Under sense run the authority broker admits only the build shape law/policy/subprocess-effects.json declares (pnpm-recursive-build); a declared argv outside it is refused before a process starts."
+        },
+        "cwd": {
+          "$ref": "#/$defs/repository_path",
+          "description": "Directory the build command runs from, repository-relative under the same path grammar as the other inputs; the repository root when omitted."
+        }
+      }
+    },
+    "perf_test_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "argv": {
+          "$ref": "#/$defs/argv",
+          "description": "Performance suite command the sensor executes, without a shell, and grades by exit code, duration, and an optional JSON metrics line. When declared it takes precedence over scriptName."
+        },
+        "scriptName": {
+          "$ref": "#/$defs/script_name",
+          "description": "Legacy key: the root package script the sensor runs as pnpm <scriptName> when no argv is declared, instead of the sensor default of test:perf."
+        }
+      }
+    },
+    "harness_idiomaticity_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "minWorkflowsForReusableCheck": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Workflow count at or above which the reusable-workflow signal is graded, instead of the sensor default of 1 (always graded). Below the threshold the signal is dropped from both the score and its denominator, not counted as absent, because a small fixed CI surface does not benefit from factoring shared workflows out."
+        }
+      }
+    },
+    "plant_depth_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "excludeGlobs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/repository_exclude_glob"
+          },
+          "description": "Repository-relative globs of source files the sensor leaves out of the plant it measures, such as a generated view derived from a law policy (an F4 artifact, not authored plant). The sensor default excludes nothing. Declaring a glob changes which files are counted, never the thresholds."
+        }
+      }
+    },
+    "workflow_file": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+\\.ya?ml$",
+      "description": "File name of a workflow under .github/workflows, such as pull-request-checks.yml, without a directory. It is the <file> value of the --workflow option on the gh run list shapes the broker admits (templates gh-run-list, gh-run-list-created, gh-run-list-branch, and gh-run-list-branch-created in law/policy/subprocess-effects.json), so the grammar is fixed here and mirrored there."
+    },
+    "workflow_event": {
+      "enum": ["push", "pull_request", "merge_group", "workflow_dispatch", "schedule"],
+      "description": "The GitHub Actions event whose runs form the sample: pull_request or merge_group for a gate that runs on pull requests, push for a gate that runs on the base branch, workflow_dispatch for a manually started run, schedule for a timed one. It is the <event> value of the --event option on the admitted gh run list shapes; the declared workflow must carry the event under its on: block, which the declared-inputs contract test checks and the schema cannot."
+    },
+    "branch_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^(?!-)(?!.*\\.\\.)[A-Za-z0-9._/-]+$",
+      "description": "One branch reference: letters, digits, dot, underscore, slash, or hyphen, without a leading hyphen or a parent segment, the same grammar as the <ref> value of the --branch option on the admitted gh run list shapes."
+    },
+    "harness_population_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "event", "minimumSample"],
+      "description": "The CI population one harness sensor samples (ADR-SCR-0010): which workflow and event, on which head and base branch, which attempts, whether cancelled runs count, how far back, how many runs make a verdict, and which workflow-and-job pairs are left out by identity. The population is part of the reading's metrics. Below minimumSample the sensor reads unknown with the sample size, the minimum, and the population in its finding, never pass and never fail; at or above it the verdict is the measured one under the sensor's existing thresholds. Declaring a population never changes a threshold.",
+      "properties": {
+        "workflow": {
+          "$ref": "#/$defs/workflow_file",
+          "description": "The workflow file whose runs are sampled; passed to gh run list as --workflow <file>. Required: a declaration without it is rejected."
+        },
+        "event": {
+          "$ref": "#/$defs/workflow_event",
+          "description": "The event whose runs are sampled; passed to gh run list as --event <event>. Required: a declaration without it is rejected, and one naming an event the workflow does not carry is rejected by the declared-inputs contract test."
+        },
+        "headBranch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^(?:\\*|(?!-)(?!.*\\.\\.)[A-Za-z0-9._/-]+)$",
+          "default": "*",
+          "description": "The head branch of the runs sampled: a literal branch reference, passed to gh run list as the single --branch <ref> option, or * for any head branch, in which case no --branch option is passed and every head branch is kept. A gate that runs on pull requests has a head branch that is never the base branch, so it declares *. Default * when omitted."
+        },
+        "baseBranch": {
+          "$ref": "#/$defs/branch_ref",
+          "default": "main",
+          "description": "The base branch the sampled runs target: the branch a pull request or merge group merges into, or the branch pushed for a push event. Applied by the sensor after the gh run list call, since gh run list carries no base branch field. Default main when omitted."
+        },
+        "attempts": {
+          "enum": ["last", "all"],
+          "default": "last",
+          "description": "Whether only the last attempt of each run counts (last, the gh run list default, so a rerun replaces its earlier attempt) or every attempt counts (all). Default last when omitted."
+        },
+        "includeCancelled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether runs whose conclusion is cancelled count in the sample. False leaves them out of the sample and the denominator; true counts a cancelled run as a run that did not succeed. Default false when omitted."
+        },
+        "lookbackDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365,
+          "default": 30,
+          "description": "How many days back from the moment of sensing a run may have been created and still be sampled. Default 30 when omitted. The since input of harness_green_main is kept and is applied after this population filter."
+        },
+        "minimumSample": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many runs the population must hold, after every filter above, before the sensor states a verdict. For harness_green_main and harness_robustness it counts the sampled runs; for harness_performance it counts the successful runs whose durations are measured. Below it the sensor reads unknown with sample_size and minimum_sample in the finding. Required: a declaration without it is rejected."
+        },
+        "excludedJobs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["workflow", "job"],
+            "properties": {
+              "workflow": {
+                "$ref": "#/$defs/workflow_file",
+                "description": "The workflow file that carries the excluded job."
+              },
+              "job": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$",
+                "description": "The job key under the workflow's jobs: block."
+              }
+            }
+          },
+          "description": "Workflow-and-job pairs whose runs are left out of the sample by identity, never by duration: jobs that wait on a protected environment, such as the approval stops of a release rehearsal, so their wall-clock time does not enter the performance median. A run of the sampled workflow with a long duration stays in the sample and can drive fail. Empty when omitted."
+        }
+      }
+    },
+    "surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["http", "database", "rbac", "actions"],
+      "description": "The plant surfaces the repository declares (ADR-SCR-0003). Every surface is stated, true or false. A sensor bound only to absent surfaces emits skipped with the declaration as its reason and its cell records N/A when every reading there is skipped; a sensor that finds evidence of an absent surface reports review instead of skipping. When this object is omitted every surface is presumed present and each sensor measures as it did before the declaration existed.",
+      "properties": {
+        "http": {
+          "type": "boolean",
+          "description": "True when the repository has an HTTP surface (routes, endpoints, an API map); false declares the surface absent. Absent: inventory_api and inventory_routes skip, and inventory_coverage and plant_coverage no longer count endpoints."
+        },
+        "database": {
+          "type": "boolean",
+          "description": "True when the repository has a database surface (tables, migrations, a data model); false declares the surface absent. Absent: inventory_data_model skips and no table is expected."
+        },
+        "rbac": {
+          "type": "boolean",
+          "description": "True when the repository has an authorization surface (roles, permissions, PII-bearing columns); false declares the surface absent. Absent: inventory_rbac and inventory_data_handling skip."
+        },
+        "actions": {
+          "type": "boolean",
+          "description": "True when the repository has a registered action surface (law/policy/action-registry.json); false declares the surface absent. Absent: the action registry is not measured. Present: plant_coverage and inventory_coverage measure registered actions against their specification links the way they measure routes."
+        }
+      }
+    }
+  },
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Declared inputs keyed by registered sensor kind. Only the kinds listed here read a declared input; every other registered kind takes no input and is refused as an undeclared key.",
+      "properties": {
+        "test_security_coverage": {
+          "$ref": "#/$defs/test_inputs"
+        },
+        "test_performance_coverage": {
+          "$ref": "#/$defs/test_inputs"
+        },
+        "test_robustness_coverage": {
+          "$ref": "#/$defs/test_inputs"
+        },
+        "test_idiomaticity": {
+          "$ref": "#/$defs/test_inputs"
+        },
+        "spec_depth": {
+          "$ref": "#/$defs/spec_depth_inputs"
+        },
+        "test_coverage_depth": {
+          "$ref": "#/$defs/test_coverage_depth_inputs"
+        },
+        "action_effect_inference": {
+          "$ref": "#/$defs/action_effect_inference_inputs"
+        },
+        "type_check": {
+          "$ref": "#/$defs/type_check_inputs"
+        },
+        "unit_test": {
+          "$ref": "#/$defs/test_suite_inputs"
+        },
+        "integration_test": {
+          "$ref": "#/$defs/test_suite_inputs"
+        },
+        "e2e_test": {
+          "$ref": "#/$defs/test_suite_inputs"
+        },
+        "perf_test": {
+          "$ref": "#/$defs/perf_test_inputs"
+        },
+        "build": {
+          "$ref": "#/$defs/build_inputs"
+        },
+        "harness_idiomaticity": {
+          "$ref": "#/$defs/harness_idiomaticity_inputs"
+        },
+        "plant_depth": {
+          "$ref": "#/$defs/plant_depth_inputs"
+        },
+        "harness_green_main": {
+          "$ref": "#/$defs/harness_population_inputs"
+        },
+        "harness_performance": {
+          "$ref": "#/$defs/harness_population_inputs"
+        },
+        "harness_robustness": {
+          "$ref": "#/$defs/harness_population_inputs"
+        }
+      }
+    },
+    "surfaces": {
+      "$ref": "#/$defs/surfaces"
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "inputs": {}
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "inputs": {},
+      "surfaces": {
+        "http": true,
+        "database": true,
+        "rbac": true,
+        "actions": false
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "inputs": {
+        "test_security_coverage": {
+          "testGlobs": ["packages/*/tests", "tests"]
+        },
+        "spec_depth": {
+          "adrDir": "law/adr"
+        },
+        "test_coverage_depth": {
+          "coveragePath": "scratch/coverage/local/coverage-final.json",
+          "population": "local",
+          "exclusions": ["tests/integration/authority-effect-postgres.db.test.ts"]
+        },
+        "action_effect_inference": {
+          "tsconfigPath": "tests/config/tsconfig.effects.json"
+        },
+        "type_check": {
+          "argv": ["pnpm", "run", "typecheck"]
+        },
+        "e2e_test": {
+          "argv": ["pnpm", "vitest", "run", "--config", "tests/config/rc.e2e.config.ts"]
+        },
+        "perf_test": {
+          "argv": [
+            "pnpm",
+            "vitest",
+            "run",
+            "--config",
+            "tests/config/rc.performance.config.ts",
+            "tests/regression"
+          ]
+        },
+        "harness_green_main": {
+          "workflow": "pull-request-checks.yml",
+          "event": "pull_request",
+          "headBranch": "*",
+          "baseBranch": "main",
+          "attempts": "last",
+          "includeCancelled": false,
+          "lookbackDays": 30,
+          "minimumSample": 20,
+          "excludedJobs": [{ "workflow": "release.yml", "job": "build-release" }]
+        },
+        "harness_performance": {
+          "workflow": "ci.yml",
+          "event": "push",
+          "headBranch": "main",
+          "minimumSample": 10
+        }
+      },
+      "surfaces": {
+        "http": false,
+        "database": false,
+        "rbac": false,
+        "actions": true
+      }
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { DetranError } from '@detran/shared';
 import {
   assertMeasureAllowed,
   findRow,
+  lockRow,
   inTenantTransaction,
   insertRow,
   patchRow,
@@ -68,7 +69,7 @@ export class RecordRemovalCommand {
     }
 
     return inTenantTransaction(this.deps, async (tx) => {
-      let measure = await findRow(this.deps, tx, 'measures', measureId);
+      let measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });
       let currentState = assertMeasureAllowed(
         measure,

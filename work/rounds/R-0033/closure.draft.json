@@ -1,0 +1,242 @@
+{
+  "_draft": "RASCUNHO Architect atualizado em 2026-10-18, W3. Não é closure canônico, não foi registrado nem certifica fechamento. id/closed_at/merged_as permanecem null. Snapshot W1/W2 preservado em historical_w1_w2. verdict fail com NOT RUN indica medição ou efeito ainda pendente, não falha material observada; o formato histórico não oferece not run.",
+  "schemaVersion": "1.0.0",
+  "id": null,
+  "round_id": "R-0033",
+  "title": "C-0003 fase P: prévia honesta RAIT/JW-01 e Portal baseada em fixtures",
+  "declaring_decision": "D-1",
+  "closing_decision": null,
+  "batches": [
+    {
+      "id": "CTG-0001",
+      "roles": ["Architect", "Inspector", "Engineer"],
+      "commit": "96256370",
+      "headline": "TASK-0001 contrato/inventário/padrão v0 (e9daaddf); TASK-0002 specs de prévia (629e1695, 3f632355); TASK-0003 configuração preview — M1 (52f73e0f); TASK-0004 estados 64 × 5 (96256370)."
+    },
+    {
+      "id": "CTG-0003",
+      "roles": ["Inspector", "Engineer"],
+      "commit": "3832a928",
+      "headline": "TASK-0005 roteiro e scripts (5ad1528b); TASK-0006 JW-01, 87 capturas, axe, dist/preview — M2 (3832a928)."
+    },
+    {
+      "id": "FIX-0001",
+      "roles": ["Inspector"],
+      "commit": "7b2accbb",
+      "headline": "Paridade rait-fixtures.json × seed (OD-C3-008 a), PR #184 próprio (1727bdc8), mesclado em main e integrado por merge 77de66ed."
+    },
+    {
+      "id": "CTG-0005",
+      "roles": ["Architect"],
+      "commit": "aca40880",
+      "headline": "TASK-0008 concluída no checkpoint preservado aca40880; estimativa J e follow-ups históricos preservados. W3 refresca inventário e registros sem fechar a rodada."
+    },
+    {
+      "id": "CTG-0004",
+      "roles": ["Inspector", "Engineer"],
+      "commit": "0b11e91a",
+      "headline": "W3: TASK-0009 Inspector aceita (61282b66), TASK-0007 Engineer aceita (0b11e91a). Browser final da reconstrução source3eeb95ca PASS, reports/W3-final-gates.md; ensaio inicial ee3dca5a preservado como histórico."
+    }
+  ],
+  "gates": {
+    "prompt-review": {
+      "status": "pass",
+      "detail": "Histórico W1: reviews/prompt-review-3.json PASS; prompts de tarefa originais preservados."
+    },
+    "fix-0001-delivery-review": {
+      "status": "pass",
+      "detail": "Histórico W1/PR #184: reviews/fix-0001-delivery-review-1.json PASS; fixture parity integrada separadamente."
+    },
+    "task-acceptance": {
+      "status": "pass",
+      "detail": "W3: TASK-0009 aceita em 61282b66 (reports/TASK-0009.md, W3-portal-red.log); TASK-0007 aceita em 0b11e91a (reports/TASK-0007.md, W3-portal-all-tests.log). Aceitação dos pacotes não substitui gates integrais, reconstrução e review final. Histórico das demais tarefas em historical_w1_w2."
+    },
+    "pnpm-check": {
+      "status": "pass",
+      "detail": "W3 pnpm check integral exit 0, sessão do maestro 11592; reports/W3-pnpm-check.log. RAIT 163 arquivos PASS/1 skipped, 4958 testes PASS/139 todo; Portal 125 arquivos/1551 PASS/14 todo. Contratos, blueprints, proof gates, workspace typecheck e lint/test/build production dos apps PASS. Primeira tentativa infra Compose preservada em W3-pnpm-check-compose-missing.log; ambiente corrigido via DOCKER_CONFIG temporário com Compose 5.6 instalado, sem mudança de configuração persistente."
+    },
+    "cross-family-delivery-review": {
+      "status": "pass",
+      "detail": "Claude alias CLI opus, ciclo1 somente leitura sobre HEAD40741b11a7053df98d6b914c9389d60faba6a36e. reviews/delivery-review-W3-1.json PASS; dois achados low tratados documentalmente, sem mudança runtime ou condição adicional de PR. Registro reviews/delivery-review-W3-1.bridge.json. C10 permanece parcial.",
+      "family": "claude",
+      "model_alias": "opus",
+      "prompt_sha256": "f8061926301a83c05fa7e3db510583ed70af1b8d71a8f1a268910283d3a8231b",
+      "output_sha256": "f33130a3e6b4e279e47dc0bdb39246f0c0eaa50e754a411a31d332d043db1aab",
+      "started_at": "2026-10-18T06:17:14Z",
+      "ended_at": "2026-10-18T06:22:06Z"
+    },
+    "remote-ci": {
+      "status": "skipped",
+      "detail": "PR #191 aberto: https://github.com/aarusso-nyx/detran/pull/191; publicação inicial bb6c4458. CI pendente na criação; estado vivo em https://github.com/aarusso-nyx/detran/pull/191/checks. Nenhum PASS remoto afirmado."
+    },
+    "evidence-chain": {
+      "status": "skipped",
+      "detail": "NOT RUN: evidência atual e efeitos pós-integração pendentes; round close/seal não autorizados por B3 e não executados."
+    },
+    "additional-local-checks": {
+      "status": "pass",
+      "detail": "W3 doctor PASS, round tasks 320 PASS; development builds dos dois apps com marca ausente (71/108 arquivos) e production negativo dos dois PASS. Recibos: reports/W3-doctor.log, W3-round-tasks.log, W3-development-builds.log, W3-production-gates.log."
+    },
+    "final-artifacts": {
+      "status": "pass",
+      "detail": "reports/W3-artifacts.json: runtime source 3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989; manifests RAIT48/Portal32 com todos os hashes verificados. ZIP693124 bytes/83 entradas/CRC válido, SHA256 db39717beb8c75e3e4e523bbbbbf5e7f9b930e2a269685517980e525f075672f. Upload pendente de autenticação browser; recibos posteriores metadata-only D-12/A6."
+    },
+    "final-browser": {
+      "status": "pass",
+      "detail": "reports/W3-final-gates.md: RAIT87 capturas/2 contraprovas/29 axe/0 seriouscritical/13 moderate; Portal38 rotas/96 capturas/32 axe/2 contraprovas/0 v1-console-pageerrors/6 achados menores. Todos os32 assets browser Portal SHA iguais ao manifesto. Ambos smokes HTTP200 e limpeza de processos PASS."
+    }
+  },
+  "source_repo_deleted": false,
+  "validation_criteria": [
+    {
+      "criterion": "C-01: `pnpm --filter @detran/<s> build --configuration preview` gera `dist/preview/` e `ng serve --configuration preview` sobe sem backend; `pnpm --filter @detran/<s> build` (production) continua verde e **sem** `DETRAN_PREVIEW_MARK` no `dist/browser`",
+      "verdict": "pass",
+      "evidence": "W3 builds production/development/preview e smokes HTTP 200 PASS nos dois apps, marcas positiva/negativas conferidas. Reconstrução final source 3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989 PASS, manifests48/32 e ZIP verificados em reports/W3-artifacts.json; smokes finais limparam processos. Upload pendente de autenticação browser; review Claude PASS, PR #191 aberto; CI pendente na criação."
+    },
+    {
+      "criterion": "C-02: Spec de cobertura: toda entrada `page` do manifesto renderiza sob `preview` com interceptor de rede bloqueando `/v1` (0 requisições) e sem erro no console",
+      "verdict": "pass",
+      "evidence": "Verificação final da reconstrução: RAIT 64 páginas nos specs, 87 capturas e 2 contraprovas; Portal38 rotas, 2 contraprovas e zero /v1, console/page errors PASS. Todos32 assets browser Portal correspondem por SHA ao manifesto. Junta médica preserva redirecionamento real indisponível. Fontes: reports/W3-final-gates.md, W3-portal-browser.json. Limite: browser Portal observa apenas /v1; bloqueio geral provado pelo interceptor e specs HTTP/mock/stream/auth boundary, conforme review low2. Sensor browser mais amplo fica como follow-up, não condição de PR."
+    },
+    {
+      "criterion": "C-03: Faixa \"PRÉVIA — DADOS FICTÍCIOS\" presente em 100 % das páginas; toda ação de comando exibe \"não funcional na prévia\" ao ser acionada (spec por ação do catálogo da jornada)",
+      "verdict": "pass",
+      "evidence": "W3 RAIT preview specs PASS; Portal 234 testes preview e suíte final 125 arquivos/1551 testes PASS/14 todo (reports/W3-pnpm-check.log), incluindo duas regressões do registro i18n do Inspector. Marca e 21 ações/downloads rejeitados com aviso/log, sem efeito real; delegações SERVICE_UNAVAILABLE. Aceitação inicial TASK-0007 tinha 1549 PASS, preservada como história."
+    },
+    {
+      "criterion": "C-04: Jornada JW-nn: cada tela do roteiro de TASK-0005 capturada em 360/768/1280 nos estados `loaded`/`empty`/`error`/`forbidden`; capturas versionadas em `work/rounds/R-0033/preview/`",
+      "verdict": "pass",
+      "evidence": "W3 reconstrução final: RAIT87 PNG (84 passos1–8 +3 prova negativa), 2 contraprovas PASS; Portal96 PNG nas38 rotas PASS. Capturas versionadas em preview/{rait-web,portal-web}/captures; reports/W3-final-gates.md. Fonte runtime3eeb95ca; mudanças posteriores de recibos são metadados."
+    },
+    {
+      "criterion": "C-05: axe-core 4.13.0 sobre as telas da jornada sob `preview`: 0 violações `serious`/`critical`; demais listadas no relatório, não escondidas",
+      "verdict": "pass",
+      "evidence": "W3 browser final: RAIT29 páginas, zero serious/critical e13 moderate; Portal32 verificações axe, zero serious/critical e6 achados menores. Todos listados, sem ocultação, em preview/rait-web/captures/axe-report.json e reports/W3-portal-browser.json; consolidado W3-final-gates.md."
+    },
+    {
+      "criterion": "C-06: Nenhum valor normativo inventado: fixture rastreável a `docs/framework/arch/fixtures/`, `@example` gerado ou seed; `source_pending` visível onde faltar",
+      "verdict": "pass",
+      "evidence": "W3: inventory-rait-web.md refrescado a partir das 49 chaves e adapters; 14 leituras passaram a ter fonte, 6 leituras Infraction/Notification continuam sem coleção; campos sem fonte source_pending. Portal usa fixtures canônicas e 4 presets de assinatura; junta_medica indisponível; sem tenant, persona ou serviço inventado. Revisão cruzada final pendente."
+    },
+    {
+      "criterion": "C-07: `pnpm --filter @detran/<s> lint`, `test`, `typecheck`, `build` verdes; testes existentes **não editados** salvo adição; `pnpm check` verde no fim",
+      "verdict": "pass",
+      "evidence": "W3 pnpm check integral exit 0, reports/W3-pnpm-check.log: workspace typecheck, lint, testes e builds production PASS; RAIT 163 arquivos PASS/1 skipped, 4958 testes PASS/139 todo; Portal 125 arquivos/1551 testes PASS/14 todo. Gates não enfraquecidos; comparação final dos testes preexistentes permanece parte da revisão cruzada. reports/W3-final-gates.md confirma testes preexistentes inalterados contra main e novos testes restritos aos módulos preview."
+    },
+    {
+      "criterion": "C-08: `git diff origin/main...HEAD --name-only` sem `backend/`, `packages/senatran-adapter`, gerados, `tools/stynx-version.json`, `.github/workflows/`, `.devai/`, `record/`, `law/register`, `policy.ts`",
+      "verdict": "pass",
+      "evidence": "Conferência final pelo maestro em reports/W3-final-gates.md: diff da rodada exclui backend, gerados, STYNX pin, workflows, .devai/, record/, law/register e policy.ts. Cadeias governada e legada preservadas; proof gates PASS no pnpm check."
+    },
+    {
+      "criterion": "C-09: `frontend-preview-mode.md` e `frontend-wiring-pattern.md` v0 publicados; `work/rounds/README.md`, `waves.md`, `backlog.md` atualizados; ODs no registro canônico",
+      "verdict": "pass",
+      "evidence": "Contratos/padrão v0/inventários/continuação/status e índices atualizados; KB e rounds index PASS. OD-C3-007/008 decididas, OD-C3-009 aberta sem bloquear preview. Histórico W1/W2 separado e preservado; documentação relata limitações e dashboard/TEAT não entregues. Recibos consolidados em reports/W3-final-gates.md."
+    },
+    {
+      "criterion": "C-10: Delivery-review PASS (Opus 5.5); evidência `evidence-R-0033.json`; `round close` + `round seal`",
+      "verdict": "fail",
+      "evidence": "PARCIAL: delivery-review Claude opus ciclo 1 PASS sobre 40741b11, reviews/delivery-review-W3-1.json e .bridge.json; dois low documentais tratados. PR #191 aberto: https://github.com/aarusso-nyx/detran/pull/191. CI pendente na criação; acompanhar /pull/191/checks. Upload aguarda autenticação browser; merge, evidência pós-integração, auditoria exata, close/seal pendentes. B3 não concede integração/fechamento; C10 não integralmente satisfeita."
+    }
+  ],
+  "closed_at": null,
+  "merged_as": null,
+  "pending_reason": "PR #191 aberto; CI pendente na criação, acompanhar https://github.com/aarusso-nyx/detran/pull/191/checks. Upload ZIP aguarda autenticação GitHub browser. Gates locais/build source3eeb95ca e review40741b11 PASS são observações históricas dessas fontes; commits posteriores apenas metadados. Merge/close/seal não autorizados; id/closed_at/merged_as null.",
+  "release_disposition": "none-needed",
+  "notes": "D-1: autorização de 2026-10-15, B1/B2 e continuação B3 de 2026-10-18. Maestro W3 Codex; reviewer Claude via alias opus planejado. Configurações históricas de executores e PC preservadas. Inventário RAIT refrescado A4/A5. Resultados iniciais não provam SHA final. Sem release/deploy; dashboard/TEAT preview não entregues.",
+  "historical_w1_w2": {
+    "date": "2026-10-15",
+    "gates": {
+      "prompt-review": {
+        "status": "pass",
+        "detail": "reviews/prompt-review-3.json PASS (Sol 6, ciclo 3 restrito, Adenda B1); ciclos 1 e 2 FAIL."
+      },
+      "fix-0001-delivery-review": {
+        "status": "pass",
+        "detail": "reviews/fix-0001-delivery-review-1.json PASS (PR #184)."
+      },
+      "task-acceptance": {
+        "status": "pass",
+        "detail": "acceptance_commands reexecutados pelo maestro: TASK-0001 7/7, TASK-0002 11/11, TASK-0005 14/14, TASK-0003 9/9, TASK-0004 7/7, TASK-0006 15/15."
+      },
+      "pnpm-check": {
+        "status": "skipped",
+        "detail": "not run — sequência final (2)."
+      },
+      "cross-family-delivery-review": {
+        "status": "skipped",
+        "detail": "not run — sequência final (3)."
+      },
+      "remote-ci": {
+        "status": "skipped",
+        "detail": "not run — sem push/PR (autorização do Owner pendente)."
+      },
+      "evidence-chain": {
+        "status": "skipped",
+        "detail": "not run — evidence-R-0033.json, audit observe, round close/seal após o merge."
+      }
+    },
+    "validation_criteria": [
+      {
+        "criterion": "C-01: `pnpm --filter @detran/<s> build --configuration preview` gera `dist/preview/` e `ng serve --configuration preview` sobe sem backend; `pnpm --filter @detran/<s> build` (production) continua verde e **sem** `DETRAN_PREVIEW_MARK` no `dist/browser`",
+        "verdict": "pass",
+        "evidence": "TASK-0003 gate do maestro 9/9 em 52f73e0f (reports/TASK-0003.md §Gate): ng build --configuration preview gera apps/rait/web/dist/preview/index.html com a marca; smoke.mjs (ng serve --configuration preview) responde 200 com rait-preview-root e encerra; pnpm --filter @detran/rait-web build (production) verde e grep -rl DETRAN_PREVIEW_MARK dist/browser vazio. Reexecutado no gate de TASK-0004 (7/7, 96256370) e TASK-0006 (15/15, 3832a928; smoke 200 na porta 60469). Ressalva: reconstrução no SHA final do PR fica para a sequência final (D-12)."
+      },
+      {
+        "criterion": "C-02: Spec de cobertura: toda entrada `page` do manifesto renderiza sob `preview` com interceptor de rede bloqueando `/v1` (0 requisições) e sem erro no console",
+        "verdict": "pass",
+        "evidence": "apps/rait/web/src/app/preview/preview-coverage.spec.ts (+ preview-http-block.interceptor.spec.ts): 64 páginas do manifesto sob preview, 0 requisições, sem console.error; vitest src/app/preview 428 passed/0 failed e suíte 4958 passed/139 todo/0 failed em 52f73e0f (reports/TASK-0003.md iteração 2 e gate); varredura 64 × 5 = 320 casos conformes (reports/TASK-0004.md)."
+      },
+      {
+        "criterion": "C-03: Faixa \"PRÉVIA — DADOS FICTÍCIOS\" presente em 100 % das páginas; toda ação de comando exibe \"não funcional na prévia\" ao ser acionada (spec por ação do catálogo da jornada)",
+        "verdict": "pass",
+        "evidence": "preview-mark.spec.ts (faixa em todas as páginas, inclusive /sem-permissao pelo host rait-forbidden-page, A5 B3) e preview-not-functional.spec.ts (ações da JW-01 + 64 comandos M8 = RAIT_COMMANDS) verdes em 52f73e0f; percurso ao vivo de TASK-0006: 8 ações (claim-next, triage, admit, reject, open-inquiry, answer, extend, submit-draft) → \"Não funcional na prévia: <cmd> não foi executado.\" + \"Indisponível nesta versão.\", 0 /v1 (preview/rait-web/execucao.md). attach-official provado por ausência do botão (fail-closed, OD-R12-027/R-14)."
+      },
+      {
+        "criterion": "C-04: Jornada JW-nn: cada tela do roteiro de TASK-0005 capturada em 360/768/1280 nos estados `loaded`/`empty`/`error`/`forbidden`; capturas versionadas em `work/rounds/R-0033/preview/`",
+        "verdict": "pass",
+        "evidence": "87 PNG em work/rounds/R-0033/preview/rait-web/captures/ (7 telas dos passos 1–8 × loaded/empty/error/forbidden × 360/768/1280 = 84 + 3 da prova negativa /sem-permissao), commit 3832a928; node check.mjs captures → \"ok: 87 capturas == expectedCaptureCount()\" (gate de TASK-0006). Passos 9–10 reescritos por OD-C3-007 (a) (adenda A3)."
+      },
+      {
+        "criterion": "C-05: axe-core 4.13.0 sobre as telas da jornada sob `preview`: 0 violações `serious`/`critical`; demais listadas no relatório, não escondidas",
+        "verdict": "pass",
+        "evidence": "work/rounds/R-0033/preview/rait-web/captures/axe-report.json (axe-core 4.13.0, 29 páginas): 0 critical, 0 serious; 13 moderate listados (landmark-unique × 4 em .detran-sidenav > nav; heading-order × 9) em execucao.md e reports/TASK-0006.md; node check.mjs axe → \"ok: 0 serious/critical em 29 páginas\"."
+      },
+      {
+        "criterion": "C-06: Nenhum valor normativo inventado: fixture rastreável a `docs/framework/arch/fixtures/`, `@example` gerado ou seed; `source_pending` visível onde faltar",
+        "verdict": "pass",
+        "evidence": "preview-fixture-source.spec.ts verde em 52f73e0f (14 leituras A4 derivadas da JSON; D-07 restrito a InfractionClient/NotificationClient); fixtures servidas = docs/framework/arch/fixtures/ byte a byte (P-13; sha256 em dist-preview.manifest.json, 48/0 divergentes); source_pending por D-06 (5) e registros bloqueados D-06 (6) (collectionDocuments, payments, refundOrders) listados em reports/TASK-0003.md; datas sem coluna na seed exibidas como célula vazia, nenhum valor fabricado."
+      },
+      {
+        "criterion": "C-07: `pnpm --filter @detran/<s> lint`, `test`, `typecheck`, `build` verdes; testes existentes **não editados** salvo adição; `pnpm check` verde no fim",
+        "verdict": "fail",
+        "evidence": "NOT RUN (parcial): pnpm --filter @detran/rait-web lint, test (4958/0), typecheck e build verdes nos gates de TASK-0003/0004/0006; nenhum spec existente editado (só specs novos em src/app/preview/). pnpm check completo ainda não rodado nesta rodada — é passo (2) da sequência final OD-C2-005."
+      },
+      {
+        "criterion": "C-08: `git diff origin/main...HEAD --name-only` sem `backend/`, `packages/senatran-adapter`, gerados, `tools/stynx-version.json`, `.github/workflows/`, `.devai/`, `record/`, `law/register`, `policy.ts`",
+        "verdict": "fail",
+        "evidence": "NOT RUN (parcial): fronteira conferida pelo maestro por tarefa via git status (reports/TASK-0001…0006.md, commits.md) — nenhum caminho proibido tocado por tarefa. A conferência final git diff origin/main...HEAD --name-only é da sequência final, após o merge de origin/main (hoje 9d731f4b)."
+      },
+      {
+        "criterion": "C-09: `frontend-preview-mode.md` e `frontend-wiring-pattern.md` v0 publicados; `work/rounds/README.md`, `waves.md`, `backlog.md` atualizados; ODs no registro canônico",
+        "verdict": "fail",
+        "evidence": "NOT RUN (parcial): frontend-preview-mode.md e frontend-wiring-pattern.md v0 publicados em e9daaddf; work/rounds/README.md (linha R-0033), waves.md (§Histórico) e backlog.md (entradas R-0033 →) atualizados por TASK-0008 na árvore, ainda sem commit; OD-C3-007/008 decididas no registro canônico; a proposta de OD de TASK-0008 (divergências JW-02/05/08 × manifesto) aguarda registro pelo maestro. Reavaliar no fechamento."
+      },
+      {
+        "criterion": "C-10: Delivery-review PASS (Opus 5.5); evidência `evidence-R-0033.json`; `round close` + `round seal`",
+        "verdict": "fail",
+        "evidence": "NOT RUN: nenhuma delivery-review da rodada (OD-C2-005: uma só, na sequência final; o reviewer desta execução é Codex Sol 6 pela troca de família registrada em AUTHORIZATION.md §Desvios); evidence-R-0033.json inexistente; round close/seal não executados."
+      }
+    ],
+    "pending_reason": "aguarda merge do PR (sequência final OD-C2-005: merge de origin/main, pnpm check, delivery-review única, PR com autorização do Owner, CI remoto, evidência, audit observe, round close/seal); SHAs curtos de commits.md — o maestro preenche os SHAs completos.",
+    "notes": "D-1 = autorização do Owner de 2026-10-15 (AUTHORIZATION.md, lida como R-0033) e Adendas B1/B2; D-2 = decisão de fechamento, a vincular no close. CTG-0002 sem tarefa própria (A1 item 1). Desvio de família registrado em AUTHORIZATION.md §Desvios (maestro Fable 5.1, workers Claude, reviewer Codex Sol 6). Inventário inventory-rait-web.md §2/§3/§5.1 pré-A4 até o refresco da janela 3.",
+    "note": "Snapshot fiel do rascunho original aca40880, restaurado e comparado por igualdade profunda em 2026-10-18; não descreve a continuação W3."
+  },
+  "pull_request": {
+    "number": 191,
+    "url": "https://github.com/aarusso-nyx/detran/pull/191",
+    "checks_url": "https://github.com/aarusso-nyx/detran/pull/191/checks",
+    "published_head_at_creation": "bb6c4458",
+    "ci_at_creation": "pending"
+  }
+}

@@ -63,7 +63,7 @@ export class ReconcileNumberingCommand {
   ): Promise<ReconcileNumberingResponse> {
     const { tenantId } = tenantScope(this.deps);
     return inTransaction(this.deps, async (scope) => {
-      const reservation = await this.load(scope, tenantId, id);
+      const reservation = await this.load(scope, tenantId, id, true);
       if (!['reserved', 'consumed'].includes(reservation.status))
         throw validationFailed([{ path: 'status', rule: 'transition' }]);
       const start = bigintOf(reservation.start_number);
@@ -106,7 +106,8 @@ export class ReconcileNumberingCommand {
            values ($1, $2, $3, $4, now())
            on conflict (tenant_id, range_id, number)
            do update set status = excluded.status, reconciled_at = now(),
-                         updated_at = now()`,
+                         updated_at = now()
+             where ops.numbering_consumption.status <> 'aplicado'`,
           [reservation.id, reservation.range_id, number, status],
         );
         consumption.push({
@@ -175,13 +176,22 @@ export class ReconcileNumberingCommand {
     });
   }
 
+  /**
+   * `lock` trava a reserva (`for update`) na reconciliação: o applier `ait`
+   * também a trava antes de gravar o consumo `aplicado`, então a leitura dos
+   * aplicados só acontece depois de um ato concorrente confirmado ou desfeito.
+   */
   private async load(
     scope: SqlScope,
     tenantId: string,
     id: string,
+    lock = false,
   ): Promise<ReservationRow> {
     const result = await scope.query<ReservationRow>(
-      `select * from ops.numbering_reservation where tenant_id = $1 and id = $2`,
+      lock
+        ? `select * from ops.numbering_reservation
+            where tenant_id = $1 and id = $2 for update`
+        : `select * from ops.numbering_reservation where tenant_id = $1 and id = $2`,
       [tenantId, id],
     );
     const row = result.rows[0];

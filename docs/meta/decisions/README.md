@@ -11,11 +11,14 @@ resolve product ambiguity so design/engineering can proceed, but they do not cer
 correctness — where a decision carries residual legal risk, the source rule says so explicitly and
 this handoff repeats the caveat.
 
-**Scope note.** Only `inf` (RAIT, and TEAT's ported modules — `ait`, `alcohol`, `measures`,
-`normative`) has real backend code in this monorepo today. `ch` (PEC), `est` (BOAT), `portal`, and
-`dashboard` are still empty placeholder domains. The RAIT and TEAT docs below are directly
-actionable against existing schema/services; the BOAT, PEC, PORTAL, and DASHBOARD docs are
-forward-looking — capture the decision now so it's not lost before those domains are ported.
+**Scope note (reconciled 2026-10-18).** The original 2026-08-28 description of
+CH/EST/PORTAL/DASHBOARD as empty domains is historical. Those backend domains now
+exist in `backend/domains/`; their presence does not establish production readiness.
+PEC frontend is commissioned by ADR-0034 and R-0031/R-0032; main still contains only
+the reserved app README, with contracts/tests preserved on branches. The per-domain
+Owner decisions below remain binding. Consult the
+[reconciled backlog](../knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual)
+for implementation versus integration state.
 
 ## Per-domain docs
 

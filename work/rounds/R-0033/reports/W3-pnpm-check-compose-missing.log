@@ -1,0 +1,152 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 format:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:archival-pc-guard /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-archival-pc-guard.mjs --repo-root .
+
+verify-archival-pc-guard: OK (applied)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-stynx-pin.ts
+
+All STYNX dependencies match 1.5.3.
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stynx-pin/tests/*.test.mjs
+
+✔ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (69.581125ms)
+✔ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (66.294667ms)
+✔ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (66.729417ms)
+✔ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (68.506334ms)
+✔ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (70.158041ms)
+✔ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (426.572958ms)
+✔ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (129.605209ms)
+✔ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (68.17825ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1016.723625
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stack /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stack/*.test.mjs
+
+✔ dado o package.json adotado quando a superfície stack é enumerada então as nove entradas originais permanecem verbatim (0.876667ms)
+✔ dado help quando o comando é solicitado então termina com sucesso (18.12675ms)
+✔ dado um comando desconhecido quando a stack é invocada então termina com erro (15.020708ms)
+✔ dado stop quando recebe uma opção então recusa a opção (12.071958ms)
+✔ dado status quando recebe uma opção então recusa a opção (12.364167ms)
+✔ dado build quando recebe uma opção então recusa a opção (13.2775ms)
+✔ dado db-init quando recebe uma opção então recusa a opção (19.542875ms)
+✔ dado db-reset quando recebe uma opção então recusa a opção (26.747083ms)
+✔ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (227.095416ms)
+✔ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (15.07125ms)
+✔ dado o proxy versionado quando ele é lido então v1 aponta para o backend loopback (0.1615ms)
+✔ dado os quatro manifests Angular quando a superfície é lida então portas e projetos são os adotados (1.050833ms)
+✔ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (24.590917ms)
+✔ C-02-05 A6 dado outro banco quando a fixture Portal e invocada entao recusa antes de SQL (6.258334ms)
+✔ C-02-05 A6 dado o banco descartável quando a fixture Portal e invocada então envia SQL ao container e ID concretos (159.134041ms)
+✔ C-02-02 dado o mock SEFAZ quando a interface é inspecionada então exporta factory e CLI fixa loopback:3999 (56.0965ms)
+✔ C-02-02 dado o adapter SEFAZ quando o mock recebe as seis operações então o sensor usa tsx e o adapter real (192.600833ms)
+✔ C-02-05/06 dado targets estruturados quando smoke é executado então percorre root, proxy, health, PEC e CH off sem vazar segredo (57.708ms)
+✔ C-02-05 A6 dado ID Portal ausente quando o proxy responde entao smoke falha (53.167375ms)
+✔ C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executado então registra target, resultado e motivo específicos (320.725791ms)
+✔ C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter (109.043708ms)
+✔ C-02-05 dado item de array com tenant divergente quando o proxy responde então smoke registra tenant_mismatch (108.263583ms)
+✔ C-02-05/06 dado as fases CLI quando smoke reinicia o backend então prepara Portal após preflight, restaura os cinco papéis e não herda overrides locais (437.233083ms)
+✔ C-02-02 dado o comando literal do adapter SEFAZ quando executado então confirma operações e erros observáveis (113.181041ms)
+✔ C-02-05/06 dado o preflight falho quando a CLI smoke é iniciada então não chama bash e preserva seu relatório separado (39.778084ms)
+✔ C-02-05 dado PEC construído e entrypoint em caminho com espaços e symlink quando a CLI smoke roda então mede a porta 4204 (272.547625ms)
+✔ C-01-05 dado o banco próprio quando apply full não recebe autorização então recusa antes de conectar (10.80775ms)
+✔ C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed (500.197625ms)
+✔ C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais (0.223084ms)
+✔ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (222.094083ms)
+✔ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (222.653875ms)
+✔ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (214.581083ms)
+✔ C-01-07 dado DETRAN_DB_IMAGE quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.319792ms)
+✔ C-01-07 dado DB_HOST quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (12.298541ms)
+✔ C-01-07 dado DB_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (12.323917ms)
+✔ C-01-07 dado DB_USER quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (12.262583ms)
+✔ C-01-07 dado DETRAN_BACKEND_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (12.440292ms)
+✔ C-01-07 dado DETRAN_RUNTIME_PROFILE inválida quando config é solicitado então recusa sem alcançar runtime (13.439125ms)
+✔ C-01-07 dado SENATRAN_PROVIDER inválida quando config é solicitado então recusa sem alcançar runtime (12.969417ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (12.566084ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (13.751542ms)
+✔ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (184.73325ms)
+✔ C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra (1134.119959ms)
+✔ C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz (462.8315ms)
+✖ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (81.545791ms)
+✔ C-01-10 dado Docker Compose 2.24.3 quando start prepara o mock então valida a versão antes de up (282.272ms)
+✔ C-01-10 dado Docker Compose 2.24.4 quando start prepara o mock então valida a versão antes de up (1351.9335ms)
+✔ C-01-07 dado start --no-mock quando falha de forma controlada então config persiste mock desabilitado e stop limpa o modo (1439.979791ms)
+✔ C-01-07 dado start --no-mock quando health é chamado depois então não sonda o mock desabilitado (2276.529875ms)
+✔ C-01-07 dado variáveis sensíveis quando backend inicia então elas não atravessam o ambiente explicitamente permitido (1164.834625ms)
+✔ C-01-11 dado start quando a saúde do backend expira então informa timeout e não deixa PID ou processo local (1138.553208ms)
+✔ C-01-11 dado start quando somente a saúde do mock expira então pede os logs Compose do serviço app (1010.571458ms)
+✔ C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos (1066.12575ms)
+✔ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (109.675958ms)
+✔ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (656.31675ms)
+✔ C-01-12 dado os papéis locais padrão quando a stack os declara então pertencem ao catálogo composto (1.904708ms)
+✔ C-01-13 dado db-reset quando o volume é gerenciado então preserva volumes e usa somente a autorização própria (0.432708ms)
+✔ C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada (0.03775ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 57
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13706.8075
+
+✖ failing tests:
+
+test at tools/stack/revision.test.mjs:499:1
+✖ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (81.545791ms)
+  AssertionError [ERR_ASSERTION]: unknown shorthand flag: 'f' in -f
+  
+  Usage:  docker [OPTIONS] COMMAND [ARG...]
+  
+  Run 'docker --help' for more information
+  
+  
+  125 !== 0
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:516:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 125,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.

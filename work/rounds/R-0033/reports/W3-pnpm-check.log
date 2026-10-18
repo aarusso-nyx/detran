@@ -1,0 +1,2134 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 format:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:archival-pc-guard /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-archival-pc-guard.mjs --repo-root .
+
+verify-archival-pc-guard: OK (applied)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-stynx-pin.ts
+
+All STYNX dependencies match 1.5.3.
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stynx-pin/tests/*.test.mjs
+
+✔ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (71.386583ms)
+✔ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (70.22ms)
+✔ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (70.034833ms)
+✔ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (67.265417ms)
+✔ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (71.853958ms)
+✔ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (446.100291ms)
+✔ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (131.472375ms)
+✔ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (70.868791ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1051.071542
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stack /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stack/*.test.mjs
+
+✔ dado o package.json adotado quando a superfície stack é enumerada então as nove entradas originais permanecem verbatim (0.964667ms)
+✔ dado help quando o comando é solicitado então termina com sucesso (17.62ms)
+✔ dado um comando desconhecido quando a stack é invocada então termina com erro (16.723291ms)
+✔ dado stop quando recebe uma opção então recusa a opção (13.290708ms)
+✔ dado status quando recebe uma opção então recusa a opção (13.731875ms)
+✔ dado build quando recebe uma opção então recusa a opção (14.463042ms)
+✔ dado db-init quando recebe uma opção então recusa a opção (15.897125ms)
+✔ dado db-reset quando recebe uma opção então recusa a opção (18.666125ms)
+✔ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (246.127ms)
+✔ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (15.236708ms)
+✔ dado o proxy versionado quando ele é lido então v1 aponta para o backend loopback (0.227959ms)
+✔ dado os quatro manifests Angular quando a superfície é lida então portas e projetos são os adotados (1.476375ms)
+✔ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (30.875708ms)
+✔ C-02-05 A6 dado outro banco quando a fixture Portal e invocada entao recusa antes de SQL (6.738375ms)
+✔ C-02-05 A6 dado o banco descartável quando a fixture Portal e invocada então envia SQL ao container e ID concretos (272.291666ms)
+✔ C-02-02 dado o mock SEFAZ quando a interface é inspecionada então exporta factory e CLI fixa loopback:3999 (55.902208ms)
+✔ C-02-02 dado o adapter SEFAZ quando o mock recebe as seis operações então o sensor usa tsx e o adapter real (162.998ms)
+✔ C-02-05/06 dado targets estruturados quando smoke é executado então percorre root, proxy, health, PEC e CH off sem vazar segredo (59.705583ms)
+✔ C-02-05 A6 dado ID Portal ausente quando o proxy responde entao smoke falha (57.502042ms)
+✔ C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executado então registra target, resultado e motivo específicos (323.359792ms)
+✔ C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter (112.861167ms)
+✔ C-02-05 dado item de array com tenant divergente quando o proxy responde então smoke registra tenant_mismatch (109.033875ms)
+✔ C-02-05/06 dado as fases CLI quando smoke reinicia o backend então prepara Portal após preflight, restaura os cinco papéis e não herda overrides locais (339.203208ms)
+✔ C-02-02 dado o comando literal do adapter SEFAZ quando executado então confirma operações e erros observáveis (114.73625ms)
+✔ C-02-05/06 dado o preflight falho quando a CLI smoke é iniciada então não chama bash e preserva seu relatório separado (40.575875ms)
+✔ C-02-05 dado PEC construído e entrypoint em caminho com espaços e symlink quando a CLI smoke roda então mede a porta 4204 (215.15925ms)
+✔ C-01-05 dado o banco próprio quando apply full não recebe autorização então recusa antes de conectar (11.142875ms)
+✔ C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed (579.665375ms)
+✔ C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais (0.219917ms)
+✔ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (223.935792ms)
+✔ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (229.140334ms)
+✔ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (220.021875ms)
+✔ C-01-07 dado DETRAN_DB_IMAGE quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.945583ms)
+✔ C-01-07 dado DB_HOST quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (12.945ms)
+✔ C-01-07 dado DB_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.913833ms)
+✔ C-01-07 dado DB_USER quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.397875ms)
+✔ C-01-07 dado DETRAN_BACKEND_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.256792ms)
+✔ C-01-07 dado DETRAN_RUNTIME_PROFILE inválida quando config é solicitado então recusa sem alcançar runtime (13.265292ms)
+✔ C-01-07 dado SENATRAN_PROVIDER inválida quando config é solicitado então recusa sem alcançar runtime (14.118292ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (14.071375ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (14.2625ms)
+✔ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (59.836542ms)
+✔ C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra (687.480167ms)
+✔ C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz (480.285084ms)
+✔ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (157.66925ms)
+✔ C-01-10 dado Docker Compose 2.24.3 quando start prepara o mock então valida a versão antes de up (276.614166ms)
+✔ C-01-10 dado Docker Compose 2.24.4 quando start prepara o mock então valida a versão antes de up (578.197958ms)
+✔ C-01-07 dado start --no-mock quando falha de forma controlada então config persiste mock desabilitado e stop limpa o modo (1609.708458ms)
+✔ C-01-07 dado start --no-mock quando health é chamado depois então não sonda o mock desabilitado (2210.223292ms)
+✔ C-01-07 dado variáveis sensíveis quando backend inicia então elas não atravessam o ambiente explicitamente permitido (1163.604542ms)
+✔ C-01-11 dado start quando a saúde do backend expira então informa timeout e não deixa PID ou processo local (996.74875ms)
+✔ C-01-11 dado start quando somente a saúde do mock expira então pede os logs Compose do serviço app (1003.27325ms)
+✔ C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos (1040.872416ms)
+✔ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (89.969166ms)
+✔ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (729.519209ms)
+✔ C-01-12 dado os papéis locais padrão quando a stack os declara então pertencem ao catálogo composto (0.790291ms)
+✔ C-01-13 dado db-reset quando o volume é gerenciado então preserva volumes e usa somente a autorização própria (0.376833ms)
+✔ C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada (0.035792ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12531.083834
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 law:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/law/tests/*.test.mjs
+
+✔ dado fixture temporária quando prepara os diretórios então cria os caminhos de corpus exigidos (8.144708ms)
+✔ dado schema copiado e hash correspondente quando verifica a regra (a) então não há violação (a) (6.903209ms)
+✔ dado schema ausente quando verifica a regra (a) então aponta a cópia ausente (4.115125ms)
+✔ dado schema extra quando verifica a regra (a) então aponta o arquivo fora do roster (4.74725ms)
+✔ dado schema alterado quando verifica a regra (a) então aponta bytes divergentes (5.127292ms)
+✔ dado sha divergente no manifesto quando verifica a regra (a) então aponta o hash incorreto (3.982208ms)
+✔ dado manifesto sem schema do roster quando verifica a regra (a) então aponta o roster divergente (3.8875ms)
+✔ dado manifesto com schema extra quando verifica a regra (a) então aponta o roster divergente (3.393584ms)
+✔ dado manifesto JSON inválido quando verifica a regra (a) então aponta manifesto inválido (3.151167ms)
+✔ dado OD-R19-001 registrado na seção canônica quando verifica a regra (b) então não há violação (b) (9.415959ms)
+✔ dado cabeçalho Decisão quando a âncora remove o diacrítico então rejeita a aproximação (3.983042ms)
+✔ dado OD anterior em outra seção do registro quando verifica a regra (b) então resolve a linha da tabela (3.809542ms)
+✔ dado OD-R19 fora da seção canônica quando verifica a regra (b) então rejeita a linha deslocada (3.917958ms)
+✔ dado provenance sem fonte quando verifica a regra (b) então aponta o ID não resolvido (3.177708ms)
+▶ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente
+  ✔ ID WF-INF-999 (3.401541ms)
+  ✔ ID UC-INF-999 (3.871583ms)
+  ✔ ID JRN-INF-999 (3.368584ms)
+  ✔ ID APP-MISSING (3.794958ms)
+  ✔ ID ADR-9999 (3.526625ms)
+✔ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente (18.500166ms)
+✔ dado âncora ausente no documento quando verifica a regra (b) então aponta a referência inválida (4.769375ms)
+✔ dado documento de autoridade ausente quando verifica a regra (b) então aponta a fonte inexistente (3.332334ms)
+✔ dado OD não registrado quando verifica a regra (b) então aponta a decisão não resolvida (3.487792ms)
+✔ dado README vigente quando verifica a regra (e) então não há violação (e) (3.092458ms)
+✔ dado README-placeholder sem conteúdo autoral quando verifica a regra (e) então placeholders isolados são permitidos (4.371333ms)
+✔ dado README com cada frase obsoleta quando verifica a regra (e) então aponta ambas (3.901417ms)
+✔ dado README de jornada obsoleto com arquivo descendente quando verifica a regra (e) então aponta a frase (3.908791ms)
+✔ dado README autoral que mantém frase obsoleta quando verifica a regra (e) então aponta a frase (3.546708ms)
+✔ dado termo e GE correspondentes quando verifica a regra (c) então aceita o par (5.018083ms)
+✔ dado termo fonte sem GE quando verifica a regra (c) então aponta a ausência (3.647459ms)
+✔ dado GE sem termo no domain.md quando verifica a regra (c) então aponta a entrada órfã (3.556625ms)
+✔ dado JRN com JNY correspondente quando verifica a regra (d) então não marca o par como órfão (5.736083ms)
+✔ dado JRN sem JNY quando verifica a regra (d) então aponta a jornada fonte sem par (5.433583ms)
+✔ dado JNY sem JRN quando verifica a regra (d) então aponta a jornada DEVAI órfã (3.461917ms)
+✔ dado UC com entrada no bundle correspondente quando verifica a regra (d) então não marca o caso como órfão (4.723917ms)
+✔ dado UC sem entrada em bundle quando verifica a regra (d) então aponta o caso fonte sem par (5.697625ms)
+✔ dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta a entrada órfã (3.887166ms)
+✔ dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE] (4.276209ms)
+✔ dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID] (3.941625ms)
+✔ dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING] (4.180917ms)
+✔ dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED] (3.782083ms)
+✔ dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING] (4.722041ms)
+✔ dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE] (4.949875ms)
+✔ dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE] (5.653ms)
+✔ dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE] (4.659334ms)
+✔ dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE] (3.850375ms)
+✔ dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED] (3.486083ms)
+✔ dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS] (5.073666ms)
+✔ dado JNY sem steps então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_steps] (5.177583ms)
+✔ dado JNY sem AC então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_AC] (5.178333ms)
+✔ dado JNY sem persona então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_persona] (5.094959ms)
+✔ dado JNY status não draft então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_status_não_draft] (4.43325ms)
+✔ dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT] (14.2575ms)
+✔ dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT] (27.888833ms)
+✔ dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT] (36.424084ms)
+✔ dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT] (37.747458ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 398.573
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 devai:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/devai/tests/*.test.mjs
+
+✔ dada uma fixture com linha de prova sem âncora quando mede a linha de base então a órfã traz caminho sequência e sha256 (775.7465ms)
+✔ dada uma fixture com linha de prova declarada quando mede a linha de base então ela conta como âncora e não como órfã (0.145208ms)
+✔ dada uma fixture com TASK válida e inválida quando mede a linha de base então preserva classificações e erros reproduzíveis (0.503417ms)
+✔ dada uma fixture sem fonte canônica F2/F3 quando mede commits mistos então não inventa total nem classificação (0.074ms)
+✔ dadas SensorReadings persistidas por kind quando mede a linha de base então conta estado e referência sem promover resultado não persistido (0.087791ms)
+✔ dada uma fixture com linhas ancorada e órfã quando mede a linha de base então proofs.lines preserva chave e hash de todas as linhas (0.169083ms)
+✔ dada uma fixture com checks, provas e rodada pendentes quando renderiza Markdown então expõe contagens e o diagnóstico da rodada (0.182041ms)
+✔ dada uma linha de base sem regressões quando mede o fechamento então grava baseline-final e compara os oito eixos (1378.186625ms)
+✔ dada uma SensorReading de abertura removida quando mede o fechamento então escreve baseline-final e falha a regressão de sensores (1331.0045ms)
+✔ dada somente a órfã A2 e gate estrito limpo quando compara proofs então aceita a linha nova (11.984958ms)
+✔ dada A2 com gate ausente quando compara proofs então falha (7.601042ms)
+✔ dada A2 com gate com falha quando compara proofs então falha (6.971459ms)
+✔ dada A2 com órfã não declarada pelo gate quando compara proofs então falha (5.345167ms)
+✔ dada A2 com âncora duplicada no gate quando compara proofs então falha (8.610458ms)
+✔ dada A2 com referência inválida no gate quando compara proofs então falha (11.878541ms)
+✔ dada A2 com erro de validação no gate quando compara proofs então falha (7.116583ms)
+✔ dada A2 com cadeia inválida quando compara proofs então falha (7.271958ms)
+✔ dada A2 com hash A2 diferente quando compara proofs então falha (5.681ms)
+✔ dada A2 com outra órfã nova quando compara proofs então falha (6.82225ms)
+✔ dados os dez caminhos A3 e recibo íntegro quando compara TASKs então aceita somente a transposição autorizada (19.11925ms)
+✔ dada transposição A3 com hash da abertura divergente quando compara TASKs então falha (9.299584ms)
+✔ dada transposição A3 com hash de abertura do posterior D1 divergente quando compara TASKs então falha (13.150958ms)
+✔ dada transposição A3 com subconjunto de nove caminhos quando compara TASKs então falha (13.742ms)
+✔ dada transposição A3 com décimo primeiro caminho quando compara TASKs então falha (10.848917ms)
+✔ dada transposição A3 com hash do sidecar divergente quando compara TASKs então falha (8.681167ms)
+✔ dada transposição A3 com sidecar ausente no recibo quando compara TASKs então falha (11.02075ms)
+✔ dada transposição A3 com leitura de sidecar falha no recibo quando compara TASKs então falha (6.943042ms)
+✔ dada transposição A3 com artefato congelado divergente quando compara TASKs então falha (11.928625ms)
+✔ dada transposição A3 com mapeamento analisado de alias divergente quando compara TASKs então falha (15.581083ms)
+✔ dada transposição A3 com mapeamento analisado D1 divergente quando compara TASKs então falha (8.490375ms)
+✔ dada transposição A3 com leitura ou JSON do índice D1 falha no recibo quando compara TASKs então falha (11.141416ms)
+✔ dada transposição A3 com hash posterior D1 divergente quando compara TASKs então falha (10.463083ms)
+✔ dada transposição A3 com destino canônico inválido quando compara TASKs então falha (10.75525ms)
+✔ dada transposição A3 com destino canônico ausente quando compara TASKs então falha (12.478542ms)
+✔ dada transposição A3 com verificador negativo quando compara TASKs então falha (6.90775ms)
+✔ dada transposição A3 com argv do verificador divergente quando compara TASKs então falha (5.922834ms)
+✔ dada transposição A3 com hash da fonte canônica final divergente quando compara TASKs então falha (11.98ms)
+✔ dada transposição A3 com recibo ausente quando compara TASKs então falha (7.234ms)
+✔ dada fixture A3 sem cópia local do verificador quando mede fechamento então grava recibo normalizado com hashes reais (1542.506541ms)
+✔ dado tabela CTG A3.2 quando normaliza representante então reserva aliases distintos sem colisão (1295.14ms)
+✔ dado candidato CTG já reservado quando normaliza então rejeita colisão declarada sem mutação (1380.120042ms)
+✔ dado doze títulos A3.2 quando normaliza então aplica cada literal editorial sem truncamento (1072.700125ms)
+✔ dado INV externo A3.2 quando normaliza então arquiva como ref sem alegar invariante local (1052.025792ms)
+✔ dado executor.note autorizado quando normaliza então remove só a nota e preserva contrato executor no sidecar (947.921167ms)
+✔ dado EV e REC A3.2 quando normaliza então arquiva sete REC e trinta e um EV sem fabricar evidência (21196.189791ms)
+✔ dado onze PCs A3.2 guardados quando normaliza então produz índice separado e projeções prospectivas fiéis (6136.416542ms)
+✔ dado PCs arquivísticos sem manifesto A3.5 quando normaliza então falha sem escrita (77.57975ms)
+✔ dado outra classe source_pending quando normaliza então preserva JSON integral e não deixa mutação parcial (65.013875ms)
+✔ dado quatro D1 quando normaliza então move 0019 e arquiva três snapshots sem criar IDs (1651.138792ms)
+✔ dado D1 com snapshot divergente quando normaliza então rejeita hash e preserva todos os originais (112.786625ms)
+✔ dado dois basenames para o mesmo ID quando verifica round TASKs então rejeita antes de D1 (1301.841875ms)
+✔ dado S2 e S3 incompletas quando normaliza então conserva checkpoint arquivístico e sucessoras (1921.434ms)
+✔ dado S2 incompleta com outra classe pendente quando normaliza então não muda o arquivo inteiro (128.767209ms)
+✔ dado dez posições literais quando normaliza então usa null e mantém disciplina e upstream (6837.766792ms)
+✔ dado ciclo runtime preexistente quando projeta P1 então upstream segue DAG sem ciclo novo (905.404583ms)
+✔ dado PREP U1 quando normaliza então preserva todas as linhas do ledger sem horário inventado (916.718458ms)
+✔ dado PREP com budget alterado quando normaliza então falha sem alegar precedência temporal (917.279708ms)
+✔ dado T1 escalated quando normaliza então indexa reviews sem terceiro worker nem PASS retroativo (1037.761708ms)
+✔ dado T1 com revisão hash divergente quando normaliza então falha sem alterar TASK (1116.995167ms)
+✔ dado S1 cujo sidecar diz incompleta quando verificador vê completed então rejeita PASS inventado (79.429584ms)
+✔ dado P1 com posição inventada quando verifica sidecar então rejeita reclassificação de Auditor (81.48775ms)
+✔ dado U1 com retry omitido quando verifica índice então rejeita perda da ordem documental (91.173625ms)
+✔ dado U1 com caminho externo quando verifica índice então rejeita fonte fora do repositório (80.258083ms)
+✔ dado U1 com horário fabricado quando verifica índice então rejeita precedência temporal inventada (89.865833ms)
+✔ dado T1 com terceiro worker inventado quando verifica índice então preserva limite 2 (155.271583ms)
+✔ dado normalizador arquivístico quando inspeciona fonte então não invoca despacho nem escreve estado runtime (3.222958ms)
+✔ dado nove iteration_trail legados da tabela quando normalizados então arquiva arrays integrais sem inventar started_at ou verdict (7980.111625ms)
+✔ dado iteration_trail já válido em R-0003 TASK-0001 quando normalizado então preserva bytes sem arquivamento (78.385375ms)
+✔ dado R-0006 TASK-0003 escalada sem índice T1 quando normalizada então preserva caso especial pendente (709.821417ms)
+✔ dado iteration_trail legado fora dos nove caminhos autorizados quando normalizado então relata source_pending sem mutar (78.985625ms)
+✔ dado R-0012 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (755.246458ms)
+✔ dado R-0016 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (801.851958ms)
+✔ dado upstream vazio em arquivo alheio quando normalizado então falha sem projetar null (86.690042ms)
+✔ dado upstream vazio em hash alheio no path autorizado quando normalizado então falha sem projetar null (84.697792ms)
+✔ dado tarefa válida quando normalizada duas vezes então preserva executor, composição e bytes (152.044875ms)
+✔ dado ref não INV em target_invariants quando normalizada então move a ref para tags sem perdê-la (968.556667ms)
+✔ dado db_isolation legado sem fonte quando normalizada então relata source_pending sem mutar (98.716083ms)
+✔ dado coupled_task_group inválido sem prova quando normalizada então relata source_pending sem mutar (103.278916ms)
+✔ dado propriedade adicional com bytes estáveis quando normalizada então relata source_pending sem mutar (86.454875ms)
+✔ dado TASK allowlist com none quando normalizada então projeta database e preserva fato histórico no sidecar (1034.243166ms)
+✔ dado hash allowlist divergente quando normalizada então relata source_pending sem mutar (110.003458ms)
+✔ dado sidecar corrompido quando normalizada então relata source_pending sem mutar (880.815792ms)
+✔ dado TASK fora da allowlist quando normalizada então relata source_pending sem mutar (96.019834ms)
+✔ dado TASK allowlisted com classe A3.2 pendente quando normalizada então não aplica projeção parcial (95.759792ms)
+✔ dado allowlist correta mas literal diferente de none quando normalizada então não aplica A3.1 (89.9015ms)
+✔ dado lote com sidecar persistido e outra TASK pendente quando normalizada então não deixa substituição sem original (996.570791ms)
+✔ dado estado parcial canônico sem relatório quando normalizada então retoma sem reescrever bytes (243.39775ms)
+✔ dado matriz R1 aplicada quando normaliza as duas TASKs concluídas então projeta owner sem tocar policy, despacho ou raízes protegidas (2244.175959ms)
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (137.091083ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (63.083459ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (61.906791ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (198.409959ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (57.72225ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (70.921291ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (58.887291ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (52.414875ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (51.880875ms)
+✔ dado manifesto pré-migração íntegro quando verifica guarda então aceita (185.088125ms)
+✔ dado manifesto applied íntegro quando verifica guarda então aceita (302.973792ms)
+✔ dado fixture applied quando confere A3.2 então preserva sidecars, tags e bridges (91.175584ms)
+✔ dado variantes canônicas de fonte quando calcula hash então preserva digest (0.238958ms)
+✔ dado manifesto ausente quando verifica guarda então falha fechada (90.470875ms)
+✔ dado status desconhecido quando verifica guarda então falha fechada (88.722083ms)
+✔ dado fonte com hash divergente quando verifica guarda então falha fechada (203.29575ms)
+✔ dado pacote antecipado em pré-migração quando verifica guarda então falha fechada (161.424833ms)
+✔ dado store R-0007 quando verifica guarda então falha fechada (125.184083ms)
+✔ dado G0 ausente ou vazio quando verifica guarda então aceita (116.983542ms)
+✔ dado G0 malformado quando verifica guarda então falha fechada (115.086625ms)
+✔ dado backlog R-0007 quando verifica guarda então falha fechada (107.756792ms)
+✔ dado fonte simbólica quando verifica guarda então falha fechada (106.748125ms)
+✔ dado disco aplicado e manifesto regressivo quando verifica guarda então falha fechada (108.12325ms)
+✔ dado manifesto applied sem índice quando verifica guarda então falha fechada (157.838333ms)
+✔ dado uso inválido quando verifica guarda então retorna 2 (71.997459ms)
+✔ dado linha órfã histórica quando não há declaração então falha (105.8715ms)
+✔ dado linha órfã histórica quando prova declaratória ancorada a cita então passa (87.203125ms)
+✔ dado declaração com hash ou sequência divergente quando verifica então falha (107.4175ms)
+✔ dado duas declarações da mesma linha quando verifica então falha (95.702667ms)
+✔ dado declaração append-only de linha nova quando tem hash correto então falha (78.082833ms)
+✔ dado baseline histórica alterada em somente orphans quando verifica então falha (74.792084ms)
+✔ dado baseline histórica alterada em somente lines quando verifica então falha (91.080542ms)
+✔ dado baseline histórica alterada em listas congruentes com trio falso quando verifica então falha (69.993167ms)
+✔ dado baseline histórica alterada em head sha adulterado quando verifica então falha (92.923291ms)
+✔ dado duas âncoras para a mesma linha quando verifica então falha (104.89425ms)
+✔ dado linha nova sem âncora quando verifica então falha (91.569042ms)
+✔ dado referência da cadeia sem linha quando verifica então falha (91.781875ms)
+✔ dado sequência física divergente quando verifica então falha (86.962584ms)
+✔ dado declaração sem âncora quando verifica então falha (90.361417ms)
+✔ dado declaração de linha já ancorada quando verifica então falha (77.915583ms)
+✔ dado declaração de caminho inexistente quando verifica então falha (88.306042ms)
+✔ dado nota generic malformada quando verifica então falha (93.77825ms)
+✔ dado payload round divergente quando verifica então falha (109.51125ms)
+✔ dado declaração da sequência oito com hash da nove quando verifica então falha (89.826375ms)
+✔ dado somente contagem de órfãs adulterada quando verifica então falha (81.431375ms)
+✔ dado R-0021 seq. 2 sem arquivo excepcional quando declaração ancorada a cita então falha (83.032375ms)
+✔ dado autorização A2 e exceção exatas quando declaração ancorada cita R-0021 seq. 2 então passa (79.613667ms)
+✔ dado exceção A2 sem prova declaratória quando verifica R-0021 seq. 2 então falha (84.0845ms)
+✔ dado hash da decisão A2 errado quando declaração ancorada cita R-0021 seq. 2 então falha (100.38075ms)
+✔ dado outro trio com digest canônico coerente quando declaração ancorada cita R-0021 seq. 2 então falha (96.593958ms)
+✔ dado linha extra no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (86.617292ms)
+✔ dado linha duplicada no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (88.577ms)
+✔ dado A2 válida quando nova linha R-0020 é declarada então essa linha falha (150.482917ms)
+✔ dado historical-gap e generic com a mesma sequência quando verifica então exige namespaces e hash físico distintos (305.453542ms)
+✔ dado duas tarefas 2.0.0 válidas quando o gate verifica a rodada então aceita ambas (1471.9535ms)
+✔ dado dois arquivos válidos com mesmo round_id e id quando o gate verifica a rodada então falha por duplicata (1199.289958ms)
+✔ dado tarefa com schemaVersion inválido quando o gate verifica a rodada então falha e identifica o arquivo (819.13925ms)
+✔ dado tarefa inválida em R-0020 quando o gate verifica as rodadas então identifica o arquivo (1024.278458ms)
+✔ dado sidecar e tags coerentes quando verifica originais então aceita o vínculo (100.385ms)
+✔ dado vínculo sem relatório antes depois quando verifica originais então falha fechada (74.388291ms)
+✔ dado bytes de sidecar corrompidos quando verifica originais então falha com o caminho (83.799458ms)
+✔ dado caminho de sidecar que escapa do repositório quando verifica originais então falha fechada (77.257083ms)
+✔ dado alias divergente quando verifica originais então falha com o arquivo canônico (112.204ms)
+✔ dado sidecar ausente e par de tags duplicado quando verifica originais então falha fechada (105.57625ms)
+✔ dado sidecar órfão quando verifica originais então falha fechada (74.763792ms)
+✔ dado dois aliases para o mesmo ID quando verifica originais então rejeita a colisão (70.712625ms)
+✔ dado ID ou round_id original divergente sem alias quando verifica originais então falha fechada (87.023834ms)
+✔ dado relatório com outra rodada e caminho relativo igual quando verifica originais então falha fechada (87.107792ms)
+✔ dado duas projeções R1 íntegras quando verifica originais então confirma a matriz aplicada e os vínculos concretos (105.778542ms)
+✔ dado matriz A3.4 em candidate-not-applied quando verifica originais então recusa o estado (112.325959ms)
+✔ dado matriz A3.4 em unknown quando verifica originais então recusa o estado (106.686917ms)
+✔ dado tag R1 1 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (279.140958ms)
+✔ dado tag R1 2 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (248.423334ms)
+✔ dado tag R1 3 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (261.041875ms)
+✔ dado projeção R1 não concluída quando verifica originais então acusa status da TASK (121.719875ms)
+✔ dado hash A3.4 divergente quando verifica originais então acusa hash (112.528042ms)
+✔ dado path A3.4 divergente quando verifica originais então acusa path (116.785333ms)
+✔ dado receipt A3.4 divergente quando verifica originais então acusa receipt (137.71175ms)
+✔ dado literal A3.4 divergente quando verifica originais então acusa literal (93.366916ms)
+✔ dado identidade R-0003/TASK-0004 materializada em tasks quando verifica originais então recusa despacho (106.041959ms)
+✔ dado identidade R-0005/TASK-0009 materializada em tasks quando verifica originais então recusa despacho (129.258375ms)
+✔ dado identidade R-0003/TASK-0004 materializada em backlog quando verifica originais então recusa despacho (123.183708ms)
+✔ dado identidade R-0005/TASK-0009 materializada em backlog quando verifica originais então recusa despacho (119.966042ms)
+✔ dado sidecar A3 missing quando verifica originais então acusa o sidecar (149.025083ms)
+✔ dado sidecar A3 corrupted quando verifica originais então acusa o sidecar (81.187459ms)
+✔ dado matriz que alega grant retrospectivo quando verifica originais então recusa a alegação (69.168625ms)
+ℹ tests 174
+ℹ suites 0
+ℹ pass 174
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 33301.484541
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:law-corpus /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/law/verify.mjs --repo-root . --package-schemas-dir node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas --od-registry docs/meta/knowledge-base/open-decisions-rait.md
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:orchestra-bridge /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+bridge: codex/fixture -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.SvjTMdMABz/reviews/result.json (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.SvjTMdMABz/reviews/result.bridge.json)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+bridge: claude/fixture -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.SvjTMdMABz/reviews/claude.json (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.SvjTMdMABz/reviews/claude.bridge.json)
+bridge test: PASS
+worker: codex/fixture-model (low) -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.nN0cwSc1m0/reports/TASK-TEST.md (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.nN0cwSc1m0/reports/TASK-TEST.worker.json)
+worker.test: OK
+worker.test: OK (recusa git)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 docs:kb:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/check.mjs
+
+knowledge-base check: OK (773 artifacts, 446 canonical tokens)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 docs:kb:publish-check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/publish-dry-run.mjs
+
+publication dry run: OK (201 files, raw/internal material excluded)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:state-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/state-index/check.mjs
+
+verify:state-index OK: 41 ADRs, 3 redirecionamentos, 36 rodadas, 20 closures
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:rounds-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/render-rounds-index.mjs --check
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:rounds-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/devai/tests/render-rounds-index.test.mjs
+
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (75.500458ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (38.471625ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (36.74125ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (110.574ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (46.718375ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (55.693583ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (38.737541ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (41.959792ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (39.459667ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 532.217292
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:proof-anchors /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human
+
+directly anchored: 88
+declared orphans: 53
+undeclared orphans: 0
+duplicate anchors: 0
+invalid references: 0
+validation errors: 0
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+evidence chain: valid; 88 proof lines anchored; 53 historical gap acknowledged; head 1aff766517710795bfd0907e851169b5bcb1f848a1a1be69bda2268dd4dec8cc
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:state-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs
+
+✔ C-01-28 dado dry-run (sem --write) quando o renumerador roda então nenhum byte é escrito (hash igual antes/depois) e imprime "3 pending, 2 review" (43.990083ms)
+✔ C-01-29 dado --write quando o renumerador roda então "to" = header (§3.2) + bytes originais e "from" = texto do stub (§3.3), byte a byte (41.341666ms)
+✔ C-01-30 dado uma citação com o slug do renumerado num livePath quando --write roda então o texto do link e o caminho são reescritos (41.473083ms)
+✔ C-01-31 dado uma citação com o slug do arquivo que conserva o número quando --write roda então permanece intocada (45.068667ms)
+✔ C-01-32 dado citações sem slug de um número duplicado (inclusive um identificador persistido tipo ADR-0006-2026-08-24) quando --write roda então permanecem intocadas e geram uma linha REVIEW por ocorrência (42.352333ms)
+✔ C-01-33 dado arquivos históricos e fora de livePaths quando --write roda então permanecem intocados (42.088292ms)
+✔ C-01-33 dado um livePath sob um prefixo do §5.5 (historicalPrefixes/outOfLockPrefixes) quando o renumerador roda então erro de configuração, exit 2 (39.792166ms)
+✔ C-01-34 dado uma 2ª execução (dry-run) depois de --write quando o renumerador roda então "0 pending" e linhas SKIP para as entradas já aplicadas (86.128458ms)
+✔ C-01-35 dado "to" preexistente com conteúdo diferente do já aplicado quando --write roda então exit 2 sem escrever nada (43.681625ms)
+✔ C-01-35 dado "from" ausente quando --write roda então exit 2 sem escrever nada (39.906542ms)
+✔ C-01-35 dado duas entradas em que a 2ª é inválida quando --write roda então nenhuma escrita ocorre, nem a da 1ª entrada válida (validação antes da 1ª escrita) (40.839333ms)
+✔ C-01-13 dado um arquivo com "## Status" e palavra-chave Accepted quando classifyStatus roda então devolve Accepted (0.948333ms)
+✔ dado "## Status" com palavra-chave em português (Aceita) quando classifyStatus roda então devolve Accepted (0.392375ms)
+✔ dado "## Status" com Proposed/Proposta quando classifyStatus roda então devolve Proposed (0.099292ms)
+✔ dado "## Status" com Superseded/Substituída quando classifyStatus roda então devolve Superseded (0.077625ms)
+✔ dado "## Status" com prefixo "**" quando classifyStatus roda então o prefixo é ignorado (0.081291ms)
+✔ dado "## Status" com "Renumerada para [ADR-nnnn](…)." quando classifyStatus roda então devolve Renumbered (0.06275ms)
+✔ dado um arquivo sem "## Status" mas com a linha "- Status: Accepted" quando classifyStatus roda então devolve Accepted (0.14375ms)
+✔ dado a linha "- Status:" com pontuação final quando classifyStatus roda então a pontuação é descartada (0.105208ms)
+✔ C-01-13 dado prosa "Owner decision …" sem "## Status", sem "- Status:" e sem exceção quando classifyStatus roda então devolve null (0.084375ms)
+✔ C-01-13 dado a mesma prosa listada em statusExceptions quando classifyStatus roda então devolve a classe da exceção (não null) (0.110542ms)
+✔ C-01-01 dado um número com dois arquivos não-stub em docs/meta/adr quando o gate roda então acusa duplicata (44.384791ms)
+✔ C-01-01 dado um número duplicado com redirecionamento válido para outro número existente quando o gate roda então não acusa duplicata (43.522791ms)
+✔ C-01-02 dado um stub cujo alvo não existe quando o gate roda então acusa stub inválido (44.366833ms)
+✔ C-01-02 dado um stub cujo alvo é outro stub quando o gate roda então acusa stub inválido (47.741208ms)
+✔ C-01-02 dado um stub válido apontando para arquivo existente, não-stub, de outro número quando o gate roda então não acusa stub inválido (45.842292ms)
+✔ C-01-03 dado um stub com título além do H1 e de "## Status" quando o gate roda então acusa conteúdo normativo (44.313083ms)
+✔ C-01-03 dado um stub só com H1 e "## Status" quando o gate roda então não acusa conteúdo normativo (46.332959ms)
+✔ C-01-04 dado um arquivo novo apontado por stub sem a nota de proveniência na 3ª linha quando o gate roda então acusa proveniência ausente (45.134542ms)
+✔ C-01-04 dado o arquivo novo gerado pelo §3.2, com a nota de proveniência na 3ª linha quando o gate roda então não acusa proveniência ausente (48.06ms)
+✔ C-01-05 dado um stub sem linha correspondente em §Aliases quando o gate roda então acusa alias ausente (46.354667ms)
+✔ C-01-05 dado uma linha de §Aliases cujo alvo (col. 4) difere do alvo real do stub quando o gate roda então acusa alias divergente (45.615083ms)
+✔ C-01-05 dado um stub com a linha correta em §Aliases quando o gate roda então não acusa alias ausente/divergente (42.305542ms)
+✔ C-01-05 dado uma linha de §Aliases com o id trocado na coluna 1 (Número antigo) quando o gate roda então acusa alias inconsistente (40.777875ms)
+✔ C-01-05 dado uma linha de §Aliases com o id trocado na coluna 3 (Número novo) quando o gate roda então acusa alias inconsistente (41.569417ms)
+✔ C-01-05 dado uma linha de §Aliases obsoleta (alias sem stub correspondente em docs/meta/adr) quando o gate roda então acusa alias inválido (40.458375ms)
+✔ C-01-05 dado uma segunda linha idêntica em §Aliases para o mesmo stub quando o gate roda então acusa duplicata (41.291458ms)
+✔ C-01-05 dado uma segunda linha em §Aliases para o mesmo stub com alvo divergente quando o gate roda então acusa duplicata (42.148916ms)
+✔ C-01-06 dado um nome de arquivo fora de ^ADR-\d{4}-[a-z0-9][a-z0-9-]*\.md$ quando o gate roda então acusa nome inválido (42.578333ms)
+✔ C-01-06 dado um nome de arquivo conforme o padrão quando o gate roda então não acusa nome inválido (42.373ms)
+✔ C-01-07 dado um ADR não-stub ausente de DESIGN-DECISIONS.md quando o gate roda então acusa ausência (40.439208ms)
+✔ C-01-07 dado o mesmo ADR presente em DESIGN-DECISIONS.md quando o gate roda então não acusa ausência (41.568125ms)
+✔ C-01-08 dado um ADR não-stub ausente de docs/meta/adr/README.md quando o gate roda então acusa ausência (42.149959ms)
+✔ C-01-08 dado o mesmo ADR presente em docs/meta/adr/README.md quando o gate roda então não acusa ausência (41.754084ms)
+✔ C-01-09 dado uma linha de índice citando um arquivo inexistente quando o gate roda então acusa link para arquivo inexistente (39.592625ms)
+✔ C-01-09 dado uma linha de índice cujo id exibido difere do número do arquivo citado quando o gate roda então acusa id divergente (40.187333ms)
+✔ C-01-09 dado uma linha de índice principal citando um stub quando o gate roda então acusa stub na tabela principal (43.234625ms)
+✔ C-01-09 dado um link correto para um não-stub existente quando o gate roda então não acusa (42.60475ms)
+✔ C-01-10 dado o mesmo arquivo citado em duas linhas do mesmo índice quando o gate roda então acusa duplicata de linha (40.756791ms)
+✔ C-01-10 dado cada arquivo citado em uma única linha do índice quando o gate roda então não acusa duplicata de linha (42.22175ms)
+✔ C-01-11 dado lawAdrMode pending com um ADR de law/adr citado nos dois índices quando o gate roda então não acusa a série law/adr (41.291125ms)
+✔ C-01-11 dado lawAdrMode pending com um ADR de law/adr ausente de DESIGN-DECISIONS.md quando o gate roda então acusa a série law/adr (42.818ms)
+✔ C-01-11 dado lawAdrMode migrated com um arquivo de law/adr não-stub quando o gate roda então acusa a série law/adr (41.497625ms)
+✔ C-01-11 dado lawAdrMode migrated com stub válido em law/adr sem linha em §Aliases quando o gate roda então acusa a série law/adr (42.665208ms)
+✔ C-01-11 dado lawAdrMode migrated com linha remanescente da série law/adr (caminho entre crases) em DESIGN-DECISIONS.md quando o gate roda então acusa a série law/adr (43.662042ms)
+✔ C-01-11 dado lawAdrMode migrated com a coluna 1 (Número antigo) da linha de §Aliases divergente do stub de law/adr quando o gate roda então acusa a série law/adr (51.835792ms)
+✔ C-01-11 dado lawAdrMode migrated com a coluna 3 (Número novo) da linha de §Aliases divergente do alvo do stub de law/adr quando o gate roda então acusa a série law/adr (42.849166ms)
+✔ C-01-12 dado law/adr/README.md com "intentionally empty" quando o gate roda então acusa a frase-marco ausente (42.457ms)
+✔ C-01-12 dado law/adr/README.md com a frase-marco de outro modo (migrated) enquanto lawAdrMode=pending quando o gate roda então acusa frase de modo errado (40.205416ms)
+✔ C-01-12 dado law/adr/README.md com a frase-marco de pending enquanto lawAdrMode=pending quando o gate roda então não acusa (40.715417ms)
+✔ C-01-14 dado statusExceptions referenciando um arquivo inexistente quando o gate roda então acusa exceção obsoleta (41.733167ms)
+✔ C-01-14 dado statusExceptions referenciando um ADR classificável por palavra-chave quando o gate roda então acusa exceção obsoleta (39.978458ms)
+✔ C-01-14 dado statusExceptions só para prosa não classificável quando o gate roda então não acusa exceção obsoleta (41.301916ms)
+✔ C-01-15 dado a célula Status de DESIGN-DECISIONS.md diferente da classe do arquivo quando o gate roda então acusa divergência (41.116167ms)
+✔ C-01-15 dado a célula Status de DESIGN-DECISIONS.md igual à classe do arquivo quando o gate roda então não acusa divergência (40.662542ms)
+✔ C-01-16 dado a célula Status de docs/meta/adr/README.md diferente da classe do arquivo (Accepted para Proposed) quando o gate roda então acusa divergência (43.696708ms)
+✔ C-01-16 dado a célula Status de docs/meta/adr/README.md igual à classe do arquivo quando o gate roda então não acusa divergência (40.26925ms)
+✔ C-01-15 dado a linha real da série law/adr (caminho entre crases, sem link) com status divergente em DESIGN-DECISIONS.md quando o gate roda então acusa divergência (40.768792ms)
+✔ C-01-16 dado a linha real da série law/adr (caminho entre crases, sem link) com status divergente em docs/meta/adr/README.md quando o gate roda então acusa divergência (41.03275ms)
+✔ C-01-09 dado uma linha real da série law/adr com o id exibido divergente do arquivo citado (caminho entre crases) quando o gate roda então acusa id divergente (41.400958ms)
+✔ C-01-17 dado um PC-*.json cujo round_id não tem linha em work/rounds/README.md quando o gate roda então acusa PC sem linha (42.428959ms)
+✔ C-01-17 dado o PC-0001 com round_id R-0003 presente na tabela quando o gate roda então não acusa PC sem linha (40.593333ms)
+✔ C-01-18 dado a linha do round_id do PC com Estado diferente de fechada quando o gate roda então acusa (44.238084ms)
+✔ C-01-18 dado a linha do round_id do PC com a coluna PC diferente do id do PC quando o gate roda então acusa (41.668ms)
+✔ C-01-19 dado uma linha fechada com PC "—" quando o gate roda então acusa PC ausente (41.580667ms)
+✔ C-01-19 dado uma linha fechada com PC inexistente quando o gate roda então acusa PC inexistente (43.445416ms)
+✔ C-01-19 dado uma linha fechada com PC existente e round_id igual à rodada quando o gate roda então não acusa (39.981709ms)
+✔ C-01-18 dado PC predecessor e PC terminal da mesma rodada, com README apontando ao terminal, quando o gate roda então aceita a cadeia append-only (42.301833ms)
+✔ C-01-18 dado um sucessor que aponta para PC de outra rodada quando o gate roda então acusa ligação entre rodadas (40.267583ms)
+✔ C-01-18 dado dois PCs que se supersedem mutuamente quando o gate roda então acusa ciclo (42.171541ms)
+✔ C-01-18 dado dois PCs sem sucessão para a mesma rodada quando o gate roda então acusa dois terminais (40.414542ms)
+✔ C-01-18 dado um sucessor cujo predecessor não existe quando o gate roda então acusa predecessor ausente (44.142416ms)
+✔ C-01-20 dado uma rodada fora de preMethodRounds marcada pré-método quando o gate roda então acusa (41.450458ms)
+✔ C-01-20 dado uma rodada de preMethodRounds com PC diferente de "—" quando o gate roda então acusa (41.291875ms)
+✔ C-01-20 dado preMethodRounds citando R-0002 sem linha na tabela quando o gate roda então acusa (42.09375ms)
+✔ C-01-20 dado R-0001 e R-0002 em preMethodRounds, ambos na tabela com pré-método e PC "—" quando o gate roda então não acusa (41.642542ms)
+✔ C-01-21 dado um diretório work/rounds/R-0017 sem linha na tabela quando o gate roda então acusa (42.49375ms)
+✔ C-01-21 dado R-0002 com linha e sem diretório quando o gate roda então não acusa (linha sem diretório é permitida) (41.642625ms)
+✔ C-01-22 dado uma linha de rodada fora de ^R-\d{4}$/^S-\d+\.\d+$ (R-18) quando o gate roda então acusa (40.555291ms)
+✔ C-01-22 dado um id de rodada repetido na tabela quando o gate roda então acusa (39.578375ms)
+✔ C-01-22 dado Estado fora do vocabulário (planned) quando o gate roda então acusa (39.81275ms)
+✔ C-01-22 dado Estados "parada" e "proposta (C-0003)" (C-0003, A-C2-16) quando o gate roda então não acusa (41.8915ms)
+✔ C-01-22 dado uma linha S-… com Estado diferente de "proposta (C-0002)" quando o gate roda então acusa (41.617417ms)
+✔ C-01-22 dado uma linha S-… com "proposta (C-0002)" e PC "—" quando o gate roda então não acusa (41.721084ms)
+✔ C-01-23 dado uma ocorrência de "DEVAI 1.4.5" em work/rounds/README.md com package.json pinado em 1.5.6 quando o gate roda então acusa versão divergente (41.768917ms)
+✔ C-01-23 dado "DEVAI 1.5.6" em work/rounds/README.md com o mesmo pin em package.json quando o gate roda então não acusa (44.985708ms)
+✔ C-01-24 dado a fixture íntegra quando o gate roda então stdout começa com "verify:state-index OK:" e exit 0 (41.166667ms)
+✔ C-01-25 dado uma fixture com dois achados quando o gate roda então stderr traz o cabeçalho "verify:state-index: <n> achado(s)", uma linha por achado, ordenadas, e exit 1 (42.49925ms)
+✔ C-01-26 dado uma fixture com achados quando o gate roda com --report então as mesmas linhas saem em stdout, a última é "verify:state-index report: <n> achado(s)" e exit 0 (41.5425ms)
+✔ C-01-27 dado um argumento desconhecido (--xyz) quando o gate roda então exit 2 (40.48775ms)
+✔ C-01-27 dado um config.json sem lawAdrMode quando o gate roda então exit 2 (37.987417ms)
+✔ C-01-27 dado uma raiz sem work/rounds/README.md quando o gate roda então exit 2 (41.6205ms)
+✔ C-01-36 dado um índice cuja célula de título contém `a\|b` (escapado) quando o gate roda então lê as quatro colunas corretas e a fixture íntegra continua sem achados (39.745667ms)
+✔ C-01-36 dado a mesma linha com `a|b` cru (sem escape) quando o gate roda então desloca as colunas e acusa C-01-15 (42.721458ms)
+ℹ tests 104
+ℹ suites 0
+ℹ pass 104
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3565.71675
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 blueprints:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/blueprints/check.mjs
+
+blueprints:check passed: committed generated tree matches every blueprint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 contracts:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check
+
+contracts are in sync with the blueprints
+commands contracts: OK (256 operations)
+clients in sync: 72
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 parameters:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/parameters/tests/*.test.mjs
+
+✔ dado o catálogo com os cinco namespaces boat quando parseado então a allowlist é aceita na ordem do contrato (22.24025ms)
+✔ dado um arquivo com boat.screens e boat.states quando verify:parameter-catalogue --check-usage roda então os literais são aceitos (230.038375ms)
+✔ dado uma chave boat.* na tabela BOAT quando o catálogo é validado então ela é rejeitada e os parâmetros permanecem est.* (204.924417ms)
+✔ dado um arquivo varrido com boat.experimental.title quando verify:parameter-catalogue roda então falha por namespace fora da allowlist (213.50375ms)
+✔ dado um namespace estranho quando o catálogo é parseado então ele é rejeitado fail-closed (209.187542ms)
+✔ dado uma colisão entre namespace e chave de parâmetro quando o catálogo é validado então falha fail-closed (210.964417ms)
+✔ dado o namespace literal boat.caseState quando o catálogo é parseado então a gramática rejeita camelCase ou terceiro segmento (217.973375ms)
+✔ dado o namespace literal boat.screens.extra quando o catálogo é parseado então a gramática rejeita camelCase ou terceiro segmento (206.604292ms)
+✔ dado a tabela real (sem os 9 namespaces de token do RAIT) quando verify.mjs roda então OK (245.1575ms)
+✔ [pode falhar até TASK-0006] dado a tabela real quando parseada então já contém as 14 linhas rait.* de apps/rait/web (9.105375ms)
+✔ dado a tabela real com a linha `rait.timer` acrescentada (cópia temporária) quando verify.mjs roda então falha por colisão com rait.timer.* (210.726958ms)
+✔ dado a linha `rait.caseState` (cópia temporária) quando parseada então rejeitada pela gramática [a-z][a-z0-9_]* (203.213166ms)
+✔ dado um arquivo .ts com o literal "rait.caseState.ADMITIDO" quando verify.mjs --check-usage roda então falha (candidato desconhecido) (215.002084ms)
+✔ dado um arquivo .ts com "'rait.' + 'caseState' + '.ADMITIDO'" (composição) quando verify.mjs --check-usage roda então OK (221.908333ms)
+✔ dado um arquivo .ts com "rait.screens.painel.title" e a tabela real (já allowlista rait.screens, TASK-0006) quando verify.mjs --check-usage roda então OK (225.357792ms)
+✔ OD-T14 seed uses its first installation date and stays idempotent on later days (425.372125ms)
+✔ dado legal_bases JSON exato quando analisar então preserva objeto tipado, schema e proveniência (134.08775ms)
+✔ dado legal_bases com JSON malformado quando analisar então rejeita a linha (1.926542ms)
+✔ dado legal_bases com array em vez de objeto quando analisar então rejeita a linha (1.863917ms)
+✔ dado legal_bases com string em vez de objeto quando analisar então rejeita a linha (1.726083ms)
+✔ dado legal_bases com objeto sem campos obrigatórios quando analisar então rejeita a linha (1.80525ms)
+✔ dado legal_bases com rank ou política divergente quando analisar então rejeita a linha (2.207625ms)
+✔ dado legal_bases com campo extra não autorizado quando analisar então rejeita a linha (2.041375ms)
+✔ dado legal_bases acrescentada quando gerar então defaults e metadados das demais chaves permanecem (263.461791ms)
+✔ dado catálogo mínimo válido quando gerar então produz os três artefatos tipados (484.699125ms)
+✔ dado pipe escapado em célula quando gerar então remove a barra sem criar coluna (119.21225ms)
+✔ dado parâmetro legal booleano quando gerar então não o expõe como flag editável (132.468667ms)
+✔ dado a mesma fonte quando gerar duas vezes então as saídas são byte a byte iguais (216.665625ms)
+✔ dado fonte alterada quando gerar então muda o hash e somente a linha afetada (224.960875ms)
+✔ dado header incorreto quando gerar então termina com exit 1 e diagnóstico (63.411542ms)
+✔ dado célula ausente quando gerar então termina com exit 1 e diagnóstico (59.055458ms)
+✔ dado chave duplicada quando gerar então termina com exit 1 e diagnóstico (57.906834ms)
+✔ dado status inválido quando gerar então termina com exit 1 e diagnóstico (60.578334ms)
+✔ dado pend typo no quando gerar então termina com exit 1 e diagnóstico (57.237209ms)
+✔ dado flag não booleana quando gerar então termina com exit 1 e diagnóstico (57.39025ms)
+✔ dado travessão sem pending quando gerar então termina com exit 1 e diagnóstico (55.186792ms)
+✔ dado decision ref órfã quando gerar então termina com exit 1 e diagnóstico (58.146167ms)
+✔ dado prefixo incompatível quando gerar então termina com exit 1 e diagnóstico (56.577375ms)
+✔ dado artefato gerado stale quando verificar então falha fechado (365.253625ms)
+✔ dado chave literal conhecida e desconhecida quando verificar uso então aplica regra de pontos (363.846125ms)
+✔ dado literais de parâmetro, evento e i18n quando verificar uso então classifica pelo contexto sintático (177.654125ms)
+✔ dado literais em tests, dist e node_modules quando verificar uso então são ignorados (187.675917ms)
+✔ dado allowlist com portal.errors quando arquivo usa portal.errors.not_found então exit 0 sem literal desconhecido (242.722084ms)
+✔ dado allowlist com portal.errors quando arquivo usa portal.foo.bar então exit 1 com literal desconhecido (213.882167ms)
+✔ dado namespace rait.timer em colisão com a chave rait.timer.T-DEF quando verificar então exit ≠ 0 citando a colisão (204.482208ms)
+✔ dado namespace foo.bar fora dos prefixos de superfície quando verificar então exit ≠ 0 com diagnóstico (198.724292ms)
+✔ dado tabela de namespaces malformada (três colunas) quando verificar então exit ≠ 0 com arquivo e linha (196.156ms)
+✔ dado catálogo sem seção de namespaces quando arquivo usa portal.errors.not_found então comportamento atual (candidato, exit 1) (224.442166ms)
+✔ dado literal de um ponto (portal.complaint) quando verificar então nunca é candidato, com ou sem allowlist (407.423542ms)
+✔ dado catálogo real quando a varredura cobre packages/api-clients/src/generated então exit 0 (exclusão de diretório saiu) (333.745459ms)
+✔ dado arquivo x.projection.ts com export const consumedEvents = ['rait.case.changed', 'sync.batch.received', 'dashboard.duty.changed'] as const quando verificar então exit 0 sem literal desconhecido (A14) — vermelho esperado hoje (190.942416ms)
+✔ dado o mesmo literal numa variável de outro nome (export const events = [...], não consumedEvents) quando verificar então continua candidato (exit 1) — A14 exime pelo nome, não pelo formato do literal (183.886625ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3718.225167
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:boat-transitions /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm --filter @detran/boat-mobile typecheck && pnpm --filter @detran/boat-mobile exec vitest run --config vitest.config.ts src/lib/navigation/transitions.test.ts
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 typecheck /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  03:08:22
+   Duration  1.96s (transform 879ms, setup 1.06s, import 26ms, tests 17ms, environment 751ms)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 contracts:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/contracts/tests/*.test.mjs
+
+✔ dado contrato dashboard cujo 4xx cita DASH.LAYER_N3_NEVER (código real do catálogo, presente em dashboard-error-catalog.md) quando checkCommands (catálogos padrão) então sem unknown-error-code (vermelho hoje: lacuna 3 — DASH ausente de ERROR_CATALOG_PATHS/ERROR_CATALOG_PREFIXES) (221.846667ms)
+✔ dado contrato dashboard cujo 4xx cita DASH.NAO_EXISTE (código fora do catálogo) quando checkCommands então exatamente um unknown-error-code citando o código e o prefixo DASH (verde hoje — já é o comportamento correto antes e depois de TASK-0009) (211.290125ms)
+✔ dado código PORTAL.DEMO_PRESERVED_CODE num contrato dashboard (presente só em portal-error-catalog.md, ausente de dashboard-error-catalog.md) quando checkCommands então continua julgado pelo catálogo PORTAL — comportamento atual preservado (verde hoje e depois de TASK-0009) (199.185958ms)
+✔ dado POST v1/dashboard/alerts/:id/ack em backend/domains/dashboard/monitor/src/handwritten/surface/ (+ handwritten/cycle/ e src/controllers/ vazios, sem rota) quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 1 — CONTROLLER_ROOTS não lista backend/domains/dashboard/monitor/src/handwritten) (202.011209ms)
+✔ dado a mesma rota POST v1/dashboard/alerts/:id/ack sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 1 — a raiz nunca é varrida, então a rota nunca é reportada) (203.505917ms)
+✔ dado operação dashboardAlertAck no contrato sem controlador nenhum em lugar algum quando checkCommands então exatamente um missing-route (verde hoje — independe das três lacunas: nenhum controlador existe em nenhuma raiz) (206.835208ms)
+✔ dado GET v1/dashboard/stream em backend/app/src/dashboard-stream.controller.ts quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 2 — o filtro de backend/app/src só aceita teat-*/portal-*) (235.203834ms)
+✔ dado a mesma rota de stream sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 2 — o arquivo é filtrado antes de ser varrido, então a rota nunca é reportada) (230.512417ms)
+✔ dado backend/app/src/other-thing.controller.ts (sem prefixo teat-/portal-/dashboard-) quando checkCommands (raízes padrão) então continua ignorado, sem nenhum problema (verde hoje e depois de TASK-0009 — comportamento do filtro do app não muda para arquivos sem prefixo reconhecido) (222.161042ms)
+✔ dado node tools/contracts/check-commands.mjs na fixture (b) válida (POST v1/dashboard/alerts/:id/ack em handwritten/surface/) então exit 0 e "commands contracts: OK (1 operations)" (vermelho hoje: lacuna 1 — raiz ausente de CONTROLLER_ROOTS) (210.137042ms)
+✔ dado o repositório real (checkCommands() com opções padrão, forma de pnpm contracts:check) então ok=true (vermelho hoje: as três lacunas — raiz, filtro do app, catálogo) (213.242459ms)
+✔ dado os contratos e controladores reais quando comparados então o conjunto de rotas do BP-DASH-MONITOR-001 é exatamente as 43 rotas de CTG-0002 §3 (sete controllers + stream), com operationId únicos (vermelho hoje: lacunas 1 e 2 — nenhuma rota dashboard é varrida pelas raízes padrão) (51.372334ms)
+✔ dado contrato válido e controlador com a mesma rota quando checkCommands então ok=true, operations=1 e problems=[] (15.442042ms)
+✔ dado rota no contrato sem controlador correspondente quando checkCommands então exatamente um missing-route (4.43625ms)
+✔ dado rota no controlador sem operação correspondente quando checkCommands então exatamente um missing-operation (9.786917ms)
+✔ dado código 4xx fora do catálogo quando checkCommands então exatamente um unknown-error-code citando o código (3.772292ms)
+✔ dado o mesmo operationId em dois arquivos quando checkCommands então exatamente um duplicate-operation-id citando os dois arquivos (5.318416ms)
+✔ dado x-blueprint que não existe em blueprintsDir quando checkCommands então há um unknown-blueprint (6.353833ms)
+✔ dado contrato com JSON quebrado quando checkCommands então exatamente um invalid-json no arquivo quebrado (4.600583ms)
+✔ dado arquivo *.openapi.json sem sufixo .commands quando checkCommands então é ignorado (mesmo se ilegível como JSON) (6.429792ms)
+✔ dado o repositório fixture sem problemas quando rodar a CLI então exit 0 e "commands contracts: OK (1 operations)" (218.741959ms)
+✔ dado o repositório fixture com uma rota órfã quando rodar a CLI então exit 1 com a lista de problemas em stderr e stdout vazio (208.565875ms)
+✔ C-5-03 — dado contrato sem x-blueprint, com x-commands ausente/false, ou com x-generated presente quando checkCommands então cada caso gera exatamente um invalid-json (14.924167ms)
+✔ C-5-05 — dado contrato cujo nome de arquivo não corresponde a nenhum blueprint mas cujo x-blueprint existe quando checkCommands então ok=true (resolução por x-blueprint, nunca pelo nome do arquivo) (3.270375ms)
+✔ C-5-07 — dado resposta 4xx sem properties.code.enum quando checkCommands então um unknown-error-code; dada a mesma resposta com x-kernel idempotency então ok=true (8.540166ms)
+✔ C-5-08 — dado enum de error_code (recibo de sincronização) com código fora do catálogo quando checkCommands então um unknown-error-code (4.793583ms)
+✔ C-5-12 — dado :id no controlador e {id} no contrato quando checkCommands então ok=true (normalização :id ↔ {id}); dado {aitId} no contrato contra :id no controlador então um missing-route e um missing-operation (12.592375ms)
+✔ C-5-13 — dado controlador sob src/controllers/ ou src/generated/, ou arquivo *.spec.ts, quando checkCommands então a rota não é varrida (sem missing-operation) (5.165ms)
+✔ C-5-14 — dado backend/app/src (truque de cwd) quando rodar a CLI então só teat-x.controller.ts é varrido; outro.controller.ts (sem prefixo teat-) é ignorado (202.966667ms)
+✔ C-5-15 — dado um decorador de rota com argumento não literal quando checkCommands então um invalid-json citando classe e método; e a CLI sai com exit 1 (198.261875ms)
+✔ C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=256 (205.611625ms)
+✔ C-2-16 — dado código BOAT presente somente no catálogo BOAT quando rodar o gate então passa; código BOAT ausente do catálogo BOAT falha (1127.512625ms)
+✔ C-2-16 — dado resposta 4xx BOAT e recibo com error_code BOAT quando checkCommands então ambos consultam o catálogo BOAT (4.958375ms)
+✔ C-2-17 — dado rota BOAT no contrato e controlador correspondente quando checkCommands então passa; sem controlador então há missing-route (8.649167ms)
+✔ C-2-17 — dado controlador BOAT sem operação correspondente quando checkCommands então há missing-operation (6.277125ms)
+✔ C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 100 operações TEAT permanecem presentes (11.593458ms)
+✔ dado um contrato gerado e um contrato de comando quando generateClients então escreve um .ts por arquivo com export interface paths (71.511792ms)
+✔ dado BP-DEMO-001.commands.openapi.json quando generateClients então a saída é BP-DEMO-001.commands.ts (9.80825ms)
+✔ dada a mesma entrada quando gerar duas vezes então os bytes de saída são idênticos (idempotência) (24.482917ms)
+✔ dado um .ts órfão em outDir quando generateClients então é removido e não aparece em written (6.949958ms)
+✔ dado contrato com JSON inválido quando rodar a CLI então exit 1 e o arquivo de saída anterior não é truncado (677.191708ms)
+✔ dado o conjunto fixture sem erros quando rodar a CLI então stdout "clients written: 2" (407.187667ms)
+✔ checkClients — em sincronia (outDir gerado a partir do mesmo contractsDir) então ok=true e problems=[] (53.360583ms)
+✔ checkClients — stale-client (arquivo em outDir diverge do que generateClients produziria) então um stale-client citando o arquivo, sem corrigi-lo (17.967292ms)
+✔ checkClients — orphan-client (.ts em outDir sem *.openapi.json correspondente) então um orphan-client citando o arquivo, sem removê-lo (14.31325ms)
+✔ checkClients — missing-client (*.openapi.json sem .ts correspondente em outDir) então um missing-client citando o arquivo esperado (23.587291ms)
+✔ checkClients — CLI --check: exit 0 "clients in sync: <n>" quando em sincronia; exit 1 com stderr quando divergente (1233.612458ms)
+✔ C-5-22 — dado o repositório real (sem flags) quando checkClients então ok=true (2468.129667ms)
+✔ dado contrato de provisionamento quando comandos POST são verificados então os seis exigem If-Match e Idempotency-Key e retornam ETag (1.17925ms)
+✔ dado contrato de provisionamento quando os dois GET são verificados então não exigem cabeçalhos de comando (0.093917ms)
+✔ dado contratos de registro e ato offline quando schemas são verificados então chave privada é ausente e os oito campos de INV-OFFLINE-001 são obrigatórios (0.071708ms)
+✔ dado cada resposta final de provisionamento quando o contrato é publicado então cada sucesso declara um corpo OpenAPI concreto sem material privado (0.466375ms)
+✔ dado corpos JSON de concessão, recibo e reconciliação quando o contrato é verificado então coleções são arrays tipados, nunca objetos JSON livres (0.189042ms)
+✔ dado grant persistido publicado quando entidade e DTO CRUD são gerados então ambos preservam arrays de agentes e reservas tipadas (4.319666ms)
+✔ C-5-23 — todo docs/framework/schemas/*.json e schemas/events/*.json faz JSON.parse sem erro e declara $schema draft 2020-12 e $id (23.093166ms)
+✔ C-5-24 — os dezesseis events/<type>.schema.json de CTG-0005 §5.4 existem e o const de type é igual ao nome do arquivo (3.624167ms)
+✔ C-5-25 — cada events/<type>.schema.json de §5.4 é carregável e declara a forma mínima de envelope (properties.type.const e properties.data); a produção real do envelope é C-5-25′ (events.schema.spec.ts de cada módulo) (3.98225ms)
+✔ C-5-26 — teat-offline-sync-batch.schema.json valida o corpo do lote usado em backend/app/tests/e2e/teat-field-sync.e2e.spec.ts e recusa um item sem payload_hash (0.937375ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5445.298667
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:parameter-catalogue /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/parameters/verify.mjs --check-generated --check-usage
+
+verify:parameter-catalogue: OK (91 entries, 18 flags, 62 i18n namespaces, 0 errors)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/ui@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+> ng-packagr -p ng-package.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/ui'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+- Writing FESM and DTS bundles
+✔ Writing FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/ui
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+- to:   /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-18T06:08:34.141Z - Time: 522ms
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> ng-packagr -p ng-package.json -c tsconfig.lib.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/boat-mobile'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+✔ Generating FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/boat-mobile
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+- to:   /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-18T06:08:35.797Z - Time: 821ms
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 typecheck /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm -r --if-present run typecheck
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+Scope: 63 of 64 workspace projects
+backend/domains/shared typecheck$ tsc --noEmit
+backend/domains/inf/deadlines typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck$ tsc --noEmit
+packages/api-clients typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck: Done
+packages/senatran-adapter typecheck$ tsc --noEmit
+packages/api-clients typecheck: Done
+packages/ui typecheck$ tsc -p tsconfig.spec.json --noEmit
+backend/domains/inf/deadlines typecheck: Done
+senatran-mock typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/senatran-adapter typecheck: Done
+senatran-mock typecheck: Done
+backend/domains/shared typecheck: Done
+apps/boat/mobile typecheck$ tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/dashboard/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/rait/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/portal/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/boat/mobile typecheck: Done
+backend/domains/ch/clinical-network typecheck$ tsc --noEmit
+apps/dashboard/web typecheck: Done
+backend/domains/est/crash typecheck$ tsc --noEmit
+backend/domains/ch/clinical-network typecheck: Done
+backend/domains/inf/normative typecheck$ tsc --noEmit
+apps/portal/web typecheck: Done
+backend/domains/inf/rait-integration typecheck$ tsc --noEmit
+backend/domains/est/crash typecheck: Done
+.../domains/integration/renaest-mirror typecheck$ tsc --noEmit
+apps/rait/web typecheck: Done
+backend/domains/ops/agency typecheck$ tsc --noEmit
+backend/domains/inf/normative typecheck: Done
+backend/domains/ops/core typecheck$ tsc --noEmit
+backend/domains/inf/rait-integration typecheck: Done
+backend/domains/ops/example typecheck$ tsc --noEmit
+.../domains/integration/renaest-mirror typecheck: Done
+backend/domains/ops/parameter typecheck$ tsc --noEmit
+backend/domains/ops/agency typecheck: Done
+backend/domains/portal/complaints typecheck$ tsc --noEmit
+backend/domains/ops/core typecheck: Done
+backend/domains/portal/identity typecheck$ tsc --noEmit
+backend/domains/ops/example typecheck: Done
+backend/domains/ops/parameter typecheck: Done
+backend/domains/portal/complaints typecheck: Done
+backend/domains/portal/identity typecheck: Done
+apps/teat/mobile typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+backend/domains/ch/operational-controls typecheck$ tsc --noEmit
+apps/teat/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+backend/domains/ch/patients typecheck$ tsc --noEmit
+backend/domains/ch/patients typecheck: Done
+backend/domains/dashboard/crashes typecheck$ tsc --noEmit
+backend/domains/ch/operational-controls typecheck: Done
+backend/domains/inf/ait typecheck$ tsc --noEmit
+apps/teat/web typecheck: Done
+backend/domains/ops/evidence typecheck$ tsc --noEmit
+backend/domains/dashboard/crashes typecheck: Done
+backend/domains/ops/field typecheck$ tsc --noEmit
+apps/teat/mobile typecheck: Done
+backend/domains/ops/offline-sync typecheck$ tsc --noEmit
+backend/domains/inf/ait typecheck: Done
+backend/domains/ops/snapshots typecheck$ tsc --noEmit
+backend/domains/ops/evidence typecheck: Done
+backend/domains/portal/projections typecheck$ tsc --noEmit
+backend/domains/ops/field typecheck: Done
+backend/domains/portal/requests typecheck$ tsc --noEmit
+backend/domains/ops/offline-sync typecheck: Done
+backend/domains/ops/snapshots typecheck: Done
+backend/domains/portal/projections typecheck: Done
+backend/domains/portal/requests typecheck: Done
+backend/domains/ch/toxicology typecheck$ tsc --noEmit
+backend/domains/ch/encounters typecheck$ tsc --noEmit
+backend/domains/inf/infraction typecheck$ tsc --noEmit
+backend/domains/dashboard/monitor typecheck$ tsc --noEmit
+backend/domains/ch/toxicology typecheck: Done
+backend/domains/inf/measures typecheck$ tsc --noEmit
+backend/domains/ch/encounters typecheck: Done
+backend/domains/inf/speed typecheck$ tsc --noEmit
+backend/domains/inf/infraction typecheck: Done
+backend/domains/ops/provisioning typecheck$ tsc --noEmit
+backend/domains/dashboard/monitor typecheck: Done
+backend/domains/portal/citizen-service typecheck$ tsc --noEmit
+backend/domains/inf/speed typecheck: Done
+backend/domains/portal/inbox typecheck$ tsc --noEmit
+backend/domains/inf/measures typecheck: Done
+backend/domains/ops/provisioning typecheck: Done
+backend/domains/portal/citizen-service typecheck: Done
+backend/domains/portal/inbox typecheck: Done
+backend/domains/ch/biometrics typecheck$ tsc --noEmit
+backend/domains/ch/process-blocks typecheck$ tsc --noEmit
+backend/domains/ch/exams typecheck$ tsc --noEmit
+backend/domains/ch/inconsistencies typecheck$ tsc --noEmit
+backend/domains/ch/process-blocks typecheck: Done
+backend/domains/ch/scheduling typecheck$ tsc --noEmit
+backend/domains/ch/inconsistencies typecheck: Done
+backend/domains/ch/telehealth typecheck$ tsc --noEmit
+backend/domains/ch/exams typecheck: Done
+backend/domains/inf/alcohol typecheck$ tsc --noEmit
+backend/domains/ch/biometrics typecheck: Done
+backend/domains/inf/collection typecheck$ tsc --noEmit
+backend/domains/ch/scheduling typecheck: Done
+backend/domains/inf/notification typecheck$ tsc --noEmit
+backend/domains/ch/telehealth typecheck: Done
+backend/domains/inf/collection typecheck: Done
+backend/domains/inf/alcohol typecheck: Done
+backend/domains/inf/notification typecheck: Done
+backend/domains/ch/billing typecheck$ tsc --noEmit
+backend/domains/inf/rait-case typecheck$ tsc --noEmit
+backend/domains/ch/clinical-reports typecheck$ tsc --noEmit
+backend/domains/ch/clinical-controls typecheck$ tsc --noEmit
+backend/domains/ch/clinical-controls typecheck: Done
+backend/domains/ch/billing typecheck: Done
+backend/domains/ch/clinical-reports typecheck: Done
+backend/domains/inf/rait-case typecheck: Done
+backend/domains/ch/restrictions typecheck$ tsc --noEmit
+backend/domains/ch/retention typecheck$ tsc --noEmit
+backend/domains/ch/juntas typecheck$ tsc --noEmit
+backend/domains/inf/rait-worklist typecheck$ tsc --noEmit
+backend/domains/ch/restrictions typecheck: Done
+backend/domains/ch/retention typecheck: Done
+backend/domains/ch/juntas typecheck: Done
+backend/domains/inf/rait-worklist typecheck: Done
+backend/domains/inf/rait-org typecheck$ tsc --noEmit
+backend/domains/inf/rait-session typecheck$ tsc --noEmit
+backend/domains/inf/rait-org typecheck: Done
+backend/domains/inf/rait-session typecheck: Done
+backend/app typecheck$ tsc --noEmit
+backend/app typecheck: Done
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/ui@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  03:09:32
+   Duration  1.13s (transform 28ms, setup 0ms, import 299ms, tests 45ms, environment 684ms)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:decorators /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/verify-controller-decorators.ts
+
+verify-controller-decorators: OK (1022 handlers scanned)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:rls-ddl /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/rls-ddl/tests/*.test.mjs && tsx tools/check-rls-ddl.ts
+
+✔ executable helper covers a tenant table across files (1.506ms)
+✔ comments, strings and procedural bodies cannot impersonate applied policy (0.272458ms)
+✔ only a real tenant column creates an obligation (0.155916ms)
+✔ quoted identifiers retain SQL identity (0.128958ms)
+✔ exemptions are exact (0.10875ms)
+✔ nonliteral and differently qualified calls cannot claim coverage (0.164334ms)
+✔ unterminated lexical constructs fail closed (0.215833ms)
+✔ CR-only line comments end before executable policy (0.111584ms)
+✔ stored SQL-standard bodies require explicit classification (0.301042ms)
+✔ stored rule actions cannot impersonate applied policy (0.187917ms)
+✔ COPY stdin data requires classification before raw rows can impersonate SQL (0.140042ms)
+✔ conditional and embedded helper expressions cannot claim coverage (0.258042ms)
+✔ escaped and dollar-quoted bodies preserve statement boundaries (0.286916ms)
+✔ newline continuations inherit escape-string boundaries (0.125875ms)
+✔ ordinary newline string continuations preserve literal identity (0.0735ms)
+✔ comments and case do not hide executable SQL (0.093292ms)
+✔ quoted case and punctuation cannot alias another table or exemption (0.138833ms)
+✔ nested expressions, constraints and decoy tables do not create obligations (0.08225ms)
+✔ ambiguous tenant identities and Unicode escapes fail closed with source names (0.157625ms)
+✔ unquoted non-ASCII identifiers require classification while quoted identities work (0.092792ms)
+✔ inventory is deterministic across source order, duplicate signals and final statements (0.194ms)
+✔ current repository DDL stays covered and deleting a real policy is detected (60.566166ms)
+✔ CLI reports real gaps, respects named exemptions and rejects malformed SQL (276.440292ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 399.830042
+check-rls-ddl: OK (267 tenant tables covered, 2 exempt by design: portal.brand_profile, portal.public_hostname)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:role-catalog /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-role-catalog.ts
+
+check-role-catalog: OK (36 roles, 10 RAIT, 2 dashboard)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:lifecycle-vocabulary /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-lifecycle-vocabulary.ts
+
+check-lifecycle-vocabulary: OK (15 INF states, 12 INF substates, 28 INF timers, 17 AIT states; 9 EST local states, 4 EST national states, 3 EST severities, 7 EST scene duties, 5 EST source_pending catalogs, 1 EST timers; 10 DASHBOARD alert states, 8 DASHBOARD duty states, 4 DASHBOARD freshness states, 4 DASHBOARD severities, 4 DASHBOARD layers, 3 DASHBOARD classifications, 4 DASHBOARD blocks, 14 DASHBOARD timers)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:senatran-boundary /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/verify-senatran-boundary.ts
+
+SENATRAN boundary verification passed: 3777 runtime files scanned; packages/senatran-adapter is the sole HTTP/auth boundary.
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:senatran-contracts /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm --filter @detran/senatran-adapter contracts:check
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/senatran-adapter@0.0.1 contracts:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/senatran-adapter
+> tsx scripts/generate-contracts.ts --check
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:pec-parity /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/verify-pec-parity.ts
+
+verify-pec-parity: ACCOUNTED / READY (76/76 tested, 0/76 blocked, 0 behavioral origin specs deferred/blocked, 611 origin specs dispositioned)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:pec-superset /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/verify-pec-superset.ts
+
+verify-pec-superset: PASS (32 packages, 50 tables, 611 specs, 2 transferred artifacts)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: navigation to another Document
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  125 passed (125)
+      Tests  1551 passed | 14 todo (1565)
+   Start at  03:09:43
+   Duration  39.26s (transform 8.55s, setup 34.99s, import 41.18s, tests 84.05s, environment 84.38s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names               |  Raw size | Estimated transfer size
+main-4FACM3CU.js    | main                | 542.17 kB |               129.83 kB
+styles-LSNMVM7I.css | styles              |   2.21 kB |               636 bytes
+
+                    | Initial total       | 544.39 kB |               130.46 kB
+
+Lazy chunk files    | Names               |  Raw size | Estimated transfer size
+chunk-ST7tZAsZ.js   | -                   | 425.43 kB |                77.30 kB
+chunk-5GSD7wra.js   | processos-routes    |  52.86 kB |                10.79 kB
+chunk-DGkWDKke.js   | -                   |  52.08 kB |                11.35 kB
+chunk-BN8tVAHo.js   | defesa-routes       |  34.50 kB |                 5.70 kB
+chunk-CMNS4H_0.js   | notificacoes-routes |  34.08 kB |                 8.11 kB
+chunk-DfhF_U3I.js   | pagamento-routes    |  33.57 kB |                 7.38 kB
+chunk-DAwEtrNV.js   | documentos-routes   |  32.42 kB |                 7.10 kB
+chunk-CpmdMPBB.js   | atendimento-routes  |  32.37 kB |                 7.08 kB
+chunk-CxTKBygD.js   | autos-routes        |  24.08 kB |                 5.59 kB
+chunk-Cn9L5n77.js   | -                   |  21.31 kB |                 5.73 kB
+chunk-B4N3N5hT.js   | indicacao-routes    |  18.02 kB |                 5.12 kB
+chunk-gsHkk-AF.js   | privacidade-routes  |  16.03 kB |                 4.79 kB
+chunk-D-OYC9jd.js   | exames-routes       |  15.56 kB |                 4.46 kB
+chunk-DB8V5tiX.js   | catalogo-routes     |  13.36 kB |                 3.75 kB
+chunk-CNCSI-CV.js   | sinistros-routes    |  11.78 kB |                 3.35 kB
+...and 8 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [5.575 seconds] - 2026-10-18T06:10:29.529Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/dist
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/dashboard/web
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/dashboard/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/dashboard/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  64 passed (64)
+      Tests  2042 passed (2042)
+   Start at  03:10:32
+   Duration  19.79s (transform 4.66s, setup 21.47s, import 21.49s, tests 31.34s, environment 43.15s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/dashboard/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                |  Raw size | Estimated transfer size
+main-7OBUDYMF.js    | main                 | 499.67 kB |               122.24 kB
+styles-LSNMVM7I.css | styles               |   2.21 kB |               636 bytes
+
+                    | Initial total        | 501.88 kB |               122.87 kB
+
+Lazy chunk files    | Names                |  Raw size | Estimated transfer size
+chunk-KGzpkFga.js   | -                    |  40.61 kB |                 9.00 kB
+chunk-9G_2sLcQ.js   | dashboard-pt-BR-json |  22.57 kB |                 5.59 kB
+chunk-B4iaY9J0.js   | duties-routes        |  12.16 kB |                 3.19 kB
+chunk-DgSSk_J-.js   | triage-routes        |  10.39 kB |                 3.07 kB
+chunk-I_nrojOr.js   | radar-routes         |   7.14 kB |                 1.50 kB
+chunk-BRLyBEut.js   | -                    |   6.85 kB |                 2.14 kB
+chunk-BuCWYvY4.js   | catalogue-routes     |   6.26 kB |                 1.76 kB
+chunk-Bkv9VO8Q.js   | reports-routes       |   6.19 kB |                 1.83 kB
+chunk-B2DNhY3W.js   | integrations-routes  |   4.37 kB |                 1.56 kB
+chunk-CIq2d1fm.js   | -                    |   4.00 kB |                 1.53 kB
+chunk-D0aSB6IS.js   | audit-routes         |   3.85 kB |                 1.53 kB
+chunk-Crcx7g75.js   | comparison-routes    |   3.66 kB |                 1.42 kB
+chunk-DDx3KeEi.js   | -                    |   3.62 kB |                 1.41 kB
+chunk-BxkJzhdm.js   | -                    |   3.30 kB |                 1.26 kB
+chunk-CT5IO3EM.js   | transparency-routes  |   3.16 kB |                 1.32 kB
+...and 10 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [3.648 seconds] - 2026-10-18T06:10:57.461Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/dashboard/web/dist
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/mobile
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/mobile
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/mobile
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  25 passed (25)
+      Tests  1172 passed (1172)
+   Start at  03:11:00
+   Duration  7.70s (transform 7.12s, setup 11.74s, import 6.73s, tests 8.65s, environment 16.85s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/mobile
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                |  Raw size | Estimated transfer size
+main-3KTQ66X4.js    | main                 | 898.32 kB |               178.19 kB
+styles-5INURTSO.css | styles               |   0 bytes |                 0 bytes
+
+                    | Initial total        | 898.32 kB |               178.19 kB
+
+Lazy chunk files    | Names                |  Raw size | Estimated transfer size
+chunk-DXOzHKQz.js   | -                    |  12.75 kB |                 3.82 kB
+chunk-Dj3-4b_W2.js  | sinistro-routes      |   9.59 kB |                 1.13 kB
+chunk-sW8gVHkV.js   | ait-routes           |   5.11 kB |               780 bytes
+chunk-tqM56BL-.js   | -                    |   4.78 kB |                 1.21 kB
+chunk-cs8zMD7p2.js  | ait-review-page      |   4.54 kB |                 1.51 kB
+chunk-b9vFcmq_2.js  | ait-start-page       |   4.05 kB |                 1.40 kB
+chunk-Bnnl_Qa2.js   | open-shift-page      |   3.81 kB |                 1.44 kB
+chunk-CpwvUFRc.js   | turno-routes         |   3.04 kB |               623 bytes
+chunk-DriB73Ef2.js  | auth-mfa-page        |   3.00 kB |                 1.21 kB
+chunk-DsZO6xuS2.js  | auth-login-page      |   2.96 kB |                 1.10 kB
+chunk-DhhEm1YC.js   | alcoolemia-routes    |   2.59 kB |               488 bytes
+chunk-BlI3heAq.js   | medidas-routes       |   2.16 kB |               475 bytes
+chunk-CWYYuWlK.js   | consultas-routes     |   1.98 kB |               469 bytes
+chunk-CTX3_Vdf.js   | sincronizacao-routes |   1.84 kB |               451 bytes
+chunk-Vk87yWcy.js   | ait-done-page        |   1.78 kB |               772 bytes
+...and 53 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [4.310 seconds] - 2026-10-18T06:11:13.651Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/mobile/dist
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/web
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  4 passed (4)
+      Tests  611 passed (611)
+   Start at  03:11:15
+   Duration  2.91s (transform 1.74s, setup 4.33s, import 1.96s, tests 1.91s, environment 1.76s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                                  |  Raw size | Estimated transfer size
+main-NCMBQQAN.js    | main                                   | 499.40 kB |                94.99 kB
+chunk-BGrcDqoR.js   | -                                      | 414.38 kB |               100.19 kB
+styles-5INURTSO.css | styles                                 |   0 bytes |                 0 bytes
+
+                    | Initial total                          | 913.78 kB |               195.19 kB
+
+Lazy chunk files    | Names                                  |  Raw size | Estimated transfer size
+chunk-PQ5SQH5H.js   | detran-boat-mobile-boat-pages-DRO9qfT3 |   6.77 kB |               751 bytes
+chunk-BFrSy1e8.js   | fiscalizacao-routes                    |   2.02 kB |               449 bytes
+chunk-CC2GM3R0.js   | operations-routes                      |   1.44 kB |               402 bytes
+chunk-D_ltnIKv.js   | admin-routes                           |   1.30 kB |               316 bytes
+chunk-CxsvAFMC.js   | audit-routes                           |   1.25 kB |               400 bytes
+chunk-Brhop0jn.js   | technical-routes                       |   1.22 kB |               320 bytes
+chunk-JMvKCxcJ.js   | normative-routes                       |   1.19 kB |               329 bytes
+chunk-C_CiMEyD.js   | evidence-routes                        |   1.07 kB |               342 bytes
+chunk-CFAKmYA0.js   | measures-routes                        | 972 bytes |               972 bytes
+chunk-DVnShmbs.js   | bi-routes                              | 961 bytes |               961 bytes
+chunk-WBSVQ2mL.js   | entry-routes                           | 651 bytes |               651 bytes
+chunk-DZRijsoy.js   | alcohol-routes                         | 594 bytes |               594 bytes
+chunk-Dpmcltv9.js   | sinistros-routes                       | 104 bytes |               104 bytes
+chunk-CLOaTO9Q.js   | product-page-component                 | 103 bytes |               103 bytes
+
+Application bundle generation complete. [2.978 seconds] - 2026-10-18T06:11:22.560Z
+
+▲ [WARNING] bundle initial exceeded maximum budget. Budget 600.00 kB was not met by 313.78 kB with a total of 913.78 kB.
+
+
+Output location: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/teat/web/dist
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  03:11:24
+   Duration  1.74s (transform 2.55s, setup 2.83s, import 141ms, tests 342ms, environment 1.10s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> ng-packagr -p ng-package.json -c tsconfig.lib.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/boat-mobile'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+- Writing FESM and DTS bundles
+✔ Writing FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/boat-mobile
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+- to:   /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-18T06:11:27.252Z - Time: 625ms
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+> eslint .
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  163 passed | 1 skipped (164)
+      Tests  4958 passed | 139 todo (5097)
+   Start at  03:11:31
+   Duration  47.36s (transform 10.60s, setup 47.65s, import 62.64s, tests 85.23s, environment 103.03s)
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names             |  Raw size | Estimated transfer size
+chunk-VeNNSlvK.js   | -                 | 494.60 kB |               120.86 kB
+main-QC534ORV.js    | main              |  22.62 kB |                 6.62 kB
+chunk-CMV_s-3c.js   | -                 |   9.47 kB |                 3.40 kB
+styles-LSNMVM7I.css | styles            |   2.21 kB |               636 bytes
+
+                    | Initial total     | 528.90 kB |               131.52 kB
+
+Lazy chunk files    | Names             |  Raw size | Estimated transfer size
+chunk-D1G72iJf.js   | colegiado-routes  |  99.11 kB |                16.02 kB
+chunk-DxkEHLzu2.js  | caso-routes       |  70.31 kB |                12.06 kB
+chunk-BmTqwx-A2.js  | rait-pt-BR-json   |  61.42 kB |                14.29 kB
+chunk-BRQwy27k.js   | -                 |  46.89 kB |                 9.86 kB
+chunk-CYaO3o3q.js   | protocolo-routes  |  43.98 kB |                 8.12 kB
+chunk-DYcP_8T-.js   | gestao-routes     |  32.20 kB |                 6.84 kB
+chunk-DwOFpxca2.js  | -                 |  12.97 kB |                 3.47 kB
+chunk-ZzMQYkfI2.js  | assinatura-routes |  12.92 kB |                 3.65 kB
+chunk-CYu98om5.js   | -                 |  11.62 kB |                 4.02 kB
+chunk-BMhXZPbd2.js  | arquivo-routes    |  10.84 kB |                 2.93 kB
+chunk-DjTu2kHl.js   | painel-routes     |   8.70 kB |                 2.69 kB
+chunk-ugmwpmQO.js   | fila-routes       |   8.33 kB |                 2.29 kB
+chunk-DJQNKPY92.js  | autoridade-routes |   8.00 kB |                 2.66 kB
+chunk-CNiVOyfe.js   | -                 |   5.99 kB |                 1.60 kB
+chunk-BtUhP0Jt.js   | -                 |   5.63 kB |                 2.05 kB
+...and 26 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [5.051 seconds] - 2026-10-18T06:12:24.675Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web/dist
+

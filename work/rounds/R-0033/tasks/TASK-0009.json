@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0033",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Specs do modo prévia do portal-web e inventário rota × fixture × estado do portal (CTG-0004)",
+  "description": "Escrever em apps/portal/web/src/app/preview/*.spec.ts (7 specs + preview.spec-helper.ts) os testes que codificam o contrato frontend-preview-mode.md para o portal-web — cobertura de rotas sem rede, marca, ação não funcional (delegações continuam 'serviço indisponível'), gate estático de production, fonte das fixtures, a11y — e work/rounds/R-0033/inventory-portal-web.md; os specs falham até TASK-0007 (M3). Conforme prompts/TASK-0009.md. Continuação W3 (2026-10-18): executada por Inspector da família Codex; pacote RED aceito pelo maestro, commit 61282b66. Recibos: reports/TASK-0009.md e reports/W3-portal-red.log (reprodução independente), checks de presença/Prettier/ESLint e sintaxe do smoke. Os campos executor, branch, worktree_id e prompt_composition_id preservam a configuração histórica do bootstrap, não identificam o executor atual. Não comprova prévia funcional; TASK-0007 permanece queued até aceitação própria.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-web-preview-specs",
+    "MOD-r33-round",
+    "MOD-r33-preview-scripts-portal"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["c-0003", "ctg-0004", "preview", "inspector"],
+  "branch": "claude/frontend-preview-5281e3",
+  "worktree_id": "WT-frontend-preview-5281e3",
+  "prompt_composition_id": "PC-423eb749a4930593",
+  "acceptance_commands": [
+    [
+      "test",
+      "-s",
+      "apps/portal/web/src/app/preview/preview-http-block.interceptor.spec.ts"
+    ],
+    ["test", "-s", "apps/portal/web/src/app/preview/preview-mark.spec.ts"],
+    ["test", "-s", "apps/portal/web/src/app/preview/preview-coverage.spec.ts"],
+    [
+      "test",
+      "-s",
+      "apps/portal/web/src/app/preview/preview-not-functional.spec.ts"
+    ],
+    [
+      "test",
+      "-s",
+      "apps/portal/web/src/app/preview/preview-production-gate.spec.ts"
+    ],
+    [
+      "test",
+      "-s",
+      "apps/portal/web/src/app/preview/preview-fixture-source.spec.ts"
+    ],
+    ["test", "-s", "apps/portal/web/src/app/preview/preview-a11y.spec.ts"],
+    ["test", "-s", "apps/portal/web/src/app/preview/preview.spec-helper.ts"],
+    ["test", "-s", "work/rounds/R-0033/inventory-portal-web.md"],
+    ["test", "-s", "work/rounds/R-0033/preview/portal-web/smoke.mjs"],
+    ["node", "--check", "work/rounds/R-0033/preview/portal-web/smoke.mjs"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "apps/portal/web/src/app/preview/preview-http-block.interceptor.spec.ts",
+      "apps/portal/web/src/app/preview/preview-mark.spec.ts",
+      "apps/portal/web/src/app/preview/preview-coverage.spec.ts",
+      "apps/portal/web/src/app/preview/preview-not-functional.spec.ts",
+      "apps/portal/web/src/app/preview/preview-production-gate.spec.ts",
+      "apps/portal/web/src/app/preview/preview-fixture-source.spec.ts",
+      "apps/portal/web/src/app/preview/preview-a11y.spec.ts",
+      "apps/portal/web/src/app/preview/preview.spec-helper.ts",
+      "work/rounds/R-0033/inventory-portal-web.md",
+      "work/rounds/R-0033/preview/portal-web/smoke.mjs"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/portal-web",
+      "exec",
+      "eslint",
+      "src/app/preview/"
+    ]
+  ],
+  "created_at": "2026-10-15T06:50:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-423eb749a4930593",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

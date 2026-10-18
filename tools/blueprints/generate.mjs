@@ -155,6 +155,64 @@ function entityFields(entity) {
       : [{ name: 'updated_at', type: 'timestamptz', nullable: true }]),
   ];
 }
+/**
+ * `precheck: true` num índice único: antes do `create unique index`, um bloco
+ * que procura as linhas que o índice recusaria e, havendo, falha com a lista
+ * das chaves duplicadas e o procedimento de `backend/database/ddl/README.md`.
+ * Só detecta: qual linha manter é decisão da operação, nunca da DDL. Com o
+ * índice já presente o bloco não varre a tabela.
+ */
+function uniquePrecheckSql(module, entity, index) {
+  const table = `${module.namespace}.${entity.table}`;
+  const name = index.name;
+  if (!name) throw new Error(`${table}: precheck requires an index name`);
+  const columns = index.columns.join(', ');
+  const labels = index.columns.map((column) => `${column}=%s`).join(' ');
+  const scope = index.where ? ` where ${index.where}` : '';
+  const scopeText = (index.where ? ` (${index.where})` : '').replaceAll(
+    "'",
+    "''",
+  );
+  return `do $$
+declare
+  duplicates text;
+begin
+  if to_regclass('${module.namespace}.${name}') is null then
+    select string_agg(format('${labels} linhas=%s', ${columns}, total), '; ')
+      into duplicates
+      from (select ${columns}, count(*) as total from ${table}${scope}
+             group by ${columns} having count(*) > 1) duplicate;
+    if duplicates is not null then
+      raise exception 'Indice unico ${module.namespace}.${name} nao pode ser criado: duplicatas em ${table}${scopeText}: %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', duplicates;
+    end if;
+  end if;
+end $$;`;
+}
+/**
+ * `precheck: { columns }` numa restrição `check` aditiva: antes do `alter table
+ * … add constraint`, um bloco que procura as linhas existentes que a violam e,
+ * havendo, falha listando `columns` de cada uma e o procedimento de
+ * `backend/database/ddl/README.md`. Só detecta; a correção é da operação. Com
+ * a restrição já presente o bloco não varre a tabela.
+ */
+function checkPrecheckSql(module, entity, check) {
+  const table = `${module.namespace}.${entity.table}`;
+  const columns = check.precheck.columns ?? ['id'];
+  const labels = columns.map((column) => `${column}=%s`).join(' ');
+  return `do $$
+declare
+  violations text;
+begin
+  if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${table}'::regclass) then
+    select string_agg(format('${labels}', ${columns.join(', ')}), '; ')
+      into violations
+      from ${table} where not (${check.expression});
+    if violations is not null then
+      raise exception 'Restricao ${table}.${check.name} nao pode ser criada: linhas que a violam (${check.expression.replaceAll("'", "''")}): %. Resolva-as pelo procedimento "Duplicatas antes de indice unico parcial" de backend/database/ddl/README.md e reaplique a DDL.', violations;
+    end if;
+  end if;
+end $$;`;
+}
 function tableSql(module, entity) {
   const fields = entityFields(entity);
   const columns = fields.map(
@@ -182,7 +240,9 @@ function tableSql(module, entity) {
     ...(entity.checks ?? [])
       .filter((check) => check.additive)
       .map(
-        (check) => `do $$ begin
+        (
+          check,
+        ) => `${check.precheck ? `${checkPrecheckSql(module, entity, check)}\n` : ''}do $$ begin
   if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
     alter table ${module.namespace}.${entity.table} add constraint ${check.name} check (${check.expression})${check.notValid ? ' not valid' : ''};
   end if;
@@ -190,7 +250,7 @@ end $$;`,
       ),
     ...indexes.map(
       (i) =>
-        `create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
+        `${i.unique && i.precheck ? `${uniquePrecheckSql(module, entity, i)}\n` : ''}create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
     ),
     ...indexes
       .filter(
@@ -254,7 +314,27 @@ function entity(bp, sha, item) {
     )
     .join('\n')}\n}`;
 }
+// The generated CRUD surface addresses one row through a single `:id` route
+// parameter. The key column is the blueprint's declared `primaryKey` minus
+// `tenant_id` (supplied by the tenant context and RLS, never by the caller).
+// An entity whose remaining key is composite cannot be addressed that way, so
+// its key-addressed operations (get/update/delete) are not generated; the
+// generator used to assume an `id` column for every entity (hotfix
+// fix/generated-billing-invoice-item-key, ch.billing_invoice_item).
+function addressKey(entity) {
+  if (!Array.isArray(entity.primaryKey) || !entity.primaryKey.length)
+    throw new Error(`${entity.table}: blueprint entity without primaryKey`);
+  const columns = entity.primaryKey.filter((column) => column !== 'tenant_id');
+  for (const column of columns)
+    if (!entityFields(entity).some((field) => field.name === column))
+      throw new Error(
+        `${entity.table}: primaryKey column ${column} is not a declared field`,
+      );
+  return columns.length === 1 ? columns[0] : undefined;
+}
+const KEYED_OPERATIONS = ['get', 'update', 'delete'];
 function repository(bp, sha, entity, module) {
+  const key = addressKey(entity);
   const name = `${entity.name}Repository`;
   const dtoName = `Create${entity.name}Dto`;
   const writable = entity.fields
@@ -269,7 +349,7 @@ function repository(bp, sha, entity, module) {
     .join(', ');
   return [
     header(bp, sha),
-    `import { Injectable, NotFoundException } from '@nestjs/common';`,
+    `import { Injectable${key ? ', NotFoundException' : ''} } from '@nestjs/common';`,
     `import { RequestContext } from '@stynx-nyx/core';`,
     `import { Database, type Transaction } from '@stynx-nyx/data';`,
     `import { withTenantContext } from '@detran/shared';`,
@@ -285,25 +365,43 @@ function repository(bp, sha, entity, module) {
     `  constructor(private readonly database: Database, private readonly requestContext: RequestContext) {}`,
     `  transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> { return withTenantContext(this.database, this.requestContext, work); }`,
     `  findAll(transaction?: Transaction): Promise<${entity.name}[]> { return this.execute(transaction, async (tx) => (await tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} order by created_at desc limit 500')).rows); }`,
-    `  async findOne(id: string, transaction?: Transaction): Promise<${entity.name}> { const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} where id = $1 limit 1', [id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
-    `  create(dto: ${dtoName}, transaction?: Transaction): Promise<${entity.name}> { return this.write('insert', undefined, dto, transaction); }`,
-    `  update(id: string, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { return this.write('update', id, dto, transaction); }`,
-    `  async remove(id: string, transaction?: Transaction): Promise<void> { const result = await this.execute(transaction, (tx) => tx.query('delete from ${module.namespace}.${entity.table} where id = $1 returning id', [id])); if (!result.rows[0]) throw new NotFoundException('${entity.name} ' + id + ' not found'); }`,
-    `  private async write(operation: 'insert' | 'update', id: string | undefined, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { const entries = Object.entries(dto).filter(([, value]) => value !== undefined); if (!entries.length || entries.some(([field]) => !WRITABLE_FIELDS.has(field))) throw new Error('Invalid ${entity.name} write fields'); const columns = entries.map(([field]) => field); const values = entries.map(([, value]) => value); const insertSql = 'insert into ${module.namespace}.${entity.table} (' + columns.join(', ') + ') values (' + columns.map((_, index) => '$' + (index + 1)).join(', ') + ') returning *'; const updateSql = 'update ${module.namespace}.${entity.table} set ' + columns.map((field, index) => field + ' = $' + (index + 1)).join(', ') + ', updated_at = now() where id = $' + (columns.length + 1) + ' returning *'; const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>(operation === 'insert' ? insertSql : updateSql, operation === 'insert' ? values : [...values, id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
+    ...(key
+      ? [
+          `  async findOne(id: string, transaction?: Transaction): Promise<${entity.name}> { const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} where ${key} = $1 limit 1', [id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
+          `  create(dto: ${dtoName}, transaction?: Transaction): Promise<${entity.name}> { return this.write('insert', undefined, dto, transaction); }`,
+          `  update(id: string, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { return this.write('update', id, dto, transaction); }`,
+          `  async remove(id: string, transaction?: Transaction): Promise<void> { const result = await this.execute(transaction, (tx) => tx.query('delete from ${module.namespace}.${entity.table} where ${key} = $1 returning ${key}', [id])); if (!result.rows[0]) throw new NotFoundException('${entity.name} ' + id + ' not found'); }`,
+          `  private async write(operation: 'insert' | 'update', id: string | undefined, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { const entries = Object.entries(dto).filter(([, value]) => value !== undefined); if (!entries.length || entries.some(([field]) => !WRITABLE_FIELDS.has(field))) throw new Error('Invalid ${entity.name} write fields'); const columns = entries.map(([field]) => field); const values = entries.map(([, value]) => value); const insertSql = 'insert into ${module.namespace}.${entity.table} (' + columns.join(', ') + ') values (' + columns.map((_, index) => '$' + (index + 1)).join(', ') + ') returning *'; const updateSql = 'update ${module.namespace}.${entity.table} set ' + columns.map((field, index) => field + ' = $' + (index + 1)).join(', ') + ', updated_at = now() where ${key} = $' + (columns.length + 1) + ' returning *'; const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>(operation === 'insert' ? insertSql : updateSql, operation === 'insert' ? values : [...values, id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
+        ]
+      : [
+          `  async create(dto: ${dtoName}, transaction?: Transaction): Promise<${entity.name}> { const entries = Object.entries(dto).filter(([, value]) => value !== undefined); if (!entries.length || entries.some(([field]) => !WRITABLE_FIELDS.has(field))) throw new Error('Invalid ${entity.name} write fields'); const columns = entries.map(([field]) => field); const values = entries.map(([, value]) => value); const insertSql = 'insert into ${module.namespace}.${entity.table} (' + columns.join(', ') + ') values (' + columns.map((_, index) => '$' + (index + 1)).join(', ') + ') returning *'; const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>(insertSql, values)); const row = result.rows[0]; if (!row) throw new Error('${entity.name} insert returned no row'); return row; }`,
+        ]),
     `  private execute<T>(transaction: Transaction | undefined, work: (transaction: SqlTransaction) => Promise<T>): Promise<T> { if (transaction) return work(transaction as SqlTransaction); return withTenantContext(this.database, this.requestContext, (tx) => work(tx as SqlTransaction)); }`,
     '}',
   ].join('\n');
 }
 function service(bp, sha, entity) {
-  return `${header(bp, sha)}\nimport { Injectable } from '@nestjs/common';\nimport { ${entity.name}Repository } from '../repositories/${kebab(entity.name)}.repository.js';\nimport type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\n\n@Injectable()\nexport class ${entity.name}Service {\n  constructor(private readonly repository: ${entity.name}Repository) {}\n  findAll(): Promise<${entity.name}[]> { return this.repository.findAll(); }\n  findOne(id: string): Promise<${entity.name}> { return this.repository.findOne(id); }\n  create(dto: Create${entity.name}Dto): Promise<${entity.name}> { return this.repository.create(dto); }\n  update(id: string, dto: Partial<Create${entity.name}Dto>): Promise<${entity.name}> { return this.repository.update(id, dto); }\n  remove(id: string): Promise<void> { return this.repository.remove(id); }\n}`;
+  const keyed = addressKey(entity) !== undefined;
+  return `${header(bp, sha)}\nimport { Injectable } from '@nestjs/common';\nimport { ${entity.name}Repository } from '../repositories/${kebab(entity.name)}.repository.js';\nimport type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\n\n@Injectable()\nexport class ${entity.name}Service {\n  constructor(private readonly repository: ${entity.name}Repository) {}\n  findAll(): Promise<${entity.name}[]> { return this.repository.findAll(); }\n${keyed ? `  findOne(id: string): Promise<${entity.name}> { return this.repository.findOne(id); }\n` : ''}  create(dto: Create${entity.name}Dto): Promise<${entity.name}> { return this.repository.create(dto); }\n${keyed ? `  update(id: string, dto: Partial<Create${entity.name}Dto>): Promise<${entity.name}> { return this.repository.update(id, dto); }\n  remove(id: string): Promise<void> { return this.repository.remove(id); }\n` : ''}}`;
 }
 function controller(bp, sha, entity, module) {
   const api = (bp.api?.resources ?? []).find(
     (resource) => resource.entity === entity.name,
   );
-  const operations = new Set(
-    api?.operations ?? ['list', 'get', 'create', 'update', 'delete'],
-  );
+  const keyed = addressKey(entity) !== undefined;
+  const declared = api?.operations ?? [
+    'list',
+    'create',
+    ...(keyed ? KEYED_OPERATIONS : []),
+  ];
+  const unaddressable = keyed
+    ? []
+    : declared.filter((operation) => KEYED_OPERATIONS.includes(operation));
+  if (unaddressable.length)
+    throw new Error(
+      `${bp.id} ${entity.name}: operations ${unaddressable.join(', ')} need a single-column key (primaryKey minus tenant_id)`,
+    );
+  const operations = new Set(declared);
   const resource = `${module.namespace}:${api?.resource ?? kebab(entity.name)}`;
   const route = [
     String(bp.api?.basePath ?? '')

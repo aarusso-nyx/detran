@@ -221,16 +221,16 @@ export class DashboardFreshnessService {
 
   /** `d` e `m` (§8.1) pelo `OpsParameterService` (regra numérica §1.3.7). */
   async params(): Promise<FreshnessParams> {
-    const [heartbeatDivisor, staleHideMultiplier] = await Promise.all([
-      readNumericParameter(
-        this.parameters,
-        dashboardParameterKey('heartbeat_divisor'),
-      ),
-      readNumericParameter(
-        this.parameters,
-        dashboardParameterKey('stale_hide_multiplier'),
-      ),
-    ]);
+    // Sequencial: cada leitura abre `Database.tx`; em tx ambiente, leituras
+    // concorrentes disputam savepoints da mesma conexão.
+    const heartbeatDivisor = await readNumericParameter(
+      this.parameters,
+      dashboardParameterKey('heartbeat_divisor'),
+    );
+    const staleHideMultiplier = await readNumericParameter(
+      this.parameters,
+      dashboardParameterKey('stale_hide_multiplier'),
+    );
     return { heartbeatDivisor, staleHideMultiplier };
   }
 

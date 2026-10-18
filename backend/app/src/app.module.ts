@@ -112,6 +112,7 @@ import {
   detranPipelineSqlExecutor,
   detranPipelineOptions,
   detranPersistentPipelineStore,
+  detranTenantMembershipVerifier,
   detranStorageOptions,
   detranSessionsOptions,
   detranTokenVerifier,
@@ -198,6 +199,7 @@ import { PecUserAdminService } from './pec-user-admin.service.js';
 import { PecCognitoAdminController } from './pec-cognito-admin.controller.js';
 import { PecCognitoAdminService } from './pec-cognito-admin.service.js';
 import { DetranErrorFilterModule } from './detran-error.filter.js';
+import { UniqueViolationInterceptorModule } from './unique-violation.interceptor.js';
 import { DetranPolicyErrorGuard } from './detran-policy-error.guard.js';
 import { RaitTransactionalAuditInterceptor } from './rait-transactional-audit.interceptor.js';
 
@@ -211,7 +213,15 @@ patchTenantContextInterceptorOrdering();
  */
 function patchTenantContextInterceptorOrdering(): void {
   type Internals = {
-    requestContext: { hasActiveContext(): boolean };
+    requestContext: {
+      hasActiveContext(): boolean;
+      snapshot(): {
+        tenantId?: string;
+        actorId?: string;
+        requestId: string;
+        startedAt: Date;
+      };
+    };
     requestContextMutator: {
       runWithRequestContext<T>(seed: object, work: () => T): T;
     };
@@ -227,7 +237,10 @@ function patchTenantContextInterceptorOrdering(): void {
   if (prototype.intercept.name === 'detranOrderedTenantContext') return;
   const original = prototype.intercept;
   prototype.intercept = function detranOrderedTenantContext(context, next) {
-    if (this.requestContext.hasActiveContext()) {
+    const active = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    if (active?.tenantId && active.actorId) {
       return original.call(this, context, next);
     }
     const request = context.switchToHttp().getRequest<{
@@ -250,8 +263,8 @@ function patchTenantContextInterceptorOrdering(): void {
         let subscription: { unsubscribe(): void } | undefined;
         this.requestContextMutator.runWithRequestContext(
           {
-            requestId: generateRequestId(),
-            startedAt: new Date(),
+            requestId: active?.requestId ?? generateRequestId(),
+            startedAt: active?.startedAt ?? new Date(),
             tenantId,
             actorId,
           },
@@ -272,8 +285,8 @@ function patchTenantContextInterceptorOrdering(): void {
         request.principal?.id ?? request.actor?.id ?? request.user?.id;
       this.requestContextMutator.runWithRequestContext(
         {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
+          requestId: active?.requestId ?? generateRequestId(),
+          startedAt: active?.startedAt ?? new Date(),
           ...(request.tenantId ? { tenantId: request.tenantId } : {}),
           ...(actorId ? { actorId } : {}),
         },
@@ -295,7 +308,17 @@ export const detranPostgresReadiness = new DetranPostgresReadiness();
 export const detranSessionReadiness = new DetranSessionReadiness();
 export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
 
-/** BOAT victim health data requires a declared purpose and a dedicated audit. */
+/**
+ * BOAT victim health data requires a declared purpose and a dedicated audit.
+ *
+ * R-0022 B6 (hotfix, AUTHORIZATION.md Adenda B13, OD-R22-58 (a)): este
+ * interceptor roda antes do `TenantContextInterceptor` (ordem dos globais do
+ * `AppModule`), logo o tenant do contexto (claim/cabeçalho) ainda não teve a
+ * _membership_ do ator validada. A auditoria só é gravada depois dessa
+ * validação, feita com o mesmo predicado da tenancy
+ * (`DetranTenantMembershipVerifier`) no tenant em que a linha seria gravada;
+ * sem _membership_, a mesma recusa da tenancy e nenhuma gravação.
+ */
 @Injectable()
 export class BoatVictimPurposeInterceptor {
   constructor(
@@ -334,26 +357,34 @@ export class BoatVictimPurposeInterceptor {
             status: 404,
             context: {},
           });
+        const tenantId = snapshot.tenantId;
         return from(
-          detranAuditSink.write({
-            occurredAt: new Date().toISOString(),
-            tenantId: snapshot.tenantId,
-            actorId: snapshot.actorId,
-            actorRole: request.user?.roles?.[0],
-            action: 'EST_CRASH_VICTIM_READ',
-            entity: 'est.crash_victim',
-            entityId: request.params?.id,
-            metadata: { purpose },
-          }),
+          detranTenantMembershipVerifier
+            .assertActiveMember(tenantId, snapshot.actorId)
+            .then(() =>
+              detranAuditSink.write({
+                occurredAt: new Date().toISOString(),
+                tenantId,
+                actorId: snapshot.actorId,
+                actorRole: request.user?.roles?.[0],
+                action: 'EST_CRASH_VICTIM_READ',
+                entity: 'est.crash_victim',
+                entityId: request.params?.id,
+                metadata: { purpose },
+              }),
+            ),
         ).pipe(mergeMap(() => next.handle()));
       });
-    if (this.requestContext.hasActiveContext()) return work();
+    const active = this.requestContext.hasActiveContext()
+      ? this.requestContext.snapshot()
+      : undefined;
+    if (active?.tenantId && active.actorId) return work();
     return new Observable((subscriber) => {
       let subscription: { unsubscribe(): void } | undefined;
       this.requestContextMutator.runWithRequestContext(
         {
-          requestId: generateRequestId(),
-          startedAt: new Date(),
+          requestId: active?.requestId ?? generateRequestId(),
+          startedAt: active?.startedAt ?? new Date(),
           tenantId: request.tenantId ?? request.headers?.['x-tenant-id'],
           actorId: request.principal?.id ?? request.user?.id,
         },
@@ -877,6 +908,7 @@ export class AppModule {
         OfflineSyncModule,
         ProvisioningModule,
         DetranErrorFilterModule,
+        UniqueViolationInterceptorModule,
         // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
         // the agency does not operate meters today).
         ...(detranFeatureFlagSet().flags['teat.speed_meters']?.default === true

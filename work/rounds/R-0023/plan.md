@@ -1,5 +1,11 @@
 # R-0023 — frente `authz-unification` (C-0002, ação 7d: autorização com fonte única no STYNX)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/authz-unification` @ `9ee0deb1`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase C) e da inspeção (d)
 (`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` §4.2–§4.3, lacuna A3, M3, candidatos U6/U7). Nenhum

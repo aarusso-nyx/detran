@@ -644,6 +644,14 @@ describe('CTG-0002 §4.6 — efeito de domínio do applier ait (C-0002-42)', () 
       device_id: isolatedField.deviceId,
     });
     await client.query(`select set_config('app.role', 'owner', false)`);
+    // §5.10: uma reserva `reserved` por dispositivo e turno — a reserva do
+    // caso anterior (…0001, consumida por C-0002-42) é liquidada antes de a
+    // reserva do número 2026000005 nascer.
+    await client.query(
+      `update ops.numbering_reservation set status = 'consumed'
+        where tenant_id = $1 and id = $2 and status = 'reserved'`,
+      [isolated.tenantId, isolatedField.reservationId],
+    );
     await client.query(
       `insert into ops.numbering_reservation
          (id, tenant_id, range_id, traffic_agency_id, agent_id, device_id, shift_id,

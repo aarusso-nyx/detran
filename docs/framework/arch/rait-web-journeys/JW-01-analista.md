@@ -15,8 +15,8 @@ T-03, T-04, T-05, T-06, T-07 (lado minuta). Estados do caso: `WF-RAIT-001`.
 | 6   | `/casos/:id/diligencias`  | abre diligência (15 du), prorroga 1x, responde                             | `rait-case:open-inquiry` / `extend` / `answer` | `[DILIGENCIA]`; some da mesa; volta por T-06                     | `INQUIRY_ADDRESSEE_FORBIDDEN`, `INQUIRY_EXTENSION_LIMIT`                        |
 | 7   | `/painel/retomar`         | retoma caso respondido ou vencido (`T-DIL`)                                | —                                              | `[EM_INSTRUCAO]` \| `[PRONTO_P_DECISAO]` (julga no estado)       | —                                                                               |
 | 8   | `/casos/:id/minuta`       | redige fatos, fundamentos, dispositivo; versiona; "enviar para assinatura" | `rait-case:submit-draft`                       | `[PRONTO_P_DECISAO]`; "aguardando assinatura"                    | `DRAFT_INCOMPLETE`, `CASE_STATE_INVALID`                                        |
-| 9   | `/casos/:id/decisao`      | recebe devolução com orientação (1x) ou lê a decisão assinada              | —                                              | volta ao passo 8 ou encerra                                      | —                                                                               |
-| 10  | `/casos/:id/impedimentos` | declara impedimento a qualquer momento                                     | `rait-impediment:declare`                      | caso devolvido à fila com motivo                                 | `MEMBER_IMPEDED` (já registrado)                                                |
+| 9   | `/casos/:id/resumo`       | vê o retorno da autoridade também em `/painel` e `/casos/:id/historico`    | — (decisão: só `rait-signing-authority`)       | devolvida com orientação (1x) → passo 8; assinada → encerra      | — (rotas `todos`, `rait-web-frontend.md` §4; OD-C3-007)                         |
+| 10  | — (impedimento: sem rota) | sem passo: impedimento do analista saiu da JW-01 (OD-C3-007)               | `source_pending` (sem rota ao analista)        | `/casos/:id/impedimentos` é de `rait-rapporteur`/`rait-chair`    | —                                                                               |
 
 ## Fluxo de telas
 
@@ -37,9 +37,9 @@ flowchart TB
     ret --> dos
     dos -->|"instrução completa"| min["/casos/:id/minuta  T-07 — fatos, fundamentos, dispositivo"]
     min -->|"enviar para assinatura"| pron["[PRONTO_P_DECISAO] — aguardando autoridade"]
-    pron -. "devolvida com orientação (1x)" .-> min
-    pron -. "assinada" .-> dec(("/casos/:id/decisao — somente leitura"))
-    tri -. "impedimento" .-> imp["/casos/:id/impedimentos"] --> fila
+    pron -. "retorno visto em /painel, /casos/:id/resumo, /casos/:id/historico (OD-C3-007)" .-> ret9["/casos/:id/resumo — retorno da autoridade"]
+    ret9 -->|"devolvida com orientação (1x)"| min
+    ret9 -->|"assinada"| fim(("encerra para o analista"))
 ```
 
 [Renderizado: ARCH-RAIT-WEB-j01-analista-telas.svg](../diagrams/ARCH-RAIT-WEB-j01-analista-telas.svg)
