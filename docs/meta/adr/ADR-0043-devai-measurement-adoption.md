@@ -1,4 +1,4 @@
-# ADR-0041: DEVAI 2.6.2 for scorecard measurement remediation
+# ADR-0043: DEVAI 2.6.2 for scorecard measurement remediation
 
 ## Status
 

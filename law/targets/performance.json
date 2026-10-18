@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "detran-initial-performance",
+  "kind": "performance",
+  "title": "Initial generous request-path performance baseline",
+  "status": "active",
+  "authority": "Architect",
+  "date": "2026-10-18",
+  "targets": [
+    {
+      "id": "TGT-PERF-001",
+      "title": "Median read-request latency",
+      "subject": "ADR-0044 synthetic request-path workload, per scenario",
+      "statement": "Each declared scenario has p50_ms at most 1000 ms over all 30 measured requests.",
+      "sensor_kind": "perf_test",
+      "metric": "p50_ms",
+      "metric_source": "metrics",
+      "comparator": "lte",
+      "threshold": 1000,
+      "unit": "ms",
+      "invariants": ["INV-OPS-002"],
+      "source": {
+        "doc": "docs/meta/adr/ADR-0044-initial-performance-baseline.md",
+        "anchor": "decision"
+      }
+    },
+    {
+      "id": "TGT-PERF-002",
+      "title": "95th percentile read-request latency",
+      "subject": "ADR-0044 synthetic request-path workload, per scenario",
+      "statement": "Each declared scenario has p95_ms at most 2000 ms over all 30 measured requests.",
+      "sensor_kind": "perf_test",
+      "metric": "p95_ms",
+      "metric_source": "metrics",
+      "comparator": "lte",
+      "threshold": 2000,
+      "unit": "ms",
+      "invariants": ["INV-OPS-002"],
+      "source": {
+        "doc": "docs/meta/adr/ADR-0044-initial-performance-baseline.md",
+        "anchor": "decision"
+      }
+    }
+  ]
+}

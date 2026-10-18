@@ -131,6 +131,26 @@
         "kind": "command-result",
         "population": "detran-workspace-typecheck"
       }
+    },
+    {
+      "nodeId": "scorecard-performance",
+      "dependencies": [],
+      "argv": ["node", "tools/devai/scorecard-local-task.mjs", "perf"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["perf_test"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-request-path-baseline-v1"
+      }
     }
   ],
   "profiles": [

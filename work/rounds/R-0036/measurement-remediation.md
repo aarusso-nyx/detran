@@ -2,7 +2,7 @@
 
 **Authority:** user continuation, 2026-10-18; BL-0012. Architect for measurement
 contracts and adoption, Engineer for tooling, Inspector for tests, Auditor for
-observations. ADR-0041 admits verified DEVAI 2.6.2. Product fixes are separate.
+observations. ADR-0043 admits verified DEVAI 2.6.2. Product fixes are separate.
 
 ## Sequence
 
