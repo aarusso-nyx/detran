@@ -49,3 +49,19 @@ fourth-verdict ownership. Preview adapters stay explicitly unavailable.
 Full R-0025 acceptance remains pending outside the starter slice. Generated
 artifacts, OpenAPI, client types and mounted routes must agree; all affected gates
 remain unchanged. The contract is `work/rounds/R-0025/contracts/JW01-admissibility.md`.
+
+## Addendum — control reads and preview display scenarios
+
+The R-0025 real case guard must run before the page, while preview P-09 must render
+loading/error/forbidden as page states. A typed control read separates those
+responsibilities without replacing the guard or granting access unconditionally.
+
+`CaseClient.verifyCaseAccess(caseId): Promise<void>` normally awaits the existing
+case GET, preserving credentials, RLS, received ETag and errors. The unchanged real
+guard awaits this read. Its preview adapter verifies canonical fixture membership
+without applying display QA state; missing IDs still reject. Page case reads keep
+their five-state scenarios. Auth/role guards, tenant/session and all unavailable
+preview commands remain intact; no new backend endpoint or authorization predicate.
+No synthetic ETag is needed for the preview membership check. The method is a READ
+in the method inventory, not a 66th command. Inspector proves both paths and the
+unknown-ID/role/network negatives before Engineer implementation.

@@ -5,11 +5,14 @@
 // mapeadas para os tipos de `data/models` sem inventar campo (D-06: camelCase → snake_case;
 // `tenant_id` = tenant da fixture; `@default` do contrato gerado `BP-INF-RAIT-CASE-001`; opcional
 // ausente; `created_at`, `opened_at`, `attached_at`, `evaluated_at`, `decided_at` sem coluna na
-// seed → `source_pending`, `rait-fixtures.md` §10, A5 item 5). Comandos: registram a string M8
-// (contrato §6) e delegam ao cliente real, que lança `RaitCommandUnavailableError` (nunca sucesso).
+// seed → `source_pending`, `rait-fixtures.md` §10, A5 item 5). Comandos registram a string M8.
+// Os quatro métodos ativados em JW-01 lançam indisponibilidade diretamente; os demais ainda
+// delegam ao cliente real indisponível. Nenhum comando da prévia executa rede ou simula sucesso.
 import { Injectable, inject } from '@angular/core';
 import { CaseClient } from '../../data/api/case.client';
+import { RaitCommandUnavailableError } from '../../core/error-boundary';
 import type { ListQuerySpec } from '../../data/list-query';
+import { PreviewFixtureStore } from '../preview-fixtures';
 import type {
   ListPage,
   ListQuery,
@@ -373,6 +376,7 @@ const caseEvents = (fixtures: RaitFixturesJson): readonly RaitCaseEvent[] =>
 export class PreviewCaseClient extends CaseClient {
   private readonly previewReader = inject(PreviewFixtureReader);
   private readonly previewLog = inject(PreviewActionLog);
+  private readonly fixtureStore = inject(PreviewFixtureStore);
 
   // --- leituras ------------------------------------------------------------------------------
 
@@ -382,6 +386,13 @@ export class PreviewCaseClient extends CaseClient {
 
   override getRaitCase(id: string): Promise<RaitCase> {
     return this.previewReader.get('cases', id, cases);
+  }
+
+  override async verifyCaseAccess(caseId: string): Promise<void> {
+    const fixtures = await this.fixtureStore.load();
+    if (!fixtures.cases.some((record) => record.id === caseId)) {
+      throw new Error(`rait-preview-fixture-missing:cases:${caseId}`);
+    }
   }
 
   override listRaitParty(query: ListQuery = {}): Promise<ListPage<RaitParty>> {
@@ -494,7 +505,7 @@ export class PreviewCaseClient extends CaseClient {
     return this.previewReader.get('caseEvents', id, caseEvents);
   }
 
-  // --- comandos (contrato §6: registra a string M8 e delega; o cliente real lança) ------------
+  // --- comandos (contrato §6: registra M8 e mantém indisponibilidade explícita) ---------------
 
   override protocol(
     ...args: Parameters<CaseClient['protocol']>
@@ -503,25 +514,32 @@ export class PreviewCaseClient extends CaseClient {
     return super.protocol(...args);
   }
 
-  override triage(
-    ...args: Parameters<CaseClient['triage']>
+  override async triage(
+    ..._args: Parameters<CaseClient['triage']>
   ): ReturnType<CaseClient['triage']> {
     this.previewLog.record('rait-case:triage');
-    return super.triage(...args);
+    throw new RaitCommandUnavailableError('rait-case:triage');
   }
 
-  override admit(
-    ...args: Parameters<CaseClient['admit']>
+  override async saveAdmissibility(
+    ..._args: Parameters<CaseClient['saveAdmissibility']>
+  ): ReturnType<CaseClient['saveAdmissibility']> {
+    this.previewLog.record('rait-admissibility:create');
+    throw new RaitCommandUnavailableError('rait-admissibility:create');
+  }
+
+  override async admit(
+    ..._args: Parameters<CaseClient['admit']>
   ): ReturnType<CaseClient['admit']> {
     this.previewLog.record('rait-case:admit');
-    return super.admit(...args);
+    throw new RaitCommandUnavailableError('rait-case:admit');
   }
 
-  override reject(
-    ...args: Parameters<CaseClient['reject']>
+  override async reject(
+    ..._args: Parameters<CaseClient['reject']>
   ): ReturnType<CaseClient['reject']> {
     this.previewLog.record('rait-case:reject');
-    return super.reject(...args);
+    throw new RaitCommandUnavailableError('rait-case:reject');
   }
 
   override remitJari(

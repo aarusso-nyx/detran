@@ -17,6 +17,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createSessionStub } from '../../../testing/session.stub';
 import { CASE_IDS, fixtureCase } from '../../../testing/http-fixtures';
 import { RaitSessionFacade } from '../session.facade';
+import { CaseClient } from '../../data/api/case.client';
 import { caseAccessGuard } from './case-access.guard';
 import { raitAuthGuard } from './auth.guard';
 import { roleGuard } from './role.guard';
@@ -123,4 +124,32 @@ describe('TASK25 caseAccessGuard waits for tenant-protected GET', () => {
     ).toContain('/sem-permissao?de=');
     http.expectNone(() => true);
   });
+});
+
+describe('D23 production control read uses actual GET, ETag and failures', () => {
+  for (const status of [200, 403, 404, 500]) {
+    it(`verifyCaseAccess HTTP${status} preserves server access result`, async () => {
+      const http = setup();
+      const client = TestBed.inject(CaseClient);
+      const outcome = client.verifyCaseAccess(CASE).then(
+        () => ({ ok: true }),
+        (error: unknown) => ({ error }),
+      );
+      const req = await vi.waitFor(() =>
+        http.expectOne(`/v1/inf/rait/cases/${CASE}`),
+      );
+      expect(req.request.method).toBe('GET');
+      if (status === 200) {
+        req.flush(fixtureCase(CASE), { headers: { ETag: '"7"' } });
+        expect(await outcome).toEqual({ ok: true });
+        expect(client.etagOf('cases', CASE)).toBe('"7"');
+      } else {
+        req.flush({ code: 'denied' }, { status, statusText: 'Denied' });
+        expect(await outcome).toMatchObject({
+          error: { status, error: { code: 'denied' } },
+        });
+        expect(client.etagOf('cases', CASE)).toBeNull();
+      }
+    });
+  }
 });

@@ -41,7 +41,8 @@ import { PARAMETRO_GATE } from './parametro.schema';
 import { EXPORTACAO_GATE } from './exportacao.schema';
 import { RAIT_ALL_ROLES, type RaitRoleCode } from '../app.route-manifest';
 import { RAIT_COMMANDS, type RaitCommand } from '../data/models/commands';
-import { readPolicyCommandRules } from '../../testing/kb';
+import { readFileSync } from 'node:fs';
+import { POLICY_PATH, readPolicyCommandRules } from '../../testing/kb';
 import { ROLE_PERMISSIONS_FIXTURE } from '../../testing/policy.fixture';
 import {
   COMMAND_POLICY_KEY_FIXTURE,
@@ -120,7 +121,29 @@ describe('gates — estrutura idêntica à fixture do §5 (C-2C-82)', () => {
 });
 
 describe('mapa comando M8 → chave de política (C-2C-83)', () => {
+  const policySource = readFileSync(POLICY_PATH, 'utf8');
+  const crudBlock = policySource.slice(
+    policySource.indexOf('const RAIT_SURFACE_WRITE_ROLES:'),
+    policySource.indexOf('const RAIT_COMMAND_RULES:'),
+  );
+  const admissibility = crudBlock.match(/'rait-admissibility':\s*\[([^\]]*)\]/);
+  const crudRoles = [...(admissibility?.[1] ?? '').matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
   const policyKeys = new Set(readPolicyCommandRules().map((rule) => rule.key));
+  if (admissibility && crudBlock.includes("[resource, 'create', writers]"))
+    policyKeys.add('inf:rait-admissibility:create');
+
+  it('new admissibility command uses the existing canonical CRUD create grant', () => {
+    expect(crudBlock).toContain('Object.entries(RAIT_SURFACE_WRITE_ROLES)');
+    expect(crudBlock).toContain("[resource, 'create', writers]");
+    expect(new Set(crudRoles)).toEqual(
+      new Set(['rait-analyst', 'rait-secretary']),
+    );
+    expect(COMMAND_POLICY_KEY_FIXTURE['rait-admissibility:create']).toBe(
+      'inf:rait-admissibility:create',
+    );
+  });
 
   it('dado COMMAND_POLICY_KEY_FIXTURE então cobre os 65 comandos de RAIT_COMMANDS', () => {
     // C-2C-83 (parte 1)

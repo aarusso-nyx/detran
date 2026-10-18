@@ -19,6 +19,7 @@ import { expectA11yStateInvariants } from '../../../../testing/a11y-state.spec-h
 import { raitAuthGuard } from '../../../core/guards/auth.guard';
 import { roleGuard } from '../../../core/guards/role.guard';
 import { caseAccessGuard } from '../../../core/guards/case-access.guard';
+import { CaseFacade } from '../../../data/facades/case.facade';
 import { TriagePageComponent } from './triage.page';
 const CASE = CASE_IDS.PROTOCOLADO;
 const CRITERIA = ['legitimidade', 'assinatura', 'pedido_compativel'] as const;
@@ -72,12 +73,16 @@ async function mount(
   const harness = await RouterTestingHarness.create();
   let current = { ...fixtureCase(CASE), state, version: 1 };
   let rows = state === 'PROTOCOLADO' ? [] : [timely];
+  const readCounts = { caso: 0, admissibility: 0 };
   function reads() {
     for (const req of http.match((request) => request.method === 'GET')) {
-      if (req.request.url === `/v1/inf/rait/cases/${CASE}`)
+      if (req.request.url === `/v1/inf/rait/cases/${CASE}`) {
+        readCounts.caso++;
         req.flush(current, { headers: { ETag: `"${current.version}"` } });
-      else if (req.request.url.endsWith('/admissibility')) req.flush(rows);
-      else req.flush([]);
+      } else if (req.request.url.endsWith('/admissibility')) {
+        readCounts.admissibility++;
+        req.flush(rows);
+      } else req.flush([]);
     }
   }
   const navigation = harness.navigateByUrl(`/casos/${CASE}/triagem`);
@@ -94,6 +99,23 @@ async function mount(
     harness,
     root,
     reads,
+    async refreshed(
+      version: number,
+      before: { caso: number; admissibility: number },
+    ) {
+      await vi.waitFor(() => {
+        reads();
+        harness.detectChanges();
+        expect(readCounts.caso).toBeGreaterThan(before.caso);
+        expect(readCounts.admissibility).toBeGreaterThan(before.admissibility);
+        expect(TestBed.inject(CaseFacade).caso.value()?.version).toBe(version);
+        expect(TestBed.inject(CaseFacade).caso.status()).toBe('ready');
+        expect(TestBed.inject(CaseFacade).admissibilidade.status()).toBe(
+          'ready',
+        );
+      });
+    },
+    readCounts,
     update(version: number) {
       current = { ...current, state: 'TRIAGEM_ADMISSIBILIDADE', version };
       rows = [timely];
@@ -117,7 +139,9 @@ function fill(root: HTMLElement) {
 afterEach(() => TestBed.inject(HttpTestingController).verify());
 describe('TASK25 direct PROTOCOLADO admissibility UI', () => {
   it('separates F01 initiation from checklist save; no automatic state change on visit', async () => {
-    const { http, harness, root, reads, update } = await mount('PROTOCOLADO');
+    const { http, root, refreshed, readCounts, update } =
+      await mount('PROTOCOLADO');
+    const before = { ...readCounts };
     http.expectNone((request) => request.method === 'POST');
     const button = root.querySelector<HTMLButtonElement>(
       '[data-action="start-triage"]',
@@ -141,15 +165,15 @@ describe('TASK25 direct PROTOCOLADO admissibility UI', () => {
       },
       { headers: { ETag: '"2"' } },
     );
-    await vi.waitFor(() => {
-      reads();
-      harness.detectChanges();
-      expect(root.querySelector('input[name="tempestividade"]')).toBeNull();
-    });
+    await refreshed(2, before);
+    expect(root.querySelector('[data-action="start-triage"]')).toBeNull();
+    expect(root.querySelector('input[name="tempestividade"]')).toBeNull();
     http.expectNone((request) => request.method === 'POST');
   });
   it('saves exactly three human criteria sequentially with newest case ETag, never timeliness/actor/time', async () => {
-    const { http, harness, root, reads, update } = await mount();
+    const { http, harness, root, refreshed, readCounts, update } =
+      await mount();
+    const before = { ...readCounts };
     fill(root);
     harness.detectChanges();
     root.querySelector<HTMLButtonElement>('[data-action="triage"]')!.click();
@@ -176,10 +200,7 @@ describe('TASK25 direct PROTOCOLADO admissibility UI', () => {
         { headers: { ETag: `"${index + 2}"` } },
       );
     }
-    await vi.waitFor(() => {
-      reads();
-      harness.detectChanges();
-    });
+    await refreshed(4, before);
     http.expectNone((request) => request.method === 'POST');
     await expectA11yStateInvariants(root);
   });

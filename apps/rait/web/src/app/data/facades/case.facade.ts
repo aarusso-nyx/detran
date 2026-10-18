@@ -7,12 +7,16 @@
 // ([RN-RAIT-005], [RN-RAIT-141]); `provimentos` é um join de leituras CRUD (dados, não regra).
 import { Injectable, computed, inject, signal } from '@angular/core';
 import type { RaitStreamEvent } from '../../core/sse.service';
-import { CaseClient } from '../api/case.client';
+import {
+  CaseClient,
+  type SaveAdmissibilityInput,
+  type AdmitInput,
+  type RejectInput,
+} from '../api/case.client';
 import { WorklistClient } from '../api/worklist.client';
 import { RaitClock } from '../clock';
 import type {
   CommandBody,
-  CreateRaitAdmissibilityDto,
   CreateRaitDecisionDto,
   CreateRaitDocumentDto,
   CreateRaitDraftDto,
@@ -31,7 +35,6 @@ import type {
   RaitDraft,
   RaitImpediment,
   RaitInquiry,
-  RaitNonAdmissionReason,
   RaitParty,
 } from '../models';
 import { createCommandRunner, type CommandOutcome } from './command';
@@ -280,26 +283,44 @@ export class CaseFacade {
 
   // --- comandos (§3.5; M8) -----------------------------------------------------------------
 
-  triage(
+  private async runCaseCommand<T>(
+    command: Parameters<typeof this.command.run>[0],
     caseId: string,
-    body: CreateRaitAdmissibilityDto[],
-  ): Promise<CommandOutcome<RaitAdmissibility[]>> {
-    return this.command.run('rait-case:triage', () =>
-      this.cases.triage(caseId, body, this.cases.etagOf('cases', caseId)),
+    execute: () => Promise<{ body: T; etag: string | null }>,
+  ): Promise<CommandOutcome<T>> {
+    const outcome = await this.command.run(command, execute);
+    if (outcome.ok) {
+      this.caso.invalidate(caseId);
+      this.admissibilidade.invalidate();
+    }
+    return outcome;
+  }
+
+  triage(caseId: string): Promise<CommandOutcome<RaitCase>> {
+    return this.runCaseCommand('rait-case:triage', caseId, () =>
+      this.cases.triage(caseId, {}, this.cases.etagOf('cases', caseId)),
     );
   }
 
-  admit(caseId: string, body: CommandBody): Promise<CommandOutcome<RaitCase>> {
-    return this.command.run('rait-case:admit', () =>
+  saveAdmissibility(
+    body: SaveAdmissibilityInput,
+  ): Promise<CommandOutcome<RaitAdmissibility>> {
+    return this.runCaseCommand('rait-admissibility:create', body.case_id, () =>
+      this.cases.saveAdmissibility(
+        body,
+        this.cases.etagOf('cases', body.case_id),
+      ),
+    );
+  }
+
+  admit(caseId: string, body: AdmitInput): Promise<CommandOutcome<RaitCase>> {
+    return this.runCaseCommand('rait-case:admit', caseId, () =>
       this.cases.admit(caseId, body, this.cases.etagOf('cases', caseId)),
     );
   }
 
-  reject(
-    caseId: string,
-    body: CommandBody & { non_admission_reason: RaitNonAdmissionReason },
-  ): Promise<CommandOutcome<RaitCase>> {
-    return this.command.run('rait-case:reject', () =>
+  reject(caseId: string, body: RejectInput): Promise<CommandOutcome<RaitCase>> {
+    return this.runCaseCommand('rait-case:reject', caseId, () =>
       this.cases.reject(caseId, body, this.cases.etagOf('cases', caseId)),
     );
   }

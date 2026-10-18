@@ -172,3 +172,38 @@ somente contagem sourceada e paridade dessa chave, preservando o loop integral.
 - pnpm check, doctor, gates de geração/contratos/decorators/RLS/policy afetados e
   browser smoke local antes do PR; baseline e bloqueios separados. Nenhum merge,
   close ou seal autorizado. Demais critérios da rodada continuam pendentes.
+
+## Adenda RGR — leitura de acesso versus cenário visual da prévia
+
+A guarda real introduzida nesta rodada consulta o caso antes da página. Aplicar
+`pv_estado=loading/error/forbidden` nessa consulta impede a página de renderizar
+os estados exigidos por P-09 da prévia, sem ser uma negação real por papel.
+Separar a consulta de controle da leitura de apresentação resolve essa colisão
+sem dispensar guardas, reconhecer IDs desconhecidos ou simular comandos.
+
+**API fixa:** `CaseClient.verifyCaseAccess(caseId: string): Promise<void>` é
+leitura de controle. Implementação normal aguarda `getRaitCase(caseId)`, conserva
+GET autenticado/RLS e a gravação do ETag recebido; rejeições são preservadas.
+`caseAccessGuard` aguarda esse método com o mesmo tratamento de erro/negação
+aprovado. Não há endpoint, grant ou predicado individual novo (OD-R25-017).
+
+**Override apenas de preview:** `PreviewCaseClient.verifyCaseAccess` carrega a
+fixture canônica pelo store existente e confirma a existência do ID em `cases`,
+sem aplicar `pv_estado`. ID ausente rejeita com o erro de fixture ausente já
+existente; nunca resolve incondicionalmente. Não chama backend ou método de
+comando, não cria ETag sintético e não altera contexto de sessão/papel/tenant.
+Somente GET assets permitido para carregar a fixture. `getRaitCase` das páginas
+continua com os cinco cenários, inclusive promessa pendente, 500 e 403 visual.
+
+A cadeia auth→role→caseAccessGuard continua exatamente a mesma; somente a porta
+de leitura consultada pela última guarda muda. O cenário visual forbidden é
+resposta simulada da leitura da página; negação por papel ou ID desconhecido
+continua impedindo entrada. Isto não é bypass de autenticação/autorização.
+
+Inspector primeiro: provar produção usa GET real e conserva ETag/403/404/5xx;
+preview aceita ID canônico em cada um dos cinco cenários e deixa a página aplicar
+P-09; ID não canônico rejeita em todos, papéis continuam negados e rede continua
+zero fora de assets. `verifyCaseAccess` é classificado explicitamente como READ
+no inventário de métodos; não incrementa RAIT_COMMANDS nem exclui um comando para
+passar contagem. M8 permanece 65 e os quatro comandos ativados continuam bloqueados
+nos overrides preview. Só após sensores aceitos Engineer implementa a separação.

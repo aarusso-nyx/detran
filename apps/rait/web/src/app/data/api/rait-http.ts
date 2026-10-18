@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { applyListQuery, type ListQuerySpec } from '../list-query';
 import type { ListPage, ListQuery } from '../models/list-page';
 import { EtagStore, type RaitCollection } from './etag-store';
+import type { CommandResult } from '../models/commands';
 
 // Raízes dos contratos gerados (ADR-0003). Template literals: C-2B-15 só admite strings simples
 // `'/v1/…'` que sejam caminhos completos de `paths`; uma raiz é prefixo, não caminho.
@@ -60,5 +61,28 @@ export class RaitHttp {
   ): Promise<ListPage<T>> {
     const body = await firstValueFrom(this.http.get<readonly T[]>(url));
     return applyListQuery(Array.isArray(body) ? body : [], query, spec);
+  }
+
+  /** Sends a typed command and remembers the parent case ETag returned by the server. */
+  async postCommand<T>(
+    url: string,
+    body: unknown,
+    caseId: string,
+    ifMatch: string | null,
+    idempotencyKey: string,
+  ): Promise<CommandResult<T>> {
+    const headers: Record<string, string> = {
+      [IDEMPOTENCY_KEY_HEADER]: idempotencyKey,
+    };
+    if (ifMatch !== null) headers[IF_MATCH_HEADER] = ifMatch;
+    const response = await firstValueFrom(
+      this.http.post<{ data: T; events: readonly unknown[] }>(url, body, {
+        headers,
+        observe: 'response',
+      }),
+    );
+    const etag = response.headers.get(ETAG_HEADER);
+    this.etagStore.set('cases', caseId, etag);
+    return { body: response.body!.data, etag };
   }
 }

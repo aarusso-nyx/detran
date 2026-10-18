@@ -11,6 +11,7 @@ export const RAIT_COMMANDS = [
   'rait-case:protocol',
   'rait-case:claim-next',
   'rait-case:triage',
+  'rait-admissibility:create',
   'rait-case:admit',
   'rait-case:reject',
   'rait-case:remit-jari',

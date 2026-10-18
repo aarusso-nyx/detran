@@ -123,21 +123,36 @@ function checkAllCriteriaTrue(element: HTMLElement): void {
     expect(radio, criterion).not.toBeNull();
     (radio as HTMLInputElement).checked = true;
     (radio as HTMLInputElement).dispatchEvent(new Event('change'));
+    const reason = element.querySelector<HTMLTextAreaElement>(
+      `li[data-criterion="${criterion}"] textarea`,
+    )!;
+    reason.value = 'Conferência do operador na fixture.';
+    reason.dispatchEvent(new Event('input'));
   }
 }
 
-/** Primeira opção não vazia do `<select>` de inciso (`NON_ADMISSION_REASONS` da página, lido do DOM). */
+/** Operator-entered denial; no legal grounds inferred from a reason code. */
 function chooseFirstReason(element: HTMLElement): void {
+  checkAllCriteriaTrue(element);
+  const denied = element.querySelector<HTMLInputElement>(
+    'li[data-criterion="assinatura"] input[value="false"]',
+  )!;
+  denied.checked = true;
+  denied.dispatchEvent(new Event('change'));
   const select = element.querySelector<HTMLSelectElement>(
     '#rait-triage-reason',
-  );
-  expect(select).not.toBeNull();
-  const option = [...(select?.options ?? [])].find(
-    (candidate) => candidate.value !== '',
-  );
-  expect(option).toBeDefined();
-  (select as HTMLSelectElement).value = (option as HTMLOptionElement).value;
-  (select as HTMLSelectElement).dispatchEvent(new Event('change'));
+  )!;
+  expect(
+    [...select.options].some((option) => option.value === 'sem_assinatura'),
+  ).toBe(true);
+  select.value = 'sem_assinatura';
+  select.dispatchEvent(new Event('change'));
+  const grounds = element.querySelector<HTMLTextAreaElement>(
+    '[formControlName="nonAdmissionGrounds"]',
+  )!;
+  expect(grounds).not.toBeNull();
+  grounds.value = 'Art. 4º III — fundamento jurídico informado pelo operador.';
+  grounds.dispatchEvent(new Event('input'));
 }
 
 /**
@@ -171,7 +186,7 @@ interface Jw01Action {
   readonly trigger: (harness: RouterTestingHarness) => void;
 }
 
-/** Inventário §5.2 — comandos acionáveis da JW-01 (lista fechada; P-07). */
+/** P-07 plus R25 slice: checklist/reject use canonical TRIAGEM case, not a claimed full journey. */
 const JW01_ACTIONS: readonly Jw01Action[] = [
   {
     step: '2',
@@ -188,7 +203,7 @@ const JW01_ACTIONS: readonly Jw01Action[] = [
   },
   {
     step: '3',
-    command: 'rait-case:triage',
+    command: 'rait-admissibility:create',
     route: 'casos/:id/triagem',
     page: TriagePageComponent,
     button: '[data-action="triage"]',
@@ -256,8 +271,19 @@ const JW01_ACTIONS: readonly Jw01Action[] = [
   },
 ];
 
-async function openJw01(route: string) {
-  const path = inventoryRowOf(route).previewPath;
+async function openJw01(route: string, triageCase = false) {
+  let path = inventoryRowOf(route).previewPath;
+  if (triageCase) {
+    const cases = readFixturesJson()['cases'] as Array<{
+      id: string;
+      state: string;
+    }>;
+    const canonical = cases.find(
+      (caso) => caso.state === 'TRIAGEM_ADMISSIBILIDADE',
+    );
+    expect(canonical).toBeDefined();
+    path = path.replace(/(\/casos\/)[^/]+/, `$1${canonical!.id}`);
+  }
   const url = setPreviewDocument(path, 'rait-analyst', 'loaded');
   const harness = await createPreviewHarness(previewSpecContext().providers);
   await harness.navigateByUrl(url);
@@ -275,7 +301,11 @@ function commandErrorOf(facade: Jw01Action['facade']) {
 
 /** Corpo comum de P-07: aciona, espera `kind 'unavailable'` e confere log, faixa, banner, rede. */
 async function expectNotFunctional(action: Jw01Action): Promise<void> {
-  const { harness, path, barFixture } = await openJw01(action.route);
+  const { harness, path, barFixture } = await openJw01(
+    action.route,
+    action.command === 'rait-admissibility:create' ||
+      action.command === 'rait-case:reject',
+  );
   const log = TestBed.inject(PreviewActionLog);
   const page = pageElementOf(harness, action.page);
   expect(page.querySelector(action.button)).not.toBeNull();
@@ -305,7 +335,7 @@ async function expectNotFunctional(action: Jw01Action): Promise<void> {
   expectNoNetwork();
 }
 
-describe('C-03 — ações da JW-01 na prévia: "não funcional na prévia", nunca sucesso (P-07, M6)', () => {
+describe('C-03 — ações da JW-01/recorte R25 na prévia: "não funcional na prévia", nunca sucesso (P-07, M6)', () => {
   JW01_ACTIONS.forEach((action) => {
     it(`dado JW-01 passo ${action.step} sob rait-analyst quando ${action.command} é acionado${action.confirm ? ' e confirmado' : ''} então PreviewActionLog registra só "${action.command}", a faixa mostra "${notFunctionalText(action.command)}", a página mostra "${UNAVAILABLE_TEXT}" (kind unavailable) e nenhuma requisição sai`, async () => {
       await expectNotFunctional(action);
@@ -315,7 +345,7 @@ describe('C-03 — ações da JW-01 na prévia: "não funcional na prévia", nun
   it('dado a lista fechada da JW-01 (inventário §5.2) quando contada então 6 comandos acionáveis, todos em RAIT_COMMANDS', () => {
     expect(JW01_ACTIONS.map((action) => action.command)).toEqual([
       'rait-case:claim-next',
-      'rait-case:triage',
+      'rait-admissibility:create',
       'rait-case:admit',
       'rait-case:reject',
       'rait-case:open-inquiry',
@@ -572,11 +602,12 @@ const NON_COMMAND_MEMBERS: ReadonlySet<string> = new Set([
   'etagOf',
 ]);
 
-/** Métodos de comando do cliente real, lidos do protótipo (nem `list*`/`get*`, nem `etagOf`). */
+/** Prototype inventory: list/get, etagOf and D23 verifyCaseAccess are READs; all remaining methods stay commands. */
 function commandMethodsOf(type: AnyClass): readonly string[] {
   return Object.getOwnPropertyNames(type.prototype)
     .filter((name) => !NON_COMMAND_MEMBERS.has(name))
     .filter((name) => !/^(list|get)[A-Z]/.test(name))
+    .filter((name) => name !== 'verifyCaseAccess')
     .sort();
 }
 
@@ -586,6 +617,16 @@ async function configureAdapters(): Promise<void> {
 }
 
 describe('C-03 — adapters estendem os clientes reais e sobrescrevem todo comando (M2)', () => {
+  it('D23 verifyCaseAccess is one explicit overridden READ, never an M8 command', () => {
+    expect(Object.hasOwn(CaseClient.prototype, 'verifyCaseAccess')).toBe(true);
+    expect(Object.hasOwn(PreviewCaseClient.prototype, 'verifyCaseAccess')).toBe(
+      true,
+    );
+    expect(commandMethodsOf(CaseClient)).not.toContain('verifyCaseAccess');
+    expect(RAIT_COMMANDS as readonly string[]).not.toContain(
+      'verifyCaseAccess',
+    );
+  });
   ADAPTERS.forEach((pair) => {
     it(`dado providePreviewMode() quando ${pair.name} é injetado então a instância é Preview${pair.name} e também instanceof ${pair.name}`, async () => {
       await configureAdapters();

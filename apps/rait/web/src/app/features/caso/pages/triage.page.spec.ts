@@ -3,7 +3,7 @@
 import { By } from '@angular/platform-browser';
 import { TestBed } from '@angular/core/testing';
 import { StynxConfirmDialogComponent } from '@stynx-nyx/angular-ui';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   commandMethod,
   commandRunnerStub,
@@ -17,6 +17,7 @@ import { CASE_IDS, fixtureCase } from '../../../../testing/http-fixtures';
 import { ROLE_PERMISSIONS_FIXTURE } from '../../../../testing/policy.fixture';
 import {
   createRaitRouterHarness,
+  FIXED_ENTITY_ID,
   substituteRouteParams,
 } from '../../../../testing/router-harness';
 import {
@@ -170,16 +171,35 @@ function clickAction(
   ).componentInstance;
 }
 
-/** `reject` exige `non_admission_reason` preenchido (§6.1 linha 8) antes de abrir a confirmação. */
+/** JW01: reject requires operator reason and human legal grounds before confirmation. */
 function selectReasonAndClickReject(
   harness: Awaited<ReturnType<typeof render>>['harness'],
 ): StynxConfirmDialogComponent {
   const host = harness.routeNativeElement as HTMLElement;
+  for (const criterion of ['legitimidade', 'assinatura', 'pedido_compativel']) {
+    const region = host.querySelector(`li[data-criterion="${criterion}"]`)!;
+    const verdict = region.querySelector<HTMLInputElement>(
+      `input[value="${criterion === 'assinatura' ? 'false' : 'true'}"]`,
+    )!;
+    expect(verdict).not.toBeNull();
+    verdict.checked = true;
+    verdict.dispatchEvent(new Event('change'));
+    const reason = region.querySelector<HTMLTextAreaElement>('textarea')!;
+    reason.value = 'Conferência do critério na fixture.';
+    reason.dispatchEvent(new Event('input'));
+  }
   const select = host.querySelector<HTMLSelectElement>('#rait-triage-reason');
   if (select) {
-    select.value = 'intempestivo';
+    select.value = 'sem_assinatura';
     select.dispatchEvent(new Event('change'));
   }
+  const grounds = host.querySelector<HTMLTextAreaElement>(
+    '[formControlName="nonAdmissionGrounds"]',
+  );
+  expect(grounds).not.toBeNull();
+  grounds!.value =
+    'Art. 4º III — fundamento informado pelo operador na fixture.';
+  grounds!.dispatchEvent(new Event('input'));
   harness.detectChanges();
   return clickAction(harness, '[data-action="reject"]');
 }
@@ -221,9 +241,15 @@ describe('TriagePage — C-2B-71 (confirmação de reject)', () => {
 
   it('dado o diálogo de reject confirmado então a facade é chamada uma vez com rait-case:reject', async () => {
     const { harness, facade } = await render('rait-analyst');
+    const reject = vi.spyOn(facade, 'reject');
     const dialog = selectReasonAndClickReject(harness);
     dialog.confirm.emit();
     harness.detectChanges();
+    expect(reject).toHaveBeenCalledExactlyOnceWith(FIXED_ENTITY_ID, {
+      reason: 'sem_assinatura',
+      legalBasis:
+        'Art. 4º III — fundamento informado pelo operador na fixture.',
+    });
     expect(facade.command.runMock).toHaveBeenCalledTimes(1);
     expect(facade.command.runMock.mock.calls[0]?.[0]).toBe('rait-case:reject');
   });

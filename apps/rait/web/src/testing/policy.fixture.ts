@@ -93,6 +93,7 @@ export const ROLE_PERMISSIONS_FIXTURE: Readonly<
   Record<RaitRoleCode, readonly string[]>
 > = {
   'rait-analyst': [
+    'inf:rait-admissibility:create', // canonical RAIT CRUD roles, TASK25 F3
     'inf:rait-case:claim-next',
     'inf:rait-case:triage',
     'inf:rait-case:admit',
@@ -113,6 +114,7 @@ export const ROLE_PERMISSIONS_FIXTURE: Readonly<
     'inf:rait-incident:open',
   ],
   'rait-secretary': [
+    'inf:rait-admissibility:create', // canonical RAIT CRUD roles, TASK25 F3
     'inf:rait-case:protocol',
     'inf:rait-case:triage',
     'inf:rait-case:remit-jari',

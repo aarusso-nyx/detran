@@ -7,16 +7,33 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { APP_SRC_ROOT, readPolicyCommandRules } from '../../testing/kb';
+import {
+  APP_SRC_ROOT,
+  POLICY_PATH,
+  readPolicyCommandRules,
+} from '../../testing/kb';
 import { ROLE_PERMISSIONS_FIXTURE } from '../../testing/policy.fixture';
 import { RAIT_ALL_ROLES, type RaitRoleCode } from '../app.route-manifest';
 import { PREVIEW_ROLE_PERMISSIONS } from './preview-permissions';
 
 /** Chaves `inf:<recurso>:<ação>` de `RAIT_COMMAND_RULES` cujas regras incluem `role`. */
 function policyKeysOf(role: RaitRoleCode): readonly string[] {
-  return readPolicyCommandRules()
+  const keys = readPolicyCommandRules()
     .filter((rule) => rule.roles.includes(role))
     .map((rule) => rule.key);
+  const source = readFileSync(POLICY_PATH, 'utf8');
+  const block = source.slice(
+    source.indexOf('const RAIT_SURFACE_WRITE_ROLES:'),
+    source.indexOf('const RAIT_COMMAND_RULES:'),
+  );
+  const tuple = block.match(/'rait-admissibility':\s*\[([^\]]*)\]/);
+  const roles = [...(tuple?.[1] ?? '').matchAll(/'([^']+)'/g)].map(
+    (match) => match[1],
+  );
+  expect(block).toContain("[resource, 'create', writers]");
+  expect(new Set(roles)).toEqual(new Set(['rait-analyst', 'rait-secretary']));
+  if (roles.includes(role)) keys.push('inf:rait-admissibility:create');
+  return keys;
 }
 
 describe('C-06 — PREVIEW_ROLE_PERMISSIONS: forma (P-14)', () => {
