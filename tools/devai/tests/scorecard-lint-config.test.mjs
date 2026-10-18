@@ -23,11 +23,34 @@ for (const app of apps) {
       cwd: root,
       overrideConfigFile: resolve('eslint.config.mjs'),
     });
+    const discovered = new ESLint({ cwd: root });
     const source = app === 'senatran-mock' ? 'apps/api/src' : 'src/app';
     for (const file of [`${source}/example.ts`, `${source}/example.spec.ts`]) {
       const before = await local.calculateConfigForFile(resolve(app, file));
       const after = await combined.calculateConfigForFile(resolve(app, file));
       assert.deepEqual(after.rules, before.rules);
+      const defaultConfig = await discovered.calculateConfigForFile(
+        resolve(app, file),
+      );
+      assert.equal(
+        defaultConfig.languageOptions.parserOptions.tsconfigRootDir,
+        after.languageOptions.parserOptions.tsconfigRootDir,
+      );
+      const [defaultParsed] = await discovered.lintFiles(
+        resolve(
+          app,
+          app === 'apps/boat/mobile'
+            ? 'src/index.ts'
+            : app === 'senatran-mock'
+              ? 'apps/api/src/main.ts'
+              : 'src/main.ts',
+        ),
+      );
+      assert.equal(
+        defaultParsed.fatalErrorCount,
+        0,
+        JSON.stringify(defaultParsed.messages),
+      );
       assert.equal(
         after.languageOptions.parser.meta.name,
         before.languageOptions.parser.meta.name,
