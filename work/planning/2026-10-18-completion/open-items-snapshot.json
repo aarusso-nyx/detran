@@ -1,0 +1,607 @@
+{
+  "baseline": "e536e545091d9828aef2f3c5ec0c2be6f5afb56e",
+  "legacy_open_rows": [
+    {
+      "id": "DT-001",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 48,
+      "source_row": "| DT-001 | `STYNX_ENABLE_REGISTRY_PUBLISH` est\u00e1 `false`; os 6 pacotes novos do stynx n\u00e3o resolvem no registry | blocker | plataforma | P0  | implementa\u00e7\u00e3o do RAIT \u2014 `@stynx-nyx/worklist` \u00e9 a espinha dorsal |",
+      "planning_destination": "CP-07 / administrative",
+      "reconciliation_note": "Registry blocker superseded by main STYNX1.5.3; do not schedule republishing as missing DETRAN code"
+    },
+    {
+      "id": "DT-002",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 49,
+      "source_row": "| DT-002 | Rodada local de RC do stynx pendente (d\u00edvida de evid\u00eancia dos admin-merges da Fase 1)              | blocker | plataforma | P1  | fecha a d\u00edvida de mutation-floor assinada                        |",
+      "planning_destination": "CP-07 / CP-10",
+      "reconciliation_note": "Residual upstream RC evidence requires exact proof; not inferred from published pin Mutation portion remains excluded under B17/OD-C3-004; not new execution authority."
+    },
+    {
+      "id": "DT-003",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 50,
+      "source_row": "| DT-003 | Arquivar o reposit\u00f3rio de origem `senatran` (ADR-0004 j\u00e1 congelou os m\u00f3dulos portados)             | blocker | portf\u00f3lio  | P2  | encerramento da Fase 0                                           |",
+      "planning_destination": "CP-09",
+      "reconciliation_note": "Verify parity/freeze and obtain explicit irreversible-action authority before origin archival; no sibling changes here"
+    },
+    {
+      "id": "DT-012",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 58,
+      "source_row": "| DT-012 | Procedimento do desconto de 40% fora do SNE \u2014 emiss\u00e3o do documento de arrecada\u00e7\u00e3o \u2014 **2026-09-13 (steering H.53)**: faixa de 40% fora do SNE mantida desligada at\u00e9 ades\u00e3o ao SNE ou parecer; item 6 da consulta jur\u00eddica (of\u00edcio 05)                                                               | owner-decision | rait, portal    | P1  | c\u00e1lculo de valor devido exposto ao cidad\u00e3o ([RN-RAIT-127])        |",
+      "planning_destination": "CP-03 / CP-10",
+      "reconciliation_note": "H53 already keeps40-percent outsideSNE disabled; implement that posture, await qualification/source before activation"
+    },
+    {
+      "id": "DT-016",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 62,
+      "source_row": "| DT-016 | Janela de \"mesmo intervalo\" da detec\u00e7\u00e3o de sess\u00e3o concorrente \u2014 **Owner pediu mais dados/hist\u00f3rico antes de calibrar (2026-08-28)** \u2014 **2026-09-13**: dado pedido no of\u00edcio 06 (Diretoria T\u00e9cnica); par\u00e2metro `sync.concurrency_window_minutes` segue sem valor                                    | owner-decision | teat            | P2  | levantar dados de incidentes reais antes de nova pergunta         |",
+      "planning_destination": "CP-07 / CP-11 / CP-10",
+      "reconciliation_note": "Productive TEAT sync value remains unassigned (H54); existing homologation not rescheduled; obtain calibration/source without inventing a default."
+    },
+    {
+      "id": "DT-019",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 65,
+      "source_row": "| DT-019 | Ve\u00edculo removido com propriet\u00e1rio hospitalizado \u2014 prazo de 60d sem suspens\u00e3o \u2014 **Owner respondeu \"n\u00e3o sei\" (2026-08-28)**, segue aberto \u2014 **2026-09-13 (H.54)**: premissa 60 dias sem suspens\u00e3o adotada como vigente; item 17 da consulta jur\u00eddica                                                 | owner-decision | boat, teat      | P2  | posi\u00e7\u00e3o institucional                                             |",
+      "planning_destination": "CP-05 / CP-11 / CP-10",
+      "reconciliation_note": "H.54 approved 60-day no-suspension premise remains in force for CP-05 behavior. CP-11 productive residual needs separate authorization; formal legal/institutional confirmation (consultation item 17) is CP-10 and does not block the approved default."
+    },
+    {
+      "id": "DT-040",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 83,
+      "source_row": "| DT-040 | **15 itens do TEAT** \u2014 em especial o conflito triplo sobre recolhimento do documento de habilita\u00e7\u00e3o (MBFT \u00a78.3 \u00d7 CTB 165/165-A \u00d7 Res.432 art.10)                                                                                                                                                                                                                                                                                 | legal-validation | teat              | P1  | as 49 regras do TEAT sa\u00edrem de `draft` ([RN-TEAT-129])               |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-041",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 84,
+      "source_row": "| DT-041 | Top-10 do PEC em `legal-assessment.md`                                                                                                                                                                                                                                                                                                                                                                                           | legal-validation | pec               | P1  | promo\u00e7\u00e3o das regras do PEC                                           |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-042",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 85,
+      "source_row": "| DT-042 | 18 itens do PORTAL + lista do DASHBOARD \u2014 **2026-09-13 (H.56)**: consulta jur\u00eddica \u00fanica redigida (`owner-ballots/letters/oficio-05-pge-am-parecer.md`)                                                                                                                                                                                                                                                                          | legal-validation | portal, dashboard | P1  | promo\u00e7\u00e3o das regras                                                  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-043",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 86,
+      "source_row": "| DT-043 | RAIT: os 15 itens foram respondidos em steering **sem parecer formal** \u2014 confirmar ou substituir por parecer \u2014 **2026-09-13 (H.56)**: inclu\u00eddo na consulta \u00fanica (of\u00edcio 05, bloco A e F)                                                                                                                                                                                                                                        | legal-validation | rait              | P2  | risco registrado no topo de `legal-assessment.md`                    |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain existing Owner product answers; formal legal opinion remains distinct and unproved"
+    },
+    {
+      "id": "DT-044",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 87,
+      "source_row": "| DT-044 | Art.289-A: efeito do julgamento tardio; suspens\u00e3o/interrup\u00e7\u00e3o; intervalo entre inst\u00e2ncias                                                                                                                                                                                                                                                                                                                                        | legal-validation | rait              | P1  | comportamento do sistema ao ultrapassar o teto ([RN-RAIT-112])       |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-045",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 88,
+      "source_row": "| DT-045 | _Reformatio in pejus_ em 2\u00aa inst\u00e2ncia                                                                                                                                                                                                                                                                                                                                                                                            | legal-validation | rait              | P2  | limites da decis\u00e3o do colegiado ([RN-RAIT-119], [RN-RAIT-132])       |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-046",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 89,
+      "source_row": "| DT-046 | Saneamento e cancelamento p\u00f3s-finaliza\u00e7\u00e3o sem norma federal \u2014 formalizar por portaria estadual                                                                                                                                                                                                                                                                                                                                   | legal-validation | teat              | P1  | [RN-TEAT-119], [RN-TEAT-121]                                         |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-047",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 90,
+      "source_row": "| DT-047 | LGPD sa\u00fade da v\u00edtima: adotar posi\u00e7\u00e3o prudencial art.11 II a/b **e publicar a hip\u00f3tese** \u2014 **2026-09-13 (H.44)**: Owner autorizou registrar o BAT no invent\u00e1rio do art. 28 da PN DETRAN-AM 002/2026 com as hip\u00f3teses art. 11, II, a/b e art. 13 ([REF-ANPD-GUIA-PODER-PUBLICO-2024], [REF-DETRANAM-PORTARIAS-LGPD-2026]) e publicar ap\u00f3s revis\u00e3o do CPPD; pedido no of\u00edcio 03; item 10 da consulta jur\u00eddica                       | legal-validation | boat              | P1  | dever de publicidade hoje descumprido \u2014 item n\u00ba1 do advogado         |",
+      "planning_destination": "CP-05 / CP-10",
+      "reconciliation_note": "H44 existing collection posture retained; formal LGPD validation remains distinct"
+    },
+    {
+      "id": "DT-048",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 91,
+      "source_row": "| DT-048 | Papel LGPD do DETRAN-AM (controlador?) \u2014 diverg\u00eancia da Portaria 139/2025 art.7\u00ba \u00a73\u00ba \u2014 **2026-09-13**: PN 002/016/018 de 2026 mostram o DETRAN-AM atuando como controlador ([REF-DETRANAM-PORTARIAS-LGPD-2026]); diverg\u00eancia restrita aos dados nacionais (item 12 da consulta)                                                                                                                                                  | legal-validation | boat              | P1  | base de todo o tratamento                                            |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-049",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 92,
+      "source_row": "| DT-049 | Prazos de reten\u00e7\u00e3o do BAT identificado e da bodycam \u2014 nenhuma norma os fixa \u2014 **2026-09-13 (H.45)**: prazos adotados como vigentes por decis\u00e3o do Owner (autos/BAT/sa\u00fade 5 anos, AIT e evid\u00eancias 10, bodycam pendente); CSAD (PN 015/2026, [REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]) recebe pedido de Plano de Destina\u00e7\u00e3o (of\u00edcio 03) com benchmark [REF-DETRANDF-INSTRUCAO-146-2023-TTD]                                     | legal-validation | boat              | P1  | `retention:forever` \u00e9 viola\u00e7\u00e3o de LGPD ([RN-BOAT-125])               |",
+      "planning_destination": "CP-05 / CP-10",
+      "reconciliation_note": "H45 adopted retention defaults retained; bodycam excluded/residual and institutional confirmation are not solved by this plan"
+    },
+    {
+      "id": "DT-050",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 93,
+      "source_row": "| DT-050 | Portaria estadual fixando n\u00edveis de assinatura por servi\u00e7o (Decreto 10.543/2020 \u00e9 federal) \u2014 **2026-09-13**: **Portaria Normativa DETRAN-AM 001/2025 localizada** ([REF-DETRANAM-PORTARIA-NORMATIVA-001-2025]): gov.br ouro, e-Notariado e qualificada para defesas, recursos, indica\u00e7\u00e3o e procura\u00e7\u00f5es. Owner decidiu aceitar tamb\u00e9m o selo prata (H.50) e pediu portaria (of\u00edcio 01); CETRAN pela mesma regra (H.49, of\u00edcio 02) | legal-validation | portal            | P1  | exigir \"avan\u00e7ada\" sem ato estadual \u00e9 atac\u00e1vel (Lei 13.460 art.5\u00ba IV) |",
+      "planning_destination": "CP-03 / CP-10",
+      "reconciliation_note": "Captured portaria and H49/H50 answers retained; real trust/provider/institutional confirmation separate"
+    },
+    {
+      "id": "DT-051",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 94,
+      "source_row": "| DT-051 | Ouvidoria: LEGAL conclui \"nenhum n\u00edvel exig\u00edvel\"; BPO/UX assumiram \"Simples\" \u2014 alinhar \u2014 **2026-09-13 (H.51)**: nenhum n\u00edvel para manifestar, simples para acompanhar                                                                                                                                                                                                                                                            | legal-validation | portal            | P2  | WF-PORTAL-004                                                        |",
+      "planning_destination": "CP-03 / CP-10",
+      "reconciliation_note": "H51 answered anonymous manifestation/simple tracking; do not ask product question again"
+    },
+    {
+      "id": "DT-052",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 95,
+      "source_row": "| DT-052 | RAIT: bloco [RN-RAIT-133]-[RN-RAIT-138] **desenhado** (2026-08-26) \u2014 hip\u00f3tese legal do dado do requerente, dado sens\u00edvel incidental em texto livre, dado do procurador, reten\u00e7\u00e3o, compartilhamento JARI/CETRAN; nenhum ponto validado juridicamente ainda                                                                                                                                                                        | legal-validation | rait              | P1  | ver `_meta/lgpd-assessment.md` \u00a7RAIT                                 |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-053",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 96,
+      "source_row": "| DT-053 | BOAT: LGPD art.14 (crian\u00e7as/adolescentes) nunca endere\u00e7ado \u2014 `CrashPerson` pode capturar menor de idade (pedestre/passageiro) sem gate nem base de consentimento parental/exce\u00e7\u00e3o do \u00a73\u00ba                                                                                                                                                                                                                                         | legal-validation | boat              | P2  | ver `_meta/lgpd-assessment.md` \u00a7BOAT; companheiro de DT-047/048/049  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-060",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 102,
+      "source_row": "| DT-060 | Regimento interno da JARI-AM e do CETRAN-AM \u2014 texto integral. **Reduzido em 2026-08-28**: quorum de delibera\u00e7\u00e3o e desempate do CETRAN resolvidos por norma nacional (Res. CONTRAN 901/2022, [REF-CONTRAN-901-2022]) \u2014 n\u00e3o dependem mais do texto local. Resposta institucional de 2026-08-27/28 sobre composi\u00e7\u00e3o (19 conselheiros CETRAN-AM; JARI \"Municipal/Estadual-02 Membros/Federal\") segue **amb\u00edgua** e diverge tanto do piso nacional (15) quanto do levantamento nominal p\u00fablico (15-16) \u2014 n\u00e3o fecha DT-071. Texto do regimento em si (convoca\u00e7\u00e3o, pauta, prazo de voto, sustenta\u00e7\u00e3o oral) segue n\u00e3o localizado por nenhuma via. \u2014 **2026-09-13**: PDF do regimento do CETRAN-AM outrora em `detran.am.gov.br` retorna 404 e o Wayback recusou (429); Mensagem 057/2020 (ALEAM) confirma o Decreto 34.398/2014; JARI-AM sem novidade. Of\u00edcios 01 e 02 redigidos; premissas aprovadas como vigentes (H.57) | institutional-ask | rait              | P1  | DETRAN-AM / CETRAN-AM \u2014 pedir esclarecimento direto da resposta amb\u00edgua antes de novo of\u00edcio                                                    |",
+      "planning_destination": "CP-02 / CP-10",
+      "reconciliation_note": "H57 adopted collegiado premises remain usable; missing regiments do not reopen those defaults; obtain remaining formal source"
+    },
+    {
+      "id": "DT-061",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 103,
+      "source_row": "| DT-061 | Of\u00edcio: Manuais do RENAEST + campos m\u00ednimos do BAT + manuais de acesso \u2014 **2026-09-13**: esgotado online (p\u00e1gina oficial sem anexos; Portaria SENATRAN 587/2024 \u00e9 de pre\u00e7os); of\u00edcio 04 redigido                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | institutional-ask | boat              | P1  | DETRAN-AM \u2192 SENATRAN                                                                                                                            |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-064",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 106,
+      "source_row": "| DT-064 | Throughput real do colegiado (sess\u00f5es/m\u00eas, casos/sess\u00e3o, taxa de provimento) \u2014 **parcialmente respondido (2026-08-27/28)**: volume de defesas decididas em 1\u00aa inst\u00e2ncia (306/m\u00eas, jul.) e equipe (10 pessoas) confirmados; segue faltando o throughput espec\u00edfico de sess\u00e3o JARI/CETRAN (2\u00aa inst\u00e2ncia) e taxa de provimento \u2014 **2026-09-13**: s\u00e9ries pedidas nos of\u00edcios 02 (2\u00aa inst\u00e2ncia) e 06 (1\u00aa inst\u00e2ncia)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | institutional-ask | rait              | P2  | DETRAN-AM \u2014 ver [APP-RAIT] \u00a7Volumes e capacidade                                                                                                |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-066",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 108,
+      "source_row": "| DT-066 | Ades\u00e3o do AM \u00e0 Lei 14.129/2021 \u2014 **refinado (2026-08-27)**: Lei AM 6.837/2024 lida na \u00edntegra, n\u00e3o cita a lei federal; ades\u00e3o expressa segue n\u00e3o localizada, mas a base estadual aut\u00f4noma j\u00e1 supre a maior parte do que se buscava                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | institutional-ask | portal, dashboard | P2  | rebaixado de P1 \u2014 ver [REF-LEI-AM-6837-2024]                                                                                                    |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-068",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 110,
+      "source_row": "| DT-068 | Confirmar grafia do signat\u00e1rio da Portaria 5046/2018 (OCR amb\u00edguo)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | institutional-ask | rait              | P3  | DETRAN-AM \u2014 s\u00f3 se for citar formalmente                                                                                                         |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-069",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 111,
+      "source_row": "| DT-069 | Confirmar se o DETRAN-AM j\u00e1 instituiu formalmente sua Unidade de Controle Interno por ato normativo publicado (dever expl\u00edcito do Decreto AM 53.273/2025 art. 7\u00ba)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | institutional-ask | dashboard         | P2  | DETRAN-AM \u2014 checklist de conformidade estrutural                                                                                                |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-070",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 112,
+      "source_row": "| DT-070 | Esclarecer resposta institucional sobre \"prazo de 120 dias a partir da infra\u00e7\u00e3o\" para o recurso \u2014 n\u00e3o corresponde a nenhum prazo legal j\u00e1 documentado (30d defesa, 180/360d decad\u00eancia, 24 meses julgamento); hip\u00f3tese de trabalho \u00e9 meta operacional interna, n\u00e3o confirmada \u2014 **2026-09-13**: esclarecimento pedido no of\u00edcio 06, item 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | institutional-ask | rait              | P2  | DETRAN-AM (Sub Ger\u00eancia de Infra\u00e7\u00e3o) \u2014 a que etapa exatamente o prazo se refere?                                                                |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-071",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 113,
+      "source_row": "| DT-071 | Esclarecer resposta institucional sobre composi\u00e7\u00e3o da JARI (\"Municipal/Estadual-02 Membros/Federal\") \u2014 contradiz o piso de 3 membros da Res. CONTRAN 357/2010 e n\u00e3o corresponde a nenhuma estrutura de JARI prevista em norma \u2014 **2026-09-13**: composi\u00e7\u00e3o nominal pedida no of\u00edcio 06, item 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | institutional-ask | rait              | P1  | DETRAN-AM (Sub Ger\u00eancia de Infra\u00e7\u00e3o) \u2014 a JARI-AM tem 2 membros, ou \"02 Membros\" descreve outra coisa (ex. assentos do DETRAN dentro do CETRAN)? |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-072",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 114,
+      "source_row": "| DT-072 | Confirmar autoriza\u00e7\u00e3o do \u00f3rg\u00e3o m\u00e1ximo executivo de tr\u00e2nsito da Uni\u00e3o para o DETRAN-AM arrecadar por cart\u00e3o/parcelamento (Res.918 art.27 \u00a7\u00a71\u00ba-2\u00ba) \u2014 Owner decidiu prosseguir com o desenvolvimento em paralelo (DT-031), mas a confirma\u00e7\u00e3o institucional continua pendente \u2014 **2026-09-13**: c\u00f3pia da autoriza\u00e7\u00e3o pedida no of\u00edcio 06, item 5; item 7 da consulta jur\u00eddica                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | institutional-ask | portal            | P2  | \u00f3rg\u00e3o m\u00e1ximo executivo de tr\u00e2nsito da Uni\u00e3o \u2014 pr\u00e9-condi\u00e7\u00e3o de exist\u00eancia do m\u00f3dulo                                                              |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-080",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 120,
+      "source_row": "| DT-080 | REF-AM-LAI-* \u2014 procedimento recursal estadual da LAI                                                                                                                                                                                        | research-capture | dashboard, portal | P1  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-081",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 121,
+      "source_row": "| DT-081 | Regulamenta\u00e7\u00e3o CONTRAN de \"for\u00e7a maior\" para suspens\u00e3o de prazos (CTB art.290-A)                                                                                                                                                            | research-capture | rait              | P2  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-082",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 122,
+      "source_row": "| DT-082 | Base normativa do RENAEST al\u00e9m do contrato t\u00e9cnico                                                                                                                                                                                          | research-capture | boat              | P1  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-083",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 123,
+      "source_row": "| DT-083 | Res. 918 arts.20-21 \u00d7 Lei 14.599/2023 \u2014 desconto de 60% e ades\u00e3o pr\u00e9via ao SNE                                                                                                                                                              | research-capture | rait, portal      | P2  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-084",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 124,
+      "source_row": "| DT-084 | Cat\u00e1logo fechado de `no_approach_reason`                                                                                                                                                                                                    | research-capture | teat              | P2  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-085",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 125,
+      "source_row": "| DT-085 | F\u00f3rmulas dos indicadores do PNATRANS                                                                                                                                                                                                        | research-capture | dashboard         | P2  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-086",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 126,
+      "source_row": "| DT-086 | RENAINF: papel do registro nacional no recurso interestadual                                                                                                                                                                                | research-capture | rait              | P3  |",
+      "planning_destination": "CP-10",
+      "reconciliation_note": "Retain original question and source; proper Owner/LEGAL/institutional or corpus evidence required; do not re-open portions answered by later steering."
+    },
+    {
+      "id": "DT-104",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 137,
+      "source_row": "| DT-104 | pec: estado `CANCELLED` do encounter \u00e9 morto (enum sem rota que o grave)                                                                                                                                                                                                      | engineering | pec        | P2  |",
+      "planning_destination": "CP-08",
+      "reconciliation_note": "Diagnose current CANCELLED encounter reachability against approved workflow; do not invent a cancellation route"
+    },
+    {
+      "id": "DT-111",
+      "path": "docs/meta/knowledge-base/open-issues.md",
+      "line": 144,
+      "source_row": "| DT-111 | teat/boat: `crash_record_id` em medidas administrativas sem FK r\u00edgida                                                                                                                                                                                                         | engineering | teat, boat | P2  |",
+      "planning_destination": "CP-05",
+      "reconciliation_note": "Diagnose current cross-domain crash link integrity/parity before deciding whether a hard FK is appropriate"
+    }
+  ],
+  "open_github_issues": [
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 186,
+      "title": "docs/site: remove the unused braces audit exception and fail the gate on unused exceptions",
+      "url": "https://github.com/aarusso-nyx/detran/issues/186"
+    },
+    {
+      "labels": [],
+      "number": 185,
+      "title": "Decide #179 (DEVAI 2.2.0 / STYNX 1.5.3): split vs rebase \u2014 this is the WS-5b DETRAN DEVAI pin decision (Owner)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/185"
+    },
+    {
+      "labels": [],
+      "number": 175,
+      "title": "STYNX dedup: @detran/ui como kit de app e padr\u00e3o de liga\u00e7\u00e3o \u00fanico (R-0024, a\u00e7\u00e3o 7b da C-0002)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/175"
+    },
+    {
+      "labels": [],
+      "number": 174,
+      "title": "TEAT web: substituir p\u00e1ginas gen\u00e9ricas pelo console de fiscaliza\u00e7\u00e3o (R-0029, a\u00e7\u00e3o 6 da C-0002)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/174"
+    },
+    {
+      "labels": [],
+      "number": 173,
+      "title": "DASHBOARD: console L0 \u2192 L2 sobre BP-DASH-MONITOR-001 (R-0026, a\u00e7\u00e3o 6 da C-0002)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/173"
+    },
+    {
+      "labels": [],
+      "number": 172,
+      "title": "BOAT: ligar telas e portas ao backend est/crash (R-0028, a\u00e7\u00e3o 6 da C-0002)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/172"
+    },
+    {
+      "labels": [],
+      "number": 164,
+      "title": "Portal: religar delega\u00e7\u00f5es de solicita\u00e7\u00f5es e jornadas cidad\u00e3s",
+      "url": "https://github.com/aarusso-nyx/detran/issues/164"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 126,
+      "title": "DETRAN \u2014 acompanhar decis\u00f5es jur\u00eddicas e respostas institucionais pendentes",
+      "url": "https://github.com/aarusso-nyx/detran/issues/126"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 125,
+      "title": "PORTAL \u2014 homologar integra\u00e7\u00f5es reais e superf\u00edcies institucionais",
+      "url": "https://github.com/aarusso-nyx/detran/issues/125"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 124,
+      "title": "DASHBOARD \u2014 elevar console de L0 para L2",
+      "url": "https://github.com/aarusso-nyx/detran/issues/124"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 123,
+      "title": "DASHBOARD \u2014 reconciliar contratos, policy, SSE e i18n",
+      "url": "https://github.com/aarusso-nyx/detran/issues/123"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 122,
+      "title": "RAIT-WEB: ligar comandos e fechar lacunas de produ\u00e7\u00e3o (R-0025, a\u00e7\u00e3o 6 da C-0002)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/122"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 121,
+      "title": "Platform readiness \u2014 liberar registry STYNX e fechar evid\u00eancia de RC",
+      "url": "https://github.com/aarusso-nyx/detran/issues/121"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 119,
+      "title": "BOAT \u2014 autorizar os 13 textos pt-BR source-pending (OD-R15-004)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/119"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 120,
+      "title": "BOAT/RENAEST \u2014 obter manuais, mapear campos e homologar integra\u00e7\u00e3o produtiva (DT-061/OD-B08)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/120"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 118,
+      "title": "BOAT \u2014 decidir screenId de W-05 e uxCode de S-12 (OD-R15-003/005)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/118"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 112,
+      "title": "TEAT mobile produ\u00e7\u00e3o \u2014 gate de campo e release separado da homologa\u00e7\u00e3o",
+      "url": "https://github.com/aarusso-nyx/detran/issues/112"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 111,
+      "title": "TEAT mobile produ\u00e7\u00e3o \u2014 ciclo AIT, numera\u00e7\u00e3o e reconcilia\u00e7\u00e3o",
+      "url": "https://github.com/aarusso-nyx/detran/issues/111"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 110,
+      "title": "TEAT mobile produ\u00e7\u00e3o \u2014 cat\u00e1logo e validador AIT V01\u2013V11",
+      "url": "https://github.com/aarusso-nyx/detran/issues/110"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 109,
+      "title": "TEAT mobile produ\u00e7\u00e3o \u2014 runtime Android e integra\u00e7\u00e3o GMS820",
+      "url": "https://github.com/aarusso-nyx/detran/issues/109"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 108,
+      "title": "TEAT mobile produ\u00e7\u00e3o \u2014 autoridade offline E2, trust e segredos",
+      "url": "https://github.com/aarusso-nyx/detran/issues/108"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 100,
+      "title": "OD-D58 \u2014 Fixar ou retirar DASH.ALERT_BUSINESS_ACT_FORBIDDEN (guard de ato de neg\u00f3cio)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/100"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 99,
+      "title": "OD-D50 \u2014 Implementar o job de gera\u00e7\u00e3o de relat\u00f3rios do DASHBOARD (@stynx-nyx/jobs)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/99"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 98,
+      "title": "OD-D35 \u2014 Decidir c\u00f3digos de estado inv\u00e1lido para indicator_config, bi_panel, export_log e transparency_audit",
+      "url": "https://github.com/aarusso-nyx/detran/issues/98"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3Prmg",
+          "name": "question",
+          "description": "Further information is requested",
+          "color": "d876e3"
+        }
+      ],
+      "number": 97,
+      "title": "OD-D33 \u2014 Decidir os tokens de domainEvent do DASHBOARD fora do route contract \u00a76",
+      "url": "https://github.com/aarusso-nyx/detran/issues/97"
+    },
+    {
+      "labels": [
+        {
+          "id": "LA_kwDOUCNnzs8AAAACx3PrcQ",
+          "name": "enhancement",
+          "description": "New feature or request",
+          "color": "a2eeef"
+        }
+      ],
+      "number": 96,
+      "title": "OD-D17 \u2014 Publicar rait.clock.flag-changed, rait.decision.published e rait.case.created (bloco A do DASHBOARD em 2/11)",
+      "url": "https://github.com/aarusso-nyx/detran/issues/96"
+    }
+  ]
+}

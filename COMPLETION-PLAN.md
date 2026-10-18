@@ -1,0 +1,341 @@
+# DETRAN completion plan — review baseline, 2026-10-18
+
+**Authority:** Architect, Constitution Articles 6–10. **Status: Owner-approved P1–P3; integration PR pending review.**
+This is the single completion baseline approved under P1–P3, not a new governance framework or an
+implementation authorization. Planning labels CP-00…CP-11 are document references,
+not reserved DEVAI rounds, task IDs, queues or new lifecycle states.
+
+Owner instruction:
+
+> Proceed with the replanning exercise. Reconcile current main, specs and preserved branches into one completion plan. Preserve decisions and local work, keep scorecard work separate, and open a PR for review before resuming implementation.
+
+No implementation resumes from this PR. No round is closed, sealed, cancelled or
+renumbered. No branch, recovery patch, receipt, test or acceptance criterion is
+removed. No scorecard configuration, reading, policy or result is changed here.
+
+## 1. Baseline and how this plan becomes authoritative
+
+The inspected integration baseline is main
+`e536e545091d9828aef2f3c5ec0c2be6f5afb56e`, including PRs #189–#194. DEVAI2.2.0,
+Constitution1.0.2, STYNX1.5.3, Angular22, Node24 and pnpm9 are the installed/pinned
+baseline; historical version targets do not authorize an upgrade.
+
+Owner approval of P1–P3 on 2026-10-18 authorizes replacing the **remaining-work schedule and dependency projections**
+of C-0002/C-0003 with this plan upon integration of this PR. Their decisions,
+requirements, acceptance, evidence, exclusions and historical records remain sources.
+The [planning ADR](docs/meta/adr/ADR-0042-completion-plan-rebaseline.md)
+records the approved cutover and bounded P1/P2 amendments. The approval is transcribed
+in §8 and the campaign addenda; implementation remains paused until the exact P4
+packet is approved. P5–P7 remain unresolved where applicable.
+
+Read in this order:
+
+1. Constitution and binding Owner decisions, including later steering/amendments.
+2. Accepted ADRs and canonical product/legal/workflow sources.
+3. This completion plan, once approved, for remaining outcomes and sequencing.
+4. Each outcome's reconciled contract, authorized round/task packet and acceptance.
+5. Historical campaigns/branches for provenance and reusable assets.
+
+Code and tests show what exists and what has been observed; they do not override a
+business rule or resolve a conflicting specification by themselves. Draft product
+transcriptions remain draft. Contradictions require a source-backed reconciliation
+or a decision from the proper authority before the affected code changes.
+
+Supporting inventories, not competing plans:
+
+- [Scope crosswalk](work/planning/2026-10-18-completion/scope-crosswalk.md): all40
+  imported JNY records,110 UCs,12 overlapping RAIT JW views,38 unstruck DT entries
+  and26 open issues mapped to outcomes. No item disappears because its branch is old.
+- [Branch/task snapshot](work/planning/2026-10-18-completion/branch-inventory.json):
+  exact fetched heads, ancestry, original task IDs/statuses and no-loss dispositions.
+- [Reconciliation findings](work/planning/2026-10-18-completion/reconciliation.md):
+  evidence limits, contradictions, existing decisions and historical round crosswalk.
+- [Open-item snapshot](work/planning/2026-10-18-completion/open-items-snapshot.json):
+  original DT rows and GitHub issue metadata. Issue counts are not feature counts.
+
+Inventory scope is committed repository content and preserved refs. Runtime receipts
+are historical at their exact SHAs, not rerun acceptance of every branch today.
+No deployed environment, real provider, field device or untracked scorecard work
+was inspected. The separate evaluation session owns its outputs and scheduling.
+
+## 2. What is already delivered
+
+| Capability                                    | Evidence baseline                                        | Limit retained                                                                                            |
+| --------------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Monorepo, modular backend and domain ports    | Founding ADRs; BUILD-PLAN WP history; closed R-0003…0016 | Closed ports/WPs do not establish every user journey or production integration                            |
+| Local stack, corpus and indexes               | Closed R-0017/18/19                                      | Reproduce the candidate and retain source/seed constraints; old PASS is not a new deployment proof        |
+| Platform pin/adoption                         | R-0021; PR #179; ADR-0039                                | Does not finish R-0022, unified authorization or deduplication                                            |
+| RAIT/Portal preview                           | #191/#192, R-0033, PC-0021                               | Fixture-based review, unavailable writes; Dashboard/TEAT preview follow-ups remain                        |
+| RAIT admissibility                            | #193/#194, merge e68266a0, R-0025 TASK-0024…0027         | PROTOCOLADO→triage→human checklist plus server timeliness→admit/reject only; R-0025 and JW-01 remain open |
+| Selected accessibility/RLS/dependency repairs | #187/#188/#179 and scoped receipts                       | Specific fixes, not general certification                                                                 |
+
+DEVAI proof chains, historical task records, PCs and audit observations remain
+unchanged. A successful CI gate, preview or non-promoting observation is not an
+assertion of whole-product or institutional readiness. Scorecard conclusions are
+supplied only by the dedicated evaluation session, not reconstructed here.
+
+## 3. Completion boundaries
+
+### D — Development completion of the commissioned product
+
+All software outcomes CP-01…CP-09 below meet their original retained criteria,
+including contracts, backend/frontend behavior, role/tenant negatives, recovery,
+route availability and user documentation. All40 imported journey records and110
+UCs have an explicit disposition against their governing sources: implemented and
+proved, already delivered, or expressly excluded/transferred by the Owner.
+A group-level crosswalk is not proof that each requirement has passed.
+
+No required command remains an unimplemented unavailable stub; no required page
+remains L0 without a valid recorded exception. A deliberately unavailable external
+provider must be distinguished from missing application behavior: implemented,
+tested fail-closed integration logic can be development-complete while actual
+provider qualification remains blocked. The existing campaign acceptance is not
+relaxed by this distinction; any necessary exception requires an explicit decision.
+
+### Q — Institutional/provider qualification
+
+CP-10 establishes real identity, trust, contracts, normative sources, environment
+and provider acceptance for the exact candidate. Mocks and homologation adapters
+never substitute for that evidence. Q remains a separate authorized workstream;
+C-0002 §6/C-0003 §12 exclusions of real external execution are preserved.
+
+### O — Operational release and field use
+
+CP-11 requires approved environments, distribution, signed artifacts where
+applicable, real device/offline qualification, runbooks, rollback, support and
+explicit release authorization. Merge or D-completion does not grant O.
+
+Existing exclusions remain: PEC mobile; native `apps/portal/mobile` remains deferred by the phase4 decision (C-0003 §1), distinct from Portal web/PWA; bodycam and guarda monitorada
+(including its modeling); UC-TEAT-013 speed-meter flow remains outside MVP (`teat.speed_meters=false`); unrelated reserved vehicle-domain development; upstream
+STYNX repository writes; and k6/mutation execution under B17/OD-C3-004. TEAT mobile
+production and native Android/Capacitor work remain separately commissioned tracks
+(#108–#112), not silently added to the local development campaign. This plan exposes
+them in the overall completion path without authorizing their implementation.
+
+## 4. Remaining outcomes and acceptance
+
+Every outcome carries its source requirements, authority, scope, integration owner,
+inputs, proof obligations and unresolved dependencies into its execution packet.
+Documents/availability travel with each slice; the final coverage audit remains CP-06.
+
+| Outcome                                               | Existing scope owner / sources                                         | Remaining delivery and exit evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CP-00 — Review and baseline approval**              | This PR; C-0002/C-0003; binding ledgers                                | Approve §8; review crosswalk and branch dispositions; freeze accepted baseline and next authorized packet. No implementation in this package                                                                                                                                                                                                                                                                                                                                                                            |
+| **CP-01 — One complete RAIT analyst journey**         | R-0025; JW-01; JNY-013; UC-RAIT-002/003/016; ADR-0041                  | Preserve delivered admissibility; reconcile distribution/pool/claim; dossier and official documents; inquiry/resumption; versioned draft→ready/signing handoff and authority return. Prove the whole connected workflow, not isolated screen/endpoint success                                                                                                                                                                                                                                                           |
+| **CP-02 — Remaining RAIT operations**                 | R-0025; JW02–12; JNY-014–016; remaining RAIT UCs; WF/RN/command gaps   | Coordinator/secretariat protocol and boards, signing/central authority, rapporteur/chair, organization/RH/finance, integration, audit/admin. Reconcile all original64 command obligations plus approved additions, R-01…R-36/F-01…F-16 matrix and schema changes; each required role/journey gets positive and omitted-role negatives                                                                                                                                                                                   |
+| **CP-03 — Citizen Portal workflows**                  | R-0027; Portal JNY030–040/UCs except JNY-037/UC-PORTAL-014; build pack | Replace unavailable delegation targets with source-backed defense/appeals/driver nomination/payment/medical-board/inquiry workflows; correct actor/target IDs, state, idempotency, privacy and errors; query/document behavior and end-to-end request tracking. Generic Portal medical delegation must be reconciled against the CH/PEC producer contract; this does not deliver CP-08 citizen PEC views. Keep institutional activation constraints explicit                                                            |
+| **CP-04 — Operational Dashboard**                     | R-0026; Dashboard UCs/JNY023–029; #96–100/#123/#124/#173               | Build real L2 console, reconcile GET/error/event contracts, implement RAIT producers and reporting job/exports, role-scoped drilldown and public suppression. Prove producer→read model/job→UI and access negatives, not only static panels                                                                                                                                                                                                                                                                             |
+| **CP-05 — BOAT and TEAT web workflows**               | R-0028/29; BOAT/TEAT UCs/JNY008–012,017–022                            | Reconcile BOAT gateway and six native-port boundaries; connect reporting/capture/review/sync flows and TEAT's web operational console. R-0013/ADR-0033 already delivered TEAT-mobile UI/workflow homologation; general TEAT-mobile wiring remains outside C-0003. Its remaining productive session/offline/sync obligations belong to CP-11, not new CP-05 work. Reuse source-backed text/route work. Prove local/homologation behavior; separate actual camera/GPS/hardware/field and RENAEST acceptance from adapters |
+| **CP-06 — Availability, preview and user help**       | R-0030; R-0033 residuals; #186                                         | Integrate availability schema/checker after reconciling consumers; truthful manifest and pt-BR help/manual per role/route as functionality ships; finish remaining previews, accessibility follow-ups, FAQ/glossary/contextual help and full route coverage. Remove unused audit exception through its existing security gate; no gate relaxation                                                                                                                                                                       |
+| **CP-07 — Necessary platform convergence**            | Stopped R-0022 salvage→R-0034; R-0023/24; ADR-0039; C-0003 §9          | Selectively recover useful tenancy/SSE/outbox/offline/signing/installer assets; reconcile public STYNX capability rather than old pin targets; preserve payload/ACK/provenance/deadline contracts; migrate authorization only with regenerated exact role×route parity; absorb v0 into shared kit and remove actual duplicates. No wholesale checkpoint merge                                                                                                                                                           |
+| **CP-08 — PEC staff and citizen journeys**            | R-0031/32; ADR-0034; PEC UCs/JNY001–007; JNY-037/UC-PORTAL-014 (P7)    | Reconcile contracts/clients, CH RLS seed/tests and corrective checkpoints; implement clinical/regulatory19 screens and Portal7 views, projections, holder dossier, delegations and event flows. Preserve RENACH uniqueness, P2, signing/retention boundaries. Demonstrate clinical→regulatory→citizen workflows, manuals and availability; no assumption that backend parity delivered the frontend                                                                                                                     |
+| **CP-09 — Consolidated candidate acceptance**         | R-0035 and retained C-0002/C-0003 final criteria                       | Exact-candidate full CI/root/backend/app gates; role/tenant matrix, outbox/offline failure/replay, lifecycle/recovery, secrets/paths, generated drift, accessibility and applicable performance/robustness proofs. Consolidation parity/origin-freeze/infra-retirement obligations reviewed against ADR0004/0012/0013; no origin archive or destructive action without separate authority. Full evidence/closure only for genuinely satisfied scope                                                                     |
+| **CP-10 — External decisions and qualification**      | #125/#126/#120; letters tracker; trust/provider sources                | Named custodians and formal responses for normative/institutional gaps; approved identity/signing/TSA/roots, gov.br/SNE/RENAEST/banking/VAPID/biometry contracts where required; real samples/environment and acceptance results. Draft letters are not sent requests or responses; no contact or credential collection authorized by this plan                                                                                                                                                                         |
+| **CP-11 — Separately authorized operational release** | TEAT #108–112; release/runbook scopes; applicable product decisions    | Trust/enrollment/offline, Android/GMS820, AIT validation/numbering/lifecycle/sync, production-vs-homologation separation and exact-device evidence; deployment/distribution, telemetry/support/training/rollback and explicit field/go-live decision. Plan and budget these separately before claiming DETRAN operational completion                                                                                                                                                                                    |
+
+### CP-01: first executable package proposed for review
+
+The [existing next-slice analysis](work/rounds/R-0025/reports/JW01-next-slice.md)
+remains a candidate, not an instruction to start. Reconcile first:
+
+- JW-01 puts claim before admission; current command accepts an already DISTRIBUIDO
+  case and enters EM_INSTRUCAO. The sequence must follow accepted workflow intent,
+  not change states to satisfy a diagram or route name.
+- Defense pool ID is currently empty; derive the pool/actor membership from a
+  canonical source and reconcile the actual CASE OpenAPI body/response/header.
+- ADMITIDO is not eligible for current claim. Map the existing distribution/receive
+  handoff and authorized role before connecting the two slices. A DISTRIBUIDO fixture
+  proves claim behavior but not the missing admission→distribution handoff.
+- Resolve OD-R25-017 if individual access is needed; tenant RLS alone proves only
+  tenant isolation. No invented analyst/pool predicate or broadened grant.
+
+After contract approval: Inspector RED cases for transport/routed UI, empty queue,
+WIP, availability, impediment, cross-tenant/role negatives, exact retries and concurrent
+claims; Engineer wiring→dossier and read refresh; HTTP+DB/browser/preview proofs and
+review. Then documents/inquiry/draft/signing slices, with provider gates attached
+where consumed. Do not declare CP-01 complete while a required step is blocked.
+
+### TEAT-mobile and Portal-mobile boundaries
+
+TEAT-mobile's local UI/workflow homologation is already delivered under R-0013 /
+ADR-0033. C-0003 explicitly excludes general TEAT-mobile wiring; this plan does
+not add session/offline/sync implementation to CP-05. BOAT-specific host integration
+required by R-0028 remains its own source-backed scope, not permission to implement
+the rest of TEAT-mobile. Required productive mobile behavior is CP-11 (#108–112)
+under separate authorization. Crosswalk rows identify retained homologation assets
+and productive residuals, rather than scheduling the same UI again.
+
+Portal web/PWA document consultation is CP-03; native Portal-mobile is deferred.
+JNY035/UC-PORTAL011/012 must distinguish web/PWA behavior, actual document/provider
+qualification and any deferred native/offline presentation. A web download or fixture
+is not proof of a productive offline document or native app.
+
+### Medical-delegation boundary
+
+CP-03's generic medical-board request/delegation and CP-08's seven citizen PEC
+views are different obligations. Reconcile the actual CH producer/command contract
+before accepting the CP-03 service; neither a mock target nor PEC screen preparation
+proves it. Shared contract preparation may be assessed before PEC UI implementation,
+within the existing authorized preparation limits. Do not introduce an unconditional
+CP-03↔CP-08 whole-outcome dependency. If source reconciliation demonstrates such a
+cycle under the current PEC-last rule, P7 must resolve the schedule explicitly;
+that service remains pending rather than being counted complete or moved silently.
+
+## 5. Sequencing and dependency policy
+
+1. **Review CP-00**, settle only decisions that block the next packet, then authorize
+   CP-01's reconciled first package. Preserve the agreed RAIT→Portal→Dashboard→TEAT
+   product priority; BOAT's shared TEAT-web lock/dependency is retained.
+2. **Complete the connected analyst journey**, including distribution and signing
+   dependencies. Start CP-03/04 contracts or work only under the established app and
+   shared-policy locks and explicit authorizations; no more than existing concurrency.
+3. **Attach CP-07 work to demonstrated prerequisites.** A named journey may need a
+   signing/outbox/public-API slice before its final acceptance. Do not wait for a
+   speculative wholesale platform rewrite or declare the journey done without it.
+   Owner-approved P2 amends the merged-J-round opening rule: an accepted complete
+   vertical outcome or an expressly approved narrow prerequisite may qualify. This
+   does not open R-0034 or authorize any packet; admissibility alone does not qualify.
+4. **Finish CP-02/03/04/05 and their CP-06 deliverables.** Each outcome records a
+   real prerequisite graph, not the old branch stacking order. Platform changes
+   revalidate affected journeys. Two consumers of shared policy are serialized.
+5. **Retain PEC's approved final placement** under ADR-0034/R-0030 prerequisites.
+   Candidate contract reconciliation is useful preparation, not permission to move
+   its implementation earlier. CP-08 reuses incremental R-0031/R-0032 assets.
+6. **CP-09 certifies the assembled candidate**, with input from the separate
+   evaluation session when available. Governance/scorecard work does not absorb or
+   replace missing product behavior. CP-10 dependency gathering can be planned in
+   parallel; actual external execution and CP-11 require their own authorization.
+
+Documentation and availability accompany deliveries using R-0030's existing
+advance-to-phase-D convention; final manuals/coverage are not waived. Security,
+tenant negatives and generated consistency are per-change obligations, not postponed
+to CP-09. No dependency is removed merely because a plan is old: retain, prove met,
+replace with an equivalent source-backed contract, or obtain an explicit transfer.
+
+## 6. Disposition of historical campaigns and preserved work
+
+No archive/delete/rebase/force-push or wholesale branch integration is authorized.
+The [snapshot](work/planning/2026-10-18-completion/branch-inventory.json) retains
+all fetched origin refs and local-ref metadata. Ahead counts include stacked/shared
+history and are not estimates of remaining work.
+
+| Historical scope                                | Planning disposition                                                                               | Remaining accountability                                                                                                                                                            |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C-0001 / R-0001…0016                            | Keep merged/closed proof and port history                                                          | CP-09 checks residual parity/freeze/retirement; no reopening closed PCs by document edit                                                                                            |
+| R-0017/18/19/21                                 | Delivered baseline, retained history                                                               | Reproduce relevant gates on new candidates; no duplicate migration/index/corpus program                                                                                             |
+| R-0020 and RGR TASK-0013                        | Preserve both divergent refs; hand off to separate evaluation session                              | No sensor work here; that session reconciles old incomplete obligations and reports disposition                                                                                     |
+| R-0022 stop checkpoint and earlier/handoff refs | Remains stopped; C-0003 §9 selective-salvage policy retained                                       | CP-07/10; old1.6.x manifest bumps rejected as integration inputs, bytes/history retained; generated files regenerated from sources; one-window custody investigation limit retained |
+| R-0023 / R-0024                                 | Authorization candidate assets / dedup proposal                                                    | CP-07; current matrix and public capability baseline before changes, no inherited PASS                                                                                              |
+| R-0025                                          | Original checkpoint already ancestral to main; do not remerge. #193/#194 integrated slice retained | CP-01/02; original64-command acceptance and approved additions remain; no close/seal                                                                                                |
+| R-0026 / R-0027                                 | Mostly contracts/tests; no broad runtime delivered                                                 | CP-04/03; retain intentional REDs and rejected BANK_PORT history, not a resurrected candidate                                                                                       |
+| R-0028 / R-0029                                 | BOAT homologation assets and TEAT screens/i18n preparations                                        | CP-05; real device proof remains CP-11; no production claim from adapters                                                                                                           |
+| R-0030                                          | Availability/docs gate and fixture assets, not finished manuals                                    | CP-06; premature checker failure from missing manifests is not permission to weaken it                                                                                              |
+| R-0031 / R-0032                                 | CH tests/contracts and stacked PEC/Portal preparation                                              | CP-08; reconcile corrective checkpoints and incremental changes; never count common ancestry twice                                                                                  |
+| R-0033                                          | Closed/sealed PC-0021; preview and v0 integrated                                                   | Preserve closure/errata; follow-ups CP-06/09, no reopening or rewriting proofs                                                                                                      |
+| R-0034 / R-0035                                 | Planned identifiers, not instantiated execution                                                    | CP-07/09 after review/opening conditions; do not claim implementation from a plan                                                                                                   |
+| R-0036 / active scorecard session               | Outside this plan's execution                                                                      | Receive published baseline/results only; do not inspect/change its local work or reserve its identifiers                                                                            |
+| Already merged maintenance/recovery refs        | Retain as history; no duplicate feature queue                                                      | Registry/pin decision #185 is stale against #179; residual RC claims remain separate; no issue closure from this document                                                           |
+
+Every task in a preserved branch retains its ID, status and evidence in the snapshot.
+No queued/checkpoint item is implicitly cancelled. Before each outcome starts, its
+execution packet maps every relevant old criterion/task to: already satisfied with
+exact evidence; resumed; replaced with equivalent obligations; or explicitly
+transferred/excluded by the Owner with destination. Historical files are not rewritten
+for bookkeeping. A replacement does not turn an unsatisfied criterion into PASS.
+
+## 7. Binding decisions carried forward and conflicts to reconcile
+
+[Steering §H](docs/meta/knowledge-base/steering.md) and later accepted decisions
+prevail over stale projection text. This plan does not request new values for:
+
+| Area      | Existing decision retained                                                                                                                                                                               | Source                                                       |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| RAIT      | Centralized/vinculado appeal, no counter-argument stage;30 days from publication for the decided authority flow; IPCA-E; T-PAR-3A/T-PRESC-5A alert-only; art.289-A retains its decided ex-officio effect | steering H46/H47; decisions/rait.md; applicable WF/RN        |
+| Portal    | Digital waiver; suspended fine does not itself block CRLV-e; WCAG2.1AA/eMAG3.1; silver acceptance and ombudsman distinction as decided;40-percent discount outside SNE remains disabled (H53)            | DT-026/027/028; decisions/portal.md; steering H50/H51/H53    |
+| BOAT      | Monthly configurable transmission/alert behavior; approved worst_victim derivation; provisional catalogs stay source_pending; national records terminal without retraction                               | steering H43; decisions/boat.md                              |
+| TEAT      | Bodycam/guarda exclusions, recording indicator retained; expired homologation warns/records as decided                                                                                                   | steering H55; decisions/teat.md; ADR0033                     |
+| PEC       | P2 distribution, distinct Special Board, periodic toxicology through adapter, tenant RENACH uniqueness, clinical retention/signing constraints                                                           | decisions/pec.md; accepted PEC amendments; ADR0012/0013/0034 |
+| Dashboard | Conservative cell suppression below10 with preproduction validation; approved calibration proposals; delegated technical calibration remains engineering/SRE work                                        | decisions/dashboard.md; steering                             |
+
+Steering H54's approved operational calibrations and H57's collegiado premises
+remain in force. Missing institutional regiments do not reopen or suspend those
+already approved defaults; jeton, the unassigned sync window and genuinely
+unsourced items retain their specific gates. Owner product choices and subsequent
+formal legal/institutional validation must remain distinguishable.
+
+The crosswalk assigns **source reconciliation**, not new lawmaking: draft JNY/UC
+text that conflicts with later decisions must be annotated through the existing
+proper-role process. Do not modify Owner product JSONs simply to match today's code.
+In particular, keep OD-HF-B9-001's PEC uniqueness conflict visible; legacy phrases
+requiring patient+RENACH must be reconciled to the accepted tenant-scoped rule.
+
+Actual remaining questions include OD-R25-016/017 and OD-C3-009, member role/grant,
+session creation/cadence, additional substitute ordering, unsourced deadlines and
+sync.concurrency_window_minutes where still unassigned. Do not generalize a value
+from another workflow. Exact source/owner and activation gate are required.
+
+## 8. Review decisions and implementation hold
+
+**Owner approval, 2026-10-18:** “Fix the remaining review findings, record my approval of P1–P3, run the required checks, and open the completion plan PR. Keep implementation paused until we approve the exact P4 packet, and preserve local and scorecard work.”
+
+P1–P3 below are approved; campaign addenda amend the prior scheduling restrictions
+without rewriting their history. P4 is pending exact-packet approval; P5–P7 remain
+unresolved where applicable. This approval does not prefill acceptance or PASS.
+
+| ID                                | Decision / recommendation                                                                                                                                                                                                                                                      | Authority and current restriction                                                                                                                    |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **P1 — Delivery model**           | Allow bounded, independently reviewable PRs inside an existing open round; retain final whole-round acceptance, evidence and close/seal. Require contract→RED→implementation→affected/full PR gates→cross-family review→CI→authorized merge→scoped evidence/audit per delivery | Approved by Owner 2026-10-18; amended in C-0002/C-0003 addenda. Aggregate acceptance/close/seal retained; exact P4 packet still pending              |
+| **P2 — Platform prerequisite**    | Permit R-0034 only after an accepted complete vertical outcome or an explicitly approved narrowly bounded prerequisite needed to complete that outcome; avoid waiting for every RAIT command solely because of round grouping                                                  | Approved by Owner 2026-10-18; C-0003 scheduling amendment. No R-0034 opening or R-0022 restart authorized; shared locks/no-touch boundaries retained |
+| **P3 — Meaning of completion**    | Approve D/Q/O milestones separately; retain full commissioned software scope, original external/native exclusions and explicit operational obligations. No production label until Q/O pass                                                                                     | Approved by Owner 2026-10-18; no external execution commissioned, no D acceptance reduction, no Q/O readiness claim                                  |
+| **P4 — Next CP-01 packet**        | Reconcile pool, distribution, claim destination and signing handoff with canonical sources; then authorize only the selected bounded packet                                                                                                                                    | Architect contracts + Owner where business/permissions change; OD-R25-016/017 not auto-resolved                                                      |
+| **P5 — Journey/access conflicts** | Resolve OD-C3-009 before the affected JW02/05/08 journeys and identify authority for any individual case-access rule                                                                                                                                                           | Owner/source custodian; no inferred grant or permission widening                                                                                     |
+| **P6 — External ownership**       | Name custodians, exact requests, expected public/formal evidence, target response dates and fallback/deactivation conditions for CP-10/11                                                                                                                                      | Owner/institution/LEGAL; no invented normative values, credentials or institution promises; no sending messages from this PR                         |
+
+After review: keep the first commitment to one small CP-01 packet, with contract,
+source conflicts, proofs and completion boundary visible. Re-estimate from its
+actual effort and the accepted dependency graph. Do not quote historical token
+budgets, stacked commit counts or the former25-window estimate as a finish date.
+
+**P7 — Shared medical dependency:** Architect must identify the real Portal→CH
+producer boundary and whether its source-backed delivery can precede PEC frontend
+implementation under existing authorizations. If it requires changing the approved
+PEC/R-0030 ordering, obtain an explicit Owner amendment. No invented medical
+command or automatic order change; track the unsatisfied service until resolved.
+
+## 9. Acceptance and handoff checklist
+
+For each executable packet, preserve existing gates and record:
+
+- User outcome/persona; canonical UC/WF/RN/JNY/JW sources; exact baseline/pin.
+- Existing task/round lineage and every carried-forward acceptance obligation.
+- Concrete UI→typed client→authorization→domain→DB/events→refresh behavior, with
+  available/unavailable states and operational prerequisites honestly represented.
+- Positive cases and omitted-role, cross-tenant, state/version, idempotency,
+  concurrency, failure/rollback/retry/recovery negatives applicable to that outcome.
+- Generated source/client consistency; component/routed, HTTP/DB and browser proof;
+  preview remains fixture-only and non-writing. Real IdP/provider/device proof is
+  separately named; no synthetic evidence substituted.
+- Per-route availability/help/manual updated; known a11y and error limitations
+  tracked; existing root check/backend tiers and required CI checks green before merge.
+- Cross-family review, actual limitations, exact candidate and scoped post-merge
+  evidence/audit. No whole-round completion until all retained criteria or explicit
+  Owner dispositions are verified by the existing close/seal verbs.
+
+CP-09 additionally verifies cross-product handoffs (Portal→RAIT, RAIT→Dashboard,
+BOAT/TEAT shared capture, PEC→Portal), consolidated setup/restore/rollback,
+origin parity/freeze disposition and user/support acceptance. Integration with
+national services stays through senatran-adapter. No unrelated framework is added.
+
+## 10. What this planning PR verifies
+
+Read-only evidence/spec/branch reconciliation; full population coverage checks for
+crosswalks; ref/hash/task-status accuracy; published-document links/KB/index gates;
+formatting and DEVAI doctor. No runtime or sensor source changed, no branch tests
+rerun or claimed current, no proof/round state written. Validation receipts and local
+preservation metadata live under work/planning/2026-10-18-completion/.
+
+The primary checkout belongs to the active scorecard session. This work uses the
+isolated existing managed worktree and its own codex branch, without checkout,
+stash, reset, cleanup, migration or writes in the primary checkout. Other-session
+commits may advance concurrently; preservation means no interference, not freezing
+another authorized session's work.

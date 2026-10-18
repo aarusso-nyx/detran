@@ -1,5 +1,11 @@
 # rounds
 
+> **Replanning review, 2026-10-18:** [completion-plan proposal](../../COMPLETION-PLAN.md) reconciles main `e536e545`,
+> preserved branches and source decisions into one remaining-work baseline pending integration.
+> P1–P3 were approved by the Owner on 2026-10-18; see the campaign addenda.
+> Implementation remains paused pending exact P4 packet approval. The records below retain their historical scope.
+> Scorecard work remains with its separate session.
+
 **Authority:** Architect (Constitution Article 6).
 
 Governed rounds of this repository (DEVAI 2.2.0). One round per front of the implementation
