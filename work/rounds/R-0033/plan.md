@@ -83,7 +83,7 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
 - **TASK-0009 completed:** pacote Inspector/Codex aceito pelo maestro e registrado
   no commit `61282b66`. `reports/TASK-0009.md` documenta presença, Prettier, ESLint
   e sintaxe do smoke; `reports/W3-portal-red.log` reproduz independentemente o RED
-  deliberado anterior à implementação. TASK-0007 ainda aguarda execução/aceitação;
+  deliberado anterior à implementação. TASK-0007 foi aceita em `0b11e91a` (recibos abaixo);
   a conclusão da tarefa de sensores não certifica prévia funcional. Os executores
   nos JSONs originais continuam como registro histórico do bootstrap.
 - **Exceção Portal ancorada na fonte:** 38 rotas canônicas; `junta_medica` ausente
@@ -96,6 +96,22 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   de `ng serve` respondeu 200 PASS. Fontes: `reports/W3-rait-preview-baseline.log`,
   `W3-rait-preview-build.log`, `W3-rait-capture.log`, `W3-rait-axe.log` e
   `W3-rait-smoke.log`. Os demais gates, review e PR ainda não são certificados.
+- **TASK-0007 completed:** pacote Engineer/Codex aceito em `0b11e91a`;
+  `reports/TASK-0007.md` e `W3-portal-all-tests.log`: 125 arquivos, 1549 PASS e
+  14 todo; 7 arquivos/234 testes preview, typecheck, lint, production/preview,
+  marcas negativa/positiva e smoke HTTP 200 PASS. Registro tipado das 15 chaves
+  da sobreposição de prévia preserva catálogo, scanner e testes base.
+- **Portal browser inicial:** Inspector, commit `ee3dca5a`; 38 rotas, 96 PNG,
+  32 verificações axe, zero serious/critical, 6 violações menores listadas e
+  2 contraprovas de guarda; zero `/v1`, console/page errors. Fonte:
+  `reports/W3-portal-browser.json`. Repetição após rebuild final pendente.
+  Chaves `ui.pagination.previous`, `ui.pagination.pageStatus`, `ui.pagination.next`
+  permanecem sem tradução na produção base; follow-up do kit/fase J, sem alteração
+  do catálogo nesta prévia.
+- **Sequência final:** `pnpm check` em execução (primeira tentativa interrompida
+  por infraestrutura Compose; repetida com `DOCKER_CONFIG` temporário expondo a
+  instalação existente). Rebuild/manifesta finais, development, review Claude, PR
+  e CI remoto ainda pendentes; nenhum PASS antecipado.
 
 ## Objetivo
 
@@ -397,6 +413,11 @@ OD-C3-002…006 decididas pelo Owner em 2026-10-14 (registro canônico §C-0003)
 
 ## Retomada
 
+**Histórico W1/W2:** os próximos registros descrevem o checkpoint de 2026-10-15.
+O estado atual e a autorização de PR estão em “Continuação W3” e seus recibos.
+Pendências de Portal, inventário pré-A4 e autorização de push abaixo foram superadas
+pelos registros W3; o histórico não é uma nova fila de execução.
+
 **Checkpoint 2026-10-15 (fim da janela 2, maestro Fable 5.1; redigido por TASK-0008, Architect) —
 HEAD `3832a928` (TASK-0006, M2) + a árvore de TASK-0008 (commit pelo maestro).** Branch
 `claude/frontend-preview-5281e3`; base da rodada = `main` (PR #182 mesclado `57fb8840`; PR #184
@@ -514,7 +535,7 @@ F-nn), e as jornadas G conforme as ODs do Owner forem decididas.
 | Superfície      | O que a prévia já cobre                                                                                 | O que falta para a rodada J                                                                                                                   | Rodada J             |
 | --------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | `rait-web`      | 74 entradas, 64 páginas × 5 estados, JW-01 passos 1–8 capturada, 0 `/v1`, `dist/preview/` com manifesto | tabela acima; transversais; ODs R-0025                                                                                                        | R-0025               |
-| `portal-web`    | nada ainda (TASK-0009 → TASK-0007 na janela 3)                                                          | inventário rota × fixture (`inventory-portal-web.md`, TASK-0009); delegações desligadas (`SERVICE_UNAVAILABLE`) dependem do backend de R-0027 | R-0027               |
+| `portal-web`    | prévia concluída na W3 (TASK-0009 → TASK-0007); gates finais/PR pendentes                               | inventário rota × fixture (`inventory-portal-web.md`, TASK-0009); delegações desligadas (`SERVICE_UNAVAILABLE`) dependem do backend de R-0027 | R-0027               |
 | `dashboard-web` | nada (fora do lock; 23 entradas todas L0 — R-0016)                                                      | L0 → L2 inteiro; produtores RAIT pendentes da fase S onde dependiam do outbox da R-0022 (C-0003 §4)                                           | R-0026               |
 | `teat-web`      | nada (fora do lock); já tem build `homologation` sem rede (ADR-0033)                                    | shell no kit não entregue por R-0033 (C-0003 §4: a migração só ocorre se R-0033 entregar); ligação depende do lock de R-0028                  | R-0029 (após R-0028) |
 
@@ -523,8 +544,8 @@ medição; só a estimativa global da R-0025; (2) as jornadas G bloqueadas por O
 -007…-015, OD-R12-044) — o esforço depende da opção escolhida; (3) `rait-archive:seal` e
 `rait-incident:open` — citados por JW-04/JW-09 sem método M8 entre os 64 comandos (precisam de
 ficha/contrato primeiro); (4) o estado `loaded` das telas de JW-02…12 além do inventário §3, que
-ainda está pré-A4 (refresco na janela 3); (5) `portal-web`, `dashboard-web` e `teat-web` — sem
-inventário desta rodada (só o do portal virá de TASK-0009); (6) o custo backend de cada F-nn além
+foi refrescado na W3 a partir de A4/A5, sem nova estimativa de horas; (5) `dashboard-web`
+e `teat-web` seguem sem inventário desta rodada; o inventário Portal foi entregue por TASK-0009; (6) o custo backend de cada F-nn além
 da contagem (paths e `operationId` de §5 são propostos, não contratados).
 
 ## Leitura
