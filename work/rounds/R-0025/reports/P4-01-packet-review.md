@@ -1,0 +1,119 @@
+# P4-01 — defense distribution/pool/claim contract reconciliation
+
+**Status: prepared for Owner review; not authorized for execution.** Architect,
+Constitution Article 7. The Owner authorized preparation only on 2026-10-18:
+“Yes—prepare the exact P4 packet for review”. P1–P3 approval does not approve P4.
+Implementation remains paused. This document creates no DEVAI task, round or state.
+
+## Exact proposed first packet
+
+Approve **one Architect contract-reconciliation delivery within open R-0025**,
+limited to the defense-prior workflow's admission→distribution→claim handoff,
+canonical pool resolution, post-claim destination and required access boundary.
+It produces a reviewed contract and a source/decision matrix. It does **not**
+authorize runtime changes, tests-as-implementation, client generation, wiring,
+DDL, permissions, provider integration or a full JW-01 completion claim.
+
+This uses the source-reconciliation alternative already recorded in
+[the next-slice analysis](JW01-next-slice.md). A combined implementation packet
+would currently hide unresolved business/access prerequisites. The first packet
+is therefore deliberately contract-only; any subsequent claim wiring needs a
+separately approved exact packet after these prerequisites are settled.
+
+## Verified starting evidence
+
+The preparation baseline is PR #195 head `e2dc75b170fcf6e0c23aa77ec923777dd45a7865`
+merged as main `a7900301aef943bbb84bfde35360d1cffa4aa120`; revalidate sources before execution.
+
+| Subject | Existing evidence | Consequence for this packet |
+| --- | --- | --- |
+| Defense queue/source workflow | [WF-RAIT-004](../../../../docs/framework/product/domains/inf/rait/workflows/WF-RAIT-004.md) F-DP-2: revisor claims ADMITIDO → DISTRIBUIDO from the collective ADMITIDO queue; [IU-RAIT-004](../../../../docs/framework/product/domains/inf/rait/screens/IU-RAIT-004.md) §6 gives ADMITIDO → DISTRIBUIDO → EM_INSTRUCAO; runtime rait-case-command.service.ts claim-next rule expects DISTRIBUIDO → EM_INSTRUCAO; queue.facade.ts cites ficha004/F-DP-2/RN-RAIT-141 for its ADMITIDO filter | Explicit source-versus-runtime eligibility conflict: do not presume a missing separate command or decide which side changes |
+| Pool target | `defense-pool-queue.page.ts`: empty `DEFENSE_POOL_ID_PENDING`; `worklist.client.ts`: unavailable claim | No hardcoded UUID, first-pool fallback or inferred member identity |
+| Claim transport | CASE commands OpenAPI: `POST /v1/inf/rait/pools/{id}/claim-next`, operation `raitPoolClaimNext`, response description only | Current generated description is insufficient to settle typed body/envelope/error/header contract |
+| Runtime command | `rait-case-command.service.ts`: `{}` payload, Idempotency-Key required, caller `caseId` forbidden; claim does not require If-Match; IU-RAIT-004 §6 requires it, WorklistClient says optional because pool-target | Three-way If-Match/ETag-owner conflict remains unresolved; code is evidence, not authority. Replay fingerprint excludes actor for claim and lookup is tenant+key; cross-actor reuse needs reconciliation, not adoption as policy |
+| Runtime return | `rait-case-commands.controller.ts`: HTTP200 `{data, events}` + ETag; service returns updated case with optional assignment_id | Current frontend `CommandResult<RaitAssignment>` and `outcome.body.case_id` cannot be adopted by analogy |
+| Claim eligibility | Service `claim()`: active pull pool, actor's analyst membership, published schedule/day availability, WIP, matching instance/unit, DISTRIBUIDO, no active assignment/impediment, transactional locking | Preserve exact ordering/negative behavior against accepted RN sources; no invented WIP/default or unproved legal-priority guarantee |
+| Distribution gap | `receive` rule can enter DISTRIBUIDO; its payload validation accepts only body `jari` or `cetran`, command attribution is secretary, and rait-case-command.service.ts receive guard (line 1414: payload.body !== current.instance → RAIT.FORBIDDEN_ORGAO 403) enforces body === case.instance | Receive cannot serve defense-prior cases as observed. This excludes one candidate workaround; it does not override WF-RAIT-004 or prove a separate distribution command is required |
+| Destination | IU-RAIT-004 §7/§10 and JW-01 require triage; current page follows that source; runtime enters EM_INSTRUCAO; dossier route exists and next-slice report proposes it | OD-R25-016 source/runtime/destination conflict: dossier navigation remains a proposal to ratify with Owner/source custodian, not a new routing directive |
+| Access | `case-access.guard.ts` / OD-R25-017: generated GET demonstrates tenant RLS, not individual same-tenant scope | No new grant or assumed analyst/case predicate. Resolve canonical rule before a later packet broadens access |
+
+Paths above refer to the repository root. Read the actual controller, service,
+CASE contract, UI guide and source decisions together; an old task status or
+historical test count is not acceptance. Pool-wide claim authorization and
+individual case-read authorization are separate questions.
+
+## Owned outputs and write boundary, after approval
+
+Architect owns only:
+
+1. `work/rounds/R-0025/contracts/JW01-distribution-claim.md`: source-backed contract
+   table with command target/body/headers, response/envelope/ETag, actor, state
+   pre/post, errors, idempotency/retry/concurrency and proposed UI destination.
+   Classify every error as source-backed, runtime-only or unresolved; include
+   IU-RAIT-004 MEMBER_IMPEDED versus runtime candidate exclusion/QUEUE_EMPTY or
+   next-case selection. Do not specify an invented unified error behavior.
+2. `work/rounds/R-0025/reports/JW01-distribution-claim-sources.md`: each claim linked
+   to canonical WF/UC/RN/Owner source and current code/contract evidence; explicit
+   conflicts, missing sources, options and authority required. Include the
+   signing handoff boundary/dependency without implementing ready/signing.
+3. Additive entries in `docs/meta/knowledge-base/open-decisions-rait.md` only for
+   unresolved domain transitions, permissions or constants. Preserve OD-R25-016,
+   OD-R25-017 and OD-R12-054 history; do not mark them resolved by this proposal.
+4. A bounded next implementation packet **draft**, if the sources support it,
+   under `work/rounds/R-0025/reports/`, with owned paths, RED matrix, commands and
+   stop conditions. If sources are missing, deliver the precise Owner questions
+   instead of inventing a runtime contract.
+
+Existing accepted sources are read-only in this packet. Consequential new
+architecture/security choices need their own ADR and proper authority, outside
+this bounded approval. No task/status/proof/authorization file is authored here.
+
+## Work order and stop conditions
+
+1. Reconcile JW-01, UC-RAIT-002/003/016, the relevant fiches/WF/RN, CASE and WORKLIST
+   contracts, current actor/session/policy and pool membership sources.
+2. Produce the admission→distribution→claim source map. A pre-seeded DISTRIBUIDO
+   fixture can isolate current claim behavior but never resolves the conflict with
+   WF-RAIT-004 / IU-RAIT-004 ADMITIDO eligibility.
+3. Resolve from sources, or return explicit questions for: authoritative defense claim eligibility/sequence, eligible-pool discovery and multiple/no-pool behavior, individual
+   case-read scope (OD017), response/header ownership and dossier destination
+   (OD016). Do not invent an endpoint, state transition, identity or permission.
+4. Mark every contract field as source-backed, observed implementation, proposal
+   or unresolved. Specify signing/authority return as a later dependency, not
+   part of this delivery. Preserve admissibility already integrated by #193/194.
+5. Independent cross-family review, affected planning checks, then PR for review.
+   No merge or implementation from an unanswered question or this proposal alone.
+
+A source conflict, missing permission rule or unresolved defense claim eligibility/sequence
+stops the affected design from being called executable. It does not authorize
+mock success, state reassignment, secretary impersonation, relaxed access, a
+new grant, first-pool selection or an automatic admission→distribution command.
+
+## Acceptance and verification
+
+- Each handoff has an explicit producer, consumer, actor, source and state;
+  unsupported fields/choices are visibly blocked, never silently filled.
+- Contract ownership is CASE for claim; typed response and If-Match/Idempotency-Key
+  semantics are reconciled explicitly, rather than copied from admissibility.
+- Positive/negative acceptance cases for the **future** wiring packet are listed:
+  no/multiple/unauthorized pools; empty queue; unavailable/inactive member;
+  missing schedule/day slot/WIP source; WIP limit; impediment outcome (source/runtime conflict, not yet settled); cross-tenant/role;
+  caller-selected case rejection; idempotent retry, changed-request reuse and cross-actor same-tenant key reuse;
+  simultaneous claims without duplicate assignment; stale/missing read metadata;
+  truthful routed success/error/refresh; same-tenant case access as sourced.
+- Future HTTP+DB and routed UI/browser/preview tests are specifications here,
+  not tests run or product PASS. Real IdP/provider proof remains separate.
+- Run formatting, KB/publish, indexes and DEVAI doctor; docs build/link checks
+  when published docs change. Full runtime/root/affected app tiers belong to
+  any later implementation packet under P1, not waived by this document.
+- This packet is accepted only as contract/source reconciliation. R-0025 and
+  full JW-01 stay open; no close/seal, readiness or scorecard result is changed.
+
+## Owner review requested
+
+**Proposed approval:** “Approve P4-01 as the contract-only reconciliation packet
+and its listed output paths. Keep runtime implementation paused. Return remaining
+business/access decisions and the exact wiring packet for separate approval.”
+
+Approval of this document does not choose a side of the defense claim eligibility conflict,
+individual-access policy, any new state transition or the later claim wiring.
