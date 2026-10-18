@@ -78,6 +78,25 @@ OD-C3-009 e as costuras das rodadas J permanecem nos destinos já registrados.
 Merge, `round close` e `round seal` aguardam autorização própria, mesmo que os
 checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
 
+### Recibos W3 recebidos — 2026-10-18
+
+- **TASK-0009 completed:** pacote Inspector/Codex aceito pelo maestro e registrado
+  no commit `61282b66`. `reports/TASK-0009.md` documenta presença, Prettier, ESLint
+  e sintaxe do smoke; `reports/W3-portal-red.log` reproduz independentemente o RED
+  deliberado anterior à implementação. TASK-0007 ainda aguarda execução/aceitação;
+  a conclusão da tarefa de sensores não certifica prévia funcional. Os executores
+  nos JSONs originais continuam como registro histórico do bootstrap.
+- **Exceção Portal ancorada na fonte:** 38 rotas canônicas; `junta_medica` ausente
+  de `PORTAL_SERVICE_CATALOG_FIXTURE` mantém a guarda real e redireciona
+  `/exames/:examId/junta/nova` a `/servico-indisponivel/junta_medica`. O inventário
+  e a cobertura exigem esse resultado; nenhum serviço ou papel é inventado.
+- **RAIT revalidado no pin atual:** typecheck, lint, 8 arquivos de specs de prévia
+  (428 testes) e build preview PASS; 87/87 capturas e duas contraprovas de guarda
+  PASS; axe em 29 páginas, zero serious/critical e 13 moderate conhecidos; smoke
+  de `ng serve` respondeu 200 PASS. Fontes: `reports/W3-rait-preview-baseline.log`,
+  `W3-rait-preview-build.log`, `W3-rait-capture.log`, `W3-rait-axe.log` e
+  `W3-rait-smoke.log`. Os demais gates, review e PR ainda não são certificados.
+
 ## Objetivo
 
 Entregar uma **prévia executável, honesta e baseada em fixtures** da superfície classificada pelo

@@ -81,3 +81,23 @@ texto `source_pending`; nada persiste.
 - Já conhecidos (A5 item 8): `Format: date` um dia a menos (`due_on` 2026-09-23 → 22/09/2026);
   `ui.pagination.*` e `ui.confirmDialog.cancel` sem tradução; `main.ts` sem
   `withInterceptorsFromDi()`; cores literais da faixa sem tokens `--detran-*`.
+
+## Revalidação W3 — 2026-10-18
+
+Continuação no pin STYNX 1.5.3/DEVAI 2.2.0, após integrar main e preservar o
+checkpoint RAIT. Resultados executados e informados pelo maestro nesta janela:
+
+- Typecheck e lint PASS; 8 arquivos de specs da prévia, 428 testes PASS.
+- Build preview PASS.
+- Capturas 87/87 e duas contraprovas de guarda PASS; capturas atuais copiadas para
+  `captures/` pelo maestro.
+- Axe: 29 páginas, zero serious/critical; 13 moderate conhecidos permanecem
+  registrados em `captures/axe-report.json`, sem ocultação.
+- Smoke `ng serve --configuration preview`: HTTP 200 PASS.
+
+Recibos: `../../reports/W3-rait-preview-baseline.log`,
+`../../reports/W3-rait-preview-build.log`, `../../reports/W3-rait-capture.log`,
+`../../reports/W3-rait-axe.log`, `../../reports/W3-rait-smoke.log`. Esses resultados
+não certificam production/development, o gate completo, revisão ou integração.
+O manifesto de artefatos precisa corresponder à reconstrução final antes do PR;
+a identidade antiga descrita acima continua evidência histórica, não prova do SHA final.
