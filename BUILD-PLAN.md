@@ -1,5 +1,11 @@
 # BUILD-PLAN
 
+> **Replanning review, 2026-10-18:** [Completion-plan proposal](COMPLETION-PLAN.md) reconciles main `e536e545`,
+> preserved branches and source decisions into one proposed remaining-work plan.
+> It is pending Owner review; no implementation, lifecycle or acceptance change
+> is authorized by this pointer. The records below retain their historical scope.
+> Scorecard work remains with its separate session.
+
 ## Leitura atual (reconciliação de 2026-10-18)
 
 As fases originais abaixo são o plano de origem; o addendum de 2026-09-13 e

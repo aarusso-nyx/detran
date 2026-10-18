@@ -1,0 +1,46 @@
+{
+  "mode": "planning-review",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 38,
+      "claim": "All 11 Portal journeys (JNY-030…040) and all 19 Portal UCs are mapped to the combined label 'CP-03 / CP-08'. That includes items with no PEC content, such as fines, CRLV-e, SNE, the BAT record, ombudsman, payment and LGPD access. COMPLETION-PLAN.md §4 and its medical-delegation section limit CP-08 to the seven citizen PEC views and say there must be no unconditional CP-03↔CP-08 dependency. The dual label blurs that line: under the PEC-last rule (ADR-0034/R-0030), Portal work could be held back or counted under CP-08. inventory-validation.json also records 'each_JNY_UC_JW_has_exactly_one_mapping: PASS', which is false when mappings are dual. The four RAIT JNY and 43 RAIT UC rows use the same kind of label ('CP-01 / CP-02').",
+      "fix": "Give each Portal JNY/UC one outcome. Use CP-03 by default. Use CP-08, or 'CP-03 with the PEC producer contract per P7', only for the PEC-dependent items, e.g. UC-PORTAL-014 and JNY-037, plus any item the source shows belongs to the seven PEC Portal views. Split the RAIT rows into CP-01 or CP-02 where the source makes that clear. Otherwise correct the 'exactly one mapping' PASS claim in inventory-validation.json."
+    },
+    {
+      "severity": "high",
+      "file": "COMPLETION-PLAN.md",
+      "line": 128,
+      "claim": "CP-05 schedules 'connect … the local/homologation TEAT-mobile session/offline/sync behavior'. C-0003 §1 (line 79) lists teat-mobile as homologation under ADR-0033 and 'fora do escopo de ligação (C-0002 §6)'. The homologation UI/workflow delivery belongs to closed R-0013 under ADR-0033, and C-0002 §6 excludes productive TEAT mobile. Neither §3 nor §8 records an Owner decision bringing teat-mobile wiring into the local campaign. The prompt asked whether local TEAT-mobile was kept separate from production; here it is added to CP-05 without that decision.",
+      "fix": "Restate CP-05: TEAT-mobile homologation was delivered under R-0013/ADR-0033 and teat-mobile stays outside C-0003 wiring scope. Remaining TEAT-mobile UC/JNY obligations are either already delivered as homologation or CP-11 (#108–112). If teat-mobile wiring is wanted, list it as an explicit Owner scope proposal in §8 rather than putting it in CP-05."
+    },
+    {
+      "severity": "low",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 190,
+      "claim": "Eight unstruck DT rows (DT-001/002/003/012/016/019/104/111) are mapped to 'CP-00 / affected product outcome'. CP-00 is review-only and has no implementation, and no outcome is named for these rows. Each has a source-identifiable destination: DT-003 (archive the senatran origin) is CP-09 parity/freeze/retirement and needs separate authority. DT-002 (RC/mutation-floor debt) touches the B17/OD-C3-004 exclusion and the #121 residual RC claims, which the crosswalk routes to CP-07/CP-10. DT-104 is PEC (CP-08). DT-111 is TEAT/BOAT (CP-05). DT-016 is the TEAT sync window (CP-05, value still open per steering H54). DT-019 is TEAT removal (CP-05). DT-012 is collection under steering H53 (CP-02/CP-03).",
+      "fix": "Name the destination outcome for each row. Give DT-002 the same destination as #121, and note that the mutation part stays excluded under OD-C3-004."
+    },
+    {
+      "severity": "low",
+      "file": "COMPLETION-PLAN.md",
+      "line": 108,
+      "claim": "The list of retained exclusions leaves out the existing portal-mobile deferral (C-0003 §1: apps/portal/mobile 'adiado (decisão da fase 4)'). JNY-035 (CNH-e/CRLV-e shown offline at a roadside check) is mapped to CP-03/CP-08 without saying whether its native/offline part is deferred.",
+      "fix": "Add the portal-mobile deferral, citing its source, to the §3 exclusions. Annotate JNY-035 / UC-PORTAL-011/012 with which part is CP-03 web/PWA and which part is deferred."
+    },
+    {
+      "severity": "low",
+      "file": "COMPLETION-PLAN.md",
+      "line": 239,
+      "claim": "The Portal row of the 'Existing decision retained' table cites steering H50/H51 for the digital waiver, the 'suspended fine does not block CRLV-e' rule and WCAG 2.1 AA/eMAG. Those were answered by DT-026/DT-027/DT-028 (2026-08-28) in open-issues.md. H50/H51 cover only gov.br silver acceptance and ombudsman access levels. The row also leaves out steering H53 (40% discount outside SNE kept off), which governs Portal payment (UC-PORTAL-015/JNY-039).",
+      "fix": "Cite DT-026/027/028 (and decisions/portal.md) for those items. Keep H50/H51 for silver acceptance and the ombudsman. Add H53 (collection.discount_40_outside_sne=false)."
+    }
+  ],
+  "notes": [
+    "identity: Auditor (Article 7), read-only cross-family review run through the CLI alias opus; I did not infer the exact model version.",
+    "scope: I reviewed the working-tree delta against main e536e545: COMPLETION-PLAN.md, ADR-0042, both ADR indexes (DESIGN-DECISIONS.md and docs/meta/adr/README.md), the reconciliation, scope-crosswalk, branch-inventory, open-items-snapshot and inventory-validation files, and the pointer edits to 9 tracked files. I checked against product/journeys (40), product/use-cases (110: BOAT 13, DASH 8, PEC 14, PORTAL 19, RAIT 43, TEAT 13), the open-issues.md DT register (38 unstruck rows, with DT-014/015/063 struck as exclusions), the 26 issues, steering §H 38–58, C-0002 §6/§12 (OD-C2-005), C-0003 §1/§4/§10/§12 (OD-C3-002/004/005), ADR-0033, and the R-0025 task statuses on main (8 completed, TASK-0024…0027). These checks passed: proposed status and review-only hold are explicit; P1/P2 are not adopted; R-0034 still opens only after a merged J round; RAIT→Portal→Dashboard→TEAT priority and PEC-last placement are kept; R-0031 TASK-0007 is still checkpoint while TASK-0020 is completed; portal-pec⊃pec-web is not double-counted; R-0022 stays stopped with selective salvage only; R-0033 stays closed and R-0025 open; k6/mutation stays excluded under OD-C3-004; the scorecard branch is metadata only.",
+    "limits: I ran no gates, tests, evidence/state verbs or Git changes, and inspected no scorecard or primary-checkout work. I treated technical gate outputs as pending and did not assume they passed. Two zero-byte temp files (review-1.json.formatted.*, review-1.json.raw.*) sit untracked in work/planning/2026-10-18-completion/. They look like review-capture artifacts and should not be committed. I did not verify the ADR-0035 numbering rule against concurrent branches."
+  ]
+}

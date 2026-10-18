@@ -1,5 +1,11 @@
 # Campanha C-0002: consolidação pós-R-0016
 
+> **Replanning review, 2026-10-18:** [completion-plan proposal](../../COMPLETION-PLAN.md) reconciles main `e536e545`,
+> preserved branches and source decisions into one proposed remaining-work plan.
+> It is pending Owner review; no implementation, lifecycle or acceptance change
+> is authorized by this pointer. The records below retain their historical scope.
+> Scorecard work remains with its separate session.
+
 > **Estado reconciliado em 2026-10-18:** campanha parcialmente entregue: R-0017/18/19/21
 > fechadas; R-0020 aberta com checkpoint e RGR; R-0022 parada. R-0023 e R-0025…0032
 > têm preparações/entregas preservadas em branches, R-0024 continua proposta.

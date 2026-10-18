@@ -1,5 +1,11 @@
 # Campanha C-0003: produto primeiro — prévia de frontend, jornadas verticais, endurecimento
 
+> **Replanning review, 2026-10-18:** [completion-plan proposal](../../COMPLETION-PLAN.md) reconciles main `e536e545`,
+> preserved branches and source decisions into one proposed remaining-work plan.
+> It is pending Owner review; no implementation, lifecycle or acceptance change
+> is authorized by this pointer. The records below retain their historical scope.
+> Scorecard work remains with its separate session.
+
 > **Continuação atual — 2026-10-18:** R-0033 integrada por PR #191, fechada/selada
 > PC-0021. R-0025 retomada de `orchestra/rait-web-wiring` com A-C3-01, main
 > conciliada e admissibilidade integrada por PR #193 (e68266a0); pós-merge parcial,

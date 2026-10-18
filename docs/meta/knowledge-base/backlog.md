@@ -1,5 +1,11 @@
 # Research backlog (steering queue)
 
+> **Replanning review, 2026-10-18:** [completion-plan proposal](../../../COMPLETION-PLAN.md) reconciles main `e536e545`,
+> preserved branches and source decisions into one proposed remaining-work plan.
+> It is pending Owner review; no implementation, lifecycle or acceptance change
+> is authorized by this pointer. The records below retain their historical scope.
+> Scorecard work remains with its separate session.
+
 ## Reconciliação em 2026-10-18 — fila de execução atual
 
 **Autoridade:** Architect; reconciliação solicitada pelo Owner nesta sessão. Esta seção
