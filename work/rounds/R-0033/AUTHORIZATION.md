@@ -131,3 +131,28 @@ Continuação em worktree isolada
 revisão de entrega pela outra família (Claude) está planejada, sem veredito ainda.
 As famílias, versões e limitações de janela anteriormente registradas são história
 das execuções de 2026-10-15, preservadas integralmente.
+
+## Adenda B4 — merge, evidência, auditoria e fechamento (Owner, 2026-10-18)
+
+Fonte: mensagem expressa do Owner na sessão de continuação; texto literal:
+
+> Merge PR #191 now that all required checks are green, then complete R-0033’s post-merge evidence, audit, and closure steps.
+
+Autoriza o merge do PR #191 com checks obrigatórios verdes e os passos pós-merge
+para evidência, auditoria e fechamento da R-0033, incluindo os verbos de close/seal
+aplicáveis. Supera o limite histórico de B3 para esses efeitos. Não amplia escopo
+runtime, decisões de produto, papéis ou campanha; não autoriza alterar cadeias à mão.
+
+Merge informado e confirmado pelo maestro: `b4d4d932bb49c58a5df20090a4d49d433a3c0599`.
+Cinco checks verdes do candidato `2554ff83fe1e3acb3b1e0e601a6f8750d61cbae7`.
+Auditoria exata do merge concluída pelo verbo `audit observe`: `EV-18e9b5c6a93d228a`.
+O ZIP publicado em <https://github.com/user-attachments/files/33632020/preview-R-0033.zip>
+foi verificado (693124 bytes, 83 entradas, SHA256
+`db39717beb8c75e3e4e523bbbbbf5e7f9b930e2a269685517980e525f075672f`).
+
+Vínculos de decisão para o insumo de fechamento: **D-1** = abertura autorizada de
+2026-10-15 e B1/B2/B3; **D-2** = juízo Architect de fechamento do escopo entregue,
+ancorado nesta autorização B4, nos gates/review e na observação exata do merge.
+`closure.json` preparado nesta etapa é insumo do verbo, não recibo de sua execução:
+DEVAI atribui PC/data e produz o registro canônico. Close/seal só serão declarados
+executados após os respectivos recibos; nenhuma saída de runtime é fabricada.
