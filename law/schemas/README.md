@@ -3,7 +3,7 @@
 **Authority:** Architect (Constitution Article 6).
 
 This directory contains the byte-identical JSON Schema roster shipped by DEVAI
-1.5.6. [`manifest.json`](./manifest.json) records that package version and the
+2.2.0. [`manifest.json`](./manifest.json) records that package version and the
 SHA-256 digest for each copied schema.
 
 Domain schemas remain in the published framework corpus. See

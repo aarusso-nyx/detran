@@ -1,5 +1,12 @@
 # Campanha C-0002: consolidação pós-R-0016
 
+> **Estado reconciliado em 2026-10-18:** campanha parcialmente entregue: R-0017/18/19/21
+> fechadas; R-0020 aberta com checkpoint e RGR; R-0022 parada. R-0023 e R-0025…0032
+> têm preparações/entregas preservadas em branches, R-0024 continua proposta.
+> “Nenhuma rodada foi aberta” abaixo é o status da revisão 2, não o estado atual.
+> A-C2-16/C-0003 §4 governa a nova ordem de execução. Ver
+> [reconciliação](../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Autoridade:** Architect (Constitution Article 6). Revisão 2 de 2026-09-26, com as decisões do Owner
 OD-C2-001…004 incorporadas (§7).
 **Status:** proposta com as decisões do Owner aplicadas. Nenhuma rodada foi aberta. O

@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "1.0.0",
+  "from": "1.6.0",
+  "to": "2.2.0",
+  "upgraded_at": "2026-10-08T16:45:25.896Z",
+  "constitution": {
+    "from": "1.0.1",
+    "to": "1.0.2"
+  },
+  "migrations": [
+    "MIG-1.7.0-owned-key-retirement",
+    "MIG-1.7.0-scorecard-na-f4-t5",
+    "MIG-1.7.0-forbidden-actions-maintenance-exemption",
+    "MIG-1.7.0-subprocess-effects-read-templates",
+    "MIG-1.7.0-repository-kind-from-receipt",
+    "MIG-1.8.0-constitution-1-0-2",
+    "MIG-1.8.0-adopter-authority-block",
+    "MIG-1.9.0-thresholds-soft-gate",
+    "MIG-1.9.0-proof-anchor-baseline",
+    "MIG-1.9.0-subprocess-effects-sensing-templates",
+    "MIG-2.0.0-experimental-agent-execution",
+    "MIG-2.0.0-campaign-actions",
+    "MIG-2.0.0-init-upgrade",
+    "MIG-2.0.0-subprocess-effects-common-dir",
+    "MIG-2.0.0-trusted-verifier-pin",
+    "MIG-2.1.0-post-merge-local-state"
+  ],
+  "retired_keys": [],
+  "changed_files": [
+    {
+      "path": ".devai/config/project.json",
+      "operation": "update",
+      "segment": "adopter-policy",
+      "sha256": "db305c4f6e114b1cd7ba7547f8611c66c031bef329c2796217ea1b806532ea5d"
+    },
+    {
+      "path": ".devai/config/thresholds.json",
+      "operation": "update",
+      "segment": "adopter-policy",
+      "sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4"
+    },
+    {
+      "path": ".devai/config/scorecard-na.json",
+      "operation": "update",
+      "segment": "adopter-policy",
+      "sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2"
+    },
+    {
+      "path": ".devai/config/adopter-policy-binding.json",
+      "operation": "update",
+      "segment": "adopter-policy",
+      "sha256": "2ceac24b92f951a56e531ff0078595d1e52945b0a838fbd5d345ddb9eb911bf8"
+    },
+    {
+      "path": ".devai/config/forbidden-actions.json",
+      "operation": "update",
+      "segment": "operational-law",
+      "sha256": "1b7dbdda65108802ebfb86344ded1f34c73ee737c00544b3e7b1a2c2922f07db"
+    },
+    {
+      "path": ".devai/config/subprocess-effects.json",
+      "operation": "update",
+      "segment": "subprocess-effects",
+      "sha256": "2a052d320f5f86dc4a0b062b44322e5c561301794746b7544a1317aedbb7ffe2"
+    },
+    {
+      "path": ".devai/config/authority-policy.json",
+      "operation": "update",
+      "segment": "authority",
+      "sha256": "1b15204ac924c5fac16deaa766d6524409d7a50f9ae636adeec62abcf10df1cf"
+    },
+    {
+      "path": ".devai/pin/constitution.md",
+      "operation": "update",
+      "segment": "constitution",
+      "sha256": "d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d"
+    },
+    {
+      "path": ".devai/constitution.md",
+      "operation": "update",
+      "segment": "constitution",
+      "sha256": "64d2b3b7ae483cec712f348cb2b9bc3af914accd309d784ba34974b2504c3aed"
+    },
+    {
+      "path": ".github/workflows/devai-local-rc-verify.yml",
+      "operation": "update",
+      "segment": "harness-ci",
+      "sha256": "96fb92acd062b840575cc51ab3673fcabf52607be7e7f1cdf3eab4b2f80ba5fb"
+    }
+  ],
+  "stale_version_stamps": [
+    {
+      "path": ".devai/constitution.md",
+      "field": "generated-by",
+      "version": "1.4.5",
+      "refreshed": true
+    },
+    {
+      "path": ".devai/config/project.json",
+      "field": "devai_version",
+      "version": "1.6.0",
+      "refreshed": true
+    }
+  ],
+  "obligations": [
+    {
+      "change": "MIG-1.7.0-repository-kind-from-receipt",
+      "check": "adopter-policy-receipt",
+      "status": "satisfied"
+    },
+    {
+      "change": "MIG-1.8.0-constitution-1-0-2",
+      "check": "constitution-version",
+      "status": "satisfied-by-upgrade"
+    },
+    {
+      "change": "MIG-1.9.0-thresholds-soft-gate",
+      "check": "thresholds-soft-gate",
+      "status": "satisfied-by-upgrade"
+    },
+    {
+      "change": "MIG-1.9.0-proof-anchor-baseline",
+      "check": "proof-anchor-baseline",
+      "status": "satisfied"
+    }
+  ],
+  "postchecks": [
+    {
+      "name": "policy-materialization-current",
+      "ok": true
+    },
+    {
+      "name": "authority-enforcement",
+      "ok": true
+    },
+    {
+      "name": "constitution-binding",
+      "ok": true
+    }
+  ]
+}

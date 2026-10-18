@@ -1,5 +1,12 @@
 # Ondas, frentes e rodadas
 
+> **Leitura atual — 2026-10-18:** o plano de ondas e suas métricas abaixo são
+> históricos. Para main `06b4a584` e os checkpoints remotos preservados, consultar
+> [rounds](../../../../work/rounds/README.md) e a
+> [fila reconciliada](../../knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+> C-0003 §4/A-C2-16 substitui a ordem anterior para jornadas/costuras; nenhuma
+> regra de aceitação, lock ou decisão do Owner é dispensada por esta nota.
+
 **Autoridade:** Architect. Derivado dos build packs e de `docs/meta/knowledge-base/decision-closure-plan.md`.
 Estado em 2026-09-14: WP-0 e WP-T0 mesclados em `main` (PRs #28 e #29).
 

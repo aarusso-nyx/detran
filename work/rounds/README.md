@@ -2,12 +2,23 @@
 
 **Authority:** Architect (Constitution Article 6).
 
-Governed rounds of this repository (DEVAI 1.5.6). One round per front of the implementation
+Governed rounds of this repository (DEVAI 2.2.0). One round per front of the implementation
 backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022) or of a campaign. Evidence lives in
 `record/proofs/chain.json` (machine-only); this folder holds the human-readable working papers.
 `pnpm verify:state-index` checks this table against `record/proofs/compliance/closures/PC-*.json`:
 a closed round names its closure, and every closure has its round here. R-0001 and R-0002 predate
 the method (no closure; R-0002 has no folder).
+
+## Estado de main e checkpoints preservados (2026-10-18)
+
+Base conferida: `main` = `06b4a584`; heads remotos conferidos na mesma data.
+Esta tabela separa fechamento formal de trabalho iniciado fora de main. `aberta`
+usa o vocabulário do gate: a rodada começou e não fechou; pode estar em checkpoint,
+sem execução ativa, aceitação ou merge. O escopo distingue esses checkpoints. Autorizações e
+TASKs ainda ausentes daqui são consultáveis no head do branch, sem copiá-las para a
+store histórica. A [reconciliação do backlog](../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual)
+lista heads, tarefas, entregas, decisões e pendências por frente. PCs, provas e TASKs
+históricos não foram alterados para corrigir a projeção de status.
 
 ## Campanhas
 
@@ -17,7 +28,7 @@ the method (no closure; R-0002 has no folder).
 - **C-0003** — product first (preview → vertical journeys → platform seams → hardening),
   R-0033…R-0035 plus the C-0002 rounds re-sequenced by A-C2-16
   (`work/campaigns/C-0003-produto-primeiro.md` §4). Proposed 2026-10-14 after the Owner stopped
-  R-0022.
+  R-0022; R-0033 subsequently authorized and checkpointed on the preserved preview branch.
 
 | Rodada | Frente / escopo                                                                                                                                      | Estado            | PRs de merge            | PC      | Maestro                            |
 | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------- | ------- | ---------------------------------- |
@@ -40,20 +51,20 @@ the method (no closure; R-0002 has no folder).
 | R-0017 | `local-stack` — ação 4                                                                                                                               | fechada           | #133, #143, #144        | PC-0018 | Sol 6                              |
 | R-0018 | `index-state` — ação 3                                                                                                                               | fechada           | #128, #129, #130        | PC-0020 | Opus 5.5                           |
 | R-0019 | `law-corpus` — ação 2                                                                                                                                | fechada           | #132, #137, #139        | PC-0016 | Sol 6                              |
-| R-0020 | `devai-sensors` — ação 5                                                                                                                             | aberta            | #150, #155              | —       | Codex Sol 6                        |
+| R-0020 | `devai-sensors` — ação 5; checkpoint em branch                                                                                                       | aberta            | #150, #155              | —       | Codex Sol 6                        |
 | S-1.5  | _repositório STYNX_ — release STYNX 1.5.0 (7b/7c)                                                                                                    | proposta (C-0002) | —                       | —       | governança do STYNX                |
 | R-0021 | `stynx-canonical` — ação 7a                                                                                                                          | fechada           | #149, #151, #153, #154  | PC-0019 | Sol 6                              |
 | R-0022 | `stynx-sse-tenancy` — ação 7c; parada 2026-10-14 no checkpoint `codex/detran-r22-adoption-160` `c22ea63a`, sem PR (A-C2-16)                          | parada            | —                       | —       | Opus 5.5                           |
-| R-0023 | `authz-unification` — ação 7d                                                                                                                        | proposta (C-0002) | —                       | —       | Sol 6                              |
+| R-0023 | `authz-unification` — ação 7d; checkpoint em branch                                                                                                  | aberta            | —                       | —       | Sol 6                              |
 | R-0024 | `stynx-dedup` — ação 7b                                                                                                                              | proposta (C-0002) | —                       | —       | Opus 5.5                           |
-| R-0025 | `rait-web-wiring` — ação 6                                                                                                                           | proposta (C-0002) | —                       | —       | Sol 6                              |
-| R-0026 | `dashboard-wiring` — ação 6                                                                                                                          | proposta (C-0002) | —                       | —       | Opus 5.5                           |
-| R-0027 | `portal-delegations` — ação 6                                                                                                                        | proposta (C-0002) | —                       | —       | Sol 6                              |
-| R-0028 | `boat-wiring` — ação 6                                                                                                                               | proposta (C-0002) | —                       | —       | Opus 5.5                           |
-| R-0029 | `teat-web-wiring` — ação 6                                                                                                                           | proposta (C-0002) | —                       | —       | Sol 6                              |
-| R-0030 | `user-docs` — ação 1                                                                                                                                 | proposta (C-0002) | —                       | —       | Opus 5.5                           |
-| R-0031 | `pec-web` — ação 8                                                                                                                                   | proposta (C-0002) | —                       | —       | Sol 6                              |
-| R-0032 | `portal-pec` — ação 8                                                                                                                                | proposta (C-0002) | —                       | —       | Opus 5.5                           |
+| R-0025 | `rait-web-wiring` — ação 6; checkpoint em branch                                                                                                     | aberta            | —                       | —       | Sol 6                              |
+| R-0026 | `dashboard-wiring` — ação 6; checkpoint em branch                                                                                                    | aberta            | —                       | —       | Opus 5.5                           |
+| R-0027 | `portal-delegations` — ação 6; checkpoint em branch                                                                                                  | aberta            | —                       | —       | Sol 6                              |
+| R-0028 | `boat-wiring` — ação 6; checkpoint em branch                                                                                                         | aberta            | —                       | —       | Opus 5.5                           |
+| R-0029 | `teat-web-wiring` — ação 6; checkpoint em branch                                                                                                     | aberta            | —                       | —       | Sol 6                              |
+| R-0030 | `user-docs` — ação 1; checkpoint em branch                                                                                                           | aberta            | —                       | —       | Opus 5.5                           |
+| R-0031 | `pec-web` — ação 8; checkpoint em branch                                                                                                             | aberta            | —                       | —       | Sol 6                              |
+| R-0032 | `portal-pec` — ação 8; checkpoint em branch                                                                                                          | aberta            | —                       | —       | Opus 5.5                           |
 | R-0033 | `frontend-preview` — C-0003 fase P; M1 e M2 atingidos (JW-01 do `rait-web`), janela 3: `portal-web` e sequência final; aguarda PR (fixture: PR #184) | aberta            | —                       | —       | Fable 5.1 (desvio; reviewer Sol 6) |
 | R-0034 | `platform-seams` — C-0003 fase S (salvamento da R-0022)                                                                                              | proposta (C-0003) | —                       | —       | Sol 6                              |
 | R-0035 | `hardening-certification` — C-0003 fase H                                                                                                            | proposta (C-0003) | —                       | —       | Opus 5.5                           |

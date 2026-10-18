@@ -1,9 +1,10 @@
 # Manual — Transcriber-docs
 
-Papel: **Architect** para tudo o que vive em `docs/` (fichas, catálogos, arquitetura, knowledge base — a
-Constituição reserva `docs/` ao Architect; ajuste R-0006, delivery-review) e **Engineer** para contratos de
-comando em código. O Owner só fornece decisões de negócio; o worker declara **Architect (transcrição)**.
-Transcreve definições já fechadas em fichas, contratos e catálogos; não decide nada.
+Papel: **Architect (transcrição)**, Artigo 7; autoridade por caminho no Artigo 6.
+Transcreve definições já fechadas em fichas, contratos e catálogos documentais; não decide
+produto nem escreve runtime/testes. Alterações de código são entregas Engineer em sessão
+própria; testes são Inspector. A Constituição pinada e `AGENTS.md` prevalecem sobre
+permissões históricas deste manual. O Owner mantém a autoridade de negócio.
 
 ## Leitura obrigatória
 

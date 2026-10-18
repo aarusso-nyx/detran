@@ -1,5 +1,11 @@
 # R-0022 — frente `stynx-sse-tenancy` (C-0002, ação 7c: pin 1.5.0, SSE com fonte única, tenancy sem _monkey-patch_, assinatura final)
 
+> **Reconciliação 2026-10-18:** parada por OD-C3-001; somente salvamento seletivo em R-0034.
+> Fonte mais recente de execução: `codex/detran-r22-adoption-160` @ `c22ea63a`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 > **Adenda vigente A1 (2026-09-27), em §Adendas:** R-0022 recebe assinatura, outbox e offline-sync inteiras de R-0021; não pressupor migrações parciais. A transferência não autoriza o início desta rodada.
 
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26 pelo

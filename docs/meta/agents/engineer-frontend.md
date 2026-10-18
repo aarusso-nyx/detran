@@ -1,6 +1,6 @@
 # Manual — Engineer-frontend
 
-Papel: **Engineer** (Art. 6). Constrói `apps/rait/web` sobre `@detran/ui` e STYNX 1.3.1 (Angular
+Papel: **Engineer** (Art. 7; autoridade por caminho: Art. 6). Constrói `apps/rait/web` sobre `@detran/ui` e STYNX pinado em `tools/stynx-version.json` (1.5.3 neste refresh; Angular
 22), exatamente como a especificação define.
 
 ## Leitura obrigatória

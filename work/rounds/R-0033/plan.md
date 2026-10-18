@@ -1,5 +1,11 @@
 # R-0033 — frente `frontend-preview` (fase P da C-0003 — prévia honesta de frontend baseada em fixtures)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `claude/frontend-preview-5281e3` @ `aca40880`, caminhos desta rodada
+> lidos nesse head. O status autorizado e a execução histórica abaixo vêm desse checkpoint;
+> a reconciliação de main permanece referência para integração, sem certificar fechamento.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **ativa — autorizada pelo Owner em 2026-10-15** (`AUTHORIZATION.md`: texto literal
 "R-0003 authorized. proceed ith ir work while wait for ci", lido como R-0033). Planejada em
 2026-10-14 pelo Architect (`work/campaigns/C-0003-produto-primeiro.md` §4, fase P). **Execução
