@@ -3,6 +3,7 @@ import { DetranError } from '@detran/shared';
 import {
   RaitCaseCommandService,
   type CommandResult,
+  type AuthenticatedPrincipal,
 } from './rait-case-command.service.js';
 
 /** Canonical POST boundary; the parent-case transaction owns context, version and replay. */
@@ -13,6 +14,7 @@ export class RaitAdmissibilityCommandService {
   execute(input: {
     payload: Record<string, unknown>;
     headers: Record<string, string>;
+    principal?: AuthenticatedPrincipal;
   }): Promise<CommandResult> {
     if (
       !input.payload ||
@@ -28,6 +30,7 @@ export class RaitAdmissibilityCommandService {
     return this.cases.execute({
       command: 'save-admissibility',
       targetId: input.payload.case_id,
+      principal: input.principal,
       payload: input.payload,
       headers: input.headers,
     });

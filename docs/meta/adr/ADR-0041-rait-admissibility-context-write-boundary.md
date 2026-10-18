@@ -65,3 +65,27 @@ preview commands remain intact; no new backend endpoint or authorization predica
 No synthetic ETag is needed for the preview membership check. The method is a READ
 in the method inventory, not a 66th command. Inspector proves both paths and the
 unknown-ID/role/network negatives before Engineer implementation.
+
+## Addendum — observed-version attempt identity and authenticated audit role
+
+For the four activated admissibility operations only, a request attempt includes
+the observed If-Match version. Client keys use the existing canonical hash helper
+on `{body,ifMatch}`; server fingerprints include received If-Match and the
+request-context actor alongside command, target and canonical payload. Exact
+original retries replay once; reused keys with another version/actor are 409.
+Subsequent saves and A→B→A reversions at current versions must persist rather
+than replay stale responses. Other command fingerprints and stored records stay
+unchanged. This repairs attempt identity, not a domain transition or deadline.
+
+Triage/save audit roles come from the authenticated principal already supplied
+by the request pipeline, validated against RequestContext actor/tenant and the
+existing policy helper without narrowing permission or global-admin paths. The
+existing protocol principal-forwarding pattern
+is the source; no role is accepted from browser payloads. Secretary-only requests
+record secretary, and multi-role attribution uses existing tuple order. Role attribution prefers the real canonical route role, then an actual role
+individually authorized by the existing helper. Permission-only authorization
+remains valid: record an actual principal role or NULL when no role exists, with
+audit details declaring permission-based authorization. DDL03/12 support nullable
+actor_role. Missing role intersection never introduces a new denial. No
+hardcoded analyst fallback, new grant or policy bypass is introduced. Inspector
+proves retry/re-save/revert and audit attribution before Engineer correction.

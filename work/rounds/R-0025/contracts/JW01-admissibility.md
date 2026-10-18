@@ -119,9 +119,9 @@ AdmitInput)` e `reject(caseId: string, body: RejectInput)` retornam
   `Promise<CommandOutcome<RaitCase>>`. Facade obtém ETag do caso por caseId ou
   body.case_id e passa ao cliente; página coordena os três saves sequenciais.
 - **Chaves idempotentes fixas:** cliente usa a fórmula já canônica
-  `idempotencyKey(act,target,body)`: acts triage/admit/reject com target caseId;
+  `idempotencyKey(act,target,{body,ifMatch})`: acts triage/admit/reject com target caseId;
   act `admissibility` com target `${body.case_id}:${body.criterion}`. A string é
-  enviada em Idempotency-Key; não gerar UUID novo a cada retry idêntico. Repetição
+  enviada em Idempotency-Key, incluindo o If-Match HTTP observado; não gerar UUID novo a cada retry idêntico. Repetição
   de payload divergente com chave explicitamente reutilizada continua 409 no server.
 - **M8/inventário:** triage → `rait-case:triage`; saveAdmissibility →
   `rait-admissibility:create`; admit/reject conservam `rait-case:admit`/`rait-case:reject`.
@@ -207,3 +207,86 @@ zero fora de assets. `verifyCaseAccess` é classificado explicitamente como READ
 no inventário de métodos; não incrementa RAIT_COMMANDS nem exclui um comando para
 passar contagem. M8 permanece 65 e os quatro comandos ativados continuam bloqueados
 nos overrides preview. Só após sensores aceitos Engineer implementa a separação.
+
+## Correção de entrega — versão na identidade de tentativa e papel da auditoria
+
+Delivery-review ciclo1 identificou replay incorreto: usar só ato/alvo/corpo faz um
+novo save de conteúdo igual recuperar ETag antigo; A→B→A pode aparentar sucesso
+sem persistir A. Esta correção prevalece sobre a fórmula anterior sem If-Match.
+Não altera bodies OpenAPI, nomes de métodos, grants ou estados.
+
+### Quatro operações, mesma tentativa versus nova versão
+
+Aplica-se SOMENTE a triage, save-admissibility, admit e non-admission:
+
+- Cliente usa a função canônica existente com `idempotencyKey(act,target,
+{body,ifMatch})`, preservando os acts/targets já fixados. `ifMatch` é exatamente
+  o ETag usado no header If-Match dessa requisição, não a versão calculada nem
+  a resposta posterior. Mesmo corpo/ETag na repetição da mesma tentativa produz
+  chave estável. Depois de sucesso e novo ETag, novo save (inclusive mesmo corpo
+  ou retorno A→B→A) é outra tentativa e recebe outra chave.
+- Server fingerprint desses quatro comandos contém command, targetId, payload
+  canônico, o If-Match recebido e actorId do RequestContext autenticado. Tenant
+  continua a chave de partição do registro de idempotência. Não obter ator do body.
+- Mesma chave + mesmo payload/alvo/If-Match/ator devolve a resposta histórica
+  daquela tentativa, sem segunda escrita/evento/audit. A comparação de fingerprint
+  é anterior ao replay; mesma chave com If-Match ou ator divergente produz
+  `RAIT.IDEMPOTENCY_REPLAY` 409, nunca replay de outra versão/ator.
+- Novo save com a versão atual deve realmente persistir e atualizar versão/ETag;
+  não aceitar o replay anterior como prova de nova mutação. Um retry exato de uma
+  tentativa antiga pode devolver seu ETag histórico, não é recibo do estado atual.
+- Fingerprints e chaves de todos os outros comandos permanecem inalterados.
+  Não reescrever registros históricos nem ampliar esta correção ao protocolo.
+
+### Auditoria de triage e save-admissibility
+
+RequestContext atual fornece actorId/tenantId/requestId, não o papel autorizador.
+O padrão existente de `protocol` já recebe o principal autenticado do request e
+confere sua identidade/tenant com o contexto. Reusar essa fonte para triage/save:
+
+- Controllers das duas operações recebem `@Req()` com principal autenticado
+  existente, sem role/actor no body ou header customizado. A assinatura interna
+  de `CommandInput` admite `principal?: AuthenticatedPrincipal`; triage e
+  save-admissibility exigem esse valor, validam principal.id==context.actorId e
+  principal.tenants contendo context.tenantId antes de replay ou mutação.
+  Os demais comandos mantêm a compatibilidade anterior de input.
+- `RaitAdmissibilityCommandService.execute({payload,headers,principal})` encaminha
+  o principal ao comando `save-admissibility`; o controller de triage encaminha
+  para execute. No controller CASE, o helper run pode receber principal opcional
+  para esse encaminhamento, sem mudar bodies/assinatura HTTP das outras ações.
+- Não alterar a decisão de grant: usar `isDetranActionAllowed` atual com o
+  principal autenticado completo (roles e permissions) e resource/action da rota.
+  Essas duas chaves não estão no mapa strict; o helper admite permissions `*`,
+  chave exata ou resource wildcard e fallback GLOBAL_ADMIN_ROLES antes da matriz.
+  Todos esses caminhos atuais continuam válidos, sem nova negação por só aceitar
+  analyst/secretary e sem novo grant por analogia.
+- Atribuição de audit, distinta de autorização: primeiro papel do principal que
+  também pertença à tupla canônica da rota, pela ordem da tupla. Caso contrário,
+  primeiro papel real do principal que, isoladamente e sem permissões, seja
+  aceito pelo helper atual (inclui o fallback existente ADMIN, GESTOR_DETRAN,
+  SUPORTE e technical-admin). Não copiar essa lista como política nova: a
+  avaliação do helper é a fonte. Secretaria isolada registra secretary, nunca
+  analyst hardcoded; múltiplos papéis têm escolha determinística.
+- Se a autorização vier apenas de permission e nenhum papel isolado a explique,
+  preservar o grant. Registrar um papel realmente presente no principal (primeiro
+  da lista autenticada) ou NULL quando a lista for vazia; registrar nos detalhes
+  da auditoria que a origem de autorização foi permission do principal, sem
+  afirmar que aquele papel sozinho concedeu acesso. `audit.actor_role` e o
+  parâmetro `audit.write p_role text` são nullable (DDL03/12), portanto NULL é
+  ausência explícita, não role inventada nem motivo para negar grant válido.
+- Identidade/tenant incoerentes ou `isDetranActionAllowed` falso continuam
+  `RAIT.FORBIDDEN_ACTION` antes de replay/escrita. Ausência de interseção de
+  role, por si só, NÃO cria nova negação. Nenhum papel/ator vem do body/header
+  do browser; perfis locais continuam sem prova JWT criptográfica.
+
+### Sensores antes da correção Engineer
+
+Inspector prova chave estável da mesma tentativa e chave diferente com novo ETag;
+três critérios salvos, resave igual após versões intermediárias e A→B→A persistem
+o estado esperado. HTTP/DB prova mesma chave+novo If-Match 409, ator divergente
+409, retry original positivo com uma só escrita/audit/evento; secretaria registra
+role secretary nas duas operações, não analyst. Admin/fallback existente e
+permission-only (inclusive roles vazias com actor_role NULL) não sofrem nova
+negação. Identity mismatch falha sem efeito.
+Client/facade/page e unit/integration/e2e são sensores separados; nenhum teste ou
+checker é afrouxado. Só depois de RED aceito Engineer muda os quatro caminhos.

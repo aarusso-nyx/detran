@@ -245,7 +245,7 @@ export class CaseClient {
       body,
       caseId,
       ifMatch,
-      await idempotencyKey('triage', caseId, body),
+      await idempotencyKey('triage', caseId, { body, ifMatch }),
     );
   }
 
@@ -261,7 +261,7 @@ export class CaseClient {
       await idempotencyKey(
         'admissibility',
         `${body.case_id}:${body.criterion}`,
-        body,
+        { body, ifMatch },
       ),
     );
   }
@@ -277,7 +277,7 @@ export class CaseClient {
       body,
       caseId,
       ifMatch,
-      await idempotencyKey('admit', caseId, body),
+      await idempotencyKey('admit', caseId, { body, ifMatch }),
     );
   }
 
@@ -292,7 +292,7 @@ export class CaseClient {
       body,
       caseId,
       ifMatch,
-      await idempotencyKey('reject', caseId, body),
+      await idempotencyKey('reject', caseId, { body, ifMatch }),
     );
   }
 

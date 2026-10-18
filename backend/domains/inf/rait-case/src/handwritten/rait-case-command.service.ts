@@ -14,7 +14,14 @@ import {
   type LocalDate,
   type TimerCode,
 } from '@detran/inf-deadlines';
-import { DetranError, withTenantContext } from '@detran/shared';
+import {
+  DetranError,
+  withTenantContext,
+  canonicalRoles,
+  DETRAN_POLICY_MATRIX,
+  isDetranActionAllowed,
+  policyKey,
+} from '@detran/shared';
 
 import { RaitDocumentTrustVerifier } from './rait-document-trust.verifier.js';
 import {
@@ -27,15 +34,17 @@ export interface CommandInput {
   targetId: string;
   payload: Record<string, unknown>;
   headers: Record<string, string>;
+  principal?: AuthenticatedPrincipal;
 }
 export interface CommandResult {
   data: Record<string, unknown>;
   events: Record<string, unknown>[];
   etag: string;
 }
-type AuthenticatedPrincipal = {
+export type AuthenticatedPrincipal = {
   id: string;
   roles: readonly string[];
+  permissions?: readonly string[];
   tenants: readonly string[];
 };
 type Tx = Pick<Transaction, 'query'>;
@@ -171,8 +180,6 @@ const RULES: Record<string, Rule> = {
   },
 };
 const COMMAND_AUDIT_ROLES: Record<string, string> = {
-  triage: 'rait-analyst',
-  'save-admissibility': 'rait-analyst',
   admit: 'rait-analyst',
   'non-admission': 'rait-analyst',
   remit: 'rait-secretary',
@@ -210,12 +217,17 @@ const canonical = (value: unknown): unknown => {
     );
   return value;
 };
-const fingerprint = (input: CommandInput, actorId?: string) =>
+const fingerprint = (
+  input: CommandInput,
+  attempt?: { actorId: string; ifMatch: string },
+) =>
   createHash('sha256')
     .update(
       JSON.stringify({
         command: input.command,
-        ...(actorId ? { actorId } : {}),
+        ...(attempt
+          ? { actorId: attempt.actorId, ifMatch: attempt.ifMatch }
+          : {}),
         targetId: input.targetId,
         payload: canonical(input.payload),
       }),
@@ -755,15 +767,22 @@ export class RaitCaseCommandService {
       fail('RAIT.IF_MATCH_REQUIRED', 428);
     const key = input.headers['Idempotency-Key'];
     if (!key) fail('RAIT.VALIDATION_FAILED', 400);
-    const context = {
-      ...this.context(),
-      role: COMMAND_AUDIT_ROLES[input.command] ?? '',
-    };
+    const requestContext = this.context();
+    const attribution = ['triage', 'save-admissibility'].includes(input.command)
+      ? this.admissibilityAuditContext(
+          input.command,
+          input.principal,
+          requestContext,
+        )
+      : { role: COMMAND_AUDIT_ROLES[input.command] ?? '', auditDetails: {} };
+    const context = { ...requestContext, ...attribution };
     return this.transaction(async (tx) => {
       const digest = fingerprint(
         input,
-        ['triage', 'save-admissibility'].includes(input.command)
-          ? context.actorId
+        ['triage', 'save-admissibility', 'admit', 'non-admission'].includes(
+          input.command,
+        )
+          ? { actorId: context.actorId, ifMatch: input.headers['If-Match']! }
           : undefined,
       );
       await tx.query(
@@ -929,7 +948,7 @@ export class RaitCaseCommandService {
           rule.audit,
           rule.entity,
           admissibility?.id ?? current.id,
-          JSON.stringify({ command: input.command }),
+          JSON.stringify({ command: input.command, ...context.auditDetails }),
         ],
       );
       const result = {
@@ -958,6 +977,53 @@ export class RaitCaseCommandService {
       requestId: value.requestId,
     };
   }
+  /** Existing policy decides authorization; audit attribution never fabricates an authorizing role. */
+  private admissibilityAuditContext(
+    command: string,
+    principal: AuthenticatedPrincipal | undefined,
+    context: { tenantId: string; actorId: string; requestId?: string },
+  ): { role: string | null; auditDetails: Record<string, unknown> } {
+    const resource =
+      command === 'triage' ? 'inf:rait-case' : 'inf:rait-admissibility';
+    const action = command === 'triage' ? 'triage' : 'create';
+    if (
+      !principal ||
+      principal.id !== context.actorId ||
+      !principal.tenants.includes(context.tenantId)
+    )
+      return fail('RAIT.FORBIDDEN_ACTION', 403, {}, context.requestId);
+    const permissionPrincipal = {
+      roles: [...principal.roles],
+      permissions: [...(principal.permissions ?? [])],
+    };
+    if (!isDetranActionAllowed(permissionPrincipal, resource, action))
+      return fail('RAIT.FORBIDDEN_ACTION', 403, {}, context.requestId);
+    const roles = canonicalRoles(principal.roles);
+    const tuple = DETRAN_POLICY_MATRIX[policyKey(resource, action)] ?? [];
+    const canonicalRole = tuple.find((role) => roles.includes(role));
+    if (canonicalRole)
+      return {
+        role: canonicalRole,
+        auditDetails: { authorizationSource: 'role' },
+      };
+    const individualRole = principal.roles.find((role) =>
+      isDetranActionAllowed(
+        { roles: [role], permissions: [] },
+        resource,
+        action,
+      ),
+    );
+    if (individualRole)
+      return {
+        role: individualRole,
+        auditDetails: { authorizationSource: 'role' },
+      };
+    return {
+      role: principal.roles[0] ?? null,
+      auditDetails: { authorizationSource: 'permission', resource, action },
+    };
+  }
+
   private protocolContext(principal: AuthenticatedPrincipal | undefined) {
     const context = this.context();
     if (

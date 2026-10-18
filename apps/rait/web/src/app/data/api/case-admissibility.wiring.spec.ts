@@ -102,7 +102,10 @@ describe('TASK25 generated four-operation client', () => {
       expect(req.request.body).toEqual(op.body);
       expect(req.request.headers.get('If-Match')).toBe('"4"');
       expect(req.request.headers.get('Idempotency-Key')).toBe(
-        await idempotencyKey(op.act, op.target, op.body),
+        await idempotencyKey(op.act, op.target, {
+          body: op.body,
+          ifMatch: '"4"',
+        }),
       );
       expect(req.request.body).not.toHaveProperty('evaluated_by');
       expect(req.request.body).not.toHaveProperty('tenant_id');
@@ -162,5 +165,53 @@ describe('TASK25 generated four-operation client', () => {
       await pending;
     }
     expect(keys[0]).toBe(keys[1]);
+  });
+  for (const op of OPS) {
+    it(`${op.name}: a new observed version is a fresh attempt, exact original retry is stable`, async () => {
+      const { client, http } = setup();
+      const keys: string[] = [];
+      for (const match of ['"4"', '"4"', '"5"']) {
+        const pending = op.call(client, match);
+        const req = await vi.waitFor(() =>
+          http.expectOne(`/v1/inf/rait${op.path}`),
+        );
+        const key = req.request.headers.get('Idempotency-Key')!;
+        expect(key).toBe(
+          await idempotencyKey(op.act, op.target, {
+            body: op.body,
+            ifMatch: match,
+          }),
+        );
+        expect(req.request.headers.get('If-Match')).toBe(match);
+        expect(req.request.body).toEqual(op.body);
+        keys.push(key);
+        req.flush(
+          { data: op.body, events: [] },
+          { headers: { ETag: match === '"4"' ? '"5"' : '"6"' } },
+        );
+        await pending;
+      }
+      expect(keys[0]).toBe(keys[1]);
+      expect(keys[2]).not.toBe(keys[0]);
+    });
+  }
+  it('A→B→A under successive case versions never reuses the first attempt key', async () => {
+    const { client, http } = setup();
+    const keys: string[] = [];
+    for (const [index, verdict] of [true, false, true].entries()) {
+      const body = { ...SAVE, verdict };
+      const pending = client.saveAdmissibility(body, `"${index + 4}"`);
+      const req = await vi.waitFor(() =>
+        http.expectOne('/v1/inf/rait/admissibility'),
+      );
+      keys.push(req.request.headers.get('Idempotency-Key')!);
+      expect(req.request.body).toEqual(body);
+      req.flush(
+        { data: body, events: [] },
+        { headers: { ETag: `"${index + 5}"` } },
+      );
+      await pending;
+    }
+    expect(new Set(keys).size).toBe(3);
   });
 });

@@ -73,6 +73,7 @@ async function mount(
   const harness = await RouterTestingHarness.create();
   let current = { ...fixtureCase(CASE), state, version: 1 };
   let rows = state === 'PROTOCOLADO' ? [] : [timely];
+  const persistedHuman = new Map<string, typeof timely>();
   const readCounts = { caso: 0, admissibility: 0 };
   function reads() {
     for (const req of http.match((request) => request.method === 'GET')) {
@@ -116,6 +117,25 @@ async function mount(
       });
     },
     readCounts,
+    persist(
+      body: { criterion: string; verdict: boolean; reason?: string | null },
+      version: number,
+    ) {
+      current = { ...current, state: 'TRIAGEM_ADMISSIBILIDADE', version };
+      const source = raw.admissibility.find(
+        (entry: { criterion: string }) => entry.criterion === body.criterion,
+      );
+      const record = {
+        ...timely,
+        id: source.id,
+        criterion: body.criterion,
+        verdict: body.verdict,
+        reason: body.reason ?? null,
+      };
+      persistedHuman.set(body.criterion, record);
+      rows = [timely, ...persistedHuman.values()];
+      return record;
+    },
     update(version: number) {
       current = { ...current, state: 'TRIAGEM_ADMISSIBILIDADE', version };
       rows = [timely];
@@ -272,4 +292,62 @@ describe('TASK25 direct PROTOCOLADO admissibility UI', () => {
       { status: 422, statusText: 'Rejected' },
     );
   });
+});
+
+// Delivery review1: real page/facade/client sequencing through multiple observed versions.
+describe('review1 routed checklist resave and reversal', () => {
+  for (const [label, signatureEdits] of [
+    ['save all, edit one, save all', [true, false]],
+    ['A→B→A', [true, false, true]],
+  ] as const) {
+    it(`${label}: each save persists current values with a fresh attempt key and ETag`, async () => {
+      const view = await mount();
+      const keys: string[] = [];
+      let version = 1;
+      for (const signature of signatureEdits) {
+        fill(view.root);
+        const radio = view.root.querySelector<HTMLInputElement>(
+          `li[data-criterion="assinatura"] input[value="${signature}"]`,
+        )!;
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+        view.harness.detectChanges();
+        const before = { ...view.readCounts };
+        view.root
+          .querySelector<HTMLButtonElement>('[data-action="triage"]')!
+          .click();
+        for (const criterion of CRITERIA) {
+          const req = await vi.waitFor(() =>
+            view.http.expectOne('/v1/inf/rait/admissibility'),
+          );
+          expect(req.request.headers.get('If-Match')).toBe(`"${version}"`);
+          expect(req.request.body).toMatchObject({
+            case_id: CASE,
+            criterion,
+            verdict: criterion === 'assinatura' ? signature : true,
+          });
+          const key = req.request.headers.get('Idempotency-Key')!;
+          keys.push(key);
+          const data = view.persist(req.request.body, ++version);
+          req.flush(
+            { data, events: [] },
+            { headers: { ETag: `"${version}"` } },
+          );
+        }
+        await view.refreshed(version, before);
+        expect(
+          TestBed.inject(CaseFacade)
+            .admissibilidade.items()
+            .find((row) => row.criterion === 'assinatura')?.verdict,
+        ).toBe(signature);
+        view.http.expectNone((request) => request.method === 'POST');
+      }
+      expect(version).toBe(1 + 3 * signatureEdits.length);
+      expect(new Set(keys).size).toBe(keys.length);
+      expect(TestBed.inject(CaseFacade).caso.value()?.version).toBe(version);
+      // Each unchanged human criterion at a new parent version is also a new attempt.
+      expect(keys[0]).not.toBe(keys[3]);
+      if (signatureEdits.length === 3) expect(keys[1]).not.toBe(keys[7]);
+    });
+  }
 });

@@ -1,5 +1,14 @@
-import { Body, Controller, Headers, HttpCode, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  HttpCode,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { Action, Audit, NoIdempotent, Resource } from '@detran/shared';
+import type { AuthenticatedPrincipal } from './rait-case-command.service.js';
 import { RaitAdmissibilityCommandService } from './rait-admissibility-command.service.js';
 
 type Response = { setHeader(name: string, value: string): unknown };
@@ -23,10 +32,12 @@ export class RaitAdmissibilityCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request: { principal?: AuthenticatedPrincipal },
   ) {
     return this.service
       .execute({
         payload: body,
+        principal: request.principal,
         headers: { 'If-Match': match ?? '', 'Idempotency-Key': key ?? '' },
       })
       .then((result) => {

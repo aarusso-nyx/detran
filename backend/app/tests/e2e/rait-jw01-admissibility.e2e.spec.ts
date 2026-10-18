@@ -437,3 +437,151 @@ describe('TASK25 additional R01 state and isolation counterexamples', () => {
     }
   });
 });
+
+// Delivery review cycle1: an attempt is bound to the observed parent version.
+describe('review1 current-version persistence and actual audit attribution', () => {
+  it('saves all three, edits one, then A→B→A with fresh versions and persisted verdicts', async () => {
+    let match = (await start()).headers.etag;
+    for (const [batch, signature] of [true, false, true].entries()) {
+      for (const criterion of HUMAN_CRITERIA) {
+        const body = humanBody(
+          criterion,
+          criterion === 'assinatura' ? signature : true,
+        );
+        const response = await request(app.getHttpServer())
+          .post(savePath)
+          .set(
+            headers(
+              'rait-analyst',
+              match,
+              `r25-jw01-resave-${criterion}-${match}`,
+            ),
+          )
+          .send(body);
+        expect(response.status, JSON.stringify(response.body)).toBe(200);
+        expect(response.body.data).toMatchObject(body);
+        match = response.headers.etag;
+      }
+      expect(match).toBe(`"${5 + batch * 3}"`);
+      const persisted = await fixture.snapshot();
+      expect(persisted.caso.version).toBe(5 + batch * 3);
+      expect(
+        persisted.verdicts.filter((row) => row.criterion === 'assinatura'),
+      ).toMatchObject([{ verdict: signature }]);
+      expect(persisted.verdicts).toHaveLength(4);
+    }
+  });
+  for (const operation of ['triage', 'save', 'admit', 'reject'] as const) {
+    it(`${operation}: same key with changed If-Match is 409 without replaying stale success`, async () => {
+      const match =
+        operation === 'triage'
+          ? '"1"'
+          : operation === 'save'
+            ? (await start()).headers.etag
+            : await saveAll(
+                operation === 'reject'
+                  ? [true, false, true]
+                  : [true, true, true],
+              );
+      const path =
+        operation === 'triage'
+          ? triagePath()
+          : operation === 'save'
+            ? savePath
+            : `/v1/inf/rait/cases/${JW_CASE}/commands/${operation === 'admit' ? 'admit' : 'non-admission'}`;
+      const body =
+        operation === 'save'
+          ? humanBody('assinatura')
+          : operation === 'reject'
+            ? {
+                reason: 'sem_assinatura',
+                legalBasis: 'Art. 4º III — fundamento do operador.',
+              }
+            : {};
+      const key = `r25-jw01-version-collision-${operation}`;
+      const first = await request(app.getHttpServer())
+        .post(path)
+        .set(headers('rait-analyst', match, key))
+        .send(body);
+      expect(first.status, JSON.stringify(first.body)).toBe(200);
+      const before = await fixture.snapshot();
+      const originalRetry = await request(app.getHttpServer())
+        .post(path)
+        .set(headers('rait-analyst', match, key))
+        .send(body);
+      expect(originalRetry.status, JSON.stringify(originalRetry.body)).toBe(
+        200,
+      );
+      expect(originalRetry.body).toEqual(first.body);
+      expect(originalRetry.headers.etag).toBe(first.headers.etag);
+      expect(await fixture.snapshot()).toEqual(before);
+      const retry = await request(app.getHttpServer())
+        .post(path)
+        .set(headers('rait-analyst', first.headers.etag, key))
+        .send(body);
+      expect(retry.status, JSON.stringify(retry.body)).toBe(409);
+      expect(retry.body.code).toBe('RAIT.IDEMPOTENCY_REPLAY');
+      expect(await fixture.snapshot()).toEqual(before);
+    });
+  }
+  for (const operation of ['triage', 'save'] as const) {
+    it(`${operation}: same original key/version but another authorized actor conflicts`, async () => {
+      const match =
+        operation === 'triage' ? '"1"' : (await start()).headers.etag;
+      const path = operation === 'triage' ? triagePath() : savePath;
+      const body = operation === 'triage' ? {} : humanBody('assinatura');
+      const key = `r25-jw01-actor-collision-${operation}`;
+      const first = await request(app.getHttpServer())
+        .post(path)
+        .set(headers('rait-analyst', match, key))
+        .send(body);
+      expect(first.status).toBe(200);
+      const before = await fixture.snapshot();
+      const retry = await request(app.getHttpServer())
+        .post(path)
+        .set(headers('rait-secretary', match, key))
+        .send(body);
+      expect(retry.status).toBe(409);
+      expect(retry.body.code).toBe('RAIT.IDEMPOTENCY_REPLAY');
+      expect(await fixture.snapshot()).toEqual(before);
+    });
+  }
+  for (const [role, expectedRole] of [
+    ['rait-secretary', 'rait-secretary'],
+    ['technical-admin', 'technical-admin'],
+    ['technical-admin,rait-secretary', 'rait-secretary'],
+  ] as const) {
+    it(`${role}: triage and human save audit the actual authenticated role`, async () => {
+      const marker = await fixture.owner.query(
+        'select coalesce(max(event_id),0)::text as id from audit.events where tenant_id=$1',
+        [RAIT_TENANT],
+      );
+      const first = await request(app.getHttpServer())
+        .post(triagePath())
+        .set(headers(role))
+        .send({});
+      expect(first.status, JSON.stringify(first.body)).toBe(200);
+      const second = await request(app.getHttpServer())
+        .post(savePath)
+        .set(headers(role, first.headers.etag))
+        .send(humanBody('assinatura'));
+      expect(second.status, JSON.stringify(second.body)).toBe(200);
+      const audit = await fixture.owner.query(
+        `select actor_id,actor_role,action from audit.events where tenant_id=$1 and event_id>$2 order by event_id`,
+        [RAIT_TENANT, marker.rows[0].id],
+      );
+      expect(audit.rows).toEqual([
+        {
+          actor_id: role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR,
+          actor_role: expectedRole,
+          action: 'INF_RAIT_CASE_TRIAGE',
+        },
+        {
+          actor_id: role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR,
+          actor_role: expectedRole,
+          action: 'INF_RAIT_ADMISSIBILITY_CREATE',
+        },
+      ]);
+    });
+  }
+});

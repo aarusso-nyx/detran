@@ -55,10 +55,15 @@ export class RaitCaseCommandsController {
       });
   }
 
-  private run(command: string, [id, body, match, key, response]: Args) {
+  private run(
+    command: string,
+    [id, body, match, key, response]: Args,
+    principal?: AuthenticatedRequest['principal'],
+  ) {
     return this.service
       .execute({
         command,
+        ...(principal ? { principal } : {}),
         targetId: id,
         payload: body,
         headers: { 'If-Match': match ?? '', 'Idempotency-Key': key ?? '' },
@@ -83,8 +88,13 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request: AuthenticatedRequest,
   ) {
-    return this.run('triage', [id, body, match, key, response]);
+    return this.run(
+      'triage',
+      [id, body, match, key, response],
+      request.principal,
+    );
   }
   @Post('cases/:id/commands/admit')
   @HttpCode(200)
