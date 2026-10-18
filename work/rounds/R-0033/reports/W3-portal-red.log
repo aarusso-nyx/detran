@@ -1,0 +1,214 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+> vitest run --config vitest.config.ts "src/app/preview"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web
+
+ ❯ src/app/preview/preview-fixture-source.spec.ts (0 test)
+ ❯ src/app/preview/preview-coverage.spec.ts (0 test)
+ ❯ src/app/preview/preview-not-functional.spec.ts (0 test)
+ ❯ src/app/preview/preview-http-block.interceptor.spec.ts (0 test)
+ ❯ src/app/preview/preview-mark.spec.ts (0 test)
+ ❯ src/app/preview/preview-a11y.spec.ts (0 test)
+ ❯ src/app/preview/preview-production-gate.spec.ts (5 tests | 4 failed) 34ms
+     × preview bootstraps its own root/providers and index 3ms
+     × preview has independent Angular build and serve targets 3ms
+     × typechecks both entries 6ms
+     × adds only new allowed Portal preview i18n keys 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/preview/preview-a11y.spec.ts [ src/app/preview/preview-a11y.spec.ts ]
+Error: Failed to resolve import "./preview-root.component" from "src/app/preview/preview-a11y.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-a11y.spec.ts:7:37
+  5  |  import { readCatalog } from "../../testing/kb";
+  6  |  import { expectNoSeriousA11yViolations } from "../a11y/axe.spec-helper";
+  7  |  import { PreviewRootComponent } from "./preview-root.component";
+     |                                        ^
+  8  |  import { PREVIEW_SCREEN_STATES } from "./preview-state.service";
+  9  |  import { configurePreview, expectJourneyScenario, expectNoNetwork, JOURNEY, openScreen, setPreviewDocument } from "./...
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/app/preview/preview-coverage.spec.ts [ src/app/preview/preview-coverage.spec.ts ]
+Error: Failed to resolve import "./preview-state.service" from "src/app/preview/preview-coverage.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-coverage.spec.ts:9:38
+  7  |  import { ServiceCatalogFacade } from "../core/service-catalog.facade";
+  8  |  import { SESSION_FACADE_PRESETS } from "../../testing/session-facade.stub";
+  9  |  import { PREVIEW_SCREEN_STATES } from "./preview-state.service";
+     |                                         ^
+  10 |  import { concretePath, createPreviewHarness, expectJourneyScenario, expectNoNetwork, JOURNEY, openScreen, setPreviewD...
+  11 |  afterEach(() => {
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/app/preview/preview-fixture-source.spec.ts [ src/app/preview/preview-fixture-source.spec.ts ]
+Error: Failed to resolve import "./adapters/portal.client" from "src/app/preview/preview-fixture-source.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-fixture-source.spec.ts:12:36
+  10 |  import { PORTAL_ROUTE_MANIFEST } from "../app.route-manifest";
+  11 |  import { PortalClient } from "../data/portal.client";
+  12 |  import { PreviewPortalClient } from "./adapters/portal.client";
+     |                                       ^
+  13 |  import { classifyError } from "../core/error-boundary";
+  14 |  import { PreviewStateService } from "./preview-state.service";
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/app/preview/preview-http-block.interceptor.spec.ts [ src/app/preview/preview-http-block.interceptor.spec.ts ]
+Error: Failed to resolve import "./preview-http-block.interceptor" from "src/app/preview/preview-http-block.interceptor.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-http-block.interceptor.spec.ts:6:44
+  4  |  import { firstValueFrom, of } from "rxjs";
+  5  |  import { describe, expect, it, vi } from "vitest";
+  6  |  import { previewHttpBlockInterceptor } from "./preview-http-block.interceptor";
+     |                                               ^
+  7  |  import { configurePreview, expectNoNetwork, setPreviewDocument } from "./preview.spec-helper";
+  8  |  describe("C-02 — network boundary", () => {
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/app/preview/preview-mark.spec.ts [ src/app/preview/preview-mark.spec.ts ]
+Error: Failed to resolve import "./preview-mark" from "src/app/preview/preview-mark.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-mark.spec.ts:6:115
+  4  |  import { afterEach, describe, expect, it } from "vitest";
+  5  |  import { PORTAL_ROUTE_MANIFEST } from "../app.route-manifest";
+  6  |  ...VALUE, PREVIEW_MARK_KEY, PREVIEW_NOT_FUNCTIONAL_KEY } from "./preview-mark";
+     |                                                                 ^
+  7  |  import { PreviewRootComponent } from "./preview-root.component";
+  8  |  import { PREVIEW_SCREEN_STATES, PreviewStateService } from "./preview-state.service";
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/app/preview/preview-not-functional.spec.ts [ src/app/preview/preview-not-functional.spec.ts ]
+Error: Failed to resolve import "./preview-action-log" from "src/app/preview/preview-not-functional.spec.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview-not-functional.spec.ts:8:33
+  6  |  import { classifyError } from "../core/error-boundary";
+  7  |  import { PortalClient } from "../data/portal.client";
+  8  |  import { PreviewActionLog } from "./preview-action-log";
+     |                                    ^
+  9  |  import { PreviewRootComponent } from "./preview-root.component";
+  10 |  import { PreviewPortalClient } from "./adapters/portal.client";
+ ❯ TransformPluginContext._formatLog ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_esbuild@0.28.2_less@4.9.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/preview/preview-production-gate.spec.ts > C-01 — production separation > preview bootstraps its own root/providers and index
+Error: ENOENT: no such file or directory, open '/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/main.preview.ts'
+ ❯ src/app/preview/preview-production-gate.spec.ts:28:22
+     26|         path.endsWith('.ts') &&
+     27|         !path.endsWith('.spec.ts') &&
+     28|         !path.endsWith('.spec-helper.ts') &&
+       |                      ^
+     29|         !path.startsWith(PREVIEW_DIR + '/') &&
+     30|         !path.endsWith('/main.preview.ts'),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/app/preview/preview-production-gate.spec.ts > C-01 — production separation > preview has independent Angular build and serve targets
+TypeError: Cannot read properties of undefined (reading 'browser')
+ ❯ src/app/preview/preview-production-gate.spec.ts:36:24
+     37|     }
+     38|   });
+     39|   it('preview bootstraps its own root/providers and index', () => {
+       |   ^
+     40|     const main = readFileSync(join(APP_SRC_ROOT, 'main.preview.ts'), '…
+     41|     expect(main).toMatch(/bootstrapApplication\(\s*PreviewRootComponen…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/app/preview/preview-production-gate.spec.ts > C-01 — production separation > typechecks both entries
+AssertionError: expected [ 'src/main.ts' ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
+    "src/main.ts",
+-   "src/main.preview.ts",
+  ]
+
+ ❯ src/app/preview/preview-production-gate.spec.ts:57:37
+     56|     expect(serve.configurations.preview.buildTarget).toBe(
+     57|       'portal-web:build:preview',
+     58|     );
+       |   ^
+     59|     expect(preview.assets).toContainEqual(
+     60|       expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/app/preview/preview-production-gate.spec.ts > C-01 — production separation > adds only new allowed Portal preview i18n keys
+Error: ENOENT: no such file or directory, open '/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web/src/app/preview/preview.pt-BR.json'
+ ❯ readJson src/app/preview/preview-production-gate.spec.ts:9:47
+      8| const PREVIEW_DIR = join(APP_SRC_ROOT, 'app/preview');
+      9| const readJson = (path: string) =>
+     10|   JSON.parse(readFileSync(path, 'utf8')) as Record<string, any>;
+       |            ^
+     11| function walk(dir: string): string[] {
+     12|   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+ ❯ src/app/preview/preview-production-gate.spec.ts:60:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  7 failed (7)
+      Tests  4 failed | 1 passed (5)
+   Start at  02:52:26
+   Duration  3.85s (transform 5.39s, setup 10.20s, import 405ms, tests 34ms, environment 7.57s)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/portal/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/portal-web@0.1.0 test: `vitest run --config vitest.config.ts "src/app/preview"`
+Exit status 1
