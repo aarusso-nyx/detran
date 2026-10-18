@@ -61,4 +61,4 @@ This is not a certification of any unexecuted requirement or provider integratio
 - Restart implementation/replace specifications wholesale: discards useful work
   and risks reopening binding decisions. Rejected as a planning approach.
 - Add another campaign that implicitly inherits every old task: retains overlapping
-  queues without reconciling obligations. The proposed plan instead maps them once.
+  queues without reconciling obligations. This plan instead maps them once.

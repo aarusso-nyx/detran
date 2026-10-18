@@ -1,0 +1,28 @@
+{
+  "mode": "planning-review",
+  "cycle": 3,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 26,
+      "claim": "The JNY-018 split is correct for steps 1, 2 and 6–8. These are operation planning, team composition, opening, active-shifts/operations-map and summary, and they go to CP-05. Steps 4–5 are not fully assigned. In step 4, the agency/technical admin publishes or confirms the normative catalog and mobile package (WF-TEAT-003). In step 5, the supervisor reserves numbering ranges for team devices (WF-TEAT-002). The row sends only 'numbering/catalog distribution' to CP-11. It does not say whether the backoffice-web acts of publishing the catalog and reserving ranges belong to the CP-05 web console or to CP-11. Review-2's own fix wording caused this. It is the same development-vs-operational attribution risk that finding 1 addressed, but much smaller.",
+      "fix": "State the split explicitly. Either 'CP-05 web catalog publication/confirmation and supervisor numbering-range reservation; CP-11 device-side package distribution, range consumption and sync', or record that both acts are wholly CP-11 and cite the source basis. Do not change the CP-05/CP-11 ownership of any other row."
+    },
+    {
+      "severity": "low",
+      "file": "COMPLETION-PLAN.md",
+      "line": 285,
+      "claim": "The §8 column header still reads 'Proposed decision / recommendation' even though the P1–P3 rows now record Owner approval. ADR-0042:64 (Alternatives) still says 'The proposed plan instead maps them once'. Both are leftover wording from before approval. They do not change any authority, because the Status line, the Decision section, the authority column and the campaign amendments are all unambiguous.",
+      "fix": "Rename the column to 'Decision / recommendation'. In ADR-0042:64, replace 'The proposed plan' with 'This plan'."
+    }
+  ],
+  "notes": [
+    "identity: Auditor (Constitution Article 7). Read-only cross-family review run through the CLI alias opus. The exact model version was not inferred.",
+    "exact scope: frozen HEAD 902d3e6ac675bf90ff23b60d97b566329ad9c87d against main e536e545 (the local main ref is 3ec14d3a and was not used as the base). I read review-2.json. I used git show HEAD and the HEAD diff for COMPLETION-PLAN.md, ADR-0042, docs/meta/adr/README.md, scope-crosswalk.md, open-items-snapshot.json, C-0002/C-0003, BUILD-PLAN.md, DESIGN-DECISIONS.md, work/rounds/README.md and the KB pointer files. I cross-checked product/journeys/JNY-018.json steps 1–8.",
+    "review-2 verification: (1) Fixed. JNY-018 now puts web planning, team, opening, active-shifts/operations-map and summary in CP-05. JNY-022 puts supervisor incident registration/confirmation and incident-visible reconciliation in CP-05. In both, R-0013 device homologation is retained. Device handoff and session/numbering/sync go to CP-11. JNY-022 still excludes bodycam and still says the source proposal requires contract approval. Both say no new general TEAT-mobile wiring. Residual: low finding 1. (2) Fixed. §4 now reads: CP-01 = JW-01 + JNY-013 + UC-RAIT-002/003/016. CP-02 = JNY-014–016 + the remaining RAIT UCs. CP-03 = Portal JNY030–040/UCs except JNY-037/UC-PORTAL-014. CP-08 adds JNY-037/UC-PORTAL-014 (P7). This matches crosswalk rows 21–24, 38–48, 102, 109, 110 and 123. (3) Fixed. Crosswalk:195 and the snapshot reconciliation_note keep H.54's 60-day no-suspension premise in force for CP-05. Formal confirmation (consultation item 17) goes to CP-10 and does not block the approved default. The snapshot's raw source_row and open-issues.md are unchanged (no diff). (4) Fixed. UC-TEAT-009 now reads as four separate clauses: CP-11 productive removal residual; R-0013 homologation retained; no new general mobile wiring; guarda monitorada, including modeling, excluded under DT-015. This matches JNY-020.",
+    "approval transcription: the Owner quote matches the instruction verbatim in COMPLETION-PLAN.md §8 and in both C-0002 and C-0003 amendments. ADR-0042 Status and the Decision section record Accepted for P1–P3, with integration pending. The ADR index (docs/meta/adr/README.md) and the DESIGN-DECISIONS row both show Accepted. P1 keeps the per-delivery chain contract→RED→impl→PR gates→cross-family review→CI→authorized merge→evidence. It also keeps whole-round acceptance/evidence/close/seal. P2 allows an accepted outcome or an expressly approved narrow prerequisite. It authorizes no R-0034 opening, no R-0022 restart and no blanket platform rewrite, and says admissibility alone is insufficient. P3 separates D/Q/O, keeps commissioned scope and exclusions, and allows no production claim before Q/O. Implementation is held pending the exact P4 packet. P5–P7 remain unresolved. PEC-last placement is retained (plan:181, ADR Decision). Scorecard separation and local-work preservation are stated. R-0022 stopped, R-0025 open and R-0033 sealed are unchanged. The diff touches only docs/, work/, BUILD-PLAN.md, COMPLETION-PLAN.md and DESIGN-DECISIONS.md. Nothing changed under record/, .devai/, backend/, apps/ or packages/ relative to e536e545.",
+    "limits: I ran no gates, tests, installs, servers, evidence/state verbs or Git mutations. I did not inspect the primary checkout or any scorecard content. Local check results are reported separately, and no unrun check is assumed to PASS. The untracked review-3 capture files in the planning directory were not reviewed. I did not re-audit every UC/JNY against its full source body or re-examine the architecture."
+  ]
+}
