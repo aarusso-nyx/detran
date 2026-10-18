@@ -78,8 +78,11 @@ this packet does not reopen those values or substitute literals for schedule dat
 O: claim locks the requested active pull pool; finds actor membership; checks
 active member, published weekly schedule, today's slot and non-null WIP; chooses
 a DISTRIBUIDO case matching pool.instance/unit, without active assignment or a
-recorded impediment for the member; uses FOR UPDATE SKIP LOCKED; locks/counts work
-and inserts an assignment before updating case/events in one transaction.
+recorded impediment for the member; uses FOR UPDATE SKIP LOCKED. Pool/member rows are locked, and an active-assignment
+probe uses FOR UPDATE; active work is counted with a plain COUNT, without a
+row-locking clause on that count. WIP is checked after candidate selection:
+an empty eligible queue returns QUEUE_EMPTY before a reached-WIP result. The
+assignment insert and case/events updates share the transaction.
 Static inspection is not a concurrency, authorization or ordering proof.
 
 S: ADR0037/RN141 require prescription risk first, then PCD=80+, then60+, then
