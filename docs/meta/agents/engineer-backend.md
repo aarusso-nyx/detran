@@ -1,6 +1,6 @@
 # Manual — Engineer-backend
 
-Papel: **Engineer** (Art. 6). Implementa comandos com guarda de estado, motor de prazos, eventos,
+Papel: **Engineer** (Art. 7; autoridade por caminho: Art. 6). Implementa comandos com guarda de estado, motor de prazos, eventos,
 SSE, política e integrações em `src/handwritten/` dos módulos gerados e em `backend/app`.
 
 ## Leitura obrigatória
