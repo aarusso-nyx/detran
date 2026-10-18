@@ -33,5 +33,124 @@
       "failure_mode": "fail-closed",
       "local_only_nodes": ["backend-kernel"]
     }
+  },
+  "sensor_inputs": {
+    "schemaVersion": "1.0.0",
+    "inputs": {
+      "spec_depth": {
+        "adrDir": "docs/meta/adr",
+        "invariantsDir": "law/invariants"
+      },
+      "type_check": {
+        "argv": ["pnpm", "-r", "typecheck"]
+      },
+      "unit_test": {
+        "taskId": "scorecard-unit",
+        "population": "detran-workspace-unit"
+      },
+      "integration_test": {
+        "taskId": "scorecard-integration",
+        "population": "detran-workspace-integration"
+      },
+      "e2e_test": {
+        "taskId": "scorecard-e2e",
+        "population": "detran-workspace-e2e"
+      },
+      "test_security_coverage": {
+        "testGlobs": [
+          "backend",
+          "packages",
+          "apps",
+          "senatran-mock/tests",
+          "tools"
+        ]
+      },
+      "test_performance_coverage": {
+        "testGlobs": [
+          "backend",
+          "packages",
+          "apps",
+          "senatran-mock/tests",
+          "tools"
+        ]
+      },
+      "test_robustness_coverage": {
+        "testGlobs": [
+          "backend",
+          "packages",
+          "apps",
+          "senatran-mock/tests",
+          "tools"
+        ]
+      },
+      "test_idiomaticity": {
+        "testGlobs": [
+          "backend",
+          "packages",
+          "apps",
+          "senatran-mock/tests",
+          "tools"
+        ]
+      },
+      "test_coverage_depth": {
+        "coveragePath": "coverage/coverage-final.json",
+        "population": "rc",
+        "exclusions": []
+      },
+      "harness_green_main": {
+        "workflow": "ci.yml",
+        "event": "push",
+        "headBranch": "main",
+        "baseBranch": "main",
+        "attempts": "last",
+        "includeCancelled": false,
+        "lookbackDays": 30,
+        "minimumSample": 10,
+        "excludedJobs": []
+      },
+      "harness_performance": {
+        "workflow": "ci.yml",
+        "event": "push",
+        "headBranch": "main",
+        "baseBranch": "main",
+        "attempts": "last",
+        "includeCancelled": false,
+        "lookbackDays": 30,
+        "minimumSample": 10,
+        "excludedJobs": []
+      },
+      "harness_robustness": {
+        "workflow": "ci.yml",
+        "event": "push",
+        "headBranch": "main",
+        "baseBranch": "main",
+        "attempts": "last",
+        "includeCancelled": false,
+        "lookbackDays": 30,
+        "minimumSample": 10,
+        "excludedJobs": []
+      },
+      "migration_check": {
+        "taskId": "scorecard-migration",
+        "population": "detran-workspace-migration"
+      },
+      "inventory_routes": {
+        "framework": "angular",
+        "scanDirs": [
+          "apps/rait/web/src",
+          "apps/portal/web/src",
+          "apps/dashboard/web/src",
+          "apps/teat/web/src",
+          "apps/teat/mobile/src",
+          "apps/boat/mobile/src"
+        ]
+      }
+    },
+    "surfaces": {
+      "http": true,
+      "database": true,
+      "rbac": true,
+      "actions": true
+    }
   }
 }

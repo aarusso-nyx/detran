@@ -11,7 +11,10 @@ import {
 
 const root = process.cwd();
 const round = 'R-0036';
-const audit = join(root, '.devai/local/rounds', round, 'audit');
+const session = process.env.DETRAN_SCORECARD_SESSION;
+if (session && !/^[a-z0-9][a-z0-9-]*$/.test(session))
+  throw new Error('Invalid scorecard session name');
+const audit = join(root, '.devai/local/rounds', round, 'audit', session ?? '');
 const source = JSON.parse(
   readFileSync('law/policy/scorecard-sensor-inputs.json'),
 );
@@ -96,12 +99,6 @@ const mode = process.argv[2];
 if (mode === 'capture') {
   await capture(process.argv[3], process.argv.slice(4));
 } else if (mode === 'first') {
-  const common = {
-    ...source.inputs.spec_depth,
-    ...source.inputs.test_security_coverage,
-    ...source.inputs.test_coverage_depth,
-    ...source.inputs.harness_green_main,
-  };
   await capture(
     process.argv[3] ?? 'sweep-first',
     cli(
@@ -113,8 +110,6 @@ if (mode === 'capture') {
       round,
       '--repo-root',
       '.',
-      '--input',
-      JSON.stringify(common),
       '--format',
       'json',
     ),
@@ -123,7 +118,7 @@ if (mode === 'capture') {
   const kind = process.argv[3];
   const role = process.argv[4];
   const inputs = source.inputs[kind] ?? {};
-  if (kind === 'migration_check') {
+  if (kind === 'migration_check' && !inputs.taskId) {
     if (
       !process.env.DETRAN_SCORECARD_DATABASE_URL?.startsWith(
         'postgresql://postgres:postgres@127.0.0.1:',

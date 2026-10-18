@@ -5,12 +5,21 @@
       "adrDir": "docs/meta/adr",
       "invariantsDir": "law/invariants"
     },
-    "type_check": { "argv": ["pnpm", "run", "typecheck"] },
-    "unit_test": { "argv": ["pnpm", "run", "backend:test:unit"] },
-    "integration_test": {
-      "argv": ["pnpm", "run", "backend:test:integration"]
+    "type_check": {
+      "argv": ["pnpm", "-r", "typecheck"]
     },
-    "e2e_test": { "argv": ["pnpm", "run", "backend:test:e2e"] },
+    "unit_test": {
+      "taskId": "scorecard-unit",
+      "population": "detran-workspace-unit"
+    },
+    "integration_test": {
+      "taskId": "scorecard-integration",
+      "population": "detran-workspace-integration"
+    },
+    "e2e_test": {
+      "taskId": "scorecard-e2e",
+      "population": "detran-workspace-e2e"
+    },
     "test_security_coverage": {
       "testGlobs": [
         "backend",
@@ -84,7 +93,27 @@
       "lookbackDays": 30,
       "minimumSample": 10,
       "excludedJobs": []
+    },
+    "migration_check": {
+      "taskId": "scorecard-migration",
+      "population": "detran-workspace-migration"
+    },
+    "inventory_routes": {
+      "framework": "angular",
+      "scanDirs": [
+        "apps/rait/web/src",
+        "apps/portal/web/src",
+        "apps/dashboard/web/src",
+        "apps/teat/web/src",
+        "apps/teat/mobile/src",
+        "apps/boat/mobile/src"
+      ]
     }
   },
-  "surfaces": { "http": true, "database": true, "rbac": true, "actions": true }
+  "surfaces": {
+    "http": true,
+    "database": true,
+    "rbac": true,
+    "actions": true
+  }
 }

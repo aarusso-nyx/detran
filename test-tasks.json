@@ -31,6 +31,86 @@
         "DETRAN_RC_POSTGIS_VERSION"
       ],
       "outputContract": {}
+    },
+    {
+      "nodeId": "scorecard-migration",
+      "dependencies": [],
+      "argv": ["node", "tools/devai/scorecard-local-task.mjs", "migration"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["migration_check"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-workspace-migration"
+      }
+    },
+    {
+      "nodeId": "scorecard-unit",
+      "dependencies": [],
+      "argv": ["node", "tools/devai/scorecard-local-task.mjs", "unit"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["unit_test"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-workspace-unit"
+      }
+    },
+    {
+      "nodeId": "scorecard-integration",
+      "dependencies": [],
+      "argv": ["node", "tools/devai/scorecard-local-task.mjs", "integration"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["integration_test"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-workspace-integration"
+      }
+    },
+    {
+      "nodeId": "scorecard-e2e",
+      "dependencies": [],
+      "argv": ["node", "tools/devai/scorecard-local-task.mjs", "e2e"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["e2e_test"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-workspace-e2e"
+      }
     }
   ],
   "profiles": [
