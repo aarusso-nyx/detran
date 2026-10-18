@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "/Volumes/Development/projects/stech/devai/.devai/worktrees/detran-ci-population-20261018/packages/cli/dist/runtime/index/bin.js",
+    "sense",
+    "run",
+    "harness_green_main",
+    "--repo-root",
+    ".",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T23:18:50.611Z",
+  "finished_at": "2026-10-18T23:18:54.714Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_green_main\"},\"members\":[{\"kind\":\"harness_green_main\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_green_main\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run harness_green_main\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-6875eb9c5f724a41\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-green-main\\\",\\\"kind\\\":\\\"harness_green_main\\\"},\\\"timestamp\\\":\\\"2026-10-18T23:18:54.542Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-18\\\",\\\"command_hash\\\":\\\"48b05280f5059171facc4ab9ede0f4ca3a6e266e7073042fc420a17b5bf05076\\\",\\\"tier\\\":\\\"L2\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"run_count\\\":92,\\\"success_count\\\":90,\\\"success_pct\\\":97.83,\\\"threshold_pass\\\":95,\\\"threshold_review\\\":80,\\\"sample_size\\\":92,\\\"minimum_sample\\\":10,\\\"population_workflow\\\":\\\"ci.yml\\\",\\\"population_event\\\":\\\"push\\\",\\\"population_head_branch\\\":\\\"main\\\",\\\"population_base_branch\\\":\\\"main\\\",\\\"population_attempts\\\":\\\"last\\\",\\\"population_include_cancelled\\\":false,\\\"population_lookback_days\\\":30,\\\"population_base_branch_verified\\\":true,\\\"population_excluded_jobs_unverified\\\":0,\\\"population_unverified\\\":\\\"\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}
