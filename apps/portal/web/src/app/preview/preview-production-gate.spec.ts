@@ -4,6 +4,12 @@ import { join, relative } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { APP_SRC_ROOT, readCatalog } from '../../testing/kb';
+import { previewKey, PREVIEW_USED_KEYS } from './preview-i18n';
+import {
+  PREVIEW_SCREEN_STATES,
+  PREVIEW_PERSONAS,
+} from './preview-state.service';
+import { PREVIEW_MARK_KEY, PREVIEW_NOT_FUNCTIONAL_KEY } from './preview-mark';
 const APP_ROOT = join(APP_SRC_ROOT, '..');
 const PREVIEW_DIR = join(APP_SRC_ROOT, 'app/preview');
 const readJson = (path: string) =>
@@ -99,5 +105,45 @@ describe('C-01 — production separation', () => {
     expect(overlay['portal.states.preview_source_pending']).toBe(
       'source_pending',
     );
+  });
+});
+
+// W3 integration: overlay keys are type-derived and runtime-checked; base scanner stays intact.
+describe('C-03 — typed preview translation registry', () => {
+  it('covers every actual mark, status and selector key using only new nonempty overlay values', () => {
+    const overlay = readJson(join(PREVIEW_DIR, 'preview.pt-BR.json'));
+    const expected = [
+      previewKey('states', 'mark'),
+      previewKey('states', 'not_functional'),
+      previewKey('states', 'source_pending'),
+      previewKey('shell', 'region'),
+      previewKey('shell', 'state'),
+      previewKey('shell', 'role'),
+      ...PREVIEW_SCREEN_STATES.map((state) =>
+        previewKey('shell', `state_${state}`),
+      ),
+      ...PREVIEW_PERSONAS.map((persona) =>
+        previewKey('shell', `role_${persona}`),
+      ),
+    ];
+    expect(PREVIEW_MARK_KEY).toBe(previewKey('states', 'mark'));
+    expect(PREVIEW_NOT_FUNCTIONAL_KEY).toBe(
+      previewKey('states', 'not_functional'),
+    );
+    expect(new Set(PREVIEW_USED_KEYS)).toEqual(new Set(expected));
+    expect(PREVIEW_USED_KEYS).toHaveLength(expected.length);
+    expect(new Set(Object.keys(overlay))).toEqual(new Set(expected));
+    for (const key of PREVIEW_USED_KEYS) {
+      expect(key).toMatch(/^portal\.(states|shell)\.preview_/);
+      expect(Object.hasOwn(overlay, key), key).toBe(true);
+      expect(typeof overlay[key], key).toBe('string');
+      expect(overlay[key].trim().length, key).toBeGreaterThan(0);
+      expect(Object.hasOwn(readCatalog(), key), key).toBe(false);
+    }
+  });
+  it('rejects an absent overlay key at runtime rather than returning a silent untranslated label', () => {
+    expect(() =>
+      previewKey('states', 'missing_inspector_counterexample' as never),
+    ).toThrow(/Missing preview translation/);
   });
 });
