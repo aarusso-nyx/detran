@@ -108,10 +108,35 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   Chaves `ui.pagination.previous`, `ui.pagination.pageStatus`, `ui.pagination.next`
   permanecem sem tradução na produção base; follow-up do kit/fase J, sem alteração
   do catálogo nesta prévia.
-- **Sequência final:** `pnpm check` em execução (primeira tentativa interrompida
-  por infraestrutura Compose; repetida com `DOCKER_CONFIG` temporário expondo a
-  instalação existente). Rebuild/manifesta finais, development, review Claude, PR
-  e CI remoto ainda pendentes; nenhum PASS antecipado.
+- **Gates integrais W3 PASS:** `pnpm check` terminou com exit 0 (sessão do maestro
+  11592), incluindo typecheck do workspace, contratos/blueprints/proofs e lint,
+  testes e builds production dos apps. RAIT: 163 arquivos PASS e 1 skipped;
+  4958 testes PASS e 139 todo. Portal: 125 arquivos, 1551 testes PASS e 14 todo
+  (inclui duas regressões adicionais do Inspector; os 1549 anteriores são história
+  da aceitação de TASK-0007). Fonte: `reports/W3-pnpm-check.log`.
+- **Gates adicionais PASS:** doctor (`W3-doctor.log`); 320 tarefas de rodada
+  (`W3-round-tasks.log`); builds development sem marca de prévia em ambos apps
+  (71/108 arquivos, `W3-development-builds.log`); production sem marca em ambos
+  (`W3-production-gates.log`). A primeira tentativa do check integral parou por
+  plugin Compose ausente no ambiente (`W3-pnpm-check-compose-missing.log`);
+  correção local usou `DOCKER_CONFIG` temporário para expor Docker Compose 5.6
+  já instalado, sem alterar configuração do usuário ou do repositório.
+- **Artefatos e browser finais PASS:** fonte runtime `3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989`;
+  reconstrução dos dois previews PASS. Manifesta RAIT 48 arquivos e Portal 32,
+  todos os hashes conferidos. ZIP local com 693124 bytes, 83 entradas e CRC válido;
+  SHA256 `db39717beb8c75e3e4e523bbbbbf5e7f9b930e2a269685517980e525f075672f`.
+  Fonte: `reports/W3-artifacts.json`. Commits posteriores de recibos/revisão são
+  apenas metadados, sem alterar essa fonte runtime (D-12/A6).
+- **Verificação final da reconstrução:** RAIT 87 capturas, 2 contraprovas, axe em
+  29 páginas, zero serious/critical e 13 moderate PASS; Portal 38 rotas, 96 PNG,
+  32 verificações axe, 2 contraprovas, zero `/v1`, console/page errors e 6 achados
+  menores PASS. Os 32 assets Portal observados no browser correspondem por SHA
+  ao manifesto, em verificação independente. Ambos os smokes `ng serve` HTTP 200
+  PASS com limpeza dos processos. Consolidado: `reports/W3-final-gates.md`.
+- **Entrega pendente:** review Claude, abertura do PR e CI remoto. O upload do ZIP
+  aguarda autenticação GitHub no browser solicitada ao Owner; ainda sem resposta.
+  Artefato local verificado não equivale a anexo publicado. Merge, evidência
+  pós-integração, close e seal permanecem pendentes, sem declarar toda C-10.
 
 ## Objetivo
 

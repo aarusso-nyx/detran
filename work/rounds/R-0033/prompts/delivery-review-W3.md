@@ -12,7 +12,10 @@ Trabalhe somente em leitura na worktree
 instalação, builds, testes, servidores ou comandos de evidência que escrevam estado;
 não faça checkout, commit, push, merge, close ou seal. Inspecione fontes, diffs e
 recibos existentes. A resposta inteira deve ser um único objeto JSON estrito,
-sem cercas de código, preâmbulo ou texto posterior.
+sem cercas de código, preâmbulo ou texto posterior. A declaração de papel exigida por
+AGENTS.md deve aparecer dentro do JSON, como primeira string de `notes`
+(`Papel: Auditor — Artigo 7`), nunca como prefixo em texto: o parser da ponte
+rejeita qualquer preâmbulo ou cerca de código.
 
 ## Autoridade e limites
 

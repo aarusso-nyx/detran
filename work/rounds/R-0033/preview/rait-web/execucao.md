@@ -101,3 +101,18 @@ Recibos: `../../reports/W3-rait-preview-baseline.log`,
 não certificam production/development, o gate completo, revisão ou integração.
 O manifesto de artefatos precisa corresponder à reconstrução final antes do PR;
 a identidade antiga descrita acima continua evidência histórica, não prova do SHA final.
+
+## Artefato final W3 — fonte `3eeb95ca`
+
+Reconstrução e repetição finais PASS: 87 capturas, 2 contraprovas de guarda,
+29 verificações axe com zero serious/critical e 13 moderate conhecidos; smoke
+HTTP 200 com limpeza de processo PASS. O manifesto final traz 48 arquivos com
+hashes verificados. Fonte runtime completa, manifesto e ZIP: `../../reports/W3-artifacts.json`;
+consolidado: `../../reports/W3-final-gates.md`. O ZIP inclui RAIT e Portal, tem
+693124 bytes/83 entradas/CRC válido e SHA256
+`db39717beb8c75e3e4e523bbbbbf5e7f9b930e2a269685517980e525f075672f`.
+
+Builds production/development e gate integral também PASS nesta W3, conforme
+consolidado. Recibos posteriores são metadados e preservam a identidade da fonte
+`3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989` (D-12/A6). Upload do ZIP aguarda
+autenticação GitHub no browser; revisão Claude, PR/CI e integração ainda pendentes.
