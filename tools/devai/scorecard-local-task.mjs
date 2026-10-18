@@ -16,6 +16,10 @@ const logDir = join(
 );
 mkdirSync(logDir, { recursive: true });
 console.log(`SCORECARD_TASK_LOGS=${resolve(logDir)}`);
+for (const stream of [process.stdout, process.stderr])
+  stream.on('error', (error) => {
+    if (error.code !== 'EPIPE') throw error;
+  });
 let step = 0;
 let failed = false;
 let interrupted, activeChild, killTimer;
