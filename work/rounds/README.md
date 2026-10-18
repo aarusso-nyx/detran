@@ -68,6 +68,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0033 | `frontend-preview` — C-0003 fase P; checkpoint em branch                                                                    | aberta            | —                       | —       | Fable 5.1 (desvio registrado no branch) |
 | R-0034 | `platform-seams` — C-0003 fase S (salvamento da R-0022)                                                                     | proposta (C-0003) | —                       | —       | Sol 6                                   |
 | R-0035 | `hardening-certification` — C-0003 fase H                                                                                   | proposta (C-0003) | —                       | —       | Opus 5.5                                |
+| R-0036 | `scorecard-evaluation` — avaliação dos 43 itens aplicáveis; BL-0001, plano aprovado em 2026-10-18                           | aberta            | —                       | —       | Codex                                   |
 
 ## Folder convention (`R-nnnn/`)
 

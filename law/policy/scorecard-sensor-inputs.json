@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "inputs": {
+    "spec_depth": {
+      "adrDir": "docs/meta/adr",
+      "invariantsDir": "law/invariants"
+    },
+    "type_check": { "argv": ["pnpm", "run", "typecheck"] },
+    "unit_test": { "argv": ["pnpm", "run", "backend:test:unit"] },
+    "integration_test": {
+      "argv": ["pnpm", "run", "backend:test:integration"]
+    },
+    "e2e_test": { "argv": ["pnpm", "run", "backend:test:e2e"] },
+    "test_security_coverage": {
+      "testGlobs": [
+        "backend",
+        "packages",
+        "apps",
+        "senatran-mock/tests",
+        "tools"
+      ]
+    },
+    "test_performance_coverage": {
+      "testGlobs": [
+        "backend",
+        "packages",
+        "apps",
+        "senatran-mock/tests",
+        "tools"
+      ]
+    },
+    "test_robustness_coverage": {
+      "testGlobs": [
+        "backend",
+        "packages",
+        "apps",
+        "senatran-mock/tests",
+        "tools"
+      ]
+    },
+    "test_idiomaticity": {
+      "testGlobs": [
+        "backend",
+        "packages",
+        "apps",
+        "senatran-mock/tests",
+        "tools"
+      ]
+    },
+    "test_coverage_depth": {
+      "coveragePath": "coverage/coverage-final.json",
+      "population": "rc",
+      "exclusions": []
+    },
+    "harness_green_main": {
+      "workflow": "ci.yml",
+      "event": "push",
+      "headBranch": "main",
+      "baseBranch": "main",
+      "attempts": "last",
+      "includeCancelled": false,
+      "lookbackDays": 30,
+      "minimumSample": 10,
+      "excludedJobs": []
+    },
+    "harness_performance": {
+      "workflow": "ci.yml",
+      "event": "push",
+      "headBranch": "main",
+      "baseBranch": "main",
+      "attempts": "last",
+      "includeCancelled": false,
+      "lookbackDays": 30,
+      "minimumSample": 10,
+      "excludedJobs": []
+    },
+    "harness_robustness": {
+      "workflow": "ci.yml",
+      "event": "push",
+      "headBranch": "main",
+      "baseBranch": "main",
+      "attempts": "last",
+      "includeCancelled": false,
+      "lookbackDays": 30,
+      "minimumSample": 10,
+      "excludedJobs": []
+    }
+  },
+  "surfaces": { "http": true, "database": true, "rbac": true, "actions": true }
+}
