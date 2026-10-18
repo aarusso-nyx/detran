@@ -3,8 +3,11 @@
 // (`@angular/router/testing`), como no padrão `apps/portal/web/src/testing/router-harness.ts`.
 // `STYNX_ANGULAR_AUTH_OPTIONS.loginRedirectRoute` é fixado aqui com o mesmo valor de
 // `core/guards/auth.guard.ts` (`LOGIN_ROUTE = '/auth/callback'`, `CTG-0002a.md` §4, OD-R12-006)
-// — duplicado como literal, não importado, para que este harness não dependa de nenhum símbolo
-// de produção além de `RAIT_ROUTES` (a própria árvore sob teste).
+// — duplicado como literal, não importado. O harness usa a árvore real `RAIT_ROUTES`
+// e oferece uma leitura de caso canônica explícita no `CaseClient` para specs isolados.
+import { provideHttpClient } from '@angular/common/http';
+import { CaseClient } from '../app/data/api/case.client';
+import { CASE_IDS, fixtureCase } from './http-fixtures';
 import { provideLocationMocks } from '@angular/common/testing';
 import type { Provider } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
@@ -38,6 +41,21 @@ export function createRaitRouterHarness(
   TestBed.configureTestingModule({
     providers: [
       provideRouter(RAIT_ROUTES),
+      provideHttpClient(),
+      // TASK25: explicit case-read fixture for isolated legacy routing/page specs.
+      // Real access/HTTP tests construct their own TestBed and never use this seam.
+      // Keep the real guard active; preserve all other CaseClient behavior.
+      {
+        provide: CaseClient,
+        useFactory: () => {
+          const client = new CaseClient();
+          client.getRaitCase = async (id: string) => ({
+            ...fixtureCase(CASE_IDS.PROTOCOLADO),
+            id,
+          });
+          return client;
+        },
+      },
       provideLocationMocks(),
       {
         provide: STYNX_ANGULAR_AUTH_OPTIONS,

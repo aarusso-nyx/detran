@@ -122,12 +122,12 @@ describe('gates — estrutura idêntica à fixture do §5 (C-2C-82)', () => {
 describe('mapa comando M8 → chave de política (C-2C-83)', () => {
   const policyKeys = new Set(readPolicyCommandRules().map((rule) => rule.key));
 
-  it('dado COMMAND_POLICY_KEY_FIXTURE então cobre os 64 comandos de RAIT_COMMANDS', () => {
+  it('dado COMMAND_POLICY_KEY_FIXTURE então cobre os 65 comandos de RAIT_COMMANDS', () => {
     // C-2C-83 (parte 1)
     expect(Object.keys(COMMAND_POLICY_KEY_FIXTURE).sort()).toEqual(
       [...RAIT_COMMANDS].sort(),
     );
-    expect(RAIT_COMMANDS).toHaveLength(64);
+    expect(RAIT_COMMANDS).toHaveLength(65);
   });
 
   it.each(RAIT_COMMANDS)(

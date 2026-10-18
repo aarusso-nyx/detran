@@ -25,10 +25,16 @@ import {
 } from '../core/i18n-token-key';
 
 describe('C-2A-51 — catálogo semente ⊆ catálogo do app', () => {
-  it('dado readSeedCatalog() (349) quando comparado a readAppCatalog() então toda chave existe com valor idêntico', () => {
+  it('dado readSeedCatalog() (350) quando comparado a readAppCatalog() então toda chave existe com valor idêntico', () => {
     const seed = readSeedCatalog();
     const app = readAppCatalog();
-    expect(Object.keys(seed)).toHaveLength(349);
+    expect(Object.keys(seed)).toHaveLength(350);
+    expect(seed['rait.common.blockedByDecision']).toBe(
+      'Bloqueado por decisão pendente.',
+    );
+    expect(app['rait.common.blockedByDecision']).toBe(
+      seed['rait.common.blockedByDecision'],
+    );
     for (const [key, value] of Object.entries(seed)) {
       expect(app[key], `chave ausente ou divergente: ${key}`).toBe(value);
     }

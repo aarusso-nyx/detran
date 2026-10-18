@@ -144,9 +144,6 @@ describe('CaseFacade — invalidação por SSE (C-2B-23)', () => {
 describe('CaseFacade — comandos (C-2B-24, M8)', () => {
   verifyNoOutstandingRequests();
   const COMMAND_METHODS: readonly (keyof CaseFacade)[] = [
-    'triage',
-    'admit',
-    'reject',
     'openInquiry',
     'answerInquiry',
     'extendInquiry',

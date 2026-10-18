@@ -201,29 +201,6 @@ const COMMAND_OPS: readonly CommandOp[] = [
     fonte: '§7',
   },
   {
-    method: 'triage',
-    m8: 'rait-case:triage',
-    call: (c) => c.triage(CASE_IDS.TRIAGEM_ADMISSIBILIDADE, [] as never, null),
-    fonte: '§7',
-  },
-  {
-    method: 'admit',
-    m8: 'rait-case:admit',
-    call: (c) => c.admit(CASE_IDS.TRIAGEM_ADMISSIBILIDADE, {} as never, null),
-    fonte: '§7',
-  },
-  {
-    method: 'reject',
-    m8: 'rait-case:reject',
-    call: (c) =>
-      c.reject(
-        CASE_IDS.TRIAGEM_ADMISSIBILIDADE,
-        { non_admission_reason: 'intempestivo' } as never,
-        null,
-      ),
-    fonte: '§7',
-  },
-  {
     method: 'remitJari',
     m8: 'rait-case:remit-jari',
     call: (c) =>

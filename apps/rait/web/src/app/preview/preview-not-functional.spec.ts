@@ -453,6 +453,7 @@ const ADAPTERS: readonly AdapterPair[] = [
     commands: {
       protocol: 'rait-case:protocol',
       triage: 'rait-case:triage',
+      saveAdmissibility: 'rait-admissibility:create',
       admit: 'rait-case:admit',
       reject: 'rait-case:reject',
       remitJari: 'rait-case:remit-jari',
@@ -606,9 +607,9 @@ describe('C-03 — adapters estendem os clientes reais e sobrescrevem todo coman
     });
   });
 
-  it('dado a tabela §6 quando somadas as strings M8 então 64, iguais (conjunto e ordem-livre) a RAIT_COMMANDS', () => {
+  it('dado a tabela §6 quando somadas as strings M8 então 65, iguais (conjunto e ordem-livre) a RAIT_COMMANDS', () => {
     const all = ADAPTERS.flatMap((pair) => Object.values(pair.commands));
-    expect(all).toHaveLength(64);
+    expect(all).toHaveLength(65);
     expect(new Set(all)).toEqual(new Set(RAIT_COMMANDS));
   });
 });
