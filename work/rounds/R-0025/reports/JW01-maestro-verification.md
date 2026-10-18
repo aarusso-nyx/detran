@@ -30,7 +30,7 @@ browser e banco; recibo detalhado em JW01-browser-smoke.md.
   ao catálogo, inventário integral preservado. Fixtures legadas ETag/bodyversion
   alinhadas à resposta válida; nenhum gate removido.
 - Doctor final: PASS, DEVAI2.2.0, pin Constituição1.0.2 e cadeia válida.
-- Root pnpm check: EM EXECUÇÃO; nenhum PASS global inferido dos prefixos.
+- Root pnpm check: PASS exit0 em 2026-10-18T19:06Z, log JW01-check-complete.log. Inclui todas as suítes/builds do script; 5085 PASS/133 TODO na RAIT.
 - Review cruzada: prompt REVIEW→PASS; delivery original REVIEW→PASS. Review1
   teve wrapper inválido, recuperação exata com hashes e falha da ponte preservadas.
   Browser delta: PASS sem achados, bridge JSON/hashes verificados; resultado separado do PASS original.

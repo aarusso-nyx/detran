@@ -167,6 +167,17 @@ acrescenta package.json do rait-web e somente seu importer do pnpm-lock, sem
 upgrade/framework/pin. Inspector preserva negativos genéricos0/412 e interceptor
 real; Engineer implementa após RED aceito. Não é nova decisão de produto.
 
+### Aceitação do primeiro recorte — 2026-10-18
+
+TASK-0024…0027 completed somente no recorte aprovado. Root pnpm check final
+PASS exit0; doctor PASS; backend kernel completo e tiers afetados após review
+PASS; frontend5085 PASS/133 TODO existentes; produção/preview/smoke PASS.
+Browser real confirma ADMITIDO12 e NAO_CONHECIDO12 sem depender de SSE.
+Delivery original REVIEW→PASS e browser delta PASS sem achados; hashes da ponte
+verificados. Recibo consolidado reports/JW01-maestro-verification.md.
+PR em preparação; merge/close/seal não autorizados. Aceitação integral continua
+pendente, incluindo claim/instrução/minuta e OD-R25-016/017. Histórico abaixo preservado.
+
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
 > **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada, **só análise e
