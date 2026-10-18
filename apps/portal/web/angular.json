@@ -57,6 +57,32 @@
               "outputHashing": "none",
               "sourceMap": true,
               "extractLicenses": false
+            },
+            "preview": {
+              "browser": "src/main.preview.ts",
+              "index": {
+                "input": "src/index.preview.html",
+                "output": "index.html"
+              },
+              "outputPath": {
+                "base": "dist/preview",
+                "browser": ""
+              },
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractLicenses": true,
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public"
+                },
+                {
+                  "glob": "*.json",
+                  "input": "src/app/preview/fixtures",
+                  "output": "assets/preview"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -69,6 +95,10 @@
             },
             "development": {
               "buildTarget": "portal-web:build:development"
+            },
+            "preview": {
+              "buildTarget": "portal-web:build:preview",
+              "host": "127.0.0.1"
             }
           },
           "defaultConfiguration": "development"
