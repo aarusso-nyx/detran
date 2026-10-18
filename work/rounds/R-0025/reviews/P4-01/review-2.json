@@ -1,0 +1,26 @@
+{
+  "mode": "planning-review",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/reports/P4-01-packet-review.md",
+      "line": 30,
+      "claim": "The row credits WF-RAIT-004 F-DP-2/§4 with the full sequence 'ADMITIDO → DISTRIBUIDO → EM_INSTRUCAO'. WF-RAIT-004:122 and :212 only show ADMITIDO→DISTRIBUIDO claimed from the ADMITIDO collective queue. The EM_INSTRUCAO step comes from IU-RAIT-004 §6:64 alone. The row also does not cite the runtime side of the conflict (service.ts claim-next expected ['DISTRIBUIDO']) next to the sources; it appears only in row 35.",
+      "fix": "Split the attribution: WF-RAIT-004 F-DP-2/§4 gives ADMITIDO→DISTRIBUIDO by claim-next; IU-RAIT-004 §6 gives ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO. Add the runtime position (rait-case-command.service.ts claim-next expected DISTRIBUIDO → next EM_INSTRUCAO) to the same row so the conflict can be read from that row alone. Wording only; do not choose a side."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/reports/P4-01-packet-review.md",
+      "line": 36,
+      "claim": "The row now correctly states that the domain guard requires body === case.instance, which excludes receive for defesa_previa. The cycle-1 fix asked for an exact citation, but the row has no file:line anchor (rait-case-command.service.ts receive guard, RAIT.FORBIDDEN_ORGAO 403, ~line 1414). Without it the claim is harder to recheck when sources are revalidated before execution.",
+      "fix": "Add the anchor 'rait-case-command.service.ts receive guard (payload.body !== current.instance → RAIT.FORBIDDEN_ORGAO 403)' to the row. Optional: also anchor the validatePayload jari/cetran rule and the COMMAND_AUDIT_ROLES receive: rait-secretary entry."
+    }
+  ],
+  "notes": [
+    "Identity: Auditor (Constitution Article 7), read-only cross-family review. Invoked through the Claude Code CLI with alias 'opus'. The runtime's system context reports itself as Opus 5.5 (claude-opus-5-5). That is a self-report, not inferred from the alias, and the exact served version is not independently verified. Output is a raw JSON object; no bridge PASS or valid cycle-1 bridge result is claimed.",
+    "Scope: I checked work/rounds/R-0025/reports/P4-01-packet-review.md only against the six findings in reviews/P4-01/review-1-recovered.json. All six are addressed. (1) WF-RAIT-004 F-DP-2/§4, IU-RAIT-004 §6 and queue.facade ficha004/F-DP-2/RN-RAIT-141 are cited as ADMITIDO claim sources. Runtime DISTRIBUIDO is framed as a source-versus-runtime conflict, not as proof of a missing command (rows 30 and 36, work-order item 3, line 90). (2) Dossier navigation is a proposal to ratify against IU §7/§10 and JW-01 triage under OD-R25-016 (row 37). (3) The If-Match conflict between IU §6, WorklistClient and runtime is explicit and unresolved (rows 33 and 96). (4) Output 1 classifies errors as source-backed, runtime-only or unresolved, including MEMBER_IMPEDED versus runtime exclusion/QUEUE_EMPTY, and line 100 marks impediment as unsettled. (5) Cross-actor same-tenant key reuse is listed for reconciliation, not adopted as policy (rows 33 and 101). (6) receive body===instance excludes it as a defense workaround without overriding WF-RAIT-004 (row 36). The packet is contract-only. Its four outputs are named under R-0025 contracts/reports and additive OD entries, with OD-R25-016/017 and OD-R12-054 history preserved. It grants no execution authorization and no runtime, test, DDL, grant or client changes. Lines 87-90 and 118-119 make no advance decision on the conflicts. It matches the preparation-only authorization and the paused implementation after PR #195 (a7900301).",
+    "Limits: The source checks were targeted greps and line reads of WF-RAIT-004, IU-RAIT-004, rait-case-command.service.ts (claim-next rule, audit roles, receive guard), queue.facade.ts and the OD rows. I did no new architecture audit. I made no edits, ran no tests, installs or servers, did no Git mutations, used no evidence or state verbs and took no external actions. I did not inspect the primary checkout or scorecard content. This PASS covers only the bounded correction review: it does not approve P4 execution and does not claim product, runtime or production proof."
+  ]
+}
