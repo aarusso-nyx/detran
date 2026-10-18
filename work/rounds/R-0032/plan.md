@@ -1,5 +1,11 @@
 # R-0032 — frente `portal-pec` (ação 8 da C-0002, ADR-0034 §2: superfície do candidato P-01…P-07 no Portal, vínculo cidadão → candidato PEC, comandos cidadãos por delegação, manual do cidadão PEC)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `orchestra/portal-pec` @ `3a492978`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
 pelo Architect para executar a decisão do Owner **OD-PW-001** ("elabore um plano de implementação
 completo para o módulo do cidadão/PEC disponível no portal", 2026-09-26). O Architect decidiu, para

@@ -1,5 +1,11 @@
 # C-0002 — especificação upstream única para o STYNX 1.5.0 (rodada S-1.5)
 
+> **Reconciliação 2026-10-18:** main já consome STYNX 1.5.3 (ADR-0039).
+> O alvo numérico 1.5.0 e o workspace abaixo são históricos; publicação/pin não
+> comprovam aceitação de todos os requisitos UPS. R-0022 está parada e o
+> salvamento segue R-0034/C-0003, com conformidade conferida por fatia.
+> Ver a [fila reconciliada](../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 > **Leitura vigente — adenda A1 de 2026-09-27 (§8.1):** UPS-SIG-01…04, UPS-OBX-01…02 e UPS-OFS-01…04 confirmados como MUST para suas migrações integrais em R-0022. As seções anteriores preservam a proposta histórica; A1 prevalece nas divergências. Não constitui autorização ou prova de execução upstream.
 
 > **Adenda A3 da campanha (2026-09-26):** a migração de `dashCan` é feita em R-0024, não em R-0023.
