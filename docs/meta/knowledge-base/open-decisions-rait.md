@@ -392,6 +392,19 @@ leituras do smoke passem pela tenancy/RLS normal. Isso nao amplia a decisao
 OD-R17-004: nenhuma role, grupo, permissao, policy, fixture canonica ou
 banco fora de `detran_local_stack` e alterado.
 
+## Reconciliação dos registros de branch — 2026-10-18
+
+Para as decisões posteriores ainda não integradas, consultar os recibos nos heads
+preservados da [fila reconciliada](backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+No head R-0020 `ebf308e7`, `AUTHORIZATION-A1-1-A1-2-2026-09-29.md`
+(commit `6c4bc3b5`) aceita A1-1/A1-2 e mantém A1-3=B; portanto a linha A1
+histórica abaixo não autoriza perguntar novamente os mesmos consentimentos.
+O preflight antigo precisa ser revalidado no DEVAI 2.2.0 atual, sem executar sensing
+com escrita nesta reconciliação. No head R-0033 `aca40880`, OD-C3-007/008 estão
+fechadas com recibos em `AUTHORIZATION.md` (B1/B2); OD-C3-009, divergências
+jornada×papel em JW-02/05/08, está aberta. Esses estados são referências verificadas
+nos branches, não novos recibos Owner nem promoção automática dos seus arquivos.
+
 ## C-0003 — parada da R-0022 e campanha produto-primeiro (2026-10-14)
 
 Registro canônico. Fonte: diretiva do Owner de 2026-10-14 (relatório de parada da R-0022, 21:18

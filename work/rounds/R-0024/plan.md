@@ -1,5 +1,10 @@
 # R-0024 — frente `stynx-dedup` (C-0002, ação 7b: deduplicação STYNX e `@detran/ui` como kit de app)
 
+> **Reconciliação 2026-10-18:** permanece proposta, sem branch dedicado no inventário
+> remoto. A ordem de abertura das jornadas foi substituída por C-0003 §4/A-C2-16;
+> não usar as dependências antigas abaixo para bloquear a prévia. Ver a
+> [fila reconciliada](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner**. Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase C), §3.3 e §4 (padrão de
 ligação), e da inspeção (d) (`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` §4, §5 A4/M1/M4/M5/M6/B1–B3, §7).

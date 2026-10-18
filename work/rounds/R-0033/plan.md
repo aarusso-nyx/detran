@@ -1,5 +1,11 @@
 # R-0033 — frente `frontend-preview` (fase P da C-0003 — prévia honesta de frontend baseada em fixtures)
 
+> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
+> Fonte mais recente de execução: `claude/frontend-preview-5281e3` @ `aca40880`, caminhos desta rodada
+> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
+> não anulam a execução/autorização registrada no branch nem provam integração.
+> Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+
 **Status:** **proposta — C-0003 rev. 1, aguardando autorização do Owner.** Planejada em 2026-10-14
 pelo Architect (`work/campaigns/C-0003-produto-primeiro.md` §4, fase P). Maestro **Sol 6** (Codex
 CLI), workers da escada Codex (Sol 6 / Terra / Luna vigentes, `model-ladder.md`), reviewer **Opus

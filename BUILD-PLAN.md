@@ -1,5 +1,16 @@
 # BUILD-PLAN
 
+## Leitura atual (reconciliação de 2026-10-18)
+
+As fases originais abaixo são o plano de origem; o addendum de 2026-09-13 e
+C-0003 §4/A-C2-16 determinam a execução atual para infrações. Port/merge de WP
+não certifica jornada produtiva. R-0033 já tem prévia RAIT em branch preservado;
+R-0020 permanece aberta, R-0022 parada; há contratos, testes e implementações
+parciais em R-0023/R-0025…0032 fora de main. Consulte o
+[estado por rodada](work/rounds/README.md) e a
+[fila reconciliada](docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual)
+antes de abrir ou recriar trabalho. R-0034/35 são planejadas, não executadas.
+
 Phase plan for the DETRAN consolidation (authoritative copy in the orchestrator
 handoff plan; Decisions Ledger owner-confirmed 2026-08-23, binding):
 
