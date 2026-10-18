@@ -12,4 +12,5 @@ OD-R25-016 registra divergência de sequência; OD-R25-017 registra limite do
 GET/RLS tenant versus acesso individual sem fonte. Sem nova permissão/transição.
 Checks afetados, root pnpm check, doctor e revisão cruzada PASS. Browser local
 admit/reject PASS com sessão sintética; IdP real e escopo individual sem prova.
-TASK-0024…0027 completed no recorte; PR #193 aberto, merge/close não autorizados.
+TASK-0024…0027 completed no recorte; PR #193 mesclado (e68266a0), pós-merge parcial registrado; audit YELLOW/43 UNKNOWN.
+Rodada aberta, sem close/seal. Próximo recorte recomendado em reports/JW01-next-slice.md.

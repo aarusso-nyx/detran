@@ -1,14 +1,13 @@
 # R-0025 — frente `rait-web-wiring` (ação 6 da C-0002 — RAIT web: 64 comandos, `caseAccessGuard`, SSE canônico, formulários e rotas L0)
 
-> **Reconciliação 2026-10-18:** checkpoint preservado fora de main; rodada não fechada.
-> Fonte mais recente de execução: `orchestra/rait-web-wiring` @ `9e69d867`, caminhos desta rodada
-> lidos nesse head. O status e as dependências abaixo são o plano/histórico de main;
-> não anulam a execução/autorização registrada no branch nem provam integração.
+> **Reconciliação 2026-10-18:** checkpoint histórico `orchestra/rait-web-wiring`
+> @ `9e69d867` preservado. Continuação de admissibilidade integrada por #193,
+> merge `e68266a0`; rodada integral não fechada. Dependências de setembro abaixo
+> são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual:** retomada A-C3-01 ativa no recorte de admissibilidade aprovado
-pelo Owner; TASK-0024…0027 em execução/verificação. A rodada integral continua
-aberta. A adenda A-C3-01 abaixo prevalece sobre a sequência histórica.
+**Status atual:** A-C3-01, recorte de admissibilidade integrado por PR #193;
+TASK-0024…0027 completed no recorte. Pós-merge registrado; rodada integral aberta. A adenda A-C3-01 abaixo prevalece sobre a sequência histórica.
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.
@@ -51,8 +50,9 @@ UI) e propõe OD-R25-006…015. É entrada normativa de TASK-0001, TASK-0003, TA
 
 ## Adenda A-C3-01 — retomada produto-primeiro (2026-10-18)
 
-**Estado atual:** ativa, primeiro PR limitado de admissibilidade autorizado pelo
-Owner; merge/close/seal não autorizados. Fonte literal e escolha do recorte em
+**Estado de abertura (histórico):** primeiro PR limitado de admissibilidade
+autorizado pelo Owner, então sem merge/close/seal. Merge de #193 e pós-merge foram
+autorizados posteriormente; a rodada permanece aberta. Fonte literal e escolha do recorte em
 `AUTHORIZATION.md`. As dependências e versões de setembro acima são históricas.
 
 - Checkpoint `orchestra/rait-web-wiring` @ `9e69d867` preservado; continuação em
@@ -175,8 +175,22 @@ PASS; frontend5085 PASS/133 TODO existentes; produção/preview/smoke PASS.
 Browser real confirma ADMITIDO12 e NAO_CONHECIDO12 sem depender de SSE.
 Delivery original REVIEW→PASS e browser delta PASS sem achados; hashes da ponte
 verificados. Recibo consolidado reports/JW01-maestro-verification.md.
-PR #193 aberto; merge/close/seal não autorizados. Aceitação integral continua
+PR #193 mesclado por autorização posterior do Owner; close/seal não autorizados. Aceitação integral continua
 pendente, incluindo claim/instrução/minuta e OD-R25-016/017. Histórico abaixo preservado.
+
+### Pós-merge PR #193 — 2026-10-18
+
+Merge e68266a0c83143fa099c37b0b3e5444e7bbb0484 em 16:52:16 America/Sao_Paulo.
+Cinco checks obrigatórios e backend-kernel verdes no candidato 8fcb8d9c.
+Audit observe exato EV-a388da7d4a565ec6 concluído: YELLOW, 0/45 PASS,
+43 UNKNOWN; não promove readiness. Evidência parcial por verbo, recibo
+reports/JW01-post-merge.md. Não é a evidência final dos seis CTGs nem substitui
+aceitação integral. Sem close/seal; histórico e cadeia preservados.
+
+Próximo pacote recomendado, ainda não iniciado: fila de defesa→claim-next de
+DISTRIBUIDO→EM_INSTRUCAO→dossiê, primeiro reconciliando pool/tipos/rota e handoff
+de distribuição. reports/JW01-next-slice.md detalha fontes, bloqueios e gates.
+OD-R25-016/017 continuam abertas. Não retomar R-0022 por esta recomendação.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 

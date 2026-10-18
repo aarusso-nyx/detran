@@ -1,0 +1,248 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+evidence chain: valid; 91 proof lines anchored; 53 historical gap acknowledged; head 735466bc4e70bff8e7951be14c9d66e00dceba0e8fd0bfc95bae82fc6f4f6272
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 devai:doctor /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> devai doctor
+
+{"ok":true,"profile":"tier3","checks":[{"name":"f1-paths-present","ok":true,"info":{"paths":["product","law/invariants","law/schemas","law/adr","docs/dev/operations","docs/dev/security","law/glossary"],"missing":[]}},{"name":"constitution-symlink","ok":true,"info":{"shape":"pointer-file","pointer":"pin/constitution.md","resolved":"/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/pin/constitution.md","tier3_note":"pointer resolvability is distinct from the tier3 vendored-copy and digest-pin binding requirement"}},{"name":"policy-materialization-current","ok":true,"info":{"binding":".devai/config/adopter-policy-binding.json","reason_ids":[],"mismatches":[],"remediation_commands":["devai init bind --target . --adopter-policy law/policy/adopter-policy.json --as-role architect --write"]}},{"name":"governance-tracking-binding","ok":true,"info":{"mode":"disabled","opt_out":true,"network_calls":0}},{"name":"backlog-open-items","ok":true,"info":{"count":0,"items":[]}},{"name":"credential-requirements","ok":true,"info":{"entries":[],"unreadable":"CREDENTIAL_MANIFEST_MISSING"}},{"name":"agents-claude-sync","ok":true},{"name":"chain-dir-writable","ok":true,"info":{"dir":"record/proofs"}},{"name":"evidence-chain-valid","ok":true,"info":{"chain":"record/proofs/chain.json"}},{"name":"llm-bridges","ok":true,"info":{"bridges":[{"family":"claude-cli","cli":"claude","on_path":true,"version":"2.1.292 (Claude Code)","usable":true,"hint":"Set DEVAI_LLM_BACKEND=claude-cli to use the host claude CLI (auth via host OAuth — no API key required)."},{"family":"codex-cli","cli":"codex","on_path":true,"version":"codex-cli 0.163.0","usable":true,"hint":"Set DEVAI_LLM_BACKEND=codex-cli to use the host codex CLI (auth via host OAuth — no API key required)."}]}},{"name":"docs-governance","ok":true,"info":{"verdict":"pass","fail_count":0,"warn_count":0}},{"name":"devai-version-match","ok":true,"info":{"pinned":"2.2.0","running":"2.2.0","provenance":{"source":"npm-package"}}},{"name":"authority-enforcement","ok":true,"info":{"enforcement":"binding","host_mode":"cli-only","declared_mode":"cli-only","policy_binding":"current","selected_adapter_policy_bound":true,"cli_runtime_enforced":true,"local_post_merge_enforced":false,"local_post_merge_facts":{},"github_actions_enforced":false,"github_actions_facts":{"workflow_present":false,"config_present":false},"arbitrary_host_tools_enforced":false}},{"name":"constitution-binding","ok":true,"info":{"has_pin":true,"has_vendored_copy":true,"pin":{"version":"1.0.2","sha256":"d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d"},"vendored_version":"1.0.2","upstream_version":"1.0.2","upstream_ahead":false}},{"name":"trusted-local-rc-boundary","ok":true,"info":{"configured":true,"local_rc_execution_configured":true,"remote_receipt_verification_configured":true,"proof_transport_configured":true,"exact_tree_binding_configured":true,"signer_trust_configured":true,"approved_non_revoked_signers":1,"remote_workflow_can_execute_local_only_node":false,"remote_mutation_fallback_configured":false,"attestation_boundary":"trusted signer identity and byte integrity; workstation execution is not independently reproduced by GitHub"}}]}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:proof-anchors /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human
+
+directly anchored: 91
+declared orphans: 53
+undeclared orphans: 0
+duplicate anchors: 0
+invalid references: 0
+validation errors: 0
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+evidence chain: valid; 91 proof lines anchored; 53 historical gap acknowledged; head 735466bc4e70bff8e7951be14c9d66e00dceba0e8fd0bfc95bae82fc6f4f6272
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:state-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/state-index/check.mjs
+
+verify:state-index OK: 42 ADRs, 3 redirecionamentos, 36 rodadas, 21 closures
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:rounds-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/render-rounds-index.mjs --check
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 docs:kb:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/check.mjs
+
+knowledge-base check: OK (773 artifacts, 446 canonical tokens)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 docs:kb:publish-check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/publish-dry-run.mjs
+
+publication dry run: OK (201 files, raw/internal material excluded)
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 devai:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/devai/tests/*.test.mjs
+
+✔ dada uma fixture com linha de prova sem âncora quando mede a linha de base então a órfã traz caminho sequência e sha256 (868.861916ms)
+✔ dada uma fixture com linha de prova declarada quando mede a linha de base então ela conta como âncora e não como órfã (0.2315ms)
+✔ dada uma fixture com TASK válida e inválida quando mede a linha de base então preserva classificações e erros reproduzíveis (1.598083ms)
+✔ dada uma fixture sem fonte canônica F2/F3 quando mede commits mistos então não inventa total nem classificação (0.294125ms)
+✔ dadas SensorReadings persistidas por kind quando mede a linha de base então conta estado e referência sem promover resultado não persistido (0.243792ms)
+✔ dada uma fixture com linhas ancorada e órfã quando mede a linha de base então proofs.lines preserva chave e hash de todas as linhas (0.426917ms)
+✔ dada uma fixture com checks, provas e rodada pendentes quando renderiza Markdown então expõe contagens e o diagnóstico da rodada (0.442958ms)
+✔ dada uma linha de base sem regressões quando mede o fechamento então grava baseline-final e compara os oito eixos (1978.67075ms)
+✔ dada uma SensorReading de abertura removida quando mede o fechamento então escreve baseline-final e falha a regressão de sensores (1552.614291ms)
+✔ dada somente a órfã A2 e gate estrito limpo quando compara proofs então aceita a linha nova (16.812083ms)
+✔ dada A2 com gate ausente quando compara proofs então falha (9.211083ms)
+✔ dada A2 com gate com falha quando compara proofs então falha (5.614041ms)
+✔ dada A2 com órfã não declarada pelo gate quando compara proofs então falha (3.636542ms)
+✔ dada A2 com âncora duplicada no gate quando compara proofs então falha (7.669167ms)
+✔ dada A2 com referência inválida no gate quando compara proofs então falha (11.570042ms)
+✔ dada A2 com erro de validação no gate quando compara proofs então falha (5.272833ms)
+✔ dada A2 com cadeia inválida quando compara proofs então falha (6.816458ms)
+✔ dada A2 com hash A2 diferente quando compara proofs então falha (7.037291ms)
+✔ dada A2 com outra órfã nova quando compara proofs então falha (6.30975ms)
+✔ dados os dez caminhos A3 e recibo íntegro quando compara TASKs então aceita somente a transposição autorizada (29.395042ms)
+✔ dada transposição A3 com hash da abertura divergente quando compara TASKs então falha (13.881541ms)
+✔ dada transposição A3 com hash de abertura do posterior D1 divergente quando compara TASKs então falha (17.640625ms)
+✔ dada transposição A3 com subconjunto de nove caminhos quando compara TASKs então falha (9.440792ms)
+✔ dada transposição A3 com décimo primeiro caminho quando compara TASKs então falha (17.623291ms)
+✔ dada transposição A3 com hash do sidecar divergente quando compara TASKs então falha (9.766875ms)
+✔ dada transposição A3 com sidecar ausente no recibo quando compara TASKs então falha (13.122375ms)
+✔ dada transposição A3 com leitura de sidecar falha no recibo quando compara TASKs então falha (10.817ms)
+✔ dada transposição A3 com artefato congelado divergente quando compara TASKs então falha (13.172375ms)
+✔ dada transposição A3 com mapeamento analisado de alias divergente quando compara TASKs então falha (14.013458ms)
+✔ dada transposição A3 com mapeamento analisado D1 divergente quando compara TASKs então falha (8.481459ms)
+✔ dada transposição A3 com leitura ou JSON do índice D1 falha no recibo quando compara TASKs então falha (12.149875ms)
+✔ dada transposição A3 com hash posterior D1 divergente quando compara TASKs então falha (8.928416ms)
+✔ dada transposição A3 com destino canônico inválido quando compara TASKs então falha (15.348333ms)
+✔ dada transposição A3 com destino canônico ausente quando compara TASKs então falha (15.500583ms)
+✔ dada transposição A3 com verificador negativo quando compara TASKs então falha (21.409667ms)
+✔ dada transposição A3 com argv do verificador divergente quando compara TASKs então falha (14.81025ms)
+✔ dada transposição A3 com hash da fonte canônica final divergente quando compara TASKs então falha (9.252208ms)
+✔ dada transposição A3 com recibo ausente quando compara TASKs então falha (9.279917ms)
+✔ dada fixture A3 sem cópia local do verificador quando mede fechamento então grava recibo normalizado com hashes reais (1767.070291ms)
+✔ dado tabela CTG A3.2 quando normaliza representante então reserva aliases distintos sem colisão (2105.536042ms)
+✔ dado candidato CTG já reservado quando normaliza então rejeita colisão declarada sem mutação (2087.925ms)
+✔ dado doze títulos A3.2 quando normaliza então aplica cada literal editorial sem truncamento (1371.243792ms)
+✔ dado INV externo A3.2 quando normaliza então arquiva como ref sem alegar invariante local (1260.811916ms)
+✔ dado executor.note autorizado quando normaliza então remove só a nota e preserva contrato executor no sidecar (1206.298333ms)
+✔ dado EV e REC A3.2 quando normaliza então arquiva sete REC e trinta e um EV sem fabricar evidência (18691.664ms)
+✔ dado onze PCs A3.2 guardados quando normaliza então produz índice separado e projeções prospectivas fiéis (7069.347416ms)
+✔ dado PCs arquivísticos sem manifesto A3.5 quando normaliza então falha sem escrita (81.663959ms)
+✔ dado outra classe source_pending quando normaliza então preserva JSON integral e não deixa mutação parcial (71.286125ms)
+✔ dado quatro D1 quando normaliza então move 0019 e arquiva três snapshots sem criar IDs (2655.795208ms)
+✔ dado D1 com snapshot divergente quando normaliza então rejeita hash e preserva todos os originais (138.198667ms)
+✔ dado dois basenames para o mesmo ID quando verifica round TASKs então rejeita antes de D1 (1951.861084ms)
+✔ dado S2 e S3 incompletas quando normaliza então conserva checkpoint arquivístico e sucessoras (2435.604416ms)
+✔ dado S2 incompleta com outra classe pendente quando normaliza então não muda o arquivo inteiro (163.625583ms)
+✔ dado dez posições literais quando normaliza então usa null e mantém disciplina e upstream (7028.629834ms)
+✔ dado ciclo runtime preexistente quando projeta P1 então upstream segue DAG sem ciclo novo (694.015791ms)
+✔ dado PREP U1 quando normaliza então preserva todas as linhas do ledger sem horário inventado (735.760792ms)
+✔ dado PREP com budget alterado quando normaliza então falha sem alegar precedência temporal (710.458291ms)
+✔ dado T1 escalated quando normaliza então indexa reviews sem terceiro worker nem PASS retroativo (719.927792ms)
+✔ dado T1 com revisão hash divergente quando normaliza então falha sem alterar TASK (734.584959ms)
+✔ dado S1 cujo sidecar diz incompleta quando verificador vê completed então rejeita PASS inventado (61.113458ms)
+✔ dado P1 com posição inventada quando verifica sidecar então rejeita reclassificação de Auditor (63.720542ms)
+✔ dado U1 com retry omitido quando verifica índice então rejeita perda da ordem documental (75.099833ms)
+✔ dado U1 com caminho externo quando verifica índice então rejeita fonte fora do repositório (66.466375ms)
+✔ dado U1 com horário fabricado quando verifica índice então rejeita precedência temporal inventada (71.998792ms)
+✔ dado T1 com terceiro worker inventado quando verifica índice então preserva limite 2 (74.112791ms)
+✔ dado normalizador arquivístico quando inspeciona fonte então não invoca despacho nem escreve estado runtime (0.986ms)
+✔ dado nove iteration_trail legados da tabela quando normalizados então arquiva arrays integrais sem inventar started_at ou verdict (10635.147542ms)
+✔ dado iteration_trail já válido em R-0003 TASK-0001 quando normalizado então preserva bytes sem arquivamento (73.79575ms)
+✔ dado R-0006 TASK-0003 escalada sem índice T1 quando normalizada então preserva caso especial pendente (768.505875ms)
+✔ dado iteration_trail legado fora dos nove caminhos autorizados quando normalizado então relata source_pending sem mutar (90.754667ms)
+✔ dado R-0012 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (757.706542ms)
+✔ dado R-0016 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (804.87325ms)
+✔ dado upstream vazio em arquivo alheio quando normalizado então falha sem projetar null (74.159833ms)
+✔ dado upstream vazio em hash alheio no path autorizado quando normalizado então falha sem projetar null (75.039291ms)
+✔ dado tarefa válida quando normalizada duas vezes então preserva executor, composição e bytes (158.313416ms)
+✔ dado ref não INV em target_invariants quando normalizada então move a ref para tags sem perdê-la (785.285917ms)
+✔ dado db_isolation legado sem fonte quando normalizada então relata source_pending sem mutar (89.637625ms)
+✔ dado coupled_task_group inválido sem prova quando normalizada então relata source_pending sem mutar (73.858875ms)
+✔ dado propriedade adicional com bytes estáveis quando normalizada então relata source_pending sem mutar (73.856333ms)
+✔ dado TASK allowlist com none quando normalizada então projeta database e preserva fato histórico no sidecar (784.775291ms)
+✔ dado hash allowlist divergente quando normalizada então relata source_pending sem mutar (75.799ms)
+✔ dado sidecar corrompido quando normalizada então relata source_pending sem mutar (741.20775ms)
+✔ dado TASK fora da allowlist quando normalizada então relata source_pending sem mutar (75.703417ms)
+✔ dado TASK allowlisted com classe A3.2 pendente quando normalizada então não aplica projeção parcial (74.387375ms)
+✔ dado allowlist correta mas literal diferente de none quando normalizada então não aplica A3.1 (74.35ms)
+✔ dado lote com sidecar persistido e outra TASK pendente quando normalizada então não deixa substituição sem original (688.144625ms)
+✔ dado estado parcial canônico sem relatório quando normalizada então retoma sem reescrever bytes (154.105083ms)
+✔ dado matriz R1 aplicada quando normaliza as duas TASKs concluídas então projeta owner sem tocar policy, despacho ou raízes protegidas (1454.735458ms)
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (258.778625ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (78.873ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (73.678916ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (287.28525ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (113.095083ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (89.437542ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (186.182708ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (120.242958ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (86.996916ms)
+✔ dado manifesto pré-migração íntegro quando verifica guarda então aceita (205.925958ms)
+✔ dado manifesto applied íntegro quando verifica guarda então aceita (326.122ms)
+✔ dado fixture applied quando confere A3.2 então preserva sidecars, tags e bridges (79.204542ms)
+✔ dado variantes canônicas de fonte quando calcula hash então preserva digest (0.242833ms)
+✔ dado manifesto ausente quando verifica guarda então falha fechada (211.890167ms)
+✔ dado status desconhecido quando verifica guarda então falha fechada (256.110083ms)
+✔ dado fonte com hash divergente quando verifica guarda então falha fechada (168.745875ms)
+✔ dado pacote antecipado em pré-migração quando verifica guarda então falha fechada (250.2745ms)
+✔ dado store R-0007 quando verifica guarda então falha fechada (217.608959ms)
+✔ dado G0 ausente ou vazio quando verifica guarda então aceita (120.576333ms)
+✔ dado G0 malformado quando verifica guarda então falha fechada (136.998041ms)
+✔ dado backlog R-0007 quando verifica guarda então falha fechada (130.54625ms)
+✔ dado fonte simbólica quando verifica guarda então falha fechada (99.810416ms)
+✔ dado disco aplicado e manifesto regressivo quando verifica guarda então falha fechada (160.687625ms)
+✔ dado manifesto applied sem índice quando verifica guarda então falha fechada (167.558959ms)
+✔ dado uso inválido quando verifica guarda então retorna 2 (82.341708ms)
+✔ dado linha órfã histórica quando não há declaração então falha (179.109375ms)
+✔ dado linha órfã histórica quando prova declaratória ancorada a cita então passa (104.651667ms)
+✔ dado declaração com hash ou sequência divergente quando verifica então falha (100.63725ms)
+✔ dado duas declarações da mesma linha quando verifica então falha (146.816042ms)
+✔ dado declaração append-only de linha nova quando tem hash correto então falha (151.181833ms)
+✔ dado baseline histórica alterada em somente orphans quando verifica então falha (136.9405ms)
+✔ dado baseline histórica alterada em somente lines quando verifica então falha (234.41875ms)
+✔ dado baseline histórica alterada em listas congruentes com trio falso quando verifica então falha (168.36475ms)
+✔ dado baseline histórica alterada em head sha adulterado quando verifica então falha (154.234416ms)
+✔ dado duas âncoras para a mesma linha quando verifica então falha (167.724375ms)
+✔ dado linha nova sem âncora quando verifica então falha (165.00375ms)
+✔ dado referência da cadeia sem linha quando verifica então falha (113.490458ms)
+✔ dado sequência física divergente quando verifica então falha (92.495792ms)
+✔ dado declaração sem âncora quando verifica então falha (116.710708ms)
+✔ dado declaração de linha já ancorada quando verifica então falha (110.029917ms)
+✔ dado declaração de caminho inexistente quando verifica então falha (85.037458ms)
+✔ dado nota generic malformada quando verifica então falha (117.921958ms)
+✔ dado payload round divergente quando verifica então falha (142.1485ms)
+✔ dado declaração da sequência oito com hash da nove quando verifica então falha (104.375917ms)
+✔ dado somente contagem de órfãs adulterada quando verifica então falha (89.156375ms)
+✔ dado R-0021 seq. 2 sem arquivo excepcional quando declaração ancorada a cita então falha (100.773291ms)
+✔ dado autorização A2 e exceção exatas quando declaração ancorada cita R-0021 seq. 2 então passa (122.425541ms)
+✔ dado exceção A2 sem prova declaratória quando verifica R-0021 seq. 2 então falha (87.713ms)
+✔ dado hash da decisão A2 errado quando declaração ancorada cita R-0021 seq. 2 então falha (90.167333ms)
+✔ dado outro trio com digest canônico coerente quando declaração ancorada cita R-0021 seq. 2 então falha (115.410208ms)
+✔ dado linha extra no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (91.263042ms)
+✔ dado linha duplicada no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (96.017333ms)
+✔ dado A2 válida quando nova linha R-0020 é declarada então essa linha falha (95.232791ms)
+✔ dado historical-gap e generic com a mesma sequência quando verifica então exige namespaces e hash físico distintos (362.681333ms)
+✔ dado duas tarefas 2.0.0 válidas quando o gate verifica a rodada então aceita ambas (2361.107208ms)
+✔ dado dois arquivos válidos com mesmo round_id e id quando o gate verifica a rodada então falha por duplicata (1358.844458ms)
+✔ dado tarefa com schemaVersion inválido quando o gate verifica a rodada então falha e identifica o arquivo (1114.576959ms)
+✔ dado tarefa inválida em R-0020 quando o gate verifica as rodadas então identifica o arquivo (1280.154375ms)
+✔ dado sidecar e tags coerentes quando verifica originais então aceita o vínculo (99.980333ms)
+✔ dado vínculo sem relatório antes depois quando verifica originais então falha fechada (116.912542ms)
+✔ dado bytes de sidecar corrompidos quando verifica originais então falha com o caminho (66.635792ms)
+✔ dado caminho de sidecar que escapa do repositório quando verifica originais então falha fechada (83.014958ms)
+✔ dado alias divergente quando verifica originais então falha com o arquivo canônico (88.2935ms)
+✔ dado sidecar ausente e par de tags duplicado quando verifica originais então falha fechada (75.232125ms)
+✔ dado sidecar órfão quando verifica originais então falha fechada (76.027084ms)
+✔ dado dois aliases para o mesmo ID quando verifica originais então rejeita a colisão (93.94425ms)
+✔ dado ID ou round_id original divergente sem alias quando verifica originais então falha fechada (70.79425ms)
+✔ dado relatório com outra rodada e caminho relativo igual quando verifica originais então falha fechada (75.917458ms)
+✔ dado duas projeções R1 íntegras quando verifica originais então confirma a matriz aplicada e os vínculos concretos (170.256416ms)
+✔ dado matriz A3.4 em candidate-not-applied quando verifica originais então recusa o estado (94.110125ms)
+✔ dado matriz A3.4 em unknown quando verifica originais então recusa o estado (181.02675ms)
+✔ dado tag R1 1 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (367.841375ms)
+✔ dado tag R1 2 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (285.922041ms)
+✔ dado tag R1 3 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (285.503083ms)
+✔ dado projeção R1 não concluída quando verifica originais então acusa status da TASK (157.639083ms)
+✔ dado hash A3.4 divergente quando verifica originais então acusa hash (100.9325ms)
+✔ dado path A3.4 divergente quando verifica originais então acusa path (125.362125ms)
+✔ dado receipt A3.4 divergente quando verifica originais então acusa receipt (101.536042ms)
+✔ dado literal A3.4 divergente quando verifica originais então acusa literal (77.34775ms)
+✔ dado identidade R-0003/TASK-0004 materializada em tasks quando verifica originais então recusa despacho (105.351166ms)
+✔ dado identidade R-0005/TASK-0009 materializada em tasks quando verifica originais então recusa despacho (117.118875ms)
+✔ dado identidade R-0003/TASK-0004 materializada em backlog quando verifica originais então recusa despacho (136.653ms)
+✔ dado identidade R-0005/TASK-0009 materializada em backlog quando verifica originais então recusa despacho (140.351875ms)
+✔ dado sidecar A3 missing quando verifica originais então acusa o sidecar (99.60325ms)
+✔ dado sidecar A3 corrupted quando verifica originais então acusa o sidecar (88.030708ms)
+✔ dado matriz que alega grant retrospectivo quando verifica originais então recusa a alegação (101.349041ms)
+ℹ tests 174
+ℹ suites 0
+ℹ pass 174
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 34127.319541
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 format:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!

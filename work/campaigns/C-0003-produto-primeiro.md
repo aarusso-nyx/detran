@@ -2,8 +2,8 @@
 
 > **Continuação atual — 2026-10-18:** R-0033 integrada por PR #191, fechada/selada
 > PC-0021. R-0025 retomada de `orchestra/rait-web-wiring` com A-C3-01, main
-> conciliada e recorte inicial de admissibilidade aprovado pelo Owner; PR limitado
-> sem autorização de merge/close. Quatro tarefas de pré-trabalho preservadas.
+> conciliada e admissibilidade integrada por PR #193 (e68266a0); pós-merge parcial,
+> audit YELLOW/43 UNKNOWN, sem promoção de readiness ou close/seal. Quatro tarefas de pré-trabalho preservadas.
 > Claim/instrução e aceitação integral permanecem pendentes; R-0022 segue parada.
 > R-0034/35 não são iniciadas. OD-C3-009 não é reaberta. A revisão 1 abaixo é
 > histórica; versões/dependências atuais estão no plano R-0025 A-C3-01.
