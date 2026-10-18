@@ -17,7 +17,10 @@ import {
 import { DetranError, withTenantContext } from '@detran/shared';
 
 import { RaitDocumentTrustVerifier } from './rait-document-trust.verifier.js';
-import { RaitOperationClock } from './rait-operation-clock.js';
+import {
+  RaitOperationClock,
+  type RaitOperationClockSnapshot,
+} from './rait-operation-clock.js';
 
 export interface CommandInput {
   command: string;
@@ -67,6 +70,19 @@ type Rule = {
 };
 
 const RULES: Record<string, Rule> = {
+  triage: {
+    expected: ['PROTOCOLADO'],
+    next: 'TRIAGEM_ADMISSIBILIDADE',
+    audit: 'INF_RAIT_CASE_TRIAGE',
+    entity: 'inf.rait_case',
+    fields: [],
+  },
+  'save-admissibility': {
+    expected: ['TRIAGEM_ADMISSIBILIDADE'],
+    audit: 'INF_RAIT_ADMISSIBILITY_CREATE',
+    entity: 'inf.rait_admissibility',
+    fields: ['case_id', 'criterion', 'verdict', 'reason'],
+  },
   admit: {
     expected: ['TRIAGEM_ADMISSIBILIDADE'],
     next: 'ADMITIDO',
@@ -155,6 +171,8 @@ const RULES: Record<string, Rule> = {
   },
 };
 const COMMAND_AUDIT_ROLES: Record<string, string> = {
+  triage: 'rait-analyst',
+  'save-admissibility': 'rait-analyst',
   admit: 'rait-analyst',
   'non-admission': 'rait-analyst',
   remit: 'rait-secretary',
@@ -192,11 +210,12 @@ const canonical = (value: unknown): unknown => {
     );
   return value;
 };
-const fingerprint = (input: CommandInput) =>
+const fingerprint = (input: CommandInput, actorId?: string) =>
   createHash('sha256')
     .update(
       JSON.stringify({
         command: input.command,
+        ...(actorId ? { actorId } : {}),
         targetId: input.targetId,
         payload: canonical(input.payload),
       }),
@@ -262,7 +281,10 @@ const isNonEmpty = (value: unknown): value is string =>
 export class RaitDeadlineEngineFactory {
   constructor() {}
 
-  create(transaction: Tx): DeadlineEngine {
+  create(
+    transaction: Tx,
+    operationSnapshot?: RaitOperationClockSnapshot,
+  ): DeadlineEngine {
     const mapDeadline = (row: Record<string, unknown>): Deadline => ({
       id: String(row.id),
       tenantId: String(row.tenant_id),
@@ -316,7 +338,7 @@ export class RaitDeadlineEngineFactory {
     const select =
       'select deadline.*, item.instance from inf.rait_deadline deadline join inf.rait_case item on item.id = deadline.case_id and item.tenant_id = deadline.tenant_id';
     const engine = createDeadlineEngine({
-      clock: {
+      clock: operationSnapshot ?? {
         today: () => today(),
         now: () => new Date(),
       },
@@ -708,6 +730,12 @@ export class RaitCaseCommandService {
   }
 
   async execute<T extends CommandInput>(input: T): Promise<CommandResult> {
+    if (
+      !input.payload ||
+      typeof input.payload !== 'object' ||
+      Array.isArray(input.payload)
+    )
+      fail('RAIT.VALIDATION_FAILED', 400);
     const rule = RULES[input.command];
     if (
       ['tenantId', 'actorId', 'roles', 'policy', 'tenant_id'].some(
@@ -732,7 +760,12 @@ export class RaitCaseCommandService {
       role: COMMAND_AUDIT_ROLES[input.command] ?? '',
     };
     return this.transaction(async (tx) => {
-      const digest = fingerprint(input);
+      const digest = fingerprint(
+        input,
+        ['triage', 'save-admissibility'].includes(input.command)
+          ? context.actorId
+          : undefined,
+      );
       await tx.query(
         "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
         [context.tenantId, key],
@@ -797,6 +830,11 @@ export class RaitCaseCommandService {
           tenantId: context.tenantId,
           instance: 'jari',
         });
+      const admissibility = ['triage', 'save-admissibility'].includes(
+        input.command,
+      )
+        ? await this.admissibilityEffects(tx, input, current, context)
+        : null;
       await this.effects(tx, input, current, context);
       const changesCase = input.command !== 'redirect';
       const state = rule.next ?? current.state;
@@ -890,11 +928,15 @@ export class RaitCaseCommandService {
           context.role,
           rule.audit,
           rule.entity,
-          current.id,
+          admissibility?.id ?? current.id,
           JSON.stringify({ command: input.command }),
         ],
       );
-      const result = { data, events, etag: `"${data.version}"` };
+      const result = {
+        data: admissibility ?? data,
+        events,
+        etag: `"${data.version}"`,
+      };
       await tx.query(
         "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours')",
         [context.tenantId, key, digest, 200, JSON.stringify(result)],
@@ -941,6 +983,29 @@ export class RaitCaseCommandService {
       if (!isNonEmpty(payload[field]))
         fail('RAIT.VALIDATION_FAILED', 400, { fields: [field] });
     };
+    if (
+      ['triage', 'save-admissibility'].includes(input.command) &&
+      !UUID.test(input.targetId)
+    )
+      fail('RAIT.VALIDATION_FAILED', 400, { fields: ['case_id'] });
+    if (input.command === 'save-admissibility') {
+      uuid('case_id');
+      if (payload.case_id !== input.targetId)
+        fail('RAIT.VALIDATION_FAILED', 400, { fields: ['case_id'] });
+      if (
+        !['legitimidade', 'assinatura', 'pedido_compativel'].includes(
+          String(payload.criterion),
+        )
+      )
+        fail('RAIT.ENUM_INVALID', 400, { field: 'criterion' });
+      if (
+        typeof payload.verdict !== 'boolean' ||
+        (payload.reason !== undefined &&
+          payload.reason !== null &&
+          typeof payload.reason !== 'string')
+      )
+        fail('RAIT.VALIDATION_FAILED', 400);
+    }
     if (input.command === 'non-admission') {
       if (
         ![
@@ -1942,6 +2007,103 @@ export class RaitCaseCommandService {
       ),
     )[0];
     return { ...candidate, assignment_id: assignment?.id };
+  }
+
+  /** ADR-0041/0025: one contextual time, one engine verdict, parent lock/version owned by execute. */
+  private async admissibilityEffects(
+    tx: Tx,
+    input: CommandInput,
+    current: CaseRow,
+    context: { tenantId: string; actorId: string; requestId?: string },
+  ): Promise<Record<string, unknown> | null> {
+    const clock =
+      this.operationClock ??
+      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId);
+    const tenant = rows(
+      await tx.query<{ timezone: string | null }>(
+        'select timezone from auth.tenants where id = $1 for share',
+        [context.tenantId],
+      ),
+    )[0];
+    if (!tenant?.timezone?.trim())
+      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId);
+    let snapshot: RaitOperationClockSnapshot;
+    try {
+      snapshot = clock.capture(
+        tenant.timezone ??
+          fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId),
+      );
+    } catch {
+      return fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId);
+    }
+    const code = (
+      { defesa_previa: 'T-DEF', jari: 'T-NP-VENC', cetran: 'T-R2' } as const
+    )[current.instance as 'defesa_previa' | 'jari' | 'cetran'];
+    if (!code || !current.ait_id)
+      fail(
+        'RAIT.TRIAGE_TIMELINESS_READONLY',
+        422,
+        { caseId: current.id },
+        context.requestId,
+      );
+    const timelinessInput: CaseTimelinessInput = {
+      code,
+      ownerId: current.id,
+      tenantId: context.tenantId,
+      pieceMarkOn: '',
+      caseBinding: {
+        aitId:
+          current.ait_id ??
+          fail(
+            'RAIT.TRIAGE_TIMELINESS_READONLY',
+            422,
+            { caseId: current.id },
+            context.requestId,
+          ),
+        intakeChannel: current.intake_channel,
+        protocolledAt: current.protocolled_at,
+      },
+    };
+    const timeliness = await this.requireDeadlines()
+      .create(tx, snapshot)
+      .timeliness(timelinessInput);
+    const upsert = async (
+      criterion: string,
+      verdict: boolean,
+      reason: unknown,
+    ) => {
+      const record = rows(
+        await tx.query<Record<string, unknown>>(
+          `insert into inf.rait_admissibility
+          (tenant_id, case_id, criterion, verdict, reason, evaluated_at, evaluated_by)
+         values ($1,$2,$3,$4,$5,$6,$7)
+         on conflict (tenant_id, case_id, criterion) do update
+           set verdict = excluded.verdict, reason = excluded.reason,
+               evaluated_at = excluded.evaluated_at, evaluated_by = excluded.evaluated_by,
+               updated_at = excluded.evaluated_at
+         returning *`,
+          [
+            context.tenantId,
+            current.id,
+            criterion,
+            verdict,
+            reason,
+            snapshot.now(),
+            context.actorId,
+          ],
+        ),
+      )[0];
+      if (!record) fail('RAIT.TENANT_MISMATCH', 404, {}, context.requestId);
+      return record;
+    };
+    await upsert('tempestividade', timeliness.timely, timeliness.basis);
+    if (input.command === 'triage') return null;
+    // Payload validation ran before the transaction; no server-owned field is read from it.
+    return upsert(
+      String(input.payload.criterion),
+      input.payload.verdict === true,
+      input.payload.reason ?? null,
+    );
   }
 
   private async effects(

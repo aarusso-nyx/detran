@@ -8,7 +8,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
+import { Action, Audit, NoIdempotent, Resource } from '@detran/shared';
 import { RaitCaseCommandService } from './rait-case-command.service.js';
 
 type Response = { setHeader(name: string, value: string): unknown };
@@ -68,10 +68,33 @@ export class RaitCaseCommandsController {
         return { data: result.data, events: result.events };
       });
   }
+  @Post('cases/:id/commands/triage')
+  @HttpCode(200)
+  @Action('triage')
+  @NoIdempotent()
+  @Audit({
+    action: 'INF_RAIT_CASE_TRIAGE',
+    entity: 'inf.rait_case',
+    transactional: true,
+  })
+  triage(
+    @Param('id') id: string,
+    @Body() body: Record<string, unknown>,
+    @Headers('if-match') match: string | undefined,
+    @Headers('idempotency-key') key: string | undefined,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.run('triage', [id, body, match, key, response]);
+  }
   @Post('cases/:id/commands/admit')
   @HttpCode(200)
   @Action('admit')
-  @Audit({ action: 'INF_RAIT_CASE_ADMIT', entity: 'inf.rait_case' })
+  @NoIdempotent()
+  @Audit({
+    action: 'INF_RAIT_CASE_ADMIT',
+    entity: 'inf.rait_case',
+    transactional: true,
+  })
   admit(
     @Param('id') id: string,
     @Body() body: Record<string, unknown>,
@@ -84,7 +107,12 @@ export class RaitCaseCommandsController {
   @Post('cases/:id/commands/non-admission')
   @HttpCode(200)
   @Action('reject')
-  @Audit({ action: 'INF_RAIT_CASE_REJECT', entity: 'inf.rait_case' })
+  @NoIdempotent()
+  @Audit({
+    action: 'INF_RAIT_CASE_REJECT',
+    entity: 'inf.rait_case',
+    transactional: true,
+  })
   nonAdmission(
     @Param('id') id: string,
     @Body() body: Record<string, unknown>,
