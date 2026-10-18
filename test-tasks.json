@@ -111,6 +111,26 @@
         "kind": "command-result",
         "population": "detran-workspace-e2e"
       }
+    },
+    {
+      "nodeId": "scorecard-typecheck",
+      "dependencies": [],
+      "argv": ["pnpm", "-r", "typecheck"],
+      "cwd": ".",
+      "runner": "node",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [],
+      "sensorKinds": ["type_check"],
+      "outputContract": {
+        "kind": "command-result",
+        "population": "detran-workspace-typecheck"
+      }
     }
   ],
   "profiles": [

@@ -32,6 +32,10 @@ for (const app of apps) {
         after.languageOptions.parser.meta.name,
         before.languageOptions.parser.meta.name,
       );
+      const [parsed] = await combined.lintText('export const value = 1;\n', {
+        filePath: resolve(app, file),
+      });
+      assert.equal(parsed.fatalErrorCount, 0, JSON.stringify(parsed.messages));
     }
   });
 }

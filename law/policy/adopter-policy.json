@@ -42,7 +42,8 @@
         "invariantsDir": "law/invariants"
       },
       "type_check": {
-        "argv": ["pnpm", "-r", "typecheck"]
+        "taskId": "scorecard-typecheck",
+        "population": "detran-workspace-typecheck"
       },
       "unit_test": {
         "taskId": "scorecard-unit",
@@ -101,7 +102,6 @@
         "workflow": "ci.yml",
         "event": "push",
         "headBranch": "main",
-        "baseBranch": "main",
         "attempts": "last",
         "includeCancelled": false,
         "lookbackDays": 30,
@@ -112,7 +112,6 @@
         "workflow": "ci.yml",
         "event": "push",
         "headBranch": "main",
-        "baseBranch": "main",
         "attempts": "last",
         "includeCancelled": false,
         "lookbackDays": 30,
@@ -123,7 +122,6 @@
         "workflow": "ci.yml",
         "event": "push",
         "headBranch": "main",
-        "baseBranch": "main",
         "attempts": "last",
         "includeCancelled": false,
         "lookbackDays": 30,

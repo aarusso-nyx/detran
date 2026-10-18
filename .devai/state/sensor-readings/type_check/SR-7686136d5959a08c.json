@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-7686136d5959a08c",
+  "sensor": {
+    "name": "type-check",
+    "kind": "type_check"
+  },
+  "timestamp": "2026-10-18T21:57:37.369Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "pnpm -r typecheck",
+  "command_hash": "90ef4d5e251f72070fced172add761fb79ffa15934809d536b215b7ad2744dfc",
+  "exit_code": 127,
+  "duration_ms": 127827,
+  "out_head": "Scope: 63 of 64 workspace projects\nbackend/domains/shared typecheck$ tsc --noEmit\nbackend/domains/inf/deadlines typecheck$ tsc --noEmit\npackages/api-clients typecheck$ tsc --noEmit\npackages/sefaz-adapter typecheck$ tsc --noEmit\nbackend/domains/inf/deadlines typecheck: Done\npackages/api-clients typecheck: Done\npackages/senatran-adapter typecheck$ tsc --noEmit\npackages/ui typecheck$ tsc -p tsconfig.spec.json --noEmit\npackages/sefaz-adapter typecheck: Done\nsenatran-mock typecheck$ tsc --noEmit\npackages/ui typecheck: Done\nsenatran-mock typecheck: Done\npackages/senatran-adapter typecheck: Done\nbackend/domains/shared typecheck: Done\napps/rait/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/dashboard/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/portal/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/boat/mobile typecheck$ tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit\napps/boat/mobile typecheck: Done\nbackend/domains/ch/clinical-network typecheck$ tsc --noEmit\napps/dashboard/web typecheck: Done\nbackend/domains/est/crash typecheck$ tsc --noEmit\nbackend/domains/ch/clinical-network typecheck: Done\nbackend/domains/inf/normative typecheck$ tsc --noEmit\napps/portal/web typecheck: Done\nbackend/domains/inf/rait-integration typecheck$ tsc --noEmit\nbackend/domains/est/crash typecheck: Done\n.../domains/integration/renaest-mirror typecheck$ tsc --noEmit\napps/rait/web typecheck: Done\nbackend/domains/ops/agency typecheck$ tsc --noEmit\nbackend/domains/inf/normative typecheck: Done\nbackend/domains/ops/core typecheck$ tsc --noEmit\nbackend/domains/inf/rait-integration typecheck: Done\nbackend/domains/ops/example typecheck$ tsc --noEmit\n.../domains/integration/renaest-mirror typecheck: Done\nbackend/domains/ops/parameter typecheck$ tsc --noEmit\nbackend/domains/ops/agency typecheck: Done\nbackend/domains/portal/complaints typecheck$ tsc --noEmit\nbackend/domains/ops/core typecheck: Done\nb",
+  "err_head": "spawnSync pnpm ETIMEDOUT",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "error_count": 0
+  }
+}
