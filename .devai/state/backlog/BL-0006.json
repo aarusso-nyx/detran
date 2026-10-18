@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0006",
+  "request_id": "r0036-remediation-coverage",
+  "kind": "finding",
+  "title": "P1 Inspector: enable full RC coverage producer and repair empty-exclusions handling",
+  "body": "Cell F3:T2. Empty exclusions are admitted by sensor-inputs.schema.json but rejected as SENSE_INPUT_INVALID:exclusions. Compatible-input retry retains a failed producer; no whole-repository RC coverage report exists. Add supported coverage aggregation for the real declared population in a separate task. Acceptance: measured-file population and sidecar match all admitted source roots, exclusions are explicit, and missing or stale reports never imply coverage success. Evidence: work/rounds/R-0036/reports/evaluation-34a89f84/.",
+  "origin": {
+    "session": "DIRECT-CLI-a36846f89b3c0b3f2d8bdd9048560cef",
+    "role": "auditor",
+    "commit": "34a89f845146523161f401ae758b5fb9fab8db93"
+  },
+  "round_id": "R-0036",
+  "status": "open",
+  "created_at": "2026-10-18T21:05:36.645Z",
+  "resolved_at": null
+}

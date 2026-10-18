@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-22.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/harness_green_main/SR-6fad0789b3aba691.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-6fad0789b3aba691\",\"sensor\":{\"name\":\"harness-green-main\",\"kind\":\"harness_green_main\"},\"timestamp\":\"2026-10-18T20:55:33.106Z\",\"status\":\"pass\",\"deterministic\":false,\"command\":\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 300 --created >=2026-09-18\",\"command_hash\":\"3f7291fa10c49ccb4569f30312431703f1933c2941aa334b2508f4fe94f902d9\",\"tier\":\"L2\",\"findings\":[{\"severity\":\"info\",\"code\":\"HARNESS_POPULATION_UNVERIFIED\",\"message\":\"Population filters unverified, not applied to the sample: baseBranch main (gh run list rows carry no base branch).\"}],\"metrics\":{\"run_count\":89,\"success_count\":87,\"success_pct\":97.75,\"threshold_pass\":95,\"threshold_review\":80,\"sample_size\":89,\"minimum_sample\":10,\"population_workflow\":\"ci.yml\",\"population_event\":\"push\",\"population_head_branch\":\"main\",\"population_base_branch\":\"main\",\"population_attempts\":\"last\",\"population_include_cancelled\":false,\"population_lookback_days\":30,\"population_base_branch_verified\":false,\"population_excluded_jobs_unverified\":0,\"population_unverified\":\"baseBranch\"}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

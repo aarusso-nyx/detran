@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-20.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/inventory_determinism/SR-8d99f703eb872800.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-8d99f703eb872800\",\"sensor\":{\"name\":\"inventory-determinism\",\"kind\":\"inventory_determinism\"},\"timestamp\":\"2026-10-18T20:55:30.039Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-inventory-determinism\",\"command_hash\":\"a98e42de47872a05c0a07a0f3bbed050ad244c3e751207208fd8640d37dab650\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"hash_a\":\"14c072c9d3235a92d6f77dcdd7d6951d5558bd07dcb2335c8490930b4ffbe412\",\"hash_b\":\"14c072c9d3235a92d6f77dcdd7d6951d5558bd07dcb2335c8490930b4ffbe412\",\"bytes_a\":974257,\"bytes_b\":974257,\"equal\":1}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

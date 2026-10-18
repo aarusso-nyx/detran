@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-c70a85a0d50607cf",
+  "sensor": {
+    "name": "test-coherence",
+    "kind": "test_coherence"
+  },
+  "timestamp": "2026-10-18T20:55:33.519Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense-test-coherence",
+  "command_hash": "61bbc16d5a32d45d900bed084562635adc680ff04bb11652288da7a66abefaa1",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "TEST_COHERENCE_PACKAGE_BELOW_MIN",
+      "message": "Package /Volumes/Development/projects/stech/detran/packages/api-clients has test/source ratio 0.00 (< 0.1).",
+      "file": "/Volumes/Development/projects/stech/detran/packages/api-clients"
+    }
+  ],
+  "metrics": {
+    "packages_scanned": 4,
+    "source_files": 103,
+    "test_files": 14,
+    "global_ratio": 0.136,
+    "packages_below_min_ratio": 1,
+    "naming_uses_test": 0,
+    "naming_uses_spec": 14,
+    "naming_consistent": 1
+  }
+}

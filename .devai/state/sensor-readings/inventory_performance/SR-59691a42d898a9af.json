@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-59691a42d898a9af",
+  "sensor": {
+    "name": "inventory-performance",
+    "kind": "inventory_performance"
+  },
+  "timestamp": "2026-10-18T20:59:44.224Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense-inventory-performance",
+  "command_hash": "ec3a466a92a730be6f15acd079d66bb789519e0b69ce38bfc3876fd15f1a43e6",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "INVENTORY_PERFORMANCE_SLOW",
+      "message": "Inventory p95 2989ms above pass threshold 2000ms."
+    }
+  ],
+  "metrics": {
+    "kinds_observed": 7,
+    "total_observations": 7,
+    "overall_p95_ms": 2989,
+    "overall_mean_ms": 964,
+    "threshold_pass": 2000,
+    "threshold_review": 5000,
+    "inventory_api_count": 1,
+    "inventory_api_p95_ms": 778,
+    "inventory_api_mean_ms": 778,
+    "inventory_coverage_count": 1,
+    "inventory_coverage_p95_ms": 66,
+    "inventory_coverage_mean_ms": 66,
+    "inventory_data_handling_count": 1,
+    "inventory_data_handling_p95_ms": 0,
+    "inventory_data_handling_mean_ms": 0,
+    "inventory_data_model_count": 1,
+    "inventory_data_model_p95_ms": 0,
+    "inventory_data_model_mean_ms": 0,
+    "inventory_dep_graph_count": 1,
+    "inventory_dep_graph_p95_ms": 2917,
+    "inventory_dep_graph_mean_ms": 2917,
+    "inventory_rbac_count": 1,
+    "inventory_rbac_p95_ms": 0,
+    "inventory_rbac_mean_ms": 0,
+    "inventory_routes_count": 1,
+    "inventory_routes_p95_ms": 2989,
+    "inventory_routes_mean_ms": 2989
+  }
+}

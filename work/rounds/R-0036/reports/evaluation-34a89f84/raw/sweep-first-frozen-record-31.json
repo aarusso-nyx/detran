@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-31.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/test_security_coverage/SR-3f13f6ba1de6aa5c.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-3f13f6ba1de6aa5c\",\"sensor\":{\"name\":\"test-security-coverage\",\"kind\":\"test_security_coverage\"},\"timestamp\":\"2026-10-18T20:55:34.039Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-test-security-coverage\",\"command_hash\":\"8a34e022880a8a30a8c1e4e26c7ed4d58462282cb9608bcef551a4ba33d02200\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"test_files\":707,\"security_tests\":138,\"security_pct\":19.52,\"threshold_pass\":5,\"threshold_review\":2}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-634bb6d008468ba9",
+  "sensor": {
+    "name": "harness-invariant-alignment",
+    "kind": "harness_invariant_alignment"
+  },
+  "timestamp": "2026-10-18T20:59:44.223Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense-harness-invariant-alignment",
+  "command_hash": "61224e91865dd8ed30c03cb1acf9f4bc08ada5ec450523d7320c53699a26a720",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-CH-001 has no measurable_via[] entries to align against CI."
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-DASH-001 has no measurable_via[] entries to align against CI."
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-EST-001 has no measurable_via[] entries to align against CI."
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-INF-001 has no measurable_via[] entries to align against CI."
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-OPS-001 has no measurable_via[] entries to align against CI."
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+      "message": "Gate invariant INV-PORTAL-001 has no measurable_via[] entries to align against CI."
+    }
+  ],
+  "metrics": {
+    "gate_invariants": 6,
+    "misaligned": 6,
+    "workflow_count": 2,
+    "executable_run_steps": 38,
+    "evidence_records": 54,
+    "candidate_head_resolved": true
+  }
+}

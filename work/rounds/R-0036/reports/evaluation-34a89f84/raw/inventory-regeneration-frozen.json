@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_regeneration",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--as-role",
+    "auditor",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T20:54:19.279Z",
+  "finished_at": "2026-10-18T20:54:23.389Z",
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_regeneration\"},\"members\":[{\"kind\":\"inventory_regeneration\",\"effect\":\"harness-write\",\"capabilities\":[\"fs:f5-state\"],\"consent\":{\"write\":true,\"publish\":false}}],\"executed\":[\"inventory_regeneration\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"harness-write\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"review\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":1,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run inventory_regeneration\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-104df1bf36e57b81\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory-regeneration\\\",\\\"kind\\\":\\\"inventory_regeneration\\\"},\\\"timestamp\\\":\\\"2026-10-18T20:54:23.328Z\\\",\\\"status\\\":\\\"review\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense run inventory_regeneration\\\",\\\"command_hash\\\":\\\"1e21b0a3659eee9987e46daa21c7081523fb042f9b5200a474b6ac47a3dc7a97\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_REGENERATION_KIND_REVIEW\\\",\\\"message\\\":\\\"inventory_coverage was regenerated and its producer reads REVIEW; that standing is kept.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"INVENTORY_REGENERATION_PRODUCER_FINDING\\\",\\\"message\\\":\\\"inventory_coverage [COVERAGE_REQUIRES_API_MAP]: api-map body not found at record/proofs/sensors/inventory_api/api-map.json. Run 'devai sense run inventory_api' first.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"INVENTORY_REGENERATION_PRODUCER_FINDING\\\",\\\"message\\\":\\\"inventory_coverage [COVERAGE_REQUIRES_ROUTES]: No routes-inventory body found under record/proofs/sensors/inventory_routes. Run 'devai sense run inventory_routes' first.\\\"}],\\\"metrics\\\":{\\\"kinds_touched\\\":2,\\\"kinds_rebuilt\\\":1,\\\"kinds_up_to_date\\\":1,\\\"error_count\\\":0,\\\"required_kinds\\\":2,\\\"missing_required_kinds\\\":0,\\\"obsolete_bodies_removed\\\":0,\\\"integration_head\\\":\\\"34a89f845146523161f401ae758b5fb9fab8db93\\\",\\\"integration_tree\\\":\\\"7358e90f7881553d95a880594831f638fdcd4b67\\\",\\\"inventory_body_sha256\\\":\\\"40ee6a34915ef5e29ba2bcca1a8ed28ee69992a7e6192c06056c32d561639b74\\\",\\\"inventory_dep_graph_status\\\":\\\"pass\\\",\\\"inventory_coverage_status\\\":\\\"review\\\",\\\"inventory_dep_graph_command_hash\\\":\\\"106666185d3f3b83ab13ffba253ed785de58674127b8c511b95c03ce65346631\\\",\\\"inventory_dep_graph_input_sha256\\\":\\\"24dc125e3325b436c6bf0c8766c78427de9b431e140d3ce895e862f6a047650c\\\",\\\"inventory_dep_graph_finding_count\\\":0,\\\"inventory_dep_graph_metric_node_count\\\":3372,\\\"inventory_dep_graph_metric_edge_count\\\":15898,\\\"inventory_coverage_command_hash\\\":\\\"ce8408d76cac9f9dac515a2998bee4c3928973f7e1cedf1b0d60eb06b6fe03b2\\\",\\\"inventory_coverage_input_sha256\\\":\\\"e094eeb847f85289d741ec9a85585458678b1a719158bee1b48fb4dc8e06dc4e\\\",\\\"inventory_coverage_finding_count\\\":2,\\\"inventory_coverage_metric_route_count\\\":0,\\\"inventory_coverage_metric_endpoint_count\\\":0,\\\"inventory_coverage_metric_use_case_count\\\":110,\\\"inventory_coverage_metric_link_count\\\":0,\\\"inventory_coverage_metric_unmapped_route_count\\\":0,\\\"inventory_coverage_metric_unmapped_endpoint_count\\\":0,\\\"inventory_coverage_metric_inferred_path_match_count\\\":0,\\\"inventory_coverage_metric_coverage_hash\\\":\\\"321d19a9365d422c1357bceb71ad18a5522413987c13ea310755b79d803c816e\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":1}]}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

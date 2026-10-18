@@ -1,6 +1,7 @@
 # R-0036 — all 43 applicable scorecard cells
 
-**Status:** active evaluation, initiated by the user's approved plan on 2026-10-18.
+**Status:** assessment delivered; the round remains open for separate remediation,
+without a formal closure or readiness claim. Initiated by the user's approved plan on 2026-10-18.
 Backlog: BL-0001. Baseline: `3ec14d3a0e6b274dc367157bc4958f81750c5dc8`.
 
 ## Goal
@@ -52,3 +53,23 @@ Exactly 45 unique scorecard coordinates; 43 register rows and the original two
 N/A cells. Every row names sensor commands, criteria, population, evidence,
 limitations, and follow-up ownership. Evidence verification passes, or a verified
 baseline failure is separately disclosed. No readiness claim from command success.
+
+## Assessment delivered
+
+Evaluated commit: `34a89f845146523161f401ae758b5fb9fab8db93`. All 43 cells have
+dispositions: 19 measured for the stated sensor predicate, 13 partial, 11 blocked.
+Native scorecard: 18 PASS, 10 REVIEW, 12 FAIL, 3 UNKNOWN, 2 unchanged N/A; overall FAIL.
+52 native readings were recorded. Remediation findings: BL-0002 through BL-0011.
+
+- [Assessment and validation](reports/evaluation-34a89f84/assessment.md).
+- [43-row evaluation register](reports/evaluation-34a89f84/evaluation-register.json).
+- [Native scorecard](reports/evaluation-34a89f84/final-scorecard.json).
+- [Evidence manifest](reports/evaluation-34a89f84/evidence-manifest.json).
+- [Prioritized remediation backlog](reports/evaluation-34a89f84/remediation-backlog.md).
+
+Native build, supplemental workspace typecheck, backend unit/integration/E2E/upgrade,
+mock and adapter tests, and affected governance checks passed. Six frontend timeouts
+passed targeted reruns without assertion or timeout changes. Existing empty package
+suites and TODOs are explicitly inventoried. Full formatting reports only the
+pre-existing ignored `.claude/settings.local.json`; delivered source formatting passes.
+The disposable database and both mock services were stopped and their removal recorded.

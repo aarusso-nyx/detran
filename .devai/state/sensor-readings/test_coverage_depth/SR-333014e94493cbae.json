@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-333014e94493cbae",
+  "sensor": {
+    "name": "test-coverage-depth",
+    "kind": "test_coverage_depth"
+  },
+  "timestamp": "2026-10-18T20:58:56.554Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense-test-coverage-depth",
+  "command_hash": "d7b2f1c9b6051a6c97d386b14e31285260fa137788e6d75d81d1caaa100be471",
+  "tier": "L2",
+  "exit_code": 254,
+  "duration_ms": 393,
+  "err_head": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n",
+  "findings": [
+    {
+      "severity": "error",
+      "code": "COVERAGE_PRODUCER_FAILED",
+      "message": "The rc coverage producer `pnpm vitest run --config tests/config/local.coverage.config.ts` exited with code 254. stderr head: WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}"
+    }
+  ],
+  "metrics": {
+    "population": "rc",
+    "lines_total": 0,
+    "lines_covered": 0,
+    "lines_pct": 0,
+    "threshold_pass": 80,
+    "threshold_review": 50
+  }
+}

@@ -4,6 +4,10 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
+import {
+  parseCommandDocument,
+  unwrapCommandDocument,
+} from './scorecard-output.mjs';
 
 const root = process.cwd();
 const round = 'R-0036';
@@ -31,21 +35,6 @@ function save(name, value) {
   writeFileSync(join(audit, name), JSON.stringify(value, null, 2) + '\n', {
     flag: 'wx',
   });
-}
-
-export function unwrap(document) {
-  return document?.result?.value ?? document;
-}
-
-function parse(stdout) {
-  for (const line of stdout.trim().split('\n').reverse()) {
-    try {
-      return JSON.parse(line);
-    } catch {
-      /* preserve non-JSON output in transcript */
-    }
-  }
-  return null;
 }
 
 async function capture(label, argv, timeoutMs = 900_000) {
@@ -96,7 +85,10 @@ async function capture(label, argv, timeoutMs = 900_000) {
   console.log(
     `END ${label}: exit=${result.exitCode} timeout=${result.timedOut}`,
   );
-  return { ...outcome, value: unwrap(parse(result.stdout)) };
+  return {
+    ...outcome,
+    value: unwrapCommandDocument(parseCommandDocument(result)),
+  };
 }
 
 const cli = (...args) => ['pnpm', 'exec', 'devai', ...args];
@@ -162,7 +154,7 @@ if (mode === 'capture') {
   const labels = process.argv.slice(3);
   for (const label of labels) {
     const raw = JSON.parse(readFileSync(join(audit, `${label}.json`)));
-    const value = unwrap(parse(raw.stdout));
+    const value = unwrapCommandDocument(parseCommandDocument(raw));
     for (const [index, result] of (value?.results ?? []).entries()) {
       let reading;
       try {
