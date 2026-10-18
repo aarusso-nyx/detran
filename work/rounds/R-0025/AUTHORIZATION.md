@@ -39,3 +39,19 @@ espera obrigatória por R-0022/23/24. R-0022 continua parada; não é retomada n
 fundida integralmente. Costuras e limites atuais estão no adendo do plano e no
 contrato `contracts/JW01-admissibility.md`. Maestro família Codex, reviewer Claude
 via alias CLI `opus`; sem inferência de modelo exato a partir do alias.
+
+## Adenda pós-merge PR #193 — Owner, 2026-10-18
+
+Autorização direta subsequente, literal:
+
+> Check CI on PR #193, fix any failures, and merge it once all required checks are green.
+
+Os checks requeridos passaram e o merge foi executado em
+`e68266a0c83143fa099c37b0b3e5444e7bbb0484`. A restrição prévia de merge foi
+superada exclusivamente para esse PR. Em seguida, literal do Owner:
+
+> Complete the post-merge evidence and audit for PR #193, refresh R-0025’s planning records, and recommend the next JW-01 slice. Keep the broader round open and preserve existing local changes.
+
+Autoriza observação exata, evidência parcial e atualização documental por PR;
+não autoriza close/seal, declaração de aceitação integral ou implementação da
+próxima fatia recomendada. As limitações e decisões pendentes continuam abertas.

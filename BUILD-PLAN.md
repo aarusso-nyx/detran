@@ -4,7 +4,8 @@
 
 As fases originais abaixo são o plano de origem; o addendum de 2026-09-13 e
 C-0003 §4/A-C2-16 determinam a execução atual para infrações. Port/merge de WP
-não certifica jornada produtiva. R-0033 já tem prévia RAIT em branch preservado;
+não certifica jornada produtiva. R-0033 integrou prévias RAIT/Portal e fechou PC-0021; R-0025 integrou somente
+admissibilidade por #193 e permanece aberta;
 R-0020 permanece aberta, R-0022 parada; há contratos, testes e implementações
 parciais em R-0023/R-0025…0032 fora de main. Consulte o
 [estado por rodada](work/rounds/README.md) e a
