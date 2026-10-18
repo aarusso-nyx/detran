@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0015",
+  "request_id": "r0036-product-ci-performance-20261018",
+  "kind": "finding",
+  "class": "ci",
+  "title": "P2: investigate slow historical main-branch CI",
+  "body": "Native published DEVAI 2.6.2 measured 91 push/main runs, 89 successful. CI duration median 1684 seconds and p95 2280 seconds exceed the unchanged pass limits of 900 and 1800 seconds. Evidence: work/rounds/R-0036/reports/remediation-599161f9/evidence-manifest.json. Base-branch population verification remains a provider limitation addressed separately in codex/detran-ci-population-20261018. Owner: Engineer. After population verification, profile actual CI steps and submit a separate optimization PR. Preserve mandatory checks, sample minima, observation window and duration thresholds.",
+  "origin": {
+    "session": "DIRECT-CLI-0c6d5caa24d95a15c10d74019978e355",
+    "role": "inspector",
+    "commit": "8cf4223a18d287da2c64a5a57f7172cebb3ce574"
+  },
+  "round_id": "R-0036",
+  "status": "open",
+  "created_at": "2026-10-18T23:13:57.797Z",
+  "resolved_at": null
+}
