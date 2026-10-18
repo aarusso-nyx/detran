@@ -6,13 +6,19 @@
 > não anulam a execução/autorização registrada no branch nem provam integração.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner.** Planejada em 2026-09-26
+**Status atual:** retomada A-C3-01 ativa no recorte de admissibilidade aprovado
+pelo Owner; TASK-0024…0027 em execução/verificação. A rodada integral continua
+aberta. A adenda A-C3-01 abaixo prevalece sobre a sequência histórica.
+
+**Estado histórico da Sessão A:** A-C2-15 liberava somente
+TASK-0001/0002/0003/0006 e aguardava os upstreams.
+Planejada em 2026-09-26
 pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6** (Codex CLI),
 workers da escada Codex (Sol 6 / Terra / Luna, `model-ladder.md` após R-0018), reviewer **Opus 5.5**
 pela ponte `tools/orchestra/bridge.sh claude` (OD-C2-003; ids de CLI confirmados no bootstrap).
-Worktree `/Volumes/Thiamat II/stech/detran-worktrees/rait-web-wiring`, branch
+Worktree `/Users/aarusso/.codex/worktrees/rait-web-wiring/detran`, branch
 `orchestra/rait-web-wiring`. Rastreio: issue #122. `AUTHORIZATION.md`, `tasks/` e `compositions.json`
-só nascem no bootstrap, depois da autorização.
+foram criados no bootstrap da Sessão A, depois da autorização direta.
 **Concorrência (upstreams da campanha):**
 
 - **Abertura:** R-0024 `stynx-dedup` publicada em `origin/orchestra/stynx-dedup` (abertura
@@ -42,6 +48,135 @@ CTG-0005/0006). Antes da OD-R25-001: 4.
 R-02…R-36), **16 `faltante`** (endpoints F-01…F-16 criados nesta rodada) e **0 `obsoleto na UI`**,
 com a marca `fail-closed-assinatura` em 3 linhas; lista o inverso (operações de backend sem uso na
 UI) e propõe OD-R25-006…015. É entrada normativa de TASK-0001, TASK-0003, TASK-0006 e TASK-0009.
+
+## Adenda A-C3-01 — retomada produto-primeiro (2026-10-18)
+
+**Estado atual:** ativa, primeiro PR limitado de admissibilidade autorizado pelo
+Owner; merge/close/seal não autorizados. Fonte literal e escolha do recorte em
+`AUTHORIZATION.md`. As dependências e versões de setembro acima são históricas.
+
+- Checkpoint `orchestra/rait-web-wiring` @ `9e69d867` preservado; continuação em
+  `codex/r0025-jw01`, worktree isolada
+  `/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran`. Main
+  `d871c1d4` integrado por merge `5809388b994c4561c25e377f48bdc95a359d92ff`.
+- C-0003 §4/A-C2-16 substituem base empilhada por main e esperas obrigatórias
+  R-0022/23/24 pelo padrão v0 integrado da R-0033, SSE local e DetranPolicyGuard
+  atuais. DEVAI 2.2.0, Constituição 1.0.2, STYNX 1.5.3. R-0033 fechada e selada
+  PC-0021; R-0022 permanece parada. Maestro Codex; reviewer Claude alias opus.
+- **Primeiro recorte:** PROTOCOLADO → F-01 → R-01 (três critérios humanos +
+  tempestividade server) → admit/reject existentes, com guard real GET/RLS e
+  transporte/contexto/cabeçalhos reais. Owner escolheu explicitamente esse início.
+  Não é a sequência claim→instrução do desenho da JW-01: OD-R25-016 mantém a
+  divergência explícita; nenhum novo arco de estado é criado.
+- Contrato atual: `contracts/JW01-admissibility.md`, ADR-0041. Architect prepara
+  blueprint/OpenAPI/gerados; Inspector sensores; Engineer backend e frontend em
+  sequência. As quatro TASKs históricas (0001/0002/0003/0006) ficam intactas;
+  TASK-0024…0027 instanciam somente o recorte; TASK-0004…0020 originalmente
+  planejadas mantêm identidade e escopo, sem renumeração ou substituição.
+- Não tocar app.module.ts, detran-runtime.ts, serviços SSE, documentos, outbox
+  estrutural, offline-sync, pin STYNX, workflows, .devai/config, law/register ou
+  record/. policy.ts só pode receber chave nova do próprio recorte se necessária
+  e comprovada; não migrar autorização de R-0023 nem conceder por analogia.
+- OD-R25-017 registra limite do escopo individual: GET atual prova tenant RLS,
+  não predicado de analista/pool em todo caso do mesmo tenant. RN-143 trata
+  autoridade signatária. Não inventar permissão e não relatar tal escopo como PASS.
+- **Aceitação integral preservada:** 64 comandos e todos os critérios originais
+  continuam requeridos para a rodada integral. Claim, F-02/instrução, minuta,
+  demais comandos/jornadas não foram entregues por este primeiro PR. Não promover
+  critérios não executados a PASS nem declarar R-0025/JW-01 completas.
+- Recorte requer checks afetados, root pnpm check, doctor, contratos/geração,
+  review cruzada e browser smoke local antes de PR. Perfil local de teste não
+  prova JWT/IdP real; essa limitação deve acompanhar os recibos. Nenhum gate é
+  relaxado; os dois baseline failures do catálogo são investigados separadamente.
+
+### Bootstrap da continuação — recibo de revisão
+
+Prompt-review A-C3-01 ciclo1 REVIEW (três high e dois low) → ciclo2 **PASS,
+zero achados** (`reviews/prompt-review-A-C3-01-2.json`). TASK-0024 completed: fontes
+blueprint CASE v1.1.8 e quatro operações OpenAPI tipadas; maestro fará geração
+e gates. Controller `RaitAdmissibilityCommandsController` em
+`handwritten/rait-admissibility-commands.controller` e provider
+`RaitAdmissibilityCommandService` em `handwritten/rait-admissibility-command.service`,
+exportados pelo blueprint. Fontes/gerados no commit `005780e3`; geração e blueprints:check PASS conforme
+`reports/TASK-0024.md`. Aceitação HTTP e do recorte continua independente; nenhum
+PASS de runtime final antecipado.
+
+**Esclarecimento F3 pós-review (sem mudar prompts):** TASK-0025 inclui
+`apps/rait/web/src/app/forms/gates-matrix.spec.ts` e
+`apps/rait/web/src/testing/gates.fixture.ts` somente para materializar o catálogo
+65 já aprovado: preservar mapa integral anterior e acrescentar a correspondência
+`rait-admissibility:create` → `inf:rait-admissibility:create`, ajustar contagem
+64→65 sem filtros. As contagens de 64 páginas permanecem inalteradas. Recibo em
+`reports/TASK-0024.md`; execução após checkpoint de geração.
+
+### RGR de prévia — porta de controle D-23
+
+Adenda ao contrato JW01-admissibility, ADR-0041 e frontend-preview-mode D-23:
+`verifyCaseAccess(caseId): Promise<void>` é leitura de controle, default GET real
+com ETag/RLS, override preview de existência na fixture independente do cenário
+visual. ID desconhecido continua negado; auth/role/guarda reais preservados.
+Páginas continuam todos os cinco estados; M8 permanece 65, não há 66º comando.
+Inspector cria os sensores antes do Engineer; não contornar guarda ou enfraquecer
+20 falhas de coverage/a11y decorrentes da colisão entre controle e apresentação.
+Os resultados finais após correção ainda precisam ser observados.
+
+### Delivery-review ciclo1 — correções delimitadas
+
+Veredito material **REVIEW**, não PASS; wrapper Markdown impediu parsing normal
+da ponte e o maestro preserva a resposta/recibo recuperados. High: replay de saves
+ignorava versão observada; correção de contrato/ADR inclui If-Match na chave dos
+quatro comandos ativados e If-Match+actor no fingerprint servidor. Retry exato
+continua estável; nova versão não pode reproduzir resposta antiga. Low: auditoria
+triage/save passa a atribuir o papel autenticado canônico (secretary inclusive),
+com identidade/tenant conferidos no padrão protocol existente. Grants atuais
+por permissions e GLOBAL_ADMIN_ROLES são preservados; audit pode registrar role
+real ou NULL com origem permission explícita, sem novo bloqueio por falta de
+interseção de papéis. Contrato detalha
+assinaturas internas; bodies HTTP e os outros comandos ficam intactos. Inspector
+primeiro testa resave/reversão/replay e secretaria; Engineer só após RED aceito.
+
+**Esclarecimentos F3 autorizados nesta execução:** policy.fixture.ts acrescenta
+somente a chave create canônica a analyst/secretary; guards.spec.ts substitui
+a sentinela true/todo por GET pendente e negativas reais; triage.page.spec.ts
+prova três critérios humanos e reason/grounds; gates-matrix/preview-permissions
+preservam mapa integral e a paridade dos13papéis; preview-not-functional mantém
+65 comandos/zeroHTTP no caso canônico e preview-fixture-source prova D23 como
+READ, conhecidos/desconhecidos nos5estados e papéis negados. Prompts congelados
+são preservados; estes ajustes de sensores referenciam os contratos correspondentes.
+
+### RGR do browser compilado — integração de versão/erro
+
+Observação real de GET CASE: corpo version1, cache ETag Express fraco/opaco;
+F01 reenviou header inadequado e recebeu412. Além disso, ErrorInterceptor STYNX
+transforma HttpErrorResponse em erro SDK, que boundary anterior tratava unknown.
+Adenda ao contrato/ADR0041/padrão v0 fixa token de comando separado, derivado
+somente do contador version server validado, e reconhecimento do erro SDK via
+classificador público Angular, com catálogo RAIT/shape estritos. Sem gerador,
+backendGET ou regra de negócio nova; a dependência SDK direta foi refinada abaixo. Inspector RED primeiro e
+Engineer depois; novo browser/review de delta deve comprovar ambas as correções.
+Não reutilizar PASS de mocks ou do review anterior como prova deste delta.
+
+### Refinamento browser — identidade SDK pública
+
+A opção inicial sem dependência direta SDK foi superada: o classificador Angular
+possui fallback estrutural status0, insuficiente para distinguir erro genérico.
+A correção usa `instanceof StynxSdkError` público, SDK1.5.3 direto no app (mesma
+versão já transitiva), depois classificação/catalogação RAIT. Proibido comparar
+constructor.name/Error.name ou aceitar contexto por forma de objeto. Lock F2
+acrescenta package.json do rait-web e somente seu importer do pnpm-lock, sem
+upgrade/framework/pin. Inspector preserva negativos genéricos0/412 e interceptor
+real; Engineer implementa após RED aceito. Não é nova decisão de produto.
+
+### Aceitação do primeiro recorte — 2026-10-18
+
+TASK-0024…0027 completed somente no recorte aprovado. Root pnpm check final
+PASS exit0; doctor PASS; backend kernel completo e tiers afetados após review
+PASS; frontend5085 PASS/133 TODO existentes; produção/preview/smoke PASS.
+Browser real confirma ADMITIDO12 e NAO_CONHECIDO12 sem depender de SSE.
+Delivery original REVIEW→PASS e browser delta PASS sem achados; hashes da ponte
+verificados. Recibo consolidado reports/JW01-maestro-verification.md.
+PR #193 aberto; merge/close/seal não autorizados. Aceitação integral continua
+pendente, incluindo claim/instrução/minuta e OD-R25-016/017. Histórico abaixo preservado.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
@@ -343,6 +478,8 @@ Owner.
 
 ## Decisões pendentes (ODs novas; TASK-0002 registra em `open-decisions-rait.md`)
 
+> **Estado atualizado:** a tabela abaixo registra as opções propostas na Sessão A. A resposta posterior do Owner está na adenda A-R25-001; OD-R25-003/004/006/007/008/009/011/013 já têm escolha, com as lacunas de fonte explicitadas no registro canônico.
+
 | OD         | Pergunta                                                                                                                                                                                                                | Opções                                                                                                                                                                            | Recomendação do Architect                                                         | Decisor                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | OD-R25-001 | Comandos do FE sem correspondência no backend                                                                                                                                                                           | (a) todos não executáveis; (b) criar só onde WF/RN fixam; (c) criar todos                                                                                                         | —                                                                                 | **Decidida pelo Owner em 2026-09-26:** verificar, para cada comando do frontend sem correspondência no backend, se é **desalinhamento** (a funcionalidade existe em outro endpoint/nome/verbo/path/corpo — mapear para o endpoint real) ou **falta de implementação** (não existe). Os faltantes serão ADICIONADOS como endpoints (dentro de R-0025), e as chamadas desalinhadas serão readequadas ao endpoint existente — tudo no escopo desta campanha. Resultado em `command-gap-analysis.md` (13/35/16/0); CTG-0002/0003 criam F-01…F-16, CTG-0004 readequa R-01…R-36 |
@@ -414,7 +551,41 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 
 ## Adendas
 
+- **A-R25-001 — ratificação do Owner (2026-09-29, após a Sessão A).** O Owner instruiu “adote todas as recomendações” para as decisões pendentes apresentadas da R-0025. Ficam vinculantes OD-R25-003=(a) smoke local nesta rodada, com Playwright sujeito à decisão comum dos cinco apps; OD-R25-004=(a) porta de assinatura STYNX, fail-closed sem provedor; OD-R25-006=(a) F-01 apenas transição, vereditos no CRUD `admissibility`; OD-R25-007=(a) `rait-chair` no colegiado e `rait-signing-authority` no primeiro circuito, com prazo ainda `source_pending`; OD-R25-008=(c) secretaria e membro, executando só secretaria nesta rodada até haver papel/grant do membro com fonte; OD-R25-009=(a) apenas suplente de plantão, demais convocações sem regra; OD-R25-011=(a) `published_at`/`published_by` próprios, sem usar `closed_at`; OD-R25-013=(a) readequar R-30 à sessão existente e levar criação ao backlog. Os valores de prazo, cadência, papel genérico e provedor não são inventados pela escolha. Esta adenda prevalece sobre referências a “pendente de decisão do Owner” nos contratos da Sessão A; os demais gates de fonte, DDL, R-0022/23/24 e testes permanecem.
+
 ## Decisões do maestro
+
+- **M1 (bootstrap da Sessão A, papel Architect).** Base `origin/main` em
+  `d8c5d72a4c2cdf527ded9cef4485bc399ff464c9`, branch
+  `orchestra/rait-web-wiring`. Maestro e tarefas de arquitetura grandes:
+  `gpt-6-sol` (alto); escada de workers: `gpt-5.6-terra` (médio) e
+  `gpt-6-luna` (baixo); reviewer da outra família: `claude-opus-5-5` pela
+  ponte. IDs seguem `docs/meta/agents/orchestra/model-ladder.md`; o transporte
+  do reviewer será validado no prompt-review pelo maestro.
+- **M2 (recorte A-C2-15).** Liberadas apenas TASK-0001/0002/0003/0006. Nesta
+  sessão, os gates são `acceptance_commands` reais por tarefa,
+  `pnpm verify:round-tasks`, `pnpm format:check`, `pnpm docs:kb:check` quando
+  aplicável e um prompt-review restrito aos quatro prompts. A verificação dos
+  contratos não autoriza editar blueprints, controladores, DDL, política ou
+  testes antes da retomada. Sem PR, delivery-review, CI completo, evidência ou
+  fechamento nesta sessão.
+- **M3 (dependências).** TASK-0001 precede TASK-0002; TASK-0002 precede
+  TASK-0003 e TASK-0006. Os contratos de TASK-0003 e TASK-0006 têm locks
+  disjuntos e podem avançar juntos depois do registro canônico das ODs.
+- **M4 (prompt-review).** O ciclo 1 com `claude-opus-5-5` retornou REVIEW:
+  recomendação de OD-R25-007/011 não podia virar decisão no prompt de
+  TASK-0006. As correções também explicitaram a allowlist i18n, cobertura dos
+  `acceptance_commands` e a dependência de R-0023. O ciclo 2, restrito a esses
+  achados, retornou PASS sem achados. Registros em `reviews/prompt-review-1.json`
+  e `reviews/prompt-review-2.json`.
+- **M5 (decisões Architect, 2026-09-29).** Após a matriz de TASK-0001 e a
+  análise §7, OD-R25-002=(a) política + GET do caso sob RLS; OD-R25-010=(a)
+  voto-vista em colunas de `rait_agenda_item`, pois antecede o escrutínio;
+  OD-R25-012=(a) um comando `mandate` com `act` enumerado;
+  OD-R25-014=(a) retirar `create` do CRUD duplicado no blueprint e regenerar;
+  OD-R25-015=(a) chave da rota montada canônica, com remoção das tuplas órfãs
+  na implementação. TASK-0002 transcreve-as no registro canônico. ODs com
+  decisor Owner ou Architect + Owner permanecem pendentes até resposta.
 
 ## Concorrência
 
@@ -424,4 +595,47 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
 
 ## Retomada
 
+- **Sessão A, checkpoint A-C2-15.** Concluídas e commitadas: TASK-0001
+  (`496a75cc`, matriz 64 e 13 L0), TASK-0002 (`56fd6418`, ODs/i18n),
+  TASK-0003 (`8c90734e`, CTG-0002 F-01…F-05/A-1…A-6) e TASK-0006
+  (`43b861a3`, CTG-0003 F-06…F-16). Bootstrap/autorização: `b8f2d38f`,
+  `e3d54745`; prompt-review REVIEW → PASS: `e21b89d7`. O avanço de
+  `origin/main` por PR #162 e PR #163 foi integrado por merges `a9448324` e
+  `784a3b93` antes do push; os novos blobs desses PRs não alteram as fontes
+  RAIT usadas nos três contratos desta sessão.
+- **Esperam:** TASK-0004/0005/0007/0008 dependem do formato de política de
+  R-0023 e do outbox/assinatura de R-0022; TASK-0009 em diante dependem do
+  padrão, kit e shell de R-0024. Os contratos documentais não habilitam
+  endpoints nem comandos. F-01, F-05, F-09 e F-15 ficam sujeitos às
+  OD-R25-006/008/007/011; assinatura segue fail-closed sob OD-R25-004.
+  OD-R25-003/009/013 e fontes indicadas nos CTGs também aguardam decisão.
+  OD-R25-005 já foi resolvida por C-0002 A1; OD-R25-002/010/012/014/015
+  foram decididas pelo Architect e transcritas.
+- **Gates da Sessão A:** linha de base RAIT 4.434 PASS/139 TODO após build
+  local ignorado de `@detran/ui`; `pnpm devai:doctor`,
+  `pnpm verify:parameter-catalogue`, `pnpm docs:kb:check`,
+  `pnpm format:check` e `pnpm verify:round-tasks` PASS. O último script nesta
+  base percorre só as 320 tarefas legadas até R-0020; os quatro JSONs desta
+  rodada foram validados diretamente contra `law/schemas/task.schema.json`
+  com AJV 2020 e os quatro `acceptance_commands` foram executados. Sem PR,
+  delivery-review, CI completo, código backend ou alteração de política.
+- **Orçamento:** `budget.json` registra estimativa de 335.000 tokens únicos de
+  entrada (limiar de checkpoint 520.000) e 54.000 de saída para bootstrap,
+  dois ciclos do mesmo prompt-review e quatro tarefas.
+- contratos a reconferir contra `origin/main` na retomada após R-0024 (A-C2-15).
+- **Escolhas posteriores do Owner:** A-R25-001 resolveu as oito escolhas/ratificações de Owner registradas na Sessão A. TASK-0004/0005/0007/0008 continuam esperando R-0022/R-0023 e TASK-0009+ continua esperando R-0024; F-09 não ganha timer sem prazo fonteado, F-15 não publica antes da migração de DDL 39 e da prova, assinatura continua fail-closed sem provedor. A criação de sessão e a cadência ordinária seguem pendências separadas. Nenhum código, PR ou delivery-review foi iniciado por esta adenda.
+
 ## Leitura
+
+- Bootstrap da Sessão A na branch `orchestra/rait-web-wiring`, base
+  `origin/main` `d8c5d72a4c2cdf527ded9cef4485bc399ff464c9`.
+  Lidos `AGENTS.md`, C-0002 §12/§14/§15/§16, este plano,
+  `prompts/00-maestro.md`, `command-gap-analysis.md` e o bootstrap da Sessão A
+  de R-0027 como referência de formato. O recorte autorizado está em
+  `AUTHORIZATION.md`.
+- Linha de base `pnpm --filter @detran/rait-web test`: primeira tentativa na
+  worktree limpa falhou na resolução de `@detran/ui` porque o `dist` ignorado
+  ainda não existia (127 suítes sem executar testes; nas demais, 1.783 PASS e
+  5 TODO). Depois de `pnpm --filter @detran/ui build`, sem mudança de fonte,
+  a repetição passou: 154 arquivos PASS, 1 skipped, 4.434 testes PASS e
+  **139 TODO**. Esse é o número para comparação no critério 2.

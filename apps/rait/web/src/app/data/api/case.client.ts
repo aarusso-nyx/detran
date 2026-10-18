@@ -1,17 +1,16 @@
 // CaseClient (contrato CTG-0002b §3.3/§3.5; M9): wrapper tipado sobre `RaitHttp` para os 12
 // pares list/get de `BP-INF-RAIT-CASE-001` — nome do método = `operationId`, URL literal do
-// `paths` (ADR-0003), `ListQuerySpec` da tabela §3.3 — e os 19 métodos de comando cuja
-// assinatura o §3.5 fixa. Todo comando lança `RaitCommandUnavailableError('<M8>')` até R-0007
-// CTG-0004 (M8): nenhuma requisição, nenhum `Idempotency-Key` (a coluna "chave M17" do §3.5
-// diz o `<ato>:<alvo>` reservado). Os `Create*Dto` são os gerados do CRUD (ADR-0007); o contrato
-// `.commands` trocará o tipo sem mudar o nome do método.
+// `paths` (ADR-0003), `ListQuerySpec` da tabela §3.3 — e os comandos da tabela §3.5.
+// JW-01 ativa triage, saveAdmissibility, admit e reject com os corpos gerados do contrato
+// `.commands`, ETag e chave M17; os demais comandos continuam indisponíveis (M8).
 import { Injectable, inject } from '@angular/core';
+import type { BpInfRaitCase001Commands } from '@detran/api-clients';
 import { RaitCommandUnavailableError } from '../../core/error-boundary';
+import { idempotencyKey } from '../idempotency-key';
 import type { ListQuerySpec } from '../list-query';
 import type {
   CommandBody,
   CommandResult,
-  CreateRaitAdmissibilityDto,
   CreateRaitCaseDto,
   CreateRaitDecisionDto,
   CreateRaitDocumentDto,
@@ -29,7 +28,6 @@ import type {
   RaitDocument,
   RaitDraft,
   RaitInquiry,
-  RaitNonAdmissionReason,
   RaitParty,
   RaitPendingContent,
   RaitPendingContentOutcome,
@@ -37,6 +35,16 @@ import type {
 } from '../models';
 import { EtagStore, type RaitCollection } from './etag-store';
 import { RaitHttp } from './rait-http';
+
+type Operations = BpInfRaitCase001Commands.operations;
+export type TriageInput =
+  Operations['raitCaseTriage']['requestBody']['content']['application/json'];
+export type SaveAdmissibilityInput =
+  Operations['createRaitAdmissibility']['requestBody']['content']['application/json'];
+export type AdmitInput =
+  Operations['raitCaseAdmit']['requestBody']['content']['application/json'];
+export type RejectInput =
+  Operations['raitCaseNonAdmission']['requestBody']['content']['application/json'];
 
 const CASES_URL = '/v1/inf/rait/cases';
 const PARTIES_URL = '/v1/inf/rait/parties';
@@ -50,6 +58,23 @@ const DRAFTS_URL = '/v1/inf/rait/drafts';
 const DECISIONS_URL = '/v1/inf/rait/decisions';
 const COMMUNICATIONS_URL = '/v1/inf/rait/communications';
 const EVENTS_URL = '/v1/inf/rait/events';
+const COMMAND_VERSION_TAG = /^"[1-9][0-9]*"$/;
+const NUMERIC_HTTP_TAG = /^"[0-9]+"$/;
+
+function isCommandTag(tag: string): boolean {
+  if (!COMMAND_VERSION_TAG.test(tag)) return false;
+  const version = Number(tag.slice(1, -1));
+  return validVersion(version) && `"${version}"` === tag;
+}
+
+function validVersion(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
+}
+
+function commandTag(value: unknown): string {
+  if (!validVersion(value)) throw new Error('Invalid case version');
+  return `"${value}"`;
+}
 
 const CASE_SPEC: ListQuerySpec<RaitCase> = {
   q: ['protocol_number'],
@@ -104,9 +129,51 @@ const EVENT_SPEC: ListQuerySpec<RaitCaseEvent> = {
 export class CaseClient {
   private readonly http = inject(RaitHttp);
   private readonly etagStore = inject(EtagStore);
+  private readonly caseCommandTokens = new Map<string, string>();
 
   etagOf(collection: RaitCollection, id: string): string | null {
+    if (collection === 'cases') return this.caseCommandTokens.get(id) ?? null;
     return this.etagStore.get(collection, id);
+  }
+
+  private async caseCommand<T>(
+    url: string,
+    body: unknown,
+    caseId: string,
+    ifMatch: string | null,
+    key: string,
+  ): Promise<CommandResult<T>> {
+    if (ifMatch !== null && !isCommandTag(ifMatch)) {
+      throw new Error('Invalid case If-Match');
+    }
+    const result = await this.http.postCommand<T>(
+      url,
+      body,
+      caseId,
+      ifMatch,
+      key,
+    );
+    const tag = result.etag;
+    try {
+      if (tag === null || !isCommandTag(tag)) {
+        throw new Error('Invalid command ETag');
+      }
+      const received: unknown = result.body;
+      if (
+        typeof received === 'object' &&
+        received !== null &&
+        'version' in received
+      ) {
+        if (commandTag(received.version) !== tag) {
+          throw new Error('Command version and ETag disagree');
+        }
+      }
+    } catch (error) {
+      this.caseCommandTokens.delete(caseId);
+      throw error;
+    }
+    this.caseCommandTokens.set(caseId, tag);
+    return result;
   }
 
   // --- leituras (§3.3) -------------------------------------------------------------------
@@ -115,8 +182,25 @@ export class CaseClient {
     return this.http.getList(CASES_URL, query, CASE_SPEC);
   }
 
-  getRaitCase(id: string): Promise<RaitCase> {
-    return this.http.getOne(CASES_URL, 'cases', id);
+  async getRaitCase(id: string): Promise<RaitCase> {
+    try {
+      const body = await this.http.getOne<RaitCase>(CASES_URL, 'cases', id);
+      const tag = commandTag(body.version);
+      const raw = this.etagStore.get('cases', id);
+      if (raw !== null && NUMERIC_HTTP_TAG.test(raw) && raw !== tag) {
+        throw new Error('Case version and ETag disagree');
+      }
+      this.caseCommandTokens.set(id, tag);
+      return body;
+    } catch (error) {
+      this.caseCommandTokens.delete(id);
+      throw error;
+    }
+  }
+
+  /** Control read for case navigation; the normal path uses the authenticated RLS GET. */
+  async verifyCaseAccess(caseId: string): Promise<void> {
+    await this.getRaitCase(caseId);
   }
 
   listRaitParty(query: ListQuery = {}): Promise<ListPage<RaitParty>> {
@@ -223,32 +307,64 @@ export class CaseClient {
 
   /** §3.5 #3 — `triage:<caseId>`. */
   async triage(
-    _caseId: string,
-    _body: CreateRaitAdmissibilityDto[],
-    _ifMatch: string | null,
-  ): Promise<CommandResult<RaitAdmissibility[]>> {
-    // todo(R-0007 CTG-0004): ligar ao cliente gerado de BP-INF-RAIT-CASE-001.commands
-    throw new RaitCommandUnavailableError('rait-case:triage');
+    caseId: string,
+    body: TriageInput,
+    ifMatch: string | null,
+  ): Promise<CommandResult<RaitCase>> {
+    return this.caseCommand(
+      `${CASES_URL}/${encodeURIComponent(caseId)}/commands/triage`,
+      body,
+      caseId,
+      ifMatch,
+      await idempotencyKey('triage', caseId, { body, ifMatch }),
+    );
+  }
+
+  async saveAdmissibility(
+    body: SaveAdmissibilityInput,
+    ifMatch: string | null,
+  ): Promise<CommandResult<RaitAdmissibility>> {
+    return this.caseCommand(
+      ADMISSIBILITY_URL,
+      body,
+      body.case_id,
+      ifMatch,
+      await idempotencyKey(
+        'admissibility',
+        `${body.case_id}:${body.criterion}`,
+        { body, ifMatch },
+      ),
+    );
   }
 
   /** §3.5 #4 — `admit:<caseId>`. */
   async admit(
-    _caseId: string,
-    _body: CommandBody,
-    _ifMatch: string | null,
+    caseId: string,
+    body: AdmitInput,
+    ifMatch: string | null,
   ): Promise<CommandResult<RaitCase>> {
-    // todo(R-0007 CTG-0004): ligar ao cliente gerado de BP-INF-RAIT-CASE-001.commands
-    throw new RaitCommandUnavailableError('rait-case:admit');
+    return this.caseCommand(
+      `${CASES_URL}/${encodeURIComponent(caseId)}/commands/admit`,
+      body,
+      caseId,
+      ifMatch,
+      await idempotencyKey('admit', caseId, { body, ifMatch }),
+    );
   }
 
   /** §3.5 #5 — `reject:<caseId>`. */
   async reject(
-    _caseId: string,
-    _body: CommandBody & { non_admission_reason: RaitNonAdmissionReason },
-    _ifMatch: string | null,
+    caseId: string,
+    body: RejectInput,
+    ifMatch: string | null,
   ): Promise<CommandResult<RaitCase>> {
-    // todo(R-0007 CTG-0004): ligar ao cliente gerado de BP-INF-RAIT-CASE-001.commands
-    throw new RaitCommandUnavailableError('rait-case:reject');
+    return this.caseCommand(
+      `${CASES_URL}/${encodeURIComponent(caseId)}/commands/non-admission`,
+      body,
+      caseId,
+      ifMatch,
+      await idempotencyKey('reject', caseId, { body, ifMatch }),
+    );
   }
 
   /** §3.5 #6 — `remit-jari:<caseId>`. */

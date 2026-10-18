@@ -31,6 +31,7 @@ export type * as BpInfNormative001Commands from './generated/BP-INF-NORMATIVE-00
 export type * as BpInfNormative001 from './generated/BP-INF-NORMATIVE-001.js';
 export type * as BpInfNotification001 from './generated/BP-INF-NOTIFICATION-001.js';
 export type * as BpInfRaitCase001 from './generated/BP-INF-RAIT-CASE-001.js';
+export type * as BpInfRaitCase001Commands from './generated/BP-INF-RAIT-CASE-001.commands.js';
 export type * as BpInfRaitIntegration001 from './generated/BP-INF-RAIT-INTEGRATION-001.js';
 export type * as BpInfRaitOrg001 from './generated/BP-INF-RAIT-ORG-001.js';
 export type * as BpInfRaitSession001 from './generated/BP-INF-RAIT-SESSION-001.js';

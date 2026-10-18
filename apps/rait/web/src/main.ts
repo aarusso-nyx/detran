@@ -3,7 +3,10 @@
 // i18n pt-BR), `provideHttpClient`, `provideRouter` com binding de inputs e a `TitleStrategy`
 // do app. Sem service worker (o console é interno; spec §8 "offline não suportado").
 // Configuração de runtime lida de `public/runtime-config.js` (três chaves, sem segredo).
-import { provideHttpClient } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { bootstrapApplication } from '@angular/platform-browser';
 import {
   TitleStrategy,
@@ -24,7 +27,7 @@ const origin = window.location.origin;
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
     provideRouter(RAIT_ROUTES, withComponentInputBinding()),
     provideDetranAuthenticatedApp({
       // Mesma origem: o browser só fala com `/v1/inf/rait/*` (spec §1; ADR-0003).

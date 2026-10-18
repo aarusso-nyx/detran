@@ -1,0 +1,2127 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 backend:db:reset /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> bash backend/database/apply.sh --full
+
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/12-audit-functions.sql:109: NOTICE:  trigger "audit_events_prevent_mutation" for relation "audit.events" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-agency.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-agency.sql:58: NOTICE:  policy "tenant_isolation" for relation "ops.agency_unit" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-agency.sql:60: NOTICE:  policy "tenant_isolation" for relation "ops.agency_jurisdiction" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-agency.sql:62: NOTICE:  policy "tenant_isolation" for relation "ops.agency_competence" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:22: NOTICE:  identifier "ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_number" will be truncated to "ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_n"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:73: NOTICE:  identifier "ux_ops_homologation_tenant_id_traffic_agency_id_homologation_number" will be truncated to "ux_ops_homologation_tenant_id_traffic_agency_id_homologation_nu"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:209: NOTICE:  identifier "ux_ops_measurement_instrument_tenant_id_instrument_type_serial_number" will be truncated to "ux_ops_measurement_instrument_tenant_id_instrument_type_serial_"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:210: NOTICE:  identifier "ix_ops_measurement_instrument_tenant_id_traffic_agency_id_status" will be truncated to "ix_ops_measurement_instrument_tenant_id_traffic_agency_id_statu"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:314: NOTICE:  policy "tenant_isolation" for relation "ops.ops_agent_profile" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:316: NOTICE:  policy "tenant_isolation" for relation "ops.ops_operational_device" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:318: NOTICE:  policy "tenant_isolation" for relation "ops.ops_homologation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:320: NOTICE:  policy "tenant_isolation" for relation "ops.ops_application_version" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:322: NOTICE:  policy "tenant_isolation" for relation "ops.ops_device_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:324: NOTICE:  policy "tenant_isolation" for relation "ops.ops_operation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:326: NOTICE:  policy "tenant_isolation" for relation "ops.ops_team" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:328: NOTICE:  policy "tenant_isolation" for relation "ops.ops_team_agent" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:330: NOTICE:  policy "tenant_isolation" for relation "ops.ops_patrol_vehicle" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:332: NOTICE:  policy "tenant_isolation" for relation "ops.ops_measurement_instrument" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:334: NOTICE:  policy "tenant_isolation" for relation "ops.ops_shift" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:336: NOTICE:  policy "tenant_isolation" for relation "ops.ops_approach" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/13-ops-field-operations.sql:338: NOTICE:  policy "tenant_isolation" for relation "ops.ops_session_handoff" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/14-inf-lifecycle-vocabulary.sql:10: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/15-ops-parameter.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/15-ops-parameter.sql:39: NOTICE:  policy "tenant_isolation" for relation "ops.parameter" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:41: NOTICE:  identifier "ix_snapshots_person_document_tenant_id_document_type_document_number" will be truncated to "ix_snapshots_person_document_tenant_id_document_type_document_n"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:118: NOTICE:  policy "tenant_isolation" for relation "ops.snapshots_person" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:120: NOTICE:  policy "tenant_isolation" for relation "ops.snapshots_person_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:122: NOTICE:  policy "tenant_isolation" for relation "ops.snapshots_vehicle" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:124: NOTICE:  policy "tenant_isolation" for relation "ops.snapshots_external_query" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/16-ops-snapshots.sql:126: NOTICE:  policy "tenant_isolation" for relation "ops.snapshots_vehicle_snapshot" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:111: NOTICE:  identifier "ux_evidence_probative_package_item_tenant_id_package_id_sequence" will be truncated to "ux_evidence_probative_package_item_tenant_id_package_id_sequenc"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:164: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_evidence" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:166: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_link" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:168: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_custody_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:170: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_probative_package" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:172: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_probative_package_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:174: NOTICE:  policy "tenant_isolation" for relation "ops.evidence_access_request" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/17-ops-evidence.sql:176: NOTICE:  policy "tenant_isolation" for relation "ops.storage_intent" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:227: NOTICE:  policy "tenant_isolation" for relation "ops.ait_numbering_range" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:229: NOTICE:  policy "tenant_isolation" for relation "ops.numbering_reservation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:231: NOTICE:  policy "tenant_isolation" for relation "ops.numbering_consumption" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:233: NOTICE:  policy "tenant_isolation" for relation "ops.sync_batch" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:235: NOTICE:  policy "tenant_isolation" for relation "ops.sync_queue_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:237: NOTICE:  policy "tenant_isolation" for relation "ops.sync_receipt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/18-ops-offline-sync.sql:239: NOTICE:  policy "tenant_isolation" for relation "ops.sync_conflict" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-ch-encounter-renach-key.sql:37: NOTICE:  index "ux_ch_encounter_renach_process" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-est-lifecycle-vocabulary.sql:5: NOTICE:  schema "est" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:115: NOTICE:  identifier "ux_provisioning_receipt_tenant_id_package_id_device_id_receipt_type" will be truncated to "ux_provisioning_receipt_tenant_id_package_id_device_id_receipt_"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:155: NOTICE:  identifier "ux_provisioning_command_idempotency_tenant_id_command_name_idempotency_key" will be truncated to "ux_provisioning_command_idempotency_tenant_id_command_name_idem"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:174: NOTICE:  identifier "ux_provisioning_reconciliation_tenant_id_grant_id_reconciliation_digest" will be truncated to "ux_provisioning_reconciliation_tenant_id_grant_id_reconciliatio"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:193: NOTICE:  identifier "ux_provisioning_grant_reservation_binding_tenant_id_grant_id_reservation_id" will be truncated to "ux_provisioning_grant_reservation_binding_tenant_id_grant_id_re"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:194: NOTICE:  identifier "ux_provisioning_grant_reservation_binding_tenant_id_reservation_id" will be truncated to "ux_provisioning_grant_reservation_binding_tenant_id_reservation"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:195: NOTICE:  identifier "ix_provisioning_grant_reservation_binding_tenant_id_grant_id_authorized_agent_id" will be truncated to "ix_provisioning_grant_reservation_binding_tenant_id_grant_id_au"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:203: NOTICE:  policy "tenant_isolation" for relation "ops.device_key" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:205: NOTICE:  policy "tenant_isolation" for relation "ops.offline_authorization_grant" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:207: NOTICE:  policy "tenant_isolation" for relation "ops.provisioning_package" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:209: NOTICE:  policy "tenant_isolation" for relation "ops.provisioning_receipt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:211: NOTICE:  policy "tenant_isolation" for relation "ops.device_revocation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:213: NOTICE:  policy "tenant_isolation" for relation "ops.provisioning_command_idempotency" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:215: NOTICE:  policy "tenant_isolation" for relation "ops.provisioning_reconciliation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:217: NOTICE:  policy "tenant_isolation" for relation "ops.provisioning_grant_reservation_binding" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:174: NOTICE:  policy "tenant_isolation" for relation "inf.normative_catalog" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:176: NOTICE:  policy "tenant_isolation" for relation "inf.normative_framing" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:178: NOTICE:  policy "tenant_isolation" for relation "inf.normative_metrological_table" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:180: NOTICE:  policy "tenant_isolation" for relation "inf.normative_validation_rule" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:182: NOTICE:  policy "tenant_isolation" for relation "inf.normative_agency_parameter" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:184: NOTICE:  policy "tenant_isolation" for relation "inf.normative_document_template" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:186: NOTICE:  policy "tenant_isolation" for relation "inf.signature_policy" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-inf-normative.sql:188: NOTICE:  policy "tenant_isolation" for relation "inf.normative_mobile_package" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-ops-example.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/30-ops-example.sql:17: NOTICE:  policy "tenant_isolation" for relation "ops.example_record" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:240: NOTICE:  policy "tenant_isolation" for relation "inf.ait_ait" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:242: NOTICE:  policy "tenant_isolation" for relation "inf.ait_cancel_request" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:244: NOTICE:  policy "tenant_isolation" for relation "inf.ait_cancel_request_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:246: NOTICE:  policy "tenant_isolation" for relation "inf.ait_vehicle" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:248: NOTICE:  policy "tenant_isolation" for relation "inf.ait_person" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:250: NOTICE:  policy "tenant_isolation" for relation "inf.ait_status_history" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:252: NOTICE:  policy "tenant_isolation" for relation "inf.ait_correction" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:254: NOTICE:  policy "tenant_isolation" for relation "inf.ait_signature" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/31-inf-ait.sql:256: NOTICE:  policy "tenant_isolation" for relation "inf.ait_print_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:208: NOTICE:  policy "tenant_isolation" for relation "inf.measure_type" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:210: NOTICE:  policy "tenant_isolation" for relation "inf.administrative_measure" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:212: NOTICE:  policy "tenant_isolation" for relation "inf.administrative_term" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:214: NOTICE:  policy "tenant_isolation" for relation "inf.measure_retention" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:216: NOTICE:  policy "tenant_isolation" for relation "inf.measure_removal" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:218: NOTICE:  policy "tenant_isolation" for relation "inf.vehicle_inventory" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:220: NOTICE:  policy "tenant_isolation" for relation "inf.tow_provider" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:222: NOTICE:  policy "tenant_isolation" for relation "inf.yard" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/32-inf-measures.sql:224: NOTICE:  policy "tenant_isolation" for relation "inf.measure_status_history" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:160: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_procedure" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:162: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_breathalyzer" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:164: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_test" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:166: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_refusal" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:168: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_psychomotor_sign" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/33-inf-alcohol.sql:170: NOTICE:  policy "tenant_isolation" for relation "inf.alcohol_forwarding" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:461: NOTICE:  policy "tenant_isolation" for relation "inf.rait_case" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:463: NOTICE:  policy "tenant_isolation" for relation "inf.rait_party" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:465: NOTICE:  policy "tenant_isolation" for relation "inf.rait_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:467: NOTICE:  policy "tenant_isolation" for relation "inf.rait_priority_assessment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:469: NOTICE:  policy "tenant_isolation" for relation "inf.rait_priority_basis" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:471: NOTICE:  policy "tenant_isolation" for relation "inf.rait_pending_content" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:473: NOTICE:  policy "tenant_isolation" for relation "inf.rait_redirect" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:475: NOTICE:  policy "tenant_isolation" for relation "inf.rait_admissibility" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:477: NOTICE:  policy "tenant_isolation" for relation "inf.rait_deadline" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:479: NOTICE:  policy "tenant_isolation" for relation "inf.rait_inquiry" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:481: NOTICE:  policy "tenant_isolation" for relation "inf.rait_inquiry_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:483: NOTICE:  policy "tenant_isolation" for relation "inf.rait_pending_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:485: NOTICE:  policy "tenant_isolation" for relation "inf.rait_withdrawal_attestation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:487: NOTICE:  policy "tenant_isolation" for relation "inf.rait_draft" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:489: NOTICE:  policy "tenant_isolation" for relation "inf.rait_decision" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:491: NOTICE:  policy "tenant_isolation" for relation "inf.rait_communication" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/34-inf-rait-case.sql:493: NOTICE:  policy "tenant_isolation" for relation "inf.rait_case_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:82: NOTICE:  column "representation_block" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:83: NOTICE:  column "institutional_seat_ref" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:84: NOTICE:  column "appointment_act_ref" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:85: NOTICE:  column "institutional_valid_from" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:86: NOTICE:  column "institutional_valid_to" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:87: NOTICE:  column "institutional_identity_hash" of relation "rait_pool_member" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:149: NOTICE:  column "version" of relation "rait_schedule" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:213: NOTICE:  column "version" of relation "rait_batch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:214: NOTICE:  column "approval_signature_ref" of relation "rait_batch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:215: NOTICE:  column "approval_receipt_hash" of relation "rait_batch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:216: NOTICE:  column "approval_verified_at" of relation "rait_batch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:217: NOTICE:  column "approval_signer_person_id" of relation "rait_batch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:282: NOTICE:  column "manifest_hash" of relation "rait_batch_minutes_manifest" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:283: NOTICE:  column "manifest_version" of relation "rait_batch_minutes_manifest" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:284: NOTICE:  column "prepared_at" of relation "rait_batch_minutes_manifest" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:492: NOTICE:  trigger "rait_batch_draw_snapshot_immutable" for relation "inf.rait_batch_draw_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:495: NOTICE:  trigger "rait_batch_draw_snapshot_no_truncate" for relation "inf.rait_batch_draw_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:496: NOTICE:  trigger "rait_batch_draw_snapshot_immutable_truncate" for relation "inf.rait_batch_draw_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:500: NOTICE:  trigger "rait_batch_minutes_manifest_immutable" for relation "inf.rait_batch_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:503: NOTICE:  trigger "rait_batch_minutes_manifest_no_truncate" for relation "inf.rait_batch_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:504: NOTICE:  trigger "rait_batch_minutes_manifest_immutable_truncate" for relation "inf.rait_batch_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:508: NOTICE:  policy "tenant_isolation" for relation "inf.rait_unit" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:510: NOTICE:  policy "tenant_isolation" for relation "inf.rait_pool" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:512: NOTICE:  policy "tenant_isolation" for relation "inf.rait_pool_member" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:514: NOTICE:  policy "tenant_isolation" for relation "inf.rait_schedule" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:516: NOTICE:  policy "tenant_isolation" for relation "inf.rait_schedule_slot" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:518: NOTICE:  policy "tenant_isolation" for relation "inf.rait_batch" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:520: NOTICE:  policy "tenant_isolation" for relation "inf.rait_batch_draw_snapshot" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:522: NOTICE:  policy "tenant_isolation" for relation "inf.rait_batch_minutes_manifest" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:524: NOTICE:  policy "tenant_isolation" for relation "inf.rait_batch_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:526: NOTICE:  policy "tenant_isolation" for relation "inf.rait_assignment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:528: NOTICE:  policy "tenant_isolation" for relation "inf.rait_impediment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:530: NOTICE:  policy "tenant_isolation" for relation "inf.rait_substitute_duty" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:532: NOTICE:  policy "tenant_isolation" for relation "inf.rait_bench" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:534: NOTICE:  policy "tenant_isolation" for relation "inf.rait_clock" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/35-inf-rait-worklist.sql:536: NOTICE:  policy "tenant_isolation" for relation "inf.rait_clock_alert" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:38: NOTICE:  column "version" of relation "rait_session" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:87: NOTICE:  column "version" of relation "rait_agenda_item" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:138: NOTICE:  column "representation_block" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:139: NOTICE:  column "membership_kind" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:140: NOTICE:  column "mandate_starts_on_snapshot" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:141: NOTICE:  column "mandate_ends_on_snapshot" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:142: NOTICE:  column "institutional_seat_ref" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:143: NOTICE:  column "appointment_act_ref" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:144: NOTICE:  column "institutional_valid_from" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:145: NOTICE:  column "institutional_valid_to" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:146: NOTICE:  column "composition_snapshot_hash" of relation "rait_attendance" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:244: NOTICE:  column "version" of relation "rait_minutes" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:412: NOTICE:  relation "ux_inf_rait_pool_member_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:426: NOTICE:  trigger "rait_vote_immutable" for relation "inf.rait_vote" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:429: NOTICE:  trigger "rait_vote_no_truncate" for relation "inf.rait_vote" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:430: NOTICE:  trigger "rait_vote_immutable_truncate" for relation "inf.rait_vote" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:434: NOTICE:  trigger "rait_minutes_immutable" for relation "inf.rait_minutes" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:437: NOTICE:  trigger "rait_minutes_no_truncate" for relation "inf.rait_minutes" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:438: NOTICE:  trigger "rait_minutes_immutable_truncate" for relation "inf.rait_minutes" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:442: NOTICE:  trigger "rait_session_minutes_snapshot_immutable" for relation "inf.rait_session_minutes_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:445: NOTICE:  trigger "rait_session_minutes_snapshot_no_truncate" for relation "inf.rait_session_minutes_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:446: NOTICE:  trigger "rait_session_minutes_snapshot_immutable_truncate" for relation "inf.rait_session_minutes_snapshot" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:450: NOTICE:  trigger "rait_session_minutes_manifest_immutable" for relation "inf.rait_session_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:453: NOTICE:  trigger "rait_session_minutes_manifest_no_truncate" for relation "inf.rait_session_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:454: NOTICE:  trigger "rait_session_minutes_manifest_immutable_truncate" for relation "inf.rait_session_minutes_manifest" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:458: NOTICE:  trigger "rait_minutes_required_signer_immutable" for relation "inf.rait_minutes_required_signer" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:461: NOTICE:  trigger "rait_minutes_required_signer_no_truncate" for relation "inf.rait_minutes_required_signer" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:462: NOTICE:  trigger "rait_minutes_required_signer_immutable_truncate" for relation "inf.rait_minutes_required_signer" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:466: NOTICE:  trigger "rait_minutes_signature_receipt_immutable" for relation "inf.rait_minutes_signature_receipt" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:469: NOTICE:  trigger "rait_minutes_signature_receipt_no_truncate" for relation "inf.rait_minutes_signature_receipt" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:470: NOTICE:  trigger "rait_minutes_signature_receipt_immutable_truncate" for relation "inf.rait_minutes_signature_receipt" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:474: NOTICE:  policy "tenant_isolation" for relation "inf.rait_session" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:476: NOTICE:  policy "tenant_isolation" for relation "inf.rait_agenda_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:478: NOTICE:  policy "tenant_isolation" for relation "inf.rait_attendance" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:480: NOTICE:  policy "tenant_isolation" for relation "inf.rait_vote" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:482: NOTICE:  policy "tenant_isolation" for relation "inf.rait_oral_argument" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:484: NOTICE:  policy "tenant_isolation" for relation "inf.rait_minutes" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:486: NOTICE:  policy "tenant_isolation" for relation "inf.rait_session_minutes_snapshot" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:488: NOTICE:  policy "tenant_isolation" for relation "inf.rait_session_minutes_manifest" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:490: NOTICE:  policy "tenant_isolation" for relation "inf.rait_minutes_required_signer" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/36-inf-rait-session.sql:492: NOTICE:  policy "tenant_isolation" for relation "inf.rait_minutes_signature_receipt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/37-inf-speed.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/37-inf-speed.sql:85: NOTICE:  policy "tenant_isolation" for relation "inf.speed_meter" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/37-inf-speed.sql:87: NOTICE:  policy "tenant_isolation" for relation "inf.speed_meter_certificate" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/37-inf-speed.sql:89: NOTICE:  policy "tenant_isolation" for relation "inf.speed_measurement" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/38-inf-infraction.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/38-inf-infraction.sql:128: NOTICE:  policy "tenant_isolation" for relation "inf.infraction" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/38-inf-infraction.sql:130: NOTICE:  policy "tenant_isolation" for relation "inf.infraction_timer" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/38-inf-infraction.sql:132: NOTICE:  policy "tenant_isolation" for relation "inf.infraction_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:238: NOTICE:  policy "tenant_isolation" for relation "inf.rait_holiday" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:240: NOTICE:  policy "tenant_isolation" for relation "inf.rait_suspension_act" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:242: NOTICE:  policy "tenant_isolation" for relation "inf.rait_jeton_sheet" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:244: NOTICE:  policy "tenant_isolation" for relation "inf.rait_jeton_line" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:246: NOTICE:  policy "tenant_isolation" for relation "inf.rait_incident" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:248: NOTICE:  policy "tenant_isolation" for relation "inf.rait_quality_sample" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:250: NOTICE:  policy "tenant_isolation" for relation "inf.rait_capacity_plan" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/39-inf-rait-org.sql:252: NOTICE:  policy "tenant_isolation" for relation "inf.rait_export" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/40-ch-clinical-network.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/40-ch-clinical-network.sql:82: NOTICE:  policy "tenant_isolation" for relation "ch.clinic" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/40-ch-clinical-network.sql:84: NOTICE:  policy "tenant_isolation" for relation "ch.professional" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/40-ch-clinical-network.sql:86: NOTICE:  policy "tenant_isolation" for relation "ch.biometric_station" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/41-ch-patients.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/41-ch-patients.sql:38: NOTICE:  policy "tenant_isolation" for relation "ch.patient" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/42-ch-encounters.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/42-ch-encounters.sql:76: NOTICE:  policy "tenant_isolation" for relation "ch.appointment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/42-ch-encounters.sql:78: NOTICE:  policy "tenant_isolation" for relation "ch.encounter" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/43-ch-exams.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/43-ch-exams.sql:81: NOTICE:  policy "tenant_isolation" for relation "ch.psych_instrument" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/43-ch-exams.sql:83: NOTICE:  policy "tenant_isolation" for relation "ch.medical_exam" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/43-ch-exams.sql:85: NOTICE:  policy "tenant_isolation" for relation "ch.psychological_exam" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:229: NOTICE:  policy "tenant_isolation" for relation "ch.report" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:231: NOTICE:  policy "tenant_isolation" for relation "ch.report_addendum" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:233: NOTICE:  policy "tenant_isolation" for relation "ch.report_addendum_approval" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:235: NOTICE:  policy "tenant_isolation" for relation "ch.registration_block_notice" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:237: NOTICE:  policy "tenant_isolation" for relation "ch.feedback_request" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:239: NOTICE:  policy "tenant_isolation" for relation "ch.episode_export" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/44-ch-reports.sql:241: NOTICE:  policy "tenant_isolation" for relation "ch.clinical_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/45-ch-biometrics.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/45-ch-biometrics.sql:134: NOTICE:  policy "tenant_isolation" for relation "ch.biometric_reference" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/45-ch-biometrics.sql:136: NOTICE:  policy "tenant_isolation" for relation "ch.biometric_finger_condition" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/45-ch-biometrics.sql:138: NOTICE:  policy "tenant_isolation" for relation "ch.biometric_check" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/45-ch-biometrics.sql:140: NOTICE:  policy "tenant_isolation" for relation "ch.biometric_exception" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/46-ch-scheduling.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/46-ch-scheduling.sql:66: NOTICE:  policy "tenant_isolation" for relation "ch.professional_schedule" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/46-ch-scheduling.sql:68: NOTICE:  policy "tenant_isolation" for relation "ch.appointment_assignment_draw" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/47-ch-restrictions.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/47-ch-restrictions.sql:47: NOTICE:  policy "tenant_isolation" for relation "ch.restriction_code" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/47-ch-restrictions.sql:49: NOTICE:  policy "tenant_isolation" for relation "ch.encounter_restriction" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/48-ch-retention.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/48-ch-retention.sql:78: NOTICE:  policy "tenant_isolation" for relation "ch.retention_case" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/48-ch-retention.sql:80: NOTICE:  policy "tenant_isolation" for relation "ch.retention_hold" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/48-ch-retention.sql:82: NOTICE:  policy "tenant_isolation" for relation "ch.retention_disposition" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/49-ch-process-blocks.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/49-ch-process-blocks.sql:30: NOTICE:  policy "tenant_isolation" for relation "ch.process_block" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/50-ch-telehealth.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/50-ch-telehealth.sql:41: NOTICE:  policy "tenant_isolation" for relation "ch.telehealth_session" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:132: NOTICE:  policy "tenant_isolation" for relation "ch.federal_exam_public_price" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:134: NOTICE:  policy "tenant_isolation" for relation "ch.billing_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:136: NOTICE:  policy "tenant_isolation" for relation "ch.billing_invoice" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:138: NOTICE:  policy "tenant_isolation" for relation "ch.billing_divergence" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/51-ch-billing.sql:140: NOTICE:  policy "tenant_isolation" for relation "ch.billing_invoice_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/52-ch-clinical-controls.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/52-ch-clinical-controls.sql:34: NOTICE:  policy "tenant_isolation" for relation "ch.clinical_control_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/53-ch-inconsistencies.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/53-ch-inconsistencies.sql:38: NOTICE:  policy "tenant_isolation" for relation "ch.inconsistency" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/54-ch-operational-controls.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/54-ch-operational-controls.sql:31: NOTICE:  policy "tenant_isolation" for relation "ch.operational_record" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:144: NOTICE:  policy "tenant_isolation" for relation "ch.junta_case" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:146: NOTICE:  policy "tenant_isolation" for relation "ch.junta_board" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:148: NOTICE:  policy "tenant_isolation" for relation "ch.junta_board_member" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:150: NOTICE:  policy "tenant_isolation" for relation "ch.junta_decision" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/55-ch-juntas.sql:152: NOTICE:  policy "tenant_isolation" for relation "ch.junta_appeal" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/56-ch-toxicology.sql:5: NOTICE:  schema "ch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/56-ch-toxicology.sql:67: NOTICE:  policy "tenant_isolation" for relation "ch.periodic_toxicology_result" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/56-ch-toxicology.sql:69: NOTICE:  policy "tenant_isolation" for relation "ch.toxicology_suspension" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/57-inf-collection.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/57-inf-collection.sql:135: NOTICE:  policy "tenant_isolation" for relation "inf.collection_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/57-inf-collection.sql:137: NOTICE:  policy "tenant_isolation" for relation "inf.payment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/57-inf-collection.sql:139: NOTICE:  policy "tenant_isolation" for relation "inf.refund_order" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/57-inf-collection.sql:141: NOTICE:  policy "tenant_isolation" for relation "inf.debt_handoff" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/58-inf-rait-integration.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/58-inf-rait-integration.sql:34: NOTICE:  policy "tenant_isolation" for relation "inf.rait_reconciliation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/59-inf-notification.sql:5: NOTICE:  schema "inf" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/59-inf-notification.sql:86: NOTICE:  policy "tenant_isolation" for relation "inf.notice" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/59-inf-notification.sql:88: NOTICE:  policy "tenant_isolation" for relation "inf.notice_acknowledgement" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/59-inf-notification.sql:90: NOTICE:  policy "tenant_isolation" for relation "inf.notice_delivery_attempt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/60-portal-complaints.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/60-portal-complaints.sql:30: NOTICE:  policy "tenant_isolation" for relation "portal.complaint" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/61-portal-identity.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/61-portal-identity.sql:94: NOTICE:  policy "tenant_isolation" for relation "portal.subject" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/61-portal-identity.sql:96: NOTICE:  policy "tenant_isolation" for relation "portal.representation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/61-portal-identity.sql:98: NOTICE:  policy "tenant_isolation" for relation "portal.act_level_policy" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/61-portal-identity.sql:100: NOTICE:  policy "tenant_isolation" for relation "portal.entitlement" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:156: NOTICE:  policy "tenant_isolation" for relation "portal.request" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:158: NOTICE:  policy "tenant_isolation" for relation "portal.request_draft" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:160: NOTICE:  policy "tenant_isolation" for relation "portal.request_attachment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:162: NOTICE:  policy "tenant_isolation" for relation "portal.protocol" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:164: NOTICE:  policy "tenant_isolation" for relation "portal.consequence_ack" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:166: NOTICE:  policy "tenant_isolation" for relation "portal.evaluation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/62-portal-requests.sql:168: NOTICE:  policy "tenant_isolation" for relation "portal.idempotency_record" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/63-portal-inbox.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/63-portal-inbox.sql:99: NOTICE:  policy "tenant_isolation" for relation "portal.inbox_item" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/63-portal-inbox.sql:101: NOTICE:  policy "tenant_isolation" for relation "portal.acknowledgement_evidence" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/63-portal-inbox.sql:103: NOTICE:  policy "tenant_isolation" for relation "portal.sne_enrollment" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/63-portal-inbox.sql:105: NOTICE:  policy "tenant_isolation" for relation "portal.push_subscription" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/64-portal-citizen-service.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/64-portal-citizen-service.sql:89: NOTICE:  policy "tenant_isolation" for relation "portal.manifestation" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/64-portal-citizen-service.sql:91: NOTICE:  policy "tenant_isolation" for relation "portal.manifestation_extension" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/64-portal-citizen-service.sql:93: NOTICE:  policy "tenant_isolation" for relation "portal.service_catalog" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:5: NOTICE:  schema "portal" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:146: NOTICE:  policy "tenant_isolation" for relation "portal.infraction_view" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:148: NOTICE:  policy "tenant_isolation" for relation "portal.process_timeline" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:150: NOTICE:  policy "tenant_isolation" for relation "portal.points_view" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:152: NOTICE:  policy "tenant_isolation" for relation "portal.crash_view" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:154: NOTICE:  policy "tenant_isolation" for relation "portal.exam_view" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:156: NOTICE:  policy "tenant_isolation" for relation "portal.projection_applied_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/65-portal-projections.sql:158: NOTICE:  policy "tenant_isolation" for relation "portal.national_read_cache" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:5: NOTICE:  schema "est" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:294: NOTICE:  policy "tenant_isolation" for relation "est.crash_record" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:296: NOTICE:  policy "tenant_isolation" for relation "est.crash_vehicle" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:298: NOTICE:  policy "tenant_isolation" for relation "est.crash_person" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:300: NOTICE:  policy "tenant_isolation" for relation "est.crash_victim" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:302: NOTICE:  policy "tenant_isolation" for relation "est.crash_scene_duty" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:304: NOTICE:  policy "tenant_isolation" for relation "est.crash_damage" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:306: NOTICE:  policy "tenant_isolation" for relation "est.crash_witness" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:308: NOTICE:  policy "tenant_isolation" for relation "est.crash_sketch" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:310: NOTICE:  policy "tenant_isolation" for relation "est.crash_link" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:312: NOTICE:  policy "tenant_isolation" for relation "est.crash_renaest_submission" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:314: NOTICE:  policy "tenant_isolation" for relation "est.crash_subject_request" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/70-est-crash.sql:316: NOTICE:  policy "tenant_isolation" for relation "est.crash_report_document" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/71-dashboard-crashes.sql:5: NOTICE:  schema "dashboard" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/71-dashboard-crashes.sql:46: NOTICE:  policy "tenant_isolation" for relation "dashboard.crash_aggregate" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/71-dashboard-crashes.sql:48: NOTICE:  policy "tenant_isolation" for relation "dashboard.crash_projection_applied_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/72-integration-renaest-mirror.sql:5: NOTICE:  schema "integration" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/72-integration-renaest-mirror.sql:48: NOTICE:  policy "tenant_isolation" for relation "integration.renaest_mirror" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/72-integration-renaest-mirror.sql:50: NOTICE:  policy "tenant_isolation" for relation "integration.renaest_mirror_applied_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/75-boat-renaest-job.sql:202: NOTICE:  policy "tenant_isolation" for relation "jobs.boat_renaest_identity" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/75-boat-renaest-job.sql:203: NOTICE:  policy "tenant_isolation" for relation "jobs.boat_renaest_identity_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/75-boat-renaest-job.sql:204: NOTICE:  policy "tenant_isolation" for relation "jobs.boat_renaest_execution" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:5: NOTICE:  schema "dashboard" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:671: NOTICE:  policy "tenant_isolation" for relation "dashboard.alert" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:673: NOTICE:  policy "tenant_isolation" for relation "dashboard.alert_trail" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:675: NOTICE:  policy "tenant_isolation" for relation "dashboard.duty" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:677: NOTICE:  policy "tenant_isolation" for relation "dashboard.duty_cycle" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:679: NOTICE:  policy "tenant_isolation" for relation "dashboard.indicator" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:681: NOTICE:  policy "tenant_isolation" for relation "dashboard.indicator_config" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:683: NOTICE:  policy "tenant_isolation" for relation "dashboard.bi_panel" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:685: NOTICE:  policy "tenant_isolation" for relation "dashboard.generated_report" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:687: NOTICE:  policy "tenant_isolation" for relation "dashboard.export_log" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:689: NOTICE:  policy "tenant_isolation" for relation "dashboard.source" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:691: NOTICE:  policy "tenant_isolation" for relation "dashboard.transparency_audit" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:693: NOTICE:  policy "tenant_isolation" for relation "dashboard.dataset" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:695: NOTICE:  policy "tenant_isolation" for relation "dashboard.monitor_projection_applied_event" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:697: NOTICE:  policy "tenant_isolation" for relation "dashboard.prescription_risk" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:699: NOTICE:  policy "tenant_isolation" for relation "dashboard.production" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:701: NOTICE:  policy "tenant_isolation" for relation "dashboard.integration_health" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:703: NOTICE:  policy "tenant_isolation" for relation "dashboard.pec_deadlines" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:705: NOTICE:  policy "tenant_isolation" for relation "dashboard.teat_measures" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:707: NOTICE:  policy "tenant_isolation" for relation "dashboard.portal_service_metrics" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:709: NOTICE:  policy "tenant_isolation" for relation "dashboard.duty_evidence" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:711: NOTICE:  policy "tenant_isolation" for relation "dashboard.timer" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/80-dashboard.sql:713: NOTICE:  policy "tenant_isolation" for relation "dashboard.access_log" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:1: NOTICE:  policy "tenant_isolation" for relation "tenancy.tenant_settings" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:2: NOTICE:  policy "tenant_isolation" for relation "auth.users" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:3: NOTICE:  policy "tenant_isolation" for relation "auth.roles" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:4: NOTICE:  policy "tenant_isolation" for relation "auth.memberships" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:5: NOTICE:  policy "tenant_isolation" for relation "auth.groups" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:6: NOTICE:  policy "tenant_isolation" for relation "auth.sessions" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:7: NOTICE:  policy "tenant_isolation" for relation "auth.sessions_default" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:8: NOTICE:  policy "tenant_isolation" for relation "auth.invitations" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:9: NOTICE:  policy "tenant_isolation" for relation "audit.events" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:10: NOTICE:  policy "tenant_isolation" for relation "audit.events_default" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:11: NOTICE:  policy "tenant_isolation" for relation "integration.outbox" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:12: NOTICE:  policy "tenant_isolation" for relation "integration.delivery_attempt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:13: NOTICE:  policy "tenant_isolation" for relation "integration.inbox_receipt" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:14: NOTICE:  policy "tenant_isolation" for relation "integration.idempotency_keys" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:15: NOTICE:  policy "tenant_isolation" for relation "integration.rate_limit_windows" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:16: NOTICE:  policy "tenant_isolation" for relation "integration.professional_council_cache" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:17: NOTICE:  policy "tenant_isolation" for relation "storage.objects" does not exist, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/20-rls-policies.sql:21: NOTICE:  policy "tenant_isolation" for relation "auth.tenants" does not exist, skipping
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:5: NOTICE:  schema "ops" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:23: NOTICE:  relation "device_key" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:24: NOTICE:  relation "ux_device_key_tenant_id_device_id_key_fingerprint" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:25: NOTICE:  relation "ix_device_key_tenant_id_device_id_status" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:26: NOTICE:  relation "ix_device_key_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:27: NOTICE:  relation "ix_device_key_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:57: NOTICE:  relation "offline_authorization_grant" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:58: NOTICE:  relation "ix_offline_authorization_grant_tenant_id_device_id_status" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:59: NOTICE:  relation "ux_offline_authorization_grant_tenant_id_manifest_digest" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:60: NOTICE:  relation "ix_offline_authorization_grant_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:61: NOTICE:  relation "ix_offline_authorization_grant_traffic_agency_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:62: NOTICE:  relation "ix_offline_authorization_grant_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:63: NOTICE:  relation "ix_offline_authorization_grant_normative_package_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:64: NOTICE:  relation "ix_offline_authorization_grant_key_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:89: NOTICE:  relation "provisioning_package" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:90: NOTICE:  relation "ux_provisioning_package_tenant_id_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:91: NOTICE:  relation "ix_provisioning_package_tenant_id_device_id_status" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:92: NOTICE:  relation "ux_provisioning_package_tenant_id_manifest_digest" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:93: NOTICE:  relation "ix_provisioning_package_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:94: NOTICE:  relation "ix_provisioning_package_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:95: NOTICE:  relation "ix_provisioning_package_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:96: NOTICE:  relation "ix_provisioning_package_normative_package_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:97: NOTICE:  relation "ix_provisioning_package_signature_key_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:114: NOTICE:  relation "provisioning_receipt" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:115: NOTICE:  identifier "ux_provisioning_receipt_tenant_id_package_id_device_id_receipt_type" will be truncated to "ux_provisioning_receipt_tenant_id_package_id_device_id_receipt_"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:115: NOTICE:  relation "ux_provisioning_receipt_tenant_id_package_id_device_id_receipt_" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:116: NOTICE:  relation "ux_provisioning_receipt_tenant_id_idempotency_key" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:117: NOTICE:  relation "ix_provisioning_receipt_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:118: NOTICE:  relation "ix_provisioning_receipt_package_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:119: NOTICE:  relation "ix_provisioning_receipt_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:120: NOTICE:  relation "ix_provisioning_receipt_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:135: NOTICE:  relation "device_revocation" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:136: NOTICE:  relation "ux_device_revocation_tenant_id_device_id_revocation_epoch" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:137: NOTICE:  relation "ix_device_revocation_tenant_id_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:138: NOTICE:  relation "ix_device_revocation_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:139: NOTICE:  relation "ix_device_revocation_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:140: NOTICE:  relation "ix_device_revocation_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:154: NOTICE:  relation "provisioning_command_idempotency" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:155: NOTICE:  identifier "ux_provisioning_command_idempotency_tenant_id_command_name_idempotency_key" will be truncated to "ux_provisioning_command_idempotency_tenant_id_command_name_idem"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:155: NOTICE:  relation "ux_provisioning_command_idempotency_tenant_id_command_name_idem" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:156: NOTICE:  relation "ix_provisioning_command_idempotency_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:173: NOTICE:  relation "provisioning_reconciliation" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:174: NOTICE:  identifier "ux_provisioning_reconciliation_tenant_id_grant_id_reconciliation_digest" will be truncated to "ux_provisioning_reconciliation_tenant_id_grant_id_reconciliatio"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:174: NOTICE:  relation "ux_provisioning_reconciliation_tenant_id_grant_id_reconciliatio" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:175: NOTICE:  relation "ix_provisioning_reconciliation_tenant_id_grant_id_reconciled_at" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:176: NOTICE:  relation "ix_provisioning_reconciliation_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:177: NOTICE:  relation "ix_provisioning_reconciliation_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:178: NOTICE:  relation "ix_provisioning_reconciliation_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:192: NOTICE:  relation "provisioning_grant_reservation_binding" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:193: NOTICE:  identifier "ux_provisioning_grant_reservation_binding_tenant_id_grant_id_reservation_id" will be truncated to "ux_provisioning_grant_reservation_binding_tenant_id_grant_id_re"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:193: NOTICE:  relation "ux_provisioning_grant_reservation_binding_tenant_id_grant_id_re" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:194: NOTICE:  identifier "ux_provisioning_grant_reservation_binding_tenant_id_reservation_id" will be truncated to "ux_provisioning_grant_reservation_binding_tenant_id_reservation"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:194: NOTICE:  relation "ux_provisioning_grant_reservation_binding_tenant_id_reservation" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:195: NOTICE:  identifier "ix_provisioning_grant_reservation_binding_tenant_id_grant_id_authorized_agent_id" will be truncated to "ix_provisioning_grant_reservation_binding_tenant_id_grant_id_au"
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:195: NOTICE:  relation "ix_provisioning_grant_reservation_binding_tenant_id_grant_id_au" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:196: NOTICE:  relation "ix_provisioning_grant_reservation_binding_tenant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:197: NOTICE:  relation "ix_provisioning_grant_reservation_binding_grant_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:198: NOTICE:  relation "ix_provisioning_grant_reservation_binding_reservation_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:199: NOTICE:  relation "ix_provisioning_grant_reservation_binding_traffic_agency_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:200: NOTICE:  relation "ix_provisioning_grant_reservation_binding_device_id" already exists, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/21-ops-provisioning.sql:201: NOTICE:  relation "ix_provisioning_grant_reservation_binding_authorized_agent_id" already exists, skipping
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ create_rls_policy 
+-------------------
+ 
+(1 row)
+
+ install_tenant_triggers 
+-------------------------
+ 
+(1 row)
+
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:231: NOTICE:  trigger "rait_priority_case_guard" for relation "inf.rait_case" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:234: NOTICE:  trigger "rait_priority_mark_insert" for relation "inf.rait_case" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:237: NOTICE:  trigger "rait_priority_case_complete" for relation "inf.rait_case" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:240: NOTICE:  trigger "rait_priority_document_guard" for relation "inf.rait_document" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_immutable" for relation "inf.rait_priority_assessment" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_no_truncate" for relation "inf.rait_priority_assessment" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_complete" for relation "inf.rait_priority_assessment" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_immutable" for relation "inf.rait_priority_basis" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_no_truncate" for relation "inf.rait_priority_basis" does not exist, skipping
+psql:/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/backend/database/ddl/19-rait-priority-enforce.sql:256: NOTICE:  trigger "rait_priority_complete" for relation "inf.rait_priority_basis" does not exist, skipping
+apply.sh: done (full=1 db=detran_r7_ctg1_a2)
+seed/00-fixtures-core.sql
+seed/05-parameters.sql
+seed/10-fixtures-inf-ait.sql
+seed/21-fixtures-rait-fresh.sql
+seed/25-fixtures-teat.sql
+seed/26-fixtures-teat-field.sql
+seed/27-fixtures-teat-evidence.sql
+seed/28-fixtures-teat-measures-alcohol.sql
+seed/29-fixtures-ops-provisioning.sql
+seed/30-fixtures-infraction.sql
+seed/50-fixtures-collection.sql
+seed/70-fixtures-est-crash.sql
+seed/70-fixtures-portal.sql
+seed/71-fixtures-portal-events.sql
+seed/72-fixtures-boat-projections.sql
+seed/80-fixtures-dashboard-catalog.sql
+seed/81-fixtures-dashboard-state.sql
+seed.sh: done (profile=fresh db=detran_r7_ctg1_a2)

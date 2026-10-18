@@ -12,12 +12,20 @@
 // pauta, relógio) e `get*` resolve o registro da JSON, tudo derivado da JSON lida do disco. O
 // bloco D-07 fica restrito às leituras cuja coleção não existe na JSON (`InfractionClient`,
 // `NotificationClient`; `rait-fixtures.md` §10: infrações e avisos não são transcritos).
+import { HttpTestingController } from '@angular/common/http/testing';
+import {
+  convertToParamMap,
+  type ActivatedRouteSnapshot,
+  type RouterStateSnapshot,
+} from '@angular/router';
+import { roleGuard } from '../core/guards/role.guard';
+import { caseAccessGuard } from '../core/guards/case-access.guard';
 import type { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { APP_SRC_ROOT } from '../../testing/kb';
 import { RaitSessionFacade } from '../core/session.facade';
 import { RaitStreamTransport } from '../core/stream-transport';
@@ -213,7 +221,10 @@ describe('C-06 — mapa método de lista → coleção da fixture (inventário �
     });
 
     it(`dado o protótipo de ${client.name} quando lidos list*/get* então Preview${client.name} sobrescreve cada um (nenhuma leitura chega a RaitHttp)`, () => {
-      for (const method of readMethodsOf(client.real, /^(list|get)[A-Z]/)) {
+      for (const method of readMethodsOf(
+        client.real,
+        /^(list|get|verify)[A-Z]/,
+      )) {
         expect(
           Object.prototype.hasOwnProperty.call(
             client.preview.prototype,
@@ -641,4 +652,73 @@ describe('C-06 — source_pending só onde o inventário o prevê (telas da JW-0
       ),
     ).toEqual(['casos/:id/minuta']);
   });
+});
+
+// D23 is a fixture-backed READ, not an M8 command or an authorization bypass.
+describe('D23 canonical case access before five preview presentation states', () => {
+  it('classifies verifyCaseAccess explicitly as an overridden control READ', () => {
+    expect(Object.getOwnPropertyNames(CaseClient.prototype)).toContain(
+      'verifyCaseAccess',
+    );
+    expect(Object.hasOwn(PreviewCaseClient.prototype, 'verifyCaseAccess')).toBe(
+      true,
+    );
+  });
+  for (const state of [
+    'loaded',
+    'empty',
+    'loading',
+    'error',
+    'forbidden',
+  ] as const) {
+    it(`${state}: a role omitted from triage remains denied before the control read`, async () => {
+      setPreviewDocument('/painel', 'rait-hr', state);
+      await configurePreview(previewSpecContext().providers);
+      const client = TestBed.inject(CaseClient);
+      const verify = vi.spyOn(client, 'verifyCaseAccess');
+      const value = TestBed.runInInjectionContext(() =>
+        roleGuard(['rait-analyst', 'rait-secretary'])(
+          {} as ActivatedRouteSnapshot,
+          { url: '/casos/fixture/triagem' } as RouterStateSnapshot,
+        ),
+      );
+      expect(value).not.toBe(true);
+      expect(verify).not.toHaveBeenCalled();
+      TestBed.inject(HttpTestingController).expectNone(() => true);
+      TestBed.inject(HttpTestingController).verify();
+    });
+    for (const known of [true, false]) {
+      it(`${state}: real guard ${known ? 'accepts only canonical case' : 'denies unknown fixture ID'} with zero HTTP`, async () => {
+        setPreviewDocument('/painel', 'rait-analyst', state);
+        await configurePreview(previewSpecContext().providers);
+        const id = known
+          ? [...fixtureIdsOf('cases')][0]!
+          : '71000000-0000-7000-8000-000000009999';
+        let result: unknown;
+        let settled = false;
+        const pending = TestBed.runInInjectionContext(() =>
+          caseAccessGuard(
+            {
+              paramMap: convertToParamMap({ id }),
+            } as unknown as ActivatedRouteSnapshot,
+            { url: `/casos/${id}` } as RouterStateSnapshot,
+          ),
+        );
+        void Promise.resolve(pending).then((value) => {
+          result = value;
+          settled = true;
+        });
+        await vi.waitFor(() => expect(settled).toBe(true), { timeout: 250 });
+        expect(result).toBe(known);
+        const client = TestBed.inject(CaseClient);
+        expect(client.etagOf('cases', id)).toBeNull();
+        if (!known)
+          await expect(client.verifyCaseAccess(id)).rejects.toThrow(
+            `rait-preview-fixture-missing:cases:${id}`,
+          );
+        TestBed.inject(HttpTestingController).expectNone(() => true);
+        TestBed.inject(HttpTestingController).verify();
+      });
+    }
+  }
 });

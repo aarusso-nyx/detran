@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitCase",
     "namespace": "inf",
-    "version": "1.1.7",
+    "version": "1.1.8",
     "ddlFile": "34-inf-rait-case.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
@@ -51,6 +51,10 @@
       {
         "target": "handwritten/rait-inquiry-commands.controller",
         "symbol": "RaitInquiryCommandsController"
+      },
+      {
+        "target": "handwritten/rait-admissibility-commands.controller",
+        "symbol": "RaitAdmissibilityCommandsController"
       }
     ],
     "handwrittenProviders": [
@@ -77,6 +81,10 @@
       {
         "target": "handwritten/rait-operation-clock",
         "symbol": "RaitOperationClock"
+      },
+      {
+        "target": "handwritten/rait-admissibility-command.service",
+        "symbol": "RaitAdmissibilityCommandService"
       }
     ],
     "handwrittenExports": [
@@ -86,10 +94,12 @@
       "handwritten/rait-inquiry-command.service",
       "handwritten/rait-document-trust.verifier",
       "handwritten/rait-operation-clock",
-      "handwritten/rait-case-transition.port"
+      "handwritten/rait-case-transition.port",
+      "handwritten/rait-admissibility-commands.controller",
+      "handwritten/rait-admissibility-command.service"
     ],
     "owners": ["detran-inf"],
-    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10."
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant."
   },
   "database": {
     "entities": [
@@ -1786,7 +1796,8 @@
       {
         "entity": "RaitAdmissibility",
         "path": "admissibility",
-        "resource": "rait-admissibility"
+        "resource": "rait-admissibility",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitDeadline",

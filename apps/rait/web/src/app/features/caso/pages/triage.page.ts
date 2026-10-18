@@ -34,10 +34,10 @@ import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { CaseFacade } from '../../../data/facades/case.facade';
 import {
   permissionKeyOf,
-  type CreateRaitAdmissibilityDto,
   type RaitAdmissibilityCriterion,
   type RaitNonAdmissionReason,
 } from '../../../data/models';
+import { TriagemSchema } from '../../../forms/triagem.schema';
 import {
   AdmissibilityChecklistComponent,
   EMPTY_VERDICTS,
@@ -54,7 +54,6 @@ import {
   LOADING_KEY,
   combineStatus,
   createConfirmQueue,
-  provisionalBody,
 } from '../../page-support';
 import { caseIdOf } from '../case-route';
 import { deadlineKindOf } from '../deadline-kind';
@@ -67,6 +66,7 @@ const CMD_REJECT_KEY = 'rait.screens.casos-id-triagem.cmd.reject';
 const CONFIRM_ADMIT_KEY = 'rait.screens.casos-id-triagem.confirm.admit';
 const CONFIRM_REJECT_KEY = 'rait.screens.casos-id-triagem.confirm.reject';
 const CMD_TRIAGE_KEY = 'rait.action.triage';
+const LEGAL_BASIS_KEY = 'rait.common.legalBasis';
 /** Rótulos dos critérios (ficha 008 "Chaves i18n"); `tempestividade` é somente leitura. */
 const FIELD_LABEL_KEYS: Readonly<Record<RaitAdmissibilityCriterion, string>> = {
   tempestividade: 'rait.screens.casos-id-triagem.field.tempestividade',
@@ -148,6 +148,17 @@ const REASON_REQUIRED_KEY = 'rait.errors.non_admission_reason_required';
     }
 
     @if (facade.caso.value()) {
+      @if (facade.caso.value()?.state === 'PROTOCOLADO') {
+        <button
+          *stynxHasPermission="triagePermission"
+          type="button"
+          data-action="start-triage"
+          [disabled]="offline()"
+          (click)="startTriage()"
+        >
+          {{ cmdTriageKey | stynxTranslate }}
+        </button>
+      }
       <form [formGroup]="form" (ngSubmit)="saveChecklist()" novalidate>
         <rait-admissibility-checklist
           [recorded]="facade.admissibilidade.items()"
@@ -178,15 +189,26 @@ const REASON_REQUIRED_KEY = 'rait.errors.non_admission_reason_required';
             </p>
           }
         </div>
+        <div class="rait-triage__grounds">
+          <label for="rait-triage-grounds">{{
+            legalBasisKey | stynxTranslate
+          }}</label>
+          <textarea
+            id="rait-triage-grounds"
+            formControlName="nonAdmissionGrounds"
+          ></textarea>
+        </div>
         <div class="rait-triage__actions">
-          <button
-            *stynxHasPermission="triagePermission"
-            type="submit"
-            data-action="triage"
-            [disabled]="offline()"
-          >
-            {{ cmdTriageKey | stynxTranslate }}
-          </button>
+          @if (facade.caso.value()?.state === 'TRIAGEM_ADMISSIBILIDADE') {
+            <button
+              *stynxHasPermission="savePermission"
+              type="submit"
+              data-action="triage"
+              [disabled]="offline()"
+            >
+              {{ cmdTriageKey | stynxTranslate }}
+            </button>
+          }
           <button
             *stynxHasPermission="admitPermission"
             type="button"
@@ -233,6 +255,7 @@ export class TriagePageComponent {
   readonly emptyKey = EMPTY_KEY;
   readonly loadingKey = LOADING_KEY;
   readonly cmdTriageKey = CMD_TRIAGE_KEY;
+  readonly legalBasisKey = LEGAL_BASIS_KEY;
   readonly cmdAdmitKey = CMD_ADMIT_KEY;
   readonly cmdRejectKey = CMD_REJECT_KEY;
   readonly confirmTitleKey = CONFIRM_TITLE_KEY;
@@ -241,6 +264,7 @@ export class TriagePageComponent {
   readonly reasonErrorId = REASON_ERROR_ID;
   readonly reasonRequiredKey = REASON_REQUIRED_KEY;
   readonly triagePermission = permissionKeyOf('rait-case:triage');
+  readonly savePermission = permissionKeyOf('rait-admissibility:create');
   readonly admitPermission = permissionKeyOf('rait-case:admit');
   readonly rejectPermission = permissionKeyOf('rait-case:reject');
   readonly kindOf = deadlineKindOf;
@@ -249,6 +273,7 @@ export class TriagePageComponent {
 
   readonly form = this.fb.group({
     nonAdmissionReason: this.fb.control<'' | RaitNonAdmissionReason>(''),
+    nonAdmissionGrounds: this.fb.control(''),
   });
   private readonly rejectAttempted = signal(false);
   readonly reasonInvalid = computed(
@@ -283,14 +308,44 @@ export class TriagePageComponent {
     });
   }
 
-  /** `rait-case:triage`: registra o checklist (sem efeito jurídico) — só com os 3 vereditos. */
+  startTriage(): void {
+    if (this.offline() || this.facade.caso.value()?.state !== 'PROTOCOLADO')
+      return;
+    void this.facade.triage(this.caseId).then((outcome) => {
+      if (outcome.ok) this.reload();
+    });
+  }
+
+  /** Saves the three human criteria, one transaction and current ETag at a time. */
   saveChecklist(): void {
     const verdicts = this.verdicts();
     const complete = EDITABLE_CRITERIA.every(
       (criterion) => verdicts[criterion].verdict !== null,
     );
-    if (!complete || this.offline()) return;
-    void this.facade.triage(this.caseId, this.checklistBody(verdicts));
+    if (
+      !complete ||
+      this.offline() ||
+      this.facade.caso.value()?.state !== 'TRIAGEM_ADMISSIBILIDADE'
+    )
+      return;
+    void this.saveHumanCriteria(verdicts);
+  }
+
+  private async saveHumanCriteria(
+    verdicts: AdmissibilityVerdicts,
+  ): Promise<void> {
+    for (const criterion of EDITABLE_CRITERIA) {
+      const entry = verdicts[criterion];
+      if (entry.verdict === null) return;
+      const outcome = await this.facade.saveAdmissibility({
+        case_id: this.caseId,
+        criterion,
+        verdict: entry.verdict,
+        reason: entry.reason || null,
+      });
+      if (!outcome.ok) return;
+    }
+    this.reload();
   }
 
   requestAdmit(): void {
@@ -298,11 +353,15 @@ export class TriagePageComponent {
       action: 'admit',
       confirmKey: CONFIRM_ADMIT_KEY,
       labelKey: CMD_ADMIT_KEY,
-      run: () => this.facade.admit(this.caseId, {}),
+      run: async () => {
+        const outcome = await this.facade.admit(this.caseId, {});
+        if (outcome.ok) this.reload();
+        return outcome;
+      },
     });
   }
 
-  /** `non_admission_reason` é obrigatório só aqui (§6.1 linha 8). */
+  /** Reason code and legal grounds are both supplied by the operator. */
   requestReject(): void {
     this.rejectAttempted.set(true);
     this.form.controls.nonAdmissionReason.setValidators(Validators.required);
@@ -310,12 +369,20 @@ export class TriagePageComponent {
     if (this.reasonMissing()) return;
     const reason = this.form.controls.nonAdmissionReason.value;
     if (reason === '') return;
+    const legalBasis = this.form.controls.nonAdmissionGrounds.value.trim();
+    if (!this.validReject(reason, legalBasis)) return;
     this.confirm.request({
       action: 'reject',
       confirmKey: CONFIRM_REJECT_KEY,
       labelKey: CMD_REJECT_KEY,
-      run: () =>
-        this.facade.reject(this.caseId, { non_admission_reason: reason }),
+      run: async () => {
+        const outcome = await this.facade.reject(this.caseId, {
+          reason,
+          legalBasis,
+        });
+        if (outcome.ok) this.reload();
+        return outcome;
+      },
     });
   }
 
@@ -328,17 +395,22 @@ export class TriagePageComponent {
     return this.form.controls.nonAdmissionReason.value === '';
   }
 
-  /** Só os critérios editáveis; `tempestividade` é do servidor ([RN-RAIT-005]). */
-  private checklistBody(
-    verdicts: AdmissibilityVerdicts,
-  ): CreateRaitAdmissibilityDto[] {
-    return EDITABLE_CRITERIA.map((criterion) =>
-      provisionalBody<CreateRaitAdmissibilityDto>({
-        case_id: this.caseId,
-        criterion,
-        verdict: verdicts[criterion].verdict === true,
-        reason: verdicts[criterion].reason || null,
-      }),
-    );
+  private validReject(
+    reason: RaitNonAdmissionReason,
+    legalBasis: string,
+  ): boolean {
+    const timeliness = this.facade.admissibilidade
+      .items()
+      .find((row) => row.criterion === 'tempestividade');
+    return TriagemSchema.safeParse({
+      verdicts: this.verdicts(),
+      outcome: 'reject',
+      nonAdmissionReason: reason,
+      nonAdmissionGrounds: legalBasis,
+      context: {
+        timelinessVerdict: timeliness?.verdict ?? null,
+        caseState: this.facade.caso.value()?.state ?? null,
+      },
+    }).success;
   }
 }

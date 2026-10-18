@@ -1,10 +1,17 @@
 // R-0012 TASK-0005 (Inspector). Critérios C-2A-15…24 do contrato `CTG-0002a.md` §11 sobre
 // `core/guards/*.guard.ts`, `core/session.facade.ts` e `core/role-home.ts`. Falha esperada
 // nesta entrega: nenhum desses arquivos de produção existe ainda (TASK-0006).
+import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
+import { CASE_IDS, fixtureCase } from '../../testing/http-fixtures';
 import { readFileSync } from 'node:fs';
 import { TestBed } from '@angular/core/testing';
 import {
   provideRouter,
+  convertToParamMap,
   Router,
   UrlSegment,
   type ActivatedRouteSnapshot,
@@ -17,7 +24,7 @@ import {
   STYNX_ANGULAR_AUTH_OPTIONS,
   StynxSessionService,
 } from '@stynx-nyx/angular-auth';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   ROLE_HOME_FIXTURE,
   GROUP_REDIRECT_FIXTURE,
@@ -74,7 +81,10 @@ function runCanActivate(
   url = '/x',
 ): ReturnType<CanActivateFn> {
   return TestBed.runInInjectionContext(() =>
-    guard({} as ActivatedRouteSnapshot, { url } as RouterStateSnapshot),
+    guard(
+      {} as unknown as ActivatedRouteSnapshot,
+      { url } as RouterStateSnapshot,
+    ),
   );
 }
 
@@ -249,19 +259,47 @@ describe('C-2A-19 — raitAuthGuard', () => {
   });
 });
 
-describe('C-2A-20 — caseAccessGuard (todo R-0007 CTG-0004)', () => {
-  it('dado caseAccessGuard quando chamado então true', () => {
-    configureWithSession(['rait-analyst']);
-    expect(runCanActivate(caseAccessGuard as CanActivateFn)).toBe(true);
-  });
-
-  it('dado o texto de core/guards/case-access.guard.ts quando lido então cita "todo(R-0007 CTG-0004)" e "OD-R12-005" e não contém "console." nem "HttpClient"', () => {
+describe('C-2A-20 — caseAccessGuard confirmed tenant GET', () => {
+  for (const status of [200, 403, 404, 500, 0]) {
+    it(`GET ${status}: waits for the server and only confirmed 200 permits entry`, async () => {
+      TestBed.configureTestingModule({
+        providers: [provideHttpClient(), provideHttpClientTesting()],
+      });
+      configureWithSession(['rait-analyst']);
+      const id = CASE_IDS.PROTOCOLADO;
+      let settled = false;
+      const pending = Promise.resolve(
+        TestBed.runInInjectionContext(() =>
+          caseAccessGuard(
+            {
+              paramMap: convertToParamMap({ id }),
+            } as unknown as ActivatedRouteSnapshot,
+            { url: `/casos/${id}` } as RouterStateSnapshot,
+          ),
+        ),
+      ).finally(() => {
+        settled = true;
+      });
+      await Promise.resolve();
+      expect(settled).toBe(false);
+      const http = TestBed.inject(HttpTestingController);
+      const req = await vi.waitFor(() =>
+        http.expectOne(`/v1/inf/rait/cases/${id}`),
+      );
+      expect(req.request.method).toBe('GET');
+      if (status === 200) req.flush(fixtureCase(id));
+      else if (status === 0) req.error(new ProgressEvent('error'));
+      else req.flush({}, { status, statusText: 'Denied' });
+      expect(await pending).toBe(status === 200);
+      http.verify();
+    });
+  }
+  it('reads access through CaseClient without console or direct HttpClient coupling', () => {
     const text = readFileSync(
       `${APP_SRC_ROOT}/app/core/guards/case-access.guard.ts`,
       'utf8',
     );
-    expect(text).toContain('todo(R-0007 CTG-0004)');
-    expect(text).toContain('OD-R12-005');
+    expect(text).toContain('verifyCaseAccess');
     expect(text).not.toContain('console.');
     expect(text).not.toContain('HttpClient');
   });
@@ -302,6 +340,7 @@ describe('C-2A-22 — aba inicial de /casos/:id por papel (RAIT_ROLE_PRECEDENCE)
       const session = createSessionStub({ active: true, roles });
       const harness = await createRaitRouterHarness([
         { provide: RaitSessionFacade, useValue: session },
+        stynxProviderFor(roles),
       ]);
       await harness.navigateByUrl(`/casos/${FIXED_ENTITY_ID}`);
       const router = TestBed.inject(Router);

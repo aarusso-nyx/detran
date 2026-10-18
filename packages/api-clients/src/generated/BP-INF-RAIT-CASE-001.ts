@@ -185,7 +185,7 @@ export interface paths {
     /** List RaitAdmissibility (most recent first, capped at 500) */
     get: operations['listRaitAdmissibility'];
     put?: never;
-    post: operations['createRaitAdmissibility'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -204,10 +204,10 @@ export interface paths {
     get: operations['getRaitAdmissibility'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitAdmissibility'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitAdmissibility'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/deadlines': {
@@ -2103,30 +2103,6 @@ export interface operations {
       };
     };
   };
-  createRaitAdmissibility: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAdmissibilityDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAdmissibility'];
-        };
-      };
-    };
-  };
   getRaitAdmissibility: {
     parameters: {
       query?: never;
@@ -2137,66 +2113,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAdmissibility'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitAdmissibility: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitAdmissibility: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAdmissibilityDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {

@@ -1,0 +1,17 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0025",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Papel: Auditor — Artigo 7. Revisão somente leitura. Revisor Claude invocado pelo alias CLI opus; o modelo exato não é inferido. Nenhuma edição, teste, servidor, instalação, Git mutável ou verbo de estado/evidência foi executado. O único comando com efeito foi o cálculo de hashes (shasum).",
+    "Lido integralmente reviews/prompt-review-A-C3-01-1.json. Também lidos: contracts/JW01-admissibility.md, ADR-0041, prompts e tasks TASK-0024 a TASK-0027 e compositions.json. Os sha256 dos quatro prompts conferem com compositions.json: 33d39910…, ecc2a686…, 0dfd4d16… e 4a61b235…. O prompt_composition_id de cada JSON confere com o seu prefixo.",
+    "High1 resolvido. Contrato §8 (linhas 62-72) cobre as quatro operações com requestBody estrito obrigatório, parâmetro id de path, If-Match e Idempotency-Key, resposta {data,events} com ETag, sem create em colisão e sem requestBody never. TASK-0024.md:7-11 e ADR-0041:22-26 dizem o mesmo. O commands OpenAPI atual confirma a lacuna original: raitCaseAdmit e raitCaseNonAdmission têm só a resposta 200, e raitCaseTriage ainda não existe. A correção cabe ao Architect na TASK-0024.",
+    "High2 resolvido. Contrato §9 (linhas 73-79) fixa reason = nonAdmissionReason, código de NON_ADMISSION_REASONS (triagem.schema.ts:26,49), e legalBasis = nonAdmissionGrounds, texto humano (triagem.schema.ts:50,123). Também retira non_admission_reason, hoje em case.client.ts:247. TASK-0025.md:36-37 e TASK-0027.md:23-26 citam esse mapeamento, sem inferência jurídica.",
+    "High3 resolvido. Contrato linhas 106-133: as assinaturas de Client e Facade estão fixas. triage(caseId,{},ifMatch) é o F01, e saveAdmissibility é obrigatório e grava um critério. Os aliases são índices de operations gerados. Os acts e targets idempotentes estão explícitos. M8 recebe rait-admissibility:create, que se soma às 64 chaves atuais (commands.ts tem 64; preview-not-functional.spec.ts:611 espera 64), e o tipo de recurso rait-admissibility existe em policy.ts:1412. O preview tem quatro overrides sem super. O inventário passa a 65 sem exclusões.",
+    "Low1 resolvido. TASK-0024.md:4 diz 'conforme ADR-0041'. Contrato §10 e TASK-0026.md:15-17 preservam Resource, Action e Audit e não criam chave nova de policy. TASK-0026.md:13-14 autoriza handwritten/index.ts apenas para exports. Pelo mecanismo handwrittenControllers/Providers do generate.mjs:436-464, o módulo gerado importa por target, e nenhum gerado é editado à mão.",
+    "Low2 resolvido. TASK-0025.json cobre: unit, integration e e2e focados; os sete specs web, incluindo client, facade e preview; presença, Prettier e eslint dos sensores. TASK-0026.json cobre os mesmos testes, os typechecks de inf-rait-case e app, contracts:check/test, blueprints:check e verify:decorators/role-catalog/rls-ddl. TASK-0027.json cobre typecheck, lint, test e build web, o build preview e o smoke. Os scripts existem em package.json. DB indisponível conta como blocked, e o RED esperado do Inspector não vira sensor enfraquecido.",
+    "Nota sem achado: entre a TASK-0024 e a TASK-0026, contracts:check deve dar RED com missing-route (check-commands.mjs:546-557, rait-case/src/handwritten está nos roots). blueprints:check e typecheck também podem dar RED, porque os novos targets handwritten ainda não existem. TASK-0024.md:15-16 já manda registrar esse RED sem mascarar. Isso não é PASS do produto. A aceitação integral da R-0025 e a OD-R25-017 continuam pendentes."
+  ]
+}

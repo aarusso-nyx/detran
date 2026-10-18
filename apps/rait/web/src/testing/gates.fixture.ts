@@ -614,4 +614,5 @@ export const COMMAND_POLICY_KEY_FIXTURE: Readonly<
   'rait-debt:handoff': 'inf:rait-debt:handoff',
   'rait-payment:reconcile': 'inf:rait-payment:reconcile',
   'rait-calendar:update': null, // #64 só ficha 063
+  'rait-admissibility:create': 'inf:rait-admissibility:create',
 };

@@ -1,0 +1,396 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+> vitest run --config vitest.config.ts "src/app/data/api/case-admissibility.wiring.spec.ts" "src/app/core/error-boundary-interceptors.spec.ts" "src/app/core/guards/case-access.guard.spec.ts"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts (10 tests | 9 failed) 83ms
+     × 412 conflict preserves RAIT code/context/requestId and derives its own catalog key 27ms
+     × 409: installed interceptor retains RAIT status family conflict 3ms
+     × 428: installed interceptor retains RAIT status family conflict 4ms
+     × 403: installed interceptor retains RAIT status family forbidden 8ms
+     × 422: installed interceptor retains RAIT status family business 15ms
+     × 500: installed interceptor retains RAIT status family server 3ms
+     × 0: installed interceptor retains RAIT status family offline 6ms
+     × 400 SDK context uses existing field validation and does not invent the lost Retry-After header 4ms
+     × non-record SDK context is ignored 3ms
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts (55 tests | 20 failed) 2612ms
+     × triage: GET W/"transport-hash" preserves raw cache header but posts the actual server version 4ms
+     × triage: GET "opaque-body-hash" preserves raw cache header but posts the actual server version 1ms
+     × saveAdmissibility: GET W/"transport-hash" preserves raw cache header but posts the actual server version 1ms
+     × saveAdmissibility: GET "opaque-body-hash" preserves raw cache header but posts the actual server version 1ms
+     × admit: GET W/"transport-hash" preserves raw cache header but posts the actual server version 1ms
+     × admit: GET "opaque-body-hash" preserves raw cache header but posts the actual server version 1ms
+     × reject: GET W/"transport-hash" preserves raw cache header but posts the actual server version 1ms
+     × reject: GET "opaque-body-hash" preserves raw cache header but posts the actual server version 1ms
+     × invalid server version undefined clears a prior command token and fails locally before POST 1ms
+     × invalid server version null clears a prior command token and fails locally before POST 1ms
+     × invalid server version 4 clears a prior command token and fails locally before POST 1ms
+     × invalid server version 0 clears a prior command token and fails locally before POST 1ms
+     × invalid server version -1 clears a prior command token and fails locally before POST 1ms
+     × invalid server version 1.5 clears a prior command token and fails locally before POST 1ms
+     × invalid server version 9007199254740992 clears a prior command token and fails locally before POST 1ms
+     × a numeric strong GET validator disagreeing with body.version is rejected rather than chosen blindly 1ms
+     × triage: explicit weak/opaque If-Match is a local error, never a POST 256ms
+     × saveAdmissibility: explicit weak/opaque If-Match is a local error, never a POST 0ms
+     × admit: explicit weak/opaque If-Match is a local error, never a POST 0ms
+     × reject: explicit weak/opaque If-Match is a local error, never a POST 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 412 conflict preserves RAIT code/context/requestId and derives its own catalog key
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'conflict', status: 412, …(5) }
+
+- Expected
++ Received
+
+  {
+-   "code": "RAIT.VERSION_CONFLICT",
+-   "context": {
+-     "caseId": "canonical-case-token",
+-     "retryAfter": 7,
+-   },
+-   "kind": "conflict",
+-   "messageKey": "rait.errors.version_conflict",
+-   "requestId": "browser-rgr-request",
+-   "retryAfter": 7,
+-   "status": 412,
++   "context": {},
++   "kind": "unknown",
++   "messageKey": "rait.errors.unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:55:38
+     53|   const outcome = await result;
+     54|   expect(outcome).toHaveProperty('error');
+     55|   if (!('error' in outcome)) throw new Error('Expected interceptor rej…
+       |                                      ^
+     56|   expect(outcome.error).not.toBeInstanceOf(HttpErrorResponse);
+     57|   expect(classifyStynxError(outcome.error).status).toBe(status);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 409: installed interceptor retains RAIT status family conflict
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'conflict', status: 409 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "conflict",
+-   "status": 409,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 428: installed interceptor retains RAIT status family conflict
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'conflict', status: 428 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "conflict",
+-   "status": 428,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 403: installed interceptor retains RAIT status family forbidden
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'forbidden', status: 403 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "forbidden",
+-   "status": 403,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 422: installed interceptor retains RAIT status family business
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'business', status: 422 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "business",
+-   "status": 422,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 500: installed interceptor retains RAIT status family server
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'server', status: 500 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "server",
+-   "status": 500,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 0: installed interceptor retains RAIT status family offline
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'offline', status: +0 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "offline",
+-   "status": 0,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:76:42
+     75|       messageKey: messageKeyFor('RAIT.VERSION_CONFLICT'),
+     76|       requestId: 'browser-rgr-request',
+     77|       context,
+       |  ^
+     78|       retryAfter: 7,
+     79|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > 400 SDK context uses existing field validation and does not invent the lost Retry-After header
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'validation', …(3) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "fields": [
+-     {
+-       "path": "criterion",
+-       "rule": "required",
+-     },
+-   ],
+-   "kind": "validation",
+-   "legalBasis": "Operator token",
+-   "status": 400,
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:91:38
+     89|   ] as const) {
+     90|     it(`${status}: installed interceptor retains RAIT status family ${…
+     91|       const error = await mapped(status, { code, context: {} });
+       |                                      ^
+     92|       expect(classifyError(error)).toMatchObject({ kind, status });
+     93|       expect(classifyError(error).messageKey).not.toMatch(/^ui\./);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  src/app/core/error-boundary-interceptors.spec.ts > browser RGR actual STYNX DI errors reach the RAIT boundary > non-record SDK context is ignored
+AssertionError: expected { kind: 'unknown', …(2) } to match object { kind: 'conflict', context: {} }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "context": {},
+-   "kind": "conflict",
++   "kind": "unknown",
+  }
+
+ ❯ src/app/core/error-boundary-interceptors.spec.ts:105:38
+    104|       },
+    105|     });
+    106|     expect(classifyError(error)).toMatchObject({
+       |                              ^
+    107|       kind: 'validation',
+    108|       status: 400,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > triage: GET W/"transport-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > saveAdmissibility: GET W/"transport-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > admit: GET W/"transport-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > reject: GET W/"transport-hash" preserves raw cache header but posts the actual server version
+AssertionError: expected 'W/"transport-hash"' to be '"4"' // Object.is equality
+
+Expected: ""4""
+Received: "W/"transport-hash""
+
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:181:54
+    180|         expect(key).toBe(
+    181|           await idempotencyKey(op.act, op.target, {
+    182|             body: op.body,
+       |  ^
+    183|             ifMatch: match,
+    184|           }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > triage: GET "opaque-body-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > saveAdmissibility: GET "opaque-body-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > admit: GET "opaque-body-hash" preserves raw cache header but posts the actual server version
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > reject: GET "opaque-body-hash" preserves raw cache header but posts the actual server version
+AssertionError: expected '"opaque-body-hash"' to be '"4"' // Object.is equality
+
+Expected: ""4""
+Received: ""opaque-body-hash""
+
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:181:54
+    180|         expect(key).toBe(
+    181|           await idempotencyKey(op.act, op.target, {
+    182|             body: op.body,
+       |  ^
+    183|             ifMatch: match,
+    184|           }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version undefined clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version null clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version 4 clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version 0 clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version -1 clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version 1.5 clears a prior command token and fails locally before POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > invalid server version 9007199254740992 clears a prior command token and fails locally before POST
+AssertionError: expected { value: { …(15) } } to have property "error"
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:219:29
+    218| });
+    219|
+    220| // Browser RGR: real GET transport validators are not command version …
+       |                            ^
+    221| describe('browser RGR server version to command precondition', () => {
+    222|   for (const op of OPS) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > a numeric strong GET validator disagreeing with body.version is rejected rather than chosen blindly
+AssertionError: expected { value: { …(15) } } to have property "error"
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:235:31
+    233|         expect(TestBed.inject(EtagStore).get('cases', CASE)).toBe(rawE…
+    234|         expect(client.etagOf('cases', CASE)).toBe('"4"');
+    235|         const pending = op.call(client, client.etagOf('cases', CASE));
+       |                               ^
+    236|         const req = await vi.waitFor(() =>
+    237|           http.expectOne(`/v1/inf/rait${op.path}`),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > triage: explicit weak/opaque If-Match is a local error, never a POST
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ vi.waitFor.timeout src/app/data/api/case-admissibility.wiring.spec.ts:253:56
+    251|         req.flush({ data, events: [] }, { headers: { ETag: '"5"' } });
+    252|         await expect(pending).resolves.toEqual({ body: data, etag: '"5…
+    253|         expect(client.etagOf('cases', CASE)).toBe('"5"');
+       |                                                        ^
+    254|       });
+    255|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > triage: explicit weak/opaque If-Match is a local error, never a POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > saveAdmissibility: explicit weak/opaque If-Match is a local error, never a POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > admit: explicit weak/opaque If-Match is a local error, never a POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > reject: explicit weak/opaque If-Match is a local error, never a POST
+Error: Expected no open requests, found 1: POST /v1/inf/rait/cases/00000000-0000-7000-8000-000010000002/commands/triage
+ ❯ HttpClientTestingBackend.verify ../../../node_modules/.pnpm/darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/common/http/testing/src/backend.ts:147:12
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:64:55
+     62|     target: CASE,
+     63|     body: REJECT,
+     64|     call: (client: CaseClient, match: string | null) =>
+       |                                                       ^
+     65|       client.reject(CASE, REJECT, match),
+     66|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > saveAdmissibility: explicit weak/opaque If-Match is a local error, never a POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > admit: explicit weak/opaque If-Match is a local error, never a POST
+ FAIL  src/app/data/api/case-admissibility.wiring.spec.ts > browser RGR server version to command precondition > reject: explicit weak/opaque If-Match is a local error, never a POST
+Error: Cannot configure the test module when the test module has already been instantiated. Make sure you are not using `inject` before `TestBed.configureTestingModule`.
+ ❯ TestBedImpl.assertNotInstantiated ../../../node_modules/.pnpm/darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/core/testing/src/test_bed.ts:757:12
+ ❯ TestBedImpl.configureTestingModule ../../../node_modules/.pnpm/darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/core/testing/src/test_bed.ts:572:9
+ ❯ TestBedImpl.configureTestingModule ../../../node_modules/.pnpm/darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/core/testing/src/test_bed.ts:325:32
+ ❯ setup src/app/data/api/case-admissibility.wiring.spec.ts:56:13
+     54|     body: {},
+     55|     call: (client: CaseClient, match: string | null) =>
+     56|       client.admit(CASE, {}, match),
+       |             ^
+     57|   },
+     58|   {
+ ❯ src/app/data/api/case-admissibility.wiring.spec.ts:242:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  29 failed | 48 passed (77)
+   Start at  15:34:51
+   Duration  6.16s (transform 3.97s, setup 6.18s, import 1.04s, tests 2.74s, environment 2.68s)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/rait-web@0.1.0 test: `vitest run --config vitest.config.ts "src/app/data/api/case-admissibility.wiring.spec.ts" "src/app/core/error-boundary-interceptors.spec.ts" "src/app/core/guards/case-access.guard.spec.ts"`
+Exit status 1

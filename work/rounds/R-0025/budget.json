@@ -1,0 +1,88 @@
+{
+  "round_id": "R-0025",
+  "unit": "estimated_unique_input_tokens",
+  "window_input_limit": 650000,
+  "checkpoint_input_threshold": 520000,
+  "window_hours": 5,
+  "entries": [
+    {
+      "id": "bootstrap-session-a",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 65000,
+      "output_estimate": 9000,
+      "note": "Leitura de governan\u00e7a, plano, an\u00e1lise, base e elabora\u00e7\u00e3o dos quatro prompts; estimativa inicial."
+    },
+    {
+      "id": "prompt-review-session-a",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 35000,
+      "output_estimate": 5000,
+      "result": "REVIEW \u2192 PASS",
+      "note": "Um prompt-review em dois ciclos pela ponte: corre\u00e7\u00e3o do achado high sobre ODs pendentes e dos lows do mesmo diff."
+    },
+    {
+      "id": "prompt-review-correction",
+      "role": "auditor",
+      "model": "claude-opus-5-5",
+      "input_estimate": 15000,
+      "output_estimate": 3000,
+      "result": "PASS",
+      "note": "Ciclo 2 restrito aos achados do ciclo 1."
+    },
+    {
+      "id": "task-0001",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 60000,
+      "output_estimate": 10000,
+      "note": "Matriz 64 (13/35/16/0), delta 13 L0, triagem de 54 ODs e CTG-0001; gates PASS.",
+      "result": "PASS"
+    },
+    {
+      "id": "task-0002",
+      "role": "architect",
+      "model": "gpt-6-luna",
+      "input_estimate": 30000,
+      "output_estimate": 5000,
+      "note": "Registro OD-R25-001\u2026015 e triagem R12, uma chave i18n permitida; gates de cat\u00e1logo, KB e formato PASS.",
+      "result": "PASS"
+    },
+    {
+      "id": "task-0003",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 65000,
+      "output_estimate": 11000,
+      "note": "CTG-0002: F-01\u2026F-05, A-1\u2026A-6 e C-25-2-01\u202607; acceptance e formato PASS.",
+      "result": "PASS"
+    },
+    {
+      "id": "task-0006",
+      "role": "architect",
+      "model": "gpt-6-sol",
+      "input_estimate": 65000,
+      "output_estimate": 11000,
+      "note": "CTG-0003: F-06\u2026F-16 e C-25-3-01\u202608; acceptance e formato PASS; QA 200/If-Match cria\u00e7\u00e3o.",
+      "result": "PASS"
+    }
+  ],
+  "windows": {
+    "session_a_historical": {
+      "input_estimate": 335000,
+      "output_estimate": 54000,
+      "note": "Historical Session A estimates preserved; original entries unchanged. Not current-window measured consumption."
+    },
+    "resume_jw01_20261018": {
+      "date": "2026-10-18",
+      "status": "active",
+      "estimate_kind": "planning_only_not_measured",
+      "planned_codex_input_estimate": 400000,
+      "planned_codex_output_estimate": 60000,
+      "planned_claude_input_estimate": 80000,
+      "planned_claude_output_estimate": 10000,
+      "note": "New R-0025 continuation window: reconciliation, Architect sources, Inspector/backend/frontend, gates and PR. Requested model gpt-6-sol from existing ladder; actual inherited worker model/version not observable. Current tokens not measured; R-0033 token estimates do not carry into this window. Review cycles1 REVIEW and2 PASS are observed verdicts, not token measurements. Existing650000/520000 limits unchanged. Observed review verdicts: prompt REVIEW then PASS, delivery REVIEW then PASS, browser-boundaries PASS; actual token consumption remains unmeasured. Frontend worker actual model gpt-6-sol medium observable, other inherited worker identities not inferred."
+    }
+  }
+}

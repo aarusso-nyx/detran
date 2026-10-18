@@ -2,99 +2,1377 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RAIT Case commands",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "x-blueprint": "BP-INF-RAIT-CASE-001",
-    "x-commands": true
+    "x-commands": true,
+    "description": "R-0025 admissibility slice per ADR-0041 and UC-RAIT-002. Four operations have typed strict inputs, parent-case If-Match/ETag and idempotency. Other operations retain their existing scope."
   },
   "paths": {
     "/v1/inf/rait/cases": {
       "post": {
         "operationId": "raitCaseProtocol",
-        "responses": { "200": { "description": "Caso protocolado" } }
+        "responses": {
+          "200": {
+            "description": "Caso protocolado"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/admit": {
       "post": {
         "operationId": "raitCaseAdmit",
-        "responses": { "200": { "description": "Caso admitido" } }
+        "description": "Existing admit guard: four criteria, signature and server timeliness. No state shortcut.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RaitCaseId"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCaseIfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCommandIdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaitCaseAdmitInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Persisted result or exact idempotent replay.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "description": "ETag of the persisted parent case version, also for admissibility saves.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data", "events"],
+                  "properties": {
+                    "data": {
+                      "$ref": "./BP-INF-RAIT-CASE-001.openapi.json#/components/schemas/RaitCase"
+                    },
+                    "events": {
+                      "type": "array",
+                      "description": "Existing transactional case event records; no client-supplied event.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED", "RAIT.ENUM_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. Local test profile does not prove external JWT/IdP behavior.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_STATE_INVALID",
+                        "RAIT.IDEMPOTENCY_REPLAY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.TRIAGE_INCOMPLETE",
+                        "RAIT.TRIAGE_TIMELINESS_READONLY",
+                        "RAIT.INTAKE_SIGNATURE_MISSING",
+                        "RAIT.PARAMETER_SOURCE_PENDING"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/non-admission": {
       "post": {
         "operationId": "raitCaseNonAdmission",
-        "responses": { "200": { "description": "Caso não admitido" } }
+        "description": "Existing reject guard: canonical reason must match a false criterion; legalBasis is operator text.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RaitCaseId"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCaseIfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCommandIdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaitCaseNonAdmissionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Persisted result or exact idempotent replay.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "description": "ETag of the persisted parent case version, also for admissibility saves.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data", "events"],
+                  "properties": {
+                    "data": {
+                      "$ref": "./BP-INF-RAIT-CASE-001.openapi.json#/components/schemas/RaitCase"
+                    },
+                    "events": {
+                      "type": "array",
+                      "description": "Existing transactional case event records; no client-supplied event.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED", "RAIT.ENUM_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. Local test profile does not prove external JWT/IdP behavior.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_STATE_INVALID",
+                        "RAIT.IDEMPOTENCY_REPLAY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.TRIAGE_INCOMPLETE",
+                        "RAIT.NON_ADMISSION_REASON_REQUIRED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/remit": {
       "post": {
         "operationId": "raitCaseRemit",
-        "responses": { "200": { "description": "Caso remetido" } }
+        "responses": {
+          "200": {
+            "description": "Caso remetido"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/receive": {
       "post": {
         "operationId": "raitCaseReceive",
-        "responses": { "200": { "description": "Caso recebido" } }
+        "responses": {
+          "200": {
+            "description": "Caso recebido"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/ready": {
       "post": {
         "operationId": "raitCaseReady",
-        "responses": { "200": { "description": "Minuta pronta" } }
+        "responses": {
+          "200": {
+            "description": "Minuta pronta"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/decide": {
       "post": {
         "operationId": "raitCaseDecide",
-        "responses": { "200": { "description": "Decisão assinada" } }
+        "responses": {
+          "200": {
+            "description": "Decisão assinada"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/return-draft": {
       "post": {
         "operationId": "raitCaseReturnDraft",
-        "responses": { "200": { "description": "Minuta devolvida" } }
+        "responses": {
+          "200": {
+            "description": "Minuta devolvida"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/withdraw": {
       "post": {
         "operationId": "raitCaseWithdraw",
-        "responses": { "200": { "description": "Desistência registrada" } }
+        "responses": {
+          "200": {
+            "description": "Desistência registrada"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/redirect": {
       "post": {
         "operationId": "raitCaseRedirect",
-        "responses": { "200": { "description": "Caso redirecionado" } }
+        "responses": {
+          "200": {
+            "description": "Caso redirecionado"
+          }
+        }
       }
     },
     "/v1/inf/rait/cases/{id}/commands/resolve-pending": {
       "post": {
         "operationId": "raitCaseResolvePending",
-        "responses": { "200": { "description": "Pendência resolvida" } }
+        "responses": {
+          "200": {
+            "description": "Pendência resolvida"
+          }
+        }
       }
     },
     "/v1/inf/rait/pools/{id}/claim-next": {
       "post": {
         "operationId": "raitPoolClaimNext",
-        "responses": { "200": { "description": "Próximo caso atribuído" } }
+        "responses": {
+          "200": {
+            "description": "Próximo caso atribuído"
+          }
+        }
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/answer": {
       "post": {
         "operationId": "raitInquiryAnswer",
-        "responses": { "200": { "description": "Diligência respondida" } }
+        "responses": {
+          "200": {
+            "description": "Diligência respondida"
+          }
+        }
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/extend": {
       "post": {
         "operationId": "raitInquiryExtend",
-        "responses": { "200": { "description": "Diligência prorrogada" } }
+        "responses": {
+          "200": {
+            "description": "Diligência prorrogada"
+          }
+        }
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/expire": {
       "post": {
         "operationId": "raitInquiryExpire",
-        "responses": { "200": { "description": "Diligência vencida" } }
+        "responses": {
+          "200": {
+            "description": "Diligência vencida"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/triage": {
+      "post": {
+        "operationId": "raitCaseTriage",
+        "description": "PROTOCOLADO to TRIAGEM_ADMISSIBILIDADE; server deadlines engine persists the read-only timeliness criterion.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RaitCaseId"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCaseIfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCommandIdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaitCaseTriageInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Persisted result or exact idempotent replay.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "description": "ETag of the persisted parent case version, also for admissibility saves.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data", "events"],
+                  "properties": {
+                    "data": {
+                      "$ref": "./BP-INF-RAIT-CASE-001.openapi.json#/components/schemas/RaitCase"
+                    },
+                    "events": {
+                      "type": "array",
+                      "description": "Existing transactional case event records; no client-supplied event.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED", "RAIT.ENUM_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. Local test profile does not prove external JWT/IdP behavior.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_STATE_INVALID",
+                        "RAIT.IDEMPOTENCY_REPLAY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.PARAMETER_SOURCE_PENDING",
+                        "RAIT.TRIAGE_TIMELINESS_READONLY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/admissibility": {
+      "post": {
+        "operationId": "createRaitAdmissibility",
+        "description": "Upsert one human criterion by tenant/case/criterion; server actor/time and recomputed timeliness. No generated PATCH/DELETE write bypass.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RaitCaseIfMatch"
+          },
+          {
+            "$ref": "#/components/parameters/RaitCommandIdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRaitAdmissibilityInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Persisted result or exact idempotent replay.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "description": "ETag of the persisted parent case version, also for admissibility saves.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data", "events"],
+                  "properties": {
+                    "data": {
+                      "$ref": "./BP-INF-RAIT-CASE-001.openapi.json#/components/schemas/RaitAdmissibility"
+                    },
+                    "events": {
+                      "type": "array",
+                      "description": "Existing transactional case event records; no client-supplied event.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED", "RAIT.ENUM_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. Local test profile does not prove external JWT/IdP behavior.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_STATE_INVALID",
+                        "RAIT.IDEMPOTENCY_REPLAY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.PARAMETER_SOURCE_PENDING",
+                        "RAIT.TRIAGE_TIMELINESS_READONLY"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Catalogued RAIT error response; code and status remain authoritative. ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitCaseTriageInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "SaveRaitAdmissibilityInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_id", "criterion", "verdict"],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "enum": ["legitimidade", "assinatura", "pedido_compativel"]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": ["string", "null"]
+          }
+        }
+      },
+      "RaitCaseAdmitInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "RaitCaseNonAdmissionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reason", "legalBasis"],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "intempestivo",
+              "ilegitimo",
+              "sem_assinatura",
+              "pedido_incompativel"
+            ]
+          },
+          "legalBasis": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Operator-entered nonAdmissionGrounds; no legal text inferred from the reason code."
+          }
+        }
+      }
+    },
+    "parameters": {
+      "RaitCaseId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "RaitCaseIfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": true,
+        "description": "ETag of the parent case read from server. Missing 428; stale version 412.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "RaitCommandIdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "description": "Stable key per action/target/body; same fingerprint replays without duplicate effects, divergent reuse 409.",
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   }

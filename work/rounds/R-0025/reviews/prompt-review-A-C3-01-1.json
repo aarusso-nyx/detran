@@ -1,0 +1,49 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0025",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0025/contracts/JW01-admissibility.md",
+      "line": 56,
+      "claim": "Contract §7 says admit and reject use 'bodies do contrato gerado' and that reject sends reason plus a server-required legalBasis. TASK-0027.md:20 requires generated types with no casts. But the current commands contract declares no requestBody, path parameter, If-Match or Idempotency-Key header and no ETag response for raitCaseAdmit or raitCaseNonAdmission (docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json; packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts:279 and :297 have 'requestBody?: never'). TASK-0024.md:6-8 only adds F01 and createRaitAdmissibility, so the frontend would have to write a manual DTO or a cast. That breaks contract lines 31-32.",
+      "fix": "Add to TASK-0024 and the contract: handwritten OpenAPI requestBody schemas for raitCaseAdmit (strict {}) and raitCaseNonAdmission ({reason, legalBasis}, both required). Declare the If-Match/Idempotency-Key header parameters and the {data,events} response with an ETag header for raitCaseTriage, createRaitAdmissibility, raitCaseAdmit and raitCaseNonAdmission. Then regenerate the clients so TASK-0027 can type every call from the contract."
+    },
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0025/contracts/JW01-admissibility.md",
+      "line": 57,
+      "claim": "Reject semantics are ambiguous across layers. The server reads payload.reason as one of the codes intempestivo, ilegitimo, sem_assinatura or pedido_incompativel and maps it to the criterion that must be false (backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts:1263-1270). It requires the fields reason and legalBasis (same file :82). The current client sends non_admission_reason (apps/rait/web/src/app/data/api/case.client.ts:247). The form has nonAdmissionReason and nonAdmissionGrounds (apps/rait/web/src/app/forms/triagem.schema.ts:49-50). The contract only says 'reason e legalBasis', without saying reason is the art. 4 code or that legalBasis is the operator's grounds text. That leaves a hidden semantic mapping for Inspector and Frontend.",
+      "fix": "State in the contract that reason = nonAdmissionReason (the NON_ADMISSION_REASONS code, checked by the server against the false criterion) and legalBasis = nonAdmissionGrounds (operator text, no legal mapping on the client). Retire the non_admission_reason field from the client signature. TASK-0025 and TASK-0027 should cite this mapping."
+    },
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0025/contracts/JW01-admissibility.md",
+      "line": 83,
+      "claim": "The client API for F-01 versus saving the checklist is not fixed. The existing CaseClient.triage(caseId, CreateRaitAdmissibilityDto[], ifMatch) is shaped like a batch checklist save (apps/rait/web/src/app/data/api/case.client.ts:225-232), and its M8 row calls it with an array (case.client.spec.ts:204-207). The contract leaves the new checklist method conditional ('Se houver novo método', lines 84-85 and 98-99). Yet TASK-0025 (Inspector) writes the M8 substitutions, wiring specs and the preview inventory 'checklist novo' (TASK-0025.md:22-27) before TASK-0027 decides names and signatures. The sensors cannot be executed without guessing the API.",
+      "fix": "Fix in the contract, before TASK-0025: the method name and signature for F-01 (for example, triage repurposed to an empty body with ifMatch and idempotency key), the method that saves one human criterion (name, input type derived from createRaitAdmissibility, ifMatch/key), the facade counterparts, the M8 keys each one maps to, and the corresponding entry in the preview inventory."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/prompts/TASK-0024.md",
+      "line": 4,
+      "claim": "'materialize somente ADR-0041 e contracts/JW01-admissibility.md' reads as if ADR-0041 still needs writing, but it already exists. The prompt also does not require the handwritten POST to keep @Resource('inf:rait-admissibility') + @Action('create') + @Audit INF_RAIT_ADMISSIBILITY_CREATE (backend/domains/inf/rait-case/src/controllers/rait-admissibility.controller.ts:16-30). Keeping those is what makes the existing policy (backend/domains/shared/src/policy.ts:1412) remain authoritative without a new key, as ADR-0041:32 says.",
+      "fix": "Reword to 'materializar conforme ADR-0041/contrato'. Record in the contract and in TASK-0026 that the handwritten admissibility controller reuses the existing resource/action/audit decorators and needs no new policy.ts key."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/tasks/TASK-0026.json",
+      "line": 25,
+      "claim": "acceptance_commands are narrower than the prompt prose. TASK-0026.md:28-30 requires typecheck for inf-rait-case/app, contracts:check/test, blueprints:check and verify:decorators/role-catalog/rls-ddl, but they are missing from the JSON. TASK-0025.json:33-41 lists only two web specs and omits the facade/triage specs and the focused backend suites.",
+      "fix": "Align acceptance_commands with each prompt. Keep the DB suites marked blocked when there is no disposable database, never skipped."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor — Artigo 7; somente leitura, revisor Claude via alias CLI opus, sem inferência de modelo exato; nenhuma edição, Git mutável, teste, servidor ou verbo de estado/evidência executado.",
+    "Lido: AUTHORIZATION A-C3-01, plano adenda (diff), ADR-0041, contracts/JW01-admissibility.md, TASK-0024..0027 md/json, compositions (sha256 dos 4 prompts confere), open-decisions OD-R25-016/017 (diff), commands/CRUD OpenAPI CASE, cliente gerado, controller/DTO gerados de admissibility, policy.ts, rait-case-command.service/controller, deadlines engine, case.client(+spec), triagem.schema, case-access.guard.",
+    "Conforme: TASK-0001/0002/0003/0006 permanecem completed; recorte, OD-R25-016 fora de escopo, OD-R25-017 explícita sem predicado inventado, preview sem super, substituição M8 restrita a triage/admit/reject, limitação JWT/IdP local e Docker ausente=blocked estão corretos; tupla rait-case:triage analyst/secretary existe (policy.ts:1460); motor de tempestividade com caseBinding deriva pieceMarkOn de protocolled_at (service:458-500); padrão If-Match/Idempotency/ETag existe no controller de comandos. Aceitação integral R-0025 preservada.",
+    "Veredito REVIEW: lacunas corrigíveis de contrato (corpos/headers OpenAPI de admit/non-admission, mapeamento reason/legalBasis, assinatura fixa dos métodos de cliente) antes de Inspector/Frontend."
+  ]
+}

@@ -1,5 +1,6 @@
 // Permissões por papel da sessão sintética (R-0033 TASK-0003; `frontend-preview-mode.md` §2, P-14,
-// D-14): transcrição LITERAL de `RAIT_COMMAND_RULES` de `backend/domains/shared/src/policy.ts`
+// D-14): transcrição das regras de comando e do grant CRUD existente de admissibility
+// em `backend/domains/shared/src/policy.ts`
 // (`[recurso, ação, papéis]` → chave `inf:<recurso>:<ação>`), agrupada por papel, na ordem das
 // regras na fonte. Só os 13 papéis de `RAIT_ALL_ROLES` (o `DPO` da regra `rait-export:approve` não é
 // papel canônico do RAIT). Transcrição, não dependência: nenhum import do backend. Mudança em
@@ -10,6 +11,7 @@ export const PREVIEW_ROLE_PERMISSIONS: Readonly<
   Record<RaitRoleCode, readonly string[]>
 > = {
   'rait-analyst': [
+    'inf:rait-admissibility:create',
     'inf:rait-case:claim-next',
     'inf:rait-case:triage',
     'inf:rait-case:admit',
@@ -30,6 +32,7 @@ export const PREVIEW_ROLE_PERMISSIONS: Readonly<
     'inf:rait-incident:open',
   ],
   'rait-secretary': [
+    'inf:rait-admissibility:create',
     'inf:rait-case:protocol',
     'inf:rait-case:triage',
     'inf:rait-case:remit-jari',

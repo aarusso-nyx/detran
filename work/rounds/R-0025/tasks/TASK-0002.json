@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0025",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Registrar ODs RAIT e chaves i18n",
+  "description": "Transcrever decisões e pendências da matriz no registro canônico e i18n permitido.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs-rait-od", "MOD-rait-web-i18n"],
+  "target_substrates": ["F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r25", "a-c2-15", "session-a"],
+  "branch": "orchestra/rait-web-wiring",
+  "worktree_id": "WT-rait-web-wiring",
+  "prompt_composition_id": "PC-375b0098c6700628",
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "const fs=require('fs'); const s=fs.readFileSync('docs/meta/knowledge-base/open-decisions-rait.md','utf8'); if(!s.includes('RAIT-WEB — R-0025')) process.exit(1); for(let n=1;n<=15;n++) if(!s.includes('OD-R25-'+String(n).padStart(3,'0'))) process.exit(1); JSON.parse(fs.readFileSync('docs/framework/arch/i18n/rait.pt-BR.json','utf8'))"
+    ],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-29T22:06:52Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-375b0098c6700628",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

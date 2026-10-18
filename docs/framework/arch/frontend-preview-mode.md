@@ -286,3 +286,23 @@ O que muda por app (o resto do contrato vale igual):
 
 Para `portal-web` (TASK-0009 → TASK-0007 nesta rodada): TASK-0009 escreve
 `inventory-portal-web.md` e os specs a partir desta seção; TASK-0007 implementa.
+
+## Adenda R-0025 — leitura de controle anterior à página (D-23)
+
+P-09 e o estado global de apresentação (§3) aplicam-se às leituras da página e do
+layout; não tornam `loading/error/forbidden` uma alteração da autorização de rota.
+A cadeia real auth→role→caseAccessGuard permanece ativa (P-10). D-01 conserva os
+parâmetros de cenário/papel e sua navegação; não concede acesso por cenário.
+
+Quando a guarda real consultar `CaseClient.verifyCaseAccess(caseId): Promise<void>`,
+o adapter preview confirma existência do ID na coleção canônica `cases` sem aplicar
+cenário visual. ID ausente rejeita sempre; não há retorno incondicional, acesso a
+backend, grant adicional ou ETag inventado. Sessão, papel e tenant ficam intactos.
+`getRaitCase` das páginas continua produzindo exatamente os estados de P-09.
+O método novo é leitura de controle, não comando; o catálogo M8 permanece 65 após
+a expansão aprovada da R-0025. Os comandos preview continuam não funcionais.
+
+Sensores D-23: ID conhecido deixa a guarda concluir nos cinco cenários e a página
+mostra o cenário pedido; ID desconhecido e papel sem acesso negam; produção usa o
+GET/RLS e ETag recebidos, preservando negativas HTTP; zero rede fora de assets na
+prévia. Não se substitui a guarda nem se enfraquece o sensor de página para passar.

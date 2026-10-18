@@ -1,0 +1,819 @@
+
+> detran@0.0.1 check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build
+
+
+> detran@0.0.1 format:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> detran@0.0.1 verify:archival-pc-guard /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-archival-pc-guard.mjs --repo-root .
+
+verify-archival-pc-guard: OK (applied)
+
+> detran@0.0.1 verify:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-stynx-pin.ts
+
+All STYNX dependencies match 1.5.3.
+
+> detran@0.0.1 test:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stynx-pin/tests/*.test.mjs
+
+✔ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (78.231875ms)
+✔ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (76.337459ms)
+✔ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (75.766625ms)
+✔ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (79.359708ms)
+✔ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (79.8615ms)
+✔ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (494.251417ms)
+✔ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (153.0555ms)
+✔ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (76.145625ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1172.705209
+
+> detran@0.0.1 test:stack /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stack/*.test.mjs
+
+✔ dado o package.json adotado quando a superfície stack é enumerada então as nove entradas originais permanecem verbatim (1.450125ms)
+✔ dado help quando o comando é solicitado então termina com sucesso (24.622458ms)
+✔ dado um comando desconhecido quando a stack é invocada então termina com erro (22.946208ms)
+✔ dado stop quando recebe uma opção então recusa a opção (22.078792ms)
+✔ dado status quando recebe uma opção então recusa a opção (18.176958ms)
+✔ dado build quando recebe uma opção então recusa a opção (18.067791ms)
+✔ dado db-init quando recebe uma opção então recusa a opção (17.966375ms)
+✔ dado db-reset quando recebe uma opção então recusa a opção (16.1445ms)
+✔ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (249.449375ms)
+✔ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (21.577333ms)
+✔ dado o proxy versionado quando ele é lido então v1 aponta para o backend loopback (0.191417ms)
+✔ dado os quatro manifests Angular quando a superfície é lida então portas e projetos são os adotados (1.563042ms)
+✔ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (57.386ms)
+✔ C-02-05 A6 dado outro banco quando a fixture Portal e invocada entao recusa antes de SQL (9.2065ms)
+✔ C-02-05 A6 dado o banco descartável quando a fixture Portal e invocada então envia SQL ao container e ID concretos (225.460375ms)
+✔ C-02-02 dado o mock SEFAZ quando a interface é inspecionada então exporta factory e CLI fixa loopback:3999 (62.100459ms)
+✔ C-02-02 dado o adapter SEFAZ quando o mock recebe as seis operações então o sensor usa tsx e o adapter real (249.405959ms)
+✔ C-02-05/06 dado targets estruturados quando smoke é executado então percorre root, proxy, health, PEC e CH off sem vazar segredo (116.735208ms)
+✔ C-02-05 A6 dado ID Portal ausente quando o proxy responde entao smoke falha (69.343917ms)
+✔ C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executado então registra target, resultado e motivo específicos (388.125833ms)
+✔ C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter (126.71975ms)
+✔ C-02-05 dado item de array com tenant divergente quando o proxy responde então smoke registra tenant_mismatch (131.756792ms)
+✔ C-02-05/06 dado as fases CLI quando smoke reinicia o backend então prepara Portal após preflight, restaura os cinco papéis e não herda overrides locais (559.749541ms)
+✔ C-02-02 dado o comando literal do adapter SEFAZ quando executado então confirma operações e erros observáveis (151.395541ms)
+✔ C-02-05/06 dado o preflight falho quando a CLI smoke é iniciada então não chama bash e preserva seu relatório separado (50.628666ms)
+✔ C-02-05 dado PEC construído e entrypoint em caminho com espaços e symlink quando a CLI smoke roda então mede a porta 4204 (411.498209ms)
+✔ C-01-05 dado o banco próprio quando apply full não recebe autorização então recusa antes de conectar (15.647208ms)
+✔ C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed (694.905208ms)
+✔ C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais (0.271917ms)
+✔ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (267.651625ms)
+✔ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (268.321708ms)
+✔ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (251.00425ms)
+✔ C-01-07 dado DETRAN_DB_IMAGE quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.540042ms)
+✔ C-01-07 dado DB_HOST quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.58125ms)
+✔ C-01-07 dado DB_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.440708ms)
+✔ C-01-07 dado DB_USER quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (17.379958ms)
+✔ C-01-07 dado DETRAN_BACKEND_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (16.549917ms)
+✔ C-01-07 dado DETRAN_RUNTIME_PROFILE inválida quando config é solicitado então recusa sem alcançar runtime (17.382ms)
+✔ C-01-07 dado SENATRAN_PROVIDER inválida quando config é solicitado então recusa sem alcançar runtime (17.0705ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (18.6615ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (16.05925ms)
+✔ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (204.242542ms)
+✔ C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra (1472.560083ms)
+✔ C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz (698.097083ms)
+✔ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (272.321792ms)
+✔ C-01-10 dado Docker Compose 2.24.3 quando start prepara o mock então valida a versão antes de up (392.98425ms)
+✔ C-01-10 dado Docker Compose 2.24.4 quando start prepara o mock então valida a versão antes de up (1718.592917ms)
+✔ C-01-07 dado start --no-mock quando falha de forma controlada então config persiste mock desabilitado e stop limpa o modo (1792.781583ms)
+✔ C-01-07 dado start --no-mock quando health é chamado depois então não sonda o mock desabilitado (1822.827333ms)
+✔ C-01-07 dado variáveis sensíveis quando backend inicia então elas não atravessam o ambiente explicitamente permitido (1277.062167ms)
+✔ C-01-11 dado start quando a saúde do backend expira então informa timeout e não deixa PID ou processo local (1194.363375ms)
+✔ C-01-11 dado start quando somente a saúde do mock expira então pede os logs Compose do serviço app (1706.110375ms)
+✔ C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos (1429.001791ms)
+✔ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (184.162958ms)
+✔ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (286.762458ms)
+✔ C-01-12 dado os papéis locais padrão quando a stack os declara então pertencem ao catálogo composto (1.410542ms)
+✔ C-01-13 dado db-reset quando o volume é gerenciado então preserva volumes e usa somente a autorização própria (0.36975ms)
+✔ C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada (0.053958ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16179.176125
+
+> detran@0.0.1 law:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/law/tests/*.test.mjs
+
+✔ dado fixture temporária quando prepara os diretórios então cria os caminhos de corpus exigidos (28.375083ms)
+✔ dado schema copiado e hash correspondente quando verifica a regra (a) então não há violação (a) (32.020584ms)
+✔ dado schema ausente quando verifica a regra (a) então aponta a cópia ausente (67.201375ms)
+✔ dado schema extra quando verifica a regra (a) então aponta o arquivo fora do roster (60.245792ms)
+✔ dado schema alterado quando verifica a regra (a) então aponta bytes divergentes (16.877125ms)
+✔ dado sha divergente no manifesto quando verifica a regra (a) então aponta o hash incorreto (24.703333ms)
+✔ dado manifesto sem schema do roster quando verifica a regra (a) então aponta o roster divergente (13.847709ms)
+✔ dado manifesto com schema extra quando verifica a regra (a) então aponta o roster divergente (13.913125ms)
+✔ dado manifesto JSON inválido quando verifica a regra (a) então aponta manifesto inválido (19.378583ms)
+✔ dado OD-R19-001 registrado na seção canônica quando verifica a regra (b) então não há violação (b) (32.763958ms)
+✔ dado cabeçalho Decisão quando a âncora remove o diacrítico então rejeita a aproximação (31.522375ms)
+✔ dado OD anterior em outra seção do registro quando verifica a regra (b) então resolve a linha da tabela (27.593ms)
+✔ dado OD-R19 fora da seção canônica quando verifica a regra (b) então rejeita a linha deslocada (16.509625ms)
+✔ dado provenance sem fonte quando verifica a regra (b) então aponta o ID não resolvido (15.479166ms)
+▶ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente
+  ✔ ID WF-INF-999 (7.787ms)
+  ✔ ID UC-INF-999 (23.969167ms)
+  ✔ ID JRN-INF-999 (17.396083ms)
+  ✔ ID APP-MISSING (17.729625ms)
+  ✔ ID ADR-9999 (17.613125ms)
+✔ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente (85.812042ms)
+✔ dado âncora ausente no documento quando verifica a regra (b) então aponta a referência inválida (18.82425ms)
+✔ dado documento de autoridade ausente quando verifica a regra (b) então aponta a fonte inexistente (16.885958ms)
+✔ dado OD não registrado quando verifica a regra (b) então aponta a decisão não resolvida (14.495334ms)
+✔ dado README vigente quando verifica a regra (e) então não há violação (e) (11.835209ms)
+✔ dado README-placeholder sem conteúdo autoral quando verifica a regra (e) então placeholders isolados são permitidos (12.305542ms)
+✔ dado README com cada frase obsoleta quando verifica a regra (e) então aponta ambas (39.044584ms)
+✔ dado README de jornada obsoleto com arquivo descendente quando verifica a regra (e) então aponta a frase (18.292291ms)
+✔ dado README autoral que mantém frase obsoleta quando verifica a regra (e) então aponta a frase (19.838833ms)
+✔ dado termo e GE correspondentes quando verifica a regra (c) então aceita o par (18.566209ms)
+✔ dado termo fonte sem GE quando verifica a regra (c) então aponta a ausência (16.712291ms)
+✔ dado GE sem termo no domain.md quando verifica a regra (c) então aponta a entrada órfã (10.208ms)
+✔ dado JRN com JNY correspondente quando verifica a regra (d) então não marca o par como órfão (16.411833ms)
+✔ dado JRN sem JNY quando verifica a regra (d) então aponta a jornada fonte sem par (12.866ms)
+✔ dado JNY sem JRN quando verifica a regra (d) então aponta a jornada DEVAI órfã (6.55075ms)
+✔ dado UC com entrada no bundle correspondente quando verifica a regra (d) então não marca o caso como órfão (15.539667ms)
+✔ dado UC sem entrada em bundle quando verifica a regra (d) então aponta o caso fonte sem par (16.5495ms)
+✔ dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta a entrada órfã (7.925291ms)
+✔ dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE] (11.155083ms)
+✔ dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID] (12.870334ms)
+✔ dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING] (12.663834ms)
+✔ dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED] (10.726583ms)
+✔ dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING] (9.434875ms)
+✔ dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE] (11.656667ms)
+✔ dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE] (15.395417ms)
+✔ dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE] (14.441625ms)
+✔ dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE] (10.634667ms)
+✔ dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED] (9.373417ms)
+✔ dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS] (9.546542ms)
+✔ dado JNY sem steps então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_steps] (14.808583ms)
+✔ dado JNY sem AC então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_AC] (20.251958ms)
+✔ dado JNY sem persona então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_persona] (12.3855ms)
+✔ dado JNY status não draft então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_status_não_draft] (10.989959ms)
+✔ dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT] (37.349667ms)
+✔ dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT] (61.176875ms)
+✔ dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT] (69.894333ms)
+✔ dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT] (68.610167ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1331.706375
+
+> detran@0.0.1 devai:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/devai/tests/*.test.mjs
+
+✔ dada uma fixture com linha de prova sem âncora quando mede a linha de base então a órfã traz caminho sequência e sha256 (1341.8925ms)
+✔ dada uma fixture com linha de prova declarada quando mede a linha de base então ela conta como âncora e não como órfã (0.219375ms)
+✔ dada uma fixture com TASK válida e inválida quando mede a linha de base então preserva classificações e erros reproduzíveis (1.116791ms)
+✔ dada uma fixture sem fonte canônica F2/F3 quando mede commits mistos então não inventa total nem classificação (0.250083ms)
+✔ dadas SensorReadings persistidas por kind quando mede a linha de base então conta estado e referência sem promover resultado não persistido (0.1245ms)
+✔ dada uma fixture com linhas ancorada e órfã quando mede a linha de base então proofs.lines preserva chave e hash de todas as linhas (0.291667ms)
+✔ dada uma fixture com checks, provas e rodada pendentes quando renderiza Markdown então expõe contagens e o diagnóstico da rodada (0.224959ms)
+✔ dada uma linha de base sem regressões quando mede o fechamento então grava baseline-final e compara os oito eixos (1898.242292ms)
+✔ dada uma SensorReading de abertura removida quando mede o fechamento então escreve baseline-final e falha a regressão de sensores (2534.650792ms)
+✔ dada somente a órfã A2 e gate estrito limpo quando compara proofs então aceita a linha nova (15.422ms)
+✔ dada A2 com gate ausente quando compara proofs então falha (8.141375ms)
+✔ dada A2 com gate com falha quando compara proofs então falha (6.020291ms)
+✔ dada A2 com órfã não declarada pelo gate quando compara proofs então falha (5.570292ms)
+✔ dada A2 com âncora duplicada no gate quando compara proofs então falha (7.669959ms)
+✔ dada A2 com referência inválida no gate quando compara proofs então falha (10.531833ms)
+✔ dada A2 com erro de validação no gate quando compara proofs então falha (28.41775ms)
+✔ dada A2 com cadeia inválida quando compara proofs então falha (31.579375ms)
+✔ dada A2 com hash A2 diferente quando compara proofs então falha (12.151125ms)
+✔ dada A2 com outra órfã nova quando compara proofs então falha (10.175667ms)
+✔ dados os dez caminhos A3 e recibo íntegro quando compara TASKs então aceita somente a transposição autorizada (140.636208ms)
+✔ dada transposição A3 com hash da abertura divergente quando compara TASKs então falha (12.1615ms)
+✔ dada transposição A3 com hash de abertura do posterior D1 divergente quando compara TASKs então falha (96.938125ms)
+✔ dada transposição A3 com subconjunto de nove caminhos quando compara TASKs então falha (18.950416ms)
+✔ dada transposição A3 com décimo primeiro caminho quando compara TASKs então falha (9.904417ms)
+✔ dada transposição A3 com hash do sidecar divergente quando compara TASKs então falha (32.945667ms)
+✔ dada transposição A3 com sidecar ausente no recibo quando compara TASKs então falha (70.128334ms)
+✔ dada transposição A3 com leitura de sidecar falha no recibo quando compara TASKs então falha (32.556917ms)
+✔ dada transposição A3 com artefato congelado divergente quando compara TASKs então falha (39.560083ms)
+✔ dada transposição A3 com mapeamento analisado de alias divergente quando compara TASKs então falha (13.789167ms)
+✔ dada transposição A3 com mapeamento analisado D1 divergente quando compara TASKs então falha (69.683042ms)
+✔ dada transposição A3 com leitura ou JSON do índice D1 falha no recibo quando compara TASKs então falha (35.020959ms)
+✔ dada transposição A3 com hash posterior D1 divergente quando compara TASKs então falha (10.444459ms)
+✔ dada transposição A3 com destino canônico inválido quando compara TASKs então falha (9.20725ms)
+✔ dada transposição A3 com destino canônico ausente quando compara TASKs então falha (117.978375ms)
+✔ dada transposição A3 com verificador negativo quando compara TASKs então falha (11.075542ms)
+✔ dada transposição A3 com argv do verificador divergente quando compara TASKs então falha (13.749875ms)
+✔ dada transposição A3 com hash da fonte canônica final divergente quando compara TASKs então falha (14.284708ms)
+✔ dada transposição A3 com recibo ausente quando compara TASKs então falha (136.572709ms)
+✔ dada fixture A3 sem cópia local do verificador quando mede fechamento então grava recibo normalizado com hashes reais (2834.799916ms)
+✔ dado tabela CTG A3.2 quando normaliza representante então reserva aliases distintos sem colisão (3360.602875ms)
+✔ dado candidato CTG já reservado quando normaliza então rejeita colisão declarada sem mutação (3359.167792ms)
+✔ dado doze títulos A3.2 quando normaliza então aplica cada literal editorial sem truncamento (2874.243417ms)
+✔ dado INV externo A3.2 quando normaliza então arquiva como ref sem alegar invariante local (2223.314625ms)
+✔ dado executor.note autorizado quando normaliza então remove só a nota e preserva contrato executor no sidecar (1840.542625ms)
+✔ dado EV e REC A3.2 quando normaliza então arquiva sete REC e trinta e um EV sem fabricar evidência (44405.166958ms)
+✔ dado onze PCs A3.2 guardados quando normaliza então produz índice separado e projeções prospectivas fiéis (15689.799666ms)
+✔ dado PCs arquivísticos sem manifesto A3.5 quando normaliza então falha sem escrita (83.082625ms)
+✔ dado outra classe source_pending quando normaliza então preserva JSON integral e não deixa mutação parcial (72.601958ms)
+✔ dado quatro D1 quando normaliza então move 0019 e arquiva três snapshots sem criar IDs (3963.849ms)
+✔ dado D1 com snapshot divergente quando normaliza então rejeita hash e preserva todos os originais (171.1305ms)
+✔ dado dois basenames para o mesmo ID quando verifica round TASKs então rejeita antes de D1 (3988.138583ms)
+✔ dado S2 e S3 incompletas quando normaliza então conserva checkpoint arquivístico e sucessoras (4294.343292ms)
+✔ dado S2 incompleta com outra classe pendente quando normaliza então não muda o arquivo inteiro (183.969667ms)
+✔ dado dez posições literais quando normaliza então usa null e mantém disciplina e upstream (15769.657125ms)
+✔ dado ciclo runtime preexistente quando projeta P1 então upstream segue DAG sem ciclo novo (2458.717083ms)
+✔ dado PREP U1 quando normaliza então preserva todas as linhas do ledger sem horário inventado (1607.451791ms)
+✔ dado PREP com budget alterado quando normaliza então falha sem alegar precedência temporal (2087.740958ms)
+✔ dado T1 escalated quando normaliza então indexa reviews sem terceiro worker nem PASS retroativo (1722.976166ms)
+✔ dado T1 com revisão hash divergente quando normaliza então falha sem alterar TASK (1284.853708ms)
+✔ dado S1 cujo sidecar diz incompleta quando verificador vê completed então rejeita PASS inventado (113.624458ms)
+✔ dado P1 com posição inventada quando verifica sidecar então rejeita reclassificação de Auditor (102.2915ms)
+✔ dado U1 com retry omitido quando verifica índice então rejeita perda da ordem documental (112.678125ms)
+✔ dado U1 com caminho externo quando verifica índice então rejeita fonte fora do repositório (107.4315ms)
+✔ dado U1 com horário fabricado quando verifica índice então rejeita precedência temporal inventada (100.125083ms)
+✔ dado T1 com terceiro worker inventado quando verifica índice então preserva limite 2 (96.402041ms)
+✔ dado normalizador arquivístico quando inspeciona fonte então não invoca despacho nem escreve estado runtime (2.19325ms)
+✔ dado nove iteration_trail legados da tabela quando normalizados então arquiva arrays integrais sem inventar started_at ou verdict (19641.15925ms)
+✔ dado iteration_trail já válido em R-0003 TASK-0001 quando normalizado então preserva bytes sem arquivamento (137.514375ms)
+✔ dado R-0006 TASK-0003 escalada sem índice T1 quando normalizada então preserva caso especial pendente (1532.068208ms)
+✔ dado iteration_trail legado fora dos nove caminhos autorizados quando normalizado então relata source_pending sem mutar (138.834083ms)
+✔ dado R-0012 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (1267.497584ms)
+✔ dado R-0016 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (1660.099291ms)
+✔ dado upstream vazio em arquivo alheio quando normalizado então falha sem projetar null (177.701958ms)
+✔ dado upstream vazio em hash alheio no path autorizado quando normalizado então falha sem projetar null (174.944875ms)
+✔ dado tarefa válida quando normalizada duas vezes então preserva executor, composição e bytes (368.797042ms)
+✔ dado ref não INV em target_invariants quando normalizada então move a ref para tags sem perdê-la (2183.069375ms)
+✔ dado db_isolation legado sem fonte quando normalizada então relata source_pending sem mutar (120.504167ms)
+✔ dado coupled_task_group inválido sem prova quando normalizada então relata source_pending sem mutar (110.433334ms)
+✔ dado propriedade adicional com bytes estáveis quando normalizada então relata source_pending sem mutar (121.957542ms)
+✔ dado TASK allowlist com none quando normalizada então projeta database e preserva fato histórico no sidecar (2596.6705ms)
+✔ dado hash allowlist divergente quando normalizada então relata source_pending sem mutar (154.451041ms)
+✔ dado sidecar corrompido quando normalizada então relata source_pending sem mutar (1753.198958ms)
+✔ dado TASK fora da allowlist quando normalizada então relata source_pending sem mutar (120.241625ms)
+✔ dado TASK allowlisted com classe A3.2 pendente quando normalizada então não aplica projeção parcial (248.681333ms)
+✔ dado allowlist correta mas literal diferente de none quando normalizada então não aplica A3.1 (144.245333ms)
+✔ dado lote com sidecar persistido e outra TASK pendente quando normalizada então não deixa substituição sem original (1973.45025ms)
+✔ dado estado parcial canônico sem relatório quando normalizada então retoma sem reescrever bytes (299.574333ms)
+✔ dado matriz R1 aplicada quando normaliza as duas TASKs concluídas então projeta owner sem tocar policy, despacho ou raízes protegidas (2640.850458ms)
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (320.230208ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (106.024583ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (151.616958ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (362.415583ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (87.002083ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (105.848375ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (65.400667ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (62.923041ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (57.733625ms)
+✔ dado manifesto pré-migração íntegro quando verifica guarda então aceita (272.4445ms)
+✔ dado manifesto applied íntegro quando verifica guarda então aceita (382.296583ms)
+✔ dado fixture applied quando confere A3.2 então preserva sidecars, tags e bridges (88.669542ms)
+✔ dado variantes canônicas de fonte quando calcula hash então preserva digest (0.250125ms)
+✔ dado manifesto ausente quando verifica guarda então falha fechada (144.410542ms)
+✔ dado status desconhecido quando verifica guarda então falha fechada (135.291333ms)
+✔ dado fonte com hash divergente quando verifica guarda então falha fechada (172.085458ms)
+✔ dado pacote antecipado em pré-migração quando verifica guarda então falha fechada (133.685292ms)
+✔ dado store R-0007 quando verifica guarda então falha fechada (123.966625ms)
+✔ dado G0 ausente ou vazio quando verifica guarda então aceita (118.9805ms)
+✔ dado G0 malformado quando verifica guarda então falha fechada (141.847542ms)
+✔ dado backlog R-0007 quando verifica guarda então falha fechada (180.365708ms)
+✔ dado fonte simbólica quando verifica guarda então falha fechada (95.859875ms)
+✔ dado disco aplicado e manifesto regressivo quando verifica guarda então falha fechada (102.847916ms)
+✔ dado manifesto applied sem índice quando verifica guarda então falha fechada (181.987208ms)
+✔ dado uso inválido quando verifica guarda então retorna 2 (71.76175ms)
+✔ dado linha órfã histórica quando não há declaração então falha (295.472208ms)
+✔ dado linha órfã histórica quando prova declaratória ancorada a cita então passa (143.931125ms)
+✔ dado declaração com hash ou sequência divergente quando verifica então falha (251.1585ms)
+✔ dado duas declarações da mesma linha quando verifica então falha (133.269292ms)
+✔ dado declaração append-only de linha nova quando tem hash correto então falha (119.607084ms)
+✔ dado baseline histórica alterada em somente orphans quando verifica então falha (123.486042ms)
+✔ dado baseline histórica alterada em somente lines quando verifica então falha (102.521125ms)
+✔ dado baseline histórica alterada em listas congruentes com trio falso quando verifica então falha (84.441125ms)
+✔ dado baseline histórica alterada em head sha adulterado quando verifica então falha (79.071708ms)
+✔ dado duas âncoras para a mesma linha quando verifica então falha (105.4515ms)
+✔ dado linha nova sem âncora quando verifica então falha (97.283375ms)
+✔ dado referência da cadeia sem linha quando verifica então falha (97.434458ms)
+✔ dado sequência física divergente quando verifica então falha (119.380041ms)
+✔ dado declaração sem âncora quando verifica então falha (126.515625ms)
+✔ dado declaração de linha já ancorada quando verifica então falha (87.557042ms)
+✔ dado declaração de caminho inexistente quando verifica então falha (101.32475ms)
+✔ dado nota generic malformada quando verifica então falha (79.253667ms)
+✔ dado payload round divergente quando verifica então falha (112.044416ms)
+✔ dado declaração da sequência oito com hash da nove quando verifica então falha (101.560625ms)
+✔ dado somente contagem de órfãs adulterada quando verifica então falha (120.933417ms)
+✔ dado R-0021 seq. 2 sem arquivo excepcional quando declaração ancorada a cita então falha (90.761292ms)
+✔ dado autorização A2 e exceção exatas quando declaração ancorada cita R-0021 seq. 2 então passa (81.4555ms)
+✔ dado exceção A2 sem prova declaratória quando verifica R-0021 seq. 2 então falha (97.451125ms)
+✔ dado hash da decisão A2 errado quando declaração ancorada cita R-0021 seq. 2 então falha (122.395709ms)
+✔ dado outro trio com digest canônico coerente quando declaração ancorada cita R-0021 seq. 2 então falha (231.053041ms)
+✔ dado linha extra no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (125.976042ms)
+✔ dado linha duplicada no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (116.714666ms)
+✔ dado A2 válida quando nova linha R-0020 é declarada então essa linha falha (130.477042ms)
+✔ dado historical-gap e generic com a mesma sequência quando verifica então exige namespaces e hash físico distintos (336.565167ms)
+✔ dado duas tarefas 2.0.0 válidas quando o gate verifica a rodada então aceita ambas (2762.039125ms)
+✔ dado dois arquivos válidos com mesmo round_id e id quando o gate verifica a rodada então falha por duplicata (3888.614542ms)
+✔ dado tarefa com schemaVersion inválido quando o gate verifica a rodada então falha e identifica o arquivo (1884.186083ms)
+✔ dado tarefa inválida em R-0020 quando o gate verifica as rodadas então identifica o arquivo (2239.690917ms)
+✔ dado sidecar e tags coerentes quando verifica originais então aceita o vínculo (114.967542ms)
+✔ dado vínculo sem relatório antes depois quando verifica originais então falha fechada (87.628042ms)
+✔ dado bytes de sidecar corrompidos quando verifica originais então falha com o caminho (90.189542ms)
+✔ dado caminho de sidecar que escapa do repositório quando verifica originais então falha fechada (109.901625ms)
+✔ dado alias divergente quando verifica originais então falha com o arquivo canônico (73.795209ms)
+✔ dado sidecar ausente e par de tags duplicado quando verifica originais então falha fechada (239.282208ms)
+✔ dado sidecar órfão quando verifica originais então falha fechada (106.124458ms)
+✔ dado dois aliases para o mesmo ID quando verifica originais então rejeita a colisão (103.104959ms)
+✔ dado ID ou round_id original divergente sem alias quando verifica originais então falha fechada (91.526166ms)
+✔ dado relatório com outra rodada e caminho relativo igual quando verifica originais então falha fechada (82.404709ms)
+✔ dado duas projeções R1 íntegras quando verifica originais então confirma a matriz aplicada e os vínculos concretos (162.186292ms)
+✔ dado matriz A3.4 em candidate-not-applied quando verifica originais então recusa o estado (128.454875ms)
+✔ dado matriz A3.4 em unknown quando verifica originais então recusa o estado (100.855125ms)
+✔ dado tag R1 1 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (462.242292ms)
+✔ dado tag R1 2 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (430.073833ms)
+✔ dado tag R1 3 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (310.076542ms)
+✔ dado projeção R1 não concluída quando verifica originais então acusa status da TASK (136.315375ms)
+✔ dado hash A3.4 divergente quando verifica originais então acusa hash (151.267416ms)
+✔ dado path A3.4 divergente quando verifica originais então acusa path (213.357334ms)
+✔ dado receipt A3.4 divergente quando verifica originais então acusa receipt (144.778958ms)
+✔ dado literal A3.4 divergente quando verifica originais então acusa literal (324.855583ms)
+✔ dado identidade R-0003/TASK-0004 materializada em tasks quando verifica originais então recusa despacho (105.715334ms)
+✔ dado identidade R-0005/TASK-0009 materializada em tasks quando verifica originais então recusa despacho (125.143667ms)
+✔ dado identidade R-0003/TASK-0004 materializada em backlog quando verifica originais então recusa despacho (121.011042ms)
+✔ dado identidade R-0005/TASK-0009 materializada em backlog quando verifica originais então recusa despacho (124.663416ms)
+✔ dado sidecar A3 missing quando verifica originais então acusa o sidecar (192.16175ms)
+✔ dado sidecar A3 corrupted quando verifica originais então acusa o sidecar (250.245792ms)
+✔ dado matriz que alega grant retrospectivo quando verifica originais então recusa a alegação (132.049125ms)
+ℹ tests 174
+ℹ suites 0
+ℹ pass 174
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74049.233625
+
+> detran@0.0.1 verify:law-corpus /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/law/verify.mjs --repo-root . --package-schemas-dir node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas --od-registry docs/meta/knowledge-base/open-decisions-rait.md
+
+
+> detran@0.0.1 verify:orchestra-bridge /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh
+
+bridge: codex/fixture -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.mUlRFFHV0I/reviews/result.json (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.mUlRFFHV0I/reviews/result.bridge.json)
+bridge: claude/fixture -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.mUlRFFHV0I/reviews/claude.json (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.mUlRFFHV0I/reviews/claude.bridge.json)
+bridge test: PASS
+worker: codex/fixture-model (low) -> /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.nCy8kF5mFF/reports/TASK-TEST.md (registro /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/tmp.nCy8kF5mFF/reports/TASK-TEST.worker.json)
+worker.test: OK
+worker.test: OK (recusa git)
+
+> detran@0.0.1 docs:kb:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/check.mjs
+
+knowledge-base check: OK (773 artifacts, 446 canonical tokens)
+
+> detran@0.0.1 docs:kb:publish-check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/kb/publish-dry-run.mjs
+
+publication dry run: OK (201 files, raw/internal material excluded)
+
+> detran@0.0.1 verify:state-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/docs/state-index/check.mjs
+
+verify:state-index OK: 42 ADRs, 3 redirecionamentos, 36 rodadas, 21 closures
+
+> detran@0.0.1 verify:rounds-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/render-rounds-index.mjs --check
+
+
+> detran@0.0.1 test:rounds-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/devai/tests/render-rounds-index.test.mjs
+
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (74.641417ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (38.251292ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (37.000667ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (109.107084ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (38.593917ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (36.037958ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (36.180625ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (35.67975ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (37.001ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 498.830041
+
+> detran@0.0.1 verify:proof-anchors /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human
+
+directly anchored: 90
+declared orphans: 53
+undeclared orphans: 0
+duplicate anchors: 0
+invalid references: 0
+validation errors: 0
+evidence chain: valid; 90 proof lines anchored; 53 historical gap acknowledged; head 749b2b102353dd83352cdad6938da465610bd25153fd3445c6af596678ea372b
+
+> detran@0.0.1 test:state-index /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs
+
+✔ C-01-28 dado dry-run (sem --write) quando o renumerador roda então nenhum byte é escrito (hash igual antes/depois) e imprime "3 pending, 2 review" (58.159417ms)
+✔ C-01-29 dado --write quando o renumerador roda então "to" = header (§3.2) + bytes originais e "from" = texto do stub (§3.3), byte a byte (44.503875ms)
+✔ C-01-30 dado uma citação com o slug do renumerado num livePath quando --write roda então o texto do link e o caminho são reescritos (42.551042ms)
+✔ C-01-31 dado uma citação com o slug do arquivo que conserva o número quando --write roda então permanece intocada (43.430042ms)
+✔ C-01-32 dado citações sem slug de um número duplicado (inclusive um identificador persistido tipo ADR-0006-2026-08-24) quando --write roda então permanecem intocadas e geram uma linha REVIEW por ocorrência (41.335417ms)
+✔ C-01-33 dado arquivos históricos e fora de livePaths quando --write roda então permanecem intocados (41.851875ms)
+✔ C-01-33 dado um livePath sob um prefixo do §5.5 (historicalPrefixes/outOfLockPrefixes) quando o renumerador roda então erro de configuração, exit 2 (42.406833ms)
+✔ C-01-34 dado uma 2ª execução (dry-run) depois de --write quando o renumerador roda então "0 pending" e linhas SKIP para as entradas já aplicadas (83.3995ms)
+✔ C-01-35 dado "to" preexistente com conteúdo diferente do já aplicado quando --write roda então exit 2 sem escrever nada (42.926167ms)
+✔ C-01-35 dado "from" ausente quando --write roda então exit 2 sem escrever nada (41.731583ms)
+✔ C-01-35 dado duas entradas em que a 2ª é inválida quando --write roda então nenhuma escrita ocorre, nem a da 1ª entrada válida (validação antes da 1ª escrita) (41.131541ms)
+✔ C-01-13 dado um arquivo com "## Status" e palavra-chave Accepted quando classifyStatus roda então devolve Accepted (0.875792ms)
+✔ dado "## Status" com palavra-chave em português (Aceita) quando classifyStatus roda então devolve Accepted (0.396292ms)
+✔ dado "## Status" com Proposed/Proposta quando classifyStatus roda então devolve Proposed (0.327917ms)
+✔ dado "## Status" com Superseded/Substituída quando classifyStatus roda então devolve Superseded (2.712667ms)
+✔ dado "## Status" com prefixo "**" quando classifyStatus roda então o prefixo é ignorado (1.070208ms)
+✔ dado "## Status" com "Renumerada para [ADR-nnnn](…)." quando classifyStatus roda então devolve Renumbered (0.186375ms)
+✔ dado um arquivo sem "## Status" mas com a linha "- Status: Accepted" quando classifyStatus roda então devolve Accepted (0.202792ms)
+✔ dado a linha "- Status:" com pontuação final quando classifyStatus roda então a pontuação é descartada (0.465709ms)
+✔ C-01-13 dado prosa "Owner decision …" sem "## Status", sem "- Status:" e sem exceção quando classifyStatus roda então devolve null (0.279667ms)
+✔ C-01-13 dado a mesma prosa listada em statusExceptions quando classifyStatus roda então devolve a classe da exceção (não null) (0.281875ms)
+✔ C-01-01 dado um número com dois arquivos não-stub em docs/meta/adr quando o gate roda então acusa duplicata (51.511584ms)
+✔ C-01-01 dado um número duplicado com redirecionamento válido para outro número existente quando o gate roda então não acusa duplicata (46.560833ms)
+✔ C-01-02 dado um stub cujo alvo não existe quando o gate roda então acusa stub inválido (43.5505ms)
+✔ C-01-02 dado um stub cujo alvo é outro stub quando o gate roda então acusa stub inválido (45.224042ms)
+✔ C-01-02 dado um stub válido apontando para arquivo existente, não-stub, de outro número quando o gate roda então não acusa stub inválido (46.567583ms)
+✔ C-01-03 dado um stub com título além do H1 e de "## Status" quando o gate roda então acusa conteúdo normativo (44.267625ms)
+✔ C-01-03 dado um stub só com H1 e "## Status" quando o gate roda então não acusa conteúdo normativo (43.789334ms)
+✔ C-01-04 dado um arquivo novo apontado por stub sem a nota de proveniência na 3ª linha quando o gate roda então acusa proveniência ausente (44.17925ms)
+✔ C-01-04 dado o arquivo novo gerado pelo §3.2, com a nota de proveniência na 3ª linha quando o gate roda então não acusa proveniência ausente (43.008167ms)
+✔ C-01-05 dado um stub sem linha correspondente em §Aliases quando o gate roda então acusa alias ausente (44.958083ms)
+✔ C-01-05 dado uma linha de §Aliases cujo alvo (col. 4) difere do alvo real do stub quando o gate roda então acusa alias divergente (44.804959ms)
+✔ C-01-05 dado um stub com a linha correta em §Aliases quando o gate roda então não acusa alias ausente/divergente (43.257666ms)
+✔ C-01-05 dado uma linha de §Aliases com o id trocado na coluna 1 (Número antigo) quando o gate roda então acusa alias inconsistente (43.116083ms)
+✔ C-01-05 dado uma linha de §Aliases com o id trocado na coluna 3 (Número novo) quando o gate roda então acusa alias inconsistente (48.774458ms)
+✔ C-01-05 dado uma linha de §Aliases obsoleta (alias sem stub correspondente em docs/meta/adr) quando o gate roda então acusa alias inválido (45.222333ms)
+✔ C-01-05 dado uma segunda linha idêntica em §Aliases para o mesmo stub quando o gate roda então acusa duplicata (43.546833ms)
+✔ C-01-05 dado uma segunda linha em §Aliases para o mesmo stub com alvo divergente quando o gate roda então acusa duplicata (45.160625ms)
+✔ C-01-06 dado um nome de arquivo fora de ^ADR-\d{4}-[a-z0-9][a-z0-9-]*\.md$ quando o gate roda então acusa nome inválido (40.372ms)
+✔ C-01-06 dado um nome de arquivo conforme o padrão quando o gate roda então não acusa nome inválido (39.374583ms)
+✔ C-01-07 dado um ADR não-stub ausente de DESIGN-DECISIONS.md quando o gate roda então acusa ausência (41.198042ms)
+✔ C-01-07 dado o mesmo ADR presente em DESIGN-DECISIONS.md quando o gate roda então não acusa ausência (40.335833ms)
+✔ C-01-08 dado um ADR não-stub ausente de docs/meta/adr/README.md quando o gate roda então acusa ausência (39.6855ms)
+✔ C-01-08 dado o mesmo ADR presente em docs/meta/adr/README.md quando o gate roda então não acusa ausência (41.428458ms)
+✔ C-01-09 dado uma linha de índice citando um arquivo inexistente quando o gate roda então acusa link para arquivo inexistente (41.118ms)
+✔ C-01-09 dado uma linha de índice cujo id exibido difere do número do arquivo citado quando o gate roda então acusa id divergente (41.356708ms)
+✔ C-01-09 dado uma linha de índice principal citando um stub quando o gate roda então acusa stub na tabela principal (41.052042ms)
+✔ C-01-09 dado um link correto para um não-stub existente quando o gate roda então não acusa (41.564166ms)
+✔ C-01-10 dado o mesmo arquivo citado em duas linhas do mesmo índice quando o gate roda então acusa duplicata de linha (39.394792ms)
+✔ C-01-10 dado cada arquivo citado em uma única linha do índice quando o gate roda então não acusa duplicata de linha (41.863458ms)
+✔ C-01-11 dado lawAdrMode pending com um ADR de law/adr citado nos dois índices quando o gate roda então não acusa a série law/adr (39.373917ms)
+✔ C-01-11 dado lawAdrMode pending com um ADR de law/adr ausente de DESIGN-DECISIONS.md quando o gate roda então acusa a série law/adr (40.6365ms)
+✔ C-01-11 dado lawAdrMode migrated com um arquivo de law/adr não-stub quando o gate roda então acusa a série law/adr (41.65525ms)
+✔ C-01-11 dado lawAdrMode migrated com stub válido em law/adr sem linha em §Aliases quando o gate roda então acusa a série law/adr (42.776625ms)
+✔ C-01-11 dado lawAdrMode migrated com linha remanescente da série law/adr (caminho entre crases) em DESIGN-DECISIONS.md quando o gate roda então acusa a série law/adr (41.262958ms)
+✔ C-01-11 dado lawAdrMode migrated com a coluna 1 (Número antigo) da linha de §Aliases divergente do stub de law/adr quando o gate roda então acusa a série law/adr (42.879625ms)
+✔ C-01-11 dado lawAdrMode migrated com a coluna 3 (Número novo) da linha de §Aliases divergente do alvo do stub de law/adr quando o gate roda então acusa a série law/adr (41.591041ms)
+✔ C-01-12 dado law/adr/README.md com "intentionally empty" quando o gate roda então acusa a frase-marco ausente (38.903083ms)
+✔ C-01-12 dado law/adr/README.md com a frase-marco de outro modo (migrated) enquanto lawAdrMode=pending quando o gate roda então acusa frase de modo errado (43.3305ms)
+✔ C-01-12 dado law/adr/README.md com a frase-marco de pending enquanto lawAdrMode=pending quando o gate roda então não acusa (39.124833ms)
+✔ C-01-14 dado statusExceptions referenciando um arquivo inexistente quando o gate roda então acusa exceção obsoleta (40.271834ms)
+✔ C-01-14 dado statusExceptions referenciando um ADR classificável por palavra-chave quando o gate roda então acusa exceção obsoleta (39.502625ms)
+✔ C-01-14 dado statusExceptions só para prosa não classificável quando o gate roda então não acusa exceção obsoleta (39.023ms)
+✔ C-01-15 dado a célula Status de DESIGN-DECISIONS.md diferente da classe do arquivo quando o gate roda então acusa divergência (42.108625ms)
+✔ C-01-15 dado a célula Status de DESIGN-DECISIONS.md igual à classe do arquivo quando o gate roda então não acusa divergência (42.111833ms)
+✔ C-01-16 dado a célula Status de docs/meta/adr/README.md diferente da classe do arquivo (Accepted para Proposed) quando o gate roda então acusa divergência (39.922792ms)
+✔ C-01-16 dado a célula Status de docs/meta/adr/README.md igual à classe do arquivo quando o gate roda então não acusa divergência (40.023125ms)
+✔ C-01-15 dado a linha real da série law/adr (caminho entre crases, sem link) com status divergente em DESIGN-DECISIONS.md quando o gate roda então acusa divergência (40.003125ms)
+✔ C-01-16 dado a linha real da série law/adr (caminho entre crases, sem link) com status divergente em docs/meta/adr/README.md quando o gate roda então acusa divergência (43.394583ms)
+✔ C-01-09 dado uma linha real da série law/adr com o id exibido divergente do arquivo citado (caminho entre crases) quando o gate roda então acusa id divergente (40.602833ms)
+✔ C-01-17 dado um PC-*.json cujo round_id não tem linha em work/rounds/README.md quando o gate roda então acusa PC sem linha (39.997167ms)
+✔ C-01-17 dado o PC-0001 com round_id R-0003 presente na tabela quando o gate roda então não acusa PC sem linha (39.852084ms)
+✔ C-01-18 dado a linha do round_id do PC com Estado diferente de fechada quando o gate roda então acusa (44.156958ms)
+✔ C-01-18 dado a linha do round_id do PC com a coluna PC diferente do id do PC quando o gate roda então acusa (52.3895ms)
+✔ C-01-19 dado uma linha fechada com PC "—" quando o gate roda então acusa PC ausente (46.139708ms)
+✔ C-01-19 dado uma linha fechada com PC inexistente quando o gate roda então acusa PC inexistente (41.982166ms)
+✔ C-01-19 dado uma linha fechada com PC existente e round_id igual à rodada quando o gate roda então não acusa (40.569125ms)
+✔ C-01-18 dado PC predecessor e PC terminal da mesma rodada, com README apontando ao terminal, quando o gate roda então aceita a cadeia append-only (42.333167ms)
+✔ C-01-18 dado um sucessor que aponta para PC de outra rodada quando o gate roda então acusa ligação entre rodadas (42.534834ms)
+✔ C-01-18 dado dois PCs que se supersedem mutuamente quando o gate roda então acusa ciclo (41.4495ms)
+✔ C-01-18 dado dois PCs sem sucessão para a mesma rodada quando o gate roda então acusa dois terminais (40.639167ms)
+✔ C-01-18 dado um sucessor cujo predecessor não existe quando o gate roda então acusa predecessor ausente (40.750792ms)
+✔ C-01-20 dado uma rodada fora de preMethodRounds marcada pré-método quando o gate roda então acusa (41.934584ms)
+✔ C-01-20 dado uma rodada de preMethodRounds com PC diferente de "—" quando o gate roda então acusa (43.23625ms)
+✔ C-01-20 dado preMethodRounds citando R-0002 sem linha na tabela quando o gate roda então acusa (42.173167ms)
+✔ C-01-20 dado R-0001 e R-0002 em preMethodRounds, ambos na tabela com pré-método e PC "—" quando o gate roda então não acusa (46.8215ms)
+✔ C-01-21 dado um diretório work/rounds/R-0017 sem linha na tabela quando o gate roda então acusa (41.238459ms)
+✔ C-01-21 dado R-0002 com linha e sem diretório quando o gate roda então não acusa (linha sem diretório é permitida) (39.722375ms)
+✔ C-01-22 dado uma linha de rodada fora de ^R-\d{4}$/^S-\d+\.\d+$ (R-18) quando o gate roda então acusa (40.166458ms)
+✔ C-01-22 dado um id de rodada repetido na tabela quando o gate roda então acusa (44.480584ms)
+✔ C-01-22 dado Estado fora do vocabulário (planned) quando o gate roda então acusa (43.3395ms)
+✔ C-01-22 dado Estados "parada" e "proposta (C-0003)" (C-0003, A-C2-16) quando o gate roda então não acusa (42.80375ms)
+✔ C-01-22 dado uma linha S-… com Estado diferente de "proposta (C-0002)" quando o gate roda então acusa (42.558209ms)
+✔ C-01-22 dado uma linha S-… com "proposta (C-0002)" e PC "—" quando o gate roda então não acusa (42.510958ms)
+✔ C-01-23 dado uma ocorrência de "DEVAI 1.4.5" em work/rounds/README.md com package.json pinado em 1.5.6 quando o gate roda então acusa versão divergente (45.920792ms)
+✔ C-01-23 dado "DEVAI 1.5.6" em work/rounds/README.md com o mesmo pin em package.json quando o gate roda então não acusa (53.052833ms)
+✔ C-01-24 dado a fixture íntegra quando o gate roda então stdout começa com "verify:state-index OK:" e exit 0 (42.753292ms)
+✔ C-01-25 dado uma fixture com dois achados quando o gate roda então stderr traz o cabeçalho "verify:state-index: <n> achado(s)", uma linha por achado, ordenadas, e exit 1 (44.642583ms)
+✔ C-01-26 dado uma fixture com achados quando o gate roda com --report então as mesmas linhas saem em stdout, a última é "verify:state-index report: <n> achado(s)" e exit 0 (42.56225ms)
+✔ C-01-27 dado um argumento desconhecido (--xyz) quando o gate roda então exit 2 (72.494292ms)
+✔ C-01-27 dado um config.json sem lawAdrMode quando o gate roda então exit 2 (42.851125ms)
+✔ C-01-27 dado uma raiz sem work/rounds/README.md quando o gate roda então exit 2 (39.991709ms)
+✔ C-01-36 dado um índice cuja célula de título contém `a\|b` (escapado) quando o gate roda então lê as quatro colunas corretas e a fixture íntegra continua sem achados (43.121542ms)
+✔ C-01-36 dado a mesma linha com `a|b` cru (sem escape) quando o gate roda então desloca as colunas e acusa C-01-15 (42.337125ms)
+ℹ tests 104
+ℹ suites 0
+ℹ pass 104
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3643.945916
+
+> detran@0.0.1 blueprints:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/blueprints/check.mjs
+
+blueprints:check passed: committed generated tree matches every blueprint
+
+> detran@0.0.1 contracts:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check
+
+contracts are in sync with the blueprints
+commands contracts: OK (258 operations)
+clients in sync: 72
+
+> detran@0.0.1 parameters:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/parameters/tests/*.test.mjs
+
+✔ dado o catálogo com os cinco namespaces boat quando parseado então a allowlist é aceita na ordem do contrato (15.434209ms)
+✔ dado um arquivo com boat.screens e boat.states quando verify:parameter-catalogue --check-usage roda então os literais são aceitos (218.1235ms)
+✔ dado uma chave boat.* na tabela BOAT quando o catálogo é validado então ela é rejeitada e os parâmetros permanecem est.* (220.954792ms)
+✔ dado um arquivo varrido com boat.experimental.title quando verify:parameter-catalogue roda então falha por namespace fora da allowlist (216.767125ms)
+✔ dado um namespace estranho quando o catálogo é parseado então ele é rejeitado fail-closed (221.091792ms)
+✔ dado uma colisão entre namespace e chave de parâmetro quando o catálogo é validado então falha fail-closed (246.992458ms)
+✔ dado o namespace literal boat.caseState quando o catálogo é parseado então a gramática rejeita camelCase ou terceiro segmento (217.412709ms)
+✔ dado o namespace literal boat.screens.extra quando o catálogo é parseado então a gramática rejeita camelCase ou terceiro segmento (251.069292ms)
+✔ dado a tabela real (sem os 9 namespaces de token do RAIT) quando verify.mjs roda então OK (219.586417ms)
+✔ [pode falhar até TASK-0006] dado a tabela real quando parseada então já contém as 14 linhas rait.* de apps/rait/web (9.200666ms)
+✔ dado a tabela real com a linha `rait.timer` acrescentada (cópia temporária) quando verify.mjs roda então falha por colisão com rait.timer.* (214.86075ms)
+✔ dado a linha `rait.caseState` (cópia temporária) quando parseada então rejeitada pela gramática [a-z][a-z0-9_]* (216.713292ms)
+✔ dado um arquivo .ts com o literal "rait.caseState.ADMITIDO" quando verify.mjs --check-usage roda então falha (candidato desconhecido) (225.661625ms)
+✔ dado um arquivo .ts com "'rait.' + 'caseState' + '.ADMITIDO'" (composição) quando verify.mjs --check-usage roda então OK (264.662667ms)
+✔ dado um arquivo .ts com "rait.screens.painel.title" e a tabela real (já allowlista rait.screens, TASK-0006) quando verify.mjs --check-usage roda então OK (251.217791ms)
+✔ OD-T14 seed uses its first installation date and stays idempotent on later days (379.059875ms)
+✔ dado legal_bases JSON exato quando analisar então preserva objeto tipado, schema e proveniência (157.610709ms)
+✔ dado legal_bases com JSON malformado quando analisar então rejeita a linha (3.2605ms)
+✔ dado legal_bases com array em vez de objeto quando analisar então rejeita a linha (2.65575ms)
+✔ dado legal_bases com string em vez de objeto quando analisar então rejeita a linha (2.990541ms)
+✔ dado legal_bases com objeto sem campos obrigatórios quando analisar então rejeita a linha (3.083625ms)
+✔ dado legal_bases com rank ou política divergente quando analisar então rejeita a linha (2.516666ms)
+✔ dado legal_bases com campo extra não autorizado quando analisar então rejeita a linha (2.113208ms)
+✔ dado legal_bases acrescentada quando gerar então defaults e metadados das demais chaves permanecem (271.304333ms)
+✔ dado catálogo mínimo válido quando gerar então produz os três artefatos tipados (522.785125ms)
+✔ dado pipe escapado em célula quando gerar então remove a barra sem criar coluna (162.333667ms)
+✔ dado parâmetro legal booleano quando gerar então não o expõe como flag editável (133.525542ms)
+✔ dado a mesma fonte quando gerar duas vezes então as saídas são byte a byte iguais (219.089417ms)
+✔ dado fonte alterada quando gerar então muda o hash e somente a linha afetada (231.268917ms)
+✔ dado header incorreto quando gerar então termina com exit 1 e diagnóstico (57.70175ms)
+✔ dado célula ausente quando gerar então termina com exit 1 e diagnóstico (58.071917ms)
+✔ dado chave duplicada quando gerar então termina com exit 1 e diagnóstico (59.175166ms)
+✔ dado status inválido quando gerar então termina com exit 1 e diagnóstico (63.760958ms)
+✔ dado pend typo no quando gerar então termina com exit 1 e diagnóstico (58.139834ms)
+✔ dado flag não booleana quando gerar então termina com exit 1 e diagnóstico (56.368292ms)
+✔ dado travessão sem pending quando gerar então termina com exit 1 e diagnóstico (59.467208ms)
+✔ dado decision ref órfã quando gerar então termina com exit 1 e diagnóstico (53.174166ms)
+✔ dado prefixo incompatível quando gerar então termina com exit 1 e diagnóstico (54.533791ms)
+✔ dado artefato gerado stale quando verificar então falha fechado (374.052375ms)
+✔ dado chave literal conhecida e desconhecida quando verificar uso então aplica regra de pontos (355.749459ms)
+✔ dado literais de parâmetro, evento e i18n quando verificar uso então classifica pelo contexto sintático (182.479416ms)
+✔ dado literais em tests, dist e node_modules quando verificar uso então são ignorados (179.229958ms)
+✔ dado allowlist com portal.errors quando arquivo usa portal.errors.not_found então exit 0 sem literal desconhecido (224.908542ms)
+✔ dado allowlist com portal.errors quando arquivo usa portal.foo.bar então exit 1 com literal desconhecido (225.807625ms)
+✔ dado namespace rait.timer em colisão com a chave rait.timer.T-DEF quando verificar então exit ≠ 0 citando a colisão (207.6605ms)
+✔ dado namespace foo.bar fora dos prefixos de superfície quando verificar então exit ≠ 0 com diagnóstico (216.769916ms)
+✔ dado tabela de namespaces malformada (três colunas) quando verificar então exit ≠ 0 com arquivo e linha (220.246166ms)
+✔ dado catálogo sem seção de namespaces quando arquivo usa portal.errors.not_found então comportamento atual (candidato, exit 1) (231.260709ms)
+✔ dado literal de um ponto (portal.complaint) quando verificar então nunca é candidato, com ou sem allowlist (449.642625ms)
+✔ dado catálogo real quando a varredura cobre packages/api-clients/src/generated então exit 0 (exclusão de diretório saiu) (345.12725ms)
+✔ dado arquivo x.projection.ts com export const consumedEvents = ['rait.case.changed', 'sync.batch.received', 'dashboard.duty.changed'] as const quando verificar então exit 0 sem literal desconhecido (A14) — vermelho esperado hoje (190.689542ms)
+✔ dado o mesmo literal numa variável de outro nome (export const events = [...], não consumedEvents) quando verificar então continua candidato (exit 1) — A14 exime pelo nome, não pelo formato do literal (190.320958ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3768.297292
+
+> detran@0.0.1 test:boat-transitions /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm --filter @detran/boat-mobile typecheck && pnpm --filter @detran/boat-mobile exec vitest run --config vitest.config.ts src/lib/navigation/transitions.test.ts
+
+
+> @detran/boat-mobile@0.1.0 typecheck /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  15:35:42
+   Duration  2.13s (transform 1.04s, setup 1.22s, import 32ms, tests 16ms, environment 745ms)
+
+
+> detran@0.0.1 contracts:test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/contracts/tests/*.test.mjs
+
+✔ dado contrato dashboard cujo 4xx cita DASH.LAYER_N3_NEVER (código real do catálogo, presente em dashboard-error-catalog.md) quando checkCommands (catálogos padrão) então sem unknown-error-code (vermelho hoje: lacuna 3 — DASH ausente de ERROR_CATALOG_PATHS/ERROR_CATALOG_PREFIXES) (262.128541ms)
+✔ dado contrato dashboard cujo 4xx cita DASH.NAO_EXISTE (código fora do catálogo) quando checkCommands então exatamente um unknown-error-code citando o código e o prefixo DASH (verde hoje — já é o comportamento correto antes e depois de TASK-0009) (199.744042ms)
+✔ dado código PORTAL.DEMO_PRESERVED_CODE num contrato dashboard (presente só em portal-error-catalog.md, ausente de dashboard-error-catalog.md) quando checkCommands então continua julgado pelo catálogo PORTAL — comportamento atual preservado (verde hoje e depois de TASK-0009) (201.246ms)
+✔ dado POST v1/dashboard/alerts/:id/ack em backend/domains/dashboard/monitor/src/handwritten/surface/ (+ handwritten/cycle/ e src/controllers/ vazios, sem rota) quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 1 — CONTROLLER_ROOTS não lista backend/domains/dashboard/monitor/src/handwritten) (195.080208ms)
+✔ dado a mesma rota POST v1/dashboard/alerts/:id/ack sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 1 — a raiz nunca é varrida, então a rota nunca é reportada) (197.498875ms)
+✔ dado operação dashboardAlertAck no contrato sem controlador nenhum em lugar algum quando checkCommands então exatamente um missing-route (verde hoje — independe das três lacunas: nenhum controlador existe em nenhuma raiz) (202.560083ms)
+✔ dado GET v1/dashboard/stream em backend/app/src/dashboard-stream.controller.ts quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 2 — o filtro de backend/app/src só aceita teat-*/portal-*) (207.684584ms)
+✔ dado a mesma rota de stream sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 2 — o arquivo é filtrado antes de ser varrido, então a rota nunca é reportada) (220.237375ms)
+✔ dado backend/app/src/other-thing.controller.ts (sem prefixo teat-/portal-/dashboard-) quando checkCommands (raízes padrão) então continua ignorado, sem nenhum problema (verde hoje e depois de TASK-0009 — comportamento do filtro do app não muda para arquivos sem prefixo reconhecido) (203.425375ms)
+✔ dado node tools/contracts/check-commands.mjs na fixture (b) válida (POST v1/dashboard/alerts/:id/ack em handwritten/surface/) então exit 0 e "commands contracts: OK (1 operations)" (vermelho hoje: lacuna 1 — raiz ausente de CONTROLLER_ROOTS) (224.7055ms)
+✔ dado o repositório real (checkCommands() com opções padrão, forma de pnpm contracts:check) então ok=true (vermelho hoje: as três lacunas — raiz, filtro do app, catálogo) (213.719959ms)
+✔ dado os contratos e controladores reais quando comparados então o conjunto de rotas do BP-DASH-MONITOR-001 é exatamente as 43 rotas de CTG-0002 §3 (sete controllers + stream), com operationId únicos (vermelho hoje: lacunas 1 e 2 — nenhuma rota dashboard é varrida pelas raízes padrão) (40.718125ms)
+✔ dado contrato válido e controlador com a mesma rota quando checkCommands então ok=true, operations=1 e problems=[] (32.777709ms)
+✔ dado rota no contrato sem controlador correspondente quando checkCommands então exatamente um missing-route (12.813208ms)
+✔ dado rota no controlador sem operação correspondente quando checkCommands então exatamente um missing-operation (7.187ms)
+✔ dado código 4xx fora do catálogo quando checkCommands então exatamente um unknown-error-code citando o código (6.628333ms)
+✔ dado o mesmo operationId em dois arquivos quando checkCommands então exatamente um duplicate-operation-id citando os dois arquivos (7.06575ms)
+✔ dado x-blueprint que não existe em blueprintsDir quando checkCommands então há um unknown-blueprint (6.726833ms)
+✔ dado contrato com JSON quebrado quando checkCommands então exatamente um invalid-json no arquivo quebrado (5.808459ms)
+✔ dado arquivo *.openapi.json sem sufixo .commands quando checkCommands então é ignorado (mesmo se ilegível como JSON) (6.124625ms)
+✔ dado o repositório fixture sem problemas quando rodar a CLI então exit 0 e "commands contracts: OK (1 operations)" (236.076417ms)
+✔ dado o repositório fixture com uma rota órfã quando rodar a CLI então exit 1 com a lista de problemas em stderr e stdout vazio (190.214875ms)
+✔ C-5-03 — dado contrato sem x-blueprint, com x-commands ausente/false, ou com x-generated presente quando checkCommands então cada caso gera exatamente um invalid-json (11.538416ms)
+✔ C-5-05 — dado contrato cujo nome de arquivo não corresponde a nenhum blueprint mas cujo x-blueprint existe quando checkCommands então ok=true (resolução por x-blueprint, nunca pelo nome do arquivo) (3.979459ms)
+✔ C-5-07 — dado resposta 4xx sem properties.code.enum quando checkCommands então um unknown-error-code; dada a mesma resposta com x-kernel idempotency então ok=true (8.514084ms)
+✔ C-5-08 — dado enum de error_code (recibo de sincronização) com código fora do catálogo quando checkCommands então um unknown-error-code (3.864625ms)
+✔ C-5-12 — dado :id no controlador e {id} no contrato quando checkCommands então ok=true (normalização :id ↔ {id}); dado {aitId} no contrato contra :id no controlador então um missing-route e um missing-operation (8.088625ms)
+✔ C-5-13 — dado controlador sob src/controllers/ ou src/generated/, ou arquivo *.spec.ts, quando checkCommands então a rota não é varrida (sem missing-operation) (7.488166ms)
+✔ C-5-14 — dado backend/app/src (truque de cwd) quando rodar a CLI então só teat-x.controller.ts é varrido; outro.controller.ts (sem prefixo teat-) é ignorado (197.723209ms)
+✔ C-5-15 — dado um decorador de rota com argumento não literal quando checkCommands então um invalid-json citando classe e método; e a CLI sai com exit 1 (191.224625ms)
+✔ C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=258 (205.295916ms)
+✔ C-2-16 — dado código BOAT presente somente no catálogo BOAT quando rodar o gate então passa; código BOAT ausente do catálogo BOAT falha (1088.640792ms)
+✔ C-2-16 — dado resposta 4xx BOAT e recibo com error_code BOAT quando checkCommands então ambos consultam o catálogo BOAT (5.30825ms)
+✔ C-2-17 — dado rota BOAT no contrato e controlador correspondente quando checkCommands então passa; sem controlador então há missing-route (9.020583ms)
+✔ C-2-17 — dado controlador BOAT sem operação correspondente quando checkCommands então há missing-operation (6.628125ms)
+✔ C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 100 operações TEAT permanecem presentes (9.505875ms)
+✔ dado um contrato gerado e um contrato de comando quando generateClients então escreve um .ts por arquivo com export interface paths (77.070041ms)
+✔ dado BP-DEMO-001.commands.openapi.json quando generateClients então a saída é BP-DEMO-001.commands.ts (10.801292ms)
+✔ dada a mesma entrada quando gerar duas vezes então os bytes de saída são idênticos (idempotência) (25.963166ms)
+✔ dado um .ts órfão em outDir quando generateClients então é removido e não aparece em written (6.688083ms)
+✔ dado contrato com JSON inválido quando rodar a CLI então exit 1 e o arquivo de saída anterior não é truncado (677.376042ms)
+✔ dado o conjunto fixture sem erros quando rodar a CLI então stdout "clients written: 2" (418.875084ms)
+✔ checkClients — em sincronia (outDir gerado a partir do mesmo contractsDir) então ok=true e problems=[] (36.752833ms)
+✔ checkClients — stale-client (arquivo em outDir diverge do que generateClients produziria) então um stale-client citando o arquivo, sem corrigi-lo (24.286292ms)
+✔ checkClients — orphan-client (.ts em outDir sem *.openapi.json correspondente) então um orphan-client citando o arquivo, sem removê-lo (12.362959ms)
+✔ checkClients — missing-client (*.openapi.json sem .ts correspondente em outDir) então um missing-client citando o arquivo esperado (24.10925ms)
+✔ checkClients — CLI --check: exit 0 "clients in sync: <n>" quando em sincronia; exit 1 com stderr quando divergente (1199.503916ms)
+✔ C-5-22 — dado o repositório real (sem flags) quando checkClients então ok=true (2358.234708ms)
+✔ dado contrato de provisionamento quando comandos POST são verificados então os seis exigem If-Match e Idempotency-Key e retornam ETag (1.778167ms)
+✔ dado contrato de provisionamento quando os dois GET são verificados então não exigem cabeçalhos de comando (0.100708ms)
+✔ dado contratos de registro e ato offline quando schemas são verificados então chave privada é ausente e os oito campos de INV-OFFLINE-001 são obrigatórios (0.078834ms)
+✔ dado cada resposta final de provisionamento quando o contrato é publicado então cada sucesso declara um corpo OpenAPI concreto sem material privado (0.330292ms)
+✔ dado corpos JSON de concessão, recibo e reconciliação quando o contrato é verificado então coleções são arrays tipados, nunca objetos JSON livres (0.110292ms)
+✔ dado grant persistido publicado quando entidade e DTO CRUD são gerados então ambos preservam arrays de agentes e reservas tipadas (8.557291ms)
+✔ C-5-23 — todo docs/framework/schemas/*.json e schemas/events/*.json faz JSON.parse sem erro e declara $schema draft 2020-12 e $id (51.103625ms)
+✔ C-5-24 — os dezesseis events/<type>.schema.json de CTG-0005 §5.4 existem e o const de type é igual ao nome do arquivo (5.725416ms)
+✔ C-5-25 — cada events/<type>.schema.json de §5.4 é carregável e declara a forma mínima de envelope (properties.type.const e properties.data); a produção real do envelope é C-5-25′ (events.schema.spec.ts de cada módulo) (11.514292ms)
+✔ C-5-26 — teat-offline-sync-batch.schema.json valida o corpo do lote usado em backend/app/tests/e2e/teat-field-sync.e2e.spec.ts e recusa um item sem payload_hash (2.679458ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5394.274083
+
+> detran@0.0.1 verify:parameter-catalogue /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/parameters/verify.mjs --check-generated --check-usage
+
+verify:parameter-catalogue: OK (91 entries, 18 flags, 62 i18n namespaces, 0 errors)
+
+> @detran/ui@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+> ng-packagr -p ng-package.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/ui'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+- Writing FESM and DTS bundles
+✔ Writing FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/ui
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui
+- to:   /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/packages/ui/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-18T18:35:56.654Z - Time: 916ms
+
+
+> @detran/boat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+> ng-packagr -p ng-package.json -c tsconfig.lib.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/boat-mobile'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+- Writing FESM and DTS bundles
+✔ Writing FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/boat-mobile
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile
+- to:   /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/boat/mobile/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-18T18:35:58.674Z - Time: 1235ms
+
+
+> detran@0.0.1 typecheck /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm -r --if-present run typecheck
+
+Scope: 63 of 64 workspace projects
+backend/domains/inf/deadlines typecheck$ tsc --noEmit
+backend/domains/shared typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck$ tsc --noEmit
+packages/api-clients typecheck$ tsc --noEmit
+packages/api-clients typecheck: Done
+packages/senatran-adapter typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck: Done
+packages/ui typecheck$ tsc -p tsconfig.spec.json --noEmit
+backend/domains/inf/deadlines typecheck: Done
+senatran-mock typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+senatran-mock typecheck: Done
+packages/senatran-adapter typecheck: Done
+backend/domains/shared typecheck: Done
+apps/boat/mobile typecheck$ tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/portal/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/dashboard/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/rait/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/boat/mobile typecheck: Done
+backend/domains/ch/clinical-network typecheck$ tsc --noEmit
+apps/dashboard/web typecheck: Done
+backend/domains/est/crash typecheck$ tsc --noEmit
+backend/domains/ch/clinical-network typecheck: Done
+backend/domains/inf/normative typecheck$ tsc --noEmit
+backend/domains/est/crash typecheck: Done
+backend/domains/inf/rait-integration typecheck$ tsc --noEmit
+apps/portal/web typecheck: Done
+.../domains/integration/renaest-mirror typecheck$ tsc --noEmit
+backend/domains/inf/normative typecheck: Done
+backend/domains/ops/agency typecheck$ tsc --noEmit
+apps/rait/web typecheck: src/app/core/error-boundary-interceptors.spec.ts(48,15): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | number | boolean | Object | ArrayBuffer | Blob | (string | number | boolean | Object | null)[] | null'.
+apps/rait/web typecheck: Failed
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/rait-web@0.1.0 typecheck: `tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit`
+Exit status 2
+backend/domains/ops/core typecheck$ tsc --noEmit
+ ELIFECYCLE  Command failed with exit code 2.
+ ELIFECYCLE  Command failed with exit code 2.

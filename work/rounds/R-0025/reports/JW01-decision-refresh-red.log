@@ -1,0 +1,38 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+> vitest run --config vitest.config.ts "src/app/features/caso/pages/triage.wiring.spec.ts" "src/app/data/facades/case.facade.spec.ts" "src/app/preview/preview-not-functional.spec.ts"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ src/app/features/caso/pages/triage.wiring.spec.ts (8 tests | 2 failed) 4510ms
+     × admit: confirmed success reloads actual case/checklist and removes the stale TRIAGEM view 1089ms
+     × reject: confirmed success reloads actual case/checklist and removes the stale TRIAGEM view 1086ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/features/caso/pages/triage.wiring.spec.ts > successful triage decisions refresh without SSE > admit: confirmed success reloads actual case/checklist and removes the stale TRIAGEM view
+ FAIL  src/app/features/caso/pages/triage.wiring.spec.ts > successful triage decisions refresh without SSE > reject: confirmed success reloads actual case/checklist and removes the stale TRIAGEM view
+AssertionError: expected 2 to be greater than 2
+ ❯ src/app/features/caso/pages/triage.wiring.spec.ts:112:41
+    111|       await vi.waitFor(() => {
+    112|         reads();
+    113|         harness.detectChanges();
+       |                        ^
+    114|         expect(readCounts.caso).toBeGreaterThan(before.caso);
+    115|         expect(readCounts.admissibility).toBeGreaterThan(before.admiss…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 108 passed | 13 todo (123)
+   Start at  15:49:08
+   Duration  8.30s (transform 5.02s, setup 6.07s, import 2.27s, tests 5.69s, environment 2.61s)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/apps/rait/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/rait-web@0.1.0 test: `vitest run --config vitest.config.ts "src/app/features/caso/pages/triage.wiring.spec.ts" "src/app/data/facades/case.facade.spec.ts" "src/app/preview/preview-not-functional.spec.ts"`
+Exit status 1
