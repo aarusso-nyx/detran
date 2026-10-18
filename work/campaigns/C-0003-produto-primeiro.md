@@ -2,8 +2,8 @@
 
 > **Replanning review, 2026-10-18:** [completion-plan proposal](../../COMPLETION-PLAN.md) reconciles main `e536e545`,
 > preserved branches and source decisions into one proposed remaining-work plan.
-> It is pending Owner review; no implementation, lifecycle or acceptance change
-> is authorized by this pointer. The records below retain their historical scope.
+> P1–P3 were approved by the Owner on 2026-10-18; see the appended amendment.
+> Implementation remains paused pending exact P4 packet approval. The records below retain their historical scope.
 > Scorecard work remains with its separate session.
 
 > **Continuação atual — 2026-10-18:** R-0033 integrada por PR #191, fechada/selada
@@ -266,3 +266,17 @@ Registro canônico: `docs/meta/knowledge-base/open-decisions-rait.md` §C-0003.
 Tudo que a C-0002 §6 exclui; execução de k6/mutation (B17) salvo OD-C3-004; escrita, release ou
 execução no repositório STYNX; integração externa real; publicação de prévia fora do canal
 decidido em OD-C3-003; retomada da maratona de prova em Linux alvo no caminho crítico da prévia.
+
+## Owner amendment — completion baseline P1–P3, 2026-10-18
+
+**Authority: Owner; recorded by Architect.** Direct instruction:
+
+> Fix the remaining review findings, record my approval of P1–P3, run the required checks, and open the completion plan PR. Keep implementation paused until we approve the exact P4 packet, and preserve local and scorecard work.
+
+Upon integration, [COMPLETION-PLAN.md](../../COMPLETION-PLAN.md) replaces remaining-work scheduling projections; prior decisions, full acceptance, exclusions and historical evidence remain binding.
+
+- **P1 approved:** amends OD-C2-005 and C-0003's one-round/one-PR restriction to allow bounded independently reviewable PRs within an open round. Each delivery retains contract→RED→implementation→affected/full PR gates→cross-family review→CI→authorized merge→scoped evidence/audit. Whole-round acceptance, evidence, close/seal remain required; a partial slice does not close a round.
+- **P2 approved:** amends the R-0034 merged-J-round opening prerequisite to permit an accepted complete vertical outcome or an explicitly approved narrowly bounded prerequisite necessary for that outcome. No blanket platform rewrite, R-0022 restart or R-0034 opening is authorized. Shared locks, no-touch boundaries and packet authorization remain. Admissibility alone is insufficient.
+- **P3 approved:** distinguish development (D), institutional/provider qualification (Q), and operational release (O). Retain commissioned software scope and existing external/native exclusions; no production claim until applicable Q/O acceptance. No external execution is commissioned here.
+
+**Implementation hold:** P4's exact reconciled packet still needs explicit approval. P5–P7 remain unresolved for their affected work. Preserve local changes, recovery artifacts and the separate scorecard session. No round lifecycle, proof, permission or runtime state changes in this amendment.

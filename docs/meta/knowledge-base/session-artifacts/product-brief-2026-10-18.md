@@ -1,9 +1,9 @@
 # Product brief — RAIT, TEAT, BOAT e PEC
 
 > **Replanning review, 2026-10-18:** [completion-plan proposal](../../../../COMPLETION-PLAN.md) reconciles main `e536e545`,
-> preserved branches and source decisions into one proposed remaining-work plan.
-> It is pending Owner review; no implementation, lifecycle or acceptance change
-> is authorized by this pointer. The records below retain their historical scope.
+> preserved branches and source decisions into one remaining-work baseline pending integration.
+> P1–P3 were approved by the Owner on 2026-10-18; see the campaign addenda.
+> Implementation remains paused pending exact P4 packet approval. The records below retain their historical scope.
 > Scorecard work remains with its separate session.
 
 Inspeção original: **2026-10-08**, base `a92ef73147304a39193d8b85d3b7b9a607a6396d`.

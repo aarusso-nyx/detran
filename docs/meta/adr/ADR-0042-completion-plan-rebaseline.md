@@ -2,8 +2,9 @@
 
 ## Status
 
-**Proposed — Owner review required.** Architect, 2026-10-18. This document records
-planning proposals, not an accepted change to delivery authority or runtime policy.
+**Accepted — Owner approved P1–P3 on 2026-10-18; integration pending PR review.**
+Architect records the direct Owner approval quoted in COMPLETION-PLAN.md §8 and
+the appended C-0002/C-0003 amendments. P4 exact-packet approval remains pending.
 No implementation is authorized by this PR. Recheck ADR numbering against main
 before integration if concurrent work publishes another0042.
 
@@ -16,19 +17,21 @@ contains R-0033 and PR193/194 while several planning snapshots predate them.
 JW-01 also has a documented sequence conflict with backend state transitions.
 A fresh schedule must preserve source decisions, tests, proof and unmerged work.
 
-## Proposal
+## Decision
 
-Use [COMPLETION-PLAN.md](../../../COMPLETION-PLAN.md) as the single proposed
+Use [COMPLETION-PLAN.md](../../../COMPLETION-PLAN.md) as the single approved
 remaining-work schedule, with exact-head branch/task and source-scope inventories.
-On explicit Owner approval, it supersedes scheduling/dependency projections in
+Upon integration, it supersedes scheduling/dependency projections in
 older plans; their decisions, acceptance, exclusions and histories remain binding.
 
-Decisions P1/P2 in that plan explicitly propose (1) independently verified bounded
+Owner-approved decisions P1/P2 in that plan permit (1) independently verified bounded
 PRs within an open round, while retaining final aggregate acceptance/close/seal,
 and (2) outcome-based or expressly authorized narrow platform prerequisites.
-These would amend OD-C2-005/C-0003. Until the Owner records those answers, the old
-rules and existing specific exceptions apply. A prior slice does not confer a
-general exception. Merely merging an unanswered proposal does not grant authority.
+These amend OD-C2-005/C-0003 through the appended Owner amendments. P3 approves
+separate D/Q/O milestones without changing commissioned scope. The Owner directed
+implementation to remain paused pending approval of the exact P4 packet; this ADR
+does not authorize a packet, R-0034 opening or any round closure. P5–P7 remain
+unresolved where applicable.
 
 The plan separates software development, external qualification and operational
 release without changing product scope or silently commissioning excluded native,

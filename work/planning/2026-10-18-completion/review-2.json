@@ -1,0 +1,42 @@
+{
+  "mode": "planning-review",
+  "cycle": 2,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 26,
+      "claim": "Correction 2 over-corrects. JNY-018 (JRN-TEAT-002) is mapped only to 'CP-11 productive residual; R-0013 local homologation retained, no new general TEAT-mobile wiring'. Its source is mainly a web backoffice journey. The persona is field-supervisor. Steps 1, 2, 6, 7 and 8 cover creating an Operation, composing Team/TeamAgent/PatrolVehicle, opening the operation, real-time 'retaguarda web' (active-shifts, operations-map) and the closing summary. JRN-TEAT-002 'Pontos de contato' names 'Backoffice web TEAT (/v1/mobile-operations, /v1/normative-catalog, /v1/offline-sync)' first. COMPLETION-PLAN.md:128 says CP-05 delivers 'TEAT's web operational console', and #174 is mapped to CP-05. Yet no JNY row carries that web console to CP-05. JNY-022 (line 30, JRN-TEAT-006) has the same problem: its backoffice web field-supervisor incident registration/confirmation is mapped only to CP-11. As a result, D-scope TEAT web work is attributed to the separately authorized O track (CP-11), and could be counted outside development completion. The source-ownership mapping does not reflect this.",
+      "fix": "Split JNY-018 and JNY-022. Map the TEAT web backoffice portions to CP-05: operation planning/team composition, active-shifts/operations-map, operation summary, and supervisor incident confirmation. Keep the device homologation enforcement, numbering-range reservation on devices, mobile catalog package distribution and productive session/sync behavior as R-0013 homologation retained plus a CP-11 productive residual. No new general TEAT-mobile wiring is needed."
+    },
+    {
+      "severity": "low",
+      "file": "COMPLETION-PLAN.md",
+      "line": 124,
+      "claim": "The §4 source columns were not updated to match the corrected crosswalk. CP-01 still cites 'JNY013–016/RAIT UC bundle', but the crosswalk now assigns JNY-014/015/016 to CP-02. The CP-02 row (line 125) cites no RAIT JNY rows. CP-03 (line 126) still cites 'Portal UCs/JNY030–040', which includes JNY-037/UC-PORTAL-014, now CP-08 per P7. CP-08 (line 131) cites only 'PEC UCs/JNY001–007'. Because the two artifacts disagree on ownership, a packet author reading §4 could scope the wrong rows.",
+      "fix": "Restate the sources as: CP-01: JNY-013 + UC-RAIT-002/003/016 + JW-01. CP-02: JNY-014–016 + the remaining RAIT UCs + JW-02–12. CP-03: Portal JNY-030–040/UCs except JNY-037/UC-PORTAL-014. CP-08: add JNY-037/UC-PORTAL-014 (P7)."
+    },
+    {
+      "severity": "low",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 195,
+      "claim": "The DT-019 disposition says a 'source-specific answer needed before affected behavior'. The source row (open-issues.md:65) records that on 2026-09-13 steering H.54 adopted the 60-day no-suspension premise as vigente, with only the formal legal item 17 still open. As written, the disposition gates BOAT/TEAT behavior on a new answer. That reopens an approved default, which COMPLETION-PLAN.md:260-263 forbids.",
+      "fix": "Restate: H.54's 60-day no-suspension premise stays in force for CP-05 behavior. Formal legal/institutional confirmation (consultation item 17) is CP-10 and does not block the approved default."
+    },
+    {
+      "severity": "low",
+      "file": "work/planning/2026-10-18-completion/scope-crosswalk.md",
+      "line": 159,
+      "claim": "The UC-TEAT-009 outcome text is garbled: '…no new general mobile wiring removal workflow retained; guarda monitorada excluded…'. A separator is missing, so it is unclear whether the vehicle-removal workflow is retained homologation, CP-11 residual, or CP-05 scope. JNY-020 (line 28) phrases the same split clearly.",
+      "fix": "Separate the clauses, for example: 'CP-11 productive removal residual; R-0013 homologation retained; no new general mobile wiring; guarda monitorada excluded from MVP (DT-015), including modeling', matching JNY-020."
+    }
+  ],
+  "notes": [
+    "identity: Auditor (Constitution Article 7), read-only cross-family review run through the CLI alias opus. I did not infer the exact model version.",
+    "exact scope: committed HEAD 41708573acee8c0528f6ac22a0e856259b060b4b against baseline e536e545091d9828aef2f3c5ec0c2be6f5afb56e. All files were read via git show HEAD: COMPLETION-PLAN.md, scope-crosswalk.md, inventory-validation.json, review-1.json and its bridge, ADR-0042 status, and work/rounds/README.md. Cross-checked against product/journeys/JNY-018.json, the JRN-TEAT-001…006 touchpoint sections, the product/use-cases/teat.json actors, the open-issues.md DT-001/002/003/012/016/019/026/027/028 rows, steering items 49–58, and C-0003 §1 rows 79/82.",
+    "review-1 verification: (1) Partly fixed. Portal JNY/UC rows are now single CP-03 except JNY-037/UC-PORTAL-014, which go to CP-08 per P7. RAIT JNY-013 and UC-002/003/016 are CP-01 and the other RAIT rows CP-02. inventory-validation now says one row each, with no claim of an exclusive dependency. Residual: the §4 source columns are stale (low). (2) CP-05 is BOAT+TEAT web. R-0013 homologation is retained, general TEAT-mobile wiring is excluded, productive residuals go to CP-11 under separate authorization, and BOAT host integration stays in R-0028 scope (plan lines 128, 158–166). No mobile UC is dropped. Residual: JNY-018/022 web backoffice portions are misrouted to CP-11 (high). (3) Every DT row has a named destination, and the source line and original ID are preserved. DT-002 goes to CP-07/CP-10, with the mutation part excluded under B17/OD-C3-004. DT-016 goes to CP-07/CP-11/CP-10, its value stays open per H.54, and homologation is not rescheduled. Residual: DT-019 wording versus H.54 (low). (4) Fixed: the portal-mobile deferral is explicit (plan line 108, citing C-0003 §1), and JNY-035 and UC-PORTAL-011/012 separate web/PWA work from the native deferral and from unproved offline/document qualification. (5) Fixed: the Portal row cites DT-026/027/028, decisions/portal.md and H50/H51/H53, with discount_40_outside_sne=false. H54 and H57 are retained without reopening (plan lines 260–264).",
+    "retained invariants verified unchanged: acceptance is not relaxed (§3 D, §6, §9). Source precedence (§1) stands. P1/P2 remain proposals needing an Owner amendment, and ADR-0042 is Proposed. PEC stays last (§5.5). R-0022 is stopped, R-0025 open and R-0033 closed/sealed, both in the plan and in work/rounds/README.md. The scorecard session stays separate (§6, §10). The diff touches only docs/, work/, BUILD-PLAN.md, COMPLETION-PLAN.md and DESIGN-DECISIONS.md, with no runtime or protected paths. P7 makes the possible Portal→CH medical dependency explicit, without changing order or permissions.",
+    "limits: I ran no gates, tests, installs, servers, evidence/state verbs or Git mutations. I did not inspect the primary checkout or the scorecard work. I treated local check results as reported separately and did not assume any pending or new gate passed. Three untracked review-2 capture files exist in the planning directory and were not reviewed. Checking every UC/JNY against its full source body was beyond this verification; only the corrected rows and the TEAT/Portal channel splits were checked."
+  ]
+}
