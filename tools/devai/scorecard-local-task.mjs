@@ -1,7 +1,8 @@
 // Existing suites, isolated fixture services, and real exit codes only.
 import { spawnSync, spawn } from 'node:child_process';
 import { createServer } from 'node:net';
-import { readdirSync } from 'node:fs';
+import { readdirSync, mkdirSync, writeFileSync, appendFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 const image =
   'postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5';
@@ -9,15 +10,78 @@ const container = `detran-scorecard-${process.pid}-${Date.now()}`;
 const mode = process.argv[2];
 if (!['migration', 'unit', 'integration', 'e2e', 'perf'].includes(mode))
   throw new Error('Unknown scorecard task');
+const logDir = join(
+  '.devai/local/rounds/R-0036/tasks',
+  `${mode}-${Date.now()}-${process.pid}`,
+);
+mkdirSync(logDir, { recursive: true });
+console.log(`SCORECARD_TASK_LOGS=${resolve(logDir)}`);
+let step = 0;
 let failed = false;
-function run(argv, env = process.env) {
-  const result = spawnSync(argv[0], argv.slice(1), {
-    env,
-    stdio: 'inherit',
-    timeout: 900_000,
+let interrupted, activeChild, killTimer;
+const killGroup = (child, signal) => {
+  if (!child?.pid) return;
+  try {
+    process.kill(-child.pid, signal);
+  } catch {
+    /* already exited */
+  }
+};
+for (const signal of ['SIGINT', 'SIGTERM'])
+  process.on(signal, () => {
+    interrupted = signal;
+    killGroup(activeChild, signal);
+    if (activeChild)
+      killTimer = setTimeout(() => killGroup(activeChild, 'SIGKILL'), 3000);
   });
-  if (result.status !== 0) failed = true;
-  return result.status === 0;
+async function run(argv, env = process.env) {
+  if (interrupted)
+    throw new Error(`Fixture task interrupted by ${interrupted}`);
+  const label = String(++step).padStart(2, '0');
+  const stdoutPath = join(logDir, `${label}.stdout.log`);
+  const stderrPath = join(logDir, `${label}.stderr.log`);
+  for (const path of [stdoutPath, stderrPath])
+    writeFileSync(path, '', { flag: 'wx', mode: 0o600 });
+  const child = spawn(argv[0], argv.slice(1), {
+    env,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: true,
+  });
+  child.stdout.on('data', (chunk) => {
+    appendFileSync(stdoutPath, chunk);
+    process.stdout.write(chunk);
+  });
+  child.stderr.on('data', (chunk) => {
+    appendFileSync(stderrPath, chunk);
+    process.stderr.write(chunk);
+  });
+  activeChild = child;
+  const status = await new Promise((resolve) => {
+    child.once('error', () => resolve(null));
+    child.once('close', (code) => resolve(code));
+  });
+  writeFileSync(
+    join(logDir, `${label}.json`),
+    JSON.stringify(
+      {
+        argv,
+        status,
+        interrupted: interrupted ?? null,
+        stdoutPath,
+        stderrPath,
+      },
+      null,
+      2,
+    ) + '\n',
+    { flag: 'wx', mode: 0o600 },
+  );
+  clearTimeout(killTimer);
+  if (interrupted) killGroup(child, 'SIGKILL');
+  activeChild = undefined;
+  if (interrupted)
+    throw new Error(`Fixture task interrupted by ${interrupted}`);
+  if (status !== 0) failed = true;
+  return status === 0;
 }
 function output(argv) {
   const result = spawnSync(argv[0], argv.slice(1), {
@@ -61,7 +125,7 @@ if (mode === 'unit') {
       'test',
     ],
   ])
-    run(argv);
+    await run(argv);
   process.exitCode = failed ? 1 : 0;
 } else {
   let started = false,
@@ -90,6 +154,8 @@ if (mode === 'unit') {
     started = true;
     let ready = false;
     for (let i = 0; i < 90; i++) {
+      if (interrupted)
+        throw new Error(`Fixture task interrupted by ${interrupted}`);
       const logs = output(['docker', 'logs', container]);
       if (
         logs.includes('PostgreSQL init process complete; ready for start up.')
@@ -137,11 +203,11 @@ if (mode === 'unit') {
       DETRAN_PRIORITY_UPGRADE_RESTORE_AUTHORIZED: '1',
       DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED: '1',
     };
-    if (!run(['bash', 'backend/database/apply.sh', '--full'], env))
+    if (!(await run(['bash', 'backend/database/apply.sh', '--full'], env)))
       throw new Error('DDL failed');
     if (mode === 'migration') {
-      run(['bash', 'backend/database/apply.sh'], env);
-      run(['pnpm', 'backend:rls-smoke'], env);
+      await run(['bash', 'backend/database/apply.sh'], env);
+      await run(['pnpm', 'backend:rls-smoke'], env);
       console.log(
         JSON.stringify({
           ddl_files: readdirSync('backend/database/ddl').filter((name) =>
@@ -151,24 +217,27 @@ if (mode === 'unit') {
         }),
       );
     } else {
-      if (!run(['bash', 'backend/database/seed.sh'], env))
+      if (!(await run(['bash', 'backend/database/seed.sh'], env)))
         throw new Error('Seed failed');
-      if (!run(['pnpm', 'backend:test:prepare-legacy'], env))
+      if (!(await run(['pnpm', 'backend:test:prepare-legacy'], env)))
         throw new Error('Legacy fixture failed');
       const mockEnv = {
         ...env,
         DB_NAME: 'senatran',
         DATABASE_URL: `${base}/senatran`,
       };
-      if (!run(['pnpm', '--dir', 'senatran-mock', 'db:reset'], mockEnv))
+      if (!(await run(['pnpm', '--dir', 'senatran-mock', 'db:reset'], mockEnv)))
         throw new Error('Mock DDL failed');
       if (mode === 'integration') {
-        run(['pnpm', 'backend:test:integration'], env);
-        run(
+        await run(['pnpm', 'backend:test:integration'], env);
+        await run(
           ['pnpm', '--filter', '@detran/senatran-adapter', 'test:integration'],
           env,
         );
-        run(['pnpm', '--filter', 'senatran-mock', 'test:integration'], mockEnv);
+        await run(
+          ['pnpm', '--filter', 'senatran-mock', 'test:integration'],
+          mockEnv,
+        );
       } else {
         const mockPort = await new Promise((resolve, reject) => {
           const server = createServer();
@@ -186,6 +255,8 @@ if (mode === 'unit') {
         const url = `http://127.0.0.1:${mockPort}`;
         let healthy = false;
         for (let i = 0; i < 60; i++) {
+          if (interrupted)
+            throw new Error(`Fixture task interrupted by ${interrupted}`);
           try {
             if ((await fetch(url + '/health')).ok) {
               healthy = true;
@@ -201,7 +272,7 @@ if (mode === 'unit') {
           SENATRAN_MOCK_BASE_URL: url,
         };
         if (mode === 'perf') {
-          run(
+          await run(
             [
               'pnpm',
               '--filter',
@@ -215,13 +286,16 @@ if (mode === 'unit') {
             backendEnv,
           );
         } else {
-          run(['pnpm', 'backend:test:e2e'], backendEnv);
-          run(['pnpm', 'backend:test:upgrade'], backendEnv);
-          run(['pnpm', '--filter', '@detran/senatran-adapter', 'test:e2e'], {
-            ...env,
-            SENATRAN_MOCK_BASE_URL: url,
-          });
-          run(['pnpm', '--filter', 'senatran-mock', 'test:e2e'], mockEnv);
+          await run(['pnpm', 'backend:test:e2e'], backendEnv);
+          await run(['pnpm', 'backend:test:upgrade'], backendEnv);
+          await run(
+            ['pnpm', '--filter', '@detran/senatran-adapter', 'test:e2e'],
+            {
+              ...env,
+              SENATRAN_MOCK_BASE_URL: url,
+            },
+          );
+          await run(['pnpm', '--filter', 'senatran-mock', 'test:e2e'], mockEnv);
         }
       }
     }
