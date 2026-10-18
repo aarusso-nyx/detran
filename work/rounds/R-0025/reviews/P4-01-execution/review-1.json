@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "cycle": 1,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/contracts/JW01-distribution-claim.md",
+      "line": 81,
+      "claim": "The static observation 'locks/counts work and inserts an assignment' says more than the code shows. In claim(), the WIP count query (rait-case-command.service.ts ~2055-2067) has no FOR UPDATE. Serialization comes from the earlier FOR UPDATE on the pool row, the pool_member row and the existing-assignment probe, not from locking the counted work. Also, the WIP check runs after candidate selection, so with an empty queue and a reached WIP the result is QUEUE_EMPTY rather than ASSIGNMENT_WIP_LIMIT.",
+      "fix": "Change the wording to say the member, pool and active-assignment rows are locked and active work is counted without a lock. Note that the WIP check runs after candidate selection. Keep this as a static observation for later concurrency and ordering proof."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/reports/JW01-distribution-claim-sources.md",
+      "line": 156,
+      "claim": "The text says the diff is limited to the named outputs 'and required independent-review captures'. Frozen HEAD 9af20780 changes only the three documents. The reviews/P4-01-execution captures are still untracked, so this sentence describes a future commit, not the reviewed HEAD.",
+      "fix": "Either state that the review captures will be added in a follow-up commit before submission, or add them before relying on that sentence. Do not change any other content."
+    }
+  ],
+  "notes": [
+    "Identity: Auditor (Constitution Article 7), read-only, Claude Code session reporting model claude-opus-5-5 under the opus CLI alias; the exact served model is not inferred beyond this.",
+    "Exact scope: HEAD 9af20780003e1eefb5e9f28805358f3407be758a compared with PR196 merge 1c25041ee222ba6bccf74493fd10d75c5d8ebe0e, read against the approved P4-01-packet-review.md. The commit changes only contracts/JW01-distribution-claim.md, reports/JW01-distribution-claim-sources.md and additive rows OD-R25-018/019/020 in open-decisions-rait.md; earlier OD-R25-016/017 rows are unchanged. No runtime, test, DDL, grant, ADR, state, proof or scorecard path is touched. I checked the static observations against rait-case-command.service.ts and they hold. Claim RULES expect DISTRIBUIDO and go to EM_INSTRUCAO with fields []. The caseId check gives ORDER_OVERRIDE_FORBIDDEN/403. If-Match presence and version checks are skipped only for claim-next. The fingerprint includes actorId/ifMatch only for triage, save-admissibility, admit and non-admission, so claim omits the actor. The tenant+key advisory lock and replay lookup run before claim(). Claim SQL orders by legal_priority level_2/level_1, ELSE 0, then protocolled_at and id, with FOR UPDATE SKIP LOCKED; there is no risk term and no IS NOT NULL. Impeded candidates are filtered out, which can lead to QUEUE_EMPTY. The receive guard rejects payload.body !== current.instance with FORBIDDEN_ORGAO, receive validates only jari/cetran, and its audit role is rait-secretary. The controller uses @HttpCode(200), returns {data, events} and sets ETag from the updated case version. The command OpenAPI has only operationId raitPoolClaimNext and a 200 description. policy.ts grants claim-next to rait-analyst. In the sources: WF-RAIT-001 has ADMITIDO→DISTRIBUIDO for defesa_previa|cetran; IU-RAIT-004 §6 lists ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO, says If-Match is always required and includes MEMBER_IMPEDED; ADR-0037 puts risk first and excludes NULL from automatic claim. The error-catalog statuses match. In the frontend, DEFENSE_POOL_ID_PENDING is '', WorklistClient says ifMatch is optional with a stale WORKLIST TODO, RaitSessionFacade has no person or pool identifier, and the pool entity has no version field. Packet coverage is met. Handoffs show producer, actor, state and S/O/P/B status. Route, empty body, the 200 envelope plus case ETag and typed-contract gaps are recorded. The three-way If-Match conflict is left open. Eligibility and destination are proposals that need ratification, not decisions. Pool and actor discovery and the individual-access question (OD017) stay unresolved and nothing is invented for them. Errors are classified, including MEMBER_IMPEDED versus skip. The replay risk is marked as a static observation, not a tested exploit. Signing is a later dependency. ADR0037 and H.54 WIP45/alert60 are kept as already decided. D1–D7 each name the authority and the next record needed, and none grants, adds an endpoint or state, or authorizes runtime work. Using precise questions instead of a wiring packet is the approved fallback.",
+    "Limits: static source and code inspection only; I ran no tests, builds or checks. The local check results claimed in the sources report §6 and the PR196 CI status were not re-verified here and should be reported separately. I did not inspect the primary checkout or any scorecard content, and made no Git changes, evidence or state writes, or other edits. Concurrency, authorization and ordering behavior are not proven by this review."
+  ]
+}
