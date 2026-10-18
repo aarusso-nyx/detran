@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
+// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
 import { Module } from '@nestjs/common';
 import { RaitCaseController } from './controllers/rait-case.controller.js';
 import { RaitCaseService } from './services/rait-case.service.js';
@@ -53,17 +53,20 @@ import { RaitCaseEventService } from './services/rait-case-event.service.js';
 import { RaitCaseEventRepository } from './repositories/rait-case-event.repository.js';
 import { RaitCaseCommandsController } from './handwritten/rait-case-commands.controller.js';
 import { RaitInquiryCommandsController } from './handwritten/rait-inquiry-commands.controller.js';
+import { RaitAdmissibilityCommandsController } from './handwritten/rait-admissibility-commands.controller.js';
 import { RaitCaseCommandService } from './handwritten/rait-case-command.service.js';
 import { RaitInquiryCommandService } from './handwritten/rait-inquiry-command.service.js';
 import { RaitDeadlineEngineFactory } from './handwritten/rait-case-command.service.js';
 import { RaitDocumentTrustVerifier } from './handwritten/rait-document-trust.verifier.js';
 import { DocumentTrustHttpAdapter } from './handwritten/rait-document-trust.verifier.js';
 import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
+import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibility-command.service.js';
 
 @Module({
   controllers: [
     RaitCaseCommandsController,
     RaitInquiryCommandsController,
+    RaitAdmissibilityCommandsController,
     RaitCaseController,
     RaitPartyController,
     RaitDocumentController,
@@ -123,6 +126,7 @@ import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
     RaitDocumentTrustVerifier,
     DocumentTrustHttpAdapter,
     RaitOperationClock,
+    RaitAdmissibilityCommandService,
   ],
 })
 export class RaitCaseModule {}

@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
+// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
 export * from './controllers/rait-case.controller.js';
 export * from './dto/create-rait-case.dto.js';
 export * from './entities/rait-case.entity.js';
@@ -92,3 +92,5 @@ export * from './handwritten/rait-inquiry-command.service.js';
 export * from './handwritten/rait-document-trust.verifier.js';
 export * from './handwritten/rait-operation-clock.js';
 export * from './handwritten/rait-case-transition.port.js';
+export * from './handwritten/rait-admissibility-commands.controller.js';
+export * from './handwritten/rait-admissibility-command.service.js';

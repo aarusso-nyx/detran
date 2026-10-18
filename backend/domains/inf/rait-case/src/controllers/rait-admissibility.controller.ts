@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
+// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
 import {
   Body,
   Controller,
@@ -21,35 +21,5 @@ export class RaitAdmissibilityController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'INF_RAIT_ADMISSIBILITY_CREATE',
-    entity: 'inf.rait_admissibility',
-  })
-  create(@Body() dto: CreateRaitAdmissibilityDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'INF_RAIT_ADMISSIBILITY_UPDATE',
-    entity: 'inf.rait_admissibility',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateRaitAdmissibilityDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'INF_RAIT_ADMISSIBILITY_DELETE',
-    entity: 'inf.rait_admissibility',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }
