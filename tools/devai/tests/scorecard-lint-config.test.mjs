@@ -33,8 +33,8 @@ for (const app of apps) {
         resolve(app, file),
       );
       assert.equal(
-        defaultConfig.languageOptions.parserOptions.tsconfigRootDir,
-        after.languageOptions.parserOptions.tsconfigRootDir,
+        resolve(defaultConfig.languageOptions.parserOptions.tsconfigRootDir),
+        resolve(after.languageOptions.parserOptions.tsconfigRootDir),
       );
       const [defaultParsed] = await discovered.lintFiles(
         resolve(
