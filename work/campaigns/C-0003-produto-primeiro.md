@@ -1,13 +1,12 @@
 # Campanha C-0003: produto primeiro — prévia de frontend, jornadas verticais, endurecimento
 
-> **Estado reconciliado em 2026-10-18:** R-0033 foi autorizada em 2026-10-15 e tem
-> checkpoint em `claude/frontend-preview-5281e3` @ `aca40880`: sete TASKs completed,
-> duas queued (Portal preview), prévia RAIT implementada fora de main; sequência
-> final de checks/review/integração/closure ainda pendente. A revisão 1 abaixo
-> antecede essa execução; “nenhuma rodada aberta”/“aguardando autorização” são
-> históricos. R-0034/35 permanecem no mapa, sem pastas ou tarefas instanciadas.
-> OD-C3-007/008 estão decididas no branch e OD-C3-009 continua aberta. Ver
-> [reconciliação e heads](../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
+> **Continuação atual — 2026-10-18:** R-0033 integrada por PR #191, fechada/selada
+> PC-0021. R-0025 retomada de `orchestra/rait-web-wiring` com A-C3-01, main
+> conciliada e recorte inicial de admissibilidade aprovado pelo Owner; PR limitado
+> sem autorização de merge/close. Quatro tarefas de pré-trabalho preservadas.
+> Claim/instrução e aceitação integral permanecem pendentes; R-0022 segue parada.
+> R-0034/35 não são iniciadas. OD-C3-009 não é reaberta. A revisão 1 abaixo é
+> histórica; versões/dependências atuais estão no plano R-0025 A-C3-01.
 
 **Autoridade:** Architect (Constitution Article 6). Revisão 1 de 2026-10-14, redigida a partir da
 diretiva do Owner que **parou** a R-0022 `stynx-sse-tenancy` (C-0002, ação 7c) na mesma data.

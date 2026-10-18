@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0025",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensores do recorte de admissibilidade",
+  "description": "A-C3-01: recorte aprovado pelo Owner, contrato contracts/JW01-admissibility.md e prompt work/rounds/R-0025/prompts/TASK-0025.md. Aceitação integral da R-0025 preservada. Nenhuma entrega ou PASS atual é inferido de status queued. Executor model/selection is the requested existing R25 model-ladder configuration, not an assertion of the inherited tool worker actual model/version; execution evidence must record observable provenance without inventing model identity. Review cycle1 corrections: exact generated bodies/headers/ETag for four operations; fixed Client/Facade signatures and reason/legalBasis mapping; acceptance aligned with prompt. DB commands blocked when disposable DB unavailable, never skipped.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r25-admissibility-tests", "MOD-rait-web-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0020",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0024",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r25", "a-c3-01", "jw01-admissibility"],
+  "branch": "codex/r0025-jw01",
+  "worktree_id": "WT-r0025-jw01",
+  "prompt_composition_id": "PC-ecc2a686dfed547e",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0025/prompts/TASK-0025.md"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "tests/unit/rait-jw01-admissibility.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "tests/integration/rait-jw01-admissibility.integration.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "tests/e2e/rait-jw01-admissibility.e2e.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/rait-web",
+      "test",
+      "--",
+      "src/app/core/guards/case-access.guard.spec.ts",
+      "src/app/data/api/case-admissibility.wiring.spec.ts",
+      "src/app/data/facades/case-admissibility.wiring.spec.ts",
+      "src/app/features/caso/pages/triage.wiring.spec.ts",
+      "src/app/data/api/case.client.spec.ts",
+      "src/app/data/facades/case.facade.spec.ts",
+      "src/app/preview/preview-not-functional.spec.ts"
+    ],
+    [
+      "node",
+      "-e",
+      "const fs=require('fs');for(const p of [\"backend/domains/inf/rait-case/tests/unit/rait-jw01-admissibility.spec.ts\", \"backend/domains/inf/rait-case/tests/integration/rait-jw01-admissibility.integration.spec.ts\", \"backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts\", \"backend/app/tests/shared/rait-jw01-admissibility.fixture.ts\", \"apps/rait/web/src/app/core/guards/case-access.guard.spec.ts\", \"apps/rait/web/src/app/data/api/case-admissibility.wiring.spec.ts\", \"apps/rait/web/src/app/data/facades/case-admissibility.wiring.spec.ts\", \"apps/rait/web/src/app/features/caso/pages/triage.wiring.spec.ts\"])if(!fs.existsSync(p)||fs.statSync(p).size===0)process.exit(1)"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "backend/domains/inf/rait-case/tests/unit/rait-jw01-admissibility.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-jw01-admissibility.integration.spec.ts",
+      "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts",
+      "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts",
+      "apps/rait/web/src/app/core/guards/case-access.guard.spec.ts",
+      "apps/rait/web/src/app/data/api/case-admissibility.wiring.spec.ts",
+      "apps/rait/web/src/app/data/facades/case-admissibility.wiring.spec.ts",
+      "apps/rait/web/src/app/features/caso/pages/triage.wiring.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/rait-web",
+      "exec",
+      "eslint",
+      "src/app/core/guards/case-access.guard.spec.ts",
+      "src/app/data/api/case-admissibility.wiring.spec.ts",
+      "src/app/data/facades/case-admissibility.wiring.spec.ts",
+      "src/app/features/caso/pages/triage.wiring.spec.ts"
+    ]
+  ],
+  "created_at": "2026-10-18T17:18:16Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "prompt_composition_id": "PC-ecc2a686dfed547e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    }
+  }
+}

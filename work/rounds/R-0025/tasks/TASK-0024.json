@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0024",
+  "round_id": "R-0025",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Materializar fontes de admissibilidade (ADR-0041)",
+  "description": "A-C3-01: recorte aprovado pelo Owner, contrato contracts/JW01-admissibility.md e prompt work/rounds/R-0025/prompts/TASK-0024.md. Aceitação integral da R-0025 preservada. Nenhuma entrega ou PASS atual é inferido de status queued. Executor model/selection is the requested existing R25 model-ladder configuration, not an assertion of the inherited tool worker actual model/version; execution evidence must record observable provenance without inventing model identity. Review cycle1 corrections: exact generated bodies/headers/ETag for four operations; fixed Client/Facade signatures and reason/legalBasis mapping; acceptance aligned with prompt. DB commands blocked when disposable DB unavailable, never skipped. Started after reviews/prompt-review-A-C3-01-2.json PASS (cycle2, no findings); cycle1 REVIEW preserved. Architect edits source blueprint/OpenAPI only; maestro owns generation and reports actual gates. No runtime implementation or tests authored here.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r25-admissibility-source"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0020",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r25", "a-c3-01", "jw01-admissibility"],
+  "branch": "codex/r0025-jw01",
+  "worktree_id": "WT-r0025-jw01",
+  "prompt_composition_id": "PC-33d39910bd737b74",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0025/prompts/TASK-0024.md"
+    ],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "contracts:test"]
+  ],
+  "created_at": "2026-10-18T17:18:16Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "prompt_composition_id": "PC-33d39910bd737b74",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    }
+  }
+}

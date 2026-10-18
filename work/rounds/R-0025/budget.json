@@ -67,5 +67,22 @@
       "note": "CTG-0003: F-06…F-16 e C-25-3-01…08; acceptance e formato PASS; QA 200/If-Match criação.",
       "result": "PASS"
     }
-  ]
+  ],
+  "windows": {
+    "session_a_historical": {
+      "input_estimate": 335000,
+      "output_estimate": 54000,
+      "note": "Historical Session A estimates preserved; original entries unchanged. Not current-window measured consumption."
+    },
+    "resume_jw01_20261018": {
+      "date": "2026-10-18",
+      "status": "active",
+      "estimate_kind": "planning_only_not_measured",
+      "planned_codex_input_estimate": 400000,
+      "planned_codex_output_estimate": 60000,
+      "planned_claude_input_estimate": 80000,
+      "planned_claude_output_estimate": 10000,
+      "note": "New R-0025 continuation window: reconciliation, Architect sources, Inspector/backend/frontend, gates and PR. Requested model gpt-6-sol from existing ladder; actual inherited worker model/version not observable. Current tokens not measured; R-0033 token estimates do not carry into this window. Review cycles1 REVIEW and2 PASS are observed verdicts, not token measurements. Existing650000/520000 limits unchanged."
+    }
+  }
 }

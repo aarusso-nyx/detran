@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0026",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Comandos F01 e admissibilidade com contexto de servidor",
+  "description": "A-C3-01: recorte aprovado pelo Owner, contrato contracts/JW01-admissibility.md e prompt work/rounds/R-0025/prompts/TASK-0026.md. Aceitação integral da R-0025 preservada. Nenhuma entrega ou PASS atual é inferido de status queued. Executor model/selection is the requested existing R25 model-ladder configuration, not an assertion of the inherited tool worker actual model/version; execution evidence must record observable provenance without inventing model identity. Review cycle1 corrections: exact generated bodies/headers/ETag for four operations; fixed Client/Facade signatures and reason/legalBasis mapping; acceptance aligned with prompt. DB commands blocked when disposable DB unavailable, never skipped.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-rait-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0020",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0025",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["r25", "a-c3-01", "jw01-admissibility"],
+  "branch": "codex/r0025-jw01",
+  "worktree_id": "WT-r0025-jw01",
+  "prompt_composition_id": "PC-0dfd4d16c05d1a20",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "work/rounds/R-0025/prompts/TASK-0026.md"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "tests/unit/rait-jw01-admissibility.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "tests/integration/rait-jw01-admissibility.integration.spec.ts"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "tests/e2e/rait-jw01-admissibility.e2e.spec.ts"
+    ],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "contracts:test"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:role-catalog"],
+    ["pnpm", "verify:rls-ddl"]
+  ],
+  "created_at": "2026-10-18T17:18:16Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "prompt_composition_id": "PC-0dfd4d16c05d1a20",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-sol"
+    }
+  }
+}

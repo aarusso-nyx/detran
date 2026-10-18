@@ -45,6 +45,64 @@ R-02…R-36), **16 `faltante`** (endpoints F-01…F-16 criados nesta rodada) e *
 com a marca `fail-closed-assinatura` em 3 linhas; lista o inverso (operações de backend sem uso na
 UI) e propõe OD-R25-006…015. É entrada normativa de TASK-0001, TASK-0003, TASK-0006 e TASK-0009.
 
+## Adenda A-C3-01 — retomada produto-primeiro (2026-10-18)
+
+**Estado atual:** ativa, primeiro PR limitado de admissibilidade autorizado pelo
+Owner; merge/close/seal não autorizados. Fonte literal e escolha do recorte em
+`AUTHORIZATION.md`. As dependências e versões de setembro acima são históricas.
+
+- Checkpoint `orchestra/rait-web-wiring` @ `9e69d867` preservado; continuação em
+  `codex/r0025-jw01`, worktree isolada
+  `/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran`. Main
+  `d871c1d4` integrado por merge `5809388b994c4561c25e377f48bdc95a359d92ff`.
+- C-0003 §4/A-C2-16 substituem base empilhada por main e esperas obrigatórias
+  R-0022/23/24 pelo padrão v0 integrado da R-0033, SSE local e DetranPolicyGuard
+  atuais. DEVAI 2.2.0, Constituição 1.0.2, STYNX 1.5.3. R-0033 fechada e selada
+  PC-0021; R-0022 permanece parada. Maestro Codex; reviewer Claude alias opus.
+- **Primeiro recorte:** PROTOCOLADO → F-01 → R-01 (três critérios humanos +
+  tempestividade server) → admit/reject existentes, com guard real GET/RLS e
+  transporte/contexto/cabeçalhos reais. Owner escolheu explicitamente esse início.
+  Não é a sequência claim→instrução do desenho da JW-01: OD-R25-016 mantém a
+  divergência explícita; nenhum novo arco de estado é criado.
+- Contrato atual: `contracts/JW01-admissibility.md`, ADR-0041. Architect prepara
+  blueprint/OpenAPI/gerados; Inspector sensores; Engineer backend e frontend em
+  sequência. As quatro TASKs históricas (0001/0002/0003/0006) ficam intactas;
+  TASK-0024…0027 instanciam somente o recorte; TASK-0004…0020 originalmente
+  planejadas mantêm identidade e escopo, sem renumeração ou substituição.
+- Não tocar app.module.ts, detran-runtime.ts, serviços SSE, documentos, outbox
+  estrutural, offline-sync, pin STYNX, workflows, .devai/config, law/register ou
+  record/. policy.ts só pode receber chave nova do próprio recorte se necessária
+  e comprovada; não migrar autorização de R-0023 nem conceder por analogia.
+- OD-R25-017 registra limite do escopo individual: GET atual prova tenant RLS,
+  não predicado de analista/pool em todo caso do mesmo tenant. RN-143 trata
+  autoridade signatária. Não inventar permissão e não relatar tal escopo como PASS.
+- **Aceitação integral preservada:** 64 comandos e todos os critérios originais
+  continuam requeridos para a rodada integral. Claim, F-02/instrução, minuta,
+  demais comandos/jornadas não foram entregues por este primeiro PR. Não promover
+  critérios não executados a PASS nem declarar R-0025/JW-01 completas.
+- Recorte requer checks afetados, root pnpm check, doctor, contratos/geração,
+  review cruzada e browser smoke local antes de PR. Perfil local de teste não
+  prova JWT/IdP real; essa limitação deve acompanhar os recibos. Nenhum gate é
+  relaxado; os dois baseline failures do catálogo são investigados separadamente.
+
+### Bootstrap da continuação — recibo de revisão
+
+Prompt-review A-C3-01 ciclo1 REVIEW (três high e dois low) → ciclo2 **PASS,
+zero achados** (`reviews/prompt-review-A-C3-01-2.json`). TASK-0024 in_progress: fontes
+blueprint CASE v1.1.8 e quatro operações OpenAPI tipadas; maestro fará geração
+e gates. Controller `RaitAdmissibilityCommandsController` em
+`handwritten/rait-admissibility-commands.controller` e provider
+`RaitAdmissibilityCommandService` em `handwritten/rait-admissibility-command.service`,
+exportados pelo blueprint. Nenhuma implementação ou PASS de runtime antecipado.
+
+**Esclarecimento F3 pós-review (sem mudar prompts):** TASK-0025 inclui
+`apps/rait/web/src/app/forms/gates-matrix.spec.ts` e
+`apps/rait/web/src/testing/gates.fixture.ts` somente para materializar o catálogo
+65 já aprovado: preservar mapa integral anterior e acrescentar a correspondência
+`rait-admissibility:create` → `inf:rait-admissibility:create`, ajustar contagem
+64→65 sem filtros. As contagens de 64 páginas permanecem inalteradas. Recibo em
+`reports/TASK-0024.md`; execução após checkpoint de geração.
+
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 
 > **Adenda A-C2-15 (Owner, 2026-09-30; prevalece).** Abertura antecipada, **só análise e
