@@ -71,7 +71,11 @@ async function mount(
   await TestBed.inject(StynxI18nService).initialize();
   const http = TestBed.inject(HttpTestingController);
   const harness = await RouterTestingHarness.create();
-  let current = { ...fixtureCase(CASE), state, version: 1 };
+  let current: ReturnType<typeof fixtureCase> = {
+    ...fixtureCase(CASE),
+    state,
+    version: 1,
+  };
   let rows = state === 'PROTOCOLADO' ? [] : [timely];
   const persistedHuman = new Map<string, typeof timely>();
   const readCounts = { caso: 0, admissibility: 0 };
@@ -139,6 +143,10 @@ async function mount(
     update(version: number) {
       current = { ...current, state: 'TRIAGEM_ADMISSIBILIDADE', version };
       rows = [timely];
+    },
+    transition(state: 'ADMITIDO' | 'NAO_CONHECIDO', version: number) {
+      current = { ...current, state, version };
+      return current;
     },
   };
 }
@@ -348,6 +356,83 @@ describe('review1 routed checklist resave and reversal', () => {
       // Each unchanged human criterion at a new parent version is also a new attempt.
       expect(keys[0]).not.toBe(keys[3]);
       if (signatureEdits.length === 3) expect(keys[1]).not.toBe(keys[7]);
+    });
+  }
+});
+
+// Browser receipt: a decision succeeds before SSE and the routed screen must refresh itself.
+describe('successful triage decisions refresh without SSE', () => {
+  for (const operation of ['admit', 'reject'] as const) {
+    it(`${operation}: confirmed success reloads actual case/checklist and removes the stale TRIAGEM view`, async () => {
+      const view = await mount();
+      fill(view.root);
+      if (operation === 'reject') {
+        const denied = view.root.querySelector<HTMLInputElement>(
+          'li[data-criterion="assinatura"] input[value="false"]',
+        )!;
+        denied.checked = true;
+        denied.dispatchEvent(new Event('change'));
+        const reason = view.root.querySelector<HTMLSelectElement>(
+          '[formControlName="nonAdmissionReason"]',
+        )!;
+        reason.value = 'sem_assinatura';
+        reason.dispatchEvent(new Event('change'));
+        const grounds = view.root.querySelector<HTMLTextAreaElement>(
+          '[formControlName="nonAdmissionGrounds"]',
+        )!;
+        grounds.value = 'Art. 4º III — fundamento do operador.';
+        grounds.dispatchEvent(new Event('input'));
+      }
+      // A complete persisted checklist is the server-side starting fixture, not an emitted SSE event.
+      for (const criterion of CRITERIA)
+        view.persist(
+          {
+            criterion,
+            verdict:
+              operation === 'reject' && criterion === 'assinatura'
+                ? false
+                : true,
+            reason: 'Conferência da fixture.',
+          },
+          1,
+        );
+      view.harness.detectChanges();
+      const before = { ...view.readCounts };
+      view.root
+        .querySelector<HTMLButtonElement>(`[data-action="${operation}"]`)!
+        .click();
+      view.harness.detectChanges();
+      view.http.expectNone((req) => req.method === 'POST');
+      const dialog = view.harness.fixture.debugElement.query(
+        By.directive(StynxConfirmDialogComponent),
+      ).componentInstance as StynxConfirmDialogComponent;
+      expect(dialog.open).toBe(true);
+      dialog.confirm.emit();
+      view.harness.detectChanges();
+      const request = await vi.waitFor(() =>
+        view.http.expectOne(
+          `/v1/inf/rait/cases/${CASE}/commands/${operation === 'admit' ? 'admit' : 'non-admission'}`,
+        ),
+      );
+      expect(request.request.headers.get('If-Match')).toBe('"1"');
+      expect(request.request.body).toEqual(
+        operation === 'admit'
+          ? {}
+          : {
+              reason: 'sem_assinatura',
+              legalBasis: 'Art. 4º III — fundamento do operador.',
+            },
+      );
+      const state = operation === 'admit' ? 'ADMITIDO' : 'NAO_CONHECIDO';
+      const data = view.transition(state, 2);
+      request.flush({ data, events: [] }, { headers: { ETag: '"2"' } });
+      await view.refreshed(2, before);
+      expect(TestBed.inject(CaseFacade).caso.value()?.state).toBe(state);
+      expect(TestBed.inject(CaseFacade).admissibilidade.items()).toHaveLength(
+        4,
+      );
+      expect(view.root.querySelector('[data-action="triage"]')).toBeNull();
+      view.http.expectNone((req) => req.method === 'POST');
     });
   }
 });

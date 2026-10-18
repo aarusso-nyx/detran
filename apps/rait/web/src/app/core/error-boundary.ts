@@ -7,6 +7,8 @@
 // resultado. `RaitCommandUnavailableError` (M8) é o erro dos comandos ainda não ligados ao
 // backend → `unavailable` + `rait.common.unavailable`.
 import { HttpErrorResponse } from '@angular/common/http';
+import { classifyStynxError } from '@stynx-nyx/angular';
+import { StynxSdkError } from '@stynx-nyx/sdk';
 import { isRaitErrorCode, messageKeyFor } from './error-codes';
 
 // Apresentação mínima do `ClassifiedError` (contrato §8), reexportada aqui por ser a única
@@ -158,6 +160,39 @@ function classifyHttp(response: HttpErrorResponse): ClassifiedError {
   };
 }
 
+/** The installed DI interceptor returns an SDK Error with a responseBody. */
+function classifySdk(error: unknown): ClassifiedError | null {
+  if (!(error instanceof StynxSdkError)) return null;
+  const recognized = classifyStynxError(error);
+  if (typeof recognized.status !== 'number') return null;
+  const status = recognized.status;
+  const body = isRecord(error['responseBody']) ? error['responseBody'] : {};
+  const context = isRecord(body['context'])
+    ? body['context']
+    : isRecord(error['context'])
+      ? error['context']
+      : {};
+  const code = recognized.code;
+  const kind = kindOf(status);
+  const requestId = body['requestId'];
+  const legalBasis = context['legalBasis'];
+  const fields = fieldsOf(context);
+  const retryAfter = context['retryAfter'];
+  return {
+    kind,
+    ...(code !== undefined ? { code } : {}),
+    messageKey: messageKeyOf(kind, status, code),
+    status,
+    ...(typeof requestId === 'string' ? { requestId } : {}),
+    ...(typeof legalBasis === 'string' ? { legalBasis } : {}),
+    ...(fields.length > 0 ? { fields } : {}),
+    ...(typeof retryAfter === 'number' || typeof retryAfter === 'string'
+      ? { retryAfter }
+      : {}),
+    context,
+  };
+}
+
 export function classifyError(error: unknown): ClassifiedError {
   if (error instanceof RaitCommandUnavailableError) {
     return {
@@ -170,5 +205,7 @@ export function classifyError(error: unknown): ClassifiedError {
   if (error instanceof HttpErrorResponse) {
     return classifyHttp(error);
   }
+  const sdk = classifySdk(error);
+  if (sdk) return sdk;
   return { kind: 'unknown', messageKey: UNKNOWN_ERROR_KEY, context: {} };
 }

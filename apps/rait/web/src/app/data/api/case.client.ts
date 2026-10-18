@@ -58,6 +58,23 @@ const DRAFTS_URL = '/v1/inf/rait/drafts';
 const DECISIONS_URL = '/v1/inf/rait/decisions';
 const COMMUNICATIONS_URL = '/v1/inf/rait/communications';
 const EVENTS_URL = '/v1/inf/rait/events';
+const COMMAND_VERSION_TAG = /^"[1-9][0-9]*"$/;
+const NUMERIC_HTTP_TAG = /^"[0-9]+"$/;
+
+function isCommandTag(tag: string): boolean {
+  if (!COMMAND_VERSION_TAG.test(tag)) return false;
+  const version = Number(tag.slice(1, -1));
+  return validVersion(version) && `"${version}"` === tag;
+}
+
+function validVersion(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
+}
+
+function commandTag(value: unknown): string {
+  if (!validVersion(value)) throw new Error('Invalid case version');
+  return `"${value}"`;
+}
 
 const CASE_SPEC: ListQuerySpec<RaitCase> = {
   q: ['protocol_number'],
@@ -112,9 +129,51 @@ const EVENT_SPEC: ListQuerySpec<RaitCaseEvent> = {
 export class CaseClient {
   private readonly http = inject(RaitHttp);
   private readonly etagStore = inject(EtagStore);
+  private readonly caseCommandTokens = new Map<string, string>();
 
   etagOf(collection: RaitCollection, id: string): string | null {
+    if (collection === 'cases') return this.caseCommandTokens.get(id) ?? null;
     return this.etagStore.get(collection, id);
+  }
+
+  private async caseCommand<T>(
+    url: string,
+    body: unknown,
+    caseId: string,
+    ifMatch: string | null,
+    key: string,
+  ): Promise<CommandResult<T>> {
+    if (ifMatch !== null && !isCommandTag(ifMatch)) {
+      throw new Error('Invalid case If-Match');
+    }
+    const result = await this.http.postCommand<T>(
+      url,
+      body,
+      caseId,
+      ifMatch,
+      key,
+    );
+    const tag = result.etag;
+    try {
+      if (tag === null || !isCommandTag(tag)) {
+        throw new Error('Invalid command ETag');
+      }
+      const received: unknown = result.body;
+      if (
+        typeof received === 'object' &&
+        received !== null &&
+        'version' in received
+      ) {
+        if (commandTag(received.version) !== tag) {
+          throw new Error('Command version and ETag disagree');
+        }
+      }
+    } catch (error) {
+      this.caseCommandTokens.delete(caseId);
+      throw error;
+    }
+    this.caseCommandTokens.set(caseId, tag);
+    return result;
   }
 
   // --- leituras (§3.3) -------------------------------------------------------------------
@@ -123,8 +182,20 @@ export class CaseClient {
     return this.http.getList(CASES_URL, query, CASE_SPEC);
   }
 
-  getRaitCase(id: string): Promise<RaitCase> {
-    return this.http.getOne(CASES_URL, 'cases', id);
+  async getRaitCase(id: string): Promise<RaitCase> {
+    try {
+      const body = await this.http.getOne<RaitCase>(CASES_URL, 'cases', id);
+      const tag = commandTag(body.version);
+      const raw = this.etagStore.get('cases', id);
+      if (raw !== null && NUMERIC_HTTP_TAG.test(raw) && raw !== tag) {
+        throw new Error('Case version and ETag disagree');
+      }
+      this.caseCommandTokens.set(id, tag);
+      return body;
+    } catch (error) {
+      this.caseCommandTokens.delete(id);
+      throw error;
+    }
   }
 
   /** Control read for case navigation; the normal path uses the authenticated RLS GET. */
@@ -240,7 +311,7 @@ export class CaseClient {
     body: TriageInput,
     ifMatch: string | null,
   ): Promise<CommandResult<RaitCase>> {
-    return this.http.postCommand(
+    return this.caseCommand(
       `${CASES_URL}/${encodeURIComponent(caseId)}/commands/triage`,
       body,
       caseId,
@@ -253,7 +324,7 @@ export class CaseClient {
     body: SaveAdmissibilityInput,
     ifMatch: string | null,
   ): Promise<CommandResult<RaitAdmissibility>> {
-    return this.http.postCommand(
+    return this.caseCommand(
       ADMISSIBILITY_URL,
       body,
       body.case_id,
@@ -272,7 +343,7 @@ export class CaseClient {
     body: AdmitInput,
     ifMatch: string | null,
   ): Promise<CommandResult<RaitCase>> {
-    return this.http.postCommand(
+    return this.caseCommand(
       `${CASES_URL}/${encodeURIComponent(caseId)}/commands/admit`,
       body,
       caseId,
@@ -287,7 +358,7 @@ export class CaseClient {
     body: RejectInput,
     ifMatch: string | null,
   ): Promise<CommandResult<RaitCase>> {
-    return this.http.postCommand(
+    return this.caseCommand(
       `${CASES_URL}/${encodeURIComponent(caseId)}/commands/non-admission`,
       body,
       caseId,

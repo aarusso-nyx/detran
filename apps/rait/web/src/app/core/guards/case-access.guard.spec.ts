@@ -140,7 +140,10 @@ describe('D23 production control read uses actual GET, ETag and failures', () =>
       );
       expect(req.request.method).toBe('GET');
       if (status === 200) {
-        req.flush(fixtureCase(CASE), { headers: { ETag: '"7"' } });
+        req.flush(
+          { ...fixtureCase(CASE), version: 7 },
+          { headers: { ETag: '"7"' } },
+        );
         expect(await outcome).toEqual({ ok: true });
         expect(client.etagOf('cases', CASE)).toBe('"7"');
       } else {

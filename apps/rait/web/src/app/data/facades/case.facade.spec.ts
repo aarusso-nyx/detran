@@ -71,7 +71,7 @@ describe('CaseFacade.loadCaseBundle (C-2B-22)', () => {
       expectGetOne(
         httpMock,
         `/v1/inf/rait/cases/${id}`,
-        fixtureCase(id),
+        { ...fixtureCase(id), version: 3 },
         etagFor(3),
       ),
     );
@@ -82,7 +82,7 @@ describe('CaseFacade.loadCaseBundle (C-2B-22)', () => {
     );
     await promise;
 
-    expect(facade.caso.value()).toEqual(fixtureCase(id));
+    expect(facade.caso.value()).toEqual({ ...fixtureCase(id), version: 3 });
     expect(facade.caso.status()).toBe('ready');
     // A10 item j: contrato §4.1 prevalece — lista [] (total 0) → status 'empty' (emptyWhen),
     // nunca 'ready'.

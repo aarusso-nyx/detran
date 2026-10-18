@@ -7,6 +7,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { CASE_IDS, fixtureCase } from '../../../testing/http-fixtures';
+import { EtagStore } from './etag-store';
 import { idempotencyKey } from '../idempotency-key';
 import {
   CaseClient,
@@ -116,7 +117,7 @@ describe('TASK25 generated four-operation client', () => {
               id: CASE,
               evaluated_by: '00000000-0000-4000-8000-0000b0000001',
             }
-          : fixtureCase(CASE);
+          : { ...fixtureCase(CASE), version: 5 };
       req.flush({ data, events: [] }, { headers: { ETag: '"5"' } });
       await expect(pending).resolves.toEqual({ body: data, etag: '"5"' });
       expect(client.etagOf('cases', CASE)).toBe('"5"');
@@ -214,4 +215,132 @@ describe('TASK25 generated four-operation client', () => {
     }
     expect(new Set(keys).size).toBe(3);
   });
+});
+
+// Browser RGR: real GET transport validators are not command version tokens.
+describe('browser RGR server version to command precondition', () => {
+  for (const op of OPS) {
+    for (const rawEtag of ['W/"transport-hash"', '"opaque-body-hash"']) {
+      it(`${op.name}: GET ${rawEtag} preserves raw cache header but posts the actual server version`, async () => {
+        const { client, http } = setup();
+        const read = client.getRaitCase(CASE);
+        const get = await vi.waitFor(() =>
+          http.expectOne(`/v1/inf/rait/cases/${CASE}`),
+        );
+        const caso = { ...fixtureCase(CASE), version: 4 };
+        get.flush(caso, { headers: { ETag: rawEtag } });
+        expect(await read).toEqual(caso);
+        expect(TestBed.inject(EtagStore).get('cases', CASE)).toBe(rawEtag);
+        expect(client.etagOf('cases', CASE)).toBe('"4"');
+        const pending = op.call(client, client.etagOf('cases', CASE));
+        const req = await vi.waitFor(() =>
+          http.expectOne(`/v1/inf/rait${op.path}`),
+        );
+        expect(req.request.headers.get('If-Match')).toBe('"4"');
+        expect(req.request.headers.get('Idempotency-Key')).toBe(
+          await idempotencyKey(op.act, op.target, {
+            body: op.body,
+            ifMatch: '"4"',
+          }),
+        );
+        expect(req.request.body).toEqual(op.body);
+        const data =
+          op.name === 'saveAdmissibility'
+            ? { ...SAVE, id: CASE }
+            : { ...caso, version: 5 };
+        req.flush({ data, events: [] }, { headers: { ETag: '"5"' } });
+        await expect(pending).resolves.toEqual({ body: data, etag: '"5"' });
+        expect(client.etagOf('cases', CASE)).toBe('"5"');
+      });
+    }
+  }
+  for (const version of [
+    undefined,
+    null,
+    '4',
+    0,
+    -1,
+    1.5,
+    Number.MAX_SAFE_INTEGER + 1,
+  ]) {
+    it(`invalid server version ${String(version)} clears a prior command token and fails locally before POST`, async () => {
+      const { client, http } = setup();
+      const first = client.getRaitCase(CASE);
+      const valid = await vi.waitFor(() =>
+        http.expectOne(`/v1/inf/rait/cases/${CASE}`),
+      );
+      valid.flush(
+        { ...fixtureCase(CASE), version: 4 },
+        { headers: { ETag: '"4"' } },
+      );
+      await first;
+      expect(client.etagOf('cases', CASE)).toBe('"4"');
+      const invalid = client.getRaitCase(CASE).then(
+        (value) => ({ value }),
+        (error) => ({ error }),
+      );
+      const get = await vi.waitFor(() =>
+        http.expectOne(`/v1/inf/rait/cases/${CASE}`),
+      );
+      get.flush(
+        { ...fixtureCase(CASE), version },
+        { headers: { ETag: 'W/"untrusted-validator"' } },
+      );
+      const outcome = await invalid;
+      expect(outcome).toHaveProperty('error');
+      if ('error' in outcome) {
+        expect(outcome.error).toBeInstanceOf(Error);
+        expect(outcome.error).not.toHaveProperty('status');
+        expect(outcome.error).not.toHaveProperty(
+          'code',
+          expect.stringMatching(/^RAIT\./),
+        );
+      }
+      expect(client.etagOf('cases', CASE)).toBeNull();
+      expect(TestBed.inject(EtagStore).get('cases', CASE)).toBe(
+        'W/"untrusted-validator"',
+      );
+      http.expectNone((req) => req.method === 'POST');
+    });
+  }
+  it('a numeric strong GET validator disagreeing with body.version is rejected rather than chosen blindly', async () => {
+    const { client, http } = setup();
+    const outcome = client.getRaitCase(CASE).then(
+      (value) => ({ value }),
+      (error) => ({ error }),
+    );
+    const get = await vi.waitFor(() =>
+      http.expectOne(`/v1/inf/rait/cases/${CASE}`),
+    );
+    get.flush(
+      { ...fixtureCase(CASE), version: 4 },
+      { headers: { ETag: '"8"' } },
+    );
+    expect(await outcome).toHaveProperty('error');
+    expect(client.etagOf('cases', CASE)).toBeNull();
+    expect(TestBed.inject(EtagStore).get('cases', CASE)).toBe('"8"');
+    http.expectNone((req) => req.method === 'POST');
+  });
+  for (const op of OPS) {
+    it(`${op.name}: explicit weak/opaque If-Match is a local error, never a POST`, async () => {
+      const { client, http } = setup();
+      for (const match of ['W/"transport"', '"opaque"']) {
+        let outcome: unknown;
+        let settled = false;
+        void op.call(client, match).then(
+          (value) => {
+            outcome = { value };
+            settled = true;
+          },
+          (error) => {
+            outcome = { error };
+            settled = true;
+          },
+        );
+        await vi.waitFor(() => expect(settled).toBe(true), { timeout: 250 });
+        expect(outcome).toHaveProperty('error');
+        http.expectNone((req) => req.method === 'POST');
+      }
+    });
+  }
 });

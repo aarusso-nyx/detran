@@ -353,7 +353,11 @@ export class TriagePageComponent {
       action: 'admit',
       confirmKey: CONFIRM_ADMIT_KEY,
       labelKey: CMD_ADMIT_KEY,
-      run: () => this.facade.admit(this.caseId, {}),
+      run: async () => {
+        const outcome = await this.facade.admit(this.caseId, {});
+        if (outcome.ok) this.reload();
+        return outcome;
+      },
     });
   }
 
@@ -371,7 +375,14 @@ export class TriagePageComponent {
       action: 'reject',
       confirmKey: CONFIRM_REJECT_KEY,
       labelKey: CMD_REJECT_KEY,
-      run: () => this.facade.reject(this.caseId, { reason, legalBasis }),
+      run: async () => {
+        const outcome = await this.facade.reject(this.caseId, {
+          reason,
+          legalBasis,
+        });
+        if (outcome.ok) this.reload();
+        return outcome;
+      },
     });
   }
 

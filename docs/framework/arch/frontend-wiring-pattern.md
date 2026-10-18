@@ -141,3 +141,27 @@ injeção desta lista — os 8 clientes (§1), `RaitSessionFacade`/`StynxSession
 comando, o adapter de prévia correspondente deixa de chamar `super` e lança
 `RaitCommandUnavailableError` com a mesma string (D-15 do contrato da prévia), para que a prévia
 continue "não funcional" e nunca alcance a rede.
+
+## Adenda R-0025 — versões CASE e interceptors instalados
+
+No recorte F01/R01/admit/reject, o GET CASE gerado pode trazer ETag de cache
+Express fraco/opaco que não é a pré-condição de comando. O contador version do
+corpo server é a fonte canônica da pré-condição quoted decimal, com validação de
+inteiro seguro positivo, sem cálculo/incremento/default local. Guardar esse token
+separadamente do header bruto; divergência de header forte numérico e body ou
+versão inválida falha fechada. ETag canônico da resposta de comando atualiza a
+pré-condição. Esta exceção delimitada corrige a suposição da tabela §2 sem alterar
+outros recursos/comandos. Detalhes: R-0025 contracts/JW01-admissibility.md/ADR-0041.
+
+O ErrorInterceptor STYNX instalado pode entregar erro SDK em vez de
+HttpErrorResponse. O boundary RAIT exige identidade pública `instanceof
+StynxSdkError` do SDK 1.5.3 declarado diretamente e usa o classificador Angular;
+preserva suas famílias/catálogo e valida contexto/requestId; não confia em textos
+ou messageKey do servidor nem em objeto arbitrário com status. Sensor deve usar
+a cadeia de interceptors real. Desabilitar o interceptor não é correção autorizada.
+
+Refinamento R-0025: o fallback Angular para status0 é estrutural, portanto não
+substitui o gate de identidade SDK. Não usar constructor.name/Error.name ou
+duck typing de status/code. Dependência direta do mesmo SDK1.5.3 já transitivo
+é wiring, sem upgrade; objetos genéricos0/412 seguem unknown, instância SDK real
+de rede segue offline, inclusive sem code.

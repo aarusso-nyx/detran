@@ -34,7 +34,9 @@ import {
   vi,
   type MockInstance,
 } from 'vitest';
-import { readAppCatalog } from '../../testing/kb';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { APP_SRC_ROOT, readAppCatalog } from '../../testing/kb';
 import { RaitCommandUnavailableError } from '../core/error-boundary';
 import { CaseClient } from '../data/api/case.client';
 import { CollectionClient } from '../data/api/collection.client';
@@ -608,6 +610,7 @@ function commandMethodsOf(type: AnyClass): readonly string[] {
     .filter((name) => !NON_COMMAND_MEMBERS.has(name))
     .filter((name) => !/^(list|get)[A-Z]/.test(name))
     .filter((name) => name !== 'verifyCaseAccess')
+    .filter((name) => !(type === CaseClient && name === 'caseCommand'))
     .sort();
 }
 
@@ -617,6 +620,15 @@ async function configureAdapters(): Promise<void> {
 }
 
 describe('C-03 — adapters estendem os clientes reais e sobrescrevem todo comando (M2)', () => {
+  it('CASE caseCommand is a private dispatch helper, not a new public M8 command', () => {
+    const source = readFileSync(
+      join(APP_SRC_ROOT, 'app', 'data', 'api', 'case.client.ts'),
+      'utf8',
+    );
+    expect(source).toMatch(/private\s+async\s+caseCommand</);
+    expect(commandMethodsOf(CaseClient)).not.toContain('caseCommand');
+    expect(RAIT_COMMANDS as readonly string[]).not.toContain('caseCommand');
+  });
   it('D23 verifyCaseAccess is one explicit overridden READ, never an M8 command', () => {
     expect(Object.hasOwn(CaseClient.prototype, 'verifyCaseAccess')).toBe(true);
     expect(Object.hasOwn(PreviewCaseClient.prototype, 'verifyCaseAccess')).toBe(

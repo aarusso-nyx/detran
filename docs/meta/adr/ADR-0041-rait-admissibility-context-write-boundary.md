@@ -89,3 +89,32 @@ audit details declaring permission-based authorization. DDL03/12 support nullabl
 actor_role. Missing role intersection never introduces a new denial. No
 hardcoded analyst fallback, new grant or policy bypass is introduced. Inspector
 proves retry/re-save/revert and audit attribution before Engineer correction.
+
+## Addendum — command version tokens and installed interceptor errors
+
+The generated case GET may expose an Express cache ETag unrelated to the domain
+version. The CASE blueprint and command service define the command precondition
+as the quoted persisted case version. For the four activated operations, separate
+that token from raw HTTP cache metadata. Validate the actual GET body version as
+a positive safe integer and serialize it without increment/default/coercion;
+matching strong numeric header is usable, weak/opaque cache headers are not.
+Contradictory numeric header/body or missing/invalid version fails closed and
+clears stale command preconditions. Successful command ETag is authoritative for
+the subsequent command attempt. No generator or backend GET change is needed.
+
+The installed Angular interceptor maps HTTP failures to SDK error instances.
+RAIT's boundary first verifies public StynxSdkError class identity from an
+explicit direct @stynx-nyx/sdk dependency at the already installed version1.5.3,
+then uses the public Angular classifier and the unchanged RAIT status/catalog
+mapping and safe context/requestId validation. Server text/translation keys and
+lookalike plain status objects are not trusted. Tests use the real interceptor,
+not only direct HttpErrorResponse mocks. This is a bounded integration correction,
+not new domain behavior, framework/version or global permission policy.
+
+The prior no-direct-SDK wiring preference is superseded: Angular's status0
+structural fallback cannot distinguish generic lookalikes from actual SDK
+network errors. Import the public StynxSdkError and use instanceof; never compare
+constructor.name or Error.name, which are not stable/minification-safe identity.
+Only the app package declaration and corresponding lock importer are added for
+the same SDK1.5.3 already transitive. Generic status0/412 objects remain unknown
+without context leakage; real SDK status0/codeundefined remains offline.

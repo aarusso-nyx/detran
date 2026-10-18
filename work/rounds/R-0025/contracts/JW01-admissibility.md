@@ -290,3 +290,106 @@ permission-only (inclusive roles vazias com actor_role NULL) não sofrem nova
 negação. Identity mismatch falha sem efeito.
 Client/facade/page e unit/integration/e2e são sensores separados; nenhum teste ou
 checker é afrouxado. Só depois de RED aceito Engineer muda os quatro caminhos.
+
+## Adenda RGR browser — token de versão do caso e erro SDK instalado
+
+### Token de comando versus cache HTTP
+
+O browser observou GET gerado com Express ETag fraco/opaco (`W/"..."`), corpo
+`version: 1` e o F01 retornou 412 ao reenviar o cache tag como If-Match. Fonte
+canônica: blueprint CASE descreve version como contador de ETag/If-Match; o
+serviço de comando compara If-Match com `"${current.version}"`. São semânticas
+diferentes do cache Express. Esta exceção CASE das quatro operações ativadas
+prevalece sobre a suposição do padrão v0 de um único ETag de GET.
+
+- `CaseClient.getRaitCase` preserva o GET/RLS/erro/cache-header reais e valida o
+  `version` do corpo efetivamente recebido: inteiro seguro estritamente positivo.
+  Derivar apenas sua representação quoted decimal (`"1"`, por exemplo), sem
+  incrementar, arredondar, converter string em número ou usar default/fixture.
+- Manter o token de pré-condição do caso separado do ETag HTTP bruto. Pode ser
+  cache privado tipado do CaseClient; `EtagStore` existente conserva o header
+  recebido para cache HTTP. `CaseClient.etagOf('cases',id)` usado pelas quatro
+  operações devolve o token de comando validado; outras coleções ficam intactas.
+- Header GET forte quoted decimal que coincide com o body.version pode ser
+  reutilizado; header fraco/opaco/ausente não é token de comando e não prevalece
+  sobre o contador server validado. Header forte numérico divergente do corpo é
+  inconsistência: limpar a pré-condição e falhar fechado, não escolher cegamente.
+- Versão ausente, string, zero, negativa, fracionária ou unsafe limpa qualquer
+  pré-condição anterior e rejeita a leitura/ação antes de POST. Usar falha local
+  tipada pelo caminho já existente de erro genérico; não fabricar status HTTP ou
+  novo código jurídico. Um If-Match explícito fraco/opaco tampouco é enviado como
+  precondição das quatro operações. Nenhuma versão é inventada pelo browser.
+- Depois de comando, ETag canônico da resposta atualiza o token de comando e
+  `CommandResult.etag`; não incrementar localmente. Caso haja body.version,
+  conferir coerência. R01 retorna avaliação sem version de caso, então a fonte é
+  o ETag da resposta do comando. Retry exato preserva a versão original observada,
+  conforme adenda idempotente; novo save usa o novo token recebido/validado.
+- Não mudar gerador, GET backend ou semântica dos demais comandos. Sensores
+  precisam unir GET com ETag realista fraco + corpo version → F01/save HTTP real,
+  pois mocks com header de comando artificial escondiam o defeito.
+
+### Classificação do erro STYNX 1.5.3
+
+Fonte instalada: `@stynx-nyx/angular` ErrorInterceptor chama
+`createStynxSdkError(error.status,error.error)` e rejeita com o erro SDK. O
+`classifyStynxError` público desse pacote reconhece a instância SDK real e expõe
+status/code; não reconhece objeto arbitrário `{status:412}` como conflito.
+
+- Boundary RAIT mantém suporte a HttpErrorResponse e RaitCommandUnavailableError.
+  Para o erro SDK real, exigir primeiro `instanceof StynxSdkError`, importado
+  da API pública de `@stynx-nyx/sdk` 1.5.3 como dependência direta explícita do app;
+  depois usar o classificador público Angular e o mapeamento RAIT. Não importar internals.
+- Após status/code reconhecidos, reutilizar o mapeamento RAIT do catálogo: 409,
+  412 e 428 são conflict; 0 offline; 403 forbidden; demais famílias existentes
+  preservadas. A chave i18n continua derivada do catálogo RAIT, nunca de message
+  ou messageKey enviados pelo servidor ou do fallback ui.* do SDK.
+- Context só é aceito como record seguro; fields, legalBasis e retryAfter usam
+  os validadores existentes. requestId só string do responseBody canônico ou
+  fonte SDK validada. Não atribuir status/code/context a Error genérico ou objeto
+  parecido não reconhecido; desconhecido continua unknown. SDK não carrega header
+  Retry-After original: não inventar esse header; aproveitar contexto se existir.
+- Não desligar ErrorInterceptor para deixar o mock passar. Inspector deve usar
+  o ErrorInterceptor real com withInterceptorsFromDi e HttpTestingController,
+  inclusive 412 com RAIT.VERSION_CONFLICT e body/context/requestId; preservar
+  sentinela plain-object status412→unknown e payload/messageKey hostil.
+
+### Locks adicionais do delta browser
+
+Inspector: ampliar `core/error-boundary.spec.ts`, ou novo
+`core/error-boundary-interceptors.spec.ts`, e testes HTTP de case/RaitHttp/facade
+para GET→comando com as versões válidas/inválidas e classificações reais. Provas
+numéricas pré-existentes permanecem, substituindo só suposições conflitantes
+explicitamente referenciadas por esta adenda, sem perda de asserções.
+Engineer: `core/error-boundary.ts`, `apps/rait/web/package.json` e o importer
+correspondente de `pnpm-lock.yaml` entram no lock (SDK exato 1.5.3 já transitivo),
+além de CaseClient/transport/cache
+já previstos. Preferir cache privado CaseClient para não ampliar EtagStore; se
+separação exigir EtagStore, seu lock limita-se a armazenar as duas origens sem
+misturá-las. Nenhum schema/runtime backend, framework ou versão/pin novo é necessário;
+a declaração direta do mesmo SDK instalado é wiring, sem upgrade.
+Inspector RED primeiro; Engineer após aceitação; browser compilado deve repetir
+GET/F01/checklist/decisão e conflito traduzido. Review de delta limitado a estas
+novas observações; review PASS anterior continua histórico do seu candidato.
+
+### Refinamento de identidade SDK — substitui a proibição de dependência direta
+
+A API Angular instalada possui fallback estrutural para status 0: um objeto ou
+Error genérico pode receber essa classificação sem ser instância SDK. Portanto
+ela sozinha não é porta suficiente para validar contexto/responseBody do SDK.
+A escolha anterior “sem SDK direto” fica substituída por dependência direta
+`@stynx-nyx/sdk` exatamente 1.5.3, já instalada transitivamente na mesma versão.
+
+Boundary deve usar a identidade pública `error instanceof StynxSdkError` antes
+de acessar contexto/responseBody como SDK ou usar o classificador para essa via.
+O caminho `HttpErrorResponse` existente permanece independente. Não reconhecer
+por constructor.name, Error.name, prefixo de nome, campos status/code parecidos
+ou qualquer propriedade controlável do payload. Identidade de classe permanece
+a fonte mesmo após minificação; nomes de símbolos não são contrato de runtime.
+Erro genérico ou objeto com status0/412 e contexto fingido continua unknown e não
+vaza contexto/requestId. Erro SDK real de rede, inclusive code undefined/status0,
+continua offline; SDK real412 continua conflict com validação segura do envelope.
+
+Inspector mantém RED real do interceptor e negativos genéricos status0/412,
+não reclassifica o falso objeto para fazer o teste passar. Engineer frontend
+importa o export público e declara a dependência; maestro/Engineer atualiza só
+o importer necessário do lock, sem novo pacote/versão transitiva, pin ou framework.
