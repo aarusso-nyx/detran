@@ -83,6 +83,10 @@ restriction is supported by the preview interceptor, HTTP mock/unit specs with
 outside same-origin documents, bundles and `assets/**`; this follow-up is not a
 condition for opening this PR (delivery-review low finding 2).
 
-PR, remote CI and ZIP upload remain pending. Merge, governed round evidence
+PR [#191](https://github.com/aarusso-nyx/detran/pull/191) is open (initial published head `bb6c4458`).
+Remote CI was pending at PR creation; follow the live [PR checks](https://github.com/aarusso-nyx/detran/pull/191/checks).
+No remote PASS is claimed here. ZIP upload remains pending on browser authentication.
+Build source `3eeb95ca` and review HEAD `40741b11` identify their observed trees;
+subsequent commits change metadata only. Merge, governed round evidence
 recording, exact-merge audit, round close and round seal remain post-integration
 steps requiring their own authority; C-10 remains partial and no round closure is claimed.

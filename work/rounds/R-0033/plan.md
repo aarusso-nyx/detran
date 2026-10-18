@@ -147,7 +147,11 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   de autenticação nulo e override de `uploadToSignedUrl`. Follow-up de sensor:
   ampliar observação browser para toda requisição fora dos documentos/bundles
   e `assets/**` da própria origem; não bloqueia PR nesta revisão.
-- **Entrega pendente:** abertura do PR e CI remoto. O upload do ZIP
+- **PR aberto:** [#191](https://github.com/aarusso-nyx/detran/pull/191), publicação inicial `bb6c4458`.
+  CI remoto pendente na criação; acompanhar [checks do PR](https://github.com/aarusso-nyx/detran/pull/191/checks).
+  Este registro não afirma CI verde, merge ou rodada fechada. Build runtime
+  `3eeb95ca` e review `40741b11` permanecem válidos para suas fontes observadas;
+  os commits posteriores alteram apenas metadados. O upload do ZIP
   aguarda autenticação GitHub no browser solicitada ao Owner; ainda sem resposta.
   Artefato local verificado não equivale a anexo publicado. Merge, evidência
   pós-integração, close e seal permanecem pendentes, sem declarar toda C-10.

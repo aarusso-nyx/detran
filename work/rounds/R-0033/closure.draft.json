@@ -67,7 +67,7 @@
     },
     "remote-ci": {
       "status": "skipped",
-      "detail": "NOT RUN: PR autorizado por AUTHORIZATION.md B3 (2026-10-18), ainda em preparação; CI remoto aguarda publicação."
+      "detail": "PR #191 aberto: https://github.com/aarusso-nyx/detran/pull/191; publicação inicial bb6c4458. CI pendente na criação; estado vivo em https://github.com/aarusso-nyx/detran/pull/191/checks. Nenhum PASS remoto afirmado."
     },
     "evidence-chain": {
       "status": "skipped",
@@ -91,7 +91,7 @@
     {
       "criterion": "C-01: `pnpm --filter @detran/<s> build --configuration preview` gera `dist/preview/` e `ng serve --configuration preview` sobe sem backend; `pnpm --filter @detran/<s> build` (production) continua verde e **sem** `DETRAN_PREVIEW_MARK` no `dist/browser`",
       "verdict": "pass",
-      "evidence": "W3 builds production/development/preview e smokes HTTP 200 PASS nos dois apps, marcas positiva/negativas conferidas. Reconstrução final source 3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989 PASS, manifests48/32 e ZIP verificados em reports/W3-artifacts.json; smokes finais limparam processos. Upload pendente de autenticação browser; review/PR ainda pendentes."
+      "evidence": "W3 builds production/development/preview e smokes HTTP 200 PASS nos dois apps, marcas positiva/negativas conferidas. Reconstrução final source 3eeb95ca9989a7d2a86b9319fd3a1c8f59d89989 PASS, manifests48/32 e ZIP verificados em reports/W3-artifacts.json; smokes finais limparam processos. Upload pendente de autenticação browser; review Claude PASS, PR #191 aberto; CI pendente na criação."
     },
     {
       "criterion": "C-02: Spec de cobertura: toda entrada `page` do manifesto renderiza sob `preview` com interceptor de rede bloqueando `/v1` (0 requisições) e sem erro no console",
@@ -136,12 +136,12 @@
     {
       "criterion": "C-10: Delivery-review PASS (Opus 5.5); evidência `evidence-R-0033.json`; `round close` + `round seal`",
       "verdict": "fail",
-      "evidence": "PARCIAL: delivery-review Claude opus ciclo1 PASS sobre40741b11, reviews/delivery-review-W3-1.json e .bridge.json; dois low documentais tratados. PR, CI remoto, upload (autenticação browser), merge, evidência pós-integração, auditoria exata, close/seal pendentes. B3 não concede efeitos de integração/fechamento; C10 não integralmente satisfeita."
+      "evidence": "PARCIAL: delivery-review Claude opus ciclo 1 PASS sobre 40741b11, reviews/delivery-review-W3-1.json e .bridge.json; dois low documentais tratados. PR #191 aberto: https://github.com/aarusso-nyx/detran/pull/191. CI pendente na criação; acompanhar /pull/191/checks. Upload aguarda autenticação browser; merge, evidência pós-integração, auditoria exata, close/seal pendentes. B3 não concede integração/fechamento; C10 não integralmente satisfeita."
     }
   ],
   "closed_at": null,
   "merged_as": null,
-  "pending_reason": "Gates locais, artefatos/browser e review Claude PASS. PR, CI remoto e upload do ZIP (autenticação GitHub browser pendente) ainda pendentes. Runtime source3eeb95ca; recibos posteriores apenas metadados. Merge/close/seal não autorizados; id/closed_at/merged_as null.",
+  "pending_reason": "PR #191 aberto; CI pendente na criação, acompanhar https://github.com/aarusso-nyx/detran/pull/191/checks. Upload ZIP aguarda autenticação GitHub browser. Gates locais/build source3eeb95ca e review40741b11 PASS são observações históricas dessas fontes; commits posteriores apenas metadados. Merge/close/seal não autorizados; id/closed_at/merged_as null.",
   "release_disposition": "none-needed",
   "notes": "D-1: autorização de 2026-10-15, B1/B2 e continuação B3 de 2026-10-18. Maestro W3 Codex; reviewer Claude via alias opus planejado. Configurações históricas de executores e PC preservadas. Inventário RAIT refrescado A4/A5. Resultados iniciais não provam SHA final. Sem release/deploy; dashboard/TEAT preview não entregues.",
   "historical_w1_w2": {
@@ -231,5 +231,12 @@
     "pending_reason": "aguarda merge do PR (sequência final OD-C2-005: merge de origin/main, pnpm check, delivery-review única, PR com autorização do Owner, CI remoto, evidência, audit observe, round close/seal); SHAs curtos de commits.md — o maestro preenche os SHAs completos.",
     "notes": "D-1 = autorização do Owner de 2026-10-15 (AUTHORIZATION.md, lida como R-0033) e Adendas B1/B2; D-2 = decisão de fechamento, a vincular no close. CTG-0002 sem tarefa própria (A1 item 1). Desvio de família registrado em AUTHORIZATION.md §Desvios (maestro Fable 5.1, workers Claude, reviewer Codex Sol 6). Inventário inventory-rait-web.md §2/§3/§5.1 pré-A4 até o refresco da janela 3.",
     "note": "Snapshot fiel do rascunho original aca40880, restaurado e comparado por igualdade profunda em 2026-10-18; não descreve a continuação W3."
+  },
+  "pull_request": {
+    "number": 191,
+    "url": "https://github.com/aarusso-nyx/detran/pull/191",
+    "checks_url": "https://github.com/aarusso-nyx/detran/pull/191/checks",
+    "published_head_at_creation": "bb6c4458",
+    "ci_at_creation": "pending"
   }
 }
