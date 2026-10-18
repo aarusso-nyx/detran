@@ -10,8 +10,11 @@
 
 **Autoridade:** Architect (Constitution Article 6). Revisão 1 de 2026-10-14, redigida a partir da
 diretiva do Owner que **parou** a R-0022 `stynx-sse-tenancy` (C-0002, ação 7c) na mesma data.
-**Status:** **proposta — decisões OD-C3-001…006 tomadas; aguardando autorização do Owner para
-abrir R-0033.** Nenhuma rodada desta campanha foi aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo
+**Status atual:** em execução; R-0033 integrada e encerrada, R-0025 retomada
+no recorte A-C3-01.
+
+**Status histórico da revisão 1:** proposta com decisões OD-C3-001…006 tomadas,
+aguardando autorização para abrir R-0033; naquele momento nenhuma rodada estava aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo
 `prompts/00-maestro.md`. A diretiva está registrada como OD-C3-001; as decisões OD-C3-002…006
 (§10) foram **decididas pelo Owner em 2026-10-14**, todas pela recomendação (a) do Architect.
 **Governança:** DEVAI 1.5.6, Constituição 1.0.0 (`.devai/pin/constitution.md`), ADR-0022

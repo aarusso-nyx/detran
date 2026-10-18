@@ -6,8 +6,12 @@
 > não anulam a execução/autorização registrada no branch nem provam integração.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status:** pré-trabalho da Sessão A autorizado pela A-C2-15; somente
-TASK-0001/0002/0003/0006 liberadas. A rodada integral aguarda os upstreams.
+**Status atual:** retomada A-C3-01 ativa no recorte de admissibilidade aprovado
+pelo Owner; TASK-0024…0027 em execução/verificação. A rodada integral continua
+aberta. A adenda A-C3-01 abaixo prevalece sobre a sequência histórica.
+
+**Estado histórico da Sessão A:** A-C2-15 liberava somente
+TASK-0001/0002/0003/0006 e aguardava os upstreams.
 Planejada em 2026-09-26
 pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Sol 6** (Codex CLI),
 workers da escada Codex (Sol 6 / Terra / Luna, `model-ladder.md` após R-0018), reviewer **Opus 5.5**
@@ -88,12 +92,14 @@ Owner; merge/close/seal não autorizados. Fonte literal e escolha do recorte em
 ### Bootstrap da continuação — recibo de revisão
 
 Prompt-review A-C3-01 ciclo1 REVIEW (três high e dois low) → ciclo2 **PASS,
-zero achados** (`reviews/prompt-review-A-C3-01-2.json`). TASK-0024 in_progress: fontes
+zero achados** (`reviews/prompt-review-A-C3-01-2.json`). TASK-0024 completed: fontes
 blueprint CASE v1.1.8 e quatro operações OpenAPI tipadas; maestro fará geração
 e gates. Controller `RaitAdmissibilityCommandsController` em
 `handwritten/rait-admissibility-commands.controller` e provider
 `RaitAdmissibilityCommandService` em `handwritten/rait-admissibility-command.service`,
-exportados pelo blueprint. Nenhuma implementação ou PASS de runtime antecipado.
+exportados pelo blueprint. Fontes/gerados no commit `005780e3`; geração e blueprints:check PASS conforme
+`reports/TASK-0024.md`. Aceitação HTTP e do recorte continua independente; nenhum
+PASS de runtime final antecipado.
 
 **Esclarecimento F3 pós-review (sem mudar prompts):** TASK-0025 inclui
 `apps/rait/web/src/app/forms/gates-matrix.spec.ts` e
@@ -102,6 +108,64 @@ exportados pelo blueprint. Nenhuma implementação ou PASS de runtime antecipado
 `rait-admissibility:create` → `inf:rait-admissibility:create`, ajustar contagem
 64→65 sem filtros. As contagens de 64 páginas permanecem inalteradas. Recibo em
 `reports/TASK-0024.md`; execução após checkpoint de geração.
+
+### RGR de prévia — porta de controle D-23
+
+Adenda ao contrato JW01-admissibility, ADR-0041 e frontend-preview-mode D-23:
+`verifyCaseAccess(caseId): Promise<void>` é leitura de controle, default GET real
+com ETag/RLS, override preview de existência na fixture independente do cenário
+visual. ID desconhecido continua negado; auth/role/guarda reais preservados.
+Páginas continuam todos os cinco estados; M8 permanece 65, não há 66º comando.
+Inspector cria os sensores antes do Engineer; não contornar guarda ou enfraquecer
+20 falhas de coverage/a11y decorrentes da colisão entre controle e apresentação.
+Os resultados finais após correção ainda precisam ser observados.
+
+### Delivery-review ciclo1 — correções delimitadas
+
+Veredito material **REVIEW**, não PASS; wrapper Markdown impediu parsing normal
+da ponte e o maestro preserva a resposta/recibo recuperados. High: replay de saves
+ignorava versão observada; correção de contrato/ADR inclui If-Match na chave dos
+quatro comandos ativados e If-Match+actor no fingerprint servidor. Retry exato
+continua estável; nova versão não pode reproduzir resposta antiga. Low: auditoria
+triage/save passa a atribuir o papel autenticado canônico (secretary inclusive),
+com identidade/tenant conferidos no padrão protocol existente. Grants atuais
+por permissions e GLOBAL_ADMIN_ROLES são preservados; audit pode registrar role
+real ou NULL com origem permission explícita, sem novo bloqueio por falta de
+interseção de papéis. Contrato detalha
+assinaturas internas; bodies HTTP e os outros comandos ficam intactos. Inspector
+primeiro testa resave/reversão/replay e secretaria; Engineer só após RED aceito.
+
+**Esclarecimentos F3 autorizados nesta execução:** policy.fixture.ts acrescenta
+somente a chave create canônica a analyst/secretary; guards.spec.ts substitui
+a sentinela true/todo por GET pendente e negativas reais; triage.page.spec.ts
+prova três critérios humanos e reason/grounds; gates-matrix/preview-permissions
+preservam mapa integral e a paridade dos13papéis; preview-not-functional mantém
+65 comandos/zeroHTTP no caso canônico e preview-fixture-source prova D23 como
+READ, conhecidos/desconhecidos nos5estados e papéis negados. Prompts congelados
+são preservados; estes ajustes de sensores referenciam os contratos correspondentes.
+
+### RGR do browser compilado — integração de versão/erro
+
+Observação real de GET CASE: corpo version1, cache ETag Express fraco/opaco;
+F01 reenviou header inadequado e recebeu412. Além disso, ErrorInterceptor STYNX
+transforma HttpErrorResponse em erro SDK, que boundary anterior tratava unknown.
+Adenda ao contrato/ADR0041/padrão v0 fixa token de comando separado, derivado
+somente do contador version server validado, e reconhecimento do erro SDK via
+classificador público Angular, com catálogo RAIT/shape estritos. Sem gerador,
+backendGET ou regra de negócio nova; a dependência SDK direta foi refinada abaixo. Inspector RED primeiro e
+Engineer depois; novo browser/review de delta deve comprovar ambas as correções.
+Não reutilizar PASS de mocks ou do review anterior como prova deste delta.
+
+### Refinamento browser — identidade SDK pública
+
+A opção inicial sem dependência direta SDK foi superada: o classificador Angular
+possui fallback estrutural status0, insuficiente para distinguir erro genérico.
+A correção usa `instanceof StynxSdkError` público, SDK1.5.3 direto no app (mesma
+versão já transitiva), depois classificação/catalogação RAIT. Proibido comparar
+constructor.name/Error.name ou aceitar contexto por forma de objeto. Lock F2
+acrescenta package.json do rait-web e somente seu importer do pnpm-lock, sem
+upgrade/framework/pin. Inspector preserva negativos genéricos0/412 e interceptor
+real; Engineer implementa após RED aceito. Não é nova decisão de produto.
 
 ## Execução OD-C2-005 (Owner, 2026-09-27)
 

@@ -1,0 +1,333 @@
+
+> detran@0.0.1 check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build
+
+
+> detran@0.0.1 format:check /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> detran@0.0.1 verify:archival-pc-guard /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node tools/devai/verify-archival-pc-guard.mjs --repo-root .
+
+verify-archival-pc-guard: OK (applied)
+
+> detran@0.0.1 verify:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> tsx tools/check-stynx-pin.ts
+
+All STYNX dependencies match 1.5.3.
+
+> detran@0.0.1 test:stynx-pin /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stynx-pin/tests/*.test.mjs
+
+✔ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (91.730708ms)
+✔ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (74.701667ms)
+✔ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (71.053209ms)
+✔ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (73.597542ms)
+✔ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (74.977958ms)
+✔ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (456.25225ms)
+✔ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (136.116417ms)
+✔ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (70.7605ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1112.156792
+
+> detran@0.0.1 test:stack /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran
+> node --test tools/stack/*.test.mjs
+
+✔ dado o package.json adotado quando a superfície stack é enumerada então as nove entradas originais permanecem verbatim (1.004041ms)
+✖ dado help quando o comando é solicitado então termina com sucesso (17.609959ms)
+✔ dado um comando desconhecido quando a stack é invocada então termina com erro (15.468458ms)
+✔ dado stop quando recebe uma opção então recusa a opção (14.891584ms)
+✔ dado status quando recebe uma opção então recusa a opção (14.033833ms)
+✔ dado build quando recebe uma opção então recusa a opção (15.22625ms)
+✔ dado db-init quando recebe uma opção então recusa a opção (15.360084ms)
+✔ dado db-reset quando recebe uma opção então recusa a opção (13.85075ms)
+✖ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (14.283583ms)
+✖ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (13.4475ms)
+✔ dado o proxy versionado quando ele é lido então v1 aponta para o backend loopback (0.1565ms)
+✔ dado os quatro manifests Angular quando a superfície é lida então portas e projetos são os adotados (1.124958ms)
+✖ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (238.649041ms)
+✔ C-02-05 A6 dado outro banco quando a fixture Portal e invocada entao recusa antes de SQL (7.615709ms)
+✔ C-02-05 A6 dado o banco descartável quando a fixture Portal e invocada então envia SQL ao container e ID concretos (157.611167ms)
+✔ C-02-02 dado o mock SEFAZ quando a interface é inspecionada então exporta factory e CLI fixa loopback:3999 (53.471833ms)
+✔ C-02-02 dado o adapter SEFAZ quando o mock recebe as seis operações então o sensor usa tsx e o adapter real (139.144916ms)
+✔ C-02-05/06 dado targets estruturados quando smoke é executado então percorre root, proxy, health, PEC e CH off sem vazar segredo (56.797667ms)
+✔ C-02-05 A6 dado ID Portal ausente quando o proxy responde entao smoke falha (56.11125ms)
+✔ C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executado então registra target, resultado e motivo específicos (324.063ms)
+✔ C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter (114.051666ms)
+✔ C-02-05 dado item de array com tenant divergente quando o proxy responde então smoke registra tenant_mismatch (111.60025ms)
+✔ C-02-05/06 dado as fases CLI quando smoke reinicia o backend então prepara Portal após preflight, restaura os cinco papéis e não herda overrides locais (825.747333ms)
+✔ C-02-02 dado o comando literal do adapter SEFAZ quando executado então confirma operações e erros observáveis (285.607792ms)
+✔ C-02-05/06 dado o preflight falho quando a CLI smoke é iniciada então não chama bash e preserva seu relatório separado (41.278667ms)
+✔ C-02-05 dado PEC construído e entrypoint em caminho com espaços e symlink quando a CLI smoke roda então mede a porta 4204 (325.679292ms)
+✔ C-01-05 dado o banco próprio quando apply full não recebe autorização então recusa antes de conectar (12.230042ms)
+✔ C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed (506.786209ms)
+✔ C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais (0.243625ms)
+✖ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (13.725834ms)
+✖ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (14.166917ms)
+✖ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (14.180583ms)
+✔ C-01-07 dado DETRAN_DB_IMAGE quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (15.200666ms)
+✔ C-01-07 dado DB_HOST quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.832083ms)
+✔ C-01-07 dado DB_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.174792ms)
+✔ C-01-07 dado DB_USER quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.579959ms)
+✔ C-01-07 dado DETRAN_BACKEND_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (13.560125ms)
+✔ C-01-07 dado DETRAN_RUNTIME_PROFILE inválida quando config é solicitado então recusa sem alcançar runtime (16.783125ms)
+✔ C-01-07 dado SENATRAN_PROVIDER inválida quando config é solicitado então recusa sem alcançar runtime (13.508458ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (14.014667ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (13.221167ms)
+✖ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (14.664833ms)
+✔ C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra (1414.698ms)
+✔ C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz (532.740625ms)
+✔ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (183.446375ms)
+✔ C-01-10 dado Docker Compose 2.24.3 quando start prepara o mock então valida a versão antes de up (266.385625ms)
+✔ C-01-10 dado Docker Compose 2.24.4 quando start prepara o mock então valida a versão antes de up (1563.766916ms)
+✔ C-01-07 dado start --no-mock quando falha de forma controlada então config persiste mock desabilitado e stop limpa o modo (1400.305042ms)
+✔ C-01-07 dado start --no-mock quando health é chamado depois então não sonda o mock desabilitado (2260.013959ms)
+✔ C-01-07 dado variáveis sensíveis quando backend inicia então elas não atravessam o ambiente explicitamente permitido (1157.818208ms)
+✔ C-01-11 dado start quando a saúde do backend expira então informa timeout e não deixa PID ou processo local (1183.841125ms)
+✔ C-01-11 dado start quando somente a saúde do mock expira então pede os logs Compose do serviço app (853.577667ms)
+✔ C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos (1166.667208ms)
+✖ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (14.434791ms)
+✖ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (14.12325ms)
+✔ C-01-12 dado os papéis locais padrão quando a stack os declara então pertencem ao catálogo composto (0.763291ms)
+✔ C-01-13 dado db-reset quando o volume é gerenciado então preserva volumes e usa somente a autorização própria (0.115791ms)
+✔ C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada (0.028334ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 48
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12778.291083
+
+✖ failing tests:
+
+test at tools/stack/characterization.test.mjs:101:1
+✖ dado help quando o comando é solicitado então termina com sucesso (17.609959ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/characterization.test.mjs:103:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/characterization.test.mjs:118:1
+✖ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (14.283583ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /^docker /m. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/characterization.test.mjs:127:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /^docker /m,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tools/stack/characterization.test.mjs:135:1
+✖ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (13.4475ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /restricted/. Input:
+  
+  'detran-stack: DB_HOST is not a valid stack override\n'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/characterization.test.mjs:138:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'detran-stack: DB_HOST is not a valid stack override\n',
+    expected: /restricted/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tools/stack/characterization.test.mjs:171:1
+✖ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (238.649041ms)
+  AssertionError [ERR_ASSERTION]: detran_r7_ctg1_a2: 
+  
+  97 !== 2
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/characterization.test.mjs:204:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 97,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:273:1
+✖ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (13.725834ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at readConfig (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:215:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:274:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:333:1
+✖ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (14.166917ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at readConfig (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:215:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:334:31)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:339:1
+✖ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (14.180583ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at readConfig (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:215:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:340:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:423:1
+✖ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (14.664833ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:427:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:731:1
+✖ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (14.434791ms)
+  AssertionError [ERR_ASSERTION]: detran-stack: DB_HOST is not a valid stack override
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:740:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/stack/revision.test.mjs:758:1
+✖ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (14.12325ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /backend/i. Input:
+  
+  'detran-stack: DB_HOST is not a valid stack override\n'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/tools/stack/revision.test.mjs:768:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'detran-stack: DB_HOST is not a valid stack override\n',
+    expected: /backend/i,
+    operator: 'match',
+    diff: 'simple'
+  }
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.
