@@ -2,7 +2,7 @@
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const root = process.cwd();
@@ -50,6 +50,8 @@ function parse(stdout) {
 
 async function capture(label, argv, timeoutMs = 900_000) {
   if (!/^[a-zA-Z0-9_-]+$/.test(label)) throw new Error('Invalid capture label');
+  if (existsSync(join(audit, `${label}.json`)))
+    throw new Error(`Capture already exists: ${label}; choose a new label`);
   const started = new Date().toISOString();
   console.log(`START ${label}`);
   const result = await new Promise((done) => {
@@ -109,7 +111,7 @@ if (mode === 'capture') {
     ...source.inputs.harness_green_main,
   };
   await capture(
-    'sweep-first',
+    process.argv[3] ?? 'sweep-first',
     cli(
       'sense',
       'run',
@@ -121,8 +123,6 @@ if (mode === 'capture') {
       '.',
       '--input',
       JSON.stringify(common),
-      '--as-role',
-      'auditor',
       '--format',
       'json',
     ),
@@ -142,7 +142,7 @@ if (mode === 'capture') {
     inputs.databaseUrl = process.env.DETRAN_SCORECARD_DATABASE_URL;
   }
   await capture(
-    `sensor-${kind}`,
+    process.argv[5] ?? `sensor-${kind}`,
     cli(
       'sense',
       'run',
@@ -206,8 +206,6 @@ if (mode === 'capture') {
       'second',
       '--repo-root',
       '.',
-      '--as-role',
-      'auditor',
       '--format',
       'json',
     ),
