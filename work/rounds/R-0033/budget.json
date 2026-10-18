@@ -6,7 +6,7 @@
   "window_hours": 5,
   "max_review_cycles_per_item": 2,
   "window_started_at": "2026-10-15T06:30:00Z",
-  "note": "Convenção model-ladder: tokens únicos estimados (≈ ¼ dos brutos com cache); brutos na nota quando medidos. Janela 1 = Claude Code Fable 5.1 (maestro) + workers Claude (Opus 5.5 / Sonnet 5); reviewer Codex Sol 6 contado à parte por família. Meta da janela: bootstrap + prompt-review + O1/O2 + TASK-0003 (M1); checkpoint a 80 %. Janela 2 (aberta 2026-10-15T15:30Z, maestro Fable 5.1): merge de origin/main (#182, #184), TASK-0003 (M1) → TASK-0004 → TASK-0006 (M2) → O4a/O4b se o orçamento permitir; checkpoint a 80 % (560 000 únicos da família Claude na janela).",
+  "note": "Convenção model-ladder: tokens únicos estimados (≈ ¼ dos brutos com cache); brutos na nota quando medidos. Janela 1 = Claude Code Fable 5.1 (maestro) + workers Claude (Opus 5.5 / Sonnet 5); reviewer Codex Sol 6 contado à parte por família. Meta da janela: bootstrap + prompt-review + O1/O2 + TASK-0003 (M1); checkpoint a 80 %. Janela 2 (aberta 2026-10-15T15:30Z, maestro Fable 5.1): merge de origin/main (#182, #184), TASK-0003 (M1) → TASK-0004 → TASK-0006 (M2) → O4a/O4b se o orçamento permitir; checkpoint a 80 % (560 000 únicos da família Claude na janela). W3 (2026-10-18): continuação Codex/Sol e review Claude; valores abaixo são estimativas de planejamento, não consumo medido; histórico W1/W2 preservado.",
   "entries": [
     {
       "id": "maestro-bootstrap",
@@ -259,6 +259,15 @@
       "input_estimate": 8000,
       "output_estimate": 4000,
       "note": "Gate 5/5, OD-C3-009 registrada, merge de origin/main (#181), §Concorrência, commit, nota de handover, relatório final."
+    },
+    {
+      "id": "w3-continuation-planning",
+      "window": "W3",
+      "role": "architect",
+      "model": "codex-sol-family",
+      "input_estimate": 400000,
+      "output_estimate": 30000,
+      "note": "ESTIMATIVA DE PLANEJAMENTO da família Codex para a continuação inteira, não consumo nem resultado executado; não somar como medição. Review Claude estimado separadamente em windows.W3. Modelo exato não afirmado sem recibo."
     }
   ],
   "window_totals": {
@@ -285,6 +294,14 @@
       "claude_share_of_limit": 0.781,
       "checkpoint_reason": "M2 atingido; TASK-0008 concluída; TASK-0009 + TASK-0007 cruzariam 80 % — janela 3: O4b portal-web + sequência final",
       "closed_at": "2026-10-15T19:30:00Z"
+    },
+    "W3": {
+      "date": "2026-10-18",
+      "status": "active",
+      "estimate_kind": "planning_only_not_measured",
+      "planned_codex_unique_input_estimate": 400000,
+      "planned_claude_unique_input_estimate": 70000,
+      "note": "Estimativa inicial: reconciliação/documentação, Inspector Portal, Engineer Portal, gates e preparo do PR; review Claude planejado. Consumo real e duração ainda não medidos. Não autoriza ampliar escopo ou exceder o limite herdado."
     }
   }
 }

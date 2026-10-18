@@ -54,6 +54,30 @@ continuam abertos. O artefato `dist/preview` e seu manifesto (TASK-0006) não de
 **Janelas previstas:** 2 (1 = bootstrap + prompt-review + O1/O2 — marco M1, timebox 1–2 dias úteis;
 1 = O3/O4 + fechamento — marco M2). Recalibradas no bootstrap.
 
+## Continuação W3 — 2026-10-18
+
+Autorização literal e limites: `AUTHORIZATION.md` Adenda B3. A continuação usa a
+worktree isolada `/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran`,
+branch `codex/r0033-portal-preview`, preservando `claude/frontend-preview-5281e3`
+@ `aca40880`. O merge de `origin/main` @ `3ec14d3a` foi registrado em `311412f9`;
+a reconciliação preserva contratos, tarefas, relatórios e decisões do checkpoint.
+Dependências instaladas nesta base: DEVAI **2.2.0**, Constituição pinada **1.0.2**,
+STYNX **1.5.3**. Os estados de instalação e pin das janelas anteriores são históricos.
+
+Maestro atual: família **Codex/Sol**; delivery-review pela família **Claude**
+planejada. Nenhum resultado de revisão é antecipado. Prompts e seus hashes de
+composição permanecem os registrados; as instruções de continuação não reescrevem
+os prompts originais. A separação Architect → Inspector → Engineer continua válida.
+
+Sequência: refresco documental A4/A5; TASK-0009 (inventário/specs Portal e smoke) →
+TASK-0007 (prévia Portal); reconstrução/verificação RAIT no pin atual; gates finais,
+review e PR. Estados das tarefas só são atualizados com os recibos desta execução.
+Os resultados históricos de W1/W2 não certificam a árvore atual. Orçamento W3 em
+`budget.json` é estimativa de planejamento, sem medição de consumo. Dashboard/TEAT,
+OD-C3-009 e as costuras das rodadas J permanecem nos destinos já registrados.
+Merge, `round close` e `round seal` aguardam autorização própria, mesmo que os
+checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
+
 ## Objetivo
 
 Entregar uma **prévia executável, honesta e baseada em fixtures** da superfície classificada pelo

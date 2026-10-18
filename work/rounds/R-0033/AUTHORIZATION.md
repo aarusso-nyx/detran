@@ -111,3 +111,23 @@ Efeitos e leitura do maestro (instrução de aplicação recebida junto da decis
   (`claude/frontend-preview-5281e3`) continua sem push e sem PR.
 - TASK-0003 só começa depois do merge desse PR e da integração de `origin/main` por merge na
   branch da rodada.
+
+## Adenda B3 — continuação autorizada pelo Owner (2026-10-18)
+
+Fonte: mensagem expressa do Owner na sessão de continuação; texto literal:
+
+> Resume R-0033 from claude/frontend-preview-5281e3, reconcile it with current main, finish the Portal preview and remaining checks, and open a PR.
+
+Autoriza retomar o checkpoint `aca40880`, reconciliar `main`, concluir a prévia Portal
+(TASK-0009 Inspector → TASK-0007 Engineer), executar os checks restantes e abrir o PR
+da R-0033. A restrição histórica de push/PR desta rodada fica superada neste escopo.
+Não autoriza merge, `round close` ou `round seal`; esses efeitos permanecem pendentes.
+O escopo, os critérios C-01…C-10 e as decisões existentes permanecem vinculantes.
+OD-C3-009 continua aberta e não bloqueia esta prévia; nenhum papel é ampliado.
+
+Continuação em worktree isolada
+`/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran`, branch
+`codex/r0033-portal-preview`. O maestro atual pertence à família Codex/Sol; a
+revisão de entrega pela outra família (Claude) está planejada, sem veredito ainda.
+As famílias, versões e limitações de janela anteriormente registradas são história
+das execuções de 2026-10-15, preservadas integralmente.
