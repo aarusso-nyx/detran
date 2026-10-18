@@ -156,6 +156,23 @@ checks e a abertura do PR terminem; C-10 permanece requisito de fechamento.
   Artefato local verificado não equivale a anexo publicado. Merge, evidência
   pós-integração, close e seal permanecem pendentes, sem declarar toda C-10.
 
+## Fechamento efetivo pós-merge — 2026-10-18
+
+**R-0033 fechada e selada, PC-0021.** Owner B4 autorizou os efeitos; PR #191
+mesclado em `b4d4d932bb49c58a5df20090a4d49d433a3c0599` com cinco checks verdes.
+ZIP publicado e SHA verificado. Maestro executou evidência genérica sequência 1,
+auditoria exata `EV-18e9b5c6a93d228a`, close PC-0021 e seal; status `closed`.
+Cadeia válida: 89 proof lines, head
+`bdd6a648aa768471a09994f0fc4b5c771d03e19472b7f22fc413e3381bb06535`.
+
+**Limite da auditoria:** Overall YELLOW, 0/45 passing, 43 unknown;
+`readiness_promoting=false`. Sucesso da observação não é promoção nem qualidade
+verde. Recibo e errata: `reports/W3-post-merge.md`. As pendências de PR/CI/upload,
+close/seal nos snapshots anteriores são históricas e superadas por este recibo.
+Portal: 38 rotas loaded; 96 capturas de 8 telas × 4 estados × 3 larguras.
+Insumos e PC canônicos permanecem imutáveis; follow-ups de produto/sensores seguem
+separados, sem reabertura de decisões ou autorização para outra rodada.
+
 ## Objetivo
 
 Entregar uma **prévia executável, honesta e baseada em fixtures** da superfície classificada pelo

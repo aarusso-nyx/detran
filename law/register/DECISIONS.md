@@ -123,3 +123,18 @@ Após os anexos acima, o maestro executou os 16 selos abaixo na R-0020. Esta not
 - `R-0016`: `work/rounds/R-0016/close-state.jsonl`.
 - `R-0018`: `work/rounds/R-0018/close-state.jsonl`.
 - `R-0019`: `work/rounds/R-0019/close-state.jsonl`.
+
+### Anexo de R-0033
+
+- **D-1 — Owner:** `work/rounds/R-0033/AUTHORIZATION.md` registra abertura e B1/B2/B3;
+  B4 autoriza expressamente merge e evidência/auditoria/fechamento pós-merge.
+- **D-2 — Architect:** juízo de fechamento do escopo RAIT/JW-01 e Portal, ancorado
+  em review Claude PASS, gates locais, cinco checks verdes e merge
+  `b4d4d932bb49c58a5df20090a4d49d433a3c0599`. Runtime emitiu
+  `record/proofs/compliance/closures/PC-0021.json` e o selo com status closed
+  (`work/rounds/R-0033/record.md`, `close-state.jsonl`). Recibo/errata:
+  `work/rounds/R-0033/reports/W3-post-merge.md`; insumos congelados preservados.
+
+A observação exata `EV-18e9b5c6a93d228a` concluiu o verbo, com Overall YELLOW,
+0/45 passing, 43 unknown e `readiness_promoting=false`; não se declara auditoria
+qualitativamente verde. O fechamento não apaga limitações nem inicia outra rodada.
