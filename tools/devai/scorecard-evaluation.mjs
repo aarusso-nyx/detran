@@ -40,7 +40,7 @@ function save(name, value) {
   });
 }
 
-async function capture(label, argv, timeoutMs = 900_000) {
+async function capture(label, argv, timeoutMs = 1_200_000) {
   if (!/^[a-zA-Z0-9_-]+$/.test(label)) throw new Error('Invalid capture label');
   if (existsSync(join(audit, `${label}.json`)))
     throw new Error(`Capture already exists: ${label}; choose a new label`);
@@ -55,7 +55,8 @@ async function capture(label, argv, timeoutMs = 900_000) {
     });
     let stdout = '',
       stderr = '',
-      timedOut = false;
+      timedOut = false,
+      forceTimer;
     child.stdout.on('data', (chunk) => {
       stdout += chunk;
     });
@@ -65,7 +66,14 @@ async function capture(label, argv, timeoutMs = 900_000) {
     const timer = setTimeout(() => {
       timedOut = true;
       try {
-        process.kill(-child.pid, 'SIGKILL');
+        process.kill(-child.pid, 'SIGTERM');
+        forceTimer = setTimeout(() => {
+          try {
+            process.kill(-child.pid, 'SIGKILL');
+          } catch {
+            /* already exited */
+          }
+        }, 5000);
       } catch {
         /* already exited */
       }
@@ -75,6 +83,7 @@ async function capture(label, argv, timeoutMs = 900_000) {
     });
     child.on('close', (exitCode, signal) => {
       clearTimeout(timer);
+      clearTimeout(forceTimer);
       done({ exitCode, signal, timedOut, stdout, stderr });
     });
   });

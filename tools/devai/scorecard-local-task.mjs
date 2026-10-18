@@ -16,6 +16,10 @@ const logDir = join(
 );
 mkdirSync(logDir, { recursive: true });
 console.log(`SCORECARD_TASK_LOGS=${resolve(logDir)}`);
+for (const stream of [process.stdout, process.stderr])
+  stream.on('error', (error) => {
+    if (error.code !== 'EPIPE') throw error;
+  });
 let step = 0;
 let failed = false;
 let interrupted, activeChild, killTimer;
@@ -130,6 +134,13 @@ if (mode === 'unit') {
 } else {
   let started = false,
     mock;
+  const stopMock = async () => {
+    if (mock && mock.exitCode === null && mock.signalCode === null) {
+      mock.kill('SIGTERM');
+      await new Promise((resolve) => mock.once('close', resolve));
+    }
+    mock = undefined;
+  };
   try {
     output(['docker', 'image', 'inspect', image]);
     output([
@@ -247,25 +258,30 @@ if (mode === 'unit') {
             server.close(() => resolve(port));
           });
         });
-        mock = spawn(
-          process.execPath,
-          ['senatran-mock/dist/apps/api/src/main.js'],
-          { env: { ...mockEnv, PORT: String(mockPort) }, stdio: 'ignore' },
-        );
         const url = `http://127.0.0.1:${mockPort}`;
-        let healthy = false;
-        for (let i = 0; i < 60; i++) {
+        const startMock = async () => {
           if (interrupted)
             throw new Error(`Fixture task interrupted by ${interrupted}`);
-          try {
-            if ((await fetch(url + '/health')).ok) {
-              healthy = true;
-              break;
-            }
-          } catch {}
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-        if (!healthy) throw new Error('Mock did not become healthy');
+          mock = spawn(
+            process.execPath,
+            ['senatran-mock/dist/apps/api/src/main.js'],
+            { env: { ...mockEnv, PORT: String(mockPort) }, stdio: 'ignore' },
+          );
+          let healthy = false;
+          for (let i = 0; i < 60; i++) {
+            if (interrupted)
+              throw new Error(`Fixture task interrupted by ${interrupted}`);
+            try {
+              if ((await fetch(url + '/health')).ok) {
+                healthy = true;
+                break;
+              }
+            } catch {}
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+          if (!healthy) throw new Error('Mock did not become healthy');
+        };
+        await startMock();
         const backendEnv = {
           ...env,
           SENATRAN_PROVIDER: 'mock',
@@ -288,6 +304,16 @@ if (mode === 'unit') {
         } else {
           await run(['pnpm', 'backend:test:e2e'], backendEnv);
           await run(['pnpm', 'backend:test:upgrade'], backendEnv);
+          // Each existing suite expects its own pristine synthetic service population.
+          await stopMock();
+          if (
+            !(await run(
+              ['pnpm', '--dir', 'senatran-mock', 'db:reset'],
+              mockEnv,
+            ))
+          )
+            throw new Error('Adapter fixture reset failed');
+          await startMock();
           await run(
             ['pnpm', '--filter', '@detran/senatran-adapter', 'test:e2e'],
             {
@@ -295,15 +321,20 @@ if (mode === 'unit') {
               SENATRAN_MOCK_BASE_URL: url,
             },
           );
+          await stopMock();
+          if (
+            !(await run(
+              ['pnpm', '--dir', 'senatran-mock', 'db:reset'],
+              mockEnv,
+            ))
+          )
+            throw new Error('Mock suite fixture reset failed');
           await run(['pnpm', '--filter', 'senatran-mock', 'test:e2e'], mockEnv);
         }
       }
     }
   } finally {
-    if (mock && mock.exitCode === null && mock.signalCode === null) {
-      mock.kill('SIGTERM');
-      await new Promise((resolve) => mock.once('close', resolve));
-    }
+    await stopMock();
     if (started) output(['docker', 'rm', '--force', container]);
   }
   process.exitCode = failed ? 1 : 0;
