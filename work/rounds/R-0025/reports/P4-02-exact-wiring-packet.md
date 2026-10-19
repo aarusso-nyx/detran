@@ -84,7 +84,19 @@ public CASE resources plus WORKLIST assignments/clocks/clock-alerts and every
 parent chain they can reveal. Map each route+method+effective role to metadata,
 triage, merits or oversight, parent resolution, projection and SQL predicate.
 Include lists/counts/by-ID, reparenting/state/assignment writes, protocol/triage/
-admit and claims/replays. No unclassified fallback. Do not silently revoke another
+admit and claims/replays. Pre-identified conflict: rait-web-frontend.md role table (AUDITOR "somente leitura
+em tudo", original line90) versus D3 case-merits containment; explicitly classify
+CASE consumers in /auditoria and /arquivo and their shared-route role predicates.
+D3 does not license unscoped case merits, and no other accepted role contract may
+be silently revoked. Also classify active WORKLIST pool membership with
+member_role=coordenador as an equivalent oversight source or not, including its
+actual pool/unit bounds, role, authorization/audit provenance and revocation. Do
+this before T2 adds any table or duplicate binding; do not expand a pool membership
+into unit-wide scope. If equivalent-source reuse requires changing ADR0046, record
+the bounded preflight amendment before T2, not an implicit runtime substitution.
+Any change to an already accepted ADR requires a new supplemental/superseding ADR
+under ADR0035; never edit its accepted historical text.
+No unclassified fallback. Do not silently revoke another
 accepted role journey: unsourced shared-route predicates block T2 pending amendment.
 Inventory existing defense DISTRIBUIDO rows and claim replay records by trusted
 state/provenance, without rewriting them. Approved legacy compatibility/migration

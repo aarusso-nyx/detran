@@ -1,0 +1,44 @@
+{
+  "mode": "planning-review",
+  "cycle": 1,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "docs/meta/knowledge-base/open-decisions-rait.md",
+      "line": 595,
+      "claim": "The D6 row adds 'Diagnóstico detalhado só na supervisão autorizada'. Neither ADR-0045 §7, ADR-0046 nor P4-02 defines or commissions a supervision-side impediment diagnostic. A reader could take this as an approved surface that is in scope for P4-02.",
+      "fix": "State that the oversight diagnostic is not commissioned by P4-02 and needs its own sourced contract, or drop the clause so D6 matches ADR-0045 §7 (skip silently, then safe QUEUE_EMPTY409)."
+    },
+    {
+      "severity": "low",
+      "file": "docs/framework/arch/rait-web-frontend.md",
+      "line": 90,
+      "claim": "The accepted role table still gives AUDITOR 'somente leitura em tudo'. The appended amendment and ADR-0046 require an explicit unit/pool binding for AUDITOR merits, but neither names this existing line as superseded or retained for /auditoria and /arquivo. That is a known shared-role conflict T0 will hit.",
+      "fix": "Name rait-web-frontend.md:90 (AUDITOR global read) in the P4-02 T0 inventory as a pre-identified shared-role predicate to classify. Keep it as a stop condition rather than silently narrowing or retaining it."
+    },
+    {
+      "severity": "low",
+      "file": "docs/framework/arch/rait-error-catalog.md",
+      "line": 95,
+      "claim": "RAIT.IDEMPOTENCY_REPLAY is catalogued only for 'mesma Idempotency-Key com payload diferente' on 'comandos de criação', with context `key`. ADR-0046 extends it to cross-actor reuse on the claim selector with no prior payload, but the catalog amendment does not say this.",
+      "fix": "Add one sentence to the catalog amendment: for raitPoolClaimNext, IDEMPOTENCY_REPLAY409 also covers a different actor or a changed request under the same key, with no prior case disclosed. Leave other commands' semantics unchanged."
+    },
+    {
+      "severity": "low",
+      "file": "docs/meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md",
+      "line": 48,
+      "claim": "The new inf.rait_case_read_scope binding is proposed even though the WORKLIST ck_inf_rait_pool_member_role constraint already includes 'coordenador'. Existing pool membership may already be an accepted coordinator scope source, and the ADR leaves that possible overlap to a later amendment.",
+      "fix": "Have P4-02 T0 explicitly classify existing 'coordenador' pool membership as an equivalent scope source or not, before T2 blueprints a new table."
+    }
+  ],
+  "notes": [
+    "Identity: Auditor (Article 7), read-only cross-family review via the CLI alias 'opus'; the exact model was not inferred. Frozen HEAD 574640a07ae000651c82a97bd6904fc1b4dc3722 vs main 3e4ee3781fa4f9a9e20328527b24724cde8c4457. Read only via git diff/show and grep of this worktree.",
+    "Exact scope: 13 changed files, all additive (641 insertions, 0 deletions), under docs/, work/ and DESIGN-DECISIONS.md only. Covers ADR-0045/0046, both ADR index rows, the open-decisions-rait D1–D7 record (Owner text quoted verbatim, D3 clarification bounded to unit/pool/tenant), five canonical amendments scoped to the defense claim, the JW01-distribution-claim history note, JW01-claim-wiring-contract.md and P4-02-exact-wiring-packet.md. Earlier OD016–020 rows and the P4-01 text are preserved.",
+    "Verified: atomic ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO after admissibility, with no repeat triage, receive shortcut or new state. Version v+2 with final case ETag. Per-stage outbox identity from attempt+event-kind+stage, two case.changed events and exactly one assignment event. HTTP200 typed CASE with non-null assignment_id and navigation by data.id.",
+    "Verified: claim-context gives zero/one/many over the complete authorized set, pagination after scope/order, no browser identity and no first-pool fallback. If-Match exception is explicit (400 if supplied) and other commands keep If-Match. Impeded cases are skipped with safe QUEUE_EMPTY409; ADR-0037 priority/NULL and WIP45/60 are retained, not reopened.",
+    "Verified security: separate metadata, triage, assigned-merits and rait-coordinator/AUDITOR read-only oversight purposes. Oversight requires role + permission + exactly one unit-or-pool binding + no impediment, with no wildcard, no auditor added to pool_member, no public CRUD or production seed, and denial when no binding exists. Full route/parent/write/replay inventory with SQL before pagination. Unsourced shared-role predicates stop preflight. WORKLIST→CASE dependency is reused. Replay is actor-bound and reauthorized without re-claim; legacy replay records fail closed with no history rewrite.",
+    "Verified packet: owned paths, T0–T6, RED matrix, gates and stop conditions, explicitly marked not authorized for dispatch. No attachment, draft, inquiry, signing, new SSE, platform, scorecard, proof, state, task or lifecycle change. Error codes RAIT.VALIDATION_FAILED/QUEUE_EMPTY/MEMBER_IMPEDED exist in the catalog.",
+    "Limits: no code, tests, builds, installs, servers, local gates or evidence verification were run, so local gate status is unreported. The primary checkout and scorecard branch were not inspected, so the ADR-0043/0044 reservation was taken from the packet, not checked; ADR-0043/0044 are absent from this worktree's docs/meta/adr. Chat-only Owner recommendation wording for D1–D7 was not available beyond the repo's P4-01 matrix. The untracked work/rounds/R-0025/reviews/P4-02-plan/ was not read."
+  ]
+}

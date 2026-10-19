@@ -543,3 +543,10 @@ Formalização: [ADR0045](../../meta/adr/ADR-0045-rait-claim-selector-contract.m
 Texto/diagramas anteriores são a projeção histórica nos pontos substituídos.
 Status draft da fonte não é promovido. **Runtime continua pausado** até aprovação
 do pacote exato; esta emenda não demonstra implementação ou aceitação integral.
+
+No mérito de casos, a frase histórica "AUDITOR — somente leitura em tudo" na
+tabela de papéis não dispensa o vínculo explícito de unidade/pool aprovado em D3.
+Para dados de caso consumidos por auditoria/arquivo ou outros papéis, o inventário
+T0 de P4-02 deve mapear os predicados fonteados e eventuais conflitos antes de
+mudar rotas compartilhadas; sem ampliar acesso nem revogar silenciosamente outro
+fluxo aceito. Essa classificação é um gate, não exceção de acesso por papel.

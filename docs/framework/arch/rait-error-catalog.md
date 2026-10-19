@@ -300,3 +300,7 @@ Formalização: [ADR0045](../../meta/adr/ADR-0045-rait-claim-selector-contract.m
 Texto/diagramas anteriores são a projeção histórica nos pontos substituídos.
 Status draft da fonte não é promovido. **Runtime continua pausado** até aprovação
 do pacote exato; esta emenda não demonstra implementação ou aceitação integral.
+
+Para raitPoolClaimNext, RAIT.IDEMPOTENCY_REPLAY409 também cobre outro ator ou
+requisição alterada sob a mesma chave, sem revelar o caso/resposta anterior.
+As semânticas dos outros comandos não são alteradas por essa extensão.
