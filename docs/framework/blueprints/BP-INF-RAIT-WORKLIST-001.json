@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitWorklist",
     "namespace": "inf",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "ddlFile": "35-inf-rait-worklist.sql",
     "dependencies": {
       "@detran/inf-deadlines": "workspace:*",
@@ -125,7 +125,7 @@
         "name": "RaitPool",
         "table": "rait_pool",
         "primaryKey": ["id"],
-        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2). v1.1.0: unit_id liga o pool a uma turma/JARI (WF-RAIT-004 secao 10) e priority_policy registra a ordem unica de consumo das filas (secao 2, RN-RAIT-141).",
+        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2). v1.1.0: unit_id liga o pool a uma turma/JARI (WF-RAIT-004 secao 10) e priority_policy registra a ordem unica de consumo das filas (secao 2, RN-RAIT-141). v1.5.1: ADR-0047 supersedes the historical same-unit defense-pool uniqueness: multiple explicitly qualified defense pools require verified exact case routing, never first-pool fallback. Unit-null base pools and non-defense unit/instance uniqueness remain unchanged; no new pool is provisioned.",
         "fields": [
           {
             "name": "id",
@@ -176,10 +176,10 @@
             "where": "unit_id is null"
           },
           {
-            "name": "ux_inf_rait_pool_instance_unit",
+            "name": "ux_inf_rait_pool_non_defense_instance_unit",
             "columns": ["tenant_id", "instance", "unit_id"],
             "unique": true,
-            "where": "unit_id is not null"
+            "where": "unit_id is not null and instance <> 'defesa_previa'"
           },
           {
             "name": "ux_inf_rait_pool_tenant_id",
