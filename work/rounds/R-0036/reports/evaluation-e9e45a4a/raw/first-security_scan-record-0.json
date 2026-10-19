@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/published-263-e9e45a4a/first-security_scan-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:55.577Z",
+  "finished_at": "2026-10-19T04:41:56.189Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/security_scan/SR-128fc2f928f0c3ff.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"security-scan\",\"kind\":\"security_scan\"},\"timestamp\":\"2026-10-19T04:40:18.558Z\",\"status\":\"fail\",\"deterministic\":false,\"command\":\"pnpm audit --json\",\"command_hash\":\"f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247\",\"tier\":\"L0\",\"exit_code\":1,\"findings\":[{\"severity\":\"critical\",\"code\":\"SECURITY_SCAN_CRITICAL_VULN\",\"message\":\"5 critical vulnerabilities detected.\"}],\"metrics\":{\"tool\":\"pnpm\",\"total_vulnerabilities\":37,\"critical\":5,\"high\":15,\"moderate\":13,\"low\":4,\"info\":0,\"pass_max_high\":0,\"review_max_high\":5},\"id\":\"SR-128fc2f928f0c3ff\"}}}}\n",
+  "stderr": ""
+}

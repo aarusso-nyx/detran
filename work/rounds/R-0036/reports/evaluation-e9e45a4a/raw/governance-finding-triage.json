@@ -1,0 +1,681 @@
+{
+  "findings": [
+    {
+      "kind": "decision_citation_resolution",
+      "reading_id": "SR-bc392df837a388f7",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "DECISION_CITATION_UNRESOLVED",
+        "message": "law/schemas/adr-validation-policy.schema.json cites missing ADR-014.",
+        "file": "law/schemas/adr-validation-policy.schema.json"
+      },
+      "classification": "Mirrored framework schema ADR citation unresolved in adopter catalog; reconcile provider/adopter reference scope without invented decisions",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "decision_citation_resolution",
+      "reading_id": "SR-bc392df837a388f7",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "DECISION_CITATION_UNRESOLVED",
+        "message": "law/schemas/adr.schema.json cites missing ADR-014.",
+        "file": "law/schemas/adr.schema.json"
+      },
+      "classification": "Mirrored framework schema ADR citation unresolved in adopter catalog; reconcile provider/adopter reference scope without invented decisions",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "decision_record_integrity",
+      "reading_id": "SR-3739dbafb53f532a",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "DECISION_FRONTMATTER_INVALID",
+        "message": "law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md: frontmatter is required",
+        "file": "law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md"
+      },
+      "classification": "Legacy adoption ADR and current normalized frontmatter contract; forward compatibility decision preserving history",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-c59e1065104fb730",
+      "native_status": "fail",
+      "finding": {
+        "severity": "info",
+        "code": "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+        "message": "README.md carries no schema-count claim (preferred state).",
+        "file": "README.md"
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-c59e1065104fb730",
+      "native_status": "fail",
+      "finding": {
+        "severity": "info",
+        "code": "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+        "message": "CLAUDE.md carries no schema-count claim (preferred state).",
+        "file": "CLAUDE.md"
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-c59e1065104fb730",
+      "native_status": "fail",
+      "finding": {
+        "severity": "info",
+        "code": "DOCS_DRIFT_NO_DECISION_RANGE_CLAIM",
+        "message": "README.md carries no decision-range claim (preferred state).",
+        "file": "README.md"
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-c59e1065104fb730",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "DOCS_DRIFT_CONSTITUTION_BINDING",
+        "message": "The constitution entrypoint requires an existing pin with its exact project version and SHA-256 binding.",
+        "file": ".devai/config/project.json"
+      },
+      "classification": "Strict entrypoint/adopter compatibility finding; registered doctor verifies preserved pin/version/hash. No manual PASS or pin-history rewrite",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-c59e1065104fb730",
+      "native_status": "fail",
+      "finding": {
+        "severity": "info",
+        "code": "DOCS_DRIFT_CAP_CHECK_DISABLED",
+        "message": "worktree_cap_source not configured; cap-coherence check skipped."
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_coherence",
+      "reading_id": "SR-9fbd8a4e931e56ec",
+      "native_status": "review",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_COHERENCE_ACTION_VERSION_DRIFT",
+        "message": "Action actions/checkout pinned to multiple versions across workflows: 34e114876b0b11c390a56381ad16ebd13914f8d5, 3d3c42e5aac5ba805825da76410c181273ba90b1"
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_coherence",
+      "reading_id": "SR-9fbd8a4e931e56ec",
+      "native_status": "review",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_COHERENCE_ACTION_VERSION_DRIFT",
+        "message": "Action actions/setup-node pinned to multiple versions across workflows: 49933ea5288caeca8642d1e84afbd3f7d6820020, 820762786026740c76f36085b0efc47a31fe5020"
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_coherence",
+      "reading_id": "SR-9fbd8a4e931e56ec",
+      "native_status": "review",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_COHERENCE_CONCURRENCY_POLICY",
+        "message": ".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding)."
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_idiomaticity",
+      "reading_id": "SR-4340a5dc103254d8",
+      "native_status": "review",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_IDIOMATICITY_NO_COMPOSITE_ACTIONS",
+        "message": "No composite-action references (./.github/actions/*) found. Consider extracting repeated step sequences."
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_idiomaticity",
+      "reading_id": "SR-4340a5dc103254d8",
+      "native_status": "review",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_IDIOMATICITY_NO_REUSABLE_WORKFLOWS",
+        "message": "No reusable workflow references found. Consider factoring shared CI logic."
+      },
+      "classification": "Native static governance/workflow predicate; retain FAIL/REVIEW and investigate in BL-0022",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0001 has no record.md.",
+        "file": "work/rounds/R-0001"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0003 cites missing phase closure PC-0001.",
+        "file": "work/rounds/R-0003/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0004 cites missing phase closure PC-0002.",
+        "file": "work/rounds/R-0004/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0005 cites missing phase closure PC-0003.",
+        "file": "work/rounds/R-0005/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0006 cites missing phase closure PC-0004.",
+        "file": "work/rounds/R-0006/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0007 cites missing phase closure PC-0011.",
+        "file": "work/rounds/R-0007/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0008 cites missing phase closure PC-0005.",
+        "file": "work/rounds/R-0008/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0009 cites missing phase closure PC-0006.",
+        "file": "work/rounds/R-0009/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0010 cites missing phase closure PC-0008.",
+        "file": "work/rounds/R-0010/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0011 cites missing phase closure PC-0009.",
+        "file": "work/rounds/R-0011/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0012 cites missing phase closure PC-0010.",
+        "file": "work/rounds/R-0012/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0013 cites missing phase closure PC-0013.",
+        "file": "work/rounds/R-0013/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0014 cites missing phase closure PC-0007.",
+        "file": "work/rounds/R-0014/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0015 cites missing phase closure PC-0014.",
+        "file": "work/rounds/R-0015/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0016 cites missing phase closure PC-0012.",
+        "file": "work/rounds/R-0016/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0017 cites missing phase closure PC-0018.",
+        "file": "work/rounds/R-0017/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_ARCHIVE_MUTATED",
+        "message": "R-0017 changed after its first closed commit.",
+        "file": "work/rounds/R-0017"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0018 cites missing phase closure PC-0020.",
+        "file": "work/rounds/R-0018/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_PHASE_CLOSURE_UNRESOLVED",
+        "message": "R-0019 cites missing phase closure PC-0016.",
+        "file": "work/rounds/R-0019/record.md"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0020 has no record.md.",
+        "file": "work/rounds/R-0020"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0021 has no record.md.",
+        "file": "work/rounds/R-0021"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0022 has no record.md.",
+        "file": "work/rounds/R-0022"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0023 has no record.md.",
+        "file": "work/rounds/R-0023"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0024 has no record.md.",
+        "file": "work/rounds/R-0024"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0025 has no record.md.",
+        "file": "work/rounds/R-0025"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0026 has no record.md.",
+        "file": "work/rounds/R-0026"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0027 has no record.md.",
+        "file": "work/rounds/R-0027"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0028 has no record.md.",
+        "file": "work/rounds/R-0028"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0029 has no record.md.",
+        "file": "work/rounds/R-0029"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0030 has no record.md.",
+        "file": "work/rounds/R-0030"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0031 has no record.md.",
+        "file": "work/rounds/R-0031"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0032 has no record.md.",
+        "file": "work/rounds/R-0032"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-d2aea567343117b9",
+      "native_status": "fail",
+      "finding": {
+        "severity": "error",
+        "code": "ROUND_RECORD_MISSING",
+        "message": "R-0033 has no record.md.",
+        "file": "work/rounds/R-0033"
+      },
+      "classification": "Historical lifecycle/integrity observation; forward migration/compatibility decision with sealed records preserved",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-CH-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-DASH-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-EST-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-INF-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-OPS-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-OPS-002 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    },
+    {
+      "kind": "harness_invariant_alignment",
+      "reading_id": "SR-ece3ebe146c49178",
+      "native_status": "fail",
+      "finding": {
+        "severity": "warning",
+        "code": "HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA",
+        "message": "Gate invariant INV-PORTAL-001 has no measurable_via[] entries to align against CI."
+      },
+      "classification": "Missing measurable_via metadata on seven canonical gate invariants; forward governance remediation",
+      "remediation_task": "BL-0022"
+    }
+  ],
+  "manual_verdict_override": false
+}

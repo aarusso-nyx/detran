@@ -1,0 +1,140 @@
+{
+  "evaluated_commit": "e9e45a4a6cbed5cfd394c716c79a55b1aca386b8",
+  "product_fixes_implemented": false,
+  "tasks": [
+    {
+      "id": "BL-0013",
+      "priority": "P1",
+      "owner": "Engineer",
+      "cells": [
+        "F2:T6"
+      ],
+      "title": "Pre-existing dependency vulnerabilities"
+    },
+    {
+      "key": "security-robustness-specs",
+      "title": "P1 Architect: normalize and complete security and robustness specification signals",
+      "cells": [
+        "F1:T6",
+        "F1:T8"
+      ],
+      "owner": "Architect",
+      "priority": "P1",
+      "body": "Separate specification work. Review normalized threat-model, PII registry, RBAC invariant and robustness/error-semantics predicates against all canonical document roots and actual domain contracts. Distinguish differently named existing prose from genuinely missing requirements. Record consequential security/domain decisions in the approved governance workflow; never invent legal rules or alter thresholds to get PASS.",
+      "id": "BL-0019"
+    },
+    {
+      "key": "rbac-data-classification",
+      "title": "P1 Architect: resolve static RBAC inventory mappings and PII classifications",
+      "cells": [
+        "F4:T6"
+      ],
+      "owner": "Architect",
+      "priority": "P1",
+      "body": "Separate architecture/security assessment and any subsequent product fixes. Resolve statically unbound endpoint authorization against actual guards/policies and classify name-based PII candidates. An unresolved static role is not proof an endpoint is unprotected; an unlabeled name-based candidate is not proof of a legal violation. Preserve tenant/RLS request roles and SENATRAN adapter boundaries.",
+      "id": "BL-0020"
+    },
+    {
+      "id": "BL-0014",
+      "priority": "P2",
+      "owner": "Engineer",
+      "cells": [
+        "F2:T5"
+      ],
+      "title": "Product lint findings"
+    },
+    {
+      "id": "BL-0015",
+      "priority": "P2",
+      "owner": "Engineer",
+      "cells": [
+        "F5:T7"
+      ],
+      "title": "Slow historical main-branch CI"
+    },
+    {
+      "id": "BL-0016",
+      "priority": "P2",
+      "owner": "Inspector",
+      "cells": [
+        "F3:T1"
+      ],
+      "title": "Two pre-existing SENATRAN mock HTTP 402 E2E mismatches"
+    },
+    {
+      "key": "coverage-depth",
+      "title": "P2 Inspector: improve product unit coverage and sparse package tests",
+      "cells": [
+        "F3:T2",
+        "F3:T3"
+      ],
+      "owner": "Inspector",
+      "priority": "P2",
+      "body": "Separate product test work. Increase whole-source local unit coverage from the evidence-backed baseline, prioritize sparse packages from coverage-by-package.json and test_coherence, and disposition existing TODOs through the product workflow. Retain all existing assertions, timeouts, native 80/50 coverage thresholds and original package coverage gates. Do not claim integration/E2E or RC coverage from the local-unit report. Respect the separate unapproved P4 planning boundary.",
+      "id": "BL-0017"
+    },
+    {
+      "key": "canonical-traceability",
+      "title": "P2 Architect: complete canonical source and use-case inventory traces",
+      "cells": [
+        "F1:T4",
+        "F4:T1",
+        "F4:T2",
+        "F4:T4",
+        "F4:T9"
+      ],
+      "owner": "Architect",
+      "priority": "P2",
+      "body": "Separate specification/traceability work. Reconcile low reverse source claims, unclaimed inventory entries and absent use-case refs.routeIds/refs.endpointIds. Use the complete inventory populations, classify generated-source ownership explicitly, and retain source alignment and max_orphans thresholds. Producer REVIEW is a supported finding, not a missing input.",
+      "id": "BL-0018"
+    },
+    {
+      "key": "test-mock-ownership",
+      "title": "P2 Inspector: resolve integration and E2E mock ownership findings",
+      "cells": [
+        "F3:T5"
+      ],
+      "owner": "Inspector",
+      "priority": "P2",
+      "body": "Separate test-design work. Review each installed idiomaticity finding for integration/E2E mock ownership, distinguish deliberate external-port substitutions from hidden subject replacement, and improve evidence where needed. Do not delete assertions or weaken timeouts, gates or fixture isolation.",
+      "id": "BL-0021"
+    },
+    {
+      "key": "governance-triage",
+      "title": "P2 Architect: remediate classified harness and historical governance findings",
+      "cells": [
+        "F5:T3",
+        "F5:T4",
+        "F5:T5"
+      ],
+      "owner": "Architect",
+      "priority": "P2",
+      "body": "Separate governance/harness work from measurement enablement. Address seven gate invariants lacking measurable_via entries, evaluate workflow action-version drift and concurrency policy, and assess composite/reusable workflow advisories on merit. Reconcile the strict docs-drift entrypoint predicate with the valid pinned constitution and registered doctor. Supplemental schema ADR citations, legacy ADR frontmatter, historical missing round/closure records and archive-mutation diagnostics need forward compatibility/migration decisions, without rewriting evidence or sealed history. Native FAIL/REVIEW remains unchanged during triage.",
+      "id": "BL-0022"
+    },
+    {
+      "key": "inventory-duration",
+      "title": "P3 Engineer: investigate canonical inventory generation duration",
+      "cells": [
+        "F4:T7"
+      ],
+      "owner": "Engineer",
+      "priority": "P3",
+      "body": "Separate tooling performance work. Investigate the installed store-reader p95 across its explicitly archived historical duration population, distinguish current execution from pooled historical observations, and profile expensive inventory kinds. Retain installed 2000/5000 ms thresholds; do not purge historical readings to improve the result.",
+      "id": "BL-0023"
+    }
+  ],
+  "measurement_resolutions": {
+    "BL-0002": "Registered init bind materializes the schema-valid policy declaration under published DEVAI 2.6.3.",
+    "BL-0003": "Registered native task descriptors execute complete build/typecheck/migration/test populations and preserve native lint failures.",
+    "BL-0004": "78 implementation roots, 63 package roots, complete test/specification populations and explicit exclusions are declared.",
+    "BL-0005": "All seven canonical bodies regenerated without missing/error inputs; current SQL DDL roots and Angular routes supported.",
+    "BL-0006": "ADR-0045 explicitly replaces the proposed RC coverage population with complete LOCAL UNIT source coverage. All 2574 implementation sources included; database tiers remain separately measured. No RC coverage claim and no threshold relaxation.",
+    "BL-0007": "Complete vulnerability report read through published adapter; real findings remain BL-0013.",
+    "BL-0008": "Owner-authorized generous local targets and three request-path scenarios recorded in ADR-0044; no existing threshold changed.",
+    "BL-0009": "Native findings classified and carried into separate governance remediation BL-0022; no manual PASS or historical rewrite.",
+    "BL-0010": "Native CI population verified and exact run IDs/quantiles archived. Slow durations remain BL-0015.",
+    "BL-0011": "Complete repeated two-worker frontend/unit runs pass without assertion or timeout changes. Historical timeout attempts remain in immutable reports.",
+    "BL-0012": "All 43 applicable cells have complete declared populations, current captured/persisted native readings and supported verdicts; two original N/A entries preserved. Product findings remain separate."
+  }
+}

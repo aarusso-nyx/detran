@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "site_drift",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:50.875Z",
+  "finished_at": "2026-10-19T04:41:52.382Z",
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"site_drift\"},\"members\":[{\"kind\":\"site_drift\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"site_drift\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"unknown\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":0,\"unknown\":1,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run site_drift\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"site-drift\\\",\\\"kind\\\":\\\"site_drift\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:41:52.267Z\\\",\\\"status\\\":\\\"unknown\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense site drift\\\",\\\"command_hash\\\":\\\"3945f1bc482cd88900c3ba12dfcac604834479b9ef01a62a86cd91ffe811f5d2\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"SITE_DRIFT_SOURCE_UNREACHABLE\\\",\\\"message\\\":\\\"Published source 456155a17c695e7a25b585a9b7106164f6c64bb5 is not reachable from local objects.\\\"}],\\\"metrics\\\":{\\\"repository_head\\\":\\\"e9e45a4a6cbed5cfd394c716c79a55b1aca386b8\\\",\\\"published_source_provenance\\\":\\\"journal\\\",\\\"journal_intent_id\\\":\\\"7055059128\\\"},\\\"id\\\":\\\"SR-ed34e2c6ae716b4b\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

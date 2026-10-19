@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "security-scan",
+    "kind": "security_scan"
+  },
+  "timestamp": "2026-10-19T04:40:18.558Z",
+  "status": "fail",
+  "deterministic": false,
+  "command": "pnpm audit --json",
+  "command_hash": "f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247",
+  "tier": "L0",
+  "exit_code": 1,
+  "findings": [
+    {
+      "severity": "critical",
+      "code": "SECURITY_SCAN_CRITICAL_VULN",
+      "message": "5 critical vulnerabilities detected."
+    }
+  ],
+  "metrics": {
+    "tool": "pnpm",
+    "total_vulnerabilities": 37,
+    "critical": 5,
+    "high": 15,
+    "moderate": 13,
+    "low": 4,
+    "info": 0,
+    "pass_max_high": 0,
+    "review_max_high": 5
+  },
+  "id": "SR-128fc2f928f0c3ff"
+}

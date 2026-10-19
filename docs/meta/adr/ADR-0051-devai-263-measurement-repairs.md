@@ -8,6 +8,7 @@
 
 > Referência atual de cobertura: [ADR-0050](ADR-0050-whole-source-local-coverage.md).
 > A menção histórica a ADR-0045 no corpo é desambiguada pelo redirecionamento com slug e pela tabela de aliases.
+
 ---
 
 # ADR-0046: DEVAI 2.6.3 measurement repairs

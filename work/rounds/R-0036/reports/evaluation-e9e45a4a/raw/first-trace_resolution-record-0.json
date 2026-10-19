@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/published-263-e9e45a4a/first-trace_resolution-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:54.972Z",
+  "finished_at": "2026-10-19T04:41:55.577Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/trace_resolution/SR-2847d45c4374e6db.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"trace-resolve\",\"kind\":\"trace_resolution\"},\"timestamp\":\"2026-10-19T04:39:51.858Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense trace-resolve --trace /Volumes/Development/projects/stech/detran/law/trace.json --invariants-dir /Volumes/Development/projects/stech/detran/law/invariants\",\"command_hash\":\"e3fd08d6055e1f79743187932c87761e355874302ee690cb20749d76a13e1b75\",\"findings\":[],\"metrics\":{\"unresolved_trace_entries\":0,\"missing_test_paths\":0,\"untraced_invariants\":0,\"invariants_total\":10,\"traced_invariants\":10,\"attestation_only_invariants\":0},\"id\":\"SR-2847d45c4374e6db\"}}}}\n",
+  "stderr": ""
+}

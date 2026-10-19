@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "harness-performance",
+    "kind": "harness_performance"
+  },
+  "timestamp": "2026-10-19T04:41:33.431Z",
+  "status": "fail",
+  "deterministic": false,
+  "command": "gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-19",
+  "command_hash": "2d91aa4a3217f9ae9aba121cd4c2c41554661e500daa9345c19647835e531161",
+  "tier": "L2",
+  "findings": [
+    {
+      "severity": "error",
+      "code": "HARNESS_PERFORMANCE_TOO_SLOW",
+      "message": "median 1684s, p95 2280s — above review thresholds."
+    }
+  ],
+  "metrics": {
+    "run_count": 93,
+    "success_count": 92,
+    "sample_size": 92,
+    "median_ms": 1684000,
+    "p95_ms": 2280000,
+    "pass_median_ms": 900000,
+    "pass_p95_ms": 1800000,
+    "minimum_sample": 10,
+    "population_workflow": "ci.yml",
+    "population_event": "push",
+    "population_head_branch": "main",
+    "population_base_branch": "main",
+    "population_attempts": "last",
+    "population_include_cancelled": false,
+    "population_lookback_days": 30,
+    "population_base_branch_verified": true,
+    "population_excluded_jobs_unverified": 0,
+    "population_unverified": ""
+  },
+  "id": "SR-7df1f1e4fc8c68a1"
+}
