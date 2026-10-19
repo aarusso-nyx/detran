@@ -120,3 +120,13 @@ receipt for actor-unbound command replay. Preserve canonical fingerprints, bind
 to the exact ledger UUID in the same transaction and deny missing/ambiguous or
 other-actor provenance with409 without disclosure/re-execution. No schema, public
 field, permission, historical rewrite, production migration, S2 or merge grant.
+
+### P4-02-S1-A4 preview source tests — Owner, 2026-10-19
+
+Owner answered “Approve A4 as written (recommended)” to
+reports/P4-02-S1-A4-preview-source-tests.md. Adds Inspector ownership only of
+apps/rait/web/src/app/preview/preview-fixture-source.spec.ts. Preserve complete
+canonical fixture integrity through the existing store/helper; assert exact
+authorized client subsets and denials under closed T0 instead of unconditional
+all-row analyst access. No runtime, fixture JSON, role grant, threshold, skip/TODO,
+scorecard, S2 or merge authority follows. All other S1 boundaries remain.

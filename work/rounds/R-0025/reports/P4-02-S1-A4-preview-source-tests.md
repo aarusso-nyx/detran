@@ -1,6 +1,7 @@
 # P4-02-S1-A4 — preview fixture integrity versus authorized client subsets
 
-Status: PROPOSED. Architect, Article 7. No runtime/data grant.
+Status: APPROVED by Owner, 2026-10-19: “Approve A4 as written (recommended)”.
+Architect, Article 7. No runtime/data grant.
 
 Independent review required denial of unmatched preview purposes and unsupported
 T resources. The unchanged 20 new boundary controls pass. The full RAIT suite
