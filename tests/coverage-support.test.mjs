@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
+  globSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -13,6 +14,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   assertSourcePopulation,
+  angularCoveragePlugin,
+  coverageSourcePatterns,
   populationReporter,
   verifyExistingThresholds,
   workspacePopulation,
@@ -66,6 +69,47 @@ test('rejects both missing source files and unexpected substitutes', () => {
     () => assertSourcePopulation(['a.ts', 'b.ts'], ['a.ts', 'other.ts']),
     /COVERAGE_SOURCE_POPULATION_MISMATCH.*b.ts.*other.ts/,
   );
+});
+test('emits original mapped JavaScript for the BOAT library configuration', async () => {
+  const root = process.cwd();
+  const plugin = await angularCoveragePlugin(root, 'apps/boat/mobile');
+  const file = join(root, 'apps/boat/mobile/src/lib/a11y.ts');
+  const original = readFileSync(file, 'utf8');
+  const result = plugin.transform(original, file);
+  assert.ok(result);
+  assert.match(result.code, /export async function assertBoatA11y/);
+  assert.doesNotMatch(result.code, /Readonly|Promise<boolean>/);
+  assert.ok(result.map.sources.some((source) => source.endsWith('a11y.ts')));
+  assert.ok(result.map.sourcesContent.includes(original));
+});
+test('compact coverage patterns retain generated and untested sources without test scaffolding', () => {
+  const root = temporary();
+  writeFileSync(
+    join(root, 'pnpm-workspace.yaml'),
+    "packages:\n  - 'packages/*'\n",
+  );
+  for (const name of ['one', 'untested']) {
+    const dir = join(root, 'packages', name);
+    mkdirSync(join(dir, 'src/generated'), { recursive: true });
+    writeFileSync(join(dir, 'package.json'), '{}');
+    for (const file of [
+      'index.ts',
+      'generated/client.ts',
+      'index.spec.ts',
+      'index.test.ts',
+      'index.d.ts',
+      'test-setup.ts',
+    ])
+      writeFileSync(join(dir, 'src', file), '');
+  }
+  const population = workspacePopulation(root);
+  const patterns = coverageSourcePatterns(population);
+  const actual = [
+    ...globSync(patterns.include, { cwd: root, exclude: patterns.exclude }),
+  ].sort();
+  assert.deepEqual(actual, population.sources);
+  assert.equal(actual.length, 4);
+  assert.equal(patterns.include.length, 2);
 });
 test('preserves an existing package threshold even when other packages pass', () => {
   const root = temporary(),

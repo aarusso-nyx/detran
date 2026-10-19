@@ -4,12 +4,14 @@ import { pathToFileURL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import {
   angularCoveragePlugin,
+  coverageSourcePatterns,
   populationReporter,
   workspacePopulation,
 } from './coverage-support.mjs';
 
 const root = resolve(import.meta.dirname, '../..');
 const population = workspacePopulation(root);
+const coveragePatterns = coverageSourcePatterns(population);
 const testResultsFile = resolve(
   root,
   '.devai/local/rounds/R-0036/coverage-runs',
@@ -92,8 +94,7 @@ export default defineConfig({
       clean: true,
       reportsDirectory: resolve(root, 'coverage'),
       reporter: ['json', 'json-summary', 'text-summary'],
-      include: population.sources,
-      exclude: [],
+      ...coveragePatterns,
     },
   },
 });

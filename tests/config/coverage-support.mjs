@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { getHeapStatistics } from 'node:v8';
 import { execFileSync } from 'node:child_process';
 import {
   existsSync,
@@ -119,7 +120,11 @@ export async function angularCoveragePlugin(root, app) {
             dirname(path),
           );
         };
-        const appConfig = load('tsconfig.app.json'),
+        const appConfig = load(
+            existsSync(join(appRoot, 'tsconfig.app.json'))
+              ? 'tsconfig.app.json'
+              : 'tsconfig.lib.json',
+          ),
           spec = load('tsconfig.spec.json');
         program = ts.createProgram(
           [...new Set([...spec.fileNames, ...appConfig.fileNames])],
@@ -154,6 +159,16 @@ export async function angularCoveragePlugin(root, app) {
         throw new Error(`COVERAGE_ORIGINAL_SOURCE_MAP_MISSING:${id}`);
       return { code, map: JSON.parse(map) };
     },
+  };
+}
+
+export function coverageSourcePatterns(population) {
+  // Vitest applies these patterns to every imported script. A literal pattern
+  // per source makes matching unnecessarily expensive across the whole workspace.
+  // The report still has to match the independent exact source census below.
+  return {
+    include: population.sourceRoots.map((root) => `${root}/**/*.ts`),
+    exclude: ['**/*.{spec,test,d}.ts', '**/test-setup.ts'],
   };
 }
 
@@ -237,11 +252,45 @@ export function populationReporter(
       ctx = vitest;
       collecting = vitest.config.coverage?.enabled !== false;
       if (collecting) {
+        // Vitest appends each project's default exclusions to the shared array.
+        // Remove only exact duplicates; retain every exclusion and its ordering.
+        // Mutate in place so an already initialized provider sees the same set.
+        const excludes = ctx.config.coverage?.exclude;
+        const originalExclusionCount = excludes?.length;
+        if (Array.isArray(excludes))
+          excludes.splice(0, excludes.length, ...new Set(excludes));
         candidate = execFileSync('git', ['rev-parse', 'HEAD'], {
           cwd: root,
           encoding: 'utf8',
         }).trim();
         rmSync(sidecar, { force: true });
+        if (testResultsFile) {
+          mkdirSync(dirname(testResultsFile), { recursive: true });
+          writeFileSync(
+            join(dirname(testResultsFile), 'collector-config.json'),
+            JSON.stringify(
+              {
+                candidate,
+                vitestVersion: ctx.version,
+                heapLimitBytes: getHeapStatistics().heap_size_limit,
+                root: ctx.config.root,
+                coverage: {
+                  originalExclusionCount,
+                  include: ctx.config.coverage.include,
+                  exclude: ctx.config.coverage.exclude,
+                  processingConcurrency:
+                    ctx.config.coverage.processingConcurrency,
+                },
+                projects: ctx.projects?.map((project) => ({
+                  name: project.name,
+                  root: project.config.root,
+                })),
+              },
+              null,
+              2,
+            ) + '\n',
+          );
+        }
       }
     },
     async onTestRunStart() {
