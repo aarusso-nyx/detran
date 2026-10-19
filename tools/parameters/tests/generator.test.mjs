@@ -265,7 +265,7 @@ test('dado legal_bases acrescentada quando gerar então defaults e metadados das
     withLegalBases(
       value.replace(
         '| `rait.source.pending` | S |',
-        '| `rait.ladder.B` | json | 50/75/90 % | vigente | não | não | OD-006 | radar |\n| `rait.source.pending` | S |',
+        '| `rait.signing.schedule` | json | 50/75/90 % | vigente | não | não | OD-006 | radar |\n| `rait.source.pending` | S |',
       ),
     ),
   );
@@ -280,7 +280,8 @@ test('dado legal_bases acrescentada quando gerar então defaults e metadados das
       assert.deepEqual(afterSemantics, beforeSemantics);
     }
     assert.equal(
-      after.entries.find((entry) => entry.key === 'rait.ladder.B')?.value_json,
+      after.entries.find((entry) => entry.key === 'rait.signing.schedule')
+        ?.value_json,
       '50/75/90 %',
     );
     assert.equal(

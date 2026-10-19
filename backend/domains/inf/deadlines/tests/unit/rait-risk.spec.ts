@@ -341,3 +341,11 @@ for (const [track, clockCode, flags] of [
     }
   }
 }
+
+it('rejects a sparse sourceVersions array as missing mandatory provenance', () => {
+  const value = input();
+  value.clocks[0]!.sourceVersions = new Array<string>(1);
+  expect(api.evaluateRaitRisk).toBeTypeOf('function');
+  expect(api.RaitRiskSourceError).toBeTypeOf('function');
+  expect(() => api.evaluateRaitRisk(value)).toThrow(api.RaitRiskSourceError);
+});

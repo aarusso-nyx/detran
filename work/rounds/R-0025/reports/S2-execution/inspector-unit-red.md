@@ -23,3 +23,13 @@ The historical table-identity finding above is **resolved** by Architect commit 
 ## Independent source review F6 — unexecuted additional sensor
 
 Added the fifteenth storage sensor: UPDATE of generated updated_at must reject42501 and preserve the entire exact row after rollback to the local savepoint. Existing reason UPDATE and DELETE controls remain unchanged. All15 DB sensors remain unexecuted/schema-pending until the exclusive lease; no new protection result is claimed. The original89 pure tests and their RED hashes are unchanged.
+
+## Source-backed generic JSON fixture disposition
+
+The historical legal_bases noninterference control inserted the unsupported string50/75/90% under now-reserved exact rait.ladder.B. R2 correctly rejects that fixture. Changed only its inserted key and direct-string lookup to existing unrelated generic JSON key rait.signing.schedule. The full before/after metadata equivalence loop, direct string assertion and all31 new typed-ladder rejection controls remain unchanged. No parser fallback or assertion removal.
+
+Old parser rerun:70executed,39PASS/31intentionalRED/0skip; the corrected unrelated control passes. Before hash2d0e3f7a3635167f1f9973349ef0e3eda73597699526ac5f0ccf8925e54ea3f3; formatted after hash261833a517f00f4bc96f7063a1719d88eab9eb7d0924dfa0a9224db8edde796a. The source catalogue confirms rait.signing.schedule is a generic json key. Original RED artifacts remain historical; the Engineer must rerun the transferred corrected tests unchanged to GREEN.
+
+## Sparse mandatory provenance — actual candidate behavioral RED
+
+Appended one negative to the pure suite; original89 remain unchanged (total90). A sparse sourceVersions=Array(1) has a missing mandatory reference. Against actual implemented candidate SHA c23389a69456e6d67d453498a64cebdd5aff7076a67dfe9232c1a58320d553e4, a read-only tsx probe observes successful evaluation with undefined in public sourceVersions, then fails the expected RaitRiskSourceError assertion. This is real behavioral RED, distinct from the original missing-export prerequisite results. Candidate source was never modified. Exact probe and raw log are preserved alongside this report; parent commits the counterexample before dispatching the Engineer fix.
