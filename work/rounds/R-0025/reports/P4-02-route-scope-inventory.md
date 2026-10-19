@@ -124,7 +124,7 @@ allowlist. IU008 excludes free petition text outside instruction and suppresses
 third parties. NA/NP/AIT absence cannot reject admission; no generic document
 merits or all-document download permission follows. Exact projected identity/
 procuration evidence fields and document classes still need a closed source map
-before T2; unknown fields must remain unexposed, without inventing a product rule. This
+before T1 as a T0 deliverable; unknown fields must remain unexposed, without inventing a product rule. This
 remaining field/class map is an internal unfinished T0 deliverable, not an
 external approval blocker or proof that the whole preflight is complete.
 
@@ -134,7 +134,7 @@ external approval blocker or proof that the whole preflight is complete.
 | admissibility-checklist.component.ts | criterion, verdict, reason, evaluated_at | Only four approved criteria, scoped to the case; source-missing remains pending |
 | DeadlineChip in triage.page.ts | timer_code, due_on, legal_basis | UC002 additionally needs initial/applied/raw/extended deadline explanation from existing deadline engine; no new clock thresholds |
 | case-layout.page.ts | case, parties, clocks through CaseHeader; loadCaseBundle additionally fetches deadlines | Existing generic loads are dependencies to replace with explicit purpose projections; they are not authorization to return every DTO field |
-| UC002 / IU008 document needs | Signature/legitimacy evidence and verified procuration; NA/NP/AIT are own-agency classes whose absence cannot reject | This identifies required classes, not blanket document-body/storage_key access; freeze their exact allowed field/class mapping before T2 |
+| UC002 / IU008 document needs | Signature/legitimacy evidence and verified procuration; NA/NP/AIT are own-agency classes whose absence cannot reject | This identifies required classes, not blanket document-body/storage_key access; freeze their exact allowed field/class mapping before T1 (T0 deliverable) |
 
 No undefined party/contact, free-petition, document storage or other-case data
 becomes readable merely because the shared layout currently fetches it.

@@ -41,3 +41,16 @@ copy; its original receipt path therefore resolves to that presentation copy,
 and the archived original is the source for reproducing the dispatched hash.
 Review1 output and bridge receipt are unchanged. Corrected-delta prompt formatting
 is completed before dispatch. The final stable full-format run follows review2.
+
+Corrected-delta review2 returned PASS on frozen ba2e0b79. It verified the
+missing receipt correction, original archived prompt/output hashes, role/policy
+citations and separation of pre-T2 gates from release gates. Its two info notes
+are applied: the triage field/class map consistently belongs before T1, and
+actual final formatting is recorded after execution. This is documentation
+review PASS only; exact served model version is not inferred from CLI alias.
+
+Final stable pnpm format:check passed after review2 completed and removed its
+temporary files. The only subsequent edit is this result line, checked with
+targeted Prettier. git diff --check passed. Final preservation and91-source hash
+checks passed; review1 archived prompt/output and review2 prompt/output SHA256
+values match their immutable bridge receipts.
