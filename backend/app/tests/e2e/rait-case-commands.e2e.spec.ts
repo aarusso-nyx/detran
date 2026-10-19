@@ -266,6 +266,24 @@ async function persistentEffectCounts(): Promise<{
   };
 }
 
+async function casePoolScopes(caseId: string) {
+  return (
+    await fixture.owner.query<{
+      id: string;
+      tenant_id: string;
+      case_id: string;
+      pool_id: string;
+      active: boolean;
+      authorization_ref: string;
+      source_ref: string;
+    }>(
+      `select id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref
+       from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 order by id`,
+      [RAIT_TENANT, caseId],
+    )
+  ).rows;
+}
+
 let app: INestApplication;
 let fixture: RaitCaseCommandFixture;
 let trustServer: Server;
@@ -673,6 +691,25 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
                   : command.body,
             }
           : command;
+        // Admission can create initial routing on a fresh database, while an
+        // existing active OR revoked disposition must remain unchanged. Fix the
+        // candidate precondition and expectation before invoking the handler.
+        const routingBefore =
+          command.name === 'admit'
+            ? await casePoolScopes(command.target)
+            : undefined;
+        if (routingBefore) {
+          const candidates = await fixture.owner.query<{ id: string }>(
+            `select p.id from inf.rait_pool p join inf.rait_case c
+               on c.tenant_id=p.tenant_id and c.id=$2
+             where p.tenant_id=$1 and p.active and p.strategy='pull'
+               and p.instance='defesa_previa' and c.instance=p.instance
+               and p.unit_id is not distinct from c.unit_id order by p.id`,
+            [RAIT_TENANT, command.target],
+          );
+          expect(candidates.rows).toEqual([{ id: RAIT_POOL }]);
+        }
+        const expectedRoutingActivations = routingBefore?.length === 0 ? 1 : 0;
         const before = await persistentEffectCounts();
         const response = await request(app.getHttpServer())
           .post(commandPath(invocation))
@@ -693,8 +730,46 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
         expect(after.replayBindings - before.replayBindings).toBe(
           actorBound ? 0 : 1,
         );
-        expect(after.poolActivations - before.poolActivations).toBe(0);
-        expect(after.auditTotal - before.auditTotal).toBe(actorBound ? 1 : 2);
+        expect(after.poolActivations - before.poolActivations).toBe(
+          expectedRoutingActivations,
+        );
+        expect(after.auditTotal - before.auditTotal).toBe(
+          (actorBound ? 1 : 2) + expectedRoutingActivations,
+        );
+        if (routingBefore) {
+          const routingAfter = await casePoolScopes(command.target);
+          if (expectedRoutingActivations === 0) {
+            expect(routingAfter).toEqual(routingBefore);
+          } else {
+            expect(routingAfter).toHaveLength(1);
+            expect(routingAfter[0]).toMatchObject({
+              tenant_id: RAIT_TENANT,
+              case_id: command.target,
+              pool_id: RAIT_POOL,
+              active: true,
+              authorization_ref: `command:admit:${RAIT_ACTOR}`,
+              source_ref: `pool:${RAIT_POOL}`,
+            });
+            const activation = await fixture.owner.query(
+              `select actor_id,details from audit.events
+                where tenant_id=$1 and action='INF_RAIT_CASE_POOL_SCOPE_ACTIVATE'
+                  and entity='inf.rait_case_pool_scope' and entity_id=$2`,
+              [RAIT_TENANT, routingAfter[0]!.id],
+            );
+            expect(activation.rows).toEqual([
+              {
+                actor_id: RAIT_ACTOR,
+                details: {
+                  caseId: command.target,
+                  parentVersion: 2,
+                  poolId: RAIT_POOL,
+                  authorizationRef: `command:admit:${RAIT_ACTOR}`,
+                  sourceRef: `pool:${RAIT_POOL}`,
+                },
+              },
+            ]);
+          }
+        }
       });
     }
 
