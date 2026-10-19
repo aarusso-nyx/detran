@@ -101,35 +101,14 @@ function output(argv) {
   ).trim();
 }
 if (mode === 'unit') {
-  for (const argv of [
-    ['pnpm', 'backend:test:unit'],
-    [
-      'pnpm',
-      '--filter',
-      '@detran/ch-juntas',
-      '--filter',
-      '@detran/ops-core',
-      '--filter',
-      '@detran/senatran-adapter',
-      '--filter',
-      'senatran-mock',
-      '--no-bail',
-      'run',
-      'test:unit',
-    ],
-    [
-      'pnpm',
-      '--filter',
-      './apps/**',
-      '--filter',
-      '@detran/ui',
-      '--workspace-concurrency=1',
-      '--no-bail',
-      'run',
-      'test',
-    ],
-  ])
-    await run(argv);
+  await run([
+    'pnpm',
+    'vitest',
+    'run',
+    '--config',
+    'tests/config/local.coverage.config.ts',
+    '--coverage.enabled=false',
+  ]);
   process.exitCode = failed ? 1 : 0;
 } else {
   let started = false,
