@@ -395,10 +395,13 @@ export class PreviewCaseClient extends CaseClient {
   private projectionPurpose(
     fixtures: RaitFixturesJson,
     caseId?: string | null,
-  ): 'S' | 'O' | 'M' | 'J' | 'T' {
+  ): 'S' | 'O' | 'M' | 'J' | 'T' | null {
     const item = fixtures.cases.find((candidate) => candidate.id === caseId);
-    if (item?.archived) return 'S';
+    if (caseId != null && !item) return null;
     const role = this.projectionState.role();
+    if (item?.archived) {
+      return role === 'AUDITOR' || role === 'rait-secretary' ? 'S' : null;
+    }
     if (role === 'rait-manager') return 'O';
     if (role === 'rait-secretary') return 'S';
     if (role === 'rait-analyst') {
@@ -417,7 +420,7 @@ export class PreviewCaseClient extends CaseClient {
       ].includes(role)
     )
       return 'J';
-    return 'S';
+    return null;
   }
 
   private readonly previewReader = inject(PreviewFixtureReader);
@@ -430,23 +433,30 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitCaseRead>> {
     return this.previewReader.list(query, CASE_SPEC, (fixtures) =>
-      cases(fixtures).map((record) =>
-        projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
-      ),
+      cases(fixtures)
+        .map((record) =>
+          projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitCase(id: string): Promise<RaitCaseRead> {
     return this.previewReader.get('cases', id, (fixtures) =>
-      cases(fixtures).map((record) =>
-        projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
-      ),
+      cases(fixtures)
+        .map((record) =>
+          projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override async verifyCaseAccess(caseId: string): Promise<void> {
     const fixtures = await this.fixtureStore.load();
-    if (!fixtures.cases.some((record) => record.id === caseId)) {
+    if (
+      !fixtures.cases.some((record) => record.id === caseId) ||
+      this.projectionPurpose(fixtures, caseId) === null
+    ) {
       throw new Error(`rait-preview-fixture-missing:cases:${caseId}`);
     }
   }
@@ -455,23 +465,39 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitPartyRead>> {
     return this.previewReader.list(query, PARTY_SPEC, (fixtures) =>
-      parties(fixtures).map((record) =>
-        projectRaitParty(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      parties(fixtures)
+        .filter(
+          (record) =>
+            !fixtures.cases.some(
+              (item) => item.id === record.case_id && item.archived,
+            ),
+        )
+        .map((record) =>
+          projectRaitParty(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitParty(id: string): Promise<RaitPartyRead> {
     return this.previewReader.get('parties', id, (fixtures) =>
-      parties(fixtures).map((record) =>
-        projectRaitParty(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      parties(fixtures)
+        .filter(
+          (record) =>
+            !fixtures.cases.some(
+              (item) => item.id === record.case_id && item.archived,
+            ),
+        )
+        .map((record) =>
+          projectRaitParty(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -479,23 +505,39 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitDocumentRead>> {
     return this.previewReader.list(query, DOCUMENT_SPEC, (fixtures) =>
-      documents(fixtures).map((record) =>
-        projectRaitDocument(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      documents(fixtures)
+        .filter(
+          (record) =>
+            !fixtures.cases.some(
+              (item) => item.id === record.case_id && item.archived,
+            ),
+        )
+        .map((record) =>
+          projectRaitDocument(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitDocument(id: string): Promise<RaitDocumentRead> {
     return this.previewReader.get('documents', id, (fixtures) =>
-      documents(fixtures).map((record) =>
-        projectRaitDocument(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      documents(fixtures)
+        .filter(
+          (record) =>
+            !fixtures.cases.some(
+              (item) => item.id === record.case_id && item.archived,
+            ),
+        )
+        .map((record) =>
+          projectRaitDocument(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -503,23 +545,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitPendingContentRead>> {
     return this.previewReader.list(query, PENDING_CONTENT_SPEC, (fixtures) =>
-      pendingContents(fixtures).map((record) =>
-        projectRaitPendingContent(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      pendingContents(fixtures)
+        .map((record) =>
+          projectRaitPendingContent(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitPendingContent(id: string): Promise<RaitPendingContentRead> {
     return this.previewReader.get('raitPendingContents', id, (fixtures) =>
-      pendingContents(fixtures).map((record) =>
-        projectRaitPendingContent(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      pendingContents(fixtures)
+        .map((record) =>
+          projectRaitPendingContent(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -527,23 +573,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitRedirectRead>> {
     return this.previewReader.list(query, REDIRECT_SPEC, (fixtures) =>
-      redirects(fixtures).map((record) =>
-        projectRaitRedirect(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      redirects(fixtures)
+        .map((record) =>
+          projectRaitRedirect(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitRedirect(id: string): Promise<RaitRedirectRead> {
     return this.previewReader.get('raitRedirects', id, (fixtures) =>
-      redirects(fixtures).map((record) =>
-        projectRaitRedirect(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      redirects(fixtures)
+        .map((record) =>
+          projectRaitRedirect(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -551,23 +601,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitAdmissibilityRead>> {
     return this.previewReader.list(query, ADMISSIBILITY_SPEC, (fixtures) =>
-      admissibility(fixtures).map((record) =>
-        projectRaitAdmissibility(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      admissibility(fixtures)
+        .map((record) =>
+          projectRaitAdmissibility(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitAdmissibility(id: string): Promise<RaitAdmissibilityRead> {
     return this.previewReader.get('admissibility', id, (fixtures) =>
-      admissibility(fixtures).map((record) =>
-        projectRaitAdmissibility(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      admissibility(fixtures)
+        .map((record) =>
+          projectRaitAdmissibility(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -575,23 +629,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitDeadlineRead>> {
     return this.previewReader.list(query, DEADLINE_SPEC, (fixtures) =>
-      deadlines(fixtures).map((record) =>
-        projectRaitDeadline(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      deadlines(fixtures)
+        .map((record) =>
+          projectRaitDeadline(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitDeadline(id: string): Promise<RaitDeadlineRead> {
     return this.previewReader.get('deadlines', id, (fixtures) =>
-      deadlines(fixtures).map((record) =>
-        projectRaitDeadline(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      deadlines(fixtures)
+        .map((record) =>
+          projectRaitDeadline(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -599,23 +657,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitInquiryRead>> {
     return this.previewReader.list(query, INQUIRY_SPEC, (fixtures) =>
-      inquiries(fixtures).map((record) =>
-        projectRaitInquiry(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      inquiries(fixtures)
+        .map((record) =>
+          projectRaitInquiry(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitInquiry(id: string): Promise<RaitInquiryRead> {
     return this.previewReader.get('inquiries', id, (fixtures) =>
-      inquiries(fixtures).map((record) =>
-        projectRaitInquiry(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      inquiries(fixtures)
+        .map((record) =>
+          projectRaitInquiry(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -623,23 +685,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitDraftRead>> {
     return this.previewReader.list(query, DRAFT_SPEC, (fixtures) =>
-      drafts(fixtures).map((record) =>
-        projectRaitDraft(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      drafts(fixtures)
+        .map((record) =>
+          projectRaitDraft(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitDraft(id: string): Promise<RaitDraftRead> {
     return this.previewReader.get('raitDrafts', id, (fixtures) =>
-      drafts(fixtures).map((record) =>
-        projectRaitDraft(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      drafts(fixtures)
+        .map((record) =>
+          projectRaitDraft(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -647,23 +713,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitDecisionRead>> {
     return this.previewReader.list(query, DECISION_SPEC, (fixtures) =>
-      decisions(fixtures).map((record) =>
-        projectRaitDecision(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      decisions(fixtures)
+        .map((record) =>
+          projectRaitDecision(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitDecision(id: string): Promise<RaitDecisionRead> {
     return this.previewReader.get('decisions', id, (fixtures) =>
-      decisions(fixtures).map((record) =>
-        projectRaitDecision(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      decisions(fixtures)
+        .map((record) =>
+          projectRaitDecision(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -671,23 +741,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitCommunicationRead>> {
     return this.previewReader.list(query, COMMUNICATION_SPEC, (fixtures) =>
-      communications(fixtures).map((record) =>
-        projectRaitCommunication(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      communications(fixtures)
+        .map((record) =>
+          projectRaitCommunication(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitCommunication(id: string): Promise<RaitCommunicationRead> {
     return this.previewReader.get('communications', id, (fixtures) =>
-      communications(fixtures).map((record) =>
-        projectRaitCommunication(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      communications(fixtures)
+        .map((record) =>
+          projectRaitCommunication(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -695,23 +769,27 @@ export class PreviewCaseClient extends CaseClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitCaseEventRead>> {
     return this.previewReader.list(query, EVENT_SPEC, (fixtures) =>
-      caseEvents(fixtures).map((record) =>
-        projectRaitCaseEvent(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      caseEvents(fixtures)
+        .map((record) =>
+          projectRaitCaseEvent(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitCaseEvent(id: string): Promise<RaitCaseEventRead> {
     return this.previewReader.get('caseEvents', id, (fixtures) =>
-      caseEvents(fixtures).map((record) =>
-        projectRaitCaseEvent(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      caseEvents(fixtures)
+        .map((record) =>
+          projectRaitCaseEvent(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -860,8 +938,33 @@ export class PreviewCaseClient extends CaseClient {
 
 function projectRaitCase(
   record: RaitCase,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitCaseRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitCaseRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      protocol_number: record.protocol_number,
+      instance: record.instance,
+      circuit: record.circuit,
+      state: record.state,
+      unit_id: record.unit_id,
+      protocolled_at: record.protocolled_at,
+      version: record.version,
+      intake_channel: record.intake_channel,
+      admitted_at: record.admitted_at,
+      judge_body_received_at: record.judge_body_received_at,
+      judge_body_received_on: record.judge_body_received_on,
+      cetran_received_at: record.cetran_received_at,
+      cetran_received_on: record.cetran_received_on,
+      remitted_at: record.remitted_at,
+      decided_at: record.decided_at,
+      communicated_at: record.communicated_at,
+      closed_at: record.closed_at,
+      archived: record.archived,
+      pending_completion: record.pending_completion,
+      last_movement_at: record.last_movement_at,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -949,35 +1052,22 @@ function projectRaitCase(
       suspensive_effect: record.suspensive_effect,
       unit_id: record.unit_id,
     };
-  return {
-    id: record.id,
-    protocol_number: record.protocol_number,
-    instance: record.instance,
-    circuit: record.circuit,
-    state: record.state,
-    unit_id: record.unit_id,
-    protocolled_at: record.protocolled_at,
-    version: record.version,
-    intake_channel: record.intake_channel,
-    admitted_at: record.admitted_at,
-    judge_body_received_at: record.judge_body_received_at,
-    judge_body_received_on: record.judge_body_received_on,
-    cetran_received_at: record.cetran_received_at,
-    cetran_received_on: record.cetran_received_on,
-    remitted_at: record.remitted_at,
-    decided_at: record.decided_at,
-    communicated_at: record.communicated_at,
-    closed_at: record.closed_at,
-    archived: record.archived,
-    pending_completion: record.pending_completion,
-    last_movement_at: record.last_movement_at,
-  };
+  return null;
 }
 
 function projectRaitParty(
   record: RaitParty,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitPartyRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPartyRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      role: record.role,
+      representation_kind: record.representation_kind,
+      representation_verified: record.representation_verified,
+    };
   if (purpose === 'M')
     return {
       id: record.id,
@@ -1013,19 +1103,22 @@ function projectRaitParty(
       representation_verified: record.representation_verified,
       representation_document_id: record.representation_document_id,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    role: record.role,
-    representation_kind: record.representation_kind,
-    representation_verified: record.representation_verified,
-  };
+  return null;
 }
 
 function projectRaitDocument(
   record: RaitDocument,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitDocumentRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitDocumentRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      kind: record.kind,
+      origin: record.origin,
+      attached_at: record.attached_at,
+    };
   if (purpose === 'M')
     return {
       id: record.id,
@@ -1048,28 +1141,23 @@ function projectRaitDocument(
       digitised_from_paper: record.digitised_from_paper,
       attached_at: record.attached_at,
     };
-  if (purpose === 'T')
-    return {
-      id: record.id,
-      case_id: record.case_id,
-      kind: record.kind,
-      origin: record.origin,
-      attached_at: record.attached_at,
-      digitised_from_paper: record.digitised_from_paper,
-    };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    kind: record.kind,
-    origin: record.origin,
-    attached_at: record.attached_at,
-  };
+  return null;
 }
 
 function projectRaitPendingContent(
   record: RaitPendingContent,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitPendingContentRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPendingContentRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      due_on: record.due_on,
+      opened_at: record.opened_at,
+      closed_at: record.closed_at,
+      outcome: record.outcome,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1099,20 +1187,25 @@ function projectRaitPendingContent(
       closed_at: record.closed_at,
       outcome: record.outcome,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    due_on: record.due_on,
-    opened_at: record.opened_at,
-    closed_at: record.closed_at,
-    outcome: record.outcome,
-  };
+  return null;
 }
 
 function projectRaitRedirect(
   record: RaitRedirect,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitRedirectRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitRedirectRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      direction: record.direction,
+      protocol_number: record.protocol_number,
+      counterpart_agency: record.counterpart_agency,
+      origin_protocolled_on: record.origin_protocolled_on,
+      deadline_restored: record.deadline_restored,
+      redirected_at: record.redirected_at,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1154,22 +1247,22 @@ function projectRaitRedirect(
       redirected_at: record.redirected_at,
       redirected_by: record.redirected_by,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    direction: record.direction,
-    protocol_number: record.protocol_number,
-    counterpart_agency: record.counterpart_agency,
-    origin_protocolled_on: record.origin_protocolled_on,
-    deadline_restored: record.deadline_restored,
-    redirected_at: record.redirected_at,
-  };
+  return null;
 }
 
 function projectRaitAdmissibility(
   record: RaitAdmissibility,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitAdmissibilityRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitAdmissibilityRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      criterion: record.criterion,
+      verdict: record.verdict,
+      evaluated_at: record.evaluated_at,
+    };
   if (purpose === 'M')
     return {
       id: record.id,
@@ -1199,19 +1292,28 @@ function projectRaitAdmissibility(
       reason: record.reason,
       evaluated_at: record.evaluated_at,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    criterion: record.criterion,
-    verdict: record.verdict,
-    evaluated_at: record.evaluated_at,
-  };
+  return null;
 }
 
 function projectRaitDeadline(
   record: RaitDeadline,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitDeadlineRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitDeadlineRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      timer_code: record.timer_code,
+      start_basis: record.start_basis,
+      started_on: record.started_on,
+      raw_due_on: record.raw_due_on,
+      due_on: record.due_on,
+      business_days: record.business_days,
+      extension_count: record.extension_count,
+      satisfied_at: record.satisfied_at,
+      legal_basis: record.legal_basis,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1269,25 +1371,25 @@ function projectRaitDeadline(
       extension_count: record.extension_count,
       legal_basis: record.legal_basis,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    timer_code: record.timer_code,
-    start_basis: record.start_basis,
-    started_on: record.started_on,
-    raw_due_on: record.raw_due_on,
-    due_on: record.due_on,
-    business_days: record.business_days,
-    extension_count: record.extension_count,
-    satisfied_at: record.satisfied_at,
-    legal_basis: record.legal_basis,
-  };
+  return null;
 }
 
 function projectRaitInquiry(
   record: RaitInquiry,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitInquiryRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitInquiryRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      requested_at: record.requested_at,
+      due_on: record.due_on,
+      extension_count: record.extension_count,
+      answered_at: record.answered_at,
+      answered_on: record.answered_on,
+      outcome: record.outcome,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1327,22 +1429,24 @@ function projectRaitInquiry(
       answered_on: record.answered_on,
       outcome: record.outcome,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    requested_at: record.requested_at,
-    due_on: record.due_on,
-    extension_count: record.extension_count,
-    answered_at: record.answered_at,
-    answered_on: record.answered_on,
-    outcome: record.outcome,
-  };
+  return null;
 }
 
 function projectRaitDraft(
   record: RaitDraft,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitDraftRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitDraftRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      version: record.version,
+      status: record.status,
+      submitted_at: record.submitted_at,
+      returned_at: record.returned_at,
+      return_count: record.return_count,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1381,21 +1485,23 @@ function projectRaitDraft(
       return_guidance: record.return_guidance,
       return_count: record.return_count,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    version: record.version,
-    status: record.status,
-    submitted_at: record.submitted_at,
-    returned_at: record.returned_at,
-    return_count: record.return_count,
-  };
+  return null;
 }
 
 function projectRaitDecision(
   record: RaitDecision,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitDecisionRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitDecisionRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      circuit: record.circuit,
+      decision_kind: record.decision_kind,
+      decided_at: record.decided_at,
+      published_at: record.published_at,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1433,20 +1539,25 @@ function projectRaitDecision(
       signature_ref: record.signature_ref,
       published_at: record.published_at,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    circuit: record.circuit,
-    decision_kind: record.decision_kind,
-    decided_at: record.decided_at,
-    published_at: record.published_at,
-  };
+  return null;
 }
 
 function projectRaitCommunication(
   record: RaitCommunication,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitCommunicationRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitCommunicationRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      decision_id: record.decision_id,
+      channel: record.channel,
+      sent_at: record.sent_at,
+      effective_on: record.effective_on,
+      next_deadline_on: record.next_deadline_on,
+      authority_appeal_notice: record.authority_appeal_notice,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1478,22 +1589,23 @@ function projectRaitCommunication(
       next_deadline_on: record.next_deadline_on,
       authority_appeal_notice: record.authority_appeal_notice,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    decision_id: record.decision_id,
-    channel: record.channel,
-    sent_at: record.sent_at,
-    effective_on: record.effective_on,
-    next_deadline_on: record.next_deadline_on,
-    authority_appeal_notice: record.authority_appeal_notice,
-  };
+  return null;
 }
 
 function projectRaitCaseEvent(
   record: RaitCaseEvent,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitCaseEventRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitCaseEventRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      event_type: record.event_type,
+      from_state: record.from_state,
+      to_state: record.to_state,
+      occurred_at: record.occurred_at,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1523,12 +1635,5 @@ function projectRaitCaseEvent(
       occurred_at: record.occurred_at,
       actor_id: record.actor_id,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    event_type: record.event_type,
-    from_state: record.from_state,
-    to_state: record.to_state,
-    occurred_at: record.occurred_at,
-  };
+  return null;
 }
