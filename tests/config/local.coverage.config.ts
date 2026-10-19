@@ -1,0 +1,72 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { defineConfig } from 'vitest/config';
+import {
+  angularCoveragePlugin,
+  populationReporter,
+  workspacePopulation,
+} from './coverage-support.mjs';
+
+const root = resolve(import.meta.dirname, '../..');
+const population = workspacePopulation(root);
+const projects = [],
+  policies = [],
+  angular = [];
+if (
+  (process.env.DETRAN_TEST_TIER ?? 'unit') !== 'unit' ||
+  (process.env.SENATRAN_TEST_TIER ?? 'unit') !== 'unit'
+)
+  throw new Error('COVERAGE_LOCAL_UNIT_POPULATION_REQUIRED');
+for (const pkg of population.packages) {
+  const file = resolve(root, pkg, 'vitest.config.ts');
+  if (!existsSync(file)) continue;
+  const original = (await import(/* @vite-ignore */ pathToFileURL(file).href))
+    .default;
+  if (typeof original !== 'object' || original === null)
+    throw new Error(`COVERAGE_PROJECT_CONFIG_UNSUPPORTED:${pkg}`);
+  const originalTest = original.test ?? {};
+  const plugins = [...(original.plugins ?? [])];
+  const jit = plugins.findIndex(
+    (plugin) => plugin?.name === 'angular-jit-initializer-apis',
+  );
+  if (jit >= 0) {
+    const plugin = await angularCoveragePlugin(root, pkg);
+    plugins[jit] = plugin;
+    angular.push(plugin);
+  }
+  const coverage = originalTest.coverage;
+  if (coverage?.thresholds)
+    policies.push({
+      root: pkg,
+      thresholds: coverage.thresholds,
+      include: coverage.include ?? ['**/*.ts'],
+      exclude: coverage.exclude ?? [],
+    });
+  const { coverage: _coverage, ...test } = originalTest;
+  projects.push({
+    ...original,
+    root: resolve(root, pkg),
+    plugins,
+    test: { ...test, name: pkg, coverage: undefined },
+  });
+}
+export default defineConfig({
+  root,
+  plugins: angular,
+  test: {
+    name: 'DETRAN full-source local unit coverage',
+    projects,
+    maxWorkers: 2,
+    reporters: ['default', populationReporter(root, population, policies)],
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      clean: true,
+      reportsDirectory: resolve(root, 'coverage'),
+      reporter: ['json', 'json-summary', 'text-summary'],
+      include: population.sources,
+      exclude: [],
+    },
+  },
+});

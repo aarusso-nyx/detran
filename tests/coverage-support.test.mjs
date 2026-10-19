@@ -1,0 +1,199 @@
+import { afterEach, test } from 'node:test';
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import {
+  assertSourcePopulation,
+  populationReporter,
+  verifyExistingThresholds,
+  workspacePopulation,
+} from './config/coverage-support.mjs';
+
+const directories = [];
+afterEach(() => {
+  for (const dir of directories.splice(0))
+    rmSync(dir, { recursive: true, force: true });
+});
+function temporary() {
+  const dir = mkdtempSync(join(tmpdir(), 'detran-coverage-'));
+  directories.push(dir);
+  return dir;
+}
+function coverage(path, hits = 1) {
+  return {
+    path,
+    statementMap: {
+      0: { start: { line: 1, column: 0 }, end: { line: 1, column: 4 } },
+    },
+    s: { 0: hits },
+    fnMap: {},
+    f: {},
+    branchMap: {},
+    b: {},
+  };
+}
+test('discovers every workspace package, including sources without tests', () => {
+  const root = temporary();
+  writeFileSync(
+    join(root, 'pnpm-workspace.yaml'),
+    "packages:\n  - 'packages/*'\n",
+  );
+  for (const name of ['one', 'untested']) {
+    const dir = join(root, 'packages', name);
+    mkdirSync(join(dir, 'src'), { recursive: true });
+    writeFileSync(join(dir, 'package.json'), '{}');
+    writeFileSync(join(dir, 'src/index.ts'), 'export const value=1;');
+    writeFileSync(join(dir, 'src/index.spec.ts'), '');
+  }
+  const result = workspacePopulation(root);
+  assert.deepEqual(result.packages, ['packages/one', 'packages/untested']);
+  assert.deepEqual(result.sources, [
+    'packages/one/src/index.ts',
+    'packages/untested/src/index.ts',
+  ]);
+});
+test('rejects both missing source files and unexpected substitutes', () => {
+  assert.throws(
+    () => assertSourcePopulation(['a.ts', 'b.ts'], ['a.ts', 'other.ts']),
+    /COVERAGE_SOURCE_POPULATION_MISMATCH.*b.ts.*other.ts/,
+  );
+});
+test('preserves an existing package threshold even when other packages pass', () => {
+  const root = temporary(),
+    bad = join(root, 'mock/src/a.ts'),
+    good = join(root, 'other/src/a.ts');
+  const policy = [
+    {
+      root: 'mock',
+      include: ['src/**/*.ts'],
+      exclude: [],
+      thresholds: { lines: 70 },
+    },
+  ];
+  assert.throws(
+    () =>
+      verifyExistingThresholds(
+        root,
+        { [bad]: coverage(bad, 0), [good]: coverage(good) },
+        policy,
+      ),
+    /COVERAGE_EXISTING_THRESHOLD_FAILED/,
+  );
+});
+test('keeps maximum-uncovered and per-file threshold semantics', () => {
+  const root = temporary(),
+    a = join(root, 'mock/src/a.ts'),
+    b = join(root, 'mock/src/b.ts');
+  const report = { [a]: coverage(a), [b]: coverage(b, 0) };
+  const base = { root: 'mock', include: ['src/**/*.ts'], exclude: [] };
+  assert.equal(
+    verifyExistingThresholds(root, report, [
+      { ...base, thresholds: { lines: -1 } },
+    ]).length,
+    1,
+  );
+  assert.throws(
+    () =>
+      verifyExistingThresholds(root, report, [
+        { ...base, thresholds: { lines: 50, perFile: true } },
+      ]),
+    /COVERAGE_EXISTING_THRESHOLD_FAILED/,
+  );
+});
+function fixture() {
+  const root = temporary();
+  execFileSync('git', ['init', '--quiet', root]);
+  execFileSync(
+    'git',
+    [
+      '-c',
+      'user.name=DEVAI Inspector',
+      '-c',
+      'user.email=inspector@devai.local',
+      'commit',
+      '--quiet',
+      '--allow-empty',
+      '-m',
+      'test(coverage): isolated producer fixture',
+    ],
+    { cwd: root },
+  );
+  const file = join(root, 'src/a.ts'),
+    moduleId = join(root, 'src/a.spec.ts');
+  mkdirSync(join(root, 'coverage'));
+  writeFileSync(
+    join(root, 'coverage/coverage-final.json'),
+    JSON.stringify({ [file]: coverage(file) }),
+  );
+  const context = {
+    version: '4.1.11',
+    config: {},
+    filenamePattern: [],
+    globTestSpecifications: async () => [{ project: { name: 'p' }, moduleId }],
+  };
+  const reporter = populationReporter(
+    root,
+    { packages: ['p'], sourceRoots: ['src'], sources: ['src/a.ts'] },
+    [],
+  );
+  reporter.onInit(context);
+  return {
+    root,
+    context,
+    reporter,
+    module: { project: { name: 'p' }, moduleId },
+    sidecar: join(root, 'coverage/population.json'),
+  };
+}
+test('binds a complete report to the actual commit, full population and digest', async () => {
+  const f = fixture();
+  await f.reporter.onTestRunStart();
+  f.reporter.onTestRunEnd([f.module], [], 'passed');
+  f.reporter.onFinishedReportCoverage();
+  const value = JSON.parse(readFileSync(f.sidecar));
+  assert.equal(value.binding.selector, 'full-suite');
+  assert.match(value.binding.commit, /^[a-f0-9]{40}$/);
+  assert.match(value.binding.reportSha256, /^[a-f0-9]{64}$/);
+  assert.equal(value.filesMeasured, 1);
+});
+test('marks filtered runs partial and never binds failed tests', async () => {
+  const f = fixture();
+  f.context.filenamePattern = ['subset'];
+  await f.reporter.onTestRunStart();
+  f.reporter.onTestRunEnd([f.module], [], 'passed');
+  f.reporter.onFinishedReportCoverage();
+  assert.equal(
+    JSON.parse(readFileSync(f.sidecar)).binding.selector,
+    'partial-suite',
+  );
+  f.reporter.onInit(f.context);
+  f.reporter.onTestRunEnd([f.module], [], 'failed');
+  f.reporter.onFinishedReportCoverage();
+  assert.equal(existsSync(f.sidecar), false);
+});
+test('refuses to bind a report that silently omitted a source', async () => {
+  const f = fixture();
+  await f.reporter.onTestRunStart();
+  writeFileSync(join(f.root, 'coverage/coverage-final.json'), '{}');
+  f.reporter.onTestRunEnd([f.module], [], 'passed');
+  const previousExitCode = process.exitCode;
+  try {
+    assert.throws(
+      () => f.reporter.onFinishedReportCoverage(),
+      /COVERAGE_SOURCE_POPULATION_MISMATCH/,
+    );
+    assert.equal(process.exitCode, 1);
+  } finally {
+    process.exitCode = previousExitCode;
+  }
+  assert.equal(existsSync(f.sidecar), false);
+});
