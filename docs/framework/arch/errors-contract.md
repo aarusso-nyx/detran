@@ -35,3 +35,17 @@ approved source and implementation coverage before readiness can be claimed. No 
 retry of rejected writes, automatic legal outcome or invented robustness limit follows from
 this index. The sensor may recognize this error contract file while still reporting absent
 `error_semantics` invariants; preserve that distinction in the round assessment.
+
+## Approved helper obligation
+
+[ADR-0056](../../meta/adr/ADR-0056-source-bound-security-invariants.md) transcribes
+`INV-API-001` from the approved [R-0008 CTG-0001 §1 and C-0001-01–04](../../../work/rounds/R-0008/contracts/CTG-0001.md):
+`DetranError`, `assertIfMatch` and `etagOf` only. Its dedicated producer executes all
+13 existing helper tests. This declaration does not ratify the draft RAIT catalog,
+extend If-Match to every route, promise PII redaction or establish a passing native
+reading. Exact producer custody and current-candidate execution remain required.
+
+`INV-RBAC-001` separately preserves the approved shared guard boundary, including
+`ForbiddenException`; application-owned RAIT error translation remains outside that
+shared guard. Existing `INV-AUTH-001` is preserved. The SQL PII registry and unproved
+CI effects remain explicit observation gaps.

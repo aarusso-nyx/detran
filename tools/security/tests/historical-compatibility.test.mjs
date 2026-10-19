@@ -42,9 +42,14 @@ function fixture(run, { closures = false, all = false, retain = false } = {}) {
   const copy = (file) =>
     put(root, file, fs.readFileSync(path.join(repository, file)));
   try {
-    // Copy the worktree's Git pointer for read-only show/log/cat-file queries.
-    // No Git mutation is issued by this suite or the verifier.
-    copy('.git');
+    // Resolve the real Git directory for both normal clones and linked worktrees.
+    // The fixture only issues read-only show/log/cat-file queries against it.
+    const gitDirectory = execFileSync(
+      'git',
+      ['-C', repository, 'rev-parse', '--absolute-git-dir'],
+      { encoding: 'utf8' },
+    ).trim();
+    put(root, '.git', `gitdir: ${gitDirectory}\n`);
     if (closures || all) {
       for (const entry of manifest.closure_links) {
         copy(entry.record_source.path);

@@ -180,6 +180,10 @@ jobs:
         run: detran-native-vitest run --config ./tools/security/invariants/ops-perf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
       - name: Measure invariant-portal complete semantic population
         run: detran-native-vitest run --config ./tools/security/invariants/portal.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-rbac complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/rbac.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-errors complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/errors.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
 
   foundation:
     runs-on: ubuntu-latest

@@ -111,7 +111,7 @@ test('existing CI gate identities and candidate verified-local-rc publishing are
   assert.match(published.run, /--arg head_sha "\$CANDIDATE_SHA"/);
 });
 
-test('seven invariant semantic producers execute unconditionally with isolated database services', () => {
+test('nine invariant semantic producers execute unconditionally with isolated database services', () => {
   const job = workflow('ci').jobs['invariant-producers'];
   assert.ok(job);
   assert.equal(job.if, undefined);
@@ -143,7 +143,18 @@ test('seven invariant semantic producers execute unconditionally with isolated d
   const tasks = descriptor.tasks.filter((task) =>
     task.nodeId.startsWith('invariant-'),
   );
-  assert.equal(tasks.length, 7);
+  assert.equal(tasks.length, 9);
+  assert.deepEqual(tasks.map((task) => task.nodeId).sort(), [
+    'invariant-ch',
+    'invariant-dash',
+    'invariant-errors',
+    'invariant-est',
+    'invariant-inf',
+    'invariant-ops-perf',
+    'invariant-ops-queue',
+    'invariant-portal',
+    'invariant-rbac',
+  ]);
   for (const task of tasks) {
     const step = job.steps.find(
       (candidate) => candidate.run === task.argv.join(' '),

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-API-001",
+  "domain": "API",
+  "lifecycle": "supported",
+  "severity": "hard-fail",
+  "type": "error_semantics",
+  "title": "Shared error and version helpers preserve approved semantics",
+  "statement": "The shared DetranError and version helpers MUST preserve the approved CTG-0001 section 1 semantics: stable code/status and prefix-derived messageKey; assertIfMatch rejects absent, empty or malformed versions with <PREFIX>.IF_MATCH_REQUIRED/428, rejects a differing version with <PREFIX>.VERSION_CONFLICT/412 and expected version, accepts the approved matching version representations, and etagOf emits a quoted version.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["unit"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The complete existing scoped suites exercise the approved positive and negative semantics; exact native producer custody remains independently required."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/meta/adr/ADR-0056-source-bound-security-invariants.md",
+        "anchor": "decision"
+      },
+      {
+        "doc": "work/rounds/R-0008/contracts/CTG-0001.md",
+        "anchor": "1-detranerror-e-helpers-m1-backenddomainssharedsrcerrors"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["shared-error-helpers"],
+    "code_areas": [
+      "backend/domains/shared/src/errors/detran-error.ts",
+      "backend/domains/shared/src/errors/if-match.ts"
+    ]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["ADR-0056"],
+  "measurable_via": ["sense run"]
+}

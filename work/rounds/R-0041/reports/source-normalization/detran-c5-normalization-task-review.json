@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "topic": "authority",
+      "summary": "OD-C4-008 in R-0041 AUTHORIZATION.md is a delegated orchestrator recommendation inside the active window, not a new human answer. It authorizes exactly this additive transcription: ADR-0056 and its indexes, traces for the two IDs, the RBAC client domain through the official bind, two static producers over the complete existing populations, real semantic IDs, and unconditional CI steps. It requires independent review and authentic native measurements before any standing claim. The proposal stays inside that scope."
+    },
+    {
+      "severity": "info",
+      "topic": "INV-RBAC-001",
+      "summary": "The cited source is real. R-0007 CTG-0001 lines 868-888 keep shared/src/policy.guard.ts unchanged, delegate authorization to DetranPolicyGuard, keep allow/deny and missing-principal denial, and make the app adapter own the RAIT envelope. The proposed statement scopes itself to explicitly decorated routes, claims no default deny for undecorated routes, adds no grants, and leaves INV-AUTH-001 untouched. This is a faithful, minimal transcription."
+    },
+    {
+      "severity": "info",
+      "topic": "INV-API-001",
+      "summary": "R-0008 AUTHORIZATION shows decision GRANTED, and CTG-0001 C-0001-01..04 map to backend/domains/shared/src/errors/detran-error.spec.ts. The scope is limited to the DetranError, assertIfMatch and etagOf helpers. It does not ratify the draft RAIT catalogue. API is an existing core domain, so no taxonomy change is needed."
+    },
+    {
+      "severity": "info",
+      "topic": "populations",
+      "summary": "The ordinary test counts match the proposal. policy.guard.spec.ts declares 7 tests, so 7 + 729 = 736 RBAC cases. detran-error.spec.ts declares 13. policy.spec.ts shows 120 literal it/test calls that expand to the 729 cases already reported (749 total). dash.config.mjs already includes src/policy.spec.ts, so the 729-case overlap is real and must be declared, never counted as additional unique tests, as the proposal says."
+    },
+    {
+      "severity": "info",
+      "topic": "taxonomy",
+      "summary": "RBAC is absent from domains.json client [CH,DASH,EST,INF,OPS,PORTAL] and from law/policy/adopter-policy.json domains.client. It does not collide with core or framework names. The route the proposal takes is the supported one: edit the canonical policy, bump the policy identity, and run the official init bind. It does not hand-edit .devai/config/domains.json."
+    },
+    {
+      "severity": "low",
+      "topic": "implementation-check",
+      "summary": "Engineer acceptance should require that required IDs come from the actual collection plan, including the full nested describe path in detran-error.spec.ts. The 10 RBAC tuples listed are a subset of the 736-case population; the 729 expanded policy cases are presumably covered through the population, and the implementer should confirm that the bound IDs match the IDs actually collected. Do not count the 1531 observations as 1531 distinct cases; there are 802."
+    },
+    {
+      "severity": "low",
+      "topic": "residual-gaps",
+      "summary": "The SQL PII registry stays REVIEW, with no fabricated INSERT. Native provider standing and CI effects remain unproven until authentic native runs on the correct candidate. These are honest open gaps, not blockers for this task."
+    }
+  ]
+}

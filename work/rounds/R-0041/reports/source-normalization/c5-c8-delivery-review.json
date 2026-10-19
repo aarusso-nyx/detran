@@ -1,0 +1,92 @@
+{
+  "verdict": "FAIL",
+  "head": "1884b4ace9e757cc4c43cfb716bf558625a9d6e8",
+  "base": "d7f18c5f4d46bf15e1b8b47aef359d3397788703",
+  "merge_base": "d7f18c5f4d46bf15e1b8b47aef359d3397788703",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "blocker",
+      "class": "genuine-source-blocker",
+      "area": "C8/C7",
+      "file": "tools/security/tests/historical-compatibility.test.mjs",
+      "line": 47,
+      "summary": "The test fixture runs copy('.git'), which calls fs.readFileSync on <repo>/.git. That only works when .git is a worktree pointer file, as it is in this GovWT (gitdir: .../worktrees/detran5).",
+      "failure_scenario": "actions/checkout creates .git as a directory. readFileSync then throws EISDIR inside the before() hook, all 24 tests fail, `pnpm security:history:check` fails, and so the foundation `pnpm check` fails. The required check goes red for a test-harness reason, not because of history. Any normal developer clone hits the same failure. The Inspector's 24/24 PASS came from a worktree only. This was not executed in CI because the branch is not pushed and has no runs."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "class": "explicit-pending-measurement",
+      "area": "C6/C7",
+      "file": ".github/workflows/ci.yml",
+      "line": 181,
+      "summary": "The unconditional invariant-producers job runs invariant-ops-perf with the original 60s beforeAll limit and LOG_LEVEL=info. Locally the final direct run failed that hook: 0 executed, 3 skipped. This is recorded honestly in c6-producers/assessment.md.",
+      "failure_scenario": "If CI reproduces the beforeAll timeout, invariant-producers fails and the hardened foundation gate fails closed. That is the correct behaviour, but it blocks merge until the performance preparation is fixed in a separate scoped round. It must not be resolved by raising timeouts or editing assertions."
+    },
+    {
+      "id": "F3",
+      "severity": "info",
+      "class": "explicit-pending-measurement",
+      "area": "C6",
+      "file": "work/rounds/R-0041/reports/c6-vite-compatibility/clean-candidate-observation.md",
+      "summary": "At clean candidate 329f2472 (tree d20fdea7), all seven native tasks refuse with AUDIT_PROJECTION_LINK_REFUSED because of the tracked symlink apps/rait/web/src/app/preview/fixtures. The refusal is retained truthfully: the exit-3 envelope is on stderr, stdout is empty, no reading or proof was persisted, and no bypass was made.",
+      "failure_scenario": "None counted. These are not measured passes and the root doctor is REVIEW (inner ok:false). Closing this needs a separately reviewed provider or closure-policy repair."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "class": "explicit-pending-measurement",
+      "area": "C6/C7",
+      "file": "test-tasks.json",
+      "summary": "The EST, OPS-queue, OPS-perf and PORTAL tasks declare a DB allowlistedEnv but no native service profile. The installed provider refuses declared profiles with SENSE_NATIVE_SERVICE_BACKEND_UNIMPLEMENTED. CI supplies an isolated pinned PostGIS fixture, DDL/seed/legacy preparation and role_app_backend request URLs through job env.",
+      "failure_scenario": "Native custody of the service-backed tasks stays unavailable until the provider adds service-backend support. The CI runs are diagnostic only, not native readings."
+    },
+    {
+      "id": "F5",
+      "severity": "info",
+      "class": "verified-ok",
+      "area": "C6",
+      "summary": "The seven INV-* files differ from base only by the added measurable_via:[\"sense run\"]. test-tasks.json holds 782 unique requiredTestIds: CH 11, DASH 729, EST 21, INF 7, OPS-queue 8, OPS-perf 3, PORTAL 3. Each semantic subset in invariant-producers.json and adopter-policy is contained in its task. The configs set a literal include of one existing spec, passWithNoTests:false, and no filters. The integration specs contain no skip or runIf gates. The policy binding digest was updated and thresholds are untouched.",
+      "failure_scenario": "None."
+    },
+    {
+      "id": "F6",
+      "severity": "info",
+      "class": "verified-ok",
+      "area": "C6 toolchain",
+      "summary": "The vitest@4.1.11>vite:7.3.6 override plus an exact root vite 7.3.6 pin bind the root Vitest to the provider-supported Vite. The isolated audit has 0 vulnerabilities. The full-graph audit is unchanged at the pre-C2 baseline of 27. Angular build consumers stay at 22.1.6 / Vite 8.1.5. The lock reassociates the dashboard-web and rait-web Vitest peers between Vite 8.1.5 and 8.2.2; this is disclosed and no Angular build snapshot changed.",
+      "failure_scenario": "Minor: the lockfile peer spec for vitest@4.1.11 now reads 'vite: 7.3.6' while the app Vitest instances resolve Vite 8. This is pnpm's normal peer-mismatch tolerance, worth watching at C2."
+    },
+    {
+      "id": "F7",
+      "severity": "info",
+      "class": "verified-ok",
+      "area": "C7",
+      "summary": "invariant-producers has no if condition and its seven run steps match the task argv byte for byte. foundation now needs [evidence-gate, invariant-producers] with an explicit non-success failure step. The native alias is provisioned on both runners. The new checkout v7.0.1 and setup-node v7.0.0 SHAs resolve to the real tags (verified with the GitHub API). Concurrency is now workflow/ref-scoped. ci-isolation.test.mjs: 10/10 PASS, 0 skipped (independently re-run).",
+      "failure_scenario": "No CI run exists for this HEAD. Remote green is unmeasured."
+    },
+    {
+      "id": "F8",
+      "severity": "info",
+      "class": "verified-ok",
+      "area": "C8",
+      "summary": "An independent run of verify-historical-compatibility.mjs exited 0. Results: 1073 sealed sources, governed prefix of 150 records plus a 3-record tail that still requires native verification, R-0036 closed:PC-0022, and exactly two append transitions (R-0037@173ab167 1→2 lines, R-0025@2e04f29c 4→6 lines). The 14 ROUND_RECORD_MISSING entries, the R-0017 mutation finding, the ADR-0001 frontmatter gap and native_verdict_replacement:false are all retained. No waiver path exists. The constitution genesis sentence moved to the C8 map.",
+      "failure_scenario": "None for the verifier. My independent run of the 24 historical tests did not finish: it hit the 10-minute background limit while other suites loaded the machine, and I terminated it. The only 24/24 PASS evidence is the Inspector log, and per F1 it holds only in a worktree."
+    },
+    {
+      "id": "F9",
+      "severity": "info",
+      "class": "verified-ok",
+      "area": "C5/scope",
+      "summary": "Every path cited in the threat model and errors contract exists. The 428/412 If-Match semantics and rawBody match the source. Draft and limitation status is preserved and no new codes, retries or PII claims were added. There are no diffs under backend/, apps/, packages/, thresholds, record/proofs, .devai/state, R-0036/R-0037 or docs/meta/decisions. The canonical chain verify reports valid: 102 anchored, 53 historical gaps acknowledged, head 2c053f1a….",
+      "failure_scenario": "Two untracked directories appeared during the review: work/rounds/R-0041/reports/post-c2-observations/ and r0037-main-post-integration/. This review did not create them and they are not in HEAD."
+    }
+  ],
+  "blockers": {
+    "genuine_source": ["F1"],
+    "explicit_pending_measurement": ["F2", "F3", "F4", "no CI run for HEAD"]
+  },
+  "root_doctor_pass_claimed": false,
+  "review_notes": "Read-only apart from my two background runs (the 24 historical tests and a wait loop). The test run was stopped at its time limit and is not counted. A deviation from the requested no-background constraint."
+}
