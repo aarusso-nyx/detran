@@ -77,7 +77,8 @@ Shared policy source: backend/domains/shared/src/policy.ts:1378–1454.
 Its15 read roles are ten RAIT staff roles plus agency-admin, AUDITOR, bi-analyst,
 integration-operator and traffic-authority. Mapped surfaces include case, party,
 document, admissibility, deadline, inquiry, decision, communication, event and
-WORKLIST assignment/clock/alert. Pending-content, redirect, draft and batch-item
+WORKLIST assignment/clock/alert/impediment. Pending-content, redirect, draft, batch
+and batch-item
 lack ordinary surface rules, but explicit permissions/wildcards and global admins
 still reach mounted routes (policy.ts:1755–1760,1929–1943). A missing surface rule
 is not proof that a route is unreachable. Shared policy is outside this packet.
@@ -103,7 +104,7 @@ before pagination and source+target parent checks, never a parallel scoped route
 beside an unrestricted legacy route. Until each effective role has a complete
 sourced predicate, T0 cannot certify the required per-route/per-role matrix.
 
-/auditoria loads generic events (audit.facade.ts:30–32). /arquivo search/retention
+/auditoria loads generic events (audit.facade.ts:24–27). /arquivo search/retention
 loads generic cases and sealed dossier loads cases/documents/decisions/
 communications/events (archive.facade.ts:26–37,60–74,86–94). Route manifest:843–920
 admits secretary/AUDITOR archive and AUDITOR audit. JW-12:10–12 requires audit by
@@ -123,7 +124,20 @@ allowlist. IU008 excludes free petition text outside instruction and suppresses
 third parties. NA/NP/AIT absence cannot reject admission; no generic document
 merits or all-document download permission follows. Exact projected identity/
 procuration evidence fields and document classes still need a closed source map
-before T2; unknown fields must remain unexposed, without inventing a product rule.
+before T2; unknown fields must remain unexposed, without inventing a product rule. This
+remaining field/class map is an internal unfinished T0 deliverable, not an
+external approval blocker or proof that the whole preflight is complete.
+
+| Current triage consumer | Exact inspected field surface | Scope disposition |
+| --- | --- | --- |
+| triagem.schema.ts / triage.page.ts | Three editable verdict/reason pairs; outcome; nonAdmissionReason/nonAdmissionGrounds; readonly timeliness and caseState | Preserve existing typed command input; no client-set timeliness |
+| admissibility-checklist.component.ts | criterion, verdict, reason, evaluated_at | Only four approved criteria, scoped to the case; source-missing remains pending |
+| DeadlineChip in triage.page.ts | timer_code, due_on, legal_basis | UC002 additionally needs initial/applied/raw/extended deadline explanation from existing deadline engine; no new clock thresholds |
+| case-layout.page.ts | case, parties, clocks through CaseHeader; loadCaseBundle additionally fetches deadlines | Existing generic loads are dependencies to replace with explicit purpose projections; they are not authorization to return every DTO field |
+| UC002 / IU008 document needs | Signature/legitimacy evidence and verified procuration; NA/NP/AIT are own-agency classes whose absence cannot reject | This identifies required classes, not blanket document-body/storage_key access; freeze their exact allowed field/class mapping before T2 |
+
+No undefined party/contact, free-petition, document storage or other-case data
+becomes readable merely because the shared layout currently fetches it.
 
 ## Identity, priority, risk and coordinator-source classification
 
@@ -143,7 +157,9 @@ before T2; unknown fields must remain unexposed, without inventing a product rul
   implementation defects to repair once prerequisites are available, not policy
   questions to reopen.
 - Prescription risk lacks a current authoritative producer/freshness contract.
-  WORKLIST clock flag fields/defaults are not a calculation. Dashboard's
+  WORKLIST clock flag fields/defaults are not a calculation. The default-only
+  inf.infraction.risk_flag (38-inf-infraction.sql:19) is also not an authoritative
+  current RAIT risk calculation. Dashboard's
   prescription-risk.projection.ts:1 explicitly records missing producer OD-D17,
   and no RAIT publisher was found. Dashboard consumes events; it is not the owner
   of deadline/risk calculation. Do not treat default/seeded SEM_RISCO as assessed
@@ -152,6 +168,7 @@ before T2; unknown fields must remain unexposed, without inventing a product rul
 - Active coordinator membership supplies pool containment and status revocation,
   but mandate/appointment provenance is nullable (WORKLIST blueprint:214–274,
   350–351). Seed20 coordinator has no mandatory authorization reference.
+  WORKLIST handwritten rait-worklist-command.service.ts
   requirePoolBinding(:1232–1247) does not require coordinator role/provenance.
   Therefore ordinary memberships are not equivalent to ADR0046 bindings as-is.
   Use the approved explicit internal binding model, without a duplicate qualified
@@ -194,8 +211,14 @@ inventory access/provisioning is not inferred from access to local fixtures.
 3. Obtain a trusted deployed legacy inventory and approve a bounded compatibility/
    recovery disposition. Preserve all rows and receipts meanwhile; use the already
    approved safe409 for untrustworthy replay, never automatic re-claim.
-4. After those T0 conditions pass, run T1 RED before T2, then T3–T6 exactly as
-   approved. No claim UI activation, full-JW01 PASS or round closure in this report.
+4. Keep gate timing exact: complete the internal T0 source/field map before T1;
+   run T1 RED before Engineer changes. Unsourced shared-role predicates, any needed
+   command-path clarification and explicit legacy compatibility/disposition must
+   be resolved before T2. Authoritative identity/risk sources and a trusted deployed
+   inventory block release; missing production scope rows do not prohibit provisioned
+   tenant-fixture tests. They do not create an extra requirement to obtain all
+   production inputs before any T1 test. Then execute T3–T6 under the approved
+   acceptance. No claim UI activation, full-JW01 PASS or round closure in this report.
 
 These are implementation prerequisites exposed by the approved preflight, not a
 request to repeat approval of P4-02 or D1–D7. Unknown production facts require
