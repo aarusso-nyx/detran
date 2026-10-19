@@ -234,21 +234,35 @@ function headers(role: string) {
 async function persistentEffectCounts(): Promise<{
   outbox: number;
   audit: number;
+  replayBindings: number;
+  poolActivations: number;
+  auditTotal: number;
 }> {
   const result = await fixture.owner.query<{
     outbox_count: string;
     audit_count: string;
+    replay_binding_count: string;
+    pool_activation_count: string;
+    audit_total_count: string;
   }>(
     `select
        (select count(*)::text from integration.outbox
          where tenant_id = $1 and idempotency_key like 'r7-c3-%') as outbox_count,
        (select count(*)::text from audit.events
-         where tenant_id = $1) as audit_count`,
+         where tenant_id = $1 and action not in ('INF_RAIT_COMMAND_REPLAY_BIND','INF_RAIT_CASE_POOL_SCOPE_ACTIVATE')) as audit_count,
+       (select count(*)::text from audit.events
+         where tenant_id = $1 and action='INF_RAIT_COMMAND_REPLAY_BIND') as replay_binding_count,
+       (select count(*)::text from audit.events
+         where tenant_id = $1 and action='INF_RAIT_CASE_POOL_SCOPE_ACTIVATE') as pool_activation_count,
+       (select count(*)::text from audit.events where tenant_id=$1) as audit_total_count`,
     [RAIT_TENANT],
   );
   return {
     outbox: Number(result.rows[0]?.outbox_count ?? 0),
     audit: Number(result.rows[0]?.audit_count ?? 0),
+    replayBindings: Number(result.rows[0]?.replay_binding_count ?? 0),
+    poolActivations: Number(result.rows[0]?.pool_activation_count ?? 0),
+    auditTotal: Number(result.rows[0]?.audit_total_count ?? 0),
   };
 }
 
@@ -380,10 +394,7 @@ async function prepareProceduralScope() {
            and p.unit_id is not distinct from c.unit_id and p.active
        where c.tenant_id=$1 and c.id=any($2::uuid[])
        on conflict(tenant_id,case_id,pool_id) do nothing`,
-    [
-      RAIT_TENANT,
-      [RAIT_CASE('03'), RAIT_CASE('04'), RAIT_CASE('05'), RAIT_CASE('07')],
-    ],
+    [RAIT_TENANT, [RAIT_CASE('05'), RAIT_CASE('06'), RAIT_CASE('07')]],
   );
 }
 
@@ -588,6 +599,11 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
     expect(response.body).toHaveProperty('events');
     const after = await persistentEffectCounts();
     expect(after.audit - before.audit).toBe(1);
+    // ADR0050 adds private replay provenance and the existing scoped routing
+    // writer records activation; neither replaces the single legal audit.
+    expect(after.replayBindings - before.replayBindings).toBe(1);
+    expect(after.poolActivations - before.poolActivations).toBe(1);
+    expect(after.auditTotal - before.auditTotal).toBe(3);
   });
 
   it.each(DETRAN_ROLES.filter((role) => role !== 'rait-secretary'))(
@@ -671,6 +687,14 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
         const after = await persistentEffectCounts();
         expect(after.outbox - before.outbox).toBe(command.eventCount);
         expect(after.audit - before.audit).toBe(1);
+        const actorBound = ['admit', 'non-admission', 'claim-next'].includes(
+          command.name,
+        );
+        expect(after.replayBindings - before.replayBindings).toBe(
+          actorBound ? 0 : 1,
+        );
+        expect(after.poolActivations - before.poolActivations).toBe(0);
+        expect(after.auditTotal - before.auditTotal).toBe(actorBound ? 1 : 2);
       });
     }
 
@@ -813,6 +837,13 @@ describe('CTG-0001 §10.9 — auditoria transacional e replay HTTP', () => {
       const afterEffects = await persistentEffectCounts();
       expect(afterEffects.outbox - beforeEffects.outbox).toBe(1);
       expect(afterEffects.audit - beforeEffects.audit).toBe(1);
+      expect(afterEffects.replayBindings - beforeEffects.replayBindings).toBe(
+        0,
+      );
+      expect(afterEffects.poolActivations - beforeEffects.poolActivations).toBe(
+        0,
+      );
+      expect(afterEffects.auditTotal - beforeEffects.auditTotal).toBe(1);
       await expect(caseSnapshot()).resolves.toMatchObject({
         state: 'NAO_CONHECIDO',
         version: 2,
