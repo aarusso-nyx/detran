@@ -164,3 +164,11 @@ same-unit defense pool exclusion and preservation of other-instance constraints.
 Supplemental checks: targeted WORKLIST blueprint formatting and JSON/index
 assertions PASS; runtime generation and real DB assertions remain Engineer/Inspector
 work at their separate checkpoints.
+
+## Internal generated-symbol correction
+
+Architect checkpoint: internal entity name RaitCasePoolScopeRecord replaces
+RaitCasePoolScope to avoid collision between the generated service class and the
+approved handwritten RaitCasePoolScopeService provider. Table, fields, constraints
+and operations[] are unchanged. This is an internal symbol correction; no role,
+HTTP operation or business rule changes. Attributable OpenAPI is regenerated.
