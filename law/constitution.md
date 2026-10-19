@@ -6,5 +6,4 @@ and SHA-256 digest are pinned in `.devai/config/project.json` by
 `devai init bind --constitution --write`.
 
 This file is the Architect-owned reading-order entrypoint. It does not restate
-or override the pinned Constitution. The legacy root `CONSTITUTION.md` is
-preserved as historical genesis evidence and is not the active binding.
+or override the pinned Constitution.

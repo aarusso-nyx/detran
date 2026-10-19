@@ -1,0 +1,166 @@
+[
+  {
+    "invariant": "INV-CH-001",
+    "task": "invariant-ch",
+    "kind": "unit_test",
+    "population": "detran-invariant-ch-v1",
+    "complete_test_count": 11,
+    "semantic_required_count": 5,
+    "required_titles": [
+      "AC-PEC-002-1 opens an encounter only from a checked-in appointment",
+      "AC-PEC-002-1 resolves the latest checked-in appointment when omitted",
+      "AC-PEC-003-2 accepts only a scoped, approved, non-expired check-in exception",
+      "AC-PEC-002-1 rejects an appointment in NO_SHOW",
+      "AC-PEC-002-1 rejects an appointment in CANCELLED"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/ch.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-DASH-001",
+    "task": "invariant-dash",
+    "kind": "unit_test",
+    "population": "detran-invariant-dash-v1",
+    "complete_test_count": 729,
+    "semantic_required_count": 3,
+    "required_titles": [
+      "AUDITOR holds every dashboard:<resource>:read permission of CTG-0001 §3 (CTG-0001 §8.1.10)",
+      "denies AUDITOR every dashboard mutation (CTG-0001 §8.2.22)",
+      "denies DPO the dashboard export permissions, read-only by CTG-0001 §8.2.22"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/dash.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-EST-001",
+    "task": "invariant-est",
+    "kind": "integration_test",
+    "population": "detran-invariant-est-v1",
+    "complete_test_count": 21,
+    "semantic_required_count": 4,
+    "required_titles": [
+      "dado o blueprint quando comparado ao contrato então C-1-01 e C-1-02 permanecem íntegros",
+      "dadas as tabelas de domínio quando lidas pelo catálogo então C-1-03 força RLS, política e gatilho de tenant em todas",
+      "dadas fixtures de tenant A quando lidas por role_app_backend no tenant B então C-1-13 retorna zero linhas",
+      "dado role_app_backend no tenant B quando tenta gravar uma linha de tenant A então C-1-03 e C-1-13 rejeitam o cruzamento"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/est.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-INF-001",
+    "task": "invariant-inf",
+    "kind": "unit_test",
+    "population": "detran-invariant-inf-v1",
+    "complete_test_count": 7,
+    "semantic_required_count": 4,
+    "required_titles": [
+      "dado um AIT em RASCUNHO_OFFLINE quando finalizado então transita para FINALIZADO_LOCAL",
+      "dado um AIT em RASCUNHO_OFFLINE quando finalizado então preserva hash assinatura e histórico",
+      "C-0001-09 — dado o AIT …f8000010 (RASCUNHO_OFFLINE, fixture 25-fixtures-teat.sql) quando finalize então FINALIZADO_LOCAL, content_hash não nulo e version +1",
+      "C-0001-10 — dado o AIT …f8000130 (INTEGRADO) quando finalize então 409 TEAT.AIT_STATE_INVALID com context.allowed=[\"RASCUNHO_OFFLINE\"] e context.command=\"finalize\""
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/inf.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-OPS-001",
+    "task": "invariant-ops-queue",
+    "kind": "integration_test",
+    "population": "detran-invariant-ops-queue-v1",
+    "complete_test_count": 8,
+    "semantic_required_count": 2,
+    "required_titles": [
+      "C-0002-36 — dado POST shifts/{id}/close com item received do device dentro do turno e sem reason então 422 TEAT.SHIFT_CLOSE_PENDING_QUEUE com context.pendingCount",
+      "C-0002-36 — dado o mesmo fechamento **com** reason então fecha e o evento TURNO_FECHADO carrega pendingCount"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/ops-queue.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-OPS-002",
+    "task": "invariant-ops-perf",
+    "kind": "integration_test",
+    "population": "detran-invariant-ops-perf-v1",
+    "complete_test_count": 3,
+    "semantic_required_count": 3,
+    "required_titles": [
+      "'rait-case-read' respects the initial latency and throughput targets",
+      "'ops-agency-read' respects the initial latency and throughput targets",
+      "'dashboard-kpis' respects the initial latency and throughput targets"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/ops-perf.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  },
+  {
+    "invariant": "INV-PORTAL-001",
+    "task": "invariant-portal",
+    "kind": "integration_test",
+    "population": "detran-invariant-portal-v1",
+    "complete_test_count": 3,
+    "semantic_required_count": 3,
+    "required_titles": [
+      "C-0002-30 — dado seed executado duas vezes então protocol_seq ≥ 14 (setval) e nextval não colide com AM-FIXTURES-2026-0000001…000000e; a sequência é compartilhada com manifestation.protocol",
+      "C-0002-31 — dado sujeito …70000002 quando create+draft+submit de consulta_multas então request, request_draft (2 versões), protocol, idempotency_record (key '<subjectId>:<header>') e 2 linhas na outbox com topic portal.request.changed, payload.tenantId = tenant",
+      "C-0002-32 — dado transação que lança após publicar então nenhuma linha na outbox (rollback = sem evento)"
+    ],
+    "argv": [
+      "detran-native-vitest",
+      "run",
+      "--config",
+      "./tools/security/invariants/portal.config.mjs",
+      "--configLoader",
+      "native",
+      "--reporter",
+      "@aarusso-nyx/devai/native-vitest-reporter"
+    ]
+  }
+]

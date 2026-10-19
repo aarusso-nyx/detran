@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: detran-ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
     outputs:
       evidence_mode: ${{ steps.attested.outputs.evidence_mode }}
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
@@ -54,7 +54,7 @@ jobs:
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
@@ -104,22 +104,101 @@ jobs:
             echo "evidence_mode=true" >> "$GITHUB_OUTPUT"
           fi
 
+  # C6: unconditional complete semantic producers, independently isolated DB.
+  # Foundation explicitly depends on success; an absent/skipped producer cannot open it.
+  invariant-producers:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5
+        env:
+          POSTGRES_DB: detran
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d detran"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+      DETRAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+      STYNX_OWNER_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+      STYNX_APP_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend
+      STYNX_READER_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend
+      DETRAN_PRIORITY_BASELINE_ADMIN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      DETRAN_SEED_ADMIN_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      DETRAN_SEED_SCRATCH_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2_seed_profiles
+      DETRAN_RUNTIME_PROFILE: test
+      DETRAN_PRIORITY_UPGRADE_TEST_AUTHORIZED: '1'
+      DETRAN_PRIORITY_UPGRADE_BASELINE_AUTHORIZED: '1'
+      DETRAN_PRIORITY_UPGRADE_BASELINE_RESET_AUTHORIZED: '1'
+      DETRAN_PRIORITY_UPGRADE_RESTORE_AUTHORIZED: '1'
+      DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED: '1'
+      DB_HOST: localhost
+      DB_PORT: '5432'
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: detran_r7_ctg1_a2
+      LOG_LEVEL: info
+      SENATRAN_PROVIDER: mock
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: pnpm
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+      - name: Provision real installed native Vitest entrypoint alias
+        run: |
+          node tools/security/install-native-vitest.mjs "$RUNNER_TEMP/detran-native-bin"
+          echo "$RUNNER_TEMP/detran-native-bin" >> "$GITHUB_PATH"
+      - name: Apply isolated fixture DDL
+        run: bash backend/database/apply.sh --full
+      - name: Seed isolated fixture database
+        run: bash backend/database/seed.sh
+      - name: Prepare isolated legacy test fixtures
+        run: pnpm backend:test:prepare-legacy
+      - name: Measure invariant-ch complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/ch.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-dash complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/dash.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-est complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/est.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-inf complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/inf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-ops-queue complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/ops-queue.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-ops-perf complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/ops-perf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+      - name: Measure invariant-portal complete semantic population
+        run: detran-native-vitest run --config ./tools/security/invariants/portal.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
+
   foundation:
     runs-on: ubuntu-latest
-    needs: evidence-gate
+    needs: [evidence-gate, invariant-producers]
     # Run even when evidence-gate fails so this required check goes RED instead
     # of SKIPPED (a skipped required check would satisfy branch protection —
     # ADR-CI-ECONOMY Decision 2 forbids the gate silently opening). The first
     # step converts a gate failure into a job failure.
     if: ${{ !cancelled() }}
     steps:
-      - name: Enforce evidence-gate result
-        if: ${{ needs.evidence-gate.result != 'success' }}
+      - name: Enforce evidence and invariant producer results
+        if: ${{ needs.evidence-gate.result != 'success' || needs.invariant-producers.result != 'success' }}
         run: |
-          echo "::error title=evidence-gate::evidence-gate did not succeed (result: ${{ needs.evidence-gate.result }}) — failing foundation (the gate never silently opens)."
+          echo "::error title=evidence-gate::Evidence/invariant gates did not succeed (evidence: ${{ needs.evidence-gate.result }}, invariants: ${{ needs.invariant-producers.result }}) — failing foundation (the gate never silently opens)."
           exit 1
 
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
       # pnpm must exist before setup-node's `cache: pnpm` runs. All @stynx-nyx
       # and @aarusso-nyx packages install from GitHub Packages (.npmrc);
@@ -130,7 +209,7 @@ jobs:
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
@@ -207,7 +286,7 @@ jobs:
       DB_PASSWORD: postgres
       DB_NAME: detran_r7_ctg1_a2
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -215,7 +294,7 @@ jobs:
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
@@ -251,13 +330,13 @@ jobs:
   boat-documents-real:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
@@ -302,7 +381,7 @@ jobs:
   senatran-mock:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Mirrors senatran's own compose-smoke.yml: buildx with the GitHub
       # Actions layer cache keeps a warm build at ~1-2 min; compose then reuses
@@ -381,13 +460,13 @@ jobs:
       DB_PASSWORD: postgres
       DB_NAME: senatran
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
@@ -413,13 +492,13 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
           version: 9.15.0
 
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: pnpm
