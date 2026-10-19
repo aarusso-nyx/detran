@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+-- Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:e9e4916988b2bb485cd08216fc2bf2b441c013a55c05124de7f731eb9229ac17
 
 -- Regenerable-only DDL for BP-INF-RAIT-CASE-001; request-path writes use role_app_backend.
 
@@ -458,6 +458,50 @@ create index if not exists ix_rait_case_event_tenant_id on inf.rait_case_event (
 create index if not exists ix_rait_case_event_case_id on inf.rait_case_event (case_id);
 create index if not exists ix_rait_case_event_actor_id on inf.rait_case_event (actor_id);
 
+create table if not exists inf.rait_case_read_scope (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  actor_id uuid not null,
+  role varchar(40) not null,
+  unit_id uuid,
+  pool_id uuid,
+  active boolean default false not null,
+  authorization_ref text not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_case_read_scope primary key (id),
+  constraint ck_inf_rait_read_scope_role check (role in ('rait-coordinator','AUDITOR','rait-secretary','rait-chair','rait-central-authority','rait-manager')),
+  constraint ck_inf_rait_read_scope_one_parent check ((unit_id is null) <> (pool_id is null)),
+  constraint ck_inf_rait_read_scope_authorization check (length(btrim(authorization_ref)) > 0),
+  constraint fk_inf_rait_read_scope_membership foreign key (tenant_id, actor_id) references auth.memberships (tenant_id, user_id)
+);
+create unique index if not exists ux_inf_rait_case_read_scope_unit on inf.rait_case_read_scope (tenant_id, actor_id, role, unit_id) where unit_id is not null;
+create unique index if not exists ux_inf_rait_case_read_scope_pool on inf.rait_case_read_scope (tenant_id, actor_id, role, pool_id) where pool_id is not null;
+create index if not exists ix_rait_case_read_scope_tenant_id on inf.rait_case_read_scope (tenant_id);
+create index if not exists ix_rait_case_read_scope_actor_id on inf.rait_case_read_scope (actor_id);
+create index if not exists ix_rait_case_read_scope_unit_id on inf.rait_case_read_scope (unit_id);
+create index if not exists ix_rait_case_read_scope_pool_id on inf.rait_case_read_scope (pool_id);
+
+create table if not exists inf.rait_case_pool_scope (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  pool_id uuid not null,
+  active boolean default false not null,
+  authorization_ref text not null,
+  source_ref text not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_case_pool_scope primary key (id),
+  constraint ck_inf_rait_case_pool_authorization check (length(btrim(authorization_ref)) > 0),
+  constraint ck_inf_rait_case_pool_source check (length(btrim(source_ref)) > 0),
+  constraint fk_inf_rait_case_pool_case foreign key (tenant_id, case_id) references inf.rait_case (tenant_id, id)
+);
+create unique index if not exists ux_inf_rait_case_pool_scope on inf.rait_case_pool_scope (tenant_id, case_id, pool_id);
+create index if not exists ix_rait_case_pool_scope_tenant_id on inf.rait_case_pool_scope (tenant_id);
+create index if not exists ix_rait_case_pool_scope_case_id on inf.rait_case_pool_scope (case_id);
+create index if not exists ix_rait_case_pool_scope_pool_id on inf.rait_case_pool_scope (pool_id);
+
 select auth.create_rls_policy('inf', 'rait_case');
 
 select auth.create_rls_policy('inf', 'rait_party');
@@ -491,6 +535,10 @@ select auth.create_rls_policy('inf', 'rait_decision');
 select auth.create_rls_policy('inf', 'rait_communication');
 
 select auth.create_rls_policy('inf', 'rait_case_event');
+
+select auth.create_rls_policy('inf', 'rait_case_read_scope');
+
+select auth.create_rls_policy('inf', 'rait_case_pool_scope');
 
 select auth.install_tenant_triggers();
 

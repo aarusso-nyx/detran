@@ -62,3 +62,4 @@ export type * as BpPortalProjections001Commands from './generated/BP-PORTAL-PROJ
 export type * as BpPortalProjections001 from './generated/BP-PORTAL-PROJECTIONS-001.js';
 export type * as BpPortalRequests001Commands from './generated/BP-PORTAL-REQUESTS-001.commands.js';
 export type * as BpPortalRequests001 from './generated/BP-PORTAL-REQUESTS-001.js';
+export type * as BpInfRaitWorklist001Commands from './generated/BP-INF-RAIT-WORKLIST-001.commands.js';
