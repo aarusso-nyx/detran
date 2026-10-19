@@ -1289,14 +1289,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1361,14 +1381,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1505,14 +1545,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1541,14 +1601,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1577,14 +1657,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1613,14 +1713,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1649,14 +1769,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1685,14 +1825,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1721,14 +1881,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1757,14 +1937,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1793,14 +1993,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1829,14 +2049,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1871,14 +2111,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1911,14 +2171,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1953,14 +2233,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -1993,14 +2293,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2029,14 +2349,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2065,14 +2405,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2101,14 +2461,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2137,14 +2517,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2173,14 +2573,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2209,14 +2629,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2251,14 +2691,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2291,14 +2751,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2333,14 +2813,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
@@ -2373,14 +2873,34 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
       /** @description Missing or unauthorized parent/resource */
       404: {
         headers: {
           [name: string]: unknown;
         };
-        content?: never;
+        content: {
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.TENANT_MISMATCH';
+            message?: string;
+            context?: {
+              [key: string]: unknown;
+            };
+            requestId?: string;
+          };
+        };
       };
     };
   };
