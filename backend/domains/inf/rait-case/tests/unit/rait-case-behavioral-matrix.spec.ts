@@ -332,7 +332,9 @@ function scenarioPort(
       if (/\bfrom inf\.rait_case\b/.test(sql)) {
         const target = sql.match(/\bid\s*=\s*\$(\d+)/);
         const requested = target ? values[Number(target[1]) - 1] : undefined;
-        const selectedState = sql.match(/\bstate\s*=\s*'([^']+)'/)?.[1];
+        const selectedState = sql.match(
+          /(?:^|[\s(])(?:item\.)?state\s*=\s*'([^']+)'/,
+        )?.[1];
         const eligible =
           selectedState === undefined ||
           caseRow.state.toLowerCase() === selectedState;
@@ -925,7 +927,10 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
       ];
       await expectRejectedWithoutEffects(
         subject,
-        input(command, DOCUMENT, payload, 'repeat'),
+        {
+          ...input(command, target, payload, 'repeat'),
+          headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat' },
+        },
         'RAIT.IDEMPOTENCY_REPLAY',
         409,
         effects,
@@ -1017,7 +1022,10 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
               executeInquiry(subject, request as ReturnType<typeof input>),
           },
         },
-        input(command, DOCUMENT, payload, 'repeat-inquiry'),
+        {
+          ...input(command, INQUIRY, payload, 'repeat-inquiry'),
+          headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat-inquiry' },
+        },
         'RAIT.IDEMPOTENCY_REPLAY',
         409,
         effects,
