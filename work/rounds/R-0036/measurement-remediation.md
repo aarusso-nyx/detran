@@ -2,7 +2,7 @@
 
 **Authority:** user continuation, 2026-10-18; BL-0012. Architect for measurement
 contracts and adoption, Engineer for tooling, Inspector for tests, Auditor for
-observations. ADR-0043 admits verified DEVAI 2.6.2. Product fixes are separate.
+observations. ADR-0046 admits verified DEVAI 2.6.3, superseding ADR-0043's version. Product fixes are separate.
 
 ## Sequence
 
@@ -44,6 +44,8 @@ checks, publication of 2.6.3 with those repairs, and adoption in DETRAN. #416
 preserves #414's repair on current main without a force-push or merge commit.
 This narrow sibling exception does not authorize product fixes or Pages deployment.
 The release must pass the complete protected rehearsal before tagging, publication
-and registry identity verification. Until those finish, DETRAN stays on 2.6.2.
+and registry identity verification. These release steps passed in rehearsal 39190575668/1 and publication
+39191295262; local canonical/registry tarball bytes match. DETRAN now uses
+2.6.3 through the registered upgrade. The final assessment remains pending.
 Other sibling repositories remain read-only. The previous scorecard, reports,
 readings and proof prefix are immutable.

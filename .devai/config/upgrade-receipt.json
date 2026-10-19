@@ -1,28 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "from": "2.2.0",
-  "to": "2.6.2",
-  "upgraded_at": "2026-10-18T21:43:01.065Z",
+  "from": "2.6.2",
+  "to": "2.6.3",
+  "upgraded_at": "2026-10-19T02:50:24.748Z",
   "constitution": {
     "from": "1.0.2",
     "to": "1.0.2"
   },
   "migrations": [
-    "MIG-2.3.0-subprocess-effects-pr-list",
-    "MIG-2.3.0-parallel-check-scheduling",
-    "MIG-2.3.0-green-main-final-head",
-    "MIG-2.3.1-observation-workflow-pins",
-    "MIG-2.3.1-subprocess-effects-pnpm-shapes",
-    "MIG-2.3.2-observation-install-ignore-scripts",
-    "MIG-2.4.0-sensor-inputs-projection",
-    "MIG-2.4.0-declared-sensor-task-template",
-    "MIG-2.5.0-audit-interface-projections",
-    "MIG-2.5.0-complete-test-result-population",
-    "MIG-2.5.0-trusted-verifier-2-4",
-    "MIG-2.6.0-read-only-workflow-inventory",
-    "MIG-2.6.0-selected-post-merge-hook",
-    "MIG-2.6.1-runtime-repair-identity-refresh",
-    "MIG-2.6.2-runtime-repair-identity-refresh"
+    "MIG-2.6.3-measurement-repair-identity-refresh"
   ],
   "retired_keys": [],
   "changed_files": [
@@ -30,50 +16,38 @@
       "path": ".devai/config/project.json",
       "operation": "update",
       "segment": "adopter-policy",
-      "sha256": "7e9dfb039c300cf351e286c30090ba9fca085c917fcae0f1d114ed397af38eab"
+      "sha256": "4af18ddfe257896db047b74ea43ffcfb8a94115d875dfe0a04d466658e72bd79"
     },
     {
       "path": ".devai/config/adopter-policy-binding.json",
       "operation": "update",
       "segment": "adopter-policy",
-      "sha256": "09e7477947cf93da31638f5e4942ed239cf8f50ea3f7c899fce93caa7a137e28"
-    },
-    {
-      "path": ".devai/config/subprocess-effects.json",
-      "operation": "update",
-      "segment": "subprocess-effects",
-      "sha256": "2686563fc019b169fb5a66e3abd35e5d564a59ba35fb3ba5de5bfecfac2e110a"
+      "sha256": "6c8b8980d4a19eaf3726bd4fa2cf277f3332b86167354df1de1abb44797a6219"
     },
     {
       "path": ".devai/config/authority-policy.json",
       "operation": "update",
       "segment": "authority",
-      "sha256": "97607c7279e208e25688c709681d14e8f7da5d347e182de06ad9e6d260128c58"
+      "sha256": "01b9fbb88ab59841d1826f7b0bff3a06956429b142007a6125de86e8ac80654b"
     },
     {
       "path": ".devai/constitution.md",
       "operation": "update",
       "segment": "constitution",
-      "sha256": "242fd01a1cf86508d90ab53692a3ca6d91485c5c3ead5e9ce0457f2dd4e24669"
-    },
-    {
-      "path": ".github/workflows/devai-local-rc-verify.yml",
-      "operation": "update",
-      "segment": "harness-ci",
-      "sha256": "30bb7935a0ad1ad7303217f77ac64e9c0c4c6ae3f70860d7c21f3a14e35964dc"
+      "sha256": "5a18159814d8ccecc4613b1001ee75410d4ddccd293a9a6aac5cc20400fe3cdb"
     }
   ],
   "stale_version_stamps": [
     {
       "path": ".devai/constitution.md",
       "field": "generated-by",
-      "version": "2.2.0",
+      "version": "2.6.2",
       "refreshed": true
     },
     {
       "path": ".devai/config/project.json",
       "field": "devai_version",
-      "version": "2.2.0",
+      "version": "2.6.2",
       "refreshed": true
     }
   ],
