@@ -788,10 +788,11 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
 // CTG-0003/0004 acrescentam 53 operações RAIT/infraction/collection = 256.
 // R-0025 JW01-admissibility F01/R01 acrescenta duas rotas canônicas = 258.
 // P4-02-S1 acrescenta 71 operações de substituição com escopo: 258 + 71 = 329.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=329', async () => {
+// P4-02-S2 acrescenta somente raitClaimContext e raitCaseRiskSnapshot: 329 + 2 = 331.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=331', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 329);
+  assert.equal(result.operations, 331);
 });
 
 // ---------------------------------------------------------------------------
