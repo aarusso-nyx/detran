@@ -88,3 +88,14 @@ exclusion and transactional post-pass load of19-rait-case-scope-enforce.sql befo
 final priority verification. Supporting scoped-binding DDL was already authorized.
 All existing guards remain; no script/generator logic outside these insertions,
 new grant/production data, legal guard or S2 implementation is authorized.
+
+### P4-02-S1-A2 frontend compatibility — Owner, 2026-10-19
+
+Owner answered “Approve A2 as written (recommended)” to the concrete42-file
+compatibility packet reports/P4-02-S1-A2-frontend-compatibility.md. Authorizes
+25 read-type and17 omission-aware existing-consumer changes, with Inspector-only
+colocated tests, preserving T0 exclusions. Explicit temporary unavailable batch
+position/deadline/acceptance and pending missing-item details on the three named
+views are approved; they are not functional parity or permission to mark those
+journeys complete. Typed restoration remains required before their completion.
+No new screen/command/private-field grant, risk/claim activation or S2 work.
