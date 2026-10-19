@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "--preset",
+    "sweep",
+    "--round",
+    "R-0036",
+    "--repo-root",
+    ".",
+    "--input",
+    "{\"adrDir\":\"docs/meta/adr\",\"invariantsDir\":\"law/invariants\",\"testGlobs\":[\"backend\",\"packages\",\"apps\",\"senatran-mock/tests\",\"tools\"],\"coveragePath\":\"coverage/coverage-final.json\",\"population\":\"rc\",\"exclusions\":[],\"workflow\":\"ci.yml\",\"event\":\"push\",\"headBranch\":\"main\",\"baseBranch\":\"main\",\"attempts\":\"last\",\"includeCancelled\":false,\"lookbackDays\":30,\"minimumSample\":10,\"excludedJobs\":[]}",
+    "--as-role",
+    "auditor",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T20:53:43.704Z",
+  "finished_at": "2026-10-18T20:53:44.287Z",
+  "exitCode": 2,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"AUTHORITY_DECLARATION_NOT_APPLICABLE\",\"class\":\"routing-authority\",\"exit\":2,\"message\":\"authority declaration not applicable\",\"remediation\":\"This action's effect is 'read'; remove --as-role.\",\"refs\":{\"doc\":\"law/constitution.md#article-6\"},\"context\":{\"category\":\"usage-error\",\"action_id\":\"sense run\",\"effect\":\"read\",\"declared\":{\"as_role\":true,\"authority_session\":false,\"write\":false,\"allow_publish\":false,\"experimental\":false},\"required\":{\"write\":false,\"allow_publish\":false,\"experimental\":false}}}}\n"
+}

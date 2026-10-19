@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-OPS-002",
+  "domain": "OPS",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "performance",
+  "title": "Initial request-path performance baseline",
+  "statement": "Each ADR-0044 scenario MUST complete all 30 measured requests correctly with p50 <= 1000 ms, p95 <= 2000 ms and throughput >= 1 request per second.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["perf"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The declared finite local fixture workload asserts all newly authorized generous targets; machine timings remain environment-dependent."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/meta/adr/ADR-0044-initial-performance-baseline.md",
+        "anchor": "decision"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["detran-app"],
+    "code_areas": ["backend/app/tests/performance/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["ADR-0044"]
+}

@@ -1,0 +1,66 @@
+# R-0036 measurement remediation
+
+**Authority:** user continuation, 2026-10-18; BL-0012. Architect for measurement
+contracts and adoption, Engineer for tooling, Inspector for tests, Auditor for
+observations. ADR-0051 admits verified DEVAI 2.6.3, superseding ADR-0043's version. Product fixes are separate.
+
+## Sequence
+
+1. Upgrade through registered verbs, refresh canonical schemas, and bind the
+   complete sensor input source. Verify original threshold, N/A and legacy bytes.
+2. Resolve blocked command measurements with exact reviewed task bindings. Compose
+   existing app lint configurations without relaxing their rules. Preserve all
+   original suite configs, assertions and timeout values. Fixture tasks create
+   their own loopback-only PostGIS and mock, and remove them in `finally`.
+3. Freeze the measurement configuration. Regenerate inventory, execute the
+   canonical sweep and required write-capable members, record both passes, and
+   compare all 43 cells against the immutable first assessment.
+4. Native measurement adequacy must be established by the actual population and
+   provenance, not merely a new non-UNKNOWN verdict. Capture measurement errors
+   separately from genuine product/test failures.
+
+## Provider boundaries and current validation state
+
+- DEVAI #413 adds declared SQL migration roots and complete vulnerability output;
+  #415 verifies the observed push branch; #416 supersedes #414 with explicit
+  monorepo populations and 2.6.3 release preparation. All were integrated only
+  after mandatory green checks. Their published-provider replay remains required.
+  DETRAN DDL stays at its canonical paths; no mirrored population is introduced.
+- Coverage requires an exact-candidate producer binding. ADR-0050 declares the
+  whole-source local unit population, including untested implementation files,
+  while integration and E2E remain separate measurements. This changes the
+  original proposed RC population explicitly; it does not establish RC coverage.
+  Existing package thresholds and native scorecard thresholds remain unchanged.
+  The first full collector attempt failed; the repaired collector still needs
+  complete replay. Diagnostic evidence is retained in
+  `reports/coverage-enablement-20261018/` and is not a native reading.
+- The user authorized defining generous performance targets and a suite.
+  ADR-0044 records the request-path baseline. Replay on the final evaluated
+  commit remains required; a previous run is not current-candidate evidence.
+
+The user explicitly authorized DEVAI measurement fixes in a separate branch and PR
+on 2026-10-18, then authorized integration of #413/#414/#415 after required green
+checks, publication of 2.6.3 with those repairs, and adoption in DETRAN. #416
+preserves #414's repair on current main without a force-push or merge commit.
+This narrow sibling exception does not authorize product fixes or Pages deployment.
+The release must pass the complete protected rehearsal before tagging, publication
+and registry identity verification. These release steps passed in rehearsal 39190575668/1 and publication
+39191295262; local canonical/registry tarball bytes match. DETRAN now uses
+2.6.3 through the registered upgrade. The final assessment remains pending.
+Other sibling repositories remain read-only. The previous scorecard, reports,
+readings and proof prefix are immutable.
+
+## Current population corrections
+
+Use only `backend/database/ddl` and `senatran-mock/database/ddl` for current SQL
+schema discovery and specification PII scans. The broader database roots also
+contained historical test DDL; its duplicate table definitions caused a schema
+refusal. Exclude historical database fixtures and seeds from this schema
+population, while retaining them in the migration/integration/E2E fixture tasks.
+
+The whole-source collector uses 78 compact directory patterns, an independent
+2,574-source census, exact-only deduplication of repeated Vitest exclusions,
+serial coverage remapping and the BOAT library's actual tsconfig. A partial probe
+now produces every source and still rejects the original mock coverage threshold.
+The complete suite and native reading remain required. See the immutable replay
+checkpoint `reports/replay-0cc5076a-20261019/`.

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "candidate": "0629df9a9ac781478ed4bb760e7ecdb76c21be87",
+  "scope": "Interim checkpoint; no mixed-candidate complete grid claimed",
+  "readings": [
+    {
+      "kind": "type_check",
+      "status": "pass",
+      "path": ".devai/state/sensor-readings/type_check/SR-36056681e8874282.json",
+      "evidence_id": "EV-5baa2e7351fb2d8d",
+      "sequence": 193,
+      "capture": "work/rounds/R-0036/reports/remediation-0629df9a/raw/native-typecheck-task.json",
+      "sha256": "128ce5169b59098a72ad3cf74a981ffed3f88b7477c682a17c7a10d0ab7f8227",
+      "metrics": {
+        "output_digests": "{\"stderr\":\"fb682a6c0cc290c18c1c27895d06da93a516be6692f63ab94bb218f7867a3272\",\"stdout\":\"3759c8f8ceb2e6a64116f6a2f17874952823d174195f0e51958c03c34b5522d8\"}",
+        "task_id": "scorecard-typecheck",
+        "population": "detran-workspace-typecheck",
+        "runner": "node",
+        "task_key": "13c064e4f17a5de6f72b67ff62286ac7ca56d9a2e3cef756b3fd2e401d947f2d",
+        "input_digest": "4a27fa4947de1c32b8fb1e6c56fded922f39e4ac142433cf7ba1858c40deadce",
+        "stdout_sha256": "3759c8f8ceb2e6a64116f6a2f17874952823d174195f0e51958c03c34b5522d8",
+        "stderr_sha256": "fb682a6c0cc290c18c1c27895d06da93a516be6692f63ab94bb218f7867a3272",
+        "descriptor_digest": "15a3cd4bd73891b493d1b9d04879f0eac98a5fb92e1fe54d428c857af11a1624",
+        "task_policy_digest": "dd8929b87648c3a7a3ae5f44843beb43b297835a2fcb18f23cd7bdf5af671a37",
+        "candidate_commit": "0629df9a9ac781478ed4bb760e7ecdb76c21be87",
+        "candidate_tree": "e693c6f20d707f76740e2dc4eb446826639d7879",
+        "prerequisite_digests": "{}"
+      }
+    },
+    {
+      "kind": "integration_test",
+      "status": "error",
+      "path": ".devai/state/sensor-readings/integration_test/SR-5813befd28542dfd.json",
+      "evidence_id": "EV-bf8a41d7fc15480f",
+      "sequence": 194,
+      "capture": "work/rounds/R-0036/reports/remediation-0629df9a/raw/native-integration.json",
+      "sha256": "4b1be0f8554e07f4cbf017e575ab33b5030f34bc384e542a5964d6b3295338b3",
+      "metrics": {
+        "output_digests": "{\"stderr\":\"60be609622c2b6fa2cc29f0cc3a7f8267b6b746f9cae4ea18ef575ca3d2f084a\",\"stdout\":\"0168a9bfda30f9585657a7bf3c39645628e2b4964c205a3bfb2ebed416cfc1c1\"}",
+        "task_id": "scorecard-integration",
+        "population": "detran-workspace-integration",
+        "runner": "node",
+        "task_key": "d23db7edc535258adc6dd6cd78f1079a9971da1ee52accb0a82c7b081281ccf4",
+        "input_digest": "746f0c7dd4828486b2918eadd38aee6989a2f8c77730addfa200da050b3635ab",
+        "stdout_sha256": "0168a9bfda30f9585657a7bf3c39645628e2b4964c205a3bfb2ebed416cfc1c1",
+        "stderr_sha256": "60be609622c2b6fa2cc29f0cc3a7f8267b6b746f9cae4ea18ef575ca3d2f084a",
+        "descriptor_digest": "15a3cd4bd73891b493d1b9d04879f0eac98a5fb92e1fe54d428c857af11a1624",
+        "task_policy_digest": "31141bfd74bcef65621af5debde9e8e0c26019e3c5d5858179d08c5baf7b86ab",
+        "candidate_commit": "0629df9a9ac781478ed4bb760e7ecdb76c21be87",
+        "candidate_tree": "e693c6f20d707f76740e2dc4eb446826639d7879",
+        "prerequisite_digests": "{}"
+      }
+    },
+    {
+      "kind": "e2e_test",
+      "status": "fail",
+      "path": ".devai/state/sensor-readings/e2e_test/SR-0e3e35d63b33ddf1.json",
+      "evidence_id": "EV-f358b439408877be",
+      "sequence": 195,
+      "capture": "work/rounds/R-0036/reports/remediation-0629df9a/raw/native-e2e.json",
+      "sha256": "f275d01a0f1db253b6a07d07515826f8d1cd4d78b4b1639853a2a736a38ca0d8",
+      "metrics": {
+        "output_digests": "{\"stderr\":\"dd9b66b1102014183267d362480e7fdb99a352516702a34707ce2b728cdb3a92\",\"stdout\":\"4ed97a6ca18e5d788d420f1dac77c3acfa9b67ae9112e51a645bb954ae1ab11a\"}",
+        "task_id": "scorecard-e2e",
+        "population": "detran-workspace-e2e",
+        "runner": "node",
+        "task_key": "bee150b2e76aec3a7b63ed121222ed4c642342f2fc1b4c42c962133c1ea473ed",
+        "input_digest": "746f0c7dd4828486b2918eadd38aee6989a2f8c77730addfa200da050b3635ab",
+        "stdout_sha256": "4ed97a6ca18e5d788d420f1dac77c3acfa9b67ae9112e51a645bb954ae1ab11a",
+        "stderr_sha256": "dd9b66b1102014183267d362480e7fdb99a352516702a34707ce2b728cdb3a92",
+        "descriptor_digest": "15a3cd4bd73891b493d1b9d04879f0eac98a5fb92e1fe54d428c857af11a1624",
+        "task_policy_digest": "a0a430d1c4bf00894e23777b66250cda2fddca6ed7aa7a3aae524c58aa8678cb",
+        "candidate_commit": "0629df9a9ac781478ed4bb760e7ecdb76c21be87",
+        "candidate_tree": "e693c6f20d707f76740e2dc4eb446826639d7879",
+        "prerequisite_digests": "{}",
+        "tests_passed": 1853,
+        "tests_failed": 2
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "capture": "work/rounds/R-0036/reports/remediation-0629df9a/raw/devai-security-expanded-candidate.json",
+      "standing": "Unpublished provider candidate; not recorded as official scorecard evidence"
+    }
+  ]
+}

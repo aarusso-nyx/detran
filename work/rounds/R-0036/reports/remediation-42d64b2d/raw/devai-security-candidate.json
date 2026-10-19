@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "/Volumes/Development/projects/stech/devai/.devai/worktrees/detran-measurement-gaps-20261018/packages/cli/dist/runtime/index/bin.js",
+    "sense",
+    "run",
+    "security_scan",
+    "--repo-root",
+    ".",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T22:03:06.281Z",
+  "finished_at": "2026-10-18T22:04:13.773Z",
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"security_scan\"},\"members\":[{\"kind\":\"security_scan\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"security_scan\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"unknown\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":0,\"unknown\":1,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run security_scan\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"security-scan\\\",\\\"kind\\\":\\\"security_scan\\\"},\\\"timestamp\\\":\\\"2026-10-18T22:04:13.525Z\\\",\\\"status\\\":\\\"unknown\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"pnpm audit --json\\\",\\\"command_hash\\\":\\\"f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"SECURITY_SCAN_NO_AUDIT_TOOL\\\",\\\"message\\\":\\\"Neither pnpm nor npm available: npm-invalid-evidence: AUTHORITY_HOST_PROCESS_ADAPTER_REQUIRED\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"SECURITY_SCAN_PREFERRED_AUDIT_FAILED\\\",\\\"message\\\":\\\"pnpm-error: spawnSync pnpm ETIMEDOUT: spawnSync pnpm ETIMEDOUT\\\"}],\\\"metrics\\\":{\\\"tools_tried\\\":2},\\\"id\\\":\\\"SR-8c85bdb948d31671\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

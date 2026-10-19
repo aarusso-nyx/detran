@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sensor-migration_check-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/migration_check/SR-e3ba9f1443fd0281.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-e3ba9f1443fd0281\",\"sensor\":{\"name\":\"migrate-check\",\"kind\":\"migration_check\"},\"timestamp\":\"2026-10-18T20:59:02.408Z\",\"status\":\"error\",\"deterministic\":true,\"command\":\"psql postgresql://postgres:postgres@127.0.0.1:61088/detran_r7_ctg1_a2 -f <each migration>\",\"command_hash\":\"b7ea4732e8aefd029d830bb9e733d3f3090c7531de131fee8eae0e7fc2b060f4\",\"findings\":[{\"severity\":\"critical\",\"code\":\"no_migrations_dir\",\"message\":\"cannot read any of: db/migrations\"}]}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

@@ -8,7 +8,7 @@
 
 **Authority:** Architect (Constitution Article 6).
 
-Governed rounds of this repository (DEVAI 2.2.0). One round per front of the implementation
+Governed rounds of this repository (DEVAI 2.6.3). One round per front of the implementation
 backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022) or of a campaign. Evidence lives in
 `record/proofs/chain.json` (machine-only); this folder holds the human-readable working papers.
 `pnpm verify:state-index` checks this table against `record/proofs/compliance/closures/PC-*.json`:
@@ -74,6 +74,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0033 | `frontend-preview` — RAIT/JW-01 e Portal; pós-merge concluído, fechada e selada                                               | fechada           | [#191](https://github.com/aarusso-nyx/detran/pull/191) | PC-0021 | Codex (W3; histórico Fable 5.1; review Claude PASS) |
 | R-0034 | `platform-seams` — C-0003 fase S (salvamento da R-0022)                                                                       | proposta (C-0003) | —                                                      | —       | Sol 6                                               |
 | R-0035 | `hardening-certification` — C-0003 fase H                                                                                     | proposta (C-0003) | —                                                      | —       | Opus 5.5                                            |
+| R-0036 | `scorecard-evaluation` — avaliação dos 43 itens aplicáveis; BL-0001, plano aprovado em 2026-10-18                             | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
 

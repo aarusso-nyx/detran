@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 // Lint do app (plan.md R-0014 M5): flat config com angular-eslint (ts + template recommended),
 // typescript-eslint recommended e eslint-config-prettier. Padrão que os demais apps copiam.
 import angular from 'angular-eslint';
@@ -9,6 +10,11 @@ export default defineConfig(
   { ignores: ['dist/**', '.angular/**'] },
   {
     files: ['**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)),
+      },
+    },
     extends: [
       ...tseslint.configs.recommended,
       ...angular.configs.tsRecommended,

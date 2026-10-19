@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-44.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/docs_drift/SR-3ce6665257824ec6.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-3ce6665257824ec6\",\"sensor\":{\"name\":\"docs-drift\",\"kind\":\"docs_drift\"},\"timestamp\":\"2026-10-18T20:56:44.169Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense-docs-drift\",\"command_hash\":\"d4eb8adce11fa0786742effb54c913b93dccac3cd1fb44c6b8258decdad01d01\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\",\"message\":\"README.md carries no schema-count claim (preferred state).\",\"file\":\"README.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\",\"message\":\"CLAUDE.md carries no schema-count claim (preferred state).\",\"file\":\"CLAUDE.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_NO_DECISION_RANGE_CLAIM\",\"message\":\"README.md carries no decision-range claim (preferred state).\",\"file\":\"README.md\"},{\"severity\":\"info\",\"code\":\"DOCS_DRIFT_CAP_CHECK_DISABLED\",\"message\":\"worktree_cap_source not configured; cap-coherence check skipped.\"},{\"severity\":\"error\",\"code\":\"DOCS_DRIFT_CONSTITUTION_VERSION\",\"message\":\"law/constitution.md is at (no version); .devai/pin/constitution.md pins 1.0.2.\",\"file\":\".devai/pin/constitution.md\"}],\"metrics\":{\"schema_file_count\":111,\"claims_checked\":0,\"drift_count\":1}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

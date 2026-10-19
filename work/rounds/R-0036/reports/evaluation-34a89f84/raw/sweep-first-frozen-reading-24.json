@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-d7e3d6556586cd0b",
+  "sensor": {
+    "name": "spec-security-coverage",
+    "kind": "spec_security_coverage"
+  },
+  "timestamp": "2026-10-18T20:55:33.119Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense-spec-security-coverage",
+  "command_hash": "16dea51ec07b7477c4c4ca65b9f7fc90fe8fa63bf79b92be28f52777e37b065c",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "SPEC_SECURITY_NO_THREAT_MODEL",
+      "message": "No threat-model document found under: docs/meta/security"
+    },
+    {
+      "severity": "warning",
+      "code": "SPEC_SECURITY_NO_PII_REGISTRY",
+      "message": "No `INSERT INTO core.pii_map` row found across migration dirs: migrations, apps/api/migrations, reference/api/migrations"
+    },
+    {
+      "severity": "warning",
+      "code": "SPEC_SECURITY_NO_RBAC_INVARIANT",
+      "message": "No invariant with domain=\"RBAC\" found."
+    }
+  ],
+  "metrics": {
+    "threat_model_present": 0,
+    "pii_registry_present": 0,
+    "rbac_invariant_present": 0,
+    "signals_present": 0
+  }
+}

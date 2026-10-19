@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "migration_check",
+    "--repo-root",
+    ".",
+    "--input",
+    "{\"databaseUrl\":\"postgresql://postgres:postgres@127.0.0.1:61088/detran_r7_ctg1_a2\"}",
+    "--as-role",
+    "engineer",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T20:59:00.381Z",
+  "finished_at": "2026-10-18T20:59:02.492Z",
+  "exitCode": 3,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"migration_check\"},\"members\":[{\"kind\":\"migration_check\",\"effect\":\"local-write\",\"capabilities\":[\"proc:psql\",\"db:write\",\"fs:f5-state\"],\"consent\":{\"write\":true,\"publish\":false}}],\"executed\":[\"migration_check\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"local-write\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"error\",\"readiness_status\":\"unknown\",\"applicable_count\":0,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":1},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run migration_check\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-e3ba9f1443fd0281\\\",\\\"sensor\\\":{\\\"name\\\":\\\"migrate-check\\\",\\\"kind\\\":\\\"migration_check\\\"},\\\"timestamp\\\":\\\"2026-10-18T20:59:02.408Z\\\",\\\"status\\\":\\\"error\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"psql postgresql://postgres:postgres@127.0.0.1:61088/detran_r7_ctg1_a2 -f <each migration>\\\",\\\"command_hash\\\":\\\"b7ea4732e8aefd029d830bb9e733d3f3090c7531de131fee8eae0e7fc2b060f4\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"critical\\\",\\\"code\\\":\\\"no_migrations_dir\\\",\\\"message\\\":\\\"cannot read any of: db/migrations\\\"}]}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

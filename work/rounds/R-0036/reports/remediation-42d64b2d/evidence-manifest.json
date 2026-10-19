@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "round": "R-0036",
+  "candidate": "42d64b2dff70ffb790ea13bab88279738e599040",
+  "provider": "@aarusso-nyx/devai@2.6.2",
+  "scope": "Interim measurement checkpoint; not a recomputed 43-cell scorecard",
+  "readings": [
+    {
+      "kind": "type_check",
+      "status": "fail",
+      "reading": ".devai/state/sensor-readings/type_check/SR-7686136d5959a08c.json",
+      "evidence_id": "EV-f1f92f25ff5e8cb5",
+      "sequence": 189,
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/native-typecheck.json",
+      "sha256": "2a66d4c0b4dc88bb25e1f2c4cae75462d11f7828069a3e437a47f7c33d13d41c",
+      "metrics": {
+        "error_count": 0
+      }
+    },
+    {
+      "kind": "lint",
+      "status": "review",
+      "reading": ".devai/state/sensor-readings/lint/SR-0b600f15b1762bb2.json",
+      "evidence_id": "EV-4fb692e8161aefb8",
+      "sequence": 190,
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/native-lint.json",
+      "sha256": "cd317459eb44d093c87b73f0238264c4ed0e278a2acdf331ebfd7c2c86f8cd2a",
+      "metrics": {
+        "error_count": 0,
+        "warning_count": 0,
+        "timeout_ms": 120000
+      }
+    },
+    {
+      "kind": "migration_check",
+      "status": "pass",
+      "reading": ".devai/state/sensor-readings/migration_check/SR-c78a8942240093a5.json",
+      "evidence_id": "EV-3f682c9fc73db2bb",
+      "sequence": 191,
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/native-migration.json",
+      "sha256": "15331dc2946ae1efc680c1160c8fa6327f690514beb0effaf2edab420e3b9ca0",
+      "metrics": {
+        "output_digests": "{\"stderr\":\"2468637c798672afd4821a4c12ceba95f3670d6437c224193184503cab509797\",\"stdout\":\"45864c89c494e1c71a1fdacf37ba56813f0cc09cd964a381cae8378106bf61ff\"}",
+        "task_id": "scorecard-migration",
+        "population": "detran-workspace-migration",
+        "runner": "node",
+        "task_key": "a2da9dda9ba527e9d8aef5a6a39be86437496528b7675b09c5242459859784cd",
+        "input_digest": "557dc780fa6f3a2a56bdb8923f403bdff1eba2b79240bb99c3976f8169b14d33",
+        "stdout_sha256": "45864c89c494e1c71a1fdacf37ba56813f0cc09cd964a381cae8378106bf61ff",
+        "stderr_sha256": "2468637c798672afd4821a4c12ceba95f3670d6437c224193184503cab509797",
+        "descriptor_digest": "30b43b17f364d55fe83fd81ad097db74114fea8e57bc98309f6f48dfa65354fc",
+        "task_policy_digest": "7c33d731fe7e67cc0cdd0c52b7b89e0b25f11a52de6777d9855d398cfcc52ab3",
+        "candidate_commit": "42d64b2dff70ffb790ea13bab88279738e599040",
+        "candidate_tree": "6de7e0ccb332d24071e9ffc8beea5a093d531a2f",
+        "prerequisite_digests": "{}"
+      }
+    },
+    {
+      "kind": "unit_test",
+      "status": "pass",
+      "reading": ".devai/state/sensor-readings/unit_test/SR-a00712018c65d1bf.json",
+      "evidence_id": "EV-15b4af707151283c",
+      "sequence": 192,
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/native-unit.json",
+      "sha256": "6d669d8af653ef22ef36df0f7b6074be4ce7169c26b9aaa80a0d2cacd02ef349",
+      "metrics": {
+        "output_digests": "{\"stderr\":\"f9fd66c3d00f99d0e6c8341d7d7c0d7e4773d4f3e785175d79e0d682a3b7251c\",\"stdout\":\"c39a5f2729f88611e80f73c0b56a7a698abf6c29171dea733d41298ab528f434\"}",
+        "task_id": "scorecard-unit",
+        "population": "detran-workspace-unit",
+        "runner": "node",
+        "task_key": "2ad061bd34057cb2deb7ace03dd9d9be6c09f2f7829ff1b56a166184d501ae16",
+        "input_digest": "557dc780fa6f3a2a56bdb8923f403bdff1eba2b79240bb99c3976f8169b14d33",
+        "stdout_sha256": "c39a5f2729f88611e80f73c0b56a7a698abf6c29171dea733d41298ab528f434",
+        "stderr_sha256": "f9fd66c3d00f99d0e6c8341d7d7c0d7e4773d4f3e785175d79e0d682a3b7251c",
+        "descriptor_digest": "30b43b17f364d55fe83fd81ad097db74114fea8e57bc98309f6f48dfa65354fc",
+        "task_policy_digest": "1bf99f5776aa5e2408c828e7accceece5b1c2e1b2ec8c3adc983c8f805d85ed7",
+        "candidate_commit": "42d64b2dff70ffb790ea13bab88279738e599040",
+        "candidate_tree": "6de7e0ccb332d24071e9ffc8beea5a093d531a2f",
+        "prerequisite_digests": "{}",
+        "tests_passed": 12094,
+        "tests_failed": 0
+      }
+    }
+  ],
+  "diagnostic_artifacts": [
+    {
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/devai-sql-candidate.json",
+      "sha256": "9464612a58f0d4facc1be7aa33e7d7da7fee8278b472d45f032608fd28ccbe9f",
+      "standing": "Unpublished provider candidate; not recorded as official scorecard evidence"
+    },
+    {
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/devai-doctor-candidate.json",
+      "sha256": "2f9534cd2c73e4a3c07779e0a0bc1aa64f79bc6d91b0de37d165b47eef99111c",
+      "standing": "Unpublished provider candidate; not recorded as official scorecard evidence"
+    },
+    {
+      "capture": "work/rounds/R-0036/reports/remediation-42d64b2d/raw/devai-security-candidate.json",
+      "sha256": "03d6b2ec73c0b12c8d45316409613b553e8786e3934738b7b99a63ddf68ad184",
+      "standing": "Unpublished provider candidate; not recorded as official scorecard evidence"
+    }
+  ],
+  "complete_audit": {
+    "capture": ".devai/local/rounds/R-0036/audit/provider-diagnostic-42d64b2d/complete-dependency-audit.json",
+    "sha256": "521e00063b85e1000f218f89c3b3adb6f4e6ac3d432b0a6183471509b0e0237c",
+    "storage": "Local full raw capture retained outside Git due to size",
+    "stdout_bytes": 225632228,
+    "vulnerabilities": {
+      "critical": 5,
+      "high": 15,
+      "moderate": 13,
+      "low": 4,
+      "info": 0
+    },
+    "standing": "Supplemental audit; the native sensor timed out and remains UNKNOWN"
+  },
+  "immutable_guards": [
+    {
+      "path": ".devai/config/thresholds.json",
+      "sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4"
+    },
+    {
+      "path": ".devai/config/scorecard-na.json",
+      "sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2"
+    },
+    {
+      "path": ".devai/pin/constitution.md",
+      "sha256": "d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d"
+    },
+    {
+      "path": ".devai/state/evidence-chain.json",
+      "sha256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec"
+    }
+  ]
+}

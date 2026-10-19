@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_robustness",
+    "--repo-root",
+    ".",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T22:48:11.349Z",
+  "finished_at": "2026-10-18T22:48:14.488Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_robustness\"},\"members\":[{\"kind\":\"harness_robustness\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_robustness\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run harness_robustness\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-591221e6c208324f\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-robustness\\\",\\\"kind\\\":\\\"harness_robustness\\\"},\\\"timestamp\\\":\\\"2026-10-18T22:48:14.334Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-18\\\",\\\"command_hash\\\":\\\"48b05280f5059171facc4ab9ede0f4ca3a6e266e7073042fc420a17b5bf05076\\\",\\\"tier\\\":\\\"L2\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"HARNESS_POPULATION_UNVERIFIED\\\",\\\"message\\\":\\\"Population filters unverified, not applied to the sample: baseBranch main (gh run list rows carry no base branch).\\\"}],\\\"metrics\\\":{\\\"run_count\\\":91,\\\"flaky_runs\\\":0,\\\"flakiness_pct\\\":0,\\\"threshold_pass\\\":5,\\\"threshold_review\\\":15,\\\"sample_size\\\":91,\\\"minimum_sample\\\":10,\\\"population_workflow\\\":\\\"ci.yml\\\",\\\"population_event\\\":\\\"push\\\",\\\"population_head_branch\\\":\\\"main\\\",\\\"population_base_branch\\\":\\\"main\\\",\\\"population_attempts\\\":\\\"last\\\",\\\"population_include_cancelled\\\":false,\\\"population_lookback_days\\\":30,\\\"population_base_branch_verified\\\":false,\\\"population_excluded_jobs_unverified\\\":0,\\\"population_unverified\\\":\\\"baseBranch\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-16d44b4b46ca3da0",
+  "sensor": {
+    "name": "plant-depth",
+    "kind": "plant_depth"
+  },
+  "timestamp": "2026-10-18T20:55:33.504Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense-plant-depth",
+  "command_hash": "f81f3e093e5840c1b2aa12c9a06f4d9eca6254edf05460d901005813c218f4c2",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "error",
+      "code": "PLANT_DEPTH_FILES_BLOATED",
+      "message": "95th-percentile file size 2790 LOC exceeds REVIEW threshold 1000."
+    }
+  ],
+  "metrics": {
+    "files_count": 108,
+    "lines_total": 88821,
+    "lines_max": 6656,
+    "lines_mean": 822,
+    "lines_p95": 2790,
+    "threshold_pass": 500,
+    "threshold_review": 1000
+  }
+}
