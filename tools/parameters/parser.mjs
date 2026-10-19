@@ -122,6 +122,119 @@ function legalBasesDefault(type, raw) {
   return value;
 }
 
+// Exact approved relative policies (S2-R2 / frozen catalogue source).
+// This parser does not activate proposed rows or resolve threshold dates.
+const RAIT_LADDERS = {
+  A: [
+    'days',
+    'WF-RAIT-002#4.3',
+    [
+      [
+        180,
+        [
+          ['ALERTA_N1', 90],
+          ['ALERTA_N2', 135],
+          ['CRITICO', 162],
+        ],
+      ],
+      [
+        360,
+        [
+          ['ALERTA_N1', 180],
+          ['ALERTA_N2', 270],
+          ['CRITICO', 324],
+        ],
+      ],
+    ],
+  ],
+  B: [
+    'months',
+    'WF-RAIT-002#4.1',
+    [
+      [
+        24,
+        [
+          ['ALERTA_N1', 12],
+          ['ALERTA_N2', 18],
+          ['ALERTA_N3', 21],
+          ['CRITICO', 23],
+        ],
+      ],
+    ],
+  ],
+  C: [
+    'months',
+    'WF-RAIT-002#4.2',
+    [
+      [
+        36,
+        [
+          ['ALERTA_N2', 24],
+          ['ALERTA_N3', 30],
+          ['CRITICO', 33],
+        ],
+      ],
+    ],
+  ],
+  D: [
+    'months',
+    'DT-030',
+    [
+      [
+        60,
+        [
+          ['ALERTA_N1', 30],
+          ['ALERTA_N2', 45],
+          ['CRITICO', 54],
+        ],
+      ],
+    ],
+  ],
+};
+function ladderDefault(key, type, raw) {
+  if (type !== 'json') throw new Error('ladder type must be json');
+  let value;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    throw new Error('ladder default must be valid JSON');
+  }
+  const clockCode = key.slice(-1);
+  const [unit, sourceRef, tracks] = RAIT_LADDERS[clockCode];
+  if (
+    !hasExactKeys(value, [
+      'schemaVersion',
+      'clockCode',
+      'unit',
+      'tracks',
+      'sourceRef',
+    ]) ||
+    value.schemaVersion !== 1 ||
+    value.clockCode !== clockCode ||
+    value.unit !== unit ||
+    value.sourceRef !== sourceRef ||
+    !Array.isArray(value.tracks) ||
+    value.tracks.length !== tracks.length ||
+    !value.tracks.every((track, index) => {
+      const [ceiling, steps] = tracks[index];
+      return (
+        hasExactKeys(track, ['ceiling', 'steps']) &&
+        track.ceiling === ceiling &&
+        Array.isArray(track.steps) &&
+        track.steps.length === steps.length &&
+        track.steps.every(
+          (step, stepIndex) =>
+            hasExactKeys(step, ['flag', 'after']) &&
+            step.flag === steps[stepIndex][0] &&
+            step.after === steps[stepIndex][1],
+        )
+      );
+    })
+  )
+    throw new Error('ladder default must match the approved schema');
+  return value;
+}
+
 function numericReference(reference) {
   const match = reference.match(/^(.*?)(\d+)$/);
   if (!match) return undefined;
@@ -379,7 +492,9 @@ export async function parseCatalogue(source) {
         value_json =
           key === 'rait.priority.legal_bases'
             ? legalBasesDefault(type, defaultText)
-            : jsonDefault(type, defaultText, sourcePending);
+            : /^rait\.ladder\.[ABCD]$/.test(key)
+              ? ladderDefault(key, type, defaultText)
+              : jsonDefault(type, defaultText, sourcePending);
       } catch (error) {
         throw new Error(`${source}:${row + 1}: ${key}: ${error.message}`);
       }
