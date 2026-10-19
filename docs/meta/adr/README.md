@@ -67,6 +67,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0051](ADR-0051-devai-263-measurement-repairs.md)                  | DEVAI 2.6.3 measurement repairs                                                         | Accepted | —                                                                                |
 | [ADR-0053](ADR-0053-native-round-index-compatibility.md)               | Native round index compatibility                                                        | Accepted | —                                                                                |
 | [ADR-0054](ADR-0054-security-authorization-and-data-crosswalks.md)     | Source-bound authorization and personal-data crosswalks                                 | Accepted | —                                                                                |
+| [ADR-0055](ADR-0055-rait-risk-source-transaction-locks.md)             | RAIT risk source transaction locks                                                      | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
