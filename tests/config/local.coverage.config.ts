@@ -87,6 +87,8 @@ export default defineConfig({
     coverage: {
       enabled: true,
       provider: 'v8',
+      // Bound AST/source-map remapping while preserving every covered source.
+      processingConcurrency: 1,
       clean: true,
       reportsDirectory: resolve(root, 'coverage'),
       reporter: ['json', 'json-summary', 'text-summary'],
