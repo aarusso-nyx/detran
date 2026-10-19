@@ -1,3 +1,16 @@
+import type { RaitImpedimentRead, RaitClockRead } from '../api/worklist.client';
+import type {
+  RaitCaseRead,
+  RaitPartyRead,
+  RaitDocumentRead,
+  RaitAdmissibilityRead,
+  RaitDeadlineRead,
+  RaitInquiryRead,
+  RaitDraftRead,
+  RaitDecisionRead,
+  RaitCommunicationRead,
+  RaitCaseEventRead,
+} from '../api/case.client';
 // CaseFacade (contrato CTG-0002b §4.2/§4.3; M9): módulo caso (11 abas) e autoridade/provimentos.
 // Leituras por `CaseClient`/`WorklistClient` em slots com cache/TTL (`createReadStore`,
 // `createListFacade`); invalidação por SSE: `case.changed` → slots do `caseId`;
@@ -26,16 +39,11 @@ import type {
   ListQuery,
   RaitAdmissibility,
   RaitCase,
-  RaitCaseEvent,
-  RaitClock as RaitClockResource,
-  RaitCommunication,
-  RaitDeadline,
   RaitDecision,
   RaitDocument,
   RaitDraft,
   RaitImpediment,
   RaitInquiry,
-  RaitParty,
 } from '../models';
 import { createCommandRunner, type CommandOutcome } from './command';
 import { createListFacade, type ListFacade } from './list.facade';
@@ -65,60 +73,60 @@ export class CaseFacade {
   private readonly worklist = inject(WorklistClient);
   private readonly clock = inject(RaitClock);
 
-  readonly caso = createReadStore<RaitCase>(this.clock);
-  readonly partes = createListFacade<RaitParty>(
+  readonly caso = createReadStore<RaitCaseRead>(this.clock);
+  readonly partes = createListFacade<RaitPartyRead>(
     (query) => this.cases.listRaitParty(query),
     this.clock,
   );
-  readonly prazos = createListFacade<RaitDeadline>(
+  readonly prazos = createListFacade<RaitDeadlineRead>(
     (query) => this.cases.listRaitDeadline(query),
     this.clock,
   );
-  readonly relogios = createListFacade<RaitClockResource>(
+  readonly relogios = createListFacade<RaitClockRead>(
     (query) => this.worklist.listRaitClock(query),
     this.clock,
   );
-  readonly documentos = createListFacade<RaitDocument>(
+  readonly documentos = createListFacade<RaitDocumentRead>(
     (query) => this.cases.listRaitDocument(query),
     this.clock,
   );
-  readonly diligencias = createListFacade<RaitInquiry>(
+  readonly diligencias = createListFacade<RaitInquiryRead>(
     (query) => this.cases.listRaitInquiry(query),
     this.clock,
   );
-  readonly minutas = createListFacade<RaitDraft>(
+  readonly minutas = createListFacade<RaitDraftRead>(
     (query) => this.cases.listRaitDraft(query),
     this.clock,
   );
-  readonly admissibilidade = createListFacade<RaitAdmissibility>(
+  readonly admissibilidade = createListFacade<RaitAdmissibilityRead>(
     (query) => this.cases.listRaitAdmissibility(query),
     this.clock,
   );
-  readonly comunicacoes = createListFacade<RaitCommunication>(
+  readonly comunicacoes = createListFacade<RaitCommunicationRead>(
     (query) => this.cases.listRaitCommunication(query),
     this.clock,
   );
-  readonly eventos = createListFacade<RaitCaseEvent>(
+  readonly eventos = createListFacade<RaitCaseEventRead>(
     (query) => this.cases.listRaitCaseEvent(query),
     this.clock,
   );
-  readonly impedimentos = createListFacade<RaitImpediment>(
+  readonly impedimentos = createListFacade<RaitImpedimentRead>(
     (query) => this.worklist.listRaitImpediment(query),
     this.clock,
   );
-  readonly decisao = createListFacade<RaitDecision>(
+  readonly decisao = createListFacade<RaitDecisionRead>(
     (query) => this.cases.listRaitDecision(query),
     this.clock,
   );
 
   private readonly providedDecisions = signal<
-    ReadonlyMap<string, RaitDecision>
+    ReadonlyMap<string, RaitDecisionRead>
   >(new Map());
-  private readonly appealDeadlines = signal<ReadonlyMap<string, RaitDeadline>>(
-    new Map(),
-  );
+  private readonly appealDeadlines = signal<
+    ReadonlyMap<string, RaitDeadlineRead>
+  >(new Map());
   /** Ficha 027: casos COMUNICADO da JARI com decisão `provido` (join `decisao`). */
-  readonly provimentos = createListFacade<RaitCase>(
+  readonly provimentos = createListFacade<RaitCaseRead>(
     (query) => this.loadProvidedAppealsPage(query),
     this.clock,
   );
@@ -220,7 +228,7 @@ export class CaseFacade {
 
   private async loadProvidedAppealsPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitCase>> {
+  ): Promise<ListPage<RaitCaseRead>> {
     const [cases, decisions, deadlines] = await Promise.all([
       this.cases.listRaitCase({ ...query, page: 1, pageSize: undefined }),
       this.cases.listRaitDecision({
@@ -230,13 +238,13 @@ export class CaseFacade {
         filtro: { timer_code: APPEAL_TIMER_CODE },
       }),
     ]);
-    const decisionByCase = new Map<string, RaitDecision>();
+    const decisionByCase = new Map<string, RaitDecisionRead>();
     for (const decision of decisions.items) {
       if (!decisionByCase.has(decision.case_id)) {
         decisionByCase.set(decision.case_id, decision);
       }
     }
-    const deadlineByCase = new Map<string, RaitDeadline>();
+    const deadlineByCase = new Map<string, RaitDeadlineRead>();
     for (const deadline of deadlines.items) {
       if (!deadlineByCase.has(deadline.case_id)) {
         deadlineByCase.set(deadline.case_id, deadline);

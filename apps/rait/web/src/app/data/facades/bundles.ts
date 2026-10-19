@@ -1,24 +1,28 @@
+import type {
+  RaitBatchRead,
+  RaitBatchItemRead,
+  RaitAssignmentRead,
+  RaitImpedimentRead,
+  RaitBenchRead,
+  RaitClockRead,
+  RaitClockAlertRead,
+} from '../api/worklist.client';
+import type {
+  RaitCaseRead,
+  RaitDocumentRead,
+  RaitAdmissibilityRead,
+  RaitDeadlineRead,
+  RaitDraftRead,
+  RaitDecisionRead,
+  RaitCommunicationRead,
+  RaitCaseEventRead,
+} from '../api/case.client';
 // Agregados de leitura do app (contrato CTG-0002b §4.3): composição de recursos gerados ou
 // contagens de listas — nunca campos de payload inventados (M8). Cada campo é um recurso de
 // `data/models` ou uma contagem de registros carregados (cap 500, OD-R12-031).
 import type {
-  RaitAdmissibility,
   RaitAgendaItem,
-  RaitAssignment,
   RaitAttendance,
-  RaitBatch,
-  RaitBatchItem,
-  RaitBench,
-  RaitCase,
-  RaitCaseEvent,
-  RaitClock,
-  RaitClockAlert,
-  RaitCommunication,
-  RaitDeadline,
-  RaitDecision,
-  RaitDocument,
-  RaitDraft,
-  RaitImpediment,
   RaitMinutes,
   RaitSession,
   RaitVote,
@@ -34,12 +38,12 @@ export interface ShiftSummary {
 }
 
 export interface SigningBundle {
-  readonly case: RaitCase;
-  readonly drafts: readonly RaitDraft[];
-  readonly documents: readonly RaitDocument[];
-  readonly admissibility: readonly RaitAdmissibility[];
-  readonly deadlines: readonly RaitDeadline[];
-  readonly decision: RaitDecision | null;
+  readonly case: RaitCaseRead;
+  readonly drafts: readonly RaitDraftRead[];
+  readonly documents: readonly RaitDocumentRead[];
+  readonly admissibility: readonly RaitAdmissibilityRead[];
+  readonly deadlines: readonly RaitDeadlineRead[];
+  readonly decision: RaitDecisionRead | null;
 }
 
 export interface SessionBundle {
@@ -47,30 +51,30 @@ export interface SessionBundle {
   readonly items: readonly RaitAgendaItem[];
   readonly attendance: readonly RaitAttendance[];
   readonly votes: readonly RaitVote[];
-  readonly bench: RaitBench | null;
+  readonly bench: RaitBenchRead | null;
   readonly minutes: RaitMinutes | null;
-  readonly cases: ReadonlyMap<string, RaitCase>;
+  readonly cases: ReadonlyMap<string, RaitCaseRead>;
 }
 
 export interface BatchBundle {
-  readonly batch: RaitBatch;
-  readonly items: readonly RaitBatchItem[];
-  readonly impediments: readonly RaitImpediment[];
-  readonly cases: ReadonlyMap<string, RaitCase>;
+  readonly batch: RaitBatchRead;
+  readonly items: readonly RaitBatchItemRead[];
+  readonly impediments: readonly RaitImpedimentRead[];
+  readonly cases: ReadonlyMap<string, RaitCaseRead>;
 }
 
 export interface RadarCaseBundle {
-  readonly case: RaitCase;
-  readonly clocks: readonly RaitClock[];
-  readonly alerts: readonly RaitClockAlert[];
-  readonly assignments: readonly RaitAssignment[];
-  readonly events: readonly RaitCaseEvent[];
+  readonly case: RaitCaseRead;
+  readonly clocks: readonly RaitClockRead[];
+  readonly alerts: readonly RaitClockAlertRead[];
+  readonly assignments: readonly RaitAssignmentRead[];
+  readonly events: readonly RaitCaseEventRead[];
 }
 
 export interface SealedDossier {
-  readonly case: RaitCase;
-  readonly documents: readonly RaitDocument[];
-  readonly decisions: readonly RaitDecision[];
-  readonly communications: readonly RaitCommunication[];
-  readonly events: readonly RaitCaseEvent[];
+  readonly case: RaitCaseRead;
+  readonly documents: readonly RaitDocumentRead[];
+  readonly decisions: readonly RaitDecisionRead[];
+  readonly communications: readonly RaitCommunicationRead[];
+  readonly events: readonly RaitCaseEventRead[];
 }

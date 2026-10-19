@@ -1,3 +1,4 @@
+import type { RaitDraftRead } from '../data/api/case.client';
 // MinutaEditor (contrato CTG-0002b §5.10; IU-RAIT-001 §3 "quem instrui não assina"; spec §9
 // Minuta; ficha 011): três campos (`rait.common.facts`/`grounds`/`ruling`), `<select ruling>`
 // (`acolher` | `indeferir` — tokens sem contrato, OD-R12-029), autor explícito
@@ -14,7 +15,6 @@ import {
   output,
 } from '@angular/core';
 import { StynxIntlDatePipe, StynxTranslatePipe } from '@detran/ui';
-import type { RaitDraft } from '../data/models';
 
 /** §9 fixa `acolher | indeferir`; o contrato só tem `decision_kind` (OD-R12-029). */
 export type MinutaRuling = 'acolher' | 'indeferir';
@@ -124,8 +124,8 @@ let nextId = 0;
   `,
 })
 export class MinutaEditorComponent {
-  readonly draft = input<RaitDraft | null>(null);
-  readonly versions = input<readonly RaitDraft[]>([]);
+  readonly draft = input<RaitDraftRead | null>(null);
+  readonly versions = input<readonly RaitDraftRead[]>([]);
   readonly authorLabel = input<string | null>(null);
   readonly disabled = input(false);
   readonly content = model<MinutaContent>(EMPTY_MINUTA);

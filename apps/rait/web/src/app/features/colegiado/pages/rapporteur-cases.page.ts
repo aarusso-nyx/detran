@@ -1,3 +1,4 @@
+import type { RaitBatchItemRead } from '../../../data/api/worklist.client';
 // T-25 Relatoria (ficha IU-RAIT-030; contrato CTG-0002b §6.1 linha 29; [RN-RAIT-140]): `SessionFacade.
 // loadRapporteurItems(orgao)` → `relatoria` (itens de lote do órgão — sem recorte "member=me",
 // OD-R12-021) numa `<stynx-table>` do kit (position, case_id, claim_due_on com o rótulo do timer
@@ -29,14 +30,12 @@ import { StynxHasPermissionDirective } from '@stynx-nyx/angular-auth';
 import { StynxConfirmDialogComponent } from '@stynx-nyx/angular-ui';
 import { RaitErrorBannerComponent } from '../../../core/error-boundary';
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
-import { tokenKey } from '../../../core/i18n-token-key';
 import { SseService } from '../../../core/sse.service';
 import { SessionFacade } from '../../../data/facades/session.facade';
 import {
   RAIT_IMPEDIMENT_KINDS,
   permissionKeyOf,
   type ListQuery,
-  type RaitBatchItem,
   type RaitDeclineKind,
   type RaitJudgingBody,
 } from '../../../data/models';
@@ -66,7 +65,6 @@ const CONFIRM_ACCEPT_KEY =
 const CONFIRM_IMPEDE_KEY =
   'rait.screens.colegiado-orgao-relatoria.confirm.impede';
 const IMPEDIMENT_KIND_PREFIX = 'rait.common.impediment_';
-const CLAIM_TIMER = 'T-CLAIM';
 const COLEGIADO_ROUTE = '/colegiado';
 const RAPPORTEUR_ROUTE = 'relatoria';
 const OPINION_ROUTE = 'voto';
@@ -234,7 +232,7 @@ export class RapporteurCasesPageComponent {
   readonly offline = computed(
     () => this.facade.relatoria.status() === 'offline',
   );
-  readonly selected = computed<RaitBatchItem | null>(
+  readonly selected = computed<RaitBatchItemRead | null>(
     () =>
       this.facade.relatoria
         .items()
@@ -243,14 +241,10 @@ export class RapporteurCasesPageComponent {
   readonly rows = computed<ItemRow[]>(() =>
     this.facade.relatoria.items().map((item) => ({
       id: item.id,
-      position: String(item.position),
+      position: this.i18n.translate('rait.common.unavailable'),
       case_id: item.case_id,
-      claim_due_on: item.claim_due_on
-        ? `${this.i18n.translate(tokenKey('timer', CLAIM_TIMER))} ${this.datePipe.transform(item.claim_due_on)}`
-        : '',
-      accepted_at: item.accepted_at
-        ? this.datePipe.transform(item.accepted_at)
-        : '',
+      claim_due_on: this.i18n.translate('rait.common.unavailable'),
+      accepted_at: this.i18n.translate('rait.common.unavailable'),
     })),
   );
 

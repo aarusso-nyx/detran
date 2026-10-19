@@ -1,3 +1,4 @@
+import type { RaitCaseEventRead } from '../data/api/case.client';
 // EventTimeline (contrato CTG-0002b §5.20; UC-RAIT-042; fichas 015/017/022/029/034/036/060; Portal
 // `process-timeline`): `<ol>` na ordem recebida (nunca reordena); por evento `occurred_at`
 // (`StynxIntlDatePipe`), `event_type` como texto em `<code>` (string livre do contrato — não é
@@ -19,7 +20,6 @@ import {
 } from '@detran/ui';
 import { tokenKey } from '../core/i18n-token-key';
 import type { ReadStatus } from '../data/facades/read-store';
-import type { RaitCaseEvent } from '../data/models';
 
 const TRANSITION_KEY = 'rait.common.transition';
 const ACTOR_KEY = 'rait.common.actor';
@@ -86,7 +86,7 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 export class EventTimelineComponent {
   private readonly i18n = inject(StynxI18nService);
 
-  readonly events = input.required<readonly RaitCaseEvent[]>();
+  readonly events = input.required<readonly RaitCaseEventRead[]>();
   readonly status = input<ReadStatus>('ready');
 
   readonly actorKey = ACTOR_KEY;
@@ -95,7 +95,7 @@ export class EventTimelineComponent {
   readonly timeFormat = TIME_FORMAT;
 
   /** `rait.common.transition` {from}{to} com os rótulos dos tokens; só quando há estados. */
-  transitionText(event: RaitCaseEvent): string | null {
+  transitionText(event: RaitCaseEventRead): string | null {
     if (!event.from_state && !event.to_state) return null;
     const from = event.from_state
       ? this.i18n.translate(tokenKey('caseState', event.from_state))

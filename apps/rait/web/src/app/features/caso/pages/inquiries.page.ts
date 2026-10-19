@@ -1,6 +1,7 @@
+import type { RaitDeadlineRead } from '../../../data/api/case.client';
 // T-08 Diligências (ficha IU-RAIT-010; contrato CTG-0002b §6.1 linha 10; [RN-RAIT-004];
 // [UC-RAIT-003]): `CaseFacade.loadInquiries(id)` → `diligencias` (um `InquiryCard` por
-// diligência, com o `RaitDeadline` T-DIL do caso quando `prazos` o trouxer); `InquiryForm`
+// diligência, com o `RaitDeadlineRead` T-DIL do caso quando `prazos` o trouxer); `InquiryForm`
 // (formulário `diligencia`: `addressee`, `subject`, `dueOn?` — o prazo default é do backend,
 // nunca digitado); ações sob `*stynxHasPermission` (M4): `rait-case:open-inquiry` com
 // confirmação `confirm.open` (guia §3.3), `rait-case:answer` (sem confirmação na ficha) e
@@ -25,7 +26,6 @@ import { CaseFacade } from '../../../data/facades/case.facade';
 import {
   permissionKeyOf,
   type CreateRaitInquiryDto,
-  type RaitDeadline,
 } from '../../../data/models';
 import { InquiryCardComponent } from '../../../shared/inquiry-card.component';
 import {
@@ -161,7 +161,7 @@ export class InquiriesPageComponent {
     () => this.facade.diligencias.status() === 'offline',
   );
   /** T-DIL do caso quando `prazos` o trouxer (só do servidor, [RN-RAIT-005]). */
-  readonly inquiryDeadline = computed<RaitDeadline | null>(
+  readonly inquiryDeadline = computed<RaitDeadlineRead | null>(
     () =>
       this.facade.prazos
         .items()

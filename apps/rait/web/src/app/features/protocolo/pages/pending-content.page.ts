@@ -1,3 +1,4 @@
+import type { RaitPendingContentRead } from '../../../data/api/case.client';
 // T-18 Pendências de conteúdo mínimo (ficha IU-RAIT-021; contrato CTG-0002b §6.1 linha 20):
 // `ProtocolFacade.loadPending(query)` → `pendencias` (só abertas, `outcome` null) + `pendenciasCaso`
 // (join por `case_id`) numa `QueueTable` (coluna de prazo = `due_on` da pendência como texto,
@@ -19,7 +20,11 @@ import {
   viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StynxPaginationComponent, StynxTranslatePipe } from '@detran/ui';
+import {
+  StynxI18nService,
+  StynxPaginationComponent,
+  StynxTranslatePipe,
+} from '@detran/ui';
 import { StynxHasPermissionDirective } from '@stynx-nyx/angular-auth';
 import { StynxConfirmDialogComponent } from '@stynx-nyx/angular-ui';
 import { RaitErrorBannerComponent } from '../../../core/error-boundary';
@@ -30,7 +35,6 @@ import { ProtocolFacade } from '../../../data/facades/protocol.facade';
 import {
   permissionKeyOf,
   type CommandBody,
-  type RaitPendingContent,
   type RaitPendingContentOutcome,
 } from '../../../data/models';
 import {
@@ -63,7 +67,7 @@ const CONFIRM_RESOLVE_KEY = 'rait.screens.protocolo-pendencias.confirm.resolve';
 const FIELD_MISSING_KEY = 'rait.screens.protocolo-pendencias.field.missing';
 const COLUMNS: readonly QueueColumnKey[] = ['protocol', 'state', 'deadline'];
 const CASE_ROUTE = '/casos';
-/** Sanar = pendência atendida (token do contrato `RaitPendingContent['outcome']`). */
+/** Sanar = pendência atendida (token do contrato `RaitPendingContentRead['outcome']`). */
 const RESOLVED_OUTCOME: RaitPendingContentOutcome = 'atendida';
 /** Tipos de documento da pendência: do formulário do CTG-0002c (nenhum inventado aqui). */
 const PENDING_KINDS: readonly string[] = [];
@@ -157,6 +161,7 @@ const PENDING_KINDS: readonly string[] = [];
   `,
 })
 export class PendingContentPageComponent {
+  private readonly i18n = inject(StynxI18nService);
   readonly facade = inject(ProtocolFacade);
   private readonly router = inject(Router);
   private readonly sse = inject(SseService);
@@ -216,7 +221,7 @@ export class PendingContentPageComponent {
   });
 
   /** Pendência da linha ativa da tabela. */
-  readonly activePending = computed<RaitPendingContent | null>(() => {
+  readonly activePending = computed<RaitPendingContentRead | null>(() => {
     const active = this.table()?.activeItem() ?? null;
     if (active === null) return null;
     return (
@@ -246,9 +251,8 @@ export class PendingContentPageComponent {
     });
   }
 
-  missingItemsText(pending: RaitPendingContent): string {
-    const items: unknown = pending.missing_items;
-    return Array.isArray(items) ? items.map(String).join(', ') : '';
+  missingItemsText(_pending: RaitPendingContentRead): string {
+    return this.i18n.translate('rait.common.unavailable');
   }
 
   /** Confirmação `confirm.resolve` (guia §3.3) → `rait-case:resolve-pending-content` na pendência

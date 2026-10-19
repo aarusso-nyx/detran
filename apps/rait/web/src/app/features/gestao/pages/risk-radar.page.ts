@@ -1,3 +1,4 @@
+import type { RaitClockRead } from '../../../data/api/worklist.client';
 // T-37 Radar de risco (ficha IU-RAIT-039; contrato CTG-0002b §6.1 linha 38): `RadarFacade.
 // loadRadar(query)` → `radar` (relógios com bandeira, ordem recebida — [RN-RAIT-141]) +
 // `radarCasos` (join caso) — `ClockRadar` = `<stynx-table>` de relógios (case_id/protocolo,
@@ -30,7 +31,7 @@ import { tokenKey } from '../../../core/i18n-token-key';
 import { ShortcutService } from '../../../core/shortcut.service';
 import { SseService } from '../../../core/sse.service';
 import { RadarFacade } from '../../../data/facades/radar.facade';
-import type { RaitClock } from '../../../data/models';
+
 import { ClocksPanelComponent } from '../../../shared/clocks-panel.component';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
@@ -153,13 +154,13 @@ export class RiskRadarPageComponent {
   readonly list = connectListToUrl({
     load: (query) => this.facade.loadRadar(query),
   });
-  readonly activeClock = computed<RaitClock | null>(
+  readonly activeClock = computed<RaitClockRead | null>(
     () =>
       this.facade.radar.items().find((clock) => clock.id === this.activeId()) ??
       null,
   );
   /** Relógios do caso ativo (os quatro A–D quando carregados). */
-  readonly activeClocks = computed<readonly RaitClock[]>(() => {
+  readonly activeClocks = computed<readonly RaitClockRead[]>(() => {
     const active = this.activeClock();
     if (active === null) return [];
     return this.facade.radar
@@ -204,7 +205,7 @@ export class RiskRadarPageComponent {
     });
   }
 
-  protocolOf(clock: RaitClock): string {
+  protocolOf(clock: RaitClockRead): string {
     return (
       this.facade.radarCasos().get(clock.case_id)?.protocol_number ??
       clock.case_id

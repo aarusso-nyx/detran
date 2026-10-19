@@ -1,3 +1,5 @@
+import type { RaitAssignmentRead } from '../api/worklist.client';
+import type { RaitCaseRead, RaitInquiryRead } from '../api/case.client';
 // QueueFacade (contrato CTG-0002b §4.2/§4.3; M9): módulos fila e painel. `filaDefesa` = casos
 // ADMITIDO da defesa prévia (ficha 004, F-DP-2) na ordem recebida ([RN-RAIT-141]);
 // `filaRelator` = atribuições ativas do pool do órgão (ficha 005 — "member=me" sem fonte de
@@ -18,8 +20,6 @@ import type {
   ListPage,
   ListQuery,
   RaitAssignment,
-  RaitCase,
-  RaitInquiry,
   RaitJudgingBody,
 } from '../models';
 import type { ShiftSummary } from './bundles';
@@ -51,22 +51,24 @@ export class QueueFacade {
   private readonly worklist = inject(WorklistClient);
   private readonly clock = inject(RaitClock);
 
-  readonly filaDefesa = createListFacade<RaitCase>(
+  readonly filaDefesa = createListFacade<RaitCaseRead>(
     (query) => this.cases.listRaitCase(query),
     this.clock,
   );
-  readonly filaRelator = createListFacade<RaitAssignment>(
+  readonly filaRelator = createListFacade<RaitAssignmentRead>(
     (query) => this.loadRapporteurPage(query),
     this.clock,
   );
-  readonly retomar = createListFacade<RaitInquiry>(
+  readonly retomar = createListFacade<RaitInquiryRead>(
     (query) => this.loadResumePage(query),
     this.clock,
   );
   readonly painel = createReadStore<ShiftSummary>(this.clock);
   readonly command = createCommandRunner();
 
-  private readonly caseCache = signal<ReadonlyMap<string, RaitCase>>(new Map());
+  private readonly caseCache = signal<ReadonlyMap<string, RaitCaseRead>>(
+    new Map(),
+  );
   /** Casos das atribuições/diligências carregadas (join por `case_id`, cache por id). */
   readonly casosDaFila = computed(() => this.caseCache());
 
@@ -105,7 +107,7 @@ export class QueueFacade {
   /** `listRaitPool filtro { instance }` → `pool_id` → `listRaitAssignment filtro { pool_id, active }`. */
   private async loadRapporteurPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitAssignment>> {
+  ): Promise<ListPage<RaitAssignmentRead>> {
     const { instance, ...filtro } = query.filtro ?? {};
     const orgao = instance ?? this.rapporteurBody ?? '';
     const pools = await this.worklist.listRaitPool({
@@ -128,7 +130,7 @@ export class QueueFacade {
   /** Ficha 003: diligências com desfecho (respondida × expirada) + join caso. */
   private async loadResumePage(
     query: ListQuery,
-  ): Promise<ListPage<RaitInquiry>> {
+  ): Promise<ListPage<RaitInquiryRead>> {
     const page = await this.cases.listRaitInquiry(query);
     const items = page.items.filter(
       (item) => item.outcome !== null && item.outcome !== undefined,

@@ -1,3 +1,7 @@
+import type {
+  RaitDeadlineRead,
+  RaitDraftRead,
+} from '../../../data/api/case.client';
 // T-07 Decisão da autoridade (ficha IU-RAIT-026; contrato CTG-0002b §6.1 linha 25; [UC-RAIT-016]):
 // `SigningFacade.loadSigningCase(caseId)` → `caso` (bundle: caso, minutas, documentos,
 // admissibilidade, prazos, decisão); `DecisionPanel` (formulário `decisao-autoridade`: `kind`,
@@ -31,8 +35,6 @@ import {
   permissionKeyOf,
   type CreateRaitDecisionDto,
   type CreateRaitImpedimentDto,
-  type RaitDeadline,
-  type RaitDraft,
 } from '../../../data/models';
 import {
   DecisionPanelComponent,
@@ -214,14 +216,14 @@ export class SigningDecisionPageComponent {
   readonly signPending = signal<Partial<DecisionDraft> | null>(null);
 
   readonly offline = computed(() => this.facade.caso.status() === 'offline');
-  readonly deadline = computed<RaitDeadline | null>(
+  readonly deadline = computed<RaitDeadlineRead | null>(
     () =>
       this.facade.caso
         .value()
         ?.deadlines.find((item) => item.timer_code === DECISION_TIMER) ?? null,
   );
   /** Ordem recebida ("most recent first" do contrato): a primeira é a versão mais recente. */
-  readonly latestDraft = computed<RaitDraft | null>(
+  readonly latestDraft = computed<RaitDraftRead | null>(
     () => this.facade.caso.value()?.drafts[0] ?? null,
   );
   readonly panelComplete = computed(() => this.panel()?.complete() ?? false);

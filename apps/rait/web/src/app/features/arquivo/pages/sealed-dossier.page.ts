@@ -1,3 +1,4 @@
+import type { RaitDocumentRead } from '../../../data/api/case.client';
 // T-43 Dossiê selado (ficha IU-RAIT-058; contrato CTG-0002b §6.1 linha 56; [RN-RAIT-137]):
 // `ArchiveFacade.loadSealedDossier(id)` → `dossie` (caso, documentos, decisões, comunicações,
 // eventos); `SealedDossierViewer` = `DossierViewer` (hash por documento em `<code>`; a supressão
@@ -17,7 +18,7 @@ import { StynxTranslatePipe } from '@detran/ui';
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { SseService } from '../../../core/sse.service';
 import { ArchiveFacade } from '../../../data/facades/archive.facade';
-import type { RaitDocument } from '../../../data/models';
+
 import { CaseStateBadgeComponent } from '../../../shared/case-state-badge.component';
 import { DossierViewerComponent } from '../../../shared/dossier-viewer.component';
 import { EventTimelineComponent } from '../../../shared/event-timeline.component';
@@ -32,7 +33,7 @@ const TITLE_KEY = 'rait.screens.arquivo-casos-id.title';
 const CMD_COPY_KEY = 'rait.screens.arquivo-casos-id.cmd.copy';
 const CASE_ID_PARAM = 'id';
 /** Sem endpoint de URL assinada (spec §11; OD-R12-023). */
-const DOCUMENT_URL_OF: ((document: RaitDocument) => string | null) | null =
+const DOCUMENT_URL_OF: ((document: RaitDocumentRead) => string | null) | null =
   null;
 
 @Component({

@@ -112,7 +112,8 @@ export class PartiesPageComponent {
     this.facade.partes.items().map((party) => ({
       id: party.id,
       role: this.i18n.translate(`${PARTY_ROLE_PREFIX}${party.role}`),
-      person_name: party.person_name,
+      person_name:
+        party.person_name ?? this.i18n.translate('rait.common.unavailable'),
       document_number: party.document_number ?? '',
       legitimacy_basis: party.legitimacy_basis ?? '',
       representation_verified: this.i18n.translate(

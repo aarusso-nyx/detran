@@ -1,6 +1,10 @@
+import type {
+  RaitDeadlineRead,
+  RaitInquiryRead,
+} from '../data/api/case.client';
 // InquiryCard (contrato CTG-0002b §5.9; [RN-RAIT-004]; ficha 010): destinatário
 // (`'rait.common.addressee_' + token`), assunto, `requested_at` (data), prazo por
-// `<rait-deadline-chip kind="operacional">` quando a página passa o `RaitDeadline` T-DIL, senão
+// `<rait-deadline-chip kind="operacional">` quando a página passa o `RaitDeadlineRead` T-DIL, senão
 // `due_on` (data) + `tokenKey('timer', 'T-DIL')`; `extension_count` → `rait.common.extensions`
 // {count}; `outcome` → `'rait.common.inquiry_' + outcome`. Botões responder/prorrogar sob a chave
 // de política de `RAIT_COMMAND_RULES` (`inf:rait-case:answer-inquiry` / `inf:rait-case:extend-inquiry`
@@ -17,7 +21,7 @@ import {
 import { StynxIntlDatePipe, StynxTranslatePipe } from '@detran/ui';
 import { StynxHasPermissionDirective } from '@stynx-nyx/angular-auth';
 import { tokenKey } from '../core/i18n-token-key';
-import type { RaitDeadline, RaitInquiry } from '../data/models';
+
 import { DeadlineChipComponent } from './deadline-chip.component';
 
 const ADDRESSEE_KEY_PREFIX = 'rait.common.addressee_';
@@ -102,9 +106,9 @@ const MAX_EXTENSIONS = 1;
   `,
 })
 export class InquiryCardComponent {
-  readonly inquiry = input.required<RaitInquiry>();
+  readonly inquiry = input.required<RaitInquiryRead>();
   /** T-DIL do caso, quando a página o tem. */
-  readonly deadline = input<RaitDeadline | null>(null);
+  readonly deadline = input<RaitDeadlineRead | null>(null);
   readonly disabled = input(false);
   readonly answer = output<string>();
   readonly extend = output<string>();

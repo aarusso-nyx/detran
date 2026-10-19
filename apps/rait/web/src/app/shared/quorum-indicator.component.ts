@@ -1,3 +1,4 @@
+import type { RaitBenchRead } from '../data/api/worklist.client';
 // QuorumIndicator (contrato CTG-0002b §5.14; [RN-RAIT-142]; fichas 034/035): `rait.common.quorum`
 // + `quorum_observed ?? '—'` / `quorum_required` (números do servidor); estado da banca por
 // `tokenKey('orgState', bench.state)` — a verdade do quorum é o estado da banca, NENHUMA
@@ -12,7 +13,7 @@ import {
 } from '@angular/core';
 import { StynxIntlNumberPipe, StynxTranslatePipe } from '@detran/ui';
 import { tokenKey } from '../core/i18n-token-key';
-import type { RaitAttendance, RaitBench, RaitSession } from '../data/models';
+import type { RaitAttendance, RaitSession } from '../data/models';
 
 const QUORUM_KEY = 'rait.common.quorum';
 const CHAIR_PRESENT_KEY = 'rait.common.chairPresent';
@@ -75,7 +76,7 @@ const ABSENT_MARK = '—';
 })
 export class QuorumIndicatorComponent {
   readonly session = input.required<RaitSession>();
-  readonly bench = input<RaitBench | null>(null);
+  readonly bench = input<RaitBenchRead | null>(null);
   readonly attendance = input<readonly RaitAttendance[]>([]);
 
   readonly quorumKey = QUORUM_KEY;

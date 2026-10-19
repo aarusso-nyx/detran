@@ -1,3 +1,10 @@
+import type {
+  RaitBatchRead,
+  RaitBatchItemRead,
+  RaitSubstituteDutyRead,
+  RaitClockRead,
+} from '../api/worklist.client';
+import type { RaitCaseRead } from '../api/case.client';
 // SessionFacade (contrato CTG-0002b §4.2/§4.3; M9): módulo colegiado — distinta de
 // `core/session.facade.ts` (`RaitSessionFacade`, claims STYNX). Leituras por `SessionClient`,
 // `WorklistClient` e `CaseClient` em slots com cache/TTL; joins por id (`getRaitCase`) ou por
@@ -27,8 +34,6 @@ import type {
   RaitAttendance,
   RaitBatch,
   RaitBatchItem,
-  RaitCase,
-  RaitClock as RaitClockResource,
   RaitDeclineKind,
   RaitJudgingBody,
   RaitMinutes,
@@ -94,18 +99,18 @@ export class SessionFacade {
   readonly sessao: ReadStore<SessionBundle> = createReadStore<SessionBundle>(
     this.clock,
   );
-  readonly lotes = createListFacade<RaitBatch>(
+  readonly lotes = createListFacade<RaitBatchRead>(
     (query) => this.loadBatchesPage(query),
     this.clock,
   );
   readonly lote: ReadStore<BatchBundle> = createReadStore<BatchBundle>(
     this.clock,
   );
-  readonly relatoria = createListFacade<RaitBatchItem>(
+  readonly relatoria = createListFacade<RaitBatchItemRead>(
     (query) => this.loadRapporteurItemsPage(query),
     this.clock,
   );
-  readonly pautaCandidatos = createListFacade<RaitCase>(
+  readonly pautaCandidatos = createListFacade<RaitCaseRead>(
     (query) => this.loadAgendaCandidatesPage(query),
     this.clock,
   );
@@ -113,26 +118,26 @@ export class SessionFacade {
     (query) => this.loadViewsPage(query),
     this.clock,
   );
-  readonly extraordinaria = createListFacade<RaitClockResource>(
+  readonly extraordinaria = createListFacade<RaitClockRead>(
     (query) => this.loadCriticalClocksPage(query),
     this.clock,
   );
-  readonly semRelator = createListFacade<RaitCase>(
+  readonly semRelator = createListFacade<RaitCaseRead>(
     (query) => this.cases.listRaitCase(query),
     this.clock,
   );
   readonly itemDoCaso: ReadStore<RaitAgendaItem | null> =
     createReadStore<RaitAgendaItem | null>(this.clock);
-  readonly suplentes = createListFacade<RaitSubstituteDuty>(
+  readonly suplentes = createListFacade<RaitSubstituteDutyRead>(
     (query) => this.worklist.listRaitSubstituteDuty(query),
     this.clock,
   );
   readonly command = createCommandRunner();
 
   private readonly candidateClocks = signal<
-    ReadonlyMap<string, readonly RaitClockResource[]>
+    ReadonlyMap<string, readonly RaitClockRead[]>
   >(new Map());
-  private readonly criticalCases = signal<ReadonlyMap<string, RaitCase>>(
+  private readonly criticalCases = signal<ReadonlyMap<string, RaitCaseRead>>(
     new Map(),
   );
   /** Relógios por `case_id` dos `pautaCandidatos` (bandeiras; ficha 032). */
@@ -278,7 +283,7 @@ export class SessionFacade {
   /** `listRaitPool filtro { instance: orgao }` → `listRaitBatch filtro { pool_id }`. */
   private async loadBatchesPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitBatch>> {
+  ): Promise<ListPage<RaitBatchRead>> {
     const { instance, ...filtro } = query.filtro ?? {};
     const pools = await this.worklist.listRaitPool({
       filtro: { instance: instance ?? '' },
@@ -294,7 +299,7 @@ export class SessionFacade {
   /** Ficha 030: lotes do órgão → itens de cada lote (ordem recebida). */
   private async loadRapporteurItemsPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitBatchItem>> {
+  ): Promise<ListPage<RaitBatchItemRead>> {
     const batches = await this.loadBatchesPage(query);
     const pages = await Promise.all(
       batches.items.map((batch) =>
@@ -310,7 +315,7 @@ export class SessionFacade {
   /** Ficha 032: candidatos à pauta + relógios por caso (bandeiras). */
   private async loadAgendaCandidatesPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitCase>> {
+  ): Promise<ListPage<RaitCaseRead>> {
     const page = await this.cases.listRaitCase(query);
     const clockPages = await Promise.all(
       page.items.map((item) =>
@@ -348,7 +353,7 @@ export class SessionFacade {
   /** Ficha 038 (fila F-J-3): relógios CRITICO + join caso da instância do órgão. */
   private async loadCriticalClocksPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitClockResource>> {
+  ): Promise<ListPage<RaitClockRead>> {
     const { instance, ...filtro } = query.filtro ?? {};
     const [clocks, cases] = await Promise.all([
       this.worklist.listRaitClock({ ...query, filtro }),
@@ -364,7 +369,7 @@ export class SessionFacade {
 
   private async casesById(
     ids: readonly string[],
-  ): Promise<ReadonlyMap<string, RaitCase>> {
+  ): Promise<ReadonlyMap<string, RaitCaseRead>> {
     const unique = [...new Set(ids)];
     const fetched = await Promise.all(
       unique.map((id) => this.cases.getRaitCase(id)),

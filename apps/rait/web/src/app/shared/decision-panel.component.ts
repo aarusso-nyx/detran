@@ -1,3 +1,11 @@
+import type {
+  RaitCaseRead,
+  RaitDocumentRead,
+  RaitAdmissibilityRead,
+  RaitDeadlineRead,
+  RaitDraftRead,
+  RaitDecisionRead,
+} from '../data/api/case.client';
 // DecisionPanel (contrato CTG-0002b §5.11; UC-RAIT-016; fichas 012/026; spec §9 Decisão da
 // autoridade): duas colunas — esquerda `<rait-dossier-viewer>` + minuta mais recente (somente
 // leitura); direita `<rait-deadline-chip kind="legal">` de T-DEC quando há `deadline`;
@@ -17,16 +25,7 @@ import {
 } from '@angular/core';
 import { StynxIntlDatePipe, StynxTranslatePipe } from '@detran/ui';
 import { StynxHasPermissionDirective } from '@stynx-nyx/angular-auth';
-import {
-  permissionKeyOf,
-  type RaitAdmissibility,
-  type RaitCase,
-  type RaitDeadline,
-  type RaitDecision,
-  type RaitDecisionKind,
-  type RaitDocument,
-  type RaitDraft,
-} from '../data/models';
+import { permissionKeyOf, type RaitDecisionKind } from '../data/models';
 import { DeadlineChipComponent } from './deadline-chip.component';
 import { DossierViewerComponent } from './dossier-viewer.component';
 
@@ -200,13 +199,13 @@ let nextId = 0;
   `,
 })
 export class DecisionPanelComponent {
-  readonly case = input.required<RaitCase>();
-  readonly draft = input<RaitDraft | null>(null);
-  readonly documents = input<readonly RaitDocument[]>([]);
-  readonly admissibility = input<readonly RaitAdmissibility[]>([]);
+  readonly case = input.required<RaitCaseRead>();
+  readonly draft = input<RaitDraftRead | null>(null);
+  readonly documents = input<readonly RaitDocumentRead[]>([]);
+  readonly admissibility = input<readonly RaitAdmissibilityRead[]>([]);
   /** T-DEC. */
-  readonly deadline = input<RaitDeadline | null>(null);
-  readonly decision = input<RaitDecision | null>(null);
+  readonly deadline = input<RaitDeadlineRead | null>(null);
+  readonly decision = input<RaitDecisionRead | null>(null);
   readonly disabled = input(false);
   /** `rait.screens.assinatura-caseId.state.already_signed` (da tela chamadora). */
   readonly stateLabelKey = input<string | null>(null);

@@ -23,6 +23,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
+  StynxI18nService,
   StynxIntlDatePipe,
   StynxPaginationComponent,
   StynxTableComponent,
@@ -61,7 +62,7 @@ const CONFIRM_REDIRECT_KEY =
   'rait.screens.protocolo-redirecionamentos.confirm.redirect';
 const FIELD_TARGET_BODY_KEY =
   'rait.screens.protocolo-redirecionamentos.field.target_body';
-/** Tokens do contrato `RaitRedirect['direction'|'reason']` (sem chave de rótulo no catálogo:
+/** Tokens do contrato `RaitRedirectRead['direction'|'reason']` (sem chave de rótulo no catálogo:
  * o token fica em `value`/`data-token`; o texto visível é o campo do contrato — OD-R12-028). */
 const DIRECTIONS: readonly RaitRedirectDirection[] = ['entrada', 'saida'];
 const REASONS: readonly RaitRedirectReason[] = [
@@ -238,6 +239,7 @@ const COLUMNS: readonly TableColumn<RedirectRow>[] = [
   `,
 })
 export class RedirectsPageComponent {
+  private readonly i18n = inject(StynxI18nService);
   readonly facade = inject(ProtocolFacade);
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly sse = inject(SseService);
@@ -281,9 +283,11 @@ export class RedirectsPageComponent {
     this.facade.redirecionamentos.items().map((item) => ({
       id: item.id,
       direction: item.direction,
-      reason: item.reason,
+      reason: item.reason ?? this.i18n.translate('rait.common.unavailable'),
       protocol_number: item.protocol_number,
-      counterpart_agency: item.counterpart_agency,
+      counterpart_agency:
+        item.counterpart_agency ??
+        this.i18n.translate('rait.common.unavailable'),
       redirected_at: this.datePipe.transform(item.redirected_at),
     })),
   );

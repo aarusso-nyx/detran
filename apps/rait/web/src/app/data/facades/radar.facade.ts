@@ -1,3 +1,5 @@
+import type { RaitClockRead } from '../api/worklist.client';
+import type { RaitCaseRead } from '../api/case.client';
 // RadarFacade (contrato CTG-0002b §4.2/§4.3; M9): gestao/radar, gestao/radar/:caseId,
 // gestao/incidentes. `radar` = relógios com bandeira ≠ SEM_RISCO (ficha 039 "flag>=ALERTA_N1")
 // na ordem recebida ([RN-RAIT-141]) + join caso (`radarCasos`); `drilldown` =
@@ -17,7 +19,6 @@ import type {
   ListQuery,
   RaitAssignment,
   RaitCase,
-  RaitClock as RaitClockResource,
   RaitClockAlert,
   RaitIncident,
   RaitReleaseReason,
@@ -46,7 +47,7 @@ export class RadarFacade {
   private readonly org = inject(OrgClient);
   private readonly clock = inject(RaitClock);
 
-  readonly radar = createListFacade<RaitClockResource>(
+  readonly radar = createListFacade<RaitClockRead>(
     (query) => this.loadRadarPage(query),
     this.clock,
   );
@@ -57,11 +58,11 @@ export class RadarFacade {
   );
   readonly command = createCommandRunner();
 
-  private readonly radarCaseMap = signal<ReadonlyMap<string, RaitCase>>(
+  private readonly radarCaseMap = signal<ReadonlyMap<string, RaitCaseRead>>(
     new Map(),
   );
   private readonly incidentClockMap = signal<
-    ReadonlyMap<string, RaitClockResource>
+    ReadonlyMap<string, RaitClockRead>
   >(new Map());
   /** Casos dos relógios do `radar` e dos `incidentes` (join por `case_id`). */
   readonly radarCasos = computed(() => this.radarCaseMap());
@@ -92,7 +93,7 @@ export class RadarFacade {
 
   private async loadRadarPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitClockResource>> {
+  ): Promise<ListPage<RaitClockRead>> {
     const clocks = await this.worklist.listRaitClock(query);
     const items = clocks.items.filter((item) => item.flag !== NO_RISK_FLAG);
     const cases = await this.cases.listRaitCase();

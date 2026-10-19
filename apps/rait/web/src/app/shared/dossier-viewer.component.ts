@@ -1,3 +1,4 @@
+import type { RaitDocumentRead } from '../data/api/case.client';
 // DossierViewer (contrato CTG-0002b §5.6; spec §5.2; UC-RAIT-001; fichas 009/026/031/058): dois
 // grupos (`<section aria-labelledby>`) por `origin` requerente | ofício, na ordem recebida
 // ("most recent first" do contrato — nunca reordena); por documento: `kind` (texto do contrato),
@@ -21,11 +22,7 @@ import {
   StynxTranslatePipe,
 } from '@detran/ui';
 import type { ReadStatus } from '../data/facades/read-store';
-import {
-  RAIT_DOCUMENT_ORIGINS,
-  type RaitDocument,
-  type RaitDocumentOrigin,
-} from '../data/models';
+import { RAIT_DOCUMENT_ORIGINS, type RaitDocumentOrigin } from '../data/models';
 
 const ORIGIN_KEYS: Readonly<Record<RaitDocumentOrigin, string>> = {
   requerente: 'rait.common.originRequester',
@@ -41,7 +38,7 @@ interface OriginGroup {
   readonly origin: RaitDocumentOrigin;
   readonly labelKey: string;
   readonly headingId: string;
-  readonly documents: readonly RaitDocument[];
+  readonly documents: readonly RaitDocumentRead[];
 }
 
 @Component({
@@ -102,10 +99,10 @@ interface OriginGroup {
                   @if (isPdf(doc)) {
                     <iframe
                       [src]="resourceUrl(url)"
-                      [title]="doc.filename"
+                      [title]="doc.filename ?? ''"
                     ></iframe>
                   } @else {
-                    <img [src]="url" [alt]="doc.filename" />
+                    <img [src]="url" [alt]="doc.filename ?? ''" />
                   }
                 }
               </li>
@@ -117,16 +114,16 @@ interface OriginGroup {
   `,
 })
 export class DossierViewerComponent {
-  readonly documents = input.required<readonly RaitDocument[]>();
+  readonly documents = input.required<readonly RaitDocumentRead[]>();
   /** URL do storage por documento; `null` = sem visualizador (OD-R12-023). */
   readonly documentUrlOf = input<
-    ((document: RaitDocument) => string | null) | null
+    ((document: RaitDocumentRead) => string | null) | null
   >(null);
   readonly status = input<ReadStatus>('ready');
   // Nome fixado pelo contrato CTG-0002b §5.6 (`output select`); nenhum controle de texto interno
   // dispara o `select` nativo.
   // eslint-disable-next-line @angular-eslint/no-output-native
-  readonly select = output<RaitDocument>();
+  readonly select = output<RaitDocumentRead>();
 
   private readonly sanitizer = inject(DomSanitizer);
   readonly emptyKey = EMPTY_KEY;
@@ -144,7 +141,8 @@ export class DossierViewerComponent {
     })).filter((group) => group.documents.length > 0),
   );
 
-  urlOf(doc: RaitDocument): string | null {
+  urlOf(doc: RaitDocumentRead): string | null {
+    if (!doc.filename || !doc.content_hash) return null;
     return this.documentUrlOf()?.(doc) ?? null;
   }
 
@@ -154,7 +152,7 @@ export class DossierViewerComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  isPdf(doc: RaitDocument): boolean {
-    return doc.filename.toLocaleLowerCase().endsWith(PDF_SUFFIX);
+  isPdf(doc: RaitDocumentRead): boolean {
+    return doc.filename?.toLocaleLowerCase().endsWith(PDF_SUFFIX) ?? false;
   }
 }

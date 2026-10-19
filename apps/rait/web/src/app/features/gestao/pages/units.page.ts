@@ -1,3 +1,4 @@
+import type { RaitUnitRead } from '../../../data/api/worklist.client';
 // T-36 Turmas (ficha IU-RAIT-043; contrato CTG-0002b §6.1 linha 41; L1 — M13): `createListFacade(
 // q => worklist.listRaitUnit(q))` numa `<stynx-table>` (name, judging_body → `rait.instance.`,
 // state → `tokenKey('orgState')`, coordinator_member_id). Nenhum comando (`cmd.constitute`/
@@ -21,7 +22,7 @@ import {
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { tokenKey } from '../../../core/i18n-token-key';
 import { WorklistClient } from '../../../data/api/worklist.client';
-import { LIST_PAGE_SIZE_DEFAULT, type RaitUnit } from '../../../data/models';
+import { LIST_PAGE_SIZE_DEFAULT } from '../../../data/models';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
 import { createL1List, l1Formatters, type L1Row } from '../../l1-list';
@@ -85,7 +86,7 @@ export class UnitsPageComponent {
   readonly loadingKey = LOADING_KEY;
   readonly pageSize = LIST_PAGE_SIZE_DEFAULT;
 
-  readonly l1 = createL1List<RaitUnit, Row>({
+  readonly l1 = createL1List<RaitUnitRead, Row>({
     load: (query) => this.worklist.listRaitUnit(query),
     columns: ['name', 'judging_body', 'state', 'coordinator_member_id'],
     toRow: (item) => ({

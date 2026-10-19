@@ -1,3 +1,5 @@
+import type { BpInfRaitWorklist001Commands } from '@detran/api-clients';
+import type { ScopedRead } from './case.client';
 // WorklistClient (contrato CTG-0002b §3.3/§3.5; M9): 13 pares list/get de
 // `BP-INF-RAIT-WORKLIST-001` (nome = `operationId`, URL literal do `paths`, ADR-0003) e 16
 // métodos de comando com corpo M8 (`RaitCommandUnavailableError`) até R-0007 CTG-0004. Ver
@@ -112,83 +114,91 @@ export class WorklistClient {
 
   // --- leituras (§3.3) -------------------------------------------------------------------
 
-  listRaitUnit(query: ListQuery = {}): Promise<ListPage<RaitUnit>> {
+  listRaitUnit(query: ListQuery = {}): Promise<ListPage<RaitUnitRead>> {
     return this.http.getList(UNITS_URL, query, UNIT_SPEC);
   }
 
-  getRaitUnit(id: string): Promise<RaitUnit> {
+  getRaitUnit(id: string): Promise<RaitUnitRead> {
     return this.http.getOne(UNITS_URL, 'units', id);
   }
 
-  listRaitPool(query: ListQuery = {}): Promise<ListPage<RaitPool>> {
+  listRaitPool(query: ListQuery = {}): Promise<ListPage<RaitPoolRead>> {
     return this.http.getList(POOLS_URL, query, POOL_SPEC);
   }
 
-  getRaitPool(id: string): Promise<RaitPool> {
+  getRaitPool(id: string): Promise<RaitPoolRead> {
     return this.http.getOne(POOLS_URL, 'pools', id);
   }
 
-  listRaitPoolMember(query: ListQuery = {}): Promise<ListPage<RaitPoolMember>> {
+  listRaitPoolMember(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitPoolMemberRead>> {
     return this.http.getList(POOL_MEMBERS_URL, query, POOL_MEMBER_SPEC);
   }
 
-  getRaitPoolMember(id: string): Promise<RaitPoolMember> {
+  getRaitPoolMember(id: string): Promise<RaitPoolMemberRead> {
     return this.http.getOne(POOL_MEMBERS_URL, 'pool-members', id);
   }
 
-  listRaitSchedule(query: ListQuery = {}): Promise<ListPage<RaitSchedule>> {
+  listRaitSchedule(query: ListQuery = {}): Promise<ListPage<RaitScheduleRead>> {
     return this.http.getList(SCHEDULES_URL, query, SCHEDULE_SPEC);
   }
 
-  getRaitSchedule(id: string): Promise<RaitSchedule> {
+  getRaitSchedule(id: string): Promise<RaitScheduleRead> {
     return this.http.getOne(SCHEDULES_URL, 'schedules', id);
   }
 
   listRaitScheduleSlot(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitScheduleSlot>> {
+  ): Promise<ListPage<RaitScheduleSlotRead>> {
     return this.http.getList(SCHEDULE_SLOTS_URL, query, SCHEDULE_SLOT_SPEC);
   }
 
-  getRaitScheduleSlot(id: string): Promise<RaitScheduleSlot> {
+  getRaitScheduleSlot(id: string): Promise<RaitScheduleSlotRead> {
     return this.http.getOne(SCHEDULE_SLOTS_URL, 'schedule-slots', id);
   }
 
-  listRaitBatch(query: ListQuery = {}): Promise<ListPage<RaitBatch>> {
+  listRaitBatch(query: ListQuery = {}): Promise<ListPage<RaitBatchRead>> {
     return this.http.getList(BATCHES_URL, query, BATCH_SPEC);
   }
 
-  getRaitBatch(id: string): Promise<RaitBatch> {
+  getRaitBatch(id: string): Promise<RaitBatchRead> {
     return this.http.getOne(BATCHES_URL, 'batches', id);
   }
 
-  listRaitBatchItem(query: ListQuery = {}): Promise<ListPage<RaitBatchItem>> {
+  listRaitBatchItem(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitBatchItemRead>> {
     return this.http.getList(BATCH_ITEMS_URL, query, BATCH_ITEM_SPEC);
   }
 
-  getRaitBatchItem(id: string): Promise<RaitBatchItem> {
+  getRaitBatchItem(id: string): Promise<RaitBatchItemRead> {
     return this.http.getOne(BATCH_ITEMS_URL, 'batch-items', id);
   }
 
-  listRaitAssignment(query: ListQuery = {}): Promise<ListPage<RaitAssignment>> {
+  listRaitAssignment(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitAssignmentRead>> {
     return this.http.getList(ASSIGNMENTS_URL, query, ASSIGNMENT_SPEC);
   }
 
-  getRaitAssignment(id: string): Promise<RaitAssignment> {
+  getRaitAssignment(id: string): Promise<RaitAssignmentRead> {
     return this.http.getOne(ASSIGNMENTS_URL, 'assignments', id);
   }
 
-  listRaitImpediment(query: ListQuery = {}): Promise<ListPage<RaitImpediment>> {
+  listRaitImpediment(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitImpedimentRead>> {
     return this.http.getList(IMPEDIMENTS_URL, query, IMPEDIMENT_SPEC);
   }
 
-  getRaitImpediment(id: string): Promise<RaitImpediment> {
+  getRaitImpediment(id: string): Promise<RaitImpedimentRead> {
     return this.http.getOne(IMPEDIMENTS_URL, 'impediments', id);
   }
 
   listRaitSubstituteDuty(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitSubstituteDuty>> {
+  ): Promise<ListPage<RaitSubstituteDutyRead>> {
     return this.http.getList(
       SUBSTITUTE_DUTIES_URL,
       query,
@@ -196,31 +206,33 @@ export class WorklistClient {
     );
   }
 
-  getRaitSubstituteDuty(id: string): Promise<RaitSubstituteDuty> {
+  getRaitSubstituteDuty(id: string): Promise<RaitSubstituteDutyRead> {
     return this.http.getOne(SUBSTITUTE_DUTIES_URL, 'substitute-duties', id);
   }
 
-  listRaitBench(query: ListQuery = {}): Promise<ListPage<RaitBench>> {
+  listRaitBench(query: ListQuery = {}): Promise<ListPage<RaitBenchRead>> {
     return this.http.getList(BENCHES_URL, query, BENCH_SPEC);
   }
 
-  getRaitBench(id: string): Promise<RaitBench> {
+  getRaitBench(id: string): Promise<RaitBenchRead> {
     return this.http.getOne(BENCHES_URL, 'benches', id);
   }
 
-  listRaitClock(query: ListQuery = {}): Promise<ListPage<RaitClock>> {
+  listRaitClock(query: ListQuery = {}): Promise<ListPage<RaitClockRead>> {
     return this.http.getList(CLOCKS_URL, query, CLOCK_SPEC);
   }
 
-  getRaitClock(id: string): Promise<RaitClock> {
+  getRaitClock(id: string): Promise<RaitClockRead> {
     return this.http.getOne(CLOCKS_URL, 'clocks', id);
   }
 
-  listRaitClockAlert(query: ListQuery = {}): Promise<ListPage<RaitClockAlert>> {
+  listRaitClockAlert(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitClockAlertRead>> {
     return this.http.getList(CLOCK_ALERTS_URL, query, CLOCK_ALERT_SPEC);
   }
 
-  getRaitClockAlert(id: string): Promise<RaitClockAlert> {
+  getRaitClockAlert(id: string): Promise<RaitClockAlertRead> {
     return this.http.getOne(CLOCK_ALERTS_URL, 'clock-alerts', id);
   }
 
@@ -380,3 +392,43 @@ export class WorklistClient {
     throw new RaitCommandUnavailableError('rait-pool:update');
   }
 }
+
+export type RaitUnitRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitUnit']['responses'][200]['content']['application/json']
+>;
+export type RaitPoolRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitPool']['responses'][200]['content']['application/json']
+>;
+export type RaitPoolMemberRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitPoolMember']['responses'][200]['content']['application/json']
+>;
+export type RaitScheduleRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitSchedule']['responses'][200]['content']['application/json']
+>;
+export type RaitScheduleSlotRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitScheduleSlot']['responses'][200]['content']['application/json']
+>;
+export type RaitBatchRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitBatch']['responses'][200]['content']['application/json']
+>;
+export type RaitBatchItemRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitBatchItem']['responses'][200]['content']['application/json']
+>;
+export type RaitAssignmentRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitAssignment']['responses'][200]['content']['application/json']
+>;
+export type RaitImpedimentRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitImpediment']['responses'][200]['content']['application/json']
+>;
+export type RaitSubstituteDutyRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitSubstituteDuty']['responses'][200]['content']['application/json']
+>;
+export type RaitBenchRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitBench']['responses'][200]['content']['application/json']
+>;
+export type RaitClockRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitClock']['responses'][200]['content']['application/json']
+>;
+export type RaitClockAlertRead = ScopedRead<
+  BpInfRaitWorklist001Commands.operations['getRaitClockAlert']['responses'][200]['content']['application/json']
+>;
