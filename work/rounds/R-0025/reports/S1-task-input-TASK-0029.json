@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0029",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector",
+  "title": "P4-02-S1 decisive security RED",
+  "description": "Approved S1 security RED only; actual HTTP/DB control counterexamples, no S2 risk/legacyclaim assertions. Local prompt digest and requested historical model do not claim served model.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r25-s1-sensors"
+  ],
+  "target_substrates": [
+    "F3"
+  ],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0021",
+  "coupled_pipeline_position": "inspector",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "r25",
+    "p402-s1"
+  ],
+  "branch": "codex/r0025-s1-inspector",
+  "worktree_id": "WT-r0025-s1-inspector",
+  "prompt_composition_id": "PC-21c6c5127d04c388",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "tests/e2e/rait-p402-scope.e2e.spec.ts"
+    ]
+  ],
+  "created_at": "2026-10-19T14:07:06.143442+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-app",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "codex-cli"
+    },
+    "instructions_ref": "work/rounds/R-0025/prompts/P4-02-S1-inspector.md",
+    "prompt_composition_id": "PC-21c6c5127d04c388",
+    "max_iterations": 3,
+    "capabilities": [
+      "repository-read",
+      "inspector-test-write"
+    ]
+  },
+  "upstream_task_id": "TASK-0028"
+}

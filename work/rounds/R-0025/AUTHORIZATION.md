@@ -78,3 +78,13 @@ PR201 merged as a006b039 with all required checks PASS. Only the S1 Architect �
 Inspector RED → Engineer → Inspector GREEN/review implementation-PR sequence is
 active. Historical queued tasks and S2 remain unapproved for dispatch; no merge,
 release, production provisioning, close/seal or scorecard modification authorized.
+
+### Bounded S1 loader extension — Owner, 2026-10-19
+
+Owner answer: “Approve the bounded apply.sh extension”. Adds only
+backend/database/apply.sh ownership for the exact loader dependency described in
+reports/P4-02-S1-architect-checkpoint.md: closed manual inventory, early sorted-pass
+exclusion and transactional post-pass load of19-rait-case-scope-enforce.sql before
+final priority verification. Supporting scoped-binding DDL was already authorized.
+All existing guards remain; no script/generator logic outside these insertions,
+new grant/production data, legal guard or S2 implementation is authorized.
