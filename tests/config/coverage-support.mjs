@@ -18,17 +18,27 @@ const { createCoverageMap } = istanbulCoverage;
 // rebuild from the same canonical configurations on the next transform.
 const angularPrograms = new Map();
 
-export const exclusions = [
-  'backend/**/tests/integration/**',
-  'backend/**/tests/e2e/**',
-  'backend/**/tests/real/**',
-  'backend/**/tests/in-house/**',
-  'senatran-mock/tests/integration/**',
-  'senatran-mock/tests/e2e/**',
-  'senatran-mock/tests/real/**',
-  'tools/**',
-  'tests/**',
-];
+export function coverageExclusions(root) {
+  // The installed contract admits literal repository paths, never globs.
+  const suites = globSync(
+    [
+      'backend/**/tests/integration',
+      'backend/**/tests/e2e',
+      'backend/**/tests/real',
+      'backend/**/tests/in-house',
+      'senatran-mock/tests/integration',
+      'senatran-mock/tests/e2e',
+      'senatran-mock/tests/real',
+    ],
+    { cwd: root, exclude: ['**/node_modules/**', '**/dist/**'] },
+  );
+  return [
+    ...new Set([
+      ...suites,
+      ...['tools', 'tests'].filter((path) => existsSync(join(root, path))),
+    ]),
+  ].sort();
+}
 export const sha256 = (bytes) =>
   createHash('sha256').update(bytes).digest('hex');
 
@@ -267,7 +277,7 @@ export function populationReporter(root, population, policies) {
             {
               schemaVersion: '1.0.0',
               population: 'local',
-              exclusions,
+              exclusions: coverageExclusions(root),
               include: population.sourceRoots,
               sourceFiles: measured,
               filesMeasured: measured.length,
