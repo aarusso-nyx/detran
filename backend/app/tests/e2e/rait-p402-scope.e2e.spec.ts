@@ -2023,10 +2023,10 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         temporaryMember = randomUUID();
         await owner.query(
           `insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')`,
-          [temporaryMember, RAIT_TENANT, POOL, OTHER_ACTOR],
+          [temporaryMember, RAIT_TENANT, POOL, COORDINATOR],
         );
-        await fixture.scope(OTHER_ACTOR, 'rait-secretary');
-        headers('rait-secretary', OTHER_ACTOR);
+        await fixture.scope(COORDINATOR, 'rait-secretary');
+        headers('rait-secretary', COORDINATOR);
       }
       const before = await effects();
       try {
