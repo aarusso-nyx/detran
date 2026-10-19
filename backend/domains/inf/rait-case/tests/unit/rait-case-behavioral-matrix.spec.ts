@@ -425,6 +425,31 @@ function scenarioPort(
             .map((row) => ({ ...row })),
         };
       }
+      if (
+        sql.startsWith(
+          'select a.id from inf.rait_assignment a join inf.rait_pool_member',
+        )
+      )
+        return {
+          rows: tables
+            .rait_assignment!.filter(
+              (a) =>
+                a.tenant_id === values[0] &&
+                a.case_id === values[1] &&
+                a.pool_id === values[2] &&
+                a.active &&
+                tables.rait_pool_member!.some(
+                  (m) =>
+                    m.id === a.member_id &&
+                    m.pool_id === a.pool_id &&
+                    m.tenant_id === a.tenant_id &&
+                    m.person_id === values[3] &&
+                    m.member_role === 'analista' &&
+                    m.status === 'ATIVO',
+                ),
+            )
+            .map((a) => ({ id: a.id })),
+        };
       if (sql.startsWith('select')) {
         const table = sql.match(/\bfrom (?:inf|ops)\.(\w+)/)?.[1];
         if (table && tables[table]) {
@@ -484,6 +509,15 @@ function scenarioPort(
       }
       if (sql.startsWith('insert into inf.rait_assignment')) {
         writes.push({ sql, values });
+        tables.rait_assignment!.push({
+          id: DRAFT,
+          tenant_id: values[0],
+          case_id: values[1],
+          pool_id: values[2],
+          member_id: values[3],
+          assigned_by: values[4],
+          active: true,
+        });
         return { rows: [{ id: DRAFT }] };
       }
       if (
@@ -972,6 +1006,51 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.tables.rait_admissibility![0]!.verdict = false;
       const result = await subject.service.execute(first);
       await expect(subject.service.execute(first)).resolves.toEqual(result);
+      let divergentTarget = ['admit', 'non-admission', 'claim-next'].includes(
+        command,
+      )
+        ? target
+        : ORIGIN_CASE;
+      let divergentPayload: Record<string, unknown> = { ...payload };
+      if (
+        [
+          'ready',
+          'return-draft',
+          'withdraw',
+          'redirect',
+          'resolve-pending',
+        ].includes(command)
+      ) {
+        divergentTarget = target;
+        if (command === 'ready') {
+          const alternate = randomUUID();
+          subject.tables.rait_draft!.push({
+            ...subject.tables.rait_draft![0]!,
+            id: alternate,
+          });
+          divergentPayload = { ...payload, draftId: alternate };
+        } else if (command === 'return-draft')
+          divergentPayload = {
+            ...payload,
+            guidance: 'outra orientação canônica',
+          };
+        else if (command === 'redirect')
+          divergentPayload = {
+            ...payload,
+            targetBody: '00000000-0000-7000-8000-0000e2000098',
+          };
+        else {
+          const alternate = randomUUID();
+          subject.tables.rait_document!.push({
+            ...subject.tables.rait_document![0]!,
+            id: alternate,
+          });
+          divergentPayload =
+            command === 'withdraw'
+              ? { ...payload, withdrawalDocumentId: alternate }
+              : { ...payload, documentIds: [DOCUMENT, alternate] };
+        }
+      }
       const effects = [
         subject.writes.length,
         subject.outbox.length,
@@ -981,14 +1060,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
       await expectRejectedWithoutEffects(
         subject,
         {
-          ...input(
-            command,
-            ['admit', 'non-admission', 'claim-next'].includes(command)
-              ? target
-              : ORIGIN_CASE,
-            payload,
-            'repeat',
-          ),
+          ...input(command, divergentTarget, divergentPayload, 'repeat'),
           headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat' },
         },
         'RAIT.IDEMPOTENCY_REPLAY',
