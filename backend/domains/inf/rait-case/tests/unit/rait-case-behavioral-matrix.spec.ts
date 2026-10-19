@@ -1075,14 +1075,48 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.audit.length,
         subject.replayAudit.length,
       ];
+      if (command === 'claim-next') {
+        // A different VALID pool remains canonical-input divergence409, independent of header rejection.
+        const otherPool = randomUUID(),
+          otherMember = randomUUID(),
+          otherSchedule = randomUUID();
+        subject.tables.rait_pool!.push({
+          ...subject.tables.rait_pool![0]!,
+          id: otherPool,
+        });
+        subject.tables.rait_pool_member!.push({
+          ...subject.tables.rait_pool_member![0]!,
+          id: otherMember,
+          pool_id: otherPool,
+        });
+        subject.tables.rait_schedule!.push({
+          ...subject.tables.rait_schedule![0]!,
+          id: otherSchedule,
+          pool_id: otherPool,
+          member_id: otherMember,
+        });
+        subject.tables.rait_schedule_slot!.push({
+          ...subject.tables.rait_schedule_slot![0]!,
+          schedule_id: otherSchedule,
+        });
+        await expectRejectedWithoutEffects(
+          subject,
+          input(command, otherPool, {}, 'repeat'),
+          'RAIT.IDEMPOTENCY_REPLAY',
+          409,
+          effects,
+        );
+      }
       await expectRejectedWithoutEffects(
         subject,
         {
           ...input(command, divergentTarget, divergentPayload, 'repeat'),
           headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat' },
         },
-        'RAIT.IDEMPOTENCY_REPLAY',
-        409,
+        command === 'claim-next'
+          ? 'RAIT.VALIDATION_FAILED'
+          : 'RAIT.IDEMPOTENCY_REPLAY',
+        command === 'claim-next' ? 400 : 409,
         effects,
       );
       expect([
@@ -1657,6 +1691,19 @@ describe('CTG-0001 §5 e §6 — prazos e DI/RLS concretos', () => {
     expect(Reflect.getMetadata('__injectable__', RaitCaseCommandService)).toBe(
       true,
     );
+    // Approved S2 composition adds exactly these two providers after the original five.
+    // Dynamic paths keep old-runtime absence local to this composition prerequisite.
+    const claimContextPath =
+      '../../src/handwritten/rait-claim-context.service.js';
+    const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+    const { RaitClaimContextService } = await import(
+      new URL(claimContextPath, import.meta.url).href
+    );
+    const { RaitCaseRiskService } = await import(
+      new URL(riskPath, import.meta.url).href
+    );
+    expect(RaitClaimContextService).toBeTypeOf('function');
+    expect(RaitCaseRiskService).toBeTypeOf('function');
     expect(
       Reflect.getMetadata('design:paramtypes', RaitCaseCommandService),
     ).toEqual([
@@ -1665,6 +1712,8 @@ describe('CTG-0001 §5 e §6 — prazos e DI/RLS concretos', () => {
       factory,
       RaitDocumentTrustVerifier,
       RaitOperationClock,
+      RaitClaimContextService,
+      RaitCaseRiskService,
     ]);
     expect(
       Reflect.getMetadata('design:paramtypes', RaitInquiryCommandService),
@@ -1937,20 +1986,29 @@ describe('CTG-0001 emenda — confiança, F-J-0, jurisdição e precedência', (
     );
   });
 
-  it('dado claim-next sem versão do pool quando If-Match falta ou diverge então nenhum valor do header é consumido', async () => {
-    for (const headers of [
-      { 'Idempotency-Key': 'claim-no-match' },
-      { 'If-Match': 'not-an-etag', 'Idempotency-Key': 'claim-invalid-match' },
-    ] as Array<Record<string, string>>) {
-      const subject = await caseSubject('DISTRIBUIDO', 'jari', 'rait-analyst');
-      await expect(
-        subject.service.execute({
-          command: 'claim-next',
-          targetId: POOL,
-          payload: {},
-          headers,
-        }),
-      ).resolves.toMatchObject({ data: { id: CASE }, etag: '"2"' });
+  it('S2 claim-next permits omission but rejects supplied If-Match without effects, including an exact retry key', async () => {
+    const subject = await caseSubject('DISTRIBUIDO', 'jari', 'rait-analyst');
+    const valid = input('claim-next', POOL, {}, 'claim-no-match');
+    const result = await subject.service.execute(valid);
+    expect(result).toMatchObject({ data: { id: CASE }, etag: '"2"' });
+    await expect(subject.service.execute(valid)).resolves.toEqual(result);
+    const effects = [
+      subject.writes.length,
+      subject.outbox.length,
+      subject.audit.length,
+      subject.replayAudit.length,
+    ];
+    for (const match of ['"1"', 'not-an-etag', '*']) {
+      await expectRejectedWithoutEffects(
+        subject,
+        {
+          ...valid,
+          headers: { ...valid.headers, 'If-Match': match },
+        },
+        'RAIT.VALIDATION_FAILED',
+        400,
+        effects,
+      );
     }
   });
 
