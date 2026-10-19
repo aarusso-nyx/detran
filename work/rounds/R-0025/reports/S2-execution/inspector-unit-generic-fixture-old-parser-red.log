@@ -1,0 +1,526 @@
+✔ dado a tabela real (sem os 9 namespaces de token do RAIT) quando verify.mjs roda então OK (233.975459ms)
+✔ [pode falhar até TASK-0006] dado a tabela real quando parseada então já contém as 14 linhas rait.* de apps/rait/web (10.035ms)
+✔ dado a tabela real com a linha `rait.timer` acrescentada (cópia temporária) quando verify.mjs roda então falha por colisão com rait.timer.* (197.383125ms)
+✔ dado a linha `rait.caseState` (cópia temporária) quando parseada então rejeitada pela gramática [a-z][a-z0-9_]* (210.742792ms)
+✔ dado um arquivo .ts com o literal "rait.caseState.ADMITIDO" quando verify.mjs --check-usage roda então falha (candidato desconhecido) (320.836ms)
+✔ dado um arquivo .ts com "'rait.' + 'caseState' + '.ADMITIDO'" (composição) quando verify.mjs --check-usage roda então OK (241.528125ms)
+✔ dado um arquivo .ts com "rait.screens.painel.title" e a tabela real (já allowlista rait.screens, TASK-0006) quando verify.mjs --check-usage roda então OK (278.65925ms)
+✔ S2 ladder A source label remains distinct from operational activation (4.051ms)
+✔ S2 ladder B source label remains distinct from operational activation (4.552541ms)
+✔ S2 ladder C source label remains distinct from operational activation (4.012083ms)
+✔ S2 ladder D source label remains distinct from operational activation (4.472875ms)
+✔ OD-T14 seed uses its first installation date and stays idempotent on later days (370.274709ms)
+✔ dado legal_bases JSON exato quando analisar então preserva objeto tipado, schema e proveniência (123.458458ms)
+✔ dado legal_bases com JSON malformado quando analisar então rejeita a linha (1.936833ms)
+✔ dado legal_bases com array em vez de objeto quando analisar então rejeita a linha (1.098375ms)
+✔ dado legal_bases com string em vez de objeto quando analisar então rejeita a linha (0.928667ms)
+✔ dado legal_bases com objeto sem campos obrigatórios quando analisar então rejeita a linha (0.834458ms)
+✔ dado legal_bases com rank ou política divergente quando analisar então rejeita a linha (0.806417ms)
+✔ dado legal_bases com campo extra não autorizado quando analisar então rejeita a linha (0.864459ms)
+✔ dado legal_bases acrescentada quando gerar então defaults e metadados das demais chaves permanecem (279.62725ms)
+✔ dado catálogo mínimo válido quando gerar então produz os três artefatos tipados (647.762875ms)
+✔ dado pipe escapado em célula quando gerar então remove a barra sem criar coluna (132.145833ms)
+✔ dado parâmetro legal booleano quando gerar então não o expõe como flag editável (107.8725ms)
+✔ dado a mesma fonte quando gerar duas vezes então as saídas são byte a byte iguais (216.453792ms)
+✔ dado fonte alterada quando gerar então muda o hash e somente a linha afetada (246.657125ms)
+✔ dado header incorreto quando gerar então termina com exit 1 e diagnóstico (64.061125ms)
+✔ dado célula ausente quando gerar então termina com exit 1 e diagnóstico (61.156792ms)
+✔ dado chave duplicada quando gerar então termina com exit 1 e diagnóstico (60.483167ms)
+✔ dado status inválido quando gerar então termina com exit 1 e diagnóstico (55.726625ms)
+✔ dado pend typo no quando gerar então termina com exit 1 e diagnóstico (54.703875ms)
+✔ dado flag não booleana quando gerar então termina com exit 1 e diagnóstico (64.418292ms)
+✔ dado travessão sem pending quando gerar então termina com exit 1 e diagnóstico (57.309083ms)
+✔ dado decision ref órfã quando gerar então termina com exit 1 e diagnóstico (116.649084ms)
+✔ dado prefixo incompatível quando gerar então termina com exit 1 e diagnóstico (233.418042ms)
+✔ dado artefato gerado stale quando verificar então falha fechado (1140.904583ms)
+✔ dado chave literal conhecida e desconhecida quando verificar uso então aplica regra de pontos (542.497333ms)
+✔ dado literais de parâmetro, evento e i18n quando verificar uso então classifica pelo contexto sintático (213.273334ms)
+✔ dado literais em tests, dist e node_modules quando verificar uso então são ignorados (211.957ms)
+✖ S2-R2 ladder A is a typed exact source object with preserved status (5.032958ms)
+✖ S2-R2 ladder B is a typed exact source object with preserved status (5.696417ms)
+✖ S2-R2 ladder C is a typed exact source object with preserved status (6.536208ms)
+✖ S2-R2 ladder D is a typed exact source object with preserved status (6.793792ms)
+✖ S2-R2 rejects malformed JSON for exact ladder key (6.71975ms)
+✖ S2-R2 rejects array for exact ladder key (7.142042ms)
+✖ S2-R2 rejects string payload for exact ladder key (5.35125ms)
+✖ S2-R2 rejects extra field for exact ladder key (5.403375ms)
+✖ S2-R2 rejects schema version for exact ladder key (4.796709ms)
+✖ S2-R2 rejects wrong clock for exact ladder key (5.0235ms)
+✖ S2-R2 rejects wrong unit for exact ladder key (4.68625ms)
+✖ S2-R2 rejects missing source for exact ladder key (5.106208ms)
+✖ S2-R2 rejects duplicate track for exact ladder key (4.471958ms)
+✖ S2-R2 rejects invented A N3 for exact ladder key (4.712167ms)
+✖ S2-R2 rejects changed threshold for exact ladder key (4.221583ms)
+✖ S2-R2 rejects step extra field for exact ladder key (5.161375ms)
+✔ S2-R2 unrelated JSON key retains pre-S2 string semantics and other defaults are identical (8.421958ms)
+✖ S2-R2 ladder B rejects schema version (4.716958ms)
+✖ S2-R2 ladder B rejects foreign clock identity (5.191667ms)
+✖ S2-R2 ladder B rejects unknown top-level field (3.987125ms)
+✖ S2-R2 ladder B rejects duplicate flags (6.533333ms)
+✖ S2-R2 ladder B rejects altered threshold (5.359875ms)
+✖ S2-R2 ladder C rejects schema version (4.928459ms)
+✖ S2-R2 ladder C rejects foreign clock identity (4.612667ms)
+✖ S2-R2 ladder C rejects unknown top-level field (5.10425ms)
+✖ S2-R2 ladder C rejects duplicate flags (4.624791ms)
+✖ S2-R2 ladder C rejects altered threshold (5.328459ms)
+✖ S2-R2 ladder D rejects schema version (5.270542ms)
+✖ S2-R2 ladder D rejects foreign clock identity (5.450625ms)
+✖ S2-R2 ladder D rejects unknown top-level field (4.758084ms)
+✖ S2-R2 ladder D rejects duplicate flags (6.064542ms)
+✖ S2-R2 ladder D rejects altered threshold (4.595125ms)
+ℹ tests 70
+ℹ suites 0
+ℹ pass 39
+ℹ fail 31
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5246.102708
+
+✖ failing tests:
+
+test at tools/parameters/tests/generator.test.mjs:718:3
+✖ S2-R2 ladder A is a typed exact source object with preserved status (5.032958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'string' !== 'object'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:725:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'string',
+    expected: 'object',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:718:3
+✖ S2-R2 ladder B is a typed exact source object with preserved status (5.696417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'string' !== 'object'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:725:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'string',
+    expected: 'object',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:718:3
+✖ S2-R2 ladder C is a typed exact source object with preserved status (6.536208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'string' !== 'object'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:725:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'string',
+    expected: 'object',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:718:3
+✖ S2-R2 ladder D is a typed exact source object with preserved status (6.793792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'string' !== 'object'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:725:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'string',
+    expected: 'object',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects malformed JSON for exact ladder key (6.71975ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects array for exact ladder key (7.142042ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects string payload for exact ladder key (5.35125ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects extra field for exact ladder key (5.403375ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects schema version for exact ladder key (4.796709ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects wrong clock for exact ladder key (5.0235ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects wrong unit for exact ladder key (4.68625ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects missing source for exact ladder key (5.106208ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects duplicate track for exact ladder key (4.471958ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects invented A N3 for exact ladder key (4.712167ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects changed threshold for exact ladder key (4.221583ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:871:3
+✖ S2-R2 rejects step extra field for exact ladder key (5.161375ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:890:7)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.A/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder B rejects schema version (4.716958ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.B/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder B rejects foreign clock identity (5.191667ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.B/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder B rejects unknown top-level field (3.987125ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.B/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder B rejects duplicate flags (6.533333ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.B/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder B rejects altered threshold (5.359875ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.B/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder C rejects schema version (4.928459ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.C/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder C rejects foreign clock identity (4.612667ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.C/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder C rejects unknown top-level field (5.10425ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.C/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder C rejects duplicate flags (4.624791ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.C/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder C rejects altered threshold (5.328459ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.C/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder D rejects schema version (5.270542ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.D/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder D rejects foreign clock identity (5.450625ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.D/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder D rejects unknown top-level field (4.758084ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.D/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder D rejects duplicate flags (6.064542ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.D/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tools/parameters/tests/generator.test.mjs:984:5
+✖ S2-R2 ladder D rejects altered threshold (4.595125ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/tools/parameters/tests/generator.test.mjs:997:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /rait\.ladder\.D/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

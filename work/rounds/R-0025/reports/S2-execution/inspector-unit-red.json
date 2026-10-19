@@ -102,5 +102,37 @@
       "execution": "UNEXECUTED/schema-pending; no DB lease",
       "pure89": "unchanged"
     }
+  },
+  "generic_fixture_disposition": {
+    "reason": "Historical generic JSON noninterference control used now-reserved exact ladderB with unsupported percent string. ApprovedR2 requires typedB; generic control must use unrelated JSON key.",
+    "path": "tools/parameters/tests/generator.test.mjs",
+    "change": "Only old noninterference fixture key and corresponding direct-string selector: rait.ladder.B -> canonical unrelated rait.signing.schedule; metadata equivalence loop and directstring50/75/90% assertions retained. New31typedladdernegative controls unchanged.",
+    "before_sha256": "2d0e3f7a3635167f1f9973349ef0e3eda73597699526ac5f0ccf8925e54ea3f3",
+    "after_sha256": "261833a517f00f4bc96f7063a1719d88eab9eb7d0924dfa0a9224db8edde796a",
+    "old_parser_result": {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "executed": 70,
+      "pass": 39,
+      "intentional_behavioral_red": 31,
+      "skip": 0,
+      "generic_control": "PASS",
+      "log": "inspector-unit-generic-fixture-old-parser-red.log"
+    },
+    "boundary": "No parser/runtime/source/defaultfallback/assertion removal. Parent transfers exact formatted bytes before EngineerGREEN."
+  },
+  "sparse_provenance_epoch": {
+    "test": "rejects a sparse sourceVersions array as missing mandatory provenance",
+    "path": "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts",
+    "original89": "unchanged; one appended control, total90",
+    "test_sha256": "89658980f7bfa7e20a6895e4088f6c5c4b84b61112218f31f5bbe529b2d31919",
+    "candidate_path": "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines/src/rait-risk.ts",
+    "candidate_sha256": "c23389a69456e6d67d453498a64cebdd5aff7076a67dfe9232c1a58320d553e4",
+    "command": "pnpm exec tsx /tmp/detran-s2-sparse-provenance-probe.ts",
+    "exit": 1,
+    "actual_result": "candidate succeeds and includes undefined in sourceVersions; expected typed source exception absent",
+    "classification": "actual behavioral RED against implemented candidate, not missing API",
+    "log": "inspector-unit-sparse-provenance-red.log",
+    "independent_probe": "inspector-unit-sparse-provenance-probe.log",
+    "runtime_edits": false
   }
 }
