@@ -106,9 +106,9 @@ test('dadas closures válidas quando --write e --check rodam então o índice é
 
     const indexPath = join(root, 'record/derived/indexes/rounds.md');
     const firstBytes = readFileSync(indexPath, 'utf8');
-    assert.match(firstBytes, /PC-0001.*R-0003.*—.*a{40}/);
-    assert.match(firstBytes, /PC-0002.*R-0017.*—.*b{40}/);
-    assert.match(firstBytes, /PC-0010.*R-0017.*PC-0002.*1{40}/);
+    assert.match(firstBytes, /PC-0001.*R-0003.*-.*a{40}.*yes/);
+    assert.match(firstBytes, /PC-0002.*R-0017.*-.*b{40}.*no/);
+    assert.match(firstBytes, /PC-0010.*R-0017.*PC-0002.*1{40}.*yes/);
     assert.ok(
       firstBytes.indexOf('PC-0001') < firstBytes.indexOf('PC-0002') &&
         firstBytes.indexOf('PC-0002') < firstBytes.indexOf('PC-0010'),
@@ -244,5 +244,25 @@ test('dado JSON ilegível quando o renderer roda então recusa a entrada', async
     const result = await run(root, '--write');
     assert.notEqual(result.status, 0);
     assert.match(output(result), /Unreadable JSON/);
+  });
+});
+
+test('dado marcador terminal adulterado quando check roda então rejeita o índice', async () => {
+  await withRoot(BASE_CLOSURES, async (root) => {
+    assert.equal((await run(root, '--write')).status, 0);
+    const index = join(root, 'record/derived/indexes/rounds.md');
+    const source = readFileSync(index, 'utf8');
+    assert.match(
+      source,
+      /\| closure \| round \| supersedes \| merged_as \| terminal \|/,
+    );
+    writeFileSync(
+      index,
+      source.replace(
+        'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb | no |',
+        'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb | yes |',
+      ),
+    );
+    assert.notEqual((await run(root, '--check')).status, 0);
   });
 });
