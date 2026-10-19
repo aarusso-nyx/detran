@@ -70,6 +70,11 @@ const requiredKinds = [...sweep.members, ...separatelyExecutedSensors];
 const observations = new Map();
 function add(reading, path, raw, measurement = true) {
   if (!reading?.id || !reading.sensor?.kind) return;
+  if (
+    !/^SR-[a-f0-9]{16}$/.test(reading.id) ||
+    !registry.some((entry) => entry.kind === reading.sensor.kind)
+  )
+    throw new Error('Captured reading identity is not registered');
   const canonical = `.devai/state/sensor-readings/${reading.sensor.kind}/${reading.id}.json`;
   if (!existsSync(canonical))
     throw new Error(`Reading was not persisted: ${reading.id}`);
@@ -92,6 +97,7 @@ function add(reading, path, raw, measurement = true) {
     ],
     canonical_path: canonical,
     canonical_sha256: hash(readFileSync(canonical)),
+    canonical_snapshot: `canonical-readings/${reading.sensor.kind}/${reading.id}.json`,
     capture_terminated:
       prior?.capture_terminated || Boolean(raw.timedOut || raw.signal),
   });
@@ -140,9 +146,16 @@ const summary = {
   overall: scorecard.overall.verdict,
   readiness_established: false,
 };
-const baseline = decisions.baseline_register
+const baselineDocument = decisions.baseline_register
   ? read(decisions.baseline_register)
   : undefined;
+const baseline = baselineDocument
+  ? Array.isArray(baselineDocument)
+    ? baselineDocument
+    : baselineDocument.items
+  : undefined;
+if (baselineDocument && !Array.isArray(baseline))
+  throw new Error('Baseline register must contain an item array');
 const comparison = baseline
   ? {
       baseline_register: decisions.baseline_register,
@@ -175,6 +188,16 @@ function copyCaptures(source, target) {
   }
 }
 copyCaptures(audit, join(output, 'raw'));
+for (const item of observations.values()) {
+  const bytes = readFileSync(item.canonical_path);
+  if (hash(bytes) !== item.canonical_sha256)
+    throw new Error(
+      `Canonical reading changed during archival: ${item.reading.id}`,
+    );
+  const target = join(output, item.canonical_snapshot);
+  mkdirSync(resolve(target, '..'), { recursive: true });
+  writeFileSync(target, bytes, { flag: 'wx' });
+}
 copyFileSync(assessmentArg, join(output, 'assessment-decisions.json'));
 write('scorecard.json', scorecard);
 write('summary.json', summary);
@@ -215,6 +238,7 @@ write('evidence-manifest.json', {
         {
           id: item.reading.id,
           path: item.canonical_path,
+          archive_path: item.canonical_snapshot,
           sha256: item.canonical_sha256,
         },
       ]),
