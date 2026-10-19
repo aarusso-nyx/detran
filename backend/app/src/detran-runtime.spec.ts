@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   DetranLocalTokenVerifier,
+  DetranTenantMembershipVerifier,
   DetranDurableIdempotencyBackend,
   DetranPersistedAuditSink,
   DetranPipelineSqlExecutor,
@@ -320,4 +321,52 @@ describe('DETRAN runtime hooks', () => {
       }),
     ).toBe(false);
   });
+});
+
+// Owner-approved S1 identity boundary: raw OIDC subjects are never SQL UUIDs.
+describe('S1 canonical actor UUID prevalidation', () => {
+  const tenant = '00000000-0000-7000-8000-00000000a001';
+  const actor = '00000000-0000-4000-8000-0000b0000001';
+  for (const invalid of [
+    'external-oidc-subject',
+    '',
+    'not-a-uuid',
+    '00000000-0000-0000-0000-000000000000',
+  ])
+    it(`invalid actor ${JSON.stringify(invalid)} never reaches membership SQL and preserves403`, async () => {
+      const query = vi.fn<DetranPipelineSqlExecutor['query']>();
+      const verifier = new DetranTenantMembershipVerifier({ query });
+      await expect(verifier.isActiveMember(tenant, invalid)).resolves.toBe(
+        false,
+      );
+      await expect(
+        verifier.assertActiveMember(tenant, invalid),
+      ).rejects.toMatchObject({ status: 403, message: 'TENANT_ACCESS_DENIED' });
+      expect(query).not.toHaveBeenCalled();
+    });
+  for (const allowed of [true, false])
+    it(`valid canonical actor retains active membership result ${allowed}`, async () => {
+      const query = vi
+        .fn<DetranPipelineSqlExecutor['query']>()
+        .mockResolvedValue({ rows: [{ allowed }], rowCount: 1 });
+      const verifier = new DetranTenantMembershipVerifier({ query });
+      await expect(verifier.isActiveMember(tenant, actor)).resolves.toBe(
+        allowed,
+      );
+      expect(query).toHaveBeenCalledWith(
+        expect.stringContaining('membership.is_active = true'),
+        [actor, tenant],
+      );
+      if (allowed)
+        await expect(
+          verifier.assertActiveMember(tenant, actor),
+        ).resolves.toBeUndefined();
+      else
+        await expect(
+          verifier.assertActiveMember(tenant, actor),
+        ).rejects.toMatchObject({
+          status: 403,
+          message: 'TENANT_ACCESS_DENIED',
+        });
+    });
 });
