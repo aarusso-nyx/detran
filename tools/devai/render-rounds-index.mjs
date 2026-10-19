@@ -161,30 +161,35 @@ function escapeMarkdownCell(value) {
 }
 
 export function renderRoundsIndex(closures) {
-  const sorted = [...closures].sort((left, right) => {
-    const leftNumber = BigInt(left.id.slice(3));
-    const rightNumber = BigInt(right.id.slice(3));
-    if (leftNumber < rightNumber) {
-      return -1;
-    }
-    if (leftNumber > rightNumber) {
-      return 1;
-    }
-    return left.id.localeCompare(right.id);
-  });
+  validateSupersession(closures);
+  const successors = new Map(
+    closures
+      .filter((closure) => closure.supersedes !== undefined)
+      .map((closure) => [closure.supersedes, closure]),
+  );
+  const roots = closures
+    .filter((closure) => closure.supersedes === undefined)
+    .sort((left, right) => left.round_id.localeCompare(right.round_id));
   const lines = [
-    '# Índice de rodadas',
+    '# Rounds index',
     '',
-    '| PC | Rodada | Supersedes | merged_as |',
-    '| --- | --- | --- | --- |',
+    '| closure | round | supersedes | merged_as | terminal |',
+    '| --- | --- | --- | --- | --- |',
   ];
-  for (const closure of sorted) {
-    lines.push(
-      `| ${escapeMarkdownCell(closure.id)} | ` +
-        `${escapeMarkdownCell(closure.round_id)} | ` +
-        `${escapeMarkdownCell(closure.supersedes ?? '—')} | ` +
-        `${escapeMarkdownCell(closure.merged_as ?? '—')} |`,
-    );
+  for (const root of roots) {
+    for (
+      let closure = root;
+      closure !== undefined;
+      closure = successors.get(closure.id)
+    ) {
+      lines.push(
+        `| ${escapeMarkdownCell(closure.id)} | ` +
+          `${escapeMarkdownCell(closure.round_id)} | ` +
+          `${escapeMarkdownCell(closure.supersedes ?? '-')} | ` +
+          `${escapeMarkdownCell(closure.merged_as ?? '-')} | ` +
+          `${successors.has(closure.id) ? 'no' : 'yes'} |`,
+      );
+    }
   }
   return `${lines.join('\n')}\n`;
 }

@@ -155,3 +155,8 @@ Recibos oficiais da R-0036: `round close` emitiu **PC-0022**, `round plan --decl
 materializou o registro fechado e `round seal` emitiu `close-state.jsonl`. Estado
 confirmado por `round status`; recibos preservados em
 `work/rounds/R-0036/reports/closure-20261019/`.
+
+### Anexo de R-0037
+
+- **D-1 — Owner:** C1 autorizado e PR #206 integrado com checks verdes, conforme `work/rounds/R-0037/AUTHORIZATION.md`.
+- **D-2 — Architect:** fechamento autorizado após CI main 39323527480 success no merge 92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c. Aceitação restrita a C1; scan global FAIL e BL-0013 aberto. Verificação em `work/rounds/R-0037/reports/post-integration/`. R-0036, thresholds e históricos preservados.
