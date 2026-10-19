@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/test-task-descriptor.schema.json",
+  "title": "Adopter test task descriptor",
+  "schema_version": "1.0.0",
+  "description": "Adopter-owned test task DAG. Every node names a runner; a node under any runner except `preflight-v1` declares an `argv` contract, while a `preflight-v1` node declares a `probes` array of preflight probe objects (preflight-probe.schema.json, ADR-CHK-0001) and carries no argv. A task outcome is one of five values: PASS, FAIL, SKIPPED, CACHED, and BLOCKED. BLOCKED is the outcome of a preflight node whose extrinsic probe did not pass; its dependents are marked blocked-environment and not executed, and no BLOCKED result is ever written as a reusable cache entry. An intrinsic probe mismatch is FAIL, as for any other node. The descriptor and each task are closed objects: an unknown or misspelled property is refused. Scheduling declarations for parallel execution live in the separate test-task-exclusivity.json (test-task-exclusivity.schema.json, ADR-CHK-0007), never here, so the package-owned evidence verifier keeps reading the descriptor unchanged (ADR-CHK-0006).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "descriptorVersion",
+    "repositoryId",
+    "fallbackNodeId",
+    "dynamicFallbackSelectors",
+    "tasks",
+    "profiles"
+  ],
+  "$defs": {
+    "selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "pattern"],
+      "description": "Input selector. exact compares the whole path, prefix a leading substring, glob the check-runner glob grammar. class selects every path the change-taxonomy binding assigns to the named class (ADR-GOV-0017); its pattern is restricted to the closed class enum of law/schemas/change-taxonomy.schema.json.",
+      "properties": {
+        "kind": { "type": "string", "enum": ["exact", "prefix", "glob", "class"] },
+        "pattern": { "type": "string", "minLength": 1 }
+      },
+      "if": { "properties": { "kind": { "const": "class" } } },
+      "then": {
+        "properties": {
+          "pattern": {
+            "enum": ["law", "spec", "plan", "code", "tests", "docs", "ci", "toolchain", "generated"]
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "descriptorVersion": { "type": "string", "minLength": 1 },
+    "repositoryId": { "type": "string", "minLength": 1 },
+    "fallbackNodeId": { "type": ["string", "null"] },
+    "dynamicFallbackSelectors": { "type": "array", "items": { "$ref": "#/$defs/selector" } },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "nodeId",
+          "dependencies",
+          "cwd",
+          "runner",
+          "inputSelectors",
+          "toolchainKeys",
+          "allowlistedEnv",
+          "outputContract"
+        ],
+        "properties": {
+          "sensorKinds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "type_check",
+                "unit_test",
+                "integration_test",
+                "e2e_test",
+                "perf_test",
+                "build",
+                "migration_check"
+              ]
+            },
+            "description": "Explicit sensor consumers admitted to reference this exact executable node by taskId (ADR-SCR-0015); a probe-only preflight-v1 node is not a sensor execution. Omitting the field admits no sensor task reference. It does not grant effects, widen environment, or alter ordinary check/RC execution."
+          },
+          "nodeId": { "type": "string", "minLength": 1 },
+          "dependencies": { "type": "array", "items": { "type": "string" } },
+          "argv": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "prefixItems": [{ "type": "string", "pattern": "^[A-Za-z0-9._-]+$" }]
+          },
+          "probes": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "https://devai.nyxk.com.br/schemas/preflight-probe.schema.json" },
+            "description": "Preflight probes executed in `depends_on` order by the `preflight-v1` runner. Present only on a `preflight-v1` node."
+          },
+          "cwd": { "type": "string", "minLength": 1 },
+          "runner": { "type": "string", "minLength": 1 },
+          "inputSelectors": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/selector" }
+          },
+          "toolchainKeys": { "type": "array", "items": { "type": "string" } },
+          "allowlistedEnv": { "type": "array", "items": { "type": "string" } },
+          "outputContract": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "resultPopulation": { "$ref": "test-result-population.schema.json" }
+            },
+            "if": { "required": ["resultPopulation"] },
+            "then": {
+              "required": ["kind", "population"],
+              "properties": {
+                "kind": { "const": "command-result" },
+                "population": { "type": "string", "minLength": 1 }
+              },
+              "not": { "required": ["generated_namespaces"] }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": ["sensorKinds"]
+            },
+            "then": {
+              "required": ["argv"],
+              "properties": {
+                "runner": { "not": { "const": "preflight-v1" } },
+                "outputContract": {
+                  "type": "object",
+                  "required": ["population"],
+                  "not": { "required": ["generated_namespaces"] },
+                  "properties": {
+                    "kind": { "enum": ["command-result", "vitest", "workspace-build"] },
+                    "population": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "if": { "properties": { "runner": { "const": "preflight-v1" } }, "required": ["runner"] },
+        "then": { "required": ["probes"], "not": { "required": ["argv"] } },
+        "else": { "required": ["argv"], "not": { "required": ["probes"] } }
+      }
+    },
+    "profiles": { "type": "array" }
+  },
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "descriptorVersion": "1.0.0",
+      "repositoryId": "example",
+      "fallbackNodeId": null,
+      "dynamicFallbackSelectors": [],
+      "tasks": [
+        {
+          "nodeId": "typecheck",
+          "dependencies": [],
+          "cwd": ".",
+          "runner": "exec-v1",
+          "argv": ["node", "scripts/typecheck.mjs"],
+          "inputSelectors": [{ "kind": "prefix", "pattern": "src/" }],
+          "toolchainKeys": [],
+          "allowlistedEnv": [],
+          "outputContract": {}
+        }
+      ],
+      "profiles": []
+    }
+  ]
+}

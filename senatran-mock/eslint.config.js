@@ -1,4 +1,5 @@
 import tsParser from '@typescript-eslint/parser';
+import { fileURLToPath } from 'node:url';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
@@ -15,6 +16,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
+        tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)),
         ecmaVersion: 'latest',
         sourceType: 'module',
       },

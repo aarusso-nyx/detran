@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "backlog",
+    "add",
+    "--repo-root",
+    ".",
+    "--kind",
+    "finding",
+    "--round",
+    "R-0036",
+    "--request-id",
+    "r0036-final-product-coverage-depth",
+    "--title",
+    "P2 Inspector: improve product unit coverage and sparse package tests",
+    "--body",
+    "Separate product test work. Increase whole-source local unit coverage from the evidence-backed baseline, prioritize sparse packages from coverage-by-package.json and test_coherence, and disposition existing TODOs through the product workflow. Retain all existing assertions, timeouts, native 80/50 coverage thresholds and original package coverage gates. Do not claim integration/E2E or RC coverage from the local-unit report. Respect the separate unapproved P4 planning boundary. Evidence: work/rounds/R-0036/reports/evaluation-e9e45a4a/evaluation-register.json; frozen candidate e9e45a4a6cbed5cfd394c716c79a55b1aca386b8.",
+    "--as-role",
+    "architect",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:51.536Z",
+  "finished_at": "2026-10-19T04:42:52.112Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"backlog add\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"schemaVersion\":\"1.0.0\",\"id\":\"BL-0017\",\"request_id\":\"r0036-final-product-coverage-depth\",\"kind\":\"finding\",\"title\":\"P2 Inspector: improve product unit coverage and sparse package tests\",\"body\":\"Separate product test work. Increase whole-source local unit coverage from the evidence-backed baseline, prioritize sparse packages from coverage-by-package.json and test_coherence, and disposition existing TODOs through the product workflow. Retain all existing assertions, timeouts, native 80/50 coverage thresholds and original package coverage gates. Do not claim integration/E2E or RC coverage from the local-unit report. Respect the separate unapproved P4 planning boundary. Evidence: work/rounds/R-0036/reports/evaluation-e9e45a4a/evaluation-register.json; frozen candidate e9e45a4a6cbed5cfd394c716c79a55b1aca386b8.\",\"origin\":{\"session\":\"DIRECT-CLI-21b862a3cd15c3ceb71d5f7f0c43ce22\",\"role\":\"architect\",\"commit\":\"e9e45a4a6cbed5cfd394c716c79a55b1aca386b8\"},\"round_id\":\"R-0036\",\"status\":\"open\",\"created_at\":\"2026-10-19T04:42:52.073Z\",\"resolved_at\":null}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

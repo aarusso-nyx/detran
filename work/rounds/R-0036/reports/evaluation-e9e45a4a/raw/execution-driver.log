@@ -1,0 +1,246 @@
+BEGIN ['sensor', 'build', 'engineer']
+START sensor-build
+END sensor-build: exit=0 timeout=false
+BEGIN ['sensor', 'inventory_regeneration', 'architect']
+START sensor-inventory_regeneration
+END sensor-inventory_regeneration: exit=1 timeout=false
+BEGIN ['sensor', 'migration_check', 'engineer']
+START sensor-migration_check
+END sensor-migration_check: exit=0 timeout=false
+NATIVE sensor-migration_check [('migration_check', 'pass', None, None)]
+BEGIN ['capture', 'prerequisite-coverage', 'pnpm']
+START prerequisite-coverage
+END prerequisite-coverage: exit=1 timeout=false
+NATIVE prerequisite-coverage [('test_coverage_depth', 'review', None, None)]
+EXACT_LINE_COVERAGE {'population': 'local', 'lines_total': 43685, 'lines_covered': 23583, 'lines_pct': 53.98, 'threshold_pass': 80, 'threshold_review': 50}
+BEGIN ['sensor', 'unit_test', 'inspector']
+START sensor-unit_test
+END sensor-unit_test: exit=0 timeout=false
+NATIVE sensor-unit_test [('unit_test', 'pass', 12260, 0)]
+BEGIN ['sensor', 'integration_test', 'inspector']
+START sensor-integration_test
+END sensor-integration_test: exit=0 timeout=false
+NATIVE sensor-integration_test [('integration_test', 'pass', 1515, 0)]
+BEGIN ['sensor', 'e2e_test', 'inspector']
+START sensor-e2e_test
+END sensor-e2e_test: exit=3 timeout=false
+NATIVE sensor-e2e_test [('e2e_test', 'fail', 1853, 2)]
+BEGIN ['record', 'prerequisite-coverage', 'sensor-build']
+START prerequisite-coverage-record-0
+END prerequisite-coverage-record-0: exit=0 timeout=false
+START sensor-build-record-0
+END sensor-build-record-0: exit=0 timeout=false
+START sensor-migration_check-record-0
+END sensor-migration_check-record-0: exit=0 timeout=false
+START sensor-unit_test-record-0
+END sensor-unit_test-record-0: exit=0 timeout=false
+START sensor-integration_test-record-0
+END sensor-integration_test-record-0: exit=0 timeout=false
+START sensor-e2e_test-record-0
+END sensor-e2e_test-record-0: exit=0 timeout=false
+START sensor-inventory_regeneration-record-0
+END sensor-inventory_regeneration-record-0: exit=0 timeout=false
+BEGIN ['enumerate-first']
+START first-type_check
+END first-type_check: exit=0 timeout=false
+START first-lint
+END first-lint: exit=3 timeout=false
+START first-test_weakening_review
+END first-test_weakening_review: exit=0 timeout=false
+START first-trace_resolution
+END first-trace_resolution: exit=0 timeout=false
+START first-security_scan
+END first-security_scan: exit=3 timeout=false
+START first-perf_test
+END first-perf_test: exit=0 timeout=false
+START first-inventory_api
+END first-inventory_api: exit=0 timeout=false
+START first-inventory_routes
+END first-inventory_routes: exit=0 timeout=false
+START first-inventory_data_model
+END first-inventory_data_model: exit=0 timeout=false
+START first-inventory_rbac
+END first-inventory_rbac: exit=1 timeout=false
+START first-inventory_data_handling
+END first-inventory_data_handling: exit=0 timeout=false
+START first-inventory_dep_graph
+END first-inventory_dep_graph: exit=0 timeout=false
+START first-inventory_coverage
+END first-inventory_coverage: exit=1 timeout=false
+START first-spec_depth
+END first-spec_depth: exit=0 timeout=false
+START first-spec_idiomaticity
+END first-spec_idiomaticity: exit=0 timeout=false
+START first-spec_freshness
+END first-spec_freshness: exit=0 timeout=false
+START first-plant_coverage
+END first-plant_coverage: exit=0 timeout=false
+START first-test_coverage_depth
+END first-test_coverage_depth: exit=1 timeout=false
+START first-test_invariant_alignment
+END first-test_invariant_alignment: exit=0 timeout=false
+START first-inventory_adherence
+END first-inventory_adherence: exit=3 timeout=false
+START first-inventory_determinism
+END first-inventory_determinism: exit=0 timeout=false
+START first-harness_security
+END first-harness_security: exit=0 timeout=false
+START first-harness_green_main
+END first-harness_green_main: exit=0 timeout=false
+START first-spec_alignment
+END first-spec_alignment: exit=1 timeout=false
+START first-spec_security_coverage
+END first-spec_security_coverage: exit=3 timeout=false
+START first-spec_performance_targets
+END first-spec_performance_targets: exit=0 timeout=false
+START first-spec_robustness_targets
+END first-spec_robustness_targets: exit=3 timeout=false
+START first-plant_depth
+END first-plant_depth: exit=0 timeout=false
+START first-plant_coherence
+END first-plant_coherence: exit=0 timeout=false
+START first-test_coherence
+END first-test_coherence: exit=1 timeout=false
+START first-test_idiomaticity
+END first-test_idiomaticity: exit=1 timeout=false
+START first-test_security_coverage
+END first-test_security_coverage: exit=0 timeout=false
+START first-test_performance_coverage
+END first-test_performance_coverage: exit=0 timeout=false
+START first-test_robustness_coverage
+END first-test_robustness_coverage: exit=0 timeout=false
+START first-harness_coverage
+END first-harness_coverage: exit=0 timeout=false
+START first-harness_depth
+END first-harness_depth: exit=0 timeout=false
+START first-harness_coherence
+END first-harness_coherence: exit=1 timeout=false
+START first-harness_idiomaticity
+END first-harness_idiomaticity: exit=1 timeout=false
+START first-harness_performance
+END first-harness_performance: exit=3 timeout=false
+START first-harness_robustness
+END first-harness_robustness: exit=0 timeout=false
+START first-decision_record_integrity
+END first-decision_record_integrity: exit=3 timeout=false
+START first-decision_citation_resolution
+END first-decision_citation_resolution: exit=3 timeout=false
+START first-archive_immutability
+END first-archive_immutability: exit=0 timeout=false
+START first-round_record_integrity
+END first-round_record_integrity: exit=3 timeout=false
+START first-docs_drift
+END first-docs_drift: exit=3 timeout=false
+START first-site_drift
+END first-site_drift: exit=1 timeout=false
+START first-action_effect_inference
+END first-action_effect_inference: exit=1 timeout=false
+BEGIN ['record-first']
+START first-type_check-record-0
+END first-type_check-record-0: exit=0 timeout=false
+START first-lint-record-0
+END first-lint-record-0: exit=0 timeout=false
+START first-test_weakening_review-record-0
+END first-test_weakening_review-record-0: exit=0 timeout=false
+START first-trace_resolution-record-0
+END first-trace_resolution-record-0: exit=0 timeout=false
+START first-security_scan-record-0
+END first-security_scan-record-0: exit=0 timeout=false
+START first-perf_test-record-0
+END first-perf_test-record-0: exit=0 timeout=false
+START first-inventory_api-record-0
+END first-inventory_api-record-0: exit=0 timeout=false
+START first-inventory_routes-record-0
+END first-inventory_routes-record-0: exit=0 timeout=false
+START first-inventory_data_model-record-0
+END first-inventory_data_model-record-0: exit=0 timeout=false
+START first-inventory_rbac-record-0
+END first-inventory_rbac-record-0: exit=0 timeout=false
+START first-inventory_data_handling-record-0
+END first-inventory_data_handling-record-0: exit=0 timeout=false
+START first-inventory_dep_graph-record-0
+END first-inventory_dep_graph-record-0: exit=0 timeout=false
+START first-inventory_coverage-record-0
+END first-inventory_coverage-record-0: exit=0 timeout=false
+START first-spec_depth-record-0
+END first-spec_depth-record-0: exit=0 timeout=false
+START first-spec_idiomaticity-record-0
+END first-spec_idiomaticity-record-0: exit=0 timeout=false
+START first-spec_freshness-record-0
+END first-spec_freshness-record-0: exit=0 timeout=false
+START first-plant_coverage-record-0
+END first-plant_coverage-record-0: exit=0 timeout=false
+START first-test_coverage_depth-record-0
+END first-test_coverage_depth-record-0: exit=0 timeout=false
+START first-test_invariant_alignment-record-0
+END first-test_invariant_alignment-record-0: exit=0 timeout=false
+START first-inventory_adherence-record-0
+END first-inventory_adherence-record-0: exit=0 timeout=false
+START first-inventory_determinism-record-0
+END first-inventory_determinism-record-0: exit=0 timeout=false
+START first-harness_security-record-0
+END first-harness_security-record-0: exit=0 timeout=false
+START first-harness_green_main-record-0
+END first-harness_green_main-record-0: exit=0 timeout=false
+START first-spec_alignment-record-0
+END first-spec_alignment-record-0: exit=0 timeout=false
+START first-spec_security_coverage-record-0
+END first-spec_security_coverage-record-0: exit=0 timeout=false
+START first-spec_performance_targets-record-0
+END first-spec_performance_targets-record-0: exit=0 timeout=false
+START first-spec_robustness_targets-record-0
+END first-spec_robustness_targets-record-0: exit=0 timeout=false
+START first-plant_depth-record-0
+END first-plant_depth-record-0: exit=0 timeout=false
+START first-plant_coherence-record-0
+END first-plant_coherence-record-0: exit=0 timeout=false
+START first-test_coherence-record-0
+END first-test_coherence-record-0: exit=0 timeout=false
+START first-test_idiomaticity-record-0
+END first-test_idiomaticity-record-0: exit=0 timeout=false
+START first-test_security_coverage-record-0
+END first-test_security_coverage-record-0: exit=0 timeout=false
+START first-test_performance_coverage-record-0
+END first-test_performance_coverage-record-0: exit=0 timeout=false
+START first-test_robustness_coverage-record-0
+END first-test_robustness_coverage-record-0: exit=0 timeout=false
+START first-harness_coverage-record-0
+END first-harness_coverage-record-0: exit=0 timeout=false
+START first-harness_depth-record-0
+END first-harness_depth-record-0: exit=0 timeout=false
+START first-harness_coherence-record-0
+END first-harness_coherence-record-0: exit=0 timeout=false
+START first-harness_idiomaticity-record-0
+END first-harness_idiomaticity-record-0: exit=0 timeout=false
+START first-harness_performance-record-0
+END first-harness_performance-record-0: exit=0 timeout=false
+START first-harness_robustness-record-0
+END first-harness_robustness-record-0: exit=0 timeout=false
+START first-decision_record_integrity-record-0
+END first-decision_record_integrity-record-0: exit=0 timeout=false
+START first-decision_citation_resolution-record-0
+END first-decision_citation_resolution-record-0: exit=0 timeout=false
+START first-archive_immutability-record-0
+END first-archive_immutability-record-0: exit=0 timeout=false
+START first-round_record_integrity-record-0
+END first-round_record_integrity-record-0: exit=0 timeout=false
+START first-docs_drift-record-0
+END first-docs_drift-record-0: exit=0 timeout=false
+START first-site_drift-record-0
+END first-site_drift-record-0: exit=0 timeout=false
+START first-action_effect_inference-record-0
+END first-action_effect_inference-record-0: exit=0 timeout=false
+BEGIN ['enumerate-second']
+START second-harness_invariant_alignment
+END second-harness_invariant_alignment: exit=3 timeout=false
+START second-inventory_performance
+END second-inventory_performance: exit=1 timeout=false
+BEGIN ['record', 'second-harness_invariant_alignment', 'second-inventory_performance']
+START second-harness_invariant_alignment-record-0
+END second-harness_invariant_alignment-record-0: exit=0 timeout=false
+START second-inventory_performance-record-0
+END second-inventory_performance-record-0: exit=0 timeout=false
+BEGIN ['capture', 'evaluated-scorecard', 'pnpm']
+START evaluated-scorecard
+END evaluated-scorecard: exit=0 timeout=false
+SCORECARD {'verdict': 'FAIL'} {'PASS': 24, 'REVIEW': 10, 'FAIL': 9, 'UNKNOWN': 0, 'N/A': 2}

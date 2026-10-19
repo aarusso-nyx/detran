@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "test_performance_coverage",
+    "--repo-root",
+    ".",
+    "--input",
+    "{\"testGlobs\":[\"backend\",\"packages\",\"apps\",\"senatran-mock\",\"tools\",\"tests\"]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:25.982Z",
+  "finished_at": "2026-10-19T04:41:26.803Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"test_performance_coverage\"},\"members\":[{\"kind\":\"test_performance_coverage\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"test_performance_coverage\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run test_performance_coverage\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"test-performance-coverage\\\",\\\"kind\\\":\\\"test_performance_coverage\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:41:26.701Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-test-performance-coverage\\\",\\\"command_hash\\\":\\\"04737986b31162f24bbf7ead652b123dc1356c3eaf71d97ffba4ed3e3ac4c071\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"test_files\\\":758,\\\"perf_tests\\\":48,\\\"perf_pct\\\":6.33},\\\"id\\\":\\\"SR-397ea2aa265e6935\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

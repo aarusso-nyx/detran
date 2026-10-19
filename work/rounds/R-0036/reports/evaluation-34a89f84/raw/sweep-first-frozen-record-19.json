@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-19.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/inventory_adherence/SR-892e1b63593ab440.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-892e1b63593ab440\",\"sensor\":{\"name\":\"inventory-adherence\",\"kind\":\"inventory_adherence\"},\"timestamp\":\"2026-10-18T20:55:08.259Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense-inventory-adherence\",\"command_hash\":\"7f08cb76c9a1f4dc2bd5d1be86f022c6ed87e3b49baad79246eed300c7cccfd6\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"INVENTORY_ADHERENCE_BELOW_THRESHOLD\",\"message\":\"5348 orphans exceed max_orphans=50.\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-d66d3fde\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-35ccb6d0\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-b917f7b8\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-423a8b1a\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-5e8da48c\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-53854274\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-2f917f72\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-04b00238\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-4d8a0d33\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-335a4e33\",\"file\":\"\"}],\"metrics\":{\"total_count\":6021,\"claimed_count\":673,\"orphan_count\":5348,\"max_orphans\":50}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

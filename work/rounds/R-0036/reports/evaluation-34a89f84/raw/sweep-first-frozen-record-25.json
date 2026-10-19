@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-25.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/spec_performance_targets/SR-d0d1757c88e4f8ac.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-d0d1757c88e4f8ac\",\"sensor\":{\"name\":\"spec-performance-targets\",\"kind\":\"spec_performance_targets\"},\"timestamp\":\"2026-10-18T20:55:33.404Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense-spec-performance-targets\",\"command_hash\":\"5368e5909e1d93d0f00e7a1437bfbeff5f05f9ec5bb1463a3be513637abc3e02\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"SPEC_PERFORMANCE_NO_TARGETS\",\"message\":\"No perf invariants, no perf use-cases, no perf-relevant code areas detected.\"}],\"metrics\":{\"perf_invariants\":0,\"perf_use_cases\":0,\"targets_total\":0,\"perf_relevant_code_detected\":0}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

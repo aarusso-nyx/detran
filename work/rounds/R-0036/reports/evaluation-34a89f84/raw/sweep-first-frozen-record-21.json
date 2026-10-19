@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-21.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/harness_security/SR-dac8f6d286c12ecb.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-dac8f6d286c12ecb\",\"sensor\":{\"name\":\"harness-security\",\"kind\":\"harness_security\"},\"timestamp\":\"2026-10-18T20:55:30.042Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-harness-security\",\"command_hash\":\"0997fe21464dd19921fd746d4c140219a4db2dbd0053fff866f39e9818654131\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"workflow_count\":2,\"unpinned_action_count\":0,\"missing_permissions_block_count\":0,\"pwn_request_count\":0}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

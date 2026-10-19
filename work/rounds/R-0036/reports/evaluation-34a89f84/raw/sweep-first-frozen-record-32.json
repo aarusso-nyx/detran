@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-32.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/test_performance_coverage/SR-d2400a4fd616aae4.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-d2400a4fd616aae4\",\"sensor\":{\"name\":\"test-performance-coverage\",\"kind\":\"test_performance_coverage\"},\"timestamp\":\"2026-10-18T20:55:34.477Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-test-performance-coverage\",\"command_hash\":\"04737986b31162f24bbf7ead652b123dc1356c3eaf71d97ffba4ed3e3ac4c071\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"test_files\":707,\"perf_tests\":47,\"perf_pct\":6.65}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

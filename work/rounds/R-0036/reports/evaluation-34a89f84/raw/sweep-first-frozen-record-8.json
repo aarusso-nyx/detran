@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-8.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/inventory_data_model/SR-ab7fc6bd20462821.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-ab7fc6bd20462821\",\"sensor\":{\"name\":\"inventory:data-model\",\"kind\":\"inventory_data_model\",\"version\":\"1.0.0\"},\"timestamp\":\"2026-10-18T20:55:05.144Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense data-model --repo-root .\",\"command_hash\":\"6a2784cfbaa9836dd5d1dea7fb70e2e7e36ff7419359ac29f0fa18379d72478a\",\"tier\":\"L0\",\"duration_ms\":0,\"findings\":[{\"severity\":\"warning\",\"code\":\"DATA_MODEL_EMPTY\",\"message\":\"No CREATE TABLE statements found under: migrations, db/migrations, db, database\"}],\"metrics\":{\"table_count\":0,\"column_count\":0,\"foreign_key_count\":0,\"migration_file_count\":0,\"tables_hash\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"dialect\":\"postgres\"}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

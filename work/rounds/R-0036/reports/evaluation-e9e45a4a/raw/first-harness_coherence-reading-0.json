@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "harness-coherence",
+    "kind": "harness_coherence"
+  },
+  "timestamp": "2026-10-19T04:41:29.500Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense-harness-coherence",
+  "command_hash": "b6c6e606ff19573cb165f392dbd2eaf5adf8f8d5b7febe611b3123414b7641fe",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "HARNESS_COHERENCE_ACTION_VERSION_DRIFT",
+      "message": "Action actions/checkout pinned to multiple versions across workflows: 34e114876b0b11c390a56381ad16ebd13914f8d5, 3d3c42e5aac5ba805825da76410c181273ba90b1"
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_COHERENCE_ACTION_VERSION_DRIFT",
+      "message": "Action actions/setup-node pinned to multiple versions across workflows: 49933ea5288caeca8642d1e84afbd3f7d6820020, 820762786026740c76f36085b0efc47a31fe5020"
+    },
+    {
+      "severity": "warning",
+      "code": "HARNESS_COHERENCE_CONCURRENCY_POLICY",
+      "message": ".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding)."
+    }
+  ],
+  "metrics": {
+    "workflow_count": 2,
+    "action_version_drift_count": 2,
+    "permissions_mixed": 0,
+    "concurrency_mixed": 0,
+    "concurrency_semantic_issues": 1,
+    "incoherence_score": 3,
+    "max_review_incoherence": 3
+  },
+  "id": "SR-9fbd8a4e931e56ec"
+}

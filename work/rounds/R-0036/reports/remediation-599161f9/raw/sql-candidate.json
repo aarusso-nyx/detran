@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "node",
+    "/Volumes/Development/projects/stech/devai/.devai/worktrees/detran-measurement-gaps-20261018/packages/cli/dist/runtime/index/bin.js",
+    "sense",
+    "run",
+    "inventory_data_model",
+    "--repo-root",
+    ".",
+    "--input",
+    "{\"migrationDirs\":[\"backend/database/ddl\",\"senatran-mock/database\"]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-18T22:41:27.399Z",
+  "finished_at": "2026-10-18T22:41:28.869Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_data_model\"},\"members\":[{\"kind\":\"inventory_data_model\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_data_model\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_data_model\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-b742e4793b437d06\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:data-model\\\",\\\"kind\\\":\\\"inventory_data_model\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-18T22:41:28.482Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense data-model --repo-root /Volumes/Development/projects/stech/detran\\\",\\\"command_hash\\\":\\\"77cd5321349e11ebaa95fd2c9d2283d474591910006d3ec362a5394cc59966e4\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":135,\\\"metrics\\\":{\\\"table_count\\\":361,\\\"column_count\\\":4103,\\\"foreign_key_count\\\":321,\\\"migration_file_count\\\":92,\\\"tables_hash\\\":\\\"78ae961b0ffd397fc10270760f988a541114219e1eba48fc472d4e8451a8a4eb\\\",\\\"dialect\\\":\\\"postgres\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

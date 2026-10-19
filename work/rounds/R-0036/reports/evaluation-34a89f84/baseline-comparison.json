@@ -1,0 +1,800 @@
+{
+  "baseline_counts": {
+    "N/A": 2,
+    "UNKNOWN": 43
+  },
+  "round": "R-0036",
+  "integration_head": "34a89f845146523161f401ae758b5fb9fab8db93",
+  "baseline_head": "3ec14d3a0e6b274dc367157bc4958f81750c5dc8",
+  "native_counts": {
+    "N/A": 2,
+    "PASS": 18,
+    "REVIEW": 10,
+    "FAIL": 12,
+    "UNKNOWN": 3
+  },
+  "assessment_counts": {
+    "measured": 19,
+    "partial": 13,
+    "blocked": 11
+  },
+  "applicable": 43,
+  "native_conclusive_cells": 40,
+  "overall": "FAIL",
+  "readiness_established": false,
+  "checks": [
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/adapter-e2e.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/senatran-adapter",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/adapter-integration.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/senatran-adapter",
+        "test:integration"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/affected-checks.json",
+      "argv": [
+        "pnpm",
+        "devai:test"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/affected-law-corpus.json",
+      "argv": [
+        "pnpm",
+        "verify:law-corpus"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/affected-law-tests.json",
+      "argv": [
+        "pnpm",
+        "law:test"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/affected-rounds-index.json",
+      "argv": [
+        "pnpm",
+        "verify:rounds-index"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/affected-state-index.json",
+      "argv": [
+        "pnpm",
+        "verify:state-index"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/backend-e2e.json",
+      "argv": [
+        "pnpm",
+        "backend:test:e2e"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/backend-integration.json",
+      "argv": [
+        "pnpm",
+        "backend:test:integration"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/backend-unit.json",
+      "argv": [
+        "pnpm",
+        "backend:test:unit"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/backend-upgrade.json",
+      "argv": [
+        "pnpm",
+        "backend:test:upgrade"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/baseline-chain.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/baseline-doctor.json",
+      "argv": [
+        "pnpm",
+        "devai:doctor"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/baseline-rc-metadata.json",
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/baseline-scorecard.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "audit",
+        "scorecard",
+        "--repo-root",
+        ".",
+        "--at",
+        "3ec14d3a0e6b274dc367157bc4958f81750c5dc8",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/ci-history.json",
+      "argv": [
+        "gh",
+        "run",
+        "list",
+        "--workflow",
+        "ci.yml",
+        "--event",
+        "push",
+        "--branch",
+        "main",
+        "--limit",
+        "100",
+        "--json",
+        "databaseId,headSha,conclusion,status,createdAt,updatedAt,attempt,url"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/coverage-depth-compatible-input.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "test_coverage_depth",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"coveragePath\":\"coverage/coverage-final.json\",\"population\":\"rc\"}",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/dashboard-timeout-recheck.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/dashboard-web",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "src/app/features/radar/pages/radar-pec.page.spec.ts"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/database-apply.json",
+      "argv": [
+        "bash",
+        "backend/database/apply.sh"
+      ],
+      "exit_code": 1,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/database-legacy-fixture.json",
+      "argv": [
+        "pnpm",
+        "backend:test:prepare-legacy"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/database-reset.json",
+      "argv": [
+        "bash",
+        "backend/database/apply.sh",
+        "--full"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/database-seed.json",
+      "argv": [
+        "bash",
+        "backend/database/seed.sh"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/delivery-format-recheck.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "--ignore-unknown",
+        ".gitignore",
+        ".prettierignore",
+        "law/policy/README.md",
+        "law/policy/scorecard-sensor-inputs.json",
+        "tools/devai/scorecard-evaluation.mjs",
+        "tools/devai/scorecard-output.mjs",
+        "tools/devai/report-scorecard-evaluation.mjs",
+        "tools/devai/tests/scorecard-output.test.mjs",
+        "work/rounds/README.md",
+        "work/rounds/R-0036/plan.md",
+        "work/rounds/R-0036/prompts/00-orchestrator.md",
+        "work/rounds/R-0036/inputs/population.json",
+        "work/rounds/R-0036/inputs/round.json"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/delivery-format.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        ".gitignore",
+        ".prettierignore",
+        "law/policy/README.md",
+        "law/policy/scorecard-sensor-inputs.json",
+        "tools/devai/scorecard-evaluation.mjs",
+        "tools/devai/scorecard-output.mjs",
+        "tools/devai/report-scorecard-evaluation.mjs",
+        "tools/devai/tests/scorecard-output.test.mjs",
+        "work/rounds/README.md",
+        "work/rounds/R-0036/plan.md",
+        "work/rounds/R-0036/prompts/00-orchestrator.md",
+        "work/rounds/R-0036/inputs/population.json",
+        "work/rounds/R-0036/inputs/round.json"
+      ],
+      "exit_code": 2,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/disposable-database-cleanup.json",
+      "argv": [
+        "docker",
+        "stop",
+        "detran-scorecard-r0036"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/e2e-fixture-restore.json",
+      "argv": [
+        "pnpm",
+        "backend:test:prepare-legacy"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/evaluated-scorecard.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "audit",
+        "scorecard",
+        "--repo-root",
+        ".",
+        "--at",
+        "34a89f845146523161f401ae758b5fb9fab8db93",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/evaluation-tool-tests.json",
+      "argv": [
+        "node",
+        "--test",
+        "tools/devai/tests/scorecard-output.test.mjs"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/final-chain-before-assessment.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/final-doctor.json",
+      "argv": [
+        "pnpm",
+        "devai:doctor"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/final-format.json",
+      "argv": [
+        "pnpm",
+        "format:check"
+      ],
+      "exit_code": 1,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/final-tooling-validation.json",
+      "argv": [
+        "node",
+        "--test",
+        "tools/devai/tests/scorecard-output.test.mjs"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/frontend-tests.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "./apps/**",
+        "--filter",
+        "@detran/ui",
+        "--no-bail",
+        "run",
+        "test"
+      ],
+      "exit_code": 1,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/frontend-timeout-recheck.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/rait-web",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.config.ts",
+        "--no-file-parallelism",
+        "src/app/app.routes.spec.ts",
+        "src/app/core/guards.spec.ts",
+        "src/app/features/caso/pages/case-decision.page.spec.ts",
+        "src/app/features/colegiado/pages/bench.page.spec.ts",
+        "src/app/features/colegiado/pages/live-session.page.spec.ts"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/intermediate-chain.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/inventory-regeneration-frozen.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "inventory_regeneration",
+        "--repo-root",
+        ".",
+        "--input",
+        "{}",
+        "--as-role",
+        "auditor",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 1,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/mock-database-reset.json",
+      "argv": [
+        "pnpm",
+        "--dir",
+        "senatran-mock",
+        "db:reset"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/mock-e2e.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "senatran-mock",
+        "test:e2e"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/mock-integration.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "senatran-mock",
+        "test:integration"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/omitted-unit-suites.json",
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/ch-juntas",
+        "--filter",
+        "@detran/ops-core",
+        "--filter",
+        "@detran/senatran-adapter",
+        "--filter",
+        "senatran-mock",
+        "--no-bail",
+        "run",
+        "test:unit"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/rls-smoke.json",
+      "argv": [
+        "pnpm",
+        "backend:rls-smoke"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-build.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "build",
+        "--repo-root",
+        ".",
+        "--input",
+        "{}",
+        "--as-role",
+        "engineer",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-e2e_test.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "e2e_test",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"argv\":[\"pnpm\",\"run\",\"backend:test:e2e\"]}",
+        "--as-role",
+        "inspector",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-integration_test.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "integration_test",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"argv\":[\"pnpm\",\"run\",\"backend:test:integration\"]}",
+        "--as-role",
+        "inspector",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-inventory_regeneration.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "inventory_regeneration",
+        "--repo-root",
+        ".",
+        "--input",
+        "{}",
+        "--as-role",
+        "auditor",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 1,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-migration_check.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "migration_check",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"databaseUrl\":\"postgresql://postgres:postgres@127.0.0.1:61088/detran_r7_ctg1_a2\"}",
+        "--as-role",
+        "engineer",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sensor-unit_test.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "unit_test",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"argv\":[\"pnpm\",\"run\",\"backend:test:unit\"]}",
+        "--as-role",
+        "inspector",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sweep-first-frozen.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "--preset",
+        "sweep",
+        "--round",
+        "R-0036",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"adrDir\":\"docs/meta/adr\",\"invariantsDir\":\"law/invariants\",\"testGlobs\":[\"backend\",\"packages\",\"apps\",\"senatran-mock/tests\",\"tools\"],\"coveragePath\":\"coverage/coverage-final.json\",\"population\":\"rc\",\"exclusions\":[],\"workflow\":\"ci.yml\",\"event\":\"push\",\"headBranch\":\"main\",\"baseBranch\":\"main\",\"attempts\":\"last\",\"includeCancelled\":false,\"lookbackDays\":30,\"minimumSample\":10,\"excludedJobs\":[]}",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sweep-first.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "--preset",
+        "sweep",
+        "--round",
+        "R-0036",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"adrDir\":\"docs/meta/adr\",\"invariantsDir\":\"law/invariants\",\"testGlobs\":[\"backend\",\"packages\",\"apps\",\"senatran-mock/tests\",\"tools\"],\"coveragePath\":\"coverage/coverage-final.json\",\"population\":\"rc\",\"exclusions\":[],\"workflow\":\"ci.yml\",\"event\":\"push\",\"headBranch\":\"main\",\"baseBranch\":\"main\",\"attempts\":\"last\",\"includeCancelled\":false,\"lookbackDays\":30,\"minimumSample\":10,\"excludedJobs\":[]}",
+        "--as-role",
+        "auditor",
+        "--format",
+        "json"
+      ],
+      "exit_code": 2,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/sweep-second.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "--preset",
+        "sweep",
+        "--round",
+        "R-0036",
+        "--pass",
+        "second",
+        "--repo-root",
+        ".",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/typecheck-command-admission.json",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "sense",
+        "run",
+        "type_check",
+        "--repo-root",
+        ".",
+        "--input",
+        "{\"argv\":[\"pnpm\",\"run\",\"typecheck\"]}",
+        "--format",
+        "json"
+      ],
+      "exit_code": 3,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/workspace-packages.json",
+      "argv": [
+        "pnpm",
+        "list",
+        "--recursive",
+        "--depth",
+        "-1",
+        "--json"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/raw/workspace-typecheck.json",
+      "argv": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "timed_out": false
+    }
+  ],
+  "note": "Native verdicts are preserved even when caused by measurement infrastructure. Assessment dispositions separately identify blocked or partial populations. Supplemental suite success never becomes a fabricated SensorReading."
+}

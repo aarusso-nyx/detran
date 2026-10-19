@@ -1,0 +1,71 @@
+{
+  "checks": [
+    {
+      "label": "final-proof-anchors",
+      "argv": [
+        "pnpm",
+        "verify:proof-anchors"
+      ],
+      "started_at": "2026-10-18T21:13:37.049Z",
+      "finished_at": "2026-10-18T21:13:37.886Z",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": "\n> detran@0.0.1 verify:proof-anchors /Volumes/Development/projects/stech/detran\n> node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human\n\ndirectly anchored: 89\ndeclared orphans: 53\nundeclared orphans: 0\nduplicate anchors: 0\ninvalid references: 0\nvalidation errors: 0\nevidence chain: valid; 89 proof lines anchored; 53 historical gap acknowledged; head a78f1194dd0f4f71e00d80daa17a80701da10f0dcb0cd83c28398e0db74738fb\n",
+      "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+    },
+    {
+      "label": "final-state-index",
+      "argv": [
+        "pnpm",
+        "verify:state-index"
+      ],
+      "started_at": "2026-10-18T21:13:37.973Z",
+      "finished_at": "2026-10-18T21:13:38.240Z",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": "\n> detran@0.0.1 verify:state-index /Volumes/Development/projects/stech/detran\n> node tools/docs/state-index/check.mjs\n\nverify:state-index OK: 41 ADRs, 3 redirecionamentos, 37 rodadas, 20 closures\n",
+      "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+    },
+    {
+      "label": "final-rounds-index",
+      "argv": [
+        "pnpm",
+        "verify:rounds-index"
+      ],
+      "started_at": "2026-10-18T21:13:38.336Z",
+      "finished_at": "2026-10-18T21:13:38.755Z",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": "\n> detran@0.0.1 verify:rounds-index /Volumes/Development/projects/stech/detran\n> node tools/devai/render-rounds-index.mjs --check\n\n",
+      "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+    },
+    {
+      "label": "final-source-format",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "tools/devai/scorecard-evaluation.mjs",
+        "tools/devai/report-scorecard-evaluation.mjs",
+        "tools/devai/scorecard-output.mjs",
+        "tools/devai/tests/scorecard-output.test.mjs",
+        "work/rounds/R-0036/plan.md",
+        "work/rounds/R-0036/evidence-assessment.json"
+      ],
+      "started_at": "2026-10-18T21:13:38.841Z",
+      "finished_at": "2026-10-18T21:13:39.222Z",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "stdout": "Checking formatting...\nAll matched files use Prettier code style!\n",
+      "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+    }
+  ],
+  "all_artifact_hashes_match": true,
+  "historical_records_preserved": 135,
+  "total_chain_records": 188
+}

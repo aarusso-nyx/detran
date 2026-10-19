@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 // Lint do app (R-0014 M5; R-0012 M1/M12): flat config com angular-eslint (ts + template recommended),
 // typescript-eslint recommended e eslint-config-prettier, mais as regras locais do plugin `rait`
 // (`eslint/local-rules.js`, contrato CTG-0002c §6.3): `rait/no-client-deadline-math` em
@@ -13,6 +14,11 @@ export default defineConfig(
   { ignores: ['dist/**', '.angular/**'] },
   {
     files: ['**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)),
+      },
+    },
     extends: [
       ...tseslint.configs.recommended,
       ...angular.configs.tsRecommended,

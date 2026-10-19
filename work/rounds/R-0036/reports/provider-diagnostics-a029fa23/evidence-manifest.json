@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "1.0.0",
+  "candidate": "a029fa23011f0f39a43fe4df781c34718fef62a6",
+  "standing": "unpublished-provider diagnostics only; no official readings recorded",
+  "providers": {
+    "ci": "73b64954a104a9a39debef36306c175f7fad2e59",
+    "roots": "c250abfbc86a020003c6ef1728b641dcc624b025"
+  },
+  "observations": [
+    {
+      "provider": "roots",
+      "kind": "plant_coherence",
+      "status": "pass",
+      "metrics": {
+        "dirs_scanned": 538,
+        "incoherent_dirs": 0,
+        "max_review_incoherent": 3
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-plant_coherence.json",
+      "sha256": "101a661c64e793ce4684240ff320872be29d5fc2a57709c3c97bcfdb17adf5e5"
+    },
+    {
+      "provider": "roots",
+      "kind": "plant_depth",
+      "status": "pass",
+      "metrics": {
+        "files_count": 3079,
+        "lines_total": 404808,
+        "lines_max": 6656,
+        "lines_mean": 131,
+        "lines_p95": 412,
+        "threshold_pass": 500,
+        "threshold_review": 1000
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-plant_depth.json",
+      "sha256": "f8ae84c74d6ed1e36a7a25807815b1d0f393590fadc49b090fc6a15ce0f47b68"
+    },
+    {
+      "provider": "roots",
+      "kind": "spec_alignment",
+      "status": "review",
+      "metrics": {
+        "invariants_scanned": 10,
+        "invariants_broken_forward": 0,
+        "source_files_scanned": 3079,
+        "source_files_claimed": 386,
+        "reverse_pct": 12.54,
+        "reverse_threshold_pct": 80
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-spec_alignment.json",
+      "sha256": "fcc463633701fa32c1b5d99a1ca618a6a5764fa5c493eb6f081201428b9d35c9"
+    },
+    {
+      "provider": "roots",
+      "kind": "spec_robustness_targets",
+      "status": "fail",
+      "metrics": {
+        "error_semantics_invariants": 0,
+        "error_contract_files": 0,
+        "targets_total": 0
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-spec_robustness_targets.json",
+      "sha256": "d51c766e6b8c4caf81e2dc02bba66c22a99751b441bbfd5c4dfe087141bac5be"
+    },
+    {
+      "provider": "roots",
+      "kind": "spec_security_coverage",
+      "status": "fail",
+      "metrics": {
+        "threat_model_present": 0,
+        "pii_registry_present": 0,
+        "rbac_invariant_present": 0,
+        "signals_present": 0
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-spec_security_coverage.json",
+      "sha256": "cb5d44a6b2b38704d6611aa20046a89970c6e48306e5366a81192e79adb92c61"
+    },
+    {
+      "provider": "roots",
+      "kind": "test_coherence",
+      "status": "review",
+      "metrics": {
+        "packages_scanned": 63,
+        "source_files": 2702,
+        "test_files": 719,
+        "global_ratio": 0.266,
+        "packages_below_min_ratio": 23,
+        "naming_uses_test": 1,
+        "naming_uses_spec": 718,
+        "naming_consistent": 0
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-test_coherence.json",
+      "sha256": "9666079d2feace74df3f5b268a9e73877a355553027fc34e13f0eb200807cb6e"
+    },
+    {
+      "provider": "ci",
+      "kind": "harness_green_main",
+      "status": "pass",
+      "metrics": {
+        "run_count": 92,
+        "success_count": 90,
+        "success_pct": 97.83,
+        "threshold_pass": 95,
+        "threshold_review": 80,
+        "sample_size": 92,
+        "minimum_sample": 10,
+        "population_workflow": "ci.yml",
+        "population_event": "push",
+        "population_head_branch": "main",
+        "population_base_branch": "main",
+        "population_attempts": "last",
+        "population_include_cancelled": false,
+        "population_lookback_days": 30,
+        "population_base_branch_verified": true,
+        "population_excluded_jobs_unverified": 0,
+        "population_unverified": ""
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-harness_green_main.json",
+      "sha256": "54b41e93708ad9e14829f492bc967fe84e84124278842748e0c313d9bd35a5b9"
+    },
+    {
+      "provider": "ci",
+      "kind": "harness_performance",
+      "status": "fail",
+      "metrics": {
+        "run_count": 92,
+        "success_count": 90,
+        "sample_size": 90,
+        "median_ms": 1684000,
+        "p95_ms": 2280000,
+        "pass_median_ms": 900000,
+        "pass_p95_ms": 1800000,
+        "minimum_sample": 10,
+        "population_workflow": "ci.yml",
+        "population_event": "push",
+        "population_head_branch": "main",
+        "population_base_branch": "main",
+        "population_attempts": "last",
+        "population_include_cancelled": false,
+        "population_lookback_days": 30,
+        "population_base_branch_verified": true,
+        "population_excluded_jobs_unverified": 0,
+        "population_unverified": ""
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-harness_performance.json",
+      "sha256": "7197ef653c5c1a8cd89e23f1ca25f0e1919fc8692e2f54cd9e9cf90808dc27d6"
+    },
+    {
+      "provider": "ci",
+      "kind": "harness_robustness",
+      "status": "pass",
+      "metrics": {
+        "run_count": 92,
+        "flaky_runs": 0,
+        "flakiness_pct": 0,
+        "threshold_pass": 5,
+        "threshold_review": 15,
+        "sample_size": 92,
+        "minimum_sample": 10,
+        "population_workflow": "ci.yml",
+        "population_event": "push",
+        "population_head_branch": "main",
+        "population_base_branch": "main",
+        "population_attempts": "last",
+        "population_include_cancelled": false,
+        "population_lookback_days": 30,
+        "population_base_branch_verified": true,
+        "population_excluded_jobs_unverified": 0,
+        "population_unverified": ""
+      },
+      "capture": "work/rounds/R-0036/reports/provider-diagnostics-a029fa23/raw/provider-harness_robustness.json",
+      "sha256": "3a5344872c66a6c34a5b7f2f803b1573f0dd2eebb600b13ca50a8c1666aef6bf"
+    }
+  ]
+}
