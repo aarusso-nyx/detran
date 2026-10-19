@@ -92,3 +92,21 @@ other-member negative. No implicit role-wide history grant is introduced.
 All batch-item purposes remain exactly id, case_id, batch_id, member_id. A2's
 position/deadline/acceptance limitation remains in force; organizational reads
 must use the same closed projection as the typed contract and preview.
+
+## Fourth review — exact-pool batch proof without an invalid JARI fixture
+
+Architect, Article 7. Review4 correctly identifies that the cross-instance batch
+negative alone cannot disprove a unit/instance shortcut. Its proposed second JARI
+pool in the same unit is not a valid fixture: generated DDL35's
+ux_inf_rait_pool_non_defense_instance_unit preserves uniqueness for every
+non-defesa_previa instance. Only defense-prior partition uniqueness was narrowed;
+this review cannot authorize changing the accepted JARI/CETRAN invariant.
+
+Inspector instead uses the existing unlinked JARI CASE18, with the same unit and
+instance as pool20000002 and a separately qualified secretary read. The batch
+request must deny404 with unchanged effects and batch/item rows while no current
+trusted exact-pool association exists. Adding only a trusted fixture relation to
+that exact pool makes the identical request succeed201. A regression to unit and
+instance inference would fail the first assertion. Existing cross-instance and
+representable same-unit defense-pool controls remain. No production binding,
+DDL, runtime permission or accepted contract changes follow from this fixture.
