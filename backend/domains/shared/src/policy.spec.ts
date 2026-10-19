@@ -1133,6 +1133,60 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
     'rait-export': { create: ['AUDITOR'] },
   };
 
+  // P4-02-S1 / ADR0047 / closed T0: these five formerly missing read rows
+  // are now explicitly approved. This supplements only READ; all historical
+  // mutation/action and omitted-role negatives remain exhaustive below.
+  const S1_READ_GRANTS: Readonly<Record<string, readonly string[]>> = {
+    'rait-batch': [
+      'rait-secretary',
+      'rait-chair',
+      'rait-rapporteur',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+    ],
+    'rait-batch-item': [
+      'rait-secretary',
+      'rait-chair',
+      'rait-rapporteur',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+    ],
+    'rait-pending-content': [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+    'rait-redirect': [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+    'rait-draft': [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+  };
   const STRICT_COMMAND_GRANTS: Readonly<
     Record<string, Readonly<Record<string, readonly string[]>>>
   > = {
@@ -1148,9 +1202,10 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
    * negativa, não são o gap que M17(c) endereça.
    */
   function expectResourceHasNoGeneratedMatrixEntry(resource: string): void {
-    const grantedActions = Object.keys(
-      PRE_EXISTING_COMMAND_GRANTS[resource] ?? {},
-    );
+    const grantedActions = [
+      ...Object.keys(PRE_EXISTING_COMMAND_GRANTS[resource] ?? {}),
+      ...(S1_READ_GRANTS[resource] ? ['read'] : []),
+    ];
     const presentGeneratedKeys = GENERATED_ACTIONS.filter(
       (action) => `inf:${resource}:${action}` in DETRAN_POLICY_MATRIX,
     ).map((action) => `inf:${resource}:${action}`);
@@ -1163,7 +1218,9 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
     for (const action of GENERATED_ACTIONS) {
       const strictRoles = STRICT_COMMAND_GRANTS[resource]?.[action];
       const exceptionRoles =
-        PRE_EXISTING_COMMAND_GRANTS[resource]?.[action] ?? [];
+        (action === 'read' ? S1_READ_GRANTS[resource] : undefined) ??
+        PRE_EXISTING_COMMAND_GRANTS[resource]?.[action] ??
+        [];
       for (const role of DETRAN_ROLES) {
         const expected = strictRoles
           ? strictRoles.includes(role)
@@ -1213,7 +1270,7 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   });
 
   for (const resource of NEW_RESOURCES) {
-    it(`dado o recurso novo inf:${resource} sem matriz quando isDetranActionAllowed é chamado para read/create/update/delete então nega para todo papel canônico de roles.ts, exceto GLOBAL_ADMIN_ROLES e a exceção nomeada da matriz de comando — OD-309 (M17)`, () => {
+    it(`dado o recurso histórico inf:${resource} quando read/create/update/delete são avaliados então preserva negativas exaustivas e somente grants nomeados de comando e P4-02-S1 T0 — OD-309 (M17)`, () => {
       expectDeniedForEveryRole(resource);
       expectResourceHasNoGeneratedMatrixEntry(resource);
     });
