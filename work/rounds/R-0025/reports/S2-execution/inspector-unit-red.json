@@ -69,5 +69,38 @@
     "tools/parameters/parser.mjs": "a3a34ec9f2ad53679c8be70f7583450591f53eb45f8008d7c847c206beeaffa3",
     "backend/domains/inf/deadlines/src/index.ts": "c07c0b3707301955860481c34167f05fce1466b1fc38b9b20c3b888957a47f98",
     "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322"
+  },
+  "provenance_epoch": {
+    "provided_source_checkpoint": "e9d98482",
+    "format_read": [
+      "source-provenance-format.md",
+      "source-provenance-format.json"
+    ],
+    "new_storage_sensors": {
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-p402-claim-transaction.integration.spec.ts",
+      "sha256": "93d821a5f6f350152245e6bf46adda5c529d471ac839bf16825e14c1a523ebd5",
+      "tests": 15,
+      "executed": false,
+      "reason": "No database lease granted; baseline schema not generated. Never count absence as protection."
+    },
+    "typecheck": {
+      "command": "pnpm --filter @detran/inf-rait-case typecheck",
+      "exit": 0,
+      "log": "/tmp/detran-s2-case-test-types.log"
+    },
+    "source_issue": "Exact table identity inf.ait must be corrected by Architect to actual inf.ait_ait before real SQL receipts; no alias/no schema mutation.",
+    "source_issue_resolution": {
+      "status": "resolved by Architect",
+      "source_commit": "ae6f7284",
+      "format_json_sha_prefix": "8058e15e",
+      "format_md_sha_prefix": "288688bb",
+      "resolution": "Canonical exact table identity corrected from inf.ait to actual inf.ait_ait; historical finding retained. No schema/alias change."
+    },
+    "F6_append_only_metadata": {
+      "assertion": "UPDATE updated_at rejected42501 and exact JSONB row preserved after rollback-to-savepoint",
+      "existing_reason_update_and_delete": "unchanged",
+      "execution": "UNEXECUTED/schema-pending; no DB lease",
+      "pure89": "unchanged"
+    }
   }
 }
