@@ -98,3 +98,12 @@ BL-0002 through BL-0012 are resolved as measurement findings. Product/governance
 ## PR #202 — reconciliation with main
 
 The main decisions and round states are preserved. ADR-0050 and ADR-0051 are the current coverage/adoption identifiers; the old measurement slugs resolve through ADR-0035 redirects and aliases. Frozen reports retain their original identifiers and hashes. [Reconciliation and exact history custody](reports/pr202-reconciliation-20261019/reconciliation.md) preserves both evidence histories and documents native chronological proof recovery. The frozen scorecard is not a new measurement of the integrated main product tree; current Owner decisions remain those preserved from main.
+
+## Encerramento oficial — 2026-10-19
+
+Após autorização expressa do Owner, a integração do PR #202 e a atestação local
+foram registradas em `reports/closure-20261019/`. O runtime emitiu **PC-0022**,
+materializou o registro fechado e executou `round seal`; `round status` confirma
+`closed`. A avaliação permanece congelada em e9e45a4a, com resultado geral FAIL.
+BL-0013 a BL-0023 continuam abertos e inalterados; nenhuma correção de produto,
+release DETRAN ou nova medição do produto integrado faz parte do fechamento.
