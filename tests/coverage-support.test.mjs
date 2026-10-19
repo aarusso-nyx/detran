@@ -19,6 +19,7 @@ import {
   populationReporter,
   verifyExistingThresholds,
   workspacePopulation,
+  withExactLineCounters,
 } from './config/coverage-support.mjs';
 
 const directories = [];
@@ -69,6 +70,23 @@ test('rejects both missing source files and unexpected substitutes', () => {
     () => assertSourcePopulation(['a.ts', 'b.ts'], ['a.ts', 'other.ts']),
     /COVERAGE_SOURCE_POPULATION_MISMATCH.*b.ts.*other.ts/,
   );
+});
+test('counts a covered line once when multiple statements share it', () => {
+  const entry = coverage('/fixture.ts', 0);
+  entry.statementMap[1] = {
+    start: { line: 1, column: 5 },
+    end: { line: 1, column: 9 },
+  };
+  entry.statementMap[2] = {
+    start: { line: 2, column: 0 },
+    end: { line: 2, column: 4 },
+  };
+  entry.s[1] = 3;
+  entry.s[2] = 0;
+  const normalized = withExactLineCounters({ '/fixture.ts': entry });
+  assert.deepEqual({ ...normalized['/fixture.ts'].l }, { 1: 3, 2: 0 });
+  assert.deepEqual(normalized['/fixture.ts'].s, { 0: 0, 1: 3, 2: 0 });
+  assert.equal(entry.l, undefined);
 });
 test('emits original mapped JavaScript for the BOAT library configuration', async () => {
   const root = process.cwd();

@@ -13,7 +13,10 @@ import { createRequire } from 'node:module';
 import { dirname, join, matchesGlob, relative, resolve } from 'node:path';
 import istanbulCoverage from 'istanbul-lib-coverage';
 
-const { createCoverageMap } = istanbulCoverage;
+const { createCoverageMap, createFileCoverage } = istanbulCoverage;
+const coverageLibraryVersion = createRequire(import.meta.url)(
+  'istanbul-lib-coverage/package.json',
+).version;
 // Six complete Angular compiler programs plus the merged V8 coverage map exceed
 // Node's default heap. Keep at most two unchanged program contexts; evicted apps
 // rebuild from the same canonical configurations on the next transform.
@@ -183,6 +186,15 @@ export function assertSourcePopulation(expected, observed) {
     );
 }
 
+export function withExactLineCounters(report) {
+  return Object.fromEntries(
+    Object.entries(report).map(([file, entry]) => [
+      file,
+      { ...entry, l: createFileCoverage(entry).getLineCoverage() },
+    ]),
+  );
+}
+
 export function verifyExistingThresholds(root, report, policies) {
   const results = [];
   for (const policy of policies) {
@@ -309,8 +321,8 @@ export function populationReporter(
     onFinishedReportCoverage() {
       if (!collecting || !passed) return;
       try {
-        const bytes = readFileSync(reportPath),
-          report = JSON.parse(bytes);
+        let bytes = readFileSync(reportPath);
+        const report = JSON.parse(bytes);
         let testResults;
         if (testResultsFile) {
           const resultBytes = readFileSync(testResultsFile);
@@ -352,6 +364,10 @@ export function populationReporter(
           encoding: 'utf8',
         }).trim();
         if (commit !== candidate) throw new Error('COVERAGE_CANDIDATE_CHANGED');
+        const rawReportSha256 = sha256(bytes);
+        writeFileSync(join(dirname(reportPath), 'coverage-v8.json'), bytes);
+        bytes = Buffer.from(JSON.stringify(withExactLineCounters(report)));
+        writeFileSync(reportPath, bytes);
         mkdirSync(dirname(sidecar), { recursive: true });
         writeFileSync(
           sidecar,
@@ -370,6 +386,12 @@ export function populationReporter(
               declaredTestFiles: expected,
               executedTestFiles: executed,
               existingThresholdChecks: thresholds,
+              lineCounters: {
+                method: 'istanbul-lib-coverage.getLineCoverage',
+                version: coverageLibraryVersion,
+                rawReportPath: 'coverage/coverage-v8.json',
+                rawReportSha256,
+              },
               ...(testResults && { testResults }),
               binding: {
                 commit,
