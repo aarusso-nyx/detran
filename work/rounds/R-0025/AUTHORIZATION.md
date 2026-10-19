@@ -130,3 +130,12 @@ canonical fixture integrity through the existing store/helper; assert exact
 authorized client subsets and denials under closed T0 instead of unconditional
 all-row analyst access. No runtime, fixture JSON, role grant, threshold, skip/TODO,
 scorecard, S2 or merge authority follows. All other S1 boundaries remain.
+
+### P4-02-S1-A5 contract-operation census — Owner, 2026-10-19
+
+Owner answered “Approve A5 as written (recommended)” to
+reports/P4-02-S1-A5-contract-operation-census.md. Adds Inspector ownership only
+of tools/contracts/tests/check-commands.test.mjs for the exact fixed census
+258→329 (71 approved scoped replacements), explanatory comment and test title.
+All route/error, TEAT100 and malformed-input assertions remain. No runtime,
+contract, generator, threshold, scorecard, S2 or merge authority is added.

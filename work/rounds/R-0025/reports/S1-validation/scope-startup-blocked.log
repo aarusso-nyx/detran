@@ -1,0 +1,35 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/app@0.0.1 test:e2e /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/backend/app
+> DETRAN_TEST_TIER=e2e vitest run "tests/e2e/rait-p402-scope.e2e.spec.ts" "--hookTimeout=60000"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/backend/app
+
+ ❯ tests/e2e/rait-p402-scope.e2e.spec.ts (350 tests | 350 skipped) 60095ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/rait-p402-scope.e2e.spec.ts [ tests/e2e/rait-p402-scope.e2e.spec.ts ]
+Error: Hook timed out in 60000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ tests/e2e/rait-p402-scope.e2e.spec.ts:117:1
+    115|   return out;
+    116| }
+    117| beforeAll(async () => {
+       | ^
+    118|   assertDedicatedDatabaseEnvironment();
+    119|   env('DETRAN_LOCAL_TENANT_ID', RAIT_TENANT);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  350 skipped (350)
+   Start at  12:37:10
+   Duration  62.50s (transform 51.39s, setup 0ms, import 2.04s, tests 60.10s, environment 0ms)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/backend/app:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/app@0.0.1 test:e2e: `DETRAN_TEST_TIER=e2e vitest run "tests/e2e/rait-p402-scope.e2e.spec.ts" "--hookTimeout=60000"`
+Exit status 1
