@@ -349,6 +349,8 @@ export class DetranLocalTokenVerifier implements TokenVerifier {
           : {}),
       },
     };
+    if (!uuidOrNull(principal.id))
+      throw new ForbiddenException('TENANT_ACCESS_DENIED');
     return { principal, token };
   }
 }
@@ -369,7 +371,7 @@ export function detranTokenVerifier(): TokenVerifier {
       'STYNX_COGNITO_ISSUER is required when DETRAN_AUTH_MODE=cognito',
     );
   }
-  return new CognitoTokenVerifier({
+  const verifier = new CognitoTokenVerifier({
     issuer,
     audience: process.env.STYNX_COGNITO_AUDIENCE,
     jwksUri: process.env.STYNX_COGNITO_JWKS_URI,
@@ -395,6 +397,14 @@ export function detranTokenVerifier(): TokenVerifier {
       .map((claim) => claim.trim())
       .filter(Boolean),
   });
+  return {
+    async verifyAuthorizationHeader(value) {
+      const result = await verifier.verifyAuthorizationHeader(value);
+      if (!uuidOrNull(result.principal.id))
+        throw new ForbiddenException('TENANT_ACCESS_DENIED');
+      return result;
+    },
+  };
 }
 
 type HostnameDirectoryDatabase = Pick<Database, 'tx' | 'withSystemContext'>;
@@ -812,12 +822,7 @@ export class DetranTenantMembershipVerifier {
   /** Exige contexto de requisição ativo com `tenantId` = `tenantId`. */
   async isActiveMember(tenantId: string, actorId: string): Promise<boolean> {
     // D9: request staff identity is auth.users.id, never a raw external subject.
-    if (
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu.test(
-        actorId,
-      )
-    )
-      return false;
+    if (!uuidOrNull(actorId)) return false;
     const result = await this.executor.query<{ allowed: boolean }>(
       ACTIVE_MEMBERSHIP_SQL,
       [actorId, tenantId],
