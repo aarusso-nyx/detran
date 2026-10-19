@@ -1,0 +1,107 @@
+{
+  "role": "Engineer",
+  "scope": "pure risk and four-key parser only",
+  "checkpoint": "27d6ef7d",
+  "status": "SCOPED_RUNTIME_READY_WITH_INSPECTOR_FIXTURE_FINDING",
+  "files": {
+    "backend/domains/inf/deadlines/src/rait-risk.ts": "c23389a69456e6d67d453498a64cebdd5aff7076a67dfe9232c1a58320d553e4",
+    "backend/domains/inf/deadlines/src/index.ts": "f7e641382e91cf9bc6f7d1f2a5fff3e71b33e0558a5d6a40fd2cc4f9ca1f5533",
+    "tools/parameters/parser.mjs": "773478cee14260910c40b8fb774d1627b981765e45da97fe83b5d610abcedf59"
+  },
+  "results": [
+    {
+      "command": "pnpm --filter @detran/inf-deadlines test:unit",
+      "pass": 112,
+      "fail": 0,
+      "new_risk_tests": 89,
+      "existing_tests": 23,
+      "log": "engineer-pure-parser-logs/deadlines-unit.log"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-deadlines typecheck",
+      "status": "PASS",
+      "log": "engineer-pure-parser-logs/deadlines-typecheck.log"
+    },
+    {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "pass": 69,
+      "fail": 1,
+      "skip": 0,
+      "new_S2_R2_behavioral_cases_pass": 31,
+      "log": "engineer-pure-parser-logs/parameters.log"
+    },
+    {
+      "command": "pnpm exec prettier --check <three owned runtime files>",
+      "status": "PASS"
+    }
+  ],
+  "finding": {
+    "file": "tools/parameters/tests/generator.test.mjs",
+    "line": 262,
+    "issue": "Legacy legal-bases isolation fixture injects exact rait.ladder.B with raw 50/75/90 % and expects a string; approved S2-R2 requires rejecting that value.",
+    "recommendation": "Inspector should preserve the unrelated-default assertion using an unrelated fixture key or supply canonical typed B when testing B; no runtime fallback.",
+    "tests_edited": false
+  },
+  "not_run": [
+    "DB commands/tests (not authorized for this task)",
+    "CASE/WORKLIST/app/runtime acceptance",
+    "root pnpm check",
+    "devai:doctor",
+    "evidence verification (proofs unchanged)"
+  ],
+  "limitations": [
+    "Pure projection consumes already resolved reachedOn dates; it does not qualify SQL provenance or activate proposed policies.",
+    "Full parameter suite is not GREEN until Inspector resolves the source-backed legacy fixture finding."
+  ],
+  "preservation": "No Git/state/proof/test/source/scorecard/dependency/DDL/DB edits or commands; only three runtime files plus scoped report/logs.",
+  "final_epoch": {
+    "checkpoint": "9fd88a24 runtime candidate plus Inspector938c790c",
+    "status": "SCOPED_GREEN_NOT_FULL_S2_ACCEPTANCE",
+    "sparse_RED": {
+      "pass": 112,
+      "fail": 1,
+      "total": 113,
+      "log": "engineer-pure-parser-logs/sparse-provenance-red.log"
+    },
+    "correction": "Full sourceVersions iteration rejects each missing/hole/undefined element; no permissive fallback and opaque valid strings preserved.",
+    "inspector_test_sha256": "89658980f7bfa7e20a6895e4088f6c5c4b84b61112218f31f5bbe529b2d31919",
+    "pure_test_count": 90,
+    "runtime_sha256": "bf2584138d26b3e41ae4cd0f2bcb1b9c8e3ac4e3f8e35e099d77b0ff78fc83ec",
+    "results": [
+      {
+        "command": "pnpm --filter @detran/inf-deadlines test:unit",
+        "pass": 113,
+        "fail": 0,
+        "new_risk_tests": 90,
+        "existing_tests": 23,
+        "log": "engineer-pure-parser-logs/final-deadlines-unit.log"
+      },
+      {
+        "command": "pnpm --filter @detran/inf-deadlines typecheck",
+        "status": "PASS",
+        "log": "engineer-pure-parser-logs/final-deadlines-typecheck.log"
+      },
+      {
+        "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+        "pass": 70,
+        "fail": 0,
+        "skip": 0,
+        "log": "engineer-pure-parser-logs/final-parameters-70.log"
+      },
+      {
+        "command": "pnpm parameters:test",
+        "pass": 88,
+        "fail": 0,
+        "skip": 0,
+        "log": "engineer-pure-parser-logs/final-parameters-all.log"
+      },
+      {
+        "command": "pnpm exec prettier --check <three owned files>",
+        "status": "PASS",
+        "log": "engineer-pure-parser-logs/final-format.log"
+      }
+    ],
+    "fixture_finding_resolution": "Independent Inspector correction938c790c uses unrelated generic JSON fixture key; Engineer did not edit tests. Initial69/1 result retained above as history.",
+    "no_test_or_git_or_db_edits": true
+  }
+}
