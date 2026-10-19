@@ -1,23 +1,22 @@
 # Campanha C-0003: produto primeiro — prévia de frontend, jornadas verticais, endurecimento
 
-> **Replanning review, 2026-10-18:** [completion-plan proposal](../../COMPLETION-PLAN.md) reconciles main `e536e545`,
-> preserved branches and source decisions into one proposed remaining-work plan.
-> P1–P3 were approved by the Owner on 2026-10-18; see the appended amendment.
-> Implementation remains paused pending exact P4 packet approval. The records below retain their historical scope.
-> Scorecard work remains with its separate session.
+> **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
+> S1 security prerequisites integrated through #196–#203. R-0025/JW-01 remain open.
+> S2 is paused pending approval of its [exact backend-first packet](../rounds/R-0025/reports/P4-02-S2-approval-packet.md).
+> Scorecard evaluation/remediation and protected local/recovery work stay separate.
 
-> **Continuação atual — 2026-10-18:** R-0033 integrada por PR #191, fechada/selada
-> PC-0021. R-0025 retomada de `orchestra/rait-web-wiring` com A-C3-01, main
-> conciliada e admissibilidade integrada por PR #193 (e68266a0); pós-merge parcial,
-> audit YELLOW/43 UNKNOWN, sem promoção de readiness ou close/seal. Quatro tarefas de pré-trabalho preservadas.
-> Claim/instrução e aceitação integral permanecem pendentes; R-0022 segue parada.
-> R-0034/35 não são iniciadas. OD-C3-009 não é reaberta. A revisão 1 abaixo é
-> histórica; versões/dependências atuais estão no plano R-0025 A-C3-01.
+> **Continuação atual — 2026-10-19:** R-0033 fechada/selada PC-0021; R-0025
+> tem admissibilidade #193 e pré-requisito de segurança S1 #203 em main2df548e0.
+> Pós-merge exato registrado sem promoção de readiness. Proposta: S2 backend
+> risco/legado/claim atômico, depois S3 UI/dossiê sob aprovação separada; nenhuma
+> aceitação é removida. S2 pausada; R-0025/JW-01 abertas. R-0022 segue parada;
+> R-0034/35 não são iniciadas por este pacote. OD-C3-009 não é reaberta.
+> Os estados e tabelas de revisão anteriores permanecem históricos.
 
 **Autoridade:** Architect (Constitution Article 6). Revisão 1 de 2026-10-14, redigida a partir da
 diretiva do Owner que **parou** a R-0022 `stynx-sse-tenancy` (C-0002, ação 7c) na mesma data.
 **Status atual:** em execução; R-0033 integrada e encerrada, R-0025 retomada
-no recorte A-C3-01.
+com admissibilidade e S1 integrados; S2 aguarda aprovação.
 
 **Status histórico da revisão 1:** proposta com decisões OD-C3-001…006 tomadas,
 aguardando autorização para abrir R-0033; naquele momento nenhuma rodada estava aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo

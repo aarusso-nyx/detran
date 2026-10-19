@@ -1,10 +1,9 @@
 # HANDOFF PROMPT — DETRAN Monorepo Consolidation & New Apps (BOAT, RAIT, PORTAL, DASHBOARD)
 
-> **Replanning review, 2026-10-18:** [completion-plan proposal](../../../../COMPLETION-PLAN.md) reconciles main `e536e545`,
-> preserved branches and source decisions into one remaining-work baseline pending integration.
-> P1–P3 were approved by the Owner on 2026-10-18; see the campaign addenda.
-> Implementation remains paused pending exact P4 packet approval. The records below retain their historical scope.
-> Scorecard work remains with its separate session.
+> **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
+> S1 security prerequisites integrated through #196–#203. R-0025/JW-01 remain open.
+> S2 is paused pending approval of its [exact backend-first packet](../../../../work/rounds/R-0025/reports/P4-02-S2-approval-packet.md).
+> Scorecard evaluation/remediation and protected local/recovery work stay separate.
 
 > **Nota de leitura — reconciliação de 2026-10-18:** este handoff preserva a missão,
 > as decisões e os gates originais. Versões, caminhos e estado de execução são
