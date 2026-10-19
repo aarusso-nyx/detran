@@ -383,10 +383,13 @@ export class PreviewWorklistClient extends WorklistClient {
   private projectionPurpose(
     fixtures: RaitFixturesJson,
     caseId?: string | null,
-  ): 'S' | 'O' | 'M' | 'J' | 'T' {
+  ): 'S' | 'O' | 'M' | 'J' | 'T' | null {
     const item = fixtures.cases.find((candidate) => candidate.id === caseId);
-    if (item?.archived) return 'S';
+    if (caseId != null && !item) return null;
     const role = this.projectionState.role();
+    if (item?.archived) {
+      return role === 'AUDITOR' || role === 'rait-secretary' ? 'S' : null;
+    }
     if (role === 'rait-manager') return 'O';
     if (role === 'rait-secretary') return 'S';
     if (role === 'rait-analyst') {
@@ -405,7 +408,7 @@ export class PreviewWorklistClient extends WorklistClient {
       ].includes(role)
     )
       return 'J';
-    return 'S';
+    return null;
   }
 
   private readonly previewReader = inject(PreviewFixtureReader);
@@ -417,17 +420,21 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitUnitRead>> {
     return this.previewReader.list(query, UNIT_SPEC, (fixtures) =>
-      units(fixtures).map((record) =>
-        projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      units(fixtures)
+        .map((record) =>
+          projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitUnit(id: string): Promise<RaitUnitRead> {
     return this.previewReader.get('raitUnits', id, (fixtures) =>
-      units(fixtures).map((record) =>
-        projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      units(fixtures)
+        .map((record) =>
+          projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -435,17 +442,21 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitPoolRead>> {
     return this.previewReader.list(query, POOL_SPEC, (fixtures) =>
-      pools(fixtures).map((record) =>
-        projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      pools(fixtures)
+        .map((record) =>
+          projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitPool(id: string): Promise<RaitPoolRead> {
     return this.previewReader.get('raitPools', id, (fixtures) =>
-      pools(fixtures).map((record) =>
-        projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      pools(fixtures)
+        .map((record) =>
+          projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -453,23 +464,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitPoolMemberRead>> {
     return this.previewReader.list(query, POOL_MEMBER_SPEC, (fixtures) =>
-      poolMembers(fixtures).map((record) =>
-        projectRaitPoolMember(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      poolMembers(fixtures)
+        .map((record) =>
+          projectRaitPoolMember(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitPoolMember(id: string): Promise<RaitPoolMemberRead> {
     return this.previewReader.get('poolMembers', id, (fixtures) =>
-      poolMembers(fixtures).map((record) =>
-        projectRaitPoolMember(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      poolMembers(fixtures)
+        .map((record) =>
+          projectRaitPoolMember(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -477,23 +492,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitScheduleRead>> {
     return this.previewReader.list(query, SCHEDULE_SPEC, (fixtures) =>
-      schedules(fixtures).map((record) =>
-        projectRaitSchedule(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      schedules(fixtures)
+        .map((record) =>
+          projectRaitSchedule(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitSchedule(id: string): Promise<RaitScheduleRead> {
     return this.previewReader.get('raitSchedules', id, (fixtures) =>
-      schedules(fixtures).map((record) =>
-        projectRaitSchedule(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      schedules(fixtures)
+        .map((record) =>
+          projectRaitSchedule(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -501,23 +520,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitScheduleSlotRead>> {
     return this.previewReader.list(query, SCHEDULE_SLOT_SPEC, (fixtures) =>
-      scheduleSlots(fixtures).map((record) =>
-        projectRaitScheduleSlot(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      scheduleSlots(fixtures)
+        .map((record) =>
+          projectRaitScheduleSlot(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitScheduleSlot(id: string): Promise<RaitScheduleSlotRead> {
     return this.previewReader.get('raitScheduleSlots', id, (fixtures) =>
-      scheduleSlots(fixtures).map((record) =>
-        projectRaitScheduleSlot(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      scheduleSlots(fixtures)
+        .map((record) =>
+          projectRaitScheduleSlot(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -525,17 +548,21 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitBatchRead>> {
     return this.previewReader.list(query, BATCH_SPEC, (fixtures) =>
-      batches(fixtures).map((record) =>
-        projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      batches(fixtures)
+        .map((record) =>
+          projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitBatch(id: string): Promise<RaitBatchRead> {
     return this.previewReader.get('raitBatches', id, (fixtures) =>
-      batches(fixtures).map((record) =>
-        projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      batches(fixtures)
+        .map((record) =>
+          projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -543,23 +570,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitBatchItemRead>> {
     return this.previewReader.list(query, BATCH_ITEM_SPEC, (fixtures) =>
-      batchItems(fixtures).map((record) =>
-        projectRaitBatchItem(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      batchItems(fixtures)
+        .map((record) =>
+          projectRaitBatchItem(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitBatchItem(id: string): Promise<RaitBatchItemRead> {
     return this.previewReader.get('raitBatchItems', id, (fixtures) =>
-      batchItems(fixtures).map((record) =>
-        projectRaitBatchItem(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      batchItems(fixtures)
+        .map((record) =>
+          projectRaitBatchItem(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -567,23 +598,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitAssignmentRead>> {
     return this.previewReader.list(query, ASSIGNMENT_SPEC, (fixtures) =>
-      assignments(fixtures).map((record) =>
-        projectRaitAssignment(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      assignments(fixtures)
+        .map((record) =>
+          projectRaitAssignment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitAssignment(id: string): Promise<RaitAssignmentRead> {
     return this.previewReader.get('assignments', id, (fixtures) =>
-      assignments(fixtures).map((record) =>
-        projectRaitAssignment(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      assignments(fixtures)
+        .map((record) =>
+          projectRaitAssignment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -591,23 +626,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitImpedimentRead>> {
     return this.previewReader.list(query, IMPEDIMENT_SPEC, (fixtures) =>
-      impediments(fixtures).map((record) =>
-        projectRaitImpediment(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      impediments(fixtures)
+        .map((record) =>
+          projectRaitImpediment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitImpediment(id: string): Promise<RaitImpedimentRead> {
     return this.previewReader.get('impediments', id, (fixtures) =>
-      impediments(fixtures).map((record) =>
-        projectRaitImpediment(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      impediments(fixtures)
+        .map((record) =>
+          projectRaitImpediment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -615,23 +654,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitSubstituteDutyRead>> {
     return this.previewReader.list(query, SUBSTITUTE_DUTY_SPEC, (fixtures) =>
-      substituteDuties(fixtures).map((record) =>
-        projectRaitSubstituteDuty(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      substituteDuties(fixtures)
+        .map((record) =>
+          projectRaitSubstituteDuty(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitSubstituteDuty(id: string): Promise<RaitSubstituteDutyRead> {
     return this.previewReader.get('raitSubstituteDuties', id, (fixtures) =>
-      substituteDuties(fixtures).map((record) =>
-        projectRaitSubstituteDuty(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      substituteDuties(fixtures)
+        .map((record) =>
+          projectRaitSubstituteDuty(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -639,17 +682,21 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitBenchRead>> {
     return this.previewReader.list(query, BENCH_SPEC, (fixtures) =>
-      benches(fixtures).map((record) =>
-        projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      benches(fixtures)
+        .map((record) =>
+          projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitBench(id: string): Promise<RaitBenchRead> {
     return this.previewReader.get('raitBenches', id, (fixtures) =>
-      benches(fixtures).map((record) =>
-        projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
-      ),
+      benches(fixtures)
+        .map((record) =>
+          projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -657,23 +704,27 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitClockRead>> {
     return this.previewReader.list(query, CLOCK_SPEC, (fixtures) =>
-      clocks(fixtures).map((record) =>
-        projectRaitClock(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      clocks(fixtures)
+        .map((record) =>
+          projectRaitClock(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitClock(id: string): Promise<RaitClockRead> {
     return this.previewReader.get('clocks', id, (fixtures) =>
-      clocks(fixtures).map((record) =>
-        projectRaitClock(
-          record,
-          this.projectionPurpose(fixtures, record.case_id),
-        ),
-      ),
+      clocks(fixtures)
+        .map((record) =>
+          projectRaitClock(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -681,23 +732,41 @@ export class PreviewWorklistClient extends WorklistClient {
     query: ListQuery = {},
   ): Promise<ListPage<RaitClockAlertRead>> {
     return this.previewReader.list(query, CLOCK_ALERT_SPEC, (fixtures) =>
-      clockAlerts(fixtures).map((record) =>
-        projectRaitClockAlert(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      clockAlerts(fixtures)
+        .filter((record) =>
+          fixtures.clocks.some((clock) => clock.id === record.clock_id),
+        )
+        .map((record) =>
+          projectRaitClockAlert(
+            record,
+            this.projectionPurpose(
+              fixtures,
+              fixtures.clocks.find((clock) => clock.id === record.clock_id)
+                ?.caseId,
+            ),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
   override getRaitClockAlert(id: string): Promise<RaitClockAlertRead> {
     return this.previewReader.get('clockAlerts', id, (fixtures) =>
-      clockAlerts(fixtures).map((record) =>
-        projectRaitClockAlert(
-          record,
-          this.projectionPurpose(fixtures, undefined),
-        ),
-      ),
+      clockAlerts(fixtures)
+        .filter((record) =>
+          fixtures.clocks.some((clock) => clock.id === record.clock_id),
+        )
+        .map((record) =>
+          projectRaitClockAlert(
+            record,
+            this.projectionPurpose(
+              fixtures,
+              fixtures.clocks.find((clock) => clock.id === record.clock_id)
+                ?.caseId,
+            ),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
@@ -818,8 +887,9 @@ export class PreviewWorklistClient extends WorklistClient {
 
 function projectRaitUnit(
   record: RaitUnit,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitUnitRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitUnitRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     name: record.name,
@@ -833,8 +903,9 @@ function projectRaitUnit(
 
 function projectRaitPool(
   record: RaitPool,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitPoolRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPoolRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     name: record.name,
@@ -851,8 +922,9 @@ function projectRaitPool(
 
 function projectRaitPoolMember(
   record: RaitPoolMember,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitPoolMemberRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPoolMemberRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     pool_id: record.pool_id,
@@ -879,8 +951,9 @@ function projectRaitPoolMember(
 
 function projectRaitSchedule(
   record: RaitSchedule,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitScheduleRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitScheduleRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     pool_id: record.pool_id,
@@ -901,8 +974,9 @@ function projectRaitSchedule(
 
 function projectRaitScheduleSlot(
   record: RaitScheduleSlot,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitScheduleSlotRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitScheduleSlotRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     schedule_id: record.schedule_id,
@@ -916,8 +990,9 @@ function projectRaitScheduleSlot(
 
 function projectRaitBatch(
   record: RaitBatch,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitBatchRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBatchRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     pool_id: record.pool_id,
@@ -944,8 +1019,16 @@ function projectRaitBatch(
 
 function projectRaitBatchItem(
   record: RaitBatchItem,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitBatchItemRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBatchItemRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      batch_id: record.batch_id,
+      member_id: record.member_id,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -967,18 +1050,26 @@ function projectRaitBatchItem(
       batch_id: record.batch_id,
       member_id: record.member_id,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    batch_id: record.batch_id,
-    member_id: record.member_id,
-  };
+  return null;
 }
 
 function projectRaitAssignment(
   record: RaitAssignment,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitAssignmentRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitAssignmentRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      pool_id: record.pool_id,
+      member_id: record.member_id,
+      assigned_at: record.assigned_at,
+      released_at: record.released_at,
+      active: record.active,
+      claim_due_at: record.claim_due_at,
+      batch_id: record.batch_id,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1019,23 +1110,14 @@ function projectRaitAssignment(
       assigned_by: record.assigned_by,
       release_reason: record.release_reason,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    pool_id: record.pool_id,
-    member_id: record.member_id,
-    assigned_at: record.assigned_at,
-    released_at: record.released_at,
-    active: record.active,
-    claim_due_at: record.claim_due_at,
-    batch_id: record.batch_id,
-  };
+  return null;
 }
 
 function projectRaitImpediment(
   record: RaitImpediment,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitImpedimentRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitImpedimentRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     case_id: record.case_id,
@@ -1052,8 +1134,9 @@ function projectRaitImpediment(
 
 function projectRaitSubstituteDuty(
   record: RaitSubstituteDuty,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitSubstituteDutyRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitSubstituteDutyRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     session_id: record.session_id,
@@ -1068,8 +1151,9 @@ function projectRaitSubstituteDuty(
 
 function projectRaitBench(
   record: RaitBench,
-  _purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitBenchRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBenchRead | null {
+  if (purpose === null) return null;
   return {
     id: record.id,
     session_id: record.session_id,
@@ -1085,8 +1169,21 @@ function projectRaitBench(
 
 function projectRaitClock(
   record: RaitClock,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitClockRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitClockRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      clock_code: record.clock_code,
+      started_on: record.started_on,
+      ceiling_on: record.ceiling_on,
+      flag: record.flag,
+      flag_changed_at: record.flag_changed_at,
+      last_reset_at: record.last_reset_at,
+      legal_basis: record.legal_basis,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1123,23 +1220,23 @@ function projectRaitClock(
       last_reset_at: record.last_reset_at,
       legal_basis: record.legal_basis,
     };
-  return {
-    id: record.id,
-    case_id: record.case_id,
-    clock_code: record.clock_code,
-    started_on: record.started_on,
-    ceiling_on: record.ceiling_on,
-    flag: record.flag,
-    flag_changed_at: record.flag_changed_at,
-    last_reset_at: record.last_reset_at,
-    legal_basis: record.legal_basis,
-  };
+  return null;
 }
 
 function projectRaitClockAlert(
   record: RaitClockAlert,
-  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
-): RaitClockAlertRead {
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitClockAlertRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      clock_id: record.clock_id,
+      level: record.level,
+      raised_at: record.raised_at,
+      acknowledged_at: record.acknowledged_at,
+      incident_ref: record.incident_ref,
+    };
   if (purpose === 'O')
     return {
       id: record.id,
@@ -1171,12 +1268,5 @@ function projectRaitClockAlert(
       notified_role: record.notified_role,
       acknowledged_by: record.acknowledged_by,
     };
-  return {
-    id: record.id,
-    clock_id: record.clock_id,
-    level: record.level,
-    raised_at: record.raised_at,
-    acknowledged_at: record.acknowledged_at,
-    incident_ref: record.incident_ref,
-  };
+  return null;
 }
