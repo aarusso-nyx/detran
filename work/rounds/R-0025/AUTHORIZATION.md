@@ -55,3 +55,14 @@ superada exclusivamente para esse PR. Em seguida, literal do Owner:
 Autoriza observação exata, evidência parcial e atualização documental por PR;
 não autoriza close/seal, declaração de aceitação integral ou implementação da
 próxima fatia recomendada. As limitações e decisões pendentes continuam abertas.
+
+## Adenda pós-merge PR200 — Owner, 2026-10-19
+
+Mensagem direta: “Complete the post-merge evidence and audit for PR #200, then
+present the exact next P4-02 implementation slice for approval. Keep runtime
+paused and preserve local and scorecard work.”
+
+Autoriza observação exata não-promotora, evidência parcial por verbo e preparação
+documental por PR. P4-02-S1 permanece proposta: nenhum dispatch Inspector/Engineer,
+merge deste follow-up, fechamento de rodada ou implementação runtime está liberado.
+D1–D11 e o design integrado por PR200 permanecem aprovados; não são reabertos.
