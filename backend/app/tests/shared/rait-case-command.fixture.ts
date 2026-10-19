@@ -326,7 +326,9 @@ export class RaitCaseCommandFixture {
     );
   }
 
-  async enableAuditFailure(): Promise<void> {
+  async enableAuditFailure(
+    action?: 'INF_RAIT_COMMAND_REPLAY_BIND',
+  ): Promise<void> {
     await this.disableAuditFailure();
     await this.owner.query(
       `create sequence audit.r7_c3_audit_fail_probe_seq start 1`,
@@ -335,6 +337,7 @@ export class RaitCaseCommandFixture {
       `create function audit.r7_c3_force_write_failure() returns trigger
        language plpgsql as $fixture$
        begin
+         ${action ? "if NEW.action <> 'INF_RAIT_COMMAND_REPLAY_BIND' then return NEW; end if;" : ''}
          perform nextval('audit.r7_c3_audit_fail_probe_seq');
          raise exception 'R7_C3_FORCED_AUDIT_WRITE_FAILURE';
        end
