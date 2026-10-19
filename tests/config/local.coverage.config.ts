@@ -10,6 +10,12 @@ import {
 
 const root = resolve(import.meta.dirname, '../..');
 const population = workspacePopulation(root);
+const testResultsFile = resolve(
+  root,
+  '.devai/local/rounds/R-0036/coverage-runs',
+  `${Date.now()}-${process.pid}`,
+  'test-results.json',
+);
 const projects = [],
   policies = [],
   angular = [];
@@ -72,7 +78,12 @@ export default defineConfig({
     name: 'DETRAN full-source local unit coverage',
     projects,
     maxWorkers: 2,
-    reporters: ['default', populationReporter(root, population, policies)],
+    reporters: [
+      'default',
+      'json',
+      populationReporter(root, population, policies, testResultsFile),
+    ],
+    outputFile: { json: testResultsFile },
     coverage: {
       enabled: true,
       provider: 'v8',

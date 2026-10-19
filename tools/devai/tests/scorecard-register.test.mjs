@@ -52,6 +52,7 @@ function fixture() {
     registry,
     assessments,
     observations,
+    requiredKinds: registry.map((entry) => entry.kind),
     scorecard: { integration_head: commit, cells },
   };
 }
@@ -101,6 +102,7 @@ test('requires every registered sensor and an uninterrupted measurement capture'
     kind: 'missing_second_sensor',
     cells: [{ substrate: 'F1', property: 'T2' }],
   });
+  input.requiredKinds.push('missing_second_sensor');
   assert.throws(
     () => reconcileRegister(input),
     /Insufficient current evidence/,
@@ -118,6 +120,16 @@ test('requires every registered sensor and an uninterrupted measurement capture'
     () => reconcileRegister(interrupted),
     /Insufficient current evidence/,
   );
+});
+test('retains optional registered sensors without inventing a measurement requirement', () => {
+  const input = fixture();
+  input.registry.push({
+    kind: 'optional_remote_judge',
+    cells: [{ substrate: 'F1', property: 'T2' }],
+  });
+  const row = reconcileRegister(input)[0];
+  assert.equal(row.evaluation_disposition, 'measured');
+  assert.deepEqual(row.optional_unselected_sensors, ['optional_remote_judge']);
 });
 test('does not count a failed coverage producer as a measured line population', () => {
   const input = fixture(),

@@ -66,22 +66,26 @@ export function workspacePopulation(root) {
     ),
   );
   const roots = [...new Set(sourceRoots)].sort();
-  const sources = [
+  const allSources = [
     ...new Set(
       globSync(
         roots.map((dir) => `${dir}/**/*.ts`),
         { cwd: root },
       ),
     ),
-  ]
-    .filter(
-      (file) =>
-        !/\.(spec|test|d)\.ts$/.test(file) && !file.endsWith('/test-setup.ts'),
-    )
-    .sort();
+  ].sort();
+  const sources = allSources.filter(
+    (file) =>
+      !/\.(spec|test|d)\.ts$/.test(file) && !file.endsWith('/test-setup.ts'),
+  );
   if (!packages.length || !sources.length)
     throw new Error('COVERAGE_POPULATION_EMPTY');
-  return { packages, sourceRoots: roots, sources };
+  return {
+    packages,
+    sourceRoots: roots,
+    sources,
+    sourceExcludedFiles: allSources.filter((file) => !sources.includes(file)),
+  };
 }
 
 // Reuse Angular's existing JIT transformation through the compiler's emitter, so
@@ -213,13 +217,19 @@ export function verifyExistingThresholds(root, report, policies) {
   return results;
 }
 
-export function populationReporter(root, population, policies) {
+export function populationReporter(
+  root,
+  population,
+  policies,
+  testResultsFile,
+) {
   const reportPath = join(root, 'coverage/coverage-final.json'),
     sidecar = join(root, 'coverage/population.json');
   let ctx,
     modules = [],
     passed = false,
     expected = [],
+    expectedFiles = [],
     collecting = true,
     candidate;
   return {
@@ -235,7 +245,11 @@ export function populationReporter(root, population, policies) {
       }
     },
     async onTestRunStart() {
-      expected = (await ctx.globTestSpecifications([]))
+      const specifications = await ctx.globTestSpecifications([]);
+      expectedFiles = specifications
+        .map((spec) => relative(root, spec.moduleId))
+        .sort();
+      expected = specifications
         .map((spec) => `${spec.project.name}:${spec.moduleId}`)
         .sort();
     },
@@ -248,6 +262,25 @@ export function populationReporter(root, population, policies) {
       try {
         const bytes = readFileSync(reportPath),
           report = JSON.parse(bytes);
+        let testResults;
+        if (testResultsFile) {
+          const resultBytes = readFileSync(testResultsFile);
+          const result = JSON.parse(resultBytes);
+          if (
+            result.success !== true ||
+            result.numFailedTests !== 0 ||
+            result.testResults?.length !== modules.length
+          )
+            throw new Error('COVERAGE_TEST_RESULT_POPULATION_MISMATCH');
+          testResults = {
+            path: relative(root, testResultsFile),
+            sha256: sha256(resultBytes),
+            testsPassed: result.numPassedTests,
+            testsFailed: result.numFailedTests,
+            testsPending: result.numPendingTests,
+            testsTodo: result.numTodoTests,
+          };
+        }
         const measured = Object.keys(report)
           .map((file) => relative(root, file))
           .sort();
@@ -278,14 +311,17 @@ export function populationReporter(root, population, policies) {
               schemaVersion: '1.0.0',
               population: 'local',
               exclusions: coverageExclusions(root),
-              include: population.sourceRoots,
+              include: expectedFiles,
+              sourceRoots: population.sourceRoots,
               sourceFiles: measured,
+              sourceExcludedFiles: population.sourceExcludedFiles ?? [],
               filesMeasured: measured.length,
               testFiles: modules.length,
               workspacePackages: population.packages,
               declaredTestFiles: expected,
               executedTestFiles: executed,
               existingThresholdChecks: thresholds,
+              ...(testResults && { testResults }),
               binding: {
                 commit,
                 producer: {
