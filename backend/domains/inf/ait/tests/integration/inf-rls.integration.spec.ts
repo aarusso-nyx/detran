@@ -100,8 +100,8 @@ describe('inf database contract', () => {
         group by tables.table_schema, tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity
         order by tables.table_name`,
     );
-    // Tenant tables (98, closed DDL inventory plus five C4/C4-OD, six CTG-0002
-    // and two P4-02-S1 internal scope additions):
+    // Tenant tables (99, closed DDL inventory plus five C4/C4-OD, six CTG-0002
+    // and two P4-02-S1 internal scope additions plus one S2 legacy qualification):
     // ait (11), normative (7), measures (9), alcohol (6), rait-case (12: DDL 34, includes
     // rait_pending_content/rait_redirect/rait_draft v1.1.0; 17 after C4-OD), rait-worklist (13: DDL 35, includes
     // rait_unit/rait_schedule/rait_schedule_slot/rait_batch/rait_batch_item/rait_substitute_duty/
@@ -112,7 +112,7 @@ describe('inf database contract', () => {
     // tables in the schema.
     const tenantTables = result.rows.filter((row) => row.has_tenant_id);
     const referenceTables = result.rows.filter((row) => !row.has_tenant_id);
-    expect(tenantTables).toHaveLength(98);
+    expect(tenantTables).toHaveLength(99);
     expect(referenceTables).toHaveLength(10);
     const c4Tables = new Set([
       'rait_inquiry_document',
@@ -138,6 +138,20 @@ describe('inf database contract', () => {
     ]);
     expect(
       s1ScopeTables.every(
+        (row) =>
+          row.has_tenant_id &&
+          row.relrowsecurity &&
+          row.relforcerowsecurity &&
+          row.policy_count === '1' &&
+          row.trigger_count === '1',
+      ),
+    ).toBe(true);
+    const legacyQualification = tenantTables.filter(
+      (row) => row.table_name === 'rait_claim_legacy_qualification',
+    );
+    expect(legacyQualification).toHaveLength(1);
+    expect(
+      legacyQualification.every(
         (row) =>
           row.has_tenant_id &&
           row.relrowsecurity &&
