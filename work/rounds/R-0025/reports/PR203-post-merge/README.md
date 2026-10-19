@@ -17,6 +17,8 @@ baseline dispositions remain71 replacements,25 retained scoped methods and11
 removals. CI follow-up corrected four existing test fixtures (RLS table inventory,
 admission routing receipt, CTG2 direct-service scope and upgrade SQL inventory).
 Those repairs did not change runtime, SQL, permissions, thresholds or retries.
+ci-repairs.json records the four corrective commits, exact touched paths and
+final test hashes, with an explicit tests-only assertion.
 The final full remote backend run passed; earlier failures and rerun epochs remain
 preserved in the PR and S1 source/evidence records. No old report was rewritten to
 pretend it covered a later source epoch.
@@ -28,7 +30,9 @@ Main's146-record prefix and original S1 proof bytes were verified intact.
 
 ## Exact-merge observation, without readiness promotion
 
-Before drafting changes, `devai audit observe --at 2df548e0ac5227abb64b66994f675dea7ba36a5a
+Before drafting changes, the CLI invoked with `--as-role auditor`
+(the evidence-chain actor is devai-cli, actor_role=harness) ran
+`devai audit observe --at 2df548e0ac5227abb64b66994f675dea7ba36a5a
 --round R-0025 --as-role auditor --write` emitted `EV-ded4f5431f6737ad` and
 `SC-20261019T180026-001`. Canonical machine outputs are under
 `.devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/`.
@@ -68,3 +72,13 @@ ladder promotion, provider qualification, deployment, close or seal is inferred.
 The exact proposed packet is ../P4-02-S2-approval-packet.md. Until approval, no S2
 runtime/test task creation or dispatch occurs. Preserved branches, recovery patches,
 RC receipts, local configuration and independent scorecard work are retained.
+
+## Preserved S1 local task metadata
+
+The exact-merge observation's Git context includes untracked S1 TASK-0028…0031,
+backlog/worktree records and six expired S1 module locks. The committed source
+snapshot is exact2df548e0; the host checkout was not wholly clean. These files
+were preserved, not marked as managed completed or manually deleted. S2 preflight
+must truthfully reconcile custody/release through supported verbs and avoid ID/
+lock collisions before any separately approved registration. No task/lock/worktree
+cleanup occurs in this post-merge planning lane.

@@ -40,7 +40,9 @@ semantic drift or a new policy decision stops for a bounded amendment.
 ## Exact transport
 
 - GET `/v1/inf/rait/claim-context` / raitClaimContext under existing analyst claim
-  permission. Optional pool_id, separate pool/queue cursors and bounded limit(max50
+  permission: `@Resource('inf:rait-case') @Action('claim-next')`, preserving the
+  current analyst-only action. A read-only role must receive403, even if it can
+  read scoped merits. Optional pool_id, separate pool/queue cursors and bounded limit(max50
   from the accepted contract). Complete-set eligiblePoolCount; selection
   none/single/choice; selectedPoolId or null; paged pools `{id,name,instance,unit_id}`
   and queue metadata `{id,protocol_number,instance,state,protocolled_at,unit_id}`.
@@ -48,8 +50,8 @@ semantic drift or a new policy decision stops for a bounded amendment.
   authorized choice. Server scope/order precedes pagination; no merits, identities,
   client purpose/tenant/actor authority or incomplete500-row eligibility inference.
 - GET `/v1/inf/rait/cases/{id}/risk` / raitCaseRiskSnapshot, the typed current-risk operation
-  already specified by A1 §6, under the existing scoped CASE read permission and
-  S1 parent/purpose predicate. RaitRiskSnapshot contains asOf/today, applicability,
+  already specified by A1 §6, using `@Resource('inf:rait-case') @Action('read')`
+  plus the existing S1 parent/purpose predicate. RaitRiskSnapshot contains asOf/today, applicability,
   applicable clocks' flags/ceilings, worstFlag and sourceVersions. No raw input source references, persisted clock falsely represented as fresh,
   or partial full-entity cast.
 - Existing POST `/v1/inf/rait/pools/{id}/claim-next` / raitPoolClaimNext: strict `{}`,
@@ -90,6 +92,10 @@ semantic drift or a new policy decision stops for a bounded amendment.
    tenant/case/version-bound with verified admission/distribution/pool/assignment
    refs and reviewer/authorization provenance per ADR0048. Missing, stale or
    contradictory classification blocks CLAIM_LEGACY_UNVERIFIED409 without merits.
+   Selected-pool claim-context GET uses the same complete qualified ordering and
+   also returns CLAIM_LEGACY_UNVERIFIED409 for an unresolved in-scope legacy row;
+   never a successful degraded page. This transcribes ADR0048's identical pool/
+   context qualification and safe ordered-set boundary, not a new grant.
    An explicit trusted hold may exclude only its row and preserves operational
    visibility. No automatic backfill/recovery, guessed reviewer or public CRUD.
 6. POST re-evaluates risk/eligibility inside its locked transaction. Serialize
@@ -143,12 +149,34 @@ runtime grant or implicit permission to edit colocated tests.
   FORCE/policy/trigger assertions; preserve all10 reference tables and existing
   cross-tenant protections. No other table-count relaxation is authorized. Parameter tests may add
   exact A/C and normalized B/D assertions without changing other inputs. No skipped
-  tests, removed sentinels, timeout increase or gate relaxation.
+  tests, removed sentinels, timeout increase or gate relaxation. The existing
+  CTG2 structural E2E spec is explicitly Inspector-owned only to qualify its
+  transaction-scoped pool/legacy fixture if needed; retain manifest/draw/assignment/
+  timer/ETag assertions and rollback. No new production grant or changed draw rule.
 
 No frontend runtime/test/preview edit, shared policy grant, WORKLIST command
 activation, workflow/CI runner change, sibling, pin, law reference-signal or
 scorecard policy/tool/input edit is authorized. Read-only regression execution is
 allowed. A required extra path stops for explicit bounded approval before editing.
+
+## Preserved lifecycle and legacy harness disposition
+
+S1's untracked TASK-0028…0031 records, backlog entries, six expired module locks
+and registered task worktrees remain in custody. They describe external execution
+checkpoints, not fabricated managed-provider finish evidence. Before any approved
+S2 registration, inspect/reconcile that state through supported DEVAI verbs, avoid
+ID/lock reuse, and preserve recovery lineage. If supported release/disposition
+cannot be completed truthfully, stop before dispatch; never hand-delete or mark
+S1 tasks completed just because PR203 merged. This proposal performs no lifecycle
+mutation and does not authorize destructive worktree cleanup.
+
+`createWorklistCommandRuntime` and its fixture-only claim branch are read-only
+legacy harness material: current references occur only in WORKLIST unit/integration
+tests, not the mounted CASE HTTP claim path. Their DISTRIBUIDO-only/WIP-first model
+is not the canonical S2 contract and cannot prove new selector acceptance. Preserve
+those sentinels byte-identically; decisive S2 HTTP+DB tests own the real contract.
+If that harness or its tests must change, stop for a bounded amendment rather than
+silently creating a second live claim implementation or weakening old assertions.
 
 ## Role sequence and decisive acceptance
 
@@ -165,11 +193,12 @@ Required real HTTP+PostgreSQL proof includes:
 - Earlier protocol→triage→human checklist→admit succeeds, then new claimv+2;
   qualified legacyv+1; exact assignment, two-versus-one stages, ETag, audit/outbox.
 - Zero/one/multiple pools; complete counts beyond a page; unauthorized/inactive/
-  revoked pools; same-unit other-pool isolation; cursor/pool input cannot grant scope.
+  revoked pools; read-only-role claim-context403; same-unit other-pool isolation; cursor/pool input cannot grant scope.
 - Every risk ladder boundary/applicability/timezone/source-version case; missing
   source beyond first page blocks whole selection; NULL and deterministic ties;
   priority and worst-clock order; impeded cases skipped without disclosure.
-- Missing/stale/contradictory legacy proof, preserve-assigned and explicit hold;
+- Missing/stale/contradictory legacy proof409 on both selected-pool GET and POST,
+  preserve-assigned and explicit hold;
   wrong tenant/parent/version; required incident provider/provenance503; no guessed
   classifications, successful partial queues or unsafe fallback.
 - Competing analysts on one case, same-member competing claims/WIP, scope/revocation

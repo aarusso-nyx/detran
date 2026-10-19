@@ -5,6 +5,29 @@
 > S2 is paused pending approval of its [exact backend-first packet](../../../work/rounds/R-0025/reports/P4-02-S2-approval-packet.md).
 > Scorecard evaluation/remediation and protected local/recovery work stay separate.
 
+## R-0025 — atualização pós-merge #203, 2026-10-19
+
+- **Integrado:** admissibilidade #193 e S1 escopo/projeção/parent/replay #203,
+  merge2df548e0; não é JW-01/CP-01 ou rodada concluída.
+- **Implementação pendente:** S2 risco/legado/contexto/claim atômico; proposta
+  backend-first aguarda aprovação exata. S3 UI/dossiê/browser e restauração tipada
+  dos detalhes A2 continuam obrigatórios, sem dispatch autorizado.
+- **Aguardando integração:** recibos pós-merge, projeções atualizadas e proposta
+  documental deste follow-up; não há implementação S2 aguardando merge.
+- **Registros superados:** banners de candidato S1/PR203 ainda pendente e decisões
+  D1–D11 abertas são históricos; decisões aprovadas não são reabertas.
+- **Dependências adiadas:** bindings/identidade, ladders executáveis, inventário e
+  disposições de legado, fontes relógio/calendário/incidente e qualificação real.
+  Não equivalem a defaults de produção ou redução da aceitação integral.
+- **Follow-up CI separado:** workflow trusted-local-RC39298941092 falhou por tag
+  protegida ausente e resumo ausente; DETRAN CI39298941118 passou e publicou
+  verified-local-rc via backend completo. Não declarar atestação local assinada ou
+  todos os workflows verdes; tratar o fluxo de tag/resumo antes de depender dele
+  como evidência de release. Sem reparo de workflow/política neste pacote.
+
+Recibos e limites em [PR203 pós-merge](../../../work/rounds/R-0025/reports/PR203-post-merge/README.md).
+Scorecard/R-0036, limiares e trabalho local permanecem separados.
+
 ## Reconciliação em 2026-10-18 — fila de execução atual
 
 **Autoridade:** Architect; reconciliação solicitada pelo Owner nesta sessão. Esta seção
