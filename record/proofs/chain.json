@@ -1,5 +1,5 @@
 {
-  "head": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e",
+  "head": "68e78a080c3e4d2d9d446054311715295e420e229abb529b8fee5bccf2bfe8eb",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -8358,6 +8358,110 @@
       "manifest_hash": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e",
       "sequence": 148,
       "previous_hash": "0a23309906f1d08ae2ab177fc0c0e798eaecc37af7daf86abb84b7007c683a95"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-3751088b544129ca",
+      "timestamp": "2026-10-19T20:19:16.874Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "sense.readings.record",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Development/.codex/worktrees/pr202-reconcile/detran",
+        "git": {
+          "head_sha": "3272521de5c11dadb6071f769078c922cb58d78e",
+          "dirty_files": [
+            "work/rounds/R-0037/reports/app-unit.log",
+            "work/rounds/R-0037/reports/baseline-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/canonical-build.log",
+            "work/rounds/R-0037/reports/compatibility-probe.cjs",
+            "work/rounds/R-0037/reports/compatibility-probe.log",
+            "work/rounds/R-0037/reports/disposable-runtime-e2e.log",
+            "work/rounds/R-0037/reports/disposable-runtime-summary.json",
+            "work/rounds/R-0037/reports/doctor.log",
+            "work/rounds/R-0037/reports/frozen-install.log",
+            "work/rounds/R-0037/reports/initial-disposable-reset-refused.log",
+            "work/rounds/R-0037/reports/initial-probe-metadata-error.log",
+            "work/rounds/R-0037/reports/initial-stale-database-attempt.log",
+            "work/rounds/R-0037/reports/lockfile-scope.json",
+            "work/rounds/R-0037/reports/preservation-baseline.json",
+            "work/rounds/R-0037/reports/security-scan-reading.json",
+            "work/rounds/R-0037/reports/security-scan.stderr",
+            "work/rounds/R-0037/reports/security-scan.stdout"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": ".devai/state/sensor-readings/security_scan/SR-0633d2afcf0126e7.json",
+          "sha256": "70702506e452b7b30e1cfb2fde7642ab3d08339373084cd9cbbaeff71358c5ac",
+          "kind": "sensor-reading"
+        }
+      ],
+      "notes": [
+        "sensor-reading id: SR-0633d2afcf0126e7; kind: security_scan; sha256: 70702506e452b7b30e1cfb2fde7642ab3d08339373084cd9cbbaeff71358c5ac"
+      ],
+      "previous_run_hash": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e",
+      "manifest_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8",
+      "sequence": 149,
+      "previous_hash": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-6a88cfb77ac4c189",
+      "timestamp": "2026-10-19T20:21:15.783Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "evidence.record.generic",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Development/.codex/worktrees/pr202-reconcile/detran",
+        "git": {
+          "head_sha": "3272521de5c11dadb6071f769078c922cb58d78e",
+          "dirty_files": [
+            "record/proofs/chain.json",
+            "record/proofs/work/generic/R-0037.jsonl",
+            "work/rounds/R-0037/reports/app-unit.log",
+            "work/rounds/R-0037/reports/baseline-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/candidate-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/canonical-build.log",
+            "work/rounds/R-0037/reports/compatibility-probe.cjs",
+            "work/rounds/R-0037/reports/compatibility-probe.log",
+            "work/rounds/R-0037/reports/delivery.md",
+            "work/rounds/R-0037/reports/dependency-audit-comparison.json",
+            "work/rounds/R-0037/reports/disposable-runtime-e2e.log",
+            "work/rounds/R-0037/reports/disposable-runtime-summary.json",
+            "work/rounds/R-0037/reports/doctor.log",
+            "work/rounds/R-0037/reports/frozen-install.log",
+            "work/rounds/R-0037/reports/initial-disposable-reset-refused.log",
+            "work/rounds/R-0037/reports/initial-probe-metadata-error.log",
+            "work/rounds/R-0037/reports/initial-stale-database-attempt.log",
+            "work/rounds/R-0037/reports/lockfile-scope.json",
+            "work/rounds/R-0037/reports/manifest.json",
+            "work/rounds/R-0037/reports/persisted-security-scan-reading.json",
+            "work/rounds/R-0037/reports/preservation-baseline.json",
+            "work/rounds/R-0037/reports/preservation-result.json",
+            "work/rounds/R-0037/reports/security-scan-reading.json",
+            "work/rounds/R-0037/reports/security-scan.stderr",
+            "work/rounds/R-0037/reports/security-scan.stdout",
+            "work/rounds/R-0037/reports/sense-record-receipt.json",
+            "work/rounds/R-0037/reports/validation.json"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "round_id=R-0037",
+        "proof_sequence=1"
+      ],
+      "proof_path": "record/proofs/work/generic/R-0037.jsonl",
+      "proof_sequence": 1,
+      "proof_sha256": "ee724c1bf1133d854ec31e8f187f2972f0df33c4fa564e509a1d73037b9fec07",
+      "previous_run_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8",
+      "manifest_hash": "68e78a080c3e4d2d9d446054311715295e420e229abb529b8fee5bccf2bfe8eb",
+      "sequence": 150,
+      "previous_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8"
     }
   ]
 }
