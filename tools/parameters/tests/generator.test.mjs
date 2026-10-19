@@ -712,3 +712,295 @@ test('dado literais em tests, dist e node_modules quando verificar uso entÃ£o sÃ
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+// S2-R2: canonical catalogue values are typed objects; proposal is not activation.
+for (const clockCode of ['A', 'B', 'C', 'D']) {
+  test(`S2-R2 ladder ${clockCode} is a typed exact source object with preserved status`, async () => {
+    const model = await parseCatalogue(approvedCatalogue);
+    const rows = model.entries.filter(
+      (row) => row.key === `rait.ladder.${clockCode}`,
+    );
+    assert.equal(rows.length, 1);
+    const row = rows[0];
+    assert.equal(typeof row.value_json, 'object');
+    assert.notEqual(row.value_json, null);
+    assert.deepEqual(Object.keys(row.value_json).sort(), [
+      'clockCode',
+      'schemaVersion',
+      'sourceRef',
+      'tracks',
+      'unit',
+    ]);
+    assert.equal(row.value_json.schemaVersion, 1);
+    assert.equal(row.value_json.clockCode, clockCode);
+    assert.equal(
+      row.status,
+      ['A', 'C'].includes(clockCode) ? 'proposta' : 'vigente',
+    );
+    const expected = {
+      A: [
+        'days',
+        [
+          [
+            180,
+            [
+              ['ALERTA_N1', 90],
+              ['ALERTA_N2', 135],
+              ['CRITICO', 162],
+            ],
+          ],
+          [
+            360,
+            [
+              ['ALERTA_N1', 180],
+              ['ALERTA_N2', 270],
+              ['CRITICO', 324],
+            ],
+          ],
+        ],
+        'WF-RAIT-002#4.3',
+      ],
+      B: [
+        'months',
+        [
+          [
+            24,
+            [
+              ['ALERTA_N1', 12],
+              ['ALERTA_N2', 18],
+              ['ALERTA_N3', 21],
+              ['CRITICO', 23],
+            ],
+          ],
+        ],
+        'WF-RAIT-002#4.1',
+      ],
+      C: [
+        'months',
+        [
+          [
+            36,
+            [
+              ['ALERTA_N2', 24],
+              ['ALERTA_N3', 30],
+              ['CRITICO', 33],
+            ],
+          ],
+        ],
+        'WF-RAIT-002#4.2',
+      ],
+      D: [
+        'months',
+        [
+          [
+            60,
+            [
+              ['ALERTA_N1', 30],
+              ['ALERTA_N2', 45],
+              ['CRITICO', 54],
+            ],
+          ],
+        ],
+        'DT-030',
+      ],
+    }[clockCode];
+    assert.deepEqual(row.value_json, {
+      schemaVersion: 1,
+      clockCode,
+      unit: expected[0],
+      tracks: expected[1].map(([ceiling, steps]) => ({
+        ceiling,
+        steps: steps.map(([flag, after]) => ({ flag, after })),
+      })),
+      sourceRef: expected[2],
+    });
+  });
+}
+
+const invalidS2Ladders = [
+  ['malformed JSON', () => '{broken'],
+  ['array', () => []],
+  ['string payload', (value) => JSON.stringify(value)],
+  ['extra field', (value) => ({ ...value, active: true })],
+  ['schema version', (value) => ({ ...value, schemaVersion: 2 })],
+  ['wrong clock', (value) => ({ ...value, clockCode: 'D' })],
+  ['wrong unit', (value) => ({ ...value, unit: 'months' })],
+  ['missing source', (value) => ({ ...value, sourceRef: '' })],
+  [
+    'duplicate track',
+    (value) => ({ ...value, tracks: [...value.tracks, value.tracks[0]] }),
+  ],
+  [
+    'invented A N3',
+    (value) => ({
+      ...value,
+      tracks: [
+        {
+          ...value.tracks[0],
+          steps: [...value.tracks[0].steps, { flag: 'ALERTA_N3', after: 150 }],
+        },
+        value.tracks[1],
+      ],
+    }),
+  ],
+  [
+    'changed threshold',
+    (value) => ({
+      ...value,
+      tracks: [{ ...value.tracks[0], ceiling: 181 }, value.tracks[1]],
+    }),
+  ],
+  [
+    'step extra field',
+    (value) => ({
+      ...value,
+      tracks: [
+        {
+          ...value.tracks[0],
+          steps: [
+            { ...value.tracks[0].steps[0], guess: true },
+            ...value.tracks[0].steps.slice(1),
+          ],
+        },
+        value.tracks[1],
+      ],
+    }),
+  ],
+];
+for (const [label, mutate] of invalidS2Ladders) {
+  test(`S2-R2 rejects ${label} for exact ladder key`, async () => {
+    const text = await readFile(approvedCatalogue, 'utf8');
+    const line = text
+      .split('\n')
+      .find((value) => value.includes('`rait.ladder.A`'));
+    assert.ok(line);
+    const raw = line
+      .split('|')[3]
+      .trim()
+      .replace(/^`|`$/g, '')
+      .replaceAll('\\"', '"');
+    const value = mutate(JSON.parse(raw));
+    const encoded = label === 'malformed JSON' ? value : JSON.stringify(value);
+    const directory = await mkdtemp('/tmp/detran-s2-ladder-');
+    try {
+      const source = join(directory, 'catalogue.md');
+      const cells = line.split('|');
+      cells[3] = ` \`${encoded}\` `;
+      await writeFile(source, text.replace(line, cells.join('|')));
+      await assert.rejects(parseCatalogue(source), /rait\.ladder\.A/);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+}
+
+test('S2-R2 unrelated JSON key retains pre-S2 string semantics and other defaults are identical', async () => {
+  const text = await readFile(approvedCatalogue, 'utf8');
+  const directory = await mkdtemp('/tmp/detran-s2-unrelated-');
+  try {
+    const source = join(directory, 'catalogue.md');
+    await writeFile(
+      source,
+      text.replace('`rait.ladder.A`', '`rait.fixture.json_default`'),
+    );
+    const original = await parseCatalogue(approvedCatalogue);
+    const changed = await parseCatalogue(source);
+    const unrelated = changed.entries.find(
+      (row) => row.key === 'rait.fixture.json_default',
+    );
+    assert.equal(typeof unrelated.value_json, 'string');
+    assert.deepEqual(JSON.parse(unrelated.value_json), {
+      schemaVersion: 1,
+      clockCode: 'A',
+      unit: 'days',
+      tracks: [
+        {
+          ceiling: 180,
+          steps: [
+            { flag: 'ALERTA_N1', after: 90 },
+            { flag: 'ALERTA_N2', after: 135 },
+            { flag: 'CRITICO', after: 162 },
+          ],
+        },
+        {
+          ceiling: 360,
+          steps: [
+            { flag: 'ALERTA_N1', after: 180 },
+            { flag: 'ALERTA_N2', after: 270 },
+            { flag: 'CRITICO', after: 324 },
+          ],
+        },
+      ],
+      sourceRef: 'WF-RAIT-002#4.3',
+    });
+    const omitFixture = (entries) =>
+      entries
+        .filter(
+          (row) =>
+            !['rait.ladder.A', 'rait.fixture.json_default'].includes(row.key),
+        )
+        .map(({ line: _line, source: _source, ...row }) => row);
+    assert.deepEqual(
+      omitFixture(changed.entries),
+      omitFixture(original.entries),
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+for (const clockCode of ['B', 'C', 'D']) {
+  for (const [label, mutate] of [
+    ['schema version', (value) => ({ ...value, schemaVersion: 2 })],
+    ['foreign clock identity', (value) => ({ ...value, clockCode: 'A' })],
+    ['unknown top-level field', (value) => ({ ...value, guessed: true })],
+    [
+      'duplicate flags',
+      (value) => ({
+        ...value,
+        tracks: [
+          {
+            ...value.tracks[0],
+            steps: [...value.tracks[0].steps, value.tracks[0].steps[0]],
+          },
+        ],
+      }),
+    ],
+    [
+      'altered threshold',
+      (value) => ({
+        ...value,
+        tracks: [
+          {
+            ...value.tracks[0],
+            steps: value.tracks[0].steps.map((step, index) =>
+              index === 0 ? { ...step, after: step.after + 1 } : step,
+            ),
+          },
+        ],
+      }),
+    ],
+  ]) {
+    test(`S2-R2 ladder ${clockCode} rejects ${label}`, async () => {
+      const text = await readFile(approvedCatalogue, 'utf8');
+      const line = text
+        .split('\n')
+        .find((value) => value.includes(`\`rait.ladder.${clockCode}\``));
+      assert.ok(line);
+      const cells = line.split('|');
+      const raw = cells[3].trim().replace(/^`|`$/g, '').replaceAll('\\"', '"');
+      cells[3] = ` \`${JSON.stringify(mutate(JSON.parse(raw)))}\` `;
+      const directory = await mkdtemp('/tmp/detran-s2-four-ladders-');
+      try {
+        const source = join(directory, 'catalogue.md');
+        await writeFile(source, text.replace(line, cells.join('|')));
+        await assert.rejects(
+          parseCatalogue(source),
+          new RegExp(`rait\\.ladder\\.${clockCode}`),
+        );
+      } finally {
+        await rm(directory, { recursive: true, force: true });
+      }
+    });
+  }
+}

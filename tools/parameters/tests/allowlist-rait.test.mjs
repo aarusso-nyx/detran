@@ -192,3 +192,24 @@ test('dado um arquivo .ts com "rait.screens.painel.title" e a tabela real (já a
     await rm(temporarySource.directory, { recursive: true, force: true });
   }
 });
+
+for (const clock of ['A', 'B', 'C', 'D']) {
+  test(`S2 ladder ${clock} source label remains distinct from operational activation`, async () => {
+    const model = await parseCatalogue(realCatalogue);
+    const entries = model.entries.filter(
+      (entry) => entry.key === `rait.ladder.${clock}`,
+    );
+    assert.equal(entries.length, 1);
+    assert.equal(entries[0].value_type, 'json');
+    assert.equal(
+      entries[0].status,
+      ['A', 'C'].includes(clock) ? 'proposta' : 'vigente',
+    );
+    assert.equal(entries[0].source_pending, false);
+    assert.equal(entries[0].decision_ref, clock === 'D' ? 'DT-030' : 'H.54');
+    assert.ok(
+      entries[0].decision_tokens.includes(clock === 'D' ? 'DT-030' : 'OD-006'),
+    );
+    assert.equal(Object.hasOwn(entries[0], 'activation_receipt'), false);
+  });
+}
