@@ -16,11 +16,13 @@ Thresholds não relaxam. Provas, selos e arquivos históricos nunca são reescri
 | ------ | --------------- | --------------------------------------------------------------------------------------------- | ----------------------------- |
 | C2     | R-0038          | Ferramentas e Angular compatíveis; auditoria completa, sem resíduos críticos/altos conhecidos | C1 integrado                  |
 | C3     | R-0039          | Exportação fiel de autorização, contexto e seis rotas públicas; negativos efetivos            | Fontes de política existentes |
-| C4     | R-0040          | Registro de dados pessoais com fontes, finalidade, retenção e lacunas nomeadas                | C3 e blueprints               |
+| C4     | R-0039          | Registro de dados pessoais com fontes, finalidade, retenção e lacunas nomeadas                | C3 e blueprints               |
 | C5     | R-0041          | Modelo de ameaças e contratos normalizados de segurança/robustez                              | C3/C4                         |
-| C6     | R-0042          | Vínculos reais dos sete invariantes e entrypoint compatível                                   | Medições existentes           |
-| C7     | R-0043          | Ações e concorrência da CI; geração oficial e verificações intactas                           | Provedor compatível           |
-| C8     | R-0044          | Compatibilidade histórica aditiva, erros explícitos e recuperação de fontes                   | Selos e provas preservados    |
+| C6     | R-0041          | Vínculos reais dos sete invariantes e entrypoint compatível                                   | Medições existentes           |
+| C7     | R-0041          | Ações e concorrência da CI; geração oficial e verificações intactas                           | Provedor compatível           |
+| C8     | R-0041          | Compatibilidade histórica aditiva, erros explícitos e recuperação de fontes                   | Selos e provas preservados    |
+
+C3/C4 compartilham uma frente com aceites separados na R-0039; C5–C8 compartilham a R-0041. R-0040 e R-0042–R-0044 eram propostas de alocação, não rodadas abertas.
 
 O reparo de formato do índice terminal, ADR-0053, foi necessário ao fechamento oficial do C1 e antecipa somente essa dependência de C8. PR207 ainda deve passar na CI antes de integração. Não se afirma que a R0037 já está encerrada na main enquanto seu PR não integrar.
 
