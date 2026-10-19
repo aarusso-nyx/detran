@@ -304,6 +304,18 @@ function scenarioPort(
   const query = vi.fn(
     async (rawSql: string, values: readonly unknown[] = []) => {
       const sql = rawSql.toLowerCase().replace(/\s+/g, ' ').trim();
+      // S1 unit-boundary fixture: canonical active identity is explicit.
+      // Real complete-purpose SQL/RLS remains covered by the HTTP+DB sensors.
+      if (sql.includes('from auth.users u join auth.memberships'))
+        return {
+          rows:
+            values[0] === TENANT && values[1] === ACTOR ? [{ id: ACTOR }] : [],
+        };
+      if (sql.includes('from auth.memberships'))
+        return {
+          rows:
+            values[0] === TENANT && values[1] === ACTOR ? [{ id: MEMBER }] : [],
+        };
       if (sql.startsWith('select request_fingerprint')) {
         const saved = replay.get(String(values[1]));
         return {
@@ -534,24 +546,44 @@ async function caseSubject(state: string, instance: string, role: string) {
     engine,
     factory,
     trust,
-    service: Reflect.construct(RaitCaseCommandService, [
-      port.database as never,
-      {
-        hasActiveContext: () => true,
-        snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
-        tenantContext: {
-          current: () => ({ tenantId: TENANT, actorId: ACTOR, roles: [role] }),
+    service: (() => {
+      const service = Reflect.construct(RaitCaseCommandService, [
+        port.database as never,
+        {
+          hasActiveContext: () => true,
+          snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
+          tenantContext: {
+            current: () => ({
+              tenantId: TENANT,
+              actorId: ACTOR,
+              roles: [role],
+            }),
+          },
         },
-      },
-      factory,
-      trust,
-      {
-        capture: vi.fn(() => ({
-          now: () => new Date(NOW),
-          today: () => '2026-09-14',
-        })),
-      },
-    ]) as InstanceType<typeof RaitCaseCommandService>,
+        factory,
+        trust,
+        {
+          capture: vi.fn(() => ({
+            now: () => new Date(NOW),
+            today: () => '2026-09-14',
+          })),
+        },
+      ]) as InstanceType<typeof RaitCaseCommandService>;
+      const execute = service.execute.bind(service);
+      service.execute = (request) => {
+        const authenticated = {
+          ...request,
+          principal: {
+            id: ACTOR,
+            roles: [role],
+            permissions: [],
+            tenants: [TENANT],
+          },
+        };
+        return execute(authenticated);
+      };
+      return service;
+    })(),
   };
 }
 
@@ -593,18 +625,38 @@ async function inquirySubject(
     engine,
     factory,
     trust,
-    service: Reflect.construct(RaitInquiryCommandService, [
-      port.database as never,
-      {
-        hasActiveContext: () => true,
-        snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
-        tenantContext: {
-          current: () => ({ tenantId: TENANT, actorId: ACTOR, roles: [role] }),
+    service: (() => {
+      const service = Reflect.construct(RaitInquiryCommandService, [
+        port.database as never,
+        {
+          hasActiveContext: () => true,
+          snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
+          tenantContext: {
+            current: () => ({
+              tenantId: TENANT,
+              actorId: ACTOR,
+              roles: [role],
+            }),
+          },
         },
-      },
-      factory,
-      trust,
-    ]) as InstanceType<typeof RaitInquiryCommandService>,
+        factory,
+        trust,
+      ]) as InstanceType<typeof RaitInquiryCommandService>;
+      const execute = service.execute.bind(service);
+      service.execute = (request) => {
+        const authenticated = {
+          ...request,
+          principal: {
+            id: ACTOR,
+            roles: [role],
+            permissions: [],
+            tenants: [TENANT],
+          },
+        };
+        return execute(authenticated);
+      };
+      return service;
+    })(),
   };
 }
 
