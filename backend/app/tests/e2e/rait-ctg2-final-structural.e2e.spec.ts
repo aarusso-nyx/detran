@@ -69,6 +69,14 @@ describe('CTG-0002 final structural corrections', () => {
         [TENANT, SECRETARY, '00000000-0000-7000-8000-000020000002'],
       );
       await client.query(
+        `insert into inf.rait_case_pool_scope
+           (tenant_id, case_id, pool_id, active, authorization_ref, source_ref)
+         values ($1,$2,$3,true,'ctg2-final-structural','seed20:batch-1-case-18')
+         on conflict (tenant_id,case_id,pool_id)
+         do update set active = true`,
+        [TENANT, CASE, '00000000-0000-7000-8000-000020000002'],
+      );
+      await client.query(
         `delete from inf.rait_assignment
           where tenant_id = $1 and case_id = $2 and active`,
         [TENANT, CASE],
