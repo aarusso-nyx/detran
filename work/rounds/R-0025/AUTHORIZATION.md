@@ -139,3 +139,21 @@ of tools/contracts/tests/check-commands.test.mjs for the exact fixed census
 258→329 (71 approved scoped replacements), explanatory comment and test title.
 All route/error, TEAT100 and malformed-input assertions remain. No runtime,
 contract, generator, threshold, scorecard, S2 or merge authority is added.
+
+## PR203 merge and post-merge planning — Owner, 2026-10-19
+
+Direct instruction:
+
+> Check CI on PR #203, fix any failures, and merge once all required checks are green. Keep S2 paused and preserve local and scorecard work.
+
+PR203 merged178addd6 as2df548e0 with all five required checks green. This supersedes
+the earlier no-merge boundary only for that PR and preserves every S2 exclusion.
+Subsequent direct instruction:
+
+> Complete the post-merge evidence and audit for PR #203, refresh R-0025’s planning records, and present the exact S2 packet for approval. Keep S2 paused and preserve local and scorecard work.
+
+Authorizes exact non-promoting audit, partial evidence and planning/review packet.
+It does not approve S2 or its recommended backend-first sequencing. No S2 task
+creation, RED authoring, Engineer dispatch, implementation, merge, close/seal or
+scorecard modification follows. The proposal and closed owned paths are in
+reports/P4-02-S2-approval-packet.md and reports/P4-02-S2-owned-paths.json.

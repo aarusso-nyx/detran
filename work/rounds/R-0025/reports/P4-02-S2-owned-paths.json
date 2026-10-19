@@ -1,0 +1,1256 @@
+{
+  "packet": "P4-02-S2",
+  "status": "PROPOSED_NOT_AUTHORIZED",
+  "baseline": "2df548e0ac5227abb64b66994f675dea7ba36a5a",
+  "architect_sources": [
+    {
+      "path": "docs/framework/arch/parameter-catalogue.md",
+      "exists_at_baseline": true,
+      "sha256": "2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+      "exists_at_baseline": true,
+      "sha256": "1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-RAIT-WORKLIST-001.json",
+      "exists_at_baseline": true,
+      "sha256": "d64b808c363287ff59a68d90dcc41991994d835a49117d5a16e61314f2edd48b"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+      "exists_at_baseline": true,
+      "sha256": "0a10022aa509d7e6205770939afccf6f1cb126894b78875f25dd6dface691181"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.commands.openapi.json",
+      "exists_at_baseline": true,
+      "sha256": "94e23f0aa146e94dbc963e48a0f0a7eb38b7c7ebd6602e48180541c32e1cf59a"
+    }
+  ],
+  "engineer_handwritten": [
+    {
+      "path": "backend/app/src/app.module.ts",
+      "exists_at_baseline": true,
+      "sha256": "4d013e69e4c176e0df71e22f2c2fa1cdb1a2af35a4263ecbd76d54788db04600"
+    },
+    {
+      "path": "backend/app/src/rait-risk.providers.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/database/ddl/19-rait-case-scope-enforce.sql",
+      "exists_at_baseline": true,
+      "sha256": "49c70fa93e3ecef4b8ff27057d3ebbf799b5ddb68326ee4a605121ccd0f5a990"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/src/index.ts",
+      "exists_at_baseline": true,
+      "sha256": "c07c0b3707301955860481c34167f05fce1466b1fc38b9b20c3b888957a47f98"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/src/rait-risk.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/index.ts",
+      "exists_at_baseline": true,
+      "sha256": "ebe669b793c32059eb04b028533fd548bb15b320cd921dfd4c1f8ff5e9ce1983"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-commands.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "a0536efbcef420f014434578518ba48e262dd061c36c56bed7a636f054cd6ba7"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-pool-scope.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "0b9a9ff0cf1a5e9b981e6422920598d79125cd35616ff0d9a1ab978175528d56"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.controller.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.service.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "0b318015667cc14450e06756d5ac4e76dc8d7b01241fbd9bf223f65215571a4e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.controller.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-legacy-qualification.service.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/handwritten/index.ts",
+      "exists_at_baseline": true,
+      "sha256": "55415dd67a5994fe1760369ae2d49650355c40ebef537907504a33fe3bfeb5e3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/handwritten/rait-risk-projection.service.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    }
+  ],
+  "inspector": [
+    {
+      "path": "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "c42ee3b3d0286c7124631b80081fad0f7b3ad55d1b563f9fdde4d50bde3a6eab"
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "f02803fdad189387cf5228b2520d02befc5883be0501c02cad90bd695603ad2f"
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "16a8aa8346598197fe3388dc2d0ea9aab06aaac0e2afd401d6318e079e72a247"
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "8f035d7ec0a15d38f4ba28d2ada36661e5f256d1217788def5d570f53855f642"
+    },
+    {
+      "path": "backend/app/tests/shared/rait-case-command.fixture.ts",
+      "exists_at_baseline": true,
+      "sha256": "6e423b63b2d015eb8ca7d5c68380573358a77668fc8cce7cfb2f80d6371dfa9c"
+    },
+    {
+      "path": "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts",
+      "exists_at_baseline": true,
+      "sha256": "b696830b535b09f9db8f2a5655e4885720c4d293e48e3205aaa3c3d3c21f3b3c"
+    },
+    {
+      "path": "backend/app/tests/shared/rait-p402-claim.fixture.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "87f73e869b7affa44e03a874798572ee74c0579111851a0811e2e9bc2f4053a6"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-command-contract.integration.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "554f794b8182f9691e614822cc8e82a468888d8f4600c830db317572f4febbaa"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.fixture.ts",
+      "exists_at_baseline": true,
+      "sha256": "13fcc5ed8dfbd030c2d6b32b5b955a5878fe658915e627e72042a77cd51e46a9"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.integration.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "d0cc0a3bf20f99558dd0fe3664e283f9d46aa7742e6f32bda3c1c2c448485a28"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-p402-claim-transaction.integration.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "0c82c1a9f94a11e81f800c4af08f1ea135735dcf0fe629dd6811ee9831892855"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "1730636414e0140ba4f72609c3ba1a698d3a2d5b9231251bfb059aa85bede54b"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "f573323d764c4eb0536363f89525afd44860f6bf9eec4ae6e25f40d26d4468d3"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "c9458526874af49959ec25f4e3c1da57ff4b80e03e49563c982dfb786f8b2fcc"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-di-c4.spec.ts",
+      "exists_at_baseline": true,
+      "sha256": "a7718a8749b996283267c7ec0e9b6b55b6a779ee2fdfb847da6804188fe39637"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-risk.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-claim-context.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-legacy-qualification.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/tests/unit/rait-risk-projection.spec.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "tools/contracts/tests/check-commands.test.mjs",
+      "exists_at_baseline": true,
+      "sha256": "f28eac2e7d3ef8edf3c5802079935b82a2af655f8bb684e11f73810a47a96388"
+    },
+    {
+      "path": "tools/parameters/tests/allowlist-rait.test.mjs",
+      "exists_at_baseline": true,
+      "sha256": "fba6acf13bff0141da0d13ae5b9b93cd83d0cb78bef0ca5fec00a9a2e61c4ea3"
+    },
+    {
+      "path": "tools/parameters/tests/generator.test.mjs",
+      "exists_at_baseline": true,
+      "sha256": "6259b9f0c24a77d3d283b09af84a79bad1c2ae82c95b258bd26d3ba95fbdbd05"
+    }
+  ],
+  "generated_existing_envelope": [
+    {
+      "path": "backend/app/src/generated/parameter-flags.ts",
+      "exists_at_baseline": true,
+      "sha256": "8bcae688eac857a8faea6ad085d25d0dea2ddc374bdbd6d9ce2cdc01d4e86419"
+    },
+    {
+      "path": "backend/database/ddl/34-inf-rait-case.sql",
+      "exists_at_baseline": true,
+      "sha256": "22c99259e906d5ac24a945f0076bcec32dbcdfb92564871046df96fda4a6a73e"
+    },
+    {
+      "path": "backend/database/ddl/35-inf-rait-worklist.sql",
+      "exists_at_baseline": true,
+      "sha256": "e44840b004e9857f1af2e51e8700b1d68eb714ee26b0ffe6434023cc6876bdf0"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "exists_at_baseline": true,
+      "sha256": "e6fd77fe2753d62c149f35a48846afdd5a613b2e3b7412e0400ced65516b85b0"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/package.json",
+      "exists_at_baseline": true,
+      "sha256": "c3722cfdbb74a1a1b3c653fb6439b7d815b50905e5383232fd8a6dd09bff2b9f"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-admissibility.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "537d0ceb9e934724a2b5df864cb7fde28871e3d38ceb90b858d8094f6bfb5190"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-event.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "4e1478451e8b7a791f194eea40a09cb95c5f9973f4e212e4e337688b66e4da88"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-pool-scope-record.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "d02119debd833d27fcec3019bd5580a93536c6b2c9526ca8a597e232fca2157a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-read-scope.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "e3d76b79eb4e84f30cdc98ba47c1e928f8e318fe064bc724bd0826c07371b36d"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "4ea9cf5caf5d59dd23464afe684b7cc4f01637f86ab6859cec6eafb96b54131e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-communication.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "50eb21a5efe412e6c9fd98ed06c39cbd7209d1b86d01af8ec914c2408268d3f5"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-deadline.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "509ee8b6597eb84b7162a217da9f632aeac690035b1d613734002276b97917dd"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-decision.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "fc951abf41ea70d3289037229c734546818e2a3120fa180f59d139a548b75ac5"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-document.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "c09d9a2e081b07f18a833219777e6e700d6263267b162e07c023b43631806148"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-draft.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "dad50ff035e6be78495196d981d2c607867de6fe4038501fd684ed52b5eb3ec9"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-inquiry-document.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "d56bd0e921c53b5b7f7891e27ec715f263130d54f5e16163eeccd920d05b702e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-inquiry.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "234a43bb6e8d001ab7f842c6691de5c3da299f07c52be66b1a48f1ec0b24d142"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-party.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "f85d30ce6003f0b6820430c1436f08e51bf1be8026f3df2549e134a822ef6c63"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-pending-content.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "274102a297f82f8731b15e485945024a2d070ffafd8b72d1815b532b40931cae"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-pending-document.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "bc72435ed6ce4d5d29ccd45280f2322742538fa2be7186d45415fc4a02e155ef"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-priority-assessment.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "ff9d6055892f84b32495203d13df52bf8ad3fa8422ba6acf5dd10aa5415e0293"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-priority-basis.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "fe03dafe74b617cc39d39c366c2d250945e619025998412c94e0d907151d8f92"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-redirect.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "130ee9dd3a1d2c959ba51c731c40cfd5b3ba3d2e7d8841a43112c8c6ab108d7e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-withdrawal-attestation.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "e1a4e6fef53ecf93c918c7d529a100f31d0da14b075a174f2a9444a174a85476"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-admissibility.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "4f68269bd52b69d870447dfb6248f4602a54d35e38d5774513eac49fcf08ce33"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-event.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "e1f5a1eb4d896246e8cd07ee20fe7aa3d187c626900e6ff966ca07e70b9684ff"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-pool-scope-record.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "22489e2d6cdd0849c94a92821fcd982a2301977b479804962f60fde42a3662a2"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-read-scope.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "2e5a5f85a0d828ef4844bcb668a51c167b241d62bbf6434a298aa033e06fdc87"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "820832858d1d420d90b8a886f380caa0db7aca672539b57aadc79a686f481b9d"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-communication.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "2034c71d07465494d84896887984f51cd31316041f36a2eccb5f0b0128232942"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-deadline.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "a52d80cbd06ddccbca45fe93f2389ac209a4253eb669d5f275a6d5bf0444ea12"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-decision.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "bf2cb7cfe396587e292fc792e0c6108d3f257db85029a1f0984318a151b5475e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-document.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "7bd6f5caacef1e5c0ba040c92027722831fc5fc7290058e1432a816815eb4bb8"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-draft.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "3eacde611fba020a26fe91a70717185f98e6a63561c65b96679dba2c95df9ec0"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-inquiry-document.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "3142c301883ecef83be08c48879e771a121d50e591b980839e873e4acad15d96"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-inquiry.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "507af2a655c72e9673310bba31cd15b26e35f3b9735edb08daaa6bb0522392a1"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-party.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "67451a497fdcde4d95c7512ed82a6ee5ebfe054d2605578c067f051788d29e8b"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-pending-content.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "ad99ab3f2e8e43fafc305e9e7403cfa66d22796898aa7ab67377ac81bc5b6491"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-pending-document.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "d20e1bc58f3505dd22ebb445be812122e5a9bab4ddf7a6b27132ffc024c876d4"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-priority-assessment.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "01a64be072c608bede59cecfcf66826f88dab0fdedc31c4a1c9180312bbf7be4"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-priority-basis.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "1b2c81cbaf09b8f9e415b133861f24df49023d2f5094bb33e0a274fe783739f5"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-redirect.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "8fe29c090f7fd3ebffea5f2f758b3a4ba70d96844381bec513cd7af1651530c7"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-withdrawal-attestation.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "453372d28b1c74d7552935f23489871f024703259001002925b9eb704a06656e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-admissibility.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "2b52978a53069c1c2f5050a43c7262a5f6752b2012df0f66cc247ee91506c909"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-event.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "307f712b63d402b09627ee5e9dd7de1cab8b5e9d96cb58d572e5ebb2d395a27e"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-pool-scope-record.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "5df35e5e29f503629f55632f7eef2bb647a3806e857433699527fb883f76a504"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-read-scope.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "ac13f751eac0d824888c88fcf5ccba7e31cd6d7d473267180717368b66dd5e71"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "82f0d32ddd71541c2d7c47b336fc9e6c4abe5e890020b0d95dddecb71c227d72"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-communication.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "ccc74478471b5a57fde13c68b8ac4b4af148c1d9da58a79d00e8c0b09b8de9cb"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-deadline.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "e8eba0f72cdb3bb79eb167ea93e3c5c69b18284ec60563f7999885f1778c50e7"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-decision.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "f5134d7cdb86fb726487c23a388e91ab0278341964d85c22ca8becd81e84e81a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-document.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "943bce1b0a4c3895dad56a3d361c20286567e8dc933eeccbd908d1ca72c4b1de"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-draft.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "841fe40860ebdb892d5074047b3d11a407729ce5e801eaeb71e3fb18e5d81b18"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-inquiry-document.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "e8fa2dfef827255d2f41d1f877b2b7fe4ee15748cd694157e278accffa5b91c6"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-inquiry.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "02b16cf9881e6a7fe84e0d503c8fc68d340becabb804aa0911342670419852ca"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-party.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "bb809caeccd7253cdf53ff5352f6c38e48d58bcad0c18ac3a931c395fe97b9da"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-pending-content.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "6611d815cd7502d7b34bb1c984e02bff40cec5a411e6835514278dfb7ad47812"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-pending-document.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "753302207ddc9d578d462955f04540f95dcba347f754817f445fcf1efb0f8f69"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-priority-assessment.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "f71dac2a82f51fd53d4111a4465ddebe8b0393fb0aada76caa193812e52f5bf6"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-priority-basis.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "c21522e19fb09d5f47e38470c969a7a9c26c32f87a44741c6dcb497495410909"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-redirect.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "6bc3a9d6dfa421994310e0a4ce7dc27b2bb778e0d7698c81a5f56cb6d26135a5"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-withdrawal-attestation.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "2ef21ff2095259da1770a334889236756129ce6538da703e54e31388597086e9"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/index.ts",
+      "exists_at_baseline": true,
+      "sha256": "02ce74f3843a9d53d224cba3287ba1065353ad5641134e55ebd9529b1ea0b0ee"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/rait-case.module.ts",
+      "exists_at_baseline": true,
+      "sha256": "6611368c1e9cf40d63772bff2cbeccc72fbf18647d3e9b4189ef5698834bb3ee"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-admissibility.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "971069ea80f540d1f38443e5323f61dca99a65f49eae129a9aa416d30dfd3b9f"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-event.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "46ab8bf34f516c80d96a447f0ac6a1393426b1b559e9425934dcf0f82dcca7ea"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-pool-scope-record.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "7ec5779726b0078faee08e7ed201733d1475f202cbd09c09383123838c7b7112"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-read-scope.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "207f4d32a53e241cdac2f171a6759a2b8d9609e961872a4e55bd3dfe3c9419b7"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "5540d626f791027c504bcf3ca98896ecdfc347512fa219d5b257f5ed7047900a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-communication.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "f09d2aae18fa20ce8131d10eb59cddfa525db6606283b5bcb4eb0d901a923583"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-deadline.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "1a5041c40fadfec57d1fc3c1d7281d0998833f5eb82220b3ac4dc6a7a54c80e1"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-decision.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "c5d725b436a1475418ebaf0971a8902d8888b37e97135300abeb95538ec72dea"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-document.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "92aa4ddfd33ff3152e01feb93999769b3420d013bd6f805c9dc7a7690872cdd5"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-draft.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "a5cd6b10e5c31e244fcd0c048b75b1676249dfaaea32f31f4418aa4a89dfb465"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-inquiry-document.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "8886d08cc041bc9db59d40a4e9a2f9ee14a37ecbf3ccb637f857aa409bf4a2d9"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-inquiry.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "662e1961e4750408df24f9e6ecef84702c94a081d70a39077073aab732787914"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-party.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "70fe43b45464498817b15e5904e91f5c336f580ed16d112097a48b020800e45a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-pending-content.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "853ad03f876776c1d733c4ecf3c5e34487841e6395c22735ff95866027a6af9b"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-pending-document.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "cb61951efe19ec94553529a605ef73de2e52ab710a92f2e3da80d2930eb59f57"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-priority-assessment.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "582259cac19876f751d0b275299a39f5418e8aa493fc4f7a6493c926cb5b2ceb"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-priority-basis.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "827e7cec7253eadadbafe003d46962eb43747966a50bf90c1119a814a36a23fd"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-redirect.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "8b8ede5d56e5016701abd9c4c98d2e876adc390f20bf0950617a82b16992cd2c"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-withdrawal-attestation.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "f1b8f96c6634a647f5e9fd2a05119f74cefca3ffc1c33f30702fff6eb80e8240"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-admissibility.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "74eef7d69f2140295e5698a34ea0877a116693a889f501a0cfb1e3af24134df3"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-event.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "6a30f09a42bfcafa637eb4090f7948d4a4b0a265f8f4446cbaa0c7fa07093aeb"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-pool-scope-record.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "194452e0991a6dd7650e97ff2d4d523f9a1dd1d116274dee825177136baeaf3b"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-read-scope.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "cd0b2c0468a07331aeee6960dd8e8294bf3f66bb1b334b8f6695db1c139d7f6c"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "fbafec458160887c19e52dc1d0b089ed9e4a7996fea1790f6ec591e8be78a3ee"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-communication.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "218929d7c6b432b4e5acca4e07c59b50e608fd9afff8240e9e8228de9a398161"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-deadline.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "bde39a2b38dc42bb11506030c738fe447b6945f60ddb4b83398e0733197ccfba"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-decision.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "ea697944e7d0684705b806ddf5599e6a98aff20141e174df58c54913caaea6d9"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-document.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "f5a9de0625bbc7293079a6914842efc4d438398d4dc035c9f0f64b9060b0eb9a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-draft.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "50b325e161563943a5d191d378801547ee5a24da7e51db325af93f7f19f47592"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-inquiry-document.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "472ff27945b192c8790b11dd74b92fa80036826a568f752ca9b29bc30770d92a"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-inquiry.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "37f0fa312f58e240c971e7feb6164bcf72ac21e6a19c93bf01eb4773eeb35db2"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-party.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "b15b982702a8898e7f3d90d815b23d01cc659459dd493d4c6de14e957a0af926"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-pending-content.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "631e999ca43b8332397b02081b38ba6b5376e1df43cefc6ced1fcc263f0e9246"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-pending-document.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "344852400c989d7d4c8a5debca66e2bdb98629d5cca153148de220d19d819ac0"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-priority-assessment.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "9305b7fe75ffafc916256e0c1e6335194481da357b57b5f45be2c22b493bd06d"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-priority-basis.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "a576c3b2f190004f848504d78d367f45dd5657f868b03342655908b4e6fe0a67"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-redirect.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "87da4972d6a25fb13e863d5c8195ae37c60e4c3bfae28877668b485dc1528789"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-withdrawal-attestation.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "518811e02278c928111dcf54cb4b7455b509951c2207d0d6c314212b7ea3d3bb"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tsconfig.build.json",
+      "exists_at_baseline": true,
+      "sha256": "5a3235c0c2c2c62f2a76fb694b9808ea6c56be56525067164482c7aaf585b27d"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tsconfig.json",
+      "exists_at_baseline": true,
+      "sha256": "cd804a68e6e99255b8401285c2f7aea89d094378440daf13fbe5a6c175ec103d"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/vitest.config.ts",
+      "exists_at_baseline": true,
+      "sha256": "34be8592f2c514bd09ce5f3a6a070afb04f28b3767605703efbffcefb0037988"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/package.json",
+      "exists_at_baseline": true,
+      "sha256": "98eaa6ceecb2f5424231894394ed5561a0a5c052fda6dcfd92130103c0077df1"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-assignment.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "e714821ec074ac2864b4ccc9781d9ef8dfe28de705fc298141d81fd906e65611"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-draw-snapshot.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "adc314474e13e8eb69cd5722fcb136eb3f856ae9d5b81f864a5ee474ed8577a3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-item.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "4659319d36486efc541719c8c0401b8883a345acc9a4da39b8e6cd6ab4136aa3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-minutes-manifest.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "d4d270012aba816de9b6c84bbc32f22cb84ce2ab53125e06d5e51d1188a635cf"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "c11dea84531a5976a9a55452f83e1c744955bcda1bbdc97c95f39f4ba8e2e6ba"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-bench.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "92be7c7c1add2e1b2e8c2f1f249473af2f3efd737a7e647bcdaf44573bc061f3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-clock-alert.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "62e6b88c9c211da7a3e7001c4c899aecca8a7c6ef1dc4992e924d4173c10eb3b"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-clock.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "8e6c50353204dae608b35c2aab14c45a92398a345bb2008a5d91dc5da5121288"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-impediment.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "3c7498d9d577848b2711822f203e2e81ae015622f3a6f777086011e799b2611e"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-pool-member.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "e183d1ba8d8cc0cf120a40f0956601150875348b182a3521006a56f771d5995c"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-pool.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "4719c0a85f3aacddefdfe581c88b7292bc106f60318006145805887cca945dbe"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-schedule-slot.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "e2df1e21c31adc8ced81ed47531ed74fe601312315e1aa2e980066b9729eeaf1"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-schedule.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "a4d10ddfcfecfaef7d930ac81ecc0a555ddd0861f22be791d9061160f44440ac"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-substitute-duty.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "c01c95a8f1ead224907b7f7644f57f47e0577d651139852631efeb91da738758"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-unit.controller.ts",
+      "exists_at_baseline": true,
+      "sha256": "0348dd55d50579ed3ef24ff1128e66d4c1fb89f73e6b27b0760bed4f24385e1d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-assignment.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "e637bfddfb3b640d4e7317f93789a722854b328f07d359537db2735eb83cb436"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-draw-snapshot.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "d24dd971d60b2a2985aa58492883729d42838d4169485adaaf306a6a015d919c"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-item.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "78f0daff17e9541f0f1d6441c56641492f35e6c57aae51068be68eccd8dc9734"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-minutes-manifest.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "7ae28b7d92cf95a7ef84b389cfcc3b94c8c7d8c66ee82baf9980b0e95d306945"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "0c3f6f9950738eaa68f2a85876b4db0ac8b76dcf537f93c9b586c60b5dd16df0"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-bench.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "e5fd02708f8d08b84df54a863a669c24540cc96ab96a43e9eb4c593a3951e2d3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-clock-alert.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "e164384f47a1afbc258d0bab86658850227e772b0d5c1cddd634bdb0646571de"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-clock.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "6da5a80d8bb0608b841f03885fdcbe5800abbec7d04b6737928c13edf7f2fbf8"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-impediment.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "60050632bf1778b86c885aa40dd34263113fced84f994ab9b9648ed4edf8077b"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-pool-member.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "f16f7295e7a47b21042c546f52698baca35451c43bae471fe90539493e86d4cb"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-pool.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "8d0755ab7fa80c1f9a76ba094b85b664d38447b738e0193e413e0bf369f06c82"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-schedule-slot.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "46bb9e8be33d9d34505f9cc8db6dfd6216fe8b5876616ba884e96c45e83f9843"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-schedule.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "a0ee9e6082fb9ab5176dee8ccc85cb772b3b239081882264b8bd3e3a0aef7ee6"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-substitute-duty.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "6b5f39f2f2ef865184723338cc9a7a161a3d0c98057f4fe2bc58e24054ed0bdd"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-unit.dto.ts",
+      "exists_at_baseline": true,
+      "sha256": "1b62b1d8362cec78a7165d8bbaf7a63c946712d20810c5478425ea94f4b50f7f"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-assignment.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "66eb2edf9f3b925362e33add0d7609caf4b93ac3d76cfe497655c25c8943f1fc"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-draw-snapshot.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "968609e989acbca8e49feb29543dcccf851b4fd20cc936fdd6e29c0bef21d300"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-item.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "d1d7a1707e65b6df8ea11bcfeea6ecaba240f6b3ee3d3163a1d16fc3fed2c42f"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-minutes-manifest.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "747b857370af5cb1ec7514c6fa5a8cc5f79192ffcbd43c08c1fad5ae96f81baa"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "5204fb2ce1114ae08bd69ec16751d12869768f062be0c9587835299e70bee2b3"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-bench.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "799549e3927f25fadda144941f17a8f426e24928c1115cc9fa9bf7635eea171f"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-clock-alert.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "6a10cb40b1d3bc4c4fa77e24de8ff8514ca8955eafae6168169e10478882880c"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-clock.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "df7d7fc6614b981bc30b3e62345d8741fa824372d899697971906c2e4cee508b"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-impediment.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "d96df987339361baf83780ffd1fd03d3912129aa469611484fc7a01e46dc18ee"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-pool-member.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "84f0a8a05bb33d8223a58ca39fd086f5c4115b3afa83d9b46c3c74d9b0fbfd8d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-pool.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "36dafc3782dc0d13febe8c6b15a85241a14edf87e0ee68c3a00d30f4b2e0dad9"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-schedule-slot.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "2c600c51216babaab92b13b2ad4ccf527979353fab9c229f92f3521cb345bfa9"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-schedule.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "2fd206d8fb97ff5cd61b00b47d70b36090c6500c1dcac08f7bee6b218decd8d9"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-substitute-duty.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "4d2d2a839d9c034d9876df5bbcb512f45b38c8c2df6f2a626b628eadf2043c0b"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-unit.entity.ts",
+      "exists_at_baseline": true,
+      "sha256": "d0639aca6a0c085bc3a5eb5856af32f91eede88aa8898833ecbfa355c4e5dae0"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/index.ts",
+      "exists_at_baseline": true,
+      "sha256": "73b000b238e00da228d51158e17c54fd3bf26801b8e89702b8bc5f1e5373d464"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/rait-worklist.module.ts",
+      "exists_at_baseline": true,
+      "sha256": "4d134d8a291fdd3a3d885b41b054e4ea71ad36b2fcfb4d31b2baff5a0d79dd68"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-assignment.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "d466c5d42d6c604791c6cac74b119faf4b47e965a5af71da0c56c3ee5c858394"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-draw-snapshot.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "106977aec15cc84f1fa33d8902593b766584d209d162254227361068c2130a30"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-item.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "041a24a3f28ef77d95197e101a2ea556d9a7cf4625f648f803051de07cea75a4"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-minutes-manifest.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "f84c67199399abbb3424c2c7e8df3934e3ecddd7621b0dbb7b06802e55d554ad"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "b5e1df9d5e1cc2eb0efb1ab5dd56b1e895146ee4b56696a8d026f6cef3986e07"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-bench.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "71b26aa8bbd20862d991639579acca7ee2ad03b041b7e63875d0b7246542ba2d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-clock-alert.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "38c20bd4fcc6b9e4343e42e4c3f71b664a99b2b88a06a1bc6c14a87c1d6d463a"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-clock.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "e83fc6187a537b1d5ebaba5c9edf5e0f207424cc289231ecc70040856ce5fef7"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-impediment.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "3d1031a8397028e64243f74ceeba8af27047d75f9ce5b6a52c581e32e9959b55"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-pool-member.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "db93d38148fa0fc9e52db2bad08b37d13f1a8af2f25b7177bdf0d9ac8ed7b1bb"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-pool.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "559aab24fa30cd26391f72c6024b099887175ab66245b314496ec1473b2c1484"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-schedule-slot.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "f649af04b5164a1f58b5580b2e0d3d99b2bba596eb07fbdbd608fc9b45d38ffb"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-schedule.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "7e578c15585b0d0c9837301aefb9f999c43a831b37a40c974f3cd6c80c963d08"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-substitute-duty.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "3005621bcfe8791a1c1c6f42e3b57e0146b274ea536ad4acd28e1f3231b89c2e"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-unit.repository.ts",
+      "exists_at_baseline": true,
+      "sha256": "dd27a2d8fa19c25dc95852d555b87440da71a0dc85d92bf09689e5984cca7276"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-assignment.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "b794d4b908d5383e866ee443075b0fdaeec859f6713a7ba207e181b93e27570f"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-draw-snapshot.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "61e932f53d40c1b9e96f16448b415ad1d189008c9a8034891aac724c806a8226"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-item.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "ac8be9718817d90f7e2b06357aaa9db6417659b3c07bfa4608ef084ed94839c9"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-minutes-manifest.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "23a1751239915efac764b3614ebef4530d5f9dbb5f5362707b6edec0e24ebe58"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "50fdefccd746b3bd5881aba42e81483d1eac6bd79a988afef4febd827e59baaa"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-bench.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "09aa292db1f989fdf128c912d1fa4b5bed7647c7016fe3bb4126b551f7d58ecf"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-clock-alert.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "5f73191ad6dfc504f1d3150adfddd8d546a2385c861928949dabf887f98893a2"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-clock.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "0ff671f55afd185a9bce44b22797e1be5b319a124d2e702420ae5ee6114f0b54"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-impediment.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "d69754fe0d51932c305568cb1587025d766b80f8394f189fd695519a12a8630c"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-pool-member.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "c84c0cd8f87155caa215e4f865555a5667dab50e99d0c4b5d26412a400455225"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-pool.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "8fbc24d1a4fa98102e893c7c6e3c51e92b0d9c32adf3a57da69fceee345ba84e"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-schedule-slot.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "88fad034721ea2e3f6c0742fff6f389b78487a48ead70d1c378e859bc8fadbdb"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-schedule.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "43c150af07124acae75b52cb76555aacc45a4ba0eedb17c1d881faf89125ee07"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-substitute-duty.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "faec05d8cefc93ff9f5f7fa040efb8c7b4230927aaf2c60e2ccd4ede6d1dca4d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-unit.service.ts",
+      "exists_at_baseline": true,
+      "sha256": "4be4b832f85e67d5fe6000aae01e8511a1f15e6d2b7e2156ecb564a152a1701c"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/tsconfig.build.json",
+      "exists_at_baseline": true,
+      "sha256": "5a3235c0c2c2c62f2a76fb694b9808ea6c56be56525067164482c7aaf585b27d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/tsconfig.json",
+      "exists_at_baseline": true,
+      "sha256": "cd804a68e6e99255b8401285c2f7aea89d094378440daf13fbe5a6c175ec103d"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/vitest.config.ts",
+      "exists_at_baseline": true,
+      "sha256": "fa2c2b55fd7d6b0888218eb73ba3e179382f5668419c0333bd24f5215b51f9d0"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/generated/parameter-catalogue.ts",
+      "exists_at_baseline": true,
+      "sha256": "5a06ec7cd342531ebae985788fba3d56efa77b7997fae387c72c6a3885fc69e4"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.openapi.json",
+      "exists_at_baseline": true,
+      "sha256": "95c48c595f06528f7cfdd65e97749cc755bc0d679af8c056de1749a6bac6a688"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.openapi.json",
+      "exists_at_baseline": true,
+      "sha256": "b8defe91bc325082dd4352932da9f5c810cb6c6457519aefad2677d6ce6790d9"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts",
+      "exists_at_baseline": true,
+      "sha256": "183a787172447c65c10276e5c245270bb559d1b07d54b81fe04dcf4ea596add8"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.ts",
+      "exists_at_baseline": true,
+      "sha256": "65f231222730a2222423d72fa76f7e01a8304108469982861f62b4077fd9dd55"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-WORKLIST-001.commands.ts",
+      "exists_at_baseline": true,
+      "sha256": "b7f5f275d8c72a79c28d352d925ac59fc60b0dbb14a381e58b39b0b9e7aa1259"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-WORKLIST-001.ts",
+      "exists_at_baseline": true,
+      "sha256": "e6208460fa09465d8119c78fd2e4d031bd327e3e1da0ab37eb2fb9df645c5515"
+    },
+    {
+      "path": "tools/blueprints/generated-files.json",
+      "exists_at_baseline": true,
+      "sha256": "ce82eee75de330f7cc9f49676294cc532d1c7d19658ddabd3ced66d0572fa73a"
+    }
+  ],
+  "generated_new_exact_entity": [
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-claim-legacy-qualification.controller.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-claim-legacy-qualification.dto.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-claim-legacy-qualification.entity.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-claim-legacy-qualification.repository.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-claim-legacy-qualification.service.ts",
+      "exists_at_baseline": false,
+      "sha256": null
+    }
+  ],
+  "generated_rule": "Envelope is an upper bound, not permission for unrelated regeneration. Only output deltas attributable to approved CASE/WORKLIST legacy/transport and four ladder rows may change. Operations[] must not mount CRUD for internal qualification entity. Architect executes generated OpenAPI under docs; Engineer executes code/DDL/client/parameter generation. Unlisted outputs stop for amendment."
+}
