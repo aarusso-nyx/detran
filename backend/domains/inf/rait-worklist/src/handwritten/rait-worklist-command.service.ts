@@ -424,7 +424,26 @@ export class RaitWorklistCommandService {
   async execute(input: WorklistCommandInput): Promise<Result> {
     const uuid =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
-    if (!uuid.test(input.targetId)) fail('RAIT.TENANT_MISMATCH', 404);
+    if (
+      [
+        'publish-schedule',
+        'approve-batch',
+        'accept-batch-item',
+        'declare-batch-item-impediment',
+        'draw',
+        'reassign',
+      ].includes(input.command) &&
+      !uuid.test(input.targetId)
+    )
+      fail('RAIT.TENANT_MISMATCH', 404);
+    if (
+      ['accept-batch-item', 'declare-batch-item-impediment'].includes(
+        input.command,
+      ) &&
+      (typeof input.payload.caseId !== 'string' ||
+        !uuid.test(input.payload.caseId))
+    )
+      fail('RAIT.TENANT_MISMATCH', 404);
     for (const field of ['poolId', 'memberId', 'caseId', 'replacementMemberId'])
       if (
         input.payload[field] !== undefined &&
