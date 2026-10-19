@@ -1081,105 +1081,147 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
     await fixture.scope(RAIT_SECRETARY, 'rait-secretary');
     const pool = '00000000-0000-7000-8000-000020000002';
     const caseId = RAIT_CASE('18');
-    const parents = (
+    // Canonical seed20:134 owns an active assignment for CASE18. Preserve its
+    // complete JSONB snapshot and temporarily release it for this route-absence probe.
+    const assignments = (
       await owner.query(
-        `select c.instance as case_instance,c.unit_id as case_unit,p.instance as pool_instance,p.unit_id as pool_unit from inf.rait_case c join inf.rait_pool p on p.tenant_id=c.tenant_id and p.id=$3 where c.tenant_id=$1 and c.id=$2`,
-        [RAIT_TENANT, caseId, pool],
-      )
-    ).rows[0];
-    expect(parents).toEqual({
-      case_instance: 'jari',
-      case_unit: RaitP402ScopeFixture.UNIT,
-      pool_instance: 'jari',
-      pool_unit: RaitP402ScopeFixture.UNIT,
-    });
-    expect(
-      (await get(`${PREFIX}/cases/${caseId}`, 'rait-secretary', RAIT_SECRETARY))
-        .status,
-    ).toBe(200);
-    const routing = (
-      await owner.query(
-        `select exists(select 1 from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and active) as link,exists(select 1 from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active) as assignment,exists(select 1 from inf.rait_batch_item bi join inf.rait_batch b on b.tenant_id=bi.tenant_id and b.id=bi.batch_id where bi.tenant_id=$1 and bi.case_id=$2 and b.state='LOTE_ACEITO') as accepted_batch`,
+        'select to_jsonb(a) as snapshot from inf.rait_assignment a where tenant_id=$1 and case_id=$2 order by id',
         [RAIT_TENANT, caseId],
       )
-    ).rows[0];
-    expect(routing).toEqual({
-      link: false,
-      assignment: false,
-      accepted_batch: false,
-    });
-    expect(
-      (
+    ).rows.map((row) => row.snapshot);
+    try {
+      for (const assignment of assignments.filter((row) => row.active))
         await owner.query(
-          'select id from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and pool_id=$3',
+          "update inf.rait_assignment set active=false,released_at=now(),release_reason='afastamento' where id=$1",
+          [assignment.id],
+        );
+      const parents = (
+        await owner.query(
+          `select c.instance as case_instance,c.unit_id as case_unit,p.instance as pool_instance,p.unit_id as pool_unit from inf.rait_case c join inf.rait_pool p on p.tenant_id=c.tenant_id and p.id=$3 where c.tenant_id=$1 and c.id=$2`,
           [RAIT_TENANT, caseId, pool],
         )
-      ).rows,
-    ).toEqual([]);
-    const body = {
-      poolId: pool,
-      weekStart: '2032-01-05',
-      kind: 'extraordinario',
-      caseIds: [caseId],
-    };
-    const h = headers('rait-secretary', RAIT_SECRETARY);
-    const before = await effects();
-    const batches = (
-      await owner.query('select * from inf.rait_batch order by id')
-    ).rows;
-    const items = (
-      await owner.query('select * from inf.rait_batch_item order by id')
-    ).rows;
-    const denied = await request(app.getHttpServer())
-      .post(`${PREFIX}/batches`)
-      .set(h)
-      .send(body);
-    expect(denied.status, JSON.stringify(denied.body)).toBe(404);
-    expect(denied.body).not.toHaveProperty('data');
-    expect(await effects()).toEqual(before);
-    expect(
-      (await owner.query('select * from inf.rait_batch order by id')).rows,
-    ).toEqual(batches);
-    expect(
-      (await owner.query('select * from inf.rait_batch_item order by id')).rows,
-    ).toEqual(items);
-    const link = randomUUID();
-    let batch: string | undefined;
-    await owner.query(
-      `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,$4,true,'r25-s1-fixture','same-unit-exact-route-control')`,
-      [link, RAIT_TENANT, caseId, pool],
-    );
-    try {
-      const allowed = await request(app.getHttpServer())
-        .post(`${PREFIX}/batches`)
-        .set(h)
-        .send(body);
-      expect(allowed.status, JSON.stringify(allowed.body)).toBe(201);
-      batch = allowed.body.data.id;
-      expect(allowed.body.data).toMatchObject({
-        pool_id: pool,
-        state: 'LOTE_ABERTO',
-        version: 1,
+      ).rows[0];
+      expect(parents).toEqual({
+        case_instance: 'jari',
+        case_unit: RaitP402ScopeFixture.UNIT,
+        pool_instance: 'jari',
+        pool_unit: RaitP402ScopeFixture.UNIT,
+      });
+      expect(
+        (
+          await get(
+            `${PREFIX}/cases/${caseId}`,
+            'rait-secretary',
+            RAIT_SECRETARY,
+          )
+        ).status,
+      ).toBe(200);
+      const routing = (
+        await owner.query(
+          `select exists(select 1 from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and active) as link,exists(select 1 from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active) as assignment,exists(select 1 from inf.rait_batch_item bi join inf.rait_batch b on b.tenant_id=bi.tenant_id and b.id=bi.batch_id where bi.tenant_id=$1 and bi.case_id=$2 and b.state='LOTE_ACEITO') as accepted_batch`,
+          [RAIT_TENANT, caseId],
+        )
+      ).rows[0];
+      expect(routing).toEqual({
+        link: false,
+        assignment: false,
+        accepted_batch: false,
       });
       expect(
         (
           await owner.query(
-            'select case_id from inf.rait_batch_item where batch_id=$1',
-            [batch],
+            'select id from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and pool_id=$3',
+            [RAIT_TENANT, caseId, pool],
           )
         ).rows,
-      ).toEqual([{ case_id: caseId }]);
-    } finally {
-      if (batch) {
-        await owner.query('delete from inf.rait_batch_item where batch_id=$1', [
-          batch,
-        ]);
-        await owner.query('delete from inf.rait_batch where id=$1', [batch]);
-      }
+      ).toEqual([]);
+      const body = {
+        poolId: pool,
+        weekStart: '2032-01-05',
+        kind: 'extraordinario',
+        caseIds: [caseId],
+      };
+      const h = headers('rait-secretary', RAIT_SECRETARY);
+      const before = await effects();
+      const batches = (
+        await owner.query('select * from inf.rait_batch order by id')
+      ).rows;
+      const items = (
+        await owner.query('select * from inf.rait_batch_item order by id')
+      ).rows;
+      const denied = await request(app.getHttpServer())
+        .post(`${PREFIX}/batches`)
+        .set(h)
+        .send(body);
+      expect(denied.status, JSON.stringify(denied.body)).toBe(404);
+      expect(denied.body).not.toHaveProperty('data');
+      expect(await effects()).toEqual(before);
+      expect(
+        (await owner.query('select * from inf.rait_batch order by id')).rows,
+      ).toEqual(batches);
+      expect(
+        (await owner.query('select * from inf.rait_batch_item order by id'))
+          .rows,
+      ).toEqual(items);
+      const link = randomUUID();
+      let batch: string | undefined;
       await owner.query(
-        "delete from inf.rait_case_pool_scope where id=$1 and authorization_ref='r25-s1-fixture'",
-        [link],
+        `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,$4,true,'r25-s1-fixture','same-unit-exact-route-control')`,
+        [link, RAIT_TENANT, caseId, pool],
       );
+      try {
+        const allowed = await request(app.getHttpServer())
+          .post(`${PREFIX}/batches`)
+          .set(h)
+          .send(body);
+        expect(allowed.status, JSON.stringify(allowed.body)).toBe(201);
+        batch = allowed.body.data.id;
+        expect(allowed.body.data).toMatchObject({
+          pool_id: pool,
+          state: 'LOTE_ABERTO',
+          version: 1,
+        });
+        expect(
+          (
+            await owner.query(
+              'select case_id from inf.rait_batch_item where batch_id=$1',
+              [batch],
+            )
+          ).rows,
+        ).toEqual([{ case_id: caseId }]);
+      } finally {
+        if (batch) {
+          await owner.query(
+            'delete from inf.rait_batch_item where batch_id=$1',
+            [batch],
+          );
+          await owner.query('delete from inf.rait_batch where id=$1', [batch]);
+        }
+        await owner.query(
+          "delete from inf.rait_case_pool_scope where id=$1 and authorization_ref='r25-s1-fixture'",
+          [link],
+        );
+      }
+    } finally {
+      for (const assignment of assignments)
+        await owner.query(
+          'update inf.rait_assignment set active=$2,released_at=$3::timestamptz,release_reason=$4,updated_at=$5::timestamptz where id=$1',
+          [
+            assignment.id,
+            assignment.active,
+            assignment.released_at,
+            assignment.release_reason,
+            assignment.updated_at,
+          ],
+        );
+      expect(
+        (
+          await owner.query(
+            'select to_jsonb(a) as snapshot from inf.rait_assignment a where tenant_id=$1 and case_id=$2 order by id',
+            [RAIT_TENANT, caseId],
+          )
+        ).rows.map((row) => row.snapshot),
+      ).toEqual(assignments);
     }
   });
   it('batch creation rejects only the wrong requested pool in an otherwise valid request', async () => {
