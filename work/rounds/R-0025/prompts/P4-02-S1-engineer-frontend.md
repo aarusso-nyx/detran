@@ -1,0 +1,3 @@
+# P4-02-S1-A2 typed read compatibility
+
+Engineer only after Inspector RED e2ee4359. S1 and A2 explicitly approved,42 additionalexactexistingconsumers and originalownedfrontpaths only. Derive generated typedreadaliases separatefromstoredcommandDTOs; exactprojection/narrowing, no partial-as-full casts or fabricatedfalse/empty. Three approved temporaryunavailable batch/pendingdetailviews; no claim/risk/newscreen/command/attachmentactivation. AlltestsInspectorowned. No backend/package/law/pin/config/primary/scorecardwrites or git. Use existing i18n unavailable keys; additionalunownedpath requires concrete resolution. Requested historicalmodelmetadata is not served-model evidence.

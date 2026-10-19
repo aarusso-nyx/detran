@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0031",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "P4-02-S1-A2 typed read compatibility",
+  "description": "Engineer only after Inspector RED e2ee4359. S1 and A2 explicitly approved,42 additionalexactexistingconsumers and originalownedfrontpaths only. Derive generated typedreadaliases separatefromstoredcommandDTOs; exactprojection/narrowing, no partial-as-full casts or fabricatedfalse/empty. Three approved temporaryunavailable batch/pendingdetailviews; no claim/risk/newscreen/command/attachmentactivation. AlltestsInspectorowned. No backend/package/law/pin/config/primary/scorecardwrites or git. Use existing i18n unavailable keys; additionalunownedpath requires concrete resolution. Requested historicalmodelmetadata is not served-model evidence.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r25-s1-web-compatibility"
+  ],
+  "target_substrates": [
+    "F2"
+  ],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0021",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "r25",
+    "p402-s1"
+  ],
+  "branch": "codex/r0025-s1-engineer-frontend",
+  "worktree_id": "WT-r0025-s1-engineer-frontend",
+  "prompt_composition_id": "PC-41ff9b5d4fbdb09f",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "check"
+    ]
+  ],
+  "created_at": "2026-10-19T14:22:31.058087+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-app",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "codex-cli"
+    },
+    "instructions_ref": "work/rounds/R-0025/prompts/P4-02-S1-engineer-frontend.md",
+    "prompt_composition_id": "PC-41ff9b5d4fbdb09f",
+    "max_iterations": 3,
+    "capabilities": [
+      "repository-read",
+      "engineer-runtime-write"
+    ]
+  },
+  "upstream_task_id": "TASK-0029"
+}
