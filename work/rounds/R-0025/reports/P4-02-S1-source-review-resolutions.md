@@ -54,3 +54,41 @@ Generic impediment reads remain only their existing own/explicit functional
 purpose with full case/member/pool parents; S/O generic details stay denied and
 no organization-wide or free-merits grant is introduced. Missing qualification
 must deny, not return a partial object cast as a complete functional DTO.
+
+## Second review — legal triage versus revoked operational routing
+
+Architect, Article 7. The complete T0 triage row separately authorizes existing
+analyst/secretary admissibility through active matching unit/pool membership.
+ADR0047 explicitly says missing operational routing does not invalidate legal
+admissibility or add a fifth criterion. Its exact-pool rule applies to a current
+trusted association; a revoked relation is not current pool authorization.
+
+Therefore a revoked-only operational link remains revoked and cannot confer
+pool-bound U, merits, selection or assignment rights. It also cannot revoke a
+separately qualified legal unit-triage purpose. With no current trusted route,
+the existing unit-membership triage rule may still authorize only the closed T
+projection and existing legal commands/guards. When a current exact route exists,
+its partition remains required. This is not fallback from a revoked pool-only U
+to unit merits; that remains denied. The writer preserves historical revocation
+and cannot reactivate it. Inspector verifies both continued legal admissibility
+and denial of pool-only merits after revocation, including a different same-unit
+pool. No routing-dependent legal admission guard is added.
+
+This interpretation follows the already approved independent-purpose and legal
+routing boundaries; it introduces no role, field grant or new contract.
+
+## Second review — own-assignment versus independent functional purpose
+
+T0's WORKLIST parent row says that active own assignment proves the analyst or
+rapporteur purpose, not arbitrary other assignments. An M/J purpose derived only
+from own assignment therefore returns only that actor's assignment rows. Another
+member's released assignment, assigned_by or release_reason is not authorized by
+that proof. A separately complete source-backed procedural, operational,
+oversight or board/session purpose may still supply its necessary assignment
+projection; its action, role and scope must be independently satisfied, without
+borrowing the analyst's scope. Inspector covers the own-row positive and the
+other-member negative. No implicit role-wide history grant is introduced.
+
+All batch-item purposes remain exactly id, case_id, batch_id, member_id. A2's
+position/deadline/acceptance limitation remains in force; organizational reads
+must use the same closed projection as the typed contract and preview.
