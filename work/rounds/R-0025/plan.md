@@ -664,3 +664,15 @@ closed D1–D11 decisions. Next proposed slice is reports/P4-02-S1-security-prer
 (T1 security RED then T2 scoped protection, one implementation PR). It awaits
 explicit approval; runtime and test dispatch remain paused. Scorecard work stays
 separate; no close/seal or production qualification is declared.
+
+## Current execution boundary — PR201 and approved S1, 2026-10-19
+
+Owner approved P4-02-S1 and PR201 merged at
+`a006b039ed2bc31757847e1c7230131fdeba24d3` with required checks green.
+The preceding PR200 pause is superseded only for S1. Architect sources, Inspector
+RED and bounded Engineer implementation are integrated on the implementation
+branch; GREEN checks and independent review remain required before its PR.
+See `AUTHORIZATION.md` for the approved loader, A2 frontend compatibility and
+identity validation extensions. A2's unavailable batch and pending-item details
+are temporary limitations, not completed journeys. S2, production qualification,
+runtime beyond S1, scorecard work and round closure remain outside authorization.
