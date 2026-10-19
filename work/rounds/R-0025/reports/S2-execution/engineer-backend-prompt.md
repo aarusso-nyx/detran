@@ -28,7 +28,9 @@ Only the following handwritten runtime paths are assigned by the approved packet
 
 `app.module.ts` is registration-only. SQL19 is restricted to qualification
 constraints/immutability not expressible by the existing generator; record the
-rationale and preserve all S1 protections. Pure/parser, generated paths, tests,
+rationale and preserve all S1 protections. S2-R5 uses generated immutable/append-only
+protection plus the minimal final SQL19 REVOKE after broad grants; do not duplicate
+the generated immutability trigger. Pure/parser, generated paths, tests,
 fixtures, canonical sources, packages/config, scorecard and DEVAI state are not owned.
 You are not alone in the repository. Preserve others' edits. Parent owns all Git.
 
@@ -36,7 +38,7 @@ You are not alone in the repository. Preserve others' edits. Parent owns all Git
 
 Read AGENTS.md, P4-02-S2-approval-packet.md, its owned-path manifest, accepted
 ADR0037/0045–49/0052, and S2-execution source-freeze, source-provenance-format,
-source-review-disposition and S2-R1–R4. Historical source-freeze is immutable;
+source-review-disposition and S2-R1–R5. Historical source-freeze is immutable;
 additive corrections control. The current controller already forwards claim body
 and If-Match; do not rely on the superseded controller-loss diagnosis.
 
