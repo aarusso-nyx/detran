@@ -205,6 +205,7 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
   documents: {
     S: ['id', 'case_id', 'kind', 'origin', 'attached_at'],
     M: [
+      'filename',
       'id',
       'case_id',
       'kind',
@@ -214,6 +215,7 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
       'attached_at',
     ],
     J: [
+      'filename',
       'id',
       'case_id',
       'kind',
@@ -781,7 +783,7 @@ export class RaitCaseScopeService {
         action,
       );
     const member = (role: string, extra = '') =>
-      `exists(select 1 from inf.rait_pool_member pm join inf.rait_pool p on p.tenant_id=pm.tenant_id and p.id=pm.pool_id where pm.tenant_id=${c}.tenant_id and pm.person_id=$2 and pm.status='ATIVO' and pm.member_role='${role}' and (pm.mandate_starts_on is null or pm.mandate_starts_on<=current_date) and (pm.mandate_ends_on is null or pm.mandate_ends_on>=current_date) and p.active and p.instance=${c}.instance and p.unit_id is not distinct from ${c}.unit_id ${extra})`;
+      `exists(select 1 from inf.rait_pool_member pm join inf.rait_pool p on p.tenant_id=pm.tenant_id and p.id=pm.pool_id where pm.tenant_id=${c}.tenant_id and pm.person_id=$2 and pm.status='ATIVO' and pm.member_role='${role}' and (pm.mandate_starts_on is null or pm.mandate_starts_on<=current_date) and (pm.mandate_ends_on is null or pm.mandate_ends_on>=current_date) and p.active ${role === 'autoridade' ? '' : `and p.instance=${c}.instance and p.unit_id is not distinct from ${c}.unit_id`} ${extra})`;
     const bound = (role: string) =>
       `exists(select 1 from inf.rait_case_read_scope rs where rs.tenant_id=${c}.tenant_id and rs.actor_id=$2 and rs.role='${role}' and rs.active and btrim(rs.authorization_ref)<>'' and (rs.unit_id=${c}.unit_id or (rs.pool_id is not null and ${this.poolCaseSql(c, 'rs.pool_id')})))`;
     const own = (role: string) =>
