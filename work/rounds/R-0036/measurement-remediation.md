@@ -19,20 +19,31 @@ observations. ADR-0043 admits verified DEVAI 2.6.2. Product fixes are separate.
    provenance, not merely a new non-UNKNOWN verdict. Capture measurement errors
    separately from genuine product/test failures.
 
-## Remaining provider boundaries to verify
+## Provider boundaries and current validation state
 
-- Data-model discovery still reads only migrations/db/database conventions; the
-  supported input schema has no data-model roots. DETRAN DDL remains canonical at
-  backend/database/ddl. Do not mirror it into a conventional directory to disguise
-  this limitation.
-- The vulnerability sensor's bounded process output can fail on the complete
-  dependency audit. Do not omit dependencies or advisories to shrink it.
-- Coverage requires an exact-candidate producer binding. Do not label an authored
-  aggregate as the package-owned producer or weaken its provenance checks.
-- Missing approved performance targets and unsupported native transformations
-  remain explicit until evidence or authorized provider changes resolve them.
+- DEVAI #413 adds declared SQL migration roots and complete vulnerability output;
+  #415 verifies the observed push branch; #416 supersedes #414 with explicit
+  monorepo populations and 2.6.3 release preparation. All were integrated only
+  after mandatory green checks. Their published-provider replay remains required.
+  DETRAN DDL stays at its canonical paths; no mirrored population is introduced.
+- Coverage requires an exact-candidate producer binding. ADR-0045 declares the
+  whole-source local unit population, including untested implementation files,
+  while integration and E2E remain separate measurements. This changes the
+  original proposed RC population explicitly; it does not establish RC coverage.
+  Existing package thresholds and native scorecard thresholds remain unchanged.
+  The first full collector attempt failed; the repaired collector still needs
+  complete replay. Diagnostic evidence is retained in
+  `reports/coverage-enablement-20261018/` and is not a native reading.
+- The user authorized defining generous performance targets and a suite.
+  ADR-0044 records the request-path baseline. Replay on the final evaluated
+  commit remains required; a previous run is not current-candidate evidence.
 
 The user explicitly authorized DEVAI measurement fixes in a separate branch and PR
-on 2026-10-18. That exception does not authorize a package release or product fixes.
+on 2026-10-18, then authorized integration of #413/#414/#415 after required green
+checks, publication of 2.6.3 with those repairs, and adoption in DETRAN. #416
+preserves #414's repair on current main without a force-push or merge commit.
+This narrow sibling exception does not authorize product fixes or Pages deployment.
+The release must pass the complete protected rehearsal before tagging, publication
+and registry identity verification. Until those finish, DETRAN stays on 2.6.2.
 Other sibling repositories remain read-only. The previous scorecard, reports,
 readings and proof prefix are immutable.
