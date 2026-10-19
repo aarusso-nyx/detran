@@ -149,11 +149,13 @@ export function evaluateRaitRisk(input: RaitRiskInput): RaitRiskSnapshot {
     );
     seen.add(clock.clockCode);
     requireSource(
-      Array.isArray(clock.sourceVersions) &&
-        clock.sourceVersions.length > 0 &&
-        clock.sourceVersions.every(reference),
+      Array.isArray(clock.sourceVersions) && clock.sourceVersions.length > 0,
     );
-    for (const version of clock.sourceVersions) sourceVersions.add(version);
+    for (const version of clock.sourceVersions) {
+      // Iteration visits holes as undefined; Array.every would skip them.
+      requireSource(reference(version));
+      sourceVersions.add(version);
+    }
     if (clock.applicability === 'not_applicable') {
       requireSource(reference(clock.sourceRef));
       clocks.push({

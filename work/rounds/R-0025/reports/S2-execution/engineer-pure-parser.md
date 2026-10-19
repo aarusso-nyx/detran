@@ -24,3 +24,19 @@ GREEN is explicitly not claimed. See JSON and preserved sanitized execution logs
 
 No DB/full backend/root gates were run in this narrowly authorized task. No
 production source qualification, S2 completion, readiness or merge claim follows.
+
+## Final scoped validation epoch
+
+Independent Inspector938c790c corrected the old unrelated generic-JSON fixture
+and added a90th pure test demonstrating sparse sourceVersions bypass on the actual
+runtime candidate9fd88a24. Before the fix, unchanged tests recorded112PASS/1FAIL
+of113. Engineer changed only full-entry provenance validation: for-of visits holes
+as undefined, so every element now requires a nonempty string before inclusion.
+Opaque valid source encodings remain accepted. No test was edited by Engineer.
+
+Final unchanged deadlines tests113/113PASS (90risk +23existing), typecheck PASS,
+parameter targeted suite70/70PASS, broader pnpm parameters:test88/88PASS, no skips,
+and three-file formatting PASS. Exact90-test hash and final runtime hash are in the
+additive final_epoch JSON. Initial69/1 fixture result above remains historical;
+its finding is resolved by the independent Inspector commit. Full S2/DB/root
+acceptance remains outside this task and is not claimed.

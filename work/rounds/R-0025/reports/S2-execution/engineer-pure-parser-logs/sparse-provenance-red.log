@@ -1,0 +1,35 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/inf-deadlines@0.0.1 test:unit /Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines
+> DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines
+
+ ❯ tests/unit/rait-risk.spec.ts (90 tests | 1 failed) 113ms
+   × rejects a sparse sourceVersions array as missing mandatory provenance 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > rejects a sparse sourceVersions array as missing mandatory provenance
+AssertionError: expected function to throw an error, but it didn't
+ ❯ tests/unit/rait-risk.spec.ts:350:45
+    348|   expect(api.evaluateRaitRisk).toBeTypeOf('function');
+    349|   expect(api.RaitRiskSourceError).toBeTypeOf('function');
+    350|   expect(() => api.evaluateRaitRisk(value)).toThrow(api.RaitRiskSource…
+       |                                             ^
+    351| });
+    352|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 112 passed (113)
+   Start at  19:21:38
+   Duration  2.06s (transform 728ms, setup 0ms, import 940ms, tests 191ms, environment 0ms)
+
+/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/inf-deadlines@0.0.1 test:unit: `DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts`
+Exit status 1
