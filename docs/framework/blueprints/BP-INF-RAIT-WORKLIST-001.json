@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitWorklist",
     "namespace": "inf",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "ddlFile": "35-inf-rait-worklist.sql",
     "dependencies": {
       "@detran/inf-deadlines": "workspace:*",
@@ -32,6 +32,10 @@
       {
         "target": "handwritten/rait-worklist-commands.controller",
         "symbol": "RaitWorklistCommandsController"
+      },
+      {
+        "target": "handwritten/rait-worklist-scoped-reads.controller",
+        "symbol": "RaitWorklistScopedReadsController"
       }
     ],
     "handwrittenProviders": [
@@ -42,10 +46,17 @@
     ],
     "handwrittenExports": [
       "handwritten/rait-worklist-commands.controller",
-      "handwritten/rait-worklist-command.service"
+      "handwritten/rait-worklist-command.service",
+      "handwritten/rait-worklist-scoped-reads.controller"
     ],
     "owners": ["detran-inf"],
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura."
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura. v1.5.0: P4-02-S1/ADR-0046/0047 closed T0 scopes replace generated HTTP with handwritten scoped functional reads, preserving effective role/action and typed projections; no claim-context, risk producer or selector change.",
+    "moduleImports": [
+      {
+        "package": "@detran/inf-rait-case",
+        "symbol": "RaitCaseModule"
+      }
+    ]
   },
   "database": {
     "entities": [
@@ -92,6 +103,11 @@
           {
             "name": "ix_inf_rait_unit_state",
             "columns": ["tenant_id", "state"]
+          },
+          {
+            "name": "ux_inf_rait_unit_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true
           }
         ],
         "checks": [
@@ -164,6 +180,11 @@
             "columns": ["tenant_id", "instance", "unit_id"],
             "unique": true,
             "where": "unit_id is not null"
+          },
+          {
+            "name": "ux_inf_rait_pool_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true
           }
         ],
         "checks": [
@@ -766,16 +787,35 @@
         "immutable": true,
         "description": "Snapshot canônico e imutável do sorteio por lote, produzido pelo servidor antes da ata (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "batch_id", "type": "uuid", "writable": false },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "batch_id",
+            "type": "uuid",
+            "writable": false
+          },
           {
             "name": "snapshot_version",
             "type": "varchar(20)",
             "writable": false
           },
-          { "name": "snapshot", "type": "jsonb", "writable": false },
-          { "name": "snapshot_hash", "type": "varchar(64)", "writable": false },
+          {
+            "name": "snapshot",
+            "type": "jsonb",
+            "writable": false
+          },
+          {
+            "name": "snapshot_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
           {
             "name": "origin",
             "type": "varchar(30)",
@@ -827,12 +867,35 @@
         "immutable": true,
         "description": "Manifestacao imutavel da ata de distribuicao PAdES+TSA, vinculada ao snapshot do sorteio e ao presidente (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "batch_id", "type": "uuid", "writable": false },
-          { "name": "document_id", "type": "uuid", "writable": false },
-          { "name": "content_hash", "type": "varchar(64)", "writable": false },
-          { "name": "snapshot_hash", "type": "varchar(64)", "writable": false },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "batch_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "content_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "snapshot_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
           {
             "name": "snapshot_version",
             "type": "varchar(20)",
@@ -1554,37 +1617,37 @@
         "entity": "RaitUnit",
         "path": "units",
         "resource": "rait-unit",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitPool",
         "path": "pools",
         "resource": "rait-pool",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitPoolMember",
         "path": "pool-members",
         "resource": "rait-pool-member",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitSchedule",
         "path": "schedules",
         "resource": "rait-schedule",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitScheduleSlot",
         "path": "schedule-slots",
         "resource": "rait-schedule-slot",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitBatch",
         "path": "batches",
         "resource": "rait-batch",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitBatchDrawSnapshot",
@@ -1602,43 +1665,43 @@
         "entity": "RaitBatchItem",
         "path": "batch-items",
         "resource": "rait-batch-item",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitAssignment",
         "path": "assignments",
         "resource": "rait-assignment",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitImpediment",
         "path": "impediments",
         "resource": "rait-impediment",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitSubstituteDuty",
         "path": "substitute-duties",
         "resource": "rait-substitute-duty",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitBench",
         "path": "benches",
         "resource": "rait-bench",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitClock",
         "path": "clocks",
         "resource": "rait-clock",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitClockAlert",
         "path": "clock-alerts",
         "resource": "rait-clock-alert",
-        "operations": ["list", "get"]
+        "operations": []
       }
     ]
   },

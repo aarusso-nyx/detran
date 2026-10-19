@@ -2,57 +2,2819 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RAIT Worklist commands",
-    "version": "1.0.0",
+    "version": "1.5.0",
     "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
-    "x-commands": true
+    "x-commands": true,
+    "description": " P4-02-S1 typed scoped replacement of the frozen107-method baseline. ADR0046/47 and T0 closed access/triage maps govern complete role purposes; runtime production qualification is separate. No claim-context/risk API or selector change."
   },
   "paths": {
     "/v1/inf/rait/schedules": {
       "post": {
         "operationId": "raitScheduleCreate",
-        "responses": { "200": { "description": "Escala criada" } }
+        "responses": {
+          "200": {
+            "description": "Escala criada"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+      },
+      "get": {
+        "operationId": "listRaitSchedule",
+        "tags": ["rait-schedule"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitScheduleFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
       }
     },
     "/v1/inf/rait/schedules/{id}/publish": {
       "post": {
         "operationId": "raitSchedulePublish",
-        "responses": { "200": { "description": "Escala publicada" } }
+        "responses": {
+          "200": {
+            "description": "Escala publicada"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/batches": {
       "post": {
         "operationId": "raitBatchCreate",
-        "responses": { "200": { "description": "Lote criado" } }
+        "responses": {
+          "200": {
+            "description": "Lote criado"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+      },
+      "get": {
+        "operationId": "listRaitBatch",
+        "tags": ["rait-batch"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitBatchFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
       }
     },
     "/v1/inf/rait/batches/{id}/approve": {
       "post": {
         "operationId": "raitBatchApprove",
-        "responses": { "200": { "description": "Lote aprovado" } }
+        "responses": {
+          "200": {
+            "description": "Lote aprovado"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/batches/{id}/items/{caseId}/accept": {
       "post": {
         "operationId": "raitBatchItemAccept",
-        "responses": { "200": { "description": "Item aceito" } }
+        "responses": {
+          "200": {
+            "description": "Item aceito"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/batches/{id}/items/{caseId}/impediment": {
       "post": {
         "operationId": "raitBatchItemImpediment",
-        "responses": { "200": { "description": "Impedimento registrado" } }
+        "responses": {
+          "200": {
+            "description": "Impedimento registrado"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/batches/{id}/commands/draw": {
       "post": {
         "operationId": "raitBatchDraw",
-        "responses": { "200": { "description": "Lote sorteado" } }
+        "responses": {
+          "200": {
+            "description": "Lote sorteado"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/assignments/{id}/commands/reassign": {
       "post": {
         "operationId": "raitAssignmentReassign",
-        "responses": { "200": { "description": "Caso reatribuído" } }
+        "responses": {
+          "200": {
+            "description": "Caso reatribuído"
+          }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+      }
+    },
+    "/v1/inf/rait/units": {
+      "get": {
+        "operationId": "listRaitUnit",
+        "tags": ["rait-unit"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitUnitFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/units/{id}": {
+      "get": {
+        "operationId": "getRaitUnit",
+        "tags": ["rait-unit"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitUnitFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/pools": {
+      "get": {
+        "operationId": "listRaitPool",
+        "tags": ["rait-pool"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitPoolFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/pools/{id}": {
+      "get": {
+        "operationId": "getRaitPool",
+        "tags": ["rait-pool"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPoolFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/pool-members": {
+      "get": {
+        "operationId": "listRaitPoolMember",
+        "tags": ["rait-pool-member"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitPoolMemberFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/pool-members/{id}": {
+      "get": {
+        "operationId": "getRaitPoolMember",
+        "tags": ["rait-pool-member"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPoolMemberFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/schedules/{id}": {
+      "get": {
+        "operationId": "getRaitSchedule",
+        "tags": ["rait-schedule"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitScheduleFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/schedule-slots": {
+      "get": {
+        "operationId": "listRaitScheduleSlot",
+        "tags": ["rait-schedule-slot"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitScheduleSlotFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/schedule-slots/{id}": {
+      "get": {
+        "operationId": "getRaitScheduleSlot",
+        "tags": ["rait-schedule-slot"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitScheduleSlotFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/batches/{id}": {
+      "get": {
+        "operationId": "getRaitBatch",
+        "tags": ["rait-batch"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatchFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/batch-items": {
+      "get": {
+        "operationId": "listRaitBatchItem",
+        "tags": ["rait-batch-item"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitBatchItemSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitBatchItemORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitBatchItemMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitBatchItemJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/batch-items/{id}": {
+      "get": {
+        "operationId": "getRaitBatchItem",
+        "tags": ["rait-batch-item"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitBatchItemSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitBatchItemORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitBatchItemMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitBatchItemJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/assignments": {
+      "get": {
+        "operationId": "listRaitAssignment",
+        "tags": ["rait-assignment"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitAssignmentSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAssignmentORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAssignmentMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAssignmentJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/assignments/{id}": {
+      "get": {
+        "operationId": "getRaitAssignment",
+        "tags": ["rait-assignment"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitAssignmentSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAssignmentORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAssignmentMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAssignmentJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/impediments": {
+      "get": {
+        "operationId": "listRaitImpediment",
+        "tags": ["rait-impediment"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitImpedimentFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/impediments/{id}": {
+      "get": {
+        "operationId": "getRaitImpediment",
+        "tags": ["rait-impediment"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitImpedimentFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/substitute-duties": {
+      "get": {
+        "operationId": "listRaitSubstituteDuty",
+        "tags": ["rait-substitute-duty"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitSubstituteDutyFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/substitute-duties/{id}": {
+      "get": {
+        "operationId": "getRaitSubstituteDuty",
+        "tags": ["rait-substitute-duty"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSubstituteDutyFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/benches": {
+      "get": {
+        "operationId": "listRaitBench",
+        "tags": ["rait-bench"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitBenchFunctionalRead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/benches/{id}": {
+      "get": {
+        "operationId": "getRaitBench",
+        "tags": ["rait-bench"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBenchFunctionalRead"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/clocks": {
+      "get": {
+        "operationId": "listRaitClock",
+        "tags": ["rait-clock"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitClockSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/clocks/{id}": {
+      "get": {
+        "operationId": "getRaitClock",
+        "tags": ["rait-clock"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitClockSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/clock-alerts": {
+      "get": {
+        "operationId": "listRaitClockAlert",
+        "tags": ["rait-clock-alert"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "clock_id -> clock -> case",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitClockAlertSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockAlertORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockAlertMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitClockAlertJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/clock-alerts/{id}": {
+      "get": {
+        "operationId": "getRaitClockAlert",
+        "tags": ["rait-clock-alert"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "clock_id -> clock -> case",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitClockAlertSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockAlertORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockAlertMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitClockAlertJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitUnitFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["TURMA_ATIVA", "TURMA_EM_CONSTITUICAO", "TURMA_SUSPENSA"],
+            "default": "'TURMA_ATIVA'"
+          },
+          "coordinator_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["name", "judging_body", "created_at"]
+      },
+      "RaitPoolFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "strategy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pull", "round_robin", "load_balanced"]
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "priority_policy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ordem_unica"],
+            "default": "'ordem_unica'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["name", "instance", "circuit", "strategy", "created_at"]
+      },
+      "RaitPoolMemberFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_role": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "analista",
+              "relator",
+              "presidente",
+              "coordenador",
+              "secretaria",
+              "autoridade"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "ATIVO",
+              "IMPEDIDO",
+              "ADVERTIDO",
+              "AFASTADO_TEMP",
+              "MANDATO_ENCERRADO"
+            ],
+            "default": "'ATIVO'"
+          },
+          "mandate_starts_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mandate_ends_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "late_opinion_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "unjustified_absence_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "is_substitute": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "representation_block": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "executivo_estadual",
+              "municipal_rodoviario",
+              "sociedade_civil"
+            ],
+            "nullable": true
+          },
+          "institutional_seat_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "appointment_act_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "institutional_valid_from": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_identity_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["pool_id", "person_id", "member_role", "created_at"]
+      },
+      "RaitScheduleFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "escala_semanal",
+              "plantao_risco",
+              "escala_assinatura",
+              "escala_balcao"
+            ]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "wip_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "pool_id",
+          "member_id",
+          "kind",
+          "period_start",
+          "period_end",
+          "created_at"
+        ]
+      },
+      "RaitScheduleSlotFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "schedule_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slot_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["schedule_id", "slot_on", "created_at"]
+      },
+      "RaitBatchFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["semanal", "extraordinario"],
+            "default": "'semanal'"
+          },
+          "week_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["LOTE_ABERTO", "LOTE_SORTEADO", "LOTE_ACEITO"],
+            "default": "'LOTE_ABERTO'"
+          },
+          "seed": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "drawn_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "minutes_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "homologated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "homologated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "approval_signature_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "approval_receipt_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "approval_verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "approval_signer_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["pool_id", "week_start", "created_at"]
+      },
+      "RaitBatchItemSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "batch_id"]
+      },
+      "RaitBatchItemORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "batch_id"]
+      },
+      "RaitBatchItemMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "batch_id"]
+      },
+      "RaitBatchItemJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "batch_id"]
+      },
+      "RaitAssignmentSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "pool_id",
+          "member_id",
+          "assigned_at",
+          "active"
+        ]
+      },
+      "RaitAssignmentORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "pool_id",
+          "member_id",
+          "assigned_at",
+          "active"
+        ]
+      },
+      "RaitAssignmentMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "assigned_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "release_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "impedimento",
+              "afastamento",
+              "rebalanceamento",
+              "risco_prescricao",
+              "concluido"
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "pool_id",
+          "member_id",
+          "assigned_at",
+          "active"
+        ]
+      },
+      "RaitAssignmentJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "assigned_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "release_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "impedimento",
+              "afastamento",
+              "rebalanceamento",
+              "risco_prescricao",
+              "concluido"
+            ],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "pool_id",
+          "member_id",
+          "assigned_at",
+          "active"
+        ]
+      },
+      "RaitImpedimentFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "declared_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["impedimento", "suspeicao"],
+            "default": "'impedimento'"
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["case_id", "member_id", "basis", "created_at"]
+      },
+      "RaitSubstituteDutyFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "designated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "designated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "convened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["session_id", "member_id", "created_at"]
+      },
+      "RaitBenchFunctionalRead": {
+        "type": "object",
+        "description": "Existing functional organization/personnel/impediment contract only; scoped relation and effective action permission remain required; no inferred case-merits grant.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "BANCA_PREVISTA",
+              "BANCA_CONFIRMADA",
+              "BANCA_INSUFICIENTE"
+            ],
+            "default": "'BANCA_PREVISTA'"
+          },
+          "confirmed_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "parity_observed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "confirmed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "insufficient_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["session_id", "created_at"]
+      },
+      "RaitClockSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "flag",
+          "flag_changed_at",
+          "legal_basis"
+        ]
+      },
+      "RaitClockORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "flag",
+          "flag_changed_at",
+          "legal_basis"
+        ]
+      },
+      "RaitClockMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "flag",
+          "flag_changed_at",
+          "legal_basis"
+        ]
+      },
+      "RaitClockJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "flag",
+          "flag_changed_at",
+          "legal_basis"
+        ]
+      },
+      "RaitClockAlertSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          }
+        },
+        "required": ["id", "clock_id", "level", "raised_at"]
+      },
+      "RaitClockAlertORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          }
+        },
+        "required": ["id", "clock_id", "level", "raised_at"]
+      },
+      "RaitClockAlertMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "notified_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acknowledged_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "clock_id", "level", "raised_at", "notified_role"]
+      },
+      "RaitClockAlertJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "notified_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acknowledged_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "clock_id", "level", "raised_at", "notified_role"]
       }
     }
   }

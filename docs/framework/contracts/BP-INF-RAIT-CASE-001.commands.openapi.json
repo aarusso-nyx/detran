@@ -2,10 +2,10 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RAIT Case commands",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "x-blueprint": "BP-INF-RAIT-CASE-001",
     "x-commands": true,
-    "description": "R-0025 admissibility slice per ADR-0041 and UC-RAIT-002. Four operations have typed strict inputs, parent-case If-Match/ETag and idempotency. Other operations retain their existing scope."
+    "description": "R-0025 admissibility slice per ADR-0041 and UC-RAIT-002. Four operations have typed strict inputs, parent-case If-Match/ETag and idempotency. Other operations retain their existing scope. P4-02-S1 typed scoped replacement of the frozen107-method baseline. ADR0046/47 and T0 closed access/triage maps govern complete role purposes; runtime production qualification is separate. No claim-context/risk API or selector change."
   },
   "paths": {
     "/v1/inf/rait/cases": {
@@ -15,7 +15,58 @@
           "200": {
             "description": "Caso protocolado"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+      },
+      "get": {
+        "operationId": "listRaitCase",
+        "tags": ["rait-case"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitCaseSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseJRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseTRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": []
       }
     },
     "/v1/inf/rait/cases/{id}/commands/admit": {
@@ -305,7 +356,8 @@
               }
             }
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/non-admission": {
@@ -593,7 +645,8 @@
               }
             }
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/remit": {
@@ -603,7 +656,8 @@
           "200": {
             "description": "Caso remetido"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/receive": {
@@ -613,7 +667,8 @@
           "200": {
             "description": "Caso recebido"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/ready": {
@@ -623,7 +678,8 @@
           "200": {
             "description": "Minuta pronta"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/decide": {
@@ -633,7 +689,8 @@
           "200": {
             "description": "Decisão assinada"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/return-draft": {
@@ -643,7 +700,8 @@
           "200": {
             "description": "Minuta devolvida"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/withdraw": {
@@ -653,7 +711,8 @@
           "200": {
             "description": "Desistência registrada"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/redirect": {
@@ -663,7 +722,8 @@
           "200": {
             "description": "Caso redirecionado"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/resolve-pending": {
@@ -673,7 +733,8 @@
           "200": {
             "description": "Pendência resolvida"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/pools/{id}/claim-next": {
@@ -683,7 +744,8 @@
           "200": {
             "description": "Próximo caso atribuído"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/answer": {
@@ -693,7 +755,8 @@
           "200": {
             "description": "Diligência respondida"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/extend": {
@@ -703,7 +766,8 @@
           "200": {
             "description": "Diligência prorrogada"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/expire": {
@@ -713,7 +777,8 @@
           "200": {
             "description": "Diligência vencida"
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/cases/{id}/commands/triage": {
@@ -1001,7 +1066,8 @@
               }
             }
           }
-        }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
       }
     },
     "/v1/inf/rait/admissibility": {
@@ -1286,7 +1352,2230 @@
               }
             }
           }
+        },
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+      },
+      "get": {
+        "operationId": "listRaitAdmissibility",
+        "tags": ["rait-admissibility"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitAdmissibilitySRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAdmissibilityMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAdmissibilityJRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitAdmissibilityTRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/cases/{id}": {
+      "get": {
+        "operationId": "getRaitCase",
+        "tags": ["rait-case"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitCaseSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/parties": {
+      "get": {
+        "operationId": "listRaitParty",
+        "tags": ["rait-party"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitPartySRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPartyMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPartyJRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPartyTRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitParty",
+        "tags": ["rait-party"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          },
+          "201": {
+            "description": "Scoped ordinary metadata mutation; current action permission, complete parent purpose and verified-representation invariants required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitPartySRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitPartyScopedInput"
+              }
+            }
+          }
         }
+      }
+    },
+    "/v1/inf/rait/parties/{id}": {
+      "get": {
+        "operationId": "getRaitParty",
+        "tags": ["rait-party"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitPartySRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitParty",
+        "tags": ["rait-party"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          },
+          "200": {
+            "description": "Scoped ordinary metadata mutation; current action permission, complete parent purpose and verified-representation invariants required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitPartySRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPartyTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitPartyScopedInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "removeRaitParty",
+        "tags": ["rait-party"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Unreferenced scoped ordinary metadata removed; empty body"
+          },
+          "400": {
+            "description": "Immutable/referenced record; no effects"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "description": "Only unreferenced ordinary party metadata under the existing technical-admin action and independently complete case purpose; referenced authority/evidence, lifecycle or audit rows cannot be deleted."
+      }
+    },
+    "/v1/inf/rait/documents": {
+      "get": {
+        "operationId": "listRaitDocument",
+        "tags": ["rait-document"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitDocumentSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDocumentMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDocumentJRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDocumentTRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitDocument",
+        "tags": ["rait-document"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDocumentScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/documents/{id}": {
+      "get": {
+        "operationId": "getRaitDocument",
+        "tags": ["rait-document"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitDocument",
+        "tags": ["rait-document"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          },
+          "200": {
+            "description": "Scoped ordinary metadata mutation; current action permission, complete parent purpose and verified-representation invariants required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDocumentTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitDocumentScopedInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/pending-contents": {
+      "get": {
+        "operationId": "listRaitPendingContent",
+        "tags": ["rait-pending-content"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitPendingContentSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPendingContentORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPendingContentMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitPendingContentJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitPendingContent",
+        "tags": ["rait-pending-content"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitPendingContentScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/pending-contents/{id}": {
+      "get": {
+        "operationId": "getRaitPendingContent",
+        "tags": ["rait-pending-content"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitPendingContentSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPendingContentORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPendingContentMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitPendingContentJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitPendingContent",
+        "tags": ["rait-pending-content"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitPendingContentScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/redirects": {
+      "get": {
+        "operationId": "listRaitRedirect",
+        "tags": ["rait-redirect"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitRedirectSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitRedirectORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitRedirectMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitRedirectJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitRedirect",
+        "tags": ["rait-redirect"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitRedirectScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/redirects/{id}": {
+      "get": {
+        "operationId": "getRaitRedirect",
+        "tags": ["rait-redirect"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitRedirectSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitRedirectORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitRedirectMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitRedirectJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitRedirect",
+        "tags": ["rait-redirect"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitRedirectScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/admissibility/{id}": {
+      "get": {
+        "operationId": "getRaitAdmissibility",
+        "tags": ["rait-admissibility"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitAdmissibilitySRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAdmissibilityMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAdmissibilityJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitAdmissibilityTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/inf/rait/deadlines": {
+      "get": {
+        "operationId": "listRaitDeadline",
+        "tags": ["rait-deadline"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitDeadlineSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDeadlineORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDeadlineMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDeadlineJRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDeadlineTRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitDeadline",
+        "tags": ["rait-deadline"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDeadlineScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/deadlines/{id}": {
+      "get": {
+        "operationId": "getRaitDeadline",
+        "tags": ["rait-deadline"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitDeadlineSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDeadlineORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDeadlineMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDeadlineJRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDeadlineTRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitDeadline",
+        "tags": ["rait-deadline"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitDeadlineScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/inquiries": {
+      "get": {
+        "operationId": "listRaitInquiry",
+        "tags": ["rait-inquiry"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitInquirySRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitInquiryORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitInquiryMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitInquiryJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitInquiry",
+        "tags": ["rait-inquiry"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitInquiryScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/inquiries/{id}": {
+      "get": {
+        "operationId": "getRaitInquiry",
+        "tags": ["rait-inquiry"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitInquirySRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitInquiryORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitInquiryMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitInquiryJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitInquiry",
+        "tags": ["rait-inquiry"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitInquiryScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/drafts": {
+      "get": {
+        "operationId": "listRaitDraft",
+        "tags": ["rait-draft"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitDraftSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDraftORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDraftMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDraftJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitDraft",
+        "tags": ["rait-draft"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDraftScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/drafts/{id}": {
+      "get": {
+        "operationId": "getRaitDraft",
+        "tags": ["rait-draft"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitDraftSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDraftORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDraftMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDraftJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitDraft",
+        "tags": ["rait-draft"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitDraftScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/decisions": {
+      "get": {
+        "operationId": "listRaitDecision",
+        "tags": ["rait-decision"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitDecisionSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDecisionORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDecisionMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitDecisionJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitDecision",
+        "tags": ["rait-decision"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDecisionScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/decisions/{id}": {
+      "get": {
+        "operationId": "getRaitDecision",
+        "tags": ["rait-decision"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitDecisionSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDecisionORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDecisionMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitDecisionJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitDecision",
+        "tags": ["rait-decision"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitDecisionScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/communications": {
+      "get": {
+        "operationId": "listRaitCommunication",
+        "tags": ["rait-communication"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitCommunicationSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCommunicationORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCommunicationMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCommunicationJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitCommunication",
+        "tags": ["rait-communication"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCommunicationScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/communications/{id}": {
+      "get": {
+        "operationId": "getRaitCommunication",
+        "tags": ["rait-communication"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitCommunicationSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCommunicationORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCommunicationMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCommunicationJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitCommunication",
+        "tags": ["rait-communication"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitCommunicationScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/events": {
+      "get": {
+        "operationId": "listRaitCaseEvent",
+        "tags": ["rait-case-event"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/RaitCaseEventSRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseEventORead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseEventMRead"
+                      },
+                      {
+                        "$ref": "#/components/schemas/RaitCaseEventJRead"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createRaitCaseEvent",
+        "tags": ["rait-case-event"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCaseEventScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
+      }
+    },
+    "/v1/inf/rait/events/{id}": {
+      "get": {
+        "operationId": "getRaitCaseEvent",
+        "tags": ["rait-case-event"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "200": {
+            "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/RaitCaseEventSRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseEventORead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseEventMRead"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RaitCaseEventJRead"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateRaitCaseEvent",
+        "tags": ["rait-case-event"],
+        "x-rait-scope": {
+          "contract": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+          "purposeSelection": "server-owned complete role/action/purpose union; never cross-role scope mixing",
+          "parent": "source AND target parents including all related references",
+          "sql": "tenant and complete scope before sorting/count/pagination; no generic500-row authorization",
+          "identity": "authenticated auth.users.id + active tenant membership",
+          "byIdFailure": "404 for missing and unauthorized"
+        },
+        "responses": {
+          "403": {
+            "description": "Action not permitted; no scope or candidate disclosure"
+          },
+          "404": {
+            "description": "Missing or unauthorized parent/resource"
+          },
+          "400": {
+            "description": "VALIDATION_FAILED: protected/unknown fields, invalid references or empty/no-op raw mutation; no row/version/event/audit effect"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRaitCaseEventScopedInput"
+              }
+            }
+          }
+        },
+        "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
       }
     }
   },
@@ -1343,6 +3632,3254 @@
             "description": "Operator-entered nonAdmissionGrounds; no legal text inferred from the reason code."
           }
         }
+      },
+      "RaitCaseSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "intake_channel": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "cetran_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "remitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "communicated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "state",
+          "protocolled_at",
+          "version",
+          "intake_channel",
+          "archived",
+          "pending_completion",
+          "last_movement_at"
+        ]
+      },
+      "RaitCaseORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "state",
+          "protocolled_at",
+          "version",
+          "last_movement_at",
+          "pending_completion",
+          "archived"
+        ]
+      },
+      "RaitCaseMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "intake_channel": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "cetran_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "remitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "communicated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "non_admission_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "intempestivo",
+              "ilegitimo",
+              "sem_assinatura",
+              "pedido_incompativel"
+            ],
+            "nullable": true
+          },
+          "withdrawal_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "legal_priority": {
+            "type": "string",
+            "maxLength": 30,
+            "nullable": true
+          },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "state",
+          "protocolled_at",
+          "version",
+          "ait_id",
+          "intake_channel",
+          "suspensive_effect",
+          "archived",
+          "last_movement_at",
+          "pending_completion"
+        ]
+      },
+      "RaitCaseJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "intake_channel": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "cetran_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "remitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "communicated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "non_admission_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "intempestivo",
+              "ilegitimo",
+              "sem_assinatura",
+              "pedido_incompativel"
+            ],
+            "nullable": true
+          },
+          "withdrawal_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "legal_priority": {
+            "type": "string",
+            "maxLength": 30,
+            "nullable": true
+          },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "state",
+          "protocolled_at",
+          "version",
+          "ait_id",
+          "intake_channel",
+          "suspensive_effect",
+          "archived",
+          "last_movement_at",
+          "pending_completion"
+        ]
+      },
+      "RaitCaseTRead": {
+        "type": "object",
+        "description": "T0 T purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "state",
+          "protocolled_at",
+          "version",
+          "suspensive_effect"
+        ]
+      },
+      "RaitPartySRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": ["id", "case_id", "role", "representation_verified"]
+      },
+      "RaitPartyMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "representation_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "role",
+          "person_name",
+          "document_number",
+          "representation_verified"
+        ]
+      },
+      "RaitPartyJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "representation_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "role",
+          "person_name",
+          "document_number",
+          "representation_verified"
+        ]
+      },
+      "RaitPartyTRead": {
+        "type": "object",
+        "description": "T0 T purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "representation_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "role",
+          "person_name",
+          "representation_verified"
+        ]
+      },
+      "CreateRaitPartyScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          }
+        },
+        "minProperties": 1,
+        "required": ["case_id", "role", "person_name", "document_number"]
+      },
+      "UpdateRaitPartyScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          }
+        },
+        "minProperties": 1
+      },
+      "RaitDocumentSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["id", "case_id", "kind", "origin", "attached_at"]
+      },
+      "RaitDocumentMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "filename": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "digitised_from_paper": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "kind",
+          "origin",
+          "filename",
+          "content_hash",
+          "digitised_from_paper",
+          "attached_at"
+        ]
+      },
+      "RaitDocumentJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "filename": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "digitised_from_paper": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "kind",
+          "origin",
+          "filename",
+          "content_hash",
+          "digitised_from_paper",
+          "attached_at"
+        ]
+      },
+      "RaitDocumentTRead": {
+        "type": "object",
+        "description": "T0 T purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "digitised_from_paper": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "kind",
+          "origin",
+          "attached_at",
+          "digitised_from_paper"
+        ]
+      },
+      "CreateRaitDocumentScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitDocumentScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "filename": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "minProperties": 1
+      },
+      "RaitPendingContentSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["atendida", "nao_atendida"],
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "due_on", "opened_at"]
+      },
+      "RaitPendingContentORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["atendida", "nao_atendida"],
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "due_on", "opened_at"]
+      },
+      "RaitPendingContentMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["atendida", "nao_atendida"],
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "due_on", "opened_at", "opened_by"]
+      },
+      "RaitPendingContentJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["atendida", "nao_atendida"],
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "due_on", "opened_at", "opened_by"]
+      },
+      "CreateRaitPendingContentScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitPendingContentScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitRedirectSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["entrada", "saida"]
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "counterpart_agency": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "origin_protocolled_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_restored": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "redirected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "protocol_number",
+          "counterpart_agency",
+          "deadline_restored",
+          "redirected_at"
+        ]
+      },
+      "RaitRedirectORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["entrada", "saida"]
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "deadline_restored": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "redirected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "protocol_number",
+          "deadline_restored",
+          "redirected_at"
+        ]
+      },
+      "RaitRedirectMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["entrada", "saida"]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["outro_orgao_autuador", "orgao_incompetente"]
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "ait_number": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "counterpart_agency": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "counterpart_renainf_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "origin_protocolled_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_restored": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "receipt_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "redirected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "redirected_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "reason",
+          "protocol_number",
+          "counterpart_agency",
+          "deadline_restored",
+          "redirected_at",
+          "redirected_by"
+        ]
+      },
+      "RaitRedirectJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["entrada", "saida"]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["outro_orgao_autuador", "orgao_incompetente"]
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "ait_number": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "counterpart_agency": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "counterpart_renainf_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "origin_protocolled_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_restored": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "receipt_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "redirected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "redirected_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "reason",
+          "protocol_number",
+          "counterpart_agency",
+          "deadline_restored",
+          "redirected_at",
+          "redirected_by"
+        ]
+      },
+      "CreateRaitRedirectScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitRedirectScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitAdmissibilitySRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["id", "case_id", "criterion", "verdict", "evaluated_at"]
+      },
+      "RaitAdmissibilityMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "evaluated_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "criterion",
+          "verdict",
+          "evaluated_at",
+          "evaluated_by"
+        ]
+      },
+      "RaitAdmissibilityJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "evaluated_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "criterion",
+          "verdict",
+          "evaluated_at",
+          "evaluated_by"
+        ]
+      },
+      "RaitAdmissibilityTRead": {
+        "type": "object",
+        "description": "T0 T purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["id", "case_id", "criterion", "verdict", "evaluated_at"]
+      },
+      "RaitDeadlineSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "business_days",
+          "extension_count",
+          "legal_basis"
+        ]
+      },
+      "RaitDeadlineORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "business_days",
+          "extension_count",
+          "legal_basis"
+        ]
+      },
+      "RaitDeadlineMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "business_days",
+          "extension_count",
+          "legal_basis"
+        ]
+      },
+      "RaitDeadlineJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "business_days",
+          "extension_count",
+          "legal_basis"
+        ]
+      },
+      "RaitDeadlineTRead": {
+        "type": "object",
+        "description": "T0 T purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "business_days",
+          "extension_count",
+          "legal_basis"
+        ]
+      },
+      "CreateRaitDeadlineScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitDeadlineScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitInquirySRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "requested_at",
+          "due_on",
+          "extension_count"
+        ]
+      },
+      "RaitInquiryORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "requested_at",
+          "due_on",
+          "extension_count"
+        ]
+      },
+      "RaitInquiryMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressee": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "orgao_autuador"]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "addressee",
+          "subject",
+          "requested_at",
+          "requested_by",
+          "due_on",
+          "extension_count"
+        ]
+      },
+      "RaitInquiryJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressee": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "orgao_autuador"]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "addressee",
+          "subject",
+          "requested_at",
+          "requested_by",
+          "due_on",
+          "extension_count"
+        ]
+      },
+      "CreateRaitInquiryScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitInquiryScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitDraftSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["rascunho", "submetida", "devolvida", "assinada"],
+            "default": "'rascunho'"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "returned_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "return_count": {
+            "type": "integer",
+            "default": "0"
+          }
+        },
+        "required": ["id", "case_id", "version", "status", "return_count"]
+      },
+      "RaitDraftORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["rascunho", "submetida", "devolvida", "assinada"],
+            "default": "'rascunho'"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "returned_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "return_count": {
+            "type": "integer",
+            "default": "0"
+          }
+        },
+        "required": ["id", "case_id", "version", "status", "return_count"]
+      },
+      "RaitDraftMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "author_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["rascunho", "submetida", "devolvida", "assinada"],
+            "default": "'rascunho'"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "returned_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "return_guidance": {
+            "type": "string",
+            "nullable": true
+          },
+          "return_count": {
+            "type": "integer",
+            "default": "0"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "version",
+          "author_id",
+          "content_hash",
+          "status",
+          "return_count"
+        ]
+      },
+      "RaitDraftJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "author_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["rascunho", "submetida", "devolvida", "assinada"],
+            "default": "'rascunho'"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "returned_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "return_guidance": {
+            "type": "string",
+            "nullable": true
+          },
+          "return_count": {
+            "type": "integer",
+            "default": "0"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "version",
+          "author_id",
+          "content_hash",
+          "status",
+          "return_count"
+        ]
+      },
+      "CreateRaitDraftScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitDraftScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitDecisionSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "circuit", "decision_kind", "decided_at"]
+      },
+      "RaitDecisionORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "circuit", "decision_kind", "decided_at"]
+      },
+      "RaitDecisionMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "grounds": {
+            "type": "string"
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "circuit",
+          "decision_kind",
+          "grounds",
+          "decided_by",
+          "decided_at"
+        ]
+      },
+      "RaitDecisionJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "grounds": {
+            "type": "string"
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "circuit",
+          "decision_kind",
+          "grounds",
+          "decided_by",
+          "decided_at"
+        ]
+      },
+      "CreateRaitDecisionScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitDecisionScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitCommunicationSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "authority_appeal_notice": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "channel",
+          "sent_at",
+          "authority_appeal_notice"
+        ]
+      },
+      "RaitCommunicationORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "channel", "sent_at"]
+      },
+      "RaitCommunicationMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "authority_appeal_notice": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "channel",
+          "sent_at",
+          "authority_appeal_notice"
+        ]
+      },
+      "RaitCommunicationJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "authority_appeal_notice": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "id",
+          "case_id",
+          "channel",
+          "sent_at",
+          "authority_appeal_notice"
+        ]
+      },
+      "CreateRaitCommunicationScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitCommunicationScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "RaitCaseEventSRead": {
+        "type": "object",
+        "description": "T0 S purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["id", "case_id", "event_type", "occurred_at"]
+      },
+      "RaitCaseEventORead": {
+        "type": "object",
+        "description": "T0 O purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["id", "case_id", "event_type", "occurred_at"]
+      },
+      "RaitCaseEventMRead": {
+        "type": "object",
+        "description": "T0 M purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "event_type", "occurred_at"]
+      },
+      "RaitCaseEventJRead": {
+        "type": "object",
+        "description": "T0 J purpose projection. Server-authorized complete purpose only; parent checks before SQL pagination and count. No tenant, storage, arbitrary payload or unqualified reference disclosure.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["id", "case_id", "event_type", "occurred_at"]
+      },
+      "CreateRaitCaseEventScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
+      },
+      "UpdateRaitCaseEventScopedInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "minProperties": 1
       }
     },
     "parameters": {
