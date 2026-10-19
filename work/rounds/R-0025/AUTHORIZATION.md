@@ -66,3 +66,15 @@ Autoriza observação exata não-promotora, evidência parcial por verbo e prepa
 documental por PR. P4-02-S1 permanece proposta: nenhum dispatch Inspector/Engineer,
 merge deste follow-up, fechamento de rodada ou implementação runtime está liberado.
 D1–D11 e o design integrado por PR200 permanecem aprovados; não são reabertos.
+
+## P4-02-S1 execution authorization — Owner, 2026-10-19
+
+status: active
+GRANTED for P4-02-S1 only, per direct Owner message:
+
+> I approve P4-02-S1 as written. Check CI on PR #201, fix any failures, and merge once required checks are green. Then execute the approved slice, preserving local and scorecard work.
+
+PR201 merged as a006b039 with all required checks PASS. Only the S1 Architect →
+Inspector RED → Engineer → Inspector GREEN/review implementation-PR sequence is
+active. Historical queued tasks and S2 remain unapproved for dispatch; no merge,
+release, production provisioning, close/seal or scorecard modification authorized.
