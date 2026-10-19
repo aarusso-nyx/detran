@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_dep_graph",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:40:55.880Z",
+  "finished_at": "2026-10-19T04:40:57.356Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_dep_graph\"},\"members\":[{\"kind\":\"inventory_dep_graph\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_dep_graph\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_dep_graph\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:dep-graph\\\",\\\"kind\\\":\\\"inventory_dep_graph\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:40:57.252Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense dep-graph --repo-root /Volumes/Development/projects/stech/detran\\\",\\\"command_hash\\\":\\\"287be378a27b2bd095cac7b096ce1efdafd9a30fc6ab703309b44b28b194cf97\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":822,\\\"metrics\\\":{\\\"node_count\\\":3375,\\\"edge_count\\\":15913},\\\"id\\\":\\\"SR-e227d2047d1d0ff7\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

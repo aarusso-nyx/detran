@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "decision_citation_resolution",
+    "kind": "decision_citation_resolution"
+  },
+  "timestamp": "2026-10-19T04:41:38.612Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense run decision_citation_resolution",
+  "command_hash": "190a76c829ea0a34b275ccd66b08f17ca72a9660de52094fa2b16d072a2faa9b",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "error",
+      "code": "DECISION_CITATION_UNRESOLVED",
+      "message": "law/schemas/adr-validation-policy.schema.json cites missing ADR-014.",
+      "file": "law/schemas/adr-validation-policy.schema.json"
+    },
+    {
+      "severity": "error",
+      "code": "DECISION_CITATION_UNRESOLVED",
+      "message": "law/schemas/adr.schema.json cites missing ADR-014.",
+      "file": "law/schemas/adr.schema.json"
+    }
+  ],
+  "metrics": {
+    "finding_count": 2
+  },
+  "id": "SR-bc392df837a388f7"
+}

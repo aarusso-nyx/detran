@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_invariant_alignment",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:21.987Z",
+  "finished_at": "2026-10-19T04:42:22.790Z",
+  "exitCode": 3,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_invariant_alignment\"},\"members\":[{\"kind\":\"harness_invariant_alignment\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_invariant_alignment\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run harness_invariant_alignment\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-invariant-alignment\\\",\\\"kind\\\":\\\"harness_invariant_alignment\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:42:22.698Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense run harness_invariant_alignment\\\",\\\"command_hash\\\":\\\"2ffb8cc65dbb549d8b019f82af4cc567ea80cc8d932ba646e1ae727a43f76def\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-CH-001 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-DASH-001 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-EST-001 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-INF-001 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-OPS-001 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-OPS-002 has no measurable_via[] entries to align against CI.\\\"},{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_INVARIANT_ALIGNMENT_NO_MEASURABLE_VIA\\\",\\\"message\\\":\\\"Gate invariant INV-PORTAL-001 has no measurable_via[] entries to align against CI.\\\"}],\\\"metrics\\\":{\\\"gate_invariants\\\":7,\\\"misaligned\\\":7,\\\"workflow_count\\\":2,\\\"executable_run_steps\\\":38,\\\"evidence_records\\\":188,\\\"candidate_head_resolved\\\":true},\\\"id\\\":\\\"SR-ece3ebe146c49178\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

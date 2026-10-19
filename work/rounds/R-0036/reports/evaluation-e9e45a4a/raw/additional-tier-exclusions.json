@@ -1,0 +1,18 @@
+{
+  "excluded_existing_test_tiers": {
+    "real": [
+      "backend/app/tests/real/boat-documents.real.spec.ts",
+      "backend/app/tests/real/postgis.real.spec.ts"
+    ],
+    "in-house": [
+      "backend/app/tests/in-house/pec-dashboard.in-house.spec.ts",
+      "backend/app/tests/in-house/pec-real-environment.in-house.spec.ts"
+    ]
+  },
+  "reason": "Existing environment-specific real/in-house tiers are outside this disposable local unit/integration/API-E2E contract; not represented as passed or as RC coverage.",
+  "integration_upgrade_assignment": {
+    "path": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+    "excluded_from": "backend:test:integration",
+    "executed_by": "backend:test:upgrade inside e2e task"
+  }
+}

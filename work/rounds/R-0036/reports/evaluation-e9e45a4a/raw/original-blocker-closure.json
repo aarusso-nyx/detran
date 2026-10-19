@@ -1,0 +1,247 @@
+{
+  "evaluated_commit": "e9e45a4a6cbed5cfd394c716c79a55b1aca386b8",
+  "baseline_commit": "34a89f845146523161f401ae758b5fb9fab8db93",
+  "original_blocked_count": 11,
+  "cells": [
+    {
+      "cell": "F2:T1",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "plant_coverage",
+          "id": "SR-ad11a6967afee4e7",
+          "status": "pass",
+          "capture": "raw/first-plant_coverage.json"
+        }
+      ],
+      "remediation_tasks": []
+    },
+    {
+      "cell": "F2:T4",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "migration_check",
+          "id": "SR-f1abd621b3b3abd8",
+          "status": "pass",
+          "capture": "raw/sensor-migration_check.json"
+        }
+      ],
+      "remediation_tasks": []
+    },
+    {
+      "cell": "F2:T5",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "lint",
+          "id": "SR-a91ed32cc69e7146",
+          "status": "fail",
+          "capture": "raw/first-lint.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0014"
+      ]
+    },
+    {
+      "cell": "F2:T6",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "security_scan",
+          "id": "SR-128fc2f928f0c3ff",
+          "status": "fail",
+          "capture": "raw/first-security_scan.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0013"
+      ]
+    },
+    {
+      "cell": "F2:T7",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "perf_test",
+          "id": "SR-f604560e06674aa5",
+          "status": "pass",
+          "capture": "raw/first-perf_test.json"
+        }
+      ],
+      "remediation_tasks": []
+    },
+    {
+      "cell": "F2:T8",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "type_check",
+          "id": "SR-630aeeee3eb19c7d",
+          "status": "pass",
+          "capture": "raw/first-type_check.json"
+        }
+      ],
+      "remediation_tasks": []
+    },
+    {
+      "cell": "F3:T1",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "e2e_test",
+          "id": "SR-3f2b0428fcf71d7a",
+          "status": "fail",
+          "capture": "raw/sensor-e2e_test.json"
+        },
+        {
+          "kind": "integration_test",
+          "id": "SR-031a5d2e0ce0ad12",
+          "status": "pass",
+          "capture": "raw/sensor-integration_test.json"
+        },
+        {
+          "kind": "unit_test",
+          "id": "SR-4f6aa383c5a7878a",
+          "status": "pass",
+          "capture": "raw/sensor-unit_test.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0016"
+      ]
+    },
+    {
+      "cell": "F3:T2",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "test_coverage_depth",
+          "id": "SR-896662eb2dc21862",
+          "status": "review",
+          "capture": "raw/first-test_coverage_depth.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0017"
+      ]
+    },
+    {
+      "cell": "F4:T1",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "inventory_api",
+          "id": "SR-f15df859e6702a61",
+          "status": "pass",
+          "capture": "raw/first-inventory_api.json"
+        },
+        {
+          "kind": "inventory_coverage",
+          "id": "SR-8c2f4675d7009bf1",
+          "status": "review",
+          "capture": "raw/first-inventory_coverage.json"
+        },
+        {
+          "kind": "inventory_data_handling",
+          "id": "SR-88b8cb3e8c219946",
+          "status": "pass",
+          "capture": "raw/first-inventory_data_handling.json"
+        },
+        {
+          "kind": "inventory_data_model",
+          "id": "SR-a25094e4d3607fbc",
+          "status": "pass",
+          "capture": "raw/first-inventory_data_model.json"
+        },
+        {
+          "kind": "inventory_dep_graph",
+          "id": "SR-e227d2047d1d0ff7",
+          "status": "pass",
+          "capture": "raw/first-inventory_dep_graph.json"
+        },
+        {
+          "kind": "inventory_rbac",
+          "id": "SR-0d9509b651c3e07c",
+          "status": "review",
+          "capture": "raw/first-inventory_rbac.json"
+        },
+        {
+          "kind": "inventory_routes",
+          "id": "SR-68f069c8826fa731",
+          "status": "pass",
+          "capture": "raw/first-inventory_routes.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0018"
+      ]
+    },
+    {
+      "cell": "F4:T2",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "inventory_api",
+          "id": "SR-f15df859e6702a61",
+          "status": "pass",
+          "capture": "raw/first-inventory_api.json"
+        },
+        {
+          "kind": "inventory_coverage",
+          "id": "SR-8c2f4675d7009bf1",
+          "status": "review",
+          "capture": "raw/first-inventory_coverage.json"
+        },
+        {
+          "kind": "inventory_data_model",
+          "id": "SR-a25094e4d3607fbc",
+          "status": "pass",
+          "capture": "raw/first-inventory_data_model.json"
+        },
+        {
+          "kind": "inventory_routes",
+          "id": "SR-68f069c8826fa731",
+          "status": "pass",
+          "capture": "raw/first-inventory_routes.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0018"
+      ]
+    },
+    {
+      "cell": "F4:T6",
+      "before": "blocked",
+      "after": "measured",
+      "native_evidence": [
+        {
+          "kind": "inventory_data_handling",
+          "id": "SR-88b8cb3e8c219946",
+          "status": "pass",
+          "capture": "raw/first-inventory_data_handling.json"
+        },
+        {
+          "kind": "inventory_rbac",
+          "id": "SR-0d9509b651c3e07c",
+          "status": "review",
+          "capture": "raw/first-inventory_rbac.json"
+        }
+      ],
+      "remediation_tasks": [
+        "BL-0020"
+      ]
+    }
+  ]
+}

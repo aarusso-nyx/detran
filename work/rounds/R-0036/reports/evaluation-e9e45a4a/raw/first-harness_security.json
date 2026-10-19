@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_security",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:10.394Z",
+  "finished_at": "2026-10-19T04:41:11.049Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_security\"},\"members\":[{\"kind\":\"harness_security\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_security\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run harness_security\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-security\\\",\\\"kind\\\":\\\"harness_security\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:41:10.960Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-harness-security\\\",\\\"command_hash\\\":\\\"0997fe21464dd19921fd746d4c140219a4db2dbd0053fff866f39e9818654131\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"workflow_count\\\":2,\\\"unpinned_action_count\\\":0,\\\"missing_permissions_block_count\\\":0,\\\"pwn_request_count\\\":0},\\\"id\\\":\\\"SR-3ceb34b946d27ff0\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

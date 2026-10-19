@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_determinism",
+    "--repo-root",
+    ".",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:41:02.749Z",
+  "finished_at": "2026-10-19T04:41:10.394Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_determinism\"},\"members\":[{\"kind\":\"inventory_determinism\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_determinism\"],\"excluded\":[],\"round_required\":false,\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_determinism\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory-determinism\\\",\\\"kind\\\":\\\"inventory_determinism\\\"},\\\"timestamp\\\":\\\"2026-10-19T04:41:10.269Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-inventory-determinism\\\",\\\"command_hash\\\":\\\"a98e42de47872a05c0a07a0f3bbed050ad244c3e751207208fd8640d37dab650\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"hash_a\\\":\\\"fd03b3df4dcc306d7310902a84fcbfbcc25c598b8d1b9d111c73d086b5aecee5\\\",\\\"hash_b\\\":\\\"fd03b3df4dcc306d7310902a84fcbfbcc25c598b8d1b9d111c73d086b5aecee5\\\",\\\"bytes_a\\\":976889,\\\"bytes_b\\\":976889,\\\"equal\\\":1},\\\"id\\\":\\\"SR-81e91b557a919913\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

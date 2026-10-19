@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "inventory:coverage",
+    "kind": "inventory_coverage",
+    "version": "1.0.0"
+  },
+  "timestamp": "2026-10-19T04:40:57.909Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense coverage --repo-root /Volumes/Development/projects/stech/detran",
+  "command_hash": "9d839d06e07a39cc236e606ef06d7b872260a9ea1ab876e936c1abd0390964f9",
+  "tier": "L0",
+  "duration_ms": 38,
+  "findings": [
+    {
+      "severity": "info",
+      "code": "COVERAGE_PARTIAL_USE_CASE_LINKING",
+      "message": "110 use-case(s) populate 0 link(s); 91 route(s) and 1151 endpoint(s) remain unmapped. Extend use-case refs.routeIds + refs.endpointIds to close."
+    }
+  ],
+  "metrics": {
+    "route_count": 91,
+    "endpoint_count": 1151,
+    "use_case_count": 110,
+    "link_count": 0,
+    "unmapped_route_count": 91,
+    "unmapped_endpoint_count": 1151,
+    "inferred_path_match_count": 0,
+    "coverage_hash": "52c5e15618455570c188762d55414aa703794208bd25bfb603fd500706acc311"
+  },
+  "id": "SR-8c2f4675d7009bf1"
+}

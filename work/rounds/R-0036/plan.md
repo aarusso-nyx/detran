@@ -4,6 +4,8 @@
 without a formal closure or readiness claim. Initiated by the user's approved plan on 2026-10-18.
 Backlog: BL-0001. Baseline: `3ec14d3a0e6b274dc367157bc4958f81750c5dc8`.
 
+The initial assessment contract and its historical results are preserved below. The user-authorized measurement extension and current results are recorded at the end of this plan.
+
 ## Goal
 
 Evaluate every applicable cell using DEVAI 2.2.0, enable supported sensor inputs,
@@ -73,3 +75,22 @@ passed targeted reruns without assertion or timeout changes. Existing empty pack
 suites and TODOs are explicitly inventoried. Full formatting reports only the
 pre-existing ignored `.claude/settings.local.json`; delivered source formatting passes.
 The disposable database and both mock services were stopped and their removal recorded.
+
+## Authorized measurement extension completed — 2026-10-19
+
+The Owner authorized adopting the latest published DEVAI, separate measurement repairs in DEVAI, integration after mandatory green checks, release 2.6.3, and new generous performance targets/suite. These authorizations supersede only the corresponding initial restrictions above. ADR-0044 defines the new local request-path baseline; ADR-0045 explicitly replaces proposed RC coverage with whole-source **local unit** coverage and separately measured database tiers; ADR-0046 records published DEVAI 2.6.3 adoption. All existing thresholds, product behavior and historical evidence remain preserved.
+
+The DEVAI source repairs landed through #413, #415 and #416, with #414 preserved and closed as superseded by #416. The verified 2.6.3 release was adopted through registered upgrade/binding operations.
+
+Frozen evaluation commit: `e9e45a4a6cbed5cfd394c716c79a55b1aca386b8`. All **43 applicable cells are measured**, including the original 11 blocked items. Native result: **24 PASS / 10 REVIEW / 9 FAIL / 0 UNKNOWN / 2 unchanged N/A**; overall FAIL. No readiness or formal round-closure claim is made.
+
+The replay order is prerequisites, **record prerequisites before emitting any repeated sensor kind**, first canonical pass, record, second store-reader pass, record, and exact-commit scorecard. In particular, recording prerequisite coverage before the first-pass coverage emission gives its new instance an explicit immutable supersedes link. The refused ambiguous attempt remains historical evidence.
+
+- [Completed assessment](reports/evaluation-e9e45a4a/completion.md).
+- [43-row register](reports/evaluation-e9e45a4a/evaluation-register.json).
+- [Native scorecard](reports/evaluation-e9e45a4a/scorecard.json).
+- [Evidence manifest](reports/evaluation-e9e45a4a/evidence-manifest.json).
+- [Baseline comparison](reports/evaluation-e9e45a4a/baseline-comparison.json).
+- [Separate prioritized backlog](reports/evaluation-e9e45a4a/raw/remediation-backlog.md).
+
+BL-0002 through BL-0012 are resolved as measurement findings. Product/governance tasks BL-0013 through BL-0023 remain open. The independent current-baseline replanning and unapproved P4 packet remain outside this work.

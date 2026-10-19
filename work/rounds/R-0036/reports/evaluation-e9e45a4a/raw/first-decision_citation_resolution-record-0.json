@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/published-263-e9e45a4a/first-decision_citation_resolution-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:18.205Z",
+  "finished_at": "2026-10-19T04:42:18.811Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/decision_citation_resolution/SR-bc392df837a388f7.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"decision_citation_resolution\",\"kind\":\"decision_citation_resolution\"},\"timestamp\":\"2026-10-19T04:41:38.612Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense run decision_citation_resolution\",\"command_hash\":\"190a76c829ea0a34b275ccd66b08f17ca72a9660de52094fa2b16d072a2faa9b\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"law/schemas/adr-validation-policy.schema.json cites missing ADR-014.\",\"file\":\"law/schemas/adr-validation-policy.schema.json\"},{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"law/schemas/adr.schema.json cites missing ADR-014.\",\"file\":\"law/schemas/adr.schema.json\"}],\"metrics\":{\"finding_count\":2},\"id\":\"SR-bc392df837a388f7\"}}}}\n",
+  "stderr": ""
+}
