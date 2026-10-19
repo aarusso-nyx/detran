@@ -6,8 +6,11 @@
 > são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual:** A-C3-01, recorte de admissibilidade integrado por PR #193;
-TASK-0024…0027 completed no recorte. Pós-merge registrado; rodada integral aberta. A adenda A-C3-01 abaixo prevalece sobre a sequência histórica.
+**Status atual (2026-10-19):** admissibilidade #193 e pré-requisito S1
+escopo/projeção/parent/replay #203 integrados, main2df548e0. Pós-merge exato
+não-promotor registrado; R-0025/JW-01 permanecem abertas. S2 backend-first é
+proposta, sem autorização ou dispatch; a adenda PR203 abaixo prevalece sobre
+banners históricos. Nenhuma aceitação integral foi reduzida.
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.
@@ -691,3 +694,28 @@ no PR merge, deployment or round completion is declared.
 The earlier S1 pause is superseded by the recorded approval only within S1.
 S2 remains unapproved. A2's unavailable details, production qualification and
 broader JW01/R-0025 completion remain open; no scorecard completion is implied.
+
+## Current execution boundary — PR203 post-merge and proposed S2, 2026-10-19
+
+PR203 merged candidate178addd6 as2df548e0 after all five required checks passed.
+Main's complete DETRAN CI also passed. S1 is integrated, including the approved
+loader, identity, A2–A5 and four test-only CI fixture repairs. Historical candidate
+receipts above retain their original scope, rather than implying implementation
+or GREEN remains pending. See reports/PR203-post-merge/README.md.
+
+Exact-merge audit EV-ded4f5431f6737ad is YELLOW:0/45 passing,43 UNKNOWN,2 N/A,
+readiness_promoting=false; separate scorecard measurement/closure is unchanged.
+A separate trusted-local-RC workflow failed its missing protected-tag lookup and
+summary output; the full backend fallback published successful verified-local-rc.
+That workflow/attestation exception remains visible as a separate CI follow-up,
+not a runtime failure, blanket all-workflows PASS or signed RC success.
+
+Next recommendation is reports/P4-02-S2-approval-packet.md with its closed
+P4-02-S2-owned-paths.json: backend current risk, provenance-qualified legacy,
+complete-pool context and atomic claim together. It explicitly splits T3 from
+later S3 UI/dossier/browser delivery; all T4–T6 and original64-command acceptance
+remain required. S2 remains PAUSED/NOT AUTHORIZED until explicit exact approval.
+No managed tasks, locks or runtime edits are created by this proposal. D1–D11 stay
+approved; operational bindings/ladder/legacy/incident inputs remain release gates.
+A2 unavailable batch/pending-item fields require later typed restoration.
+No close/seal, readiness promotion, production provisioning or scorecard changes.

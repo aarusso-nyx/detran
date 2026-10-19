@@ -1,0 +1,61 @@
+{
+  "verdict": "PASS",
+  "scope": "Read-only Architect/Inspector review of the PR203 post-merge audit and the proposed P4-02-S2 packet against merge 2df548e0. During the review the lane committed its work as a8336c43, so the committed versions were reviewed. Also read the uncommitted 23-line backlog.md addition and the untracked same-family-review.md and inventory-verification.json for context. Files reviewed: PR203-post-merge README and JSON receipts (pr, candidate/main/required checks, main-ci, trusted-rc history and log, audit-observe, preservation-start), P4-02-S2-approval-packet.md, P4-02-S2-owned-paths.json, and the updated plan, AUTHORIZATION, COMPLETION-PLAN, BUILD-PLAN, C-0003, backlog, rounds index, handoff and chain.json. Checked against ADR-0045/0047/0048/0049/0052, JW01-claim-wiring-contract, P4-02-deadlines-risk-api, P4-02-D8-D11 amendment (A1, including §2 ownership and §6 risk read), policy.ts, the deadlines vitest config, check-commands census and inf-rls census. All 247 owned-path entries were re-hashed against 2df548e0: existence and sha256 match for every entry, 0 mismatches. Receipts agree with the claims. All five required candidate contexts passed; stack-smoke was SKIPPED and is not counted as a pass. DETRAN CI run 39298941118 passed. Trusted-local-RC run 39298941092 failed with gh HTTP 404 and is kept separate from the fallback verified-local-rc success. The audit-observe artifact hashes match chain entry EV-ded4f5431f6737ad, YELLOW, readiness_promoting=false. The packet's transport, error codes, If-Match 400, limit max 50, CASE_POOL_UNRESOLVED/RISK_SOURCE_UNAVAILABLE/CLAIM_LEGACY_UNVERIFIED, v+2/v+1 legacy paths, NULL priority exclusion and A/C proposta rows all trace to accepted sources. The backend-only split keeps every T4–T6 and journey obligation, and no approval or completion is claimed.",
+  "findings": [
+    {
+      "severity": "low",
+      "path": ".devai/state/tasks/TASK-0028.json (and TASK-0029..0031, .devai/state/locks/*MOD-r25-s1-*.json, .devai/state/backlog.jsonl, .devai/state/worktrees.json)",
+      "detail": "S1 lifecycle state is still in the worktree, untracked: TASK-0028..0031 are 'ready' (backlog.jsonl says 'queued') and six S1 module locks have expired TTLs. Every record says S1 is integrated. EV-ded4f5431f6737ad lists these files as dirty_files, so the exact-merge observation ran on a dirty tree. The README's preservation section does not mention this S1 task/lock state.",
+      "recommendation": "Before any S2 task registration, close or release the S1 tasks and locks through the supported DEVAI lifecycle verbs, or record their custody explicitly. Do not hand-delete them. Then S2 IDs, locks and worktrees cannot collide with or inherit stale S1 state, and the next observation starts from a clean tree."
+    },
+    {
+      "severity": "low",
+      "path": "work/campaigns/C-0003-produto-primeiro.md",
+      "detail": "Section 2 (lines 17–31) still has a header calling it the current execution order. Its rows still say PR203 is a candidate pending merge (line 27) and that the next action is to check CI and merge PR203 (line 31). Its PC-tranche line also still lists PR203 as pending (line 132). The new banner (lines 4–15) records the merge, so the campaign file contradicts itself. Also, the claim that the four CI fixture repairs left no runtime change has no receipt in the PR203-post-merge folder.",
+      "recommendation": "Mark those Section 2 rows and line 132 as superseded by the 2026-10-19 banner, or update them in place. Add a small receipt listing the four commits and their touched paths, or link to where that is recorded."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/README.md",
+      "detail": "The R-0025 row's 'PRs de merge' column is still '—', although #193 and #203 merged into this open round. Other open rounds, such as R-0020 (#150, #155), list their merged PRs.",
+      "recommendation": "Add #193 and #203 (and any other R-0025 merges in #196–#203 that belong there) to the column, and run pnpm verify:rounds-index."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-S2-approval-packet.md",
+      "detail": "The packet says both new GETs reuse existing permissions but does not name the @Resource/@Action pair. In policy.ts, claim-next is analyst-only (['rait-case','claim-next',['rait-analyst']]), while the scoped reads use @Resource('inf:rait-case') @Action('read'), which many roles hold. If raitClaimContext is decorated with 'read', or with a new action label, it would either widen access past the analyst claim permission or require editing policy.ts, which S2 does not own.",
+      "recommendation": "State the exact tuples: raitClaimContext uses @Resource('inf:rait-case') @Action('claim-next'), and raitCaseRiskSnapshot uses @Resource('inf:rait-case') @Action('read') plus the S1 parent/purpose predicate. Add an HTTP negative test showing a read-only role is denied claim-context."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-S2-approval-packet.md",
+      "detail": "ADR-0047 makes both claim-context and claim fail with CASE_POOL_UNRESOLVED409, and ADR-0049 makes both fail with RISK_SOURCE_UNAVAILABLE503. ADR-0048 only says a selector that cannot build its safe ordered set returns CLAIM_LEGACY_UNVERIFIED409. The packet does not say whether the selected-pool claim-context GET returns that 409 or a degraded queue page when an in-scope legacy row is unverified. Its acceptance list does not cover the GET either.",
+      "recommendation": "State the GET behavior explicitly; the most consistent reading is that the whole selected-pool context also returns 409. Add a GET case to the legacy acceptance bullet. If the sources do not decide it, record it as a bounded stop item instead of leaving it to the Engineer."
+    },
+    {
+      "severity": "low",
+      "path": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "detail": "The WORKLIST harness runtime (createWorklistCommandRuntime) still handles 'claim-next' with DISTRIBUIDO-only selection and checks WIP before QUEUE_EMPTY, the reverse of the ADR-0045 §7 precedence S2 enforces. Its tests (rait-worklist-command-contract.spec.ts, rait-worklist-corrective.spec.ts) are neither owned by S2 nor disposed of. A second, contrary claim definition will remain after S2.",
+      "recommendation": "Record a disposition in the packet: either a legacy harness kept read-only, with a note that it is not the canonical claim contract, or a bounded owned change. Then reviewers will not treat its regressions as conflicting evidence."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-S2-owned-paths.json",
+      "detail": "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts uses the pool-scope fixtures. Its pool-provenance fixture needed repairs in S1 CI (de976582, e2391e65). S2 changes the owned rait-case-pool-scope.service.ts and adds legacy qualification, but this test is not in the inventory. Under the stop rule, a likely fixture update would pause S2 mid-flight, as happened with the RLS census before it was added.",
+      "recommendation": "Pre-classify it now: either an explicit read-only regression that must stay byte-identical, or a bounded Inspector-owned path with its baseline hash and an allowed-change statement."
+    },
+    {
+      "severity": "info",
+      "path": "work/rounds/R-0025/reports/PR203-post-merge/README.md",
+      "detail": "The README says the observation ran 'as Auditor'. The chain entry EV-ded4f5431f6737ad records actor 'devai-cli' with actor_role 'harness'; the invocation used --as-role auditor.",
+      "recommendation": "Say that the CLI ran with --as-role auditor and the chain records actor_role=harness, so the receipt and the claim match exactly."
+    }
+  ],
+  "limitations": [
+    "No tests, CI, generators, devai doctor or proof-chain verification were run. CI conclusions come only from the committed receipts.",
+    "HEAD moved from 2df548e0 to a8336c43 during the review, and the backlog.md working copy has an extra uncommitted section. The findings apply to those versions.",
+    "The untracked same-family-review.md and inventory-verification.json were read only for context and were not checked as receipts.",
+    "Did not verify that the generator can express ADR-0048 constraints without the 19-rait-case-scope-enforce.sql exception, or that ORG exports a public interface for the incident port. The packet treats both as stop conditions.",
+    "GitHub was not queried directly. Branch protection, check-run and workflow claims rely on the JSON receipts in the repo."
+  ]
+}

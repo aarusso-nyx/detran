@@ -1,0 +1,24 @@
+{
+  "verdict": "PASS",
+  "scope": "Read-only cross-family Architect/Inspector delta review from a8336c43 to the checkpoint ec1dcb59, with HEAD 66d21161 adding only PR203-S2-packet-2/prompt.md. Each of the 8 findings in PR203-S2-packet-1/review.json was checked against actual source. The packet sha256 is 495d9b55…6b72 and the owned-paths sha256 is 1310ee3d…a91f; both match the frozen values. All 248 owned-path entries were re-hashed at ec1dcb59. There were 0 existence or sha256 mismatches and no duplicate paths. 22 entries are future paths (exists_at_baseline=false), and the CTG2 spec appears exactly once, under 'inspector'. Results per finding: (1) The decorator tuples are now exact. shared/src/policy.ts:1530 confirms ['rait-case','claim-next',['rait-analyst']]. A read-only-role claim-context 403 test is in the acceptance list. (2) The selected-pool GET returning CLAIM_LEGACY_UNVERIFIED409 is supported by ADR-0048 lines 22–23 (pool/context checks are identical to the new selector) and line 55 (an unsafe ordered set gives the bounded 409). GET and POST both appear in acceptance. No new grant is introduced. (3) S1 task/lock/worktree custody is preserved without changes. The packet requires reconciliation through supported verbs and a stop before dispatch, and forbids hand-deletion or marking tasks completed. (4) createWorklistCommandRuntime is referenced only in its own source, dist, and WORKLIST unit/integration specs. None of those are in the manifest, so the byte-identical read-only disposition holds. (5) CTG2 is Inspector-owned, its hash matches ci-repairs final_hashes, and its assertions and rollback are retained. (6) The rounds README R-0025 merge column (#193, #194, #196–#201, #203) matches the merge commits on main and correctly leaves out #202, which was scorecard work. (7) The README attribution now matches the chain: the CLI ran with --as-role auditor and the chain records actor devai-cli with actor_role=harness. (8) ci-repairs.json is correct: git show --stat of bfdcedf0, 17ee1c3c, de976582 and 70d6b5f4 touches only the four listed test specs. The earlier C-0003 Section 2/PC-tranche finding does not reproduce. The current C-0003 has no PR203-candidate, merge-next or PC-tranche text. Its 203/S1 mentions are only the merged banner (lines 4, 9, 19) and an unrelated port range at line 85, so no edit is needed. The backend S2 / frontend S3 split is stated as needing explicit Owner approval. Merging the planning PR does not count as approval. All T4–T6 UI, whole-journey, dossier/browser and A2 obligations stay outstanding. The backlog keeps DETRAN CI 39298941118 success separate from the trusted-local-RC 39298941092 failure (missing tag and summary). The delta changes no files under backend/, apps/, packages/ or .github/.",
+  "findings": [
+    {
+      "severity": "info",
+      "path": "work/campaigns/C-0003-produto-primeiro.md",
+      "detail": "Banner line 4 (unchanged in this delta) says S1 prerequisites were integrated 'through #196–#203'. That range includes #202, which is the scorecard-evaluation merge and not R-0025 work. The rounds index correctly lists #196–#201 and #203 separately. This is a wording difference, not a ledger contradiction.",
+      "recommendation": "Optionally reword the banner in a later documentation pass to '#196–#201, #203' to match the rounds index. This does not block S2 approval."
+    },
+    {
+      "severity": "info",
+      "path": "work/rounds/R-0025/reports/PR203-post-merge/preservation-final.json",
+      "detail": "The working tree has untracked files: preservation-final.json, review.json.formatted/raw temp files under PR203-S2-packet-2/, and the S1 .devai/state task, lock and worktree records. They are outside the frozen checkpoint. The S1 state is covered by the packet's custody section, but preservation-final.json is not part of the reviewed commit.",
+      "recommendation": "If preservation-final.json is meant to be a receipt, commit it with the final review output and say that it was produced after this review's inputs were frozen. Remove the bridge temp files only through the bridge's own cleanup."
+    }
+  ],
+  "limitations": [
+    "No tests, CI, generators, devai doctor or evidence-chain verification were run. CI conclusions about the corrective commits rely on git show --stat and the committed receipts.",
+    "GitHub was not queried directly; merge membership was checked only through local merge commits on main.",
+    "The review covers only the a8336c43..ec1dcb59 delta and the prior findings. The baseline audit content that review 1 accepted was not re-audited.",
+    "Two items are still treated as packet stop conditions and were not resolved here: whether the generator can express the ADR-0048 constraints, and whether an ORG incident-port interface exists."
+  ]
+}
