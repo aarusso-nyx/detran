@@ -99,3 +99,24 @@ position/deadline/acceptance and pending missing-item details on the three named
 views are approved; they are not functional parity or permission to mark those
 journeys complete. Typed restoration remains required before their completion.
 No new screen/command/private-field grant, risk/claim activation or S2 work.
+
+### Bounded S1 identity validation extension — Owner, 2026-10-19
+
+Owner answered “Approve the bounded identity validation extension” to the exact
+request covering `backend/app/src/detran-runtime.ts` and Inspector-owned tests.
+The tenant membership verifier must reject noncanonical actor IDs before its UUID
+SQL cast using the existing `403 TENANT_ACCESS_DENIED` response. Valid membership
+behavior is preserved. This fixes raw external OIDC subjects causing HTTP500 before
+S1 handlers. Engineer owns only this additional runtime path; Inspector owns its
+focused tests. No tenant permission, identity mapping, fallback principal, S2 work
+or wider authentication redesign is authorized.
+
+### P4-02-S1-A3 replay provenance — Owner, 2026-10-19
+
+Owner answered “Approve A3 as written (recommended)” to
+reports/P4-02-S1-A3-replay-provenance.md. Authorizes its exact additional
+Architect ADR/index paths and Inspector checks, and the bounded internal audit
+receipt for actor-unbound command replay. Preserve canonical fingerprints, bind
+to the exact ledger UUID in the same transaction and deny missing/ambiguous or
+other-actor provenance with409 without disclosure/re-execution. No schema, public
+field, permission, historical rewrite, production migration, S2 or merge grant.
