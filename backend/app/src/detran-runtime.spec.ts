@@ -335,7 +335,9 @@ describe('S1 canonical actor UUID prevalidation', () => {
   ])
     it(`invalid actor ${JSON.stringify(invalid)} never reaches membership SQL and preserves403`, async () => {
       const query = vi.fn<DetranPipelineSqlExecutor['query']>();
-      const verifier = new DetranTenantMembershipVerifier({ query });
+      const verifier = new DetranTenantMembershipVerifier({
+        query: query as DetranPipelineSqlExecutor['query'],
+      });
       await expect(verifier.isActiveMember(tenant, invalid)).resolves.toBe(
         false,
       );
@@ -349,7 +351,9 @@ describe('S1 canonical actor UUID prevalidation', () => {
       const query = vi
         .fn<DetranPipelineSqlExecutor['query']>()
         .mockResolvedValue({ rows: [{ allowed }], rowCount: 1 });
-      const verifier = new DetranTenantMembershipVerifier({ query });
+      const verifier = new DetranTenantMembershipVerifier({
+        query: query as DetranPipelineSqlExecutor['query'],
+      });
       await expect(verifier.isActiveMember(tenant, actor)).resolves.toBe(
         allowed,
       );
