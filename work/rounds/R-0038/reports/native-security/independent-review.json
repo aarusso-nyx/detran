@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "note",
+      "path": "work/rounds/README.md",
+      "message": "The branch does not merge cleanly into the current origin/main (2e04f29c). origin/main has moved past base 92be0db4 through PR205, which changed record/proofs/chain.json and reformatted the rounds README table. `git merge-tree` reports a content conflict in work/rounds/README.md, at the R-0038 row added by this branch. The PR needs a rebase or merge before integration. After that, frozen install and the clean-checkout security_scan should run on the rebased commit, not on dfe96076."
+    },
+    {
+      "severity": "note",
+      "path": "work/rounds/R-0038/reports/c2-worker/security-scan.stderr.gz",
+      "message": "The native gate is still unmeasured and the report says so. Exit 3 is SENSE_INSTANCE_CHAIN_DIGEST_MISMATCH:SR-0633d2afcf0126e7, with counts error=1 and pass=0, and the run stopped before the scan executed. The delivery report and validation-results.json both mark it 'refused before measurement' and claim no PASS. The record.md gates 'security-scan' and 'evidence-chain' stay open until the maestro's clean-checkout run, so R-0038 must not close on the npm audit alone."
+    },
+    {
+      "severity": "note",
+      "path": "pnpm-lock.yaml",
+      "message": "The compatibility check holds. Framework packages moved together to 22.2.0 and no 22.1.x copies remain. @angular/build and @angular/cli stay at 22.1.6, and their compiler-cli, core, platform-browser, service-worker and ng-packagr peers are ^22.0.0, which 22.2.0 satisfies. @angular/ssr ^22.1.6 is an optional peer and is not installed. STYNX 1.5.3 Angular peers are >=22.0.0 <23. STYNX 1.5.3, DEVAI, TypeScript 6.0.3 and Node engines are unchanged. All six C1 overrides are kept, and the 15 new overrides are all scoped to a specific parent and version. The lockfile overrides block matches package.json. The lock delta is 18 versions removed and 16 added, all on the vulnerable paths."
+    },
+    {
+      "severity": "note",
+      "path": "work/rounds/R-0038/reports/c2-worker/validation-results.json",
+      "message": "The claims match the evidence. All 49 manifest sha256 values match the files on disk, with nothing unlisted. environment-source-hashes match the 9 dependency files at HEAD. audit-after.json.gz shows 0 at every severity, with 1070 dependencies, no ignore or auditConfig set, and dev dependencies included. audit-before had 27 vulnerabilities (2 critical, 12 high, 10 moderate, 3 low) across 26 IDs, none new or remaining. Frontend tests total 2+15+1551+2042+1172+611+5115 = 10508 passed, and 14+133 = 147 TODO are reported as TODO, not as passes. 25 consumer commands plus the UI and BOAT builds make the stated 27. app 144, DEVAI 198, law 56 and pin 8 all passed. The diff against the base touches no app code, tests, thresholds, proofs or historical artifacts. Its only files outside the manifests and lockfile are work/rounds/R-0038/**, the new work/campaigns/C-0004 campaign file and the README row."
+    }
+  ]
+}

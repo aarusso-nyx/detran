@@ -1,0 +1,49 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "note",
+      "message": "Common: all three prompts are clear on what workers may not do. Workers make no git mutations, commits, merges or evidence records. They don't touch sibling repos or .devai state, don't spawn agents and don't contact the Owner. They don't revert other agents' work, and scope expansion goes to the parent. Each prompt names its role (A Engineer, B and C Architect), which fits Article 7. The anti-fabrication rules are concrete: no invented legal facts, permissions, retention values or sensor verdicts, and no fake PC/ADR history. R0036 and historical proofs/rounds are immutable."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt A: 'temporary logs and R0038 reports' has no path. Pin it, for example to work/rounds/R-0038/reports/ (the untracked R-0038 directory already exists), so the root-checkout worker doesn't scatter files that the parent then has to triage before committing."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt A: 'no majors' and 'preserve STYNX 1.5.3 / DEVAI 2.6.3' are good limits. But the prompt doesn't say what to do if an advisory fix needs a major bump, or if STYNX 1.5.3 peer ranges block Angular >=22.2. Say explicitly: stop, leave that advisory as a residual with the evidence, and return it to the parent. Don't work around it with peer overrides or --force/legacy-peer-deps installs. This blocks a 'silent' peer break that the current wording only covers indirectly."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt A: the counts '26 advisory entries / 27 occurrences' are a baseline. The worker should re-measure them at the start with the same audit command and report any difference before claiming they are all resolved, rather than fitting the work to those numbers."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt B: the fixed counts (1139 endpoints, 70 heuristic + 141 blueprint PII fields) combined with 'do not shrink populations' can push a worker to force-fit results. Add: if the deterministic export finds different counts, report the difference with source refs rather than reconciling it to the stated number."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt B: law/security/ doesn't exist yet in the repo, so both JSON files are new. If they need a schema under law/schemas or a registration that a gate consumes, those paths are outside B's ownership and must go to the parent. Say that explicitly so the worker doesn't add an unowned schema."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt C: 'canonical harness policy if needed' names no path. That is the only open-ended write grant across the three prompts. Name the exact file, or require the worker to return the proposed change to the parent."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt C: 'current new docs/meta/security/historical-compatibility.md' is garbled. The file doesn't exist today (docs/meta/security only has README.md and lgpd-rait.md). State plainly that C creates this file."
+    },
+    {
+      "severity": "note",
+      "message": "Prompt C: law/constitution.md changes are limited to making the entry point match the actual native text, with version and hash unchanged. Add that any change that would alter the hash or version, or touch article content, must stop and go to the parent. That makes the limit checkable."
+    },
+    {
+      "severity": "note",
+      "message": "Integration: A changes the lockfile and manifests in the root checkout while B and C work in isolated worktrees. The prompts should name the base commit each worktree branches from. They should also say that B/C must not run installs that rewrite pnpm-lock.yaml. C editing .github/workflows/ci.yml is the only write that crosses into CI. The parent should check that no other worker touches it (none is granted it now)."
+    },
+    {
+      "severity": "note",
+      "message": "I checked these references in the repo: DEVAI is pinned at 2.6.3 and @stynx-nyx/*@1.5.3 is referenced. ADR-0022 exists. All seven gate invariants C names exist (INV-CH-001, INV-DASH-001, INV-EST-001, INV-INF-001, INV-OPS-001, INV-OPS-002, INV-PORTAL-001), and INV-AUTH-001 is correctly excluded. The approved packets C depends on are in work/planning/2026-10-19-security-remediation-diagnostic/APPROVAL-PACKETS.md."
+    }
+  ]
+}
