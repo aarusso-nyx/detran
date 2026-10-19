@@ -4,11 +4,14 @@ id: "R-0036"
 title: "Evaluate all 43 applicable scorecard cells"
 type: "round"
 kind: "evaluation"
-status: "active"
+status: "closed"
 date: "2026-10-18"
 authority: "Architect"
 goal: "User-approved scorecard assessment and existing sensor enablement, tracked by BL-0001."
-declared_by: "user-approved-plan-20261018"
+declared_by: "D-1"
+closed_by: "D-2"
+phase_closure: "PC-0022"
+merged_as: "6f07295b60a51022b9de1d3e3bdebd9bcd48c2b1"
 isolation:
   kind: "branch"
   branch: "codex/scorecard-evaluation-20261018"
@@ -27,8 +30,8 @@ waves:
     lock_scopes: [".devai/local/rounds/R-0036", "record/proofs"]
     gates: ["43-cell-register", "evidence-chain"]
 gates: ["43-cell-register", "evidence-chain"]
-orchestrator_prompt: "work/rounds/R-0036/prompts/00-orchestrator.md"
-plan_path: "work/rounds/R-0036/plan.md"
+orchestrator_prompt: "prompts/00-orchestrator.md"
+plan_path: "plan.md"
 ---
 
 # R-0036
