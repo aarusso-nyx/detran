@@ -1,7 +1,7 @@
 // Artifact-production gate only: preserve native readiness, require complete execution.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,6 +28,52 @@ const kinds = Object.freeze([
   'inventory_coverage',
 ]);
 const canonicalCommand = 'devai sense run inventory_regeneration';
+const bodyContracts = Object.freeze([
+  {
+    kind: 'inventory_api',
+    file: 'inventory_api/api-map.json',
+    metric: 'endpoints_hash',
+  },
+  {
+    kind: 'inventory_data_model',
+    file: 'inventory_data_model/data-model.json',
+    metric: 'tables_hash',
+  },
+  {
+    kind: 'inventory_data_handling',
+    file: 'inventory_data_handling/data-model-pii.json',
+    metric: 'data_handling_hash',
+  },
+]);
+// Exact DEVAI 2.6.3 producer projections, release-host.js API/data-model/data-handling.
+// Preserve producer array order; full serialized body SHA additionally binds all fields.
+function producerDigest(kind, body) {
+  if (kind === 'inventory_api')
+    return hash(
+      JSON.stringify(
+        body.endpoints.map((e) => [
+          e.method,
+          e.path,
+          e.controller.file,
+          e.controller.methodName ?? '',
+        ]),
+      ),
+    );
+  if (kind === 'inventory_data_model')
+    return hash(
+      JSON.stringify(
+        body.tables.map((t) => [t.name, t.columns.map((c) => c.name)]),
+      ),
+    );
+  return hash(
+    JSON.stringify(
+      body.tables.flatMap((t) =>
+        t.columns.map((c) => [t.name, c.name, c.pii_class ?? '']),
+      ),
+    ),
+  );
+}
+
 function requireFact(condition, message) {
   if (!condition) throw new Error(`Inventory generation refused: ${message}`);
 }
@@ -189,7 +235,18 @@ export function validateInventoryGeneration(child, candidate) {
       sha(metrics.inventory_body_sha256),
     'inventory provenance differs from exact HEAD/tree',
   );
+  const bodies = bodyContracts.map((contract) => {
+    const bodySha256 = metrics[`${contract.kind}_input_sha256`];
+    const producerSha256 =
+      metrics[`${contract.kind}_metric_${contract.metric}`];
+    requireFact(
+      sha(bodySha256) && sha(producerSha256),
+      `native body/projection hashes missing for ${contract.kind}`,
+    );
+    return Object.freeze({ ...contract, bodySha256, producerSha256 });
+  });
   return Object.freeze({
+    bodies: Object.freeze(bodies),
     readiness,
     nativeExit: child.status,
     readingId: reading.id,
@@ -213,21 +270,27 @@ function identity(root) {
       git(root, ['status', '--porcelain', '--untracked-files=normal']) === '',
   };
 }
-function main() {
-  if (process.argv.length !== 2)
-    throw new Error(
-      'Usage: node tools/security/prepare-security-inventories.mjs',
-    );
-  const root = fileURLToPath(new URL('../../', import.meta.url));
-  const candidate = identity(root);
+/** I/O orchestration seam for tests; the CLI always supplies only its fixed repository root. */
+export function runInventoryPreparation(root, dependencies = {}) {
+  const readIdentity = dependencies.readIdentity ?? identity;
+  const runChild =
+    dependencies.runChild ??
+    ((argv, options) => spawnSync('pnpm', argv, options));
+  const createCapture =
+    dependencies.createCapture ??
+    (() => mkdtempSync(path.join(os.tmpdir(), 'detran-security-inventories-')));
+  const stdoutSink =
+    dependencies.stdoutSink ?? ((text) => process.stdout.write(text));
+  const stderrSink =
+    dependencies.stderrSink ?? ((text) => process.stderr.write(text));
+  const announce = dependencies.announce ?? ((text) => console.log(text));
+  const candidate = readIdentity(root);
   requireFact(
     candidate.clean,
     'working tree differs from HEAD before generation',
   );
-  const capture = mkdtempSync(
-    path.join(os.tmpdir(), 'detran-security-inventories-'),
-  );
-  const child = spawnSync('pnpm', [...inventoryProducerArgv], {
+  const capture = createCapture();
+  const child = runChild([...inventoryProducerArgv], {
     cwd: root,
     encoding: 'utf8',
     timeout: 600_000,
@@ -235,7 +298,7 @@ function main() {
   });
   const stdout = child.stdout ?? '',
     stderr = child.stderr ?? '';
-  // Full raw native streams are retained and displayed, even when validation rejects them.
+  // Full raw native streams survive every subsequent validation failure.
   writeFileSync(path.join(capture, 'native.stdout.json'), stdout);
   writeFileSync(path.join(capture, 'native.stderr.log'), stderr);
   writeFileSync(
@@ -252,38 +315,64 @@ function main() {
       2,
     ) + '\n',
   );
-  process.stdout.write(stdout);
-  process.stderr.write(stderr);
-  console.log(`\nSECURITY_INVENTORY_RAW_CAPTURE=${capture}`);
+  stdoutSink(stdout);
+  stderrSink(stderr);
+  announce(`\nSECURITY_INVENTORY_RAW_CAPTURE=${capture}`);
   const admission = validateInventoryGeneration(
     { ...child, stdout, stderr },
     candidate,
   );
   requireFact(
-    same(identity(root), candidate),
+    same(readIdentity(root), candidate),
     'candidate changed during generation',
   );
   const inventoryBytes = readFileSync(
     path.join(root, '.devai/state/inventory/inventory.json'),
   );
+  const inventory = JSON.parse(inventoryBytes);
   requireFact(
     hash(inventoryBytes) === admission.inventoryBodySha256 &&
-      JSON.parse(inventoryBytes).integration_head === candidate.head,
+      inventory.integration_head === candidate.head,
     'generated manifest body/hash is stale or missing',
   );
-  for (const file of [
-    'inventory_api/api-map.json',
-    'inventory_data_model/data-model.json',
-    'inventory_data_handling/data-model-pii.json',
-  ])
-    requireFact(
-      statSync(path.join(root, '.devai/state/sensors', file)).isFile(),
-      `required generated body missing: ${file}`,
+  requireFact(
+    typeof inventory.generated_at === 'string' &&
+      Number.isFinite(Date.parse(inventory.generated_at)),
+    'generated manifest timestamp is absent or invalid',
+  );
+  for (const contract of admission.bodies) {
+    const bytes = readFileSync(
+      path.join(root, '.devai/state/sensors', contract.file),
     );
-  console.log(
+    requireFact(
+      hash(bytes) === contract.bodySha256,
+      `generated body bytes differ from native metric: ${contract.kind}`,
+    );
+    const body = JSON.parse(bytes);
+    requireFact(
+      body.schemaVersion === '1.0.0' &&
+        body.sourceRepo === '.' &&
+        body.generatedAt === inventory.generated_at,
+      `generated body metadata differs from current manifest: ${contract.kind}`,
+    );
+    requireFact(
+      producerDigest(contract.kind, body) === contract.producerSha256,
+      `generated body projection differs from native producer metric: ${contract.kind}`,
+    );
+  }
+  announce(
     `Complete inventory body generation admitted for ${admission.head}; original native readiness=${admission.readiness.toUpperCase()}, native exit=${admission.nativeExit} preserved. Explicit body-schema/exporter validation is the next mandatory CI step. This is not a native PASS or readiness approval.`,
   );
+  return Object.freeze({ admission, capture });
 }
+function main() {
+  if (process.argv.length !== 2)
+    throw new Error(
+      'Usage: node tools/security/prepare-security-inventories.mjs',
+    );
+  runInventoryPreparation(fileURLToPath(new URL('../../', import.meta.url)));
+}
+
 if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)

@@ -1,8 +1,20 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { createHash } from 'node:crypto';
+import {
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   inventoryProducerArgv,
   validateInventoryGeneration,
+  runInventoryPreparation,
 } from '../prepare-security-inventories.mjs';
 
 const candidate = { head: 'a'.repeat(40), tree: 'b'.repeat(40), clean: true };
@@ -36,6 +48,12 @@ function complete(readiness = 'review') {
       integration_head: candidate.head,
       integration_tree: candidate.tree,
       inventory_body_sha256: 'd'.repeat(64),
+      inventory_api_input_sha256: 'e'.repeat(64),
+      inventory_api_metric_endpoints_hash: 'f'.repeat(64),
+      inventory_data_model_input_sha256: 'e'.repeat(64),
+      inventory_data_model_metric_tables_hash: 'f'.repeat(64),
+      inventory_data_handling_input_sha256: 'e'.repeat(64),
+      inventory_data_handling_metric_data_handling_hash: 'f'.repeat(64),
       ...Object.fromEntries(
         kinds.map((kind) => [
           `${kind}_status`,
@@ -308,3 +326,368 @@ test('contradictory exits, error findings and malformed embedded readings reject
   envelope.result.value.results[0].stdout = '{';
   reject({ ...child, stdout: JSON.stringify(envelope) });
 });
+
+const digest = (value) => createHash('sha256').update(value).digest('hex');
+const serial = (value) => JSON.stringify(value, null, 2) + '\n';
+function ioFixture(run) {
+  const directory = mkdtempSync(
+    path.join(os.tmpdir(), 'detran-inventory-io-test-'),
+  );
+  const root = path.join(directory, 'temporary-repo'),
+    capture = path.join(directory, 'capture');
+  mkdirSync(root);
+  mkdirSync(capture);
+  const put = (file, text) => {
+    const absolute = path.join(root, file);
+    mkdirSync(path.dirname(absolute), { recursive: true });
+    writeFileSync(absolute, text);
+  };
+  const generatedAt = '2026-10-19T22:12:44.000Z';
+  const bodies = {
+    inventory_api: {
+      schemaVersion: '1.0.0',
+      sourceRepo: '.',
+      generatedAt,
+      endpoints: [
+        {
+          method: 'GET',
+          path: '/v1/example',
+          controller: {
+            file: 'backend/example.controller.ts',
+            methodName: 'list',
+          },
+        },
+      ],
+    },
+    inventory_data_model: {
+      schemaVersion: '1.0.0',
+      sourceRepo: '.',
+      generatedAt,
+      tables: [
+        {
+          name: 'example',
+          schema: 'demo',
+          columns: [{ name: 'email', type: 'text' }],
+        },
+      ],
+    },
+    inventory_data_handling: {
+      schemaVersion: '1.0.0',
+      sourceRepo: '.',
+      generatedAt,
+      tables: [
+        {
+          name: 'example',
+          schema: 'demo',
+          columns: [{ name: 'email', type: 'text', pii_class: 'contact' }],
+        },
+      ],
+    },
+  };
+  const files = {
+    inventory_api: 'inventory_api/api-map.json',
+    inventory_data_model: 'inventory_data_model/data-model.json',
+    inventory_data_handling: 'inventory_data_handling/data-model-pii.json',
+  };
+  // Explicit known projections from installed native producer contracts, not implementation calls.
+  const projections = {
+    inventory_api: digest(
+      JSON.stringify([
+        ['GET', '/v1/example', 'backend/example.controller.ts', 'list'],
+      ]),
+    ),
+    inventory_data_model: digest(JSON.stringify([['example', ['email']]])),
+    inventory_data_handling: digest(
+      JSON.stringify([['example', 'email', 'contact']]),
+    ),
+  };
+  const metricNames = {
+    inventory_api: 'endpoints_hash',
+    inventory_data_model: 'tables_hash',
+    inventory_data_handling: 'data_handling_hash',
+  };
+  const manifest = {
+    schemaVersion: '1.0.0',
+    generated_at: generatedAt,
+    integration_head: candidate.head,
+  };
+  put('.devai/state/inventory/inventory.json', serial(manifest));
+  const child = change(complete(), (_e, _v, reading) => {
+    reading.metrics.inventory_body_sha256 = digest(serial(manifest));
+    for (const [kind, body] of Object.entries(bodies)) {
+      put('.devai/state/sensors/' + files[kind], serial(body));
+      reading.metrics[`${kind}_input_sha256`] = digest(serial(body));
+      reading.metrics[`${kind}_metric_${metricNames[kind]}`] =
+        projections[kind];
+    }
+  });
+  let calls = 0;
+  const emitted = { stdout: '', stderr: '', announcements: [] };
+  const dependencies = {
+    readIdentity: () => ({ ...candidate }),
+    createCapture: () => capture,
+    runChild: (argv, options) => {
+      calls++;
+      assert.deepEqual(argv, inventoryProducerArgv);
+      assert.equal(options.cwd, root);
+      assert.equal(options.encoding, 'utf8');
+      return child;
+    },
+    stdoutSink: (text) => {
+      emitted.stdout += text;
+    },
+    stderrSink: (text) => {
+      emitted.stderr += text;
+    },
+    announce: (text) => emitted.announcements.push(text),
+  };
+  try {
+    run({
+      root,
+      capture,
+      put,
+      bodies,
+      files,
+      child,
+      dependencies,
+      emitted,
+      calls: () => calls,
+      manifest,
+    });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+function rawRetained(f) {
+  assert.equal(
+    readFileSync(path.join(f.capture, 'native.stdout.json'), 'utf8'),
+    f.child.stdout,
+  );
+  assert.equal(
+    readFileSync(path.join(f.capture, 'native.stderr.log'), 'utf8'),
+    f.child.stderr,
+  );
+  assert.equal(f.emitted.stdout, f.child.stdout);
+  assert.equal(f.emitted.stderr, f.child.stderr);
+  assert.deepEqual(
+    JSON.parse(readFileSync(path.join(f.capture, 'process.json'))).argv,
+    ['pnpm', ...inventoryProducerArgv],
+  );
+}
+
+test('I/O main accepts complete native body hashes, projections and current manifest metadata', () =>
+  ioFixture((f) => {
+    const result = runInventoryPreparation(f.root, f.dependencies);
+    assert.equal(result.admission.readiness, 'review');
+    assert.equal(f.calls(), 1);
+    rawRetained(f);
+    assert.match(f.emitted.announcements.at(-1), /not a native PASS/);
+  }));
+test('I/O main accepts source-equivalent up-to-date bodies without requiring wall-clock freshness', () =>
+  ioFixture((f) => {
+    const updated = change(f.child, (_e, _v, reading) => {
+      reading.metrics.kinds_rebuilt = 0;
+      reading.metrics.kinds_up_to_date = 7;
+    });
+    f.child.stdout = updated.stdout;
+    assert.equal(
+      runInventoryPreparation(f.root, f.dependencies).admission.producedKinds,
+      7,
+    );
+    rawRetained(f);
+  }));
+test('I/O main refuses dirty preflight without invoking producer or writing any capture', () =>
+  ioFixture((f) => {
+    let captures = 0;
+    assert.throws(
+      () =>
+        runInventoryPreparation(f.root, {
+          ...f.dependencies,
+          readIdentity: () => ({ ...candidate, clean: false }),
+          createCapture: () => {
+            captures++;
+            return f.capture;
+          },
+        }),
+      /working tree differs/,
+    );
+    assert.equal(f.calls(), 0);
+    assert.equal(captures, 0);
+  }));
+test('I/O main refuses candidate change after producer and preserves complete raw streams', () =>
+  ioFixture((f) => {
+    let reads = 0;
+    assert.throws(
+      () =>
+        runInventoryPreparation(f.root, {
+          ...f.dependencies,
+          readIdentity: () =>
+            ++reads === 1
+              ? { ...candidate }
+              : { ...candidate, head: 'f'.repeat(40) },
+        }),
+      /candidate changed/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main refuses post-generation dirtiness and preserves raw capture', () =>
+  ioFixture((f) => {
+    let reads = 0;
+    assert.throws(
+      () =>
+        runInventoryPreparation(f.root, {
+          ...f.dependencies,
+          readIdentity: () => ({ ...candidate, clean: ++reads === 1 }),
+        }),
+      /candidate changed/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main rejects a manifest whose actual bytes do not match the native digest', () =>
+  ioFixture((f) => {
+    f.put(
+      '.devai/state/inventory/inventory.json',
+      serial({ ...f.manifest, integration_head: 'f'.repeat(40) }),
+    );
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /manifest body\/hash/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main rejects missing generated bodies and preserves raw capture', () =>
+  ioFixture((f) => {
+    unlinkSync(
+      path.join(f.root, '.devai/state/sensors', f.files.inventory_data_model),
+    );
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /ENOENT/,
+    );
+    rawRetained(f);
+  }));
+for (const kind of [
+  'inventory_api',
+  'inventory_data_model',
+  'inventory_data_handling',
+]) {
+  test(`I/O main rejects tampered ${kind} body, including fields outside native summary projection`, () =>
+    ioFixture((f) => {
+      f.put(
+        '.devai/state/sensors/' + f.files[kind],
+        serial({ ...f.bodies[kind], extra_tampered_content: true }),
+      );
+      assert.throws(
+        () => runInventoryPreparation(f.root, f.dependencies),
+        /body bytes differ/,
+      );
+      rawRetained(f);
+    }));
+}
+test('I/O main rejects contradictory native summary digest even if complete body bytes match', () =>
+  ioFixture((f) => {
+    f.child.stdout = change(f.child, (_e, _v, reading) => {
+      reading.metrics.inventory_api_metric_endpoints_hash = '0'.repeat(64);
+    }).stdout;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /projection differs/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main rejects internally hashed body with stale generatedAt relative to current manifest', () =>
+  ioFixture((f) => {
+    const body = {
+      ...f.bodies.inventory_api,
+      generatedAt: '2000-01-01T00:00:00.000Z',
+    };
+    f.put('.devai/state/sensors/' + f.files.inventory_api, serial(body));
+    f.child.stdout = change(f.child, (_e, _v, reading) => {
+      reading.metrics.inventory_api_input_sha256 = digest(serial(body));
+    }).stdout;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /metadata differs/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main rejects different sourceRepo even if body SHA was quoted consistently', () =>
+  ioFixture((f) => {
+    const body = {
+      ...f.bodies.inventory_api,
+      sourceRepo: '/different/repository',
+    };
+    f.put('.devai/state/sensors/' + f.files.inventory_api, serial(body));
+    f.child.stdout = change(f.child, (_e, _v, reading) => {
+      reading.metrics.inventory_api_input_sha256 = digest(serial(body));
+    }).stdout;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /metadata differs/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main retains invalid child JSON and stderr before refusing generation', () =>
+  ioFixture((f) => {
+    f.child.stdout = '{incomplete';
+    f.child.stderr = 'full native diagnostics\nwithout alteration\n';
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /malformed native JSON/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main retains child process errors before refusing generation', () =>
+  ioFixture((f) => {
+    f.child.error = new Error('spawn error');
+    f.child.status = null;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /child process failed/,
+    );
+    rawRetained(f);
+  }));
+
+test('native admission requires all three complete-body and producer-projection digests', () => {
+  for (const key of [
+    'inventory_api_input_sha256',
+    'inventory_api_metric_endpoints_hash',
+    'inventory_data_model_input_sha256',
+    'inventory_data_model_metric_tables_hash',
+    'inventory_data_handling_input_sha256',
+    'inventory_data_handling_metric_data_handling_hash',
+  ]) {
+    reject(
+      change(complete(), (_e, _v, reading) => {
+        delete reading.metrics[key];
+      }),
+      /body\/projection hashes missing/,
+    );
+  }
+});
+test('I/O main refuses wrong manifest HEAD even if its actual SHA is quoted consistently', () =>
+  ioFixture((f) => {
+    const manifest = { ...f.manifest, integration_head: 'f'.repeat(40) };
+    f.put('.devai/state/inventory/inventory.json', serial(manifest));
+    f.child.stdout = change(f.child, (_e, _v, reading) => {
+      reading.metrics.inventory_body_sha256 = digest(serial(manifest));
+    }).stdout;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /manifest body\/hash/,
+    );
+    rawRetained(f);
+  }));
+test('I/O main refuses invalid manifest timestamp even with a consistent whole-body digest', () =>
+  ioFixture((f) => {
+    const manifest = { ...f.manifest, generated_at: 'not-a-time' };
+    f.put('.devai/state/inventory/inventory.json', serial(manifest));
+    f.child.stdout = change(f.child, (_e, _v, reading) => {
+      reading.metrics.inventory_body_sha256 = digest(serial(manifest));
+    }).stdout;
+    assert.throws(
+      () => runInventoryPreparation(f.root, f.dependencies),
+      /manifest timestamp/,
+    );
+    rawRetained(f);
+  }));

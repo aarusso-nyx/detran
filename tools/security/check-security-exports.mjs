@@ -86,6 +86,13 @@ function provenance(root, value) {
         [...row.public_review.sources, ...row.public_review.tests].forEach(
           reference,
         );
+      if (row.population === 'application' && row.binding === 'declared-public')
+        assert(
+          row.public_review !== null &&
+            row.public_review.sources.length > 0 &&
+            row.public_review.tests.length > 0,
+          `Public application handler requires reviewed controls and tests: ${row.native_id}`,
+        );
       if (row.binding === 'conditional-policy-reference')
         assert(
           row.policy_key === `${row.resource}:${row.action}`,

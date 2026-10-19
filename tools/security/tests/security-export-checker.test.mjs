@@ -187,6 +187,27 @@ test('missing explicit native inputs fail instead of silently skipping productio
   );
 });
 
+test('an additional public application handler cannot bypass individual control review', async () =>
+  fixture((root) => {
+    const value = read(root, 'law/security/authorization.json');
+    Object.assign(value.endpoints[0], {
+      binding: 'declared-public',
+      resource: null,
+      action: null,
+      policy_key: null,
+      predicate: null,
+      decorator_expressions: ['Public()'],
+      public_review: null,
+    });
+    value.population.application_policy--;
+    value.population.application_public++;
+    write(root, 'law/security/authorization.json', value);
+    rejected(
+      invoke(root, ['--snapshots-only']),
+      /Public application handler requires reviewed controls and tests/,
+    );
+  }));
+
 test('snapshots-only cannot masquerade as partial native regeneration', () => {
   rejected(
     invoke(repository, ['--snapshots-only', '--api-map', 'unused.json']),
