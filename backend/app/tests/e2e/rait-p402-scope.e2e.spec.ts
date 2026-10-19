@@ -1013,7 +1013,7 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
         kind: 'escala_semanal',
         version: 1,
       });
-      expect(response.headers.etag).toBe('"1"');
+      expect(response.headers.etag).toBe('W/"1"');
       expect(response.body.events).toEqual([]);
       expect(
         (
@@ -1053,7 +1053,7 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
         state: 'LOTE_ABERTO',
         version: 1,
       });
-      expect(response.headers.etag).toBe('"1"');
+      expect(response.headers.etag).toBe('W/"1"');
       expect(response.body.events).toHaveLength(1);
       expect(
         (
