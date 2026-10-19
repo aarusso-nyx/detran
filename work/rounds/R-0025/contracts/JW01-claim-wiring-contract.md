@@ -87,3 +87,17 @@ calendar/risk fallback, tenant-system context or fake concurrency. Preserve earl
 admissibility, other-role and other-instance contracts or stop for an amendment.
 No attachment, draft, inquiry, signature, provider or productive IdP activation.
 Review/approval of P4-02 is still required before Inspector or Engineer dispatch.
+
+## Owner approval and T0 execution — 2026-10-18
+
+Owner approved the exact P4-02 packet and requested green-check merge of PR198,
+then execution while preserving local/scorecard work. Literal approval and
+post-merge baseline are in [the T0 inventory](../reports/P4-02-route-scope-inventory.md).
+This supersedes the earlier pending-approval wording only for this packet.
+
+T0 identified the packet's explicit stop conditions: incomplete shared-role
+case predicates and legacy compatibility, with risk/identity operational-source
+gaps also preventing release. Inspector/Engineer dispatch has not started.
+The inventory records the proposed bounded unblocks; it does not amend accepted
+ADRs, approve new access/legacy behavior, change production records or claim
+runtime completion. R-0025 remains open and scorecard work remains separate.
