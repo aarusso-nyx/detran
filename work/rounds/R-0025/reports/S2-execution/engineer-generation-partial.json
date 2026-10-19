@@ -1,0 +1,100 @@
+{
+  "role": "Engineer",
+  "task": "TASK-0038",
+  "status": "PARTIAL_GENERATION_IN_PROGRESS",
+  "baseline": "f67008c8",
+  "changedFiles": [
+    {
+      "path": "backend/app/src/generated/parameter-flags.ts",
+      "before": "8bcae688eac857a8faea6ad085d25d0dea2ddc374bdbd6d9ce2cdc01d4e86419",
+      "after": "5997ddad6623af449eca1637af9b1713145c720e0e296060f5572759185dcdfc",
+      "attribution": "four typed ladder cells and derived source hash/line offsets"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "before": "e6fd77fe2753d62c149f35a48846afdd5a613b2e3b7412e0400ced65516b85b0",
+      "after": "91e993cc3e538afca1f0f65766ad079093c491f946c721f17935309bfd258136",
+      "attribution": "four typed ladder cells and derived source hash/line offsets"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/generated/parameter-catalogue.ts",
+      "before": "5a06ec7cd342531ebae985788fba3d56efa77b7997fae387c72c6a3885fc69e4",
+      "after": "7c91b25f8f949608acc580df09c251933cbe9e9e75c26aa3337f51edb97265e2",
+      "attribution": "four typed ladder cells and derived source hash/line offsets"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts",
+      "before": "183a787172447c65c10276e5c245270bb559d1b07d54b81fe04dcf4ea596add8",
+      "after": "1355ac310aba4468d8d4cc631403340619eeffbb95f1dd22c8358c5e42feb2ee",
+      "attribution": "CASE internal legacy schema or two new GETs/existing claim POST source"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.ts",
+      "before": "65f231222730a2222423d72fa76f7e01a8304108469982861f62b4077fd9dd55",
+      "after": "8ef303234dae98198a4104a3e586f182970bc29ded2a22778c1c10b84cea666d",
+      "attribution": "CASE internal legacy schema or two new GETs/existing claim POST source"
+    }
+  ],
+  "checks": [
+    {
+      "command": "pnpm contracts:clients",
+      "exit": 0
+    },
+    {
+      "command": "pnpm parameters:generate",
+      "exit": 0
+    },
+    {
+      "command": "pnpm verify:parameter-catalogue",
+      "exit": 0,
+      "result": "93 entries,18 flags,62 namespaces,0 errors"
+    },
+    {
+      "command": "pnpm exec node tools/contracts/generate-clients.mjs --check",
+      "exit": 0,
+      "result": "72 clients in sync"
+    }
+  ],
+  "parameterSemanticChanges": [
+    "rait.ladder.A",
+    "rait.ladder.B",
+    "rait.ladder.C",
+    "rait.ladder.D"
+  ],
+  "excludedDerivedField": "provenance.line",
+  "blueprints": {
+    "initialFullGeneration": "interrupted own PID24023 with SIGTERM, exit143; no observed unowned content delta",
+    "targetedCommand": "BLUEPRINTS_DIR=/tmp/detran-s2-blueprints-source pnpm blueprints:generate",
+    "targetedStatus": "RUNNING; partial global manifest excluded from handoff",
+    "fullCanonicalCommand": "BLUEPRINTS_OUTPUT=/tmp/detran-s2-blueprints-full-output pnpm blueprints:generate",
+    "fullCanonicalStatus": "PAUSED own PID77877 with SIGSTOP to prioritize coherent CASE/WORKLIST checkpoint",
+    "sourceCopies": [
+      {
+        "path": "BP-INF-RAIT-CASE-001.json",
+        "canonicalSha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2",
+        "copiedSha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2"
+      },
+      {
+        "path": "BP-INF-RAIT-WORKLIST-001.json",
+        "canonicalSha256": "dbdb30cf6d6e61f8180f89ece1cf3a2b22b13e3bb2d41e3480c7d13f917688f5",
+        "copiedSha256": "dbdb30cf6d6e61f8180f89ece1cf3a2b22b13e3bb2d41e3480c7d13f917688f5"
+      }
+    ],
+    "dependencyResolution": "module dependency/import/export declarations read only from each complete own blueprint; no cross-blueprint scan resolution",
+    "globalAggregatesExcluded": [
+      "tools/blueprints/generated-files.json"
+    ]
+  },
+  "preservation": {
+    "beforeSnapshotPath": "/tmp/detran-s2-generation-before.json",
+    "beforeSnapshotSha256": "aa9dc9e8e5f63171474fb4634c4befbc40a9a822ad5e30fa422ab846f70d10ef",
+    "beforeFileCount": 11621,
+    "seedConflictPolicy": "DO NOTHING retained",
+    "oldOperationalVersions": "not rewritten or activated",
+    "A_C_status": "proposta",
+    "databaseUse": "NOT RUN; no lease",
+    "fullBlueprintEquivalence": "PENDING",
+    "runtimeCompilation": "PENDING actual parallel handwritten runtime",
+    "fullAcceptance": "NOT RUN; no delivery/readiness claim"
+  }
+}
