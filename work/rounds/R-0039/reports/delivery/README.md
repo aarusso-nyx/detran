@@ -1,0 +1,7 @@
+# R-0039 local delivery archive
+
+This archive retains independent Claude PASS reviews and bridge custody, 63 security exporter/checker/wrapper tests, complete inventory generation and explicit three-input exporter validation, blueprints/contracts and backend checks. The reviewed implementation candidate is `6e459da656465922f408981d55953701d2da96e9`; later reconciliation preserves main closure and both divergent chain snapshots. Raw observations are archived without rewriting their candidate or timestamp.
+
+Seven actual inventory bodies, their native manifest, and seven unchanged rebuilt reading files are compressed with deterministic gzip. `manifest.json` binds original and compressed SHA-256 hashes; decompression must reproduce each original source hash. Review bridge paths remain the authentic original paths and their output/prompt hashes match the archived raw files.
+
+Supplemental crosswalks cover 1,139 endpoints and 211 known PII fields. They do not supply native compatibility or legal approval. Native generation completed with REVIEW/exit1, including 1,094 unresolved RBAC endpoints and inventory coverage REVIEW. All 211 PII fields remain pending review. The seven readings retain `REBUILT_FROM_BODY`; original findings/metrics and native execution provenance are not recreated. BL-0020 remains open. This is local delivery awaiting separate PR, required CI and integration; R-0039 is not closed. R-0036/R-0037, thresholds, legacy and historical evidence remain preserved.

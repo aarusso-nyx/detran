@@ -1,0 +1,677 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/pii-registry.schema.json",
+  "title": "detran-pii-crosswalk",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "native_sensor_compatible",
+    "native_population_sha256",
+    "semantics",
+    "population",
+    "review_policy",
+    "contextual_sources",
+    "known_gaps",
+    "sources",
+    "fields"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "kind": {
+      "const": "detran-pii-crosswalk"
+    },
+    "native_sensor_compatible": {
+      "const": false
+    },
+    "native_population_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "semantics": {
+      "type": "string",
+      "minLength": 1
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sql_tables",
+        "sql_columns",
+        "native_candidates",
+        "blueprint_fields",
+        "blueprint_matched_native",
+        "blueprint_outside_native_heuristic",
+        "known_field_union",
+        "blueprint_without_sql",
+        "state_candidates",
+        "cnpj_candidates",
+        "pending_fields"
+      ],
+      "properties": {
+        "sql_tables": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sql_columns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "native_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blueprint_fields": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blueprint_matched_native": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blueprint_outside_native_heuristic": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "known_field_union": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blueprint_without_sql": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cnpj_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pending_fields": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "review_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pending_owner",
+        "conservative_recommendation",
+        "no_automatic_legal_basis",
+        "no_automatic_retention"
+      ],
+      "properties": {
+        "pending_owner": {
+          "type": "string"
+        },
+        "conservative_recommendation": {
+          "type": "string"
+        },
+        "no_automatic_legal_basis": {
+          "const": true
+        },
+        "no_automatic_retention": {
+          "const": true
+        }
+      }
+    },
+    "contextual_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "status", "note"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+          },
+          "status": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "known_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/field"
+      },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sql_present",
+        "native_name_candidate",
+        "native_pii_class",
+        "sql",
+        "canonical_classifications",
+        "classification_status",
+        "blueprint_sources",
+        "processing_purpose",
+        "legal_basis",
+        "retention",
+        "semantic_review",
+        "pending",
+        "owner_question"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sql_present": {
+          "type": "boolean"
+        },
+        "native_name_candidate": {
+          "type": "boolean"
+        },
+        "native_pii_class": {
+          "type": ["string", "null"]
+        },
+        "sql": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["schema", "table", "column", "type", "evidence"],
+              "properties": {
+                "schema": {
+                  "type": "string"
+                },
+                "table": {
+                  "type": "string"
+                },
+                "column": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["path", "startLine", "endLine"],
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+                      },
+                      "startLine": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "endLine": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "note": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "minItems": 1
+                }
+              }
+            }
+          ]
+        },
+        "canonical_classifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "classification_status": {
+          "type": "string",
+          "enum": ["source-declared", "conflict", "pending"]
+        },
+        "blueprint_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source",
+              "pii",
+              "retention",
+              "legal_basis",
+              "purpose",
+              "module_context"
+            ],
+            "properties": {
+              "source": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path", "pointer"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+                  },
+                  "pointer": {
+                    "type": "string",
+                    "pattern": "^/database/entities/[0-9]+/fields/[0-9]+$"
+                  }
+                }
+              },
+              "pii": {
+                "type": "string"
+              },
+              "retention": {
+                "type": ["string", "null"]
+              },
+              "legal_basis": {
+                "type": ["string", "null"]
+              },
+              "purpose": {
+                "type": ["string", "null"]
+              },
+              "module_context": {
+                "type": ["string", "null"]
+              }
+            }
+          }
+        },
+        "processing_purpose": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "values"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["source-declared", "conflict", "pending"]
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "pending"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "conflict"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 2,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "not": {
+                      "enum": ["pending", "conflict"]
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "legal_basis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "values"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "source-declared-not-legally-validated",
+                "conflict",
+                "pending"
+              ]
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "pending"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "conflict"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 2,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "not": {
+                      "enum": ["pending", "conflict"]
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "values"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "source-declared-review-indefinite",
+                "source-declared-not-operationally-validated",
+                "conflict",
+                "pending"
+              ]
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "pending"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "conflict"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 2,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "not": {
+                      "enum": ["pending", "conflict"]
+                    }
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "values": {
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "semantic_review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["category", "recommendation", "source_default"],
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": [
+                "status-or-location-needs-semantic-review",
+                "organization-identifier-context-dependent",
+                "credential-requires-restricted-handling",
+                "canonical-sensitive-data",
+                "canonical-personal-data",
+                "unclassified-name-candidate"
+              ]
+            },
+            "recommendation": {
+              "type": "string"
+            },
+            "source_default": {
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "pending": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "owner_question": {
+          "type": ["string", "null"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sql_present": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "sql": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "sql": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification_status": {
+                "const": "pending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "canonical_classifications": {
+                "maxItems": 0,
+                "type": "array"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification_status": {
+                "const": "source-declared"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "canonical_classifications": {
+                "minItems": 1,
+                "maxItems": 1,
+                "type": "array"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "classification_status": {
+                "const": "conflict"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "canonical_classifications": {
+                "minItems": 2,
+                "type": "array"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

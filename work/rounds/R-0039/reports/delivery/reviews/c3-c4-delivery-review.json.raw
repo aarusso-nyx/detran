@@ -1,0 +1,63 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "blocking": false,
+      "category": "custody",
+      "file": "tools/security/prepare-security-inventories.mjs",
+      "line": 279,
+      "summary": "Only the manifest .devai/state/inventory/inventory.json is bound to the generation, by its sha256 and integration_head. The three body files the checker consumes (api-map.json, data-model.json, data-model-pii.json) are only checked for existence with statSync().isFile(). Nothing ties their bytes to this run or to this HEAD/tree.",
+      "failure_scenario": "In a reused local workspace, native can report kinds_up_to_date>0 (the positive run had 1). The wrapper would then admit a body left over from an earlier HEAD. The risk is mitigated: CI checks out fresh and .devai/state is gitignored, and the exporters fail on stale coordinates, omitted or duplicate handlers, and data-model/PII population mismatch. A stale body that is internally consistent with the current source would still pass without being attributed to this run."
+    },
+    {
+      "severity": "low",
+      "blocking": false,
+      "category": "test-coverage",
+      "file": "tools/security/tests/prepare-security-inventories.test.mjs",
+      "line": 114,
+      "summary": "All 13 wrapper tests exercise only the pure validateInventoryGeneration(). The I/O path in main() has no test: the clean-tree precondition, the identity recheck after generation ('candidate changed during generation'), the manifest hash and integration_head comparison, the body-existence checks, and the persisted raw capture.",
+      "failure_scenario": "A regression in main(), such as dropping the identity recheck or comparing the hash of the wrong file, would still pass all 44 tests. The only thing that would catch it is a real CI run."
+    },
+    {
+      "severity": "low",
+      "blocking": false,
+      "category": "security-semantics",
+      "file": "tools/security/export-authorization.ts",
+      "line": 328,
+      "summary": "An application route with @Public that has no publicReviews entry is exported as declared-public with a limitation string. Nothing fails. The checker never asserts that application_public equals the number of reviewed entries, or that every declared-public row has a public_review.",
+      "failure_scenario": "Someone adds a new @Public() handler and regenerates the snapshot. Both the full and snapshots-only checks pass, and the only signal is the diff of the regenerated snapshot. This is listed honestly under known_gaps, and today all 6 public routes are reviewed, but the gate does not enforce it."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "category": "scope",
+      "file": "package.json",
+      "line": 15,
+      "summary": "pnpm check runs security:exports:check -- --snapshots-only. That mode verifies only the source digests already listed in the snapshot, so it does not detect a new controller or DDL file. Census completeness depends on the separate CI generation and explicit-check steps (ci.yml:146-150). Its output says this honestly.",
+      "failure_scenario": "A local pnpm check passes after a new controller is added. Only the CI foundation steps, or a manual full check, catch it."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "category": "hygiene",
+      "file": "package.json",
+      "line": 5,
+      "summary": "An unrelated change rewrote the em dash in the description as the JSON escape \\u2014. The value is identical, so this is byte churn only.",
+      "failure_scenario": "None functionally. It is noise in the candidate diff."
+    }
+  ],
+  "notes": [
+    "Read-only review of frozen HEAD d6937c4d against origin/main 2e04f29c. The working tree was clean before and after. 33 files changed, and git diff --stat shows nothing under backend/, DDL, law/schemas, record/, .devai/, or R-0036/R-0037: no new grants, DDL, runtime, threshold or history changes.",
+    "I reproduced the populations from law/security/*.json. Authorization has 1139 endpoints: 1004 conditional-policy-reference, 6 declared-public, 121 mock, 8 test-fixture, 0 other, 0 unresolved_application. PII has 211 fields: 70 native candidates and 141 blueprint-only. 211 have PII-PURPOSE pending, 211 PII-LEGAL-BASIS, 73 PII-RETENTION, 4 PII-INDEFINITE-RETENTION-REVIEW (forever), 53 PII-CLASSIFICATION, and 0 PII-SQL-MAPPING. No field carries a legal_basis or purpose value, and none is presented as ratified.",
+    "The blueprint-to-SQL identity check holds: blueprint_without_sql=0, and no blueprint-only id has an alias with a matching table.column under another schema.",
+    "The exporter's binding semantics match DetranPolicyGuard (policy.guard.ts:21-47). Resource is method-over-class, Action is method-only, Public applies from either level and bypasses policy, and missing metadata maps to unresolved, never to a grant. runtime_authorization_proven is schema-const false. Both the source walk and the native-map comparison are enforced (lines 301-310, 377-380). No @Sse/@Render routes exist, and the repo has no @Controller outside *.controller.ts.",
+    "All 6 public routes carry public_review entries with source and test references. The schemas forbid extra properties (additionalProperties never true), use const/enum/if-then for binding and policy_key, and require file paths that are relative and free of '..'. The checker resolves real paths for containment.",
+    "The wrapper is generation-only. It requires execution_status=pass, readiness in {pass, review} with a matching verdict, exit 1 for REVIEW, and zero error/unknown/na. All 7 kinds must be touched, each with pass or review standing, and integration_head/tree must equal clean HEAD/tree. It never converts REVIEW to PASS. The positive capture /tmp/c3-positive-generation.json confirms execution pass, readiness review, exit 1, 7/7 kinds, error_count 0, head d6937c4d and tree 722afed8, with only info findings.",
+    "Bounded checks I ran myself: pnpm security:exports:test gave 44/44 pass. check-security-exports.mjs --snapshots-only passed. The explicit three-input full check against the generated bodies passed. The tree was clean afterwards.",
+    "Not verified by me: whether the CI foundation steps work on a shallow actions/checkout runner. That includes devai sense run --as-role architect --write and the clean-tree precondition after pnpm install and npm ci. CI has not started, and integration still needs all checks green.",
+    "Not claimed: the full blueprints regeneration (/tmp/c3-blueprints.log was still running), the full pnpm check, and format:check. The policy, app-unit, law, schema, state-index and doctor logs are author-reported and I did not re-run them.",
+    "The scope is honest. DEVAI 2.6.3 does not consume either crosswalk (native_sensor_compatible=false), the native unresolved count of 1094 and the native verdict are unchanged, and the artifacts do not claim that BL-0020 is closed or that any legal fact is validated. ADR-0054 is registered in DESIGN-DECISIONS.md.",
+    "The worker's delivery.json integration_remaining entries describe the worker-stage state, and parent integration has since handled them. A reader should treat that file as a historical worker report."
+  ]
+}

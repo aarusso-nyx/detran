@@ -76,6 +76,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0036 | `scorecard-evaluation` — 43 itens medidos; integração e atestação aprovadas; fechada e selada                               | fechada           | [#202](https://github.com/aarusso-nyx/detran/pull/202) | PC-0022 | Codex                                               |
 | R-0037 | `C1` — dependências de execução integradas por PR #206; CI pós-integração aprovada                                          | fechada           | [#206](https://github.com/aarusso-nyx/detran/pull/206) | PC-0023 | Codex                                               |
 | R-0038 | `C2` — ferramentas e Angular, campanha C-0004 autorizada                                                                    | aberta            | —                                                      | —       | Codex                                               |
+| R-0039 | C3-C4 authorization and PII source normalization                                                                            | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
 
