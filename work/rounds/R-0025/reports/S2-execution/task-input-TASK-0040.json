@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0040",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector",
+  "title": "P4-02-S2 exact HTTP SQL and outbox sensor corrections",
+  "description": "Inspector only: reserved SQL alias correction and exact claim-event selection, preserving all decisive assertions and historical RED evidence.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r25-s2-http-sensor-correction"
+  ],
+  "target_substrates": [
+    "F3"
+  ],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0022",
+  "coupled_pipeline_position": "inspector",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "r25",
+    "p402-s2"
+  ],
+  "branch": "codex/r0025-s2-inspector-http",
+  "prompt_composition_id": "PC-3a3e32b717b97db1",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "typecheck"
+    ]
+  ],
+  "created_at": "2026-10-19T23:54:14.794555+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-app",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "codex-cli"
+    },
+    "instructions_ref": "work/rounds/R-0025/reports/S2-execution/inspector-http-sensor-correction-prompt.md",
+    "prompt_composition_id": "PC-3a3e32b717b97db1",
+    "max_iterations": 3,
+    "capabilities": [
+      "repository-read",
+      "inspector-test-write"
+    ]
+  }
+}

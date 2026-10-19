@@ -1,0 +1,283 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case
+
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts (105 tests | 4 failed) 8641ms
+     ✓ dado admit válido quando é confirmado então devolve ETag, evento e auditoria completos  7917ms
+     ✓ dado payload inválido quando admit é solicitado então rejeita sem efeito parcial 2ms
+     ✓ dado If-Match ausente ou divergente quando admit é solicitado então retorna 428 ou 412 sem efeito 7ms
+     ✓ dado a mesma chave quando admit é repetido igual ou divergente então não duplica nem aceita replay 10ms
+     ✓ dado non-admission válido quando é confirmado então devolve ETag, evento e auditoria completos 6ms
+     ✓ dado payload inválido quando non-admission é solicitado então rejeita sem efeito parcial 1ms
+     ✓ dado If-Match ausente ou divergente quando non-admission é solicitado então retorna 428 ou 412 sem efeito 21ms
+     ✓ dado a mesma chave quando non-admission é repetido igual ou divergente então não duplica nem aceita replay 11ms
+     ✓ dado remit válido quando é confirmado então devolve ETag, evento e auditoria completos 9ms
+     ✓ dado payload inválido quando remit é solicitado então rejeita sem efeito parcial 2ms
+     ✓ dado If-Match ausente ou divergente quando remit é solicitado então retorna 428 ou 412 sem efeito 2ms
+     ✓ dado a mesma chave quando remit é repetido igual ou divergente então não duplica nem aceita replay 3ms
+     ✓ dado receive válido quando é confirmado então devolve ETag, evento e auditoria completos 2ms
+     ✓ dado payload inválido quando receive é solicitado então rejeita sem efeito parcial 2ms
+     ✓ dado If-Match ausente ou divergente quando receive é solicitado então retorna 428 ou 412 sem efeito 2ms
+     ✓ dado a mesma chave quando receive é repetido igual ou divergente então não duplica nem aceita replay 2ms
+     ✓ dado ready válido quando é confirmado então devolve ETag, evento e auditoria completos 1ms
+     ✓ dado payload inválido quando ready é solicitado então rejeita sem efeito parcial 1ms
+     ✓ dado If-Match ausente ou divergente quando ready é solicitado então retorna 428 ou 412 sem efeito 2ms
+     ✓ dado a mesma chave quando ready é repetido igual ou divergente então não duplica nem aceita replay 4ms
+     ✓ dado decide válido quando é confirmado então devolve ETag, evento e auditoria completos 3ms
+     ✓ dado payload inválido quando decide é solicitado então rejeita sem efeito parcial 0ms
+     ✓ dado If-Match ausente ou divergente quando decide é solicitado então retorna 428 ou 412 sem efeito 4ms
+     ✓ dado a mesma chave quando decide é repetido igual ou divergente então não duplica nem aceita replay 2ms
+     ✓ dado return-draft válido quando é confirmado então devolve ETag, evento e auditoria completos 1ms
+     ✓ dado payload inválido quando return-draft é solicitado então rejeita sem efeito parcial 1ms
+     ✓ dado If-Match ausente ou divergente quando return-draft é solicitado então retorna 428 ou 412 sem efeito 4ms
+     ✓ dado a mesma chave quando return-draft é repetido igual ou divergente então não duplica nem aceita replay 6ms
+     ✓ dado withdraw válido quando é confirmado então devolve ETag, evento e auditoria completos 3ms
+     ✓ dado payload inválido quando withdraw é solicitado então rejeita sem efeito parcial 2ms
+     ✓ dado If-Match ausente ou divergente quando withdraw é solicitado então retorna 428 ou 412 sem efeito 2ms
+     ✓ dado a mesma chave quando withdraw é repetido igual ou divergente então não duplica nem aceita replay 3ms
+     ✓ dado redirect válido quando é confirmado então devolve ETag, evento e auditoria completos 1ms
+     ✓ dado payload inválido quando redirect é solicitado então rejeita sem efeito parcial 1ms
+     ✓ dado If-Match ausente ou divergente quando redirect é solicitado então retorna 428 ou 412 sem efeito 2ms
+     ✓ dado a mesma chave quando redirect é repetido igual ou divergente então não duplica nem aceita replay 2ms
+     ✓ dado resolve-pending válido quando é confirmado então devolve ETag, evento e auditoria completos 2ms
+     ✓ dado payload inválido quando resolve-pending é solicitado então rejeita sem efeito parcial 2ms
+     ✓ dado If-Match ausente ou divergente quando resolve-pending é solicitado então retorna 428 ou 412 sem efeito 26ms
+     ✓ dado a mesma chave quando resolve-pending é repetido igual ou divergente então não duplica nem aceita replay 3ms
+     ✓ dado claim-next válido quando é confirmado então devolve ETag, evento e auditoria completos 20ms
+     ✓ dado payload inválido quando claim-next é solicitado então rejeita sem efeito parcial 1ms
+     × S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid 21ms
+     × dado a mesma chave quando claim-next é repetido igual ou divergente então não duplica nem aceita replay 9ms
+     ✓ dado answer válido quando é confirmado então devolve ETag, eventos e auditoria completos 209ms
+     ✓ dado payload inválido quando answer é solicitado então rejeita sem efeito parcial 6ms
+     ✓ dado If-Match ausente ou divergente quando answer é solicitado então retorna 428 ou 412 sem efeito 13ms
+     ✓ dado a mesma chave quando answer é repetido igual ou divergente então não duplica nem aceita replay 6ms
+     ✓ dado extend válido quando é confirmado então devolve ETag, eventos e auditoria completos 4ms
+     ✓ dado payload inválido quando extend é solicitado então rejeita sem efeito parcial 3ms
+     ✓ dado If-Match ausente ou divergente quando extend é solicitado então retorna 428 ou 412 sem efeito 3ms
+     ✓ dado a mesma chave quando extend é repetido igual ou divergente então não duplica nem aceita replay 1ms
+     ✓ dado o pool de claim-next quando há caso elegível então usa poolId só no pool e bloqueia/muta somente o caseId escolhido 1ms
+     ✓ dado a guarda RAIT.TRIAGE_INCOMPLETE quando admit recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.INTAKE_SIGNATURE_MISSING quando admit recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.NON_ADMISSION_REASON_REQUIRED quando non-admission recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.REMIT_CHECKLIST_INCOMPLETE quando remit recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.FORBIDDEN_ORGAO quando receive recebe cenário inválido então não atualiza, insere, publica nem audita 3ms
+     ✓ dado a guarda RAIT.DRAFT_INCOMPLETE quando ready recebe cenário inválido então não atualiza, insere, publica nem audita 3ms
+     ✓ dado a guarda RAIT.DECISION_GROUNDS_REQUIRED quando decide recebe cenário inválido então não atualiza, insere, publica nem audita 3ms
+     ✓ dado a guarda RAIT.DRAFT_RETURN_LIMIT quando return-draft recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.WITHDRAWAL_LEGITIMACY quando withdraw recebe cenário inválido então não atualiza, insere, publica nem audita 1ms
+     ✓ dado a guarda RAIT.PENDING_CONTENT_EXPIRED quando resolve-pending recebe cenário inválido então não atualiza, insere, publica nem audita 2ms
+     ✓ dado a guarda RAIT.TRIAGE_TIMELINESS_READONLY quando admit recebe cenário inválido então não atualiza, insere, publica nem audita 1ms
+     ✓ dado a guarda RAIT.RECEIPT_ALREADY_REGISTERED quando receive recebe cenário inválido então não atualiza, insere, publica nem audita 1ms
+     ✓ dado a guarda RAIT.DECISION_NOT_ON_DUTY quando decide recebe cenário inválido então não atualiza, insere, publica nem audita 1ms
+     ✓ dado a guarda RAIT.DRAFT_AUTHOR_CANNOT_SIGN quando decide recebe cenário inválido então não atualiza, insere, publica nem audita 0ms
+     ✓ dado a guarda RAIT.DECISION_KIND_INVALID_FOR_INSTANCE quando decide recebe cenário inválido então não atualiza, insere, publica nem audita 1ms
+     ✓ dado diligência expirada quando answer é solicitado então a guarda impede todo efeito 1ms
+     ✓ dado diligência expirada quando extend é solicitado então a guarda impede todo efeito 1ms
+     ✓ dado override RAIT.QUEUE_EMPTY quando claim-next é solicitado então retorna o código contratual sem efeito 1ms
+     ✓ dado override RAIT.ASSIGNMENT_WIP_LIMIT quando claim-next é solicitado então retorna o código contratual sem efeito 1ms
+     ✓ dado override RAIT.ASSIGNMENT_ALREADY_ACTIVE quando claim-next é solicitado então retorna o código contratual sem efeito 1ms
+     ✓ dado override RAIT.ORDER_OVERRIDE_FORBIDDEN quando claim-next é solicitado então retorna o código contratual sem efeito 2ms
+     ✓ dado admit bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.case.admitted 1ms
+     ✓ dado receive bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.case.received 1ms
+     ✓ dado withdraw bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.case.withdrawn 1ms
+     ✓ dado claim-next bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.assignment.changed 1ms
+     ✓ dado answer bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.inquiry.changed 2ms
+     ✓ dado extend bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.inquiry.changed 44ms
+     ✓ dado expire bem-sucedido quando completa então emite exatamente 2 eventos incluindo rait.inquiry.changed 42ms
+     ✓ dado remit e extend quando são bem-sucedidos então delegam respectivamente T-REM10 e T-DIL ao DeadlineEngine 3ms
+     ✓ dado expire quando recebe efeito do motor então aceita somente o efeito produzido e não um principal humano 1ms
+     ✓ dado Clock fixo posterior ao vencimento e servidor em dia anterior quando expire consome o efeito então não depende de current_date 0ms
+     ✓ dado evento antigo após extensão quando expire é consumido então rejeita sem efeito 1ms
+     ✓ dado evento vigente quando expire é repetido então aplica uma vez e responde replay idempotente 2ms
+     × dado os serviços quando o Nest os constrói então usam Database e RequestContext concretos e são Injectable 24ms
+     ✓ dado a ponte RAIT de confiança quando o Nest a constrói então RaitDocumentTrustVerifier é provider concreto e Injectable 6ms
+     ✓ dado identificador de outro tenant quando qualquer comando busca o alvo então RLS não revela nem muta o recurso 2ms
+     ✓ dado due_on string anterior quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 2ms
+     ✓ dado due_on Date anterior quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 1ms
+     ✓ dado due_on string igual quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 0ms
+     ✓ dado due_on Date igual quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 0ms
+     ✓ dado due_on string posterior quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 1ms
+     ✓ dado due_on Date posterior quando resolve-pending compara ao Clock então preserva a mesma fronteira civil 1ms
+     ✓ dado minuta submetida quando ready é executado então a porta documental atesta identidade, hash, tipo e três seções antes de escrever 1ms
+     ✓ dado decisão válida quando decide é executado então a porta vincula assinatura, documento, hash e actorId antes de inserir 1ms
+     ✓ dado recibo documental divergente quando decide verifica a assinatura então falha antes de qualquer mutação 2ms
+     ✓ dado checklist F-J-0 sem evidência obrigatória quando remit é executado então informa TEAT_EVIDENCE e ignora role como critério 2ms
+     ✓ dado autoridade de circunscrição diferente quando decide é solicitado então retorna RAIT.DECISION_JURISDICTION sem efeito 3ms
+     ✓ dado autoridade substituta designada mas slot diário ausente quando decide é solicitado então o slot prevalece e retorna RAIT.DECISION_NOT_ON_DUTY 2ms
+     ✓ dado T-DEC vencido quando decide é solicitado então retorna RAIT.EXTINCTION_DECISION_LATE sem recalcular prazo 2ms
+     ✓ dado instância incompatível e fundamentos ausentes quando decide é solicitado então a espécie/instância precede fundamentos 1ms
+     × S2 claim-next permits omission but rejects supplied If-Match without effects, including an exact retry key 3ms
+     ✓ dado TimerExpiredData quando expire é consumido então dispensa headers de cliente e usa chave derivada estável 1ms
+ ❯ tests/unit/rait-case-command-contract.spec.ts (38 tests | 1 failed) 519ms
+     ✓ dado fixture canônica em TRIAGEM_ADMISSIBILIDADE quando admit é executado então bloqueia, atualiza, publica e audita uma vez 107ms
+     ✓ dado fixture canônica em TRIAGEM_ADMISSIBILIDADE quando non-admission é executado então bloqueia, atualiza, publica e audita uma vez 4ms
+     ✓ dado fixture canônica em ADMITIDO quando remit é executado então bloqueia, atualiza, publica e audita uma vez 3ms
+     ✓ dado fixture canônica em AGUARDANDO_REMESSA_JARI quando receive é executado então bloqueia, atualiza, publica e audita uma vez 2ms
+     ✓ dado fixture canônica em EM_INSTRUCAO quando ready é executado então bloqueia, atualiza, publica e audita uma vez 90ms
+     ✓ dado fixture canônica em PRONTO_P_DECISAO quando decide é executado então bloqueia, atualiza, publica e audita uma vez 28ms
+     ✓ dado fixture canônica em PRONTO_P_DECISAO quando return-draft é executado então bloqueia, atualiza, publica e audita uma vez 5ms
+     ✓ dado fixture canônica em EM_INSTRUCAO quando withdraw é executado então bloqueia, atualiza, publica e audita uma vez 9ms
+     ✓ dado fixture canônica em DISTRIBUIDO quando claim-next é executado então bloqueia, atualiza, publica e audita uma vez 13ms
+     ✓ dado prioridade legal apurada quando claim-next é executado então ordena por rank e desempates canônicos 12ms
+     ✓ dado EM_INSTRUCAO quando admit é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 16ms
+     ✓ dado EM_INSTRUCAO quando non-admission é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 2ms
+     ✓ dado EM_INSTRUCAO quando remit é executado então retorna RAIT.REMIT_NOT_ADMITTED sem escrita 17ms
+     ✓ dado ADMITIDO quando receive é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 22ms
+     ✓ dado ADMITIDO quando ready é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 4ms
+     ✓ dado EM_INSTRUCAO quando decide é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 6ms
+     ✓ dado EM_INSTRUCAO quando return-draft é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 2ms
+     ✓ dado DECIDIDO_AUTORIDADE quando withdraw é executado então retorna RAIT.WITHDRAWAL_AFTER_DECISION sem escrita 3ms
+     ✓ dado EM_INSTRUCAO quando redirect é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 15ms
+     ✓ dado EM_INSTRUCAO quando resolve-pending é executado então retorna RAIT.CASE_STATE_INVALID sem escrita 2ms
+     ✓ dado EM_INSTRUCAO quando claim-next é executado então retorna RAIT.QUEUE_EMPTY sem escrita 1ms
+     ✓ dado redirect sem transição quando executado então não emite case.changed 2ms
+     ✓ dado resolve-pending quando conclui a pendência então emite case.changed uma vez 2ms
+     ✓ dado uma chave opaca repetida quando admit é reexecutado então preserva uma só atualização, outbox e auditoria 2ms
+     ✓ dado chave opaca já usada com target diferente quando executado então retorna replay sem outra escrita 1ms
+     ✓ dado If-Match ausente ou divergente quando admit é executado então retorna 428 ou 412 sem escrita 2ms
+     ✓ dado diligência aberta quando answer é executado então atualiza com lock, outbox e audit.write 10ms
+     ✓ dado diligência aberta quando extend é executado então atualiza com lock, outbox e audit.write 1ms
+     ✓ dado diligência respondida quando answer é executado então retorna RAIT.INQUIRY_ALREADY_CLOSED sem escrita 2ms
+     ✓ dado diligência já estendida quando extend é executado então retorna RAIT.INQUIRY_EXTENSION_LIMIT sem escrita 0ms
+     ✓ dado principal humano quando expire é chamado então retorna RAIT.FORBIDDEN_ACTION antes da transação 0ms
+     ✓ dado os controladores quando carregados então expõem os recursos e ações canônicos 69ms
+     ✓ dado controller quando executa admit então delega corpo e cabeçalhos e propaga ETag 17ms
+     ✓ dado principal autenticado quando controller protocola então o encaminha separado de payload e cabeçalhos 26ms
+     ✓ dado principal ausente quando serviço protocola então falha antes de abrir transação 3ms
+     ✓ dado principal com ator divergente quando serviço protocola então falha antes de abrir transação 0ms
+     ✓ dado um comando quando o body tenta fornecer identidade autenticada então rejeita antes da transação 2ms
+     × dado os serviços de comando quando carregados pelo Nest então declaram providers concretos e Injectable 13ms
+ ❯ tests/unit/rait-case-delivery-c3.spec.ts (6 tests | 1 failed) 58ms
+     × dado composição Nest quando resolve serviços então todas as dependências obrigatórias estão declaradas sem canal oculto 41ms
+     ✓ dado RequestContext ausente quando input tenta injetar identidade então falha antes de database.tx 7ms
+     ✓ dado remit com campo não contratado quando schema valida então rejeita antes de replay e SQL 2ms
+     ✓ dado answer e extend quando PolicyGuard lê metadados então ambos usam inf:rait-case 1ms
+     ✓ dado contrato documental quando desistência é verificada então a porta possui operação específica sem PAdES de autoridade 0ms
+     ✓ dado controller HTTP quando serviço retorna resultado então ETag fica só no header e não vaza no body 2ms
+ ✓ tests/unit/rait-case-di-c4.spec.ts (1 test) 4785ms
+     ✓ dado o módulo RAIT quando Nest carrega os seis providers concretos então a composição é carregável  4782ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-case-behavioral-matrix.spec.ts > CTG-0001 §3 — matriz comportamental integral de envelope e isolamento > S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid
+AssertionError: expected undefined to match object { Object (code, status) }
+
+- Expected:
+{
+  "code": "RAIT.VALIDATION_FAILED",
+  "status": 400,
+}
+
++ Received:
+undefined
+
+ ❯ expectRejectedWithoutEffects tests/unit/rait-case-behavioral-matrix.spec.ts:926:19
+    924|     (error: unknown) => error as { code?: string; status?: number },
+    925|   );
+    926|   expect(outcome).toMatchObject({ code, status });
+       |                   ^
+    927|   expect(subject.writes).toHaveLength(baseline[0]);
+    928|   expect(subject.outbox).toHaveLength(baseline[1]);
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts:980:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/unit/rait-case-behavioral-matrix.spec.ts > CTG-0001 §3 — matriz comportamental integral de envelope e isolamento > dado a mesma chave quando claim-next é repetido igual ou divergente então não duplica nem aceita replay
+AssertionError: expected DetranError: O comando não pode ser execu… { …(5) } to match object { Object (code, status) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "RAIT.VALIDATION_FAILED",
+-   "status": 400,
++ DetranError {
++   "code": "RAIT.IDEMPOTENCY_REPLAY",
++   "status": 409,
+  }
+
+ ❯ expectRejectedWithoutEffects tests/unit/rait-case-behavioral-matrix.spec.ts:926:19
+    924|     (error: unknown) => error as { code?: string; status?: number },
+    925|   );
+    926|   expect(outcome).toMatchObject({ code, status });
+       |                   ^
+    927|   expect(subject.writes).toHaveLength(baseline[0]);
+    928|   expect(subject.outbox).toHaveLength(baseline[1]);
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts:1110:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/unit/rait-case-behavioral-matrix.spec.ts > CTG-0001 §5 e §6 — prazos e DI/RLS concretos > dado os serviços quando o Nest os constrói então usam Database e RequestContext concretos e são Injectable
+Error: Cannot find module 'file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.js' imported from /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts:1699:41
+    1697|       '../../src/handwritten/rait-claim-context.service.js';
+    1698|     const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+    1699|     const { RaitClaimContextService } = await import(
+       |                                         ^
+    1700|       new URL(claimContextPath, import.meta.url).href
+    1701|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/unit/rait-case-behavioral-matrix.spec.ts > CTG-0001 emenda — confiança, F-J-0, jurisdição e precedência > S2 claim-next permits omission but rejects supplied If-Match without effects, including an exact retry key
+AssertionError: expected DetranError: O comando não pode ser execu… { …(5) } to match object { Object (code, status) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "RAIT.VALIDATION_FAILED",
+-   "status": 400,
++ DetranError {
++   "code": "RAIT.IDEMPOTENCY_REPLAY",
++   "status": 409,
+  }
+
+ ❯ expectRejectedWithoutEffects tests/unit/rait-case-behavioral-matrix.spec.ts:926:19
+    924|     (error: unknown) => error as { code?: string; status?: number },
+    925|   );
+    926|   expect(outcome).toMatchObject({ code, status });
+       |                   ^
+    927|   expect(subject.writes).toHaveLength(baseline[0]);
+    928|   expect(subject.outbox).toHaveLength(baseline[1]);
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts:2002:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/unit/rait-case-command-contract.spec.ts > CTG-0001 — fronteira autenticada e DI Nest > dado os serviços de comando quando carregados pelo Nest então declaram providers concretos e Injectable
+Error: Cannot find module 'file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.js' imported from /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts
+ ❯ tests/unit/rait-case-command-contract.spec.ts:1172:41
+    1170|       '../../src/handwritten/rait-claim-context.service.js';
+    1171|     const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+    1172|     const { RaitClaimContextService } = await import(
+       |                                         ^
+    1173|       new URL(claimContextPath, import.meta.url).href
+    1174|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/unit/rait-case-delivery-c3.spec.ts > CTG-0001 §10.2 — sensores C3 de DI e identidade fail-closed > dado composição Nest quando resolve serviços então todas as dependências obrigatórias estão declaradas sem canal oculto
+Error: Cannot find module 'file:///Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.js' imported from /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts
+ ❯ tests/unit/rait-case-delivery-c3.spec.ts:24:41
+     22|       '../../src/handwritten/rait-claim-context.service.js';
+     23|     const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+     24|     const { RaitClaimContextService } = await import(
+       |                                         ^
+     25|       new URL(claimContextPath, import.meta.url).href
+     26|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  6 failed | 144 passed (150)
+   Start at  20:43:18
+   Duration  26.79s (transform 3.73s, setup 0ms, import 8.77s, tests 14.00s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-unit-compat-final-results.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --config vitest.config.ts tests/unit/rait-case-behavioral-matrix.spec.ts tests/unit/rait-case-command-contract.spec.ts tests/unit/rait-case-delivery-c3.spec.ts tests/unit/rait-case-di-c4.spec.ts --reporter=default --reporter=json --outputFile=/tmp/detran-s2-unit-compat-final-results.json

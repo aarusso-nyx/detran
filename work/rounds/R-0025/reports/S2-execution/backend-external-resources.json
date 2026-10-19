@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-10-19T23:24:22.987397+00:00",
+  "authority": "Approved S2; accepted RED f67008c8; external execution under S2-R1",
+  "base": "f67008c87f77dd9d593ae3d467616a41ffb07a7a",
+  "tasks": [
+    {
+      "id": "TASK-0037",
+      "status": "ready",
+      "resourceKind": "explicit external Git checkout; supported locks-only task",
+      "checkout": "/Volumes/Development/.codex/worktrees/r0025-s2-backend/detran",
+      "branch": "codex/r0025-s2-backend",
+      "reusedEngineerCheckout": false
+    },
+    {
+      "id": "TASK-0038",
+      "status": "ready",
+      "resourceKind": "explicit external Git checkout; supported locks-only task",
+      "checkout": "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran",
+      "branch": "codex/r0025-s2-generation",
+      "reusedEngineerCheckout": true
+    }
+  ],
+  "databaseLease": "Parent held; no worker use/reset yet",
+  "preservedPureBranch": "0bb93a69f719c417a70f6e8c57dae390eef933d1",
+  "managedFinishClaimed": false,
+  "backendDependencies": {
+    "command": "pnpm install --frozen-lockfile",
+    "exitCode": 0,
+    "privateLog": "/tmp/detran-s2-backend-install.log",
+    "sha256": "0c737e3aaf853cd8b1bf72aee55d9f3a5f0db9592cc0b647db289276cf3381cb"
+  }
+}

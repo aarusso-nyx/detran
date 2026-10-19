@@ -15,7 +15,20 @@ import { RaitOperationClock } from '../../src/handwritten/rait-operation-clock.j
 const CASE = '00000000-0000-7000-8000-000010000005';
 
 describe('CTG-0001 §10.2 — sensores C3 de DI e identidade fail-closed', () => {
-  it('dado composição Nest quando resolve serviços então todas as dependências obrigatórias estão declaradas sem canal oculto', () => {
+  it('dado composição Nest quando resolve serviços então todas as dependências obrigatórias estão declaradas sem canal oculto', async () => {
+    // Approved S2 composition adds exactly these two providers after the original five.
+    // Dynamic paths keep old-runtime absence local to this composition prerequisite.
+    const claimContextPath =
+      '../../src/handwritten/rait-claim-context.service.js';
+    const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+    const { RaitClaimContextService } = await import(
+      new URL(claimContextPath, import.meta.url).href
+    );
+    const { RaitCaseRiskService } = await import(
+      new URL(riskPath, import.meta.url).href
+    );
+    expect(RaitClaimContextService).toBeTypeOf('function');
+    expect(RaitCaseRiskService).toBeTypeOf('function');
     expect(
       Reflect.getMetadata('design:paramtypes', RaitCaseCommandService),
     ).toEqual([
@@ -24,6 +37,8 @@ describe('CTG-0001 §10.2 — sensores C3 de DI e identidade fail-closed', () =>
       RaitDeadlineEngineFactory,
       RaitDocumentTrustVerifier,
       RaitOperationClock,
+      RaitClaimContextService,
+      RaitCaseRiskService,
     ]);
     expect(
       Reflect.getMetadata('design:paramtypes', RaitInquiryCommandService),

@@ -1,0 +1,115 @@
+{
+  "role": "Inspector",
+  "task": "TASK-0039",
+  "status": "RED_AND_PREREQUISITES_EXECUTED_NONPROMOTING",
+  "readinessPromoting": false,
+  "source": {
+    "parentSuppliedHead": "9a061347",
+    "capturedAt": "2026-10-19T23:43:16.164907+00:00",
+    "sha256": {
+      "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts": "8000f06c25b6a1aa9b23c1e70c896c1bbebd22d9128c85d85a7bcabd0ba12090",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts": "ac268f38f6d5564db7b8eba739fb4988f34c955eeccf4172e14528663c40316e",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts": "2b2ad6d8d91c957597ed61374232362d7632a51aea45fd3dacd4581357de36b9",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-di-c4.spec.ts": "a7718a8749b996283267c7ec0e9b6b55b6a779ee2fdfb847da6804188fe39637",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322",
+      "work/rounds/R-0025/reports/S2-execution/source-freeze.md": "2b14893898eca4020ac08761bfd62f47ab855d645b1a090b49b71c4d998ed01e",
+      "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1"
+    }
+  },
+  "hashesVerifiedUnchangedAfterExecution": true,
+  "scope": {
+    "changedSpecs": [
+      "rait-case-behavioral-matrix.spec.ts",
+      "rait-case-command-contract.spec.ts",
+      "rait-case-delivery-c3.spec.ts"
+    ],
+    "unchangedOwnedSpec": "rait-case-di-c4.spec.ts",
+    "runtimeEdited": false,
+    "dbUsed": false,
+    "gitMutations": false,
+    "frozenHttpEdited": false
+  },
+  "command": "pnpm --filter @detran/inf-rait-case exec vitest run --config vitest.config.ts tests/unit/rait-case-behavioral-matrix.spec.ts tests/unit/rait-case-command-contract.spec.ts tests/unit/rait-case-delivery-c3.spec.ts tests/unit/rait-case-di-c4.spec.ts --reporter=default --reporter=json --outputFile=/tmp/detran-s2-unit-compat-final-results.json",
+  "finalResult": {
+    "executed": 150,
+    "passed": 144,
+    "failed": 6,
+    "skipped": 0,
+    "durationSeconds": 26.79,
+    "exitCode": 1,
+    "failures": [
+      {
+        "name": "CTG-0001 \u00a73 \u2014 matriz comportamental integral de envelope e isolamento S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid",
+        "classification": "BEHAVIOR_RED_SUPPLIED_CLAIM_HEADER"
+      },
+      {
+        "name": "CTG-0001 \u00a73 \u2014 matriz comportamental integral de envelope e isolamento dado a mesma chave quando claim-next \u00e9 repetido igual ou divergente ent\u00e3o n\u00e3o duplica nem aceita replay",
+        "classification": "BEHAVIOR_RED_SUPPLIED_CLAIM_HEADER"
+      },
+      {
+        "name": "CTG-0001 \u00a75 e \u00a76 \u2014 prazos e DI/RLS concretos dado os servi\u00e7os quando o Nest os constr\u00f3i ent\u00e3o usam Database e RequestContext concretos e s\u00e3o Injectable",
+        "classification": "MISSING_INTERFACE_PREREQUISITE"
+      },
+      {
+        "name": "CTG-0001 emenda \u2014 confian\u00e7a, F-J-0, jurisdi\u00e7\u00e3o e preced\u00eancia S2 claim-next permits omission but rejects supplied If-Match without effects, including an exact retry key",
+        "classification": "BEHAVIOR_RED_SUPPLIED_CLAIM_HEADER"
+      },
+      {
+        "name": "CTG-0001 \u2014 fronteira autenticada e DI Nest dado os servi\u00e7os de comando quando carregados pelo Nest ent\u00e3o declaram providers concretos e Injectable",
+        "classification": "MISSING_INTERFACE_PREREQUISITE"
+      },
+      {
+        "name": "CTG-0001 \u00a710.2 \u2014 sensores C3 de DI e identidade fail-closed dado composi\u00e7\u00e3o Nest quando resolve servi\u00e7os ent\u00e3o todas as depend\u00eancias obrigat\u00f3rias est\u00e3o declaradas sem canal oculto",
+        "classification": "MISSING_INTERFACE_PREREQUISITE"
+      }
+    ]
+  },
+  "typecheck": {
+    "command": "pnpm --filter @detran/inf-rait-case typecheck",
+    "result": "PASS",
+    "exitCode": 0
+  },
+  "remainingAcceptance": [
+    "Parent checkpoints and integrates approved runtime; rerun these unchanged tests to GREEN.",
+    "Run final unchanged99 HTTP and full required backend/kernel/CI; unit doubles do not prove production qualification or transaction/security acceptance.",
+    "Supplied-header loop stops on the first failing assertion in old runtime; later values remain authored, not baseline-pass evidence.",
+    "Separate HTTP bare day alias correction requires parent authority/checkpoint."
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-red.log",
+      "sha256": "25e3770ad62969276064bf68e13bc4e5a6836779092268c6856bc921bbe61f40",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-red-results.json",
+      "sha256": "325c09fe21f8b4f8a62f384a1539c34a3802cde5f7dd6d9ce3eba32c1278de89",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-source.json",
+      "sha256": "81cd2636dec20b9462e71d3941d4eea9c59039cfafea60596944519bcaa0e11f",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-final.log",
+      "sha256": "07d919dd430d897140554236877b195c57125007a31ed9351d45878cb48faade",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-final-results.json",
+      "sha256": "8bda4035987befe107aa04bf9377bdc0ebfbab39a0d98aa0b7266fc1a3f338a4",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-final-source.json",
+      "sha256": "0581a2ea73cecadff575d605a2a772e8957749394f95b411d8d84d24ebd77af2",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-unit-compatibility-final-types.log",
+      "sha256": "a366f849553f15949b1746972562b60fc6c1e44427fd349c301908990581d4cf",
+      "sanitization": "Mechanical DSN/non-local bearer redaction; raw tmp originals preserved."
+    }
+  ]
+}
