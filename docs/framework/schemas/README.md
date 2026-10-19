@@ -70,3 +70,10 @@ existente da outbox, e o único emissor do `type` é um helper de teste do e2e d
 `node -e "JSON.parse(...)"` sobre todo o diretório confirma sintaxe válida (parte de
 `pnpm contracts:check` desde TASK-0010); não há gate de schema × código nesta rodada além do que
 `tools/contracts/check-commands.mjs` cobre para os `*.commands.openapi.json` que os referenciam.
+
+## Registros de segurança da R-0039
+
+- [authorization-crosswalk.schema.json](authorization-crosswalk.schema.json): população completa, referências condicionais de autorização, controles públicos e hashes de origem.
+- [pii-registry.schema.json](pii-registry.schema.json): união dos candidatos SQL e blueprints, fontes e pendências explícitas de classificação/finalidade/base/retenção.
+
+A decisão [ADR-0054](../../meta/adr/ADR-0054-security-authorization-and-data-crosswalks.md) preserva a diferença entre registro suplementar e leitura nativa. `pnpm security:exports:check` exige os três corpos nativos por caminhos explícitos e reproduz os exportadores; `--snapshots-only` valida somente os snapshots e suas fontes, sem alegar regeneração. `pnpm security:exports:test` executa contraprovas dos exportadores. Nenhum schema altera o roster DEVAI ou concede acesso.
