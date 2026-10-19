@@ -719,3 +719,14 @@ No managed tasks, locks or runtime edits are created by this proposal. D1–D11 
 approved; operational bindings/ladder/legacy/incident inputs remain release gates.
 A2 unavailable batch/pending-item fields require later typed restoration.
 No close/seal, readiness promotion, production provisioning or scorecard changes.
+
+## S2 execution activation — 2026-10-19
+
+Owner approved the exact backend-first S2 packet. PR205 merged as2e04f29c after
+all required checks green, following main92be0db4 security reconciliation with
+both original evidence forks preserved. The historical “S2 paused” proposal above
+is superseded only for its approved scope. S3, operational production and whole-
+journey/round completion remain unapproved. See AUTHORIZATION.md and
+reports/S2-execution/ for real managed-task custody and role checkpoint evidence.
+S1 plumbing records remain preserved without false finish; S2 uses explicit new
+identities and exact owned paths. Inspector RED precedes Engineer changes.

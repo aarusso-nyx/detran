@@ -157,3 +157,38 @@ It does not approve S2 or its recommended backend-first sequencing. No S2 task
 creation, RED authoring, Engineer dispatch, implementation, merge, close/seal or
 scorecard modification follows. The proposal and closed owned paths are in
 reports/P4-02-S2-approval-packet.md and reports/P4-02-S2-owned-paths.json.
+
+## P4-02-S2 execution — Owner, 2026-10-19
+
+Direct instruction:
+
+> I approve P4-02-S2 as written, including backend-first sequencing. Check CI on PR #205, fix any failures, and merge once required checks are green. Then execute the approved slice, preserving local and scorecard work.
+
+Exact approved packet: reports/P4-02-S2-approval-packet.md and its248-path inventory,
+unchanged by main security reconciliation. PR205 merged12161d73 as2e04f29c with
+all five required checks PASS. Authorizes only S2 source→Inspector RED→Engineer→
+Inspector GREEN/review and an implementation PR. S3 UI activation, production,
+scorecard changes, this future implementation PR's merge and close/seal remain
+outside this slice. Original64-command and full-journey acceptance is retained.
+
+S1's ready/queued metadata and expired locks are preserved as recovery custody,
+not fabricated managed completion. Supported task/status inspection plus new
+explicit S2 identities/CTG/locks avoids redispatch and collision; no old managed
+worktree is released or removed. Current host boundary remains CLI-only; actual
+external role work is reported separately from managed-provider lifecycle state.
+
+### Temporary delegated Owner choices
+
+Owner instructed (Portuguese, literal):
+
+> Estarei dirigindo pelas próximas 5 horas, então até eu sinalizar que voltei ao console, assuma sempre as opções recomendadas em cada questão de OWNER que surgir nesse período.
+> Be wise. I trust you :)
+
+Authorization recorded2026-10-19T21:39:32Z, ending on return-to-console signal or
+2026-10-20T02:39:32Z, whichever comes first. Within the already authorized task,
+record each concrete Owner question, recommended choice, justification and exact
+bounds before acting. No invented legal/external fact, automatic S3/production
+expansion, gate weakening or destruction of preserved work follows. Receipt in
+reports/S2-execution/owner-delegation.json. Necessary bounded amendments may be
+adopted under this delegation with a reviewable decision record, rather than
+interrupting the Owner while driving.
