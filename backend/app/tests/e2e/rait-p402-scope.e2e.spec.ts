@@ -990,26 +990,173 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
       );
     }
   });
-  it('batch creation cannot include a case linked to another same-unit pool', async () => {
+  it('qualified coordinator creates a schedule through the real collection controller', async () => {
+    await fixture.scope(COORDINATOR, 'rait-coordinator');
     const before = await effects();
-    const batches = (
-      await owner.query('select * from inf.rait_batch order by id')
-    ).rows;
-    const response = await request(app.getHttpServer())
-      .post(`${PREFIX}/batches`)
-      .set(headers('rait-secretary', RAIT_SECRETARY))
-      .send({
-        poolId: '00000000-0000-7000-8000-000020000001',
-        weekStart: '2026-09-14',
-        caseIds: [RAIT_CASE('03')],
+    let id: string | undefined;
+    try {
+      const response = await request(app.getHttpServer())
+        .post(`${PREFIX}/schedules`)
+        .set(headers('rait-coordinator', COORDINATOR))
+        .send({
+          poolId: '00000000-0000-7000-8000-000020000001',
+          memberId: '00000000-0000-7000-8000-000021000001',
+          kind: 'escala_semanal',
+          periodStart: '2032-01-05',
+          periodEnd: '2032-01-11',
+        });
+      expect(response.status, JSON.stringify(response.body)).toBe(201);
+      id = response.body.data.id;
+      expect(response.body.data).toMatchObject({
+        pool_id: '00000000-0000-7000-8000-000020000001',
+        member_id: '00000000-0000-7000-8000-000021000001',
+        kind: 'escala_semanal',
+        version: 1,
       });
-    expect(response.status, JSON.stringify(response.body)).toBe(404);
-    expect(response.body).not.toHaveProperty('data');
-    expect(await effects()).toEqual(before);
-    expect(
-      (await owner.query('select * from inf.rait_batch order by id')).rows,
-    ).toEqual(batches);
+      expect(response.headers.etag).toBe('"1"');
+      expect(response.body.events).toEqual([]);
+      expect(
+        (
+          await owner.query(
+            'select id from inf.rait_schedule where tenant_id=$1 and id=$2',
+            [RAIT_TENANT, id],
+          )
+        ).rows,
+      ).toEqual([{ id }]);
+      const after = await effects();
+      expect(after.idem - before.idem).toBe(1);
+      expect(after.replayAudit - before.replayAudit).toBe(1);
+      expect(after.audit - before.audit).toBe(2);
+    } finally {
+      if (id)
+        await owner.query('delete from inf.rait_schedule where id=$1', [id]);
+    }
   });
+  it('qualified secretary creates an exact-pool batch through the real collection controller', async () => {
+    await fixture.scope(RAIT_SECRETARY, 'rait-secretary');
+    const before = await effects();
+    let id: string | undefined;
+    try {
+      const response = await request(app.getHttpServer())
+        .post(`${PREFIX}/batches`)
+        .set(headers('rait-secretary', RAIT_SECRETARY))
+        .send({
+          poolId: '00000000-0000-7000-8000-000020000002',
+          weekStart: '2032-01-05',
+          kind: 'extraordinario',
+          caseIds: [RAIT_CASE('19')],
+        });
+      expect(response.status, JSON.stringify(response.body)).toBe(201);
+      id = response.body.data.id;
+      expect(response.body.data).toMatchObject({
+        pool_id: '00000000-0000-7000-8000-000020000002',
+        state: 'LOTE_ABERTO',
+        version: 1,
+      });
+      expect(response.headers.etag).toBe('"1"');
+      expect(response.body.events).toHaveLength(1);
+      expect(
+        (
+          await owner.query(
+            'select case_id from inf.rait_batch_item where tenant_id=$1 and batch_id=$2',
+            [RAIT_TENANT, id],
+          )
+        ).rows,
+      ).toEqual([{ case_id: RAIT_CASE('19') }]);
+      const after = await effects();
+      expect(after.outbox - before.outbox).toBe(1);
+      expect(after.idem - before.idem).toBe(1);
+      expect(after.replayAudit - before.replayAudit).toBe(1);
+      expect(after.audit - before.audit).toBe(2);
+    } finally {
+      if (id) {
+        await owner.query('delete from inf.rait_batch_item where batch_id=$1', [
+          id,
+        ]);
+        await owner.query('delete from inf.rait_batch where id=$1', [id]);
+      }
+    }
+  });
+  it('batch creation rejects only the wrong requested pool in an otherwise valid request', async () => {
+    await fixture.scope(RAIT_SECRETARY, 'rait-secretary');
+    const member = randomUUID();
+    const cetran = '00000000-0000-7000-8000-000020000003';
+    await owner.query(
+      `insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')`,
+      [member, RAIT_TENANT, cetran, RAIT_SECRETARY],
+    );
+    const payload = {
+      poolId: '00000000-0000-7000-8000-000020000002',
+      weekStart: '2032-01-05',
+      kind: 'extraordinario',
+      caseIds: [RAIT_CASE('17')],
+    };
+    let id: string | undefined;
+    try {
+      // The secretary independently qualifies for this existing CETRAN case;
+      // only the requested JARI pool differs from its trusted current pool.
+      expect(
+        (
+          await get(
+            `${PREFIX}/cases/${RAIT_CASE('17')}`,
+            'rait-secretary',
+            RAIT_SECRETARY,
+          )
+        ).status,
+      ).toBe(200);
+      const before = await effects();
+      const batches = (
+        await owner.query('select * from inf.rait_batch order by id')
+      ).rows;
+      const denied = await request(app.getHttpServer())
+        .post(`${PREFIX}/batches`)
+        .set(headers('rait-secretary', RAIT_SECRETARY))
+        .send(payload);
+      expect(denied.status, JSON.stringify(denied.body)).toBe(404);
+      expect(denied.body).not.toHaveProperty('data');
+      expect(await effects()).toEqual(before);
+      expect(
+        (await owner.query('select * from inf.rait_batch order by id')).rows,
+      ).toEqual(batches);
+      const positive = await request(app.getHttpServer())
+        .post(`${PREFIX}/batches`)
+        .set(headers('rait-secretary', RAIT_SECRETARY))
+        .send({ ...payload, poolId: cetran });
+      expect(positive.status, JSON.stringify(positive.body)).toBe(201);
+      id = positive.body.data.id;
+      expect(
+        (
+          await owner.query(
+            'select case_id from inf.rait_batch_item where batch_id=$1',
+            [id],
+          )
+        ).rows,
+      ).toEqual([{ case_id: RAIT_CASE('17') }]);
+    } finally {
+      if (id) {
+        await owner.query('delete from inf.rait_batch_item where batch_id=$1', [
+          id,
+        ]);
+        await owner.query('delete from inf.rait_batch where id=$1', [id]);
+      }
+      await owner.query('delete from inf.rait_pool_member where id=$1', [
+        member,
+      ]);
+    }
+  });
+  for (const operation of ['accept', 'impediment'] as const)
+    it(`malformed route caseId for batch ${operation} is404 before SQL or body validation`, async () => {
+      const before = await effects();
+      const response = await request(app.getHttpServer())
+        .post(
+          `${PREFIX}/batches/00000000-0000-7000-8000-000028000002/items/not-a-uuid/${operation}`,
+        )
+        .set({ ...headers('rait-rapporteur', RAPPORTEUR), 'if-match': '"1"' })
+        .send({});
+      expect(response.status, JSON.stringify(response.body)).toBe(404);
+      expect(response.body).not.toHaveProperty('data');
+      expect(await effects()).toEqual(before);
+    });
   for (const resource of ['pending-contents', 'redirects'] as const)
     it(`triage has no sourced ${resource} projection for actual records`, async () => {
       const id = randomUUID();
