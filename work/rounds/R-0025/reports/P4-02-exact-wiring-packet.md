@@ -18,7 +18,10 @@ An authorized analyst chooses from server-derived eligible pools, sees only the
 ordered metadata they may consume, confirms a fresh claim, receives HTTP200 CASE
 result and opens the assigned case's dossier. The command composes the already
 documented ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO stages atomically, after admissibility.
-The assignment and both logical state movements are traced in the same transaction.
+The assignment and both logical state movements are traced in the same transaction;
+versions advance v→v+1→v+2, final ETag v+2, with correct from/to snapshots and
+distinct per-stage outbox identities for the two existing case-changed events.
+Do not reuse attempt+topic for both events or emit duplicate assignment effects.
 Exact retries do not assign again. New claims have new attempt identities.
 
 The same packet proves pre-assignment triage still works and no unrestricted

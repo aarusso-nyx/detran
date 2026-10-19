@@ -115,7 +115,7 @@ QUEUE_EMPTY409 sem revelar casos. MEMBER_IMPEDED continua nas demais utilizaçõ
 fonteadas. Não há nova rota de impedimento do analista.
 
 Escopo server-side separa metadados coletivos, triagem autorizada pré-atribuição
-e mérito atribuído. `rait-coordinator` e `AUDITOR` podem ler mérito não atribuído
+e mérito atribuído. coordenadores e auditores podem ler mérito não atribuído
 no vínculo explícito de unidade/pool/tenant, somente leitura, sem impedimento;
 nenhum novo grant de claim/escrita/assinatura ou escopo amplo é inferido.
 Formalização: [ADR0045](../../../../../../meta/adr/ADR-0045-rait-claim-selector-contract.md) e [ADR0046](../../../../../../meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md).

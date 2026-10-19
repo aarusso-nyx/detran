@@ -17,7 +17,11 @@ is inferred. All actors are excluded from merits when impeded.
 
 Defense sequence: delivered protocol/triage/admission first, then a single claim
 transaction composes ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO and assignment/audit/history/
-outbox effects. The UI opens `/casos/:id/dossie` using returned data.id. No repeat
+outbox effects. Each state movement advances version once; the result ETag is final v+2.
+Two existing case-changed events carry correct successive from/to snapshots;
+stable per-stage outbox identities prevent same-topic deduplication collisions,
+with one assignment event and total rollback/retry-once effects. No new topic.
+The UI opens `/casos/:id/dossie` using returned data.id. No repeat
 triage, receive shortcut or new state. JARI/CETRAN behavior is retained. Legacy
 DISTRIBUIDO/replay inventory is a mandatory preflight, not an automatic migration.
 

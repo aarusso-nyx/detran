@@ -23,6 +23,12 @@ P4-01 source matrix and the appended Owner decision record in open-decisions-rai
 
 1. Defense claim composes existing ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO stages in
    one transaction, with assignment, state history, audit and outbox effects.
+   Each logical movement advances case.version once (v→v+1→v+2); return the final
+   v+2 CASE ETag. Persist ordered history and two existing rait.case.changed events
+   with accurate from/to snapshots plus one assignment event. Give each stage a
+   distinct outbox idempotency identity derived from attempt+event-kind+stage,
+   rather than reusing attempt+topic for both movements. No new public topic or
+   dependency on delivery ordering across unrelated aggregates.
    No committed intermediate unassigned/distributed state; no invented state,
    secretary receive shortcut, repeat admission or independent distribution command.
    Preserve existing JARI/CETRAN command behavior in this packet. An old defense
