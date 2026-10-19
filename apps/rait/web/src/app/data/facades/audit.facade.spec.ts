@@ -67,7 +67,7 @@ describe('S1-A2 audit projection', () => {
     const event = {
       id: 'scoped-event',
       case_id: CASE_IDS.EM_INSTRUCAO,
-      event_type: 'rait.case.changed',
+      event_type: 'CASE_ADMITTED',
       occurred_at: '2026-09-15T12:00:00Z',
     };
     const promise = facade.loadTrail({
