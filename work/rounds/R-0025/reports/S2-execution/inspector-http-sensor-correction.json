@@ -1,0 +1,96 @@
+{
+  "role": "Inspector",
+  "task": "TASK-0040",
+  "status": "AUTHORED_TYPECHECK_PREREQUISITE_PENDING_NONPROMOTING",
+  "readinessPromoting": false,
+  "parentSuppliedHead": "8a03c884",
+  "ownedTestPath": "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+  "beforeSha256": "f865598ccb6026deeb7e954f287796de8d1eaa8ccaa4a4765e5e5b307c03cab2",
+  "amendedSha256": "b2a84ec634a279c32695de0a2c80bbb0252439e3a51fece894a385b11f9ca433",
+  "historicalFrozen99": "Existing inspector-http-red.md/json and all R2/delta artifacts are preserved unchanged; amended sensor requires later unchanged full99 acceptance.",
+  "changes": [
+    {
+      "kind": "SQL_SYNTAX_ONLY",
+      "location": "C movement source query",
+      "before": "::date::text day",
+      "after": "::date::text AS \"day\"",
+      "resultKeyUnchanged": "day"
+    },
+    {
+      "kind": "HISTORICAL_EVENT_SELECTION",
+      "location": "exactClaimPersistence records filter",
+      "before": "All assignment rows or case events whose fromState is ADMITIDO/DISTRIBUIDO",
+      "after": "All assignment rows or exact ADMITIDO\u2192DISTRIBUIDO / DISTRIBUIDO\u2192EM_INSTRUCAO transition pairs",
+      "exclusion": "Pre-existing admission ADMITIDO\u2192ADMITIDO is not a claim event; no admission runtime approval or correction."
+    }
+  ],
+  "sourceTrace": {
+    "graft": "Lexical graft lookup attempted; target helper not indexed, returned unrelated symbols. Actual rg/helper/caller reads are authority.",
+    "helperCallers": [
+      "qualified new HTTP admission positive",
+      "qualified historical admission/distribution positive"
+    ],
+    "preservedAssertions": [
+      "Actual outbox delta exactly3/new and2/legacy",
+      "Exact version/state/committed pg_notify stage order",
+      "Exact response events/order/payloads",
+      "Exact selected outbox cardinality equals event count",
+      "Exact persisted payload multiset/topic equality",
+      "Distinct idempotency keys, no duplicate, zero flag events",
+      "All rollback/race assertions untouched"
+    ],
+    "runtimeReadOnly": "Engineer CASE source stage builder emits accurate from/to and stage-indexed keys; generic pre-existing admission events construct from merged post-update data. This is observed retained behavior, not commissioned approval."
+  },
+  "debugEvidence": {
+    "log": "/tmp/detran-s2-backend-http-debug5.log",
+    "executed": 2,
+    "failed": 2,
+    "filteredUnexecuted": 97,
+    "classification": "Both fail only helper historical count4vs3 /3vs2 after actual delta/stage/response assertions. Filtered debug is not full acceptance.",
+    "sha256": "550ad16e6272bb72915772cb3d04e68d23c1f603314100d52d5879e8e9d7ce13"
+  },
+  "boundary": {
+    "dbUsed": false,
+    "runtimeEdited": false,
+    "fixtureEdited": false,
+    "gitMutations": false,
+    "timeoutsChanged": false,
+    "newTestsOrSkips": false
+  },
+  "typecheck": {
+    "command": "pnpm --filter @detran/app typecheck",
+    "status": "PREREQUISITE_PENDING",
+    "exitCode": 2,
+    "log": "/tmp/detran-s2-http-sensor-types.log",
+    "errors": [
+      "../domains/inf/rait-case/src/index.ts(115,15): error TS2307: Cannot find module './handwritten/rait-claim-context.controller.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/index.ts(116,15): error TS2307: Cannot find module './handwritten/rait-case-risk.controller.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/index.ts(117,15): error TS2307: Cannot find module './handwritten/rait-claim-context.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/index.ts(118,15): error TS2307: Cannot find module './handwritten/rait-case-risk.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/index.ts(119,15): error TS2307: Cannot find module './handwritten/rait-risk.port.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/index.ts(120,15): error TS2307: Cannot find module './handwritten/rait-legacy-qualification.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/rait-case.module.ts(67,44): error TS2307: Cannot find module './handwritten/rait-claim-context.controller.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/rait-case.module.ts(68,40): error TS2307: Cannot find module './handwritten/rait-case-risk.controller.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/rait-case.module.ts(78,41): error TS2307: Cannot find module './handwritten/rait-claim-context.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/rait-case.module.ts(79,37): error TS2307: Cannot find module './handwritten/rait-case-risk.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-case/src/rait-case.module.ts(80,48): error TS2307: Cannot find module './handwritten/rait-legacy-qualification.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-worklist/src/index.ts(81,15): error TS2307: Cannot find module './handwritten/rait-risk-projection.service.js' or its corresponding type declarations.",
+      "../domains/inf/rait-worklist/src/rait-worklist.module.ts(51,43): error TS2307: Cannot find module './handwritten/rait-risk-projection.service.js' or its corresponding type declarations."
+    ],
+    "classification": "Generated modules reference approved new runtime services not yet present in this Inspector checkout; no owned-spec error reported. No pass claimed."
+  },
+  "acceptancePending": "Later exclusive lease, generated runtime, and full unchanged amended99 GREEN. No filtered/debug result counts as full acceptance.",
+  "finalHashVerifiedUnchanged": true,
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-sensor-correction-types.log",
+      "sha256": "f7e5f0f7d3e2f3e3afbfc076f422c9e5eb962343b5d50aa3c1c5c3b99573d128",
+      "sanitization": "Mechanical DSN redaction, raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-sensor-correction-diff.txt",
+      "sha256": "159c4efa5fba41a3775b8eca77b77ca27b9965f46a41dfcdd8a5bcd9a7eb7e36",
+      "sanitization": "Mechanical DSN redaction, raw tmp originals preserved."
+    }
+  ]
+}
