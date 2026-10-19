@@ -23,7 +23,12 @@ selects WF-RAIT-002 §4.1 (21-month N3,23-month critical); do not parse the summ
 into a different threshold. Normalize typed parameter representation from the
 binding decision, retaining version/source provenance and old versions. D's
 30/45/54/60-month stages are in docs/meta/decisions/rait.md; do not invent an N3
-threshold absent from that ladder. Missing/conflicting operational versions block
+threshold absent from that ladder. A/C new catalogue rows start proposta (source_pending=false where the approved
+source is attached), not automatically vigente. WF §4.3 retains its historical
+“proposta/proporcionalmente” labels; the workflow header records Owner approval
+of §§4.1–4.3. Source approval does not automatically activate an operational
+parameter version. Explicit qualification/promotion is a release input.
+Missing/conflicting operational versions block
 use and release until sourced; do not reinterpret them silently.
 
 ## Decision: one calculation, explicit composition
@@ -63,11 +68,27 @@ bounded producer required for selector correctness, not a claim of radar freshne
 A future full-coverage producer/publisher requires its own reviewed operational
 packet and consumer acceptance. Existing case/assignment events remain unchanged.
 
-If current evaluation reaches PRESCRITO_OPERACIONAL without the existing required
-qualified incident/provenance input, claim returns RISK_SOURCE_UNAVAILABLE503 and
-rolls back with no assignment/state/audit/outbox effects. Never create an incident
-or downgrade the flag to make claim succeed. Such records remain operational
-release inputs; existing legal expiry commands remain under their own contracts.
+If any otherwise eligible candidate reaches PRESCRITO_OPERACIONAL without
+qualified incident/provenance input, both selected-pool claim-context GET and claim
+POST fail the whole pool operation with RISK_SOURCE_UNAVAILABLE503, no candidate
+payload or effects. Do not skip that candidate and claim lower-ranked work. Scoped
+GET cases/:id/risk also returns503 under that condition for that case; other
+properly scoped case/operational inventory reads remain available. The blocking
+case/reference is visible only in authorized unit/pool operational inventory,
+never disclosed to an analyst through the error. No incident is fabricated and
+no flag downgraded. Such records remain operational release inputs.
+
+Incident qualification is an adapter concern, separate from the pure calculation:
+read the existing inf.rait_clock_alert.incident_ref and same-tenant
+inf.rait_incident source through the named app read-only snapshot adapter in the
+caller's transaction. Require one authoritative incident reference with matching
+case_id or clock_id (and consistent other link if present), valid provenance and
+source revision; ambiguous/missing/inconsistent target is unqualified. A verified
+operational receipt may supply the source reference; it is never a browser value.
+The internal port carries qualified | missing | ambiguous status and source-version
+refs, not incident cause/outcome text. Its public HTTP result exposes no incident
+payload. No ORG writes, new dependency/cycle or new incident API is authorized;
+existing legal expiry commands remain under their own contracts.
 
 The additive public API is frozen in
 [the CTG-0001 §5 supplement](../../../work/rounds/R-0025/contracts/P4-02-deadlines-risk-api.md).

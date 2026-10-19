@@ -381,3 +381,20 @@ not hidden omission. Scoped raw clock reads retain stored chronology; current
 risk is separately read through the typed scoped cases/:id/risk operation under
 the same case predicate. No stored flag/flag_changed_at is presented as a fresh
 evaluation, and no flag publication is commissioned by this packet.
+
+### Exact outcomes for restricted generic writes
+
+Permission success is not a successful mutation. Missing action/purpose denies403
+or scoped parent404 before body validation. For an authorized role/parent:
+
+| Generic request                                 | Defined outcome in this packet                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| POST documents                                  | No viable allowed generic create body: only filename is ordinary metadata, while protected kind/origin/storage/hash are required by storage. Reject protected/unknown keys400 VALIDATION_FAILED; filename-only incomplete create400, no row/effect. Protocol remains the existing document-creation owner; upload stays unavailable |
+| PATCH documents                                 | filename-only metadata edit may succeed for the qualified existing writer; changing any other/protected field400, no effects                                                                                                                                                                                                        |
+| POST/PATCH decisions, communications, inquiries | Closed generic writable set is empty; reject any supplied mutation field400 VALIDATION_FAILED, and reject an empty no-op body400. Preserve existing owner commands/contracts and their actual roles; this raw endpoint is not an alternate command                                                                                  |
+| PATCH cases                                     | Remove the generic operation through blueprint controls: expected404 for PATCH, no handler/effect for any role. No current ordinary writable field is qualified; actual versioned commands remain the positive path                                                                                                                 |
+
+No silent200/no-op success. Inspector asserts these exact negatives and separately
+proves the authorized owner-command positives; protected fields are not admitted
+just to satisfy the old full create DTO. These are explicit bypass removals under
+P4-02 T2, not revocation of the underlying permission rule or a new business action.

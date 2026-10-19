@@ -91,8 +91,8 @@ No separate permissive legacy endpoint survives to bypass the scoped operation.
    merge and post-merge evidence remain separately authorized. No round close/seal.
 
 New safe errors are RAIT.CLAIM_LEGACY_UNVERIFIED409,
-RAIT.CASE_POOL_UNRESOLVED409 and RAIT.RISK_SOURCE_UNAVAILABLE503, specified in ADR0048/49 and the error-catalogue
-addendum. Neither discloses a candidate. No supplied If-Match, result-envelope,
+RAIT.CASE_POOL_UNRESOLVED409 and RAIT.RISK_SOURCE_UNAVAILABLE503, specified in ADR0047/48/49 and the error-catalogue
+addendum. None discloses a candidate. No supplied If-Match, result-envelope,
 new-attempt/retry or other command contract is relaxed. Qualified legacy success
 returns the same typed CASE shape with final v+1; new path returns v+2.
 
@@ -168,3 +168,18 @@ The new rait.ladder.A and rait.ladder.C catalogue rows are transcriptions of the
 approved WF-RAIT-002 §§4.3/4.2 with source/version refs. B normalizes to approved
 N3=21 months/critical23, D to30/45/54/60 without an invented N3. No previous live
 parameter version is overwritten and no unrelated parameter/flag is introduced.
+
+A/C catalogue additions start proposta with their source labels/provenance;
+source approval is not automatic operational promotion. WF §4.3's historical
+“ladder proposta / escala proporcionalmente” label is preserved alongside its
+Owner-approved workflow-header provenance. No live parameter is promoted in this
+PR; qualified executable vigente versions remain release inputs. Snapshot clock
+elements carry applicability and ceilingOn from the same asOf source, not a join
+to a potentially different raw-clock instant.
+
+ADR0049's missing-incident503 applies to the whole eligible pool candidate set for
+claim/context; the scoped case risk read also503 for that case. Existing scoped
+case/operational inventory retains visibility of the blocker. The app read-only
+incident adapter resolves existing clock-alert ref and ORG incident target in the
+caller's transaction, without ORG writes/new API/dependency. It returns only
+qualification status/source refs internally; no incident payload in public errors.

@@ -39,3 +39,22 @@ to avoid activating a partial SSE/DASHBOARD/infraction feed; request-time curren
 risk remains mandatory, with scoped typed read and no persistence/outbox changes.
 PRESCRITO_OPERACIONAL without required qualified incident input fails safely503.
 These are contract corrections, not executed controls or new production facts.
+
+Corrected-delta review2 returned PASS on db9c6f51. Its five low clarifications
+were applied: exact restricted generic-write results; pool-wide missing-incident
+and GET risk503 with named existing sources; proposed A/C operational versions
+without automatic promotion; per-clock snapshot applicability/ceiling; error
+ADR attribution and wording. No command grant or production fact was added.
+Review is design-only; served model version is not inferred from the opus alias.
+
+Final stable full format:check passed after review2 cleanup and the five low
+clarifications. Final targeted formatting is checked for subsequent receipt/method
+wording only. Documentation checks passed on both assembled and corrected stages;
+the final affected gates are repeated before PR after low clarifications.
+Preservation check retained every starting local ref name and all three machine
+config SHA256 values. Accepted main ADR bytes and protected paths remain unchanged.
+
+Final post-clarification rerun: docs:kb:check, docs:kb:publish-check,
+verify:state-index, verify:rounds-index, devai:doctor and docs:check all PASS.
+Both review capture hashes verified; starting refs and machine configuration
+hashes retained; accepted baseline ADRs remain byte-identical.

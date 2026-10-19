@@ -48,7 +48,15 @@ export interface RaitRiskInput {
 export interface RaitRiskSnapshot {
   asOf: string;
   today: LocalDate;
-  clocks: readonly { clockCode: RaitRiskClockCode; flag: RaitRiskFlag }[];
+  clocks: readonly (
+    | {
+        clockCode: RaitRiskClockCode;
+        applicability: 'applicable';
+        flag: RaitRiskFlag;
+        ceilingOn: LocalDate;
+      }
+    | { clockCode: RaitRiskClockCode; applicability: 'not_applicable' }
+  )[];
   worstFlag: RaitRiskFlag | null;
   sourceVersions: readonly string[];
 }
@@ -85,3 +93,12 @@ risk display use the typed snapshot. There is no claim-only flag event or partia
 DASHBOARD feed. Tests assert complete/missing/applicability/threshold-date source,
 worst-flag and same-instant behavior, plus public-export and no-side-effect invariants.
 Real HTTP+DB tests separately prove source qualification, ordering and rollback.
+
+Each snapshot clock explicitly retains applicability and the applicable ceiling
+from that same source instant; the header never joins a fresh flag to an unrelated
+raw read's ceiling. No fake flag or ceiling for a not-applicable clock. The CASE
+adapter's separate incident-qualification port is specified by ADR0049: it validates
+existing same-tenant incident/ref/target provenance in the caller transaction.
+The pure evaluateRaitRisk function does not require incident I/O or create records.
+Missing required incident qualification maps to503 for pool context/claim and the
+scoped risk read; it is not represented as SEM_RISCO or a successful partial queue.
