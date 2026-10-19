@@ -1,7 +1,7 @@
 # P4-02-S1-A3 — preserve fingerprints and bind unbound replay to its actor
 
-Status: PROPOSED; Owner approval required before this amendment is implemented.
-Architect, Constitution Article 7. Other approved S1 work may continue.
+Status: APPROVED by Owner, 2026-10-19: “Approve A3 as written (recommended)”.
+Architect, Constitution Article 7. Implementation is bounded to this packet.
 
 ## Source conflict and bounded recommendation
 

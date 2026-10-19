@@ -60,6 +60,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0047](ADR-0047-rait-role-purpose-and-staff-identity.md)           | RAIT complete role-purpose scope and canonical staff identity                           | Accepted | —                                                                                |
 | [ADR-0048](ADR-0048-rait-legacy-defense-claim-compatibility.md)        | Provenance-qualified legacy defense claim compatibility                                 | Accepted | —                                                                                |
 | [ADR-0049](ADR-0049-rait-authoritative-risk-composition.md)            | Authoritative current-risk production for claim ordering                                | Accepted | —                                                                                |
+| [ADR-0050](ADR-0050-rait-command-replay-provenance.md)                 | Immutable actor provenance for RAIT command replay                                      | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
