@@ -33,6 +33,13 @@ const invalid = (): never => {
     message: 'Dados inválidos.',
   });
 };
+const pagination = (value: unknown, fallback: number): number => {
+  if (value === undefined) return fallback;
+  if (typeof value !== 'string' || !/^\d+$/u.test(value)) return invalid();
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 0) return invalid();
+  return parsed;
+};
 const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
 const TABLES: Record<string, string> = {
@@ -269,7 +276,6 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
       'closed_at',
       'outcome',
     ],
-    T: ['id', 'case_id', 'due_on', 'opened_at', 'closed_at', 'outcome'],
   },
   deadlines: {
     S: [
@@ -451,6 +457,7 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
       'published_at',
     ],
     M: [
+      'grounds',
       'id',
       'case_id',
       'circuit',
@@ -463,6 +470,7 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
       'published_at',
     ],
     J: [
+      'grounds',
       'id',
       'case_id',
       'circuit',
@@ -585,16 +593,6 @@ const FIELDS: Record<string, Record<string, readonly string[]>> = {
       'receipt_document_id',
       'redirected_at',
       'redirected_by',
-    ],
-    T: [
-      'id',
-      'case_id',
-      'direction',
-      'protocol_number',
-      'counterpart_agency',
-      'origin_protocolled_on',
-      'deadline_restored',
-      'redirected_at',
     ],
   },
   assignments: {
@@ -770,6 +768,7 @@ export class RaitCaseScopeService {
     principal: RaitScopePrincipal,
     resource: string,
     action = 'read',
+    ownFunctionalImpediment = false,
   ): string {
     const c = alias;
     const localDay = `(current_timestamp at time zone (select timezone from auth.tenants where id=${c}.tenant_id))::date`;
@@ -800,19 +799,21 @@ export class RaitCaseScopeService {
       !projectedResource ||
       (Boolean(FIELDS[projectedResource]?.[purpose]) &&
         (purpose !== 'T' || projectedResource !== 'documents'));
+    const hasRouting = `exists(select 1 from inf.rait_case_pool_scope cr where cr.tenant_id=${c}.tenant_id and cr.case_id=${c}.id and cr.active) or exists(select 1 from inf.rait_assignment ar where ar.tenant_id=${c}.tenant_id and ar.case_id=${c}.id and ar.active) or exists(select 1 from inf.rait_batch_item br join inf.rait_batch bh on bh.tenant_id=br.tenant_id and bh.id=br.batch_id where br.tenant_id=${c}.tenant_id and br.case_id=${c}.id and bh.state='LOTE_ACEITO')`;
+    const triagePool = `and (not (${hasRouting}) or ${this.poolCaseSql(c, 'p.id')})`;
     const noOtherAssignment = `not exists(select 1 from inf.rait_assignment ax join inf.rait_pool_member mx on mx.tenant_id=ax.tenant_id and mx.id=ax.member_id where ax.tenant_id=${c}.tenant_id and ax.case_id=${c}.id and ax.active and mx.person_id<>$2)`;
     const branches: string[] = [];
     if (has('AUDITOR'))
       branches.push(`when ${c}.archived and ${bound('AUDITOR')} then 'S'`);
     if (has('rait-analyst') && can('T'))
       branches.push(
-        `when ${!((resource === 'rait-case' && ['triage', 'admit', 'reject'].includes(action)) || (resource === 'rait-admissibility' && action === 'create')) ? `${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE')` : 'true'} and ${member('analista')} and (${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE') or ${noOtherAssignment}) then 'T'`,
+        `when ${!((resource === 'rait-case' && ['triage', 'admit', 'reject'].includes(action)) || (resource === 'rait-admissibility' && action === 'create')) ? `${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE')` : 'true'} and ${member('analista', triagePool)} and (${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE') or ${noOtherAssignment}) then 'T'`,
       );
     if (has('rait-analyst') && can('M'))
       branches.push(`when ${own('analista')} then 'M'`);
     if (has('rait-secretary') && can('T'))
       branches.push(
-        `when ${!((resource === 'rait-case' && ['triage', 'admit', 'reject'].includes(action)) || (resource === 'rait-admissibility' && action === 'create')) ? `${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE')` : 'true'} and ${member('secretaria')} and (${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE') or ${noOtherAssignment}) then 'T'`,
+        `when ${!((resource === 'rait-case' && ['triage', 'admit', 'reject'].includes(action)) || (resource === 'rait-admissibility' && action === 'create')) ? `${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE')` : 'true'} and ${member('secretaria', triagePool)} and (${c}.state in ('PROTOCOLADO','TRIAGEM_ADMISSIBILIDADE') or ${noOtherAssignment}) then 'T'`,
       );
     if (has('rait-secretary') && can('S'))
       branches.push(
@@ -841,7 +842,7 @@ export class RaitCaseScopeService {
       );
     if (!branches.length)
       return '(case when $2::uuid is not null then null::text else null::text end)';
-    return `(case when exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=${c}.tenant_id and m.is_active) and not exists(select 1 from inf.rait_impediment i join inf.rait_pool_member im on im.tenant_id=i.tenant_id and im.id=i.member_id where i.tenant_id=${c}.tenant_id and i.case_id=${c}.id and im.person_id=$2) then (case ${branches.join(' ')} else null end) else null end)`.replaceAll(
+    return `(case when exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=${c}.tenant_id and m.is_active) and ${ownFunctionalImpediment && resource === 'rait-impediment' && action === 'read' ? 'true' : `not exists(select 1 from inf.rait_impediment i join inf.rait_pool_member im on im.tenant_id=i.tenant_id and im.id=i.member_id where i.tenant_id=${c}.tenant_id and i.case_id=${c}.id and im.person_id=$2)`} then (case ${branches.join(' ')} else null end) else null end)`.replaceAll(
       'current_date',
       localDay,
     );
@@ -945,8 +946,10 @@ export class RaitCaseScopeService {
         if (resource === 'assignments')
           where += ` and r.pool_id=$${values.length}`;
       }
-      const limit = Math.min(500, Math.max(1, Number(query.limit) || 500));
-      const offset = Math.max(0, Number(query.offset) || 0);
+      const requestedLimit = pagination(query.limit, 500);
+      if (requestedLimit === 0) return invalid();
+      const limit = Math.min(500, requestedLimit);
+      const offset = pagination(query.offset, 0);
       values.push(limit, offset);
       const result = await tx.query<Row>(
         `select ${alias}.*, row_to_json(c) as _case, ${purpose} as _purpose from inf.${table} ${alias} ${join} where ${where} order by ${alias}.id limit $${values.length - 1} offset $${values.length}`,
@@ -1057,6 +1060,12 @@ export class RaitCaseScopeService {
     principal: RaitScopePrincipal | undefined,
   ) {
     const identity = this.identity(principal);
+    if (
+      query.case_id !== undefined &&
+      (!['batch-items', 'impediments'].includes(resource) ||
+        !UUID.test(String(query.case_id)))
+    )
+      return invalid();
     const allowed = [
       'rait_pool',
       'rait_pool_member',
@@ -1090,9 +1099,12 @@ export class RaitCaseScopeService {
       if (resource === 'batch-items' || resource === 'impediments') {
         join =
           'join inf.rait_case c on c.tenant_id=r.tenant_id and c.id=r.case_id';
-        where += ` and (${this.purposeSql('c', principal!, policyResource)}) is not null`;
+        where +=
+          resource === 'impediments'
+            ? ` and (${this.purposeSql('c', principal!, policyResource, 'read', true)}) in ('M','J')`
+            : ` and (${this.purposeSql('c', principal!, policyResource)}) is not null`;
         if (resource === 'impediments')
-          where += ` and exists(select 1 from inf.rait_pool_member pm where pm.tenant_id=r.tenant_id and pm.id=r.member_id and pm.person_id=$2 and pm.status='ATIVO')`;
+          where += ` and exists(select 1 from inf.rait_pool_member pm where pm.tenant_id=r.tenant_id and pm.id=r.member_id and pm.person_id=$2 and pm.status='ATIVO' and exists(select 1 from inf.rait_pool ip where ip.tenant_id=pm.tenant_id and ip.id=pm.pool_id and ip.active and ip.instance=c.instance and ip.unit_id is not distinct from c.unit_id))`;
         if (resource === 'batch-items') {
           join +=
             ' join inf.rait_batch ba on ba.tenant_id=r.tenant_id and ba.id=r.batch_id';
@@ -1128,9 +1140,13 @@ export class RaitCaseScopeService {
         else if (resource === 'benches')
           where += ` and exists(select 1 from inf.rait_session se join inf.rait_pool_member pm on pm.tenant_id=se.tenant_id and pm.id=se.chair_member_id where se.tenant_id=r.tenant_id and se.id=r.session_id and pm.pool_id=${parameter})`;
       }
+      const orgLimit = pagination(query.limit, 500);
+      if (orgLimit === 0) return invalid();
+      const orgOffset = pagination(query.offset, 0);
+      values.push(Math.min(500, orgLimit), orgOffset);
       const rows = (
         await tx.query<Row>(
-          `select r.* from inf.${table} r ${join} where ${where} and exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=r.tenant_id and m.is_active) order by r.id limit 500`,
+          `select r.* from inf.${table} r ${join} where ${where} and exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=r.tenant_id and m.is_active) order by r.id limit $${values.length - 1} offset $${values.length}`,
           values,
         )
       ).rows;
@@ -1206,6 +1222,108 @@ export class RaitCaseScopeService {
         }
     }
   }
+  /** ADR-0050: private append-only provenance; never changes the public response or request fingerprint. */
+  async bindCommandReplay(
+    tx: Tx,
+    ledgerId: string,
+    principal: RaitScopePrincipal | undefined,
+    command: string,
+    targetId: string,
+    fingerprint: string,
+    role: string,
+  ) {
+    const identity = this.identity(principal);
+    if (
+      !UUID.test(ledgerId) ||
+      !canonicalRoles(principal!.roles).includes(role as never)
+    )
+      throw new DetranError('RAIT.INTERNAL', {
+        status: 500,
+        message: 'Proveniência de repetição indisponível.',
+      });
+    await tx.query('select audit.write($1,$2,$3,$4,$5,$6,$7,null,null,null)', [
+      identity.tenantId,
+      identity.actorId,
+      role,
+      'INF_RAIT_COMMAND_REPLAY_BIND',
+      'integration.idempotency_keys',
+      ledgerId,
+      JSON.stringify({
+        schema_version: 1,
+        command,
+        target_id: targetId,
+        request_fingerprint: fingerprint,
+      }),
+    ]);
+  }
+  async verifyCommandReplay(
+    tx: Tx,
+    ledgerId: string,
+    principal: RaitScopePrincipal | undefined,
+    command: string,
+    targetId: string,
+    fingerprint: string,
+  ) {
+    const identity = this.identity(principal);
+    const deny = (): never => {
+      throw new DetranError('RAIT.IDEMPOTENCY_REPLAY', {
+        status: 409,
+        message: 'A tentativa anterior não pode ser repetida.',
+      });
+    };
+    if (!UUID.test(ledgerId)) return deny();
+    const receipts = await tx.query<{
+      actor_id: string;
+      actor_role: string | null;
+      details: Record<string, unknown>;
+    }>(
+      'select actor_id,actor_role,details from audit.events where tenant_id=$1 and entity=$2 and entity_id=$3 and action=$4',
+      [
+        identity.tenantId,
+        'integration.idempotency_keys',
+        ledgerId,
+        'INF_RAIT_COMMAND_REPLAY_BIND',
+      ],
+    );
+    const receipt = receipts.rows[0];
+    const d = receipt?.details;
+    if (
+      receipts.rows.length !== 1 ||
+      !receipt ||
+      typeof receipt.actor_id !== 'string' ||
+      receipt.actor_id.toLowerCase() !== identity.actorId.toLowerCase() ||
+      !receipt.actor_role ||
+      !canonicalRoles([receipt.actor_role]).length ||
+      !d ||
+      d.schema_version !== 1 ||
+      d.command !== command ||
+      d.target_id !== targetId ||
+      d.request_fingerprint !== fingerprint ||
+      Object.keys(d).sort().join(',') !==
+        'command,request_fingerprint,schema_version,target_id'
+    )
+      return deny();
+  }
+  async qualifiedCaseRole(
+    tx: Tx,
+    caseId: string,
+    principal: RaitScopePrincipal | undefined,
+    resource: string,
+    action: string,
+    candidates: readonly string[],
+  ): Promise<string> {
+    const identity = this.identity(principal);
+    for (const role of candidates) {
+      if (!canonicalRoles(principal!.roles).includes(role as never)) continue;
+      const single = { ...principal!, roles: [role], permissions: [] };
+      const result = await tx.query(
+        `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$3 and (${this.purposeSql('c', single, resource, action)}) is not null`,
+        [identity.tenantId, identity.actorId, caseId],
+      );
+      if (result.rows[0]) return role;
+    }
+    return missing();
+  }
   async mutate(
     resource: string,
     id: string | undefined,
@@ -1215,6 +1333,9 @@ export class RaitCaseScopeService {
     key?: string | string[],
   ) {
     const identity = this.identity(principal);
+    if (id && !UUID.test(id)) return missing();
+    if (!body || typeof body !== 'object' || Array.isArray(body))
+      return invalid();
     const table = TABLES[resource];
     if (!table || remove) return missing();
     const policyResource = `rait-${table.replace('rait_', '').replaceAll('_', '-')}`;
@@ -1280,10 +1401,60 @@ export class RaitCaseScopeService {
         Object.keys(body).some((k) => !allowed.includes(k))
       )
         return invalid();
+      if (resource === 'parties') {
+        const maximum: Record<string, number> = {
+          role: 30,
+          legitimacy_basis: 40,
+          person_name: 200,
+          document_number: 30,
+          contact_email: 200,
+          representation_kind: 60,
+        };
+        const required = ['role', 'person_name', 'document_number'];
+        if (!id && required.some((k) => typeof body[k] !== 'string'))
+          return invalid();
+        for (const [field, value] of Object.entries(body))
+          if (
+            field !== 'case_id' &&
+            (value === null
+              ? !required.includes(field)
+              : typeof value === 'string' &&
+                value.length <= (maximum[field] ?? 0)) === false
+          )
+            return invalid();
+        if (
+          body.role !== undefined &&
+          !['requerente', 'procurador', 'autoridade'].includes(
+            String(body.role),
+          )
+        )
+          return invalid();
+        if (
+          body.legitimacy_basis !== undefined &&
+          body.legitimacy_basis !== null &&
+          ![
+            'proprietario',
+            'condutor',
+            'embarcador',
+            'transportador',
+            'possuidor_equiparado',
+            'principal_condutor',
+          ].includes(String(body.legitimacy_basis))
+        )
+          return invalid();
+        if (
+          body.representation_kind !== undefined &&
+          body.representation_kind !== null &&
+          !['procuracao_publica', 'particular_firma_autenticidade'].includes(
+            String(body.representation_kind),
+          )
+        )
+          return invalid();
+      }
       if (
-        resource === 'parties' &&
-        !id &&
-        (!body.role || typeof body.person_name !== 'string')
+        resource === 'documents' &&
+        'filename' in body &&
+        (typeof body.filename !== 'string' || body.filename.length > 255)
       )
         return invalid();
       if (typeof key !== 'string' || !key.trim()) return invalid();

@@ -425,10 +425,8 @@ export class RaitWorklistCommandService {
     validateEnvelope(input);
     const context = this.context();
     const key = input.headers['Idempotency-Key'];
-    const digest = fingerprint({
-      ...input,
-      payload: { ...input.payload, _actor: context.actorId },
-    });
+    const { principal: _principal, ...originalInput } = input;
+    const digest = fingerprint(originalInput);
     return withTenantContext(this.database, this.requestContext, async (tx) => {
       const scope = new RaitCaseScopeService(
         this.database,
@@ -451,6 +449,9 @@ export class RaitWorklistCommandService {
         )
       )
         fail('RAIT.FORBIDDEN_ACTION', 403);
+      let replayRole = (roles[input.command] ?? []).find((role) =>
+        input.principal!.roles.includes(role),
+      )!;
       let poolId: unknown = input.payload.poolId;
       if (input.command === 'publish-schedule') {
         const parent = rows(
@@ -521,7 +522,7 @@ export class RaitWorklistCommandService {
           : []) {
           const consistent = rows(
             await tx.query(
-              'select c.id from inf.rait_case c join inf.rait_pool p on p.tenant_id=c.tenant_id and p.instance=c.instance and p.unit_id is not distinct from c.unit_id where c.tenant_id=$1 and c.id=$2 and p.id=$3',
+              `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
               [context.tenantId, caseId, poolId],
             ),
           )[0];
@@ -544,6 +545,14 @@ export class RaitWorklistCommandService {
           'reassign',
           'rait-assignment',
           true,
+        );
+        replayRole = await scope.qualifiedCaseRole(
+          tx,
+          String(assignment!.case_id),
+          input.principal,
+          'rait-assignment',
+          'reassign',
+          roles.reassign!,
         );
       }
       if (input.payload.caseId)
@@ -571,23 +580,44 @@ export class RaitWorklistCommandService {
         [context.tenantId, key],
       );
       const replay = rows<{
+        id: string;
         request_fingerprint: string;
         response_body: Result;
       }>(
         await tx.query(
-          'select request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
+          'select id,request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
           [context.tenantId, key],
         ),
       )[0];
       if (replay) {
         if (replay.request_fingerprint !== digest)
           fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key });
+        await scope.verifyCommandReplay(
+          tx,
+          replay.id,
+          input.principal,
+          input.command,
+          input.targetId,
+          digest,
+        );
         return replay.response_body;
       }
       const result = await this.persist(tx, input, context);
-      await tx.query(
-        "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1,$2,$3,$4,$5,clock_timestamp() + interval '24 hours')",
-        [context.tenantId, key, digest, 200, JSON.stringify(result)],
+      const ledger = rows(
+        await tx.query<{ id: string }>(
+          "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1,$2,$3,$4,$5,clock_timestamp() + interval '24 hours') returning id",
+          [context.tenantId, key, digest, 200, JSON.stringify(result)],
+        ),
+      )[0];
+      if (!ledger) fail('RAIT.INTERNAL', 500);
+      await scope.bindCommandReplay(
+        tx,
+        ledger!.id,
+        input.principal,
+        input.command,
+        input.targetId,
+        digest,
+        replayRole,
       );
       return result;
     });
