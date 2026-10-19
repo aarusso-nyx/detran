@@ -744,7 +744,10 @@ const input = (
   command,
   targetId,
   payload,
-  headers: { 'If-Match': '"1"', 'Idempotency-Key': key },
+  headers: {
+    ...(command === 'claim-next' ? {} : { 'If-Match': '"1"' }),
+    'Idempotency-Key': key,
+  },
 });
 
 type TimerCommandInput = Omit<ReturnType<typeof input>, 'headers'> & {
@@ -967,38 +970,53 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         400,
       );
     });
-    it(`dado If-Match ausente ou divergente quando ${command} é solicitado então retorna 428 ou 412 sem efeito`, async () => {
-      if (command === 'claim-next') {
-        const subject = await caseSubject(state, instance, role);
-        await expect(
-          subject.service.execute({
+    it(
+      command === 'claim-next'
+        ? 'S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid'
+        : `dado If-Match ausente ou divergente quando ${command} é solicitado então retorna 428 ou 412 sem efeito`,
+      async () => {
+        if (command === 'claim-next') {
+          const subject = await caseSubject(state, instance, role);
+          await expectRejectedWithoutEffects(
+            subject,
+            {
+              ...input(command, target, payload),
+              headers: {
+                'If-Match': '"1"',
+                'Idempotency-Key': 'claim-with-match',
+              },
+            },
+            'RAIT.VALIDATION_FAILED',
+            400,
+          );
+          const valid = await caseSubject(state, instance, role);
+          await expect(
+            valid.service.execute(input(command, target, payload)),
+          ).resolves.toMatchObject({ etag: '"2"' });
+          return;
+        }
+        const missing = await caseSubject(state, instance, role);
+        await expectRejectedWithoutEffects(
+          missing,
+          {
             ...input(command, target, payload),
-            headers: { 'Idempotency-Key': 'claim-without-match' },
-          }),
-        ).resolves.toMatchObject({ etag: '"2"' });
-        return;
-      }
-      const missing = await caseSubject(state, instance, role);
-      await expectRejectedWithoutEffects(
-        missing,
-        {
-          ...input(command, target, payload),
-          headers: { 'Idempotency-Key': 'missing' },
-        },
-        'RAIT.IF_MATCH_REQUIRED',
-        428,
-      );
-      const stale = await caseSubject(state, instance, role);
-      await expectRejectedWithoutEffects(
-        stale,
-        {
-          ...input(command, target, payload),
-          headers: { 'If-Match': '"2"', 'Idempotency-Key': 'stale' },
-        },
-        'RAIT.VERSION_CONFLICT',
-        412,
-      );
-    });
+            headers: { 'Idempotency-Key': 'missing' },
+          },
+          'RAIT.IF_MATCH_REQUIRED',
+          428,
+        );
+        const stale = await caseSubject(state, instance, role);
+        await expectRejectedWithoutEffects(
+          stale,
+          {
+            ...input(command, target, payload),
+            headers: { 'If-Match': '"2"', 'Idempotency-Key': 'stale' },
+          },
+          'RAIT.VERSION_CONFLICT',
+          412,
+        );
+      },
+    );
     it(`dado a mesma chave quando ${command} é repetido igual ou divergente então não duplica nem aceita replay`, async () => {
       const subject = await caseSubject(state, instance, role);
       const first = input(command, target, payload, 'repeat');

@@ -1,0 +1,46 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/inf-rait-case@0.0.1 test:unit /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case
+> DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts "tests/unit/rait-case-behavioral-matrix.spec.ts" "--passWithNoTests=false"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case
+
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts (105 tests | 1 failed) 8726ms
+     × S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid 88ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-case-behavioral-matrix.spec.ts > CTG-0001 §3 — matriz comportamental integral de envelope e isolamento > S2 claim-next rejects supplied If-Match with 400 without effects; omission remains valid
+AssertionError: expected undefined to match object { Object (code, status) }
+
+- Expected:
+{
+  "code": "RAIT.VALIDATION_FAILED",
+  "status": 400,
+}
+
++ Received:
+undefined
+
+ ❯ expectRejectedWithoutEffects tests/unit/rait-case-behavioral-matrix.spec.ts:926:19
+    924|     (error: unknown) => error as { code?: string; status?: number },
+    925|   );
+    926|   expect(outcome).toMatchObject({ code, status });
+       |                   ^
+    927|   expect(subject.writes).toHaveLength(baseline[0]);
+    928|   expect(subject.outbox).toHaveLength(baseline[1]);
+ ❯ tests/unit/rait-case-behavioral-matrix.spec.ts:980:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 104 passed (105)
+   Start at  19:04:04
+   Duration  11.22s (transform 3.16s, setup 0ms, import 1.05s, tests 8.73s, environment 3ms)
+
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/rait-case:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/inf-rait-case@0.0.1 test:unit: `DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts "tests/unit/rait-case-behavioral-matrix.spec.ts" "--passWithNoTests=false"`
+Exit status 1
