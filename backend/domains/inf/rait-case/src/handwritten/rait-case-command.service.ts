@@ -796,6 +796,8 @@ export class RaitCaseCommandService {
       Array.isArray(input.payload)
     )
       fail('RAIT.VALIDATION_FAILED', 400);
+    if (input.command === 'claim-next' && !UUID.test(input.targetId))
+      fail('RAIT.TENANT_MISMATCH', 404);
     const rule = RULES[input.command];
     if (
       ['tenantId', 'actorId', 'roles', 'policy', 'tenant_id'].some(
