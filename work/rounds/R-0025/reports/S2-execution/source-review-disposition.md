@@ -94,3 +94,18 @@ Inspector test, task/state/proof, catalogue, provider or production change occur
 Formatting and source diagnostics are distinguished from pending real RED/GREEN
 and independent re-review. Parent may checkpoint and pass corrected source ancestry
 to Inspector before accepting RED.
+
+## Re-review2 low-note follow-up — new GET denial contexts only
+
+The recovered source re-review2 is accepted_with_notes; its fenced bridge output
+failure remains preserved and is not reported as bridge PASS. This narrow source
+hardening changes only the two new GET operations: FORBIDDEN_CASE_SCOPE and
+TENANT_MISMATCH context schemas are empty where present. No out-of-scope case/pool/
+unit identity is permitted in those GET denial contexts. POST retained contexts,
+all other operations, code sets, request/body validation and permissions remain
+unchanged. Existing caseId→403 ORDER_OVERRIDE_FORBIDDEN precedence and other unknown
+field→400 behavior remain Inspector/Engineer obligations, without a new rule.
+
+Exact semantic diff is limited to those GET error-context property sets/descriptions.
+Attributable generation is checked separately for zero CRUD byte changes; no runtime
+or Inspector result is claimed. Original source-freeze reports remain historical.

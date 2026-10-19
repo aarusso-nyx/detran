@@ -38,7 +38,7 @@
   "files": [
     {
       "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
-      "sha256": "431f7016bbc0267efcd3a9e5749c58848da29f30b14ab906c422555f6a5e19a8"
+      "sha256": "2179953a18d991781ff61e9543f7f33508a21d0e9b047d4f29baedb922e38b96"
     },
     {
       "path": "work/rounds/R-0025/reports/S2-execution/source-provenance-format.md",
@@ -50,7 +50,7 @@
     },
     {
       "path": "work/rounds/R-0025/reports/S2-execution/source-review-disposition.md",
-      "sha256": "6882dc57b43a5f356183f128fece385172cbdf9f42fe68c8af8a0eeeb1ae276f"
+      "sha256": "ddd143c6c00c7d46f65fddaed4993fd2d0a66ab8e2a33e86e04929dc031fca95"
     }
   ],
   "historical_freeze": [
@@ -85,5 +85,32 @@
     "No runtime/test/state/proof/Git changes",
     "No new source store/writer/audit action/permission",
     "No S3/provider/production activation"
-  ]
+  ],
+  "getDenialFollowup": {
+    "sourceReview": "work/rounds/R-0025/reviews/S2-source-2/review.recovered.json",
+    "reviewSha256": "242a8cc74da58b26ba15e0c5a7d35469f6e961f890021e29099a11f4775e88eb",
+    "verdict": "accepted_with_notes recovered JSON, bridge fenced-output failure preserved; not bridge PASS",
+    "semanticDiff": [
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/description",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/caseId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/poolId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/unitId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/404/content/application/json/schema/properties/context/description",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/description",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/caseId",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/poolId",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/unitId",
+      "/paths//v1/inf/rait/claim-context/get/responses/404/content/application/json/schema/properties/context/description"
+    ],
+    "postOperationByteEquivalentJson": true,
+    "behavior": "Only two new GET denial contexts empty; no new code/path/permission or runtime change",
+    "generation": {
+      "command": "pnpm contracts:openapi",
+      "exitCode": 0,
+      "documents": 48,
+      "compared_CRUD_documents": 48,
+      "changed_CRUD_documents": []
+    },
+    "format": "PASS for canonical contract and both disposition reports"
+  }
 }
