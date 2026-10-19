@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "metadata-consistency",
+      "file": "work/rounds/R-0041/AUTHORIZATION.md",
+      "line": 33,
+      "summary": "At HEAD 522b8947, OD-C4-009 says it was adopted at 2026-10-19T23:43Z. That is later than the decision's own manifest time (23:42:32Z) and later than the commit that records it (20:42:39-0300, which is 23:42:39Z).",
+      "failure_scenario": "An auditor rebuilding the timeline sees the decision timestamped after the commit that recorded it. The worktree has an uncommitted, unreviewed edit that reduces the timestamp to the date only. It is not part of HEAD, so it should be committed and reviewed (or replaced with the manifest's exact time) before anyone relies on it."
+    },
+    {
+      "severity": "low",
+      "category": "typography",
+      "file": "work/rounds/R-0041/AUTHORIZATION.md",
+      "line": 33,
+      "summary": "Several tokens in the OD-C4-009 text are run together without spaces: 'até02:30UTC', 'DEVAI2.6.4', 'patch2.6.5', 'Se2.6.5'.",
+      "failure_scenario": "A text search for 'DEVAI 2.6.4' or '2.6.5' that expects a space before the version misses this decision. Only readability and search are affected; the scope it records does not change."
+    }
+  ],
+  "verified": {
+    "merge_a71003e0_parents": "88b0fd55 + f3dfc6ee (PR209)",
+    "conflicts": "DESIGN-DECISIONS.md and docs/meta/adr/README.md keep ADR-0054 from main followed by ADR-0055 and ADR-0056, in order; work/rounds/README.md keeps R-0039 followed by R-0041",
+    "package_check": "every step of main's check list is kept and security:history:check is added after devai:test; security:exports:test, security:exports:check --snapshots-only and security:history:check each appear exactly once; package.json is unchanged in 522b8947",
+    "ci": "C3's prepare-security-inventories step and the strict check-security-exports run with explicit native bodies are kept; C7's invariant-producers job is kept, and foundation needs both evidence-gate and invariant-producers to succeed",
+    "chain": "Governance's 155 records are an exact prefix of the current 163; HEAD and worktree chain.json are byte-identical in content to main f3dfc6ee; head is c03ae783...3de9",
+    "snapshots": "both raw chain snapshots are byte-identical to the git blobs, and all 12 manifest sha256 values match",
+    "protected": "the merge only adds record/proofs/work/generic/R-0039.jsonl from main; .devai/state/evidence-chain.json, R-0036, R-0037 and existing proof lines are unchanged, and no files differ from main under record/ or R-0039",
+    "logs": "evidence verify: 104 anchored, 53 historical gap, head c03ae...; 63/63 security tests pass; state-index OK with 57 ADRs",
+    "od_c4_009": "recorded as documentation only; it grants no service standing and activates no catalogue; the four DB populations stay explicitly blocked; 2.6.4 stays limited to reporter/link, and 2.6.5 is a separate conditional track; the c6 manifest hashes match"
+  }
+}
