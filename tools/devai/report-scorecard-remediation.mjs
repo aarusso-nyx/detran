@@ -8,7 +8,7 @@ import {
   readdirSync,
   writeFileSync,
 } from 'node:fs';
-import { basename, join, relative, resolve } from 'node:path';
+import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import {
   parseCommandDocument,
   unwrapCommandDocument,
@@ -28,6 +28,14 @@ if (existsSync(output))
   throw new Error(
     'Output must be a new directory; preserve previous assessments',
   );
+const outputRelative = relative(audit, output);
+if (
+  outputRelative === '' ||
+  (outputRelative !== '..' &&
+    !outputRelative.startsWith(`..${sep}`) &&
+    !isAbsolute(outputRelative))
+)
+  throw new Error('Output cannot be nested in capture input');
 const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const normalized = (data) =>
@@ -153,9 +161,20 @@ const comparison = baseline
 mkdirSync(join(output, 'raw'), { recursive: true });
 const write = (name, data) =>
   writeFileSync(join(output, name), JSON.stringify(data, null, 2) + '\n');
-for (const file of readdirSync(audit))
-  if (file.endsWith('.json'))
-    copyFileSync(join(audit, file), join(output, 'raw', file));
+function copyCaptures(source, target) {
+  for (const entry of readdirSync(source, { withFileTypes: true })) {
+    const from = join(source, entry.name),
+      to = join(target, entry.name);
+    if (entry.isSymbolicLink())
+      throw new Error('Capture archives must contain regular files');
+    if (entry.isDirectory()) {
+      mkdirSync(to);
+      copyCaptures(from, to);
+    } else if (entry.isFile()) copyFileSync(from, to);
+    else throw new Error('Capture archives must contain regular files');
+  }
+}
+copyCaptures(audit, join(output, 'raw'));
 copyFileSync(assessmentArg, join(output, 'assessment-decisions.json'));
 write('scorecard.json', scorecard);
 write('summary.json', summary);
@@ -191,17 +210,18 @@ write('evidence-manifest.json', {
   artifacts: files,
   canonical_readings: [
     ...new Map(
-      register
-        .flatMap((row) => row.evidence)
-        .map((item) => [
-          item.id,
-          {
-            id: item.id,
-            path: item.canonical_path,
-            sha256: item.canonical_sha256,
-          },
-        ]),
+      [...observations.values()].map((item) => [
+        item.reading.id,
+        {
+          id: item.reading.id,
+          path: item.canonical_path,
+          sha256: item.canonical_sha256,
+        },
+      ]),
     ).values(),
+  ],
+  selected_reading_ids: [
+    ...new Set(register.flatMap((row) => row.evidence.map((item) => item.id))),
   ],
 });
 console.log(JSON.stringify(summary));
