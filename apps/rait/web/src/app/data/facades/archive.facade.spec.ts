@@ -90,3 +90,47 @@ describe('ArchiveFacade — leituras (C-2B-31)', () => {
     expect(facade.retencao.status()).toBe('empty');
   });
 });
+
+describe('S1-A2 sealed archive projection', () => {
+  it('retains restricted server fields without restoring withheld merits or requesting another source', async () => {
+    const { facade, httpMock } = setup();
+    const id = CASE_IDS.NAO_CONHECIDO;
+    const projected = {
+      id,
+      protocol_number: 'RAIT-2026-000003',
+      instance: 'defesa_previa',
+      circuit: 1,
+      state: 'NAO_CONHECIDO',
+      unit_id: null,
+      protocolled_at: '2026-09-15T12:00:00Z',
+      version: 1,
+      archived: true,
+    };
+    const promise = facade.loadSealedDossier(id);
+    await vi.waitFor(() =>
+      expectGetOne(httpMock, `/v1/inf/rait/cases/${id}`, projected, etagFor(1)),
+    );
+    const doc = {
+      id: 'sealed-document',
+      case_id: id,
+      kind: 'requerimento',
+      origin: 'requerente',
+      attached_at: '2026-09-15T12:00:00Z',
+    };
+    await vi.waitFor(() =>
+      expectGetList(httpMock, '/v1/inf/rait/documents', [doc]),
+    );
+    for (const resource of ['decisions', 'communications', 'events'])
+      await vi.waitFor(() =>
+        expectGetList(httpMock, `/v1/inf/rait/${resource}`, []),
+      );
+    await promise;
+    expect(facade.dossie.value()?.case).toEqual(projected);
+    expect(facade.dossie.value()?.documents).toEqual([doc]);
+    expect(facade.dossie.value()?.documents[0]).not.toHaveProperty('filename');
+    expect(facade.dossie.value()?.documents[0]).not.toHaveProperty(
+      'storage_key',
+    );
+    httpMock.expectNone((req) => req.method !== 'GET');
+  });
+});
