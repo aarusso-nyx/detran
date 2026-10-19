@@ -32,7 +32,9 @@ rationale and preserve all S1 protections. S2-R5 uses generated immutable/append
 protection plus the minimal final SQL19 REVOKE after broad grants; do not duplicate
 the generated immutability trigger. Pure/parser, generated paths, tests,
 fixtures, canonical sources, packages/config, scorecard and DEVAI state are not owned.
-You are not alone in the repository. Preserve others' edits. Parent owns all Git.
+You are not alone in the repository. Preserve others' edits. Parent owns all Git. Before existing-symbol or multi-file edits, run graft
+callers with the full connected scope; inspect actual current source, not stale
+summary diagnoses.
 
 ## Binding inputs
 
