@@ -75,7 +75,7 @@ describe('inf database contract', () => {
     await owner.end();
   });
 
-  it('dado schema C4-OD + CTG-0002 quando inspeciona inf então 96 relações tenant têm RLS, FORCE, policy e trigger', async () => {
+  it('dado schema C4-OD + CTG-0002 + P4-02-S1 quando inspeciona inf então 98 relações tenant têm RLS, FORCE, policy e trigger', async () => {
     const result = await owner.query<{
       table_name: string;
       relrowsecurity: boolean;
@@ -100,7 +100,8 @@ describe('inf database contract', () => {
         group by tables.table_schema, tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity
         order by tables.table_name`,
     );
-    // Tenant tables (96, closed DDL inventory plus five C4/C4-OD additions and six CTG-0002 additions):
+    // Tenant tables (98, closed DDL inventory plus five C4/C4-OD, six CTG-0002
+    // and two P4-02-S1 internal scope additions):
     // ait (11), normative (7), measures (9), alcohol (6), rait-case (12: DDL 34, includes
     // rait_pending_content/rait_redirect/rait_draft v1.1.0; 17 after C4-OD), rait-worklist (13: DDL 35, includes
     // rait_unit/rait_schedule/rait_schedule_slot/rait_batch/rait_batch_item/rait_substitute_duty/
@@ -111,7 +112,7 @@ describe('inf database contract', () => {
     // tables in the schema.
     const tenantTables = result.rows.filter((row) => row.has_tenant_id);
     const referenceTables = result.rows.filter((row) => !row.has_tenant_id);
-    expect(tenantTables).toHaveLength(96);
+    expect(tenantTables).toHaveLength(98);
     expect(referenceTables).toHaveLength(10);
     const c4Tables = new Set([
       'rait_inquiry_document',
@@ -128,6 +129,23 @@ describe('inf database contract', () => {
       'rait_minutes_required_signer',
       'rait_minutes_signature_receipt',
     ]);
+    const s1ScopeTables = tenantTables.filter((row) =>
+      ['rait_case_read_scope', 'rait_case_pool_scope'].includes(row.table_name),
+    );
+    expect(s1ScopeTables.map((row) => row.table_name)).toEqual([
+      'rait_case_pool_scope',
+      'rait_case_read_scope',
+    ]);
+    expect(
+      s1ScopeTables.every(
+        (row) =>
+          row.has_tenant_id &&
+          row.relrowsecurity &&
+          row.relforcerowsecurity &&
+          row.policy_count === '1' &&
+          row.trigger_count === '1',
+      ),
+    ).toBe(true);
     const caseTables = new Set([
       'rait_case',
       'rait_party',
