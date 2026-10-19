@@ -55,6 +55,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0040](ADR-0040-docs-dependency-audit.md)                          | Documentation dependency audit remediation and bounded braces patch                     | Accepted | —                                                                                |
 | [ADR-0043](ADR-0043-devai-measurement-adoption.md)                     | DEVAI 2.6.2 for scorecard measurement remediation                                       | Accepted | —                                                                                |
 | [ADR-0044](ADR-0044-initial-performance-baseline.md)                   | Initial generous request-path performance targets and suite                             | Accepted | —                                                                                |
+| [ADR-0045](ADR-0045-whole-source-local-coverage.md)                    | Whole-source local coverage for the scorecard                                           | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
