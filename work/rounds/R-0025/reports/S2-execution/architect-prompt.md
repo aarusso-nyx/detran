@@ -2,7 +2,7 @@
 
 Role: Architect, Constitution6–10/24. Owner approved exact backend-first S2;
 PR205 merged2e04f29c, bootstrap6bc3d15d. You are not alone in the repo: preserve
-others' edits, do not revert work, and work only in your assigned managed worktree.
+others' edits, do not revert work, and work only in your assigned external Git worktree (S2-R1).
 No Git operations. No runtime, tests, package/dependency, state/proof or scorecard
 edits. Do not run app/database tests or production provisioning.
 
