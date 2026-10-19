@@ -109,3 +109,26 @@ field→400 behavior remain Inspector/Engineer obligations, without a new rule.
 Exact semantic diff is limited to those GET error-context property sets/descriptions.
 Attributable generation is checked separately for zero CRUD byte changes; no runtime
 or Inspector result is claimed. Original source-freeze reports remain historical.
+
+## S2-R5 — existing generator-native immutability flags
+
+The parent-recorded S2-R5 recommendation at2026-10-19T22:54:11Z adopts the
+existing generator facilities for the approved append-only legacy entity. Only
+RaitClaimLegacyQualification adds immutable:true and applicationAppendOnly:true,
+without immutableColumns. All seven CHECKs, tenant/case FK, unique revision key,
+fields, operations[] and other blueprint semantics remain unchanged. No duplicate
+custom trigger, new loader, generator change or SQL file is needed.
+
+Existing generate.mjs immutableSql supplies full BEFORE UPDATE OR DELETE and
+BEFORE TRUNCATE SQLSTATE42501 rejection, so updated_at is protected too. Existing
+applicationAppendOnly emits an application-role UPDATE/DELETE REVOKE. Parent
+Engineer separately adds the approved final REVOKE in existing supportingSQL19
+after later broad grants; Architect does not edit runtime/DDL or run codegen here.
+This corrects the earlier source-stage assumption that a custom supporting trigger
+might be necessary; original source-freeze remains historical. Database immutability
+does not authenticate provenance. Actual final-DDL/role_app_backend acceptance and
+UPDATE/updated_at/DELETE/row-preservation tests remain Inspector obligations.
+
+Attributable contracts:openapi generation checks whether these SQL-only flags leave
+CRUD OpenAPI byte-identical; observed diagnostics/hashes are recorded in the JSON
+receipt. No runtime generation, test execution, Git or lifecycle mutation occurs.

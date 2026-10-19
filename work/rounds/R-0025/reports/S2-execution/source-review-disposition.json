@@ -50,7 +50,7 @@
     },
     {
       "path": "work/rounds/R-0025/reports/S2-execution/source-review-disposition.md",
-      "sha256": "ddd143c6c00c7d46f65fddaed4993fd2d0a66ab8e2a33e86e04929dc031fca95"
+      "sha256": "4d8dfdfbea4d81070833f1d7ef0deb344cafbfd5295433763ff2902824670f27"
     }
   ],
   "historical_freeze": [
@@ -112,5 +112,28 @@
       "changed_CRUD_documents": []
     },
     "format": "PASS for canonical contract and both disposition reports"
+  },
+  "generatorNativeImmutabilityR5": {
+    "authority": "Parent S2-R5 at2026-10-19T22:54:11Z, rootc11f6017",
+    "blueprint": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+    "sha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2",
+    "entity": "RaitClaimLegacyQualification",
+    "exactSemanticDiff": {
+      "immutable": true,
+      "applicationAppendOnly": true
+    },
+    "immutableColumns": "ABSENT",
+    "allOtherBlueprintSemantics": "Byte-equivalent parsed JSON after removing exact two flags",
+    "generation": {
+      "command": "pnpm contracts:openapi",
+      "exitCode": 0,
+      "documents": 48,
+      "compared_CRUD_documents": 48,
+      "changed_CRUD_documents": []
+    },
+    "format": "PASS blueprint and additive markdown, JSON serialized with existing2spaceformat",
+    "runtimeDDL": "NOT GENERATED or edited by Architect",
+    "acceptanceTests": "NOT EXECUTED by Architect; Inspector final appliedDDL acceptance pending",
+    "engineerBoundary": "Use existing generator fullUPDATE/DELETE/TRUNCATE42501, no customtrigger. Final supportingSQL19 REVOKE compensates laterbroadgrant order, no loader/generatorlogic change."
   }
 }
