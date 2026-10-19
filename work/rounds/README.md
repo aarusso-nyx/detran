@@ -75,6 +75,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0035 | `hardening-certification` — C-0003 fase H                                                                                   | proposta (C-0003) | —                                                      | —       | Opus 5.5                                            |
 | R-0036 | `scorecard-evaluation` — 43 itens medidos; integração e atestação aprovadas; fechada e selada                               | fechada           | [#202](https://github.com/aarusso-nyx/detran/pull/202) | PC-0022 | Codex                                               |
 | R-0037 | `C1` — dependências de execução integradas por PR #206; CI pós-integração aprovada                                          | fechada           | [#206](https://github.com/aarusso-nyx/detran/pull/206) | PC-0023 | Codex                                               |
+| R-0038 | `C2` — ferramentas e Angular, campanha C-0004 autorizada                                                                    | aberta            | —                                                      | —       | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
