@@ -769,6 +769,7 @@ export class RaitCaseScopeService {
     resource: string,
     action = 'read',
     ownFunctionalImpediment = false,
+    excludeOwnAssignment = false,
   ): string {
     const c = alias;
     const localDay = `(current_timestamp at time zone (select timezone from auth.tenants where id=${c}.tenant_id))::date`;
@@ -786,10 +787,12 @@ export class RaitCaseScopeService {
     const bound = (role: string) =>
       `exists(select 1 from inf.rait_case_read_scope rs where rs.tenant_id=${c}.tenant_id and rs.actor_id=$2 and rs.role='${role}' and rs.active and btrim(rs.authorization_ref)<>'' and (rs.unit_id=${c}.unit_id or (rs.pool_id is not null and ${this.poolCaseSql(c, 'rs.pool_id')})))`;
     const own = (role: string) =>
-      member(
-        role,
-        `and exists(select 1 from inf.rait_assignment ass where ass.tenant_id=${c}.tenant_id and ass.case_id=${c}.id and ass.member_id=pm.id and ass.pool_id=p.id and ass.active)`,
-      );
+      excludeOwnAssignment
+        ? 'false'
+        : member(
+            role,
+            `and exists(select 1 from inf.rait_assignment ass where ass.tenant_id=${c}.tenant_id and ass.case_id=${c}.id and ass.member_id=pm.id and ass.pool_id=p.id and ass.active)`,
+          );
     const projectedResource = Object.entries(TABLES).find(
       ([, table]) =>
         'rait-' + table.replace('rait_', '').replaceAll('_', '-') === resource,
@@ -907,7 +910,21 @@ export class RaitCaseScopeService {
         ? 'rait-case-event'
         : `rait-${table.replace('rait_', '').replaceAll('_', '-')}`;
     return this.transaction(async (tx) => {
-      const purpose = this.purposeSql('c', principal!, policyResource);
+      const independentAssignmentPurpose =
+        resource === 'assignments'
+          ? this.purposeSql(
+              'c',
+              principal!,
+              policyResource,
+              'read',
+              false,
+              true,
+            )
+          : undefined;
+      const basePurpose = this.purposeSql('c', principal!, policyResource);
+      const purpose = independentAssignmentPurpose
+        ? `coalesce((${independentAssignmentPurpose}), (${basePurpose}))`
+        : basePurpose;
       const join =
         resource === 'cases'
           ? ''
@@ -937,8 +954,18 @@ export class RaitCaseScopeService {
         values.push(query.case_id);
         where += ` and c.id=$${values.length}`;
       }
-      if (resource === 'assignments')
+      if (resource === 'assignments') {
+        const independentPurpose = this.purposeSql(
+          'c',
+          principal!,
+          policyResource,
+          'read',
+          false,
+          true,
+        );
+        where += ` and ((${independentPurpose}) is not null or (r.active and exists(select 1 from inf.rait_pool_member own_member where own_member.tenant_id=r.tenant_id and own_member.id=r.member_id and own_member.person_id=$2 and own_member.status='ATIVO'))) `;
         where += ` and exists(select 1 from inf.rait_pool p join inf.rait_pool_member pm on pm.tenant_id=p.tenant_id and pm.pool_id=p.id and pm.id=r.member_id where p.tenant_id=c.tenant_id and p.id=r.pool_id and p.instance=c.instance and p.unit_id is not distinct from c.unit_id)`;
+      }
       if (query.pool_id) {
         if (!UUID.test(String(query.pool_id))) return missing();
         values.push(query.pool_id);
@@ -1102,7 +1129,7 @@ export class RaitCaseScopeService {
         where +=
           resource === 'impediments'
             ? ` and (${this.purposeSql('c', principal!, policyResource, 'read', true)}) in ('M','J')`
-            : ` and (${this.purposeSql('c', principal!, policyResource)}) is not null`;
+            : ` and (${this.purposeSql('c', principal!, policyResource)}) in ('S','O','M','J')`;
         if (resource === 'impediments')
           where += ` and exists(select 1 from inf.rait_pool_member pm where pm.tenant_id=r.tenant_id and pm.id=r.member_id and pm.person_id=$2 and pm.status='ATIVO' and exists(select 1 from inf.rait_pool ip where ip.tenant_id=pm.tenant_id and ip.id=pm.pool_id and ip.active and ip.instance=c.instance and ip.unit_id is not distinct from c.unit_id))`;
         if (resource === 'batch-items') {
@@ -1146,14 +1173,19 @@ export class RaitCaseScopeService {
       values.push(Math.min(500, orgLimit), orgOffset);
       const rows = (
         await tx.query<Row>(
-          `select r.* from inf.${table} r ${join} where ${where} and exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=r.tenant_id and m.is_active) order by r.id limit $${values.length - 1} offset $${values.length}`,
+          `select r.*${resource === 'batch-items' ? `, ${this.purposeSql('c', principal!, policyResource)} as _purpose` : ''} from inf.${table} r ${join} where ${where} and exists(select 1 from auth.users u join auth.memberships m on m.user_id=u.id where u.id=$2 and u.is_active and m.tenant_id=r.tenant_id and m.is_active) order by r.id limit $${values.length - 1} offset $${values.length}`,
           values,
         )
       ).rows;
       const result = rows.map((row) => {
         const out: Row = {};
+        const fields =
+          resource === 'batch-items'
+            ? (FIELDS['batch-items']![row._purpose as RaitReadPurpose] ?? [])
+            : undefined;
         for (const [k, v] of Object.entries(row))
           if (
+            (!fields || fields.includes(k)) &&
             k !== 'tenant_id' &&
             !['snapshot', 'payload', 'grounds'].includes(k)
           )
@@ -1334,10 +1366,10 @@ export class RaitCaseScopeService {
   ) {
     const identity = this.identity(principal);
     if (id && !UUID.test(id)) return missing();
-    if (!body || typeof body !== 'object' || Array.isArray(body))
-      return invalid();
     const table = TABLES[resource];
     if (!table || remove) return missing();
+    if (!body || typeof body !== 'object' || Array.isArray(body))
+      return invalid();
     const policyResource = `rait-${table.replace('rait_', '').replaceAll('_', '-')}`;
     const action = remove ? 'delete' : id ? 'update' : 'create';
     return this.transaction(async (tx) => {
