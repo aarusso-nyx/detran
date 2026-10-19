@@ -1,0 +1,27 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+Actual candidate result contains missing provenance: true
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Missing expected exception (RaitRiskSourceError): Sparse array must reject, not publish undefined sourceVersions
+    at assert (/private/tmp/detran-s2-sparse-provenance-probe.ts:6:8)
+    at Object.<anonymous> (/private/tmp/detran-s2-sparse-provenance-probe.ts:6:171)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object.transformer (/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/node_modules/.pnpm/tsx@4.23.13/node_modules/tsx/dist/register-OY9cqBEN.cjs:9:3619)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at loadCJSModuleWithModuleLoad (node:internal/modules/esm/translators:372:15)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:244:9)
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: [class RaitRiskSourceError extends Error],
+  operator: 'throws',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

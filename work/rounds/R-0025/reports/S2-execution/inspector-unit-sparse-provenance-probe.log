@@ -1,0 +1,6 @@
+import assert from 'node:assert/strict';
+import { evaluateRaitRisk, RaitRiskSourceError } from '/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines/src/rait-risk.ts';
+const input = {asOf:'2026-09-15T12:00:00-04:00',today:'2026-09-15',tenantTimezone:'America/Manaus',clocks:[{clockCode:'A',applicability:'applicable',timerRef:'qualified:timer:A:r1',startedOn:'2026-01-01',ceilingOn:'2026-09-20',steps:[['ALERTA_N1','2026-09-10'],['ALERTA_N2','2026-09-15'],['CRITICO','2026-09-18'],['PRESCRITO_OPERACIONAL','2026-09-20']].map(([flag,reachedOn])=>({flag,reachedOn,parameterRef:'fixture:activated:A:r1',sourceRef:'fixture:qualified:A:r1'})),sourceVersions:new Array<string>(1)},...['B','C','D'].map(clockCode=>({clockCode,applicability:'not_applicable',sourceRef:`fixture:applicability:${clockCode}:r1`,sourceVersions:[`opaque:${clockCode}:r1`]}))]};
+const result = evaluateRaitRisk(input as Parameters<typeof evaluateRaitRisk>[0]);
+console.log('Actual candidate result contains missing provenance:',result.sourceVersions.some(value=>value===undefined));
+assert.throws(()=>evaluateRaitRisk(input as Parameters<typeof evaluateRaitRisk>[0]), RaitRiskSourceError, 'Sparse array must reject, not publish undefined sourceVersions');
