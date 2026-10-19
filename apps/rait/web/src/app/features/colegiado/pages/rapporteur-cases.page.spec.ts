@@ -20,6 +20,7 @@ import {
 } from '../../../../testing/router-harness';
 import { RAIT_ALL_ROLES } from '../../../../testing/route-manifest.fixture';
 import { SessionFacade } from '../../../data/facades/session.facade';
+import { RapporteurCasesPageComponent } from './rapporteur-cases.page';
 import type { RaitBatchItem } from '../../../data/models';
 
 function sessionFacadeStub(items: readonly RaitBatchItem[] = []) {
@@ -172,5 +173,50 @@ describe('RapporteurCasesPage — a11y (C-2B-80)', () => {
   it('dado a página em ready quando expectA11yStateInvariants + axe então nenhuma violação serious/critical', async () => {
     const { harness } = await render('rait-rapporteur');
     await expectA11yStateInvariants(harness.routeNativeElement as HTMLElement);
+  });
+});
+
+describe('S1-A2 purpose-projected rapporteur items', () => {
+  it('withheld position/deadline/acceptance render unavailable and retain server order', async () => {
+    const projected = [
+      {
+        id: 'second-server-item',
+        batch_id: 'batch',
+        case_id: 'case-b',
+        member_id: null,
+      },
+      {
+        id: 'first-server-item',
+        batch_id: 'batch',
+        case_id: 'case-a',
+        member_id: null,
+      },
+    ];
+    const facade = {
+      ...sessionFacadeStub(),
+      loadRapporteurItems: async () => {},
+      relatoria: listFacadeStub(projected),
+    };
+    const harness = await createRaitRouterHarness(
+      pageProviders('rait-rapporteur', [
+        { provide: SessionFacade, useValue: facade },
+      ]),
+    );
+    await harness.navigateByUrl(
+      `/${substituteRouteParams('colegiado/:orgao/relatoria')}`,
+    );
+    const host = harness.routeNativeElement as HTMLElement;
+    expect(host.textContent).toContain('rait.common.unavailable');
+    expect(host.textContent).not.toContain('undefined');
+    const page = harness.fixture.debugElement.query(
+      By.directive(RapporteurCasesPageComponent),
+    ).componentInstance as RapporteurCasesPageComponent;
+    const rows = page.rows();
+    expect(rows.map((row: { id: string }) => row.id)).toEqual(
+      projected.map((row) => row.id),
+    );
+    for (const row of rows)
+      for (const key of ['position', 'claim_due_on', 'accepted_at'])
+        expect(row[key]).toContain('rait.common.unavailable');
   });
 });

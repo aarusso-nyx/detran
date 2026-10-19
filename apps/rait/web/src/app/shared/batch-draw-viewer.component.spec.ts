@@ -63,3 +63,28 @@ describe('BatchDrawViewer — a11y (C-2B-59)', () => {
     await expectA11yStateInvariants(fixture.nativeElement);
   });
 });
+
+// P4-02-S1-A2: approved temporary omission is visible, never invented detail.
+describe('S1-A2 bounded batch projection', () => {
+  it('preserves server item order and labels omitted position, deadline and acceptance unavailable', async () => {
+    const fixture = await render();
+    const first = fixtureBatchItem('00000000-0000-7000-8000-000028010001');
+    const second = fixtureBatchItem('00000000-0000-7000-8000-000028010002');
+    const project = (item: typeof first) => ({
+      id: item.id,
+      batch_id: item.batch_id,
+      case_id: item.case_id,
+      member_id: item.member_id,
+    });
+    fixture.componentRef.setInput('items', [project(second), project(first)]);
+    fixture.detectChanges();
+    const rows = fixture.componentInstance.rows();
+    expect(rows.map((row) => row.id)).toEqual([second.id, first.id]);
+    for (const row of rows) {
+      expect(row.position).toContain('rait.common.unavailable');
+      expect(row.claimDueOn).toContain('rait.common.unavailable');
+      expect(row.acceptance).toContain('rait.common.unavailable');
+    }
+    expect(fixture.nativeElement.textContent).not.toContain('undefined');
+  });
+});

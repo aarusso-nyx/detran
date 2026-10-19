@@ -886,78 +886,96 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
       values($1,'r25-s1-tenant-b','S1 disposable tenant B','America/Manaus')`,
       [RaitP402ScopeFixture.FOREIGN_TENANT],
     );
-    await this.owner.query(
-      `insert into auth.users(id,tenant_id,email,display_name)
-      values($1,$2,'s1-tenant-b@fixtures.invalid','S1 tenant B user')`,
-      [RaitP402ScopeFixture.FOREIGN_USER, RaitP402ScopeFixture.FOREIGN_TENANT],
-    );
-    await this.owner.query(
-      'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
-      [RaitP402ScopeFixture.FOREIGN_TENANT, RaitP402ScopeFixture.FOREIGN_USER],
-    );
-    await this.owner.query(
-      `insert into inf.rait_unit(id,tenant_id,name,judging_body)
-      values($1,$2,'S1 independent foreign unit','jari')`,
-      [RaitP402ScopeFixture.FOREIGN_UNIT, RaitP402ScopeFixture.FOREIGN_TENANT],
-    );
-    // Independent tenant-B CASE -> AIT -> framing/catalog chain. Source legal
-    // values are copied. This isolates RAIT read parents; it is not a rehearsal
-    // of tenant-B field issuance or a production qualification receipt.
-    const source = (
-      await this.owner.query('select * from inf.ait_ait where id=$1', [
-        RAIT_AIT,
-      ])
-    ).rows[0];
-    for (const [table, sourceId, id, extra] of [
-      [
-        'inf.normative_catalog',
-        source.catalog_id,
-        RaitP402ScopeFixture.FOREIGN_CATALOG,
-        {},
-      ],
-      [
-        'inf.normative_framing',
-        source.framing_id,
-        RaitP402ScopeFixture.FOREIGN_FRAMING,
-        { catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG },
-      ],
-      [
-        'inf.ait_ait',
-        RAIT_AIT,
-        RaitP402ScopeFixture.FOREIGN_AIT,
-        {
-          catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG,
-          framing_id: RaitP402ScopeFixture.FOREIGN_FRAMING,
-          ait_number: 'S1-FOREIGN-FIXTURE',
-          agent_id: RaitP402ScopeFixture.FOREIGN_USER,
-        },
-      ],
-    ] as const) {
+    await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+      RaitP402ScopeFixture.FOREIGN_TENANT,
+    ]);
+    try {
       await this.owner.query(
-        `insert into ${table} select (jsonb_populate_record(null::${table},to_jsonb(source)||$2::jsonb)).*
-        from ${table} source where id=$1`,
+        `insert into auth.users(id,tenant_id,email,display_name)
+      values($1,$2,'s1-tenant-b@fixtures.invalid','S1 tenant B user')`,
         [
-          sourceId,
-          JSON.stringify({
-            id,
-            tenant_id: RaitP402ScopeFixture.FOREIGN_TENANT,
-            ...extra,
-          }),
+          RaitP402ScopeFixture.FOREIGN_USER,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
         ],
       );
-    }
-    await this.owner.query(
-      `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at,unit_id)
+      await this.owner.query(
+        'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
+        [
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+          RaitP402ScopeFixture.FOREIGN_USER,
+        ],
+      );
+      await this.owner.query(
+        `insert into inf.rait_unit(id,tenant_id,name,judging_body)
+      values($1,$2,'S1 independent foreign unit','jari')`,
+        [
+          RaitP402ScopeFixture.FOREIGN_UNIT,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+        ],
+      );
+      // Independent tenant-B CASE -> AIT -> framing/catalog chain. Source legal
+      // values are copied. This isolates RAIT read parents; it is not a rehearsal
+      // of tenant-B field issuance or a production qualification receipt.
+      const source = (
+        await this.owner.query('select * from inf.ait_ait where id=$1', [
+          RAIT_AIT,
+        ])
+      ).rows[0];
+      for (const [table, sourceId, id, extra] of [
+        [
+          'inf.normative_catalog',
+          source.catalog_id,
+          RaitP402ScopeFixture.FOREIGN_CATALOG,
+          {},
+        ],
+        [
+          'inf.normative_framing',
+          source.framing_id,
+          RaitP402ScopeFixture.FOREIGN_FRAMING,
+          { catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG },
+        ],
+        [
+          'inf.ait_ait',
+          RAIT_AIT,
+          RaitP402ScopeFixture.FOREIGN_AIT,
+          {
+            catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG,
+            framing_id: RaitP402ScopeFixture.FOREIGN_FRAMING,
+            ait_number: 'S1-FOREIGN-FIXTURE',
+            agent_id: RaitP402ScopeFixture.FOREIGN_USER,
+          },
+        ],
+      ] as const) {
+        await this.owner.query(
+          `insert into ${table} select (jsonb_populate_record(null::${table},to_jsonb(source)||$2::jsonb)).*
+        from ${table} source where id=$1`,
+          [
+            sourceId,
+            JSON.stringify({
+              id,
+              tenant_id: RaitP402ScopeFixture.FOREIGN_TENANT,
+              ...extra,
+            }),
+          ],
+        );
+      }
+      await this.owner.query(
+        `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at,unit_id)
       select $1,$2,$3,'S1-FOREIGN-CASE',instance,circuit,state,intake_channel,protocolled_at,$4
       from inf.rait_case where id=$5`,
-      [
-        RaitP402ScopeFixture.FOREIGN_CASE,
-        RaitP402ScopeFixture.FOREIGN_TENANT,
-        RaitP402ScopeFixture.FOREIGN_AIT,
-        RaitP402ScopeFixture.FOREIGN_UNIT,
-        RAIT_CASE('04'),
-      ],
-    );
+        [
+          RaitP402ScopeFixture.FOREIGN_CASE,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+          RaitP402ScopeFixture.FOREIGN_AIT,
+          RaitP402ScopeFixture.FOREIGN_UNIT,
+          RAIT_CASE('04'),
+        ],
+      );
+    } finally {
+      await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+        RAIT_TENANT,
+      ]);
+    }
   }
   async scope(
     actor: string,
@@ -987,6 +1005,9 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
   }
   async cleanupScope(): Promise<void> {
     if (!this.prepared) return;
+    await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
     await this.clearScopes();
     await this.owner.query(
       "delete from inf.rait_case_pool_scope where authorization_ref='r25-s1-fixture'",
