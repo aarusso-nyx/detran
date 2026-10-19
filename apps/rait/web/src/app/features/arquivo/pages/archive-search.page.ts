@@ -24,7 +24,7 @@ import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { tokenKey } from '../../../core/i18n-token-key';
 import { SseService } from '../../../core/sse.service';
 import { ArchiveFacade } from '../../../data/facades/archive.facade';
-import type { RaitCase } from '../../../data/models';
+import type { RaitCaseRead } from '../../../data/api/case.client';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
 import { StreamStatusBannerComponent } from '../../../shared/stream-status-banner.component';
@@ -165,7 +165,7 @@ export class ArchiveSearchPageComponent {
     });
   }
 
-  caseRoute(kase: RaitCase): string[] {
+  caseRoute(kase: RaitCaseRead): string[] {
     return [ARCHIVE_CASE_ROUTE, kase.id];
   }
 

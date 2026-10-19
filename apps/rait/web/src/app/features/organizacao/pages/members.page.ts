@@ -1,3 +1,4 @@
+import type { RaitPoolMemberRead } from '../../../data/api/worklist.client';
 // T-40 Membros (ficha IU-RAIT-047; contrato CTG-0002b §6.1 linha 45; L1 — M13): `createListFacade(
 // q => worklist.listRaitPoolMember(q))` numa `<stynx-table>` (pool_id, person_id, member_role,
 // status → `tokenKey('memberStatus')`, is_substitute, mandate_starts_on, mandate_ends_on,
@@ -22,10 +23,7 @@ import {
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { tokenKey } from '../../../core/i18n-token-key';
 import { WorklistClient } from '../../../data/api/worklist.client';
-import {
-  LIST_PAGE_SIZE_DEFAULT,
-  type RaitPoolMember,
-} from '../../../data/models';
+import { LIST_PAGE_SIZE_DEFAULT } from '../../../data/models';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
 import { createL1List, l1Formatters, type L1Row } from '../../l1-list';
@@ -92,7 +90,7 @@ export class MembersPageComponent {
   readonly loadingKey = LOADING_KEY;
   readonly pageSize = LIST_PAGE_SIZE_DEFAULT;
 
-  readonly l1 = createL1List<RaitPoolMember, Row>({
+  readonly l1 = createL1List<RaitPoolMemberRead, Row>({
     load: (query) => this.worklist.listRaitPoolMember(query),
     columns: [
       'pool_id',

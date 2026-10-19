@@ -1,3 +1,4 @@
+import type { RaitDeadlineRead } from '../../../data/api/case.client';
 // T-26 Parecer e voto do relator (ficha IU-RAIT-031; contrato CTG-0002b §6.1 linha 30;
 // [UC-RAIT-004]): `CaseFacade.loadCaseBundle(caseId)` + `loadDocuments` (`DossierViewer`,
 // `DeadlineChip` T-VOTO de `prazos`) e `SessionFacade.loadAgendaItemOfCase(caseId)` → `itemDoCaso`;
@@ -25,7 +26,7 @@ import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { SseService } from '../../../core/sse.service';
 import { CaseFacade } from '../../../data/facades/case.facade';
 import { SessionFacade } from '../../../data/facades/session.facade';
-import { permissionKeyOf, type RaitDeadline } from '../../../data/models';
+import { permissionKeyOf } from '../../../data/models';
 import { DeadlineChipComponent } from '../../../shared/deadline-chip.component';
 import { DossierViewerComponent } from '../../../shared/dossier-viewer.component';
 import {
@@ -163,7 +164,7 @@ export class OpinionPageComponent {
     combineStatus(this.cases.caso.status(), this.sessions.itemDoCaso.status()),
   );
   readonly offline = computed(() => this.cases.caso.status() === 'offline');
-  readonly voteDeadline = computed<RaitDeadline | null>(
+  readonly voteDeadline = computed<RaitDeadlineRead | null>(
     () =>
       this.cases.prazos
         .items()

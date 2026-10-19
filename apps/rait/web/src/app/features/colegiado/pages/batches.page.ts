@@ -1,8 +1,9 @@
+import type { RaitBatchRead } from '../../../data/api/worklist.client';
 // T-23 Distribuição — lotes de sorteio (ficha IU-RAIT-028; contrato CTG-0002b §6.1 linha 27;
 // [UC-RAIT-014]): `SessionFacade.loadBatches(orgao, query)` → `lotes` (um `BatchDrawViewer` por
 // lote) e `loadUnassigned(orgao)` → `semRelator` (casos DISTRIBUIDO sem relator, ordem recebida —
 // [RN-RAIT-141]) numa `QueueTable`; formulário `lote-sorteio` (`poolId`, `kind` — tokens de
-// `RaitBatch['kind']` —, `weekStart`) com `Validators.required`; ações `rait-batch:open`
+// `RaitBatchRead['kind']` —, `weekStart`) com `Validators.required`; ações `rait-batch:open`
 // (`confirm.open`), `rait-batch:draw` (`confirm.draw`) e `rait-batch:approve` (`confirm.approve`)
 // sob `*stynxHasPermission` (M4; OD-R12-010) sobre o lote selecionado → `facade.<comando>` (M8).
 // Os pools do órgão vêm da `OrganizationFacade` (§6.1) — aqui o `poolId` é digitado, com os ids
@@ -37,7 +38,6 @@ import { SessionFacade } from '../../../data/facades/session.facade';
 import {
   permissionKeyOf,
   type CreateRaitBatchDto,
-  type RaitBatch,
   type RaitBatchKind,
   type RaitJudgingBody,
 } from '../../../data/models';
@@ -73,7 +73,7 @@ const CONFIRM_DRAW_KEY =
 const CONFIRM_APPROVE_KEY =
   'rait.screens.colegiado-orgao-distribuicao.confirm.approve';
 const BATCH_KIND_PREFIX = 'rait.common.batch_';
-/** Tokens do contrato `RaitBatch['kind']`. */
+/** Tokens do contrato `RaitBatchRead['kind']`. */
 const BATCH_KINDS: readonly RaitBatchKind[] = ['semanal', 'extraordinario'];
 const COLEGIADO_ROUTE = '/colegiado';
 const BATCH_DETAIL_ROUTE = 'distribuicao';
@@ -393,7 +393,7 @@ export class BatchesPageComponent {
     });
   }
 
-  openBatch(batch: RaitBatch): void {
+  openBatch(batch: RaitBatchRead): void {
     void this.router.navigate([
       COLEGIADO_ROUTE,
       this.orgao,

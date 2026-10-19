@@ -115,7 +115,13 @@ export class RetentionQueuePageComponent {
       id: kase.id,
       protocol_number: kase.protocol_number,
       closed_at: kase.closed_at ? this.datePipe.transform(kase.closed_at) : '',
-      archived: this.i18n.translate(kase.archived ? YES_KEY : NO_KEY),
+      archived: this.i18n.translate(
+        kase.archived === undefined
+          ? 'rait.common.unavailable'
+          : kase.archived
+            ? YES_KEY
+            : NO_KEY,
+      ),
     })),
   );
 

@@ -1,3 +1,7 @@
+import type {
+  RaitAssignmentRead,
+  RaitClockAlertRead,
+} from '../../../data/api/worklist.client';
 // T-38 Drill-down de risco (ficha IU-RAIT-040; contrato CTG-0002b §6.1 linha 38): `RadarFacade.
 // loadDrilldown(caseId)` → `drilldown` (caso, relógios, alertas, atribuições, eventos);
 // `RiskFlag`/`DeadlineChip` pelos relógios, `EventTimeline` do histórico; `ReassignDialog` =
@@ -33,8 +37,6 @@ import {
   RAIT_RELEASE_REASONS,
   permissionKeyOf,
   type CommandBody,
-  type RaitAssignment,
-  type RaitClockAlert,
   type RaitReleaseReason,
 } from '../../../data/models';
 import { CaseStateBadgeComponent } from '../../../shared/case-state-badge.component';
@@ -218,13 +220,13 @@ export class RiskCaseDrilldownPageComponent {
     () => this.facade.drilldown.status() === 'offline',
   );
   /** Atribuição ativa do caso (leitura do campo `active`). */
-  readonly activeAssignment = computed<RaitAssignment | null>(
+  readonly activeAssignment = computed<RaitAssignmentRead | null>(
     () =>
       this.facade.drilldown.value()?.assignments.find((item) => item.active) ??
       null,
   );
   /** Primeiro alerta sem reconhecimento, na ordem recebida. */
-  readonly openAlert = computed<RaitClockAlert | null>(
+  readonly openAlert = computed<RaitClockAlertRead | null>(
     () =>
       this.facade.drilldown
         .value()

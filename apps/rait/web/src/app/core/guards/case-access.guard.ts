@@ -1,4 +1,4 @@
-// The case GET applies tenant RLS. Individual same-tenant scope remains OD-R25-017.
+// The authenticated case read enforces the server-approved scope and purpose.
 import { inject } from '@angular/core';
 import type { CanActivateFn } from '@angular/router';
 import { CaseClient } from '../../data/api/case.client';

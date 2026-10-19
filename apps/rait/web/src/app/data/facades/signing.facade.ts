@@ -1,3 +1,4 @@
+import type { RaitCaseRead } from '../api/case.client';
 // SigningFacade (contrato CTG-0002b §4.2/§4.3; M9): módulo assinatura (aba casos/:id/decisao).
 // `fila` = casos PRONTO_P_DECISAO da defesa prévia (ficha 025; "unit=…" sem fonte → sem filtro,
 // OD-R12-021); `caso` = `SigningBundle` (getRaitCase + drafts/documents/admissibility/deadlines/
@@ -13,7 +14,6 @@ import type {
   CreateRaitDecisionDto,
   CreateRaitImpedimentDto,
   ListQuery,
-  RaitCase,
   RaitDecision,
   RaitDraft,
   RaitImpediment,
@@ -36,7 +36,7 @@ export class SigningFacade {
   private readonly worklist = inject(WorklistClient);
   private readonly clock = inject(RaitClock);
 
-  readonly fila = createListFacade<RaitCase>(
+  readonly fila = createListFacade<RaitCaseRead>(
     (query) => this.cases.listRaitCase(query),
     this.clock,
   );

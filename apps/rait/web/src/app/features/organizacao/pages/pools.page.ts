@@ -1,3 +1,4 @@
+import type { RaitPoolRead } from '../../../data/api/worklist.client';
 // T-41 Pools (ficha IU-RAIT-048; contrato CTG-0002b §6.1 linha 46; L1 — M13): `createListFacade(
 // q => worklist.listRaitPool(q))` numa `<stynx-table>` (name, instance → `rait.instance.`,
 // circuit, strategy → `rait.common.strategy_` + token, active, priority_policy). Nenhum comando
@@ -20,7 +21,7 @@ import {
 } from '@detran/ui';
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { WorklistClient } from '../../../data/api/worklist.client';
-import { LIST_PAGE_SIZE_DEFAULT, type RaitPool } from '../../../data/models';
+import { LIST_PAGE_SIZE_DEFAULT } from '../../../data/models';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
 import { createL1List, l1Formatters, type L1Row } from '../../l1-list';
@@ -87,7 +88,7 @@ export class PoolsPageComponent {
   readonly loadingKey = LOADING_KEY;
   readonly pageSize = LIST_PAGE_SIZE_DEFAULT;
 
-  readonly l1 = createL1List<RaitPool, Row>({
+  readonly l1 = createL1List<RaitPoolRead, Row>({
     load: (query) => this.worklist.listRaitPool(query),
     columns: [
       'name',

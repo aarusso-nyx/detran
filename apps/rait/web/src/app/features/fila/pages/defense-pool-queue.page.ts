@@ -1,3 +1,4 @@
+import type { RaitCaseRead } from '../../../data/api/case.client';
 // T-02 Fila de defesa prévia (ficha IU-RAIT-004; contrato CTG-0002b §6.1 linha 4; [UC-RAIT-003];
 // [JRN-RAIT-001]): `QueueFacade.loadDefenseQueue(query)` → `filaDefesa` (casos ADMITIDO do pool
 // `defesa_previa`, ordem única do servidor — [RN-RAIT-141]) numa `QueueTable` com ação principal
@@ -26,7 +27,7 @@ import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { ShortcutService } from '../../../core/shortcut.service';
 import { SseService } from '../../../core/sse.service';
 import { QueueFacade } from '../../../data/facades/queue.facade';
-import type { RaitCase } from '../../../data/models';
+
 import { PageStateComponent } from '../../../shared/page-state.component';
 import {
   QueueTableComponent,
@@ -207,7 +208,7 @@ export class DefensePoolQueuePageComponent {
   }
 }
 
-function toQueueItem(item: RaitCase): QueueItem {
+function toQueueItem(item: RaitCaseRead): QueueItem {
   return {
     id: item.id,
     caseId: item.id,

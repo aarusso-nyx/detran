@@ -1,3 +1,5 @@
+import type { RaitClockRead } from '../data/api/worklist.client';
+import type { RaitCaseRead, RaitPartyRead } from '../data/api/case.client';
 // CaseHeader (contrato CTG-0002b §5.5; spec §5.2 "cabeçalho fixo de /casos/:id"; guia §3.2; ficha
 // 006): protocolo (texto), `<rait-case-state-badge>`, partes requerente|procurador por
 // `person_name` (`document_number` NÃO aparece — LGPD §10.6, OD-R12-033), um `<rait-risk-flag>` por
@@ -14,13 +16,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { StynxTranslatePipe } from '@detran/ui';
 import { StynxHasPermissionDirective } from '@stynx-nyx/angular-auth';
-import {
-  permissionKeyOf,
-  type RaitCase,
-  type RaitClock,
-  type RaitCommand,
-  type RaitParty,
-} from '../data/models';
+import { permissionKeyOf, type RaitCommand } from '../data/models';
 import { CaseStateBadgeComponent } from './case-state-badge.component';
 import { RiskFlagComponent } from './risk-flag.component';
 
@@ -32,7 +28,7 @@ export interface CaseHeaderAction {
 
 const SUSPENSIVE_EFFECT_KEY = 'rait.common.suspensiveEffect';
 const PARTY_KEY_PREFIX = 'rait.common.party_';
-const HEADER_PARTY_ROLES: ReadonlySet<RaitParty['role']> = new Set([
+const HEADER_PARTY_ROLES: ReadonlySet<RaitPartyRead['role']> = new Set([
   'requerente',
   'procurador',
 ]);
@@ -119,9 +115,9 @@ let nextId = 0;
   `,
 })
 export class CaseHeaderComponent {
-  readonly case = input.required<RaitCase>();
-  readonly parties = input<readonly RaitParty[]>([]);
-  readonly clocks = input<readonly RaitClock[]>([]);
+  readonly case = input.required<RaitCaseRead>();
+  readonly parties = input<readonly RaitPartyRead[]>([]);
+  readonly clocks = input<readonly RaitClockRead[]>([]);
   readonly actions = input<readonly CaseHeaderAction[]>([]);
   readonly action = output<RaitCommand>();
 

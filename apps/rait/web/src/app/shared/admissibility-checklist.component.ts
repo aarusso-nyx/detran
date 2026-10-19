@@ -1,3 +1,4 @@
+import type { RaitAdmissibilityRead } from '../data/api/case.client';
 // AdmissibilityChecklist (contrato CTG-0002b §5.8; [RN-RAIT-001]; [RN-RAIT-122]; ficha 008; spec
 // §9 Triagem): 4 linhas na ordem fixa de `RAIT_ADMISSIBILITY_CRITERIA`; rótulos vêm da tela
 // chamadora (`fieldLabelKeys`, Portal §5 "…LabelKey"). `tempestividade` é SOMENTE LEITURA
@@ -14,7 +15,6 @@ import {
 import { StynxIntlDatePipe, StynxTranslatePipe } from '@detran/ui';
 import {
   RAIT_ADMISSIBILITY_CRITERIA,
-  type RaitAdmissibility,
   type RaitAdmissibilityCriterion,
 } from '../data/models';
 
@@ -126,7 +126,7 @@ let nextId = 0;
 })
 export class AdmissibilityChecklistComponent {
   /** Registros do servidor (o de `tempestividade` é o único exibido como veredito). */
-  readonly recorded = input<readonly RaitAdmissibility[]>([]);
+  readonly recorded = input<readonly RaitAdmissibilityRead[]>([]);
   readonly disabled = input(false);
   /** Rótulos da tela chamadora (ficha 008 `field.*`). */
   readonly fieldLabelKeys =
@@ -155,7 +155,9 @@ export class AdmissibilityChecklistComponent {
     );
   });
 
-  recordedFor(criterion: RaitAdmissibilityCriterion): RaitAdmissibility | null {
+  recordedFor(
+    criterion: RaitAdmissibilityCriterion,
+  ): RaitAdmissibilityRead | null {
     return this.recorded().find((item) => item.criterion === criterion) ?? null;
   }
 

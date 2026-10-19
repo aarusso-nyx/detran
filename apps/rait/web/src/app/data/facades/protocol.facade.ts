@@ -1,3 +1,9 @@
+import type {
+  RaitCaseRead,
+  RaitPendingContentRead,
+  RaitRedirectRead,
+  RaitDeadlineRead,
+} from '../api/case.client';
 // ProtocolFacade (contrato CTG-0002b §4.2/§4.3; M9): módulo protocolo. `intake` = casos
 // PROTOCOLADO (ficha 019); `pendencias` = pendências abertas (`outcome` nulo) + join caso (ficha
 // 021); `remessas` = casos AGUARDANDO_REMESSA_JARI + prazos `T-REM10` por caso (ficha 022;
@@ -14,7 +20,6 @@ import type {
   ListPage,
   ListQuery,
   RaitCase,
-  RaitDeadline,
   RaitPendingContent,
   RaitPendingContentOutcome,
   RaitRedirect,
@@ -40,31 +45,31 @@ export class ProtocolFacade {
   private readonly cases = inject(CaseClient);
   private readonly clock = inject(RaitClock);
 
-  readonly intake = createListFacade<RaitCase>(
+  readonly intake = createListFacade<RaitCaseRead>(
     (query) => this.cases.listRaitCase(query),
     this.clock,
   );
-  readonly pendencias = createListFacade<RaitPendingContent>(
+  readonly pendencias = createListFacade<RaitPendingContentRead>(
     (query) => this.loadPendingPage(query),
     this.clock,
   );
-  readonly remessas = createListFacade<RaitCase>(
+  readonly remessas = createListFacade<RaitCaseRead>(
     (query) => this.loadRemittancesPage(query),
     this.clock,
   );
-  readonly redirecionamentos = createListFacade<RaitRedirect>(
+  readonly redirecionamentos = createListFacade<RaitRedirectRead>(
     (query) => this.cases.listRaitRedirect(query),
     this.clock,
   );
   /** Caso alvo do termo de desistência; `empty` quando o protocolo não existe (ficha 024). */
-  readonly desistenciaCaso = createReadStore<RaitCase | null>(this.clock);
+  readonly desistenciaCaso = createReadStore<RaitCaseRead | null>(this.clock);
   readonly command = createCommandRunner();
 
-  private readonly pendingCases = signal<ReadonlyMap<string, RaitCase>>(
+  private readonly pendingCases = signal<ReadonlyMap<string, RaitCaseRead>>(
     new Map(),
   );
   private readonly remittanceDeadlines = signal<
-    ReadonlyMap<string, RaitDeadline>
+    ReadonlyMap<string, RaitDeadlineRead>
   >(new Map());
   /** Casos das pendências carregadas (join por `case_id`). */
   readonly pendenciasCaso = computed(() => this.pendingCases());
@@ -124,7 +129,7 @@ export class ProtocolFacade {
 
   private async loadPendingPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitPendingContent>> {
+  ): Promise<ListPage<RaitPendingContentRead>> {
     const page = await this.cases.listRaitPendingContent(query);
     const items = page.items.filter(
       (item) => item.outcome === null || item.outcome === undefined,
@@ -139,14 +144,14 @@ export class ProtocolFacade {
 
   private async loadRemittancesPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitCase>> {
+  ): Promise<ListPage<RaitCaseRead>> {
     const [page, deadlines] = await Promise.all([
       this.cases.listRaitCase(query),
       this.cases.listRaitDeadline({
         filtro: { timer_code: REMITTANCE_TIMER_CODE },
       }),
     ]);
-    const byCase = new Map<string, RaitDeadline>();
+    const byCase = new Map<string, RaitDeadlineRead>();
     for (const deadline of deadlines.items) {
       if (!byCase.has(deadline.case_id)) byCase.set(deadline.case_id, deadline);
     }

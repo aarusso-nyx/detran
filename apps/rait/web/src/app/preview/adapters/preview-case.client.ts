@@ -1,3 +1,18 @@
+import { PreviewStateService } from '../preview-state.service';
+import type {
+  RaitCaseRead,
+  RaitPartyRead,
+  RaitDocumentRead,
+  RaitPendingContentRead,
+  RaitRedirectRead,
+  RaitAdmissibilityRead,
+  RaitDeadlineRead,
+  RaitInquiryRead,
+  RaitDraftRead,
+  RaitDecisionRead,
+  RaitCommunicationRead,
+  RaitCaseEventRead,
+} from '../../data/api/case.client';
 // Adapter de prévia do `CaseClient` (R-0033 TASK-0003; `frontend-preview-mode.md` §2, §6, D-06,
 // D-07, D-11, D-15; inventário §2). Leituras: `cases`, `raitPendingContents`, `raitRedirects` e
 // `raitDrafts` de `rait-fixtures.json` e, desde A4/A5 (PR #184), `parties`, `documents`,
@@ -52,51 +67,51 @@ import {
 } from './preview-reader';
 
 // `ListQuerySpec` — cópia literal de `data/api/case.client.ts` (constantes privadas do módulo).
-const CASE_SPEC: ListQuerySpec<RaitCase> = {
+const CASE_SPEC: ListQuerySpec<RaitCaseRead> = {
   q: ['protocol_number'],
   filtro: ['state', 'instance', 'archived', 'ait_id', 'unit_id'],
 };
-const PARTY_SPEC: ListQuerySpec<RaitParty> = {
+const PARTY_SPEC: ListQuerySpec<RaitPartyRead> = {
   q: ['person_name'],
   filtro: ['case_id', 'role'],
 };
-const DOCUMENT_SPEC: ListQuerySpec<RaitDocument> = {
+const DOCUMENT_SPEC: ListQuerySpec<RaitDocumentRead> = {
   q: ['filename'],
   filtro: ['case_id', 'origin', 'kind'],
 };
-const PENDING_CONTENT_SPEC: ListQuerySpec<RaitPendingContent> = {
+const PENDING_CONTENT_SPEC: ListQuerySpec<RaitPendingContentRead> = {
   q: [],
   filtro: ['case_id', 'outcome'],
 };
-const REDIRECT_SPEC: ListQuerySpec<RaitRedirect> = {
+const REDIRECT_SPEC: ListQuerySpec<RaitRedirectRead> = {
   q: ['protocol_number', 'counterpart_agency'],
   filtro: ['case_id', 'direction', 'reason'],
 };
-const ADMISSIBILITY_SPEC: ListQuerySpec<RaitAdmissibility> = {
+const ADMISSIBILITY_SPEC: ListQuerySpec<RaitAdmissibilityRead> = {
   q: [],
   filtro: ['case_id', 'criterion'],
 };
-const DEADLINE_SPEC: ListQuerySpec<RaitDeadline> = {
+const DEADLINE_SPEC: ListQuerySpec<RaitDeadlineRead> = {
   q: [],
   filtro: ['case_id', 'timer_code'],
 };
-const INQUIRY_SPEC: ListQuerySpec<RaitInquiry> = {
+const INQUIRY_SPEC: ListQuerySpec<RaitInquiryRead> = {
   q: ['subject'],
   filtro: ['case_id', 'addressee', 'outcome'],
 };
-const DRAFT_SPEC: ListQuerySpec<RaitDraft> = {
+const DRAFT_SPEC: ListQuerySpec<RaitDraftRead> = {
   q: [],
   filtro: ['case_id', 'status'],
 };
-const DECISION_SPEC: ListQuerySpec<RaitDecision> = {
+const DECISION_SPEC: ListQuerySpec<RaitDecisionRead> = {
   q: [],
   filtro: ['case_id', 'decision_kind'],
 };
-const COMMUNICATION_SPEC: ListQuerySpec<RaitCommunication> = {
+const COMMUNICATION_SPEC: ListQuerySpec<RaitCommunicationRead> = {
   q: [],
   filtro: ['case_id', 'channel'],
 };
-const EVENT_SPEC: ListQuerySpec<RaitCaseEvent> = {
+const EVENT_SPEC: ListQuerySpec<RaitCaseEventRead> = {
   q: ['event_type'],
   filtro: ['case_id', 'event_type'],
 };
@@ -374,18 +389,59 @@ const caseEvents = (fixtures: RaitFixturesJson): readonly RaitCaseEvent[] =>
 
 @Injectable({ providedIn: 'root' })
 export class PreviewCaseClient extends CaseClient {
+  private readonly projectionState = inject(PreviewStateService);
+
+  /** Fictional display projection only; never a production scope or appointment grant. */
+  private projectionPurpose(
+    fixtures: RaitFixturesJson,
+    caseId?: string | null,
+  ): 'S' | 'O' | 'M' | 'J' | 'T' {
+    const item = fixtures.cases.find((candidate) => candidate.id === caseId);
+    if (item?.archived) return 'S';
+    const role = this.projectionState.role();
+    if (role === 'rait-manager') return 'O';
+    if (role === 'rait-secretary') return 'S';
+    if (role === 'rait-analyst') {
+      return item &&
+        ['PROTOCOLADO', 'TRIAGEM_ADMISSIBILIDADE'].includes(item.state)
+        ? 'T'
+        : 'M';
+    }
+    if (role === 'rait-coordinator' || role === 'AUDITOR') return 'M';
+    if (
+      [
+        'rait-rapporteur',
+        'rait-chair',
+        'rait-signing-authority',
+        'rait-central-authority',
+      ].includes(role)
+    )
+      return 'J';
+    return 'S';
+  }
+
   private readonly previewReader = inject(PreviewFixtureReader);
   private readonly previewLog = inject(PreviewActionLog);
   private readonly fixtureStore = inject(PreviewFixtureStore);
 
   // --- leituras ------------------------------------------------------------------------------
 
-  override listRaitCase(query: ListQuery = {}): Promise<ListPage<RaitCase>> {
-    return this.previewReader.list(query, CASE_SPEC, cases);
+  override listRaitCase(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitCaseRead>> {
+    return this.previewReader.list(query, CASE_SPEC, (fixtures) =>
+      cases(fixtures).map((record) =>
+        projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
+      ),
+    );
   }
 
-  override getRaitCase(id: string): Promise<RaitCase> {
-    return this.previewReader.get('cases', id, cases);
+  override getRaitCase(id: string): Promise<RaitCaseRead> {
+    return this.previewReader.get('cases', id, (fixtures) =>
+      cases(fixtures).map((record) =>
+        projectRaitCase(record, this.projectionPurpose(fixtures, record.id)),
+      ),
+    );
   }
 
   override async verifyCaseAccess(caseId: string): Promise<void> {
@@ -395,114 +451,268 @@ export class PreviewCaseClient extends CaseClient {
     }
   }
 
-  override listRaitParty(query: ListQuery = {}): Promise<ListPage<RaitParty>> {
-    return this.previewReader.list(query, PARTY_SPEC, parties);
+  override listRaitParty(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitPartyRead>> {
+    return this.previewReader.list(query, PARTY_SPEC, (fixtures) =>
+      parties(fixtures).map((record) =>
+        projectRaitParty(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitParty(id: string): Promise<RaitParty> {
-    return this.previewReader.get('parties', id, parties);
+  override getRaitParty(id: string): Promise<RaitPartyRead> {
+    return this.previewReader.get('parties', id, (fixtures) =>
+      parties(fixtures).map((record) =>
+        projectRaitParty(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitDocument(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitDocument>> {
-    return this.previewReader.list(query, DOCUMENT_SPEC, documents);
+  ): Promise<ListPage<RaitDocumentRead>> {
+    return this.previewReader.list(query, DOCUMENT_SPEC, (fixtures) =>
+      documents(fixtures).map((record) =>
+        projectRaitDocument(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitDocument(id: string): Promise<RaitDocument> {
-    return this.previewReader.get('documents', id, documents);
+  override getRaitDocument(id: string): Promise<RaitDocumentRead> {
+    return this.previewReader.get('documents', id, (fixtures) =>
+      documents(fixtures).map((record) =>
+        projectRaitDocument(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitPendingContent(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitPendingContent>> {
-    return this.previewReader.list(
-      query,
-      PENDING_CONTENT_SPEC,
-      pendingContents,
+  ): Promise<ListPage<RaitPendingContentRead>> {
+    return this.previewReader.list(query, PENDING_CONTENT_SPEC, (fixtures) =>
+      pendingContents(fixtures).map((record) =>
+        projectRaitPendingContent(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
     );
   }
 
-  override getRaitPendingContent(id: string): Promise<RaitPendingContent> {
-    return this.previewReader.get('raitPendingContents', id, pendingContents);
+  override getRaitPendingContent(id: string): Promise<RaitPendingContentRead> {
+    return this.previewReader.get('raitPendingContents', id, (fixtures) =>
+      pendingContents(fixtures).map((record) =>
+        projectRaitPendingContent(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitRedirect(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitRedirect>> {
-    return this.previewReader.list(query, REDIRECT_SPEC, redirects);
+  ): Promise<ListPage<RaitRedirectRead>> {
+    return this.previewReader.list(query, REDIRECT_SPEC, (fixtures) =>
+      redirects(fixtures).map((record) =>
+        projectRaitRedirect(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitRedirect(id: string): Promise<RaitRedirect> {
-    return this.previewReader.get('raitRedirects', id, redirects);
+  override getRaitRedirect(id: string): Promise<RaitRedirectRead> {
+    return this.previewReader.get('raitRedirects', id, (fixtures) =>
+      redirects(fixtures).map((record) =>
+        projectRaitRedirect(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitAdmissibility(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitAdmissibility>> {
-    return this.previewReader.list(query, ADMISSIBILITY_SPEC, admissibility);
+  ): Promise<ListPage<RaitAdmissibilityRead>> {
+    return this.previewReader.list(query, ADMISSIBILITY_SPEC, (fixtures) =>
+      admissibility(fixtures).map((record) =>
+        projectRaitAdmissibility(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitAdmissibility(id: string): Promise<RaitAdmissibility> {
-    return this.previewReader.get('admissibility', id, admissibility);
+  override getRaitAdmissibility(id: string): Promise<RaitAdmissibilityRead> {
+    return this.previewReader.get('admissibility', id, (fixtures) =>
+      admissibility(fixtures).map((record) =>
+        projectRaitAdmissibility(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitDeadline(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitDeadline>> {
-    return this.previewReader.list(query, DEADLINE_SPEC, deadlines);
+  ): Promise<ListPage<RaitDeadlineRead>> {
+    return this.previewReader.list(query, DEADLINE_SPEC, (fixtures) =>
+      deadlines(fixtures).map((record) =>
+        projectRaitDeadline(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitDeadline(id: string): Promise<RaitDeadline> {
-    return this.previewReader.get('deadlines', id, deadlines);
+  override getRaitDeadline(id: string): Promise<RaitDeadlineRead> {
+    return this.previewReader.get('deadlines', id, (fixtures) =>
+      deadlines(fixtures).map((record) =>
+        projectRaitDeadline(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitInquiry(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitInquiry>> {
-    return this.previewReader.list(query, INQUIRY_SPEC, inquiries);
+  ): Promise<ListPage<RaitInquiryRead>> {
+    return this.previewReader.list(query, INQUIRY_SPEC, (fixtures) =>
+      inquiries(fixtures).map((record) =>
+        projectRaitInquiry(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitInquiry(id: string): Promise<RaitInquiry> {
-    return this.previewReader.get('inquiries', id, inquiries);
+  override getRaitInquiry(id: string): Promise<RaitInquiryRead> {
+    return this.previewReader.get('inquiries', id, (fixtures) =>
+      inquiries(fixtures).map((record) =>
+        projectRaitInquiry(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override listRaitDraft(query: ListQuery = {}): Promise<ListPage<RaitDraft>> {
-    return this.previewReader.list(query, DRAFT_SPEC, drafts);
+  override listRaitDraft(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitDraftRead>> {
+    return this.previewReader.list(query, DRAFT_SPEC, (fixtures) =>
+      drafts(fixtures).map((record) =>
+        projectRaitDraft(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitDraft(id: string): Promise<RaitDraft> {
-    return this.previewReader.get('raitDrafts', id, drafts);
+  override getRaitDraft(id: string): Promise<RaitDraftRead> {
+    return this.previewReader.get('raitDrafts', id, (fixtures) =>
+      drafts(fixtures).map((record) =>
+        projectRaitDraft(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitDecision(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitDecision>> {
-    return this.previewReader.list(query, DECISION_SPEC, decisions);
+  ): Promise<ListPage<RaitDecisionRead>> {
+    return this.previewReader.list(query, DECISION_SPEC, (fixtures) =>
+      decisions(fixtures).map((record) =>
+        projectRaitDecision(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitDecision(id: string): Promise<RaitDecision> {
-    return this.previewReader.get('decisions', id, decisions);
+  override getRaitDecision(id: string): Promise<RaitDecisionRead> {
+    return this.previewReader.get('decisions', id, (fixtures) =>
+      decisions(fixtures).map((record) =>
+        projectRaitDecision(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitCommunication(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitCommunication>> {
-    return this.previewReader.list(query, COMMUNICATION_SPEC, communications);
+  ): Promise<ListPage<RaitCommunicationRead>> {
+    return this.previewReader.list(query, COMMUNICATION_SPEC, (fixtures) =>
+      communications(fixtures).map((record) =>
+        projectRaitCommunication(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitCommunication(id: string): Promise<RaitCommunication> {
-    return this.previewReader.get('communications', id, communications);
+  override getRaitCommunication(id: string): Promise<RaitCommunicationRead> {
+    return this.previewReader.get('communications', id, (fixtures) =>
+      communications(fixtures).map((record) =>
+        projectRaitCommunication(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   override listRaitCaseEvent(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitCaseEvent>> {
-    return this.previewReader.list(query, EVENT_SPEC, caseEvents);
+  ): Promise<ListPage<RaitCaseEventRead>> {
+    return this.previewReader.list(query, EVENT_SPEC, (fixtures) =>
+      caseEvents(fixtures).map((record) =>
+        projectRaitCaseEvent(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
-  override getRaitCaseEvent(id: string): Promise<RaitCaseEvent> {
-    return this.previewReader.get('caseEvents', id, caseEvents);
+  override getRaitCaseEvent(id: string): Promise<RaitCaseEventRead> {
+    return this.previewReader.get('caseEvents', id, (fixtures) =>
+      caseEvents(fixtures).map((record) =>
+        projectRaitCaseEvent(
+          record,
+          this.projectionPurpose(fixtures, record.case_id),
+        ),
+      ),
+    );
   }
 
   // --- comandos (contrato §6: registra M8 e mantém indisponibilidade explícita) ---------------
@@ -646,4 +856,679 @@ export class PreviewCaseClient extends CaseClient {
     this.previewLog.record('rait-case:redirect');
     return super.redirect(...args);
   }
+}
+
+function projectRaitCase(
+  record: RaitCase,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitCaseRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      protocol_number: record.protocol_number,
+      instance: record.instance,
+      circuit: record.circuit,
+      state: record.state,
+      unit_id: record.unit_id,
+      protocolled_at: record.protocolled_at,
+      version: record.version,
+      last_movement_at: record.last_movement_at,
+      pending_completion: record.pending_completion,
+      archived: record.archived,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      protocol_number: record.protocol_number,
+      instance: record.instance,
+      circuit: record.circuit,
+      state: record.state,
+      unit_id: record.unit_id,
+      protocolled_at: record.protocolled_at,
+      version: record.version,
+      ait_id: record.ait_id,
+      origin_case_id: record.origin_case_id,
+      intake_channel: record.intake_channel,
+      admitted_at: record.admitted_at,
+      judge_body_received_at: record.judge_body_received_at,
+      judge_body_received_on: record.judge_body_received_on,
+      cetran_received_at: record.cetran_received_at,
+      cetran_received_on: record.cetran_received_on,
+      remitted_at: record.remitted_at,
+      decided_at: record.decided_at,
+      communicated_at: record.communicated_at,
+      closed_at: record.closed_at,
+      suspensive_effect: record.suspensive_effect,
+      archived: record.archived,
+      non_admission_reason: record.non_admission_reason,
+      withdrawal_document_id: record.withdrawal_document_id,
+      last_movement_at: record.last_movement_at,
+      pending_completion: record.pending_completion,
+      legal_priority: record.legal_priority,
+      agency_jurisdiction_id: record.agency_jurisdiction_id,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      protocol_number: record.protocol_number,
+      instance: record.instance,
+      circuit: record.circuit,
+      state: record.state,
+      unit_id: record.unit_id,
+      protocolled_at: record.protocolled_at,
+      version: record.version,
+      ait_id: record.ait_id,
+      origin_case_id: record.origin_case_id,
+      intake_channel: record.intake_channel,
+      admitted_at: record.admitted_at,
+      judge_body_received_at: record.judge_body_received_at,
+      judge_body_received_on: record.judge_body_received_on,
+      cetran_received_at: record.cetran_received_at,
+      cetran_received_on: record.cetran_received_on,
+      remitted_at: record.remitted_at,
+      decided_at: record.decided_at,
+      communicated_at: record.communicated_at,
+      closed_at: record.closed_at,
+      suspensive_effect: record.suspensive_effect,
+      archived: record.archived,
+      non_admission_reason: record.non_admission_reason,
+      withdrawal_document_id: record.withdrawal_document_id,
+      last_movement_at: record.last_movement_at,
+      pending_completion: record.pending_completion,
+      legal_priority: record.legal_priority,
+      agency_jurisdiction_id: record.agency_jurisdiction_id,
+    };
+  if (purpose === 'T')
+    return {
+      id: record.id,
+      protocol_number: record.protocol_number,
+      instance: record.instance,
+      state: record.state,
+      protocolled_at: record.protocolled_at,
+      version: record.version,
+      suspensive_effect: record.suspensive_effect,
+      unit_id: record.unit_id,
+    };
+  return {
+    id: record.id,
+    protocol_number: record.protocol_number,
+    instance: record.instance,
+    circuit: record.circuit,
+    state: record.state,
+    unit_id: record.unit_id,
+    protocolled_at: record.protocolled_at,
+    version: record.version,
+    intake_channel: record.intake_channel,
+    admitted_at: record.admitted_at,
+    judge_body_received_at: record.judge_body_received_at,
+    judge_body_received_on: record.judge_body_received_on,
+    cetran_received_at: record.cetran_received_at,
+    cetran_received_on: record.cetran_received_on,
+    remitted_at: record.remitted_at,
+    decided_at: record.decided_at,
+    communicated_at: record.communicated_at,
+    closed_at: record.closed_at,
+    archived: record.archived,
+    pending_completion: record.pending_completion,
+    last_movement_at: record.last_movement_at,
+  };
+}
+
+function projectRaitParty(
+  record: RaitParty,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitPartyRead {
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      role: record.role,
+      legitimacy_basis: record.legitimacy_basis,
+      person_name: record.person_name,
+      document_number: record.document_number,
+      representation_kind: record.representation_kind,
+      representation_verified: record.representation_verified,
+      representation_document_id: record.representation_document_id,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      role: record.role,
+      legitimacy_basis: record.legitimacy_basis,
+      person_name: record.person_name,
+      document_number: record.document_number,
+      representation_kind: record.representation_kind,
+      representation_verified: record.representation_verified,
+      representation_document_id: record.representation_document_id,
+    };
+  if (purpose === 'T')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      role: record.role,
+      person_name: record.person_name,
+      legitimacy_basis: record.legitimacy_basis,
+      representation_kind: record.representation_kind,
+      representation_verified: record.representation_verified,
+      representation_document_id: record.representation_document_id,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    role: record.role,
+    representation_kind: record.representation_kind,
+    representation_verified: record.representation_verified,
+  };
+}
+
+function projectRaitDocument(
+  record: RaitDocument,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitDocumentRead {
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      kind: record.kind,
+      origin: record.origin,
+      filename: record.filename,
+      content_hash: record.content_hash,
+      digitised_from_paper: record.digitised_from_paper,
+      attached_at: record.attached_at,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      kind: record.kind,
+      origin: record.origin,
+      filename: record.filename,
+      content_hash: record.content_hash,
+      digitised_from_paper: record.digitised_from_paper,
+      attached_at: record.attached_at,
+    };
+  if (purpose === 'T')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      kind: record.kind,
+      origin: record.origin,
+      attached_at: record.attached_at,
+      digitised_from_paper: record.digitised_from_paper,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    kind: record.kind,
+    origin: record.origin,
+    attached_at: record.attached_at,
+  };
+}
+
+function projectRaitPendingContent(
+  record: RaitPendingContent,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitPendingContentRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      due_on: record.due_on,
+      opened_at: record.opened_at,
+      closed_at: record.closed_at,
+      outcome: record.outcome,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      due_on: record.due_on,
+      opened_at: record.opened_at,
+      opened_by: record.opened_by,
+      closed_at: record.closed_at,
+      outcome: record.outcome,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      due_on: record.due_on,
+      opened_at: record.opened_at,
+      opened_by: record.opened_by,
+      closed_at: record.closed_at,
+      outcome: record.outcome,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    due_on: record.due_on,
+    opened_at: record.opened_at,
+    closed_at: record.closed_at,
+    outcome: record.outcome,
+  };
+}
+
+function projectRaitRedirect(
+  record: RaitRedirect,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitRedirectRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      direction: record.direction,
+      protocol_number: record.protocol_number,
+      deadline_restored: record.deadline_restored,
+      redirected_at: record.redirected_at,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      direction: record.direction,
+      reason: record.reason,
+      protocol_number: record.protocol_number,
+      ait_number: record.ait_number,
+      counterpart_agency: record.counterpart_agency,
+      counterpart_renainf_code: record.counterpart_renainf_code,
+      origin_protocolled_on: record.origin_protocolled_on,
+      deadline_restored: record.deadline_restored,
+      receipt_document_id: record.receipt_document_id,
+      redirected_at: record.redirected_at,
+      redirected_by: record.redirected_by,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      direction: record.direction,
+      reason: record.reason,
+      protocol_number: record.protocol_number,
+      ait_number: record.ait_number,
+      counterpart_agency: record.counterpart_agency,
+      counterpart_renainf_code: record.counterpart_renainf_code,
+      origin_protocolled_on: record.origin_protocolled_on,
+      deadline_restored: record.deadline_restored,
+      receipt_document_id: record.receipt_document_id,
+      redirected_at: record.redirected_at,
+      redirected_by: record.redirected_by,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    direction: record.direction,
+    protocol_number: record.protocol_number,
+    counterpart_agency: record.counterpart_agency,
+    origin_protocolled_on: record.origin_protocolled_on,
+    deadline_restored: record.deadline_restored,
+    redirected_at: record.redirected_at,
+  };
+}
+
+function projectRaitAdmissibility(
+  record: RaitAdmissibility,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitAdmissibilityRead {
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      criterion: record.criterion,
+      verdict: record.verdict,
+      reason: record.reason,
+      evaluated_at: record.evaluated_at,
+      evaluated_by: record.evaluated_by,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      criterion: record.criterion,
+      verdict: record.verdict,
+      reason: record.reason,
+      evaluated_at: record.evaluated_at,
+      evaluated_by: record.evaluated_by,
+    };
+  if (purpose === 'T')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      criterion: record.criterion,
+      verdict: record.verdict,
+      reason: record.reason,
+      evaluated_at: record.evaluated_at,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    criterion: record.criterion,
+    verdict: record.verdict,
+    evaluated_at: record.evaluated_at,
+  };
+}
+
+function projectRaitDeadline(
+  record: RaitDeadline,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitDeadlineRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      timer_code: record.timer_code,
+      start_basis: record.start_basis,
+      started_on: record.started_on,
+      raw_due_on: record.raw_due_on,
+      due_on: record.due_on,
+      business_days: record.business_days,
+      extension_count: record.extension_count,
+      satisfied_at: record.satisfied_at,
+      legal_basis: record.legal_basis,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      timer_code: record.timer_code,
+      start_basis: record.start_basis,
+      started_on: record.started_on,
+      raw_due_on: record.raw_due_on,
+      due_on: record.due_on,
+      business_days: record.business_days,
+      extension_count: record.extension_count,
+      satisfied_at: record.satisfied_at,
+      legal_basis: record.legal_basis,
+      suspended_by_act_id: record.suspended_by_act_id,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      timer_code: record.timer_code,
+      start_basis: record.start_basis,
+      started_on: record.started_on,
+      raw_due_on: record.raw_due_on,
+      due_on: record.due_on,
+      business_days: record.business_days,
+      extension_count: record.extension_count,
+      satisfied_at: record.satisfied_at,
+      legal_basis: record.legal_basis,
+      suspended_by_act_id: record.suspended_by_act_id,
+    };
+  if (purpose === 'T')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      timer_code: record.timer_code,
+      start_basis: record.start_basis,
+      started_on: record.started_on,
+      raw_due_on: record.raw_due_on,
+      due_on: record.due_on,
+      business_days: record.business_days,
+      extension_count: record.extension_count,
+      legal_basis: record.legal_basis,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    timer_code: record.timer_code,
+    start_basis: record.start_basis,
+    started_on: record.started_on,
+    raw_due_on: record.raw_due_on,
+    due_on: record.due_on,
+    business_days: record.business_days,
+    extension_count: record.extension_count,
+    satisfied_at: record.satisfied_at,
+    legal_basis: record.legal_basis,
+  };
+}
+
+function projectRaitInquiry(
+  record: RaitInquiry,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitInquiryRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      requested_at: record.requested_at,
+      due_on: record.due_on,
+      extension_count: record.extension_count,
+      answered_at: record.answered_at,
+      answered_on: record.answered_on,
+      outcome: record.outcome,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      addressee: record.addressee,
+      subject: record.subject,
+      requested_at: record.requested_at,
+      requested_by: record.requested_by,
+      due_on: record.due_on,
+      extension_count: record.extension_count,
+      answered_at: record.answered_at,
+      answered_on: record.answered_on,
+      outcome: record.outcome,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      addressee: record.addressee,
+      subject: record.subject,
+      requested_at: record.requested_at,
+      requested_by: record.requested_by,
+      due_on: record.due_on,
+      extension_count: record.extension_count,
+      answered_at: record.answered_at,
+      answered_on: record.answered_on,
+      outcome: record.outcome,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    requested_at: record.requested_at,
+    due_on: record.due_on,
+    extension_count: record.extension_count,
+    answered_at: record.answered_at,
+    answered_on: record.answered_on,
+    outcome: record.outcome,
+  };
+}
+
+function projectRaitDraft(
+  record: RaitDraft,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitDraftRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      version: record.version,
+      status: record.status,
+      submitted_at: record.submitted_at,
+      returned_at: record.returned_at,
+      return_count: record.return_count,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      version: record.version,
+      author_id: record.author_id,
+      document_id: record.document_id,
+      content_hash: record.content_hash,
+      status: record.status,
+      submitted_at: record.submitted_at,
+      returned_at: record.returned_at,
+      return_guidance: record.return_guidance,
+      return_count: record.return_count,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      version: record.version,
+      author_id: record.author_id,
+      document_id: record.document_id,
+      content_hash: record.content_hash,
+      status: record.status,
+      submitted_at: record.submitted_at,
+      returned_at: record.returned_at,
+      return_guidance: record.return_guidance,
+      return_count: record.return_count,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    version: record.version,
+    status: record.status,
+    submitted_at: record.submitted_at,
+    returned_at: record.returned_at,
+    return_count: record.return_count,
+  };
+}
+
+function projectRaitDecision(
+  record: RaitDecision,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitDecisionRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      circuit: record.circuit,
+      decision_kind: record.decision_kind,
+      decided_at: record.decided_at,
+      published_at: record.published_at,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      circuit: record.circuit,
+      decision_kind: record.decision_kind,
+      grounds: record.grounds,
+      decided_by: record.decided_by,
+      decided_at: record.decided_at,
+      session_id: record.session_id,
+      signature_kind: record.signature_kind,
+      signature_ref: record.signature_ref,
+      published_at: record.published_at,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      circuit: record.circuit,
+      decision_kind: record.decision_kind,
+      grounds: record.grounds,
+      decided_by: record.decided_by,
+      decided_at: record.decided_at,
+      session_id: record.session_id,
+      signature_kind: record.signature_kind,
+      signature_ref: record.signature_ref,
+      published_at: record.published_at,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    circuit: record.circuit,
+    decision_kind: record.decision_kind,
+    decided_at: record.decided_at,
+    published_at: record.published_at,
+  };
+}
+
+function projectRaitCommunication(
+  record: RaitCommunication,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitCommunicationRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      channel: record.channel,
+      sent_at: record.sent_at,
+      effective_on: record.effective_on,
+      next_deadline_on: record.next_deadline_on,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      decision_id: record.decision_id,
+      channel: record.channel,
+      sent_at: record.sent_at,
+      effective_on: record.effective_on,
+      next_deadline_on: record.next_deadline_on,
+      authority_appeal_notice: record.authority_appeal_notice,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      decision_id: record.decision_id,
+      channel: record.channel,
+      sent_at: record.sent_at,
+      effective_on: record.effective_on,
+      next_deadline_on: record.next_deadline_on,
+      authority_appeal_notice: record.authority_appeal_notice,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    decision_id: record.decision_id,
+    channel: record.channel,
+    sent_at: record.sent_at,
+    effective_on: record.effective_on,
+    next_deadline_on: record.next_deadline_on,
+    authority_appeal_notice: record.authority_appeal_notice,
+  };
+}
+
+function projectRaitCaseEvent(
+  record: RaitCaseEvent,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T',
+): RaitCaseEventRead {
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      event_type: record.event_type,
+      from_state: record.from_state,
+      to_state: record.to_state,
+      occurred_at: record.occurred_at,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      event_type: record.event_type,
+      from_state: record.from_state,
+      to_state: record.to_state,
+      occurred_at: record.occurred_at,
+      actor_id: record.actor_id,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      event_type: record.event_type,
+      from_state: record.from_state,
+      to_state: record.to_state,
+      occurred_at: record.occurred_at,
+      actor_id: record.actor_id,
+    };
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    event_type: record.event_type,
+    from_state: record.from_state,
+    to_state: record.to_state,
+    occurred_at: record.occurred_at,
+  };
 }

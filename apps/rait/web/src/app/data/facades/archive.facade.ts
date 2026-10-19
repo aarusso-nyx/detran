@@ -1,3 +1,4 @@
+import type { RaitCaseRead } from '../api/case.client';
 // ArchiveFacade (contrato CTG-0002b §4.2/§4.3; M9): módulo arquivo. `busca` = casos arquivados
 // (ficha 057); `dossie` = `SealedDossier` (ficha 058); `retencao` = arquivados com `closed_at`
 // (ficha 059 — o prazo de retenção não se calcula, OD-018: só `closed_at` é exibido). SSE:
@@ -7,7 +8,7 @@ import { Injectable, inject } from '@angular/core';
 import type { RaitStreamEvent } from '../../core/sse.service';
 import { CaseClient } from '../api/case.client';
 import { RaitClock } from '../clock';
-import type { ListPage, ListQuery, RaitCase } from '../models';
+import type { ListPage, ListQuery } from '../models';
 import type { SealedDossier } from './bundles';
 import { createListFacade } from './list.facade';
 import { createReadStore } from './read-store';
@@ -24,12 +25,12 @@ export class ArchiveFacade {
   private readonly cases = inject(CaseClient);
   private readonly clock = inject(RaitClock);
 
-  readonly busca = createListFacade<RaitCase>(
+  readonly busca = createListFacade<RaitCaseRead>(
     (query) => this.cases.listRaitCase(query),
     this.clock,
   );
   readonly dossie = createReadStore<SealedDossier>(this.clock);
-  readonly retencao = createListFacade<RaitCase>(
+  readonly retencao = createListFacade<RaitCaseRead>(
     (query) => this.loadRetentionPage(query),
     this.clock,
   );
@@ -75,7 +76,7 @@ export class ArchiveFacade {
 
   private async loadRetentionPage(
     query: ListQuery,
-  ): Promise<ListPage<RaitCase>> {
+  ): Promise<ListPage<RaitCaseRead>> {
     const page = await this.cases.listRaitCase(query);
     const items = page.items.filter(
       (item) => item.closed_at !== null && item.closed_at !== undefined,
