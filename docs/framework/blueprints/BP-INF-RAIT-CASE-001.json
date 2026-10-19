@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitCase",
     "namespace": "inf",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "ddlFile": "34-inf-rait-case.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
@@ -59,6 +59,14 @@
       {
         "target": "handwritten/rait-case-scoped-reads.controller",
         "symbol": "RaitCaseScopedReadsController"
+      },
+      {
+        "target": "handwritten/rait-claim-context.controller",
+        "symbol": "RaitClaimContextController"
+      },
+      {
+        "target": "handwritten/rait-case-risk.controller",
+        "symbol": "RaitCaseRiskController"
       }
     ],
     "handwrittenProviders": [
@@ -97,6 +105,18 @@
       {
         "target": "handwritten/rait-case-pool-scope.service",
         "symbol": "RaitCasePoolScopeService"
+      },
+      {
+        "target": "handwritten/rait-claim-context.service",
+        "symbol": "RaitClaimContextService"
+      },
+      {
+        "target": "handwritten/rait-case-risk.service",
+        "symbol": "RaitCaseRiskService"
+      },
+      {
+        "target": "handwritten/rait-legacy-qualification.service",
+        "symbol": "RaitLegacyQualificationService"
       }
     ],
     "handwrittenExports": [
@@ -111,11 +131,21 @@
       "handwritten/rait-admissibility-command.service",
       "handwritten/rait-case-scoped-reads.controller",
       "handwritten/rait-case-scope.service",
-      "handwritten/rait-case-pool-scope.service"
+      "handwritten/rait-case-pool-scope.service",
+      "handwritten/rait-claim-context.controller",
+      "handwritten/rait-case-risk.controller",
+      "handwritten/rait-claim-context.service",
+      "handwritten/rait-case-risk.service",
+      "handwritten/rait-risk.port",
+      "handwritten/rait-legacy-qualification.service"
     ],
     "owners": ["detran-inf"],
-    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant. v1.2.0: P4-02-S1, ADR-0046/0047 and closed T0 access/triage maps replace generated HTTP with scoped purpose projections; internal explicit read-scope and case-pool records expose no CRUD. WF-RAIT-001/002 and existing legal command transitions remain unchanged.",
-    "moduleExports": ["RaitCaseScopeService"]
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant. v1.2.0: P4-02-S1, ADR-0046/0047 and closed T0 access/triage maps replace generated HTTP with scoped purpose projections; internal explicit read-scope and case-pool records expose no CRUD. WF-RAIT-001/002 and existing legal command transitions remain unchanged. v1.3.0: approved P4-02-S2 backend selector, current read-only risk composition and append-only legacy qualification (ADR0045/48/49); no UI, provisioning, clock publication or production activation.",
+    "moduleExports": [
+      "RaitCaseScopeService",
+      "RaitCaseRiskService",
+      "RaitLegacyQualificationService"
+    ]
   },
   "database": {
     "entities": [
@@ -1951,6 +1981,153 @@
             }
           }
         ]
+      },
+      {
+        "name": "RaitClaimLegacyQualification",
+        "table": "rait_claim_legacy_qualification",
+        "primaryKey": ["id"],
+        "description": "ADR0048: append-only server-owned, case-version-bound legacy disposition. Source references require same-tenant authentic history/audit/pool validation; state or opaque strings alone do not qualify. No public CRUD, automatic backfill, recovery or production seed. Append-only enforcement requires supporting approved19 constraints where blueprint cannot express it.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "writable": false,
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "case_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "observed_version",
+            "type": "integer",
+            "writable": false
+          },
+          {
+            "name": "observed_state",
+            "type": "varchar(40)",
+            "writable": false
+          },
+          {
+            "name": "assignment_status",
+            "type": "varchar(30)",
+            "writable": false
+          },
+          {
+            "name": "classification",
+            "type": "varchar(30)",
+            "writable": false
+          },
+          {
+            "name": "revision",
+            "type": "integer",
+            "writable": false
+          },
+          {
+            "name": "admission_ref",
+            "type": "text",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "distribution_ref",
+            "type": "text",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "assignment_ref",
+            "type": "text",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "pool_scope_ref",
+            "type": "text",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "reviewer_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "authorization_ref",
+            "type": "text",
+            "writable": false
+          },
+          {
+            "name": "observed_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          {
+            "name": "created_at",
+            "type": "timestamptz",
+            "writable": false,
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_claim_legacy_revision",
+            "columns": ["tenant_id", "case_id", "observed_version", "revision"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_claim_legacy_positive_version",
+            "expression": "observed_version > 0 and revision > 0"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_classification",
+            "expression": "classification in ('qualified_unassigned','preserve_assigned','hold')"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_assignment_status",
+            "expression": "assignment_status in ('unassigned','assigned')"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_authorization",
+            "expression": "length(btrim(authorization_ref)) > 0"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_qualified",
+            "expression": "classification <> 'qualified_unassigned' or (observed_state = 'DISTRIBUIDO' and assignment_status = 'unassigned' and admission_ref is not null and length(btrim(admission_ref)) > 0 and distribution_ref is not null and length(btrim(distribution_ref)) > 0 and pool_scope_ref is not null and length(btrim(pool_scope_ref)) > 0)"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_assigned",
+            "expression": "classification <> 'preserve_assigned' or (assignment_status = 'assigned' and assignment_ref is not null and length(btrim(assignment_ref)) > 0)"
+          },
+          {
+            "name": "ck_inf_rait_claim_legacy_hold",
+            "expression": "classification <> 'hold' or (reason is not null and length(btrim(reason)) > 0)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_claim_legacy_case",
+            "columns": ["tenant_id", "case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
       }
     ]
   },
@@ -2069,6 +2246,12 @@
         "entity": "RaitCasePoolScopeRecord",
         "path": "internal/case-pool-scope",
         "resource": "rait-case-pool-scope",
+        "operations": []
+      },
+      {
+        "entity": "RaitClaimLegacyQualification",
+        "path": "internal/claim-legacy-qualification",
+        "resource": "rait-claim-legacy-qualification",
         "operations": []
       }
     ]

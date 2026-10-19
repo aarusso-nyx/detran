@@ -793,10 +793,354 @@
         "operationId": "raitPoolClaimNext",
         "responses": {
           "200": {
-            "description": "Próximo caso atribuído"
+            "description": "Selected CASE identity, final non-null assignment and exact transactional events; not an assignment entity.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "description": "Strong final case version: v+2 for new defense, v+1 for qualified legacy.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^\"[1-9][0-9]*\"$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data", "events"],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RaitClaimCaseResult"
+                    },
+                    "events": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.QUEUE_EMPTY",
+                        "RAIT.CASE_POOL_UNRESOLVED",
+                        "RAIT.CLAIM_LEGACY_UNVERIFIED",
+                        "RAIT.IDEMPOTENCY_REPLAY",
+                        "RAIT.ASSIGNMENT_ALREADY_ACTIVE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.MEMBER_NOT_AVAILABLE",
+                        "RAIT.PARAMETER_SOURCE_PENDING",
+                        "RAIT.ASSIGNMENT_WIP_LIMIT"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
-        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged."
+        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged.",
+        "description": "ADR0045/48/49: strict selector body. Supplied If-Match is rejected400. New defense ADMITIDO v+2; qualified legacy DISTRIBUIDO v+1. Preserve existing other-instance behavior. Actor-bound exact replay reauthorizes current scope without rerunning first-use selection/WIP.",
+        "x-rait-resource": "inf:rait-case",
+        "x-rait-action": "claim-next",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/RaitCommandIdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RaitClaimNextInput"
+              }
+            }
+          }
+        }
       }
     },
     "/v1/inf/rait/inquiries/{id}/commands/answer": {
@@ -6376,6 +6720,541 @@
         },
         "description": "Retained implemented validation boundary; closed generic writable set has no viable mutation. Existing owner commands remain the only positive lifecycle path. No success/no-op result."
       }
+    },
+    "/v1/inf/rait/claim-context": {
+      "get": {
+        "operationId": "raitClaimContext",
+        "x-rait-resource": "inf:rait-case",
+        "x-rait-action": "claim-next",
+        "x-rait-scope": "Complete S1 authenticated role/action/purpose and exact parent/pool predicates; no actor/tenant/purpose query authority.",
+        "responses": {
+          "200": {
+            "description": "Current scoped read-only snapshot; no assignment or domain/audit writes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data"],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RaitClaimContext"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_POOL_UNRESOLVED",
+                        "RAIT.CLAIM_LEGACY_UNVERIFIED"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pool_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pool_cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "queue_cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
+        "description": "Complete-set pool eligibility and safe metadata only. Zero:none, one:single automatically selected, multiple:choice; explicit authorized pool_id selects a member of that complete set. No selection yields an empty queue. Cursor binds selection/scope/order; missing/invalid current sources fail the whole selected pool before pagination."
+      }
+    },
+    "/v1/inf/rait/cases/{id}/risk": {
+      "get": {
+        "operationId": "raitCaseRiskSnapshot",
+        "x-rait-resource": "inf:rait-case",
+        "x-rait-action": "read",
+        "x-rait-scope": "Complete S1 authenticated role/action/purpose and exact parent/pool predicates; no actor/tenant/purpose query authority.",
+        "responses": {
+          "200": {
+            "description": "Current scoped read-only snapshot; no assignment or domain/audit writes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["data"],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RaitRiskSnapshot"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
+                      "properties": {
+                        "wip": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RaitCaseId"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -9679,6 +10558,290 @@
         "additionalProperties": false,
         "properties": {},
         "minProperties": 1
+      },
+      "RaitClaimNextInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {}
+      },
+      "RaitClaimPoolSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "instance", "unit_id"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "enum": ["defesa_previa"]
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "RaitClaimQueueItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "protocol_number",
+          "instance",
+          "state",
+          "protocolled_at",
+          "unit_id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol_number": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string",
+            "enum": ["defesa_previa"]
+          },
+          "state": {
+            "type": "string",
+            "enum": ["ADMITIDO", "DISTRIBUIDO"]
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "RaitClaimContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eligiblePoolCount",
+          "selection",
+          "selectedPoolId",
+          "reason",
+          "pools",
+          "queue"
+        ],
+        "properties": {
+          "eligiblePoolCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "selection": {
+            "type": "string",
+            "enum": ["none", "single", "choice"]
+          },
+          "selectedPoolId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "Safe unavailability explanation, without case/person identities; null when none needed."
+          },
+          "pools": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["items", "nextCursor"],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RaitClaimPoolSummary"
+                }
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "queue": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["items", "nextCursor"],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RaitClaimQueueItem"
+                }
+              },
+              "nextCursor": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "RaitRiskClockSnapshot": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["clockCode", "applicability", "flag", "ceilingOn"],
+            "properties": {
+              "clockCode": {
+                "type": "string",
+                "enum": ["A", "B", "C", "D"]
+              },
+              "applicability": {
+                "type": "string",
+                "enum": ["applicable"]
+              },
+              "flag": {
+                "type": "string",
+                "enum": [
+                  "SEM_RISCO",
+                  "ALERTA_N1",
+                  "ALERTA_N2",
+                  "ALERTA_N3",
+                  "CRITICO",
+                  "PRESCRITO_OPERACIONAL"
+                ]
+              },
+              "ceilingOn": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["clockCode", "applicability"],
+            "properties": {
+              "clockCode": {
+                "type": "string",
+                "enum": ["A", "B", "C", "D"]
+              },
+              "applicability": {
+                "type": "string",
+                "enum": ["not_applicable"]
+              }
+            }
+          }
+        ]
+      },
+      "RaitRiskSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asOf", "today", "clocks", "worstFlag", "sourceVersions"],
+        "properties": {
+          "asOf": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "today": {
+            "type": "string",
+            "format": "date"
+          },
+          "clocks": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/components/schemas/RaitRiskClockSnapshot"
+            }
+          },
+          "worstFlag": {
+            "type": "string",
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "nullable": true
+          },
+          "sourceVersions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RaitClaimCaseResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "state", "version", "instance", "assignment_id"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["EM_INSTRUCAO"]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "instance": {
+            "type": "string",
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "cetran_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "assignment_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
       }
     },
     "parameters": {

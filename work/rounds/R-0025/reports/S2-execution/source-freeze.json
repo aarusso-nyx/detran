@@ -1,0 +1,173 @@
+{
+  "schemaVersion": "1.0.0",
+  "packet": "P4-02-S2",
+  "checkpoint": "Architect canonical sources, not runtime acceptance",
+  "baseline": "b1faf78d",
+  "owner_amendments": [
+    "S2-R1 external resources",
+    "S2-R2 bounded four-key parameter parser, parent-recorded2a82c8e8"
+  ],
+  "files": [
+    {
+      "path": "docs/framework/arch/parameter-catalogue.md",
+      "sha256": "8f0eb7b9bfc7b0301c344c0813212cada9581a50a5e7eeb3b95c93d431759d60"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+      "sha256": "01130d65517a5d9f6c2d36f2f22f6bfd96ce42a1a048df8e806af3ceca2e9683"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-RAIT-WORKLIST-001.json",
+      "sha256": "dbdb30cf6d6e61f8180f89ece1cf3a2b22b13e3bb2d41e3480c7d13f917688f5"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+      "sha256": "746a7c97bdb5f48be0a2129c77cd205d2195681259839a56124e495656afc6c5"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.commands.openapi.json",
+      "sha256": "e1414acd90340b27afe40e4bfd8b2a7741a041da68a8832b1f7248c1fe8cd5a4"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.openapi.json",
+      "sha256": "53600f4ff425a00b02c40bf66b6661f20e4bb033be3d6f75e7dcbff9b240e96a"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.openapi.json",
+      "sha256": "ac2e2350eeed0148cfb0e7ab9e1134ee1a3c7797092b9904fe4a0e0157fa7aba"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-freeze.md",
+      "sha256": "2b14893898eca4020ac08761bfd62f47ab855d645b1a090b49b71c4d998ed01e"
+    }
+  ],
+  "read_sources": [
+    {
+      "path": "docs/meta/adr/ADR-0037-rait-legal-priority-owner-policy.md",
+      "sha256": "f9ba64df607699f5963eeff9bc26f180f5c66c0b99980d5598fb191286dd85c1"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0045-rait-claim-selector-contract.md",
+      "sha256": "96e309664da5939c9cc745de7de1cf08fd62d3ec942df1b74489b5bf56fc8286"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md",
+      "sha256": "fd987e65b47828a98d6efc62d42aae3cfa7a44c42143c58ab424341d3d7c78fb"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0047-rait-role-purpose-and-staff-identity.md",
+      "sha256": "25cb5b16a373eb2f69881b957829cd76a1a19cc621e9b943a11d6410f6f062cc"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0048-rait-legacy-defense-claim-compatibility.md",
+      "sha256": "3b5870772e649b442db5d4f2b4fa881dcf521a45123a8867897cbf7292fa8f3f"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0049-rait-authoritative-risk-composition.md",
+      "sha256": "dfa3d71ef6f0785500a2758282af01c9cc912c10b056f1eb269b86c4bd082662"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0052-rait-command-replay-provenance.md",
+      "sha256": "2c8f4083a62efb58c73de5d68ddeb9dc55dc39b60fc48025b3f97f3f5b22643c"
+    },
+    {
+      "path": "work/rounds/R-0025/contracts/P4-02-deadlines-risk-api.md",
+      "sha256": "44d3b806c097633277a821cdcdd52f1930726d3400993e61b93fd3eed4f6e4f2"
+    },
+    {
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "sha256": "5b14851f6be453e91304af9324809043678d37f4d9edc0eb66c8b6509cf66235"
+    },
+    {
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-triage-fields.md",
+      "sha256": "4e4753532c51efba2ae543397b60a8fd40ccdc90255091572e6e6cde6a08d54a"
+    },
+    {
+      "path": "docs/framework/arch/rait-deadline-engine.md",
+      "sha256": "8d4f039d0b13ffbd4a019fae0ebb284e14c51fd9c4b5e96b2ffd74c5665be669"
+    },
+    {
+      "path": "tools/parameters/parser.mjs",
+      "sha256": "a3a34ec9f2ad53679c8be70f7583450591f53eb45f8008d7c847c206beeaffa3"
+    }
+  ],
+  "added_operations": [
+    {
+      "method": "GET",
+      "path": "/v1/inf/rait/claim-context",
+      "operationId": "raitClaimContext",
+      "resource": "inf:rait-case",
+      "action": "claim-next"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/inf/rait/cases/{id}/risk",
+      "operationId": "raitCaseRiskSnapshot",
+      "resource": "inf:rait-case",
+      "action": "read"
+    }
+  ],
+  "diagnostics": [
+    {
+      "command": "pnpm contracts:openapi",
+      "result": "exit0 contracts written48; only approved CASE/WORKLIST inputs changed; parent must inspect exact output scope before commit"
+    },
+    {
+      "command": "parseCatalogue(canonicalPath)",
+      "result": "exit0; four ladder source cells recognized; all four value_json remain strings until approved S2-R2 parser implementation (expected source prerequisite)"
+    },
+    {
+      "command": "prettier on five canonical sources",
+      "result": "exit0"
+    },
+    {
+      "command": "node tools/contracts/generate-openapi.mjs --check; node tools/contracts/check-commands.mjs",
+      "result": "OpenAPI check PASS; route check reports exactly raitClaimContext/raitCaseRiskSnapshot missing mounted handwritten runtime before Engineer (expected source-stage RED, not runtime delivery PASS)."
+    },
+    {
+      "command": "Final targeted Prettier formatting",
+      "result": "All owned source/report files formatted; final CASE transport reformat after safe error context typing. No running validation remains."
+    }
+  ],
+  "unexecuted": [
+    "runtime implementation",
+    "Inspector RED/GREEN",
+    "real HTTP+DB",
+    "production source qualification",
+    "S3/browser acceptance"
+  ],
+  "graft": {
+    "query": "RAIT risk source parameter loader",
+    "mode": "lexical",
+    "tokens_saved_estimate": 9343,
+    "authority": "navigation only, exact files govern"
+  },
+  "constraints": [
+    "No Git/state/proof/runtime/test edits",
+    "No manual generated code",
+    "No proposed parameter activation",
+    "No new source store/producer or production receipt"
+  ],
+  "remaining_operational_inputs": [
+    "qualified current timers and A180/360 source proof",
+    "C movement/D interruption policy and actual events",
+    "qualified executable operational ladder versions/activation",
+    "verified incident source receipts when required",
+    "trusted deployed legacy inventory/dispositions",
+    "production identity/routing/provider qualification"
+  ],
+  "internal_port_names": [
+    "RAIT_RISK_SNAPSHOT_FACTORY",
+    "RaitRiskQualificationStatus",
+    "RaitRiskIncidentQualification",
+    "RaitRiskSourceSnapshot",
+    "RaitRiskSnapshotReader.read",
+    "RaitRiskSnapshotFactory.create",
+    "RAIT_RISK_PROVENANCE_READER",
+    "RaitRiskProvenanceRequest",
+    "RaitRiskProvenanceResult",
+    "RaitRiskProvenanceReader.qualify",
+    "RaitRiskSnapshotModule",
+    "SqlRaitRiskSnapshotFactory"
+  ]
+}
