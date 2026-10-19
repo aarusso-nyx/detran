@@ -129,6 +129,13 @@ function transactionalPort(scenario: { case: CaseRow; inquiry?: InquiryRow }) {
             ? [{ id: values[1] }]
             : [],
       };
+    if (sql.includes('from inf.rait_case c where c.tenant_id=$1 and c.id=$2'))
+      return {
+        rows:
+          values[0] === TENANT && values[1] === CASE && values[2] === POOL
+            ? [{ id: CASE }]
+            : [],
+      };
     if (sql.includes('from inf.rait_case c where c.tenant_id=$1'))
       return {
         rows:
