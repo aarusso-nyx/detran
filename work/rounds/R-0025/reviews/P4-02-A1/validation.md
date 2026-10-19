@@ -28,3 +28,14 @@ final post-correction checks are recorded only after their actual execution.
 Any authored-document failure will be distinguished from baseline failure. No
 runtime/RED tests or generators execute for this contract-only PR; the amendment
 names their required future gates instead of treating their absence as PASS.
+
+Documentation check passed sync307 pages, TypeScript and production build.
+Review1 of f23224b3 returned FAIL and is preserved. Corrections address effective
+strict policy precedence (the earlier command-mismatch conclusion was incorrect),
+exact new read roles/retained writer predicates, routing writer/partition/error,
+internal legacy classification storage, additive public deadlines API, A/C ladder
+inputs, AUDITOR archive and clock-alert parent. Risk flag publication is deferred
+to avoid activating a partial SSE/DASHBOARD/infraction feed; request-time current
+risk remains mandatory, with scoped typed read and no persistence/outbox changes.
+PRESCRITO_OPERACIONAL without required qualified incident input fails safely503.
+These are contract corrections, not executed controls or new production facts.

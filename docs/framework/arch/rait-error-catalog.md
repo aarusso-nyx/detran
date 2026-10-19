@@ -318,3 +318,10 @@ implementation. This catalogue amendment activates no route or runtime code.
 These are not new legal outcomes, QUEUE_EMPTY aliases or substitutes for the
 jeton parameter guard. Unknown risk is not low risk; unresolved legacy work is
 not silently discarded. Existing other command errors remain unchanged.
+
+The same A1 routing boundary also defines `RAIT.CASE_POOL_UNRESOLVED` (409):
+server cannot establish the exact pool association for a potentially in-scope
+candidate. Claim/context return no candidate details or effects, and authorized
+operational inventory retains the pending case. This is not a fifth admissibility
+criterion and never turns unresolved routing into QUEUE_EMPTY. ADR0047 names the
+internal writer and protocol/admit resolution lifecycle; no public routing API.

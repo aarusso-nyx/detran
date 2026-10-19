@@ -134,3 +134,13 @@ missing/forged evidence and parent-class mismatches fail closed. A future
 requirement to inspect petition binaries, obtain document URLs or add a new trust
 provider exceeds this packet and needs an explicit bounded amendment; no such
 implementation or permission is inferred here.
+
+### Current-risk read supplement
+
+ADR0049 defers persisted flag changes/publication. Existing clock records and
+flag_changed_at remain stored chronology, not assessment proof. Where the header
+shows current risk, use the generated typed raitCaseRiskSnapshot read from the
+amendment (same case scope) and its asOf/sourceVersions. Derive the view's flag
+from that snapshot; never cast it to a complete stored RaitClock DTO or fabricate
+a changed-at timestamp. Missing source displays the existing unavailable/error
+state rather than a default low-risk chip. No flag/SSE/DASHBOARD feed is activated.

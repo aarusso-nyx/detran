@@ -59,6 +59,31 @@ selection, preserving it and its reason in the authorized inventory. It is never
 treated as admitted/claimed. Release requires the deployed inventory and approved
 disposition for every affected category; fixture coverage is not a substitute.
 
+The durable owner is CASE: internal blueprint entity RaitClaimLegacyQualification,
+table inf.rait_claim_legacy_qualification, operations[]. Fields: id,tenant_id,
+case_id,observed_version,observed_state,assignment_status,classification,revision,
+admission_ref,distribution_ref,assignment_ref,pool_scope_ref,reason,reviewer_id,
+authorization_ref,observed_at,created_at. Composite tenant/case FK; unique
+(tenant_id,case_id,observed_version,revision); positive version/revision; nonempty
+reviewer/authorization provenance. Source refs are validated against the same
+current case/tenant, not accepted as arbitrary strings or browser payload.
+
+Classification is qualified_unassigned, preserve_assigned or hold. Qualified
+requires DISTRIBUIDO, no active assignment and nonempty verified admission,
+distribution and pool refs; preserve_assigned requires active assignment/ref.
+Hold may lack those proofs but requires nonempty reason and authorization ref.
+Append revisions; do not rewrite/delete previous dispositions. Select the latest
+qualified revision under the locked current case/version, reject contradictory
+or stale sources. CASE-owned rait-legacy-qualification.service.ts is the named
+internal resolver/writer; no public classification CRUD or invented operator role.
+Explicit authorized operational receipts/qualified fixtures provide its input.
+No table or production row is created by this documentation PR.
+
+Exact successful replay follows ADR0046 and reauthorizes current assigned-case
+read/action; it does not rerun first-use legacy version/provenance selection after
+success changed the case version. Keep the first-use qualification reference as
+historical evidence and never convert a retry into a new assignment.
+
 Old actorless replay remains safe409 under ADR0046; do not infer its actor from
 case ownership or alter other commands' fingerprints/historical responses. No
 recovery action happens automatically after an uncertain response.

@@ -37,7 +37,8 @@ Output includes each evaluated flag, worst-case key, asOf and source versions.
 The clock applicability set must be explicit: missing is not not-applicable.
 No default assessment, client date, raw age heuristic, NULL→none or unknown→low.
 
-The CASE-owned snapshot adapter resolves trusted current source records in the
+The CASE-owned snapshot adapter and scoped raitCaseRiskSnapshot read resolve
+trusted current source records in the
 same tenant transaction for claim-context and claim. Evaluate every in-scope
 candidate before ordered pagination/selection; a missing candidate's risk cannot
 be hidden by a capped fetch or silently omitted to make another case first.
@@ -45,35 +46,44 @@ Claim re-evaluates in its locked transaction; discovery is not a lease. Never
 reuse an asynchronous cached flag unless its input versions/instant are proved
 current under this same contract. GET remains read-only.
 
-WORKLIST owns persistence of its clock/alert records and the existing flag-change
-outbox event. Its producer consumes the same public calculation/snapshot contract;
-CASE never imports WORKLIST back and never copies its mutation policy. Compose
-an explicit transaction-bound risk-commit port in backend/app so CASE claim can
-commit required qualified flag changes together with assignment/state/history,
-without a circular package dependency. Required port/source absent means failure
-before writes, not an optional fallback. WORKLIST already depends on CASE; CASE
-continues to depend only on the public deadlines library/its existing packages.
+WORKLIST's scoped clock-risk reads consume the same CASE snapshot provider via
+the existing WORKLIST→CASE dependency. CASE consumes only the public deadlines
+library, not WORKLIST. backend/app binds the mandatory read-only snapshot factory;
+no transaction commit/persistence port is introduced for risk in this packet.
+Claim audit records the evaluated source/version references as part of its own
+transaction; that does not change stored clock flags or publish a flag event.
 
-Use the existing event topic/envelope, actor/tenant/audit and idempotent outbox
-infrastructure for actual changed flags. Distinct risk effects use attempt+clock
-identity+source-version/flag keys, never collide with claim case-stage keys, and
-retries emit no duplicate effects. No new public SSE topic, browser provider,
-DASHBOARD logic, notification escalation, scheduler activation or automatic legal
-extinction/incident creation is commissioned. An overdue flag's existing required
-incident/provenance constraints must be satisfied, never fabricated to persist it.
-The request snapshot provides current ordering; enabling a periodic full sweeper
-is outside this bounded packet and is not claimed complete under OD-D17.
+**Defer risk flag persistence and publication.** Existing consumers of
+rait.clock.flag-changed include SSE, DASHBOARD and infraction; publishing only
+claim-evaluated cases would create partial radar coverage. No such partial feed
+is activated. No clock/alert writes, flag-change outbox event, notification,
+scheduler/sweeper, automatic legal extinction or incident creation is commissioned.
+OD-D17's full publisher remains open; current request-time calculation is the
+bounded producer required for selector correctness, not a claim of radar freshness.
+A future full-coverage producer/publisher requires its own reviewed operational
+packet and consumer acceptance. Existing case/assignment events remain unchanged.
+
+If current evaluation reaches PRESCRITO_OPERACIONAL without the existing required
+qualified incident/provenance input, claim returns RISK_SOURCE_UNAVAILABLE503 and
+rolls back with no assignment/state/audit/outbox effects. Never create an incident
+or downgrade the flag to make claim succeed. Such records remain operational
+release inputs; existing legal expiry commands remain under their own contracts.
+
+The additive public API is frozen in
+[the CTG-0001 §5 supplement](../../../work/rounds/R-0025/contracts/P4-02-deadlines-risk-api.md).
+It extends R-0006's fixed library API by exact new names without editing its
+historical contract. No existing export/engine/date behavior changes.
 
 ## Failure and delivery boundary
 
 Use RAIT.RISK_SOURCE_UNAVAILABLE503 for missing/conflicting/unverified risk sources
-or mandatory composition; return no case/person details and make no claim effect.
+or mandatory snapshot composition; return no case/person details and make no claim effect.
 This is an explicit transport/invariant error, not a new legal outcome. Fully
 qualified data that proves SEM_RISCO is different from an absent/default value.
 Parameter-source diagnostics remain internal/authorized; do not overload the
 jeton-specific parameter error or QUEUE_EMPTY.
 
-New calculation/adapter/commit-port paths and parameter-source normalization are
+New calculation/adapter/snapshot-port paths and parameter-source normalization are
 bounded in the amendment. Generated artifacts come only from their canonical
 inputs. No change to legal timers, expiry effects, priority/WIP values, provider
 identity, package pins or operational production data. Real HTTP+DB ordering,

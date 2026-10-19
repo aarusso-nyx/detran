@@ -70,7 +70,30 @@ compatibility. No first-pool, all-pools-in-unit or browser-supplied association.
 Missing/ambiguous association denies pool-scoped access; a separately authorized
 unit binding may still satisfy the unit rule. Internal routing/provenance records
 are operational inputs; no new public routing API or automatic historic migration.
-Same containment applies to selector candidate routing where multiple pools exist.
+Same containment applies to selector candidate routing. Partition is explicit
+whenever more than one active defense pull pool matches the case unit/instance;
+unit/instance equality alone never chooses between those pools.
+
+The named writer is CASE-owned rait-case-pool-scope.service.ts. Existing protocol
+and admit commands call its server resolver in their transaction: exactly one
+compatible active pool in canonical operational configuration may generate the
+case link with that command/pool provenance. With multiple pools, only a verified
+explicit case routing disposition may choose one; no first-pool fallback. The same
+internal writer applies an Owner-authorized operational routing receipt, with
+current actor/source provenance, parent/version validation and append-only audit.
+It exposes no HTTP/CRUD route and performs no production provisioning in this PR.
+Existing assignment or batch sources can establish exact pool links only where
+actually present; they cannot qualify a new unassigned case circularly.
+
+Missing routing does not invalidate legal admissibility or add a fifth criterion.
+Protocol/triage/admit retain their existing legal/If-Match guards; if no qualified
+route can be written, retain the unlinked case for authorized operational inventory.
+For any potentially in-scope ADMITIDO/legacy-unassigned candidate in the selected
+pool's unit/instance whose exact pool association is unresolved, claim-context and
+claim stop with RAIT.CASE_POOL_UNRESOLVED409 and no candidate disclosure or writes,
+rather than silently omit it/return QUEUE_EMPTY. Scope resolves ordinary reads
+fail-closed meanwhile. The internal writer and new error are bounded by A1;
+release requires the routing inventory to be qualified.
 
 ## Canonical authenticated staff identifier — D9
 
