@@ -130,6 +130,7 @@ describe('CTG-0001 §10.4/§10.6/§10.7 — superfície pública C3', () => {
       { documentIds: ['document'], answeredOn: '2026-09-15' },
       '"1"',
       'r7-c3-controller',
+      { setHeader },
       {
         principal: {
           id: '00000000-0000-4000-8000-0000b0000001',
@@ -138,7 +139,6 @@ describe('CTG-0001 §10.4/§10.6/§10.7 — superfície pública C3', () => {
           tenants: ['00000000-0000-7000-8000-00000000a001'],
         },
       },
-      { setHeader },
     );
     expect(setHeader).toHaveBeenCalledWith('ETag', '"2"');
     expect(body).toEqual({
