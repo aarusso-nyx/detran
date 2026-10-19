@@ -1073,6 +1073,43 @@ export interface components {
       updated_at?: string | null;
     };
     CreateRaitCasePoolScopeRecordDto: Record<string, never>;
+    /** @description ADR0048: append-only server-owned, case-version-bound legacy disposition. Source references require same-tenant authentic history/audit/pool validation; state or opaque strings alone do not qualify. No public CRUD, automatic backfill, recovery or production seed. Append-only enforcement requires supporting approved19 constraints where blueprint cannot express it. */
+    RaitClaimLegacyQualification: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      case_id: string;
+      observed_version: number;
+      observed_state: string;
+      /** @enum {string} */
+      assignment_status: 'unassigned' | 'assigned';
+      /** @enum {string} */
+      classification: 'qualified_unassigned' | 'preserve_assigned' | 'hold';
+      revision: number;
+      admission_ref?: string | null;
+      distribution_ref?: string | null;
+      assignment_ref?: string | null;
+      pool_scope_ref?: string | null;
+      reason?: string | null;
+      /** Format: uuid */
+      reviewer_id: string;
+      authorization_ref: string;
+      /** Format: date-time */
+      observed_at: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitClaimLegacyQualificationDto: Record<string, never>;
   };
   responses: never;
   parameters: never;
