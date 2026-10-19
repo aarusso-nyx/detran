@@ -204,8 +204,9 @@ positive separately from missing-original-provenance and ambiguous-reset negativ
 
 ## Exact request cardinality
 
-Each qualification request covers one clock (identified by exactly one clock row)
-or one selected parameter. The factory composes four applicability records from
+Each applicable-clock qualification request covers one actual clock row, or one
+selected parameter for parameter qualification. The explicit B-defense-NA
+applicability kind below is the sole no-clock/no-timer exception. The factory composes four applicability records from
 those complete requests; four clock rows in one unconstrained bag are not proof.
 The JSON kindCardinalities is normative. At most one current source timer for that
 clock; match actual tenant/parent/code/instance. One selected parameter per parameter
@@ -215,6 +216,34 @@ such rows must be present, not a convenient subset. Reject unrelated extras and
 unresolved competing current reset/interruption/alert sources. Exact table fieldsets
 remain mandatory for every row. This is completeness validation, not automatic
 inference that absence of an optional event means no event ever happened.
+
+## Explicit B-defense not-applicable provenance
+
+Add the narrowly typed internal kind `applicability` to the existing provenance
+request union. Its **only** meaning is clockCode B, persisted case instance
+`defesa_previa`, applicability `not_applicable`. Thus the existing envelope remains
+unambiguous without adding a synthetic clock/timer row or changing public risk API.
+Other clock/instance/state uses of this kind reject503. There is no general-purpose
+caller-selected applicability grant.
+
+The exact source set is one real current case, its actual linked AIT and infraction,
+with full allowlisted field projections and independent authenticated B-defense-NA
+disposition receipt. Reader verifies persisted instance, tenant/parent relationships,
+current content revisions and receipt origin. RN110/111 and ARCH-RAIT-DEADLINES4
+provide B's judging-instance applicability source. A source hash or absent B timer
+alone is not an admitted disposition. Bind accepted source references/decision
+provenance as needed through the same existing receipt core; invent no writer/action.
+
+After independent qualification, the real factory emits the existing API supplement
+record `{clockCode:'B',applicability:'not_applicable',sourceRef,sourceVersions}`,
+with internal verified sourceRef and opaque qualified sourceVersions. No B flag,
+ceiling, timer or fake row is emitted. The other A/C/D applicable records remain
+fully qualified under their real clock/timer requirements. Missing/ambiguous NA
+provenance503; unsupported other-instance/state reads503 rather than inferred NA.
+Inspector positive must use actual persisted defense case/owner rows and independently
+precomputed explicit NA receipt; deleted/mismatched/changed-instance or untrusted
+receipt negatives must fail. This transcribes the original source-freeze's explicit
+B-defense-NA requirement; it adds no new domain rule, permission, producer or store.
 
 ## Legacy disposition provenance through the same internal boundary
 
