@@ -70,10 +70,10 @@ async function effects() {
     (select count(*)::int from integration.outbox) outbox,
     (select count(*)::int from integration.idempotency_keys) idem,
     (select count(*)::int from audit.events) audit,
-    (select count(*)::int from audit.events where action='INF_RAIT_CASE_PROTOCOL') protocolAudit,
-    (select count(*)::int from audit.events where action='INF_RAIT_CASE_ADMIT') admitAudit,
-    (select count(*)::int from audit.events where action='INF_RAIT_CASE_POOL_SCOPE_ACTIVATE') routingAudit,
-    (select count(*)::int from audit.events where action='INF_RAIT_COMMAND_REPLAY_BIND') replayAudit,
+    (select count(*)::int from audit.events where action='INF_RAIT_CASE_PROTOCOL') "protocolAudit",
+    (select count(*)::int from audit.events where action='INF_RAIT_CASE_ADMIT') "admitAudit",
+    (select count(*)::int from audit.events where action='INF_RAIT_CASE_POOL_SCOPE_ACTIVATE') "routingAudit",
+    (select count(*)::int from audit.events where action='INF_RAIT_COMMAND_REPLAY_BIND') "replayAudit",
     (select count(*)::int from inf.rait_priority_assessment) priority`);
   return rows[0];
 }
@@ -488,6 +488,207 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
         'rait-coordinator',
         COORDINATOR,
       );
+      expect([400, 404], JSON.stringify(response.body)).toContain(
+        response.status,
+      );
+      expect(response.body).not.toHaveProperty('data');
+      expect(await effects()).toEqual(before);
+    });
+  for (const [role, actor] of [
+    ['rait-secretary', RAIT_SECRETARY],
+    ['rait-manager', MANAGER],
+    ['rait-coordinator', COORDINATOR],
+    ['rait-rapporteur', RAPPORTEUR],
+    ['rait-chair', CHAIR],
+  ] as const)
+    it(`${role} batch-item list and detail expose exactly the four sourced fields`, async () => {
+      if (role !== 'rait-rapporteur') await fixture.scope(actor, role);
+      const response = await get(`${PREFIX}/batch-items`, role, actor);
+      expect(response.status, JSON.stringify(response.body)).toBe(200);
+      const rows = bodyRows(response.body);
+      expect(rows.length).toBeGreaterThan(0);
+      const keys = ['id', 'case_id', 'batch_id', 'member_id'].sort();
+      for (const row of rows) expect(Object.keys(row).sort()).toEqual(keys);
+      const detail = await get(
+        `${PREFIX}/batch-items/${rows[0]!.id}`,
+        role,
+        actor,
+      );
+      expect(detail.status, JSON.stringify(detail.body)).toBe(200);
+      expect(Object.keys(detail.body).sort()).toEqual(keys);
+      expect(detail.body).toEqual(rows[0]);
+    });
+  for (const [role, actor, caseId] of [
+    ['rait-analyst', RAIT_ACTOR, RAIT_CASE('07')],
+    ['rait-rapporteur', RAPPORTEUR, RAIT_CASE('11')],
+  ] as const)
+    it(`${role} own assignment alone does not reveal another member's released assignment history`, async () => {
+      const own = (
+        await owner.query(
+          `select a.id,a.pool_id from inf.rait_assignment a join inf.rait_pool_member m on m.id=a.member_id and m.tenant_id=a.tenant_id where a.tenant_id=$1 and a.case_id=$2 and a.active and m.person_id=$3`,
+          [RAIT_TENANT, caseId, actor],
+        )
+      ).rows[0];
+      expect(own).toBeDefined();
+      const other = (
+        await owner.query(
+          `select id from inf.rait_pool_member where tenant_id=$1 and pool_id=$2 and person_id<>$3 and status='ATIVO' order by id limit 1`,
+          [RAIT_TENANT, own.pool_id, actor],
+        )
+      ).rows[0];
+      expect(other).toBeDefined();
+      const agendas = (
+        await owner.query(
+          `select a.id,a.withdrawn from inf.rait_agenda_item a join inf.rait_pool_member m on m.id=a.rapporteur_member_id and m.tenant_id=a.tenant_id where a.tenant_id=$1 and a.case_id=$2 and m.person_id=$3`,
+          [RAIT_TENANT, caseId, actor],
+        )
+      ).rows;
+      for (const a of agendas)
+        await owner.query(
+          'update inf.rait_agenda_item set withdrawn=true where id=$1',
+          [a.id],
+        );
+      const id = randomUUID();
+      await owner.query(
+        `insert into inf.rait_assignment(id,tenant_id,case_id,pool_id,member_id,assigned_by,active,released_at,release_reason) values($1,$2,$3,$4,$5,$6,false,now(),'concluido')`,
+        [id, RAIT_TENANT, caseId, own.pool_id, other.id, RAIT_SECRETARY],
+      );
+      try {
+        expect(
+          (await get(`${PREFIX}/assignments/${own.id}`, role, actor)).status,
+        ).toBe(200);
+        expect(
+          (await get(`${PREFIX}/assignments/${id}`, role, actor)).status,
+        ).toBe(404);
+        const list = await get(
+          `${PREFIX}/assignments?case_id=${caseId}`,
+          role,
+          actor,
+        );
+        expect(list.status).toBe(200);
+        expect(bodyRows(list.body).some((row) => row.id === own.id)).toBe(true);
+        expect(bodyRows(list.body).some((row) => row.id === id)).toBe(false);
+        await fixture.scope(COORDINATOR, 'rait-coordinator');
+        expect(
+          (
+            await get(
+              `${PREFIX}/assignments/${id}`,
+              'rait-coordinator',
+              COORDINATOR,
+            )
+          ).status,
+        ).toBe(200);
+      } finally {
+        await owner.query('delete from inf.rait_assignment where id=$1', [id]);
+        for (const a of agendas)
+          await owner.query(
+            'update inf.rait_agenda_item set withdrawn=$2 where id=$1',
+            [a.id, a.withdrawn],
+          );
+      }
+    });
+  it('revoked operational routing cannot authorize pool-only merits through either same-unit pool', async () => {
+    const pool = RaitP402ScopeFixture.OTHER_POOL;
+    await fixture.scope(COORDINATOR, 'rait-coordinator', 'pool', pool);
+    expect(
+      (
+        await get(
+          `${PREFIX}/cases/${RAIT_CASE('03')}`,
+          'rait-coordinator',
+          COORDINATOR,
+        )
+      ).status,
+    ).toBe(200);
+    const links = (
+      await owner.query(
+        'select id,active from inf.rait_case_pool_scope where case_id=$1',
+        [RAIT_CASE('03')],
+      )
+    ).rows;
+    await owner.query(
+      'update inf.rait_case_pool_scope set active=false where case_id=$1',
+      [RAIT_CASE('03')],
+    );
+    try {
+      expect(
+        (
+          await get(
+            `${PREFIX}/cases/${RAIT_CASE('03')}`,
+            'rait-coordinator',
+            COORDINATOR,
+          )
+        ).status,
+      ).toBe(404);
+      await fixture.scope(COORDINATOR, 'rait-coordinator', 'pool');
+      expect(
+        (
+          await get(
+            `${PREFIX}/cases/${RAIT_CASE('03')}`,
+            'rait-coordinator',
+            COORDINATOR,
+          )
+        ).status,
+      ).toBe(404);
+      const list = await get(
+        `${PREFIX}/cases`,
+        'rait-coordinator',
+        COORDINATOR,
+      );
+      expect(list.status).toBe(200);
+      expect(
+        bodyRows(list.body).some((row) => row.id === RAIT_CASE('03')),
+      ).toBe(false);
+    } finally {
+      for (const link of links)
+        await owner.query(
+          'update inf.rait_case_pool_scope set active=$2 where id=$1',
+          [link.id, link.active],
+        );
+    }
+  });
+  for (const path of [
+    '/batch-items/not-a-uuid',
+    '/batch-items?case_id=not-a-uuid',
+    '/assignments/not-a-uuid',
+  ])
+    it(`malformed worklist read ${path} has a controlled response`, async () => {
+      await fixture.scope(COORDINATOR, 'rait-coordinator');
+      const before = await effects();
+      const response = await get(
+        PREFIX + path,
+        'rait-coordinator',
+        COORDINATOR,
+      );
+      expect([400, 404], JSON.stringify(response.body)).toContain(
+        response.status,
+      );
+      expect(await effects()).toEqual(before);
+    });
+  for (const [path, role, actor, payload] of [
+    [
+      '/inquiries/not-a-uuid/commands/answer',
+      'rait-analyst',
+      RAIT_ACTOR,
+      { documentIds: [DOCUMENT], answeredOn: '2026-09-14' },
+    ],
+    ['/pools/not-a-uuid/claim-next', 'rait-analyst', RAIT_ACTOR, {}],
+    ['/schedules/not-a-uuid/publish', 'rait-coordinator', COORDINATOR, {}],
+    [
+      '/assignments/not-a-uuid/commands/reassign',
+      'rait-coordinator',
+      COORDINATOR,
+      {
+        replacementMemberId: '00000000-0000-7000-8000-000021000002',
+        reason: 'rebalanceamento',
+      },
+    ],
+  ] as const)
+    it(`malformed retained command ${path} never raises an uncontrolled SQL error`, async () => {
+      const before = await effects();
+      const response = await request(app.getHttpServer())
+        .post(PREFIX + path)
+        .set({ ...headers(role, actor), 'if-match': '"1"' })
+        .send(payload);
       expect([400, 404], JSON.stringify(response.body)).toContain(
         response.status,
       );
@@ -1625,7 +1826,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
       expect(first.status, JSON.stringify(first.body)).toBe(200);
       const assignment = (
         await owner.query(
-          'select id,member_id,active from inf.rait_assignment where case_id=$1 and active',
+          'select id,member_id,active,released_at,release_reason from inf.rait_assignment where case_id=$1 and active',
           [first.body.data.id],
         )
       ).rows[0];
@@ -1634,7 +1835,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
       let createdMember = false;
       if (revocation === 'release')
         await owner.query(
-          'update inf.rait_assignment set active=false where id=$1',
+          "update inf.rait_assignment set active=false,released_at=now(),release_reason='afastamento' where id=$1",
           [assignment.id],
         );
       if (revocation === 'reassign') {
@@ -1674,8 +1875,14 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
             temporary,
           ]);
         await owner.query(
-          'update inf.rait_assignment set active=$2,member_id=$3 where id=$1',
-          [assignment.id, assignment.active, assignment.member_id],
+          'update inf.rait_assignment set active=$2,member_id=$3,released_at=$4,release_reason=$5 where id=$1',
+          [
+            assignment.id,
+            assignment.active,
+            assignment.member_id,
+            assignment.released_at,
+            assignment.release_reason,
+          ],
         );
         if (createdMember)
           await owner.query('delete from inf.rait_pool_member where id=$1', [
@@ -1993,6 +2200,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         'target_id',
       ]);
       let temporaryMember: string | undefined;
+      let temporaryActor: string | undefined;
       if (mode === 'legacy-missing') {
         h['idempotency-key'] = `s1-legacy-${randomUUID()}`;
         await owner.query(
@@ -2021,12 +2229,21 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         );
       } else {
         temporaryMember = randomUUID();
+        temporaryActor = randomUUID();
+        await owner.query(
+          `insert into auth.users(id,tenant_id,email,display_name) values($1,$2,$3,'S1 replay actor')`,
+          [temporaryActor, RAIT_TENANT, `${temporaryActor}@fixtures.invalid`],
+        );
+        await owner.query(
+          'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
+          [RAIT_TENANT, temporaryActor],
+        );
         await owner.query(
           `insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')`,
-          [temporaryMember, RAIT_TENANT, POOL, COORDINATOR],
+          [temporaryMember, RAIT_TENANT, POOL, temporaryActor],
         );
-        await fixture.scope(COORDINATOR, 'rait-secretary');
-        headers('rait-secretary', COORDINATOR);
+        await fixture.scope(temporaryActor, 'rait-secretary');
+        headers('rait-secretary', temporaryActor);
       }
       const before = await effects();
       try {
@@ -2046,10 +2263,24 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
           expect(JSON.stringify(response.body)).not.toContain(secret);
         expect(await effects()).toEqual(before);
       } finally {
+        if (temporaryActor)
+          await owner.query(
+            "delete from inf.rait_case_read_scope where actor_id=$1 and authorization_ref='r25-s1-fixture'",
+            [temporaryActor],
+          );
         if (temporaryMember)
           await owner.query('delete from inf.rait_pool_member where id=$1', [
             temporaryMember,
           ]);
+        if (temporaryActor) {
+          await owner.query(
+            'delete from auth.memberships where tenant_id=$1 and user_id=$2',
+            [RAIT_TENANT, temporaryActor],
+          );
+          await owner.query('delete from auth.users where id=$1', [
+            temporaryActor,
+          ]);
+        }
       }
     });
   it('a failed actor-binding receipt atomically rolls back protocol, legal audit, routing and ledger', async () => {
