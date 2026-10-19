@@ -31,10 +31,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -97,10 +148,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -198,10 +300,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -244,10 +397,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -287,10 +491,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -333,10 +588,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -376,10 +682,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -422,10 +779,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -465,10 +873,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -508,10 +967,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -554,10 +1064,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -597,10 +1158,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -640,10 +1252,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -708,10 +1371,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -764,10 +1478,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -832,10 +1597,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -888,10 +1704,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -934,10 +1801,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -977,10 +1895,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1023,10 +1992,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1066,10 +2086,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1112,10 +2183,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1155,10 +2277,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1223,10 +2396,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1279,10 +2503,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
@@ -1347,10 +2622,61 @@
         },
         "responses": {
           "403": {
-            "description": "Action not permitted; no scope or candidate disclosure"
+            "description": "Action not permitted; no scope or candidate disclosure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
-            "description": "Missing or unauthorized parent/resource"
+            "description": "Missing or unauthorized parent/resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["RAIT.TENANT_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "200": {
             "description": "Authorized purpose-projected result; collections retain bare array shape and contain only scoped rows.",
