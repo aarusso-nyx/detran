@@ -84,7 +84,50 @@ test('renders a successful native UNKNOWN command as 43 blocked entries, never m
       }),
     );
     const decisions = join(root, 'decisions.json');
-    writeFileSync(decisions, JSON.stringify({ rows }));
+    const baseline = join(root, 'baseline.json');
+    writeFileSync(
+      baseline,
+      JSON.stringify({
+        items: rows.map((row) => ({
+          ...row,
+          native_verdict: 'FAIL',
+          evaluation_disposition: 'partial',
+        })),
+      }),
+    );
+    writeFileSync(
+      decisions,
+      JSON.stringify({ rows, baseline_register: baseline }),
+    );
+    // An extra captured reading cannot override the native scorecard, but its
+    // exact persisted bytes must survive without depending on ignored state.
+    const reading = {
+      id: 'SR-0123456789abcdef',
+      sensor: { kind: 'trace_resolution' },
+      status: 'pass',
+    };
+    const canonical = join(
+      root,
+      '.devai/state/sensor-readings/trace_resolution',
+      `${reading.id}.json`,
+    );
+    mkdirSync(resolve(canonical, '..'), { recursive: true });
+    const canonicalBytes = JSON.stringify(reading) + '\n';
+    writeFileSync(canonical, canonicalBytes);
+    writeFileSync(
+      join(audit, 'supplemental.json'),
+      JSON.stringify({
+        argv: ['fixture'],
+        exitCode: 0,
+        signal: null,
+        timedOut: false,
+        stdout: JSON.stringify({
+          ok: true,
+          result: { value: { results: [{ stdout: JSON.stringify(reading) }] } },
+        }),
+        stderr: '',
+      }),
+    );
     const output = join(root, 'report');
     execFileSync(
       process.execPath,
@@ -103,11 +146,24 @@ test('renders a successful native UNKNOWN command as 43 blocked entries, never m
     assert.equal(summary.assessment_counts.blocked, 43);
     assert.equal(summary.supported_machine_verdicts, 0);
     assert.equal(summary.readiness_established, false);
+    const comparison = JSON.parse(
+      readFileSync(join(output, 'baseline-comparison.json')),
+    );
+    assert.equal(comparison.cells.length, 43);
+    assert.equal(comparison.baseline_native_applicable_counts.FAIL, 43);
     const manifest = JSON.parse(
       readFileSync(join(output, 'evidence-manifest.json')),
     );
     assert.ok(
       manifest.artifacts.every((entry) => /^[0-9a-f]{64}$/.test(entry.sha256)),
+    );
+    assert.equal(manifest.canonical_readings.length, 1);
+    assert.equal(
+      readFileSync(
+        join(output, manifest.canonical_readings[0].archive_path),
+        'utf8',
+      ),
+      canonicalBytes,
     );
   } finally {
     rmSync(root, { recursive: true, force: true });
