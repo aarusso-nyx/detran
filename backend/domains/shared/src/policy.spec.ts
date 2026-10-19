@@ -2699,3 +2699,96 @@ describe('R-0007 CTG-0004 — política das superfícies finais', () => {
     });
   }
 });
+
+describe('P4-02-S1 exact ordinary read rows and preserved strict commands', () => {
+  const general = [
+    'rait-analyst',
+    'rait-secretary',
+    'rait-coordinator',
+    'AUDITOR',
+    'rait-manager',
+    'rait-rapporteur',
+    'rait-chair',
+    'rait-signing-authority',
+    'rait-central-authority',
+  ];
+  const batch = [
+    'rait-secretary',
+    'rait-chair',
+    'rait-rapporteur',
+    'rait-coordinator',
+    'AUDITOR',
+    'rait-manager',
+  ];
+  for (const [resource, roles] of [
+    ['rait-pending-content', general],
+    ['rait-draft', general],
+    ['rait-redirect', general],
+    ['rait-batch', batch],
+    ['rait-batch-item', batch],
+  ] as const)
+    for (const role of DETRAN_ROLES)
+      it(`${resource}:read ordinary grant for ${role} matches closed T0`, () => {
+        const actual = isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          `inf:${resource}`,
+          'read',
+        );
+        // Existing global administrative reach remains; actual case scope is tested via HTTP.
+        expect(actual).toBe(
+          roles.includes(role) ||
+            ['ADMIN', 'GESTOR_DETRAN', 'SUPORTE', 'technical-admin'].includes(
+              role,
+            ),
+        );
+      });
+  for (const resource of [
+    'rait-unit',
+    'rait-schedule',
+    'rait-schedule-slot',
+    'rait-substitute-duty',
+    'rait-bench',
+  ])
+    for (const role of [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+    ])
+      it(`does not invent ${resource}:read ordinary grant for ${role}`, () => {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            'read',
+          ),
+        ).toBe(false);
+      });
+  for (const [resource, action, roles] of [
+    ['rait-schedule', 'create', ['rait-coordinator']],
+    ['rait-schedule', 'publish', ['rait-coordinator']],
+    ['rait-batch', 'create', ['rait-secretary']],
+    ['rait-batch', 'approve', ['rait-chair']],
+    ['rait-batch-item', 'accept', ['rait-rapporteur']],
+    ['rait-batch-item', 'impediment', ['rait-rapporteur']],
+    ['rait-batch', 'draw', ['rait-secretary']],
+    [
+      'rait-assignment',
+      'reassign',
+      ['rait-coordinator', 'rait-manager', 'rait-chair'],
+    ],
+  ] as const)
+    for (const role of DETRAN_ROLES)
+      it(`strict ${resource}:${action} keeps ${role} bounded even with wildcard`, () => {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: ['*'] },
+            `inf:${resource}`,
+            action,
+          ),
+        ).toBe((roles as readonly string[]).includes(role));
+      });
+});

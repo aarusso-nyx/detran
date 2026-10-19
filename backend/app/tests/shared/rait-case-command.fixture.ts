@@ -811,3 +811,223 @@ export class RaitCaseCommandFixture {
     }
   }
 }
+
+/** S1 Inspector fixture. Explicit disposable authorization; no schema creation,
+ * guessed identity mapping, production binding or append-only audit deletion. */
+export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
+  static readonly UNIT = '71000000-0000-7000-8000-000000002901';
+  static readonly OTHER_POOL = '71000000-0000-7000-8000-000000002902';
+  static readonly FOREIGN_TENANT = '71000000-0000-7000-8000-000000002903';
+  static readonly FOREIGN_UNIT = '71000000-0000-7000-8000-000000002904';
+  static readonly FOREIGN_USER = '71000000-0000-7000-8000-000000002905';
+  static readonly FOREIGN_CASE = '71000000-0000-7000-8000-000000002906';
+  static readonly FOREIGN_AIT = '71000000-0000-7000-8000-000000002907';
+  static readonly FOREIGN_CATALOG = '71000000-0000-7000-8000-000000002908';
+  static readonly FOREIGN_FRAMING = '71000000-0000-7000-8000-000000002909';
+  private cases: { id: string; unit_id: string | null; archived: boolean }[] =
+    [];
+  private pools: { id: string; unit_id: string | null }[] = [];
+  private prepared = false;
+  async prepareScope(): Promise<void> {
+    const tables = await this.owner
+      .query(`select to_regclass('inf.rait_case_read_scope')::text as read_scope,
+      to_regclass('inf.rait_case_pool_scope')::text as pool_scope`);
+    if (!tables.rows[0].read_scope || !tables.rows[0].pool_scope)
+      throw new Error(
+        'S1_SCHEMA_PENDING: generated scope tables absent; this is not decisive security RED',
+      );
+    this.cases = (
+      await this.owner.query(
+        'select id,unit_id,archived from inf.rait_case where tenant_id=$1',
+        [RAIT_TENANT],
+      )
+    ).rows;
+    this.pools = (
+      await this.owner.query(
+        'select id,unit_id from inf.rait_pool where tenant_id=$1',
+        [RAIT_TENANT],
+      )
+    ).rows;
+    await this.owner.query(
+      `insert into inf.rait_unit(id,tenant_id,name,judging_body)
+      values($1,$2,'S1 disposable unit','jari')`,
+      [RaitP402ScopeFixture.UNIT, RAIT_TENANT],
+    );
+    this.prepared = true;
+    await this.owner.query(
+      'update inf.rait_case set unit_id=$2 where tenant_id=$1',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
+    );
+    await this.owner.query(
+      'update inf.rait_pool set unit_id=$2 where tenant_id=$1',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
+    );
+    await this.owner.query(
+      `insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id)
+      select $1,tenant_id,'S1 same-unit distinct pool',instance,circuit,strategy,unit_id
+      from inf.rait_pool where id=$2`,
+      [RaitP402ScopeFixture.OTHER_POOL, RAIT_POOL],
+    );
+    await this.owner.query(
+      `insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref)
+      values($1,$2,$3,true,'r25-s1-fixture','fixture-qualified-case-routing'),
+            ($1,$4,$5,true,'r25-s1-fixture','fixture-qualified-other-routing')`,
+      [
+        RAIT_TENANT,
+        RAIT_CASE('04'),
+        RAIT_POOL,
+        RAIT_CASE('03'),
+        RaitP402ScopeFixture.OTHER_POOL,
+      ],
+    );
+    // These are independently qualified tenant-B parents, not copies referencing tenantA.
+    await this.owner.query(
+      `insert into auth.tenants(id,slug,name,timezone)
+      values($1,'r25-s1-tenant-b','S1 disposable tenant B','America/Manaus')`,
+      [RaitP402ScopeFixture.FOREIGN_TENANT],
+    );
+    await this.owner.query(
+      `insert into auth.users(id,tenant_id,email,display_name)
+      values($1,$2,'s1-tenant-b@fixtures.invalid','S1 tenant B user')`,
+      [RaitP402ScopeFixture.FOREIGN_USER, RaitP402ScopeFixture.FOREIGN_TENANT],
+    );
+    await this.owner.query(
+      'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
+      [RaitP402ScopeFixture.FOREIGN_TENANT, RaitP402ScopeFixture.FOREIGN_USER],
+    );
+    await this.owner.query(
+      `insert into inf.rait_unit(id,tenant_id,name,judging_body)
+      values($1,$2,'S1 independent foreign unit','jari')`,
+      [RaitP402ScopeFixture.FOREIGN_UNIT, RaitP402ScopeFixture.FOREIGN_TENANT],
+    );
+    // Independent tenant-B CASE -> AIT -> framing/catalog chain. Source legal
+    // values are copied. This isolates RAIT read parents; it is not a rehearsal
+    // of tenant-B field issuance or a production qualification receipt.
+    const source = (
+      await this.owner.query('select * from inf.ait_ait where id=$1', [
+        RAIT_AIT,
+      ])
+    ).rows[0];
+    for (const [table, sourceId, id, extra] of [
+      [
+        'inf.normative_catalog',
+        source.catalog_id,
+        RaitP402ScopeFixture.FOREIGN_CATALOG,
+        {},
+      ],
+      [
+        'inf.normative_framing',
+        source.framing_id,
+        RaitP402ScopeFixture.FOREIGN_FRAMING,
+        { catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG },
+      ],
+      [
+        'inf.ait_ait',
+        RAIT_AIT,
+        RaitP402ScopeFixture.FOREIGN_AIT,
+        {
+          catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG,
+          framing_id: RaitP402ScopeFixture.FOREIGN_FRAMING,
+          ait_number: 'S1-FOREIGN-FIXTURE',
+          agent_id: RaitP402ScopeFixture.FOREIGN_USER,
+        },
+      ],
+    ] as const) {
+      await this.owner.query(
+        `insert into ${table} select (jsonb_populate_record(null::${table},to_jsonb(source)||$2::jsonb)).*
+        from ${table} source where id=$1`,
+        [
+          sourceId,
+          JSON.stringify({
+            id,
+            tenant_id: RaitP402ScopeFixture.FOREIGN_TENANT,
+            ...extra,
+          }),
+        ],
+      );
+    }
+    await this.owner.query(
+      `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at,unit_id)
+      select $1,$2,$3,'S1-FOREIGN-CASE',instance,circuit,state,intake_channel,protocolled_at,$4
+      from inf.rait_case where id=$5`,
+      [
+        RaitP402ScopeFixture.FOREIGN_CASE,
+        RaitP402ScopeFixture.FOREIGN_TENANT,
+        RaitP402ScopeFixture.FOREIGN_AIT,
+        RaitP402ScopeFixture.FOREIGN_UNIT,
+        RAIT_CASE('04'),
+      ],
+    );
+  }
+  async scope(
+    actor: string,
+    role: string,
+    parent: 'unit' | 'pool' = 'unit',
+    id?: string,
+  ): Promise<string> {
+    const scopeId = (await import('node:crypto')).randomUUID();
+    await this.owner.query(
+      `insert into inf.rait_case_read_scope(id,tenant_id,actor_id,role,unit_id,pool_id,active,authorization_ref)
+      values($1,$2,$3,$4,$5,$6,true,'r25-s1-fixture')`,
+      [
+        scopeId,
+        RAIT_TENANT,
+        actor,
+        role,
+        parent === 'unit' ? (id ?? RaitP402ScopeFixture.UNIT) : null,
+        parent === 'pool' ? (id ?? RAIT_POOL) : null,
+      ],
+    );
+    return scopeId;
+  }
+  async clearScopes(): Promise<void> {
+    await this.owner.query(
+      "delete from inf.rait_case_read_scope where authorization_ref='r25-s1-fixture'",
+    );
+  }
+  async cleanupScope(): Promise<void> {
+    if (!this.prepared) return;
+    await this.clearScopes();
+    await this.owner.query(
+      "delete from inf.rait_case_pool_scope where authorization_ref='r25-s1-fixture'",
+    );
+    await this.owner.query('delete from inf.rait_pool where id=$1', [
+      RaitP402ScopeFixture.OTHER_POOL,
+    ]);
+    for (const row of this.cases)
+      await this.owner.query(
+        'update inf.rait_case set unit_id=$2,archived=$3 where id=$1',
+        [row.id, row.unit_id, row.archived],
+      );
+    for (const row of this.pools)
+      await this.owner.query(
+        'update inf.rait_pool set unit_id=$2 where id=$1',
+        [row.id, row.unit_id],
+      );
+    await this.owner.query('delete from inf.rait_case where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_CASE,
+    ]);
+    await this.owner.query('delete from inf.ait_ait where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_AIT,
+    ]);
+    await this.owner.query('delete from inf.normative_framing where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_FRAMING,
+    ]);
+    await this.owner.query('delete from inf.normative_catalog where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_CATALOG,
+    ]);
+    await this.owner.query(
+      'delete from inf.rait_unit where id=any($1::uuid[])',
+      [[RaitP402ScopeFixture.UNIT, RaitP402ScopeFixture.FOREIGN_UNIT]],
+    );
+    await this.owner.query('delete from auth.memberships where tenant_id=$1', [
+      RaitP402ScopeFixture.FOREIGN_TENANT,
+    ]);
+    await this.owner.query('delete from auth.users where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_USER,
+    ]);
+    await this.owner.query('delete from auth.tenants where id=$1', [
+      RaitP402ScopeFixture.FOREIGN_TENANT,
+    ]);
+  }
+}
