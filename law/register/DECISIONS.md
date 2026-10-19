@@ -138,3 +138,20 @@ Após os anexos acima, o maestro executou os 16 selos abaixo na R-0020. Esta not
 A observação exata `EV-18e9b5c6a93d228a` concluiu o verbo, com Overall YELLOW,
 0/45 passing, 43 unknown e `readiness_promoting=false`; não se declara auditoria
 qualitativamente verde. O fechamento não apaga limitações nem inicia outra rodada.
+
+### Anexo de R-0036
+
+- **D-1 — Owner:** abertura, extensões da avaliação e integração/atestação autorizadas,
+  conforme `work/rounds/R-0036/AUTHORIZATION.md`; o escopo não inclui correções de produto.
+- **D-2 — Architect:** fechamento da avaliação após PR #202 integrado em
+  `6f07295b60a51022b9de1d3e3bdebd9bcd48c2b1`, CI principal 39273060556 aprovada e
+  atestação independente 39285749403 aprovada com vínculo exact-commit. O resultado
+  congelado continua FAIL; os 43 itens foram medidos e BL-0013 a BL-0023 permanecem
+  abertos. Relatório e recibos: `work/rounds/R-0036/reports/closure-20261019/`.
+  O PC e o selo são emitidos pelos verbos oficiais, sem reescrever as evidências
+  históricas ou declarar prontidão do produto.
+
+Recibos oficiais da R-0036: `round close` emitiu **PC-0022**, `round plan --declare`
+materializou o registro fechado e `round seal` emitiu `close-state.jsonl`. Estado
+confirmado por `round status`; recibos preservados em
+`work/rounds/R-0036/reports/closure-20261019/`.
