@@ -137,3 +137,12 @@ precise decisions and recommendations. It deliberately returns those questions
 instead of a falsely ready wiring packet. No runtime, tests, DDL, grants, generated
 contracts/clients, provider integrations or scorecard work is changed. The next
 implementation packet requires explicit approval after its blockers are resolved.
+
+## Design decisions accepted after this baseline — 2026-10-18
+
+The Owner approved D1–D7 and explicitly authorized coordinator/AUDITOR read-only
+oversight of unassigned merits inside approved scope. The S/O/P/B distinctions
+above preserve P4-01 history and static observations; the current accepted design
+is [JW01-claim-wiring-contract.md](JW01-claim-wiring-contract.md), ADR0045/0046 and
+the additive Owner decision record. No runtime proof or packet execution follows
+from this approval. Proposed P4-02 still requires explicit review/authorization.

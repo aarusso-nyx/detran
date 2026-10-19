@@ -439,3 +439,23 @@ compartilhada `docs/framework/product/shared/workflows/diagrams/`; regenerar qua
 - **2026-09-12** — redação inicial (rodada de organização do trabalho, Owner). Proposta não
   vinculante; incorpora as decisões de steering A.1-A.8 e B.9-B.12 e os dados institucionais de
   2026-08-27/28.
+
+## Emenda D1–D7 aprovada pelo Owner — 2026-10-18
+
+Para defesa prévia, esta emenda prevalece sobre a sequência histórica de claim
+seguida de triagem: admissibilidade ocorre primeiro. O claim compõe atomicamente
+ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO e abre o dossiê, sem repetir triagem. Não se
+inventa estado, comando de distribuição ou atalho de recebimento pela secretaria.
+
+Casos com impedimento são excluídos antes de acesso ao mérito; segue o próximo
+elegível na ordem vigente. Sem elegíveis, resposta vazia segura sem revelar casos.
+O escopo server-side separa metadados coletivos, triagem autorizada pré-atribuição
+e mérito do responsável. Coordenadores e auditores podem ler mérito não atribuído
+no vínculo explícito de unidade/pool/tenant, somente leitura, sem impedimento;
+nenhuma autoridade de claim/escrita/assinatura é inferida dessa supervisão.
+
+Detalhes de contrato, validação, tipos e replay constam da
+[decisão de contrato](../../../../../../meta/adr/ADR-0045-rait-claim-selector-contract.md) e da
+[decisão de segurança](../../../../../../meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md).
+Texto/diagramas anteriores são históricos nos pontos substituídos; o status draft
+da fonte permanece. Runtime continua pausado até aprovação do pacote exato.

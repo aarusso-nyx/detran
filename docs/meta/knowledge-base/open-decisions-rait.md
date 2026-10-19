@@ -568,3 +568,39 @@ OD-R25-016 continua aberta para sequência/elegibilidade e destino pós-claim
 (D3). If-Match/ETag é reconciliação técnica do Architect (D5), não novo valor de
 domínio inventado. Prioridade/NULL (ADR0037) e WIP45/alerta60 (H.54/H.57) já estão
 decididos: divergência do código é trabalho de implementação, não nova pergunta.
+
+## D1–D7 — decisões do Owner registradas em 2026-10-18
+
+Architect registra literalmente a autorização:
+
+> I approve your recommendations for D1–D7. Record the decisions, formalize the contract/security ADRs, and prepare the exact wiring packet in a PR for review. Keep runtime paused and preserve local and scorecard work.
+
+Esclarecimento de D3, após pergunta sobre supervisão:
+
+> yes, coordinators and auditors can read unassigned case merits.
+
+O limite unit/pool/tenant de D3 aprovado continua; a resposta não concede acesso
+indiscriminado por tenant. Papéis canônicos: `rait-coordinator` e `AUDITOR`,
+supervisão somente leitura, inclusive casos não atribuídos, mediante vínculo de
+escopo explícito, permissão de leitura e ausência de impedimento. Sem vínculo,
+negar; sem nova autoridade de claim/escrita/assinatura.
+
+| Decisão / referência anterior | Decisão aprovada e formalização                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1 / OD-R25-016               | Admissibilidade primeiro; claim de defesa compõe atomicamente os estados existentes ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO, sem comando de distribuição inventado ou atalho receive. ADR0045; dados legados exigem inventário/compatibilidade explícitos, nunca conversão implícita.                                                                                                                                                           |
+| D2 / OD-R25-016               | Pós-claim vai ao dossiê/instrução, não repete triagem/admissão. Emenda limitada à sequência da defesa em IU004/JW01; assinatura continua posterior. ADR0045.                                                                                                                                                                                                                                                                              |
+| D3 / OD-R25-017               | Separar metadados coletivos, triagem autorizada antes da atribuição e mérito do analista atribuído; escopo por unidade/pool. Coordenador e AUDITOR têm supervisão somente leitura, inclusive mérito não atribuído, no escopo explícito. Todos sem mérito quando impedidos. ADR0046 registra vínculo e negação na ausência, sem supor autorização individual por RLS. Decisão de produto resolvida; prova/implantação continuam pendentes. |
+| D4 / OD-R25-018               | Descoberta server-side de pools elegíveis: zero indisponível com motivo, um seleção automática pelo conjunto completo, vários escolha explícita. Identidade/escopo não vêm do browser nem do primeiro registro de lista limitada. ADR0045/0046.                                                                                                                                                                                           |
+| D5 / Architect                | Claim é seletor com exceção explícita a If-Match; transação, scope/retry e provas de concorrência obrigatórios. HTTP200 CASE tipado + ETag do caso para escritas posteriores. Supplied If-Match400 em vez de validador fictício. ADR0045; nenhuma alteração runtime neste registro.                                                                                                                                                       |
+| D6 / OD-R25-019               | Excluir impedidos antes do mérito e seguir ao próximo elegível; sem candidatos, resultado seguro QUEUE_EMPTY. Diagnóstico detalhado só na supervisão autorizada, mas não é comissionado por P4-02 e exige contrato próprio fonteado; sem nova rota de impedimento do analista; MEMBER_IMPEDED preservado nas demais utilizações fonteadas. ADR0045/0046.                                                                                  |
+| D7 / OD-R25-020               | Tentativa vinculada ao ator autenticado; chave nova por ação nova, mesma chave apenas no retry exato; reuso por outro ator recusa sem resposta anterior. Replay reautoriza leitura sem refazer claim. Legado sem vínculo confiável falha fechado, sem reescrever histórico. ADR0046.                                                                                                                                                      |
+
+As linhas abertas anteriores de OD016/017/018/019/020 são histórico preservado;
+este registro resolve suas escolhas de produto/contrato, não certifica controles
+ainda não implementados. Fontes atuais: [ADR0045](../adr/ADR-0045-rait-claim-selector-contract.md),
+[ADR0046](../adr/ADR-0046-rait-case-scope-and-claim-replay.md) e
+[pacote P4-02](../../../work/rounds/R-0025/reports/P4-02-exact-wiring-packet.md).
+OD-R12-054 recebe decisão de descoberta nesta entrega, sem alegação de wiring
+executado. Prioridade/NULL (ADR0037), WIP45/60, C3/PEC-last e demais decisões
+permanecem. Runtime continua pausado até aprovação explícita de P4-02; nenhuma
+tarefa/rodada/evidência é promovida ou encerrada; scorecard/local preservados.
