@@ -256,6 +256,35 @@ let app: INestApplication;
 let fixture: RaitCaseCommandFixture;
 let trustServer: Server;
 
+// ADR0047/T0: a procedural role requires an explicit, independently sourced
+// pool purpose and exact case/pool relation; null-unit fixtures stay null-unit.
+async function prepareProceduralScope() {
+  await fixture.owner.query(
+    `insert into inf.rait_case_read_scope
+       (tenant_id,actor_id,role,pool_id,active,authorization_ref)
+     select $1,$2,'rait-secretary',p.id,true,'r7-c3-procedural-duty'
+       from inf.rait_pool p where p.tenant_id=$1 and p.active
+         and exists(select 1 from inf.rait_pool_member m
+           where m.tenant_id=p.tenant_id and m.pool_id=p.id
+             and m.person_id=$2 and m.member_role='secretaria' and m.status='ATIVO')
+         and not exists(select 1 from inf.rait_case_read_scope rs
+           where rs.tenant_id=$1 and rs.actor_id=$2 and rs.pool_id=p.id
+             and rs.role='rait-secretary' and rs.active)`,
+    [RAIT_TENANT, RAIT_SECRETARY],
+  );
+  await fixture.owner.query(
+    `insert into inf.rait_case_pool_scope
+       (tenant_id,case_id,pool_id,active,authorization_ref,source_ref)
+     select c.tenant_id,c.id,p.id,true,'r7-c3-procedural-duty','CTG-0001 canonical fixture routing'
+       from inf.rait_case c join inf.rait_pool p
+         on p.tenant_id=c.tenant_id and p.instance=c.instance
+           and p.unit_id is not distinct from c.unit_id and p.active
+       where c.tenant_id=$1 and c.id=any($2::uuid[])
+       on conflict(tenant_id,case_id,pool_id) do nothing`,
+    [RAIT_TENANT, [RAIT_CASE('05'), RAIT_CASE('07')]],
+  );
+}
+
 beforeAll(async () => {
   assertDedicatedDatabaseEnvironment();
   process.env.DETRAN_LOCAL_TENANT_ID = RAIT_TENANT;
@@ -350,10 +379,19 @@ beforeAll(async () => {
 beforeEach(async () => {
   process.env.DETRAN_LOCAL_ROLES = 'bi-analyst';
   await fixture.resetMutableState();
+  await prepareProceduralScope();
 });
 
 afterAll(async () => {
   await app?.close();
+  if (fixture) {
+    await fixture.owner.query(
+      "delete from inf.rait_case_read_scope where authorization_ref='r7-c3-procedural-duty'",
+    );
+    await fixture.owner.query(
+      "delete from inf.rait_case_pool_scope where authorization_ref='r7-c3-procedural-duty'",
+    );
+  }
   await fixture?.close();
   await new Promise<void>((resolve, reject) =>
     trustServer?.close((error) => (error ? reject(error) : resolve())),
@@ -468,6 +506,8 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
     for (const role of command.roles) {
       it(`dado papel mínimo ${role} quando ${command.name} atravessa HTTP, PolicyGuard e banco então responde 200, ETag só no header e efeitos atômicos`, async () => {
         await fixture.prepareCommand(command.name);
+        if (command.name === 'return-draft')
+          await fixture.prepareCommand('decide');
         const before = await persistentEffectCounts();
         const response = await request(app.getHttpServer())
           .post(commandPath(command))
