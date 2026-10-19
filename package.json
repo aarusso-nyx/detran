@@ -92,7 +92,7 @@
     "test:rounds-index": "node --test tools/devai/tests/render-rounds-index.test.mjs",
     "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
     "security:exports:check": "node tools/security/check-security-exports.mjs",
-    "security:exports:test": "node --import tsx --test tools/security/tests/security-exporters.test.ts tools/security/tests/security-export-checker.test.mjs"
+    "security:exports:test": "node --import tsx --test tools/security/tests/security-exporters.test.ts tools/security/tests/security-export-checker.test.mjs tools/security/tests/prepare-security-inventories.test.mjs"
   },
   "devDependencies": {
     "@aarusso-nyx/devai": "2.6.3",
