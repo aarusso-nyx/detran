@@ -566,7 +566,7 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
     it(`${resource}: actual child positive + revoked-parent detail/list negative + closed fields`, async () => {
       const row = (
         await owner.query(
-          `select id from inf.${table} where tenant_id=$1 order by id limit 1`,
+          `select id from inf.${table} where tenant_id=$1 ${resource === 'redirects' ? 'and case_id is not null' : ''} order by id limit 1`,
           [RAIT_TENANT],
         )
       ).rows[0];
@@ -640,7 +640,7 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
             COORDINATOR,
           )
         ).status,
-      ).toBe(404);
+      ).toBe(403);
     } finally {
       await owner.query(
         'update auth.memberships set is_active=true where tenant_id=$1 and user_id=$2',
@@ -655,7 +655,7 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
           RaitP402ScopeFixture.FOREIGN_USER,
         )
       ).status,
-    ).toBe(404);
+    ).toBe(403);
   });
   it('manager positively reads operational case projection and cannot access parties/documents/merits', async () => {
     await fixture.scope(MANAGER, 'rait-manager');
@@ -1415,8 +1415,16 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         [RAIT_CASE('03')],
       )
     ).rows[0];
+    const otherOriginal = (
+      await owner.query('select state,version from inf.rait_case where id=$1', [
+        RAIT_CASE('06'),
+      ])
+    ).rows[0];
+    await owner.query("update inf.rait_case set state='ADMITIDO' where id=$1", [
+      RAIT_CASE('06'),
+    ]);
     await owner.query(
-      "update inf.rait_case set state='DISTRIBUIDO',protocolled_at='2000-01-01T00:00:00Z' where id=$1",
+      "update inf.rait_case set state='DISTRIBUIDO' where id=$1",
       [RAIT_CASE('03')],
     );
     const before = await effects();
@@ -1431,13 +1439,12 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
       expect(await effects()).toEqual(before);
     } finally {
       await owner.query(
-        'update inf.rait_case set state=$2,version=$3,protocolled_at=$4 where id=$1',
-        [
-          RAIT_CASE('03'),
-          original.state,
-          original.version,
-          original.protocolled_at,
-        ],
+        'update inf.rait_case set state=$2,version=$3 where id=$1',
+        [RAIT_CASE('03'), original.state, original.version],
+      );
+      await owner.query(
+        'update inf.rait_case set state=$2,version=$3 where id=$1',
+        [RAIT_CASE('06'), otherOriginal.state, otherOriginal.version],
       );
     }
   });
@@ -1515,7 +1522,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         .set(headers('rait-secretary', RAIT_SECRETARY))
         .send({
           ait_id: '00000000-0000-7000-8000-0000f0000002',
-          protocol_number: `S1-DUPLICATE-DUTY-${randomUUID()}`,
+          protocol_number: `S1D-${randomUUID().replaceAll('-', '')}`,
           instance: 'defesa_previa',
           circuit: 1,
           intake_channel: 'portal',
@@ -1564,7 +1571,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         .set(headers('rait-secretary', RAIT_SECRETARY))
         .send({
           ait_id: '00000000-0000-7000-8000-0000f0000002',
-          protocol_number: `S1-AMBIGUOUS-${randomUUID()}`,
+          protocol_number: `S1A-${randomUUID().replaceAll('-', '')}`,
           instance: 'defesa_previa',
           circuit: 1,
           intake_channel: 'portal',
@@ -1585,8 +1592,14 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
   });
   for (const routing of ['zero', 'one', 'multiple'] as const)
     it(`admission with ${routing} qualified routing retains legal200,v+1 and one unchanged domain event`, async () => {
+      const priorLinks = (
+        await owner.query(
+          'select id,active from inf.rait_case_pool_scope where case_id=$1',
+          [RAIT_CASE('02')],
+        )
+      ).rows;
       await owner.query(
-        "delete from inf.rait_case_pool_scope where authorization_ref='r25-s1-fixture' and case_id=$1",
+        'update inf.rait_case_pool_scope set active=false where case_id=$1',
         [RAIT_CASE('02')],
       );
       await owner.query('update inf.rait_pool set strategy=$2 where id=$1', [
