@@ -20,6 +20,7 @@ import {
 } from '../../../../testing/router-harness';
 import { RAIT_ALL_ROLES } from '../../../../testing/route-manifest.fixture';
 import { SessionFacade } from '../../../data/facades/session.facade';
+import { RapporteurCasesPageComponent } from './rapporteur-cases.page';
 import type { RaitBatchItem } from '../../../data/models';
 
 function sessionFacadeStub(items: readonly RaitBatchItem[] = []) {
@@ -207,8 +208,10 @@ describe('S1-A2 purpose-projected rapporteur items', () => {
     const host = harness.routeNativeElement as HTMLElement;
     expect(host.textContent).toContain('rait.common.unavailable');
     expect(host.textContent).not.toContain('undefined');
-    const table = harness.fixture.debugElement.query(By.css('stynx-table'));
-    const rows = table.componentInstance.rows();
+    const page = harness.fixture.debugElement.query(
+      By.directive(RapporteurCasesPageComponent),
+    ).componentInstance as RapporteurCasesPageComponent;
+    const rows = page.rows();
     expect(rows.map((row: { id: string }) => row.id)).toEqual(
       projected.map((row) => row.id),
     );

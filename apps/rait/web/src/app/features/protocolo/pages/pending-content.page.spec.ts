@@ -23,6 +23,7 @@ import { RAIT_ALL_ROLES } from '../../../../testing/route-manifest.fixture';
 import { SseService } from '../../../core/sse.service';
 import { ProtocolFacade } from '../../../data/facades/protocol.facade';
 import type { RaitPendingContent } from '../../../data/models';
+import { CASE_IDS, fixtureCase } from '../../../../testing/http-fixtures';
 
 const ACTION_KEY = 'inf:rait-case:resolve-pending-content';
 
@@ -217,7 +218,7 @@ describe('S1-A2 projected pending-content limitation', () => {
   it('withheld missing_items is unavailable rather than an empty or satisfied checklist', async () => {
     const projected = {
       id: 'scoped-pending',
-      case_id: 'scoped-case',
+      case_id: CASE_IDS.EM_INSTRUCAO,
       due_on: '2026-10-30',
       opened_at: '2026-09-15T12:00:00Z',
       closed_at: null,
@@ -226,6 +227,8 @@ describe('S1-A2 projected pending-content limitation', () => {
     const pendencias = listFacadeStub([projected]);
     const facade = {
       ...protocolFacadeStub(),
+      pendenciasCaso: () =>
+        new Map([[CASE_IDS.EM_INSTRUCAO, fixtureCase(CASE_IDS.EM_INSTRUCAO)]]),
       pendencias,
       loadPending: delegateListLoad(pendencias),
     };
