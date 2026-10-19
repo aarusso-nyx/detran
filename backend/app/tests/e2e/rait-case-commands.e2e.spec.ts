@@ -258,17 +258,19 @@ let trustServer: Server;
 
 // ADR0047/T0: a procedural role requires an explicit, independently sourced
 // pool purpose and exact case/pool relation; null-unit fixtures stay null-unit.
+const createdAnalystMemberships: string[] = [];
 async function qualifyAdmitAnalyst(instance: string) {
-  await fixture.owner.query(
+  const inserted = await fixture.owner.query<{ id: string }>(
     `insert into inf.rait_pool_member
        (tenant_id,pool_id,person_id,member_role,status,is_substitute)
      select $1,p.id,$2,'analista','ATIVO',false from inf.rait_pool p
       where p.tenant_id=$1 and p.instance=$3 and p.unit_id is null and p.active
         and not exists(select 1 from inf.rait_pool_member m
           where m.tenant_id=$1 and m.pool_id=p.id and m.person_id=$2
-            and m.member_role='analista' and m.status='ATIVO')`,
+            and m.member_role='analista' and m.status='ATIVO') returning id`,
     [RAIT_TENANT, RAIT_ACTOR, instance],
   );
+  createdAnalystMemberships.push(...inserted.rows.map((row) => row.id));
 }
 
 // Independent inquiry parents preserve the original defence fixture and give
@@ -485,6 +487,40 @@ beforeEach(async () => {
 afterAll(async () => {
   await app?.close();
   if (fixture) {
+    const inquiryCases = [
+      '71000000-0000-7000-8000-000000003201',
+      '71000000-0000-7000-8000-000000003202',
+    ];
+    await fixture.owner.query(
+      'delete from inf.rait_inquiry_document where inquiry_id in (select id from inf.rait_inquiry where case_id=any($1::uuid[]))',
+      [inquiryCases],
+    );
+    await fixture.owner.query(
+      'delete from inf.rait_inquiry where case_id=any($1::uuid[])',
+      [inquiryCases],
+    );
+    await fixture.owner.query(
+      'delete from inf.rait_document where case_id=any($1::uuid[])',
+      [inquiryCases],
+    );
+    await fixture.owner.query(
+      'delete from inf.rait_deadline where case_id=any($1::uuid[])',
+      [inquiryCases],
+    );
+    await fixture.owner.query(
+      'delete from inf.rait_assignment where case_id=any($1::uuid[])',
+      [inquiryCases],
+    );
+    // Immutable priority parent/assessment receipts intentionally remain in this
+    // disposable DB; restore non-claimable state for subsequent regression runs.
+    await fixture.owner.query(
+      "update inf.rait_case set state='DILIGENCIA',version=1 where id=any($1::uuid[])",
+      [inquiryCases],
+    );
+    await fixture.owner.query(
+      'delete from inf.rait_pool_member where id=any($1::uuid[])',
+      [createdAnalystMemberships],
+    );
     await fixture.owner.query(
       "delete from inf.rait_case_read_scope where authorization_ref='r7-c3-procedural-duty'",
     );
