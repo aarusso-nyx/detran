@@ -49,6 +49,9 @@ and If-Match; do not rely on the superseded controller-loss diagnosis.
   compiled typed closed projections and public package APIs; never read planning
   JSON/files at runtime. Default production provenance is missing for each kind
   without a named accepted verifier. A matching digest alone is not authority.
+- Preserve S1 purpose predicates: an unassigned analyst cannot read ADMITIDO merits.
+  The public risk GET retains that guard; internal selector risk qualification uses
+  approved pull-pool scope and the internal factory, not a new external merits grant.
 - Scoped risk GET, complete pool/context selection and internal append-only legacy
   qualification. The same selector serves GET and POST. Current risk includes
   qualified parameter, A track, timers, C movement, D reset/non-reset, applicability
