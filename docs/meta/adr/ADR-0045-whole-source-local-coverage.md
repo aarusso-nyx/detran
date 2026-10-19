@@ -41,6 +41,12 @@ Bind a valid sidecar to the exact evaluated commit, actual test-file population,
 complete source census and report digest. Filters, shards and incomplete execution
 must be identified as partial. Failed tests, missing files, report-generation
 errors or failed package thresholds must never produce an accepted full binding.
+Emit exact per-file line counters (`l`) using Istanbul's `getLineCoverage`, while
+preserving the original V8 report and statement counters. This is an admitted
+sensor input format: without `l`, DEVAI approximates lines with statement hits.
+Bind the normalized report digest and retain the original report digest, library
+version and method in the sidecar. Existing package gates still use their original
+Istanbul summaries. No threshold or verdict is rewritten.
 Native verdicts are emitted and persisted only through the installed DEVAI actions.
 
 ## Evidence and follow-up
