@@ -190,3 +190,15 @@ identity/risk source, unclassified shared route/role, unsafe legacy data, failed
 same-tenant/bypass/concurrency proof, needed unowned path or new business choice.
 Resolve those through the named preflight gate or an approved amendment; never
 label them implementation complete. No scorecard work or local cleanup is bundled.
+
+
+## Current authority addendum — D8–D11 / A1, 2026-10-18
+
+The opening pending-approval banner records this packet's original proposal.
+Owner subsequently approved P4-02, merged PR198 and requested execution. PR199's
+T0 inspection stopped at its explicit design gates. Owner then approved D8–D11
+and requested [amendment A1](P4-02-D8-D11-bounded-amendment.md), supplemental ADRs
+and completed T0 mappings in a review PR. A1 closes those design classifications
+and names additional prerequisite paths; it preserves the base approval and all
+unamended acceptance. This documentation stage is not runtime dispatch or release.
+No task/state/proof/lifecycle or scorecard promotion is performed.

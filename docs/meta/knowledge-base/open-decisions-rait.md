@@ -604,3 +604,28 @@ OD-R12-054 recebe decisão de descoberta nesta entrega, sem alegação de wiring
 executado. Prioridade/NULL (ADR0037), WIP45/60, C3/PEC-last e demais decisões
 permanecem. Runtime continua pausado até aprovação explícita de P4-02; nenhuma
 tarefa/rodada/evidência é promovida ou encerrada; scorecard/local preservados.
+
+## D8–D11 — aprovação e reconciliação T0 (Owner, 2026-10-18)
+
+Registro literal do Owner:
+
+> I approve your recommendations for D8–D11. Record the decisions, formalize the supplemental ADRs and bounded P4-02 amendment, finish the T0 mapping, and open a PR for review. Preserve local and scorecard work.
+
+| Decisão | Conteúdo aprovado / formalização                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D8      | Escopo completo por papel/finalidade: secretaria em unidade/pool explicitamente autorizados e dever procedimental/arquivo; relator por atribuição ativa ou participação qualificada em sessão/vista; presidente por colegiado ativo; signatário por circunscrição/investidura/plantão e caso pronto; autoridade central por designação e revisão de provimento JARI; gestor por projeção operacional, sem mérito geral; demais papéis por suas projeções funcionais, sem mérito por wildcard/admin. ADR0047 e mapa T0; D3 coordenador/AUDITOR permanece. |
+| D9      | auth.users.id autenticado é o identificador interno canônico do pessoal nas verificações de person_id. Subject externo passa pela autenticação, não é UUID de pessoa. Namespace legado divergente exige mapeamento explícito verificado; nunca conversão por palpite. ADR0047; qualificação produtiva continua gate de release.                                                                                                                                                                                                                          |
+| D10     | Novo ADMITIDO compõe dois movimentos/v+2. Legado DISTRIBUIDO sem atribuição, com proveniência confiável, pode consumir a mesma ordem e fazer apenas o movimento restante/v+1. Já atribuído é preservado e não reclamado; ambíguo para processamento automático e exige recuperação registrada. Sem descarte/conversão silenciosa. ADR0048; inventário produtivo antes do release. Replay legado inseguro409 continua D7.                                                                                                                                 |
+| D11     | Autoriza preparação da emenda delimitada para matriz D8/identidade D9, compatibilidade D10, checks de pais WORKLIST e produtor de risco atual/integração com caminhos e testes explícitos. Pior bandeira primeiro já consta da especificação; não reabre limiares, prazos, prioridade/NULL ou WIP. ADR0049 e emenda A1; sem implementação nesta entrega.                                                                                                                                                                                                 |
+
+Formalização: [ADR0047](../adr/ADR-0047-rait-role-purpose-and-staff-identity.md),
+[ADR0048](../adr/ADR-0048-rait-legacy-defense-claim-compatibility.md),
+[ADR0049](../adr/ADR-0049-rait-authoritative-risk-composition.md) e
+[emenda P4-02 A1](../../../work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md).
+Mapas T0 fecham classificações de rotas/pais/papéis e campos/classes necessários;
+controle runtime, testes reais e qualificação produtiva não estão executados.
+Os blockers de desenho registrados em PR199 ficam resolvidos por estas decisões;
+dados operacionais e evidência de implantação continuam pendentes. Nenhum valor
+novo, papel público, prazo ou limiar é inventado. A aprovação base P4-02 permanece;
+esta solicitação é documental com PR de revisão, sem dispatch Inspector/Engineer,
+sem close/seal/readiness, sem absorver scorecard ou alterar trabalho local.
