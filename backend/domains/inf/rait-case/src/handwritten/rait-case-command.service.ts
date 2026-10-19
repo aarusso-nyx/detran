@@ -602,18 +602,28 @@ export class RaitCaseCommandService {
         this.requestContext,
       );
       await scope.authenticate(tx, input.principal);
-      const membership = rows(
+      const payload = input.payload;
+      const protocolMembership = rows(
         await tx.query(
-          "select pm.id from inf.rait_pool_member pm join inf.rait_pool p on p.tenant_id=pm.tenant_id and p.id=pm.pool_id where pm.tenant_id=$1 and pm.person_id=$2 and pm.member_role='secretaria' and pm.status='ATIVO' and p.active and p.instance=$3 and p.unit_id is not distinct from $4::uuid",
+          `select member.id
+             from inf.rait_pool_member member
+             join inf.rait_pool pool
+               on pool.id = member.pool_id and pool.tenant_id = member.tenant_id
+            where member.tenant_id = $1 and member.person_id = $2
+              and member.member_role = 'secretaria' and member.status = 'ATIVO'
+              and pool.active and pool.instance = $3
+              and pool.unit_id is not distinct from $4::uuid
+            for update of member, pool`,
           [
             context.tenantId,
             context.actorId,
-            input.payload.instance,
-            input.payload.unit_id ?? null,
+            payload.instance,
+            payload.unit_id ?? null,
           ],
         ),
-      )[0];
-      if (!membership) fail('RAIT.TENANT_MISMATCH', 404);
+      );
+      if (!protocolMembership.length)
+        fail('RAIT.FORBIDDEN_CASE_SCOPE', 403, {}, context.requestId);
       if (input.payload.origin_case_id)
         await scope.assertCase(
           tx,
@@ -656,28 +666,6 @@ export class RaitCaseCommandService {
         return replay.response_body;
       }
 
-      const payload = input.payload;
-      const protocolMembership = rows(
-        await tx.query(
-          `select member.id
-             from inf.rait_pool_member member
-             join inf.rait_pool pool
-               on pool.id = member.pool_id and pool.tenant_id = member.tenant_id
-            where member.tenant_id = $1 and member.person_id = $2
-              and member.member_role = 'secretaria' and member.status = 'ATIVO'
-              and pool.active and pool.instance = $3
-              and pool.unit_id is not distinct from $4::uuid
-            for update of member, pool`,
-          [
-            context.tenantId,
-            context.actorId,
-            payload.instance,
-            payload.unit_id ?? null,
-          ],
-        ),
-      );
-      if (membership.length !== 1)
-        fail('RAIT.FORBIDDEN_CASE_SCOPE', 403, {}, context.requestId);
       const tenant = rows(
         await tx.query<{ timezone: string }>(
           'select timezone from auth.tenants where id = $1 for share',
