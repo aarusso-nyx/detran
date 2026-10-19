@@ -1,0 +1,58 @@
+{
+  "role": "Inspector",
+  "scope": "ONLY independent pure/parser GREEN",
+  "provided_engineer_checkpoint": "0bb93a69",
+  "engineer_descends_inspector_counterexample": "938c790c",
+  "external_checkout": "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran",
+  "unchanged_test_hashes": {
+    "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts": "89658980f7bfa7e20a6895e4088f6c5c4b84b61112218f31f5bbe529b2d31919",
+    "tools/parameters/tests/generator.test.mjs": "261833a517f00f4bc96f7063a1719d88eab9eb7d0924dfa0a9224db8edde796a",
+    "tools/parameters/tests/allowlist-rait.test.mjs": "69765ee695003227934121a3fcfa915b44b7d4e4f14b2030713160d1a6e7d4c7"
+  },
+  "runtime_hashes": {
+    "backend/domains/inf/deadlines/src/rait-risk.ts": "bf2584138d26b3e41ae4cd0f2bcb1b9c8e3ac4e3f8e35e099d77b0ff78fc83ec",
+    "backend/domains/inf/deadlines/src/index.ts": "f7e641382e91cf9bc6f7d1f2a5fff3e71b33e0558a5d6a40fd2cc4f9ca1f5533",
+    "tools/parameters/parser.mjs": "773478cee14260910c40b8fb774d1627b981765e45da97fe83b5d610abcedf59"
+  },
+  "results": [
+    {
+      "command": "pnpm --filter @detran/inf-deadlines test:unit --passWithNoTests=false",
+      "exit": 0,
+      "files": 2,
+      "pass": 113,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "log": "inspector-pure-green.log"
+    },
+    {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "exit": 0,
+      "pass": 70,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "log": "inspector-parser-target-green.log"
+    },
+    {
+      "command": "pnpm parameters:test",
+      "exit": 0,
+      "pass": 88,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0,
+      "log": "inspector-parser-full-green.log"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-deadlines typecheck",
+      "exit": 0,
+      "log": "inspector-pure-types-green.log"
+    }
+  ],
+  "public_export": "src/index.ts exports evaluateRaitRisk and RaitRiskSourceError; public API tests passed against those exports",
+  "limits": [
+    "15 storage tests remain UNEXECUTED/schema-pending; no DB lease or DB command",
+    "No HTTP/handler/fullS2 acceptance",
+    "No runtime/test/canonical source/Git/state/scorecard edits during this GREEN phase"
+  ]
+}
