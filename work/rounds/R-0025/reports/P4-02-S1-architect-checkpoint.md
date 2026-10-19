@@ -124,3 +124,43 @@ not run by Architect; downstream responsibilities after authorized checkpoints.
 Missing not-yet-authored controllers are an expected intermediate source state,
 not a decisive runtime RED. Accepted ADRs, product/law, runtime/tests, scorecard,
 primary checkout and recovery material were not edited.
+
+## Supplemental checkpoint — defense pool partition and approved loader path
+
+The Owner explicitly approved the bounded apply.sh loader ownership extension
+(the three insertion sites above), as relayed by the orchestrator. The supporting
+constraint SQL was already authorized by S1. This Architect makes no loader/runtime
+edit; the pending-path stop above records the earlier checkpoint, not a renewed
+approval requirement.
+
+The original WORKLIST pool description and ux_inf_rait_pool_instance_unit index
+reflect historical steering A.2's three base pools without additional segmentation.
+Later accepted ADR0047 explicitly permits more than one active defense pull pool
+matching a case's unit/instance and requires qualified explicit routing. That
+approved decision supersedes the old uniqueness for defesa_previa only; it does
+not authorize weakening JARI/CETRAN uniqueness or provisioning another pool.
+WORKLIST1.5.1 retires the old partial index and generates the replacement
+ux_inf_rait_pool_non_defense_instance_unit on(tenant_id,instance,unit_id) WHERE
+unit_id IS NOT NULL AND instance <> 'defesa_previa'. The existing unit-null base
+index and unique(tenant_id,id) FK target indexes remain unchanged. No row, identity,
+assignment or operational routing receipt is created by this change.
+
+The generator creates indexes idempotently but cannot drop retired indexes.
+Therefore the already authorized supporting post-pass file
+19-rait-case-scope-enforce.sql must explicitly retire only the old standalone
+partial index inf.ux_inf_rait_pool_instance_unit with DROP INDEX IF EXISTS,
+without CASCADE, after generated DDL35 installs the narrower non-defense index.
+Before dropping, inspect pg_index/pg_class/pg_constraint: require that any existing
+index has the expected inf.rait_pool target, unique tenant_id/instance/unit_id
+columns and unit_id IS NOT NULL predicate, and is not owned by another constraint;
+a conflicting shape fails closed instead of dropping an unrelated object.
+Verify the replacement non-defense and unit-null uniqueness indexes and the
+rait_pool(tenant_id,id), rait_unit(tenant_id,id), rait_case(tenant_id,id) FK targets
+remain present/valid. Reapplication must preserve the same state. This narrow
+retirement restores an already approved defense-partition possibility; it does
+not fabricate routing or change case legal success. Inspector must demonstrate
+same-unit defense pool exclusion and preservation of other-instance constraints.
+
+Supplemental checks: targeted WORKLIST blueprint formatting and JSON/index
+assertions PASS; runtime generation and real DB assertions remain Engineer/Inspector
+work at their separate checkpoints.
