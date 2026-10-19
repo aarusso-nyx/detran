@@ -1,0 +1,223 @@
+{
+  "excludedDerivedField": "provenance.line",
+  "differences": [
+    {
+      "key": "rait.ladder.B",
+      "before": {
+        "key": "rait.ladder.B",
+        "value_type": "json",
+        "value_json": "50/75/90 % + crítico 23 m ([WF-RAIT-002] §4.1)",
+        "status": "vigente",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "OD-006",
+        "decision_tokens": [
+          "OD-006"
+        ],
+        "consumer": "radar; RN-RAIT-112 a reconciliar",
+        "surface": "rait"
+      },
+      "after": {
+        "key": "rait.ladder.B",
+        "value_type": "json",
+        "value_json": {
+          "schemaVersion": 1,
+          "clockCode": "B",
+          "unit": "months",
+          "tracks": [
+            {
+              "ceiling": 24,
+              "steps": [
+                {
+                  "flag": "ALERTA_N1",
+                  "after": 12
+                },
+                {
+                  "flag": "ALERTA_N2",
+                  "after": 18
+                },
+                {
+                  "flag": "ALERTA_N3",
+                  "after": 21
+                },
+                {
+                  "flag": "CRITICO",
+                  "after": 23
+                }
+              ]
+            }
+          ],
+          "sourceRef": "WF-RAIT-002#4.1"
+        },
+        "status": "vigente",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "H.54",
+        "decision_tokens": [
+          "OD-006",
+          "H.54"
+        ],
+        "consumer": "current risk; ADR0049 typed normalization, old operational versions preserved",
+        "surface": "rait"
+      }
+    },
+    {
+      "key": "rait.ladder.D",
+      "before": {
+        "key": "rait.ladder.D",
+        "value_type": "json",
+        "value_json": "50/75/90 % (DT-030)",
+        "status": "vigente",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "DT-030",
+        "decision_tokens": [
+          "DT-030"
+        ],
+        "consumer": "IND-DASH-105",
+        "surface": "rait"
+      },
+      "after": {
+        "key": "rait.ladder.D",
+        "value_type": "json",
+        "value_json": {
+          "schemaVersion": 1,
+          "clockCode": "D",
+          "unit": "months",
+          "tracks": [
+            {
+              "ceiling": 60,
+              "steps": [
+                {
+                  "flag": "ALERTA_N1",
+                  "after": 30
+                },
+                {
+                  "flag": "ALERTA_N2",
+                  "after": 45
+                },
+                {
+                  "flag": "CRITICO",
+                  "after": 54
+                }
+              ]
+            }
+          ],
+          "sourceRef": "DT-030"
+        },
+        "status": "vigente",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "DT-030",
+        "decision_tokens": [
+          "DT-030"
+        ],
+        "consumer": "current risk; ADR0049 typed normalization, old operational versions preserved",
+        "surface": "rait"
+      }
+    },
+    {
+      "key": "rait.ladder.A",
+      "before": null,
+      "after": {
+        "key": "rait.ladder.A",
+        "value_type": "json",
+        "value_json": {
+          "schemaVersion": 1,
+          "clockCode": "A",
+          "unit": "days",
+          "tracks": [
+            {
+              "ceiling": 180,
+              "steps": [
+                {
+                  "flag": "ALERTA_N1",
+                  "after": 90
+                },
+                {
+                  "flag": "ALERTA_N2",
+                  "after": 135
+                },
+                {
+                  "flag": "CRITICO",
+                  "after": 162
+                }
+              ]
+            },
+            {
+              "ceiling": 360,
+              "steps": [
+                {
+                  "flag": "ALERTA_N1",
+                  "after": 180
+                },
+                {
+                  "flag": "ALERTA_N2",
+                  "after": 270
+                },
+                {
+                  "flag": "CRITICO",
+                  "after": 324
+                }
+              ]
+            }
+          ],
+          "sourceRef": "WF-RAIT-002#4.3"
+        },
+        "status": "proposta",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "H.54",
+        "decision_tokens": [
+          "OD-006",
+          "H.54"
+        ],
+        "consumer": "WF-RAIT-002 §4.3 Owner approval; ADR0049; operational promotion remains separate",
+        "surface": "rait"
+      }
+    },
+    {
+      "key": "rait.ladder.C",
+      "before": null,
+      "after": {
+        "key": "rait.ladder.C",
+        "value_type": "json",
+        "value_json": {
+          "schemaVersion": 1,
+          "clockCode": "C",
+          "unit": "months",
+          "tracks": [
+            {
+              "ceiling": 36,
+              "steps": [
+                {
+                  "flag": "ALERTA_N2",
+                  "after": 24
+                },
+                {
+                  "flag": "ALERTA_N3",
+                  "after": 30
+                },
+                {
+                  "flag": "CRITICO",
+                  "after": 33
+                }
+              ]
+            }
+          ],
+          "sourceRef": "WF-RAIT-002#4.2"
+        },
+        "status": "proposta",
+        "source_pending": false,
+        "legal_readonly": false,
+        "decision_ref": "H.54",
+        "decision_tokens": [
+          "OD-006",
+          "H.54"
+        ],
+        "consumer": "WF-RAIT-002 §4.2 Owner approval; ADR0049; operational promotion remains separate",
+        "surface": "rait"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed
+// Generated from parameter-catalogue.md sha256:8f0eb7b9bfc7b0301c344c0813212cada9581a50a5e7eeb3b95c93d431759d60
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed';
+  '8f0eb7b9bfc7b0301c344c0813212cada9581a50a5e7eeb3b95c93d431759d60';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',
@@ -125,13 +125,42 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.ladder.B',
     value_type: 'json',
-    value_json: '50/75/90 % + crítico 23 m ([WF-RAIT-002] §4.1)',
+    value_json: {
+      schemaVersion: 1,
+      clockCode: 'B',
+      unit: 'months',
+      tracks: [
+        {
+          ceiling: 24,
+          steps: [
+            {
+              flag: 'ALERTA_N1',
+              after: 12,
+            },
+            {
+              flag: 'ALERTA_N2',
+              after: 18,
+            },
+            {
+              flag: 'ALERTA_N3',
+              after: 21,
+            },
+            {
+              flag: 'CRITICO',
+              after: 23,
+            },
+          ],
+        },
+      ],
+      sourceRef: 'WF-RAIT-002#4.1',
+    },
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
-    decision_ref: 'OD-006',
-    decision_tokens: ['OD-006'],
-    consumer: 'radar; RN-RAIT-112 a reconciliar',
+    decision_ref: 'H.54',
+    decision_tokens: ['OD-006', 'H.54'],
+    consumer:
+      'current risk; ADR0049 typed normalization, old operational versions preserved',
     surface: 'rait',
     provenance: {
       line: 30,
@@ -140,16 +169,138 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.ladder.D',
     value_type: 'json',
-    value_json: '50/75/90 % (DT-030)',
+    value_json: {
+      schemaVersion: 1,
+      clockCode: 'D',
+      unit: 'months',
+      tracks: [
+        {
+          ceiling: 60,
+          steps: [
+            {
+              flag: 'ALERTA_N1',
+              after: 30,
+            },
+            {
+              flag: 'ALERTA_N2',
+              after: 45,
+            },
+            {
+              flag: 'CRITICO',
+              after: 54,
+            },
+          ],
+        },
+      ],
+      sourceRef: 'DT-030',
+    },
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
     decision_ref: 'DT-030',
     decision_tokens: ['DT-030'],
-    consumer: 'IND-DASH-105',
+    consumer:
+      'current risk; ADR0049 typed normalization, old operational versions preserved',
     surface: 'rait',
     provenance: {
       line: 31,
+    },
+  },
+  {
+    key: 'rait.ladder.A',
+    value_type: 'json',
+    value_json: {
+      schemaVersion: 1,
+      clockCode: 'A',
+      unit: 'days',
+      tracks: [
+        {
+          ceiling: 180,
+          steps: [
+            {
+              flag: 'ALERTA_N1',
+              after: 90,
+            },
+            {
+              flag: 'ALERTA_N2',
+              after: 135,
+            },
+            {
+              flag: 'CRITICO',
+              after: 162,
+            },
+          ],
+        },
+        {
+          ceiling: 360,
+          steps: [
+            {
+              flag: 'ALERTA_N1',
+              after: 180,
+            },
+            {
+              flag: 'ALERTA_N2',
+              after: 270,
+            },
+            {
+              flag: 'CRITICO',
+              after: 324,
+            },
+          ],
+        },
+      ],
+      sourceRef: 'WF-RAIT-002#4.3',
+    },
+    status: 'proposta',
+    source_pending: false,
+    legal_readonly: false,
+    decision_ref: 'H.54',
+    decision_tokens: ['OD-006', 'H.54'],
+    consumer:
+      'WF-RAIT-002 §4.3 Owner approval; ADR0049; operational promotion remains separate',
+    surface: 'rait',
+    provenance: {
+      line: 32,
+    },
+  },
+  {
+    key: 'rait.ladder.C',
+    value_type: 'json',
+    value_json: {
+      schemaVersion: 1,
+      clockCode: 'C',
+      unit: 'months',
+      tracks: [
+        {
+          ceiling: 36,
+          steps: [
+            {
+              flag: 'ALERTA_N2',
+              after: 24,
+            },
+            {
+              flag: 'ALERTA_N3',
+              after: 30,
+            },
+            {
+              flag: 'CRITICO',
+              after: 33,
+            },
+          ],
+        },
+      ],
+      sourceRef: 'WF-RAIT-002#4.2',
+    },
+    status: 'proposta',
+    source_pending: false,
+    legal_readonly: false,
+    decision_ref: 'H.54',
+    decision_tokens: ['OD-006', 'H.54'],
+    consumer:
+      'WF-RAIT-002 §4.2 Owner approval; ADR0049; operational promotion remains separate',
+    surface: 'rait',
+    provenance: {
+      line: 33,
     },
   },
   {
@@ -164,7 +315,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'amostragem',
     surface: 'rait',
     provenance: {
-      line: 32,
+      line: 34,
     },
   },
   {
@@ -179,7 +330,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'gatilho de nova turma',
     surface: 'rait',
     provenance: {
-      line: 33,
+      line: 35,
     },
   },
   {
@@ -194,7 +345,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-DASH-304/305',
     surface: 'rait',
     provenance: {
-      line: 34,
+      line: 36,
     },
   },
   {
@@ -209,7 +360,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'folha de jeton, RAIT.PARAMETER_SOURCE_PENDING',
     surface: 'rait',
     provenance: {
-      line: 35,
+      line: 37,
     },
   },
   {
@@ -224,7 +375,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'rait',
     provenance: {
-      line: 36,
+      line: 38,
     },
   },
   {
@@ -239,7 +390,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: '/assinatura',
     surface: 'rait',
     provenance: {
-      line: 37,
+      line: 39,
     },
   },
   {
@@ -254,7 +405,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'restituição (série IBGE a cachear)',
     surface: 'rait',
     provenance: {
-      line: 38,
+      line: 40,
     },
   },
   {
@@ -279,7 +430,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'ordem única; ADR-0024; parser/seed pendentes do ciclo C4-OD',
     surface: 'rait',
     provenance: {
-      line: 39,
+      line: 41,
     },
   },
   {
@@ -294,7 +445,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'RAIT.EXPORT_DPO_APPROVAL_REQUIRED',
     surface: 'rait',
     provenance: {
-      line: 40,
+      line: 42,
     },
   },
   {
@@ -309,7 +460,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: '/arquivo/retencao (CSAD)',
     surface: 'rait',
     provenance: {
-      line: 41,
+      line: 43,
     },
   },
   {
@@ -324,7 +475,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'advertência art. 267',
     surface: 'rait',
     provenance: {
-      line: 42,
+      line: 44,
     },
   },
   {
@@ -339,7 +490,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'T-12',
     surface: 'rait',
     provenance: {
-      line: 43,
+      line: 45,
     },
   },
   {
@@ -354,7 +505,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'pedido de vista',
     surface: 'rait',
     provenance: {
-      line: 44,
+      line: 46,
     },
   },
   {
@@ -369,7 +520,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'rait',
     provenance: {
-      line: 45,
+      line: 47,
     },
   },
   {
@@ -384,7 +535,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'LiveSessionBoard',
     surface: 'rait',
     provenance: {
-      line: 46,
+      line: 48,
     },
   },
   {
@@ -399,7 +550,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'casting-vote',
     surface: 'rait',
     provenance: {
-      line: 47,
+      line: 49,
     },
   },
   {
@@ -414,7 +565,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'rait',
     provenance: {
-      line: 48,
+      line: 50,
     },
   },
   {
@@ -429,7 +580,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'QuorumIndicator',
     surface: 'rait',
     provenance: {
-      line: 49,
+      line: 51,
     },
   },
   {
@@ -444,7 +595,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'contadores',
     surface: 'rait',
     provenance: {
-      line: 50,
+      line: 52,
     },
   },
   {
@@ -459,7 +610,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'calendário',
     surface: 'rait',
     provenance: {
-      line: 51,
+      line: 53,
     },
   },
   {
@@ -474,7 +625,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'faixa desconto_40_fora_sne',
     surface: 'rait',
     provenance: {
-      line: 52,
+      line: 54,
     },
   },
   {
@@ -489,7 +640,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'motor de prazos',
     surface: 'rait',
     provenance: {
-      line: 53,
+      line: 55,
     },
   },
   {
@@ -504,7 +655,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'rait',
     provenance: {
-      line: 54,
+      line: 56,
     },
   },
   {
@@ -519,7 +670,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'transição #5/#6',
     surface: 'rait',
     provenance: {
-      line: 55,
+      line: 57,
     },
   },
   {
@@ -534,7 +685,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'rait',
     provenance: {
-      line: 56,
+      line: 58,
     },
   },
   {
@@ -549,7 +700,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'job (technical-admin)',
     surface: 'rait',
     provenance: {
-      line: 57,
+      line: 59,
     },
   },
   {
@@ -564,7 +715,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'calendário',
     surface: 'rait',
     provenance: {
-      line: 58,
+      line: 60,
     },
   },
   {
@@ -580,7 +731,7 @@ export const PARAMETER_CATALOGUE = [
       'ops/offline-sync/src/handwritten/concurrency-detector.ts (CONCURRENCY_WINDOW_KEY)',
     surface: 'teat',
     provenance: {
-      line: 64,
+      line: 66,
     },
   },
   {
@@ -596,7 +747,7 @@ export const PARAMETER_CATALOGUE = [
       'ops/field bootstrap: frescor online de 300 s; offline exige prova local independente, sem fallback hardcoded',
     surface: 'teat',
     provenance: {
-      line: 65,
+      line: 67,
     },
   },
   {
@@ -612,7 +763,7 @@ export const PARAMETER_CATALOGUE = [
       'ops/field/src/handwritten/mobile-bootstrap.service.ts (HOMOLOGATION_BEHAVIOR_KEY), bloqueador HOMOLOGATION_RENEWAL_DUE',
     surface: 'teat',
     provenance: {
-      line: 66,
+      line: 68,
     },
   },
   {
@@ -627,7 +778,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'teat',
     provenance: {
-      line: 67,
+      line: 69,
     },
   },
   {
@@ -643,7 +794,7 @@ export const PARAMETER_CATALOGUE = [
       'ops/offline-sync/src/handwritten/reserve-numbering.command.ts (RESERVATION_TTL_KEY)',
     surface: 'teat',
     provenance: {
-      line: 68,
+      line: 70,
     },
   },
   {
@@ -658,7 +809,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'alerta de faixa',
     surface: 'teat',
     provenance: {
-      line: 69,
+      line: 71,
     },
   },
   {
@@ -673,7 +824,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'chrome/metadados',
     surface: 'teat',
     provenance: {
-      line: 70,
+      line: 72,
     },
   },
   {
@@ -689,7 +840,7 @@ export const PARAMETER_CATALOGUE = [
       'inf/measures/src/handwritten/record-removal.command.ts (MONITORED_CUSTODY_FLAG, porta MEASURE_FEATURE_FLAGS)',
     surface: 'teat',
     provenance: {
-      line: 71,
+      line: 73,
     },
   },
   {
@@ -705,7 +856,7 @@ export const PARAMETER_CATALOGUE = [
       'backend/app/src/app.module.ts (montagem condicional do SpeedModule), UC-TEAT-013',
     surface: 'teat',
     provenance: {
-      line: 72,
+      line: 74,
     },
   },
   {
@@ -720,7 +871,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'adapter',
     surface: 'teat',
     provenance: {
-      line: 73,
+      line: 75,
     },
   },
   {
@@ -735,7 +886,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'open-shift',
     surface: 'teat',
     provenance: {
-      line: 74,
+      line: 76,
     },
   },
   {
@@ -750,7 +901,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'UC-TEAT-002',
     surface: 'teat',
     provenance: {
-      line: 75,
+      line: 77,
     },
   },
   {
@@ -765,7 +916,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'arquivo',
     surface: 'teat',
     provenance: {
-      line: 76,
+      line: 78,
     },
   },
   {
@@ -781,7 +932,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'gates de serviço',
     surface: 'portal',
     provenance: {
-      line: 82,
+      line: 84,
     },
   },
   {
@@ -797,7 +948,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'portal',
     provenance: {
-      line: 83,
+      line: 85,
     },
   },
   {
@@ -812,7 +963,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'recurso 2ª instância',
     surface: 'portal',
     provenance: {
-      line: 84,
+      line: 86,
     },
   },
   {
@@ -827,7 +978,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'ouvidoria',
     surface: 'portal',
     provenance: {
-      line: 85,
+      line: 87,
     },
   },
   {
@@ -842,7 +993,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'pagamento',
     surface: 'portal',
     provenance: {
-      line: 86,
+      line: 88,
     },
   },
   {
@@ -857,7 +1008,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'portal',
     provenance: {
-      line: 87,
+      line: 89,
     },
   },
   {
@@ -872,7 +1023,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'termo de renúncia',
     surface: 'portal',
     provenance: {
-      line: 88,
+      line: 90,
     },
   },
   {
@@ -887,7 +1038,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'resposta ao titular',
     surface: 'portal',
     provenance: {
-      line: 89,
+      line: 91,
     },
   },
   {
@@ -902,7 +1053,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'leituras nacionais',
     surface: 'portal',
     provenance: {
-      line: 90,
+      line: 92,
     },
   },
   {
@@ -917,7 +1068,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'apps/portal/mobile',
     surface: 'portal',
     provenance: {
-      line: 91,
+      line: 93,
     },
   },
   {
@@ -932,7 +1083,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'ouvidoria',
     surface: 'portal',
     provenance: {
-      line: 92,
+      line: 94,
     },
   },
   {
@@ -948,7 +1099,7 @@ export const PARAMETER_CATALOGUE = [
       'upload de anexos (o app usa ATTACHMENT_MAX_BYTES/accept fixos até o parâmetro ser lido)',
     surface: 'portal',
     provenance: {
-      line: 93,
+      line: 95,
     },
   },
   {
@@ -964,7 +1115,7 @@ export const PARAMETER_CATALOGUE = [
       'upload de anexos (o app usa ATTACHMENT_MAX_BYTES/accept fixos até o parâmetro ser lido)',
     surface: 'portal',
     provenance: {
-      line: 94,
+      line: 96,
     },
   },
   {
@@ -979,7 +1130,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'T-BOAT-TRANSM',
     surface: 'est',
     provenance: {
-      line: 100,
+      line: 102,
     },
   },
   {
@@ -994,7 +1145,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'adapter',
     surface: 'est',
     provenance: {
-      line: 101,
+      line: 103,
     },
   },
   {
@@ -1009,7 +1160,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'gate de fechamento',
     surface: 'est',
     provenance: {
-      line: 102,
+      line: 104,
     },
   },
   {
@@ -1024,7 +1175,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'BOAT.RETENTION_UNDEFINED',
     surface: 'est',
     provenance: {
-      line: 103,
+      line: 105,
     },
   },
   {
@@ -1039,7 +1190,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'est',
     provenance: {
-      line: 104,
+      line: 106,
     },
   },
   {
@@ -1055,7 +1206,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'transparência',
     surface: 'est',
     provenance: {
-      line: 105,
+      line: 107,
     },
   },
   {
@@ -1070,7 +1221,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'crash-start',
     surface: 'est',
     provenance: {
-      line: 106,
+      line: 108,
     },
   },
   {
@@ -1085,7 +1236,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'crash-conditions',
     surface: 'est',
     provenance: {
-      line: 107,
+      line: 109,
     },
   },
   {
@@ -1100,7 +1251,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'rotas reservadas',
     surface: 'est',
     provenance: {
-      line: 108,
+      line: 110,
     },
   },
   {
@@ -1115,7 +1266,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'cancel',
     surface: 'est',
     provenance: {
-      line: 109,
+      line: 111,
     },
   },
   {
@@ -1130,7 +1281,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'aviso na tela',
     surface: 'est',
     provenance: {
-      line: 110,
+      line: 112,
     },
   },
   {
@@ -1145,7 +1296,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'P-06, P-09, exportações (supressão primária e secundária)',
     surface: 'dashboard',
     provenance: {
-      line: 116,
+      line: 118,
     },
   },
   {
@@ -1161,7 +1312,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'escalonamento',
     surface: 'dashboard',
     provenance: {
-      line: 117,
+      line: 119,
     },
   },
   {
@@ -1176,7 +1327,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'selo de frescor (× latência aceitável)',
     surface: 'dashboard',
     provenance: {
-      line: 118,
+      line: 120,
     },
   },
   {
@@ -1191,7 +1342,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'source_freshness',
     surface: 'dashboard',
     provenance: {
-      line: 119,
+      line: 121,
     },
   },
   {
@@ -1207,7 +1358,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'LayerGate (forma normalizada por OD-D30)',
     surface: 'dashboard',
     provenance: {
-      line: 120,
+      line: 122,
     },
   },
   {
@@ -1222,7 +1373,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'DASH.EXPORT_VOLUME_APPROVAL_REQUIRED',
     surface: 'dashboard',
     provenance: {
-      line: 121,
+      line: 123,
     },
   },
   {
@@ -1237,7 +1388,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'calendário de deveres',
     surface: 'dashboard',
     provenance: {
-      line: 122,
+      line: 124,
     },
   },
   {
@@ -1252,7 +1403,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-206/207',
     surface: 'dashboard',
     provenance: {
-      line: 123,
+      line: 125,
     },
   },
   {
@@ -1267,7 +1418,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-209',
     surface: 'dashboard',
     provenance: {
-      line: 124,
+      line: 126,
     },
   },
   {
@@ -1282,7 +1433,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-309/314',
     surface: 'dashboard',
     provenance: {
-      line: 125,
+      line: 127,
     },
   },
   {
@@ -1297,7 +1448,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-401 (technical-admin)',
     surface: 'dashboard',
     provenance: {
-      line: 126,
+      line: 128,
     },
   },
   {
@@ -1312,7 +1463,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-402',
     surface: 'dashboard',
     provenance: {
-      line: 127,
+      line: 129,
     },
   },
   {
@@ -1327,7 +1478,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-403',
     surface: 'dashboard',
     provenance: {
-      line: 128,
+      line: 130,
     },
   },
   {
@@ -1342,7 +1493,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-403',
     surface: 'dashboard',
     provenance: {
-      line: 129,
+      line: 131,
     },
   },
   {
@@ -1357,7 +1508,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'CRITICO_EXTINCAO',
     surface: 'dashboard',
     provenance: {
-      line: 130,
+      line: 132,
     },
   },
   {
@@ -1372,7 +1523,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'D-14/D-16',
     surface: 'dashboard',
     provenance: {
-      line: 131,
+      line: 133,
     },
   },
   {
@@ -1387,7 +1538,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'source (faixas por OD-D34)',
     surface: 'dashboard',
     provenance: {
-      line: 132,
+      line: 134,
     },
   },
 ] as const;

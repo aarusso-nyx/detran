@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
+// Generated from BP-INF-RAIT-CASE-001 v1.3.0 sha256:1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2
 export * from './controllers/rait-case.controller.js';
 export * from './dto/create-rait-case.dto.js';
 export * from './entities/rait-case.entity.js';
@@ -94,6 +94,11 @@ export * from './dto/create-rait-case-pool-scope-record.dto.js';
 export * from './entities/rait-case-pool-scope-record.entity.js';
 export * from './repositories/rait-case-pool-scope-record.repository.js';
 export * from './services/rait-case-pool-scope-record.service.js';
+export * from './controllers/rait-claim-legacy-qualification.controller.js';
+export * from './dto/create-rait-claim-legacy-qualification.dto.js';
+export * from './entities/rait-claim-legacy-qualification.entity.js';
+export * from './repositories/rait-claim-legacy-qualification.repository.js';
+export * from './services/rait-claim-legacy-qualification.service.js';
 export * from './rait-case.module.js';
 export * from './handwritten/rait-case-commands.controller.js';
 export * from './handwritten/rait-inquiry-commands.controller.js';
@@ -107,3 +112,9 @@ export * from './handwritten/rait-admissibility-command.service.js';
 export * from './handwritten/rait-case-scoped-reads.controller.js';
 export * from './handwritten/rait-case-scope.service.js';
 export * from './handwritten/rait-case-pool-scope.service.js';
+export * from './handwritten/rait-claim-context.controller.js';
+export * from './handwritten/rait-case-risk.controller.js';
+export * from './handwritten/rait-claim-context.service.js';
+export * from './handwritten/rait-case-risk.service.js';
+export * from './handwritten/rait-risk.port.js';
+export * from './handwritten/rait-legacy-qualification.service.js';
