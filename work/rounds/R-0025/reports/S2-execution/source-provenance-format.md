@@ -105,6 +105,10 @@ approved literal in the accompanying JSON; no invented URI/source-token alias.
 
 ## Exact projection and completeness
 
+AIT uses the actual SQL table `inf.ait_ait` from31-inf-ait.sql:7, referenced
+by CASE34 and INFRACTION38 foreign keys. Source refs use
+`sql:inf.ait_ait:<uuid>`; `inf.ait` is not a table alias accepted by this format.
+
 The accompanying rowFields enumerates every consumed SQL column. No SELECT * hash,
 mutable created/updated timestamp surrogate, guessed owner relation or omission of
 a field actually used by calculation/qualification is allowed. If Engineer needs
