@@ -44,11 +44,25 @@ for (const pkg of population.packages) {
       exclude: coverage.exclude ?? [],
     });
   const { coverage: _coverage, ...test } = originalTest;
+  if (test.pool && test.pool !== 'forks')
+    throw new Error(`COVERAGE_PACKAGE_CONTEXT_POOL_UNSUPPORTED:${pkg}`);
+  const setup = Array.isArray(test.setupFiles)
+    ? test.setupFiles
+    : test.setupFiles
+      ? [test.setupFiles]
+      : [];
   projects.push({
     ...original,
     root: resolve(root, pkg),
     plugins,
-    test: { ...test, name: pkg, coverage: undefined },
+    test: {
+      ...test,
+      name: pkg,
+      pool: 'forks',
+      coverage: undefined,
+      provide: { ...test.provide, scorecardPackageCwd: resolve(root, pkg) },
+      setupFiles: [resolve(root, 'tests/config/package-cwd.mjs'), ...setup],
+    },
   });
 }
 export default defineConfig({

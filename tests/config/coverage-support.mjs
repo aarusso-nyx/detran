@@ -13,6 +13,10 @@ import { dirname, join, matchesGlob, relative, resolve } from 'node:path';
 import istanbulCoverage from 'istanbul-lib-coverage';
 
 const { createCoverageMap } = istanbulCoverage;
+// Six complete Angular compiler programs plus the merged V8 coverage map exceed
+// Node's default heap. Keep at most two unchanged program contexts; evicted apps
+// rebuild from the same canonical configurations on the next transform.
+const angularPrograms = new Map();
 
 export const exclusions = [
   'backend/**/tests/integration/**',
@@ -79,7 +83,6 @@ export async function angularCoveragePlugin(root, app) {
   const { angularJitApplicationTransform } = await import(
     require.resolve('@angular/compiler-cli')
   );
-  let program;
   return {
     name: 'scorecard-angular-original-source-map',
     enforce: 'pre',
@@ -90,6 +93,7 @@ export async function angularCoveragePlugin(root, app) {
         !id.startsWith(`${appRoot}/`)
       )
         return null;
+      let program = angularPrograms.get(appRoot);
       if (!program) {
         const load = (file) => {
           const path = join(appRoot, file),
@@ -115,6 +119,10 @@ export async function angularCoveragePlugin(root, app) {
           },
         );
       }
+      angularPrograms.delete(appRoot);
+      angularPrograms.set(appRoot, program);
+      while (angularPrograms.size > 2)
+        angularPrograms.delete(angularPrograms.keys().next().value);
       const source = program.getSourceFile(id);
       if (!source) return null;
       let code, map;
@@ -201,11 +209,20 @@ export function populationReporter(root, population, policies) {
   let ctx,
     modules = [],
     passed = false,
-    expected = [];
+    expected = [],
+    collecting = true,
+    candidate;
   return {
     onInit(vitest) {
       ctx = vitest;
-      rmSync(sidecar, { force: true });
+      collecting = vitest.config.coverage?.enabled !== false;
+      if (collecting) {
+        candidate = execFileSync('git', ['rev-parse', 'HEAD'], {
+          cwd: root,
+          encoding: 'utf8',
+        }).trim();
+        rmSync(sidecar, { force: true });
+      }
     },
     async onTestRunStart() {
       expected = (await ctx.globTestSpecifications([]))
@@ -217,7 +234,7 @@ export function populationReporter(root, population, policies) {
       passed = reason === 'passed' && errors.length === 0;
     },
     onFinishedReportCoverage() {
-      if (!passed) return;
+      if (!collecting || !passed) return;
       try {
         const bytes = readFileSync(reportPath),
           report = JSON.parse(bytes);
@@ -242,6 +259,7 @@ export function populationReporter(root, population, policies) {
           cwd: root,
           encoding: 'utf8',
         }).trim();
+        if (commit !== candidate) throw new Error('COVERAGE_CANDIDATE_CHANGED');
         mkdirSync(dirname(sidecar), { recursive: true });
         writeFileSync(
           sidecar,

@@ -180,6 +180,46 @@ test('marks filtered runs partial and never binds failed tests', async () => {
   f.reporter.onFinishedReportCoverage();
   assert.equal(existsSync(f.sidecar), false);
 });
+test('a non-coverage unit run preserves the existing coverage binding', () => {
+  const f = fixture();
+  writeFileSync(f.sidecar, 'existing coverage binding');
+  f.context.config.coverage = { enabled: false };
+  f.reporter.onInit(f.context);
+  f.reporter.onTestRunEnd([f.module], [], 'passed');
+  f.reporter.onFinishedReportCoverage();
+  assert.equal(readFileSync(f.sidecar, 'utf8'), 'existing coverage binding');
+});
+test('refuses to bind a report if HEAD moved during the producer run', async () => {
+  const f = fixture();
+  await f.reporter.onTestRunStart();
+  execFileSync(
+    'git',
+    [
+      '-c',
+      'user.name=DEVAI Inspector',
+      '-c',
+      'user.email=inspector@devai.local',
+      'commit',
+      '--quiet',
+      '--allow-empty',
+      '-m',
+      'test(coverage): move isolated candidate',
+    ],
+    { cwd: f.root },
+  );
+  f.reporter.onTestRunEnd([f.module], [], 'passed');
+  const previousExitCode = process.exitCode;
+  try {
+    assert.throws(
+      () => f.reporter.onFinishedReportCoverage(),
+      /COVERAGE_CANDIDATE_CHANGED/,
+    );
+    assert.equal(process.exitCode, 1);
+  } finally {
+    process.exitCode = previousExitCode;
+  }
+  assert.equal(existsSync(f.sidecar), false);
+});
 test('refuses to bind a report that silently omitted a source', async () => {
   const f = fixture();
   await f.reporter.onTestRunStart();
