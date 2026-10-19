@@ -102,8 +102,10 @@ ux_inf_rait_pool_non_defense_instance_unit preserves uniqueness for every
 non-defesa_previa instance. Only defense-prior partition uniqueness was narrowed;
 this review cannot authorize changing the accepted JARI/CETRAN invariant.
 
-Inspector instead uses the existing unlinked JARI CASE18, with the same unit and
-instance as pool20000002 and a separately qualified secretary read. The batch
+Inspector instead uses existing JARI CASE18, with the same unit and instance
+as pool20000002 and a separately qualified secretary read. Its canonical seeded
+assignment is temporarily released with the valid tuple; the fixture restores
+and verifies the exact full original assignment snapshots in finally. The batch
 request must deny404 with unchanged effects and batch/item rows while no current
 trusted exact-pool association exists. Adding only a trusted fixture relation to
 that exact pool makes the identical request succeed201. A regression to unit and
