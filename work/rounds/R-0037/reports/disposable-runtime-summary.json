@@ -1,0 +1,34 @@
+{
+  "container": "detran-c1-r0037-99132",
+  "image": "postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5",
+  "results": [
+    {
+      "argv": [
+        "pnpm",
+        "backend:db:reset"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "bash",
+        "backend/database/seed.sh"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/app",
+        "exec",
+        "vitest",
+        "run",
+        "tests/e2e/runtime-profiles.e2e.spec.ts",
+        "tests/e2e/r21-trust-profiles.e2e.spec.ts"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "cleanup_exit_code": 0
+}
