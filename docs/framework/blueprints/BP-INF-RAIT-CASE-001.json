@@ -113,22 +113,16 @@
       "handwritten/rait-case-scope.service",
       "handwritten/rait-case-pool-scope.service"
     ],
-    "owners": [
-      "detran-inf"
-    ],
+    "owners": ["detran-inf"],
     "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant. v1.2.0: P4-02-S1, ADR-0046/0047 and closed T0 access/triage maps replace generated HTTP with scoped purpose projections; internal explicit read-scope and case-pool records expose no CRUD. WF-RAIT-001/002 and existing legal command transitions remain unchanged.",
-    "moduleExports": [
-      "RaitCaseScopeService"
-    ]
+    "moduleExports": ["RaitCaseScopeService"]
   },
   "database": {
     "entities": [
       {
         "name": "RaitCase",
         "table": "rait_case",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Caso RAIT — um requerimento sobre um AIT em uma instancia (RN-RAIT-002). v1.1.0: legal_priority guarda a base de prioridade legal de tramitacao da ordem unica (WF-RAIT-004 secao 2; valores no parametro rait.priority.legal_bases, OD-016 — sem check para nao congelar parametro em DDL), unit_id aponta a turma/JARI que julga (secao 7, sem FK: inf.rait_unit nasce no DDL 35, posterior ao 34) e version e o contador de ETag/If-Match.",
         "fields": [
           {
@@ -275,47 +269,28 @@
         "indexes": [
           {
             "name": "ux_inf_rait_case_protocol",
-            "columns": [
-              "tenant_id",
-              "protocol_number"
-            ],
+            "columns": ["tenant_id", "protocol_number"],
             "unique": true
           },
           {
             "name": "ix_inf_rait_case_state",
-            "columns": [
-              "tenant_id",
-              "instance",
-              "state"
-            ]
+            "columns": ["tenant_id", "instance", "state"]
           },
           {
             "name": "ix_inf_rait_case_movement",
-            "columns": [
-              "tenant_id",
-              "last_movement_at"
-            ]
+            "columns": ["tenant_id", "last_movement_at"]
           },
           {
             "name": "ix_inf_rait_case_cetran_received",
-            "columns": [
-              "tenant_id",
-              "cetran_received_at"
-            ]
+            "columns": ["tenant_id", "cetran_received_at"]
           },
           {
             "name": "ix_inf_rait_case_agency_jurisdiction",
-            "columns": [
-              "tenant_id",
-              "agency_jurisdiction_id"
-            ]
+            "columns": ["tenant_id", "agency_jurisdiction_id"]
           },
           {
             "name": "ux_inf_rait_case_tenant_id",
-            "columns": [
-              "tenant_id",
-              "id"
-            ],
+            "columns": ["tenant_id", "id"],
             "unique": true
           }
         ],
@@ -360,38 +335,26 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_case_ait",
-            "columns": [
-              "ait_id"
-            ],
+            "columns": ["ait_id"],
             "references": {
               "table": "inf.ait_ait",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_case_origin",
-            "columns": [
-              "origin_case_id"
-            ],
+            "columns": ["origin_case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_case_agency_jurisdiction",
-            "columns": [
-              "agency_jurisdiction_id"
-            ],
+            "columns": ["agency_jurisdiction_id"],
             "references": {
               "table": "ops.agency_jurisdiction",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -399,9 +362,7 @@
       {
         "name": "RaitParty",
         "table": "rait_party",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Parte do caso — legitimidade ativa (RN-RAIT-120) e representacao (RN-RAIT-121).",
         "fields": [
           {
@@ -463,11 +424,7 @@
         "indexes": [
           {
             "name": "ix_inf_rait_party_case",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "role"
-            ]
+            "columns": ["tenant_id", "case_id", "role"]
           }
         ],
         "checks": [
@@ -487,14 +444,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_party_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -502,9 +455,7 @@
       {
         "name": "RaitDocument",
         "table": "rait_document",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Peca do dossie. origin='oficio' marca as pecas que o orgao junta por dever proprio (RN-RAIT-003).",
         "fields": [
           {
@@ -559,19 +510,11 @@
         "indexes": [
           {
             "name": "ix_inf_rait_document_case",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "kind"
-            ]
+            "columns": ["tenant_id", "case_id", "kind"]
           },
           {
             "name": "ux_inf_rait_document_case_id",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "id"
-            ],
+            "columns": ["tenant_id", "case_id", "id"],
             "unique": true
           }
         ],
@@ -584,14 +527,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_document_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -599,9 +538,7 @@
       {
         "name": "RaitPriorityAssessment",
         "table": "rait_priority_assessment",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "ADR-0024 e CTG-0001-C4-OD V3: qualificacao no protocolo, politica e instante preservados; revision posterior reservada e vedada na politica atual.",
         "fields": [
           {
@@ -662,20 +599,12 @@
         "indexes": [
           {
             "name": "ux_inf_rait_priority_assessment_revision",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "revision"
-            ],
+            "columns": ["tenant_id", "case_id", "revision"],
             "unique": true
           },
           {
             "name": "ux_inf_rait_priority_assessment_case_id",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "id"
-            ],
+            "columns": ["tenant_id", "case_id", "id"],
             "unique": true
           }
         ],
@@ -704,16 +633,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_priority_assessment_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ],
+            "columns": ["tenant_id", "case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "tenant_id",
-                "id"
-              ]
+              "columns": ["tenant_id", "id"]
             }
           }
         ]
@@ -721,9 +644,7 @@
       {
         "name": "RaitPriorityBasis",
         "table": "rait_priority_basis",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "ADR-0024 e CTG-0001-C4-OD V3: todas as provas do ato, anexo PCD obrigatorio; documento/CNH apresentado para idade sem upload obrigatorio.",
         "fields": [
           {
@@ -825,34 +746,18 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_priority_basis_assessment",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "assessment_id"
-            ],
+            "columns": ["tenant_id", "case_id", "assessment_id"],
             "references": {
               "table": "inf.rait_priority_assessment",
-              "columns": [
-                "tenant_id",
-                "case_id",
-                "id"
-              ]
+              "columns": ["tenant_id", "case_id", "id"]
             }
           },
           {
             "name": "fk_inf_rait_priority_basis_document",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "document_id"
-            ],
+            "columns": ["tenant_id", "case_id", "document_id"],
             "references": {
               "table": "inf.rait_document",
-              "columns": [
-                "tenant_id",
-                "case_id",
-                "id"
-              ]
+              "columns": ["tenant_id", "case_id", "id"]
             }
           }
         ]
@@ -860,9 +765,7 @@
       {
         "name": "RaitPendingContent",
         "table": "rait_pending_content",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Pendencia de conteudo minimo aberta no protocolo — UC-RAIT-028 fluxos 1-3. Registra os itens ausentes (RN-RAIT-002), o prazo interno ao requerente e o desfecho; pendencia nao e recusa de protocolo (AC-RAIT-028-1) e nao consome o prazo do requerente (AC-RAIT-028-2). Exigencia de uma so vez: no maximo uma pendencia aberta por caso (RN-PORTAL-107).",
         "fields": [
           {
@@ -909,19 +812,13 @@
         "indexes": [
           {
             "name": "ux_inf_rait_pending_content_open",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ],
+            "columns": ["tenant_id", "case_id"],
             "unique": true,
             "where": "closed_at is null"
           },
           {
             "name": "ix_inf_rait_pending_content_due",
-            "columns": [
-              "tenant_id",
-              "due_on"
-            ],
+            "columns": ["tenant_id", "due_on"],
             "where": "closed_at is null"
           }
         ],
@@ -938,14 +835,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_pending_content_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -953,9 +846,7 @@
       {
         "name": "RaitRedirect",
         "table": "rait_redirect",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Redirecionamento de intake entre orgaos — UC-RAIT-027 fluxos 2-4. Peca de outro orgao autuador remetida de imediato (Res. 900 art. 6 paragrafos 2 e 3) ou recebida de outro orgao, com o protocolo de origem como marco de tempestividade (AC-RAIT-027-1, RN-RAIT-106) e devolucao de prazo quando o orgao era incompetente (Lei 9.784 art. 63 paragrafo 1, RN-RAIT-109). case_id nulo quando a peca pertence a outro orgao e nao gera caso aqui.",
         "fields": [
           {
@@ -1026,19 +917,12 @@
         "indexes": [
           {
             "name": "ux_inf_rait_redirect_protocol",
-            "columns": [
-              "tenant_id",
-              "direction",
-              "protocol_number"
-            ],
+            "columns": ["tenant_id", "direction", "protocol_number"],
             "unique": true
           },
           {
             "name": "ix_inf_rait_redirect_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ]
+            "columns": ["tenant_id", "case_id"]
           }
         ],
         "checks": [
@@ -1058,14 +942,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_redirect_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1073,9 +953,7 @@
       {
         "name": "RaitAdmissibility",
         "table": "rait_admissibility",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Um veredito por criterio do art.4 da Res.900/2022 — AC-RAIT-002-3 exige os quatro registrados individualmente.",
         "fields": [
           {
@@ -1117,11 +995,7 @@
         "indexes": [
           {
             "name": "ux_inf_rait_admissibility_criterion",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "criterion"
-            ],
+            "columns": ["tenant_id", "case_id", "criterion"],
             "unique": true
           }
         ],
@@ -1134,14 +1008,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_admissibility_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1149,9 +1019,7 @@
       {
         "name": "RaitDeadline",
         "table": "rait_deadline",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Motor de prazos unico (RN-RAIT-005). due_on ja vem prorrogado ao 1o dia util (CONTRAN-918 art.29).",
         "fields": [
           {
@@ -1215,19 +1083,12 @@
         "indexes": [
           {
             "name": "ux_inf_rait_deadline_case_timer",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "timer_code"
-            ],
+            "columns": ["tenant_id", "case_id", "timer_code"],
             "unique": true
           },
           {
             "name": "ix_inf_rait_deadline_due",
-            "columns": [
-              "tenant_id",
-              "due_on"
-            ],
+            "columns": ["tenant_id", "due_on"],
             "where": "satisfied_at is null"
           }
         ],
@@ -1248,14 +1109,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_deadline_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1263,9 +1120,7 @@
       {
         "name": "RaitInquiry",
         "table": "rait_inquiry",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Diligencia (RN-RAIT-004). Expirar avanca o caso a PRONTO_P_DECISAO; nunca arquiva.",
         "fields": [
           {
@@ -1326,10 +1181,7 @@
         "indexes": [
           {
             "name": "ix_inf_rait_inquiry_open",
-            "columns": [
-              "tenant_id",
-              "due_on"
-            ],
+            "columns": ["tenant_id", "due_on"],
             "where": "answered_at is null"
           }
         ],
@@ -1350,14 +1202,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_inquiry_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1365,9 +1213,7 @@
       {
         "name": "RaitInquiryDocument",
         "table": "rait_inquiry_document",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Relacao interna entre resposta de diligencia e documento existente; sem CRUD HTTP.",
         "fields": [
           {
@@ -1400,37 +1246,25 @@
         "indexes": [
           {
             "name": "ux_inf_rait_inquiry_document_once",
-            "columns": [
-              "tenant_id",
-              "inquiry_id",
-              "document_id"
-            ],
+            "columns": ["tenant_id", "inquiry_id", "document_id"],
             "unique": true
           }
         ],
         "foreignKeys": [
           {
             "name": "fk_inf_rait_inquiry_document_inquiry",
-            "columns": [
-              "inquiry_id"
-            ],
+            "columns": ["inquiry_id"],
             "references": {
               "table": "inf.rait_inquiry",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_inquiry_document_document",
-            "columns": [
-              "document_id"
-            ],
+            "columns": ["document_id"],
             "references": {
               "table": "inf.rait_document",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1438,9 +1272,7 @@
       {
         "name": "RaitPendingDocument",
         "table": "rait_pending_document",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Relacao interna entre resolucao de pendencia e documento existente; sem CRUD HTTP.",
         "fields": [
           {
@@ -1473,37 +1305,25 @@
         "indexes": [
           {
             "name": "ux_inf_rait_pending_document_once",
-            "columns": [
-              "tenant_id",
-              "pending_id",
-              "document_id"
-            ],
+            "columns": ["tenant_id", "pending_id", "document_id"],
             "unique": true
           }
         ],
         "foreignKeys": [
           {
             "name": "fk_inf_rait_pending_document_pending",
-            "columns": [
-              "pending_id"
-            ],
+            "columns": ["pending_id"],
             "references": {
               "table": "inf.rait_pending_content",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_pending_document_document",
-            "columns": [
-              "document_id"
-            ],
+            "columns": ["document_id"],
             "references": {
               "table": "inf.rait_document",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1511,9 +1331,7 @@
       {
         "name": "RaitWithdrawalAttestation",
         "table": "rait_withdrawal_attestation",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Atestado interno verificavel do termo de desistência fisico ou digital; sem CRUD HTTP.",
         "fields": [
           {
@@ -1557,10 +1375,7 @@
         "indexes": [
           {
             "name": "ux_inf_rait_withdrawal_attestation_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ],
+            "columns": ["tenant_id", "case_id"],
             "unique": true
           }
         ],
@@ -1577,38 +1392,26 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_withdrawal_attestation_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_withdrawal_attestation_document",
-            "columns": [
-              "document_id"
-            ],
+            "columns": ["document_id"],
             "references": {
               "table": "inf.rait_document",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_withdrawal_attestation_signer",
-            "columns": [
-              "signer_party_id"
-            ],
+            "columns": ["signer_party_id"],
             "references": {
               "table": "inf.rait_party",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1616,9 +1419,7 @@
       {
         "name": "RaitDraft",
         "table": "rait_draft",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Minuta de decisao versionada — WF-RAIT-004 secao 4 passos 3, 5 e 6. Uma linha por versao da minuta do caso, com autor, documento na fachada de documentos (ADR-0018, sem FK), hash de conteudo e status; a autoridade signataria pode devolver a minuta com orientacao uma unica vez, sem sair de PRONTO_P_DECISAO (secao 4 passo 5).",
         "fields": [
           {
@@ -1680,20 +1481,12 @@
         "indexes": [
           {
             "name": "ux_inf_rait_draft_version",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "version"
-            ],
+            "columns": ["tenant_id", "case_id", "version"],
             "unique": true
           },
           {
             "name": "ix_inf_rait_draft_status",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "status"
-            ]
+            "columns": ["tenant_id", "case_id", "status"]
           }
         ],
         "checks": [
@@ -1721,14 +1514,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_draft_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1736,9 +1525,7 @@
       {
         "name": "RaitDecision",
         "table": "rait_decision",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Decisao do caso. session_id referencia inf.rait_session sem FK — a sessao e criada em DDL posterior (36).",
         "fields": [
           {
@@ -1799,10 +1586,7 @@
         "indexes": [
           {
             "name": "ux_inf_rait_decision_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ],
+            "columns": ["tenant_id", "case_id"],
             "unique": true
           }
         ],
@@ -1831,14 +1615,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_decision_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1846,9 +1626,7 @@
       {
         "name": "RaitCommunication",
         "table": "rait_communication",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Comunicacao do resultado (RN-RAIT-130). effective_on e a ciencia — no SNE, sent_at+30d (RN-RAIT-124).",
         "fields": [
           {
@@ -1906,10 +1684,7 @@
         "indexes": [
           {
             "name": "ix_inf_rait_communication_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ]
+            "columns": ["tenant_id", "case_id"]
           }
         ],
         "checks": [
@@ -1921,26 +1696,18 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_communication_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           },
           {
             "name": "fk_inf_rait_communication_decision",
-            "columns": [
-              "decision_id"
-            ],
+            "columns": ["decision_id"],
             "references": {
               "table": "inf.rait_decision",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -1948,9 +1715,7 @@
       {
         "name": "RaitCaseEvent",
         "table": "rait_case_event",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "Trilha de movimentacao e eventos de dominio publicados (WF-RAIT-001 secao Eventos). Toda linha reinicia o relogio C.",
         "fields": [
           {
@@ -1999,24 +1764,16 @@
         "indexes": [
           {
             "name": "ix_inf_rait_case_event_case",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "occurred_at"
-            ]
+            "columns": ["tenant_id", "case_id", "occurred_at"]
           }
         ],
         "foreignKeys": [
           {
             "name": "fk_inf_rait_case_event_case",
-            "columns": [
-              "case_id"
-            ],
+            "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "id"
-              ]
+              "columns": ["id"]
             }
           }
         ]
@@ -2024,9 +1781,7 @@
       {
         "name": "RaitCaseReadScope",
         "table": "rait_case_read_scope",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "ADR-0046/0047, P4-02-S1: explicit role-purpose read containment for WF-RAIT-001/002. Owner-qualified provisioning only; no public API. Unit/pool tenant FKs installed by supporting post-table DDL; role/duty/action remain independently required.",
         "fields": [
           {
@@ -2083,23 +1838,13 @@
         "indexes": [
           {
             "name": "ux_inf_rait_case_read_scope_unit",
-            "columns": [
-              "tenant_id",
-              "actor_id",
-              "role",
-              "unit_id"
-            ],
+            "columns": ["tenant_id", "actor_id", "role", "unit_id"],
             "unique": true,
             "where": "unit_id is not null"
           },
           {
             "name": "ux_inf_rait_case_read_scope_pool",
-            "columns": [
-              "tenant_id",
-              "actor_id",
-              "role",
-              "pool_id"
-            ],
+            "columns": ["tenant_id", "actor_id", "role", "pool_id"],
             "unique": true,
             "where": "pool_id is not null"
           }
@@ -2121,16 +1866,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_read_scope_membership",
-            "columns": [
-              "tenant_id",
-              "actor_id"
-            ],
+            "columns": ["tenant_id", "actor_id"],
             "references": {
               "table": "auth.memberships",
-              "columns": [
-                "tenant_id",
-                "user_id"
-              ]
+              "columns": ["tenant_id", "user_id"]
             }
           }
         ]
@@ -2138,9 +1877,7 @@
       {
         "name": "RaitCasePoolScopeRecord",
         "table": "rait_case_pool_scope",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "description": "ADR-0047, WF-RAIT-001/002 and P4-02-S1: exact tenant-case-pool containment with verified operational provenance; no first-pool/unit-wide fallback, no public CRUD, seed or historical backfill. Missing routing never invalidates legal protocol/admission.",
         "fields": [
           {
@@ -2190,11 +1927,7 @@
         "indexes": [
           {
             "name": "ux_inf_rait_case_pool_scope",
-            "columns": [
-              "tenant_id",
-              "case_id",
-              "pool_id"
-            ],
+            "columns": ["tenant_id", "case_id", "pool_id"],
             "unique": true
           }
         ],
@@ -2211,16 +1944,10 @@
         "foreignKeys": [
           {
             "name": "fk_inf_rait_case_pool_case",
-            "columns": [
-              "tenant_id",
-              "case_id"
-            ],
+            "columns": ["tenant_id", "case_id"],
             "references": {
               "table": "inf.rait_case",
-              "columns": [
-                "tenant_id",
-                "id"
-              ]
+              "columns": ["tenant_id", "id"]
             }
           }
         ]
