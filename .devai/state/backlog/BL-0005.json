@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0005",
+  "request_id": "r0036-remediation-inventory",
+  "kind": "finding",
+  "title": "P1 Architect/Engineer: restore complete canonical inventory inputs",
+  "body": "Cells F2:T1, F4:T1/T2/T6/T7/T9. API sensor finds 1151 endpoints, but read-only runs do not persist the bodies required by dependent sensors. Routes/data-model discovery is empty; regeneration only rebuilds dependency/coverage bodies and reports missing prerequisites. Acceptance: authorized regeneration emits schema-valid complete API, Angular routes, SQL/data model, RBAC/data-handling and coverage bodies; dependent sensors resolve the same candidate and complete inventory timings. Evidence: work/rounds/R-0036/reports/evaluation-34a89f84/.",
+  "origin": {
+    "session": "DIRECT-CLI-a36846f89b3c0b3f2d8bdd9048560cef",
+    "role": "auditor",
+    "commit": "34a89f845146523161f401ae758b5fb9fab8db93"
+  },
+  "round_id": "R-0036",
+  "status": "resolved",
+  "created_at": "2026-10-18T21:05:36.036Z",
+  "resolved_at": "2026-10-19T04:42:58.887Z",
+  "resolution": "work/rounds/R-0036/reports/evaluation-e9e45a4a/assessment.md — All seven canonical bodies regenerated without missing/error inputs; current SQL DDL roots and Angular routes supported."
+}

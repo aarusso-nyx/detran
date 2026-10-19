@@ -1,0 +1,96 @@
+{
+  "round": "R-0036",
+  "integration_head": "0cc5076aa89b160c8a3364ed80d30fd4583d6244",
+  "framework_version": "2.6.3",
+  "started_at": "2026-10-19T02:53:38.521303+00:00",
+  "clean_at_freeze": true,
+  "baseline_commit": "34a89f845146523161f401ae758b5fb9fab8db93",
+  "constitution_version": "1.0.2",
+  "preserved_na": [
+    "F1:T1",
+    "F4:T5"
+  ],
+  "hashes": {
+    "package.json": "12ac9dbba6397a51c87254bd80bd32fe4f73d5343fdee62ad890d2e5cdefae6c",
+    "pnpm-lock.yaml": "ac4bc38a8be323322b1fc15e97a17c1a85565890cff858ec266290615990fe3e",
+    ".devai/pin/constitution.md": "d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d",
+    ".devai/config/thresholds.json": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4",
+    ".devai/config/scorecard-na.json": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2",
+    ".devai/config/sensor-inputs.json": "aa1bd49b15ee05cd1aee7eca3519f26914acb7e3ca8ff4e37760918c6b2b5a7d",
+    "law/policy/scorecard-sensor-inputs.json": "77f175c947eafd4fa12d47da41b08ed185f840db58ef6ee6223c8c81f12b55ab",
+    "test-tasks.json": "752c6105900f752bae1b276f8b0282f501f139777615e5704ba733595ed5fbad",
+    "law/schemas/manifest.json": "81cfe4554b95aeea45a17bb7fa0e15530e28a4860fef3f676b9617396cf86933",
+    ".devai/state/evidence-chain.json": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec",
+    "record/proofs/chain.json": "7bba4b0feaff456a2163602c30e8c0cd647ca55e4a24f8ad2c40009b3bdee574"
+  },
+  "environment": {
+    "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "node": "v24.22.0",
+    "pnpm": "9.15.0",
+    "physical_memory_bytes": 17179869184,
+    "coverage_node_options": "--max-old-space-size=8192",
+    "collector_workers": 2,
+    "coverage_processing_concurrency": 1,
+    "databases": "Disposable loopback-only PostGIS fixtures; request-role RLS preserved"
+  },
+  "ci_population": {
+    "workflow": "ci.yml",
+    "event": "push",
+    "headBranch": "main",
+    "attempts": "last",
+    "includeCancelled": false,
+    "lookbackDays": 30,
+    "minimumSample": 10,
+    "excludedJobs": [],
+    "observation_started_at": "2026-10-19T02:53:38.521303+00:00",
+    "exact_window_and_run_ids": "Resolved by captured native CI readings"
+  },
+  "bound_thresholds": {
+    "schemaVersion": "1.0.0",
+    "coverage": {
+      "lines": 70,
+      "branches": 60,
+      "functions": 70,
+      "statements": 70
+    },
+    "mutation": {
+      "score_min": 60,
+      "survived_max": 9007199254740991
+    },
+    "lint": {
+      "max_errors": 0,
+      "max_warnings": 0
+    },
+    "typecheck": {
+      "max_errors": 0
+    },
+    "freshness": {
+      "default_max_age_hours": 168,
+      "scorecard_failure_max_age_hours": 168
+    },
+    "soft_gate": {
+      "scale_min": 0,
+      "scale_max": 4,
+      "minimum_scores": {
+        "spec_coherence": 3,
+        "plant_idiomaticity": 3,
+        "test_depth": 3,
+        "traceability_quality": 3
+      },
+      "aggregation": "all-dimensions",
+      "max_age_hours": 24,
+      "future_tolerance_seconds": 0,
+      "require_independent_evaluator": true,
+      "require_completed_no_tool_mcp": true
+    }
+  },
+  "native_thresholds": "Installed 2.6.3 rules, no relaxation; criteria notes and reading metrics retain actual consumed thresholds",
+  "coverage_population": "Whole-source local unit population per ADR-0045; integration/E2E separate",
+  "product_findings_separate": [
+    "BL-0013",
+    "BL-0014",
+    "BL-0015",
+    "BL-0016"
+  ]
+}

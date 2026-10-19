@@ -46,7 +46,7 @@ new endpoint, permission, data grant, selector/risk activation or S2 implementat
 ## Exact ownership
 
 Architect documentation: this report, AUTHORIZATION.md and plan.md under
-work/rounds/R-0025; new docs/meta/adr/ADR-0050-rait-command-replay-provenance.md,
+work/rounds/R-0025; new docs/meta/adr/ADR-0052-rait-command-replay-provenance.md,
 docs/meta/adr/README.md and DESIGN-DECISIONS.md. Accepted ADR0046 remains immutable;
 the supplement preserves its fingerprint rule and formalizes safe legacy denial.
 
@@ -68,3 +68,13 @@ metadata leak and no replay re-execution. Run affected unit/integration/HTTP,
 root checks, independent cross-family review and governed evidence verification.
 Stop for any additional schema, permission, public contract, production migration
 or unowned path. No implementation PR merge or round closure is authorized.
+
+## Identifier reconciliation after PR202
+
+ADR0035 determines identifier ownership by first integration into main. PR202
+merged the scorecard coverage ADR as ADR0050 and measurement repairs as ADR0051
+at 6f07295b. This unmerged replay decision consequently becomes
+[ADR0052](../../../../docs/meta/adr/ADR-0052-rait-command-replay-provenance.md);
+the original replay ADR0050 path remains a redirect. The accepted normative text
+is preserved byte for byte below provenance metadata. This mechanical identifier
+reconciliation changes no Owner-approved A3 behavior or source permissions.

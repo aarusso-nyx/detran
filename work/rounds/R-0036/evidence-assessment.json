@@ -1,0 +1,65 @@
+{
+  "action": "Evaluate all 43 applicable DETRAN scorecard cells",
+  "round": "R-0036",
+  "role": "auditor",
+  "evaluation_head": "34a89f845146523161f401ae758b5fb9fab8db93",
+  "baseline_head": "3ec14d3a0e6b274dc367157bc4958f81750c5dc8",
+  "readiness_established": false,
+  "native_counts": {
+    "PASS": 18,
+    "REVIEW": 10,
+    "FAIL": 12,
+    "UNKNOWN": 3,
+    "N/A": 2
+  },
+  "assessment_counts": {
+    "measured": 19,
+    "partial": 13,
+    "blocked": 11
+  },
+  "recorded_sensor_readings": 52,
+  "remediation": [
+    "BL-0002",
+    "BL-0003",
+    "BL-0004",
+    "BL-0005",
+    "BL-0006",
+    "BL-0007",
+    "BL-0008",
+    "BL-0009",
+    "BL-0010",
+    "BL-0011"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/assessment.md",
+      "sha256": "ccc06fac0384d6c5d1b037d99d19f472e303466ea1569638470561e0814d11e5"
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/evaluation-register.json",
+      "sha256": "938b7b0b2c490f597872c5f8f7ec942abaa0a0e067f5a0cc5d256c6ff7b5eba3"
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/final-scorecard.json",
+      "sha256": "fd515c95c20f0044a325b9b76458ed65e138d25e85ae90c4f417e40ab8a010a2"
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/baseline-comparison.json",
+      "sha256": "769e2d16f77766c8765340e46cd5c84e2465b698d5d1c2963be475b59dad5558"
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/remediation-backlog.json",
+      "sha256": "894969e55290b8ecb38cc2f646ec994980a6cc7166ec748f6d847d7d6049b8cb"
+    },
+    {
+      "path": "work/rounds/R-0036/reports/evaluation-34a89f84/evidence-manifest.json",
+      "sha256": "2822fd00a1040181392b0a9b333c1ff9561d3ccc7484bfdc69860601cd53d980"
+    }
+  ],
+  "limitations": [
+    "Sensor-input binding is unsupported in installed 2.2.0; schema-valid inputs supplied explicitly.",
+    "Native errors, partial populations, default threshold provenance and infrastructure gaps are retained; supplemental results are not synthesized readings.",
+    "Full formatting has one pre-existing failure in ignored .claude/settings.local.json; delivery formatting passes.",
+    "Assessment is bound to evaluation_head; delivery commits and production readiness are not certified."
+  ]
+}

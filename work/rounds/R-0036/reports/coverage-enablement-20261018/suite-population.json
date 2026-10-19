@@ -1,0 +1,997 @@
+[
+  {
+    "package": "@detran/app",
+    "path": "backend/app",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run",
+    "files": [
+      "tests/integration/audit-persistence.integration.spec.ts",
+      "tests/integration/boat-documents.integration.spec.ts",
+      "tests/integration/boat-projections.integration.spec.ts",
+      "tests/integration/offline-numbering-shift-races.integration.spec.ts",
+      "tests/integration/offline-unique-index-precheck.integration.spec.ts",
+      "tests/integration/ops-model.integration.spec.ts",
+      "tests/integration/pec-pipeline-persistence.integration.spec.ts",
+      "tests/integration/pec-renach-process-key-race.integration.spec.ts",
+      "tests/integration/r21-renach-characterization.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ch-billing",
+    "path": "backend/domains/ch/billing",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/billing-payment-race.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ch-biometrics",
+    "path": "backend/domains/ch/biometrics",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-controls",
+    "path": "backend/domains/ch/clinical-controls",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-network",
+    "path": "backend/domains/ch/clinical-network",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-reports",
+    "path": "backend/domains/ch/clinical-reports",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/report-outbox-writer.integration.spec.ts",
+      "tests/integration/report-signature-race.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ch-encounters",
+    "path": "backend/domains/ch/encounters",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-exams",
+    "path": "backend/domains/ch/exams",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-inconsistencies",
+    "path": "backend/domains/ch/inconsistencies",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-juntas",
+    "path": "backend/domains/ch/juntas",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-operational-controls",
+    "path": "backend/domains/ch/operational-controls",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-patients",
+    "path": "backend/domains/ch/patients",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-process-blocks",
+    "path": "backend/domains/ch/process-blocks",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-restrictions",
+    "path": "backend/domains/ch/restrictions",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-retention",
+    "path": "backend/domains/ch/retention",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-scheduling",
+    "path": "backend/domains/ch/scheduling",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-telehealth",
+    "path": "backend/domains/ch/telehealth",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-toxicology",
+    "path": "backend/domains/ch/toxicology",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/dashboard-crashes",
+    "path": "backend/domains/dashboard/crashes",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/dashboard-monitor",
+    "path": "backend/domains/dashboard/monitor",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/cycle-alert-commands.integration.spec.ts",
+      "tests/integration/cycle-alert-matrix.integration.spec.ts",
+      "tests/integration/cycle-detector.integration.spec.ts",
+      "tests/integration/cycle-duties.integration.spec.ts",
+      "tests/integration/cycle-events.integration.spec.ts",
+      "tests/integration/cycle-freshness-nested-tx.integration.spec.ts",
+      "tests/integration/cycle-freshness.integration.spec.ts",
+      "tests/integration/cycle-sweeper.integration.spec.ts",
+      "tests/integration/detector-race.integration.spec.ts",
+      "tests/integration/projections-replay.integration.spec.ts",
+      "tests/integration/rls.integration.spec.ts",
+      "tests/integration/seeds.integration.spec.ts",
+      "tests/integration/surface-access-log.integration.spec.ts",
+      "tests/integration/surface-suppression.integration.spec.ts",
+      "tests/integration/surface-watermark.integration.spec.ts",
+      "tests/integration/vocabulary.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/est-crash",
+    "path": "backend/domains/est/crash",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/boat-contract.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-ait",
+    "path": "backend/domains/inf/ait",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/ait-commands.integration.spec.ts",
+      "tests/integration/ait-race.integration.spec.ts",
+      "tests/integration/ait-sync-applier.integration.spec.ts",
+      "tests/integration/inf-rls.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-alcohol",
+    "path": "backend/domains/inf/alcohol",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/alcohol-commands.integration.spec.ts",
+      "tests/integration/alcohol-race.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-collection",
+    "path": "backend/domains/inf/collection",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/collection-db.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-infraction",
+    "path": "backend/domains/inf/infraction",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/infraction-db.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-measures",
+    "path": "backend/domains/inf/measures",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/measure-commands.integration.spec.ts",
+      "tests/integration/measure-race.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-normative",
+    "path": "backend/domains/inf/normative",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/catalog-publish.integration.spec.ts",
+      "tests/integration/package-publish.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-notification",
+    "path": "backend/domains/inf/notification",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/notification-db.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-rait-case",
+    "path": "backend/domains/inf/rait-case",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/rait-case-command-contract.integration.spec.ts",
+      "tests/integration/rait-case-deltas-db.integration.spec.ts",
+      "tests/integration/rait-case-runtime.integration.spec.ts",
+      "tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "tests/integration/rait-seed-profiles.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-rait-integration",
+    "path": "backend/domains/inf/rait-integration",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/rait-integration-db.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-rait-org",
+    "path": "backend/domains/inf/rait-org",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/rait-org-db.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-rait-session",
+    "path": "backend/domains/inf/rait-session",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/rait-session-agenda-production-red.integration.spec.ts",
+      "tests/integration/rait-session-command-transaction.integration.spec.ts",
+      "tests/integration/rait-session-deliberation-minutes-red.integration.spec.ts",
+      "tests/integration/rait-session-deltas-db.integration.spec.ts",
+      "tests/integration/rait-session-lock-aggregate-red.integration.spec.ts",
+      "tests/integration/rait-session-view-limit-race-red.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-rait-worklist",
+    "path": "backend/domains/inf/rait-worklist",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/rait-batch-minutes-manifest.integration.spec.ts",
+      "tests/integration/rait-worklist-command-transaction.integration.spec.ts",
+      "tests/integration/rait-worklist-corrective.integration.spec.ts",
+      "tests/integration/rait-worklist-deltas-db.integration.spec.ts",
+      "tests/integration/rait-worklist-production-red.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-speed",
+    "path": "backend/domains/inf/speed",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/integration-renaest-mirror",
+    "path": "backend/domains/integration/renaest-mirror",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ops-agency",
+    "path": "backend/domains/ops/agency",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-evidence",
+    "path": "backend/domains/ops/evidence",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/complete-upload.integration.spec.ts",
+      "tests/integration/deliver-access-request.integration.spec.ts",
+      "tests/integration/generate-probative-package.integration.spec.ts",
+      "tests/integration/purge-unverified.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-example",
+    "path": "backend/domains/ops/example",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ops-field",
+    "path": "backend/domains/ops/field",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/device-posture.integration.spec.ts",
+      "tests/integration/shift-lifecycle.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-offline-sync",
+    "path": "backend/domains/ops/offline-sync",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/concurrency-window.integration.spec.ts",
+      "tests/integration/numbering.integration.spec.ts",
+      "tests/integration/r21-offline-characterization.integration.spec.ts",
+      "tests/integration/resolve-conflict.integration.spec.ts",
+      "tests/integration/sync-batch.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-parameter",
+    "path": "backend/domains/ops/parameter",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/parameter-put-race.integration.spec.ts",
+      "tests/integration/parameter.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-provisioning",
+    "path": "backend/domains/ops/provisioning",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/provisioning-amendment3.integration.spec.ts",
+      "tests/integration/provisioning-amendment4.integration.spec.ts",
+      "tests/integration/provisioning-behavior.integration.spec.ts",
+      "tests/integration/provisioning.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-snapshots",
+    "path": "backend/domains/ops/snapshots",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/external-query.integration.spec.ts",
+      "tests/integration/senatran-boundary.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-citizen-service",
+    "path": "backend/domains/portal/citizen-service",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/portal-timers.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-complaints",
+    "path": "backend/domains/portal/complaints",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/portal-identity",
+    "path": "backend/domains/portal/identity",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/portal-rls.integration.spec.ts",
+      "tests/integration/portal-seed.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-inbox",
+    "path": "backend/domains/portal/inbox",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/portal-inbox.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-projections",
+    "path": "backend/domains/portal/projections",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/portal-projections-replay.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-requests",
+    "path": "backend/domains/portal/requests",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/portal-requests.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/senatran-adapter",
+    "path": "packages/senatran-adapter",
+    "tier": "integration",
+    "command": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "files": [
+      "tests/integration/http-client.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "senatran-mock",
+    "path": "senatran-mock",
+    "tier": "integration",
+    "command": "SENATRAN_TEST_TIER=integration vitest run",
+    "files": [
+      "tests/integration/contract-views.integration.spec.ts",
+      "tests/integration/idempotency-audit.integration.spec.ts",
+      "tests/integration/national-extensions-idempotency.integration.spec.ts",
+      "tests/integration/renaest-idempotency-audit.integration.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/app",
+    "path": "backend/app",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run",
+    "files": [
+      "tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "tests/e2e/boat-projections.e2e.spec.ts",
+      "tests/e2e/boat-renaest-job.e2e.spec.ts",
+      "tests/e2e/boat-victim-audit-tenant.e2e.spec.ts",
+      "tests/e2e/dashboard-audit.e2e.spec.ts",
+      "tests/e2e/dashboard-catalog.e2e.spec.ts",
+      "tests/e2e/dashboard-domain-boundary.e2e.spec.ts",
+      "tests/e2e/dashboard-exports.e2e.spec.ts",
+      "tests/e2e/dashboard-layers.e2e.spec.ts",
+      "tests/e2e/dashboard-policy.e2e.spec.ts",
+      "tests/e2e/dashboard-stream.e2e.spec.ts",
+      "tests/e2e/inf-ait-routes.e2e.spec.ts",
+      "tests/e2e/ops-active-uniqueness-routes.e2e.spec.ts",
+      "tests/e2e/ops-modules.e2e.spec.ts",
+      "tests/e2e/ops-provisioning.e2e.spec.ts",
+      "tests/e2e/pec-idempotency.e2e.spec.ts",
+      "tests/e2e/policy-routes.e2e.spec.ts",
+      "tests/e2e/portal-identity.e2e.spec.ts",
+      "tests/e2e/portal-journeys.e2e.spec.ts",
+      "tests/e2e/portal-manifestation-tenant-isolation.e2e.spec.ts",
+      "tests/e2e/portal-national-mock.e2e.spec.ts",
+      "tests/e2e/portal-national-unavailable.e2e.spec.ts",
+      "tests/e2e/portal-payload-lint.e2e.spec.ts",
+      "tests/e2e/portal-requests.e2e.spec.ts",
+      "tests/e2e/portal-routes.e2e.spec.ts",
+      "tests/e2e/portal-stream.e2e.spec.ts",
+      "tests/e2e/r21-offline-sync.e2e.spec.ts",
+      "tests/e2e/r21-trust-profiles.e2e.spec.ts",
+      "tests/e2e/rait-case-commands.e2e.spec.ts",
+      "tests/e2e/rait-ctg2-final-structural.e2e.spec.ts",
+      "tests/e2e/rait-session-agenda-production.e2e.spec.ts",
+      "tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts",
+      "tests/e2e/rait-stream.e2e.spec.ts",
+      "tests/e2e/rait-worklist-corrective.e2e.spec.ts",
+      "tests/e2e/rait-worklist-production.e2e.spec.ts",
+      "tests/e2e/runtime-profiles.e2e.spec.ts",
+      "tests/e2e/teat-evidence-normative.e2e.spec.ts",
+      "tests/e2e/teat-field-sync.e2e.spec.ts",
+      "tests/e2e/teat-measures-alcohol.e2e.spec.ts",
+      "tests/e2e/teat-stream.e2e.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ch-billing",
+    "path": "backend/domains/ch/billing",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-biometrics",
+    "path": "backend/domains/ch/biometrics",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-controls",
+    "path": "backend/domains/ch/clinical-controls",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-network",
+    "path": "backend/domains/ch/clinical-network",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-clinical-reports",
+    "path": "backend/domains/ch/clinical-reports",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-encounters",
+    "path": "backend/domains/ch/encounters",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-exams",
+    "path": "backend/domains/ch/exams",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-inconsistencies",
+    "path": "backend/domains/ch/inconsistencies",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-juntas",
+    "path": "backend/domains/ch/juntas",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-operational-controls",
+    "path": "backend/domains/ch/operational-controls",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-patients",
+    "path": "backend/domains/ch/patients",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-process-blocks",
+    "path": "backend/domains/ch/process-blocks",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-restrictions",
+    "path": "backend/domains/ch/restrictions",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-retention",
+    "path": "backend/domains/ch/retention",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-scheduling",
+    "path": "backend/domains/ch/scheduling",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-telehealth",
+    "path": "backend/domains/ch/telehealth",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ch-toxicology",
+    "path": "backend/domains/ch/toxicology",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/dashboard-crashes",
+    "path": "backend/domains/dashboard/crashes",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/dashboard-monitor",
+    "path": "backend/domains/dashboard/monitor",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/est-crash",
+    "path": "backend/domains/est/crash",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-ait",
+    "path": "backend/domains/inf/ait",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [
+      "tests/e2e/ait-lifecycle.e2e.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/inf-alcohol",
+    "path": "backend/domains/inf/alcohol",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-collection",
+    "path": "backend/domains/inf/collection",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-infraction",
+    "path": "backend/domains/inf/infraction",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-measures",
+    "path": "backend/domains/inf/measures",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-normative",
+    "path": "backend/domains/inf/normative",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-notification",
+    "path": "backend/domains/inf/notification",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-rait-case",
+    "path": "backend/domains/inf/rait-case",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-rait-integration",
+    "path": "backend/domains/inf/rait-integration",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-rait-org",
+    "path": "backend/domains/inf/rait-org",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-rait-session",
+    "path": "backend/domains/inf/rait-session",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-rait-worklist",
+    "path": "backend/domains/inf/rait-worklist",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/inf-speed",
+    "path": "backend/domains/inf/speed",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/integration-renaest-mirror",
+    "path": "backend/domains/integration/renaest-mirror",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ops-agency",
+    "path": "backend/domains/ops/agency",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-evidence",
+    "path": "backend/domains/ops/evidence",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-example",
+    "path": "backend/domains/ops/example",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ops-field",
+    "path": "backend/domains/ops/field",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-offline-sync",
+    "path": "backend/domains/ops/offline-sync",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-parameter",
+    "path": "backend/domains/ops/parameter",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/ops-provisioning",
+    "path": "backend/domains/ops/provisioning",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [
+      "tests/e2e/provisioning.e2e.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/ops-snapshots",
+    "path": "backend/domains/ops/snapshots",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-citizen-service",
+    "path": "backend/domains/portal/citizen-service",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-complaints",
+    "path": "backend/domains/portal/complaints",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": false
+  },
+  {
+    "package": "@detran/portal-identity",
+    "path": "backend/domains/portal/identity",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-inbox",
+    "path": "backend/domains/portal/inbox",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-projections",
+    "path": "backend/domains/portal/projections",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/portal-requests",
+    "path": "backend/domains/portal/requests",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "@detran/senatran-adapter",
+    "path": "packages/senatran-adapter",
+    "tier": "e2e",
+    "command": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "files": [
+      "tests/e2e/mock-contract.e2e.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  },
+  {
+    "package": "senatran-mock",
+    "path": "senatran-mock",
+    "tier": "e2e",
+    "command": "SENATRAN_TEST_TIER=e2e vitest run",
+    "files": [
+      "tests/e2e/auth.e2e.spec.ts",
+      "tests/e2e/contract-conformance.e2e.spec.ts",
+      "tests/e2e/error-envelope.e2e.spec.ts",
+      "tests/e2e/national-extensions.e2e.spec.ts",
+      "tests/e2e/pagination.e2e.spec.ts",
+      "tests/e2e/read-sweep.e2e.spec.ts",
+      "tests/e2e/renach-workflow.e2e.spec.ts",
+      "tests/e2e/renaest-workflow.e2e.spec.ts",
+      "tests/e2e/renainf-workflow.e2e.spec.ts",
+      "tests/e2e/scenarios.e2e.spec.ts",
+      "tests/e2e/transactional-conformance.e2e.spec.ts"
+    ],
+    "coveredByExistingWrapper": true
+  }
+]

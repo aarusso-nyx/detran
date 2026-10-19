@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-b1c81919b60af4b4",
+  "sensor": {
+    "name": "security-scan",
+    "kind": "security_scan"
+  },
+  "timestamp": "2026-10-18T20:55:01.372Z",
+  "status": "unknown",
+  "deterministic": false,
+  "command": "pnpm audit --json",
+  "command_hash": "f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "info",
+      "code": "SECURITY_SCAN_NO_AUDIT_TOOL",
+      "message": "Neither pnpm nor npm available: npm-invalid-evidence: AUTHORITY_HOST_PROCESS_ADAPTER_REQUIRED"
+    },
+    {
+      "severity": "info",
+      "code": "SECURITY_SCAN_PREFERRED_AUDIT_FAILED",
+      "message": "pnpm-error: spawnSync pnpm ENOBUFS: spawnSync pnpm ENOBUFS"
+    }
+  ],
+  "metrics": {
+    "tools_tried": 2
+  }
+}

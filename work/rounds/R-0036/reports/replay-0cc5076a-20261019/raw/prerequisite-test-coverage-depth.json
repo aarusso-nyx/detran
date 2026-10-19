@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "test_coverage_depth",
+    "--repo-root",
+    ".",
+    "--input",
+    "{\"coveragePath\":\"coverage/coverage-final.json\",\"population\":\"local\",\"exclusions\":[\"backend/app/tests/e2e\",\"backend/app/tests/in-house\",\"backend/app/tests/integration\",\"backend/app/tests/real\",\"backend/domains/ch/billing/tests/integration\",\"backend/domains/ch/clinical-reports/tests/integration\",\"backend/domains/dashboard/monitor/tests/integration\",\"backend/domains/est/crash/tests/integration\",\"backend/domains/inf/ait/tests/e2e\",\"backend/domains/inf/ait/tests/integration\",\"backend/domains/inf/alcohol/tests/integration\",\"backend/domains/inf/collection/tests/integration\",\"backend/domains/inf/infraction/tests/integration\",\"backend/domains/inf/measures/tests/integration\",\"backend/domains/inf/normative/tests/integration\",\"backend/domains/inf/notification/tests/integration\",\"backend/domains/inf/rait-case/tests/integration\",\"backend/domains/inf/rait-integration/tests/integration\",\"backend/domains/inf/rait-org/tests/integration\",\"backend/domains/inf/rait-session/tests/integration\",\"backend/domains/inf/rait-worklist/tests/integration\",\"backend/domains/ops/evidence/tests/integration\",\"backend/domains/ops/field/tests/integration\",\"backend/domains/ops/offline-sync/tests/integration\",\"backend/domains/ops/parameter/tests/integration\",\"backend/domains/ops/provisioning/tests/e2e\",\"backend/domains/ops/provisioning/tests/integration\",\"backend/domains/ops/snapshots/tests/integration\",\"backend/domains/portal/citizen-service/tests/integration\",\"backend/domains/portal/identity/tests/integration\",\"backend/domains/portal/inbox/tests/integration\",\"backend/domains/portal/projections/tests/integration\",\"backend/domains/portal/requests/tests/integration\",\"senatran-mock/tests/e2e\",\"senatran-mock/tests/integration\",\"tests\",\"tools\"]}",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T02:53:38.904Z",
+  "finished_at": "2026-10-19T02:53:39.444Z",
+  "exitCode": 2,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"AUTHORITY_DECLARATION_NOT_APPLICABLE\",\"class\":\"routing-authority\",\"exit\":2,\"message\":\"authority declaration not applicable\",\"remediation\":\"This action's effect is 'read'; remove --write and --as-role.\",\"refs\":{\"doc\":\"law/constitution.md#article-6\"},\"context\":{\"category\":\"usage-error\",\"action_id\":\"sense run\",\"effect\":\"read\",\"declared\":{\"as_role\":true,\"authority_session\":false,\"write\":true,\"allow_publish\":false,\"experimental\":false},\"required\":{\"write\":false,\"allow_publish\":false,\"experimental\":false}}}}\n"
+}

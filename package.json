@@ -93,14 +93,17 @@
     "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human"
   },
   "devDependencies": {
-    "@aarusso-nyx/devai": "2.2.0",
+    "@aarusso-nyx/devai": "2.6.3",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.4",
+    "@vitest/coverage-v8": "4.1.11",
+    "istanbul-lib-coverage": "3.2.2",
     "openapi-typescript": "7.13.0",
     "pg": "^8.20.0",
     "prettier": "^3.5.3",
     "tsx": "^4.23.13",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "4.1.11"
   },
   "pnpm": {
     "peerDependencyRules": {

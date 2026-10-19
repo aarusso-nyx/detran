@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import angular from 'angular-eslint';
 import prettier from 'eslint-config-prettier';
 import { defineConfig } from 'eslint/config';
@@ -7,6 +8,11 @@ export default defineConfig(
   { ignores: ['dist/**', '.angular/**'] },
   {
     files: ['**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: fileURLToPath(new URL('.', import.meta.url)),
+      },
+    },
     extends: [
       ...tseslint.configs.recommended,
       ...angular.configs.tsRecommended,

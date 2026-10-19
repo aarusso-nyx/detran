@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-34.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/harness_coverage/SR-a9341ebe7494e8e2.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-a9341ebe7494e8e2\",\"sensor\":{\"name\":\"harness-coverage\",\"kind\":\"harness_coverage\"},\"timestamp\":\"2026-10-18T20:55:34.902Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-harness-coverage\",\"command_hash\":\"0770e7d9705a873f205cae5992631fa2acaa1bc1a7f6bbb9e5466c884bb541fa\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"workflow_count\":2,\"covered_by_unfiltered_workflow\":1,\"coverage_pct\":100}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

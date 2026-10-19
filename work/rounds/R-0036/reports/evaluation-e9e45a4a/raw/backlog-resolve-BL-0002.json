@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "backlog",
+    "resolve",
+    "BL-0002",
+    "--repo-root",
+    ".",
+    "--resolution",
+    "work/rounds/R-0036/reports/evaluation-e9e45a4a/assessment.md — Registered init bind materializes the schema-valid policy declaration under published DEVAI 2.6.3.",
+    "--as-role",
+    "architect",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:56.394Z",
+  "finished_at": "2026-10-19T04:42:56.937Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"backlog resolve\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"schemaVersion\":\"1.0.0\",\"id\":\"BL-0002\",\"request_id\":\"r0036-remediation-binding\",\"kind\":\"finding\",\"title\":\"P1 Architect: add a supported sensor-input binding operation\",\"body\":\"DEVAI 2.2.0 reads sensor-inputs.json but its registered init actions cannot materialize it, and adopter-policy rejects that field. Source: law/policy/scorecard-sensor-inputs.json. Add upstream support in a separately authorized task; do not hand-write protected configuration or patch installed dependencies. Acceptance: registered init action validates and materializes the adopter source with a digest, retaining thresholds and surfaces. Evidence: work/rounds/R-0036/reports/evaluation-34a89f84/.\",\"origin\":{\"session\":\"DIRECT-CLI-a36846f89b3c0b3f2d8bdd9048560cef\",\"role\":\"auditor\",\"commit\":\"34a89f845146523161f401ae758b5fb9fab8db93\"},\"round_id\":\"R-0036\",\"status\":\"resolved\",\"created_at\":\"2026-10-18T21:05:34.039Z\",\"resolved_at\":\"2026-10-19T04:42:56.898Z\",\"resolution\":\"work/rounds/R-0036/reports/evaluation-e9e45a4a/assessment.md — Registered init bind materializes the schema-valid policy declaration under published DEVAI 2.6.3.\"}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

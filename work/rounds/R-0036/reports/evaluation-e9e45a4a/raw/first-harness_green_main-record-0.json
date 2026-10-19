@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/published-263-e9e45a4a/first-harness_green_main-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:06.585Z",
+  "finished_at": "2026-10-19T04:42:07.199Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/harness_green_main/SR-bd13e76c74b1f213.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"harness-green-main\",\"kind\":\"harness_green_main\"},\"timestamp\":\"2026-10-19T04:41:14.422Z\",\"status\":\"pass\",\"deterministic\":false,\"command\":\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-19\",\"command_hash\":\"2d91aa4a3217f9ae9aba121cd4c2c41554661e500daa9345c19647835e531161\",\"tier\":\"L2\",\"findings\":[],\"metrics\":{\"run_count\":93,\"success_count\":92,\"success_pct\":98.92,\"threshold_pass\":95,\"threshold_review\":80,\"sample_size\":93,\"minimum_sample\":10,\"population_workflow\":\"ci.yml\",\"population_event\":\"push\",\"population_head_branch\":\"main\",\"population_base_branch\":\"main\",\"population_attempts\":\"last\",\"population_include_cancelled\":false,\"population_lookback_days\":30,\"population_base_branch_verified\":true,\"population_excluded_jobs_unverified\":0,\"population_unverified\":\"\"},\"id\":\"SR-bd13e76c74b1f213\"}}}}\n",
+  "stderr": ""
+}

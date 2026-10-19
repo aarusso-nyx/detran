@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/sweep-first-frozen-reading-27.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/plant_depth/SR-16d44b4b46ca3da0.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-16d44b4b46ca3da0\",\"sensor\":{\"name\":\"plant-depth\",\"kind\":\"plant_depth\"},\"timestamp\":\"2026-10-18T20:55:33.504Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense-plant-depth\",\"command_hash\":\"f81f3e093e5840c1b2aa12c9a06f4d9eca6254edf05460d901005813c218f4c2\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"PLANT_DEPTH_FILES_BLOATED\",\"message\":\"95th-percentile file size 2790 LOC exceeds REVIEW threshold 1000.\"}],\"metrics\":{\"files_count\":108,\"lines_total\":88821,\"lines_max\":6656,\"lines_mean\":822,\"lines_p95\":2790,\"threshold_pass\":500,\"threshold_review\":1000}}}}}\n",
+  "stderr": " WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/projects/stech/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

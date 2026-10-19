@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0014",
+  "request_id": "r0036-product-lint-20261018",
+  "kind": "finding",
+  "class": "code",
+  "title": "P2: remediate product lint findings revealed by complete measurement",
+  "body": "The complete diagnostic run with DEVAI PR #413 parsed 3498 files and reported 1135 errors and 1 warning, with zero parser errors. Existing app rules are preserved; enablement changes configure discovery and parser roots only. Evidence: work/rounds/R-0036/reports/remediation-599161f9/evidence-manifest.json and candidate-provider diagnostics. Owner: Engineer; fix product violations in a separate PR without weakening or disabling rules. Do not classify these as enablement regressions merely because the previous sensor could not complete; compare each finding with its source history. The diagnostic is not an official published-provider verdict.",
+  "origin": {
+    "session": "DIRECT-CLI-0c6d5caa24d95a15c10d74019978e355",
+    "role": "inspector",
+    "commit": "8cf4223a18d287da2c64a5a57f7172cebb3ce574"
+  },
+  "round_id": "R-0036",
+  "status": "open",
+  "created_at": "2026-10-18T23:13:54.578Z",
+  "resolved_at": null
+}

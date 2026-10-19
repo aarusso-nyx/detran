@@ -45,7 +45,7 @@
       "docs": [
         {
           "doc": "docs/framework/product/domains/ch/pec/workflows/WF-PEC-001.md",
-          "anchor": "transições-e-gatilhos"
+          "anchor": "transi\u00e7\u00f5es-e-gatilhos"
         }
       ],
       "tests": [
@@ -79,7 +79,7 @@
       "docs": [
         {
           "doc": "docs/framework/product/transversal/portal/APP.md",
-          "anchor": "modelo-de-operação"
+          "anchor": "modelo-de-opera\u00e7\u00e3o"
         }
       ],
       "tests": [
@@ -158,6 +158,23 @@
         }
       ],
       "code_areas": ["backend/domains/est/crash/**"]
+    },
+    {
+      "id": "INV-OPS-002",
+      "docs": [
+        {
+          "doc": "docs/meta/adr/ADR-0044-initial-performance-baseline.md",
+          "anchor": "decision"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "perf",
+          "path": "backend/app/tests/performance/backend-baseline.perf.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/app/tests/performance/**"]
     }
   ],
   "test_corpus": []

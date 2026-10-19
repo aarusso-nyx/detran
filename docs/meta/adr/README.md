@@ -60,7 +60,11 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0047](ADR-0047-rait-role-purpose-and-staff-identity.md)           | RAIT complete role-purpose scope and canonical staff identity                           | Accepted | —                                                                                |
 | [ADR-0048](ADR-0048-rait-legacy-defense-claim-compatibility.md)        | Provenance-qualified legacy defense claim compatibility                                 | Accepted | —                                                                                |
 | [ADR-0049](ADR-0049-rait-authoritative-risk-composition.md)            | Authoritative current-risk production for claim ordering                                | Accepted | —                                                                                |
-| [ADR-0050](ADR-0050-rait-command-replay-provenance.md)                 | Immutable actor provenance for RAIT command replay                                      | Accepted | —                                                                                |
+| [ADR-0043](ADR-0043-devai-measurement-adoption.md)                     | DEVAI 2.6.2 for scorecard measurement remediation                                       | Accepted | parcial → [ADR-0051](ADR-0051-devai-263-measurement-repairs.md)                  |
+| [ADR-0052](ADR-0052-rait-command-replay-provenance.md)                 | Immutable actor provenance for RAIT command replay                                      | Accepted | —                                                                                |
+| [ADR-0044](ADR-0044-initial-performance-baseline.md)                   | Initial generous request-path performance targets and suite                             | Accepted | —                                                                                |
+| [ADR-0050](ADR-0050-whole-source-local-coverage.md)                    | Whole-source local coverage for the scorecard                                           | Accepted | —                                                                                |
+| [ADR-0051](ADR-0051-devai-263-measurement-repairs.md)                  | DEVAI 2.6.3 measurement repairs                                                         | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
@@ -86,6 +90,10 @@ não uma citação, e não muda.
 | ADR-0006      | [ADR-0006-ops-field-operations-port.md](ADR-0006-ops-field-operations-port.md)                     | ADR-0036    | [ADR-0036-ops-field-operations-port.md](ADR-0036-ops-field-operations-port.md)                     |
 | ADR-0024      | [ADR-0024-rait-legal-priority-owner-policy.md](ADR-0024-rait-legal-priority-owner-policy.md)       | ADR-0037    | [ADR-0037-rait-legal-priority-owner-policy.md](ADR-0037-rait-legal-priority-owner-policy.md)       |
 | ADR-0028      | [ADR-0028-provisionamento-operacional-offline.md](ADR-0028-provisionamento-operacional-offline.md) | ADR-0038    | [ADR-0038-provisionamento-operacional-offline.md](ADR-0038-provisionamento-operacional-offline.md) |
+| ADR-0045      | [ADR-0045-whole-source-local-coverage.md](ADR-0045-whole-source-local-coverage.md)                 | ADR-0050    | [ADR-0050-whole-source-local-coverage.md](ADR-0050-whole-source-local-coverage.md)                 |
+| ADR-0046      | [ADR-0046-devai-263-measurement-repairs.md](ADR-0046-devai-263-measurement-repairs.md)             | ADR-0051    | [ADR-0051-devai-263-measurement-repairs.md](ADR-0051-devai-263-measurement-repairs.md)             |
+
+| ADR-0050 | [ADR-0050-rait-command-replay-provenance.md](ADR-0050-rait-command-replay-provenance.md) | ADR-0052 | [ADR-0052-rait-command-replay-provenance.md](ADR-0052-rait-command-replay-provenance.md) |
 
 ## R-0025 admissibility continuation
 

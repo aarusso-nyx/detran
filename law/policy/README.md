@@ -11,6 +11,8 @@ command.
 
 ## Current policy sources
 
+- Scorecard evaluation inputs: [`scorecard-sensor-inputs.json`](./scorecard-sensor-inputs.json)
+  (R-0036; schema-valid source, passed explicitly until DEVAI supports governed binding).
 - Local release candidate environment: [`devai-local-rc-environment.json`](./devai-local-rc-environment.json).
 - Local release candidate toolchain: [`devai-local-rc-toolchain.json`](./devai-local-rc-toolchain.json).
 - Local release candidate trust store: [`devai-local-rc-trust-store.json`](./devai-local-rc-trust-store.json).

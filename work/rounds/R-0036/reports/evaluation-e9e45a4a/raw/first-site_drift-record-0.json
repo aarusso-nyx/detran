@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/projects/stech/detran/.devai/local/rounds/R-0036/audit/published-263-e9e45a4a/first-site_drift-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-19T04:42:20.655Z",
+  "finished_at": "2026-10-19T04:42:21.264Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/projects/stech/detran/.devai/state/sensor-readings/site_drift/SR-ed34e2c6ae716b4b.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"site-drift\",\"kind\":\"site_drift\"},\"timestamp\":\"2026-10-19T04:41:52.267Z\",\"status\":\"unknown\",\"deterministic\":true,\"command\":\"devai sense site drift\",\"command_hash\":\"3945f1bc482cd88900c3ba12dfcac604834479b9ef01a62a86cd91ffe811f5d2\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"SITE_DRIFT_SOURCE_UNREACHABLE\",\"message\":\"Published source 456155a17c695e7a25b585a9b7106164f6c64bb5 is not reachable from local objects.\"}],\"metrics\":{\"repository_head\":\"e9e45a4a6cbed5cfd394c716c79a55b1aca386b8\",\"published_source_provenance\":\"journal\",\"journal_intent_id\":\"7055059128\"},\"id\":\"SR-ed34e2c6ae716b4b\"}}}}\n",
+  "stderr": ""
+}

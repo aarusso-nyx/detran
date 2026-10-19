@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0.0",
+  "candidate": "8cf4223a18d287da2c64a5a57f7172cebb3ce574",
+  "provider": "Native E2E published 2.6.2; integration PR #413 candidate diagnostic only",
+  "observations": [
+    {
+      "label": "native-e2e-isolated",
+      "official_reading": true,
+      "status": "fail",
+      "sensor": {
+        "name": "task:scorecard-e2e",
+        "kind": "e2e_test"
+      },
+      "metrics": {
+        "output_digests": "{\"stderr\":\"842aefd0ae59f4f5bc885cff29809de293c8836382d852c334d016a7c4b1f517\",\"stdout\":\"dbda7cd1cbe85af77f167fa95ead232e597c246e176434d850bb0f067cbf766f\"}",
+        "task_id": "scorecard-e2e",
+        "population": "detran-workspace-e2e",
+        "runner": "node",
+        "task_key": "4ecb0d9abb7fcbb78c27f32ccf9224c10e091434757cc36889e2ee208fda7bba",
+        "input_digest": "a07893e51f4574f855b0f75d336447e9df0e236431259dc0a6568a3bb77275a5",
+        "stdout_sha256": "dbda7cd1cbe85af77f167fa95ead232e597c246e176434d850bb0f067cbf766f",
+        "stderr_sha256": "842aefd0ae59f4f5bc885cff29809de293c8836382d852c334d016a7c4b1f517",
+        "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+        "task_policy_digest": "f9d6aa1ad349227edc351a079e93e5199d4900e8941e1bc30534e971c234dcd5",
+        "candidate_commit": "8cf4223a18d287da2c64a5a57f7172cebb3ce574",
+        "candidate_tree": "911353903956f611e7d22a6059e7442867ee652c",
+        "prerequisite_digests": "{}",
+        "tests_passed": 1853,
+        "tests_failed": 2
+      },
+      "capture": "work/rounds/R-0036/reports/remediation-8cf4223a/raw/native-e2e-isolated.json",
+      "archive": "work/rounds/R-0036/reports/remediation-8cf4223a/raw/native-e2e-isolated-complete-output.json.gz",
+      "archive_sha256": "d94c7db04e5b2a89f9e8d1d8d9d24239fa2ae8b3c14c39005bf32ed0a523fc6d",
+      "output_digests_verified": true,
+      "canonical_path": ".devai/state/sensor-readings/e2e_test/SR-69fc051b44d19323.json",
+      "evidence_id": "EV-ac5cbc4315d452ad",
+      "sequence": 202
+    },
+    {
+      "label": "integration-candidate",
+      "official_reading": false,
+      "status": "pass",
+      "sensor": {
+        "name": "task:scorecard-integration",
+        "kind": "integration_test"
+      },
+      "metrics": {
+        "output_digests": "{\"stderr\":\"4dbaa6046f9c8b2472dc8f5e60ebb366a72bd887ad80702f72696daf0674bb3f\",\"stdout\":\"b7e11a42086f42b278b5b259d9b9469a3a59846ecf16b358bc34e45c1c825176\"}",
+        "task_id": "scorecard-integration",
+        "population": "detran-workspace-integration",
+        "runner": "node",
+        "task_key": "c9867d066e184eba02a8cde8cc803408f7c7aa226a15d0271df0fa8a346e23bb",
+        "input_digest": "a07893e51f4574f855b0f75d336447e9df0e236431259dc0a6568a3bb77275a5",
+        "stdout_sha256": "b7e11a42086f42b278b5b259d9b9469a3a59846ecf16b358bc34e45c1c825176",
+        "stderr_sha256": "4dbaa6046f9c8b2472dc8f5e60ebb366a72bd887ad80702f72696daf0674bb3f",
+        "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+        "task_policy_digest": "4c07cb7f5f40a667493f112d75e82df64f24b269de8f19449076ab55fbf145f1",
+        "candidate_commit": "8cf4223a18d287da2c64a5a57f7172cebb3ce574",
+        "candidate_tree": "911353903956f611e7d22a6059e7442867ee652c",
+        "prerequisite_digests": "{}",
+        "tests_passed": 1515,
+        "tests_failed": 0
+      },
+      "capture": "work/rounds/R-0036/reports/remediation-8cf4223a/raw/integration-candidate.json",
+      "archive": "work/rounds/R-0036/reports/remediation-8cf4223a/raw/integration-candidate-complete-output.json.gz",
+      "archive_sha256": "1846039783253319e2d0b1116bf6c595eae3e0aaf07d1416cdc668498d81e1e2",
+      "output_digests_verified": true
+    }
+  ],
+  "product_remediation_backlog": [
+    "BL-0013",
+    "BL-0014",
+    "BL-0015",
+    "BL-0016"
+  ],
+  "preserved_thresholds": true,
+  "preserved_na_cells": [
+    "F1:T1",
+    "F4:T5"
+  ],
+  "complete_43_cell_evaluation": false,
+  "mock_file_isolation_diagnostic": {
+    "candidate": "90dc922b",
+    "official_reading": false,
+    "capture_archive": "work/rounds/R-0036/reports/remediation-8cf4223a/raw/mock-file-isolation-complete.json.gz",
+    "archive_sha256": "e03acf7154570ea6f1a33eb00438404a930d742a7a2622de58f1c6a18ad0126c",
+    "exit_code": 1,
+    "timed_out": false,
+    "test_counts": {
+      "passed": 1853,
+      "failed": 2,
+      "todo": 3,
+      "skipped": 0
+    }
+  }
+}

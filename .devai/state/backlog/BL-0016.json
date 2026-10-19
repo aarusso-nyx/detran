@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BL-0016",
+  "request_id": "r0036-product-mock-e2e-20261018",
+  "kind": "finding",
+  "class": "tests",
+  "title": "P2: investigate two reproducible SENATRAN mock E2E contract mismatches",
+  "body": "Published DEVAI 2.6.2 native E2E at 8cf4223a completed with 1853 passed and 2 failed: national-extensions.e2e.spec.ts CDT recognition expects 200 and receives 402; renach-workflow.e2e.spec.ts exam idempotency expects 201 and receives 402. A separate full replay at diagnostic commit 90dc922b resets the existing mock seed before every test file and reproduces both mismatches, so cross-file contamination is not a sufficient explanation. Product sources, assertions and timeouts are unchanged. Evidence: work/rounds/R-0036/reports/remediation-8cf4223a/evidence-manifest.json. Owner: Inspector to capture the actual error envelope and compare the seeded business state; Engineer/Architect to remediate the established fixture or product cause in a separate PR. Preserve original failed readings and no weakening of assertions. Do not call either failure an enablement regression without source-history evidence.",
+  "origin": {
+    "session": "DIRECT-CLI-0c6d5caa24d95a15c10d74019978e355",
+    "role": "inspector",
+    "commit": "8cf4223a18d287da2c64a5a57f7172cebb3ce574"
+  },
+  "round_id": "R-0036",
+  "status": "open",
+  "created_at": "2026-10-18T23:16:25.532Z",
+  "resolved_at": null
+}
