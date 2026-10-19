@@ -1,0 +1,29 @@
+✖ actual repository either has both exact approved streams or refuses their unintegrated baseline versions (0.805916ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 205.907625
+
+✖ failing tests:
+
+test at tools/security/tests/historical-compatibility.test.mjs:108:1
+✖ actual repository either has both exact approved streams or refuses their unintegrated baseline versions (0.805916ms)
+  Error: EISDIR: illegal operation on a directory, read
+      at Object.readSync (node:fs:797:18)
+      at tryReadSync (node:fs:426:20)
+      at Object.readFileSync (node:fs:529:19)
+      at copy (file:///private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-c8-normal-clone-c1rpstuc/clone/tools/security/tests/historical-compatibility.test.mjs:43:24)
+      at fixture (file:///private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-c8-normal-clone-c1rpstuc/clone/tools/security/tests/historical-compatibility.test.mjs:47:5)
+      at TestContext.<anonymous> (file:///private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-c8-normal-clone-c1rpstuc/clone/tools/security/tests/historical-compatibility.test.mjs:97:3)
+      at TestHook.runInAsyncScope (node:async_hooks:227:14)
+      at TestHook.run (node:internal/test_runner/test:1402:25)
+      at TestHook.run (node:internal/test_runner/test:1757:18)
+      at TestHook.run (node:internal/util:581:20) {
+    errno: -21,
+    code: 'EISDIR',
+    syscall: 'read'
+  }

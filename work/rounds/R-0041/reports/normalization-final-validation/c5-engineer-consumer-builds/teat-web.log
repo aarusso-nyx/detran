@@ -1,0 +1,35 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 build /Volumes/Development/.codex/worktrees/c5-c8-governance/detran/apps/teat/web
+> ng build
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [21.139 seconds] - 2026-10-19T23:27:14.988Z
+
+✘ [ERROR] Could not resolve "@detran/boat-mobile"
+
+    src/app/app.config.ts:11:35:
+      11 │ import { BOAT_PT_BR_CATALOG } from '@detran/boat-mobile';
+         ╵                                    ~~~~~~~~~~~~~~~~~~~~~
+
+  The module "./dist/fesm2022/detran-boat-mobile.mjs" was not found on the file system:
+
+    node_modules/@detran/boat-mobile/package.json:10:17:
+      10 │       "default": "./dist/fesm2022/detran-boat-mobile.mjs"
+         ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "@detran/boat-mobile" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+✘ [ERROR] TS2307: Cannot find module '@detran/boat-mobile' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/app/app.config.ts:11:35:
+      11 │ import { BOAT_PT_BR_CATALOG } from '@detran/boat-mobile';
+         ╵                                    ~~~~~~~~~~~~~~~~~~~~~
+
+
+/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/apps/teat/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/teat-web@0.1.0 build: `ng build`
+Exit status 1
