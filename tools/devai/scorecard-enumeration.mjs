@@ -1,4 +1,12 @@
 // Execute the installed population exactly; task-bound members need explicit local-write consent.
+export const separatelyExecutedSensors = [
+  'build',
+  'unit_test',
+  'integration_test',
+  'e2e_test',
+  'migration_check',
+  'inventory_regeneration',
+];
 export function scorecardEnumerationPlan(presets, registry, inputs) {
   const sweep = presets.presets.find((entry) => entry.name === 'sweep');
   if (!sweep) throw new Error('Installed sweep is missing');
@@ -45,6 +53,11 @@ export function scorecardEnumerationPlan(presets, registry, inputs) {
       .filter((kind) => !second.includes(kind))
       .map((kind) => command(kind, 'first')),
     second: second.map((kind) => command(kind, 'second')),
-    separately_required: [...sweep.excluded],
+    separately_required: sweep.excluded.filter((kind) =>
+      separatelyExecutedSensors.includes(kind),
+    ),
+    optional_excluded: sweep.excluded.filter(
+      (kind) => !separatelyExecutedSensors.includes(kind),
+    ),
   };
 }

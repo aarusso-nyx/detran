@@ -14,6 +14,7 @@ import {
   unwrapCommandDocument,
 } from './scorecard-output.mjs';
 import { countBy, reconcileRegister } from './scorecard-register.mjs';
+import { separatelyExecutedSensors } from './scorecard-enumeration.mjs';
 
 const [auditArg, assessmentArg, outputArg] = process.argv.slice(2);
 if (!auditArg || !assessmentArg || !outputArg)
@@ -49,6 +50,15 @@ if (context.framework_version !== installed.version)
 const registry = read(
   'node_modules/@aarusso-nyx/devai/dist/runtime/index/sensor-registry.json',
 ).entries;
+const sweep = read(
+  'node_modules/@aarusso-nyx/devai/dist/law/policy/sense-presets.json',
+).presets.find((preset) => preset.name === 'sweep');
+if (
+  !sweep ||
+  separatelyExecutedSensors.some((kind) => !sweep.excluded.includes(kind))
+)
+  throw new Error('Installed execution contract changed');
+const requiredKinds = [...sweep.members, ...separatelyExecutedSensors];
 const observations = new Map();
 function add(reading, path, raw, measurement = true) {
   if (!reading?.id || !reading.sensor?.kind) return;
@@ -102,12 +112,17 @@ const register = reconcileRegister({
   registry,
   assessments: decisions.rows,
   observations,
+  requiredKinds,
 });
 const summary = {
   round: 'R-0036',
   integration_head: context.integration_head,
   framework_version: context.framework_version,
   applicable: register.length,
+  evaluated_sensor_kinds: requiredKinds,
+  optional_excluded_sensor_kinds: sweep.excluded.filter(
+    (kind) => !separatelyExecutedSensors.includes(kind),
+  ),
   not_applicable: 2,
   native_counts: countBy(scorecard.cells, 'verdict'),
   assessment_counts: countBy(register, 'evaluation_disposition'),

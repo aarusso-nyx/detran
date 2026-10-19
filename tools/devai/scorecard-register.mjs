@@ -12,7 +12,15 @@ export function reconcileRegister({
   registry,
   assessments,
   observations,
+  requiredKinds,
 }) {
+  if (
+    !Array.isArray(requiredKinds) ||
+    !requiredKinds.length ||
+    new Set(requiredKinds).size !== requiredKinds.length ||
+    requiredKinds.some((kind) => !registry.some((entry) => entry.kind === kind))
+  )
+    throw new Error('Missing or invalid evaluated sensor selection');
   if (scorecard.integration_head !== commit)
     throw new Error('Scorecard candidate mismatch');
   const keys = scorecard.cells.map(key);
@@ -70,6 +78,7 @@ export function reconcileRegister({
         .map((entry) => entry.kind);
       if (!sensors.length)
         throw new Error(`No registered sensors: ${coordinate}`);
+      const selected = sensors.filter((kind) => requiredKinds.includes(kind));
       const evidence = (cell.sensor_readings ?? []).map((id) => {
         const observation = observations.get(id);
         if (!observation) throw new Error(`Missing captured evidence: ${id}`);
@@ -84,7 +93,8 @@ export function reconcileRegister({
       if (assessment.evaluation_disposition === 'measured') {
         if (
           !conclusive.has(cell.verdict) ||
-          sensors.some(
+          !selected.length ||
+          selected.some(
             (kind) => !evidence.some((item) => item.kind === kind),
           ) ||
           evidence.some(
@@ -110,6 +120,10 @@ export function reconcileRegister({
         ...assessment,
         cell: coordinate,
         registered_sensors: sensors,
+        selected_sensors: selected,
+        optional_unselected_sensors: sensors.filter(
+          (kind) => !requiredKinds.includes(kind),
+        ),
         native_verdict: cell.verdict,
         evidence,
       };
