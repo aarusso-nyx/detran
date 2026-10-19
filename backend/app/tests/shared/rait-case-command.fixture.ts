@@ -857,6 +857,19 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
       [RaitP402ScopeFixture.UNIT, RAIT_TENANT],
     );
     this.prepared = true;
+    // Stage explicit fixture parent moves with routing deactivated, then
+    // revalidate every previously active link after BOTH parents have moved.
+    // Keep the real active-parent constraint and RLS enabled throughout.
+    const activeLinks = (
+      await this.owner.query(
+        'select id from inf.rait_case_pool_scope where tenant_id=$1 and active',
+        [RAIT_TENANT],
+      )
+    ).rows.map((row) => row.id);
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=false where id=any($1::uuid[])',
+      [activeLinks],
+    );
     await this.owner.query(
       'update inf.rait_case set unit_id=$2 where tenant_id=$1',
       [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
@@ -864,6 +877,10 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
     await this.owner.query(
       'update inf.rait_pool set unit_id=$2 where tenant_id=$1',
       [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
+    );
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=true where id=any($1::uuid[])',
+      [activeLinks],
     );
     await this.owner.query(
       `insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id)
@@ -874,7 +891,7 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
     await this.owner.query(
       `insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref)
       values($1,$2,$3,true,'r25-s1-fixture','fixture-qualified-case-routing'),
-            ($1,$4,$5,true,'r25-s1-fixture','fixture-qualified-other-routing')`,
+            ($1,$4,$5,true,'r25-s1-fixture','fixture-qualified-other-routing') on conflict(tenant_id,case_id,pool_id) do nothing`,
       [
         RAIT_TENANT,
         RAIT_CASE('04'),
@@ -1062,6 +1079,16 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
     await this.owner.query("select set_config('app.tenant_id',$1,false)", [
       RAIT_TENANT,
     ]);
+    const activeLinks = (
+      await this.owner.query(
+        "select id from inf.rait_case_pool_scope where tenant_id=$1 and active and authorization_ref<>'r25-s1-fixture'",
+        [RAIT_TENANT],
+      )
+    ).rows.map((row) => row.id);
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=false where tenant_id=$1 and active',
+      [RAIT_TENANT],
+    );
     await this.clearScopes();
     await this.owner.query(
       "delete from inf.rait_case_pool_scope where authorization_ref='r25-s1-fixture'",
@@ -1074,11 +1101,19 @@ export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
         'update inf.rait_case set unit_id=$2,archived=$3 where id=$1',
         [row.id, row.unit_id, row.archived],
       );
+    await this.owner.query(
+      'update inf.rait_case set unit_id=null where tenant_id=$1 and unit_id=$2 and not(id=any($3::uuid[]))',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT, this.cases.map((row) => row.id)],
+    );
     for (const row of this.pools)
       await this.owner.query(
         'update inf.rait_pool set unit_id=$2 where id=$1',
         [row.id, row.unit_id],
       );
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=true where id=any($1::uuid[])',
+      [activeLinks],
+    );
     // Tenant-B revision1 priority evidence is immutable. Preserve its qualified
     // CASE/AIT/policy/membership/unit parents in this explicitly disposable DB.
     // Subsequent fixture setup reuses exact IDs without rewriting their history.
