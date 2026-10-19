@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "merge_checkpoint": "4f6682a51d3cc6175728bc91d901796701547abd",
+  "main_commit": "d7f18c5f4d46bf15e1b8b47aef359d3397788703",
+  "canonical_records": 160,
+  "main_prefix_records": 153,
+  "new_registered_reading_anchors": 7,
+  "pre_merge_chain_check": "Expected PROOF_HISTORY_MODIFIED comparing selected main prefix with divergent old HEAD; archived unchanged. Authorized merge checkpoint restored the normal committed-history baseline.",
+  "checks": {
+    "official_chain": "pass",
+    "proof_anchors": "pass: zero undeclared orphans, duplicates, invalid references or validation errors; existing 53 declared historical gaps retained",
+    "state_index": "pass: 55 ADRs, 39 rounds, 23 closures",
+    "rounds_index": "pass",
+    "rounds_index_tests": "pass: 10 tests",
+    "affected_format": "pass",
+    "doctor": "pass: exit 0"
+  },
+  "preservation": {
+    "both_chain_snapshots_sha256_verified": true,
+    "main_prefix_unchanged": true,
+    "legacy_chain_sha256_unchanged": true,
+    "all_reading_bytes_unchanged": true,
+    "R0036": "closed",
+    "R0037": "closed",
+    "R0039": "open",
+    "R0038": "Absent in this branch; no record invented",
+    "ADRs": [
+      "ADR-0053",
+      "ADR-0054"
+    ]
+  },
+  "limitations": [
+    "Existing reading inputs were registered body rebuilds; original findings/metrics and native execution provenance were not reconstructed.",
+    "Native regeneration remains REVIEW for RBAC and coverage; registering rebuilt reading files does not promote that native readiness.",
+    "No product source, threshold, legacy evidence or historical proof-line bytes were changed."
+  ]
+}
