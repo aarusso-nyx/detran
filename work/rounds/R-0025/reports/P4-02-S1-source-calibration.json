@@ -1,0 +1,20 @@
+{
+  "kind": "Inspector source-conflict fixture calibration",
+  "originalReceipt": "/tmp/detran-s1-inspector-red-receipt.json unchanged",
+  "files": {
+    "backend/domains/shared/src/policy.spec.ts": "b6287410e09a48eb93924183f5e1623a519ff98bb5b26713c5b26d0b97194bb1",
+    "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "29fcd3a7f6826705740fd62383fe7cc4968d6592a9e32160bfb52688cc40b8ec"
+  },
+  "policy": {
+    "failureReceipt": "/tmp/detran-s1-policy-30.log",
+    "evidence": "five old M17 read-never-granted expectations conflict with Owner-approved T0 exactreadrows",
+    "change": "read-only exactroleexceptions; all otheractions/roles and old23resourcecatalog retained"
+  },
+  "protocol": {
+    "source": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts: protocol result events:[], no outbox insert; database/ddl/19-rait-priority-enforce.sql initialqualification no outbox",
+    "change": "only three new routing protocol tests events[]/outboxdelta0, retainedauditdelta1 and addedprioritydelta1/idemdelta1",
+    "unchanged": "admission eventcount1/outbox1, runtimelegalguard, response/version, all originalregressions"
+  },
+  "validation": "source inspection only; postgeneration unchangedsuite run required",
+  "DB": "no connections or writes for calibration"
+}

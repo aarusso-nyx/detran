@@ -1,0 +1,47 @@
+{
+  "role": "Inspector Article7",
+  "scope": "Owner-approved P4-02-S1-A2 frontend omission sensors",
+  "files": {
+    "apps/rait/web/src/app/shared/batch-draw-viewer.component.spec.ts": "6cb707a9a04a95edb90a9bed1f91ed95bba9b3030c01f31e58c8ef4d27316e29",
+    "apps/rait/web/src/app/shared/dossier-viewer.component.spec.ts": "8b63ee022bf14e1a534109c3e5ead1fdd687ca614faae797701ce6d1cb71a3b0",
+    "apps/rait/web/src/app/features/caso/pages/communications.page.spec.ts": "7b620289eebf00dcbbf7ab00d0122578b16ac8f865e094bbb372d8b51a51873a",
+    "apps/rait/web/src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts": "a0a4ec9aef4a542fea12d9262402bcd7ab8c7721d8825877bc1d9769ad044ee7",
+    "apps/rait/web/src/app/features/protocolo/pages/pending-content.page.spec.ts": "eec152e62d7ba8c7bc0cb6fb741c6d20900773decfd018d7afdce7a867998ab2",
+    "apps/rait/web/src/app/data/facades/archive.facade.spec.ts": "04f94b68b4ca2c3b89bdd0afd083d6392683f03f0c0a24c539e774fd6b458a6c",
+    "apps/rait/web/src/app/data/facades/audit.facade.spec.ts": "bfe129ae58450b3d0e1c1d8b5301671f07db22bdf1b108f235e0353ada84d2d5",
+    "apps/rait/web/src/app/preview/adapters/preview-case.client.spec.ts": "b56b243505a534441ea77417d83f3808c77953c5941cf3184d2a64d632444fdd",
+    "apps/rait/web/src/app/preview/adapters/preview-worklist.client.spec.ts": "92fbe83cf4e415125a9b32212551b1130f3b7fdf512cf8f18754b0eb8841f0dd"
+  },
+  "UI": {
+    "failed": 4,
+    "passed": 71,
+    "preexistingTodo": 1,
+    "log": "/tmp/detran-s1-a2-frontend-red.log"
+  },
+  "preview": {
+    "failed": 2,
+    "log": "/tmp/detran-s1-a2-preview-red.log"
+  },
+  "typecheck": "PASS /tmp/detran-s1-a2-test-types.log",
+  "dependencyBuild": "PASS ignored @detran/ui/dist only /tmp/detran-s1-ui-test-build.log",
+  "boundaries": [
+    "no DB operations",
+    "no backend sensor changes",
+    "no production/i18n/config edits",
+    "no partial-as-full data casts",
+    "existing command assertions unchanged",
+    "preexisting todo retained; none introduced"
+  ],
+  "decisiveRED": [
+    "batch string undefined instead of unavailable",
+    "omitted communication boolean rendered No",
+    "rapporteur/pending presentation lacks explicit unavailable",
+    "preview CASE returns storage/tenant internals",
+    "preview WORKLIST restores excluded position"
+  ],
+  "positiveControls": [
+    "restricted document reference no URL/PDF/fetch",
+    "sealed archive projection passthrough no restoration",
+    "audit metadata no rawpayload/no write"
+  ]
+}
