@@ -68,3 +68,40 @@ describe('CommunicationsPage — nenhuma ação [negativo] e a11y (C-2B-80)', ()
     await expectA11yStateInvariants(el.nativeElement);
   });
 });
+
+describe('S1-A2 purpose-projected communication', () => {
+  it('omitted authority_appeal_notice is unavailable, never false/No', async () => {
+    const projected = {
+      id: 'projection-communication',
+      case_id: CASE_IDS.EM_INSTRUCAO,
+      channel: 'postal',
+      sent_at: '2026-09-15T12:00:00Z',
+      effective_on: null,
+      next_deadline_on: null,
+    };
+    const facade = {
+      ...caseFacadeStub(),
+      loadCaseBundle: async () => {},
+      loadCommunications: async () => {},
+      loadEvents: async () => {},
+      comunicacoes: listFacadeStub([projected]),
+    };
+    const harness = await createRaitRouterHarness(
+      pageProviders('rait-secretary', [
+        { provide: CaseFacade, useValue: facade },
+      ]),
+    );
+    await harness.navigateByUrl(
+      `/${substituteRouteParams('casos/:id/comunicacoes')}`,
+    );
+    const component = harness.fixture.debugElement.query(
+      By.directive(CommunicationsPageComponent),
+    ).componentInstance as CommunicationsPageComponent;
+    expect(component.rows()[0]?.authority_appeal_notice).toContain(
+      'rait.common.unavailable',
+    );
+    expect(component.rows()[0]?.authority_appeal_notice).not.toContain(
+      'rait.common.no',
+    );
+  });
+});

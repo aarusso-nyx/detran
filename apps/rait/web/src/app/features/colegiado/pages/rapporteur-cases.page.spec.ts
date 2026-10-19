@@ -174,3 +174,46 @@ describe('RapporteurCasesPage — a11y (C-2B-80)', () => {
     await expectA11yStateInvariants(harness.routeNativeElement as HTMLElement);
   });
 });
+
+describe('S1-A2 purpose-projected rapporteur items', () => {
+  it('withheld position/deadline/acceptance render unavailable and retain server order', async () => {
+    const projected = [
+      {
+        id: 'second-server-item',
+        batch_id: 'batch',
+        case_id: 'case-b',
+        member_id: null,
+      },
+      {
+        id: 'first-server-item',
+        batch_id: 'batch',
+        case_id: 'case-a',
+        member_id: null,
+      },
+    ];
+    const facade = {
+      ...sessionFacadeStub(),
+      loadRapporteurItems: async () => {},
+      relatoria: listFacadeStub(projected),
+    };
+    const harness = await createRaitRouterHarness(
+      pageProviders('rait-rapporteur', [
+        { provide: SessionFacade, useValue: facade },
+      ]),
+    );
+    await harness.navigateByUrl(
+      `/${substituteRouteParams('colegiado/:orgao/relatoria')}`,
+    );
+    const host = harness.routeNativeElement as HTMLElement;
+    expect(host.textContent).toContain('rait.common.unavailable');
+    expect(host.textContent).not.toContain('undefined');
+    const table = harness.fixture.debugElement.query(By.css('stynx-table'));
+    const rows = table.componentInstance.rows();
+    expect(rows.map((row: { id: string }) => row.id)).toEqual(
+      projected.map((row) => row.id),
+    );
+    for (const row of rows)
+      for (const key of ['position', 'claim_due_on', 'accepted_at'])
+        expect(row[key]).toContain('rait.common.unavailable');
+  });
+});

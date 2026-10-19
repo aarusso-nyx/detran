@@ -212,3 +212,36 @@ describe('PendingContentPage — C-2B-87 (slot offline: botões desabilitados)',
     if (button) expect(button.disabled).toBe(true);
   });
 });
+
+describe('S1-A2 projected pending-content limitation', () => {
+  it('withheld missing_items is unavailable rather than an empty or satisfied checklist', async () => {
+    const projected = {
+      id: 'scoped-pending',
+      case_id: 'scoped-case',
+      due_on: '2026-10-30',
+      opened_at: '2026-09-15T12:00:00Z',
+      closed_at: null,
+      outcome: null,
+    };
+    const pendencias = listFacadeStub([projected]);
+    const facade = {
+      ...protocolFacadeStub(),
+      pendencias,
+      loadPending: delegateListLoad(pendencias),
+    };
+    const harness = await createRaitRouterHarness(
+      pageProviders('rait-secretary', [
+        { provide: ProtocolFacade, useValue: facade },
+        { provide: SseService, useValue: sseServiceStub('live') },
+      ]),
+    );
+    await harness.navigateByUrl(
+      `/${substituteRouteParams('protocolo/pendencias')}`,
+    );
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'rait.common.unavailable',
+    );
+    expect(harness.routeNativeElement?.textContent).not.toContain('undefined');
+    expect(facade.command.runMock).not.toHaveBeenCalled();
+  });
+});

@@ -60,3 +60,26 @@ describe('AuditFacade — leitura (C-2B-31)', () => {
     expect(facade.trilha.status()).toBe('empty');
   });
 });
+
+describe('S1-A2 audit projection', () => {
+  it('retains projected event metadata without restoring raw payload or performing a write', async () => {
+    const { facade, httpMock } = setup();
+    const event = {
+      id: 'scoped-event',
+      case_id: CASE_IDS.EM_INSTRUCAO,
+      event_type: 'rait.case.changed',
+      occurred_at: '2026-09-15T12:00:00Z',
+    };
+    const promise = facade.loadTrail({
+      filtro: { case_id: CASE_IDS.EM_INSTRUCAO },
+    });
+    await vi.waitFor(() =>
+      expectGetList(httpMock, '/v1/inf/rait/events', [event]),
+    );
+    await promise;
+    expect(facade.trilha.items()).toEqual([event]);
+    expect(facade.trilha.items()[0]).not.toHaveProperty('payload');
+    expect(facade.trilha.items()[0]).not.toHaveProperty('actor_id');
+    httpMock.expectNone((req) => req.method !== 'GET');
+  });
+});

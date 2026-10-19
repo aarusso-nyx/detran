@@ -108,3 +108,27 @@ describe('DossierViewer — a11y (C-2B-59)', () => {
     await expectA11yStateInvariants(loading.nativeElement);
   });
 });
+
+describe('S1-A2 restricted document reference', () => {
+  it('withheld filename/hash does not activate a PDF/image URL, fetch or fabricated metadata', async () => {
+    const fixture = await render({ documents: [] });
+    const projected = {
+      id: 'restricted-reference',
+      case_id: 'restricted-case',
+      kind: 'requerimento',
+      origin: 'requerente',
+      attached_at: '2026-09-15T12:00:00Z',
+      digitised_from_paper: false,
+    };
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    fixture.componentRef.setInput('documents', [projected]);
+    fixture.componentRef.setInput('documentUrlOf', null);
+    fixture.detectChanges();
+    const host: HTMLElement = fixture.nativeElement;
+    expect(host.querySelector('iframe,object,embed,img,[download]')).toBeNull();
+    expect(host.textContent).not.toContain('undefined');
+    expect(host.textContent).not.toContain('source_pending');
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
+  });
+});
