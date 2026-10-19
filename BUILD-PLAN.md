@@ -1,7 +1,7 @@
 # BUILD-PLAN
 
 > **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
-> S1 security prerequisites integrated through #196–#203. R-0025/JW-01 remain open.
+> S1 security prerequisites integrated through #196–#201 and #203. R-0025/JW-01 remain open.
 > S2 is paused pending approval of its [exact backend-first packet](work/rounds/R-0025/reports/P4-02-S2-approval-packet.md).
 > Scorecard evaluation/remediation and protected local/recovery work stay separate.
 
