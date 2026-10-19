@@ -1,5 +1,5 @@
 {
-  "head": "e98d6a0c0aa60e6510d1a39a08e44edf8eaf0cd1b45d3d42af8b1844211e13b4",
+  "head": "68e78a080c3e4d2d9d446054311715295e420e229abb529b8fee5bccf2bfe8eb",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -8361,137 +8361,107 @@
     },
     {
       "schemaVersion": "1.0.0",
-      "id": "EV-ded4f5431f6737ad",
-      "timestamp": "2026-10-19T19:53:53.714Z",
+      "id": "EV-3751088b544129ca",
+      "timestamp": "2026-10-19T20:19:16.874Z",
       "actor": "devai-cli",
       "actor_role": "harness",
-      "action": "audit.observe",
+      "action": "sense.readings.record",
       "status": "completed",
       "context": {
-        "repo_root": "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran",
+        "repo_root": "/Volumes/Development/.codex/worktrees/pr202-reconcile/detran",
         "git": {
-          "head_sha": "2df548e0ac5227abb64b66994f675dea7ba36a5a",
+          "head_sha": "3272521de5c11dadb6071f769078c922cb58d78e",
           "dirty_files": [
-            ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/assessment.json",
-            ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/backlog.json",
-            ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/inventory.json",
-            ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/scorecard.json",
-            ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/status.json",
-            ".devai/state/backlog.jsonl",
-            ".devai/state/locks/F1~MOD-r25-s1-source.json",
-            ".devai/state/locks/F2~MOD-r25-s1-case.json",
-            ".devai/state/locks/F2~MOD-r25-s1-client-generation.json",
-            ".devai/state/locks/F2~MOD-r25-s1-web-compatibility.json",
-            ".devai/state/locks/F2~MOD-r25-s1-worklist.json",
-            ".devai/state/locks/F3~MOD-r25-s1-sensors.json",
-            ".devai/state/tasks/TASK-0028.json",
-            ".devai/state/tasks/TASK-0029.json",
-            ".devai/state/tasks/TASK-0030.json",
-            ".devai/state/tasks/TASK-0031.json",
-            ".devai/state/worktrees.json"
+            "work/rounds/R-0037/reports/app-unit.log",
+            "work/rounds/R-0037/reports/baseline-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/canonical-build.log",
+            "work/rounds/R-0037/reports/compatibility-probe.cjs",
+            "work/rounds/R-0037/reports/compatibility-probe.log",
+            "work/rounds/R-0037/reports/disposable-runtime-e2e.log",
+            "work/rounds/R-0037/reports/disposable-runtime-summary.json",
+            "work/rounds/R-0037/reports/doctor.log",
+            "work/rounds/R-0037/reports/frozen-install.log",
+            "work/rounds/R-0037/reports/initial-disposable-reset-refused.log",
+            "work/rounds/R-0037/reports/initial-probe-metadata-error.log",
+            "work/rounds/R-0037/reports/initial-stale-database-attempt.log",
+            "work/rounds/R-0037/reports/lockfile-scope.json",
+            "work/rounds/R-0037/reports/preservation-baseline.json",
+            "work/rounds/R-0037/reports/security-scan-reading.json",
+            "work/rounds/R-0037/reports/security-scan.stderr",
+            "work/rounds/R-0037/reports/security-scan.stdout"
           ]
         }
       },
       "artifacts": [
         {
-          "path": ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/inventory.json",
-          "sha256": "64223fdae4d090df836ae4e0feb80945a46f04caa721a240c9b2a216d6a8fcc5",
-          "kind": "audit"
-        },
-        {
-          "path": ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/scorecard.json",
-          "sha256": "df4ff8c83e1ce358102d89fd26827cea5cc35e22836a3c4911d8a4a3c2d4436f",
-          "kind": "audit"
-        },
-        {
-          "path": ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/backlog.json",
-          "sha256": "0a604b3303fe7486b4897ec75381ef10ebfe2505077f4914365148a8819a4da2",
-          "kind": "audit"
-        },
-        {
-          "path": ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/assessment.json",
-          "sha256": "3bd3aa39dfc19725a9fa937cbdbcf4f69072f7a3575395edc680990f99e13c2f",
-          "kind": "audit"
-        },
-        {
-          "path": ".devai/state/audit-observations/2df548e0ac5227abb64b66994f675dea7ba36a5a/status.json",
-          "sha256": "2132dcbf146365e36f51ed679ad1e4e9ebc344337f68a34ccfd8128208e20c07",
-          "kind": "audit"
+          "path": ".devai/state/sensor-readings/security_scan/SR-0633d2afcf0126e7.json",
+          "sha256": "70702506e452b7b30e1cfb2fde7642ab3d08339373084cd9cbbaeff71358c5ac",
+          "kind": "sensor-reading"
         }
       ],
       "notes": [
-        "exact_sha=2df548e0ac5227abb64b66994f675dea7ba36a5a",
-        "readiness_promoting=false"
+        "sensor-reading id: SR-0633d2afcf0126e7; kind: security_scan; sha256: 70702506e452b7b30e1cfb2fde7642ab3d08339373084cd9cbbaeff71358c5ac"
       ],
       "previous_run_hash": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e",
-      "manifest_hash": "6ee84bd67c8b84fa90a13a1cc4c42bc0ac4c1174a9cc2d8b9db4f5c771cb3c2c",
+      "manifest_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8",
       "sequence": 149,
       "previous_hash": "b9c7639a050237a8fdefdb4e609395d42103247342f418831cf296e29b35e40e"
     },
     {
       "schemaVersion": "1.0.0",
-      "id": "EV-b583cb966bf27674",
-      "timestamp": "2026-10-19T20:11:50.510Z",
+      "id": "EV-6a88cfb77ac4c189",
+      "timestamp": "2026-10-19T20:21:15.783Z",
       "actor": "devai-cli",
       "actor_role": "harness",
       "action": "evidence.record.generic",
       "status": "completed",
       "context": {
-        "repo_root": "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran",
+        "repo_root": "/Volumes/Development/.codex/worktrees/pr202-reconcile/detran",
         "git": {
-          "head_sha": "66d21161dccdf17c73aeeeafe80d4fb4bf06ea75",
+          "head_sha": "3272521de5c11dadb6071f769078c922cb58d78e",
           "dirty_files": [
-            "BUILD-PLAN.md",
-            "docs/meta/knowledge-base/backlog.md",
-            "docs/meta/knowledge-base/session-artifacts/orchestration-handoff.md",
-            "record/proofs/work/generic/R-0025.jsonl",
-            "work/campaigns/C-0003-produto-primeiro.md",
-            "work/rounds/README.md",
-            ".devai/state/backlog.jsonl",
-            ".devai/state/locks/F1~MOD-r25-s1-source.json",
-            ".devai/state/locks/F2~MOD-r25-s1-case.json",
-            ".devai/state/locks/F2~MOD-r25-s1-client-generation.json",
-            ".devai/state/locks/F2~MOD-r25-s1-web-compatibility.json",
-            ".devai/state/locks/F2~MOD-r25-s1-worklist.json",
-            ".devai/state/locks/F3~MOD-r25-s1-sensors.json",
-            ".devai/state/tasks/TASK-0028.json",
-            ".devai/state/tasks/TASK-0029.json",
-            ".devai/state/tasks/TASK-0030.json",
-            ".devai/state/tasks/TASK-0031.json",
-            ".devai/state/worktrees.json",
-            "work/rounds/R-0025/reports/PR203-post-merge/archival-guard.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/devai-tests.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/doctor.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/evidence-input.json",
-            "work/rounds/R-0025/reports/PR203-post-merge/evidence-record.json",
-            "work/rounds/R-0025/reports/PR203-post-merge/format-changed.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/format-clean.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/kb-check.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/kb-final.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/kb-publish-check.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/kb-publish-final.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/preservation-final.json",
-            "work/rounds/R-0025/reports/PR203-post-merge/rounds-final.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/rounds-index.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/state-index.log",
-            "work/rounds/R-0025/reports/PR203-post-merge/validation.md",
-            "work/rounds/R-0025/reviews/PR203-S2-packet-2/review.bridge.json",
-            "work/rounds/R-0025/reviews/PR203-S2-packet-2/review.json"
+            "record/proofs/chain.json",
+            "record/proofs/work/generic/R-0037.jsonl",
+            "work/rounds/R-0037/reports/app-unit.log",
+            "work/rounds/R-0037/reports/baseline-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/candidate-pnpm-audit.json.gz",
+            "work/rounds/R-0037/reports/canonical-build.log",
+            "work/rounds/R-0037/reports/compatibility-probe.cjs",
+            "work/rounds/R-0037/reports/compatibility-probe.log",
+            "work/rounds/R-0037/reports/delivery.md",
+            "work/rounds/R-0037/reports/dependency-audit-comparison.json",
+            "work/rounds/R-0037/reports/disposable-runtime-e2e.log",
+            "work/rounds/R-0037/reports/disposable-runtime-summary.json",
+            "work/rounds/R-0037/reports/doctor.log",
+            "work/rounds/R-0037/reports/frozen-install.log",
+            "work/rounds/R-0037/reports/initial-disposable-reset-refused.log",
+            "work/rounds/R-0037/reports/initial-probe-metadata-error.log",
+            "work/rounds/R-0037/reports/initial-stale-database-attempt.log",
+            "work/rounds/R-0037/reports/lockfile-scope.json",
+            "work/rounds/R-0037/reports/manifest.json",
+            "work/rounds/R-0037/reports/persisted-security-scan-reading.json",
+            "work/rounds/R-0037/reports/preservation-baseline.json",
+            "work/rounds/R-0037/reports/preservation-result.json",
+            "work/rounds/R-0037/reports/security-scan-reading.json",
+            "work/rounds/R-0037/reports/security-scan.stderr",
+            "work/rounds/R-0037/reports/security-scan.stdout",
+            "work/rounds/R-0037/reports/sense-record-receipt.json",
+            "work/rounds/R-0037/reports/validation.json"
           ]
         }
       },
       "artifacts": [],
       "notes": [
-        "round_id=R-0025",
-        "proof_sequence=5"
+        "round_id=R-0037",
+        "proof_sequence=1"
       ],
-      "proof_path": "record/proofs/work/generic/R-0025.jsonl",
-      "proof_sequence": 5,
-      "proof_sha256": "3471af3acbba5644101d5fcfc02dd8dc5a427e8532f81ecfa0474a41586f8fcf",
-      "previous_run_hash": "6ee84bd67c8b84fa90a13a1cc4c42bc0ac4c1174a9cc2d8b9db4f5c771cb3c2c",
-      "manifest_hash": "e98d6a0c0aa60e6510d1a39a08e44edf8eaf0cd1b45d3d42af8b1844211e13b4",
+      "proof_path": "record/proofs/work/generic/R-0037.jsonl",
+      "proof_sequence": 1,
+      "proof_sha256": "ee724c1bf1133d854ec31e8f187f2972f0df33c4fa564e509a1d73037b9fec07",
+      "previous_run_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8",
+      "manifest_hash": "68e78a080c3e4d2d9d446054311715295e420e229abb529b8fee5bccf2bfe8eb",
       "sequence": 150,
-      "previous_hash": "6ee84bd67c8b84fa90a13a1cc4c42bc0ac4c1174a9cc2d8b9db4f5c771cb3c2c"
+      "previous_hash": "c2210928992a2f1cf4c7762f6aed1542c069bfc7db0017a66e3467c132085ae8"
     }
   ]
 }

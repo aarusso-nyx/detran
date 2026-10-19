@@ -1,0 +1,32 @@
+{
+  "implementation_commit": "3272521de5c11dadb6071f769078c922cb58d78e",
+  "checks": {
+    "frozen-install": "pass",
+    "stynx-pin": "pass 1.5.3",
+    "canonical-build": "pass",
+    "backend-app-typecheck": "pass",
+    "backend-app-unit": "pass: 144 tests, 25 files",
+    "disposable-DDL-and-fixtures": "pass; exact pinned PostGIS image; container removed",
+    "runtime-E2E": "pass: 13 tests, 2 files",
+    "compatibility-probes": "pass: 5 probes",
+    "devai-doctor": "pass",
+    "rounds-index": "pass",
+    "state-index": "pass",
+    "archival-pc-guard": "pass",
+    "proof-anchors-before-new-record": "pass",
+    "KB-check": "pass",
+    "KB-publish-check": "pass",
+    "security_scan": "FAIL: 27 occurrences; thresholds unchanged"
+  },
+  "not_executed": [
+    "full local RC backend-kernel; no attestation issued",
+    "full pnpm check; required remote CI pending"
+  ],
+  "initial_attempts": [
+    "nonexistent backend:build alias corrected to canonical pnpm build",
+    "round seal refused active round; no closure fabricated",
+    "initial HTTP run against stale local DB failed: missing portal.public_hostname; repeated successfully in pinned disposable environment",
+    "first disposable reset refused unapproved DB name; repeated using officially allowed fixture name and consent flags",
+    "probe completed checks then package.json subpath lookup failed; metadata lookup corrected; final probe passed"
+  ]
+}
