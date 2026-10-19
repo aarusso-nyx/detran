@@ -1,0 +1,57 @@
+{
+  "role": "Engineer",
+  "scope": "pure risk and four-key parser only",
+  "checkpoint": "27d6ef7d",
+  "status": "SCOPED_RUNTIME_READY_WITH_INSPECTOR_FIXTURE_FINDING",
+  "files": {
+    "backend/domains/inf/deadlines/src/rait-risk.ts": "c23389a69456e6d67d453498a64cebdd5aff7076a67dfe9232c1a58320d553e4",
+    "backend/domains/inf/deadlines/src/index.ts": "f7e641382e91cf9bc6f7d1f2a5fff3e71b33e0558a5d6a40fd2cc4f9ca1f5533",
+    "tools/parameters/parser.mjs": "773478cee14260910c40b8fb774d1627b981765e45da97fe83b5d610abcedf59"
+  },
+  "results": [
+    {
+      "command": "pnpm --filter @detran/inf-deadlines test:unit",
+      "pass": 112,
+      "fail": 0,
+      "new_risk_tests": 89,
+      "existing_tests": 23,
+      "log": "engineer-pure-parser-logs/deadlines-unit.log"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-deadlines typecheck",
+      "status": "PASS",
+      "log": "engineer-pure-parser-logs/deadlines-typecheck.log"
+    },
+    {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "pass": 69,
+      "fail": 1,
+      "skip": 0,
+      "new_S2_R2_behavioral_cases_pass": 31,
+      "log": "engineer-pure-parser-logs/parameters.log"
+    },
+    {
+      "command": "pnpm exec prettier --check <three owned runtime files>",
+      "status": "PASS"
+    }
+  ],
+  "finding": {
+    "file": "tools/parameters/tests/generator.test.mjs",
+    "line": 262,
+    "issue": "Legacy legal-bases isolation fixture injects exact rait.ladder.B with raw 50/75/90 % and expects a string; approved S2-R2 requires rejecting that value.",
+    "recommendation": "Inspector should preserve the unrelated-default assertion using an unrelated fixture key or supply canonical typed B when testing B; no runtime fallback.",
+    "tests_edited": false
+  },
+  "not_run": [
+    "DB commands/tests (not authorized for this task)",
+    "CASE/WORKLIST/app/runtime acceptance",
+    "root pnpm check",
+    "devai:doctor",
+    "evidence verification (proofs unchanged)"
+  ],
+  "limitations": [
+    "Pure projection consumes already resolved reachedOn dates; it does not qualify SQL provenance or activate proposed policies.",
+    "Full parameter suite is not GREEN until Inspector resolves the source-backed legacy fixture finding."
+  ],
+  "preservation": "No Git/state/proof/test/source/scorecard/dependency/DDL/DB edits or commands; only three runtime files plus scoped report/logs."
+}

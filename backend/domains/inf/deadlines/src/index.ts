@@ -47,3 +47,12 @@ export type {
   TimerStatus,
   TimerStore,
 } from './types.js';
+export { evaluateRaitRisk, RaitRiskSourceError } from './rait-risk.js';
+export type {
+  RaitRiskFlag,
+  RaitRiskClockCode,
+  RaitRiskStep,
+  RaitRiskClockInput,
+  RaitRiskInput,
+  RaitRiskSnapshot,
+} from './rait-risk.js';
