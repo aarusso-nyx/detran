@@ -304,3 +304,24 @@ do pacote exato; esta emenda não demonstra implementação ou aceitação integ
 Para raitPoolClaimNext, RAIT.IDEMPOTENCY_REPLAY409 também cobre outro ator ou
 requisição alterada sob a mesma chave, sem revelar o caso/resposta anterior.
 As semânticas dos outros comandos não são alteradas por essa extensão.
+
+## P4-02 A1 contract supplement — 2026-10-18
+
+ADR0048 and ADR0049 define two safe technical guards for the approved D10/D11
+implementation. This catalogue amendment activates no route or runtime code.
+
+| Code                           | HTTP | Cause                                                                                                              | Public detail                                                                              | Scope                                        |
+| ------------------------------ | ---- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `RAIT.CLAIM_LEGACY_UNVERIFIED` | 409  | Ordered legacy candidate set cannot be qualified from trusted current admission/distribution/assignment provenance | No candidate identifiers or prior response; authorized inventory carries recovery evidence | Defense claim/context contract under ADR0048 |
+| `RAIT.RISK_SOURCE_UNAVAILABLE` | 503  | Mandatory current risk source, typed approved ladder or transaction composition missing/conflicting/unverified     | No case/person/source payload; internal authorized diagnostic only                         | Defense claim/context contract under ADR0049 |
+
+These are not new legal outcomes, QUEUE_EMPTY aliases or substitutes for the
+jeton parameter guard. Unknown risk is not low risk; unresolved legacy work is
+not silently discarded. Existing other command errors remain unchanged.
+
+The same A1 routing boundary also defines `RAIT.CASE_POOL_UNRESOLVED` (409):
+server cannot establish the exact pool association for a potentially in-scope
+candidate. Claim/context return no candidate details or effects, and authorized
+operational inventory retains the pending case. This is not a fifth admissibility
+criterion and never turns unresolved routing into QUEUE_EMPTY. ADR0047 names the
+internal writer and protocol/admit resolution lifecycle; no public routing API.

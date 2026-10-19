@@ -101,3 +101,14 @@ gaps also preventing release. Inspector/Engineer dispatch has not started.
 The inventory records the proposed bounded unblocks; it does not amend accepted
 ADRs, approve new access/legacy behavior, change production records or claim
 runtime completion. R-0025 remains open and scorecard work remains separate.
+
+## D8–D11 and supplemental P4-02 A1 — 2026-10-18
+
+Owner approved D8–D11 and requested the supplemental ADRs, bounded amendment,
+completed T0 mapping and review PR. [Amendment A1](../reports/P4-02-D8-D11-bounded-amendment.md)
+and its two linked closed maps govern the next candidate. ADR0047/48/49 supplement
+role-purpose/identity, legacy v+1 compatibility and authoritative risk composition.
+The original PR199 preflight remains historical; its design blockers are resolved
+by these decisions, not by claiming the runtime already enforces them. Operational
+qualification and acceptance remain release gates. This preparation dispatches no
+Inspector/Engineer implementation and does not reopen D1–D7 or close R-0025.

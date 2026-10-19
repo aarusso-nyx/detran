@@ -1,0 +1,74 @@
+{
+  "verdict": "PASS",
+  "scope": {
+    "review_type": "Independent Architect contract review (Constitution Art.7), read-only, corrected delta",
+    "frozen_commit": "db9c6f51ec90e1e8ed9359a78a592fdd423751b8",
+    "compared_against": ["f23224b3 (review-1 target)", "main ad20e168"],
+    "delta": "f23224b3..db9c6f51: 12 files, +499/-77. Docs, contracts, reports and reviews only. ADR0047/48/49, error-catalogue supplement, both T0 maps, amendment A1, new P4-02-deadlines-risk-api.md, review-1 receipts and validation.md. No runtime, DDL, generated, test, task/state/proof or accepted-ADR bytes changed.",
+    "read": [
+      "work/rounds/R-0025/reviews/P4-02-A1/review-1.json and validation.md",
+      "full f23224b3..db9c6f51 diff",
+      "db9c6f51 ADR-0049 full text; amendment A1 §1-§2 and §6; T0 access map closed raw-write field table and new register/matrices",
+      "ad20e168 addenda (decisions/rait.md, open-decisions D8-D11, JW01, exact-wiring-packet) for stale pre-correction text",
+      "baseline ad20e168 policy.ts (RAIT_STAFF/READ/CASE_WRITE roles, RAIT_SURFACE_WRITE_ROLES, RAIT_COMMAND_RULES, RAIT_STRICT_COMMAND_RULES, GLOBAL_ADMIN_ROLES, isDetranActionAllowed order)",
+      "baseline WF-RAIT-002 §4.1-4.4 and status, parameter-catalogue rait.ladder rows, OD-006",
+      "baseline RaitCase/RaitDocument entities and the rait-case-command.service protocol/admit locations"
+    ],
+    "review1_closure": {
+      "F1_effective_policy_high": "CLOSED. The register follows isDetranActionAllowed exactly: DPO retention, protocol secretary-only, disabled keys, RAIT strict, OPS strict, permissions/wildcard, ops parameter, global admin, matrix. All eight mounted pairs match RAIT_STRICT_COMMAND_RULES, including batch:create secretary, batch-item accept/impediment rapporteur, schedule:create coordinator and schedule:publish coordinator-only (strict overrides the matrix chair entry). The false obstruction text is gone, and A1 T3 now states that strict precedence applies.",
+      "F2_read_rows_medium": "CLOSED. New rows exist for pending-content, draft, redirect, batch and batch-item, each with an exact role set drawn from RAIT_READ_ROLES and joined to its purpose. unit, schedule, schedule-slot, substitute-duty and bench explicitly get no new ordinary row and keep existing explicit/admin access. No working ordinary-role journey is claimed for them, and no command grant is added.",
+      "F3_routing_medium": "CLOSED. ADR0047 names the CASE rait-case-pool-scope.service.ts writer. protocol/admit (rait-case-command.service.ts, already owned) resolve exactly one compatible pool in their transaction. Multiple pools require an explicit verified disposition; no first pool is picked by default. Unit/instance equality never chooses between pools. Unresolved candidates return CASE_POOL_UNRESOLVED409 and are never treated as QUEUE_EMPTY. Admissibility is unchanged and the unlinked case stays in inventory.",
+      "F4_legacy_storage_medium": "CLOSED. The CASE internal entity RaitClaimLegacyQualification / inf.rait_claim_legacy_qualification is defined with exact fields, a composite tenant/case FK, uniqueness, conditional constraints per classification, append-only revisions and the named rait-legacy-qualification.service.ts. A1 §2 ownership now includes it. Replay semantics are stated.",
+      "F5_flag_events_medium": "CLOSED. Flag persistence and publication are deferred, so existing SSE/DASHBOARD/infraction consumers are not fed. No sweeper is activated. Request-time calculation stays mandatory through a read-only snapshot provider and the typed scoped cases/:id/risk read. PRESCRITO_OPERACIONAL without the required incident input returns 503 with no effects. Stale commit-port/outbox text was removed from ADR0049, A1 ownership, T3 and the D11 test row.",
+      "F6_retained_writes_medium": "CLOSED. The retained-write role sets match RAIT_SURFACE_WRITE_ROLES and the technical-admin delete rule exactly. Combined with the closed raw-write field table, this explicitly limits each method. See low finding 1 on how the outcome is stated.",
+      "F7_ladder_low": "CLOSED. A and C are explicit new rows mapped to WF-RAIT-002 §4.3 and §4.2 (mapping verified). B uses OD-006/WF §4.1 (21/23 months). D uses 30/45/54/60 with no N3. Earlier versions are retained. See low finding 3 on how the A row's source is labelled.",
+      "F8_ctg_low": "CLOSED. The additive CTG-0001 §5 supplement exists at contracts/P4-02-deadlines-risk-api.md. The R-0006 file is not edited, and the supplement is in A1 ownership.",
+      "F9_auditor_low": "CLOSED. A row requiring U AND archived=true, with the sealed S projection and no mixing with oversight reads, was added.",
+      "F10_clock_alert_low": "CLOSED. The parent of clock-alerts is now id,clock_id, resolved through the clock."
+    },
+    "boundary_checks": [
+      "No command grant, role, threshold, deadline or production input is introduced. The cases/:id/risk read uses the existing case-read action plus the complete purpose predicate, a scoped technical prerequisite within D11.",
+      "D11 Owner text authorizes the risk producer/integration. Deferring publication narrows that scope and grants nothing.",
+      "Human checklist assessment is preserved, and no verifier prerequisite is added (triage supplement only governs risk display).",
+      "The package graph stays acyclic: WORKLIST to CASE to deadlines, with app-level read-only binding."
+    ],
+    "not_performed": [
+      "No file was modified. No generator, runtime test, format, docs build, DB or production query was run, and the primary scorecard was not inspected.",
+      "validation.md records a docs check pass (sync307, TS, prod build). This review did not re-run it and does not assert it.",
+      "Source hashes and the 107-method count were taken from review-1 without repetition.",
+      "This is design review only. It is not proof of active controls, production qualification or completed implementation."
+    ]
+  },
+  "findings": [
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 359,
+      "message": "The retained-write matrix says POST/PATCH documents, decisions, communications and inquiries are retained with 'actual create/update action'. The closed raw-write field table (lines 181-189) allows only filename for documents and 'None' for decisions, communications and inquiries. A document POST therefore cannot supply its NOT NULL kind/origin/storage_key/content_hash, so generic create is effectively unavailable. This is coherent as 'permission preserved, unsafe effect removed', but the matrix never states that outcome. Name the expected result (e.g. permitted role reaches validation, unknown/protected field rejected with existing 400/422) for each retained create whose writable set is empty or not viable, so Inspector positives/negatives are not guessed."
+    },
+    {
+      "severity": "low",
+      "path": "docs/meta/adr/ADR-0049-rait-authoritative-risk-composition.md",
+      "line": 66,
+      "message": "Every in-scope candidate is evaluated before selection, worst flag first. So one PRESCRITO_OPERACIONAL candidate lacking qualified incident input makes the 503 apply to the whole pool's claim, not just one case. The ADR does not say this explicitly, and it does not specify behaviour for claim-context GET or GET cases/:id/risk (200 with the flag vs 503) in the same condition. The incident input is also not modelled in the CTG supplement or adapter contract. State the pool-wide effect, the inventory visibility of the blocking case and the GET/risk-read outcome."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md",
+      "line": 167,
+      "message": "WF-RAIT-002 (status approved) labels the §4.3 clock-A table 'ladder proposta' and says the 360-day track 'escala proporcionalmente'. A has no PRESCRITO_OPERACIONAL stage. parameter-catalogue line 209 says OD-004/005/006 values enter as version 1 'proposta'. Calling rait.ladder.A an 'approved' transcription without stating the new row's catalogue status and source label risks silently promoting a proposed ladder to vigente. Record the row status exactly as sourced. C (§4.2) is unaffected."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/contracts/P4-02-deadlines-risk-api.md",
+      "line": 48,
+      "message": "RaitRiskSnapshot.clocks carries only {clockCode, flag}. It has no per-clock applicability or ceilingOn. So the 'explicit not-applicable' display at line 78 cannot be represented per clock, and CaseHeader's per-clock ceiling_on must come from a separate raw clock read at a different source instant. Either add applicability/ceilingOn to the snapshot element, or state that the header combines the two reads and how it handles inconsistency between them."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md",
+      "line": 94,
+      "message": "Editorial: the three new errors are said to be 'specified in ADR0048/49', but CASE_POOL_UNRESOLVED409 is specified in ADR0047. The following sentence still says 'Neither discloses a candidate' for three errors."
+    }
+  ]
+}

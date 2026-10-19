@@ -69,3 +69,14 @@ condemnatory decision is flagged as an open legal question in `RN-RAIT-113` (con
 outside the SNE — remains unanswered. This affects `RN-RAIT-127` (the discount regime) and is
 distinct from PORTAL's DT-026 (which only settled the waiver-declaration instrument, not this
 issuance procedure). Do not build the outside-SNE document-issuance path yet.
+
+## Addendum — approved P4-02 reconciliation, 2026-10-18
+
+D1–D11 are recorded additively in the [RAIT decision register](../knowledge-base/open-decisions-rait.md).
+D8–D11 approve bounded role-purpose reads, canonical authenticated staff identity,
+provenance-qualified legacy defense compatibility and current-risk prerequisites.
+Supplemental ADR0047/48/49 and [P4-02 amendment A1](../../../work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md)
+close T0 design classification while leaving runtime implementation, production
+qualification and R-0025 closure unexecuted. Earlier decisions above retain their
+historical sources; no numeric deadline, threshold or institutional appointment is
+chosen by this addendum. Local and scorecard work remain separate.

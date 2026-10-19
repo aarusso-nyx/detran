@@ -1,0 +1,100 @@
+{
+  "verdict": "FAIL",
+  "scope": {
+    "review_type": "Independent Architect contract review (Constitution Art.7), read-only",
+    "frozen_commit": "f23224b3d32bc2425f830afb1260ef11b929c78d",
+    "base": "main ad20e1689004463a98230c010190eecf50cf9c4a",
+    "diff": "15 files, +1117/-0, docs/contracts/reports only; no runtime, DDL, generated, test, task/state/proof or accepted-ADR bytes changed",
+    "read": [
+      "docs/meta/adr/ADR-0047/0048/0049 (new)",
+      "docs/meta/adr/README.md and DESIGN-DECISIONS.md index rows",
+      "docs/meta/decisions/rait.md addendum",
+      "docs/meta/knowledge-base/open-decisions-rait.md D8-D11",
+      "docs/framework/arch/rait-error-catalog.md supplement",
+      "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md",
+      "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "work/rounds/R-0025/contracts/P4-02-T0-triage-fields.md",
+      "work/rounds/R-0025/reports/P4-02-A1-source-freeze.json",
+      "work/rounds/R-0025/reviews/P4-02-A1/validation.md",
+      "JW01 contract and exact-wiring-packet addenda",
+      "baseline (ad20e168) sources: policy.ts, CASE/WORKLIST controllers, entities, blueprints, commands OpenAPI, ADR0045/0046, WF-RAIT-002, parameter-catalogue, CTG-0001 §5, rait-events-sse-contract, JW-10..12, case-header component, package.json deps"
+    ],
+    "independently_verified": [
+      "All 145 source_hashes in the freeze receipt match sha256 of the ad20e168 blobs (0 mismatches, 0 missing)",
+      "107 mounted methods: 56 CASE generated (cases 4, admissibility 2, 10x5), 17 CASE handwritten, 26 WORKLIST generated (13x2), 8 WORKLIST handwritten; the five CASE and two WORKLIST operations[]-only controllers have zero decorators",
+      "Every field named in the S/O/M/J and triage allowlists exists on the generated CASE/WORKLIST entity interfaces",
+      "Party role, legitimacy_basis and representation_kind tokens and document origin check match the CASE blueprint exactly; document.kind is varchar(60) with no check and the protocol insert passes kind through unvalidated; kind='requerimento' AND origin='requerente' remittance guard exists",
+      "Non-admission reasons are exactly the four triagem.schema enum tokens; CaseHeader renders person_name and per-clock flag/clock_code/ceiling_on, not document_number",
+      "Package graph WORKLIST->CASE->deadlines is acyclic, and deadlines has no dependencies",
+      "rait.ladder.B summary '50/75/90 % + crítico 23 m' vs WF-RAIT-002 §4.1 N3=21m/CRITICO=23m and OD-006's selection of WF §4.1 are cited accurately; the D ladder 30/45/54/60 has no N3",
+      "clock_code in (A,B,C,D); clock-alert PRESCRITO_OPERACIONAL requires incident_ref; rait.clock.flag-changed has no producer on main (OD-D17)",
+      "ADR IDs 0047-0049 are additive in both indexes; no accepted ADR is edited"
+    ],
+    "not_performed": [
+      "No file modified, no generator, test, format or docs build run, no DB/production query, no primary scorecard content inspected",
+      "Doc build and format results are not asserted; validation.md correctly marks them pending"
+    ]
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 307,
+      "message": "The 'Mounted action mismatch register' (and lines 279-285) misstates effective baseline policy. backend/domains/shared/src/policy.ts:1769-1826 RAIT_STRICT_COMMAND_RULES defines the exact mounted pairs 'inf:rait-batch:create' [secretary], 'inf:rait-batch-item:accept' [rapporteur], 'inf:rait-batch-item:impediment' [rapporteur] and 'inf:rait-schedule:create' [coordinator]. isDetranActionAllowed (policy.ts ~1919-1923) checks that strict map before the wildcard, global-admin and matrix paths. So these commands do not 'fail closed' and are not 'pre-existing obstructions'. Also, 'POST schedules/:id/publish ... coordinator/chair Exact pair retained' is wrong: the strict row 'inf:rait-schedule:publish' => ['rait-coordinator'] overrides the RAIT_COMMAND_RULES coordinator/chair row, so a chair is denied. The register only cites RAIT_COMMAND_RULES. A 'closed' T0 map with wrong effective-permission claims would mis-seed Inspector RED expectations (expected denies that actually succeed) and invite unnecessary 'bounded sourced corrections' (lines 325-327, amendment line 80). Fix: rewrite the register from the effective decision order (protocol special case -> disabled keys -> RAIT_STRICT_COMMAND_RULES -> OPS strict -> permissions/wildcard -> global admin -> matrix), with actual effective roles per mounted pair."
+    },
+    {
+      "severity": "medium",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 320,
+      "message": "The list of resources lacking RAIT_SURFACE_RULES read rows is incomplete. Besides pending-content, redirect, draft, batch and batch-item, the mounted generated GETs for inf:rait-unit, inf:rait-schedule, inf:rait-schedule-slot, inf:rait-substitute-duty and inf:rait-bench (10 methods) also have no read row in RAIT_SURFACE_WRITE_ROLES, RAIT_COMMAND_RULES or the strict map. Non-admin principals are currently denied there. Yet the WORKLIST table (lines 240-246) describes them as 'Existing scoped ... projection', and the amendment's read-policy-only lane (amendment line 49) is not bounded to cover them. In addition, 'source-equivalent functional read rows' is not closed to an exact role set per new row. The T0 map should list each new read row with its exact roles (and which purpose row they serve) or explicitly keep those GETs admin-only, so the policy amendment cannot silently broaden or omit."
+    },
+    {
+      "severity": "medium",
+      "path": "docs/meta/adr/ADR-0047-rait-role-purpose-and-staff-identity.md",
+      "line": 66,
+      "message": "Pool containment for unassigned cases is sound as a predicate, but the writer/lifecycle of rait_case_pool_scope for newly protocolled/admitted cases is unspecified. Amendment line 52ff and access map lines 66-78 forbid public CRUD, automatic migration and same-unit inference, and call routing 'operational input', but no command (protocol/triage/admit) is named to create the link. ADR0047 line 73 and access map line 75 also apply this containment to claim selection 'where multiple pools exist' without defining when partition is required. In a multi-pool unit, new ADMITIDO cases with no link would either vanish from claim-context (a silent QUEUE_EMPTY, which ADR0048/0049 forbid for legacy and risk) or be unreadable to pool-bound oversight. Also, the 'trusted current assignment' source is circular for unassigned cases. Specify the authoritative routing source at admission (existing field, or a named command effect inside an already-owned path), the selector's behavior for unlinked candidates (error vs visible inventory, not silent omission), and the exact pool-partition trigger."
+    },
+    {
+      "severity": "medium",
+      "path": "docs/meta/adr/ADR-0048-rait-legacy-defense-claim-compatibility.md",
+      "line": 46,
+      "message": "The required 'server-owned inventory/disposition receipt' and trusted 'hold/recovery disposition' have no named storage owner, entity or path. Amendment §2 (lines 38-60) bounds new internal entities only to the extended read-scope binding and rait_case_pool_scope; no blueprint entity, constraint set or service path is assigned for legacy classification and holds. Qualification also depends on it: the selector must bind qualification to these records and to the current version, and must return CLAIM_LEGACY_UNVERIFIED otherwise. As written, an implementer must either invent an unowned table/path (outside the amendment) or treat legacy work as permanently unverified (blocking every in-scope claim). Add the CASE-blueprint internal entity (fields as listed, uniqueness, tenant FKs, provenance non-null, no public CRUD) to the amendment's ownership table."
+    },
+    {
+      "severity": "medium",
+      "path": "docs/meta/adr/ADR-0049-rait-authoritative-risk-composition.md",
+      "line": 57,
+      "message": "The flag-event boundary is not fully honest about downstream activation. Per rait-events-sse-contract.md:64, rait.clock.flag-changed (RAIT_ALERTA_PRESCRICAO) is consumed by SSE, dashboard (backend/domains/dashboard/monitor prescription-risk.projection.ts already subscribes) and infração (RISCO_PRESCRICAO_ALTERADO, 14-inf-lifecycle-vocabulary.sql). Publishing it from claim POSTs therefore activates existing SSE, DASHBOARD and infraction consumers. With no sweeper, coverage is limited to cases evaluated at claim time, giving a partial, non-representative radar. The ADR says 'no new SSE topic / no DASHBOARD logic' but does not state that existing consumers start receiving claim-path-only events, or whether that partial feed is acceptable. Either state this explicitly as an accepted bounded effect with acceptance tests for consumers, or defer publication until the sweeper is authorized. Also unspecified: the claim outcome when the computed flag is PRESCRITO_OPERACIONAL and no incident_ref exists (line 62). Name it (e.g. RISK_SOURCE_UNAVAILABLE with no effects) rather than leaving it implicit."
+    },
+    {
+      "severity": "medium",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 138,
+      "message": "The write-side role-purpose is not closed for retained generic child writes, so it risks silent revocation of accepted writers. RAIT_SURFACE_WRITE_ROLES grants rait-document and rait-case create/update to analyst, secretary, coordinator, rapporteur and chair, rait-inquiry to analyst and rapporteur, and rait-deadline, rait-case-event and rait-clock to agency-admin. The CUD dispositions name a retained actor only for parties (secretary/analyst) and communications (secretary). Documents ('existing permitted document metadata contract'), inquiries and pending-contents give no role -> purpose -> scope predicate, and the role table only defines read purposes. Under 'unmatched purposes deny' this silently revokes, or leaves for the implementer to decide, existing coordinator, rapporteur and chair document writes and agency-admin deadline/clock writes. List per retained write method the exact roles and the complete purpose/scope, or explicitly record each removal as an approved bypass removal with its journey impact."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md",
+      "line": 48,
+      "message": "Parameter normalization is not fully bounded. parameter-catalogue.md has only rait.ladder.B and rait.ladder.D; there are no A or C ladder keys. 'Typed A/B/C/D ladder source representation' therefore requires adding new catalogue parameters (from WF-RAIT-002 §4.2/§4.3), which conflicts with 'no unrelated parameters/flags' unless stated. State explicitly that rait.ladder.A and rait.ladder.C are new rows transcribed verbatim from the approved WF-RAIT-002 §4.2/§4.3 (with their source refs), and that rait.ladder.B normalizes to N3=21m/CRITICO=23m without changing its version history."
+    },
+    {
+      "severity": "low",
+      "path": "docs/meta/adr/ADR-0049-rait-authoritative-risk-composition.md",
+      "line": 31,
+      "message": "Adding src/rait-risk.ts and exports to @detran/inf-deadlines extends a public API that work/rounds/R-0006/contracts/CTG-0001.md §5 fixes by exact name (already amended once in §5.2). Neither ADR0049 nor the amendment records an additive CTG-0001 §5 amendment or names it in the ownership table. Add that pointer so the library contract stays the single source for its public surface."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 96,
+      "message": "The AUDITOR sealed-archive purpose (JW-12 /arquivo/busca and /arquivo/casos/:id) is referenced as 'AUDITOR archive uses S redaction', but the role table has no AUDITOR archive row with its predicate. S is defined as the secretary purpose, and AUDITOR otherwise appears only under U-bound oversight. State whether AUDITOR archive reads require the ADR0046 U binding plus archived=true, so it is not left to the 'unmatched purpose' deny or inferred."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+      "line": 87,
+      "message": "'id,case_id are common child identifiers': rait_clock_alert has no case_id (its parent is clock_id -> clock -> case), and batch-items lists case_id explicitly. Minor accuracy fix: name clock_id as the parent key for clock-alerts."
+    }
+  ]
+}
