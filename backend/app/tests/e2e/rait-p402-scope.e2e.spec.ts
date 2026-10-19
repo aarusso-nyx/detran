@@ -539,13 +539,13 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
       expect(other).toBeDefined();
       const agendas = (
         await owner.query(
-          `select a.id,a.withdrawn from inf.rait_agenda_item a join inf.rait_pool_member m on m.id=a.rapporteur_member_id and m.tenant_id=a.tenant_id where a.tenant_id=$1 and a.case_id=$2 and m.person_id=$3`,
+          `select a.id,a.withdrawn,a.withdrawn_reason from inf.rait_agenda_item a join inf.rait_pool_member m on m.id=a.rapporteur_member_id and m.tenant_id=a.tenant_id where a.tenant_id=$1 and a.case_id=$2 and m.person_id=$3`,
           [RAIT_TENANT, caseId, actor],
         )
       ).rows;
       for (const a of agendas)
         await owner.query(
-          'update inf.rait_agenda_item set withdrawn=true where id=$1',
+          "update inf.rait_agenda_item set withdrawn=true,withdrawn_reason='S1 own-assignment fixture' where id=$1",
           [a.id],
         );
       const id = randomUUID();
@@ -582,8 +582,8 @@ describe('S1 explicit bindings, exact pools, complete purposes and real role_app
         await owner.query('delete from inf.rait_assignment where id=$1', [id]);
         for (const a of agendas)
           await owner.query(
-            'update inf.rait_agenda_item set withdrawn=$2 where id=$1',
-            [a.id, a.withdrawn],
+            'update inf.rait_agenda_item set withdrawn=$2,withdrawn_reason=$3 where id=$1',
+            [a.id, a.withdrawn, a.withdrawn_reason],
           );
       }
     });
