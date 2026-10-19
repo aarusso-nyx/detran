@@ -442,21 +442,20 @@ compartilhada `docs/framework/product/shared/workflows/diagrams/`; regenerar qua
 
 ## Emenda D1–D7 aprovada pelo Owner — 2026-10-18
 
-Esta emenda prevalece **somente para o claim da defesa prévia** sobre a sequência
-claim→triagem e a exigência genérica de If-Match deste documento. Admissibilidade
-vem primeiro; claim compõe ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO em uma transação e
-abre `/casos/:id/dossie`, sem repetir triagem. HTTP200 CASE tipado e ETag do caso;
-If-Match não integra esse seletor (se enviado,400), mantido nas demais escritas
-versionadas. Chave nova por ação nova, replay apenas da mesma tentativa/ator.
-Impedidos são excluídos e o próximo elegível é selecionado; sem elegíveis,
-QUEUE_EMPTY409 sem revelar casos. MEMBER_IMPEDED continua nas demais utilizações
-fonteadas. Não há nova rota de impedimento do analista.
+Para defesa prévia, esta emenda prevalece sobre a sequência histórica de claim
+seguida de triagem: admissibilidade ocorre primeiro. O claim compõe atomicamente
+ADMITIDO→DISTRIBUIDO→EM_INSTRUCAO e abre o dossiê, sem repetir triagem. Não se
+inventa estado, comando de distribuição ou atalho de recebimento pela secretaria.
 
-Escopo server-side separa metadados coletivos, triagem autorizada pré-atribuição
-e mérito atribuído. `rait-coordinator` e `AUDITOR` podem ler mérito não atribuído
+Casos com impedimento são excluídos antes de acesso ao mérito; segue o próximo
+elegível na ordem vigente. Sem elegíveis, resposta vazia segura sem revelar casos.
+O escopo server-side separa metadados coletivos, triagem autorizada pré-atribuição
+e mérito do responsável. Coordenadores e auditores podem ler mérito não atribuído
 no vínculo explícito de unidade/pool/tenant, somente leitura, sem impedimento;
-nenhum novo grant de claim/escrita/assinatura ou escopo amplo é inferido.
-Formalização: [ADR0045](../../../../../../meta/adr/ADR-0045-rait-claim-selector-contract.md) e [ADR0046](../../../../../../meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md).
-Texto/diagramas anteriores são a projeção histórica nos pontos substituídos.
-Status draft da fonte não é promovido. **Runtime continua pausado** até aprovação
-do pacote exato; esta emenda não demonstra implementação ou aceitação integral.
+nenhuma autoridade de claim/escrita/assinatura é inferida dessa supervisão.
+
+Detalhes de contrato, validação, tipos e replay constam da
+[decisão de contrato](../../../../../../meta/adr/ADR-0045-rait-claim-selector-contract.md) e da
+[decisão de segurança](../../../../../../meta/adr/ADR-0046-rait-case-scope-and-claim-replay.md).
+Texto/diagramas anteriores são históricos nos pontos substituídos; o status draft
+da fonte permanece. Runtime continua pausado até aprovação do pacote exato.
