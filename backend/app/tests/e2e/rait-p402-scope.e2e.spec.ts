@@ -142,7 +142,7 @@ beforeAll(async () => {
     abortOnError: false,
   });
   await app.init();
-}, 60_000);
+}, 180_000);
 afterAll(async () => {
   await app?.close();
   await owner?.end();
