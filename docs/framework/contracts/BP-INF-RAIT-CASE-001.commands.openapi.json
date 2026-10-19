@@ -2,10 +2,10 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RAIT Case commands",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "x-blueprint": "BP-INF-RAIT-CASE-001",
     "x-commands": true,
-    "description": "R-0025 admissibility slice per ADR-0041 and UC-RAIT-002. Four operations have typed strict inputs, parent-case If-Match/ETag and idempotency. Other operations retain their existing scope. P4-02-S1 typed scoped replacement of the frozen107-method baseline. ADR0046/47 and T0 closed access/triage maps govern complete role purposes; runtime production qualification is separate. No claim-context/risk API or selector change."
+    "description": "R-0025 admissibility slice per ADR-0041 and UC-RAIT-002. Four operations have typed strict inputs, parent-case If-Match/ETag and idempotency. Other operations retain their existing scope. P4-02-S1 typed scoped replacement of the frozen107-method baseline. ADR0046/47 and T0 closed access/triage maps govern complete role purposes; runtime production qualification is separate. S1 historical scope is retained. P4-02-S2 adds typed claim-context/current-risk reads and the ADR0045/48 selector transport, preserving existing other commands/instances and S1 protections; runtime acceptance and production qualification remain separate."
   },
   "paths": {
     "/v1/inf/rait/cases": {
@@ -797,7 +797,7 @@
             "headers": {
               "ETag": {
                 "required": true,
-                "description": "Strong final case version: v+2 for new defense, v+1 for qualified legacy.",
+                "description": "Strong final CASE version: new defense v+2; qualified legacy defense v+1; existing JARI/CETRAN claim behavior remains v+1 unchanged.",
                 "schema": {
                   "type": "string",
                   "pattern": "^\"[1-9][0-9]*\"$"
@@ -827,19 +827,25 @@
             }
           },
           "400": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.VALIDATION_FAILED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [400]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -848,37 +854,55 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "rule": {
+                                "type": "string"
+                              },
+                              "params": {
+                                "type": "object",
+                                "additionalProperties": true
+                              }
+                            }
+                          }
                         }
-                      }
+                      },
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "401": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.AUTH_REQUIRED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [401]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -887,79 +911,162 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "403": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.FORBIDDEN_ACTION",
-                        "RAIT.FORBIDDEN_CASE_SCOPE"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_ACTION"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "resource": {
+                              "type": "string"
+                            },
+                            "action": {
+                              "type": "string"
+                            },
+                            "roles": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_CASE_SCOPE"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "caseId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "poolId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "unitId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.ORDER_OVERRIDE_FORBIDDEN"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {},
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "404": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.TENANT_MISMATCH"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [404]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -968,82 +1075,214 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "409": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.QUEUE_EMPTY",
-                        "RAIT.CASE_POOL_UNRESOLVED",
-                        "RAIT.CLAIM_LEGACY_UNVERIFIED",
-                        "RAIT.IDEMPOTENCY_REPLAY",
-                        "RAIT.ASSIGNMENT_ALREADY_ACTIVE"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.QUEUE_EMPTY"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "poolId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.CASE_POOL_UNRESOLVED"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {},
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.CLAIM_LEGACY_UNVERIFIED"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {},
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.IDEMPOTENCY_REPLAY"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.ASSIGNMENT_ALREADY_ACTIVE"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "assignmentId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "memberId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "503": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [503]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -1052,68 +1291,142 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "422": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.MEMBER_NOT_AVAILABLE",
-                        "RAIT.PARAMETER_SOURCE_PENDING",
-                        "RAIT.ASSIGNMENT_WIP_LIMIT"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.MEMBER_NOT_AVAILABLE"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [422]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "memberId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "availability": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.PARAMETER_SOURCE_PENDING"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [422]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.ASSIGNMENT_WIP_LIMIT"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [422]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "wip": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           }
         },
-        "x-rait-scope": "T0 complete action+role+purpose; source and target parent checks and actor-bound replay; no role/permission/admin bypass. Existing legal transitions, version guards and response contract remain unchanged.",
+        "x-rait-scope": "Complete S1 role/action/purpose and exact pool/parent scope; ADR0045 selector exception rejects supplied If-Match400, strict empty input and typed CASE result. New defense v+2; qualified legacy defense v+1; other-instance existing v+1 unchanged. Actor-bound retry and all non-claim versioned contracts remain unchanged.",
         "description": "ADR0045/48/49: strict selector body. Supplied If-Match is rejected400. New defense ADMITIDO v+2; qualified legacy DISTRIBUIDO v+1. Preserve existing other-instance behavior. Actor-bound exact replay reauthorizes current scope without rerunning first-use selection/WIP.",
         "x-rait-resource": "inf:rait-case",
         "x-rait-action": "claim-next",
@@ -6746,19 +7059,25 @@
             }
           },
           "400": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.VALIDATION_FAILED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [400]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -6767,37 +7086,55 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "rule": {
+                                "type": "string"
+                              },
+                              "params": {
+                                "type": "object",
+                                "additionalProperties": true
+                              }
+                            }
+                          }
                         }
-                      }
+                      },
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "401": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.AUTH_REQUIRED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [401]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -6806,79 +7143,132 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "403": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.FORBIDDEN_ACTION",
-                        "RAIT.FORBIDDEN_CASE_SCOPE"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_ACTION"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "resource": {
+                              "type": "string"
+                            },
+                            "action": {
+                              "type": "string"
+                            },
+                            "roles": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_CASE_SCOPE"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "caseId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "poolId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "unitId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "404": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.TENANT_MISMATCH"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [404]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -6887,79 +7277,106 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "409": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.CASE_POOL_UNRESOLVED",
-                        "RAIT.CLAIM_LEGACY_UNVERIFIED"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.CASE_POOL_UNRESOLVED"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {},
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.CLAIM_LEGACY_UNVERIFIED"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [409]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {},
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "503": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [503]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -6968,19 +7385,11 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -7051,19 +7460,25 @@
             }
           },
           "400": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.VALIDATION_FAILED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [400]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -7072,37 +7487,55 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
+                        "fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "rule": {
+                                "type": "string"
+                              },
+                              "params": {
+                                "type": "object",
+                                "additionalProperties": true
+                              }
+                            }
+                          }
                         }
-                      }
+                      },
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "401": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.AUTH_REQUIRED"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [401]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -7111,79 +7544,132 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "403": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "required": ["code"],
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "enum": [
-                        "RAIT.FORBIDDEN_ACTION",
-                        "RAIT.FORBIDDEN_CASE_SCOPE"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "requestId": {
-                      "type": "string"
-                    },
-                    "context": {
+                  "oneOf": [
+                    {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
                       "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_ACTION"]
                         },
-                        "limit": {
+                        "status": {
                           "type": "integer",
-                          "minimum": 0
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "resource": {
+                              "type": "string"
+                            },
+                            "action": {
+                              "type": "string"
+                            },
+                            "roles": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                         }
-                      }
+                      },
+                      "required": ["code"]
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "enum": ["RAIT.FORBIDDEN_CASE_SCOPE"]
+                        },
+                        "status": {
+                          "type": "integer",
+                          "enum": [403]
+                        },
+                        "message": {
+                          "type": "string"
+                        },
+                        "messageKey": {
+                          "type": "string"
+                        },
+                        "requestId": {
+                          "type": "string"
+                        },
+                        "context": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "caseId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "poolId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "unitId": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          },
+                          "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
+                        }
+                      },
+                      "required": ["code"]
                     }
-                  }
+                  ]
                 }
               }
             }
           },
           "404": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.TENANT_MISMATCH"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [404]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -7192,37 +7678,35 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }
           },
           "503": {
-            "description": "Safe catalogued RAIT error; no candidate, person, incident or source details.",
+            "description": "Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["code"],
                   "properties": {
                     "code": {
                       "type": "string",
                       "enum": ["RAIT.RISK_SOURCE_UNAVAILABLE"]
                     },
+                    "status": {
+                      "type": "integer",
+                      "enum": [503]
+                    },
                     "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
                       "type": "string"
                     },
                     "requestId": {
@@ -7231,19 +7715,11 @@
                     "context": {
                       "type": "object",
                       "additionalProperties": false,
-                      "description": "Safe transport diagnostics only, no candidate/source/actor/incident references.",
-                      "properties": {
-                        "wip": {
-                          "type": "integer",
-                          "minimum": 0
-                        },
-                        "limit": {
-                          "type": "integer",
-                          "minimum": 0
-                        }
-                      }
+                      "properties": {},
+                      "description": "Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context."
                     }
-                  }
+                  },
+                  "required": ["code"]
                 }
               }
             }

@@ -485,5 +485,61 @@
     "receipt": "Existing core kind applicability and exact row bindings plus independent authenticated NA disposition/source provenance; policySources may bind accepted canonical B applicability references, never hash-only authority.",
     "publicInput": "Factory constructs existing RaitRiskClockInput {clockCode:B,applicability:not_applicable,sourceRef:<internal verified receipt/source ref>,sourceVersions:<opaque qualified revisions>} only after qualification.",
     "failure": "Unknown/missing/ambiguous provenance or unsupported branch -> RAIT.RISK_SOURCE_UNAVAILABLE503. No false SEM_RISCO, absent timer=>NA or invented Bclock."
+  },
+  "productionBindings": {
+    "timer": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "track": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "movement": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "interruption": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "parameter": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "incident": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "legacy": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 409,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    },
+    "applicability": {
+      "existingAcceptedImmutableVerifier": null,
+      "behavior": "missing",
+      "status": 503,
+      "reason": "S2 does not identify an already accepted immutable authoritative receipt verifier for this kind. SQL linkage/content digests alone do not establish authority. No new audit action/source/store/writer invented. Later qualified release input requires its separately approved binding."
+    }
+  },
+  "productionBindingBoundary": "Current S2 production composition returns missing for every listed kind. This is explicit fail-closed behavior, not implementation freedom to invent a verifier. Synthetic narrowly admitted tenant fixture reader substitutes only provenance port and verifies independently precomputed receipts against actual SQL; actual SqlRaitRiskSnapshotFactory and source linkage remain exercised.",
+  "unshiftedCeilingQualification": {
+    "rule": "Resolve raw start+approved selected track ceiling and canonical due date through existing date/calendar owner. Require actual timer.raw_due_on and due_on equal those canonical results and actual clock.ceiling_on equal due_on. A departure due to suspension, extension or unqualified adjustment503.",
+    "steps": "Threshold dates follow unchanged approved start/track through same existing owner; no shifting steps, ratios, compensation or new legal rule.",
+    "negative": "A/B/C/D mismatching due_on/raw_due_on, extension/suspension adjustment or stale clock ceiling cannot qualify even with matching signed receipt."
   }
 }

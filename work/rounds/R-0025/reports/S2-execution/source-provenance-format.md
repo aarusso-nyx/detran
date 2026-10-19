@@ -311,3 +311,34 @@ prove changed-row, wrong-tenant/parent, stale activation/version, unknown origin
 echoed digest, duplicate/ambiguous receipt and proposed-only parameter negatives
 alongside independent actual-SQL positive receipts. No new production qualification
 follows from controlled fixture success.
+
+## Independent source-review dispositions F2/F3 — effective clarification
+
+For **each** kind timer,track,movement,interruption,parameter,incident,legacy and
+applicability, S2 identifies no already accepted immutable authoritative production
+receipt verifier. Therefore the S2 production provenance binding returns `missing`
+for every kind, not qualified from SQL consistency or digest equality. legacy
+maps missing to safe409; other mandatory risk kinds to503. This is a closed binding,
+not a choice left to Engineer. No invented audit action, generic audit.write,
+receipt filename/env allowlist or opaque reference becomes authority. Existing
+INF_RAIT_CASE_ADMIT proves its own admitted fact when actually verified but does
+not qualify an entire legacy disposition or authorize another source kind.
+
+The narrowly controlled tenant-fixture provenance reader remains permitted only
+for independently admitted synthetic receipts, independently recomputed actual SQL
+bindings and explicit activation provenance. Keep the actual SQL snapshot factory,
+all clock/timer/parameter/incident/legacy joins and validations. Never replace whole
+snapshot, echo requestdigest or install fixture trust in production. Later production
+qualification requires separately approved real operational verifier/release input.
+The earlier original-start versus reset distinction and B-defense-NA shape remain;
+neither may bypass the explicit missing-production binding.
+
+For A/B/C/D, compute canonical raw ceiling and rounded due through the existing
+public date/calendar owner from the verified start and selected approved track.
+Require persisted raw_due_on/due_on equal those exact canonical results, with the
+current clock ceiling equal due_on. If a suspension, extension or other adjustment
+makes them differ, return RISK_SOURCE_UNAVAILABLE503. Do not shift ladder steps,
+change ratios, compensate with elapsed days or invent a new legal calculation.
+Normal existing calendar rounding remains part of the canonical comparison.
+Inspector proves adjusted/raw/due/clock inconsistency negatives, even when an
+independent fixture receipt matches that inconsistent current row content.
