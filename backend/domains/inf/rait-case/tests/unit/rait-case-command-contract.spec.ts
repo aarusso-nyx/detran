@@ -89,7 +89,10 @@ const request = (
     targetId,
     payload,
     principal: { id: ACTOR, roles: [role], permissions: [], tenants: [TENANT] },
-    headers: { 'If-Match': '"1"', 'Idempotency-Key': `opaque-${command}` },
+    headers: {
+      ...(command === 'claim-next' ? {} : { 'If-Match': '"1"' }),
+      'Idempotency-Key': `opaque-${command}`,
+    },
   };
 };
 
@@ -1161,6 +1164,19 @@ describe('CTG-0001 — fronteira autenticada e DI Nest', () => {
     expect(Reflect.getMetadata('__injectable__', RaitCaseCommandService)).toBe(
       true,
     );
+    // Approved S2 composition adds exactly these two providers after the original five.
+    // Dynamic paths keep old-runtime absence local to this composition prerequisite.
+    const claimContextPath =
+      '../../src/handwritten/rait-claim-context.service.js';
+    const riskPath = '../../src/handwritten/rait-case-risk.service.js';
+    const { RaitClaimContextService } = await import(
+      new URL(claimContextPath, import.meta.url).href
+    );
+    const { RaitCaseRiskService } = await import(
+      new URL(riskPath, import.meta.url).href
+    );
+    expect(RaitClaimContextService).toBeTypeOf('function');
+    expect(RaitCaseRiskService).toBeTypeOf('function');
     expect(
       Reflect.getMetadata('design:paramtypes', RaitCaseCommandService),
     ).toEqual([
@@ -1169,6 +1185,8 @@ describe('CTG-0001 — fronteira autenticada e DI Nest', () => {
       RaitDeadlineEngineFactory,
       RaitDocumentTrustVerifier,
       RaitOperationClock,
+      RaitClaimContextService,
+      RaitCaseRiskService,
     ]);
     expect(
       Reflect.getMetadata('design:paramtypes', RaitInquiryCommandService),
