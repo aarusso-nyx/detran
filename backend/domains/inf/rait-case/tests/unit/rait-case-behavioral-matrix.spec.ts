@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TimerExpiredData } from '@detran/inf-deadlines';
 
@@ -299,8 +300,13 @@ function scenarioPort(
   const tables = baseTables(caseRow);
   const writes: Array<{ sql: string; values: readonly unknown[] }> = [];
   const outbox: Array<readonly unknown[]> = [];
+  // Original legal audit assertions remain separate from ADR0050's private receipt.
   const audit: Array<readonly unknown[]> = [];
-  const replay = new Map<string, { fingerprint: string; response: unknown }>();
+  const replayAudit: Array<readonly unknown[]> = [];
+  const replay = new Map<
+    string,
+    { id: string; fingerprint: string; response: unknown }
+  >();
   const query = vi.fn(
     async (rawSql: string, values: readonly unknown[] = []) => {
       const sql = rawSql.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -316,12 +322,13 @@ function scenarioPort(
           rows:
             values[0] === TENANT && values[1] === ACTOR ? [{ id: MEMBER }] : [],
         };
-      if (sql.startsWith('select request_fingerprint')) {
+      if (/^select (?:id,\s*)?request_fingerprint/.test(sql)) {
         const saved = replay.get(String(values[1]));
         return {
           rows: saved
             ? [
                 {
+                  id: saved.id,
                   request_fingerprint: saved.fingerprint,
                   response_body: saved.response,
                 },
@@ -329,6 +336,24 @@ function scenarioPort(
             : [],
         };
       }
+      if (
+        sql.startsWith('select actor_id,actor_role,details from audit.events')
+      )
+        return {
+          rows: replayAudit
+            .filter(
+              (row) =>
+                row[0] === values[0] &&
+                row[4] === values[1] &&
+                row[5] === values[2] &&
+                row[3] === values[3],
+            )
+            .map((row) => ({
+              actor_id: row[1],
+              actor_role: row[2],
+              details: JSON.parse(String(row[6])),
+            })),
+        };
       if (/\bfrom inf\.rait_case\b/.test(sql)) {
         const target = sql.match(/\bid\s*=\s*\$(\d+)/);
         const requested = target ? values[Number(target[1]) - 1] : undefined;
@@ -477,14 +502,19 @@ function scenarioPort(
         return { rows: [] };
       }
       if (sql.startsWith('select audit.write')) {
-        audit.push(values);
+        if (values[3] === 'INF_RAIT_COMMAND_REPLAY_BIND')
+          replayAudit.push(values);
+        else audit.push(values);
         return { rows: [] };
       }
       if (sql.startsWith('insert into integration.idempotency_keys')) {
+        const id = randomUUID();
         replay.set(String(values[1]), {
+          id,
           fingerprint: String(values[2]),
           response: JSON.parse(String(values[4])),
         });
+        return { rows: [{ id }] };
       }
       return { rows: [] };
     },
@@ -494,7 +524,16 @@ function scenarioPort(
       work({ query }),
     ),
   };
-  return { database, query, writes, outbox, audit, tables, caseRow };
+  return {
+    database,
+    query,
+    writes,
+    outbox,
+    audit,
+    replayAudit,
+    tables,
+    caseRow,
+  };
 }
 
 async function caseSubject(state: string, instance: string, role: string) {
@@ -836,11 +875,12 @@ async function expectRejectedWithoutEffects(
     writes: unknown[];
     outbox: unknown[];
     audit: unknown[];
+    replayAudit: unknown[];
   },
   request: unknown,
   code: string,
   status: number,
-  baseline = [0, 0, 0],
+  baseline = [0, 0, 0, 0],
 ) {
   const outcome = await subject.service.execute(request).then(
     () => undefined,
@@ -850,6 +890,7 @@ async function expectRejectedWithoutEffects(
   expect(subject.writes).toHaveLength(baseline[0]);
   expect(subject.outbox).toHaveLength(baseline[1]);
   expect(subject.audit).toHaveLength(baseline[2]);
+  expect(subject.replayAudit).toHaveLength(baseline[3]);
 }
 
 describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamento', () => {
@@ -867,6 +908,17 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         etag: command === 'redirect' ? '"1"' : '"2"',
       });
       expect(subject.audit).toHaveLength(1);
+      expect(subject.replayAudit).toHaveLength(
+        [
+          'triage',
+          'save-admissibility',
+          'admit',
+          'non-admission',
+          'claim-next',
+        ].includes(command)
+          ? 0
+          : 1,
+      );
       expect(result.events.map((event) => event.type).sort()).toEqual(
         [...eventTypes[command]!].sort(),
       );
@@ -924,11 +976,19 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ];
       await expectRejectedWithoutEffects(
         subject,
         {
-          ...input(command, target, payload, 'repeat'),
+          ...input(
+            command,
+            ['admit', 'non-admission', 'claim-next'].includes(command)
+              ? target
+              : ORIGIN_CASE,
+            payload,
+            'repeat',
+          ),
           headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat' },
         },
         'RAIT.IDEMPOTENCY_REPLAY',
@@ -939,6 +999,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ]).toEqual(effects);
     });
   }
@@ -953,6 +1014,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         etag: '"2"',
       });
       expect(subject.audit).toHaveLength(1);
+      expect(subject.replayAudit).toHaveLength(1);
       expect(subject.outbox).toHaveLength(eventTypes[command]!.length);
     });
     it(`dado payload inválido quando ${command} é solicitado então rejeita sem efeito parcial`, async () => {
@@ -1013,6 +1075,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ];
       await expectRejectedWithoutEffects(
         {
@@ -1023,7 +1086,14 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
           },
         },
         {
-          ...input(command, INQUIRY, payload, 'repeat-inquiry'),
+          ...input(
+            command,
+            INQUIRY,
+            command === 'answer'
+              ? { ...payload, answeredOn: '2026-09-15' }
+              : { ...payload, reason: 'outro fundamento canônico' },
+            'repeat-inquiry',
+          ),
           headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat-inquiry' },
         },
         'RAIT.IDEMPOTENCY_REPLAY',
