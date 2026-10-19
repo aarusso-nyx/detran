@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
+-- Generated from BP-INF-RAIT-WORKLIST-001 v1.5.1 sha256:d64b808c363287ff59a68d90dcc41991994d835a49117d5a16e61314f2edd48b
 
 -- Regenerable-only DDL for BP-INF-RAIT-WORKLIST-001; request-path writes use role_app_backend.
 
@@ -19,6 +19,7 @@ create table if not exists inf.rait_unit (
 );
 create unique index if not exists ux_inf_rait_unit_name on inf.rait_unit (tenant_id, judging_body, name);
 create index if not exists ix_inf_rait_unit_state on inf.rait_unit (tenant_id, state);
+create unique index if not exists ux_inf_rait_unit_tenant_id on inf.rait_unit (tenant_id, id);
 create index if not exists ix_rait_unit_tenant_id on inf.rait_unit (tenant_id);
 create index if not exists ix_rait_unit_coordinator_member_id on inf.rait_unit (coordinator_member_id);
 
@@ -41,7 +42,8 @@ create table if not exists inf.rait_pool (
   constraint fk_inf_rait_pool_unit foreign key (unit_id) references inf.rait_unit (id)
 );
 create unique index if not exists ux_inf_rait_pool_instance on inf.rait_pool (tenant_id, instance) where unit_id is null;
-create unique index if not exists ux_inf_rait_pool_instance_unit on inf.rait_pool (tenant_id, instance, unit_id) where unit_id is not null;
+create unique index if not exists ux_inf_rait_pool_non_defense_instance_unit on inf.rait_pool (tenant_id, instance, unit_id) where unit_id is not null and instance <> 'defesa_previa';
+create unique index if not exists ux_inf_rait_pool_tenant_id on inf.rait_pool (tenant_id, id);
 create index if not exists ix_rait_pool_tenant_id on inf.rait_pool (tenant_id);
 create index if not exists ix_rait_pool_unit_id on inf.rait_pool (unit_id);
 

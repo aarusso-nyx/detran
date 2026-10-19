@@ -36,18 +36,19 @@ export class RaitCaseCommandsController {
   @Post('cases')
   @HttpCode(200)
   @Action('protocol')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_PROTOCOL', entity: 'inf.rait_case' })
   protocol(
     @Body() body: Record<string, unknown>,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
-    @Req() request: AuthenticatedRequest,
+    @Req() request?: AuthenticatedRequest,
   ) {
     return this.service
       .protocol({
         payload: body,
         headers: { 'Idempotency-Key': key ?? '' },
-        principal: request.principal,
+        principal: request?.principal,
       })
       .then((result) => {
         response.setHeader('ETag', result.etag);
@@ -88,12 +89,12 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
-    @Req() request: AuthenticatedRequest,
+    @Req() request?: AuthenticatedRequest,
   ) {
     return this.run(
       'triage',
       [id, body, match, key, response],
-      request.principal,
+      request?.principal,
     );
   }
   @Post('cases/:id/commands/admit')
@@ -111,8 +112,13 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('admit', [id, body, match, key, response]);
+    return this.run(
+      'admit',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/non-admission')
   @HttpCode(200)
@@ -129,12 +135,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('non-admission', [id, body, match, key, response]);
+    return this.run(
+      'non-admission',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/remit')
   @HttpCode(200)
   @Action('remit-jari')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_REMIT', entity: 'inf.rait_case' })
   remit(
     @Param('id') id: string,
@@ -142,12 +154,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('remit', [id, body, match, key, response]);
+    return this.run(
+      'remit',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/receive')
   @HttpCode(200)
   @Action('receive-judging-body')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_RECEIVE', entity: 'inf.rait_case' })
   receive(
     @Param('id') id: string,
@@ -155,12 +173,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('receive', [id, body, match, key, response]);
+    return this.run(
+      'receive',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/ready')
   @HttpCode(200)
   @Action('submit-draft')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_READY', entity: 'inf.rait_case' })
   ready(
     @Param('id') id: string,
@@ -168,13 +192,19 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('ready', [id, body, match, key, response]);
+    return this.run(
+      'ready',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/decide')
   @HttpCode(200)
   @Resource('inf:rait-decision')
   @Action('sign')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_DECISION_SIGN', entity: 'inf.rait_decision' })
   decide(
     @Param('id') id: string,
@@ -182,13 +212,19 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('decide', [id, body, match, key, response]);
+    return this.run(
+      'decide',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/return-draft')
   @HttpCode(200)
   @Resource('inf:rait-decision')
   @Action('return-draft')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_DECISION_RETURN_DRAFT', entity: 'inf.rait_draft' })
   returnDraft(
     @Param('id') id: string,
@@ -196,12 +232,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('return-draft', [id, body, match, key, response]);
+    return this.run(
+      'return-draft',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/withdraw')
   @HttpCode(200)
   @Action('withdraw')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_WITHDRAW', entity: 'inf.rait_case' })
   withdraw(
     @Param('id') id: string,
@@ -209,12 +251,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('withdraw', [id, body, match, key, response]);
+    return this.run(
+      'withdraw',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/redirect')
   @HttpCode(200)
   @Action('redirect')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_REDIRECT', entity: 'inf.rait_redirect' })
   redirect(
     @Param('id') id: string,
@@ -222,12 +270,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('redirect', [id, body, match, key, response]);
+    return this.run(
+      'redirect',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('cases/:id/commands/resolve-pending')
   @HttpCode(200)
   @Action('resolve-pending-content')
+  @NoIdempotent()
   @Audit({
     action: 'INF_RAIT_CASE_RESOLVE_PENDING_CONTENT',
     entity: 'inf.rait_pending_content',
@@ -238,12 +292,18 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('resolve-pending', [id, body, match, key, response]);
+    return this.run(
+      'resolve-pending',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
   @Post('pools/:id/claim-next')
   @HttpCode(200)
   @Action('claim-next')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_CASE_CLAIM_NEXT', entity: 'inf.rait_case' })
   claimNext(
     @Param('id') id: string,
@@ -251,7 +311,12 @@ export class RaitCaseCommandsController {
     @Headers('if-match') match: string | undefined,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: AuthenticatedRequest,
   ) {
-    return this.run('claim-next', [id, body, match, key, response]);
+    return this.run(
+      'claim-next',
+      [id, body, match, key, response],
+      request?.principal,
+    );
   }
 }

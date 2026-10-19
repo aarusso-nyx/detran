@@ -1,3 +1,7 @@
+import type {
+  RaitScopeRequest,
+  RaitScopePrincipal,
+} from '@detran/inf-rait-case';
 import {
   Body,
   Controller,
@@ -6,8 +10,9 @@ import {
   Param,
   Post,
   Res,
+  Req,
 } from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
+import { Action, Audit, Resource, NoIdempotent } from '@detran/shared';
 
 import { RaitWorklistCommandService } from './rait-worklist-command.service.js';
 
@@ -22,11 +27,13 @@ export class RaitWorklistCommandsController {
   @HttpCode(201)
   @Resource('inf:rait-schedule')
   @Action('create')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_SCHEDULE_CREATE', entity: 'inf.rait_schedule' })
   createSchedule(
     @Body() payload: Record<string, unknown>,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
     return this.run(
       'create-schedule',
@@ -35,6 +42,7 @@ export class RaitWorklistCommandsController {
       key,
       undefined,
       response,
+      request?.principal,
     );
   }
 
@@ -42,6 +50,7 @@ export class RaitWorklistCommandsController {
   @HttpCode(200)
   @Resource('inf:rait-schedule')
   @Action('publish')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_SCHEDULE_PUBLISH', entity: 'inf.rait_schedule' })
   publishSchedule(
     @Param('id') id: string,
@@ -49,27 +58,47 @@ export class RaitWorklistCommandsController {
     @Headers('idempotency-key') key: string | undefined,
     @Headers('if-match') match: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
-    return this.run('publish-schedule', id, payload, key, match, response);
+    return this.run(
+      'publish-schedule',
+      id,
+      payload,
+      key,
+      match,
+      response,
+      request?.principal,
+    );
   }
 
   @Post('batches')
   @HttpCode(201)
   @Resource('inf:rait-batch')
   @Action('create')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_BATCH_CREATE', entity: 'inf.rait_batch' })
   createBatch(
     @Body() payload: Record<string, unknown>,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
-    return this.run('create-batch', 'batch', payload, key, undefined, response);
+    return this.run(
+      'create-batch',
+      'batch',
+      payload,
+      key,
+      undefined,
+      response,
+      request?.principal,
+    );
   }
 
   @Post('batches/:id/approve')
   @HttpCode(200)
   @Resource('inf:rait-batch')
   @Action('approve')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_BATCH_APPROVE', entity: 'inf.rait_batch' })
   approveBatch(
     @Param('id') id: string,
@@ -77,14 +106,24 @@ export class RaitWorklistCommandsController {
     @Headers('idempotency-key') key: string | undefined,
     @Headers('if-match') match: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
-    return this.run('approve-batch', id, payload, key, match, response);
+    return this.run(
+      'approve-batch',
+      id,
+      payload,
+      key,
+      match,
+      response,
+      request?.principal,
+    );
   }
 
   @Post('batches/:id/items/:caseId/accept')
   @HttpCode(200)
   @Resource('inf:rait-batch-item')
   @Action('accept')
+  @NoIdempotent()
   @Audit({
     action: 'INF_RAIT_BATCH_ITEM_ACCEPT',
     entity: 'inf.rait_batch_item',
@@ -96,6 +135,7 @@ export class RaitWorklistCommandsController {
     @Headers('idempotency-key') key: string | undefined,
     @Headers('if-match') match: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
     return this.run(
       'accept-batch-item',
@@ -104,6 +144,7 @@ export class RaitWorklistCommandsController {
       key,
       match,
       response,
+      request?.principal,
     );
   }
 
@@ -111,6 +152,7 @@ export class RaitWorklistCommandsController {
   @HttpCode(200)
   @Resource('inf:rait-batch-item')
   @Action('impediment')
+  @NoIdempotent()
   @Audit({
     action: 'INF_RAIT_BATCH_ITEM_IMPEDIMENT',
     entity: 'inf.rait_batch_item',
@@ -122,6 +164,7 @@ export class RaitWorklistCommandsController {
     @Headers('idempotency-key') key: string | undefined,
     @Headers('if-match') match: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
     return this.run(
       'declare-batch-item-impediment',
@@ -130,26 +173,38 @@ export class RaitWorklistCommandsController {
       key,
       match,
       response,
+      request?.principal,
     );
   }
 
   @Post('batches/:id/commands/draw')
   @HttpCode(200)
   @Action('draw')
+  @NoIdempotent()
   @Audit({ action: 'INF_RAIT_BATCH_DRAW', entity: 'inf.rait_batch' })
   draw(
     @Param('id') id: string,
     @Body() payload: Record<string, unknown>,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
-    return this.run('draw', id, payload, key, undefined, response);
+    return this.run(
+      'draw',
+      id,
+      payload,
+      key,
+      undefined,
+      response,
+      request?.principal,
+    );
   }
 
   @Post('assignments/:id/commands/reassign')
   @HttpCode(200)
   @Resource('inf:rait-assignment')
   @Action('reassign')
+  @NoIdempotent()
   @Audit({
     action: 'INF_RAIT_ASSIGNMENT_REASSIGN',
     entity: 'inf.rait_assignment',
@@ -160,8 +215,17 @@ export class RaitWorklistCommandsController {
     @Headers('idempotency-key') key: string | undefined,
     @Headers('if-match') match: string | undefined,
     @Res({ passthrough: true }) response: Response,
+    @Req() request?: RaitScopeRequest,
   ) {
-    return this.run('reassign', id, payload, key, match, response);
+    return this.run(
+      'reassign',
+      id,
+      payload,
+      key,
+      match,
+      response,
+      request?.principal,
+    );
   }
 
   private run(
@@ -171,10 +235,12 @@ export class RaitWorklistCommandsController {
     key: string | undefined,
     match: string | undefined,
     response: Response,
+    principal: RaitScopePrincipal | undefined,
   ) {
     return this.service
       .execute({
         command,
+        principal,
         targetId,
         payload,
         headers: { 'Idempotency-Key': key ?? '', 'If-Match': match ?? '' },

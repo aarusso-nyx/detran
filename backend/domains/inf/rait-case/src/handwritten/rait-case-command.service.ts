@@ -23,6 +23,8 @@ import {
   policyKey,
 } from '@detran/shared';
 
+import { RaitCaseScopeService } from './rait-case-scope.service.js';
+import { RaitCasePoolScopeService } from './rait-case-pool-scope.service.js';
 import { RaitDocumentTrustVerifier } from './rait-document-trust.verifier.js';
 import {
   RaitOperationClock,
@@ -595,10 +597,34 @@ export class RaitCaseCommandService {
       fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId);
 
     return this.transaction(async (tx) => {
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
+      );
+      await scope.authenticate(tx, input.principal);
+      const membership = rows(
+        await tx.query(
+          "select pm.id from inf.rait_pool_member pm join inf.rait_pool p on p.tenant_id=pm.tenant_id and p.id=pm.pool_id where pm.tenant_id=$1 and pm.person_id=$2 and pm.member_role='secretaria' and pm.status='ATIVO' and p.active and p.instance=$3 and p.unit_id is not distinct from $4::uuid",
+          [
+            context.tenantId,
+            context.actorId,
+            input.payload.instance,
+            input.payload.unit_id ?? null,
+          ],
+        ),
+      )[0];
+      if (!membership) fail('RAIT.TENANT_MISMATCH', 404);
+      if (input.payload.origin_case_id)
+        await scope.assertCase(
+          tx,
+          String(input.payload.origin_case_id),
+          input.principal,
+        );
       const digest = createHash('sha256')
         .update(
           JSON.stringify({
             command: 'protocol',
+            actorId: context.actorId,
             payload: canonical(input.payload),
           }),
         )
@@ -619,11 +645,19 @@ export class RaitCaseCommandService {
       if (replay) {
         if (replay.request_fingerprint !== digest)
           fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key }, context.requestId);
+        await scope.assertCase(
+          tx,
+          String(replay.response_body.data.id),
+          input.principal,
+          'protocol',
+          'rait-case',
+          true,
+        );
         return replay.response_body;
       }
 
       const payload = input.payload;
-      const membership = rows(
+      const protocolMembership = rows(
         await tx.query(
           `select member.id
              from inf.rait_pool_member member
@@ -732,6 +766,12 @@ export class RaitCaseCommandService {
           JSON.stringify({ command: 'protocol' }),
         ],
       );
+      await new RaitCasePoolScopeService().resolve(
+        tx,
+        context.tenantId,
+        String(data.id),
+        'command:protocol:' + context.actorId,
+      );
       const result = { data, events: [], etag: `"${data.version}"` };
       await tx.query(
         "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours')",
@@ -777,14 +817,21 @@ export class RaitCaseCommandService {
       : { role: COMMAND_AUDIT_ROLES[input.command] ?? '', auditDetails: {} };
     const context = { ...requestContext, ...attribution };
     return this.transaction(async (tx) => {
-      const digest = fingerprint(
-        input,
-        ['triage', 'save-admissibility', 'admit', 'non-admission'].includes(
-          input.command,
-        )
-          ? { actorId: context.actorId, ifMatch: input.headers['If-Match']! }
-          : undefined,
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
       );
+      await scope.command(
+        tx,
+        input.principal,
+        input.command,
+        input.targetId,
+        input.payload,
+      );
+      const digest = fingerprint(input, {
+        actorId: context.actorId,
+        ifMatch: input.headers['If-Match'] ?? '',
+      });
       await tx.query(
         "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
         [context.tenantId, key],
@@ -801,6 +848,16 @@ export class RaitCaseCommandService {
       if (replay) {
         if (replay.request_fingerprint !== digest)
           fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key }, context.requestId);
+        if (input.command === 'claim-next') {
+          const id = String(replay.response_body.data.id);
+          const qualified = rows(
+            await tx.query(
+              `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
+              [context.tenantId, id, input.targetId],
+            ),
+          )[0];
+          if (!qualified) fail('RAIT.TENANT_MISMATCH', 404);
+        }
         return replay.response_body;
       }
       const current =
@@ -951,6 +1008,13 @@ export class RaitCaseCommandService {
           JSON.stringify({ command: input.command, ...context.auditDetails }),
         ],
       );
+      if (input.command === 'admit')
+        await new RaitCasePoolScopeService().resolve(
+          tx,
+          context.tenantId,
+          current.id,
+          'command:admit:' + context.actorId,
+        );
       const result = {
         data: admissibility ?? data,
         events,
@@ -2035,6 +2099,14 @@ export class RaitCaseCommandService {
     )[0];
     if (!candidate || candidate.state !== 'DISTRIBUIDO')
       fail('RAIT.QUEUE_EMPTY', 409, { poolId });
+    const scope = new RaitCaseScopeService(this.database, this.requestContext);
+    const qualified = rows(
+      await tx.query(
+        `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
+        [tenantId, candidate.id, poolId],
+      ),
+    )[0];
+    if (!qualified) fail('RAIT.TENANT_MISMATCH', 404);
     const existingAssignment = rows(
       await tx.query<Record<string, unknown>>(
         `select id, member_id from inf.rait_assignment

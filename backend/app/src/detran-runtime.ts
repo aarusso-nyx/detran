@@ -811,6 +811,13 @@ export class DetranTenantMembershipVerifier {
 
   /** Exige contexto de requisição ativo com `tenantId` = `tenantId`. */
   async isActiveMember(tenantId: string, actorId: string): Promise<boolean> {
+    // D9: request staff identity is auth.users.id, never a raw external subject.
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu.test(
+        actorId,
+      )
+    )
+      return false;
     const result = await this.executor.query<{ allowed: boolean }>(
       ACTIVE_MEMBERSHIP_SQL,
       [actorId, tenantId],

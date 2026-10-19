@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:e9e4916988b2bb485cd08216fc2bf2b441c013a55c05124de7f731eb9229ac17
 export * from './controllers/rait-case.controller.js';
 export * from './dto/create-rait-case.dto.js';
 export * from './entities/rait-case.entity.js';
@@ -84,6 +84,16 @@ export * from './dto/create-rait-case-event.dto.js';
 export * from './entities/rait-case-event.entity.js';
 export * from './repositories/rait-case-event.repository.js';
 export * from './services/rait-case-event.service.js';
+export * from './controllers/rait-case-read-scope.controller.js';
+export * from './dto/create-rait-case-read-scope.dto.js';
+export * from './entities/rait-case-read-scope.entity.js';
+export * from './repositories/rait-case-read-scope.repository.js';
+export * from './services/rait-case-read-scope.service.js';
+export * from './controllers/rait-case-pool-scope-record.controller.js';
+export * from './dto/create-rait-case-pool-scope-record.dto.js';
+export * from './entities/rait-case-pool-scope-record.entity.js';
+export * from './repositories/rait-case-pool-scope-record.repository.js';
+export * from './services/rait-case-pool-scope-record.service.js';
 export * from './rait-case.module.js';
 export * from './handwritten/rait-case-commands.controller.js';
 export * from './handwritten/rait-inquiry-commands.controller.js';
@@ -94,3 +104,6 @@ export * from './handwritten/rait-operation-clock.js';
 export * from './handwritten/rait-case-transition.port.js';
 export * from './handwritten/rait-admissibility-commands.controller.js';
 export * from './handwritten/rait-admissibility-command.service.js';
+export * from './handwritten/rait-case-scoped-reads.controller.js';
+export * from './handwritten/rait-case-scope.service.js';
+export * from './handwritten/rait-case-pool-scope.service.js';

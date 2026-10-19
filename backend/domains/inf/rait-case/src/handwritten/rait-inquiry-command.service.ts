@@ -1,3 +1,7 @@
+import {
+  RaitCaseScopeService,
+  type RaitScopePrincipal,
+} from './rait-case-scope.service.js';
 import { createHash } from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';
@@ -9,6 +13,7 @@ import { DetranError, withTenantContext } from '@detran/shared';
 import { RaitDeadlineEngineFactory } from './rait-case-command.service.js';
 
 export interface InquiryCommandInput {
+  principal?: RaitScopePrincipal;
   command: string;
   targetId: string;
   payload: Record<string, unknown>;
@@ -146,7 +151,43 @@ export class RaitInquiryCommandService {
       : input.headers['Idempotency-Key'];
     if (!key) fail('RAIT.VALIDATION_FAILED', 400);
     return this.transaction(async (tx) => {
-      const requestDigest = digest(input);
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
+      );
+      if (!effect) {
+        await scope.authenticate(tx, input.principal);
+        const parent = rows(
+          await tx.query<{ case_id: string }>(
+            'select case_id from inf.rait_inquiry where tenant_id=$1 and id=$2',
+            [context.tenantId, input.targetId],
+          ),
+        )[0];
+        if (!parent) fail('RAIT.TENANT_MISMATCH', 404);
+        await scope.assertCase(
+          tx,
+          parent!.case_id,
+          input.principal,
+          input.command === 'answer' ? 'answer-inquiry' : 'extend-inquiry',
+          'rait-case',
+          true,
+        );
+        for (const doc of Array.isArray(input.payload.documentIds)
+          ? input.payload.documentIds
+          : []) {
+          const linked = rows(
+            await tx.query(
+              'select id from inf.rait_document where tenant_id=$1 and id=$2 and case_id=$3',
+              [context.tenantId, doc, parent!.case_id],
+            ),
+          )[0];
+          if (!linked) fail('RAIT.TENANT_MISMATCH', 404);
+        }
+      }
+      const requestDigest = digest({
+        ...input,
+        payload: { ...input.payload, _actor: context.actorId },
+      });
       await tx.query(
         "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
         [context.tenantId, key],

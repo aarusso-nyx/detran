@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:e9e4916988b2bb485cd08216fc2bf2b441c013a55c05124de7f731eb9229ac17
 import {
   Body,
   Controller,
@@ -16,28 +16,4 @@ import { RaitDecisionService } from '../services/rait-decision.service.js';
 @Resource('inf:rait-decision')
 export class RaitDecisionController {
   constructor(private readonly service: RaitDecisionService) {}
-  @Get() @Action('read') list() {
-    return this.service.findAll();
-  }
-  @Get(':id') @Action('read') get(@Param('id') id: string) {
-    return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({ action: 'INF_RAIT_DECISION_CREATE', entity: 'inf.rait_decision' })
-  create(@Body() dto: CreateRaitDecisionDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({ action: 'INF_RAIT_DECISION_UPDATE', entity: 'inf.rait_decision' })
-  update(@Param('id') id: string, @Body() dto: Partial<CreateRaitDecisionDto>) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({ action: 'INF_RAIT_DECISION_DELETE', entity: 'inf.rait_decision' })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
-  }
 }
