@@ -28,8 +28,9 @@ function headers(
   key = `r25-jw01-${randomUUID()}`,
 ) {
   process.env.DETRAN_LOCAL_ROLES = role;
-  process.env.DETRAN_LOCAL_ACTOR_ID =
-    role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR;
+  process.env.DETRAN_LOCAL_ACTOR_ID = role.split(',').includes('rait-secretary')
+    ? RAIT_SECRETARY
+    : RAIT_ACTOR;
   return {
     authorization: 'Bearer local',
     'x-tenant-id': RAIT_TENANT,
@@ -103,7 +104,9 @@ describe('TASK25 F01 and R01 real persistence', () => {
       expect(after.verdicts[0]).toMatchObject({
         criterion: 'tempestividade',
         verdict: true,
-        evaluated_by: role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR,
+        evaluated_by: role.split(',').includes('rait-secretary')
+          ? RAIT_SECRETARY
+          : RAIT_ACTOR,
       });
       expect(after.verdicts[0].evaluated_at).toBeInstanceOf(Date);
       expect(after.effects.outbox - before.effects.outbox).toBe(1);
@@ -546,9 +549,19 @@ describe('review1 current-version persistence and actual audit attribution', () 
       expect(await fixture.snapshot()).toEqual(before);
     });
   }
+  // ADR0047 / approved T0 supersedes the historical standalone admin
+  // positive: action permission cannot supply an individual triage purpose.
+  it('standalone technical-admin cannot triage/save by wildcard or alter audit history', async () => {
+    const before = await fixture.snapshot();
+    const response = await request(app.getHttpServer())
+      .post(triagePath())
+      .set(headers('technical-admin'))
+      .send({});
+    expect(response.status, JSON.stringify(response.body)).toBe(404);
+    expect(await fixture.snapshot()).toEqual(before);
+  });
   for (const [role, expectedRole] of [
     ['rait-secretary', 'rait-secretary'],
-    ['technical-admin', 'technical-admin'],
     ['technical-admin,rait-secretary', 'rait-secretary'],
   ] as const) {
     it(`${role}: triage and human save audit the actual authenticated role`, async () => {
@@ -572,12 +585,16 @@ describe('review1 current-version persistence and actual audit attribution', () 
       );
       expect(audit.rows).toEqual([
         {
-          actor_id: role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR,
+          actor_id: role.split(',').includes('rait-secretary')
+            ? RAIT_SECRETARY
+            : RAIT_ACTOR,
           actor_role: expectedRole,
           action: 'INF_RAIT_CASE_TRIAGE',
         },
         {
-          actor_id: role === 'rait-secretary' ? RAIT_SECRETARY : RAIT_ACTOR,
+          actor_id: role.split(',').includes('rait-secretary')
+            ? RAIT_SECRETARY
+            : RAIT_ACTOR,
           actor_role: expectedRole,
           action: 'INF_RAIT_ADMISSIBILITY_CREATE',
         },
