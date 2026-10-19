@@ -1635,6 +1635,11 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
           routing === 'one' ? [{ pool_id: POOL }] : [],
         );
       } finally {
+        for (const link of priorLinks)
+          await owner.query(
+            'update inf.rait_case_pool_scope set active=$2 where id=$1',
+            [link.id, link.active],
+          );
         await owner.query(
           "update inf.rait_pool set strategy='pull' where id=$1",
           [POOL],
