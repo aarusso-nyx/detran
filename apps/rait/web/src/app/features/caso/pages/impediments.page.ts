@@ -1,3 +1,4 @@
+import type { RaitImpedimentRead } from '../../../data/api/worklist.client';
 // T-14 Impedimentos e suspeições (ficha IU-RAIT-016; contrato CTG-0002b §6.1 linha 16;
 // [RN-RAIT-140]; [UC-RAIT-026]): `CaseFacade.loadImpediments(id)` → `impedimentos` numa
 // `<stynx-table>` do kit (kind → `rait.common.impediment_` + kind, member_id, declared_at,
@@ -32,7 +33,6 @@ import {
   permissionKeyOf,
   type CommandBody,
   type CreateRaitImpedimentDto,
-  type RaitImpediment,
 } from '../../../data/models';
 import {
   ImpedimentDialogComponent,
@@ -63,7 +63,7 @@ const CMD_SUSPICION_KEY = 'rait.action.suspicion';
 /** Ficha 016 §6 "decidir arguição": sem chave `cmd.*` própria — rótulo da semente. */
 const CMD_DECIDE_KEY = 'rait.action.declare';
 const IMPEDIMENT_KIND_PREFIX = 'rait.common.impediment_';
-const SUSPICION_KIND: RaitImpediment['kind'] = 'suspeicao';
+const SUSPICION_KIND: RaitImpedimentRead['kind'] = 'suspeicao';
 
 interface ImpedimentRow extends Record<string, unknown> {
   readonly id: string;
@@ -206,7 +206,7 @@ export class ImpedimentsPageComponent {
   readonly trackRow = (row: ImpedimentRow): string => row.id;
   readonly confirm = createConfirmQueue();
   readonly dialogOpen = signal(false);
-  private readonly dialogKind = signal<RaitImpediment['kind'] | null>(null);
+  private readonly dialogKind = signal<RaitImpedimentRead['kind'] | null>(null);
   readonly dialogTitleKey = computed(() =>
     this.dialogKind() === SUSPICION_KIND ? CMD_SUSPICION_KEY : CMD_DECLARE_KEY,
   );
@@ -218,7 +218,7 @@ export class ImpedimentsPageComponent {
     () => this.facade.impedimentos.status() === 'offline',
   );
   /** Primeira arguição sem decisão (leitura de campo, não regra). */
-  readonly pendingImpediment = computed<RaitImpediment | null>(
+  readonly pendingImpediment = computed<RaitImpedimentRead | null>(
     () =>
       this.facade.impedimentos
         .items()
@@ -264,7 +264,7 @@ export class ImpedimentsPageComponent {
     });
   }
 
-  openDialog(kind: RaitImpediment['kind'] | null): void {
+  openDialog(kind: RaitImpedimentRead['kind'] | null): void {
     this.dialogKind.set(kind);
     this.dialogOpen.set(true);
   }

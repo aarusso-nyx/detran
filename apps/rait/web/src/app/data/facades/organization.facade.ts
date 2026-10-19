@@ -1,3 +1,4 @@
+import type { RaitPoolRead } from '../api/worklist.client';
 // OrganizationFacade (contrato CTG-0002b §4.3; M9): organizacao/* e gestao L1 (as leituras L1
 // são `createListFacade` nas páginas, M13). `pools` (ficha 043). Sem linha na tabela §4.2 →
 // só `tick$`/`resync$`. 9 comandos M8 até R-0007 CTG-0004.
@@ -30,7 +31,7 @@ export class OrganizationFacade {
   private readonly org = inject(OrgClient);
   private readonly clock = inject(RaitClock);
 
-  readonly pools = createListFacade<RaitPool>(
+  readonly pools = createListFacade<RaitPoolRead>(
     (query) => this.worklist.listRaitPool(query),
     this.clock,
   );
@@ -64,7 +65,7 @@ export class OrganizationFacade {
 
   updatePool(
     poolId: string,
-    body: CommandBody & Pick<RaitPool, 'strategy' | 'active'>,
+    body: CommandBody & Pick<RaitPoolRead, 'strategy' | 'active'>,
   ): Promise<CommandOutcome<RaitPool>> {
     return this.command.run('rait-pool:update', () =>
       this.worklist.updatePool(

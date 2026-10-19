@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
 import {
   Body,
   Controller,
@@ -16,40 +16,4 @@ import { RaitCaseEventService } from '../services/rait-case-event.service.js';
 @Resource('inf:rait-case-event')
 export class RaitCaseEventController {
   constructor(private readonly service: RaitCaseEventService) {}
-  @Get() @Action('read') list() {
-    return this.service.findAll();
-  }
-  @Get(':id') @Action('read') get(@Param('id') id: string) {
-    return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'INF_RAIT_CASE_EVENT_CREATE',
-    entity: 'inf.rait_case_event',
-  })
-  create(@Body() dto: CreateRaitCaseEventDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'INF_RAIT_CASE_EVENT_UPDATE',
-    entity: 'inf.rait_case_event',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateRaitCaseEventDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'INF_RAIT_CASE_EVENT_DELETE',
-    entity: 'inf.rait_case_event',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
-  }
 }

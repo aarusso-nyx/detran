@@ -1,3 +1,4 @@
+import type { RaitDraftRead } from '../../../data/api/case.client';
 // T-09 Minuta (ficha IU-RAIT-011; contrato CTG-0002b §6.1 linha 11; IU-RAIT-001 §3 "quem instrui
 // não assina"): `CaseFacade.loadDrafts(id)` → `minutas` no `MinutaEditor` (versão mais recente =
 // primeira recebida; `model content` = formulário `minuta`: `facts`, `grounds`, `ruling`);
@@ -22,11 +23,7 @@ import { StynxConfirmDialogComponent } from '@stynx-nyx/angular-ui';
 import { RaitErrorBannerComponent } from '../../../core/error-boundary';
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { CaseFacade } from '../../../data/facades/case.facade';
-import {
-  permissionKeyOf,
-  type CreateRaitDraftDto,
-  type RaitDraft,
-} from '../../../data/models';
+import { permissionKeyOf, type CreateRaitDraftDto } from '../../../data/models';
 import {
   EMPTY_MINUTA,
   MinutaEditorComponent,
@@ -51,7 +48,7 @@ const CMD_SUBMIT_KEY = 'rait.screens.casos-id-minuta.cmd.submit';
 const CONFIRM_SUBMIT_KEY = 'rait.screens.casos-id-minuta.confirm.submit';
 const AWAITING_SIGNATURE_KEY =
   'rait.screens.casos-id-minuta.state.awaiting-signature';
-const SUBMITTED_STATUS: RaitDraft['status'] = 'submetida';
+const SUBMITTED_STATUS: RaitDraftRead['status'] = 'submetida';
 
 @Component({
   selector: 'rait-draft-page',
@@ -146,7 +143,7 @@ export class DraftPageComponent {
   );
   readonly offline = computed(() => this.facade.minutas.status() === 'offline');
   /** Ordem recebida ("most recent first" do contrato): a primeira é a versão mais recente. */
-  readonly latestDraft = computed<RaitDraft | null>(
+  readonly latestDraft = computed<RaitDraftRead | null>(
     () => this.facade.minutas.items()[0] ?? null,
   );
   /** Token `status` da minuta mais recente (leitura, não regra). */
@@ -193,8 +190,8 @@ export class DraftPageComponent {
           provisionalBody<CreateRaitDraftDto>({
             case_id: this.caseId,
             status: SUBMITTED_STATUS,
-            ...(this.latestDraft() !== null
-              ? { document_id: this.latestDraft()?.document_id ?? null }
+            ...(this.latestDraft()?.document_id !== undefined
+              ? { document_id: this.latestDraft()?.document_id }
               : {}),
           }),
         ),

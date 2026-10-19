@@ -178,13 +178,13 @@ export class CaseClient {
 
   // --- leituras (§3.3) -------------------------------------------------------------------
 
-  listRaitCase(query: ListQuery = {}): Promise<ListPage<RaitCase>> {
+  listRaitCase(query: ListQuery = {}): Promise<ListPage<RaitCaseRead>> {
     return this.http.getList(CASES_URL, query, CASE_SPEC);
   }
 
-  async getRaitCase(id: string): Promise<RaitCase> {
+  async getRaitCase(id: string): Promise<RaitCaseRead> {
     try {
-      const body = await this.http.getOne<RaitCase>(CASES_URL, 'cases', id);
+      const body = await this.http.getOne<RaitCaseRead>(CASES_URL, 'cases', id);
       const tag = commandTag(body.version);
       const raw = this.etagStore.get('cases', id);
       if (raw !== null && NUMERIC_HTTP_TAG.test(raw) && raw !== tag) {
@@ -203,97 +203,99 @@ export class CaseClient {
     await this.getRaitCase(caseId);
   }
 
-  listRaitParty(query: ListQuery = {}): Promise<ListPage<RaitParty>> {
+  listRaitParty(query: ListQuery = {}): Promise<ListPage<RaitPartyRead>> {
     return this.http.getList(PARTIES_URL, query, PARTY_SPEC);
   }
 
-  getRaitParty(id: string): Promise<RaitParty> {
+  getRaitParty(id: string): Promise<RaitPartyRead> {
     return this.http.getOne(PARTIES_URL, 'parties', id);
   }
 
-  listRaitDocument(query: ListQuery = {}): Promise<ListPage<RaitDocument>> {
+  listRaitDocument(query: ListQuery = {}): Promise<ListPage<RaitDocumentRead>> {
     return this.http.getList(DOCUMENTS_URL, query, DOCUMENT_SPEC);
   }
 
-  getRaitDocument(id: string): Promise<RaitDocument> {
+  getRaitDocument(id: string): Promise<RaitDocumentRead> {
     return this.http.getOne(DOCUMENTS_URL, 'documents', id);
   }
 
   listRaitPendingContent(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitPendingContent>> {
+  ): Promise<ListPage<RaitPendingContentRead>> {
     return this.http.getList(PENDING_CONTENTS_URL, query, PENDING_CONTENT_SPEC);
   }
 
-  getRaitPendingContent(id: string): Promise<RaitPendingContent> {
+  getRaitPendingContent(id: string): Promise<RaitPendingContentRead> {
     return this.http.getOne(PENDING_CONTENTS_URL, 'pending-contents', id);
   }
 
-  listRaitRedirect(query: ListQuery = {}): Promise<ListPage<RaitRedirect>> {
+  listRaitRedirect(query: ListQuery = {}): Promise<ListPage<RaitRedirectRead>> {
     return this.http.getList(REDIRECTS_URL, query, REDIRECT_SPEC);
   }
 
-  getRaitRedirect(id: string): Promise<RaitRedirect> {
+  getRaitRedirect(id: string): Promise<RaitRedirectRead> {
     return this.http.getOne(REDIRECTS_URL, 'redirects', id);
   }
 
   listRaitAdmissibility(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitAdmissibility>> {
+  ): Promise<ListPage<RaitAdmissibilityRead>> {
     return this.http.getList(ADMISSIBILITY_URL, query, ADMISSIBILITY_SPEC);
   }
 
-  getRaitAdmissibility(id: string): Promise<RaitAdmissibility> {
+  getRaitAdmissibility(id: string): Promise<RaitAdmissibilityRead> {
     return this.http.getOne(ADMISSIBILITY_URL, 'admissibility', id);
   }
 
-  listRaitDeadline(query: ListQuery = {}): Promise<ListPage<RaitDeadline>> {
+  listRaitDeadline(query: ListQuery = {}): Promise<ListPage<RaitDeadlineRead>> {
     return this.http.getList(DEADLINES_URL, query, DEADLINE_SPEC);
   }
 
-  getRaitDeadline(id: string): Promise<RaitDeadline> {
+  getRaitDeadline(id: string): Promise<RaitDeadlineRead> {
     return this.http.getOne(DEADLINES_URL, 'deadlines', id);
   }
 
-  listRaitInquiry(query: ListQuery = {}): Promise<ListPage<RaitInquiry>> {
+  listRaitInquiry(query: ListQuery = {}): Promise<ListPage<RaitInquiryRead>> {
     return this.http.getList(INQUIRIES_URL, query, INQUIRY_SPEC);
   }
 
-  getRaitInquiry(id: string): Promise<RaitInquiry> {
+  getRaitInquiry(id: string): Promise<RaitInquiryRead> {
     return this.http.getOne(INQUIRIES_URL, 'inquiries', id);
   }
 
-  listRaitDraft(query: ListQuery = {}): Promise<ListPage<RaitDraft>> {
+  listRaitDraft(query: ListQuery = {}): Promise<ListPage<RaitDraftRead>> {
     return this.http.getList(DRAFTS_URL, query, DRAFT_SPEC);
   }
 
-  getRaitDraft(id: string): Promise<RaitDraft> {
+  getRaitDraft(id: string): Promise<RaitDraftRead> {
     return this.http.getOne(DRAFTS_URL, 'drafts', id);
   }
 
-  listRaitDecision(query: ListQuery = {}): Promise<ListPage<RaitDecision>> {
+  listRaitDecision(query: ListQuery = {}): Promise<ListPage<RaitDecisionRead>> {
     return this.http.getList(DECISIONS_URL, query, DECISION_SPEC);
   }
 
-  getRaitDecision(id: string): Promise<RaitDecision> {
+  getRaitDecision(id: string): Promise<RaitDecisionRead> {
     return this.http.getOne(DECISIONS_URL, 'decisions', id);
   }
 
   listRaitCommunication(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitCommunication>> {
+  ): Promise<ListPage<RaitCommunicationRead>> {
     return this.http.getList(COMMUNICATIONS_URL, query, COMMUNICATION_SPEC);
   }
 
-  getRaitCommunication(id: string): Promise<RaitCommunication> {
+  getRaitCommunication(id: string): Promise<RaitCommunicationRead> {
     return this.http.getOne(COMMUNICATIONS_URL, 'communications', id);
   }
 
-  listRaitCaseEvent(query: ListQuery = {}): Promise<ListPage<RaitCaseEvent>> {
+  listRaitCaseEvent(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitCaseEventRead>> {
     return this.http.getList(EVENTS_URL, query, EVENT_SPEC);
   }
 
-  getRaitCaseEvent(id: string): Promise<RaitCaseEvent> {
+  getRaitCaseEvent(id: string): Promise<RaitCaseEventRead> {
     return this.http.getOne(EVENTS_URL, 'events', id);
   }
 
@@ -514,3 +516,51 @@ export class CaseClient {
     throw new RaitCommandUnavailableError('rait-case:redirect');
   }
 }
+
+/** Maximum of the generated purpose projections; withheld fields stay optional. */
+type ReadKeys<U> = U extends unknown ? keyof U : never;
+type ReadValue<U, K extends PropertyKey> = U extends unknown
+  ? K extends keyof U
+    ? U[K]
+    : never
+  : never;
+export type ScopedRead<U> = { [K in keyof U]: U[K] } & {
+  [K in Exclude<ReadKeys<U>, keyof U>]?: ReadValue<U, K>;
+};
+
+export type RaitCaseRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitCase']['responses'][200]['content']['application/json']
+>;
+export type RaitPartyRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitParty']['responses'][200]['content']['application/json']
+>;
+export type RaitDocumentRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitDocument']['responses'][200]['content']['application/json']
+>;
+export type RaitPendingContentRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitPendingContent']['responses'][200]['content']['application/json']
+>;
+export type RaitRedirectRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitRedirect']['responses'][200]['content']['application/json']
+>;
+export type RaitAdmissibilityRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitAdmissibility']['responses'][200]['content']['application/json']
+>;
+export type RaitDeadlineRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitDeadline']['responses'][200]['content']['application/json']
+>;
+export type RaitInquiryRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitInquiry']['responses'][200]['content']['application/json']
+>;
+export type RaitDraftRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitDraft']['responses'][200]['content']['application/json']
+>;
+export type RaitDecisionRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitDecision']['responses'][200]['content']['application/json']
+>;
+export type RaitCommunicationRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitCommunication']['responses'][200]['content']['application/json']
+>;
+export type RaitCaseEventRead = ScopedRead<
+  BpInfRaitCase001Commands.operations['getRaitCaseEvent']['responses'][200]['content']['application/json']
+>;

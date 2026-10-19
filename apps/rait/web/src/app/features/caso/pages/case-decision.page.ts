@@ -1,3 +1,8 @@
+import type {
+  RaitDeadlineRead,
+  RaitDraftRead,
+  RaitDecisionRead,
+} from '../../../data/api/case.client';
 // T-10 Decisão da autoridade — aba do caso (ficha IU-RAIT-012; contrato CTG-0002b §6.1 linha
 // 12; nome OD-R12-028; [UC-RAIT-016]): o `DecisionPanel` recebe o caso (bundle do layout),
 // a minuta mais recente, documentos, admissibilidade, o prazo `T-DEC` e a decisão já assinada;
@@ -30,9 +35,6 @@ import {
   permissionKeyOf,
   type CreateRaitDecisionDto,
   type CreateRaitImpedimentDto,
-  type RaitDeadline,
-  type RaitDecision,
-  type RaitDraft,
 } from '../../../data/models';
 import {
   DecisionPanelComponent,
@@ -179,13 +181,13 @@ export class CaseDecisionPageComponent {
     combineStatus(this.facade.caso.status(), this.facade.minutas.status()),
   );
   readonly offline = computed(() => this.facade.caso.status() === 'offline');
-  readonly latestDraft = computed<RaitDraft | null>(
+  readonly latestDraft = computed<RaitDraftRead | null>(
     () => this.facade.minutas.items()[0] ?? null,
   );
-  readonly decision = computed<RaitDecision | null>(
+  readonly decision = computed<RaitDecisionRead | null>(
     () => this.facade.decisao.items()[0] ?? null,
   );
-  readonly deadline = computed<RaitDeadline | null>(
+  readonly deadline = computed<RaitDeadlineRead | null>(
     () =>
       this.facade.prazos
         .items()

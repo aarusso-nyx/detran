@@ -1,3 +1,4 @@
+import type { RaitAssignmentRead } from '../../../data/api/worklist.client';
 // T-34 Produção (ficha IU-RAIT-041; contrato CTG-0002b §6.1 linha 39; L1 — M13): `createListFacade(
 // q => worklist.listRaitAssignment(q))` numa `<stynx-table>` (case_id, member_id, pool_id,
 // assigned_at, active, release_reason); `KpiTile` `kpi.loaded` = `total` (meta/teto sem fonte);
@@ -22,10 +23,7 @@ import {
 } from '@detran/ui';
 import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { WorklistClient } from '../../../data/api/worklist.client';
-import {
-  LIST_PAGE_SIZE_DEFAULT,
-  type RaitAssignment,
-} from '../../../data/models';
+import { LIST_PAGE_SIZE_DEFAULT } from '../../../data/models';
 import { KpiTileComponent } from '../../../shared/kpi-tile.component';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import { screenOf } from '../../../shared/route-screen';
@@ -105,7 +103,7 @@ export class ProductionPageComponent {
   readonly series = EMPTY_SERIES;
   readonly pageSize = LIST_PAGE_SIZE_DEFAULT;
 
-  readonly l1 = createL1List<RaitAssignment, Row>({
+  readonly l1 = createL1List<RaitAssignmentRead, Row>({
     load: (query) => this.worklist.listRaitAssignment(query),
     columns: [
       'case_id',

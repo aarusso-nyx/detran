@@ -1453,6 +1453,77 @@ const RAIT_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> =
     [resource, 'update', writers],
     [resource, 'delete', ['technical-admin']],
   ]);
+RAIT_SURFACE_RULES.push(
+  [
+    'rait-pending-content',
+    'read',
+    [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+  ],
+  [
+    'rait-draft',
+    'read',
+    [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+  ],
+  [
+    'rait-redirect',
+    'read',
+    [
+      'rait-analyst',
+      'rait-secretary',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+      'rait-rapporteur',
+      'rait-chair',
+      'rait-signing-authority',
+      'rait-central-authority',
+    ],
+  ],
+  [
+    'rait-batch',
+    'read',
+    [
+      'rait-secretary',
+      'rait-chair',
+      'rait-rapporteur',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+    ],
+  ],
+  [
+    'rait-batch-item',
+    'read',
+    [
+      'rait-secretary',
+      'rait-chair',
+      'rait-rapporteur',
+      'rait-coordinator',
+      'AUDITOR',
+      'rait-manager',
+    ],
+  ],
+);
 /** Command surface (state-guarded endpoints, rait-web-frontend.md §7). */
 const RAIT_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['rait-case', 'protocol', ['rait-secretary']],

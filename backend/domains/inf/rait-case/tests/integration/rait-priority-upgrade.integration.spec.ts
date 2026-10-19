@@ -29,6 +29,7 @@ const manual = [
   '19-rait-priority-enforce.sql',
   '19-rait-priority-verify.sql',
 ] as const;
+const scopeEnforcement = '19-rait-case-scope-enforce.sql';
 type LegacyBaselineHarness = {
   prepareLegacyPriorityV1Baseline: () => Promise<void>;
   restoreFreshPriorityV3Database: () => Promise<void>;
@@ -239,8 +240,8 @@ async function isolatedCopy(syntheticManual = false): Promise<string> {
     throw new Error('TASK-0029 SQL candidate is required for DB rehearsal');
   expect(present).toEqual(
     presentManual.length === manual.length
-      ? [...listed, ...manual].sort()
-      : [...listed].sort(),
+      ? [...listed, ...manual, scopeEnforcement].sort()
+      : [...listed, scopeEnforcement].sort(),
   );
   for (const name of present)
     await copyFile(
@@ -647,7 +648,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
     const directory = await isolatedCopy(true);
     try {
       const copied = await readdir(join(directory, 'ddl'));
-      expect(copied.length).toBe(67);
+      expect(copied.length).toBe(68);
       expect(
         copied.filter((name) => name === '20-rls-policies.sql'),
       ).toHaveLength(1);
@@ -686,7 +687,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       const files = argv
         .filter((arg) => arg.endsWith('.sql'))
         .map((arg) => arg.split('/').at(-1));
-      expect(files).toHaveLength(68);
+      expect(files).toHaveLength(69);
       expect(
         files.filter((name) => name === '21-ops-provisioning.sql'),
       ).toHaveLength(2);
@@ -708,6 +709,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
         '20-rls-policies.sql',
         '21-ops-provisioning.sql',
         manual[1],
+        scopeEnforcement,
         manual[2],
       ]);
       expect(lock).toBeGreaterThan(-1);

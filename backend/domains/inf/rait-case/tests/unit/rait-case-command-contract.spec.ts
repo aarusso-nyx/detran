@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -10,6 +11,12 @@ type Request = {
   targetId: string;
   payload: Record<string, unknown>;
   headers: Record<string, string>;
+  principal: {
+    id: string;
+    roles: string[];
+    permissions: string[];
+    tenants: string[];
+  };
 };
 type CaseRow = {
   id: string;
@@ -81,6 +88,7 @@ const request = (
     command,
     targetId,
     payload,
+    principal: { id: ACTOR, roles: [role], permissions: [], tenants: [TENANT] },
     headers: { 'If-Match': '"1"', 'Idempotency-Key': `opaque-${command}` },
   };
 };
@@ -89,10 +97,12 @@ const request = (
 function transactionalPort(scenario: { case: CaseRow; inquiry?: InquiryRow }) {
   const idempotency = new Map<
     string,
-    { fingerprint: string; response: unknown }
+    { id: string; fingerprint: string; response: unknown }
   >();
   const outbox: Array<readonly unknown[]> = [];
+  // Preserve legal audit contract exactly; ADR0050 adds a separate private receipt.
   const audits: Array<readonly unknown[]> = [];
+  const replayAudits: Array<readonly unknown[]> = [];
   const updates: Array<{ sql: string; values: readonly unknown[] }> = [];
   const queries: Array<{ sql: string; values: readonly unknown[] }> = [];
   const admissibility = [
@@ -103,12 +113,83 @@ function transactionalPort(scenario: { case: CaseRow; inquiry?: InquiryRow }) {
   ].map((criterion) => ({ criterion, verdict: true }));
   const query = vi.fn(async (sql: string, values: readonly unknown[] = []) => {
     queries.push({ sql, values });
-    if (sql.startsWith('select request_fingerprint')) {
+    if (
+      sql.includes('from auth.users u join auth.memberships') ||
+      sql.includes('from auth.memberships')
+    )
+      return {
+        rows:
+          values[0] === TENANT && values[1] === ACTOR ? [{ id: ACTOR }] : [],
+      };
+    if (sql.startsWith('select id from inf.rait_case where tenant_id=$1'))
+      return {
+        rows:
+          values[0] === TENANT &&
+          [CASE, ORIGIN_CASE].includes(String(values[1]))
+            ? [{ id: values[1] }]
+            : [],
+      };
+    if (sql.includes('from inf.rait_case c where c.tenant_id=$1 and c.id=$2'))
+      return {
+        rows:
+          values[0] === TENANT && values[1] === CASE && values[2] === POOL
+            ? [{ id: CASE }]
+            : [],
+      };
+    if (sql.includes('from inf.rait_case c where c.tenant_id=$1'))
+      return {
+        rows:
+          values[0] === TENANT &&
+          values[1] === ACTOR &&
+          [CASE, ORIGIN_CASE].includes(String(values[2]))
+            ? [{ id: values[2] }]
+            : [],
+      };
+    if (sql.startsWith('select case_id from inf.rait_inquiry'))
+      return {
+        rows:
+          values[0] === TENANT && values[1] === INQUIRY
+            ? [{ case_id: CASE }]
+            : [],
+      };
+    if (
+      sql.startsWith('select id from inf.rait_document where tenant_id=$1') ||
+      sql.startsWith('select id from inf.rait_draft where tenant_id=$1') ||
+      sql.startsWith(
+        'select id from inf.rait_pending_content where tenant_id=$1',
+      )
+    )
+      return {
+        rows:
+          values[0] === TENANT &&
+          [DOCUMENT, DRAFT].includes(String(values[1])) &&
+          values[2] === CASE
+            ? [{ id: values[1] }]
+            : [],
+      };
+    if (sql.startsWith('select actor_id,actor_role,details from audit.events'))
+      return {
+        rows: replayAudits
+          .filter(
+            (row) =>
+              row[0] === values[0] &&
+              row[4] === values[1] &&
+              row[5] === values[2] &&
+              row[3] === values[3],
+          )
+          .map((row) => ({
+            actor_id: row[1],
+            actor_role: row[2],
+            details: JSON.parse(String(row[6])),
+          })),
+      };
+    if (/^select (?:id,\s*)?request_fingerprint/.test(sql)) {
       const saved = idempotency.get(String(values[1]));
       return {
         rows: saved
           ? [
               {
+                id: saved.id,
                 request_fingerprint: saved.fingerprint,
                 response_body: saved.response,
               },
@@ -328,14 +409,19 @@ function transactionalPort(scenario: { case: CaseRow; inquiry?: InquiryRow }) {
       return { rows: [] };
     }
     if (sql.startsWith('select audit.write')) {
-      audits.push(values);
+      if (values[3] === 'INF_RAIT_COMMAND_REPLAY_BIND')
+        replayAudits.push(values);
+      else audits.push(values);
       return { rows: [] };
     }
     if (sql.startsWith('insert into integration.idempotency_keys')) {
+      const id = randomUUID();
       idempotency.set(String(values[1]), {
+        id,
         fingerprint: String(values[2]),
         response: JSON.parse(String(values[4])),
       });
+      return { rows: [{ id }] };
     }
     return { rows: [] };
   });
@@ -351,6 +437,7 @@ function transactionalPort(scenario: { case: CaseRow; inquiry?: InquiryRow }) {
     updates,
     outbox,
     audits,
+    replayAudits,
     admissibility,
   };
 }
@@ -621,6 +708,9 @@ describe('CTG-0001 — comandos do caso na porta SQL transacional', () => {
           JSON.stringify({ command }),
         ],
       ]);
+      expect(runtime.replayAudits).toHaveLength(
+        ['admit', 'non-admission', 'claim-next'].includes(command) ? 0 : 1,
+      );
       const entityId = runtime.audits[0]?.[5];
       expect(entityId).toEqual(
         expect.stringMatching(
@@ -760,7 +850,9 @@ describe('CTG-0001 — comandos do caso na porta SQL transacional', () => {
     const runtime = await caseRuntime('TRIAGEM_ADMISSIBILIDADE');
     await runtime.service.execute(request('admit', 'rait-analyst'));
     await expect(
-      runtime.service.execute(request('admit', 'rait-analyst', {}, POOL)),
+      runtime.service.execute(
+        request('admit', 'rait-analyst', {}, ORIGIN_CASE),
+      ),
     ).rejects.toMatchObject({ status: 409, code: 'RAIT.IDEMPOTENCY_REPLAY' });
     expect(runtime.outbox).toHaveLength(2);
   });
@@ -827,6 +919,7 @@ describe('CTG-0001 — diligências na porta SQL transacional', () => {
           JSON.stringify({ command }),
         ],
       ]);
+      expect(runtime.replayAudits).toHaveLength(1);
       expect(
         runtime.queries.find(({ sql }) => sql.startsWith('select audit.write'))
           ?.sql,

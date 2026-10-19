@@ -1,3 +1,7 @@
+import type {
+  RaitScheduleRead,
+  RaitScheduleSlotRead,
+} from '../data/api/worklist.client';
 // ScheduleGrid (contrato CTG-0002b §5.18; UC-RAIT-013; WF-RAIT-004 §3; ficha 046 — L0: o
 // componente existe e é testado; nenhuma página o usa nesta CTG): `<stynx-table>` com linhas =
 // `schedules` (`member_id` ou `memberLabelOf`) e colunas = dias distintos de `slots[].slot_on`
@@ -14,7 +18,6 @@ import {
 import { StynxI18nService, StynxTableComponent } from '@detran/ui';
 import type { TableColumn } from './table-column';
 import { tokenKey } from '../core/i18n-token-key';
-import type { RaitSchedule, RaitScheduleSlot } from '../data/models';
 
 const WIP_LIMIT_KEY = 'rait.common.wipLimit';
 const ABSENCE_KEY_PREFIX = 'rait.common.absence_';
@@ -41,8 +44,8 @@ type ScheduleRow = Record<string, string> & { readonly id: string };
 export class ScheduleGridComponent {
   private readonly i18n = inject(StynxI18nService);
 
-  readonly schedules = input.required<readonly RaitSchedule[]>();
-  readonly slots = input.required<readonly RaitScheduleSlot[]>();
+  readonly schedules = input.required<readonly RaitScheduleRead[]>();
+  readonly slots = input.required<readonly RaitScheduleSlotRead[]>();
   readonly memberLabelOf = input<((memberId: string) => string) | null>(null);
 
   /** Dias distintos de `slots[].slot_on`, na ordem recebida. */
@@ -73,7 +76,7 @@ export class ScheduleGridComponent {
 
   readonly trackRow = (row: ScheduleRow): string => row.id;
 
-  private memberText(schedule: RaitSchedule): string {
+  private memberText(schedule: RaitScheduleRead): string {
     const label =
       this.memberLabelOf()?.(schedule.member_id) ?? schedule.member_id;
     const wip =
@@ -83,7 +86,7 @@ export class ScheduleGridComponent {
     return `${label}${wip}`;
   }
 
-  private cellText(schedule: RaitSchedule, day: string): string {
+  private cellText(schedule: RaitScheduleRead, day: string): string {
     const slot = this.slots().find(
       (candidate) =>
         candidate.schedule_id === schedule.id && candidate.slot_on === day,

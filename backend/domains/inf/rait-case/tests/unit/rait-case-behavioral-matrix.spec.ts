@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TimerExpiredData } from '@detran/inf-deadlines';
 
@@ -299,17 +300,35 @@ function scenarioPort(
   const tables = baseTables(caseRow);
   const writes: Array<{ sql: string; values: readonly unknown[] }> = [];
   const outbox: Array<readonly unknown[]> = [];
+  // Original legal audit assertions remain separate from ADR0050's private receipt.
   const audit: Array<readonly unknown[]> = [];
-  const replay = new Map<string, { fingerprint: string; response: unknown }>();
+  const replayAudit: Array<readonly unknown[]> = [];
+  const replay = new Map<
+    string,
+    { id: string; fingerprint: string; response: unknown }
+  >();
   const query = vi.fn(
     async (rawSql: string, values: readonly unknown[] = []) => {
       const sql = rawSql.toLowerCase().replace(/\s+/g, ' ').trim();
-      if (sql.startsWith('select request_fingerprint')) {
+      // S1 unit-boundary fixture: canonical active identity is explicit.
+      // Real complete-purpose SQL/RLS remains covered by the HTTP+DB sensors.
+      if (sql.includes('from auth.users u join auth.memberships'))
+        return {
+          rows:
+            values[0] === TENANT && values[1] === ACTOR ? [{ id: ACTOR }] : [],
+        };
+      if (sql.includes('from auth.memberships'))
+        return {
+          rows:
+            values[0] === TENANT && values[1] === ACTOR ? [{ id: MEMBER }] : [],
+        };
+      if (/^select (?:id,\s*)?request_fingerprint/.test(sql)) {
         const saved = replay.get(String(values[1]));
         return {
           rows: saved
             ? [
                 {
+                  id: saved.id,
                   request_fingerprint: saved.fingerprint,
                   response_body: saved.response,
                 },
@@ -317,10 +336,30 @@ function scenarioPort(
             : [],
         };
       }
+      if (
+        sql.startsWith('select actor_id,actor_role,details from audit.events')
+      )
+        return {
+          rows: replayAudit
+            .filter(
+              (row) =>
+                row[0] === values[0] &&
+                row[4] === values[1] &&
+                row[5] === values[2] &&
+                row[3] === values[3],
+            )
+            .map((row) => ({
+              actor_id: row[1],
+              actor_role: row[2],
+              details: JSON.parse(String(row[6])),
+            })),
+        };
       if (/\bfrom inf\.rait_case\b/.test(sql)) {
         const target = sql.match(/\bid\s*=\s*\$(\d+)/);
         const requested = target ? values[Number(target[1]) - 1] : undefined;
-        const selectedState = sql.match(/\bstate\s*=\s*'([^']+)'/)?.[1];
+        const selectedState = sql.match(
+          /(?:^|[\s(])(?:item\.)?state\s*=\s*'([^']+)'/,
+        )?.[1];
         const eligible =
           selectedState === undefined ||
           caseRow.state.toLowerCase() === selectedState;
@@ -386,6 +425,31 @@ function scenarioPort(
             .map((row) => ({ ...row })),
         };
       }
+      if (
+        sql.startsWith(
+          'select a.id from inf.rait_assignment a join inf.rait_pool_member',
+        )
+      )
+        return {
+          rows: tables
+            .rait_assignment!.filter(
+              (a) =>
+                a.tenant_id === values[0] &&
+                a.case_id === values[1] &&
+                a.pool_id === values[2] &&
+                a.active &&
+                tables.rait_pool_member!.some(
+                  (m) =>
+                    m.id === a.member_id &&
+                    m.pool_id === a.pool_id &&
+                    m.tenant_id === a.tenant_id &&
+                    m.person_id === values[3] &&
+                    m.member_role === 'analista' &&
+                    m.status === 'ATIVO',
+                ),
+            )
+            .map((a) => ({ id: a.id })),
+        };
       if (sql.startsWith('select')) {
         const table = sql.match(/\bfrom (?:inf|ops)\.(\w+)/)?.[1];
         if (table && tables[table]) {
@@ -445,6 +509,15 @@ function scenarioPort(
       }
       if (sql.startsWith('insert into inf.rait_assignment')) {
         writes.push({ sql, values });
+        tables.rait_assignment!.push({
+          id: DRAFT,
+          tenant_id: values[0],
+          case_id: values[1],
+          pool_id: values[2],
+          member_id: values[3],
+          assigned_by: values[4],
+          active: true,
+        });
         return { rows: [{ id: DRAFT }] };
       }
       if (
@@ -463,14 +536,19 @@ function scenarioPort(
         return { rows: [] };
       }
       if (sql.startsWith('select audit.write')) {
-        audit.push(values);
+        if (values[3] === 'INF_RAIT_COMMAND_REPLAY_BIND')
+          replayAudit.push(values);
+        else audit.push(values);
         return { rows: [] };
       }
       if (sql.startsWith('insert into integration.idempotency_keys')) {
+        const id = randomUUID();
         replay.set(String(values[1]), {
+          id,
           fingerprint: String(values[2]),
           response: JSON.parse(String(values[4])),
         });
+        return { rows: [{ id }] };
       }
       return { rows: [] };
     },
@@ -480,7 +558,16 @@ function scenarioPort(
       work({ query }),
     ),
   };
-  return { database, query, writes, outbox, audit, tables, caseRow };
+  return {
+    database,
+    query,
+    writes,
+    outbox,
+    audit,
+    replayAudit,
+    tables,
+    caseRow,
+  };
 }
 
 async function caseSubject(state: string, instance: string, role: string) {
@@ -534,24 +621,44 @@ async function caseSubject(state: string, instance: string, role: string) {
     engine,
     factory,
     trust,
-    service: Reflect.construct(RaitCaseCommandService, [
-      port.database as never,
-      {
-        hasActiveContext: () => true,
-        snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
-        tenantContext: {
-          current: () => ({ tenantId: TENANT, actorId: ACTOR, roles: [role] }),
+    service: (() => {
+      const service = Reflect.construct(RaitCaseCommandService, [
+        port.database as never,
+        {
+          hasActiveContext: () => true,
+          snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
+          tenantContext: {
+            current: () => ({
+              tenantId: TENANT,
+              actorId: ACTOR,
+              roles: [role],
+            }),
+          },
         },
-      },
-      factory,
-      trust,
-      {
-        capture: vi.fn(() => ({
-          now: () => new Date(NOW),
-          today: () => '2026-09-14',
-        })),
-      },
-    ]) as InstanceType<typeof RaitCaseCommandService>,
+        factory,
+        trust,
+        {
+          capture: vi.fn(() => ({
+            now: () => new Date(NOW),
+            today: () => '2026-09-14',
+          })),
+        },
+      ]) as InstanceType<typeof RaitCaseCommandService>;
+      const execute = service.execute.bind(service);
+      service.execute = (request) => {
+        const authenticated = {
+          ...request,
+          principal: {
+            id: ACTOR,
+            roles: [role],
+            permissions: [],
+            tenants: [TENANT],
+          },
+        };
+        return execute(authenticated);
+      };
+      return service;
+    })(),
   };
 }
 
@@ -593,18 +700,38 @@ async function inquirySubject(
     engine,
     factory,
     trust,
-    service: Reflect.construct(RaitInquiryCommandService, [
-      port.database as never,
-      {
-        hasActiveContext: () => true,
-        snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
-        tenantContext: {
-          current: () => ({ tenantId: TENANT, actorId: ACTOR, roles: [role] }),
+    service: (() => {
+      const service = Reflect.construct(RaitInquiryCommandService, [
+        port.database as never,
+        {
+          hasActiveContext: () => true,
+          snapshot: () => ({ tenantId: TENANT, actorId: ACTOR }),
+          tenantContext: {
+            current: () => ({
+              tenantId: TENANT,
+              actorId: ACTOR,
+              roles: [role],
+            }),
+          },
         },
-      },
-      factory,
-      trust,
-    ]) as InstanceType<typeof RaitInquiryCommandService>,
+        factory,
+        trust,
+      ]) as InstanceType<typeof RaitInquiryCommandService>;
+      const execute = service.execute.bind(service);
+      service.execute = (request) => {
+        const authenticated = {
+          ...request,
+          principal: {
+            id: ACTOR,
+            roles: [role],
+            permissions: [],
+            tenants: [TENANT],
+          },
+        };
+        return execute(authenticated);
+      };
+      return service;
+    })(),
   };
 }
 
@@ -782,11 +909,12 @@ async function expectRejectedWithoutEffects(
     writes: unknown[];
     outbox: unknown[];
     audit: unknown[];
+    replayAudit: unknown[];
   },
   request: unknown,
   code: string,
   status: number,
-  baseline = [0, 0, 0],
+  baseline = [0, 0, 0, 0],
 ) {
   const outcome = await subject.service.execute(request).then(
     () => undefined,
@@ -796,6 +924,7 @@ async function expectRejectedWithoutEffects(
   expect(subject.writes).toHaveLength(baseline[0]);
   expect(subject.outbox).toHaveLength(baseline[1]);
   expect(subject.audit).toHaveLength(baseline[2]);
+  expect(subject.replayAudit).toHaveLength(baseline[3]);
 }
 
 describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamento', () => {
@@ -813,6 +942,17 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         etag: command === 'redirect' ? '"1"' : '"2"',
       });
       expect(subject.audit).toHaveLength(1);
+      expect(subject.replayAudit).toHaveLength(
+        [
+          'triage',
+          'save-admissibility',
+          'admit',
+          'non-admission',
+          'claim-next',
+        ].includes(command)
+          ? 0
+          : 1,
+      );
       expect(result.events.map((event) => event.type).sort()).toEqual(
         [...eventTypes[command]!].sort(),
       );
@@ -866,14 +1006,63 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.tables.rait_admissibility![0]!.verdict = false;
       const result = await subject.service.execute(first);
       await expect(subject.service.execute(first)).resolves.toEqual(result);
+      let divergentTarget = ['admit', 'non-admission', 'claim-next'].includes(
+        command,
+      )
+        ? target
+        : ORIGIN_CASE;
+      let divergentPayload: Record<string, unknown> = { ...payload };
+      if (
+        [
+          'ready',
+          'return-draft',
+          'withdraw',
+          'redirect',
+          'resolve-pending',
+        ].includes(command)
+      ) {
+        divergentTarget = target;
+        if (command === 'ready') {
+          const alternate = randomUUID();
+          subject.tables.rait_draft!.push({
+            ...subject.tables.rait_draft![0]!,
+            id: alternate,
+          });
+          divergentPayload = { ...payload, draftId: alternate };
+        } else if (command === 'return-draft')
+          divergentPayload = {
+            ...payload,
+            guidance: 'outra orientação canônica',
+          };
+        else if (command === 'redirect')
+          divergentPayload = {
+            ...payload,
+            targetBody: '00000000-0000-7000-8000-0000e2000098',
+          };
+        else {
+          const alternate = randomUUID();
+          subject.tables.rait_document!.push({
+            ...subject.tables.rait_document![0]!,
+            id: alternate,
+          });
+          divergentPayload =
+            command === 'withdraw'
+              ? { ...payload, withdrawalDocumentId: alternate }
+              : { ...payload, documentIds: [DOCUMENT, alternate] };
+        }
+      }
       const effects = [
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ];
       await expectRejectedWithoutEffects(
         subject,
-        input(command, DOCUMENT, payload, 'repeat'),
+        {
+          ...input(command, divergentTarget, divergentPayload, 'repeat'),
+          headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat' },
+        },
         'RAIT.IDEMPOTENCY_REPLAY',
         409,
         effects,
@@ -882,6 +1071,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ]).toEqual(effects);
     });
   }
@@ -896,6 +1086,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         etag: '"2"',
       });
       expect(subject.audit).toHaveLength(1);
+      expect(subject.replayAudit).toHaveLength(1);
       expect(subject.outbox).toHaveLength(eventTypes[command]!.length);
     });
     it(`dado payload inválido quando ${command} é solicitado então rejeita sem efeito parcial`, async () => {
@@ -956,6 +1147,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
         subject.writes.length,
         subject.outbox.length,
         subject.audit.length,
+        subject.replayAudit.length,
       ];
       await expectRejectedWithoutEffects(
         {
@@ -965,7 +1157,17 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
               executeInquiry(subject, request as ReturnType<typeof input>),
           },
         },
-        input(command, DOCUMENT, payload, 'repeat-inquiry'),
+        {
+          ...input(
+            command,
+            INQUIRY,
+            command === 'answer'
+              ? { ...payload, answeredOn: '2026-09-15' }
+              : { ...payload, reason: 'outro fundamento canônico' },
+            'repeat-inquiry',
+          ),
+          headers: { 'If-Match': '"2"', 'Idempotency-Key': 'repeat-inquiry' },
+        },
         'RAIT.IDEMPOTENCY_REPLAY',
         409,
         effects,

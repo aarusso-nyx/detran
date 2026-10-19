@@ -1,0 +1,100 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/apps/rait/web
+> vitest run --config vitest.config.ts "src/app/shared/batch-draw-viewer.component.spec.ts" "src/app/shared/dossier-viewer.component.spec.ts" "src/app/features/caso/pages/communications.page.spec.ts" "src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts" "src/app/features/protocolo/pages/pending-content.page.spec.ts" "src/app/data/facades/archive.facade.spec.ts" "src/app/data/facades/audit.facade.spec.ts"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/apps/rait/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ src/app/shared/batch-draw-viewer.component.spec.ts (3 tests | 1 failed) 249ms
+     × preserves server item order and labels omitted position, deadline and acceptance unavailable 11ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ src/app/features/protocolo/pages/pending-content.page.spec.ts (23 tests | 1 failed) 737ms
+     × withheld missing_items is unavailable rather than an empty or satisfied checklist 17ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ src/app/features/caso/pages/communications.page.spec.ts (2 tests | 1 failed) 792ms
+     × omitted authority_appeal_notice is unavailable, never false/No 31ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts (36 tests | 1 failed) 890ms
+     × withheld position/deadline/acceptance render unavailable and retain server order 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/shared/batch-draw-viewer.component.spec.ts > S1-A2 bounded batch projection > preserves server item order and labels omitted position, deadline and acceptance unavailable
+AssertionError: expected 'undefined' to contain 'rait.common.unavailable'
+
+Expected: "rait.common.unavailable"
+Received: "undefined"
+
+ ❯ src/app/shared/batch-draw-viewer.component.spec.ts:69:34
+     67| // P4-02-S1-A2: approved temporary omission is visible, never invented…
+     68| describe('S1-A2 bounded batch projection', () => {
+     69|   it('preserves server item order and labels omitted position, deadlin…
+       |                                  ^
+     70|     const fixture = await render();
+     71|     const first = fixtureBatchItem('00000000-0000-7000-8000-0000280100…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/app/features/caso/pages/communications.page.spec.ts > S1-A2 purpose-projected communication > omitted authority_appeal_notice is unavailable, never false/No
+AssertionError: expected 'rait.common.no' to contain 'rait.common.unavailable'
+
+Expected: "rait.common.unavailable"
+Received: "rait.common.no"
+
+ ❯ src/app/features/caso/pages/communications.page.spec.ts:73:62
+     71|
+     72| describe('S1-A2 purpose-projected communication', () => {
+     73|   it('omitted authority_appeal_notice is unavailable, never false/No',…
+       |                                                              ^
+     74|     const projected = {
+     75|       id: 'projection-communication',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts > S1-A2 purpose-projected rapporteur items > withheld position/deadline/acceptance render unavailable and retain server order
+AssertionError: expected 'rait.screens.colegiado-orgao-relatori…' to contain 'rait.common.unavailable'
+
+Expected: "rait.common.unavailable"
+Received: "rait.screens.colegiado-orgao-relatoria.titlerait.screens.colegiado-orgao-relatoria.intropositioncase_idclaim_due_onaccepted_atundefinedcase-bundefinedcase-acase_id case-b  case-a  ui.pagination.previous ui.pagination.pageStatus ui.pagination.next  rait.action.open  rait.screens.colegiado-orgao-relatoria.cmd.accept decline_kind rait.common.impediment_impedimento  rait.common.impediment_suspeicao  rait.screens.colegiado-orgao-relatoria.cmd.impede "
+
+ ❯ src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts:164:34
+    162|   it('dado o diálogo de impede dispensado então a facade NÃO é chamada…
+    163|     const { harness, facade } = await render('rait-rapporteur');
+    164|     const dialog = clickAction(harness, '[data-action="impede"]');
+       |                                  ^
+    165|     dialog.dismissed.emit();
+    166|     harness.detectChanges();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/app/features/protocolo/pages/pending-content.page.spec.ts > S1-A2 projected pending-content limitation > withheld missing_items is unavailable rather than an empty or satisfied checklist
+AssertionError: expected 'rait.screens.protocolo-pendencias.tit…' to contain 'rait.common.unavailable'
+
+Expected: "rait.common.unavailable"
+Received: "rait.screens.protocolo-pendencias.titlerait.screens.protocolo-pendencias.intro rait.action.open protocol_numberstatedue_on ui.pagination.previous ui.pagination.pageStatus ui.pagination.next rait.screens.protocolo-pendencias.cmd.resolverait.common.documentKindrait.common.filerait.common.digitised rait.common.attach  rait.screens.protocolo-pendencias.cmd.resolve "
+
+ ❯ src/app/features/protocolo/pages/pending-content.page.spec.ts:166:57
+    166|   });
+    167|
+    168|   it('dado o diálogo de resolve confirmado então a facade é chamada um…
+       |                                                  ^
+    169|     const { harness, facade } = await render('rait-secretary');
+    170|     const dialog = clickResolve(harness);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  4 failed | 3 passed (7)
+      Tests  4 failed | 71 passed | 1 todo (76)
+   Start at  11:28:53
+   Duration  5.52s (transform 5.35s, setup 4.05s, import 5.97s, tests 3.00s, environment 9.16s)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/apps/rait/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/rait-web@0.1.0 test: `vitest run --config vitest.config.ts "src/app/shared/batch-draw-viewer.component.spec.ts" "src/app/shared/dossier-viewer.component.spec.ts" "src/app/features/caso/pages/communications.page.spec.ts" "src/app/features/colegiado/pages/rapporteur-cases.page.spec.ts" "src/app/features/protocolo/pages/pending-content.page.spec.ts" "src/app/data/facades/archive.facade.spec.ts" "src/app/data/facades/audit.facade.spec.ts"`
+Exit status 1

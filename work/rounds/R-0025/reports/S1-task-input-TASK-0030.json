@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0030",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "P4-02-S1 backend scope implementation",
+  "description": "Engineer only after Inspector RED e2ee4359. Implement approved S1 scope/SQL/projections/parent/mutation/replay protection; no S2. Own backend CASE/WORKLIST handwritten approved paths, RAIT read policy rows only, attributable code/DDL/client generation and approved19 scoped constraints. Owner explicitly approved apply.sh three loader sites. Preserve107 disposition71replaced25retained11removed, unchanged decisiveInspector tests. Exact routing no-link success if unresolvable. No tests/spec/law/pin edits, generatorlogic, primary/scorecardwrites or git. Run isolatedDB53340 from /tmp/detran-s1-test-env.sh. Requested historical executor metadata is not served-model evidence.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r25-s1-case",
+    "MOD-r25-s1-worklist",
+    "MOD-r25-s1-client-generation"
+  ],
+  "target_substrates": [
+    "F2"
+  ],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0021",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "r25",
+    "p402-s1"
+  ],
+  "branch": "codex/r0025-s1-engineer-backend",
+  "worktree_id": "WT-r0025-s1-engineer-backend",
+  "prompt_composition_id": "PC-7293ed111662503f",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "check"
+    ]
+  ],
+  "created_at": "2026-10-19T14:22:31.057461+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-app",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "codex-cli"
+    },
+    "instructions_ref": "work/rounds/R-0025/prompts/P4-02-S1-engineer-backend.md",
+    "prompt_composition_id": "PC-7293ed111662503f",
+    "max_iterations": 3,
+    "capabilities": [
+      "repository-read",
+      "engineer-runtime-write"
+    ]
+  },
+  "upstream_task_id": "TASK-0029"
+}

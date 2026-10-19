@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitCase",
     "namespace": "inf",
-    "version": "1.1.8",
+    "version": "1.2.0",
     "ddlFile": "34-inf-rait-case.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
@@ -55,6 +55,10 @@
       {
         "target": "handwritten/rait-admissibility-commands.controller",
         "symbol": "RaitAdmissibilityCommandsController"
+      },
+      {
+        "target": "handwritten/rait-case-scoped-reads.controller",
+        "symbol": "RaitCaseScopedReadsController"
       }
     ],
     "handwrittenProviders": [
@@ -85,6 +89,14 @@
       {
         "target": "handwritten/rait-admissibility-command.service",
         "symbol": "RaitAdmissibilityCommandService"
+      },
+      {
+        "target": "handwritten/rait-case-scope.service",
+        "symbol": "RaitCaseScopeService"
+      },
+      {
+        "target": "handwritten/rait-case-pool-scope.service",
+        "symbol": "RaitCasePoolScopeService"
       }
     ],
     "handwrittenExports": [
@@ -96,10 +108,14 @@
       "handwritten/rait-operation-clock",
       "handwritten/rait-case-transition.port",
       "handwritten/rait-admissibility-commands.controller",
-      "handwritten/rait-admissibility-command.service"
+      "handwritten/rait-admissibility-command.service",
+      "handwritten/rait-case-scoped-reads.controller",
+      "handwritten/rait-case-scope.service",
+      "handwritten/rait-case-pool-scope.service"
     ],
     "owners": ["detran-inf"],
-    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant."
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10. v1.1.8: ADR-0041/R-0025 admissibility context-owned write; generated HTTP resource read-only, canonical POST handwritten with server actor/time/timeliness (UC-RAIT-002), no new business state or grant. v1.2.0: P4-02-S1, ADR-0046/0047 and closed T0 access/triage maps replace generated HTTP with scoped purpose projections; internal explicit read-scope and case-pool records expose no CRUD. WF-RAIT-001/002 and existing legal command transitions remain unchanged.",
+    "moduleExports": ["RaitCaseScopeService"]
   },
   "database": {
     "entities": [
@@ -1761,6 +1777,180 @@
             }
           }
         ]
+      },
+      {
+        "name": "RaitCaseReadScope",
+        "table": "rait_case_read_scope",
+        "primaryKey": ["id"],
+        "description": "ADR-0046/0047, P4-02-S1: explicit role-purpose read containment for WF-RAIT-001/002. Owner-qualified provisioning only; no public API. Unit/pool tenant FKs installed by supporting post-table DDL; role/duty/action remain independently required.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "writable": false,
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "role",
+            "type": "varchar(40)",
+            "writable": false
+          },
+          {
+            "name": "unit_id",
+            "type": "uuid",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid",
+            "writable": false,
+            "nullable": true
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "writable": false,
+            "default": "false"
+          },
+          {
+            "name": "authorization_ref",
+            "type": "text",
+            "writable": false
+          },
+          {
+            "name": "created_at",
+            "type": "timestamptz",
+            "writable": false,
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_case_read_scope_unit",
+            "columns": ["tenant_id", "actor_id", "role", "unit_id"],
+            "unique": true,
+            "where": "unit_id is not null"
+          },
+          {
+            "name": "ux_inf_rait_case_read_scope_pool",
+            "columns": ["tenant_id", "actor_id", "role", "pool_id"],
+            "unique": true,
+            "where": "pool_id is not null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_read_scope_role",
+            "expression": "role in ('rait-coordinator','AUDITOR','rait-secretary','rait-chair','rait-central-authority','rait-manager')"
+          },
+          {
+            "name": "ck_inf_rait_read_scope_one_parent",
+            "expression": "(unit_id is null) <> (pool_id is null)"
+          },
+          {
+            "name": "ck_inf_rait_read_scope_authorization",
+            "expression": "length(btrim(authorization_ref)) > 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_read_scope_membership",
+            "columns": ["tenant_id", "actor_id"],
+            "references": {
+              "table": "auth.memberships",
+              "columns": ["tenant_id", "user_id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitCasePoolScopeRecord",
+        "table": "rait_case_pool_scope",
+        "primaryKey": ["id"],
+        "description": "ADR-0047, WF-RAIT-001/002 and P4-02-S1: exact tenant-case-pool containment with verified operational provenance; no first-pool/unit-wide fallback, no public CRUD, seed or historical backfill. Missing routing never invalidates legal protocol/admission.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "writable": false,
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "case_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "writable": false,
+            "default": "false"
+          },
+          {
+            "name": "authorization_ref",
+            "type": "text",
+            "writable": false
+          },
+          {
+            "name": "source_ref",
+            "type": "text",
+            "writable": false
+          },
+          {
+            "name": "created_at",
+            "type": "timestamptz",
+            "writable": false,
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_case_pool_scope",
+            "columns": ["tenant_id", "case_id", "pool_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_case_pool_authorization",
+            "expression": "length(btrim(authorization_ref)) > 0"
+          },
+          {
+            "name": "ck_inf_rait_case_pool_source",
+            "expression": "length(btrim(source_ref)) > 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_case_pool_case",
+            "columns": ["tenant_id", "case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
       }
     ]
   },
@@ -1771,43 +1961,49 @@
         "entity": "RaitCase",
         "path": "cases",
         "resource": "rait-case",
-        "operations": ["list", "get", "update", "delete"]
+        "operations": []
       },
       {
         "entity": "RaitParty",
         "path": "parties",
-        "resource": "rait-party"
+        "resource": "rait-party",
+        "operations": []
       },
       {
         "entity": "RaitDocument",
         "path": "documents",
-        "resource": "rait-document"
+        "resource": "rait-document",
+        "operations": []
       },
       {
         "entity": "RaitPendingContent",
         "path": "pending-contents",
-        "resource": "rait-pending-content"
+        "resource": "rait-pending-content",
+        "operations": []
       },
       {
         "entity": "RaitRedirect",
         "path": "redirects",
-        "resource": "rait-redirect"
+        "resource": "rait-redirect",
+        "operations": []
       },
       {
         "entity": "RaitAdmissibility",
         "path": "admissibility",
         "resource": "rait-admissibility",
-        "operations": ["list", "get"]
+        "operations": []
       },
       {
         "entity": "RaitDeadline",
         "path": "deadlines",
-        "resource": "rait-deadline"
+        "resource": "rait-deadline",
+        "operations": []
       },
       {
         "entity": "RaitInquiry",
         "path": "inquiries",
-        "resource": "rait-inquiry"
+        "resource": "rait-inquiry",
+        "operations": []
       },
       {
         "entity": "RaitInquiryDocument",
@@ -1830,22 +2026,26 @@
       {
         "entity": "RaitDraft",
         "path": "drafts",
-        "resource": "rait-draft"
+        "resource": "rait-draft",
+        "operations": []
       },
       {
         "entity": "RaitDecision",
         "path": "decisions",
-        "resource": "rait-decision"
+        "resource": "rait-decision",
+        "operations": []
       },
       {
         "entity": "RaitCommunication",
         "path": "communications",
-        "resource": "rait-communication"
+        "resource": "rait-communication",
+        "operations": []
       },
       {
         "entity": "RaitCaseEvent",
         "path": "events",
-        "resource": "rait-case-event"
+        "resource": "rait-case-event",
+        "operations": []
       },
       {
         "entity": "RaitPriorityAssessment",
@@ -1857,6 +2057,18 @@
         "entity": "RaitPriorityBasis",
         "path": "internal/priority-bases",
         "resource": "rait-priority-basis",
+        "operations": []
+      },
+      {
+        "entity": "RaitCaseReadScope",
+        "path": "internal/case-read-scope",
+        "resource": "rait-case-read-scope",
+        "operations": []
+      },
+      {
+        "entity": "RaitCasePoolScopeRecord",
+        "path": "internal/case-pool-scope",
+        "resource": "rait-case-pool-scope",
         "operations": []
       }
     ]

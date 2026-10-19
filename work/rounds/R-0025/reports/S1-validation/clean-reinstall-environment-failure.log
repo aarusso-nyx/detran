@@ -1,0 +1,442 @@
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 check /private/tmp/detran-p402-s1-validation
+> pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build
+
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 format:check /private/tmp/detran-p402-s1-validation
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:archival-pc-guard /private/tmp/detran-p402-s1-validation
+> node tools/devai/verify-archival-pc-guard.mjs --repo-root .
+
+verify-archival-pc-guard: OK (applied)
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:stynx-pin /private/tmp/detran-p402-s1-validation
+> tsx tools/check-stynx-pin.ts
+
+All STYNX dependencies match 1.5.3.
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stynx-pin /private/tmp/detran-p402-s1-validation
+> node --test tools/stynx-pin/tests/*.test.mjs
+
+✔ C-02-01 dado fonte válida e manifestos uniformes quando verifica então aceita as quatro seções (152.977584ms)
+✔ C-02-02 dado versões divergentes por seção quando verifica então diagnostica cada declaração (146.43125ms)
+✔ C-02-03 dado ranges tags protocolos e valor não string quando verifica então rejeita todos (166.296208ms)
+✔ C-02-04 dado manifestos raiz docs e pacote novo quando verifica então encontra todos (146.00625ms)
+✔ C-02-05 dado diretórios excluídos e fonte gerada quando verifica então ignora só os excluídos (118.681708ms)
+✔ C-02-06 dado fonte ou manifesto inválido quando verifica então falha com caminho e causa (867.511667ms)
+✔ C-02-07 dado repoRoot explícito ou cwd quando verifica então usa a fonte da fixture (334.591792ms)
+✔ C-02-08 dado symlinks externos e repo sem STYNX quando verifica então não segue links nem escreve (121.837833ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2138.775541
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 test:stack /private/tmp/detran-p402-s1-validation
+> node --test tools/stack/*.test.mjs
+
+✔ dado o package.json adotado quando a superfície stack é enumerada então as nove entradas originais permanecem verbatim (2.11825ms)
+✔ dado help quando o comando é solicitado então termina com sucesso (63.206708ms)
+✔ dado um comando desconhecido quando a stack é invocada então termina com erro (46.554667ms)
+✔ dado stop quando recebe uma opção então recusa a opção (42.625667ms)
+✔ dado status quando recebe uma opção então recusa a opção (63.453292ms)
+✔ dado build quando recebe uma opção então recusa a opção (24.156208ms)
+✔ dado db-init quando recebe uma opção então recusa a opção (33.484625ms)
+✔ dado db-reset quando recebe uma opção então recusa a opção (26.69675ms)
+✔ dado start quando recebe apenas --no-mock então não há erro de argumento desconhecido antes do runtime (365.548041ms)
+✔ dado db-reset quando o banco não autorizado é informado então recusa antes de DDL (24.144333ms)
+✔ dado o proxy versionado quando ele é lido então v1 aponta para o backend loopback (0.643584ms)
+✔ dado os quatro manifests Angular quando a superfície é lida então portas e projetos são os adotados (1.757959ms)
+✔ dado apply full quando recebe os bancos de ensaio sem autorização então recusa antes de conectar (64.227875ms)
+✔ C-02-05 A6 dado outro banco quando a fixture Portal e invocada entao recusa antes de SQL (14.924583ms)
+✔ C-02-05 A6 dado o banco descartável quando a fixture Portal e invocada então envia SQL ao container e ID concretos (239.048625ms)
+✔ C-02-02 dado o mock SEFAZ quando a interface é inspecionada então exporta factory e CLI fixa loopback:3999 (80.454334ms)
+✔ C-02-02 dado o adapter SEFAZ quando o mock recebe as seis operações então o sensor usa tsx e o adapter real (203.444875ms)
+✔ C-02-05/06 dado targets estruturados quando smoke é executado então percorre root, proxy, health, PEC e CH off sem vazar segredo (101.670209ms)
+✔ C-02-05 A6 dado ID Portal ausente quando o proxy responde entao smoke falha (86.598125ms)
+✔ C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executado então registra target, resultado e motivo específicos (453.127417ms)
+✔ C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter (148.362625ms)
+✔ C-02-05 dado item de array com tenant divergente quando o proxy responde então smoke registra tenant_mismatch (135.780042ms)
+✔ C-02-05/06 dado as fases CLI quando smoke reinicia o backend então prepara Portal após preflight, restaura os cinco papéis e não herda overrides locais (565.302875ms)
+✔ C-02-02 dado o comando literal do adapter SEFAZ quando executado então confirma operações e erros observáveis (139.106041ms)
+✔ C-02-05/06 dado o preflight falho quando a CLI smoke é iniciada então não chama bash e preserva seu relatório separado (45.422583ms)
+✔ C-02-05 dado PEC construído e entrypoint em caminho com espaços e symlink quando a CLI smoke roda então mede a porta 4204 (300.645292ms)
+✔ C-01-05 dado o banco próprio quando apply full não recebe autorização então recusa antes de conectar (43.655084ms)
+✔ C-01-05 dado o banco próprio quando apply full recebe a autorização própria então chega à conexão stubbed (833.497875ms)
+✔ C-01-06 dado o CI quando a imagem PostGIS é comparada então o digest e a plataforma são iguais (0.310417ms)
+✔ C-01-07 dado stack config quando é executado então retorna o JSON fechado sem segredos (287.596166ms)
+✔ C-01-08 dado a configuração resolvida quando RAIT é lido então usa rait-web e seu build target (284.312833ms)
+✔ C-01-07 dado a configuração resolvida quando os serviços são lidos então as portas e os frontends são a tabela contratada (258.292375ms)
+✔ C-01-07 dado DETRAN_DB_IMAGE quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (15.889083ms)
+✔ C-01-07 dado DB_HOST quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (17.622875ms)
+✔ C-01-07 dado DB_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (14.922625ms)
+✔ C-01-07 dado DB_USER quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (19.798959ms)
+✔ C-01-07 dado DETRAN_BACKEND_PORT quando tenta sobrepor a superfície fixa então recusa antes de backend ou container (16.276958ms)
+✔ C-01-07 dado DETRAN_RUNTIME_PROFILE inválida quando config é solicitado então recusa sem alcançar runtime (17.700042ms)
+✔ C-01-07 dado SENATRAN_PROVIDER inválida quando config é solicitado então recusa sem alcançar runtime (25.981833ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (21.222791ms)
+✔ C-01-07 dado SENATRAN_MOCK_BASE_URL inválida quando config é solicitado então recusa sem alcançar runtime (19.460416ms)
+✔ C-01-09 dado status quando o slot PEC não possui angular.json então grava a linha UTF-8 contratada (219.100333ms)
+✔ C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra (1428.904375ms)
+✔ C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz (639.112834ms)
+✔ C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback (227.195208ms)
+✔ C-01-10 dado Docker Compose 2.24.3 quando start prepara o mock então valida a versão antes de up (344.675417ms)
+✔ C-01-10 dado Docker Compose 2.24.4 quando start prepara o mock então valida a versão antes de up (1517.246917ms)
+✔ C-01-07 dado start --no-mock quando falha de forma controlada então config persiste mock desabilitado e stop limpa o modo (1860.790917ms)
+✔ C-01-07 dado start --no-mock quando health é chamado depois então não sonda o mock desabilitado (1854.025708ms)
+✔ C-01-07 dado variáveis sensíveis quando backend inicia então elas não atravessam o ambiente explicitamente permitido (1453.364459ms)
+✔ C-01-11 dado start quando a saúde do backend expira então informa timeout e não deixa PID ou processo local (2079.844375ms)
+✔ C-01-11 dado start quando somente a saúde do mock expira então pede os logs Compose do serviço app (1612.394ms)
+✔ C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos (1242.096ms)
+✔ C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos (154.134625ms)
+✔ C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado (498.959333ms)
+✔ C-01-12 dado os papéis locais padrão quando a stack os declara então pertencem ao catálogo composto (0.987542ms)
+✔ C-01-13 dado db-reset quando o volume é gerenciado então preserva volumes e usa somente a autorização própria (0.180875ms)
+✔ C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada (0.039833ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17113.896041
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 law:test /private/tmp/detran-p402-s1-validation
+> node --test tools/law/tests/*.test.mjs
+
+✔ dado fixture temporária quando prepara os diretórios então cria os caminhos de corpus exigidos (8.993208ms)
+✔ dado schema copiado e hash correspondente quando verifica a regra (a) então não há violação (a) (8.739417ms)
+✔ dado schema ausente quando verifica a regra (a) então aponta a cópia ausente (4.454042ms)
+✔ dado schema extra quando verifica a regra (a) então aponta o arquivo fora do roster (4.699083ms)
+✔ dado schema alterado quando verifica a regra (a) então aponta bytes divergentes (4.74775ms)
+✔ dado sha divergente no manifesto quando verifica a regra (a) então aponta o hash incorreto (4.056625ms)
+✔ dado manifesto sem schema do roster quando verifica a regra (a) então aponta o roster divergente (4.27675ms)
+✔ dado manifesto com schema extra quando verifica a regra (a) então aponta o roster divergente (4.204459ms)
+✔ dado manifesto JSON inválido quando verifica a regra (a) então aponta manifesto inválido (4.660667ms)
+✔ dado OD-R19-001 registrado na seção canônica quando verifica a regra (b) então não há violação (b) (10.234958ms)
+✔ dado cabeçalho Decisão quando a âncora remove o diacrítico então rejeita a aproximação (4.845166ms)
+✔ dado OD anterior em outra seção do registro quando verifica a regra (b) então resolve a linha da tabela (5.696459ms)
+✔ dado OD-R19 fora da seção canônica quando verifica a regra (b) então rejeita a linha deslocada (5.082875ms)
+✔ dado provenance sem fonte quando verifica a regra (b) então aponta o ID não resolvido (3.808875ms)
+▶ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente
+  ✔ ID WF-INF-999 (4.313875ms)
+  ✔ ID UC-INF-999 (8.486458ms)
+  ✔ ID JRN-INF-999 (4.910042ms)
+  ✔ ID APP-MISSING (5.570667ms)
+  ✔ ID ADR-9999 (8.471625ms)
+✔ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente (33.226709ms)
+✔ dado âncora ausente no documento quando verifica a regra (b) então aponta a referência inválida (10.071167ms)
+✔ dado documento de autoridade ausente quando verifica a regra (b) então aponta a fonte inexistente (26.650083ms)
+✔ dado OD não registrado quando verifica a regra (b) então aponta a decisão não resolvida (6.45675ms)
+✔ dado README vigente quando verifica a regra (e) então não há violação (e) (4.713375ms)
+✔ dado README-placeholder sem conteúdo autoral quando verifica a regra (e) então placeholders isolados são permitidos (5.3095ms)
+✔ dado README com cada frase obsoleta quando verifica a regra (e) então aponta ambas (5.61375ms)
+✔ dado README de jornada obsoleto com arquivo descendente quando verifica a regra (e) então aponta a frase (5.934166ms)
+✔ dado README autoral que mantém frase obsoleta quando verifica a regra (e) então aponta a frase (6.855625ms)
+✔ dado termo e GE correspondentes quando verifica a regra (c) então aceita o par (6.168834ms)
+✔ dado termo fonte sem GE quando verifica a regra (c) então aponta a ausência (4.74125ms)
+✔ dado GE sem termo no domain.md quando verifica a regra (c) então aponta a entrada órfã (6.818042ms)
+✔ dado JRN com JNY correspondente quando verifica a regra (d) então não marca o par como órfão (8.869375ms)
+✔ dado JRN sem JNY quando verifica a regra (d) então aponta a jornada fonte sem par (6.85875ms)
+✔ dado JNY sem JRN quando verifica a regra (d) então aponta a jornada DEVAI órfã (5.288916ms)
+✔ dado UC com entrada no bundle correspondente quando verifica a regra (d) então não marca o caso como órfão (6.471792ms)
+✔ dado UC sem entrada em bundle quando verifica a regra (d) então aponta o caso fonte sem par (7.450583ms)
+✔ dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta a entrada órfã (4.703459ms)
+✔ dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE] (9.604292ms)
+✔ dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID] (5.408ms)
+✔ dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING] (5.5165ms)
+✔ dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED] (7.767583ms)
+✔ dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING] (7.189958ms)
+✔ dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE] (7.851917ms)
+✔ dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE] (7.584584ms)
+✔ dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE] (7.011167ms)
+✔ dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE] (5.188ms)
+✔ dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED] (5.134292ms)
+✔ dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS] (5.961208ms)
+✔ dado JNY sem steps então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_steps] (9.384292ms)
+✔ dado JNY sem AC então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_AC] (8.767125ms)
+✔ dado JNY sem persona então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_persona] (8.63925ms)
+✔ dado JNY status não draft então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_status_não_draft] (9.470292ms)
+✔ dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT] (67.264791ms)
+✔ dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT] (84.802209ms)
+✔ dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT] (236.610875ms)
+✔ dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT] (249.549167ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1071.4755
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 devai:test /private/tmp/detran-p402-s1-validation
+> node --test tools/devai/tests/*.test.mjs
+
+✔ dada uma fixture com linha de prova sem âncora quando mede a linha de base então a órfã traz caminho sequência e sha256 (1097.077542ms)
+✔ dada uma fixture com linha de prova declarada quando mede a linha de base então ela conta como âncora e não como órfã (0.240416ms)
+✔ dada uma fixture com TASK válida e inválida quando mede a linha de base então preserva classificações e erros reproduzíveis (0.571209ms)
+✔ dada uma fixture sem fonte canônica F2/F3 quando mede commits mistos então não inventa total nem classificação (0.088167ms)
+✔ dadas SensorReadings persistidas por kind quando mede a linha de base então conta estado e referência sem promover resultado não persistido (0.09925ms)
+✔ dada uma fixture com linhas ancorada e órfã quando mede a linha de base então proofs.lines preserva chave e hash de todas as linhas (0.195583ms)
+✔ dada uma fixture com checks, provas e rodada pendentes quando renderiza Markdown então expõe contagens e o diagnóstico da rodada (0.206042ms)
+✔ dada uma linha de base sem regressões quando mede o fechamento então grava baseline-final e compara os oito eixos (2275.91425ms)
+✔ dada uma SensorReading de abertura removida quando mede o fechamento então escreve baseline-final e falha a regressão de sensores (3761.266375ms)
+✔ dada somente a órfã A2 e gate estrito limpo quando compara proofs então aceita a linha nova (13.38925ms)
+✔ dada A2 com gate ausente quando compara proofs então falha (12.953958ms)
+✔ dada A2 com gate com falha quando compara proofs então falha (12.097459ms)
+✔ dada A2 com órfã não declarada pelo gate quando compara proofs então falha (6.196917ms)
+✔ dada A2 com âncora duplicada no gate quando compara proofs então falha (10.98075ms)
+✔ dada A2 com referência inválida no gate quando compara proofs então falha (15.647292ms)
+✔ dada A2 com erro de validação no gate quando compara proofs então falha (5.396792ms)
+✔ dada A2 com cadeia inválida quando compara proofs então falha (11.740667ms)
+✔ dada A2 com hash A2 diferente quando compara proofs então falha (7.52725ms)
+✔ dada A2 com outra órfã nova quando compara proofs então falha (10.009333ms)
+✔ dados os dez caminhos A3 e recibo íntegro quando compara TASKs então aceita somente a transposição autorizada (112.131125ms)
+✔ dada transposição A3 com hash da abertura divergente quando compara TASKs então falha (79.485541ms)
+✔ dada transposição A3 com hash de abertura do posterior D1 divergente quando compara TASKs então falha (53.08225ms)
+✔ dada transposição A3 com subconjunto de nove caminhos quando compara TASKs então falha (170.197167ms)
+✔ dada transposição A3 com décimo primeiro caminho quando compara TASKs então falha (21.830375ms)
+✔ dada transposição A3 com hash do sidecar divergente quando compara TASKs então falha (266.573208ms)
+✔ dada transposição A3 com sidecar ausente no recibo quando compara TASKs então falha (14.659334ms)
+✔ dada transposição A3 com leitura de sidecar falha no recibo quando compara TASKs então falha (24.749625ms)
+✔ dada transposição A3 com artefato congelado divergente quando compara TASKs então falha (14.53725ms)
+✔ dada transposição A3 com mapeamento analisado de alias divergente quando compara TASKs então falha (12.202542ms)
+✔ dada transposição A3 com mapeamento analisado D1 divergente quando compara TASKs então falha (10.018666ms)
+✔ dada transposição A3 com leitura ou JSON do índice D1 falha no recibo quando compara TASKs então falha (62.804375ms)
+✔ dada transposição A3 com hash posterior D1 divergente quando compara TASKs então falha (71.095833ms)
+✔ dada transposição A3 com destino canônico inválido quando compara TASKs então falha (37.734792ms)
+✔ dada transposição A3 com destino canônico ausente quando compara TASKs então falha (33.663833ms)
+✔ dada transposição A3 com verificador negativo quando compara TASKs então falha (24.761042ms)
+✔ dada transposição A3 com argv do verificador divergente quando compara TASKs então falha (11.759292ms)
+✔ dada transposição A3 com hash da fonte canônica final divergente quando compara TASKs então falha (10.490417ms)
+✔ dada transposição A3 com recibo ausente quando compara TASKs então falha (12.21075ms)
+✔ dada fixture A3 sem cópia local do verificador quando mede fechamento então grava recibo normalizado com hashes reais (3553.739708ms)
+✔ dado tabela CTG A3.2 quando normaliza representante então reserva aliases distintos sem colisão (3031.50825ms)
+✔ dado candidato CTG já reservado quando normaliza então rejeita colisão declarada sem mutação (5181.522167ms)
+✔ dado doze títulos A3.2 quando normaliza então aplica cada literal editorial sem truncamento (3700.388792ms)
+✔ dado INV externo A3.2 quando normaliza então arquiva como ref sem alegar invariante local (2634.24275ms)
+✔ dado executor.note autorizado quando normaliza então remove só a nota e preserva contrato executor no sidecar (3983.59325ms)
+✔ dado EV e REC A3.2 quando normaliza então arquiva sete REC e trinta e um EV sem fabricar evidência (60776.627042ms)
+✔ dado onze PCs A3.2 guardados quando normaliza então produz índice separado e projeções prospectivas fiéis (13009.013042ms)
+✔ dado PCs arquivísticos sem manifesto A3.5 quando normaliza então falha sem escrita (89.179375ms)
+✔ dado outra classe source_pending quando normaliza então preserva JSON integral e não deixa mutação parcial (76.587541ms)
+✔ dado quatro D1 quando normaliza então move 0019 e arquiva três snapshots sem criar IDs (3403.707625ms)
+✔ dado D1 com snapshot divergente quando normaliza então rejeita hash e preserva todos os originais (251.391584ms)
+✔ dado dois basenames para o mesmo ID quando verifica round TASKs então rejeita antes de D1 (5018.02375ms)
+✔ dado S2 e S3 incompletas quando normaliza então conserva checkpoint arquivístico e sucessoras (5473.225833ms)
+✔ dado S2 incompleta com outra classe pendente quando normaliza então não muda o arquivo inteiro (189.720334ms)
+✔ dado dez posições literais quando normaliza então usa null e mantém disciplina e upstream (42218.372583ms)
+✔ dado ciclo runtime preexistente quando projeta P1 então upstream segue DAG sem ciclo novo (2010.3615ms)
+✔ dado PREP U1 quando normaliza então preserva todas as linhas do ledger sem horário inventado (2104.556625ms)
+✔ dado PREP com budget alterado quando normaliza então falha sem alegar precedência temporal (2115.634416ms)
+✔ dado T1 escalated quando normaliza então indexa reviews sem terceiro worker nem PASS retroativo (1165.156667ms)
+✔ dado T1 com revisão hash divergente quando normaliza então falha sem alterar TASK (1027.722958ms)
+✔ dado S1 cujo sidecar diz incompleta quando verificador vê completed então rejeita PASS inventado (82.695417ms)
+✔ dado P1 com posição inventada quando verifica sidecar então rejeita reclassificação de Auditor (85.894042ms)
+✔ dado U1 com retry omitido quando verifica índice então rejeita perda da ordem documental (89.634208ms)
+✔ dado U1 com caminho externo quando verifica índice então rejeita fonte fora do repositório (65.510417ms)
+✔ dado U1 com horário fabricado quando verifica índice então rejeita precedência temporal inventada (60.183125ms)
+✔ dado T1 com terceiro worker inventado quando verifica índice então preserva limite 2 (74.131584ms)
+✔ dado normalizador arquivístico quando inspeciona fonte então não invoca despacho nem escreve estado runtime (1.03775ms)
+✔ dado nove iteration_trail legados da tabela quando normalizados então arquiva arrays integrais sem inventar started_at ou verdict (40672.693584ms)
+✔ dado iteration_trail já válido em R-0003 TASK-0001 quando normalizado então preserva bytes sem arquivamento (501.718791ms)
+✔ dado R-0006 TASK-0003 escalada sem índice T1 quando normalizada então preserva caso especial pendente (4852.205541ms)
+✔ dado iteration_trail legado fora dos nove caminhos autorizados quando normalizado então relata source_pending sem mutar (607.895833ms)
+✔ dado R-0012 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (3802.606834ms)
+✔ dado R-0016 TASK-0001 com upstream vazio e hash histórico quando normalizada então projeta null e preserva literal (2553.807334ms)
+✔ dado upstream vazio em arquivo alheio quando normalizado então falha sem projetar null (113.241292ms)
+✔ dado upstream vazio em hash alheio no path autorizado quando normalizado então falha sem projetar null (143.834541ms)
+✔ dado tarefa válida quando normalizada duas vezes então preserva executor, composição e bytes (322.843541ms)
+✔ dado ref não INV em target_invariants quando normalizada então move a ref para tags sem perdê-la (2133.424583ms)
+✔ dado db_isolation legado sem fonte quando normalizada então relata source_pending sem mutar (129.179792ms)
+✔ dado coupled_task_group inválido sem prova quando normalizada então relata source_pending sem mutar (120.377708ms)
+✔ dado propriedade adicional com bytes estáveis quando normalizada então relata source_pending sem mutar (134.706042ms)
+✔ dado TASK allowlist com none quando normalizada então projeta database e preserva fato histórico no sidecar (2297.812375ms)
+✔ dado hash allowlist divergente quando normalizada então relata source_pending sem mutar (134.93ms)
+✔ dado sidecar corrompido quando normalizada então relata source_pending sem mutar (2262.98025ms)
+✔ dado TASK fora da allowlist quando normalizada então relata source_pending sem mutar (133.030583ms)
+✔ dado TASK allowlisted com classe A3.2 pendente quando normalizada então não aplica projeção parcial (143.137792ms)
+✔ dado allowlist correta mas literal diferente de none quando normalizada então não aplica A3.1 (145.361334ms)
+✔ dado lote com sidecar persistido e outra TASK pendente quando normalizada então não deixa substituição sem original (1750.566625ms)
+✔ dado estado parcial canônico sem relatório quando normalizada então retoma sem reescrever bytes (283.122708ms)
+✔ dado matriz R1 aplicada quando normaliza as duas TASKs concluídas então projeta owner sem tocar policy, despacho ou raízes protegidas (1981.101208ms)
+✔ dadas closures válidas quando --write e --check rodam então o índice é ordenado, completo e idempotente (209.156125ms)
+✔ dado PC cujo nome de arquivo diverge do id quando o renderer roda então recusa a entrada (72.201042ms)
+✔ dadas duas closures no mesmo ciclo de supersessão quando o renderer roda então recusa o ciclo (70.25525ms)
+✔ dado índice alterado ou ausente quando --check roda então o gate falha (312.101875ms)
+✔ dado caminho de entrada simbólico com caracteres reservados quando --check roda então executa o gate (79.793459ms)
+✔ dado predecessor ausente quando o renderer roda então recusa a entrada (62.969375ms)
+✔ dado ligação entre rodadas quando o renderer roda então recusa a entrada (72.40975ms)
+✔ dado dois terminais quando o renderer roda então recusa a entrada (56.15475ms)
+✔ dado JSON ilegível quando o renderer roda então recusa a entrada (59.137583ms)
+✔ enumeration retains every registered read member and the installed two-pass order (1.817708ms)
+✔ an omitted registered read member is refused instead of silently shrinking the population (0.714ms)
+✔ duplicates and second-pass omissions cannot become a valid execution plan (0.732666ms)
+✔ only task-bound members carry explicit local-write consent and Inspector role (0.438625ms)
+✔ workspace lint preserves apps/boat/mobile rules and parser (3590.550125ms)
+✔ workspace lint preserves apps/dashboard/web rules and parser (265.249375ms)
+✔ workspace lint preserves apps/portal/web rules and parser (436.578875ms)
+✔ workspace lint preserves apps/rait/web rules and parser (337.3815ms)
+✔ workspace lint preserves apps/teat/mobile rules and parser (178.481667ms)
+✔ workspace lint preserves apps/teat/web rules and parser (142.766375ms)
+✔ workspace lint preserves senatran-mock rules and parser (1569.451875ms)
+✔ a failed gate retains native readings from the stderr payload (0.965ms)
+✔ successful command execution does not turn an UNKNOWN scorecard into PASS (0.113709ms)
+✔ a refusal without readings and non-JSON diagnostics do not create observations (0.081ms)
+✔ retains a supported native FAIL and exactly 43 applicable entries (4.165917ms)
+✔ refuses duplicate grid coordinates and changed historical N/A entries (0.421292ms)
+✔ requires an explicit disposition for every applicable coordinate (0.992708ms)
+✔ does not promote UNKNOWN to measured through assessment prose (0.371ms)
+✔ refuses a captured task reading from another candidate (0.177625ms)
+✔ requires every registered sensor and an uninterrupted measurement capture (0.421417ms)
+✔ retains optional registered sensors without inventing a measurement requirement (0.774209ms)
+✔ does not count a failed coverage producer as a measured line population (0.267959ms)
+✔ renders a successful native UNKNOWN command as 43 blocked entries, never measured PASS (205.7785ms)
+✔ interrupted fixture task terminates its child group and removes its disposable service (775.307166ms)
+✔ dado manifesto pré-migração íntegro quando verifica guarda então aceita (140.042041ms)
+✔ dado manifesto applied íntegro quando verifica guarda então aceita (266.745334ms)
+✔ dado fixture applied quando confere A3.2 então preserva sidecars, tags e bridges (170.215458ms)
+✔ dado variantes canônicas de fonte quando calcula hash então preserva digest (2.048125ms)
+✔ dado manifesto ausente quando verifica guarda então falha fechada (82.69ms)
+✔ dado status desconhecido quando verifica guarda então falha fechada (99.726ms)
+✔ dado fonte com hash divergente quando verifica guarda então falha fechada (112.029167ms)
+✔ dado pacote antecipado em pré-migração quando verifica guarda então falha fechada (199.607ms)
+✔ dado store R-0007 quando verifica guarda então falha fechada (107.279292ms)
+✔ dado G0 ausente ou vazio quando verifica guarda então aceita (200.22175ms)
+✔ dado G0 malformado quando verifica guarda então falha fechada (274.169208ms)
+✔ dado backlog R-0007 quando verifica guarda então falha fechada (121.569417ms)
+✔ dado fonte simbólica quando verifica guarda então falha fechada (111.697209ms)
+✔ dado disco aplicado e manifesto regressivo quando verifica guarda então falha fechada (133.751167ms)
+✔ dado manifesto applied sem índice quando verifica guarda então falha fechada (157.938417ms)
+✔ dado uso inválido quando verifica guarda então retorna 2 (84.5955ms)
+✔ dado linha órfã histórica quando não há declaração então falha (99.773083ms)
+✔ dado linha órfã histórica quando prova declaratória ancorada a cita então passa (90.742125ms)
+✔ dado declaração com hash ou sequência divergente quando verifica então falha (93.82325ms)
+✔ dado duas declarações da mesma linha quando verifica então falha (115.255417ms)
+✔ dado declaração append-only de linha nova quando tem hash correto então falha (90.036334ms)
+✔ dado baseline histórica alterada em somente orphans quando verifica então falha (114.498625ms)
+✔ dado baseline histórica alterada em somente lines quando verifica então falha (81.424125ms)
+✔ dado baseline histórica alterada em listas congruentes com trio falso quando verifica então falha (173.847708ms)
+✔ dado baseline histórica alterada em head sha adulterado quando verifica então falha (246.652542ms)
+✔ dado duas âncoras para a mesma linha quando verifica então falha (95.20675ms)
+✔ dado linha nova sem âncora quando verifica então falha (112.714041ms)
+✔ dado referência da cadeia sem linha quando verifica então falha (118.400666ms)
+✔ dado sequência física divergente quando verifica então falha (95.967041ms)
+✔ dado declaração sem âncora quando verifica então falha (81.873834ms)
+✔ dado declaração de linha já ancorada quando verifica então falha (93.75025ms)
+✔ dado declaração de caminho inexistente quando verifica então falha (106.503166ms)
+✔ dado nota generic malformada quando verifica então falha (117.830667ms)
+✔ dado payload round divergente quando verifica então falha (122.224584ms)
+✔ dado declaração da sequência oito com hash da nove quando verifica então falha (85.026958ms)
+✔ dado somente contagem de órfãs adulterada quando verifica então falha (149.395583ms)
+✔ dado R-0021 seq. 2 sem arquivo excepcional quando declaração ancorada a cita então falha (265.861542ms)
+✔ dado autorização A2 e exceção exatas quando declaração ancorada cita R-0021 seq. 2 então passa (97.473333ms)
+✔ dado exceção A2 sem prova declaratória quando verifica R-0021 seq. 2 então falha (181.0485ms)
+✔ dado hash da decisão A2 errado quando declaração ancorada cita R-0021 seq. 2 então falha (226.854125ms)
+✔ dado outro trio com digest canônico coerente quando declaração ancorada cita R-0021 seq. 2 então falha (140.4295ms)
+✔ dado linha extra no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (119.792208ms)
+✔ dado linha duplicada no JSONL excepcional quando declaração ancorada cita R-0021 seq. 2 então falha (137.617375ms)
+✔ dado A2 válida quando nova linha R-0020 é declarada então essa linha falha (106.815417ms)
+✔ dado historical-gap e generic com a mesma sequência quando verifica então exige namespaces e hash físico distintos (371.95675ms)
+✔ dado duas tarefas 2.0.0 válidas quando o gate verifica a rodada então aceita ambas (4939.39575ms)
+✔ dado dois arquivos válidos com mesmo round_id e id quando o gate verifica a rodada então falha por duplicata (3453.426125ms)
+✔ dado tarefa com schemaVersion inválido quando o gate verifica a rodada então falha e identifica o arquivo (2311.885292ms)
+✔ dado tarefa inválida em R-0020 quando o gate verifica as rodadas então identifica o arquivo (3372.23725ms)
+✔ dado sidecar e tags coerentes quando verifica originais então aceita o vínculo (551.447041ms)
+✔ dado vínculo sem relatório antes depois quando verifica originais então falha fechada (681.833084ms)
+✔ dado bytes de sidecar corrompidos quando verifica originais então falha com o caminho (134.438208ms)
+✔ dado caminho de sidecar que escapa do repositório quando verifica originais então falha fechada (134.078791ms)
+✔ dado alias divergente quando verifica originais então falha com o arquivo canônico (200.72325ms)
+✔ dado sidecar ausente e par de tags duplicado quando verifica originais então falha fechada (122.797708ms)
+✔ dado sidecar órfão quando verifica originais então falha fechada (270.192042ms)
+✔ dado dois aliases para o mesmo ID quando verifica originais então rejeita a colisão (247.723417ms)
+✔ dado ID ou round_id original divergente sem alias quando verifica originais então falha fechada (92.83075ms)
+✔ dado relatório com outra rodada e caminho relativo igual quando verifica originais então falha fechada (82.071542ms)
+✔ dado duas projeções R1 íntegras quando verifica originais então confirma a matriz aplicada e os vínculos concretos (159.982333ms)
+✔ dado matriz A3.4 em candidate-not-applied quando verifica originais então recusa o estado (341.696417ms)
+✔ dado matriz A3.4 em unknown quando verifica originais então recusa o estado (124.278875ms)
+✔ dado tag R1 1 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (363.819958ms)
+✔ dado tag R1 2 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (320.866875ms)
+✔ dado tag R1 3 ausente, duplicada ou trocada quando verifica originais então acusa a tag concreta (369.905083ms)
+✔ dado projeção R1 não concluída quando verifica originais então acusa status da TASK (111.408792ms)
+✔ dado hash A3.4 divergente quando verifica originais então acusa hash (116.896875ms)
+✔ dado path A3.4 divergente quando verifica originais então acusa path (125.118333ms)
+✔ dado receipt A3.4 divergente quando verifica originais então acusa receipt (164.762583ms)
+✔ dado literal A3.4 divergente quando verifica originais então acusa literal (126.105375ms)
+✔ dado identidade R-0003/TASK-0004 materializada em tasks quando verifica originais então recusa despacho (95.4405ms)
+✔ dado identidade R-0005/TASK-0009 materializada em tasks quando verifica originais então recusa despacho (157.454333ms)
+✔ dado identidade R-0003/TASK-0004 materializada em backlog quando verifica originais então recusa despacho (217.92725ms)
+✔ dado identidade R-0005/TASK-0009 materializada em backlog quando verifica originais então recusa despacho (125.52375ms)
+✔ dado sidecar A3 missing quando verifica originais então acusa o sidecar (145.404958ms)
+✔ dado sidecar A3 corrupted quando verifica originais então acusa o sidecar (215.491542ms)
+✔ dado matriz que alega grant retrospectivo quando verifica originais então recusa a alegação (165.369208ms)
+ℹ tests 198
+ℹ suites 0
+ℹ pass 198
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92813.050959
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/private/tmp/detran-p402-s1-validation/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:law-corpus /private/tmp/detran-p402-s1-validation
+> node tools/law/verify.mjs --repo-root . --package-schemas-dir node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas --od-registry docs/meta/knowledge-base/open-decisions-rait.md
+
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/action-registry.schema.json: Copied bytes differ from package schema action-registry.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/adopter-policy.schema.json: Copied bytes differ from package schema adopter-policy.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/api-map.schema.json: Copied bytes differ from package schema api-map.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/coverage-matrix.schema.json: Copied bytes differ from package schema coverage-matrix.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/mutation-evidence-policy-v2.schema.json: Copied bytes differ from package schema mutation-evidence-policy-v2.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/round-execution.schema.json: Copied bytes differ from package schema round-execution.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/sensor-inputs.schema.json: Copied bytes differ from package schema sensor-inputs.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/subprocess-effects.schema.json: Copied bytes differ from package schema subprocess-effects.schema.json.
+[a] SCHEMA_BYTES_DIVERGENT law/schemas/use-cases.schema.json: Copied bytes differ from package schema use-cases.schema.json.
+[a] SCHEMA_EXTRA law/schemas/invariant-producers.schema.json: Schema invariant-producers.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/native-service-backends-policy.schema.json: Schema native-service-backends-policy.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/native-service-profile.schema.json: Schema native-service-profile.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/native-service-profiles-policy.schema.json: Schema native-service-profiles-policy.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/preflight-probe.schema.json: Schema preflight-probe.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/reviewed-workflow-steps.schema.json: Schema reviewed-workflow-steps.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/test-result-population.schema.json: Schema test-result-population.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/test-task-descriptor.schema.json: Schema test-task-descriptor.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/test-task-exclusivity.schema.json: Schema test-task-exclusivity.schema.json is outside the package roster.
+[a] SCHEMA_EXTRA law/schemas/workflow-step-inventory.schema.json: Schema workflow-step-inventory.schema.json is outside the package roster.
+[a] MANIFEST_ROSTER_DIVERGENT law/schemas/manifest.json: Manifest sha256 keys must equal the package schema roster.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for action-registry.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for adopter-policy.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for api-map.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for coverage-matrix.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for mutation-evidence-policy-v2.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for round-execution.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for sensor-inputs.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for subprocess-effects.schema.json does not match the package bytes.
+[a] MANIFEST_HASH_DIVERGENT law/schemas/manifest.json: Manifest hash for use-cases.schema.json does not match the package bytes.
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.

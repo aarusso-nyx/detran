@@ -23,6 +23,8 @@ import {
   policyKey,
 } from '@detran/shared';
 
+import { RaitCaseScopeService } from './rait-case-scope.service.js';
+import { RaitCasePoolScopeService } from './rait-case-pool-scope.service.js';
 import { RaitDocumentTrustVerifier } from './rait-document-trust.verifier.js';
 import {
   RaitOperationClock,
@@ -595,35 +597,13 @@ export class RaitCaseCommandService {
       fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {}, context.requestId);
 
     return this.transaction(async (tx) => {
-      const digest = createHash('sha256')
-        .update(
-          JSON.stringify({
-            command: 'protocol',
-            payload: canonical(input.payload),
-          }),
-        )
-        .digest('hex');
-      await tx.query(
-        "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
-        [context.tenantId, key],
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
       );
-      const replay = rows(
-        await tx.query<{
-          request_fingerprint: string;
-          response_body: CommandResult;
-        }>(
-          'select request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
-          [context.tenantId, key],
-        ),
-      )[0];
-      if (replay) {
-        if (replay.request_fingerprint !== digest)
-          fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key }, context.requestId);
-        return replay.response_body;
-      }
-
+      await scope.authenticate(tx, input.principal);
       const payload = input.payload;
-      const membership = rows(
+      const protocolMembership = rows(
         await tx.query(
           `select member.id
              from inf.rait_pool_member member
@@ -642,8 +622,58 @@ export class RaitCaseCommandService {
           ],
         ),
       );
-      if (membership.length !== 1)
+      if (!protocolMembership.length)
         fail('RAIT.FORBIDDEN_CASE_SCOPE', 403, {}, context.requestId);
+      if (input.payload.origin_case_id)
+        await scope.assertCase(
+          tx,
+          String(input.payload.origin_case_id),
+          input.principal,
+        );
+      const digest = createHash('sha256')
+        .update(
+          JSON.stringify({
+            command: 'protocol',
+            payload: canonical(input.payload),
+          }),
+        )
+        .digest('hex');
+      await tx.query(
+        "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
+        [context.tenantId, key],
+      );
+      const replay = rows(
+        await tx.query<{
+          id: string;
+          request_fingerprint: string;
+          response_body: CommandResult;
+        }>(
+          'select id,request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
+          [context.tenantId, key],
+        ),
+      )[0];
+      if (replay) {
+        if (replay.request_fingerprint !== digest)
+          fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key }, context.requestId);
+        await scope.assertCase(
+          tx,
+          String(replay.response_body.data.id),
+          input.principal,
+          'read',
+          'rait-case',
+          true,
+        );
+        await scope.verifyCommandReplay(
+          tx,
+          replay.id,
+          input.principal,
+          'protocol',
+          String(replay.response_body.data.id),
+          digest,
+        );
+        return replay.response_body;
+      }
+
       const tenant = rows(
         await tx.query<{ timezone: string }>(
           'select timezone from auth.tenants where id = $1 for share',
@@ -732,10 +762,28 @@ export class RaitCaseCommandService {
           JSON.stringify({ command: 'protocol' }),
         ],
       );
+      await new RaitCasePoolScopeService(this.requestContext).resolve(
+        tx,
+        context.tenantId,
+        String(data.id),
+        'command:protocol:' + context.actorId,
+      );
       const result = { data, events: [], etag: `"${data.version}"` };
-      await tx.query(
-        "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours')",
-        [context.tenantId, key, digest, 200, JSON.stringify(result)],
+      const ledger = rows(
+        await tx.query<{ id: string }>(
+          "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours') returning id",
+          [context.tenantId, key, digest, 200, JSON.stringify(result)],
+        ),
+      )[0];
+      if (!ledger) fail('RAIT.INTERNAL', 500);
+      await scope.bindCommandReplay(
+        tx,
+        ledger!.id,
+        input.principal,
+        'protocol',
+        String(data.id),
+        digest,
+        'rait-secretary',
       );
       return result;
     });
@@ -748,6 +796,8 @@ export class RaitCaseCommandService {
       Array.isArray(input.payload)
     )
       fail('RAIT.VALIDATION_FAILED', 400);
+    if (input.command === 'claim-next' && !UUID.test(input.targetId))
+      fail('RAIT.TENANT_MISMATCH', 404);
     const rule = RULES[input.command];
     if (
       ['tenantId', 'actorId', 'roles', 'policy', 'tenant_id'].some(
@@ -777,12 +827,31 @@ export class RaitCaseCommandService {
       : { role: COMMAND_AUDIT_ROLES[input.command] ?? '', auditDetails: {} };
     const context = { ...requestContext, ...attribution };
     return this.transaction(async (tx) => {
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
+      );
+      await scope.command(
+        tx,
+        input.principal,
+        input.command,
+        input.targetId,
+        input.payload,
+      );
+      const actorBound = [
+        'triage',
+        'save-admissibility',
+        'admit',
+        'non-admission',
+        'claim-next',
+      ].includes(input.command);
       const digest = fingerprint(
         input,
-        ['triage', 'save-admissibility', 'admit', 'non-admission'].includes(
-          input.command,
-        )
-          ? { actorId: context.actorId, ifMatch: input.headers['If-Match']! }
+        actorBound
+          ? {
+              actorId: context.actorId,
+              ifMatch: input.headers['If-Match'] ?? '',
+            }
           : undefined,
       );
       await tx.query(
@@ -791,16 +860,51 @@ export class RaitCaseCommandService {
       );
       const replay = rows(
         await tx.query<{
+          id: string;
           request_fingerprint: string;
           response_body: CommandResult;
         }>(
-          'select request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
+          'select id,request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
           [context.tenantId, key],
         ),
       )[0];
       if (replay) {
         if (replay.request_fingerprint !== digest)
           fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key }, context.requestId);
+        if (input.command === 'claim-next') {
+          const id = String(replay.response_body.data.id);
+          const qualified = rows(
+            await tx.query(
+              `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
+              [context.tenantId, id, input.targetId],
+            ),
+          )[0];
+          if (!qualified) fail('RAIT.TENANT_MISMATCH', 404);
+          await scope.assertCase(
+            tx,
+            id,
+            input.principal,
+            'read',
+            'rait-case',
+            true,
+          );
+          const own = rows(
+            await tx.query(
+              "select a.id from inf.rait_assignment a join inf.rait_pool_member m on m.tenant_id=a.tenant_id and m.id=a.member_id and m.pool_id=a.pool_id where a.tenant_id=$1 and a.case_id=$2 and a.pool_id=$3 and a.active and m.person_id=$4 and m.member_role='analista' and m.status='ATIVO'",
+              [context.tenantId, id, input.targetId, context.actorId],
+            ),
+          )[0];
+          if (!own) fail('RAIT.TENANT_MISMATCH', 404);
+        }
+        if (!actorBound)
+          await scope.verifyCommandReplay(
+            tx,
+            replay.id,
+            input.principal,
+            input.command,
+            input.targetId,
+            digest,
+          );
         return replay.response_body;
       }
       const current =
@@ -951,15 +1055,35 @@ export class RaitCaseCommandService {
           JSON.stringify({ command: input.command, ...context.auditDetails }),
         ],
       );
+      if (input.command === 'admit')
+        await new RaitCasePoolScopeService(this.requestContext).resolve(
+          tx,
+          context.tenantId,
+          current.id,
+          'command:admit:' + context.actorId,
+        );
       const result = {
         data: admissibility ?? data,
         events,
         etag: `"${data.version}"`,
       };
-      await tx.query(
-        "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours')",
-        [context.tenantId, key, digest, 200, JSON.stringify(result)],
-      );
+      const ledger = rows(
+        await tx.query<{ id: string }>(
+          "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1, $2, $3, $4, $5, clock_timestamp() + interval '24 hours') returning id",
+          [context.tenantId, key, digest, 200, JSON.stringify(result)],
+        ),
+      )[0];
+      if (!ledger) fail('RAIT.INTERNAL', 500);
+      if (!actorBound)
+        await scope.bindCommandReplay(
+          tx,
+          ledger!.id,
+          input.principal,
+          input.command,
+          input.targetId,
+          digest,
+          String(context.role),
+        );
       return result;
     });
   }
@@ -2035,6 +2159,14 @@ export class RaitCaseCommandService {
     )[0];
     if (!candidate || candidate.state !== 'DISTRIBUIDO')
       fail('RAIT.QUEUE_EMPTY', 409, { poolId });
+    const scope = new RaitCaseScopeService(this.database, this.requestContext);
+    const qualified = rows(
+      await tx.query(
+        `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
+        [tenantId, candidate.id, poolId],
+      ),
+    )[0];
+    if (!qualified) fail('RAIT.TENANT_MISMATCH', 404);
     const existingAssignment = rows(
       await tx.query<Record<string, unknown>>(
         `select id, member_id from inf.rait_assignment

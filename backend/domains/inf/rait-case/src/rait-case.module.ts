@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
 import { Module } from '@nestjs/common';
 import { RaitCaseController } from './controllers/rait-case.controller.js';
 import { RaitCaseService } from './services/rait-case.service.js';
@@ -51,9 +51,16 @@ import { RaitCommunicationRepository } from './repositories/rait-communication.r
 import { RaitCaseEventController } from './controllers/rait-case-event.controller.js';
 import { RaitCaseEventService } from './services/rait-case-event.service.js';
 import { RaitCaseEventRepository } from './repositories/rait-case-event.repository.js';
+import { RaitCaseReadScopeController } from './controllers/rait-case-read-scope.controller.js';
+import { RaitCaseReadScopeService } from './services/rait-case-read-scope.service.js';
+import { RaitCaseReadScopeRepository } from './repositories/rait-case-read-scope.repository.js';
+import { RaitCasePoolScopeRecordController } from './controllers/rait-case-pool-scope-record.controller.js';
+import { RaitCasePoolScopeRecordService } from './services/rait-case-pool-scope-record.service.js';
+import { RaitCasePoolScopeRecordRepository } from './repositories/rait-case-pool-scope-record.repository.js';
 import { RaitCaseCommandsController } from './handwritten/rait-case-commands.controller.js';
 import { RaitInquiryCommandsController } from './handwritten/rait-inquiry-commands.controller.js';
 import { RaitAdmissibilityCommandsController } from './handwritten/rait-admissibility-commands.controller.js';
+import { RaitCaseScopedReadsController } from './handwritten/rait-case-scoped-reads.controller.js';
 import { RaitCaseCommandService } from './handwritten/rait-case-command.service.js';
 import { RaitInquiryCommandService } from './handwritten/rait-inquiry-command.service.js';
 import { RaitDeadlineEngineFactory } from './handwritten/rait-case-command.service.js';
@@ -61,12 +68,15 @@ import { RaitDocumentTrustVerifier } from './handwritten/rait-document-trust.ver
 import { DocumentTrustHttpAdapter } from './handwritten/rait-document-trust.verifier.js';
 import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
 import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibility-command.service.js';
+import { RaitCaseScopeService } from './handwritten/rait-case-scope.service.js';
+import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.service.js';
 
 @Module({
   controllers: [
     RaitCaseCommandsController,
     RaitInquiryCommandsController,
     RaitAdmissibilityCommandsController,
+    RaitCaseScopedReadsController,
     RaitCaseController,
     RaitPartyController,
     RaitDocumentController,
@@ -84,6 +94,8 @@ import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibilit
     RaitDecisionController,
     RaitCommunicationController,
     RaitCaseEventController,
+    RaitCaseReadScopeController,
+    RaitCasePoolScopeRecordController,
   ],
   providers: [
     RaitCaseService,
@@ -120,6 +132,10 @@ import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibilit
     RaitCommunicationRepository,
     RaitCaseEventService,
     RaitCaseEventRepository,
+    RaitCaseReadScopeService,
+    RaitCaseReadScopeRepository,
+    RaitCasePoolScopeRecordService,
+    RaitCasePoolScopeRecordRepository,
     RaitCaseCommandService,
     RaitInquiryCommandService,
     RaitDeadlineEngineFactory,
@@ -127,6 +143,9 @@ import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibilit
     DocumentTrustHttpAdapter,
     RaitOperationClock,
     RaitAdmissibilityCommandService,
+    RaitCaseScopeService,
+    RaitCasePoolScopeService,
   ],
+  exports: [RaitCaseScopeService],
 })
 export class RaitCaseModule {}

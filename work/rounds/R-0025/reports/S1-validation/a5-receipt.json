@@ -1,0 +1,46 @@
+{
+  "role": "Inspector",
+  "approval": "A5 approved as written; canonical stored-event fixture correction",
+  "cwd": "/Volumes/Development/.codex/worktrees/p402-s1-validation/detran",
+  "head": "3633a033e63affd01a1007a83f0cb82126d26986",
+  "changes": [
+    "Append fixed S1 258+71=329 comment; exact title/count329",
+    "Only audit fixture event_type changed to CASE_ADMITTED"
+  ],
+  "checks": {
+    "contracts:test": {
+      "exit": 0,
+      "tests": 58,
+      "pass": 58,
+      "fail": 0,
+      "skip": 0,
+      "log": "/tmp/detran-s1-a5-contracts-test.log"
+    },
+    "contracts:check": {
+      "exit": 0,
+      "log": "/tmp/detran-s1-a5-contracts-check.log"
+    },
+    "verify:parameter-catalogue": {
+      "exit": 0,
+      "entries": 91,
+      "flags": 18,
+      "i18n_namespaces": 62,
+      "errors": 0,
+      "log": "/tmp/detran-s1-a5-parameters.log"
+    },
+    "audit.facade.spec.ts": {
+      "exit": 0,
+      "pass": 3,
+      "preexisting_todo": 1,
+      "log": "/tmp/detran-s1-a5-audit.log"
+    },
+    "format": {
+      "exit": 0,
+      "log": "/tmp/detran-s1-a5-final-format.log"
+    }
+  },
+  "sha256": {
+    "tools/contracts/tests/check-commands.test.mjs": "f28eac2e7d3ef8edf3c5802079935b82a2af655f8bb684e11f73810a47a96388",
+    "apps/rait/web/src/app/data/facades/audit.facade.spec.ts": "d73c4e5caef52a1f2ef31dd7896e704843e28ab1e7ac1f5cf045514a5265170e"
+  }
+}

@@ -664,3 +664,30 @@ closed D1–D11 decisions. Next proposed slice is reports/P4-02-S1-security-prer
 (T1 security RED then T2 scoped protection, one implementation PR). It awaits
 explicit approval; runtime and test dispatch remain paused. Scorecard work stays
 separate; no close/seal or production qualification is declared.
+
+## Current execution boundary — PR201 and approved S1, 2026-10-19
+
+Owner approved P4-02-S1 and PR201 merged at
+`a006b039ed2bc31757847e1c7230131fdeba24d3` with required checks green.
+The preceding PR200 pause is superseded only for S1. Architect sources, Inspector
+RED and bounded Engineer implementation are integrated on the implementation
+branch; GREEN checks and independent review remain required before its PR.
+See `AUTHORIZATION.md` for the approved loader, A2 frontend compatibility and
+identity validation extensions. A2's unavailable batch and pending-item details
+are temporary limitations, not completed journeys. S2, production qualification,
+runtime beyond S1, scorecard work and round closure remain outside authorization.
+
+## S1 implementation verification checkpoint — 2026-10-19
+
+Approved S1 and its bounded extensions have a role-separated implementation
+candidate. See [implementation record](reports/P4-02-S1-implementation.md) and
+its immutable validation/source receipts. Final security355HTTP, retained148HTTP,
+other8HTTP, CASE175unit/36integration, WORKLIST78unit/42integration and
+RAIT5115tests are GREEN;133 RAIT TODOs remain historical. Independent review
+material findings are closed through the final scoped PASS. Clean full pnpm check
+passed at6a63c70f with DEVAI2.6.3. The bounded candidate is ready for its review PR;
+no PR merge, deployment or round completion is declared.
+
+The earlier S1 pause is superseded by the recorded approval only within S1.
+S2 remains unapproved. A2's unavailable details, production qualification and
+broader JW01/R-0025 completion remain open; no scorecard completion is implied.

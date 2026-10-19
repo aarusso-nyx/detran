@@ -1,0 +1,39 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/app@0.0.1 test:e2e /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/backend/app
+> DETRAN_TEST_TIER=e2e vitest run "tests/e2e/rait-worklist-corrective.e2e.spec.ts" "tests/e2e/rait-worklist-production.e2e.spec.ts" "tests/e2e/policy-routes.e2e.spec.ts" "--hookTimeout=180000"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0030/backend/app
+
+[2026-10-19 12:49:44.984 -0300] INFO (34472): request completed
+    request_id: "01a154da-c176-7281-975c-2f007fd02911"
+    route: "/v1/est/crash/victims/00000000-0000-7000-8000-0000a3000001"
+    method: "GET"
+    status: 400
+    duration_ms: 33
+[2026-10-19 12:49:45.854 -0300] INFO (34472): request completed
+    request_id: "01a154da-c1ad-729c-9fce-7c48e79d0fe3"
+    route: "/v1/est/crash/victims/00000000-0000-7000-8000-0000a3000001?purpose=revisao%20do%20atendimento%20de%20sinistro"
+    method: "GET"
+    status: 200
+    duration_ms: 848
+[2026-10-19 12:49:45.942 -0300] INFO (34472): request completed
+    request_id: "01a154da-c554-7eaf-83f3-05909f0b9d92"
+    route: "/v1/est/crash/victims"
+    method: "GET"
+    status: 400
+    duration_ms: 2
+[2026-10-19 12:49:46.027 -0300] INFO (34472): request completed
+    request_id: "01a154da-c559-7850-9856-bf577bb672cb"
+    route: "/v1/est/crash/victims?purpose=consulta%20de%20vitimas%20do%20sinistro"
+    method: "GET"
+    status: 200
+    duration_ms: 82
+
+ Test Files  3 passed (3)
+      Tests  8 passed (8)
+   Start at  12:49:20
+   Duration  47.36s (transform 16.05s, setup 0ms, import 19.03s, tests 27.65s, environment 0ms)
+

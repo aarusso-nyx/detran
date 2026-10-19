@@ -1,3 +1,19 @@
+import { PreviewStateService } from '../preview-state.service';
+import type {
+  RaitUnitRead,
+  RaitPoolRead,
+  RaitPoolMemberRead,
+  RaitScheduleRead,
+  RaitScheduleSlotRead,
+  RaitBatchRead,
+  RaitBatchItemRead,
+  RaitAssignmentRead,
+  RaitImpedimentRead,
+  RaitSubstituteDutyRead,
+  RaitBenchRead,
+  RaitClockRead,
+  RaitClockAlertRead,
+} from '../../data/api/worklist.client';
 // Adapter de prévia do `WorklistClient` (R-0033 TASK-0003; `frontend-preview-mode.md` §2, §6,
 // D-06, D-07, D-11; inventário §2). Leituras: `raitUnits`, `raitPools` (os registros de
 // `rait_pool` cujos ids são os valores do mapa `pools`, `rait-fixtures.md` §10), `poolMembers`,
@@ -52,55 +68,55 @@ import {
 } from './preview-reader';
 
 // `ListQuerySpec` — cópia literal de `data/api/worklist.client.ts` (constantes privadas do módulo).
-const UNIT_SPEC: ListQuerySpec<RaitUnit> = {
+const UNIT_SPEC: ListQuerySpec<RaitUnitRead> = {
   q: ['name'],
   filtro: ['judging_body', 'state'],
 };
-const POOL_SPEC: ListQuerySpec<RaitPool> = {
+const POOL_SPEC: ListQuerySpec<RaitPoolRead> = {
   q: ['name'],
   filtro: ['instance', 'strategy', 'active'],
 };
-const POOL_MEMBER_SPEC: ListQuerySpec<RaitPoolMember> = {
+const POOL_MEMBER_SPEC: ListQuerySpec<RaitPoolMemberRead> = {
   q: [],
   filtro: ['pool_id', 'person_id', 'member_role', 'status', 'is_substitute'],
 };
-const SCHEDULE_SPEC: ListQuerySpec<RaitSchedule> = {
+const SCHEDULE_SPEC: ListQuerySpec<RaitScheduleRead> = {
   q: [],
   filtro: ['pool_id', 'member_id', 'kind', 'availability'],
 };
-const SCHEDULE_SLOT_SPEC: ListQuerySpec<RaitScheduleSlot> = {
+const SCHEDULE_SLOT_SPEC: ListQuerySpec<RaitScheduleSlotRead> = {
   q: [],
   filtro: ['schedule_id', 'slot_on', 'availability'],
 };
-const BATCH_SPEC: ListQuerySpec<RaitBatch> = {
+const BATCH_SPEC: ListQuerySpec<RaitBatchRead> = {
   q: [],
   filtro: ['pool_id', 'kind', 'state'],
 };
-const BATCH_ITEM_SPEC: ListQuerySpec<RaitBatchItem> = {
+const BATCH_ITEM_SPEC: ListQuerySpec<RaitBatchItemRead> = {
   q: [],
   filtro: ['batch_id', 'case_id', 'member_id'],
 };
-const ASSIGNMENT_SPEC: ListQuerySpec<RaitAssignment> = {
+const ASSIGNMENT_SPEC: ListQuerySpec<RaitAssignmentRead> = {
   q: [],
   filtro: ['case_id', 'pool_id', 'member_id', 'active', 'batch_id'],
 };
-const IMPEDIMENT_SPEC: ListQuerySpec<RaitImpediment> = {
+const IMPEDIMENT_SPEC: ListQuerySpec<RaitImpedimentRead> = {
   q: [],
   filtro: ['case_id', 'member_id', 'kind'],
 };
-const SUBSTITUTE_DUTY_SPEC: ListQuerySpec<RaitSubstituteDuty> = {
+const SUBSTITUTE_DUTY_SPEC: ListQuerySpec<RaitSubstituteDutyRead> = {
   q: [],
   filtro: ['session_id', 'member_id'],
 };
-const BENCH_SPEC: ListQuerySpec<RaitBench> = {
+const BENCH_SPEC: ListQuerySpec<RaitBenchRead> = {
   q: [],
   filtro: ['session_id', 'state'],
 };
-const CLOCK_SPEC: ListQuerySpec<RaitClock> = {
+const CLOCK_SPEC: ListQuerySpec<RaitClockRead> = {
   q: [],
   filtro: ['case_id', 'clock_code', 'flag'],
 };
-const CLOCK_ALERT_SPEC: ListQuerySpec<RaitClockAlert> = {
+const CLOCK_ALERT_SPEC: ListQuerySpec<RaitClockAlertRead> = {
   q: [],
   filtro: ['clock_id', 'level', 'notified_role'],
 };
@@ -361,133 +377,397 @@ const clockAlerts = (f: RaitFixturesJson): readonly RaitClockAlert[] =>
 
 @Injectable({ providedIn: 'root' })
 export class PreviewWorklistClient extends WorklistClient {
+  private readonly projectionState = inject(PreviewStateService);
+
+  /** Fictional display projection only; never a production scope or appointment grant. */
+  private projectionPurpose(
+    fixtures: RaitFixturesJson,
+    caseId?: string | null,
+  ): 'S' | 'O' | 'M' | 'J' | 'T' | null {
+    const item = fixtures.cases.find((candidate) => candidate.id === caseId);
+    if (caseId != null && !item) return null;
+    const role = this.projectionState.role();
+    if (item?.archived) {
+      return role === 'AUDITOR' || role === 'rait-secretary' ? 'S' : null;
+    }
+    if (role === 'rait-manager') return 'O';
+    if (role === 'rait-secretary') return 'S';
+    if (role === 'rait-analyst') {
+      return item &&
+        ['PROTOCOLADO', 'TRIAGEM_ADMISSIBILIDADE'].includes(item.state)
+        ? 'T'
+        : 'M';
+    }
+    if (role === 'rait-coordinator' || role === 'AUDITOR') return 'M';
+    if (
+      [
+        'rait-rapporteur',
+        'rait-chair',
+        'rait-signing-authority',
+        'rait-central-authority',
+      ].includes(role)
+    )
+      return 'J';
+    return null;
+  }
+
   private readonly previewReader = inject(PreviewFixtureReader);
   private readonly previewLog = inject(PreviewActionLog);
 
   // --- leituras ------------------------------------------------------------------------------
 
-  override listRaitUnit(query: ListQuery = {}): Promise<ListPage<RaitUnit>> {
-    return this.previewReader.list(query, UNIT_SPEC, units);
+  override listRaitUnit(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitUnitRead>> {
+    return this.previewReader.list(query, UNIT_SPEC, (fixtures) =>
+      units(fixtures)
+        .map((record) =>
+          projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitUnit(id: string): Promise<RaitUnit> {
-    return this.previewReader.get('raitUnits', id, units);
+  override getRaitUnit(id: string): Promise<RaitUnitRead> {
+    return this.previewReader.get('raitUnits', id, (fixtures) =>
+      units(fixtures)
+        .map((record) =>
+          projectRaitUnit(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override listRaitPool(query: ListQuery = {}): Promise<ListPage<RaitPool>> {
-    return this.previewReader.list(query, POOL_SPEC, pools);
+  override listRaitPool(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitPoolRead>> {
+    return this.previewReader.list(query, POOL_SPEC, (fixtures) =>
+      pools(fixtures)
+        .map((record) =>
+          projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitPool(id: string): Promise<RaitPool> {
-    return this.previewReader.get('raitPools', id, pools);
+  override getRaitPool(id: string): Promise<RaitPoolRead> {
+    return this.previewReader.get('raitPools', id, (fixtures) =>
+      pools(fixtures)
+        .map((record) =>
+          projectRaitPool(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitPoolMember(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitPoolMember>> {
-    return this.previewReader.list(query, POOL_MEMBER_SPEC, poolMembers);
+  ): Promise<ListPage<RaitPoolMemberRead>> {
+    return this.previewReader.list(query, POOL_MEMBER_SPEC, (fixtures) =>
+      poolMembers(fixtures)
+        .map((record) =>
+          projectRaitPoolMember(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitPoolMember(id: string): Promise<RaitPoolMember> {
-    return this.previewReader.get('poolMembers', id, poolMembers);
+  override getRaitPoolMember(id: string): Promise<RaitPoolMemberRead> {
+    return this.previewReader.get('poolMembers', id, (fixtures) =>
+      poolMembers(fixtures)
+        .map((record) =>
+          projectRaitPoolMember(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitSchedule(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitSchedule>> {
-    return this.previewReader.list(query, SCHEDULE_SPEC, schedules);
+  ): Promise<ListPage<RaitScheduleRead>> {
+    return this.previewReader.list(query, SCHEDULE_SPEC, (fixtures) =>
+      schedules(fixtures)
+        .map((record) =>
+          projectRaitSchedule(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitSchedule(id: string): Promise<RaitSchedule> {
-    return this.previewReader.get('raitSchedules', id, schedules);
+  override getRaitSchedule(id: string): Promise<RaitScheduleRead> {
+    return this.previewReader.get('raitSchedules', id, (fixtures) =>
+      schedules(fixtures)
+        .map((record) =>
+          projectRaitSchedule(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitScheduleSlot(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitScheduleSlot>> {
-    return this.previewReader.list(query, SCHEDULE_SLOT_SPEC, scheduleSlots);
+  ): Promise<ListPage<RaitScheduleSlotRead>> {
+    return this.previewReader.list(query, SCHEDULE_SLOT_SPEC, (fixtures) =>
+      scheduleSlots(fixtures)
+        .map((record) =>
+          projectRaitScheduleSlot(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitScheduleSlot(id: string): Promise<RaitScheduleSlot> {
-    return this.previewReader.get('raitScheduleSlots', id, scheduleSlots);
+  override getRaitScheduleSlot(id: string): Promise<RaitScheduleSlotRead> {
+    return this.previewReader.get('raitScheduleSlots', id, (fixtures) =>
+      scheduleSlots(fixtures)
+        .map((record) =>
+          projectRaitScheduleSlot(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override listRaitBatch(query: ListQuery = {}): Promise<ListPage<RaitBatch>> {
-    return this.previewReader.list(query, BATCH_SPEC, batches);
+  override listRaitBatch(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitBatchRead>> {
+    return this.previewReader.list(query, BATCH_SPEC, (fixtures) =>
+      batches(fixtures)
+        .map((record) =>
+          projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitBatch(id: string): Promise<RaitBatch> {
-    return this.previewReader.get('raitBatches', id, batches);
+  override getRaitBatch(id: string): Promise<RaitBatchRead> {
+    return this.previewReader.get('raitBatches', id, (fixtures) =>
+      batches(fixtures)
+        .map((record) =>
+          projectRaitBatch(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitBatchItem(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitBatchItem>> {
-    return this.previewReader.list(query, BATCH_ITEM_SPEC, batchItems);
+  ): Promise<ListPage<RaitBatchItemRead>> {
+    return this.previewReader.list(query, BATCH_ITEM_SPEC, (fixtures) =>
+      batchItems(fixtures)
+        .map((record) =>
+          projectRaitBatchItem(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitBatchItem(id: string): Promise<RaitBatchItem> {
-    return this.previewReader.get('raitBatchItems', id, batchItems);
+  override getRaitBatchItem(id: string): Promise<RaitBatchItemRead> {
+    return this.previewReader.get('raitBatchItems', id, (fixtures) =>
+      batchItems(fixtures)
+        .map((record) =>
+          projectRaitBatchItem(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitAssignment(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitAssignment>> {
-    return this.previewReader.list(query, ASSIGNMENT_SPEC, assignments);
+  ): Promise<ListPage<RaitAssignmentRead>> {
+    return this.previewReader.list(query, ASSIGNMENT_SPEC, (fixtures) =>
+      assignments(fixtures)
+        .map((record) =>
+          projectRaitAssignment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitAssignment(id: string): Promise<RaitAssignment> {
-    return this.previewReader.get('assignments', id, assignments);
+  override getRaitAssignment(id: string): Promise<RaitAssignmentRead> {
+    return this.previewReader.get('assignments', id, (fixtures) =>
+      assignments(fixtures)
+        .map((record) =>
+          projectRaitAssignment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitImpediment(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitImpediment>> {
-    return this.previewReader.list(query, IMPEDIMENT_SPEC, impediments);
+  ): Promise<ListPage<RaitImpedimentRead>> {
+    return this.previewReader.list(query, IMPEDIMENT_SPEC, (fixtures) =>
+      impediments(fixtures)
+        .map((record) =>
+          projectRaitImpediment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitImpediment(id: string): Promise<RaitImpediment> {
-    return this.previewReader.get('impediments', id, impediments);
+  override getRaitImpediment(id: string): Promise<RaitImpedimentRead> {
+    return this.previewReader.get('impediments', id, (fixtures) =>
+      impediments(fixtures)
+        .map((record) =>
+          projectRaitImpediment(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitSubstituteDuty(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitSubstituteDuty>> {
-    return this.previewReader.list(
-      query,
-      SUBSTITUTE_DUTY_SPEC,
-      substituteDuties,
+  ): Promise<ListPage<RaitSubstituteDutyRead>> {
+    return this.previewReader.list(query, SUBSTITUTE_DUTY_SPEC, (fixtures) =>
+      substituteDuties(fixtures)
+        .map((record) =>
+          projectRaitSubstituteDuty(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
     );
   }
 
-  override getRaitSubstituteDuty(id: string): Promise<RaitSubstituteDuty> {
-    return this.previewReader.get('raitSubstituteDuties', id, substituteDuties);
+  override getRaitSubstituteDuty(id: string): Promise<RaitSubstituteDutyRead> {
+    return this.previewReader.get('raitSubstituteDuties', id, (fixtures) =>
+      substituteDuties(fixtures)
+        .map((record) =>
+          projectRaitSubstituteDuty(
+            record,
+            this.projectionPurpose(fixtures, undefined),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override listRaitBench(query: ListQuery = {}): Promise<ListPage<RaitBench>> {
-    return this.previewReader.list(query, BENCH_SPEC, benches);
+  override listRaitBench(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitBenchRead>> {
+    return this.previewReader.list(query, BENCH_SPEC, (fixtures) =>
+      benches(fixtures)
+        .map((record) =>
+          projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitBench(id: string): Promise<RaitBench> {
-    return this.previewReader.get('raitBenches', id, benches);
+  override getRaitBench(id: string): Promise<RaitBenchRead> {
+    return this.previewReader.get('raitBenches', id, (fixtures) =>
+      benches(fixtures)
+        .map((record) =>
+          projectRaitBench(record, this.projectionPurpose(fixtures, undefined)),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override listRaitClock(query: ListQuery = {}): Promise<ListPage<RaitClock>> {
-    return this.previewReader.list(query, CLOCK_SPEC, clocks);
+  override listRaitClock(
+    query: ListQuery = {},
+  ): Promise<ListPage<RaitClockRead>> {
+    return this.previewReader.list(query, CLOCK_SPEC, (fixtures) =>
+      clocks(fixtures)
+        .map((record) =>
+          projectRaitClock(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitClock(id: string): Promise<RaitClock> {
-    return this.previewReader.get('clocks', id, clocks);
+  override getRaitClock(id: string): Promise<RaitClockRead> {
+    return this.previewReader.get('clocks', id, (fixtures) =>
+      clocks(fixtures)
+        .map((record) =>
+          projectRaitClock(
+            record,
+            this.projectionPurpose(fixtures, record.case_id),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   override listRaitClockAlert(
     query: ListQuery = {},
-  ): Promise<ListPage<RaitClockAlert>> {
-    return this.previewReader.list(query, CLOCK_ALERT_SPEC, clockAlerts);
+  ): Promise<ListPage<RaitClockAlertRead>> {
+    return this.previewReader.list(query, CLOCK_ALERT_SPEC, (fixtures) =>
+      clockAlerts(fixtures)
+        .filter((record) =>
+          fixtures.clocks.some((clock) => clock.id === record.clock_id),
+        )
+        .map((record) =>
+          projectRaitClockAlert(
+            record,
+            this.projectionPurpose(
+              fixtures,
+              fixtures.clocks.find((clock) => clock.id === record.clock_id)
+                ?.caseId,
+            ),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
-  override getRaitClockAlert(id: string): Promise<RaitClockAlert> {
-    return this.previewReader.get('clockAlerts', id, clockAlerts);
+  override getRaitClockAlert(id: string): Promise<RaitClockAlertRead> {
+    return this.previewReader.get('clockAlerts', id, (fixtures) =>
+      clockAlerts(fixtures)
+        .filter((record) =>
+          fixtures.clocks.some((clock) => clock.id === record.clock_id),
+        )
+        .map((record) =>
+          projectRaitClockAlert(
+            record,
+            this.projectionPurpose(
+              fixtures,
+              fixtures.clocks.find((clock) => clock.id === record.clock_id)
+                ?.caseId,
+            ),
+          ),
+        )
+        .filter((record) => record !== null),
+    );
   }
 
   // --- comandos (contrato §6: registra a string M8 e delega; o cliente real lança) ------------
@@ -603,4 +883,390 @@ export class PreviewWorklistClient extends WorklistClient {
     this.previewLog.record('rait-pool:update');
     return super.updatePool(...args);
   }
+}
+
+function projectRaitUnit(
+  record: RaitUnit,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitUnitRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    name: record.name,
+    judging_body: record.judging_body,
+    state: record.state,
+    coordinator_member_id: record.coordinator_member_id,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitPool(
+  record: RaitPool,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPoolRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    name: record.name,
+    instance: record.instance,
+    circuit: record.circuit,
+    strategy: record.strategy,
+    active: record.active,
+    unit_id: record.unit_id,
+    priority_policy: record.priority_policy,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitPoolMember(
+  record: RaitPoolMember,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitPoolMemberRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    pool_id: record.pool_id,
+    person_id: record.person_id,
+    member_role: record.member_role,
+    status: record.status,
+    mandate_starts_on: record.mandate_starts_on,
+    mandate_ends_on: record.mandate_ends_on,
+    late_opinion_count: record.late_opinion_count,
+    unjustified_absence_count: record.unjustified_absence_count,
+    is_substitute: record.is_substitute,
+    jurisdiction: record.jurisdiction,
+    agency_jurisdiction_id: record.agency_jurisdiction_id,
+    representation_block: record.representation_block,
+    institutional_seat_ref: record.institutional_seat_ref,
+    appointment_act_ref: record.appointment_act_ref,
+    institutional_valid_from: record.institutional_valid_from,
+    institutional_valid_to: record.institutional_valid_to,
+    institutional_identity_hash: record.institutional_identity_hash,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitSchedule(
+  record: RaitSchedule,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitScheduleRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    pool_id: record.pool_id,
+    member_id: record.member_id,
+    kind: record.kind,
+    period_start: record.period_start,
+    period_end: record.period_end,
+    availability: record.availability,
+    wip_limit: record.wip_limit,
+    absence_reason: record.absence_reason,
+    published_at: record.published_at,
+    published_by: record.published_by,
+    version: record.version,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitScheduleSlot(
+  record: RaitScheduleSlot,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitScheduleSlotRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    schedule_id: record.schedule_id,
+    slot_on: record.slot_on,
+    availability: record.availability,
+    absence_reason: record.absence_reason,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitBatch(
+  record: RaitBatch,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBatchRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    pool_id: record.pool_id,
+    kind: record.kind,
+    week_start: record.week_start,
+    state: record.state,
+    seed: record.seed,
+    opened_at: record.opened_at,
+    opened_by: record.opened_by,
+    drawn_at: record.drawn_at,
+    accepted_at: record.accepted_at,
+    minutes_document_id: record.minutes_document_id,
+    homologated_at: record.homologated_at,
+    homologated_by: record.homologated_by,
+    version: record.version,
+    approval_signature_ref: record.approval_signature_ref,
+    approval_receipt_hash: record.approval_receipt_hash,
+    approval_verified_at: record.approval_verified_at,
+    approval_signer_person_id: record.approval_signer_person_id,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitBatchItem(
+  record: RaitBatchItem,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBatchItemRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      batch_id: record.batch_id,
+      member_id: record.member_id,
+    };
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      batch_id: record.batch_id,
+      member_id: record.member_id,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      batch_id: record.batch_id,
+      member_id: record.member_id,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      batch_id: record.batch_id,
+      member_id: record.member_id,
+    };
+  return null;
+}
+
+function projectRaitAssignment(
+  record: RaitAssignment,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitAssignmentRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      pool_id: record.pool_id,
+      member_id: record.member_id,
+      assigned_at: record.assigned_at,
+      released_at: record.released_at,
+      active: record.active,
+      claim_due_at: record.claim_due_at,
+      batch_id: record.batch_id,
+    };
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      pool_id: record.pool_id,
+      member_id: record.member_id,
+      assigned_at: record.assigned_at,
+      released_at: record.released_at,
+      active: record.active,
+      claim_due_at: record.claim_due_at,
+      batch_id: record.batch_id,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      pool_id: record.pool_id,
+      member_id: record.member_id,
+      assigned_at: record.assigned_at,
+      released_at: record.released_at,
+      active: record.active,
+      claim_due_at: record.claim_due_at,
+      batch_id: record.batch_id,
+      assigned_by: record.assigned_by,
+      release_reason: record.release_reason,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      pool_id: record.pool_id,
+      member_id: record.member_id,
+      assigned_at: record.assigned_at,
+      released_at: record.released_at,
+      active: record.active,
+      claim_due_at: record.claim_due_at,
+      batch_id: record.batch_id,
+      assigned_by: record.assigned_by,
+      release_reason: record.release_reason,
+    };
+  return null;
+}
+
+function projectRaitImpediment(
+  record: RaitImpediment,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitImpedimentRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    case_id: record.case_id,
+    member_id: record.member_id,
+    basis: record.basis,
+    declared_at: record.declared_at,
+    kind: record.kind,
+    legal_basis: record.legal_basis,
+    decided_by: record.decided_by,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitSubstituteDuty(
+  record: RaitSubstituteDuty,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitSubstituteDutyRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    session_id: record.session_id,
+    member_id: record.member_id,
+    designated_at: record.designated_at,
+    designated_by: record.designated_by,
+    convened_at: record.convened_at,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitBench(
+  record: RaitBench,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitBenchRead | null {
+  if (purpose === null) return null;
+  return {
+    id: record.id,
+    session_id: record.session_id,
+    state: record.state,
+    confirmed_count: record.confirmed_count,
+    parity_observed: record.parity_observed,
+    confirmed_at: record.confirmed_at,
+    insufficient_at: record.insufficient_at,
+    created_at: record.created_at,
+    updated_at: record.updated_at,
+  };
+}
+
+function projectRaitClock(
+  record: RaitClock,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitClockRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      clock_code: record.clock_code,
+      started_on: record.started_on,
+      ceiling_on: record.ceiling_on,
+      flag: record.flag,
+      flag_changed_at: record.flag_changed_at,
+      last_reset_at: record.last_reset_at,
+      legal_basis: record.legal_basis,
+    };
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      clock_code: record.clock_code,
+      started_on: record.started_on,
+      ceiling_on: record.ceiling_on,
+      flag: record.flag,
+      flag_changed_at: record.flag_changed_at,
+      last_reset_at: record.last_reset_at,
+      legal_basis: record.legal_basis,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      clock_code: record.clock_code,
+      started_on: record.started_on,
+      ceiling_on: record.ceiling_on,
+      flag: record.flag,
+      flag_changed_at: record.flag_changed_at,
+      last_reset_at: record.last_reset_at,
+      legal_basis: record.legal_basis,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      case_id: record.case_id,
+      clock_code: record.clock_code,
+      started_on: record.started_on,
+      ceiling_on: record.ceiling_on,
+      flag: record.flag,
+      flag_changed_at: record.flag_changed_at,
+      last_reset_at: record.last_reset_at,
+      legal_basis: record.legal_basis,
+    };
+  return null;
+}
+
+function projectRaitClockAlert(
+  record: RaitClockAlert,
+  purpose: 'S' | 'O' | 'M' | 'J' | 'T' | null,
+): RaitClockAlertRead | null {
+  if (purpose === null) return null;
+  if (purpose === 'S')
+    return {
+      id: record.id,
+      clock_id: record.clock_id,
+      level: record.level,
+      raised_at: record.raised_at,
+      acknowledged_at: record.acknowledged_at,
+      incident_ref: record.incident_ref,
+    };
+  if (purpose === 'O')
+    return {
+      id: record.id,
+      clock_id: record.clock_id,
+      level: record.level,
+      raised_at: record.raised_at,
+      acknowledged_at: record.acknowledged_at,
+      incident_ref: record.incident_ref,
+    };
+  if (purpose === 'M')
+    return {
+      id: record.id,
+      clock_id: record.clock_id,
+      level: record.level,
+      raised_at: record.raised_at,
+      acknowledged_at: record.acknowledged_at,
+      incident_ref: record.incident_ref,
+      notified_role: record.notified_role,
+      acknowledged_by: record.acknowledged_by,
+    };
+  if (purpose === 'J')
+    return {
+      id: record.id,
+      clock_id: record.clock_id,
+      level: record.level,
+      raised_at: record.raised_at,
+      acknowledged_at: record.acknowledged_at,
+      incident_ref: record.incident_ref,
+      notified_role: record.notified_role,
+      acknowledged_by: record.acknowledged_by,
+    };
+  return null;
 }

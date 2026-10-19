@@ -131,7 +131,11 @@ export class CommunicationsPageComponent {
         ? this.datePipe.transform(item.next_deadline_on)
         : '',
       authority_appeal_notice: this.i18n.translate(
-        item.authority_appeal_notice ? YES_KEY : NO_KEY,
+        item.authority_appeal_notice === undefined
+          ? 'rait.common.unavailable'
+          : item.authority_appeal_notice
+            ? YES_KEY
+            : NO_KEY,
       ),
     })),
   );

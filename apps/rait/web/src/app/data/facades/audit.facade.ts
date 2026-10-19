@@ -1,3 +1,4 @@
+import type { RaitCaseEventRead } from '../api/case.client';
 // AuditFacade (contrato CTG-0002b §4.2/§4.3; M9): auditoria/trilha. `trilha` = eventos do caso
 // (ficha 060; `GET audit` do kernel sem contrato → só `listRaitCaseEvent`, filtro
 // `case_id`/`event_type`). SSE: `case.changed` → `trilha`. Comando: `createExport` (M8).
@@ -5,12 +6,7 @@ import { Injectable, inject } from '@angular/core';
 import { CaseClient } from '../api/case.client';
 import { OrgClient } from '../api/org.client';
 import { RaitClock } from '../clock';
-import type {
-  CreateRaitExportDto,
-  ListQuery,
-  RaitCaseEvent,
-  RaitExport,
-} from '../models';
+import type { CreateRaitExportDto, ListQuery, RaitExport } from '../models';
 import { createCommandRunner, type CommandOutcome } from './command';
 import { createListFacade } from './list.facade';
 import { bindStream, refreshIfLoaded } from './stream';
@@ -21,7 +17,7 @@ export class AuditFacade {
   private readonly org = inject(OrgClient);
   private readonly clock = inject(RaitClock);
 
-  readonly trilha = createListFacade<RaitCaseEvent>(
+  readonly trilha = createListFacade<RaitCaseEventRead>(
     (query) => this.cases.listRaitCaseEvent(query),
     this.clock,
   );

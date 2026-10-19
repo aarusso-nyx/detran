@@ -1,0 +1,3 @@
+# P4-02-S1 backend scope implementation
+
+Engineer only after Inspector RED e2ee4359. Implement approved S1 scope/SQL/projections/parent/mutation/replay protection; no S2. Own backend CASE/WORKLIST handwritten approved paths, RAIT read policy rows only, attributable code/DDL/client generation and approved19 scoped constraints. Owner explicitly approved apply.sh three loader sites. Preserve107 disposition71replaced25retained11removed, unchanged decisiveInspector tests. Exact routing no-link success if unresolvable. No tests/spec/law/pin edits, generatorlogic, primary/scorecardwrites or git. Run isolatedDB53340 from /tmp/detran-s1-test-env.sh. Requested historical executor metadata is not served-model evidence.

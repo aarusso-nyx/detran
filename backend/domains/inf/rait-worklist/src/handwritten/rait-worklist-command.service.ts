@@ -5,6 +5,8 @@ import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
   RaitCaseTransitionPort,
+  RaitCaseScopeService,
+  type RaitScopePrincipal,
   RaitDeadlineEngineFactory,
 } from '@detran/inf-rait-case';
 import {
@@ -28,6 +30,7 @@ type Result = {
   etag: string;
 };
 export type WorklistCommandInput = {
+  principal?: RaitScopePrincipal;
   command: string;
   targetId: string;
   payload: Record<string, unknown>;
@@ -419,33 +422,239 @@ export class RaitWorklistCommandService {
   ) {}
 
   async execute(input: WorklistCommandInput): Promise<Result> {
+    const uuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
+    if (
+      [
+        'publish-schedule',
+        'approve-batch',
+        'accept-batch-item',
+        'declare-batch-item-impediment',
+        'draw',
+        'reassign',
+      ].includes(input.command) &&
+      !uuid.test(input.targetId)
+    )
+      fail('RAIT.TENANT_MISMATCH', 404);
+    if (
+      ['accept-batch-item', 'declare-batch-item-impediment'].includes(
+        input.command,
+      ) &&
+      (typeof input.payload.caseId !== 'string' ||
+        !uuid.test(input.payload.caseId))
+    )
+      fail('RAIT.TENANT_MISMATCH', 404);
+    for (const field of ['poolId', 'memberId', 'caseId', 'replacementMemberId'])
+      if (
+        input.payload[field] !== undefined &&
+        (typeof input.payload[field] !== 'string' ||
+          !uuid.test(input.payload[field] as string))
+      )
+        fail('RAIT.VALIDATION_FAILED', 400);
+    if (
+      input.payload.caseIds !== undefined &&
+      (!Array.isArray(input.payload.caseIds) ||
+        input.payload.caseIds.some(
+          (id: unknown) => typeof id !== 'string' || !uuid.test(id),
+        ))
+    )
+      fail('RAIT.VALIDATION_FAILED', 400);
     validateEnvelope(input);
     const context = this.context();
     const key = input.headers['Idempotency-Key'];
-    const digest = fingerprint(input);
+    const { principal: _principal, ...originalInput } = input;
+    const digest = fingerprint(originalInput);
     return withTenantContext(this.database, this.requestContext, async (tx) => {
+      const scope = new RaitCaseScopeService(
+        this.database,
+        this.requestContext,
+      );
+      await scope.authenticate(tx, input.principal);
+      const roles: Record<string, readonly string[]> = {
+        'create-schedule': ['rait-coordinator'],
+        'publish-schedule': ['rait-coordinator'],
+        'create-batch': ['rait-secretary'],
+        'approve-batch': ['rait-chair'],
+        'accept-batch-item': ['rait-rapporteur'],
+        'declare-batch-item-impediment': ['rait-rapporteur'],
+        draw: ['rait-secretary'],
+        reassign: ['rait-coordinator', 'rait-manager', 'rait-chair'],
+      };
+      if (
+        !(roles[input.command] ?? []).some((role) =>
+          input.principal!.roles.includes(role),
+        )
+      )
+        fail('RAIT.FORBIDDEN_ACTION', 403);
+      let replayRole = (roles[input.command] ?? []).find((role) =>
+        input.principal!.roles.includes(role),
+      )!;
+      let poolId: unknown = input.payload.poolId;
+      if (input.command === 'publish-schedule') {
+        const parent = rows(
+          await tx.query<{ pool_id: string }>(
+            'select pool_id from inf.rait_schedule where tenant_id=$1 and id=$2 for update',
+            [context.tenantId, input.targetId],
+          ),
+        )[0];
+        if (!parent) fail('RAIT.TENANT_MISMATCH', 404);
+        poolId = parent!.pool_id;
+      }
+      if (
+        [
+          'approve-batch',
+          'accept-batch-item',
+          'declare-batch-item-impediment',
+          'draw',
+        ].includes(input.command)
+      ) {
+        const parent = rows(
+          await tx.query<{ pool_id: string }>(
+            'select pool_id from inf.rait_batch where tenant_id=$1 and id=$2 for update',
+            [context.tenantId, input.targetId],
+          ),
+        )[0];
+        if (!parent) fail('RAIT.TENANT_MISMATCH', 404);
+        poolId = parent!.pool_id;
+        const children = rows(
+          await tx.query<{ case_id: string }>(
+            'select case_id from inf.rait_batch_item where tenant_id=$1 and batch_id=$2 order by case_id',
+            [context.tenantId, input.targetId],
+          ),
+        );
+        const relevant = input.payload.caseId
+          ? children.filter((x) => x.case_id === input.payload.caseId)
+          : children;
+        if (input.payload.caseId && !relevant.length)
+          fail('RAIT.TENANT_MISMATCH', 404);
+        for (const child of relevant)
+          await scope.assertCase(
+            tx,
+            child.case_id,
+            input.principal,
+            'read',
+            'rait-case',
+            true,
+          );
+      }
+      if (poolId) {
+        const role = input.command.includes('schedule')
+          ? 'coordenador'
+          : input.command === 'approve-batch'
+            ? 'presidente'
+            : ['accept-batch-item', 'declare-batch-item-impediment'].includes(
+                  input.command,
+                )
+              ? 'relator'
+              : 'secretaria';
+        const member = rows(
+          await tx.query(
+            "select pm.id from inf.rait_pool_member pm join inf.rait_pool p on p.tenant_id=pm.tenant_id and p.id=pm.pool_id where pm.tenant_id=$1 and pm.person_id=$2 and pm.pool_id=$3 and pm.member_role=$4 and pm.status='ATIVO' and p.active for share of pm,p",
+            [context.tenantId, context.actorId, poolId, role],
+          ),
+        )[0];
+        if (!member) fail('RAIT.TENANT_MISMATCH', 404);
+        for (const caseId of Array.isArray(input.payload.caseIds)
+          ? input.payload.caseIds
+          : []) {
+          const consistent = rows(
+            await tx.query(
+              `select c.id from inf.rait_case c where c.tenant_id=$1 and c.id=$2 and ${scope.poolCaseSql('c', '$3')}`,
+              [context.tenantId, caseId, poolId],
+            ),
+          )[0];
+          if (!consistent) fail('RAIT.TENANT_MISMATCH', 404);
+        }
+      }
+
+      if (input.command === 'reassign') {
+        const assignment = rows(
+          await tx.query<Record<string, unknown>>(
+            'select case_id from inf.rait_assignment where tenant_id=$1 and id=$2 for update',
+            [context.tenantId, input.targetId],
+          ),
+        )[0];
+        if (!assignment) fail('RAIT.TENANT_MISMATCH', 404);
+        await scope.assertCase(
+          tx,
+          String(assignment!.case_id),
+          input.principal,
+          'reassign',
+          'rait-assignment',
+          true,
+        );
+        replayRole = await scope.qualifiedCaseRole(
+          tx,
+          String(assignment!.case_id),
+          input.principal,
+          'rait-assignment',
+          'reassign',
+          roles.reassign!,
+        );
+      }
+      if (input.payload.caseId)
+        await scope.assertCase(
+          tx,
+          String(input.payload.caseId),
+          input.principal,
+          'read',
+          'rait-case',
+          true,
+        );
+      for (const caseId of Array.isArray(input.payload.caseIds)
+        ? input.payload.caseIds
+        : [])
+        await scope.assertCase(
+          tx,
+          String(caseId),
+          input.principal,
+          'read',
+          'rait-case',
+          true,
+        );
       await tx.query(
         "select pg_advisory_xact_lock(hashtextextended($1 || ':' || $2, 0))",
         [context.tenantId, key],
       );
       const replay = rows<{
+        id: string;
         request_fingerprint: string;
         response_body: Result;
       }>(
         await tx.query(
-          'select request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
+          'select id,request_fingerprint, response_body from integration.idempotency_keys where tenant_id = $1 and idem_key = $2 for update',
           [context.tenantId, key],
         ),
       )[0];
       if (replay) {
         if (replay.request_fingerprint !== digest)
           fail('RAIT.IDEMPOTENCY_REPLAY', 409, { key });
+        await scope.verifyCommandReplay(
+          tx,
+          replay.id,
+          input.principal,
+          input.command,
+          input.targetId,
+          digest,
+        );
         return replay.response_body;
       }
       const result = await this.persist(tx, input, context);
-      await tx.query(
-        "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1,$2,$3,$4,$5,clock_timestamp() + interval '24 hours')",
-        [context.tenantId, key, digest, 200, JSON.stringify(result)],
+      const ledger = rows(
+        await tx.query<{ id: string }>(
+          "insert into integration.idempotency_keys (tenant_id, idem_key, request_fingerprint, status_code, response_body, expires_at) values ($1,$2,$3,$4,$5,clock_timestamp() + interval '24 hours') returning id",
+          [context.tenantId, key, digest, 200, JSON.stringify(result)],
+        ),
+      )[0];
+      if (!ledger) fail('RAIT.INTERNAL', 500);
+      await scope.bindCommandReplay(
+        tx,
+        ledger!.id,
+        input.principal,
+        input.command,
+        input.targetId,
+        digest,
+        replayRole,
       );
       return result;
     });
@@ -1156,8 +1365,8 @@ export class RaitWorklistCommandService {
       fail('RAIT.REASSIGN_TO_SAME_MEMBER', 422);
     const member = rows<{ id: string }>(
       await tx.query(
-        "select member.id from inf.rait_pool_member member where member.tenant_id = $1 and member.id = $2 and member.status = 'ATIVO' for update",
-        [context.tenantId, replacementMemberId],
+        "select member.id from inf.rait_pool_member member join inf.rait_assignment source on source.tenant_id=member.tenant_id and source.pool_id=member.pool_id where member.tenant_id = $1 and member.id = $2 and member.status = 'ATIVO' and source.id=$3 and member.member_role in ('analista','relator') for update of member",
+        [context.tenantId, replacementMemberId, input.targetId],
       ),
     )[0];
     if (!member)

@@ -326,7 +326,9 @@ export class RaitCaseCommandFixture {
     );
   }
 
-  async enableAuditFailure(): Promise<void> {
+  async enableAuditFailure(
+    action?: 'INF_RAIT_COMMAND_REPLAY_BIND',
+  ): Promise<void> {
     await this.disableAuditFailure();
     await this.owner.query(
       `create sequence audit.r7_c3_audit_fail_probe_seq start 1`,
@@ -335,6 +337,7 @@ export class RaitCaseCommandFixture {
       `create function audit.r7_c3_force_write_failure() returns trigger
        language plpgsql as $fixture$
        begin
+         ${action ? "if NEW.action <> 'INF_RAIT_COMMAND_REPLAY_BIND' then return NEW; end if;" : ''}
          perform nextval('audit.r7_c3_audit_fail_probe_seq');
          raise exception 'R7_C3_FORCED_AUDIT_WRITE_FAILURE';
        end
@@ -809,5 +812,317 @@ export class RaitCaseCommandFixture {
         ],
       );
     }
+  }
+}
+
+/** S1 Inspector fixture. Explicit disposable authorization; no schema creation,
+ * guessed identity mapping, production binding or append-only audit deletion. */
+export class RaitP402ScopeFixture extends RaitCaseCommandFixture {
+  static readonly UNIT = '71000000-0000-7000-8000-000000002901';
+  static readonly OTHER_POOL = '71000000-0000-7000-8000-000000002902';
+  static readonly FOREIGN_TENANT = '71000000-0000-7000-8000-000000002903';
+  static readonly FOREIGN_UNIT = '71000000-0000-7000-8000-000000002904';
+  static readonly FOREIGN_USER = '71000000-0000-7000-8000-000000002905';
+  static readonly FOREIGN_CASE = '71000000-0000-7000-8000-000000002906';
+  static readonly FOREIGN_AIT = '71000000-0000-7000-8000-000000002907';
+  static readonly FOREIGN_CATALOG = '71000000-0000-7000-8000-000000002908';
+  static readonly FOREIGN_FRAMING = '71000000-0000-7000-8000-000000002909';
+  static readonly FOREIGN_POOL = '71000000-0000-7000-8000-000000002910';
+  static readonly FOREIGN_MEMBER = '71000000-0000-7000-8000-000000002911';
+  static readonly FOREIGN_POLICY = '71000000-0000-7000-8000-000000002912';
+  private cases: { id: string; unit_id: string | null; archived: boolean }[] =
+    [];
+  private pools: { id: string; unit_id: string | null }[] = [];
+  private prepared = false;
+  async prepareScope(): Promise<void> {
+    const tables = await this.owner
+      .query(`select to_regclass('inf.rait_case_read_scope')::text as read_scope,
+      to_regclass('inf.rait_case_pool_scope')::text as pool_scope`);
+    if (!tables.rows[0].read_scope || !tables.rows[0].pool_scope)
+      throw new Error(
+        'S1_SCHEMA_PENDING: generated scope tables absent; this is not decisive security RED',
+      );
+    this.cases = (
+      await this.owner.query(
+        'select id,unit_id,archived from inf.rait_case where tenant_id=$1',
+        [RAIT_TENANT],
+      )
+    ).rows;
+    this.pools = (
+      await this.owner.query(
+        'select id,unit_id from inf.rait_pool where tenant_id=$1',
+        [RAIT_TENANT],
+      )
+    ).rows;
+    await this.owner.query(
+      `insert into inf.rait_unit(id,tenant_id,name,judging_body)
+      values($1,$2,'S1 disposable unit','jari') on conflict(id) do nothing`,
+      [RaitP402ScopeFixture.UNIT, RAIT_TENANT],
+    );
+    this.prepared = true;
+    // Stage explicit fixture parent moves with routing deactivated, then
+    // revalidate every previously active link after BOTH parents have moved.
+    // Keep the real active-parent constraint and RLS enabled throughout.
+    const activeLinks = (
+      await this.owner.query(
+        'select id from inf.rait_case_pool_scope where tenant_id=$1 and active',
+        [RAIT_TENANT],
+      )
+    ).rows.map((row) => row.id);
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=false where id=any($1::uuid[])',
+      [activeLinks],
+    );
+    await this.owner.query(
+      'update inf.rait_case set unit_id=$2 where tenant_id=$1',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
+    );
+    await this.owner.query(
+      'update inf.rait_pool set unit_id=$2 where tenant_id=$1',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT],
+    );
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=true where id=any($1::uuid[])',
+      [activeLinks],
+    );
+    await this.owner.query(
+      `insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id)
+      select $1,tenant_id,'S1 same-unit distinct pool',instance,circuit,strategy,unit_id
+      from inf.rait_pool where id=$2`,
+      [RaitP402ScopeFixture.OTHER_POOL, RAIT_POOL],
+    );
+    await this.owner.query(
+      `insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref)
+      values($1,$2,$3,true,'r25-s1-fixture','fixture-qualified-case-routing'),
+            ($1,$4,$5,true,'r25-s1-fixture','fixture-qualified-other-routing') on conflict(tenant_id,case_id,pool_id) do nothing`,
+      [
+        RAIT_TENANT,
+        RAIT_CASE('04'),
+        RAIT_POOL,
+        RAIT_CASE('03'),
+        RaitP402ScopeFixture.OTHER_POOL,
+      ],
+    );
+    // These are independently qualified tenant-B parents, not copies referencing tenantA.
+    await this.owner.query(
+      `insert into auth.tenants(id,slug,name,timezone)
+      values($1,'r25-s1-tenant-b','S1 disposable tenant B','America/Manaus') on conflict(id) do nothing`,
+      [RaitP402ScopeFixture.FOREIGN_TENANT],
+    );
+    await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+      RaitP402ScopeFixture.FOREIGN_TENANT,
+    ]);
+    try {
+      await this.owner.query(
+        `insert into auth.users(id,tenant_id,email,display_name)
+      values($1,$2,'s1-tenant-b@fixtures.invalid','S1 tenant B user') on conflict(id) do nothing`,
+        [
+          RaitP402ScopeFixture.FOREIGN_USER,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+        ],
+      );
+      await this.owner.query(
+        'insert into auth.memberships(tenant_id,user_id) values($1,$2) on conflict(tenant_id,user_id) do nothing',
+        [
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+          RaitP402ScopeFixture.FOREIGN_USER,
+        ],
+      );
+      await this.owner.query(
+        `insert into inf.rait_unit(id,tenant_id,name,judging_body)
+      values($1,$2,'S1 independent foreign unit','jari') on conflict(id) do nothing`,
+        [
+          RaitP402ScopeFixture.FOREIGN_UNIT,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+        ],
+      );
+      // Independent tenant-B CASE -> AIT -> framing/catalog chain. Source legal
+      // values are copied. This isolates RAIT read parents; it is not a rehearsal
+      // of tenant-B field issuance or a production qualification receipt.
+      const source = (
+        await this.owner.query('select * from inf.ait_ait where id=$1', [
+          RAIT_AIT,
+        ])
+      ).rows[0];
+      for (const [table, sourceId, id, extra] of [
+        [
+          'inf.normative_catalog',
+          source.catalog_id,
+          RaitP402ScopeFixture.FOREIGN_CATALOG,
+          {},
+        ],
+        [
+          'inf.normative_framing',
+          source.framing_id,
+          RaitP402ScopeFixture.FOREIGN_FRAMING,
+          { catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG },
+        ],
+        [
+          'inf.ait_ait',
+          RAIT_AIT,
+          RaitP402ScopeFixture.FOREIGN_AIT,
+          {
+            catalog_id: RaitP402ScopeFixture.FOREIGN_CATALOG,
+            framing_id: RaitP402ScopeFixture.FOREIGN_FRAMING,
+            ait_number: 'S1-FOREIGN-FIXTURE',
+            agent_id: RaitP402ScopeFixture.FOREIGN_USER,
+          },
+        ],
+      ] as const) {
+        await this.owner.query(
+          `insert into ${table} select (jsonb_populate_record(null::${table},to_jsonb(source)||$2::jsonb)).*
+        from ${table} source where id=$1 on conflict(id) do nothing`,
+          [
+            sourceId,
+            JSON.stringify({
+              id,
+              tenant_id: RaitP402ScopeFixture.FOREIGN_TENANT,
+              ...extra,
+            }),
+          ],
+        );
+      }
+      await this.owner.query(
+        `insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id)
+        values($1,$2,'S1 independent foreign pool','defesa_previa',1,'pull',$3) on conflict(id) do nothing`,
+        [
+          RaitP402ScopeFixture.FOREIGN_POOL,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+          RaitP402ScopeFixture.FOREIGN_UNIT,
+        ],
+      );
+      await this.owner.query(
+        `insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status)
+        values($1,$2,$3,$4,'secretaria','ATIVO') on conflict(id) do nothing`,
+        [
+          RaitP402ScopeFixture.FOREIGN_MEMBER,
+          RaitP402ScopeFixture.FOREIGN_TENANT,
+          RaitP402ScopeFixture.FOREIGN_POOL,
+          RaitP402ScopeFixture.FOREIGN_USER,
+        ],
+      );
+      await this.owner.query(
+        `insert into ops.parameter select(jsonb_populate_record(null::ops.parameter,to_jsonb(p)||$2::jsonb)).*
+        from ops.parameter p where tenant_id=$1 and key='rait.priority.legal_bases' order by id limit 1 on conflict(id) do nothing`,
+        [
+          RAIT_TENANT,
+          JSON.stringify({
+            id: RaitP402ScopeFixture.FOREIGN_POLICY,
+            tenant_id: RaitP402ScopeFixture.FOREIGN_TENANT,
+          }),
+        ],
+      );
+      const existing = await this.owner.query(
+        'select id from inf.rait_case where id=$1',
+        [RaitP402ScopeFixture.FOREIGN_CASE],
+      );
+      if (!existing.rowCount) {
+        await this.owner.query('begin');
+        try {
+          await this.owner.query(
+            `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at,unit_id)
+      select $1,$2,$3,'S1-FOREIGN-CASE',instance,circuit,state,intake_channel,protocolled_at,$4
+      from inf.rait_case where id=$5`,
+            [
+              RaitP402ScopeFixture.FOREIGN_CASE,
+              RaitP402ScopeFixture.FOREIGN_TENANT,
+              RaitP402ScopeFixture.FOREIGN_AIT,
+              RaitP402ScopeFixture.FOREIGN_UNIT,
+              RAIT_CASE('04'),
+            ],
+          );
+          await this.owner.query(
+            'select inf.rait_record_initial_priority($1,$2,clock_timestamp(),$3::jsonb)',
+            [
+              RaitP402ScopeFixture.FOREIGN_CASE,
+              RaitP402ScopeFixture.FOREIGN_USER,
+              '[]',
+            ],
+          );
+          await this.owner.query('commit');
+        } catch (error) {
+          await this.owner.query('rollback');
+          throw error;
+        }
+      }
+    } finally {
+      await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+        RAIT_TENANT,
+      ]);
+    }
+  }
+  async scope(
+    actor: string,
+    role: string,
+    parent: 'unit' | 'pool' = 'unit',
+    id?: string,
+  ): Promise<string> {
+    const scopeId = (await import('node:crypto')).randomUUID();
+    await this.owner.query(
+      `insert into inf.rait_case_read_scope(id,tenant_id,actor_id,role,unit_id,pool_id,active,authorization_ref)
+      values($1,$2,$3,$4,$5,$6,true,'r25-s1-fixture')`,
+      [
+        scopeId,
+        RAIT_TENANT,
+        actor,
+        role,
+        parent === 'unit' ? (id ?? RaitP402ScopeFixture.UNIT) : null,
+        parent === 'pool' ? (id ?? RAIT_POOL) : null,
+      ],
+    );
+    return scopeId;
+  }
+  async clearScopes(): Promise<void> {
+    await this.owner.query(
+      "delete from inf.rait_case_read_scope where authorization_ref='r25-s1-fixture'",
+    );
+  }
+  async cleanupScope(): Promise<void> {
+    if (!this.prepared) return;
+    await this.owner.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
+    const activeLinks = (
+      await this.owner.query(
+        "select id from inf.rait_case_pool_scope where tenant_id=$1 and active and authorization_ref<>'r25-s1-fixture'",
+        [RAIT_TENANT],
+      )
+    ).rows.map((row) => row.id);
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=false where tenant_id=$1 and active',
+      [RAIT_TENANT],
+    );
+    await this.clearScopes();
+    await this.owner.query(
+      "delete from inf.rait_case_pool_scope where authorization_ref='r25-s1-fixture'",
+    );
+    await this.owner.query('delete from inf.rait_pool where id=$1', [
+      RaitP402ScopeFixture.OTHER_POOL,
+    ]);
+    for (const row of this.cases)
+      await this.owner.query(
+        'update inf.rait_case set unit_id=$2,archived=$3 where id=$1',
+        [row.id, row.unit_id, row.archived],
+      );
+    await this.owner.query(
+      'update inf.rait_case set unit_id=null where tenant_id=$1 and unit_id=$2 and not(id=any($3::uuid[]))',
+      [RAIT_TENANT, RaitP402ScopeFixture.UNIT, this.cases.map((row) => row.id)],
+    );
+    for (const row of this.pools)
+      await this.owner.query(
+        'update inf.rait_pool set unit_id=$2 where id=$1',
+        [row.id, row.unit_id],
+      );
+    await this.owner.query(
+      'update inf.rait_case_pool_scope set active=true where id=any($1::uuid[])',
+      [activeLinks],
+    );
+    // Tenant-B revision1 priority evidence is immutable. Preserve its qualified
+    // CASE/AIT/policy/membership/unit parents in this explicitly disposable DB.
+    // Subsequent fixture setup reuses exact IDs without rewriting their history.
+    await this.owner.query(
+      'delete from inf.rait_unit where id=$1 and not exists(select 1 from inf.rait_case where unit_id=$1)',
+      [RaitP402ScopeFixture.UNIT],
+    );
   }
 }

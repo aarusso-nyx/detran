@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.5.1 sha256:d64b808c363287ff59a68d90dcc41991994d835a49117d5a16e61314f2edd48b
 import { Module } from '@nestjs/common';
 import { RaitUnitController } from './controllers/rait-unit.controller.js';
 import { RaitUnitService } from './services/rait-unit.service.js';
@@ -46,11 +46,15 @@ import { RaitClockAlertController } from './controllers/rait-clock-alert.control
 import { RaitClockAlertService } from './services/rait-clock-alert.service.js';
 import { RaitClockAlertRepository } from './repositories/rait-clock-alert.repository.js';
 import { RaitWorklistCommandsController } from './handwritten/rait-worklist-commands.controller.js';
+import { RaitWorklistScopedReadsController } from './handwritten/rait-worklist-scoped-reads.controller.js';
 import { RaitWorklistCommandService } from './handwritten/rait-worklist-command.service.js';
+import { RaitCaseModule } from '@detran/inf-rait-case';
 
 @Module({
+  imports: [RaitCaseModule],
   controllers: [
     RaitWorklistCommandsController,
+    RaitWorklistScopedReadsController,
     RaitUnitController,
     RaitPoolController,
     RaitPoolMemberController,

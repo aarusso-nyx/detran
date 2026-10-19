@@ -1,3 +1,4 @@
+import type { RaitInquiryRead } from '../../../data/api/case.client';
 // T-06 Prontos para retomar (ficha IU-RAIT-003; contrato CTG-0002b §6.1 linha 3): `QueueFacade.
 // loadResumeTray()` → `retomar` (diligências com desfecho `respondida` × `expirada`, ordem
 // recebida — [RN-RAIT-141]) + `casosDaFila` (join por `case_id`) numa `QueueTable` (protocolo,
@@ -21,7 +22,7 @@ import { provideRaitI18nFallback } from '../../../core/i18n-fallback';
 import { ShortcutService } from '../../../core/shortcut.service';
 import { SseService } from '../../../core/sse.service';
 import { QueueFacade } from '../../../data/facades/queue.facade';
-import type { ListQuery, RaitInquiry } from '../../../data/models';
+import type { ListQuery } from '../../../data/models';
 import { PageStateComponent } from '../../../shared/page-state.component';
 import {
   QueueTableComponent,
@@ -41,8 +42,8 @@ const COLUMNS: readonly QueueColumnKey[] = ['protocol', 'state', 'deadline'];
 const CASE_ROUTE = '/casos';
 const DOSSIER_TAB = 'dossie';
 /** Ficha 010: o prazo da diligência é o timer operacional `T-DIL` ([RN-RAIT-005]: só exibido);
- * `RaitInquiry` não traz base legal — a coluna mostra rótulo do timer + `due_on`, como o
- * `InquiryCard` sem `RaitDeadline` (§5.9). */
+ * `RaitInquiryRead` não traz base legal — a coluna mostra rótulo do timer + `due_on`, como o
+ * `InquiryCard` sem `RaitDeadlineRead` (§5.9). */
 const INQUIRY_TIMER = 'T-DIL';
 
 @Component({
@@ -165,7 +166,7 @@ export class ResumeTrayPageComponent {
   }
 
   private toItem(
-    inquiry: RaitInquiry,
+    inquiry: RaitInquiryRead,
     state: QueueItem['state'],
     instance: QueueItem['instance'],
     kase: { readonly protocol_number: string },

@@ -1,0 +1,83 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "critical",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 679,
+      "problem": "The protocol command now always fails with 403. Line 605 added `const membership = rows(...)[0]`, which is a single row object or undefined, and the original array query was renamed to `protocolMembership`. Line 679 still checks `membership.length !== 1`. On a row object `.length` is undefined, so every authorized secretary protocol call returns RAIT.FORBIDDEN_CASE_SCOPE 403 after the 404 guard passes. The legal intake path is broken. It also breaks the 'protocol/admit legal routing 0/1/multiple unchanged' guarantee. `protocolMembership`, which holds the `for update of member, pool` lock, is computed but never used. Typecheck passes because `rows()` returns an index-signature or any type.",
+      "recommendation": "Use `protocolMembership.length !== 1` (or drop one of the two queries) so the original lock and single-membership semantics are preserved. Add a real HTTP+DB positive test for protocol with 0, 1 and multiple same-unit defense pools. Don't attribute this failure to historical fixtures."
+    },
+    {
+      "severity": "high",
+      "file": "backend/domains/inf/rait-case/src/controllers/rait-case-pool-scope-record.controller.ts",
+      "line": 17,
+      "problem": "The internal table inf.rait_case_pool_scope has public generated CRUD mounted at /v1/inf/rait/rait-case-pool-scope-record (GET list, GET by id, POST, PATCH, DELETE). The blueprint api entry (docs/framework/blueprints/BP-INF-RAIT-CASE-001.json:2070) names entity `RaitCasePoolScope`, but the database entity is `RaitCasePoolScopeRecord` (line 1878). So `operations: []` never applies and the generator falls back to default CRUD. No policy row exists, but isDetranActionAllowed still admits the `*` permission, explicit `inf:rait-case-pool-scope-record:*` permissions and GLOBAL_ADMIN_ROLES. Those principals can list every tenant case-pool link with its authorization/source refs without case scope, and can hard-DELETE routing rows, which changes exact-pool containment and destroys provenance. This violates ADR-0047 ('No public CRUD'), the 'internal tables no public CRUD' rule and the no admin/wildcard bypass rule. The route is also missing from the generated OpenAPI, so the contract and runtime have drifted.",
+      "recommendation": "Fix the blueprint api entity name to `RaitCasePoolScopeRecord` with `operations: []`, regenerate under the Architect/Engineer ownership split and confirm the controller has no handlers, as in RaitCaseReadScopeController. Add an Inspector negative: technical-admin and wildcard principals get 404 on every verb at this path. Have the decorator/route gates flag mounted routes for blueprint entities that have no matching api entry."
+    },
+    {
+      "severity": "high",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "line": 1093,
+      "problem": "Generic impediment reads can never return a row. organizational() requires the impediment to be the actor's own (`pm.person_id=$2`) and also requires purposeSql(...) to be non-null. purposeSql (line 842) nulls the purpose whenever the actor has any impediment on that case (`not exists rait_impediment ... im.person_id=$2`), and rait_impediment has no status column to exempt it. So list is always empty and by-id is always 404, including the 'existing own/explicit functional impediment purpose' required by T0 and the source-review resolutions. The T-14 impediments page (features/caso/pages/impediments.page.ts, pendingImpediment/decidir arguição) silently loses data. This is not one of the Owner-approved temporarily unavailable fields.",
+      "recommendation": "Evaluate impediment reads with a purpose predicate that does not apply the self-impediment exclusion to the row being read. Keep the exclusion for other case resources. Keep full case/member/pool parent checks. Add a positive (own impediment visible) and a negative (another member's impediment hidden) on real HTTP+DB, or record an explicit Owner-approved temporary unavailability."
+    },
+    {
+      "severity": "medium",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-pool-scope.service.ts",
+      "line": 18,
+      "problem": "The protocol/admit routing writer upserts with `on conflict ... do update set active=true, authorization_ref=..., source_ref=...`. An admit after an authorized revocation (active=false) silently reactivates the link and overwrites the prior authorization/source provenance. No append-only audit row is written for activation, reactivation or overwrite. This conflicts with ADR-0047 (writer with 'current actor/source provenance, parent/version validation and append-only audit') and the resolution that activation/revocation must retain append-only audit/provenance.",
+      "recommendation": "Insert only when no row exists (`on conflict do nothing`). Never reactivate or overwrite an existing (especially revoked) link from a command. Emit an audit.write or append-only provenance record for each link written. Add Inspector cases for a revoked link followed by admit (stays revoked) and for audit presence."
+    },
+    {
+      "severity": "medium",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 851,
+      "problem": "Claim-next replay only checks that the stored case is still contained in the requested pool (poolCaseSql). It does not check that the replaying actor still holds a current read/assignment purpose on that case. After reassignment, release, a new impediment or revocation of the case binding, the original analyst can still receive the stored case response. scope.command('claim-next') only re-checks pool membership. ADR-0046 requires same-actor replay to 'validate current action/read scope before returning its stored case/projection'.",
+      "recommendation": "Before returning the replay, also run scope.assertCase(tx, replayCaseId, principal, 'read', 'rait-case') or check that the actor's own active assignment in that pool is intact, failing closed with 404. Add a replay-after-reassignment/impediment negative."
+    },
+    {
+      "severity": "medium",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "line": 205,
+      "problem": "The runtime projections omit fields that the frozen contract and the generated OpenAPI include. Documents M/J lack `filename` (OpenAPI RaitDocumentMRead/JRead and the T0 table include it). Decisions M/J lack `grounds` (lines 451-474; T0 M/J and OpenAPI RaitDecisionMRead/JRead include it). Effect: dossier-viewer.component.ts:145 now returns no URL when filename is absent, so assigned/session/signing users can view no dossier documents at runtime, and decision grounds disappear for signing authority, rapporteur and assigned analyst. The preview adapter (preview-case.client.ts projectRaitDocument/Decision) does return filename/grounds, so preview and A2 tests pass while runtime silently loses capability that was not approved as temporarily unavailable.",
+      "recommendation": "Align FIELDS with the T0 allowlist and the generated *Read schemas: add filename to documents M/J and grounds to decisions M/J, keeping the sealed-archive exclusions. Add a contract-conformance test that compares runtime projections with the OpenAPI read schemas, and runtime HTTP positives for dossier and decision fields."
+    },
+    {
+      "severity": "medium",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "line": 270,
+      "problem": "The runtime defines and serves triage (T) projections for pending-contents (lines 270, 1051-1052 path) and redirects (lines 587-596). The frozen triage field map (P4-02-T0-triage-fields.md) lists none, and the OpenAPI has no RaitPendingContentTRead or RaitRedirectTRead schema. T0 says unmatched resource/purpose combinations deny and preadmission triage uses its separately frozen field set. This invents an unsourced allowlist: redirect counterpart_agency, protocol_number and origin dates go to any same-unit analyst or secretary in triage, and the response falls outside the typed contract.",
+      "recommendation": "Either remove T from pending-contents and redirects (deny), or have the Architect record the exact triage field sets in the T0 field map and OpenAPI under a bounded amendment before runtime serves them."
+    },
+    {
+      "severity": "medium",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "line": 805,
+      "problem": "The triage purpose for analyst and secretary (lines 805-814) uses member(), which matches active membership in any active pool with the same unit and instance, not the case's exact pool. ADR-0047 allows several defense pull pools in one unit. When protocol has written an exact rait_case_pool_scope link to pool A, a member of pool B in the same unit can still read the T projection and run triage, save-admissibility, admit and non-admission (the action exemption at line 807 also drops the state restriction). Separately, create-batch case qualification (rait-worklist-command.service.ts:522) checks only same unit and instance against the batch pool. Both are same-unit inference rather than exact-pool containment.",
+      "recommendation": "When a case has an active exact pool link (or an assignment or batch relation), require the triage member to belong to that pool. Fall back to unit membership only for genuinely unlinked cases, and only if the Owner/Architect confirms that reading of the T0 'unit/pool membership' row. Use poolCaseSql for create-batch caseIds. Add second-same-unit-pool negatives."
+    },
+    {
+      "severity": "low",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 662,
+      "problem": "Protocol replay re-authorizes with action 'protocol', which falls into the secretary T branch restricted to PROTOCOLADO/TRIAGEM. An exact same-actor retry inside the 24h window after the case has moved on (admitted, etc.) returns 404 instead of the stored response. ADR-0046 says replay must not apply state checks that reject a successful attempt only because it changed state. Line 821 also changes fingerprints for every command (actorId plus ifMatch), not just claim/admissibility, so in-flight keys across deploy turn into 409. ADR-0046 says not to change other commands' fingerprints. This needs explicit source reconciliation with T0's actor-bound replay rule.",
+      "recommendation": "Replay authorization should check actor, membership and scope without the first-use state predicate. Record the fingerprint-change decision, and the safe 409 for legacy keys, against ADR-0046 explicitly."
+    },
+    {
+      "severity": "low",
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts",
+      "line": 1107,
+      "problem": "Malformed input reaches SQL and returns 500 instead of a controlled 400/404. In organizational(), `query.case_id` is bound without UUID validation (a bad value is an invalid uuid cast), and on tables without case_id (pools, units, schedules, etc.) any `?case_id=` refers to a nonexistent column r.case_id. In read(), non-integer `limit`/`offset` (e.g. 1.5) is bound to LIMIT/OFFSET. In mutate(), the PATCH `id` is not UUID-checked before the `for update` select.",
+      "recommendation": "Validate UUIDs and integer pagination up front. Reject or ignore case_id on resources without that column, returning 404/400 consistently."
+    },
+    {
+      "severity": "low",
+      "file": "apps/rait/web/src/app/preview/adapters/preview-case.client.ts",
+      "line": 420,
+      "problem": "Preview purpose selection falls back to the 'S' projection for any unmatched role (technical-admin, unknown) and uses 'S' for any role on archived cases. Runtime denies unmatched roles. Preview also serves document T rows (with digitised_from_paper), which runtime never returns (project() returns null for T documents). Preview therefore shows data runtime denies and hides the runtime gaps noted above.",
+      "recommendation": "Return no rows for unmatched roles. Mirror runtime T-document suppression and the actual runtime field sets so preview regression tests reflect runtime behavior."
+    }
+  ],
+  "scope": "Read-only review of candidate b97c2cbaa1f144145a3092ffca1a9128d66f40d6 against origin/main a006b039. No edits, test runs or DB execution. Read AUTHORIZATION.md (S1, A2, loader and identity extensions), P4-02-S1-security-prerequisite.md, P4-02-S1-source-review-resolutions.md, contracts/P4-02-T0-access-map.md and P4-02-T0-triage-fields.md, plus the relevant ADR-0046 and ADR-0047 sections. The A2 report and ADR-0045 were not read in full. Reviewed: rait-case-scope.service.ts (identity, purposeSql, poolCaseSql, read/project/organizational/command/mutate), rait-case-command.service.ts protocol/execute/claim diff, rait-case-pool-scope.service.ts, rait-inquiry-command.service.ts, the worklist command service/controller, the CASE/WORKLIST scoped-read controllers, the module registration and emptied generated controllers, DDL 34/35 and 19-rait-case-scope-enforce.sql, the apply.sh loader insertions, detran-runtime.ts actor UUID pre-check, the policy.ts read rows, the 107-method disposition manifest (71 replaced, 25 retained-scoped, 11 removed; party DELETE mounted but always 404 as resolved), and the frontend case client, dossier/decision consumers and preview projection serializers. Verified as acceptable: canonical actor UUID plus active auth.users/membership on every scope path; no wildcard/admin in case purposeSql; SQL predicate before LIMIT/OFFSET, with post-SQL projection filters mirrored in SQL; missing and unauthorized both 404; clock-alert→clock→case resolved before pagination; source and target parent checks on child PATCH and command child IDs; actor-bound fingerprints with replay re-authorization on generic, inquiry and worklist commands; tenant RLS and forced RLS on the new tables; one-of-unit/pool XOR, nonempty provenance, tenant-composite FKs, unique (tenant,case,pool) and parent-change triggers; transactional loader post-pass. Not executed and not claimed: e2e/RLS/frontend suites (validation still in progress per the prompt), root pnpm check, devai doctor and evidence chain. S2 is not activated in the reviewed code. This verdict does not establish round readiness."
+}

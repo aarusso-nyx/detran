@@ -61,6 +61,22 @@ describe('CTG-0002 final structural corrections', () => {
     rollback(async () => {
       let actor = SECRETARY;
       await client.query(
+        `insert into inf.rait_case_read_scope
+           (tenant_id, actor_id, role, pool_id, active, authorization_ref)
+         values ($1,$2,'rait-secretary',$3,true,'ctg2-final-structural')
+         on conflict (tenant_id,actor_id,role,pool_id) where pool_id is not null
+         do update set active = true`,
+        [TENANT, SECRETARY, '00000000-0000-7000-8000-000020000002'],
+      );
+      await client.query(
+        `insert into inf.rait_case_pool_scope
+           (tenant_id, case_id, pool_id, active, authorization_ref, source_ref)
+         values ($1,$2,$3,true,'ctg2-final-structural','seed20:batch-1-case-18')
+         on conflict (tenant_id,case_id,pool_id)
+         do update set active = true`,
+        [TENANT, CASE, '00000000-0000-7000-8000-000020000002'],
+      );
+      await client.query(
         `delete from inf.rait_assignment
           where tenant_id = $1 and case_id = $2 and active`,
         [TENANT, CASE],
@@ -109,6 +125,7 @@ describe('CTG-0002 final structural corrections', () => {
 
       const drawn = await service.execute({
         command: 'draw',
+        principal: { id: actor, tenants: [TENANT], roles: ['rait-secretary'] },
         targetId: BATCH,
         payload: {},
         headers: { 'Idempotency-Key': 'ctg2-final-draw' },
@@ -147,6 +164,7 @@ describe('CTG-0002 final structural corrections', () => {
       );
       const accepted = await service.execute({
         command: 'accept-batch-item',
+        principal: { id: actor, tenants: [TENANT], roles: ['rait-rapporteur'] },
         targetId: BATCH,
         payload: { caseId: CASE },
         headers: {
@@ -195,6 +213,11 @@ describe('CTG-0002 final structural corrections', () => {
       );
       const impeded = await service.execute({
         command: 'declare-batch-item-impediment',
+        principal: {
+          id: RAPPORTEUR,
+          tenants: [TENANT],
+          roles: ['rait-rapporteur'],
+        },
         targetId: BATCH,
         payload: {
           caseId: CASE,

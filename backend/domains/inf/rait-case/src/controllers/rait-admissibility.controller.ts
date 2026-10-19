@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.8 sha256:c3426aeaab9b8399bba4a449964cd2a599291a377418469f82d2cf903840098d
+// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
 import {
   Body,
   Controller,
@@ -16,10 +16,4 @@ import { RaitAdmissibilityService } from '../services/rait-admissibility.service
 @Resource('inf:rait-admissibility')
 export class RaitAdmissibilityController {
   constructor(private readonly service: RaitAdmissibilityService) {}
-  @Get() @Action('read') list() {
-    return this.service.findAll();
-  }
-  @Get(':id') @Action('read') get(@Param('id') id: string) {
-    return this.service.findOne(id);
-  }
 }

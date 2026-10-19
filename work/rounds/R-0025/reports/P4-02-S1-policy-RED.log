@@ -1,0 +1,118 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/shared@0.0.1 test /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/backend/domains/shared
+> vitest run --config vitest.config.ts "src/policy.spec.ts" "src/policy.guard.spec.ts"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/backend/domains/shared
+
+ ❯ src/policy.spec.ts (729 tests | 39 failed) 139ms
+     × rait-pending-content:read ordinary grant for AUDITOR matches closed T0 5ms
+     × rait-pending-content:read ordinary grant for rait-analyst matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-coordinator matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-secretary matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-signing-authority matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-central-authority matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-rapporteur matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-chair matches closed T0 0ms
+     × rait-pending-content:read ordinary grant for rait-manager matches closed T0 0ms
+     × rait-draft:read ordinary grant for AUDITOR matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-analyst matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-coordinator matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-secretary matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-signing-authority matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-central-authority matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-rapporteur matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-chair matches closed T0 0ms
+     × rait-draft:read ordinary grant for rait-manager matches closed T0 0ms
+     × rait-redirect:read ordinary grant for AUDITOR matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-analyst matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-coordinator matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-secretary matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-signing-authority matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-central-authority matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-rapporteur matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-chair matches closed T0 0ms
+     × rait-redirect:read ordinary grant for rait-manager matches closed T0 0ms
+     × rait-batch:read ordinary grant for AUDITOR matches closed T0 0ms
+     × rait-batch:read ordinary grant for rait-coordinator matches closed T0 0ms
+     × rait-batch:read ordinary grant for rait-secretary matches closed T0 0ms
+     × rait-batch:read ordinary grant for rait-rapporteur matches closed T0 0ms
+     × rait-batch:read ordinary grant for rait-chair matches closed T0 0ms
+     × rait-batch:read ordinary grant for rait-manager matches closed T0 0ms
+     × rait-batch-item:read ordinary grant for AUDITOR matches closed T0 0ms
+     × rait-batch-item:read ordinary grant for rait-coordinator matches closed T0 0ms
+     × rait-batch-item:read ordinary grant for rait-secretary matches closed T0 0ms
+     × rait-batch-item:read ordinary grant for rait-rapporteur matches closed T0 1ms
+     × rait-batch-item:read ordinary grant for rait-chair matches closed T0 0ms
+     × rait-batch-item:read ordinary grant for rait-manager matches closed T0 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 39 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for AUDITOR matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-analyst matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-coordinator matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-secretary matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-signing-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-central-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-rapporteur matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-chair matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-pending-content:read ordinary grant for rait-manager matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for AUDITOR matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-analyst matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-coordinator matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-secretary matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-signing-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-central-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-rapporteur matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-chair matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-draft:read ordinary grant for rait-manager matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for AUDITOR matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-analyst matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-coordinator matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-secretary matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-signing-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-central-authority matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-rapporteur matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-chair matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-redirect:read ordinary grant for rait-manager matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for AUDITOR matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for rait-coordinator matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for rait-secretary matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for rait-rapporteur matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for rait-chair matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch:read ordinary grant for rait-manager matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for AUDITOR matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for rait-coordinator matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for rait-secretary matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for rait-rapporteur matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for rait-chair matches closed T0
+ FAIL  src/policy.spec.ts > P4-02-S1 exact ordinary read rows and preserved strict commands > rait-batch-item:read ordinary grant for rait-manager matches closed T0
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/policy.spec.ts:2738:24
+    2736|         );
+    2737|         // Existing global administrative reach remains; actual case s…
+    2738|         expect(actual).toBe(
+       |                        ^
+    2739|           roles.includes(role) ||
+    2740|             ['ADMIN', 'GESTOR_DETRAN', 'SUPORTE', 'technical-admin'].i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/39]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  39 failed | 697 passed (736)
+   Start at  11:14:50
+   Duration  970ms (transform 160ms, setup 0ms, import 979ms, tests 143ms, environment 0ms)
+
+/Volumes/Development/.codex/worktrees/r0033-portal-preview/detran/.devai/worktrees/WT-TASK-0029/backend/domains/shared:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/shared@0.0.1 test: `vitest run --config vitest.config.ts "src/policy.spec.ts" "src/policy.guard.spec.ts"`
+Exit status 1

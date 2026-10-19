@@ -1,0 +1,93 @@
+{
+  "role": "Inspector",
+  "scope": "Owner-approved P4-02-S1 +A2/A3/review corrections",
+  "readiness_promoting": false,
+  "security_http": {
+    "pass": 355,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-scope26-30.log",
+    "before_source": "/tmp/detran-s1-scope26-source.txt",
+    "after_source": "/tmp/detran-s1-scope26-after-source.txt",
+    "source_identical": true,
+    "startup_allowance": "Only app import/init hook60000\u2192180000 for observed resource contention; assertion/business/race timeouts unchanged",
+    "same_unit_route_control": "IndependentSecretary read200; sameunit+instance no exactroute404/noeffects/unchangedbatch+items; owned trustedlink then identicalbody+headers201; canonicalCASE18assignment restored and fullJSONB equalityassertion passed",
+    "schema_unchanged": "DDL35:45 non-defense unit/instance uniqueness preserved; no indexdrop or secondJARIpool invented"
+  },
+  "case_unit": {
+    "pass": 175,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-case-full-unit12-30.log",
+    "source": "/tmp/detran-s1-case-full-unit12-source.txt"
+  },
+  "worklist_unit_final": {
+    "pass": 78,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-worklist-unit24-30.log",
+    "source": "/tmp/detran-s1-worklist-unit24-source.txt"
+  },
+  "case_integration": {
+    "pass": 36,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-case-integration18-30.log",
+    "source": "/tmp/detran-s1-case-integration18-source.txt",
+    "exclusion": "Only canonical priority-upgrade integration, separate destructive tier"
+  },
+  "worklist_integration": {
+    "pass": 42,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-worklist-integration20-30.log",
+    "source": "/tmp/detran-s1-worklist-integration20-source.txt"
+  },
+  "other_three_app_http": {
+    "pass": 8,
+    "fail": 0,
+    "skip": 0,
+    "log": "/tmp/detran-s1-other-http23-30.log",
+    "source": "/tmp/detran-s1-other-http23-source.txt"
+  },
+  "typecheck": {
+    "app": "PASS",
+    "log": "/tmp/detran-s1-app-types26-30.log",
+    "case": "PASS",
+    "case_log": "/tmp/detran-s1-case-types13-30.log"
+  },
+  "scope_spec_format": {
+    "status": "PASS",
+    "log": "/tmp/detran-s1-scope-format26-30.log"
+  },
+  "owned_databases": {
+    "security": {
+      "container": "detran-p402-s1-20261019",
+      "port": 53340,
+      "status": "Preserved existing disposable evidence; no reset for integration"
+    },
+    "integration": {
+      "container": "detran-p402-s1-integration-20261019",
+      "port": 53341,
+      "prepare_log": "/tmp/detran-s1-integration-prepare.log",
+      "canonical_cases": 20,
+      "env_path": "/tmp/detran-s1-integration-env.sh",
+      "env_mode": "0600",
+      "scratch": "Existing seed-profile tests refuse existing databases and remove only newly-created owned scratch DBs"
+    }
+  },
+  "boundaries": [
+    "No runtime edits by Inspector",
+    "No primary checkout or scorecard work inspected/modified",
+    "Original RED receipts immutable and preserved",
+    "No optional database PASS or skipped meaningful control in final successful runs",
+    "Startup/prerequisite/no-files failures preserved and never counted as GREEN",
+    "No round closure, readiness or scorecard approval inferred from checks"
+  ],
+  "parent_pending": [
+    "Root authoritative checks",
+    "Independent final source review",
+    "Governed evidence and PR"
+  ],
+  "fixture_calibrations": "/tmp/detran-s1-inspector-review-sensor-epoch.json"
+}

@@ -1,19 +1,21 @@
+import type { RaitClockRead } from '../data/api/worklist.client';
+import type { RaitCaseRead, RaitDeadlineRead } from '../data/api/case.client';
 // View-models de `QueueTable` (contrato CTG-0002b §5.16 `QueueItem`: montado pela página a partir
-// dos recursos gerados, não é DTO) a partir de `RaitCase`, com bandeira/prazo só quando o
+// dos recursos gerados, não é DTO) a partir de `RaitCaseRead`, com bandeira/prazo só quando o
 // servidor os traz (OD-R12-022; [RN-RAIT-005]); a ordem é sempre a recebida ([RN-RAIT-141]).
-import type { RaitCase, RaitClock, RaitDeadline } from '../data/models';
+
 import type { DeadlineKind } from '../shared/deadline-chip.component';
 import type { QueueItem } from '../shared/queue-table.component';
 
 export interface QueueItemExtras {
-  readonly clock?: RaitClock | null;
-  readonly deadline?: RaitDeadline | null;
+  readonly clock?: RaitClockRead | null;
+  readonly deadline?: RaitDeadlineRead | null;
   readonly deadlineKind?: DeadlineKind;
   readonly priority?: boolean;
 }
 
 export function caseToQueueItem(
-  kase: RaitCase,
+  kase: RaitCaseRead,
   extras: QueueItemExtras = {},
 ): QueueItem {
   const deadline = extras.deadline ?? null;

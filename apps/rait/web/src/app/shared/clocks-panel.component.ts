@@ -1,5 +1,6 @@
+import type { RaitClockRead } from '../data/api/worklist.client';
 // ClocksPanel (contrato CTG-0002b §5.4; spec §5.2 "quatro relógios A/B/C/D"; fichas 007/013):
-// quatro posições FIXAS na ordem A, B, C, D (conjunto fechado do contrato `RaitClock['clock_code']`
+// quatro posições FIXAS na ordem A, B, C, D (conjunto fechado do contrato `RaitClockRead['clock_code']`
 // — não é ordenação de fila); posição sem relógio → `rait.common.clockAbsent`; com relógio →
 // `<rait-risk-flag>` + `started_on`/`ceiling_on` (datas do servidor) + `legal_basis` (tooltip).
 // Dias restantes só do input `daysRemaining` (por `clock.id`, vindos do servidor); nada calculado.
@@ -14,11 +15,7 @@ import {
   StynxIntlDatePipe,
   StynxTranslatePipe,
 } from '@detran/ui';
-import {
-  RAIT_CLOCK_CODES,
-  type RaitClock,
-  type RaitClockCode,
-} from '../data/models';
+import { RAIT_CLOCK_CODES, type RaitClockCode } from '../data/models';
 import { LegalBasisTooltipComponent } from './legal-basis-tooltip.component';
 import { RiskFlagComponent } from './risk-flag.component';
 
@@ -27,7 +24,7 @@ const EMPTY_KEY = 'rait.states.empty';
 
 interface ClockPosition {
   readonly code: RaitClockCode;
-  readonly clock: RaitClock | null;
+  readonly clock: RaitClockRead | null;
 }
 
 @Component({
@@ -84,7 +81,7 @@ interface ClockPosition {
   `,
 })
 export class ClocksPanelComponent {
-  readonly clocks = input.required<readonly RaitClock[]>();
+  readonly clocks = input.required<readonly RaitClockRead[]>();
   /** Por `clock.id`, só do servidor (OD-R12-022). */
   readonly daysRemaining = input<Readonly<Record<string, number>>>({});
 
