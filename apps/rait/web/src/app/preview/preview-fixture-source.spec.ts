@@ -48,7 +48,10 @@ import { PreviewOrgClient } from './adapters/preview-org.client';
 import { PreviewSessionClient } from './adapters/preview-session.client';
 import { PreviewWorklistClient } from './adapters/preview-worklist.client';
 import { PREVIEW_NOW_ISO, PreviewClock } from './preview-clock';
-import { PREVIEW_SOURCE_PENDING } from './preview-fixtures';
+import {
+  PREVIEW_SOURCE_PENDING,
+  PreviewFixtureStore,
+} from './preview-fixtures';
 import {
   PreviewSessionFacade,
   PreviewStynxSessionService,
@@ -416,6 +419,26 @@ function sortedIds(items: readonly { readonly id: string }[]): string[] {
   return items.map((item) => item.id).sort();
 }
 
+/** S1-A4 / T0: default analyst is triage T before admission, M otherwise;
+ * archived cases are unavailable to that purpose. Documents have no T field set.
+ * Derive the exact expected subset from canonical source rows, never adapter output.
+ */
+function analystVisibleRecords(read: A4Read): readonly FixtureRecord[] {
+  const records = fixtureRecordsOf(read.collection);
+  if (read.client !== 'CaseClient') return records;
+  const cases = fixtureRecordsOf('cases');
+  return records.filter((record) => {
+    const parent = cases.find((row) => row.id === record['caseId']);
+    if (!parent || parent['archived'] === true) return false;
+    return (
+      read.collection !== 'documents' ||
+      !['PROTOCOLADO', 'TRIAGEM_ADMISSIBILIDADE'].includes(
+        String(parent['state']),
+      )
+    );
+  });
+}
+
 describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 item 5 (a))', () => {
   it('dado A4_READS quando comparado ao mapa CLIENTS então as 14 leituras, cada uma mapeada à sua coleção, e cada coleção é array não vazio na JSON', () => {
     expect(A4_READS).toHaveLength(14);
@@ -434,10 +457,34 @@ describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 ite
     }
   });
 
-  A4_READS.forEach((read) => {
-    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({}) então os ids são exatamente os de ${read.collection} e total = nº de registros da JSON`, async () => {
-      await configureLoaded();
+  it('preserves every canonical A4 collection in the fixture store and its complete parent membership', async () => {
+    await configureLoaded();
+    const stored = await TestBed.inject(PreviewFixtureStore).load();
+    for (const read of A4_READS) {
       const records = fixtureRecordsOf(read.collection);
+      expect(stored).toHaveProperty(read.collection, records);
+      const parentCollection =
+        read.parent.fixture === 'caseId'
+          ? 'cases'
+          : read.parent.fixture === 'clockId'
+            ? 'clocks'
+            : read.parent.fixture === 'agendaItemId'
+              ? 'agendaItems'
+              : 'sessions';
+      const parentIds = fixtureIdsOf(parentCollection);
+      for (const record of records)
+        expect(
+          parentIds.has(String(record[read.parent.fixture])),
+          `${read.collection} ${record.id}`,
+        ).toBe(true);
+    }
+    TestBed.inject(HttpTestingController).expectNone(() => true);
+  });
+
+  A4_READS.forEach((read) => {
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({}) então ids e total são exatamente o subconjunto autorizado de ${read.collection}`, async () => {
+      await configureLoaded();
+      const records = analystVisibleRecords(read);
       const page = (await instanceOf(read.client)[read.list]({})) as ListPage<{
         readonly id: string;
       }>;
@@ -445,7 +492,7 @@ describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 ite
       expect(page.total).toBe(records.length);
     });
 
-    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({ filtro: { ${read.parent.filtro} } }) para cada ${read.parent.fixture} da JSON então os ids são exatamente os registros de ${read.collection} desse pai`, async () => {
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.list}({ filtro: { ${read.parent.filtro} } }) para cada ${read.parent.fixture} da JSON então os ids são exatamente os registros autorizados de ${read.collection} desse pai (inclusive negação vazia)`, async () => {
       await configureLoaded();
       const records = fixtureRecordsOf(read.collection);
       const parents = [
@@ -455,7 +502,7 @@ describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 ite
       ];
       expect(parents.length).toBeGreaterThan(0);
       for (const parent of parents) {
-        const expected = records.filter(
+        const expected = analystVisibleRecords(read).filter(
           (record) => String(record[read.parent.fixture]) === parent,
         );
         const page = (await instanceOf(read.client)[read.list]({
@@ -468,9 +515,23 @@ describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 ite
       }
     });
 
-    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.get}(id) para cada registro de ${read.collection} então resolve o registro (id e ${read.parent.filtro} = ${read.parent.fixture} da JSON)`, async () => {
+    it(`dado a fixture canônica e pv_estado=loaded quando Preview${read.client}.${read.get}(id) para cada registro de ${read.collection} então resolve os registros autorizados e nega explicitamente os demais sem removê-los da JSON`, async () => {
       await configureLoaded();
+      const visibleIds = new Set(
+        analystVisibleRecords(read).map((record) => record.id),
+      );
+      expect(
+        visibleIds.size,
+        `${read.collection} positive authorized control`,
+      ).toBeGreaterThan(0);
       for (const record of fixtureRecordsOf(read.collection)) {
+        if (!visibleIds.has(record.id)) {
+          await expect(
+            instanceOf(read.client)[read.get](record.id),
+            `${read.get} denied ${record.id}`,
+          ).rejects.toThrow();
+          continue;
+        }
         const found = (await instanceOf(read.client)[read.get](
           record.id,
         )) as Readonly<Record<string, unknown>>;
@@ -479,6 +540,7 @@ describe('C-06 — as 14 leituras de A4 leem as coleções novas da JSON (A5 ite
           record[read.parent.fixture],
         );
       }
+      TestBed.inject(HttpTestingController).expectNone(() => true);
     });
   });
 });
