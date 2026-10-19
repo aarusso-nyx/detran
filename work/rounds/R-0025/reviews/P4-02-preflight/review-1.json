@@ -1,0 +1,48 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "medium",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 218,
+      "message": "The report says 'The accompanying validation receipt distinguishes documentation checks from unexecuted runtime acceptance', but commit 68ca62df contains no such receipt. Its diff against b41d8c15 adds or changes only four files: the inventory, source-freeze.json, fixture-inventory.json and the JW01 contract addendum. There is no reviews/P4-02-preflight/validation.md or equivalent; earlier packets have one at reviews/P4-01/validation.md and reviews/P4-02-plan/validation.md. A frozen governance artifact must not cite evidence it does not contain. Either commit the receipt with the commands run and their results, or remove the sentence. This is the only finding that blocks a PASS; everything else checked is accurate."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 197,
+      "message": "Unblock step 4 runs T1 'After those T0 conditions pass', which makes steps 2 and 3 prerequisites for T1 and T2. Step 2 is the identity/person mapping and risk producer; step 3 is the trusted deployed legacy inventory. The packet places them differently: §4 lines 104-105 and ADR-0045:77-78 make the risk and identity source gaps block release. Packet line 103 and ADR-0045:35-36 require only the legacy compatibility/migration disposition to be explicit before T2. Packet lines 108-110 also allow fixture-provisioned testing when production scope records are absent. The JW01 contract addendum states this correctly as 'also preventing release'. The section is labelled 'proposals, not approvals', so this is a recommendation: reword it so the T2 gates are the shared-role predicates, the path clarification and the legacy disposition, and the release gates are identity, risk and deployed inventory. As written it adds an approval sequence the packet does not have."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 106,
+      "message": "The citation 'audit.facade.ts:30–32' for /auditoria loading generic events points at the wrong lines. Lines 30-32 are the bindStream constructor. The listRaitCaseEvent call is at lines 24-27 (call at line 25). The claim itself is correct."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 155,
+      "message": "requirePoolBinding(:1232–1247) does not name its file. It is in backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts, but the surrounding sentence cites the WORKLIST blueprint and seed20, and lines 1232-1247 of the CASE command service are unrelated priority-proof validation. The observation is accurate: the binding checks status ATIVO and mandate_ends_on, with no member_role or provenance check. Add the path."
+    },
+    {
+      "severity": "low",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 79,
+      "message": "The policy surface lists are slightly incomplete. 'Mapped surfaces include…' leaves out rait-impediment, which is in RAIT_SURFACE_WRITE_ROLES and so readable by all 15 RAIT read roles. 'Pending-content, redirect, draft and batch-item lack ordinary surface rules' leaves out rait-batch. Batch has no surface rule and is listed in the report's own case-bearing WORKLIST table. The conclusion that a missing rule is not proof of unreachability still holds, because wildcard and global-admin access reaches it (policy.ts:1931-1943). Add batch and impediment so the role matrix input is complete."
+    },
+    {
+      "severity": "info",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 145,
+      "message": "Recommendation for completeness: inf.infraction.risk_flag (38-inf-infraction.sql:19, default 'SEM_RISCO') is another default-only risk field, in addition to the WORKLIST clock flag. It should be listed as not an authoritative RAIT prescription-risk source so it is not reused by mistake. No RAIT producer of rait.clock.flag-changed was found, which confirms the report's OD-D17 conclusion."
+    },
+    {
+      "severity": "info",
+      "path": "work/rounds/R-0025/reports/P4-02-route-scope-inventory.md",
+      "line": 124,
+      "message": "Packet T0 (line 107) asks for the allowed triage fields and document classes to be frozen. The report confirms the known form surface: three verdicts (legitimidade, assinatura, pedido_compativel), the outcome and the non-admission reason. It then defers the exact identity/procuration fields and document classes to a 'closed source map before T2'. This is stated honestly and does not misrepresent completion. Note, though, that this part of the T0 deliverable is still open and is not an external blocker."
+    }
+  ],
+  "scope": "Read-only Architect review of frozen commit 68ca62df against merged main b41d8c15. Nothing was modified. I inspected the four changed files (route-scope inventory, source freeze, fixture inventory, JW01 contract addendum), the approved P4-02 exact-wiring packet, and the relevant parts of ADR-0045 and ADR-0046.\n\nVerified directly:\n- CASE mounts 56 generated methods: 10 resources × 5, cases 4, admissibility 2, and the 5 internal controllers have no HTTP decorators. It also mounts 17 handwritten POST routes (1 + 13 + 3), for 73 in total. WORKLIST mounts 13 × 2 = 26 generated GET routes plus 8 handwritten POSTs. RaitCaseModule and RaitWorklistModule are imported at app.module.ts:896-897.\n- All 91 source-freeze SHA-256 values match both 12baf6ad and b41d8c15.\n- Policy has 15 read roles; surface rules are missing for pending-content, redirect, draft and batch-item; the wildcard and global-admin fallthrough exists.\n- The CASE repository uses select * … limit 500 with no actor predicate, and its writable fields include state, version, unit_id and origin_case_id.\n- The claim-next fingerprint omits actorId. Replay lookup comes before selection. Claim ordering has no risk term and does not exclude NULL legal_priority.\n- pool_member.person_id is a plain UUID with no foreign key and no user/person bridge. auth.users has separate oidc_sub and external_subject columns. Coordinator appointment_act_ref and mandate fields are nullable. The seed20 coordinator row has no provenance. seed20:33 is a defense DISTRIBUIDO fixture.\n- ADR-0045:35-36 makes the DISTRIBUIDO disposition a preflight item, and ADR-0046:97-99 sets the fail-closed 409 for actorless replay.\n- A scorecard ADR-0045 filename (whole-source-local-coverage) exists on a local scorecard branch. I checked the filename only, not its content.\n\nThe blockers are real under the packet. Unsourced shared-role predicates for secretary archive, rapporteur, signing and other roles block T2 per packet lines 99-100. The legacy compatibility disposition is required before T2. Identity and risk gaps block release. The packet does not name the existing WORKLIST command service/controller paths, so the path-clarification request is grounded and not invented.\n\nThe report does not overstate absence. The coordinator, identity and replay observations are hedged correctly. The fixture receipt is presented as aggregate disposable data, and production is recorded as unknown. No runtime, DDL, test, generator, state, proof or scorecard file changed, and T1-T6 are correctly reported as not executed. I could not verify 'Only PR198 was open' or the CI and merge timestamps offline.\n\nThe verdict is FAIL only because of the missing validation receipt. The low and info items are recommendations, not new approval requirements."
+}
