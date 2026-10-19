@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "policy_id": "detran-law-corpus",
-  "policy_version": "1.2.0",
+  "policy_version": "1.2.1",
   "domains": {
     "client": ["INF", "EST", "CH", "OPS", "PORTAL", "DASH"]
   },
@@ -625,7 +625,10 @@
           "senatran-mock/docs/site",
           "senatran-mock/docs/start"
         ],
-        "piiMigrationDirs": ["backend/database", "senatran-mock/database"]
+        "piiMigrationDirs": [
+          "backend/database/ddl",
+          "senatran-mock/database/ddl"
+        ]
       },
       "spec_robustness_targets": {
         "errorContractDirs": [
@@ -752,7 +755,7 @@
         ]
       },
       "inventory_data_model": {
-        "migrationDirs": ["backend/database", "senatran-mock/database"]
+        "migrationDirs": ["backend/database/ddl", "senatran-mock/database/ddl"]
       }
     },
     "surfaces": {

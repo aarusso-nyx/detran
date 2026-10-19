@@ -27,6 +27,10 @@ Pages deployment was disabled.
 Use registered `init upgrade` and `init bind --adopter-policy` operations. Bind
 explicit actual source, package, specification, SQL and test roots from the
 workspace census. Refresh the canonical schema corpus from the installed package.
+Current SQL discovery selects `backend/database/ddl` and
+`senatran-mock/database/ddl`. Historical SQL under
+`backend/database/tests/fixtures/` and seed SQL are excluded from current schema
+discovery; migration and fixture suites continue to execute them separately.
 ADR-0045 defines the whole-source local coverage population; it does not claim RC
 coverage. ADR-0044 retains the separately authorized initial performance baseline.
 

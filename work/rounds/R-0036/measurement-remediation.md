@@ -49,3 +49,18 @@ and registry identity verification. These release steps passed in rehearsal 3919
 2.6.3 through the registered upgrade. The final assessment remains pending.
 Other sibling repositories remain read-only. The previous scorecard, reports,
 readings and proof prefix are immutable.
+
+## Current population corrections
+
+Use only `backend/database/ddl` and `senatran-mock/database/ddl` for current SQL
+schema discovery and specification PII scans. The broader database roots also
+contained historical test DDL; its duplicate table definitions caused a schema
+refusal. Exclude historical database fixtures and seeds from this schema
+population, while retaining them in the migration/integration/E2E fixture tasks.
+
+The whole-source collector uses 78 compact directory patterns, an independent
+2,574-source census, exact-only deduplication of repeated Vitest exclusions,
+serial coverage remapping and the BOAT library's actual tsconfig. A partial probe
+now produces every source and still rejects the original mock coverage threshold.
+The complete suite and native reading remain required. See the immutable replay
+checkpoint `reports/replay-0cc5076a-20261019/`.
