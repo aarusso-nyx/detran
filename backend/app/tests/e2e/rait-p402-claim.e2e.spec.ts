@@ -299,7 +299,10 @@ async function exactClaimPersistence(
   const records = outbox.rows.filter(
     (row) =>
       row.topic === 'rait.assignment.changed' ||
-      ['ADMITIDO', 'DISTRIBUIDO'].includes(String(row.payload.fromState)),
+      (row.payload.fromState === 'ADMITIDO' &&
+        row.payload.toState === 'DISTRIBUIDO') ||
+      (row.payload.fromState === 'DISTRIBUIDO' &&
+        row.payload.toState === 'EM_INSTRUCAO'),
   );
   expect(records).toHaveLength(events.length);
   const ordered = (items: Record<string, unknown>[]) =>
@@ -1486,7 +1489,7 @@ describe('S2 SQL source/date qualification rather than permissive pure inputs', 
     );
     const movement = (
       await fixture.owner.query<{ day: string }>(
-        "select (occurred_at at time zone 'America/Manaus')::date::text day from inf.rait_case_event where case_id=$1 and to_state='ADMITIDO' order by occurred_at desc,id limit 1",
+        "select (occurred_at at time zone 'America/Manaus')::date::text AS \"day\" from inf.rait_case_event where case_id=$1 and to_state='ADMITIDO' order by occurred_at desc,id limit 1",
         [c.id],
       )
     ).rows[0]!.day;
