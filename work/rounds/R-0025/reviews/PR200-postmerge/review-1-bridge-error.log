@@ -1,0 +1,211 @@
+[error] stdin: SyntaxError: 'TaggedTemplateExpression' is not allowed in JSON. (1:1)
+[error] >  1 | ```json
+[error]      | ^^^^^^^
+[error] >  2 | {
+[error]      | ^
+[error] >  3 |   "verdict": "FAIL",
+[error]      | ^^^^^^^^^^^^^^^^^^^^
+[error] >  4 |   "summary": "The post-merge record is accurate and non-promoting. The S1 grouping (T1 security RED, then T2 scoped protection, in one PR) is coherent and does not activate risk, legacy or claim work. Three medium issues block approval 'as written': the routing-409 sentence contradicts ADR-0047, the frontend ownership goes beyond base §3 and A1 without saying so, and the narrowing of A1's T1 gate is not declared. All fixes are wording changes in the docs.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  5 |   "findings": [
+[error]      | ^^^^^^^^^^^^^^^
+[error] >  6 |     {
+[error]      | ^^^^^
+[error] >  7 |       "severity": "medium",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  8 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  9 |       "line": 52,
+[error]      | ^^^^^^^^^^^^^^^^^
+[error] >  10 |       "problem": "'If an existing affected command encounters unresolved routing, retain safe409' has no valid target in S1. ADR-0047 (lines 88-95) says protocol/triage/admit keep their existing legal/If-Match guards and keep the unlinked case for operational inventory. Only claim-context and claim stop with RAIT.CASE_POOL_UNRESOLVED409, and both are deferred to S2. The error is new under A1, so 'retain' is also wrong. Read literally, the sentence lets a 409 be added to protocol/admit, which breaks the accepted protocol→triage→admit journey and conflicts with line 51 of the same packet.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  11 |       "recommendation": "Replace it with: protocol/admit call the rait-case-pool-scope.service.ts resolver in their transaction; with zero or multiple qualified pools they write no link and succeed unchanged; CASE_POOL_UNRESOLVED409 is not emitted by any S1 command; unlinked cases fail closed only on pool-scoped reads. Add acceptance tests showing protocol/admit status, body, version and events are the same with and without a resolvable route."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  12 |     },
+[error]       | ^^^^^^
+[error] >  13 |     {
+[error]       | ^^^^^
+[error] >  14 |       "severity": "medium",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  15 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  16 |       "line": 45,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  17 |       "problem": "The 'Engineer — compatibility only' row adds data/facades/archive.facade.ts and audit.facade.ts, features/arquivo/pages/archive-search.page.ts and features/auditoria/pages/audit-trail.page.ts. Base P4-02 §3 (exact-wiring-packet line 71) grants only WorklistClient, CaseClient, QueueFacade, CaseFacade, case-access.guard and the defense-pool-queue/dossier/triage consumers. A1 adds no frontend Engineer paths, and A1 §4 says a path outside the amendment needs a concrete bounded resolution. The packet presents these as if they were already owned.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  18 |       "recommendation": "Mark these four files (and their specs) as an explicit S1 ownership addition beyond base §3 + A1. Justify them from the T0 access map's sealed-archive and AUDITOR/secretary archive projections (map lines 44-46, 99-112), so Owner approval of S1 is knowingly also the bounded path resolution."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  19 |     },
+[error]       | ^^^^^^
+[error] >  20 |     {
+[error]       | ^^^^^
+[error] >  21 |       "severity": "medium",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  22 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  23 |       "line": 6,
+[error]       | ^^^^^^^^^^^^^^^^
+[error] >  24 |       "problem": "A1 §3 step 2 defines T1 RED as also covering version-bound legacy classification, risk missing/unknown vs assessed-low, and actual concurrency, all before T2. A1 §4 then gates T2 on 'Inspector RED recorded'. S1 says it 'narrows' T1–T2 but never states that those T1 cases leave the pre-T2 gate. That leaves two readings of the gate: either S1 T2 is blocked by missing RED, or S2 can start T3 without its own RED.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  25 |       "recommendation": "State that S1 T1 is the security subset: the 107-method bypass, D8 projections, pool containment, D9 identity, T0 fields and scope-related concurrency. Say the legacy (D10), risk (D11) and claim-concurrency RED move to an S2 Inspector RED commit that must come before T3. Note that T2 protection does not depend on those assertions."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  26 |     },
+[error]       | ^^^^^^
+[error] >  27 |     {
+[error]       | ^^^^^
+[error] >  28 |       "severity": "low",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  29 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  30 |       "line": 41,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  31 |       "problem": "Inspector paths are not exact. 'existing affected RAIT admissibility/CASE/WORKLIST tests' leaves out the shared fixtures that two-tenant persisted pool-scope and read-scope fixtures will need (backend/app/tests/shared/rait-case-command.fixture.ts and rait-jw01-admissibility.fixture.ts). It also leaves out the DB/RLS tests for the new internal tables generated into DDL 34.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  32 |       "recommendation": "Name the existing specs (backend/app/tests/e2e/rait-case-commands, rait-jw01-admissibility, rait-worklist-corrective, rait-worklist-production, policy-routes .e2e.spec.ts), the two shared fixtures, and whichever backend/database tests cover RLS for new CASE operations[] tables. Otherwise say RLS coverage comes only from the existing RLS DDL check."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  33 |     },
+[error]       | ^^^^^^
+[error] >  34 |     {
+[error]       | ^^^^^
+[error] >  35 |       "severity": "low",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  36 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  37 |       "line": 42,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  38 |       "problem": "'public exports/DI attributable to these providers' does not say where the new scoped-read controllers and services get registered. A1 grants backend/app/src/app.module.ts only for risk-provider composition. If any S1 registration needs the app module, that path is not owned.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  39 |       "recommendation": "Name src/handwritten/index.ts for CASE and WORKLIST and state that registration is through the generated domain modules. If the app module is needed, list it explicitly as an S1 addition with a no-cycle constraint."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  40 |     },
+[error]       | ^^^^^^
+[error] >  41 |     {
+[error]       | ^^^^^
+[error] >  42 |       "severity": "low",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  43 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  44 |       "line": 44,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  45 |       "problem": "Under Article 6 core mapping, docs/ is Architect, and the generated CRUD/commands OpenAPI files (docs/framework/contracts/BP-INF-RAIT-{CASE,WORKLIST}-001*.openapi.json) sit under docs/. The packet gives 'OpenAPI' generated outputs to Engineer and the handwritten commands OpenAPI to Architect, but does not say which files are which or how path enforcement accepts a generator write under docs/.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  46 |       "recommendation": "List the handwritten *.commands.openapi.json as Architect-authored inputs and the generated *.openapi.json plus packages/api-clients as generator outputs. Record which role session runs the generator so the docs/ write is attributable and not refused."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  47 |     },
+[error]       | ^^^^^^
+[error] >  48 |     {
+[error]       | ^^^^^
+[error] >  49 |       "severity": "low",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  50 |       "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  51 |       "line": 35,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  52 |       "problem": "Article 24 coupled triplets expect Architect, then Inspector, then Engineer branch lineage and merge order. S1 puts everything in one PR with role-separated commits but does not say how that satisfies the triplet ordering or what the coupled_task_group is.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  53 |       "recommendation": "State the commit and branch lineage inside the single PR (Architect commit → Inspector RED commit → Engineer commit → Inspector GREEN rerun), name the coupled_task_group ID, and note that this follows the precedent of earlier R-0025 implementation PRs."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  54 |     },
+[error]       | ^^^^^^
+[error] >  55 |     {
+[error]       | ^^^^^
+[error] >  56 |       "severity": "low",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  57 |       "file": "work/rounds/R-0025/reports/PR200-post-merge.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  58 |       "line": 40,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  59 |       "problem": "The report points to PR200-validation.md as where the final sequence/hash and check results are recorded, but that file does not exist on this branch. The chain currently holds only the audit.observe record (seq 141); the generic partial evidence has not been appended yet, which is consistent with the stated intent.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  60 |       "recommendation": "Create PR200-validation.md, using verb output only, before opening the follow-up PR, or reword the line as pending. Do not add a manual chain entry."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  61 |     },
+[error]       | ^^^^^^
+[error] >  62 |     {
+[error]       | ^^^^^
+[error] >  63 |       "severity": "info",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  64 |       "file": "work/rounds/R-0025/reports/PR200-post-merge.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  65 |       "line": 27,
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  66 |       "problem": "SC-20261019T031044-001 encodes 03:10:44Z, one second before the GitHub mergedAt of 03:10:45Z, while the chain record is stamped 03:12:20Z. This is probably derived from the merge commit time, but read alone it looks like the observation came before the merge.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  67 |       "recommendation": "Add one clause saying the SC id timestamp comes from the observed commit, not from when the run happened."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  68 |     }
+[error]       | ^^^^^
+[error] >  69 |   ],
+[error]       | ^^^^
+[error] >  70 |   "verified_ok": [
+[error]       | ^^^^^^^^^^^^^^^^^^
+[error] >  71 |     "The post-merge report matches PR200-merged-ci.json: merge 0e6589d8 of candidate 6d5fbf57 at 03:10:45Z. stack-smoke is reported as SKIPPED, not PASS, and the CI receipt is described as covering merged PR200 only.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  72 |     "Audit observe is recorded as YELLOW, readiness_promoting=false, at the exact SHA, kept separate from the ongoing scorecard. The chain gains seq 141 EV-665af2027bacea70, linked previous_hash→735466bc. Historical records and the legacy evidence-chain are unchanged.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  73 |     "The AUTHORIZATION.md and plan.md additions only add text. They quote the Owner's 2026-10-19 message, keep runtime and dispatch paused, and do not reopen D1–D11 or declare close/seal.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  74 |     "S1 activates no claim-context, case-risk endpoint, risk evaluator, parameter catalogue, legacy qualification entity/selector, atomic claim, risk persistence or sweeper. These are explicitly deferred to S2, matching A1 T3 and ADR-0048/0049.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  75 |     "Policy scope (RAIT read rows only, strict-command precedence preserved) matches A1 §3 step 3.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  76 |     "The CASE scope, pool-scope and scoped-read files and the WORKLIST scoped-read controller are within base §3 'new CASE-owned scoped-read handlers' plus A1's rait-case-pool-scope.service.ts. WORKLIST→CASE stays acyclic.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  77 |     "Acceptance keeps the accepted functional roles, human checklist and protocol→triage→admit flow, and invents no own-agency rejection rule or document.kind semantics, consistent with the T0 triage map and the A1 tail.",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  78 |     "Docs/blueprints/handwritten OpenAPI belong to Architect under Article 6 (docs/ = Architect); generated code stays Engineer. No new business decision, no accepted-ADR rewrite, no invented production source."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  79 |   ],
+[error]       | ^^^^
+[error] >  80 |   "scope": {
+[error]       | ^^^^^^^^^^^^
+[error] >  81 |     "role": "Architect (read-only design review)",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  82 |     "branch": "codex/r0025-pr200-postmerge-20261019",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  83 |     "baseline": "main 0e6589d8a18f55a0a3e4407f0e61f1475849e7eb",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  84 |     "reviewed": [
+[error]       | ^^^^^^^^^^^^^^^^^
+[error] >  85 |       "work/rounds/R-0025/reports/PR200-post-merge.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  86 |       "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  87 |       "work/rounds/R-0025/plan.md (diff)",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  88 |       "work/rounds/R-0025/AUTHORIZATION.md (diff)",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  89 |       "record/proofs/chain.json (diff)"
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  90 |     ],
+[error]       | ^^^^^^
+[error] >  91 |     "cross_checked_against": [
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  92 |       "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md (A1)",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  93 |       "work/rounds/R-0025/reports/P4-02-exact-wiring-packet.md §3",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  94 |       "work/rounds/R-0025/contracts/P4-02-T0-access-map.md",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  95 |       "work/rounds/R-0025/contracts/P4-02-T0-triage-fields.md (via A1 summary)",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  96 |       "docs/meta/adr/ADR-0047 (routing/pool section, read in full); ADR-0045/46/48/49 checked only through A1's boundary statements",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  97 |       "work/rounds/R-0025/reports/PR200-merged-ci.json",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  98 |       ".devai/pin/constitution.md Articles 6/7/24",
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  99 |       "existing paths: backend/app/tests/e2e, backend/database/ddl/34-35, rait-case/rait-worklist src/handwritten"
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 100 |     ],
+[error]       | ^^^^^^
+[error] > 101 |     "not_done": "No edits, runtime tests, generators, DB access, primary checkout or scorecard access. Not a proof of runtime control; does not cover CI for this unmerged follow-up."
+[error]       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 102 |   }
+[error]       | ^^^
+[error] > 103 | }
+[error]       | ^
+[error] > 104 | ```
+[error]       | ^^^
+[error]   105 |
+bridge: saída do reviewer não é JSON válido: work/rounds/R-0025/reviews/PR200-postmerge/review.json

@@ -1,0 +1,52 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+      "line": 58,
+      "problem": "The 'exact fixture/spec ownership' and 'real suite plus existing RLS check for new tables' fix described in the delta is not in the packet. The Inspector row is the same as the version review1 flagged: it still says 'existing affected RAIT admissibility/CASE/WORKLIST tests'. It does not name the existing e2e specs (backend/app/tests/e2e/rait-case-commands, rait-jw01-admissibility, rait-worklist-corrective, rait-worklist-production and policy-routes .e2e.spec.ts). It does not name the shared fixtures that the required two-tenant persisted pool-scope and read-scope fixtures need (backend/app/tests/shared/rait-case-command.fixture.ts and rait-jw01-admissibility.fixture.ts). It also names no RLS test or check for the new internal read-scope and case-pool tables in DDL34. A1 gave the Inspector all of backend/app/tests. S1 narrows that to named paths, so the shared fixtures are now an unowned dependency, and needing them would trigger S1's own 'unowned required path' stop during T1. The checks section (lines 125-131) mentions 'RLS' only in general terms and names neither verify:rls-ddl nor backend:rls-smoke. PR200-validation.md does not claim this fix, so the records and the stated delta disagree.",
+      "recommendation": "Rewrite the Inspector row to list the five existing e2e specs, the two shared fixtures (edit/extend only, no deletion) and the new rait-p402-scope.e2e.spec.ts. Name the existing RLS gates the Inspector or Engineer must run for the new DDL34 tables (pnpm verify:rls-ddl, plus backend:rls-smoke or the real HTTP+DB suite under request tenant context) and say which role owns any new RLS test file. No new permission is needed; this narrows A1's existing backend/app/tests grant."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md",
+      "line": 62,
+      "problem": "Two rows claim the same frontend specs. Line 58 gives the Inspector 'named frontend specs only if compatibility adapters below change'. Line 62 gives the Engineer compatibility row the 11 frontend files 'and their colocated specs', and lines 64-68 repeat the colocated specs for the archive/audit additions without naming a role. Under the S1 sequence (Inspector RED, then Engineer, then Inspector reruns unchanged decisive tests) the Engineer must not author or edit decisive specs. As written, either role could change apps/rait/web *.spec.ts files, which undercuts 'each discipline owns its files' (line 41).",
+      "recommendation": "Assign the colocated frontend specs of the listed compatibility files to the Inspector only. Remove 'and their colocated specs' from the Engineer row, or limit it to type-only compile adjustments that the Inspector reviews. Keep the archive/audit extension paragraph's spec reference consistent with that."
+    }
+  ],
+  "scope": {
+    "role": "Architect (read-only corrected-delta design review)",
+    "branch": "codex/r0025-pr200-postmerge-20261019",
+    "baseline": "main 0e6589d8a18f55a0a3e4407f0e61f1475849e7eb",
+    "reviewed": [
+      "work/rounds/R-0025/reports/P4-02-S1-security-prerequisite.md (corrected)",
+      "work/rounds/R-0025/reports/PR200-validation.md",
+      "work/rounds/R-0025/reports/PR200-post-merge.md",
+      "work/rounds/R-0025/reports/PR200-audit-observe.json",
+      "work/rounds/R-0025/AUTHORIZATION.md and plan.md (working-tree diffs)",
+      "work/rounds/R-0025/reviews/PR200-postmerge/review-1-capture.md, review-1-recovered.json, review-2-prompt.md"
+    ],
+    "cross_checked_against": [
+      "work/rounds/R-0025/reports/P4-02-D8-D11-bounded-amendment.md (A1 §3 steps 1-3, §4 gate table and pre-T2/pre-release gates, Inspector/Engineer ownership rows)",
+      "docs/meta/adr/ADR-0047 routing section (protocol/triage/admit keep legal/If-Match guards and leave the case unlinked; CASE_POOL_UNRESOLVED409 only for claim-context/claim)",
+      "work/rounds/R-0025/contracts/P4-02-T0-access-map.md (AUDITOR sealed archive, secretary archive duty, events projection rows)",
+      "existing paths: backend/app/tests/shared/*rait*.fixture.ts, backend/app/tests/e2e/*rait*/policy-routes specs, backend/database/ddl/34-35, package.json verify:rls-ddl / backend:rls-smoke / verify:decorators / verify:role-catalog"
+    ],
+    "closed_from_review1": [
+      "Medium routing: fixed at lines 83-88 and 110-112. Protocol/admit call the resolver in their existing transaction; with zero or multiple routes they write no link and legal success is unchanged; no S1 command emits CASE_POOL_UNRESOLVED409; the 409 is deferred to S2 claim; acceptance requires identical status/body/version/events. Consistent with ADR-0047.",
+      "Medium ownership: lines 62-70 declare the four archive/audit files as an explicit bounded extension beyond base §3+A1, justified by the T0 sealed-archive/events projections, with no new screen or workflow.",
+      "Medium gate split: lines 8-14 state the S1 pre-T2 RED subset and move D10/D11/atomic claim-concurrency RED to an S2 Inspector commit that must precede T3, with no acceptance removed. Consistent with A1 §4 'Before T2', where the D10 legacy policy design is already integrated.",
+      "Low registration: CASE/WORKLIST src/handwritten/index.ts and generated domain module registration; app.module.ts explicitly not owned.",
+      "Low generation: Architect authors *.commands.openapi.json and runs contracts:openapi for generated CRUD OpenAPI under docs/; Engineer runs blueprints:generate (code/DDL/manifest) and contracts:clients; tools/blueprints/generated-files.json added only as an attributable manifest.",
+      "Low lineage: coupled group P4-02-S1 with Architect→Inspector→Engineer branch ancestry, ordered local integration, Inspector GREEN rerun, then one main-targeting PR; no task registered or dispatched now.",
+      "Low validation: PR200-validation.md exists; it states the final evidence append, post-append verification, formatting and review status as pending."
+    ],
+    "confirmed_unchanged": [
+      "PR200-post-merge.md CI/merge/audit facts, YELLOW 0/45 with readiness_promoting=false, the separate scorecard, and machine timestamps kept as emitted.",
+      "AUTHORIZATION/plan additions only add text and keep runtime and dispatch paused. No close/seal, no D1-D11 reopening, no new permission/revocation rule, and no S2 activation in S1."
+    ],
+    "not_done": "No edits, runtime, tests, generators, DB, primary checkout or concurrent scorecard access. This reviews the design packet, not implementation acceptance or runtime controls, and does not cover CI for the unmerged follow-up."
+  }
+}

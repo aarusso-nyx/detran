@@ -653,3 +653,14 @@ fechada por inferência: sem fonte versionada, a ação fica fail-closed e a OD 
   5 TODO). Depois de `pnpm --filter @detran/ui build`, sem mudança de fonte,
   a repetição passou: 154 arquivos PASS, 1 skipped, 4.434 testes PASS e
   **139 TODO**. Esse é o número para comparação no critério 2.
+
+## Current execution boundary — PR200, 2026-10-19
+
+PR200 integrated D8–D11, ADR0047–49, T0 contracts and P4-02 amendment A1 at
+0e6589d8. See reports/PR200-post-merge.md for the exact non-promoting audit and
+partial evidence. T0 design completion is not runtime or journey completion.
+R-0025 remains open; historical dependency/wait banners above do not reopen the
+closed D1–D11 decisions. Next proposed slice is reports/P4-02-S1-security-prerequisite.md
+(T1 security RED then T2 scoped protection, one implementation PR). It awaits
+explicit approval; runtime and test dispatch remain paused. Scorecard work stays
+separate; no close/seal or production qualification is declared.
