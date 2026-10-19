@@ -143,6 +143,12 @@ jobs:
       - name: Install documentation dependencies
         run: npm ci --prefix docs/site
 
+      - name: Generate complete native security inventory bodies
+        run: node tools/security/prepare-security-inventories.mjs
+
+      - name: Validate security exports against explicit generated native bodies
+        run: node tools/security/check-security-exports.mjs --api-map .devai/state/sensors/inventory_api/api-map.json --data-model .devai/state/sensors/inventory_data_model/data-model.json --pii-model .devai/state/sensors/inventory_data_handling/data-model-pii.json
+
       # The staged gate set grows with the repo (Phase 2 adds RLS smoke,
       # decorator check, OpenAPI drift, boundary check...). Today `pnpm check`
       # runs the format gate (prettier) and the recursive workspace typecheck.

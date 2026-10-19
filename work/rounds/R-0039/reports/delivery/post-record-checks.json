@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "checks": [
+    {
+      "name": "official-chain",
+      "command": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "proof-anchors",
+      "command": [
+        "pnpm",
+        "verify:proof-anchors"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "state-index",
+      "command": [
+        "pnpm",
+        "verify:state-index"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "rounds-index",
+      "command": [
+        "pnpm",
+        "verify:rounds-index"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "delivery-format",
+      "command": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "work/rounds/R-0039/reports/delivery/manifest.json",
+        "work/rounds/R-0039/reports/delivery/evidence-payload.json",
+        "work/rounds/R-0039/reports/delivery/README.md"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

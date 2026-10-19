@@ -1,0 +1,272 @@
+{
+  "consumer_commands": [
+    {
+      "consumer": "ui",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 1.53,
+      "log": "ui-typecheck.log.gz"
+    },
+    {
+      "consumer": "ui",
+      "task": "test",
+      "exit": 0,
+      "seconds": 2.65,
+      "log": "ui-test.log.gz"
+    },
+    {
+      "consumer": "boat-mobile",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 2.51,
+      "log": "boat-mobile-typecheck.log.gz"
+    },
+    {
+      "consumer": "boat-mobile",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 2.03,
+      "log": "boat-mobile-lint.log.gz"
+    },
+    {
+      "consumer": "boat-mobile",
+      "task": "test",
+      "exit": 0,
+      "seconds": 3.67,
+      "log": "boat-mobile-test.log.gz"
+    },
+    {
+      "consumer": "portal-web",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 6.37,
+      "log": "portal-web-typecheck.log.gz"
+    },
+    {
+      "consumer": "portal-web",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 4.17,
+      "log": "portal-web-lint.log.gz"
+    },
+    {
+      "consumer": "portal-web",
+      "task": "test",
+      "exit": 0,
+      "seconds": 78.75,
+      "log": "portal-web-test.log.gz"
+    },
+    {
+      "consumer": "portal-web",
+      "task": "build",
+      "exit": 0,
+      "seconds": 10.74,
+      "log": "portal-web-build.log.gz"
+    },
+    {
+      "consumer": "dashboard-web",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 4.36,
+      "log": "dashboard-web-typecheck.log.gz"
+    },
+    {
+      "consumer": "dashboard-web",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 2.89,
+      "log": "dashboard-web-lint.log.gz"
+    },
+    {
+      "consumer": "dashboard-web",
+      "task": "test",
+      "exit": 0,
+      "seconds": 32.29,
+      "log": "dashboard-web-test.log.gz"
+    },
+    {
+      "consumer": "dashboard-web",
+      "task": "build",
+      "exit": 0,
+      "seconds": 6.45,
+      "log": "dashboard-web-build.log.gz"
+    },
+    {
+      "consumer": "teat-mobile",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 5.54,
+      "log": "teat-mobile-typecheck.log.gz"
+    },
+    {
+      "consumer": "teat-mobile",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 3.27,
+      "log": "teat-mobile-lint.log.gz"
+    },
+    {
+      "consumer": "teat-mobile",
+      "task": "test",
+      "exit": 0,
+      "seconds": 15.51,
+      "log": "teat-mobile-test.log.gz"
+    },
+    {
+      "consumer": "teat-mobile",
+      "task": "build",
+      "exit": 0,
+      "seconds": 9.13,
+      "log": "teat-mobile-build.log.gz"
+    },
+    {
+      "consumer": "teat-web",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 4.15,
+      "log": "teat-web-typecheck.log.gz"
+    },
+    {
+      "consumer": "teat-web",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 2.45,
+      "log": "teat-web-lint.log.gz"
+    },
+    {
+      "consumer": "teat-web",
+      "task": "test",
+      "exit": 0,
+      "seconds": 5.9,
+      "log": "teat-web-test.log.gz"
+    },
+    {
+      "consumer": "teat-web",
+      "task": "build",
+      "exit": 0,
+      "seconds": 8.39,
+      "log": "teat-web-build.log.gz"
+    },
+    {
+      "consumer": "rait-web",
+      "task": "typecheck",
+      "exit": 0,
+      "seconds": 8.2,
+      "log": "rait-web-typecheck.log.gz"
+    },
+    {
+      "consumer": "rait-web",
+      "task": "lint",
+      "exit": 0,
+      "seconds": 4.91,
+      "log": "rait-web-lint.log.gz"
+    },
+    {
+      "consumer": "rait-web",
+      "task": "test",
+      "exit": 0,
+      "seconds": 80.25,
+      "log": "rait-web-test.log.gz"
+    },
+    {
+      "consumer": "rait-web",
+      "task": "build",
+      "exit": 0,
+      "seconds": 9.18,
+      "log": "rait-web-build.log.gz"
+    }
+  ],
+  "test_summaries": [
+    {
+      "consumer": "ui",
+      "tests": "2 passed (2)"
+    },
+    {
+      "consumer": "boat-mobile",
+      "tests": "15 passed (15)"
+    },
+    {
+      "consumer": "portal-web",
+      "tests": "1551 passed | 14 todo (1565)"
+    },
+    {
+      "consumer": "dashboard-web",
+      "tests": "2042 passed (2042)"
+    },
+    {
+      "consumer": "teat-mobile",
+      "tests": "1172 passed (1172)"
+    },
+    {
+      "consumer": "teat-web",
+      "tests": "611 passed (611)"
+    },
+    {
+      "consumer": "rait-web",
+      "tests": "5115 passed | 133 todo (5248)"
+    },
+    {
+      "consumer": "app",
+      "tests": "144 passed (144)"
+    }
+  ],
+  "additional_checks": [
+    {
+      "command": "pnpm --filter @detran/ui build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm --filter @detran/boat-mobile build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm devai:test",
+      "exit": 0,
+      "tests_passed": 198
+    },
+    {
+      "command": "pnpm verify:stynx-pin",
+      "exit": 0
+    },
+    {
+      "command": "pnpm test:stynx-pin",
+      "exit": 0,
+      "tests_passed": 8
+    },
+    {
+      "command": "pnpm law:test",
+      "exit": 0,
+      "tests_passed": 56
+    },
+    {
+      "command": "pnpm contracts:check",
+      "exit": 0,
+      "operations": 329,
+      "clients": 72
+    },
+    {
+      "command": "pnpm --filter @detran/app test:unit",
+      "exit": 0,
+      "tests_passed": 144
+    },
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec prettier --check <9 dependency files>",
+      "exit": 0
+    },
+    {
+      "command": "pnpm audit --json",
+      "exit": 0,
+      "vulnerabilities": 0
+    },
+    {
+      "command": "pnpm exec devai sense run security_scan --input <canonical> --format json",
+      "exit": 3,
+      "status": "refused before measurement",
+      "reason": "SENSE_INSTANCE_CHAIN_DIGEST_MISMATCH:SR-0633d2afcf0126e7"
+    }
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/authorization-crosswalk.schema.json",
+  "title": "detran-authorization-crosswalk",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "native_sensor_compatible",
+    "native_population_sha256",
+    "semantics",
+    "population",
+    "controls",
+    "test_references",
+    "known_gaps",
+    "sources",
+    "endpoints"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "kind": {
+      "const": "detran-authorization-crosswalk"
+    },
+    "native_sensor_compatible": {
+      "const": false
+    },
+    "native_population_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "semantics": {
+      "type": "string",
+      "minLength": 1
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "application_policy",
+        "application_public",
+        "mock",
+        "test_fixture",
+        "other",
+        "unresolved_application"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "application_policy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "application_public": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mock": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "test_fixture": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "other": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_application": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "file", "symbol", "constraint"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "constraint": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "test_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["concern", "file"],
+        "properties": {
+          "concern": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "known_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/endpoint"
+      },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_id",
+        "method",
+        "path",
+        "population",
+        "source",
+        "binding",
+        "resource",
+        "action",
+        "policy_key",
+        "predicate",
+        "guards",
+        "decorator_expressions",
+        "public_review",
+        "runtime_authorization_proven",
+        "limitations"
+      ],
+      "properties": {
+        "native_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS",
+            "ALL"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "population": {
+          "type": "string",
+          "enum": ["application", "mock", "test-fixture", "other"]
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "symbol", "start_line", "end_line"],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "start_line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "end_line": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "binding": {
+          "type": "string",
+          "enum": [
+            "conditional-policy-reference",
+            "declared-public",
+            "unresolved",
+            "separate-population-unresolved"
+          ]
+        },
+        "resource": {
+          "type": ["string", "null"]
+        },
+        "action": {
+          "type": ["string", "null"]
+        },
+        "policy_key": {
+          "type": ["string", "null"]
+        },
+        "predicate": {
+          "type": ["string", "null"]
+        },
+        "guards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "decorator_expressions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "public_review": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["control", "sources", "tests", "limitation"],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+                  }
+                },
+                "tests": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+                  }
+                },
+                "limitation": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "runtime_authorization_proven": {
+          "const": false
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "binding": {
+                "const": "conditional-policy-reference"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "resource": {
+                "type": "string",
+                "minLength": 1
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1
+              },
+              "policy_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "predicate": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "population": {
+                "enum": ["mock", "test-fixture", "other"]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "binding": {
+                "const": "separate-population-unresolved"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
