@@ -121,6 +121,7 @@ export class RaitInquiryCommandService {
     input: InquiryCommandInput,
     effect?: TimerExpiredData,
   ): Promise<Result> {
+    if (!UUID.test(input.targetId)) fail('RAIT.TENANT_MISMATCH', 404);
     const allowed = FIELDS[input.command];
     if (
       !allowed ||

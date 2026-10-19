@@ -422,6 +422,24 @@ export class RaitWorklistCommandService {
   ) {}
 
   async execute(input: WorklistCommandInput): Promise<Result> {
+    const uuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
+    if (!uuid.test(input.targetId)) fail('RAIT.TENANT_MISMATCH', 404);
+    for (const field of ['poolId', 'memberId', 'caseId', 'replacementMemberId'])
+      if (
+        input.payload[field] !== undefined &&
+        (typeof input.payload[field] !== 'string' ||
+          !uuid.test(input.payload[field] as string))
+      )
+        fail('RAIT.VALIDATION_FAILED', 400);
+    if (
+      input.payload.caseIds !== undefined &&
+      (!Array.isArray(input.payload.caseIds) ||
+        input.payload.caseIds.some(
+          (id: unknown) => typeof id !== 'string' || !uuid.test(id),
+        ))
+    )
+      fail('RAIT.VALIDATION_FAILED', 400);
     validateEnvelope(input);
     const context = this.context();
     const key = input.headers['Idempotency-Key'];
