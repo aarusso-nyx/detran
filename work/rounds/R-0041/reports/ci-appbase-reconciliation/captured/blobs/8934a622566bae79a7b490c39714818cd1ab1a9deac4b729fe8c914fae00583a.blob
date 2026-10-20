@@ -1,0 +1,97 @@
+{
+  "kind": "appbase-engineer-two-path-source-freeze",
+  "observedAt": "2026-10-20T04:39:32.383863+00:00",
+  "ownedPaths": [
+    "backend/app/vitest.config.ts",
+    "tools/security/invariants/nest-metadata-transform.d.mts"
+  ],
+  "sourceHashes": {
+    "backend/app/vitest.config.ts": "7e26ede76b9bfe698eb5b23ab3cf8b8d5a5b2dbb021347e6e4f506c79cbe4ccb",
+    "tools/security/invariants/nest-metadata-transform.d.mts": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+    "tools/security/invariants/nest-metadata-transform.mjs": "333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d",
+    "tools/security/invariants/ops-perf.config.mjs": "7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8",
+    "tools/devai/tests/ci-isolation.test.mjs": "003615a7f812c121dfd37cb17a91700abb3c3b15bdf42eb2bdd16ea812b58a0d",
+    "backend/app/vitest.performance.config.ts": "d12e699f83949bb22ba59311924a987afebd63ae4244ad4dca0d738d70311dd7",
+    "backend/app/tsconfig.json": "cd804a68e6e99255b8401285c2f7aea89d094378440daf13fbe5a6c175ec103d"
+  },
+  "frozenBlueprintPathCount": 242,
+  "frozenBlueprintMismatches": [],
+  "frozenManifestSha256": "f71be67d1f441c89778c081731a189be10ebef51e719d27e94ab4ca4d66dee27",
+  "checks": {
+    "canonical-app-typecheck": {
+      "argv": [
+        "pnpm",
+        "--filter",
+        "@detran/app",
+        "typecheck"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 7.7540271282196045,
+      "stdoutSha256": "67ff43e0403783883731af8cae6caa1f4c4a67ef84cb95db5120ec659b55d05a",
+      "stderrSha256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    "focused-config-typecheck": {
+      "argv": [
+        "node",
+        "/tmp/pr213-appbase-engineer-checks/focused-config-typecheck.cjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 0.6340701580047607,
+      "stdoutSha256": "aa741d1fc81303e4505c4cc9631a5ecbe65b84d6694e93d2f35140782db9edf3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "format-check": {
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "backend/app/vitest.config.ts",
+        "tools/security/invariants/nest-metadata-transform.d.mts"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 0.32094812393188477,
+      "stdoutSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "stderrSha256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    }
+  },
+  "focusedTypes": {
+    "kind": "appbase-engineer-focused-types",
+    "compilerVersion": "6.0.3",
+    "rootNames": [
+      "backend/app/vitest.config.ts",
+      "backend/app/vitest.performance.config.ts",
+      "tools/security/invariants/nest-metadata-transform.d.mts"
+    ],
+    "options": {
+      "target": 10,
+      "module": 199,
+      "moduleResolution": 99,
+      "strict": true,
+      "noEmit": true,
+      "skipLibCheck": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "types": [
+        "node",
+        "vitest/globals"
+      ],
+      "configFilePath": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/backend/app/tsconfig.json"
+    },
+    "diagnosticCount": 0,
+    "diagnostics": [],
+    "returnType": "Plugin<any>",
+    "returnTypeIsAny": false,
+    "rootVite": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+    "appVite": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+    "physicalViteEqual": true,
+    "viteVersion": "7.3.6",
+    "noEmit": true
+  },
+  "rawRoot": "/tmp/pr213-appbase-engineer-checks",
+  "inspectorGreen": "independently pending",
+  "noGitOrEvidenceEffects": true
+}

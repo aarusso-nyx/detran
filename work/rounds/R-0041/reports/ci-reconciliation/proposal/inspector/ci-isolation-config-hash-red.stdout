@@ -1,0 +1,44 @@
+✔ CI and generated verifier YAML reject duplicate keys and invalid syntax (16.0565ms)
+✔ CI remains present on every PR and main push with no content filters (6.275625ms)
+✔ workflow and ref keys isolate unrelated workflows and refs while superseding the same candidate (4.597083ms)
+✔ all third-party actions stay immutable and checkout/setup-node converge with the protected verifier (5.19425ms)
+✔ existing CI gate identities and candidate verified-local-rc publishing are preserved (5.241167ms)
+✖ nine invariant semantic producers execute unconditionally with isolated database services (7.254583ms)
+✔ whole native activation is deferred while the original seven task declarations and rc profile stay exact (0.888083ms)
+✔ foundation propagates every non-success producer result instead of silently skipping (3.543666ms)
+✔ protected control edits force remote execution before an exact-tree claim can be selected (3.674167ms)
+✔ generated verifier serializes the exact candidate and checks protected main controls as inert inputs (1.511625ms)
+✔ attestation binds commit tree policy trust and failure outcome without remote fallback (1.257375ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 156.680083
+
+✖ failing tests:
+
+test at tools/devai/tests/ci-isolation.test.mjs:230:1
+✖ nine invariant semantic producers execute unconditionally with isolated database services (7.254583ms)
+  AssertionError [ERR_ASSERTION]: Complete config population/control changed: invariant-ops-perf
+  + actual - expected
+  
+  + '7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8'
+  - 'd7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e'
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/ci-isolation.test.mjs:289:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8',
+    expected: 'd7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

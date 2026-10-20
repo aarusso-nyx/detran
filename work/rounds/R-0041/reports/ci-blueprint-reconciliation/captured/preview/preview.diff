@@ -1,0 +1,1904 @@
+--- a/backend/database/ddl/13-ops-field-operations.sql
++++ b/backend/database/ddl/13-ops-field-operations.sql
+@@ -1,4 +1,4 @@
+--- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++-- Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ 
+ -- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
+ 
+--- a/backend/database/ddl/31-inf-ait.sql
++++ b/backend/database/ddl/31-inf-ait.sql
+@@ -1,4 +1,4 @@
+--- Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++-- Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ 
+ -- Regenerable-only DDL for BP-INF-AIT-001; request-path writes use role_app_backend.
+ 
+--- a/backend/database/ddl/42-ch-encounters.sql
++++ b/backend/database/ddl/42-ch-encounters.sql
+@@ -1,4 +1,4 @@
+--- Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++-- Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ 
+ -- Regenerable-only DDL for BP-CH-ENCOUNTERS-001; request-path writes use role_app_backend.
+ 
+--- a/backend/database/ddl/62-portal-requests.sql
++++ b/backend/database/ddl/62-portal-requests.sql
+@@ -1,4 +1,4 @@
+--- Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++-- Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ 
+ -- Regenerable-only DDL for BP-PORTAL-REQUESTS-001; request-path writes use role_app_backend.
+ 
+--- a/backend/database/ddl/70-est-crash.sql
++++ b/backend/database/ddl/70-est-crash.sql
+@@ -1,4 +1,4 @@
+--- Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++-- Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ 
+ -- Regenerable-only DDL for BP-EST-CRASH-001; request-path writes use role_app_backend.
+ 
+--- a/backend/domains/ch/encounters/package.json
++++ b/backend/domains/ch/encounters/package.json
+@@ -31,7 +31,7 @@
+   "devDependencies": {
+     "@types/node": "^24.10.1",
+     "typescript": "^6.0.3",
+-    "vite": "7.3.6",
+-    "vitest": "^4.1.7"
++    "vitest": "^4.1.7",
++    "vite": "7.3.6"
+   }
+ }
+--- a/backend/domains/ch/encounters/src/controllers/appointment.controller.ts
++++ b/backend/domains/ch/encounters/src/controllers/appointment.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ch/encounters/src/controllers/encounter.controller.ts
++++ b/backend/domains/ch/encounters/src/controllers/encounter.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ch/encounters/src/dto/create-appointment.dto.ts
++++ b/backend/domains/ch/encounters/src/dto/create-appointment.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ export interface CreateAppointmentDto {
+   clinic_id: string;
+   patient_id: string;
+--- a/backend/domains/ch/encounters/src/dto/create-encounter.dto.ts
++++ b/backend/domains/ch/encounters/src/dto/create-encounter.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ export interface CreateEncounterDto {
+   clinic_id: string;
+   patient_id: string;
+--- a/backend/domains/ch/encounters/src/encounters.module.ts
++++ b/backend/domains/ch/encounters/src/encounters.module.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import { Module } from '@nestjs/common';
+ import { AppointmentController } from './controllers/appointment.controller.js';
+ import { AppointmentService } from './services/appointment.service.js';
+--- a/backend/domains/ch/encounters/src/entities/appointment.entity.ts
++++ b/backend/domains/ch/encounters/src/entities/appointment.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ export interface Appointment {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ch/encounters/src/entities/encounter.entity.ts
++++ b/backend/domains/ch/encounters/src/entities/encounter.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ export interface Encounter {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ch/encounters/src/index.ts
++++ b/backend/domains/ch/encounters/src/index.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ export * from './controllers/appointment.controller.js';
+ export * from './dto/create-appointment.dto.js';
+ export * from './entities/appointment.entity.js';
+--- a/backend/domains/ch/encounters/src/repositories/appointment.repository.ts
++++ b/backend/domains/ch/encounters/src/repositories/appointment.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ch/encounters/src/repositories/encounter.repository.ts
++++ b/backend/domains/ch/encounters/src/repositories/encounter.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ch/encounters/src/services/appointment.service.ts
++++ b/backend/domains/ch/encounters/src/services/appointment.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import { Injectable } from '@nestjs/common';
+ import { AppointmentRepository } from '../repositories/appointment.repository.js';
+ import type { Appointment } from '../entities/appointment.entity.js';
+--- a/backend/domains/ch/encounters/src/services/encounter.service.ts
++++ b/backend/domains/ch/encounters/src/services/encounter.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
++// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
+ import { Injectable } from '@nestjs/common';
+ import { EncounterRepository } from '../repositories/encounter.repository.js';
+ import type { Encounter } from '../entities/encounter.entity.js';
+--- a/backend/domains/est/crash/package.json
++++ b/backend/domains/est/crash/package.json
+@@ -29,7 +29,7 @@
+   "devDependencies": {
+     "@types/node": "^24.10.1",
+     "typescript": "^6.0.3",
+-    "vite": "7.3.6",
+-    "vitest": "^4.1.7"
++    "vitest": "^4.1.7",
++    "vite": "7.3.6"
+   }
+ }
+--- a/backend/domains/est/crash/src/controllers/crash-damage.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-damage.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-link.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-link.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-person.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-person.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-record.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-record.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-renaest-submission.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-renaest-submission.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-report-document.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-report-document.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-scene-duty.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-scene-duty.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-sketch.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-sketch.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-subject-request.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-subject-request.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-vehicle.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-vehicle.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-victim.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-victim.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/controllers/crash-witness.controller.ts
++++ b/backend/domains/est/crash/src/controllers/crash-witness.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/est/crash/src/crash.module.ts
++++ b/backend/domains/est/crash/src/crash.module.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Module } from '@nestjs/common';
+ import { CrashRecordController } from './controllers/crash-record.controller.js';
+ import { CrashRecordService } from './services/crash-record.service.js';
+--- a/backend/domains/est/crash/src/dto/create-crash-damage.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-damage.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashDamageDto {
+   crash_record_id: string;
+   asset_kind: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-link.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-link.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashLinkDto {
+   crash_record_id: string;
+   kind: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-person.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-person.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashPersonDto {
+   crash_record_id: string;
+   person_id?: string | null;
+--- a/backend/domains/est/crash/src/dto/create-crash-record.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-record.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashRecordDto {
+   traffic_agency_id: string;
+   crash_type: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-renaest-submission.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-renaest-submission.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashRenaestSubmissionDto {
+   crash_record_id: string;
+   protocol?: string | null;
+--- a/backend/domains/est/crash/src/dto/create-crash-report-document.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-report-document.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashReportDocumentDto {
+   crash_record_id: string;
+   document_kind: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-scene-duty.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-scene-duty.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashSceneDutyDto {
+   crash_record_id: string;
+   regime: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-sketch.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-sketch.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashSketchDto {
+   crash_record_id: string;
+   sketch_type: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-subject-request.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-subject-request.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashSubjectRequestDto {
+   crash_record_id?: string | null;
+   kind: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-vehicle.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-vehicle.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashVehicleDto {
+   crash_record_id: string;
+   vehicle_snapshot_id?: string | null;
+--- a/backend/domains/est/crash/src/dto/create-crash-victim.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-victim.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashVictimDto {
+   crash_record_id: string;
+   crash_person_id: string;
+--- a/backend/domains/est/crash/src/dto/create-crash-witness.dto.ts
++++ b/backend/domains/est/crash/src/dto/create-crash-witness.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CreateCrashWitnessDto {
+   crash_record_id: string;
+   name: string;
+--- a/backend/domains/est/crash/src/entities/crash-damage.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-damage.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashDamage {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-link.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-link.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashLink {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-person.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-person.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashPerson {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-record.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-record.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashRecord {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-renaest-submission.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-renaest-submission.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashRenaestSubmission {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-report-document.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-report-document.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashReportDocument {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-scene-duty.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-scene-duty.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashSceneDuty {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-sketch.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-sketch.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashSketch {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-subject-request.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-subject-request.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashSubjectRequest {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-vehicle.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-vehicle.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashVehicle {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-victim.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-victim.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashVictim {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/entities/crash-witness.entity.ts
++++ b/backend/domains/est/crash/src/entities/crash-witness.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export interface CrashWitness {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/est/crash/src/index.ts
++++ b/backend/domains/est/crash/src/index.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ export * from './controllers/crash-record.controller.js';
+ export * from './dto/create-crash-record.dto.js';
+ export * from './entities/crash-record.entity.js';
+--- a/backend/domains/est/crash/src/repositories/crash-damage.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-damage.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-link.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-link.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-person.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-person.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-record.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-record.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-renaest-submission.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-renaest-submission.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-report-document.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-report-document.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-scene-duty.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-scene-duty.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-sketch.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-sketch.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-subject-request.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-subject-request.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-vehicle.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-vehicle.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-victim.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-victim.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/repositories/crash-witness.repository.ts
++++ b/backend/domains/est/crash/src/repositories/crash-witness.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/est/crash/src/services/crash-damage.service.ts
++++ b/backend/domains/est/crash/src/services/crash-damage.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashDamageRepository } from '../repositories/crash-damage.repository.js';
+ import type { CrashDamage } from '../entities/crash-damage.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-link.service.ts
++++ b/backend/domains/est/crash/src/services/crash-link.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashLinkRepository } from '../repositories/crash-link.repository.js';
+ import type { CrashLink } from '../entities/crash-link.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-person.service.ts
++++ b/backend/domains/est/crash/src/services/crash-person.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashPersonRepository } from '../repositories/crash-person.repository.js';
+ import type { CrashPerson } from '../entities/crash-person.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-record.service.ts
++++ b/backend/domains/est/crash/src/services/crash-record.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashRecordRepository } from '../repositories/crash-record.repository.js';
+ import type { CrashRecord } from '../entities/crash-record.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-renaest-submission.service.ts
++++ b/backend/domains/est/crash/src/services/crash-renaest-submission.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashRenaestSubmissionRepository } from '../repositories/crash-renaest-submission.repository.js';
+ import type { CrashRenaestSubmission } from '../entities/crash-renaest-submission.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-report-document.service.ts
++++ b/backend/domains/est/crash/src/services/crash-report-document.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashReportDocumentRepository } from '../repositories/crash-report-document.repository.js';
+ import type { CrashReportDocument } from '../entities/crash-report-document.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-scene-duty.service.ts
++++ b/backend/domains/est/crash/src/services/crash-scene-duty.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashSceneDutyRepository } from '../repositories/crash-scene-duty.repository.js';
+ import type { CrashSceneDuty } from '../entities/crash-scene-duty.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-sketch.service.ts
++++ b/backend/domains/est/crash/src/services/crash-sketch.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashSketchRepository } from '../repositories/crash-sketch.repository.js';
+ import type { CrashSketch } from '../entities/crash-sketch.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-subject-request.service.ts
++++ b/backend/domains/est/crash/src/services/crash-subject-request.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashSubjectRequestRepository } from '../repositories/crash-subject-request.repository.js';
+ import type { CrashSubjectRequest } from '../entities/crash-subject-request.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-vehicle.service.ts
++++ b/backend/domains/est/crash/src/services/crash-vehicle.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashVehicleRepository } from '../repositories/crash-vehicle.repository.js';
+ import type { CrashVehicle } from '../entities/crash-vehicle.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-victim.service.ts
++++ b/backend/domains/est/crash/src/services/crash-victim.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashVictimRepository } from '../repositories/crash-victim.repository.js';
+ import type { CrashVictim } from '../entities/crash-victim.entity.js';
+--- a/backend/domains/est/crash/src/services/crash-witness.service.ts
++++ b/backend/domains/est/crash/src/services/crash-witness.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
++// Generated from BP-EST-CRASH-001 v1.0.0 sha256:4a862a5d1fd8f24a085897b18c3eb15f3c8e9d822d978efc8d07229f4c13b655
+ import { Injectable } from '@nestjs/common';
+ import { CrashWitnessRepository } from '../repositories/crash-witness.repository.js';
+ import type { CrashWitness } from '../entities/crash-witness.entity.js';
+--- a/backend/domains/inf/ait/package.json
++++ b/backend/domains/inf/ait/package.json
+@@ -33,9 +33,9 @@
+   "devDependencies": {
+     "@types/node": "^24.10.1",
+     "typescript": "^6.0.3",
+-    "vite": "7.3.6",
+     "vitest": "^4.1.7",
+     "@types/pg": "^8.15.4",
+-    "pg": "^8.20.0"
++    "pg": "^8.20.0",
++    "vite": "7.3.6"
+   }
+ }
+--- a/backend/domains/inf/ait/src/ait.module.ts
++++ b/backend/domains/inf/ait/src/ait.module.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Module } from '@nestjs/common';
+ import { AitController } from './controllers/ait.controller.js';
+ import { AitService } from './services/ait.service.js';
+--- a/backend/domains/inf/ait/src/controllers/ait-cancel-request-event.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-cancel-request-event.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-cancel-request.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-cancel-request.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-correction.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-correction.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-person.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-person.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-print-event.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-print-event.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-signature.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-signature.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-status-history.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-status-history.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait-vehicle.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait-vehicle.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/controllers/ait.controller.ts
++++ b/backend/domains/inf/ait/src/controllers/ait.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/inf/ait/src/dto/create-ait-cancel-request-event.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-cancel-request-event.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitCancelRequestEventDto {
+   cancel_request_id: string;
+   event_type: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-cancel-request.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-cancel-request.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitCancelRequestDto {
+   ait_id?: string | null;
+   kind: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-correction.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-correction.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitCorrectionDto {
+   ait_id: string;
+   operator_user_ref: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-person.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-person.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitPersonDto {
+   ait_id: string;
+   person_id: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-print-event.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-print-event.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitPrintEventDto {
+   ait_id: string;
+   event_type: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-signature.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-signature.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitSignatureDto {
+   ait_id: string;
+   person_id?: string | null;
+--- a/backend/domains/inf/ait/src/dto/create-ait-status-history.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-status-history.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitStatusHistoryDto {
+   ait_id: string;
+   status: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait-vehicle.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait-vehicle.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitVehicleDto {
+   ait_id: string;
+   vehicle_snapshot_id: string;
+--- a/backend/domains/inf/ait/src/dto/create-ait.dto.ts
++++ b/backend/domains/inf/ait/src/dto/create-ait.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface CreateAitDto {
+   traffic_agency_id: string;
+   executing_agency_id?: string | null;
+--- a/backend/domains/inf/ait/src/entities/ait-cancel-request-event.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-cancel-request-event.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitCancelRequestEvent {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-cancel-request.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-cancel-request.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitCancelRequest {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-correction.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-correction.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitCorrection {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-person.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-person.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitPerson {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-print-event.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-print-event.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitPrintEvent {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-signature.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-signature.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitSignature {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-status-history.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-status-history.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitStatusHistory {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait-vehicle.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait-vehicle.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface AitVehicle {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/entities/ait.entity.ts
++++ b/backend/domains/inf/ait/src/entities/ait.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export interface Ait {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/inf/ait/src/index.ts
++++ b/backend/domains/inf/ait/src/index.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ export * from './controllers/ait.controller.js';
+ export * from './dto/create-ait.dto.js';
+ export * from './entities/ait.entity.js';
+--- a/backend/domains/inf/ait/src/repositories/ait-cancel-request-event.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-cancel-request-event.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-cancel-request.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-cancel-request.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-correction.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-correction.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-person.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-person.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-print-event.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-print-event.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-signature.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-signature.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-status-history.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-status-history.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait-vehicle.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait-vehicle.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/repositories/ait.repository.ts
++++ b/backend/domains/inf/ait/src/repositories/ait.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/inf/ait/src/services/ait-cancel-request-event.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-cancel-request-event.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitCancelRequestEventRepository } from '../repositories/ait-cancel-request-event.repository.js';
+ import type { AitCancelRequestEvent } from '../entities/ait-cancel-request-event.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-cancel-request.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-cancel-request.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitCancelRequestRepository } from '../repositories/ait-cancel-request.repository.js';
+ import type { AitCancelRequest } from '../entities/ait-cancel-request.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-correction.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-correction.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitCorrectionRepository } from '../repositories/ait-correction.repository.js';
+ import type { AitCorrection } from '../entities/ait-correction.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-person.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-person.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitPersonRepository } from '../repositories/ait-person.repository.js';
+ import type { AitPerson } from '../entities/ait-person.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-print-event.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-print-event.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitPrintEventRepository } from '../repositories/ait-print-event.repository.js';
+ import type { AitPrintEvent } from '../entities/ait-print-event.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-signature.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-signature.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitSignatureRepository } from '../repositories/ait-signature.repository.js';
+ import type { AitSignature } from '../entities/ait-signature.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-status-history.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-status-history.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitStatusHistoryRepository } from '../repositories/ait-status-history.repository.js';
+ import type { AitStatusHistory } from '../entities/ait-status-history.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait-vehicle.service.ts
++++ b/backend/domains/inf/ait/src/services/ait-vehicle.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitVehicleRepository } from '../repositories/ait-vehicle.repository.js';
+ import type { AitVehicle } from '../entities/ait-vehicle.entity.js';
+--- a/backend/domains/inf/ait/src/services/ait.service.ts
++++ b/backend/domains/inf/ait/src/services/ait.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
++// Generated from BP-INF-AIT-001 v1.2.0 sha256:bbea1ddf9778bda02679f21a82457ea86830dad4f230eb271a51f14f05d22f6d
+ import { Injectable } from '@nestjs/common';
+ import { AitRepository } from '../repositories/ait.repository.js';
+ import type { Ait } from '../entities/ait.entity.js';
+--- a/backend/domains/ops/field/package.json
++++ b/backend/domains/ops/field/package.json
+@@ -33,7 +33,7 @@
+   "devDependencies": {
+     "@types/node": "^24.10.1",
+     "typescript": "^6.0.3",
+-    "vite": "7.3.6",
+-    "vitest": "^4.1.7"
++    "vitest": "^4.1.7",
++    "vite": "7.3.6"
+   }
+ }
+--- a/backend/domains/ops/field/src/controllers/agent-profile.controller.ts
++++ b/backend/domains/ops/field/src/controllers/agent-profile.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/application-version.controller.ts
++++ b/backend/domains/ops/field/src/controllers/application-version.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/approach.controller.ts
++++ b/backend/domains/ops/field/src/controllers/approach.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/device-event.controller.ts
++++ b/backend/domains/ops/field/src/controllers/device-event.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/homologation.controller.ts
++++ b/backend/domains/ops/field/src/controllers/homologation.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/measurement-instrument.controller.ts
++++ b/backend/domains/ops/field/src/controllers/measurement-instrument.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/operation.controller.ts
++++ b/backend/domains/ops/field/src/controllers/operation.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/operational-device.controller.ts
++++ b/backend/domains/ops/field/src/controllers/operational-device.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/patrol-vehicle.controller.ts
++++ b/backend/domains/ops/field/src/controllers/patrol-vehicle.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/session-handoff.controller.ts
++++ b/backend/domains/ops/field/src/controllers/session-handoff.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/shift.controller.ts
++++ b/backend/domains/ops/field/src/controllers/shift.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/team-agent.controller.ts
++++ b/backend/domains/ops/field/src/controllers/team-agent.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/controllers/team.controller.ts
++++ b/backend/domains/ops/field/src/controllers/team.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/ops/field/src/dto/create-agent-profile.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-agent-profile.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateAgentProfileDto {
+   traffic_agency_id: string;
+   user_ref: string;
+--- a/backend/domains/ops/field/src/dto/create-application-version.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-application-version.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateApplicationVersionDto {
+   app_type: string;
+   version: string;
+--- a/backend/domains/ops/field/src/dto/create-approach.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-approach.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateApproachDto {
+   traffic_agency_id: string;
+   shift_id: string;
+--- a/backend/domains/ops/field/src/dto/create-device-event.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-device-event.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateDeviceEventDto {
+   device_id: string;
+   agent_id?: string | null;
+--- a/backend/domains/ops/field/src/dto/create-homologation.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-homologation.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateHomologationDto {
+   traffic_agency_id: string;
+   homologation_number: string;
+--- a/backend/domains/ops/field/src/dto/create-measurement-instrument.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-measurement-instrument.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateMeasurementInstrumentDto {
+   traffic_agency_id: string;
+   instrument_type: string;
+--- a/backend/domains/ops/field/src/dto/create-operation.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-operation.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateOperationDto {
+   traffic_agency_id: string;
+   name: string;
+--- a/backend/domains/ops/field/src/dto/create-operational-device.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-operational-device.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateOperationalDeviceDto {
+   traffic_agency_id: string;
+   hardware_identifier_hash: string;
+--- a/backend/domains/ops/field/src/dto/create-patrol-vehicle.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-patrol-vehicle.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreatePatrolVehicleDto {
+   traffic_agency_id: string;
+   prefix: string;
+--- a/backend/domains/ops/field/src/dto/create-session-handoff.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-session-handoff.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateSessionHandoffDto {
+   shift_id: string;
+   from_agent_id: string;
+--- a/backend/domains/ops/field/src/dto/create-shift.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-shift.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateShiftDto {
+   traffic_agency_id: string;
+   agent_id: string;
+--- a/backend/domains/ops/field/src/dto/create-team-agent.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-team-agent.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateTeamAgentDto {
+   team_id: string;
+   agent_id: string;
+--- a/backend/domains/ops/field/src/dto/create-team.dto.ts
++++ b/backend/domains/ops/field/src/dto/create-team.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface CreateTeamDto {
+   traffic_agency_id: string;
+   operational_unit_id?: string | null;
+--- a/backend/domains/ops/field/src/entities/agent-profile.entity.ts
++++ b/backend/domains/ops/field/src/entities/agent-profile.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface AgentProfile {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/application-version.entity.ts
++++ b/backend/domains/ops/field/src/entities/application-version.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface ApplicationVersion {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/approach.entity.ts
++++ b/backend/domains/ops/field/src/entities/approach.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface Approach {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/device-event.entity.ts
++++ b/backend/domains/ops/field/src/entities/device-event.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface DeviceEvent {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/homologation.entity.ts
++++ b/backend/domains/ops/field/src/entities/homologation.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface Homologation {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/measurement-instrument.entity.ts
++++ b/backend/domains/ops/field/src/entities/measurement-instrument.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface MeasurementInstrument {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/operation.entity.ts
++++ b/backend/domains/ops/field/src/entities/operation.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface Operation {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/operational-device.entity.ts
++++ b/backend/domains/ops/field/src/entities/operational-device.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface OperationalDevice {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/patrol-vehicle.entity.ts
++++ b/backend/domains/ops/field/src/entities/patrol-vehicle.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface PatrolVehicle {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/session-handoff.entity.ts
++++ b/backend/domains/ops/field/src/entities/session-handoff.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface SessionHandoff {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/shift.entity.ts
++++ b/backend/domains/ops/field/src/entities/shift.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface Shift {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/team-agent.entity.ts
++++ b/backend/domains/ops/field/src/entities/team-agent.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface TeamAgent {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/entities/team.entity.ts
++++ b/backend/domains/ops/field/src/entities/team.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export interface Team {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/ops/field/src/field.module.ts
++++ b/backend/domains/ops/field/src/field.module.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Module } from '@nestjs/common';
+ import { AgentProfileController } from './controllers/agent-profile.controller.js';
+ import { AgentProfileService } from './services/agent-profile.service.js';
+--- a/backend/domains/ops/field/src/index.ts
++++ b/backend/domains/ops/field/src/index.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ export * from './controllers/agent-profile.controller.js';
+ export * from './dto/create-agent-profile.dto.js';
+ export * from './entities/agent-profile.entity.js';
+--- a/backend/domains/ops/field/src/repositories/agent-profile.repository.ts
++++ b/backend/domains/ops/field/src/repositories/agent-profile.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/application-version.repository.ts
++++ b/backend/domains/ops/field/src/repositories/application-version.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/approach.repository.ts
++++ b/backend/domains/ops/field/src/repositories/approach.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/device-event.repository.ts
++++ b/backend/domains/ops/field/src/repositories/device-event.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/homologation.repository.ts
++++ b/backend/domains/ops/field/src/repositories/homologation.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/measurement-instrument.repository.ts
++++ b/backend/domains/ops/field/src/repositories/measurement-instrument.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/operation.repository.ts
++++ b/backend/domains/ops/field/src/repositories/operation.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/operational-device.repository.ts
++++ b/backend/domains/ops/field/src/repositories/operational-device.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/patrol-vehicle.repository.ts
++++ b/backend/domains/ops/field/src/repositories/patrol-vehicle.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/session-handoff.repository.ts
++++ b/backend/domains/ops/field/src/repositories/session-handoff.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/shift.repository.ts
++++ b/backend/domains/ops/field/src/repositories/shift.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/team-agent.repository.ts
++++ b/backend/domains/ops/field/src/repositories/team-agent.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/repositories/team.repository.ts
++++ b/backend/domains/ops/field/src/repositories/team.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/ops/field/src/services/agent-profile.service.ts
++++ b/backend/domains/ops/field/src/services/agent-profile.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { AgentProfileRepository } from '../repositories/agent-profile.repository.js';
+ import type { AgentProfile } from '../entities/agent-profile.entity.js';
+--- a/backend/domains/ops/field/src/services/application-version.service.ts
++++ b/backend/domains/ops/field/src/services/application-version.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { ApplicationVersionRepository } from '../repositories/application-version.repository.js';
+ import type { ApplicationVersion } from '../entities/application-version.entity.js';
+--- a/backend/domains/ops/field/src/services/approach.service.ts
++++ b/backend/domains/ops/field/src/services/approach.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { ApproachRepository } from '../repositories/approach.repository.js';
+ import type { Approach } from '../entities/approach.entity.js';
+--- a/backend/domains/ops/field/src/services/device-event.service.ts
++++ b/backend/domains/ops/field/src/services/device-event.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { DeviceEventRepository } from '../repositories/device-event.repository.js';
+ import type { DeviceEvent } from '../entities/device-event.entity.js';
+--- a/backend/domains/ops/field/src/services/homologation.service.ts
++++ b/backend/domains/ops/field/src/services/homologation.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { HomologationRepository } from '../repositories/homologation.repository.js';
+ import type { Homologation } from '../entities/homologation.entity.js';
+--- a/backend/domains/ops/field/src/services/measurement-instrument.service.ts
++++ b/backend/domains/ops/field/src/services/measurement-instrument.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { MeasurementInstrumentRepository } from '../repositories/measurement-instrument.repository.js';
+ import type { MeasurementInstrument } from '../entities/measurement-instrument.entity.js';
+--- a/backend/domains/ops/field/src/services/operation.service.ts
++++ b/backend/domains/ops/field/src/services/operation.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { OperationRepository } from '../repositories/operation.repository.js';
+ import type { Operation } from '../entities/operation.entity.js';
+--- a/backend/domains/ops/field/src/services/operational-device.service.ts
++++ b/backend/domains/ops/field/src/services/operational-device.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { OperationalDeviceRepository } from '../repositories/operational-device.repository.js';
+ import type { OperationalDevice } from '../entities/operational-device.entity.js';
+--- a/backend/domains/ops/field/src/services/patrol-vehicle.service.ts
++++ b/backend/domains/ops/field/src/services/patrol-vehicle.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { PatrolVehicleRepository } from '../repositories/patrol-vehicle.repository.js';
+ import type { PatrolVehicle } from '../entities/patrol-vehicle.entity.js';
+--- a/backend/domains/ops/field/src/services/session-handoff.service.ts
++++ b/backend/domains/ops/field/src/services/session-handoff.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { SessionHandoffRepository } from '../repositories/session-handoff.repository.js';
+ import type { SessionHandoff } from '../entities/session-handoff.entity.js';
+--- a/backend/domains/ops/field/src/services/shift.service.ts
++++ b/backend/domains/ops/field/src/services/shift.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { ShiftRepository } from '../repositories/shift.repository.js';
+ import type { Shift } from '../entities/shift.entity.js';
+--- a/backend/domains/ops/field/src/services/team-agent.service.ts
++++ b/backend/domains/ops/field/src/services/team-agent.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { TeamAgentRepository } from '../repositories/team-agent.repository.js';
+ import type { TeamAgent } from '../entities/team-agent.entity.js';
+--- a/backend/domains/ops/field/src/services/team.service.ts
++++ b/backend/domains/ops/field/src/services/team.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee
++// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:852642f2217b56455f370f0d31299a708cd2582a04621d30461180596cf1de03
+ import { Injectable } from '@nestjs/common';
+ import { TeamRepository } from '../repositories/team.repository.js';
+ import type { Team } from '../entities/team.entity.js';
+--- a/backend/domains/portal/requests/package.json
++++ b/backend/domains/portal/requests/package.json
+@@ -31,9 +31,9 @@
+   "devDependencies": {
+     "@types/node": "^24.10.1",
+     "typescript": "^6.0.3",
+-    "vite": "7.3.6",
+     "vitest": "^4.1.7",
+     "@types/pg": "^8.15.4",
+-    "pg": "^8.20.0"
++    "pg": "^8.20.0",
++    "vite": "7.3.6"
+   }
+ }
+--- a/backend/domains/portal/requests/src/controllers/consequence-ack.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/consequence-ack.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/evaluation.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/evaluation.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/idempotency-record.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/idempotency-record.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/protocol.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/protocol.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/request-attachment.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/request-attachment.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/request-draft.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/request-draft.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/controllers/request.controller.ts
++++ b/backend/domains/portal/requests/src/controllers/request.controller.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import {
+   Body,
+   Controller,
+--- a/backend/domains/portal/requests/src/dto/create-consequence-ack.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-consequence-ack.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateConsequenceAckDto {
+   request_id: string;
+   kind: string;
+--- a/backend/domains/portal/requests/src/dto/create-evaluation.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-evaluation.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateEvaluationDto {
+   subject_kind: string;
+   subject_id: string;
+--- a/backend/domains/portal/requests/src/dto/create-idempotency-record.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-idempotency-record.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateIdempotencyRecordDto {
+   key: string;
+   subject_id?: string | null;
+--- a/backend/domains/portal/requests/src/dto/create-protocol.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-protocol.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateProtocolDto {
+   request_id: string;
+   number: string;
+--- a/backend/domains/portal/requests/src/dto/create-request-attachment.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-request-attachment.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateRequestAttachmentDto {
+   request_id: string;
+   filename: string;
+--- a/backend/domains/portal/requests/src/dto/create-request-draft.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-request-draft.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateRequestDraftDto {
+   request_id: string;
+   version: number;
+--- a/backend/domains/portal/requests/src/dto/create-request.dto.ts
++++ b/backend/domains/portal/requests/src/dto/create-request.dto.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface CreateRequestDto {
+   state: string;
+   service_key: string;
+--- a/backend/domains/portal/requests/src/entities/consequence-ack.entity.ts
++++ b/backend/domains/portal/requests/src/entities/consequence-ack.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface ConsequenceAck {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/evaluation.entity.ts
++++ b/backend/domains/portal/requests/src/entities/evaluation.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface Evaluation {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/idempotency-record.entity.ts
++++ b/backend/domains/portal/requests/src/entities/idempotency-record.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface IdempotencyRecord {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/protocol.entity.ts
++++ b/backend/domains/portal/requests/src/entities/protocol.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface Protocol {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/request-attachment.entity.ts
++++ b/backend/domains/portal/requests/src/entities/request-attachment.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface RequestAttachment {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/request-draft.entity.ts
++++ b/backend/domains/portal/requests/src/entities/request-draft.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface RequestDraft {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/entities/request.entity.ts
++++ b/backend/domains/portal/requests/src/entities/request.entity.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export interface Request {
+   id: string;
+   tenant_id: string;
+--- a/backend/domains/portal/requests/src/index.ts
++++ b/backend/domains/portal/requests/src/index.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ export * from './controllers/request.controller.js';
+ export * from './dto/create-request.dto.js';
+ export * from './entities/request.entity.js';
+--- a/backend/domains/portal/requests/src/repositories/consequence-ack.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/consequence-ack.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/evaluation.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/evaluation.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/idempotency-record.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/idempotency-record.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/protocol.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/protocol.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/request-attachment.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/request-attachment.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/request-draft.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/request-draft.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/repositories/request.repository.ts
++++ b/backend/domains/portal/requests/src/repositories/request.repository.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable, NotFoundException } from '@nestjs/common';
+ import { RequestContext } from '@stynx-nyx/core';
+ import { Database, type Transaction } from '@stynx-nyx/data';
+--- a/backend/domains/portal/requests/src/requests.module.ts
++++ b/backend/domains/portal/requests/src/requests.module.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Module } from '@nestjs/common';
+ import { RequestController } from './controllers/request.controller.js';
+ import { RequestService } from './services/request.service.js';
+--- a/backend/domains/portal/requests/src/services/consequence-ack.service.ts
++++ b/backend/domains/portal/requests/src/services/consequence-ack.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { ConsequenceAckRepository } from '../repositories/consequence-ack.repository.js';
+ import type { ConsequenceAck } from '../entities/consequence-ack.entity.js';
+--- a/backend/domains/portal/requests/src/services/evaluation.service.ts
++++ b/backend/domains/portal/requests/src/services/evaluation.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { EvaluationRepository } from '../repositories/evaluation.repository.js';
+ import type { Evaluation } from '../entities/evaluation.entity.js';
+--- a/backend/domains/portal/requests/src/services/idempotency-record.service.ts
++++ b/backend/domains/portal/requests/src/services/idempotency-record.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { IdempotencyRecordRepository } from '../repositories/idempotency-record.repository.js';
+ import type { IdempotencyRecord } from '../entities/idempotency-record.entity.js';
+--- a/backend/domains/portal/requests/src/services/protocol.service.ts
++++ b/backend/domains/portal/requests/src/services/protocol.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { ProtocolRepository } from '../repositories/protocol.repository.js';
+ import type { Protocol } from '../entities/protocol.entity.js';
+--- a/backend/domains/portal/requests/src/services/request-attachment.service.ts
++++ b/backend/domains/portal/requests/src/services/request-attachment.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { RequestAttachmentRepository } from '../repositories/request-attachment.repository.js';
+ import type { RequestAttachment } from '../entities/request-attachment.entity.js';
+--- a/backend/domains/portal/requests/src/services/request-draft.service.ts
++++ b/backend/domains/portal/requests/src/services/request-draft.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { RequestDraftRepository } from '../repositories/request-draft.repository.js';
+ import type { RequestDraft } from '../entities/request-draft.entity.js';
+--- a/backend/domains/portal/requests/src/services/request.service.ts
++++ b/backend/domains/portal/requests/src/services/request.service.ts
+@@ -1,4 +1,4 @@
+-// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c
++// Generated from BP-PORTAL-REQUESTS-001 v1.0.2 sha256:5473ac653449e703579b07347c595f918249dd6308961a12198eab656de781ae
+ import { Injectable } from '@nestjs/common';
+ import { RequestRepository } from '../repositories/request.repository.js';
+ import type { Request } from '../entities/request.entity.js';

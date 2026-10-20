@@ -1,0 +1,536 @@
+{
+  "role": "Inspector",
+  "sourceHEAD": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+  "sourceHEADTree": "620e3b1b5c4e135aa964867200807340928a3d3e",
+  "intentionalDirtyWorkingTree": true,
+  "sourceSHA256": {
+    "tools/devai/tests/nest-metadata-transform.test.mjs": "e10d243eb959f945c18e9517eef2bc31b45ed76afc4198d06f953a485f071839",
+    "tools/devai/tests/backend-app-metadata-config.test.mjs": "4e81df84298f1189cf98e218f781802fc5e2cf5fba1b4b0515b703121e33a8ed",
+    "backend/app/vitest.config.ts": "7e26ede76b9bfe698eb5b23ab3cf8b8d5a5b2dbb021347e6e4f506c79cbe4ccb",
+    "tools/security/invariants/nest-metadata-transform.d.mts": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+    "tools/security/invariants/nest-metadata-transform.mjs": "333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d",
+    "tools/security/invariants/ops-perf.config.mjs": "7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8",
+    "tools/devai/tests/ci-isolation.test.mjs": "003615a7f812c121dfd37cb17a91700abb3c3b15bdf42eb2bdd16ea812b58a0d",
+    "backend/app/vitest.performance.config.ts": "d12e699f83949bb22ba59311924a987afebd63ae4244ad4dca0d738d70311dd7",
+    "backend/app/tsconfig.json": "cd804a68e6e99255b8401285c2f7aea89d094378440daf13fbe5a6c175ec103d"
+  },
+  "genuineBaselineRed": {
+    "tests": 4,
+    "pass": 0,
+    "fail": 4,
+    "skipped": 0,
+    "capture": "/Users/aarusso/.config/devai/evidence/detran/pr213-appbase-inspector-20261020T043625Z/four-case-red.json"
+  },
+  "firstPostfixResult": {
+    "tests": 4,
+    "pass": 0,
+    "fail": 4,
+    "reason": "Inspector assertion incorrectly rejected official Vitest Plugin augmentation; actual metadata and DI already worked. Preserved, not promoted."
+  },
+  "assertionCorrection": "Exact Vite physical Plugin export symbol identity plus exactly its physical Vite declaration and actual Vitest-peer module augmentation, no unknown third origin; non-any and strict diagnostics assertions retained. No compiler options/source change.",
+  "fourCaseFinal": {
+    "tests": 4,
+    "suites": 0,
+    "pass": 4,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "finalGates": [
+    {
+      "name": "focused-prior36",
+      "argv": [
+        "node",
+        "--test",
+        "tools/devai/tests/nest-metadata-transform.test.mjs",
+        "tools/devai/tests/ci-isolation.test.mjs"
+      ],
+      "startedAt": "2026-10-20T04:41:56.395402+00:00",
+      "endedAt": "2026-10-20T04:41:58.416665+00:00",
+      "seconds": 2.021273749996908,
+      "exitCode": 0,
+      "summary": {
+        "tests": 36,
+        "suites": 0,
+        "pass": 36,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "stdoutSHA256": "ff617ba4329ce2e23b88ed56b2385f06c49212e0fbfdd71346b4cc310aa0a474",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-devai-glob",
+      "argv": [
+        "pnpm",
+        "devai:test"
+      ],
+      "startedAt": "2026-10-20T04:41:58.417309+00:00",
+      "endedAt": "2026-10-20T04:42:33.605755+00:00",
+      "seconds": 35.188126500026556,
+      "exitCode": 0,
+      "summary": {
+        "tests": 239,
+        "suites": 0,
+        "pass": 239,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "stdoutSHA256": "c169281a86ec653abcd7362f34cbadfc3accf2740c2933b98ac61843f1bb29a8",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-owned-format",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "tools/devai/tests/nest-metadata-transform.test.mjs",
+        "tools/devai/tests/backend-app-metadata-config.test.mjs"
+      ],
+      "startedAt": "2026-10-20T04:42:33.606123+00:00",
+      "endedAt": "2026-10-20T04:42:33.955817+00:00",
+      "seconds": 0.34971799998311326,
+      "exitCode": 0,
+      "summary": {},
+      "stdoutSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "frozen242Preserved": true,
+  "finalGlobFourCaseObservations": [
+    {
+      "label": "appbase-default-bundle",
+      "loaderOverrideOmitted": true,
+      "origins": {
+        "vitest": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/package.json",
+          "version": "4.1.11",
+          "sha256": "a28126d97bcaf567da5bed69443b7f3bcd9a7a8c38c8b66e554686b6bb2c10e0"
+        },
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "typescript": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        }
+      },
+      "expectedCache": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/backend/app/node_modules/.vite-temp",
+      "cacheBefore": {
+        "exists": true,
+        "entries": {}
+      },
+      "sourceAdjacentEvents": [],
+      "controlChecks": "PASS",
+      "pluginOrder": [
+        "vite:optimized-deps",
+        "vite:watch-package-data",
+        "vite:pre-alias",
+        "alias",
+        "detran-ordinary-nest-metadata",
+        "vite:modulepreload-polyfill",
+        "vite:resolve",
+        "vite:html-inline-proxy",
+        "vite:css",
+        "vite:esbuild",
+        "vite:json",
+        "vite:wasm-helper",
+        "vite:worker",
+        "vite:asset",
+        "vite:wasm-fallback",
+        "vite:define",
+        "vite:css-post",
+        "vite:worker-import-meta-url",
+        "vite:asset-import-meta-url",
+        "vite:dynamic-import-vars",
+        "vite:import-glob",
+        "vite:client-inject",
+        "vite:css-analysis",
+        "vite:import-analysis"
+      ],
+      "dashboardMetadata": [
+        "Database",
+        "RequestContext",
+        "OpsParameterService2",
+        "Object"
+      ],
+      "guardMetadata": [
+        "Reflector"
+      ],
+      "actualDashboardNestFailure": null,
+      "guardReflectorActuallyInjected": true,
+      "declaration": {
+        "sha256": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+        "returnType": "Plugin<any>",
+        "returnIsAny": false,
+        "PluginDeclarationPaths": [
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/index.d.ts",
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/dist/config.d.ts"
+        ],
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "compiler": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        },
+        "canonicalStrictNodeNext": true,
+        "focusedAppbaseAndPerformanceDiagnostics": 0,
+        "skipLibCheckIsNotTheProof": true
+      },
+      "status": "PASS",
+      "cacheSettle": {
+        "observations": [
+          {
+            "observedAt": "2026-10-20T04:42:08.501Z",
+            "snapshot": {
+              "exists": true,
+              "entries": {}
+            }
+          }
+        ],
+        "transientByteCapture": "Before/after and settle observations only; bytes already automatically unlinked remain unavailable and no filename or hash is invented."
+      },
+      "listenAttempts": 0,
+      "listenerGuardRestored": true,
+      "sourceHashCount": 12614,
+      "actualSourceStateUnchanged": true,
+      "finishedAt": "2026-10-20T04:42:09.645Z"
+    },
+    {
+      "label": "appbase-runner",
+      "loaderOverrideOmitted": false,
+      "origins": {
+        "vitest": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/package.json",
+          "version": "4.1.11",
+          "sha256": "a28126d97bcaf567da5bed69443b7f3bcd9a7a8c38c8b66e554686b6bb2c10e0"
+        },
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "typescript": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        }
+      },
+      "expectedCache": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/backend/app/node_modules/.vite-temp",
+      "cacheBefore": {
+        "exists": true,
+        "entries": {}
+      },
+      "sourceAdjacentEvents": [],
+      "controlChecks": "PASS",
+      "pluginOrder": [
+        "vite:optimized-deps",
+        "vite:watch-package-data",
+        "vite:pre-alias",
+        "alias",
+        "detran-ordinary-nest-metadata",
+        "vite:modulepreload-polyfill",
+        "vite:resolve",
+        "vite:html-inline-proxy",
+        "vite:css",
+        "vite:esbuild",
+        "vite:json",
+        "vite:wasm-helper",
+        "vite:worker",
+        "vite:asset",
+        "vite:wasm-fallback",
+        "vite:define",
+        "vite:css-post",
+        "vite:worker-import-meta-url",
+        "vite:asset-import-meta-url",
+        "vite:dynamic-import-vars",
+        "vite:import-glob",
+        "vite:client-inject",
+        "vite:css-analysis",
+        "vite:import-analysis"
+      ],
+      "dashboardMetadata": [
+        "Database",
+        "RequestContext",
+        "OpsParameterService2",
+        "Object"
+      ],
+      "guardMetadata": [
+        "Reflector"
+      ],
+      "actualDashboardNestFailure": null,
+      "guardReflectorActuallyInjected": true,
+      "declaration": {
+        "sha256": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+        "returnType": "Plugin<any>",
+        "returnIsAny": false,
+        "PluginDeclarationPaths": [
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/index.d.ts",
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/dist/config.d.ts"
+        ],
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "compiler": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        },
+        "canonicalStrictNodeNext": true,
+        "focusedAppbaseAndPerformanceDiagnostics": 0,
+        "skipLibCheckIsNotTheProof": true
+      },
+      "status": "PASS",
+      "cacheSettle": {
+        "observations": [
+          {
+            "observedAt": "2026-10-20T04:42:11.946Z",
+            "snapshot": {
+              "exists": true,
+              "entries": {}
+            }
+          }
+        ],
+        "transientByteCapture": "Before/after and settle observations only; bytes already automatically unlinked remain unavailable and no filename or hash is invented."
+      },
+      "listenAttempts": 0,
+      "listenerGuardRestored": true,
+      "sourceHashCount": 12614,
+      "actualSourceStateUnchanged": true,
+      "finishedAt": "2026-10-20T04:42:12.732Z"
+    },
+    {
+      "label": "performance-default-bundle",
+      "loaderOverrideOmitted": true,
+      "origins": {
+        "vitest": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/package.json",
+          "version": "4.1.11",
+          "sha256": "a28126d97bcaf567da5bed69443b7f3bcd9a7a8c38c8b66e554686b6bb2c10e0"
+        },
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "typescript": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        }
+      },
+      "expectedCache": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/backend/app/node_modules/.vite-temp",
+      "cacheBefore": {
+        "exists": true,
+        "entries": {}
+      },
+      "sourceAdjacentEvents": [],
+      "controlChecks": "PASS",
+      "pluginOrder": [
+        "vite:optimized-deps",
+        "vite:watch-package-data",
+        "vite:pre-alias",
+        "alias",
+        "detran-ordinary-nest-metadata",
+        "vite:modulepreload-polyfill",
+        "vite:resolve",
+        "vite:html-inline-proxy",
+        "vite:css",
+        "vite:esbuild",
+        "vite:json",
+        "vite:wasm-helper",
+        "vite:worker",
+        "vite:asset",
+        "vite:wasm-fallback",
+        "vite:define",
+        "vite:css-post",
+        "vite:worker-import-meta-url",
+        "vite:asset-import-meta-url",
+        "vite:dynamic-import-vars",
+        "vite:import-glob",
+        "vite:client-inject",
+        "vite:css-analysis",
+        "vite:import-analysis"
+      ],
+      "dashboardMetadata": [
+        "Database",
+        "RequestContext",
+        "OpsParameterService2",
+        "Object"
+      ],
+      "guardMetadata": [
+        "Reflector"
+      ],
+      "actualDashboardNestFailure": null,
+      "guardReflectorActuallyInjected": true,
+      "declaration": {
+        "sha256": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+        "returnType": "Plugin<any>",
+        "returnIsAny": false,
+        "PluginDeclarationPaths": [
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/index.d.ts",
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/dist/config.d.ts"
+        ],
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "compiler": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        },
+        "canonicalStrictNodeNext": true,
+        "focusedAppbaseAndPerformanceDiagnostics": 0,
+        "skipLibCheckIsNotTheProof": true
+      },
+      "status": "PASS",
+      "cacheSettle": {
+        "observations": [
+          {
+            "observedAt": "2026-10-20T04:42:14.914Z",
+            "snapshot": {
+              "exists": true,
+              "entries": {}
+            }
+          }
+        ],
+        "transientByteCapture": "Before/after and settle observations only; bytes already automatically unlinked remain unavailable and no filename or hash is invented."
+      },
+      "listenAttempts": 0,
+      "listenerGuardRestored": true,
+      "sourceHashCount": 12614,
+      "actualSourceStateUnchanged": true,
+      "finishedAt": "2026-10-20T04:42:15.680Z"
+    },
+    {
+      "label": "performance-runner",
+      "loaderOverrideOmitted": false,
+      "origins": {
+        "vitest": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/package.json",
+          "version": "4.1.11",
+          "sha256": "a28126d97bcaf567da5bed69443b7f3bcd9a7a8c38c8b66e554686b6bb2c10e0"
+        },
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "typescript": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        }
+      },
+      "expectedCache": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/backend/app/node_modules/.vite-temp",
+      "cacheBefore": {
+        "exists": true,
+        "entries": {}
+      },
+      "sourceAdjacentEvents": [],
+      "controlChecks": "PASS",
+      "pluginOrder": [
+        "vite:optimized-deps",
+        "vite:watch-package-data",
+        "vite:pre-alias",
+        "alias",
+        "detran-ordinary-nest-metadata",
+        "vite:modulepreload-polyfill",
+        "vite:resolve",
+        "vite:html-inline-proxy",
+        "vite:css",
+        "vite:esbuild",
+        "vite:json",
+        "vite:wasm-helper",
+        "vite:worker",
+        "vite:asset",
+        "vite:wasm-fallback",
+        "vite:define",
+        "vite:css-post",
+        "vite:worker-import-meta-url",
+        "vite:asset-import-meta-url",
+        "vite:dynamic-import-vars",
+        "vite:import-glob",
+        "vite:client-inject",
+        "vite:css-analysis",
+        "vite:import-analysis"
+      ],
+      "dashboardMetadata": [
+        "Database",
+        "RequestContext",
+        "OpsParameterService2",
+        "Object"
+      ],
+      "guardMetadata": [
+        "Reflector"
+      ],
+      "actualDashboardNestFailure": null,
+      "guardReflectorActuallyInjected": true,
+      "declaration": {
+        "sha256": "dbc09ac0842bb9331efb6343243d2960b2fd8dbd030ec5fc3808f791dbd57196",
+        "returnType": "Plugin<any>",
+        "returnIsAny": false,
+        "PluginDeclarationPaths": [
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/dist/node/index.d.ts",
+          "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@24.13.3_@vitest+coverage-v8@4.1.11_jsdom@2_vzi36ms3gej7gaj6csluhuleya/node_modules/vitest/dist/config.d.ts"
+        ],
+        "vite": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/vite@7.3.6_@types+node@24.13.3_less@4.9.0_lightningcss@1.33.0_sass@1.103.1_tsx@4.23.13_yaml@2.9.1/node_modules/vite/package.json",
+          "version": "7.3.6",
+          "sha256": "e5ed0f85215f871fe22a48987dcd77fcfbe14064a53c0c9f7f48186a6b7e2cf0"
+        },
+        "compiler": {
+          "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/package.json",
+          "version": "6.0.3",
+          "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9"
+        },
+        "canonicalStrictNodeNext": true,
+        "focusedAppbaseAndPerformanceDiagnostics": 0,
+        "skipLibCheckIsNotTheProof": true
+      },
+      "status": "PASS",
+      "cacheSettle": {
+        "observations": [
+          {
+            "observedAt": "2026-10-20T04:42:18.117Z",
+            "snapshot": {
+              "exists": true,
+              "entries": {}
+            }
+          }
+        ],
+        "transientByteCapture": "Before/after and settle observations only; bytes already automatically unlinked remain unavailable and no filename or hash is invented."
+      },
+      "listenAttempts": 0,
+      "listenerGuardRestored": true,
+      "sourceHashCount": 12614,
+      "actualSourceStateUnchanged": true,
+      "finishedAt": "2026-10-20T04:42:18.818Z"
+    }
+  ],
+  "limitations": [
+    "No native origin, nonce, scorecard, readiness or full43 result claimed.",
+    "Historical prior25/36 results remain as-produced without listener instrumentation; new runs instrument listener refusal.",
+    "Earlier broad10 checks bound their earlier source hashes; only changed-input devai glob repeated, not law/history.",
+    "Default bundle cache observation is finite/read-only; already-auto-unlinked transients have no fabricated filename/bytes capture.",
+    "No Git/evidence/remote/DB/lifecycle effects by Inspector."
+  ]
+}

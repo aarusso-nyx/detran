@@ -1,0 +1,55 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Every source hash matches the request. vitest.config.ts is 7e26ede7, the .d.mts is dbc09ac0, the new Inspector test is 4e81df84 and the amended helper test is e10d243e. The frozen files are unchanged: helper 333a08bd, ops-perf 7cfe5918, CI contract 003615a7, performance config d12e699f. HEAD is b3b66c6d. The Appbase change against the base is two lines: one import of the existing createNestMetadataPlugin and one plugins:[createNestMetadataPlugin()] entry. Aliases, includeByTier, globals/environment, passWithNoTests, fileParallelism and timeouts are untouched. The .d.mts contains only a type import and a declared function, with no runtime code."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The helper test amendment (old ebd2e15a retained as old-unit-before.mjs, new e10d243e) is limited to withVite. It adds server.ws:false and keeps middlewareMode, watch:null, the native loader and the external cache. It installs a net.Server.prototype.listen guard before createServer that throws on any call and counts attempts. After close it asserts the count is zero, and an inner finally restores the original listen. No existing case or assertion was removed or weakened."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The new test runs four real cases: appbase and performance, each with the default bundled loader (configLoader omitted) and with configLoader:'runner'. Each case checks the real config controls, then Dashboard metadata and token identity and the identity of injected providers after a real Nest Test.compile. It checks guard metadata and that the actual Reflector instance is injected. It checks that the metadata plugin is enforce:'pre', ordered before vite:esbuild and registered exactly once, so performance inherits it rather than registering a second copy. It confirms the final transformRequest output is ESM. Each case also checks listener and cache custody, source-adjacent temp files, and the full tracked plus non-ignored source snapshot. The original error is kept as the primary failure while custody is still checked and recorded."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The run history is consistent and is not misrepresented. RED (/tmp copy byte-identical to the retained capture) ran test 5b7c0dee against Appbase 14f68bf1: exit 1, 4 fail, 0 pass, 0 skip. In all four cases Dashboard metadata was null, Nest failed on dependency index 0 and the guard's Reflector was not injected. Listener attempts were 0 and source was unchanged. The first post-fix run (four-case-green.json, byte-identical to the /tmp copy) is a real 4-FAIL, exit 1, on the same 5b7c0dee test. It failed only at the old declaration-origin assertion ('Plugin declaration must resolve to the actual Vitest-peer Vite7 package'). plugin-symbol-diagnosis.stdout shows the cause: that check required every declaration path to be inside the Vite package, so it rejected Vitest's genuine dist/config.d.ts augmentation. The source before the correction is kept as new-test-before-symbol-correction.mjs. GREEN v2 (test 4e81df84): exit 0, 4 pass, 0 fail, 0 skip. Listener attempts were 0, the guard was restored, source was unchanged, there were no source-adjacent events and no custody failure in any case."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The assertion correction is stricter than what it replaced, not weaker. The old check accepted any file under the Vite package. The new one requires the deduplicated declaration-file set to be exactly the physical Vite dist/node/index.d.ts plus the same installed Vitest's dist/config.d.ts. It also requires the resolved symbol to be the actual 'Plugin' export of the Vite index.d.ts module, and the return type not to be any. Together these cover the skipLibCheck concern from the TASK review without relaxing the compiler policy. The Engineer's checks agree: canonical `pnpm --filter @detran/app typecheck` exited 0; the focused Appbase plus performance plus .d.mts program under the unchanged App options had 0 diagnostics, returned Plugin<any> rather than any, and root and App Vite resolve to the same physical 7.3.6."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The 'no third declaration' rule is enforced per file, not per declaration. strictDeclarationIdentity dedups the declaration paths with a Set before comparing them, so a second Plugin declaration inside either allowed file would not be rejected. Asserting symbol.declarations.length === 2, one per file, would match the stated rule exactly. Today's result is unaffected, because the diagnosis shows exactly two paths."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The default-bundle cases do not positively show that the bundled loader ran. A clean settle (no new entry) is the passing outcome for both the bundled and runner cases, and the bundler's temp file is unlinked automatically. So nothing directly shows the bundle path executed apart from Vite's default and the omitted override (loaderOverrideOmitted:true). The before and after observations are recorded honestly, with no invented filename or bytes, so this is a limit on what the evidence shows, not a defect."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "In the amended withVite, the inner finally asserts listenAttempts===0 after server.close(). If the action already threw, a listener-assertion failure would replace the original error, unlike the primary-error handling in the new test. The listen hook is still restored correctly. This only affects which error is reported."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Cache residue matches what was authorised. In the first RED case, cacheBefore showed backend/app/node_modules/.vite-temp as absent. Every later before and after snapshot shows it present and empty, and it is currently an empty regular directory. So the default bundler created the ignored directory and left no file entries behind. No redirected cache, source-adjacent fallback, unowned cleanup or changed pre-existing entry was observed. The fs.watch check for source-adjacent files is non-recursive and asynchronous, but the full non-ignored source snapshot backs it up."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "This approval covers only these four source paths and the retained evidence listed above. It makes no claim about prior-36 or the full devai:test glob, which are running independently and are not used here, nor about CI, main, performance, the 43-cell matrix, native C6 or K0. Thresholds, workloads, product constructors, providers and guards are outside this delta and unchanged."
+    }
+  ]
+}

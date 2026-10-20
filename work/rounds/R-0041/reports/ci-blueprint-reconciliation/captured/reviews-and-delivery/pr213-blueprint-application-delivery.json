@@ -1,0 +1,205 @@
+{
+  "role": "Architect/Engineer bounded metadata/provenance only",
+  "observedAt": "2026-10-20T04:14:56.410047+00:00",
+  "captureRoot": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g",
+  "previewRoot": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-preview-6dntnjdi",
+  "frozenPaths": 242,
+  "generatedApplied": 235,
+  "allCurrentGeneratedOutputsExactPreview": 1592,
+  "canonicalFiveJSONOnlyViteEntries": true,
+  "registryComparison": {
+    "status": "PASS",
+    "sourceHashesChanged": {
+      "authorization": 43,
+      "piiBlueprint": 5,
+      "piiDDL": 5
+    },
+    "allOtherJSONDeepEqual": true,
+    "allPopulationsRowsPointersSQLSpansLegalRetentionPermissionsUnchanged": true,
+    "native_population_sha256": {
+      "authorization": "abe04205b22e74b3ae2de078d406d98c18331f9c1f5230c66519ca558c65c7c7",
+      "pii-registry": "191d7ec48b7d8c173690cd33ab8763871e93a7a63cb8b5d164ccb65ed6881d9d"
+    },
+    "oldProducerManifestIntegrationHead": "6e459da656465922f408981d55953701d2da96e9",
+    "freshNativeExecution": false
+  },
+  "protection": {
+    "allOtherTrackedPathsByteModeLinkExact": 12179,
+    "stage2AllowedPathsOnly": 237,
+    "unexpected": []
+  },
+  "checks": [
+    {
+      "name": "exports-tests",
+      "argv": [
+        "pnpm",
+        "security:exports:test"
+      ],
+      "startedAt": "2026-10-20T04:13:44.383282+00:00",
+      "endedAt": "2026-10-20T04:13:51.173499+00:00",
+      "seconds": 6.790060792001896,
+      "exitCode": 0,
+      "testSummary": {
+        "tests": 68,
+        "pass": 68,
+        "fail": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "exports-old-input-check",
+      "argv": [
+        "pnpm",
+        "security:exports:check",
+        "--",
+        "--api-map",
+        "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_api-api-map.json",
+        "--data-model",
+        "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_data_model-data-model.json",
+        "--pii-model",
+        "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_data_handling-data-model-pii.json"
+      ],
+      "startedAt": "2026-10-20T04:13:51.173562+00:00",
+      "endedAt": "2026-10-20T04:13:52.943749+00:00",
+      "seconds": 1.7702006250037812,
+      "exitCode": 0,
+      "testSummary": {}
+    },
+    {
+      "name": "exports-snapshots",
+      "argv": [
+        "pnpm",
+        "security:exports:check",
+        "--",
+        "--snapshots-only"
+      ],
+      "startedAt": "2026-10-20T04:13:52.943794+00:00",
+      "endedAt": "2026-10-20T04:13:53.299183+00:00",
+      "seconds": 0.3554172500153072,
+      "exitCode": 0,
+      "testSummary": {}
+    },
+    {
+      "name": "scoped-format",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json",
+        "docs/framework/blueprints/BP-EST-CRASH-001.json",
+        "docs/framework/blueprints/BP-INF-AIT-001.json",
+        "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+        "docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json",
+        "law/security/authorization.json",
+        "law/security/pii-registry.json"
+      ],
+      "startedAt": "2026-10-20T04:13:53.299232+00:00",
+      "endedAt": "2026-10-20T04:13:53.899465+00:00",
+      "seconds": 0.6002546250238083,
+      "exitCode": 0,
+      "testSummary": {}
+    },
+    {
+      "name": "stack",
+      "argv": [
+        "pnpm",
+        "test:stack"
+      ],
+      "startedAt": "2026-10-20T04:13:53.899509+00:00",
+      "endedAt": "2026-10-20T04:14:08.169382+00:00",
+      "seconds": 14.269820999994408,
+      "exitCode": 0,
+      "testSummary": {
+        "tests": 58,
+        "pass": 58,
+        "fail": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "stynx-pin",
+      "argv": [
+        "pnpm",
+        "verify:stynx-pin"
+      ],
+      "startedAt": "2026-10-20T04:14:08.169431+00:00",
+      "endedAt": "2026-10-20T04:14:08.637700+00:00",
+      "seconds": 0.4682934999873396,
+      "exitCode": 0,
+      "testSummary": {}
+    },
+    {
+      "name": "stynx-pin-tests",
+      "argv": [
+        "pnpm",
+        "test:stynx-pin"
+      ],
+      "startedAt": "2026-10-20T04:14:08.637745+00:00",
+      "endedAt": "2026-10-20T04:14:09.878018+00:00",
+      "seconds": 1.2402900840097573,
+      "exitCode": 0,
+      "testSummary": {
+        "tests": 8,
+        "pass": 8,
+        "fail": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "broaderGates": "Root/c2 owns law/doctor/full repository governance; not duplicated",
+  "schema": {
+    "actualDocsSchemaBeforeAndAfter": 10,
+    "valid": true,
+    "canonicalHashesReverifiedAgainstCapturedPASS": true
+  },
+  "generatorRepeated": false,
+  "GitEvidenceLifecycleRemoteDBProductBehaviorEffects": false,
+  "files": {
+    "generated-application.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/generated-application.json",
+      "sha256": "ac7a25e10dab567259f0f19cbbb297fae1a43a4b9cccb570edf319a7bcf01e33",
+      "bytes": 87896
+    },
+    "registry-semantic-comparison.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/registry-semantic-comparison.json",
+      "sha256": "f66daa3cb0d7c5ffb2c6368f2f9b03b2fd03feb6620ce807e9949fa270358cca",
+      "bytes": 17656
+    },
+    "old-input-custody.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-input-custody.json",
+      "sha256": "41f5dac3e16cee8f857ec4ebe10f136023f9c3494d8cf46cfe71db49d7ef01be",
+      "bytes": 1734
+    },
+    "frozen-source-change-manifest.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/frozen-source-change-manifest.json",
+      "sha256": "f71be67d1f441c89778c081731a189be10ebef51e719d27e94ab4ca4d66dee27",
+      "bytes": 72961
+    },
+    "tracked-before.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/tracked-before.json",
+      "sha256": "24024269efb27e2ee439a8f338d61d6da8d641d148f8a67a20ce4ca3f932cdc9",
+      "bytes": 2575514
+    },
+    "tracked-after.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/tracked-after.json",
+      "sha256": "46ba01909556fefdb15a40c63e67c4db64dc0b47d17a88c206452eaaa230e3d6",
+      "bytes": 2575514
+    },
+    "tracked-protection-comparison.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/tracked-protection-comparison.json",
+      "sha256": "513b550da8c9a9ca28e0725dba8112c4acbdff5023476b2a3cd085f44def9f09",
+      "bytes": 17276
+    },
+    "scoped-checks-with-counts.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/scoped-checks-with-counts.json",
+      "sha256": "e71fa2728b028243d8925486303e67343ed92b450b5305698a270ff3599d8cfd",
+      "bytes": 3116
+    },
+    "capture-manifest.json": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/capture-manifest.json",
+      "sha256": "87cc9841069b90cb0fea37f66b0461ccc4f5a65bfe9876d363186e019da62a20",
+      "bytes": 6561
+    }
+  }
+}
