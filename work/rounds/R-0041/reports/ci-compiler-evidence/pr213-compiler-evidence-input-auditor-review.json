@@ -1,0 +1,393 @@
+{
+  "role": "Auditor",
+  "kind": "readonly-compiler-evidence-input-factual-review",
+  "observedAt": "2026-10-20T06:21:28.565601+00:00",
+  "inputPath": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/work/rounds/R-0041/reports/ci-compiler-evidence/evidence-input.json",
+  "inputSHA256": "4c426871c4c0e4394704bf7c9338f0920655ea7ce5259e0352ae604109b8835a",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "Exact draft/input identity",
+      "supported": true,
+      "details": {
+        "inputSHA256": "4c426871c4c0e4394704bf7c9338f0920655ea7ce5259e0352ae604109b8835a"
+      }
+    },
+    {
+      "name": "Frozen candidate identity/source stage honest",
+      "supported": true,
+      "details": {
+        "head": "ab07455014bd2bcd6acc4298c1249f95ec032057",
+        "tree": "27c60d3905098c4484ce6c8c44d68277ce713e35",
+        "currentPorcelain": "?? work/rounds/R-0041/reports/ci-compiler-evidence/\n",
+        "interpretation": "Frozen source commit unchanged; uncommitted additive input/capture stage exists now and is not a clean attestation."
+      }
+    },
+    {
+      "name": "All27 artifact path/hash references resolve",
+      "supported": true,
+      "details": {
+        "count": 27,
+        "errors": []
+      }
+    },
+    {
+      "name": "Copied originals custody exact",
+      "supported": true,
+      "details": {
+        "mappedOriginals": 22,
+        "errors": [],
+        "countBoundary": "27artifactrefs=22mappedoriginals+custodyself+threecapsulemanifests+README; not27originalcopies."
+      }
+    },
+    {
+      "name": "Six changed sources plus stable helper hash bind current commit",
+      "supported": true,
+      "details": {
+        "sourceErrors": [],
+        "changedSources": [
+          "backend/app/vitest.config.ts",
+          "backend/domains/portal/requests/vitest.config.ts",
+          "tools/devai/tests/backend-app-metadata-config.test.mjs",
+          "tools/devai/tests/ci-isolation.test.mjs",
+          "tools/devai/tests/portal-metadata-config.test.mjs",
+          "tools/security/invariants/portal.config.mjs"
+        ],
+        "newReportFiles": 396,
+        "helperSHA256": "333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d"
+      }
+    },
+    {
+      "name": "Final source review valid exact bridge output/prompt",
+      "supported": true,
+      "details": {
+        "verdict": "PASS",
+        "sourceReviewOnly": true,
+        "futureExecutionNotInferred": true
+      }
+    },
+    {
+      "name": "Five actual clean-source frozen checks/raw hashes",
+      "supported": true,
+      "details": {
+        "commands": [
+          [
+            "pnpm",
+            "devai:doctor"
+          ],
+          [
+            "pnpm",
+            "verify:proof-anchors"
+          ],
+          [
+            "pnpm",
+            "format:check"
+          ],
+          [
+            "pnpm",
+            "verify:state-index"
+          ],
+          [
+            "pnpm",
+            "verify:rounds-index"
+          ]
+        ],
+        "streamErrors": [],
+        "cleanAtCheckTime": true,
+        "currentInputStageNotRetrolabeledClean": true
+      }
+    },
+    {
+      "name": "Doctor declaration-only16 and actual108/53 chain metrics",
+      "supported": true,
+      "details": {
+        "doctorChecks": 16,
+        "adopterStanding": "diagnostic-only",
+        "anchored": 108,
+        "declaredGaps": 53,
+        "undeclared": 0
+      }
+    },
+    {
+      "name": "12755 prior file comparisons exact current bytes",
+      "supported": true,
+      "details": {
+        "comparisons": 12755,
+        "currentByteMismatches": [],
+        "baselineProof": "Authentic frozen batch-Git audit retained; current every-file SHA independently rechecked read-only."
+      }
+    },
+    {
+      "name": "167 chain and two R41 lines unchanged pre-append",
+      "supported": true,
+      "details": {
+        "records": 167,
+        "R41PhysicalLines": 2,
+        "legacySHA256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec"
+      }
+    },
+    {
+      "name": "All three committed capsules payload hash/decode exact",
+      "supported": true,
+      "details": {
+        "entryCounts": {
+          "ci-compiler-reconciliation": 500,
+          "ci-portal-reconciliation": 42,
+          "ci-compiler-finalization": 79
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "Final241 actual canonical default parallel after locality amendment",
+      "supported": true,
+      "details": {
+        "finalGate": {
+          "name": "canonical-default-parallel",
+          "argv": [
+            "pnpm",
+            "devai:test"
+          ],
+          "startedAt": "2026-10-20T06:03:18.019885+00:00",
+          "endedAt": "2026-10-20T06:03:52.507659+00:00",
+          "seconds": 34.48783704201924,
+          "exitCode": 0,
+          "summary": {
+            "tests": 241,
+            "suites": 0,
+            "pass": 241,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "stdoutSHA256": "7ea02423349381d7f5592be789190ec4c97433fd78c3bee53500624a702ed100",
+          "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+        },
+        "focused": {
+          "tests": 2,
+          "suites": 0,
+          "pass": 2,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "finalPortalSourceHash": "9640a62d46edce8c1c8f7066cb8cb61ccca94052066de30cbae1f86fffc3f2a6"
+      }
+    },
+    {
+      "name": "Requests104 full IDs exact and7 TODO unchanged",
+      "supported": true,
+      "details": {
+        "collected": 104,
+        "pass": 97,
+        "preexistingTODO": 7,
+        "executedNot104": true,
+        "baselineFail": 22
+      }
+    },
+    {
+      "name": "Requests phase runtime difference disclosed",
+      "supported": true,
+      "details": {
+        "baselineNode": "24.22.0",
+        "greenNode": "24.15.0",
+        "supportedAPIExplicit": true
+      }
+    },
+    {
+      "name": "Identity49 and TEN491+1 ordinary scopes exact",
+      "supported": true,
+      "details": {
+        "identity": [
+          {
+            "numTotalTests": 49,
+            "numPassedTests": 49,
+            "numFailedTests": 0,
+            "numPendingTests": 0,
+            "numTodoTests": 0,
+            "success": true
+          }
+        ],
+        "tenAggregate": {
+          "passed": 491,
+          "total": 492,
+          "todo": 1
+        },
+        "tenActualCommands": [
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-deadlines",
+            "test"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-infraction",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-notification",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-collection",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-rait-org",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/inf-rait-integration",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/portal-inbox",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/portal-citizen-service",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/portal-projections",
+            "test:unit"
+          ],
+          [
+            "pnpm",
+            "--filter",
+            "@detran/dashboard-monitor",
+            "test:unit"
+          ]
+        ],
+        "noSingleFullBackendClaim": true
+      }
+    },
+    {
+      "name": "Portal original3 ordinary acceptance/cleanup scope",
+      "supported": true,
+      "details": {
+        "verdict": "PASS",
+        "acceptanceChecks": 35,
+        "fullIDsAndCleanupExplicit": true,
+        "noNativeClaim": true
+      }
+    },
+    {
+      "name": "Scope guards preserve blocked/no promotion boundary",
+      "supported": true,
+      "details": {
+        "wholeNineNativeDeferred": true,
+        "historicalGaps": 53,
+        "closedRounds": "R0036\u201339 unchanged within12755-file preservation",
+        "futureEffectsNotClaimed": [
+          "PR213newCI",
+          "PR213merge/mainverification",
+          "DETRANlocalRCattestation",
+          "DEVAI2.6.4publication/adoption",
+          "C6nativeexecution",
+          "43itemremeasurement",
+          "campaignclosure"
+        ]
+      }
+    },
+    {
+      "name": "Provider263 policy1.5 empty native projection current",
+      "supported": true,
+      "details": {
+        "provider": "2.6.3",
+        "policyVersion": "1.5.0",
+        "nativeBindings": []
+      }
+    },
+    {
+      "name": "App144 canonical actual raw summary, no individual IDs inferred",
+      "supported": true,
+      "details": {
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/app",
+          "test:unit"
+        ],
+        "summaryLines": [
+          " Test Files  25 passed (25)",
+          "      Tests  144 passed (144)"
+        ],
+        "individualIDs": "unavailable in ordinary human reporter, explicitly disclosed"
+      }
+    },
+    {
+      "name": "Historical failed CI remains actual failure scoped to0cf",
+      "supported": true,
+      "details": {
+        "run": 39372271082,
+        "head": "0cfb3a9439cfff2114d3de067e7192ddd101069a",
+        "backendConclusion": "failure",
+        "observedUnitSummary": {
+          "separateSummaries": 33,
+          "passed": 2312,
+          "failed": 18,
+          "scope": "observed summary lines only; not whole backend readiness"
+        },
+        "laterCommandsUnreached": true
+      }
+    },
+    {
+      "name": "Portal3 reporter actual IDs and owned absence confirmation",
+      "supported": true,
+      "details": {
+        "collected": 3,
+        "pass": 3,
+        "failure": 0,
+        "actualFullIDs": [
+          "CTG-0002 \u00a73.3/\u00a712 \u2014 sequ\u00eancia de protocolo coerente com o seed (C-0002-30) C-0002-30 \u2014 dado seed executado duas vezes ent\u00e3o protocol_seq \u2265 14 (setval) e nextval n\u00e3o colide com AM-FIXTURES-2026-0000001\u2026000000e; a sequ\u00eancia \u00e9 compartilhada com manifestation.protocol",
+          "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-31 \u2014 dado sujeito \u202670000002 quando create+draft+submit de consulta_multas ent\u00e3o request, request_draft (2 vers\u00f5es), protocol, idempotency_record (key '<subjectId>:<header>') e 2 linhas na outbox com topic portal.request.changed, payload.tenantId = tenant",
+          "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-32 \u2014 dado transa\u00e7\u00e3o que lan\u00e7a ap\u00f3s publicar ent\u00e3o nenhuma linha na outbox (rollback = sem evento)"
+        ],
+        "cleanupConfirmedObjects": 2,
+        "firstCleanupProbeFailurePreserved": true
+      }
+    },
+    {
+      "name": "Retained failedCI raw seven reports and original Portal3 IDs match actual rerun",
+      "supported": true,
+      "details": {
+        "reportCount": 7,
+        "actualAggregate": {
+          "numTotalTests": 782,
+          "numPassedTests": 780,
+          "numFailedTests": 2
+        },
+        "originalPortalFullIDsEqual": true,
+        "unexecutedRbacErrorsNotPromoted": true
+      }
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Custody/factual input audit only, not official record or fresh sensor/native execution.",
+    "Source reviewPASS is separate from actual ordinary runs and carries its own explicit non-execution limits.",
+    "Historical/runtime/TODO/source-phase differences remain disclosed; no aggregation into fresh full backend PASS or43item readiness.",
+    "Current uncommitted additive inputstage is not retroactively a clean source execution or attestation.",
+    "No suites/services/DB/Git/remote/repository writes/evidence recording performed."
+  ],
+  "additionalReadOnlyVerification": "CanonicalApp144 raw stdout SHA+summary, retainedfailedCI snapshot, actualPortal reporter+acceptance cleanup inspected directly, beyond custody checks."
+}

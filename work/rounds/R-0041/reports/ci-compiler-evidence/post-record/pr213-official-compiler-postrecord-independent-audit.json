@@ -1,0 +1,189 @@
+{
+  "role": "Auditor",
+  "kind": "independent-readonly-official-record-postappend-audit",
+  "observedAt": "2026-10-20T06:25:28.652804+00:00",
+  "verdict": "PASS",
+  "officialEvidenceId": "EV-772856ab46edb84b",
+  "checks": [
+    {
+      "name": "Exactly one authentic ordered chain append",
+      "supported": true,
+      "details": {
+        "beforeRecords": 167,
+        "afterRecords": 168,
+        "oldOrderedPrefixDeepExact": true,
+        "beforeHead": "97db1d49b4f7249700ad5e030bb29a26cf7f18ec07e6326778247a8928abbe35",
+        "afterHead": "bed655a7b7a240a8fd779985c9a87f9a0d091dfbfaf924519c3eaeead54603b8",
+        "newEvidenceId": "EV-772856ab46edb84b"
+      }
+    },
+    {
+      "name": "Old two physical R41 lines byte-exact plus one line only",
+      "supported": true,
+      "details": {
+        "beforePhysicalLines": 2,
+        "afterPhysicalLines": 3,
+        "beforeBytesSHA256": "e4f5c773947555ac88d817a0d68535fc7b9e88706e9b289a7a0148065d21dc2b",
+        "afterBytesSHA256": "abc7d6a97a6c1d5b473ab9abfcabad07de50e7c32f4fb629c374ae9aeda598ba",
+        "appendedPhysicalLineSHA256": "f1a11cd4807886e27d89dbbd8cb7644fd68690edcf776837b956ef625a436153",
+        "lineSequence": 3
+      }
+    },
+    {
+      "name": "Legacy bytes untouched",
+      "supported": true,
+      "details": {
+        "legacySHA256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec"
+      }
+    },
+    {
+      "name": "Official command receipt exactly one record result",
+      "supported": true,
+      "details": {
+        "argv": [
+          "pnpm",
+          "exec",
+          "devai",
+          "evidence",
+          "record",
+          "--kind",
+          "generic",
+          "--round",
+          "R-0041",
+          "--repo-root",
+          ".",
+          "--input",
+          "work/rounds/R-0041/reports/ci-compiler-evidence/evidence-input.json",
+          "--as-role",
+          "architect",
+          "--write",
+          "--format",
+          "json"
+        ],
+        "exitCode": 0,
+        "startedAt": "2026-10-20T06:22:17.459599+00:00",
+        "endedAt": "2026-10-20T06:22:19.164698+00:00",
+        "stdoutSHA256": "3a2a7c7595e355fdbd55e0568efe6c2c549bfa097862ab9a97dd3bc5d2b13806",
+        "timestampFromActualRecord": "2026-10-20T06:22:18.726Z"
+      }
+    },
+    {
+      "name": "Payload identical to accepted fixed input, no added fact",
+      "supported": true,
+      "details": {
+        "acceptedInputSHA256": "4c426871c4c0e4394704bf7c9338f0920655ea7ce5259e0352ae604109b8835a",
+        "payloadJSONDeepExact": true,
+        "round": "R-0041",
+        "kind": "generic",
+        "extraCopiedAuditorReportNotAddedToInput": true
+      }
+    },
+    {
+      "name": "Independent installed-rule line/rawline/manifest reconstruction",
+      "supported": true,
+      "details": {
+        "proofSequence": 3,
+        "lineHash": "66b56ce3afec63a984f3594ce4bb3372993a9f5fc9d347f68333ea135e9f70a7",
+        "recordedLineHash": "66b56ce3afec63a984f3594ce4bb3372993a9f5fc9d347f68333ea135e9f70a7",
+        "lineHashMatches": true,
+        "rawLineSHA256": "f1a11cd4807886e27d89dbbd8cb7644fd68690edcf776837b956ef625a436153",
+        "recordedRawLineSHA256": "f1a11cd4807886e27d89dbbd8cb7644fd68690edcf776837b956ef625a436153",
+        "rawLineAnchorMatches": true,
+        "manifestHash": "bed655a7b7a240a8fd779985c9a87f9a0d091dfbfaf924519c3eaeead54603b8",
+        "recordedManifestHash": "bed655a7b7a240a8fd779985c9a87f9a0d091dfbfaf924519c3eaeead54603b8",
+        "manifestMatches": true,
+        "payloadDeepExact": true,
+        "canonicalAlgorithmSource": "InstalledDEVAI2.6.3dist/runtime/index/release-host.js:173694\u2013173700stable+computeProofEpochLineHash;173832rawline;174360\u2013174393computeManifestHash;174491GENESISdomain."
+      }
+    },
+    {
+      "name": "Chain head and proof anchor fields exact",
+      "supported": true,
+      "details": {
+        "chainHead": "bed655a7b7a240a8fd779985c9a87f9a0d091dfbfaf924519c3eaeead54603b8",
+        "proofRawSHA256": "f1a11cd4807886e27d89dbbd8cb7644fd68690edcf776837b956ef625a436153",
+        "proofLineCanonicalHash": "66b56ce3afec63a984f3594ce4bb3372993a9f5fc9d347f68333ea135e9f70a7"
+      }
+    },
+    {
+      "name": "All27 prior artifactrefs remain current unchanged",
+      "supported": true,
+      "details": {
+        "refs": 27,
+        "errors": []
+      }
+    },
+    {
+      "name": "Producer/harness authority and dirty source context honest",
+      "supported": true,
+      "details": {
+        "actor": "devai-cli",
+        "actorRole": "harness",
+        "invocationRole": "architect (actual official command)",
+        "head": "ab07455014bd2bcd6acc4298c1249f95ec032057",
+        "dirtyPathCount": 26,
+        "dirtyPathsOnlyProofAndAdditiveInputStage": true,
+        "cleanNativeAttestationClaimed": false
+      }
+    },
+    {
+      "name": "Frozen six source paths and helper identity unchanged",
+      "supported": true,
+      "details": {
+        "sourceHashesChecked": 7,
+        "errors": [],
+        "head": "ab07455014bd2bcd6acc4298c1249f95ec032057",
+        "tree": "27c60d3905098c4484ce6c8c44d68277ce713e35"
+      }
+    },
+    {
+      "name": "12755 old files incl policy/thresholds/closedrounds/backlogs still exact",
+      "supported": true,
+      "details": {
+        "comparedCurrentFileHashes": 12755,
+        "errors": [],
+        "chainAndR41ProofSeparatelyAppendAudited": true
+      }
+    },
+    {
+      "name": "No native43/readiness/closure promotion in new payload",
+      "supported": true,
+      "details": {
+        "nativeMeasurement": false,
+        "43itemsMeasured": false,
+        "R41": "active",
+        "R36-R39": "closed unchanged",
+        "historicalGaps": 53,
+        "futureCI": "not claimed",
+        "C6": "blocked no retry/implementation"
+      }
+    },
+    {
+      "name": "Working mutations limited to official proof append/inputstage",
+      "supported": true,
+      "details": {
+        "currentPorcelain": " M record/proofs/chain.json\n M record/proofs/work/generic/R-0041.jsonl\n?? work/rounds/R-0041/reports/ci-compiler-evidence/\n"
+      }
+    }
+  ],
+  "findings": [],
+  "before": {
+    "chainSHA256": "c71b06c2aefc56d1545858e4deb7e45eeaaa2c64f0e826ad83d96c4f9cb324f2",
+    "proofSHA256": "e4f5c773947555ac88d817a0d68535fc7b9e88706e9b289a7a0148065d21dc2b",
+    "legacySHA256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec"
+  },
+  "after": {
+    "chainSHA256": "9bcecbb8ea045a2341e771e68279e91b7509f9a70ff293fd22e038a65cd0027c",
+    "proofSHA256": "abc7d6a97a6c1d5b473ab9abfcabad07de50e7c32f4fb629c374ae9aeda598ba",
+    "chainHead": "bed655a7b7a240a8fd779985c9a87f9a0d091dfbfaf924519c3eaeead54603b8",
+    "newLineHash": "66b56ce3afec63a984f3594ce4bb3372993a9f5fc9d347f68333ea135e9f70a7",
+    "rawNewLineSHA256": "f1a11cd4807886e27d89dbbd8cb7644fd68690edcf776837b956ef625a436153",
+    "inputSHA256": "4c426871c4c0e4394704bf7c9338f0920655ea7ce5259e0352ae604109b8835a"
+  },
+  "limitations": [
+    "Independent byte/prefix/factual audit only; parent separately runs official verification/index/format commands.",
+    "One authenticated append observed from actual backup/receipt; this audit did not invoke evidence record.",
+    "Manifest/raw proof hash and canonical epoch line hash are distinct and independently reconstructed using installed documented algorithms.",
+    "No tests/services/DB/source/repository/Git/remote/evidence effects performed."
+  ]
+}
