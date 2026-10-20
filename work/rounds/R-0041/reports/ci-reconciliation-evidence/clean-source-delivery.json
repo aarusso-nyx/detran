@@ -1,0 +1,58 @@
+{
+  "sourceHEAD": "36f865257012c12c3f8cf262e897cdd3762ca83c",
+  "sourceTree": "39726d545d39763c00b45b974542bdf605a0b0df",
+  "cleanBefore": true,
+  "checks": [
+    {
+      "name": "doctor",
+      "argv": [
+        "pnpm",
+        "devai:doctor"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:47:43.216404+00:00",
+      "endedAt": "2026-10-20T04:47:54.695834+00:00",
+      "seconds": 11.4791175420105,
+      "stdoutSHA256": "8695126b099ee4a05ec1eab2860c4dd5c650772826f6b350c46bdb362d36987d",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    {
+      "name": "chain",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:47:54.696161+00:00",
+      "endedAt": "2026-10-20T04:47:55.274193+00:00",
+      "seconds": 0.5780559999984689,
+      "stdoutSHA256": "9a8ab775e34f826a9880835b514b9afa5cfccdf94a5f837285307e7359287074",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    {
+      "name": "preservation",
+      "argv": [
+        "python3",
+        "/tmp/pr213-ci-forward-preservation-audit.py"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:47:55.274426+00:00",
+      "endedAt": "2026-10-20T04:47:56.612701+00:00",
+      "seconds": 1.3382855410163756,
+      "stdoutSHA256": "a15e66260854bd2652c05c9fad987624aeb092116d6dc17a83c6457398950c3b",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "allPassed": true,
+  "cleanAfter": true
+}
