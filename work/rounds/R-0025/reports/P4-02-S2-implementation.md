@@ -122,14 +122,15 @@ checkout. Full final root/kernel/review/CI status must be recorded separately.
  configuration. Restart/multireplica continuity stays OPEN; no deployment-ready
  availability PASS is claimed.
 
-Open only a DRAFT review PR with actual validations/blockers; no merge or S3.
+DRAFT review PR #211 is open with actual validations/blockers; no merge or S3.
 Second valid delta review atca83c18d resolves F1/F2/F4/F5, defers F3 and raises LOW
 F6: discovery acquired global locks before preauthorization. R17 independent three
-unit RED at9dd48a80 precedes single-path Engineer correction, currently in progress.
-No corrected GREEN or independent re-review is claimed. Two-review cap exhausted;
+unit RED at9dd48a80 precedes single-path Engineer correction dd03c7ab.
+Unchanged independent unit GREEN is3/3; no independent delivery re-review is claimed. Two-review cap exhausted;
 retain REVIEW and blocked independent re-review even after any local correction.
 
-Full pnpm check remains running against older frozen ca83, not the later candidate.
+Full pnpm check at older frozen ca83 stopped at the parameter catalogue; its
+correction passed and the serial remainder is running at b2797801.
 Host load approximately227 still blocks full HTTP/kernel acceptance. The nine
 supplemental HTTP controls have not executed; app typecheck PASS is structural
 only. Parent will append exact final outcomes and hashes; no final-head PASS is
@@ -144,5 +145,6 @@ with original RED lineage preserved. CASE/app/WORKLIST typechecks PASS.
 This is not a third independent delivery review; REVIEW and exhausted cap remain.
 The full root check at ca83 stopped on a real incomplete parameter literal in
 rait-risk.providers.ts:218; preceding stages through contracts:test PASS.
-An explicit A–D canonical key map correction is underway without verifier changes.
+Explicit A–D canonical key map da74683c passed parameter catalogue and app
+typecheck without verifier changes.
 Current snapshot export consistency PASS; native REVIEW is unchanged.
