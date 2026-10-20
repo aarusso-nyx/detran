@@ -10,7 +10,7 @@
 e aprovação backend-first S2 #205 integradas. A continuação S2 foi reconciliada
 com main207642f2 (#210); runtime, geração e correções F1/F2/F4/F5 têm
 checkpoints preservados. A prova SQL R14 passou; a suíte integral local está
-bloqueada pela carga extrema do host, e checks/revisão final seguem em andamento. S2/P4, R-0025 e JW-01
+bloqueada pela carga extrema do host. A segunda revisão de delta em ca83c18d mantém REVIEW: F1/F2/F4/F5 resolvidos, F3 adiado e novo F6; correção F6 em andamento após RED independente. O limite de duas revisões foi esgotado: somente PR DRAFT, com re-review independente e aceitação pendentes. S2/P4, R-0025 e JW-01
 permanecem abertas. RESET de D e proveniência operacional produtiva continuam
 bloqueados por fonte, conforme S2-R6. A continuidade de cursor entre processos
 também permanece aberta (F3). S3 e merge da implementação não autorizados.
@@ -740,7 +740,7 @@ identities and exact owned paths. Inspector RED precedes Engineer changes.
 ## S2 implementation continuation — 2026-10-19
 
 Explicit Owner approval remains backend-first S2 only. Original packet/inventory
-are immutable approval history; delegated bounded decisions R1–R10 and their exact
+are immutable approval history; delegated bounded decisions R1–R17 and their exact
 source/role/owned-path extensions are under reports/S2-execution/. S1/local/recovery
 resources remain preserved, without false managed finish or worktree cleanup.
 
@@ -756,3 +756,18 @@ provenance/default-missing and operational ladder/calendar/incident/legacy input
 remain release gates. No S2/P4/JW01/round closure, S3, parameter activation,
 production migration/provisioning or implementation merge follows from this PR.
 Separate scorecard work and its thresholds/readings remain unchanged.
+
+### S2 R15–R17 acceptance checkpoint — 2026-10-19
+
+Current authored HTTP census is124: preserved115 plus2 discovery contention/
+revocation,1 actual WORKLIST projection and6 legacy-negative controls. The nine
+additions are authored/typechecked, not executed against DB. Existing PhaseB11,
+R14 SQL45 assertions and universe-race proofs retain only their recorded checkpoint
+scope. F6 has independent three-control unit RED at9dd48a80; single-path Engineer
+correction is in progress, not yet GREEN. Second delta review atca83c18d is REVIEW;
+F1/F2/F4/F5 resolved, F3 deferred and F6 open. Two-cycle cap is exhausted; no third
+review or inferred PASS. DRAFT review PR only, blocked on independent re-review
+and remaining acceptance. Full pnpm check is still running on the older frozen
+ca83 candidate; it cannot establish final-head acceptance. Full HTTP/kernel proof
+remains resource-blocked (host load approximately227). No DB execution of the nine
+new controls, no S3/production/implementation merge and no S2/P4/JW01/R-0025 closure.

@@ -10,7 +10,7 @@ PR205 merged2e04f29c after all five required checks and exact postmerge CI GREEN
 The optional trusted-local-RC attempt did not produce an attestation. Owner
 approved exact backend-first S2; temporary recommended choices use only the
 original21:39:32Z–02:39:32Z delegation window, ending earlier on explicit return.
-R1–R14 preserve exact adopted recommendations and exclusions before action.
+R1–R17 preserve exact adopted recommendations and exclusions before action.
 
 Main207642f2 (#210) was merged normally after security PR209; #210 changed only
 its documentary/evidence lane. Protected primary/local, scorecard, security, S1/
@@ -66,9 +66,13 @@ remain raw immutable epochs, not final results. Inspector corrected source-backe
 fixture/SQL/outbox/header/DI observation defects without weakening guards, exact
 atomic counts, actual lock barriers or complete51 selection controls.
 
-Current authored HTTP census is115: original99 +3 source-phantom +1 universe race
-+7 policy +2 authorization contention +2 raw-date +1 physical-read equivalence.
-All previous114 controls are retained. Authored is not executed/PASS.
+Current authored HTTP census is124: prior115 (original99 +3 source-phantom
++1 universe race +7 policy +2 authorization contention +2 raw-date +1 physical-read
+equivalence), plus2 discovery contention/revocation +1 actual WORKLIST projection
++6 legacy-negative vectors under R17. All prior115 controls are retained. The nine
+new controls are authored and app-typechecked, not executed against DB; authored
+is not PASS. Original26 Inspector inventory slots are owned paths, not evidence
+that every proposed filename was delivered.
 
 Independent PhaseA: nine actual F1/F5 controls PASS, then both actual SQLfactory
 weekend/holiday raw-date probes RED after genuine qualifiedHTTP200. Unchanged
@@ -100,11 +104,13 @@ checkout. Full final root/kernel/review/CI status must be recorded separately.
 
 ## Remaining gates and sources
 
-1. Complete115 HTTP and retained S1/CASE/WORKLIST/full kernel/RLS/upgrade controls
+1. Complete124 authored HTTP and retained S1/CASE/WORKLIST/full kernel/RLS/upgrade controls
  on a usable test host; retain exact source/version, full logs and actual results.
  Remote canonical CI can supply independent execution evidence; local resource
  blockage cannot be relabeled GREEN. Authoritative pnpm check, final doctor/chain
- verify, scope audit and cross-family delta review remain acceptance gates.
+ verify and scope audit remain acceptance gates. Second delta review is REVIEW;
+ independent re-review remains blocked by the exhausted two-cycle cap, not silently
+ waived or relabeled PASS.
 2. **D RESET:** OD305 has no accepted executable interruption/event/effective-start
  mapping or authentic applicable policy. RESET safely503; ORIGINAL requires
  independent qualification. No guessed legal event list or automatic NP reset.
@@ -116,6 +122,17 @@ checkout. Full final root/kernel/review/CI status must be recorded separately.
  configuration. Restart/multireplica continuity stays OPEN; no deployment-ready
  availability PASS is claimed.
 
-Open a review PR with actual validations/blockers; no merge or S3 from this record.
+Open only a DRAFT review PR with actual validations/blockers; no merge or S3.
+Second valid delta review atca83c18d resolves F1/F2/F4/F5, defers F3 and raises LOW
+F6: discovery acquired global locks before preauthorization. R17 independent three
+unit RED at9dd48a80 precedes single-path Engineer correction, currently in progress.
+No corrected GREEN or independent re-review is claimed. Two-review cap exhausted;
+retain REVIEW and blocked independent re-review even after any local correction.
+
+Full pnpm check remains running against older frozen ca83, not the later candidate.
+Host load approximately227 still blocks full HTTP/kernel acceptance. The nine
+supplemental HTTP controls have not executed; app typecheck PASS is structural
+only. Parent will append exact final outcomes and hashes; no final-head PASS is
+inferred from earlier checkpoints.
 Original64-command/journey acceptance and A2 omitted typed details remain required
 after this bounded executable remainder. No round close/seal or readiness promotion.
