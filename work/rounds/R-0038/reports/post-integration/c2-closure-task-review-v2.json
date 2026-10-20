@@ -1,0 +1,53 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "Packet order 5 now includes the step for the explicit R-0038 README row. It changes only that row, to fechada, [#208](https://github.com/aarusso-nyx/detran/pull/208) and the actual PC from the receipt, and runs before verify:state-index. As expected, work/rounds/README.md:78 still reads 'aberta | — | —' because no official verbs have run."
+    },
+    {
+      "id": "F2",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "A '## D-2 — encerramento' section was appended to AUTHORIZATION.md at 2026-10-19T23:55Z. The observed UTC time was 23:58:50Z, so the timestamp is consistent and falls inside the window. It records D-2 as a transparent delegated Architect judgment, not a new human reply. The original D-1 line and status active/GRANTED are unchanged. The R-0038 annex in DECISIONS.md is appended after the R-0037 annex, and prior annexes are unchanged."
+    },
+    {
+      "id": "F3",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "The interpretation matches the direct user instruction quoted in the task. Authority to implement and integrate persists. The return/02:30Z bound applies only to adopting NEW recommended Owner decisions. D-2 is adopted inside the window. This is recorded consistently in AUTHORIZATION.md, evidence-input.authority_boundary and packet.authority_boundary. I found no code or policy source that imposes a separate expiry on already-authorized ordinary verbs or merges, so no blanket stop is warranted. PR-only integration, green required checks and independent PASS remain mandatory."
+    },
+    {
+      "id": "F4",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "The guard is now the current 163-record f3dfc6ee prefix, compared before and after the evidence record and the round close, with new records only after index 162. Verified: record/proofs/chain.json has 163 records and is unchanged against HEAD. The 155 records at 11eea2d7 are an exact ordered prefix (true), and the 155 contain the 153 d7 records. evidence-input.preserved_chain_prefix_records=163 agrees with the guard. The leftover 'evaluated155' invariant is a consistent subset of the 163 guard, not a conflict."
+    },
+    {
+      "id": "F5",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "SR-bbe1e9585f6b0bda.byte-exact.json is cmp-equal to .devai/state/sensor-readings/security_scan/SR-bbe1e9585f6b0bda.json, with sha256 751b58224825ab7fa0c3d300142e23ca2bc93ecf9b76b4d49122f753bd1ad671. That matches the EV-5e8ba53365b6209f seq-155 anchor. It is not gitignored (negated by .gitignore:16). The hash is bound in manifest-current.json and evidence-input artifacts; manifest-current sha256 829251a7… matches its input entry. The reserialized main-reconciliation/security-reading.json (f4be8c2a…) is retained unchanged. The custody file records measured_head 174fc9f1 and lock blob b7f4508a."
+    },
+    {
+      "id": "F6",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "The integration-ci gate detail and the notes both explain the failure. The non-required 'Verify trusted local RC evidence' check failed because no local attestation exists. The required verified-local-rc passed through the official remote full-backend fallback. All five required checks succeeded: evidence-gate, foundation, senatran-mock, senatran-mock-tests and verified-local-rc. No local signature is claimed."
+    },
+    {
+      "id": "F7",
+      "severity": "info",
+      "status": "resolved",
+      "summary": "The BL-0013 resolution text now uses the full repository-relative path work/rounds/R-0038/reports/post-integration/verification.json. It cites C1 as PR206 R-0037/PC-0023 and C2 as PR208 11eea2d7 with R-0038/<actual PC>. The only placeholder is the PC, and it comes from the close receipt."
+    },
+    {
+      "id": "F8",
+      "severity": "info",
+      "status": "verified-ok",
+      "summary": "Other checks passed. HEAD is f3dfc6ee. The worktree has only 3 modified files (DECISIONS.md, AUTHORIZATION.md, plan.md) plus the untracked closure.json and post-integration/. The chain and legacy chain have no diff, so no official effects have executed. closure.json has no id, schemaVersion, closed_at or evidence binding, as the order-3/4 deferral intends, so no identity, time or hash is fabricated. The pnpm-lock blob b7f4508a is the same at 11eea2d7 and HEAD. The only manifest that differs from 11eea2d7 is root package.json, and only in scripts (check, verify:proof-anchors, security:exports:*). Prettier --check passes on all new and changed files. Heavy checks were not run, per instruction. Before merge, still required: run the official verbs in order with real receipts, the acceptance commands, a final independent source review, and all 5 required checks green on the closure PR."
+    }
+  ]
+}

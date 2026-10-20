@@ -1,0 +1,69 @@
+{
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "area": "state-index",
+      "summary": "The execution sequence never updates the R-0038 row in work/rounds/README.md. At f3dfc6ee that row still reads 'aberta | — | —'. Once the PC file exists, tools/docs/state-index/check.mjs (C-01-18) fails verify:state-index unless the row says Estado 'fechada' and has the actual PC and PR #208.",
+      "evidence": "work/rounds/README.md:78; check.mjs:806-860. The R-0037 precedent commit c732a3e4 changed README.md in the closure commit.",
+      "remedy": "After round close returns the PC, edit only the R-0038 row: fechada, [#208], the actual PC, and the C2 integrated headline. Do this before verify:state-index, and leave R-0039 and other rows unchanged."
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "area": "authorization-record",
+      "summary": "work/rounds/R-0038/AUTHORIZATION.md still says 'D-1: abertura; fechamento ainda não julgado.' The packet does not record the D-2 closing judgment there. The R-0037 precedent added a '## D-2 — encerramento' section. The runtime check decisionExists() only matches the generic '### D-1'/'### D-2' headings in DECISIONS.md (lines 5 and 9), so the per-round trace depends entirely on the human record.",
+      "evidence": "R-0038/AUTHORIZATION.md; git show c732a3e4 -- work/rounds/R-0037/AUTHORIZATION.md; release-host.js decisionExists.",
+      "remedy": "Append a D-2 section and keep the original D-1 text unchanged. Keep 'status: active' and GRANTED until round close has run, because requireActiveTaskRound needs them. State that D-2 is a delegated Architect judgment under the Owner's grant bounded at 02:30Z, not a new Owner reply."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "area": "authority-window",
+      "summary": "The delegated authority in AUTHORIZATION.md expires at 2026-10-20T02:30:00Z. The time observed during review was 23:52Z, which leaves about 2h37m for evidence, close, declare, index, seal, BL-0013 resolve, PR, all 5 required checks, the final independent review and the merge. The packet has no expiry stop condition.",
+      "evidence": "AUTHORIZATION.md 'Limite das decisões delegadas: retorno explícito ou 2026-10-20T02:30:00Z'; date -u 23:52:56Z.",
+      "remedy": "Add a guard: if the merge (or any official verb) cannot finish before 02:30Z, stop with the PR open and nothing merged, and do not resolve BL-0013 on main without fresh Owner authority."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "area": "evidence-chain",
+      "summary": "The packet's chain guard is stale. It says to keep the 'entire 155-record evaluated prefix', but the actual closure base f3dfc6ee has 163 records: C3/C4 appended 8 sense/evidence records. evidence-input.json already says preserved_chain_prefix_records=163, so the packet and the input disagree.",
+      "evidence": "record/proofs/chain.json at f3dfc6ee has 163 records; the 155-record 11eea2d7 prefix is byte-equal (verified). Packet order 2 guard and verified_facts.chain_records=155.",
+      "remedy": "Change the guard to: the current 163-record f3dfc6ee prefix is unchanged (it contains the 155 C2 prefix and the 153 d7 prefix), and new records appear only after index 162. Re-run the prefix comparison after the evidence record and after round close."
+    },
+    {
+      "id": "F5",
+      "severity": "low",
+      "area": "security-reading-custody",
+      "summary": "Chain record #155 (EV-5e8ba53365b6209f) anchors SR-bbe1e9585f6b0bda with sha256 751b5822…. That file sits in gitignored .devai/state/sensor-readings, so it exists only in this local worktree. The committed copy reports/main-reconciliation/security-reading.json is re-serialized (sha256 f4be8c2a…), so nobody can check the anchor hash from the repo.",
+      "evidence": "shasum of the local state file = 751b5822… (matches the anchor); the report copy = f4be8c2a…; .gitignore:45. The reading was measured at 174fc9f1, whose lock blob b7f4508a equals the blob at 9e6e5cca, 11eea2d7 and f3dfc6ee.",
+      "remedy": "Archive a byte-exact copy of the original SR-bbe1 file under reports/post-integration and list it in evidence-input artifacts with sha256 751b5822…, so the anchor can be verified from the repo. Note the measured head (174fc9f1) and that its lock matches."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "area": "ci-disposition",
+      "summary": "The packet's check list includes 'Verify trusted local RC evidence' (run 39339090399) with conclusion failure, but neither the closure gates nor its notes explain it. It is not a required check: the required checks are evidence-gate, foundation, senatran-mock, senatran-mock-tests and verified-local-rc, all of which succeeded, and verified-local-rc came from the remote fallback. A reader will still see an unexplained red check.",
+      "evidence": "Branch protection required_status_checks; packet verified_facts.ci.checks.",
+      "remedy": "Add one sentence to the integration-ci gate detail or notes: the local-RC verifier failed because no local attestation exists, and the required verified-local-rc passed through the official remote full-backend fallback. Do not claim a local signature."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "area": "backlog-resolution",
+      "summary": "The BL-0013 resolution text uses the relative path 'reports/post-integration/verification.json'. Because .devai/state/backlog/BL-0013.json is tracked, an ambiguous reference becomes permanent.",
+      "evidence": "Packet order 8 argv.",
+      "remedy": "Use 'work/rounds/R-0038/reports/post-integration/verification.json' and the actual PC from the round close receipt. Also cite C1 (R-0037/PC-0023) as part of the remediation, since that is how the closure frames it."
+    },
+    {
+      "id": "F8",
+      "severity": "info",
+      "area": "verified-ok",
+      "summary": "Checks that passed. Dependency continuity: from 11eea2d7 to f3dfc6ee, only root package.json scripts changed, no nested manifest changed, and the lock blob b7f4508a is identical, so no fresh audit is needed. Tree 8d8a37f6 is the same at 9e6e5cca and 11eea2d7. The R-0038 epoch is still 1 line with line_hash a058c219…. R-0036/R-0037 have PC-0022/PC-0023 and their close-state files. closure.json has no id or closed_at, has every round-record gate at pass, has no fail criteria, and validates against the phase-closure schema; the evidence binding is correctly deferred. The order close → declare closed → render index → seal matches assertClosePreconditions, which needs status closed, the PC file and an index row. round close must run before seal while AUTHORIZATION.md is still active. backlog resolve changes only status, resolution and resolved_at.",
+      "evidence": "git rev-parse :pnpm-lock.yaml; release-host.js closePhase / assertClosePreconditions / resolveBacklogItem; phase-closure.schema.json.",
+      "remedy": "None."
+    }
+  ]
+}
