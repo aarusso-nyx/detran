@@ -152,6 +152,12 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
         tenantId,
         infEvents.map((e) => ref('inf.infraction_event', e.id)),
       );
+      const ladderKeys = {
+        A: 'rait.ladder.A',
+        B: 'rait.ladder.B',
+        C: 'rait.ladder.C',
+        D: 'rait.ladder.D',
+      } as const;
       const inputs: RaitRiskClockInput[] = [];
       const incidentQualifications: RaitRiskSourceSnapshot['incidentQualifications'][number][] =
         [];
@@ -215,7 +221,7 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
         await qualify('timer', refs);
         const parameters = await q(
           `select id,traffic_agency_id from ops.parameter where tenant_id=$1 and surface='rait' and key=$2 and effective_from<=$3 and (effective_to is null or effective_to>=$3) and (traffic_agency_id=$4 or traffic_agency_id is null) order by (traffic_agency_id is not null) desc,effective_from desc,version desc for share`,
-          [tenantId, 'rait.ladder.' + code, today, ait.traffic_agency_id],
+          [tenantId, ladderKeys[code], today, ait.traffic_agency_id],
         );
         const tier = parameters.filter(
           (p) => p.traffic_agency_id === ait.traffic_agency_id,
