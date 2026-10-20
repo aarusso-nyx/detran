@@ -199,10 +199,18 @@ Owner directed continuation, completing possible validations and opening a revie
 PR while recording remaining blockers and preserving local/scorecard work. This
 continues the original delegation window; it does not restart five hours.
 
-R1–R10 in reports/S2-execution record exact adopted recommendations, owned-path
+R1–R14 in reports/S2-execution record exact adopted recommendations, owned-path
 extensions and exclusions. In particular R6 permits a reviewable executable
 remainder while qualified D RESET/S2/P4 stay OPEN; R7 and R10 add ADR0055/0056 plus
 index rows for source locking/universe consistency, R9 retains defense-only
 contention, and R8 permits exact existing security-export regeneration and
 Inspector-owned sensor calibration without scorecard promotion. No new legal
 fact, permission, source producer, production action, S3 or implementation merge.
+
+R12/ADR0057 and R13 freeze delivery-review corrections for independent policy
+provenance, owner-compatible calendar use, sorted versions and authorization
+before source contention. R14 authorizes only equivalent physical source-read
+batching in the existing port and independent fixture, plus one SQL equivalence
+control; original114 controls/complete51 populations/timeouts remain unchanged.
+No production policy, shared cursor key or DRESET rule is fabricated. Host
+resource-blocked full acceptance is reported, not converted into PASS.

@@ -8,10 +8,12 @@
 
 **Status atual (2026-10-19, America/Sao_Paulo):** admissibilidade #193, S1 #203
 e aprovação backend-first S2 #205 integradas. A continuação S2 foi reconciliada
-com main f3dfc6ee (#209); runtime e geração têm checkpoints preservados, mas
-validação integral/revisão ainda estão em andamento. S2/P4, R-0025 e JW-01
+com main207642f2 (#210); runtime, geração e correções F1/F2/F4/F5 têm
+checkpoints preservados. A prova SQL R14 passou; a suíte integral local está
+bloqueada pela carga extrema do host, e checks/revisão final seguem em andamento. S2/P4, R-0025 e JW-01
 permanecem abertas. RESET de D e proveniência operacional produtiva continuam
-bloqueados por fonte, conforme S2-R6. S3 e merge da implementação não autorizados.
+bloqueados por fonte, conforme S2-R6. A continuidade de cursor entre processos
+também permanece aberta (F3). S3 e merge da implementação não autorizados.
 A ativação S2 e suas extensões limitadas prevalecem sobre os banners históricos;
 nenhuma aceitação integral foi reduzida. Estado detalhado em
 [implementação S2](reports/P4-02-S2-implementation.md).
