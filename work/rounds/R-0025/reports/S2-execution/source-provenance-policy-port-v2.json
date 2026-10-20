@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 2,
+  "authority": "S2-R13; integration80c143fa; additive override of v1 request policySources shape and receipt decision ownership only",
+  "method": "RaitRiskProvenanceReader.qualifyPolicy?",
+  "purpose": "C_USEFUL_MOVEMENT_POLICY",
+  "requestKeys": [
+    "purpose",
+    "tenantId",
+    "caseId",
+    "sourceRefs",
+    "contentRevision",
+    "policySources"
+  ],
+  "requestPolicySourceKeys": [
+    "sourceRef",
+    "sourceRevision"
+  ],
+  "requiredRequestAnchor": {
+    "sourceRef": "docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2",
+    "sourceRevision": "sha256:1f0020512955efae8710e6d5195f0457f10a59ce0c385c28809b7f6a1f2930b5"
+  },
+  "additionalRequestSources": [
+    {
+      "sourceRef": "docs/framework/arch/rait-deadline-engine.md#2",
+      "sourceRevision": "sha256:8d4f039d0b13ffbd4a019fae0ebb284e14c51fd9c4b5e96b2ffd74c5665be669"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-113.md",
+      "sourceRevision": "sha256:ef3a948ac3811ab45474e0588aeb1bb15dea24771b821867ba58bb50128cf2c4"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2",
+      "sourceRevision": "sha256:1f0020512955efae8710e6d5195f0457f10a59ce0c385c28809b7f6a1f2930b5"
+    },
+    {
+      "sourceRef": "docs/meta/decisions/rait.md",
+      "sourceRevision": "sha256:b7850db8614245cdf4dfd1cc2a4f9d0ebf326cdc9f3c20b5d1ba5782b2f31376"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-110.md",
+      "sourceRevision": "sha256:f2cbcc67cfea610a238d5c5baf83387e3a9aa1e2fcf4676877ccf8b7466ec647"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-111.md",
+      "sourceRevision": "sha256:3a191576c72c79cfa12c5b6c61371ec144e68cd5a389e9510691b84fc9b14fc9"
+    }
+  ],
+  "requestSourceRule": "Nonempty sorted unique pairs; include required C anchor; additional references only from frozen inventory when actually needed by admitted policy. Exact whole-file digests; no invented URI/hash/decision label. Unknown, duplicate, wrong or missing pair rejects503.",
+  "receiptPolicySourceKeys": [
+    "sourceRef",
+    "sourceRevision",
+    "decisionRef"
+  ],
+  "receiptSourceRule": "Original receipt triples unchanged. Reader independently retrieves admitted full receipt and verifies every relevant actual decisionRef, historical authority, complete policy and event applicability. Request pairs and receipt pairs must correspond exactly for the policy used; extra or omitted source fails rather than silently accepting partial coverage. A pair proves byte identity only.",
+  "canonicalRequestEnvelope": {
+    "schemaVersion": 1,
+    "namespace": "rait-risk-policy-request-v1",
+    "purpose": "C_USEFUL_MOVEMENT_POLICY",
+    "tenantId": "actual canonical UUID",
+    "caseId": "actual canonical UUID",
+    "rows": "v1 complete actual current source rows",
+    "dependencies": [],
+    "policySources": "sorted exact request pairs ONLY"
+  },
+  "contentRevision": "Original canonical byte and sha256 rules over this envelope; same namespace, schemaVersion1 and v1 full source bindings. Do not hash receipt decisionRefs into requester envelope or require requester knowledge of them. Request format revision is this additive source-v2 document, not a new envelope namespace.",
+  "qualifiedResult": {
+    "status": "qualified",
+    "receiptDigest": "sha256:<64 lowercase hex>",
+    "sourceVersions": [
+      "rrv1:<64 lowercase hex>"
+    ]
+  },
+  "unqualifiedResultKeys": [
+    "status",
+    "sourceVersions"
+  ],
+  "unchanged": "All v1 constraints other than request pair shape and ownership of receipt decisions remain: exact C-only optional method, current case/AIT/infraction/C-clock/timer/reset-event bindings, independent contentRevision, existing receipt core/kind, admitted receiptDigest distinct from opaque versions, full movement dependency, defaultmissing and safe503. No zero-binding movement or rrv1 decoding.",
+  "authorityBoundary": "Section locator WF-RAIT-002#4.2 and approved workflow status are genuine source identity, not operational admission or legal validation. D11 on every source, digest equality and request echo do not authenticate decisions. Receipt independently establishes authority/completeness/applicability; if unavailable503.",
+  "fixtureBoundary": "Independently admitted synthetic isolated test authority only; precompute immutable full receipt before HTTP and independently compare actual source rows/pairs and receipt decisions. No invented production writer/action/legal approval; fixture success is not production qualification. Opaque versions differ from digest.",
+  "requiredSensors": [
+    "positive requester supplies pairs only while reader independently retrieves genuine admitted decision provenance",
+    "request triple/unknown fields rejected",
+    "missing C anchor or incorrect whole-file hash rejected",
+    "receipt invented D11 or unresolved/inapplicable decision rejected",
+    "correct pairs/hash/approved workflow without independent authority rejected",
+    "incomplete policy or wrong actual event/parent/tenant/clock/timer rejected",
+    "receipt source pairs differ from exact requested policy set rejected",
+    "opaque versions unlike receiptDigest pass without decoding; full movement independently verifies receipt dependency",
+    "absent/missing/ambiguous policy fails503 with no effects"
+  ],
+  "preservedHashes": {
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-policy-port.md": "1900673c8f7b7673ea5a99a1083260e21d27249890767d0cb608a6b715d53bbf",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-policy-port.json": "1c7521c1dc14f9580bfd8d4a8d995a70ac9fafb8b9d3a100ab54184d6655cf11",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.md": "3bb5e2b185b02b14145c7c51aeb3a19ecf7ac00a1add77d62fed462cdeec22b8",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1"
+  }
+}
