@@ -2,11 +2,11 @@ import { Global, Inject, Injectable, Module } from '@nestjs/common';
 import {
   addCalendarDays,
   addCalendarMonths,
-  isWeekend,
   type RaitRiskClockInput,
   type RaitRiskStep,
 } from '@detran/inf-deadlines';
 import {
+  RaitDeadlineEngineFactory,
   RAIT_RISK_PROVENANCE_READER,
   RAIT_RISK_SNAPSHOT_FACTORY,
   raitQualify,
@@ -92,20 +92,11 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
         return result;
       };
       const today = operation.today(operation.tenantTz);
-      const rounded = async (raw: string) => {
-        let value = raw;
-        while (
-          isWeekend(value) ||
-          (
-            await q(
-              'select id from inf.rait_holiday where tenant_id=$1 and holiday_on=$2 for share',
-              [tenantId, value],
-            )
-          ).length
-        )
-          value = addCalendarDays(value, 1);
-        return value;
-      };
+      const calendar = RaitDeadlineEngineFactory.calendar(tx);
+      const rounded = async (raw: string) =>
+        (await calendar.isBusinessDay(raw, tenantId))
+          ? raw
+          : calendar.nextBusinessDay(raw, tenantId);
       const clocks = await q(
         'select id,clock_code from inf.rait_clock where tenant_id=$1 and case_id=$2 order by id for share',
         [tenantId, caseId],
@@ -480,11 +471,10 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
         for (const step of track.steps)
           steps.push({
             flag: step.flag,
-            reachedOn: await rounded(
+            reachedOn:
               ladder.unit === 'days'
                 ? addCalendarDays(start, step.after)
                 : addCalendarMonths(start, step.after),
-            ),
             parameterRef,
             sourceRef: ladder.sourceRef,
           });

@@ -11,6 +11,7 @@ import {
   createDeadlineEngine,
   isWeekend,
   StaticTimerCatalog,
+  type Calendar,
   type Deadline,
   type DeadlineEngine,
   type DeadlineEvent,
@@ -298,6 +299,27 @@ const isNonEmpty = (value: unknown): value is string =>
 export class RaitDeadlineEngineFactory {
   constructor() {}
 
+  static calendar(transaction: Tx): Calendar {
+    return {
+      isBusinessDay: async (date, tenantId) => {
+        if (isWeekend(date)) return false;
+        const holiday = rows(
+          await transaction.query(
+            `${'select id from inf.rait_holiday'} where tenant_id = $1 and holiday_on = $2 limit 1`,
+            [tenantId, date],
+          ),
+        );
+        return holiday.length === 0;
+      },
+      nextBusinessDay: async function (date: LocalDate, tenantId: string) {
+        let candidate = addCalendarDays(date, 1);
+        while (!(await this.isBusinessDay(candidate, tenantId)))
+          candidate = addCalendarDays(candidate, 1);
+        return candidate;
+      },
+    };
+  }
+
   create(
     transaction: Tx,
     operationSnapshot?: RaitOperationClockSnapshot,
@@ -359,24 +381,7 @@ export class RaitDeadlineEngineFactory {
         today: () => today(),
         now: () => new Date(),
       },
-      calendar: {
-        isBusinessDay: async (date, tenantId) => {
-          if (isWeekend(date)) return false;
-          const holiday = rows(
-            await transaction.query(
-              `${'select id from inf.rait_holiday'} where tenant_id = $1 and holiday_on = $2 limit 1`,
-              [tenantId, date],
-            ),
-          );
-          return holiday.length === 0;
-        },
-        nextBusinessDay: async function (date: LocalDate, tenantId: string) {
-          let candidate = addCalendarDays(date, 1);
-          while (!(await this.isBusinessDay(candidate, tenantId)))
-            candidate = addCalendarDays(candidate, 1);
-          return candidate;
-        },
-      },
+      calendar: RaitDeadlineEngineFactory.calendar(transaction),
       catalog: new StaticTimerCatalog(),
       store: {
         insert: async (deadline) => {

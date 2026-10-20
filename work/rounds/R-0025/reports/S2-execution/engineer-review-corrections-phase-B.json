@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-10-20T00:49:00.198675+00:00",
+  "role": "Engineer Article7",
+  "task": "TASK-0045 PhaseB F2",
+  "grant": "82032db5; parent-review-phase-B-grant.json",
+  "independentAcceptedRED": "83457247;9F1/F5GREEN then2actualHTTP200 rawdateFAIL",
+  "runtimeHashes": {
+    "backend/app/src/rait-risk.providers.ts": "06567fa743a23322c4c03666cc896f1c9bd3924d664ad5d927e9b1e5c24ea3c7",
+    "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "239edd3c249bf91572df97700f3b8284f0ea43e413f9575cc0a5a59ba06608d4"
+  },
+  "unchangedFrozenTestHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "7d3183d05c749bb85dee21a3655a0719adb99c859bed6432630f0c791871d0d9",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "a8fae2a69f2e447936253e8e66a1383ecd740d34ee848672de29e18f7b93467c"
+  },
+  "changes": [
+    "Move existing tenant SQL Calendar object unchanged into static RaitDeadlineEngineFactory.calendar(tx):Calendar in already exported factory class; the existing deadline engine uses this same adapter.",
+    "App SQL risk factory calls that Calendar for source-prescribed actual due/ceiling rounding only. No duplicated weekend/holiday calendar loop remains in app.",
+    "Raw ladder steps use only existing addCalendarDays/addCalendarMonths. PRESCRITO_OPERACIONAL remains at canonical rounded due/ceiling.",
+    "No new calendar algorithm, holiday scope, file/barrel/dependency/DI relationship, legal rule, source authority or key."
+  ],
+  "checks": {
+    "CASE typecheck": "PASS exit0 once",
+    "app typecheck": "PASS exit0 once",
+    "WORKLIST typecheck": "PASS exit0 once",
+    "pinned Prettier two owned files": "PASS",
+    "exact frozen HTTP7d318 and fixture hashes preserved": "PASS",
+    "DB/HTTP/unit": "NOT RUN; Inspector independently executes unchanged acceptance"
+  },
+  "logHashes": {
+    "/tmp/detran-s2-backend-case-typecheck-phase-B.log": "17726477173eeab2bcb69ef22d2de630677b9000262d95174320f06f0e5b7e78",
+    "/tmp/detran-s2-backend-app-typecheck-phase-B.log": "c9b85509952012f7d439395a79e125eefc2706aa4c1d8c22022ed69fe13d45c5",
+    "/tmp/detran-s2-backend-worklist-typecheck-phase-B.log": "93dee02a301e1a1bcd027c547732cb7c73993b0168a0e36ffe401d921a9b3831"
+  },
+  "graft": {
+    "query": "RaitDeadlineEngineFactory in depth all",
+    "tokensSaved": 24975,
+    "estimatedDollarsSaved": 0.06
+  },
+  "remaining": [
+    "Independent unchanged F2/F1/F5 HTTP GREEN/full114 and full51 acceptance remain pending.",
+    "F3 process-local pagination key restart/multireplica availability stays OPEN.",
+    "D RESET and authentic production provenance stay source-blocked/default-missing.",
+    "No S2/P4/JW01 closure, production/S3/scorecard change or implementation merge claim."
+  ],
+  "preservation": "Only two approved runtime paths and this scoped receipt changed. No tests/source/ADRs/generated/config/dependency/state/Git/DB/sibling/local-work edits.",
+  "quiescent": true
+}
