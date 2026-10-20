@@ -26,3 +26,4 @@
 | PC-0022 | R-0036 | - | 6f07295b60a51022b9de1d3e3bdebd9bcd48c2b1 | yes |
 | PC-0023 | R-0037 | - | 92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c | yes |
 | PC-0024 | R-0038 | - | 11eea2d7309a958d14d536ea7ced46124dfeed2e | yes |
+| PC-0025 | R-0039 | - | f3dfc6ee47a94249631bf14e3242aeb309e36001 | yes |

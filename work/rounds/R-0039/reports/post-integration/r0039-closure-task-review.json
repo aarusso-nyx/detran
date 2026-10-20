@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "summary": "The draft's evidence-chain gate text hardcodes 'all164previousrecords', but the plan correctly says to keep main's entire actual prefix and never cut it to 164. The gate detail and validation criterion should be filled in from the fresh post-PR210 chain count (164 expected, reconciled explicitly if main has more), not the literal template number.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "summary": "Timing risk on the delegated decision. The observations were captured at 00:32-00:37Z, and the exact-main CI for 207642f2 is still running. D-2 is a new recommended Owner choice, so if CI success or D-2 adoption lands after 2026-10-20T02:30Z (or after the Owner returns), the packet should say plainly that closure stops and waits for the Owner. The draft's softer wording 'or explicit authority thereafter' should be replaced with a hard halt, so a late D-2 cannot be written under expired delegation. D-2's recorded timestamp must be the actual adoption time, as in R-0038 (23:55Z).",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The observations snapshot predates the PR210 merge: pr210_snapshot is OPEN with mergeCommit null, local_records=163, and the protected manifest covers 1,238 paths before R-0038's closed/sealed bytes (PC-0024) existed. The plan already says this must be replaced by a fresh exact-main snapshot. That snapshot is mandatory before any write, and the stale 1,238-path manifest must not be reused as the preservation baseline.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The closure template leaves out the optional title and batches[].commit. Both are schema-optional (law/schemas/phase-closure.schema.json, identical to the installed DEVAI copy), but the R-0038 precedent includes both. Suggest adding a title and commit=f3dfc6ee47a94249631bf14e3242aeb309e36001 (or the fab650cf candidate, labelled as such) for traceability. Required gates, validation_criteria and evidence are correctly deferred until after the actual checks.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The v2 manifest hashes the plan, draft, observations and v1 archive, and all five recomputed hashes match. It does not hash its sibling helpers (v2-build.py, v2-pii-clarification.py) or itself. This is a small custody gap in the packet's own provenance; hash them when archiving the packet into work/rounds/R-0039/reports/post-integration.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "Checked and confirmed, no action needed. release_disposition=none-needed is correct: the 11eea2d7..f3dfc6ee diff touches no packages/, backend/ or apps/ paths. merged_as=f3 as the C3/C4 integration commit, kept distinct from the closure-base main, matches the R-0038 precedent (merged_as=PR208 merge). Binding evidence.terminal_sha256 to the authentic last line_hash of R-0039.jsonl matches the schema ('terminal hash commits to the complete line-hash chain') and R-0038 practice. The packet keeps three things separate: the registration receipt's action PASS, the rebuilt readings' synthesized status=pass with REBUILT_FROM_BODY, and the original generation's review / exit 1 / RBAC 1094 result. It claims no fresh measurement, no legal or permission approval, no native compatibility and no backlog resolution, and BL-0020 stays OPEN. It requires the 5 mandatory checks to be green on the exact head, an independent delivery review, and official record/verify/close/plan/render/seal, with no manual edits to proofs.",
+      "blocking": false
+    }
+  ]
+}
