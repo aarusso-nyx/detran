@@ -1,0 +1,21 @@
+{
+  "task": "TASK-0044 R17 F6 independent unchanged unitGREEN",
+  "runtimeCommit": "dd03c7ab",
+  "runtimeSha256": "07f33bfbe2b27e7702cd36de4ea5479415c4ee776d05bf274d9ba5c1d8520a4e",
+  "testSha256": "c423d39e85352684f8eed45f1115361abaf66504bf400325629f393893b00385",
+  "unchangedFromIndependentRED": true,
+  "executed": 3,
+  "passed": 3,
+  "failed": 0,
+  "durationSeconds": 2.35,
+  "logSha256": "ebc30b21db6acd5bec2e3e3131ca8f40715daedbf30f69fdf135d8e0714a4c20",
+  "DBUsed": false,
+  "HTTP124": "NOT EXECUTED; pending lease/resource/acceptance",
+  "review": "DRAFT REVIEW blocked; no independent rereview/merge/readiness waiver",
+  "parameterGateFinding": {
+    "source": "backend/app/src/rait-risk.providers.ts:218",
+    "verifier": "tools/parameters/verify.mjs:374-395",
+    "cause": "AST string literal rait.ladder. contains namespace prefix and three parts but is not a registered full key.",
+    "recommendation": "Use explicit const typed map A\u2192rait.ladder.A B\u2192rait.ladder.B C\u2192rait.ladder.C D\u2192rait.ladder.D and index with already narrowed A/B/C/D code. Preserve exact SQL binding, parameter selection and missing-source behavior; no verifier/allowlist edits or string-fragment evasion."
+  }
+}
