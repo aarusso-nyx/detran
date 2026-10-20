@@ -277,7 +277,6 @@ export class RaitClaimContextService {
     )
       return invalid();
     return this.scope.transaction(async (tx) => {
-      await raitLockRiskRelations(tx);
       const { who, rows, operation } = await this.pools(tx, principal);
       const selected =
         query.pool_id === undefined
@@ -287,6 +286,12 @@ export class RaitClaimContextService {
           : String(query.pool_id);
       if (selected && !rows.some((p) => p.id === selected)) return missing();
       if (!selected && query.queue_cursor !== undefined) return invalid();
+      if (selected) {
+        await raitLockRiskRelations(tx);
+        const authorized = await this.pools(tx, principal, operation);
+        if (raitCanonical(authorized.rows) !== raitCanonical(rows))
+          return missing();
+      }
       const candidates = selected
         ? await this.candidates(
             tx,
