@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+import { createNestMetadataPlugin } from '../../tools/security/invariants/nest-metadata-transform.mjs';
 
 const tier = (process.env.DETRAN_TEST_TIER ?? 'unit') as
   'unit' | 'integration' | 'e2e' | 'real' | 'in-house';
@@ -13,6 +14,7 @@ const includeByTier: Record<typeof tier, string[]> = {
 };
 
 export default defineConfig({
+  plugins: [createNestMetadataPlugin()],
   resolve: {
     alias: {
       '@detran/shared': fileURLToPath(
