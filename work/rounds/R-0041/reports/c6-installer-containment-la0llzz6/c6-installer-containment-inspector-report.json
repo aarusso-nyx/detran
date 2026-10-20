@@ -1,0 +1,50 @@
+{
+  "role": "Inspector",
+  "ownedPath": "tools/security/tests/prepare-security-inventories.test.mjs",
+  "ownedPathSha256": "2888ddf2816fa6c9bd8cb55c4c85909dfad8ca207b32b1de8b9804997e862e00",
+  "baseline": {
+    "installerSourcePath": "/tmp/c6-installer-containment-baseline.mjs",
+    "installerSha256": "c254dc1b1d9bdfd36174ada9983ba798cbc302398b9bff310cda5cab7f55b2aa",
+    "tests": 35,
+    "passed": 33,
+    "failed": 2,
+    "exitCode": 1,
+    "causes": [
+      "Actual internal ..disguised directory wrongly admitted and alias written",
+      "Actual external symlink resolving into internal ..disguised wrongly admitted and alias written"
+    ],
+    "stdout": "/tmp/c6-installer-containment-baseline-red.stdout",
+    "stderr": "/tmp/c6-installer-containment-baseline-red.stderr"
+  },
+  "final": {
+    "installerSha256": "ea3ec1118061b0a7b7292b642a3a3aa138a83aa6f9d0dd3bd52b665a05829656",
+    "command": [
+      "node",
+      "--test",
+      "tools/security/tests/prepare-security-inventories.test.mjs"
+    ],
+    "tests": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "stdout": "/tmp/c6-installer-containment-final.stdout",
+    "stderr": "/tmp/c6-installer-containment-final.stderr"
+  },
+  "checks": {
+    "syntax": "PASS",
+    "prettier": "PASS",
+    "eslint": "PASS"
+  },
+  "limitations": [
+    "Initial fixture path /var versus /private alias mismatch fixed by canonicalizing isolated temporary root; initial raw retained separately, not claimed a production defect.",
+    "Fake supported-name/version package is isolated and never executed; no native origin/nonce/readings or installed Vitest execution.",
+    "Only assigned test file edited; root owns installer/Git. Original31cases preserved plus4 meaningful containment/idempotency/preservation fixtures."
+  ],
+  "rawHashes": {
+    "/tmp/c6-installer-containment-baseline-red.stdout": "91074e771870c297aa75c4510321f2e5e8e77591b50d328950dfa594be682680",
+    "/tmp/c6-installer-containment-baseline-red.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/c6-installer-containment-final.stdout": "38b4aa0d6a5569bcba4feec839f06d861c1bddc29df4c53f15991e169328cb24",
+    "/tmp/c6-installer-containment-final.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

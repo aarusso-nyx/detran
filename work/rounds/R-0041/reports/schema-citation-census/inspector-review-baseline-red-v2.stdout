@@ -1,0 +1,152 @@
+✔ complete tracked recursive schema population includes citation-free files and excludes untracked or unrelated JSON (174.286667ms)
+✔ exact source bytes, JSON Pointer escaping and repeated occurrence offsets are retained (190.333209ms)
+✔ ADR-looking object keys remain observable with an escaped pointer (265.597ms)
+✔ schema examples and a schema property named examples retain distinct conservative contexts (220.369167ms)
+✔ numeric and provider scoped namespaces are preserved without fake local resolution (175.700625ms)
+✔ deterministic census does not rewrite tracked bytes or the Git index (497.194125ms)
+✔ malformed tracked JSON is an explicit population error (176.969166ms)
+✔ duplicate JSON keys cannot silently discard a citation (150.753084ms)
+✔ missing tracked schema is retained as an error rather than shrinking population (288.683584ms)
+✔ tracked symlink to an internal schema is refused (235.141708ms)
+✔ tracked external symlink is refused without citing outside bytes (270.246542ms)
+✔ a schema directory replaced by an escaping symlink cannot admit external bytes (304.520292ms)
+✔ CLI returns whole JSON and nonzero exit for an incomplete population (333.648583ms)
+✖ byte equality with a self-declared installed package never authenticates a provider or resolves a citation (188.213541ms)
+✔ invalid UTF-8 is an error rather than a replacement-character source witness (187.3105ms)
+✔ equivalent escaped duplicate JSON keys also reject (262.97225ms)
+✔ a Git repository with no tracked schemas cannot claim completeness (216.827792ms)
+✖ CLI invoked through an external symlink still emits whole JSON and refuses malformed input (150.611208ms)
+✖ changed worktree bytes expose their distinct Git blob identity and declared measurement basis (272.529417ms)
+✖ UTF-8 BOM is explicitly refused rather than silently stripped (210.227417ms)
+✖ uppercase JSON extension and newline-containing tracked paths cannot silently disappear (204.239791ms)
+✔ non-root repository directories and invalid CLI arguments fail closed (360.348291ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 17
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5448.9585
+
+✖ failing tests:
+
+test at tools/security/tests/schema-citation-census.test.mjs:294:1
+✖ byte equality with a self-declared installed package never authenticates a provider or resolves a citation (188.213541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'node_modules/@aarusso-nyx/devai'
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:311:12
+      at fixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:34:12)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:295:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'node_modules/@aarusso-nyx/devai',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/security/tests/schema-citation-census.test.mjs:359:1
+✖ CLI invoked through an external symlink still emits whole JSON and refuses malformed input (150.611208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:372:14
+      at fixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:34:12)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:360:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/security/tests/schema-citation-census.test.mjs:379:1
+✖ changed worktree bytes expose their distinct Git blob identity and declared measurement basis (272.529417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '49f3b763e3d795adcd0c171e5926aae2739e44b9'
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:389:12
+      at fixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:34:12)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:380:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '49f3b763e3d795adcd0c171e5926aae2739e44b9',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/security/tests/schema-citation-census.test.mjs:405:1
+✖ UTF-8 BOM is explicitly refused rather than silently stripped (210.227417ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at incomplete (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:40:10)
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:418:5
+      at fixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:34:12)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:406:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tools/security/tests/schema-citation-census.test.mjs:422:1
+✖ uppercase JSON extension and newline-containing tracked paths cannot silently disappear (204.239791ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:428:12
+      at fixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:34:12)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/schema-citation-census.test.mjs:423:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

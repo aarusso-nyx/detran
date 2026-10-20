@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Identity is confirmed. HEAD is b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab and the tree is 620e3b1b5c4e135aa964867200807340928a3d3e. The working files hash to the given values: helper 333a08bd…, config 7cfe5918…, new test ebd2e15a…, ci-isolation 003615a7…. The archived final-* copies in the Inspector evidence directory match these bytes, and every file hash recorded in delivery.json matches its file on disk. The tools/ diff touches exactly these four paths. ops-perf.config.mjs only adds the helper import and plugins:[createNestMetadataPlugin()]; its other bytes are unchanged. ci-isolation changes only the ops-perf configSha256 literal (d799… to 7cfe…) and adds one fixed-literal SHA256 assertion for the helper, inside the real test 'nine invariant semantic producers execute unconditionally with isolated database services'. That resolves the earlier test-naming minor. The other eight config pins, nine source pins, commands, thresholds and timeouts are untouched. No product, suite, package or lock file is in this delta."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The helper matches the contract. The factory takes no parameters, and root comes from realpathSync of import.meta.url, which resolves the earlier macOS /var vs /private/var minor. It returns a stable name with enforce:'pre'. TypeScript is imported bare from the repo-root anchor; the recorded origin is .pnpm/typescript@6.0.3, checked before and after the tests. The selection map is closed: app/src, shared/src (explicit), and <group>/<package>/src. .d.ts files, test/spec files and node_modules/test/tests/__tests__ segments return null. In-scope ids with a query, fragment, NUL character, non-NFC form, backslash or dot-segment are refused. Every segment is checked with lstat from the physical root, so symlinks are refused without being followed. Decorators are detected from the AST, including parameter decorators via canHaveDecorators/getDecorators. Config handling: readConfigFile uses a host that refuses any other path, extends and references are refused, the decorator flags must already be true and are never injected, and target and the other semantic options are preserved. Only emission is overridden in memory (ESNext/Bundler/noEmit false/declaration off/inline sourcemap). Error diagnostics throw instead of falling back. The config cache is keyed by path plus a SHA-256 of the bytes, not by mtime or environment. There is no Reflect patch and no token injection."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The raw evidence supports the RED→GREEN claims. The functional RED (test-red.mjs, exit 1, 2/2 failed, 0 skipped) runs the real ops-perf config through Vite 7.3.6, resolved from Vitest 4.1.11's realpath, with configLoader 'native', middlewareMode and a temporary cacheDir. On that run, design:paramtypes was undefined for both production DashboardStreamService and DetranPolicyGuard, and Nest failed with 'can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK) … index [0]'. This is the real DI cause, not MODULE_NOT_FOUND. The earlier 'exports is not defined' SSR error from @stynx-nyx/data is kept separately and is not presented as the RED. The final test file is the RED test plus formatting and plugin-order/enforce assertions. The GREEN metadata matches the real tokens by reference after the final vite:esbuild transform. Nest then compiles with distinct useValue providers, and the injected-instance identity checks are not tautological. The final output is ESM (no require( and no exports.). The guard's metadata equals [Reflector] and it compiles. The hash RED is an actual d799 vs 7cfe mismatch (10 pass, 1 fail). The final focused run is 36/36 pass (25 new + 11 ci-isolation) with 0 fail, 0 skipped, 0 cancelled and 0 todo; its stdout/stderr hashes match. Prettier exit 0 (stderr holds only the .npmrc NODE_AUTH_TOKEN warning); node --check exit 0."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "configFor rule C does not exclude 'shared' as the group segment. A future backend/domains/shared/<x>/src/** file would map to backend/domains/shared/<x>/tsconfig.json instead of being refused or kept to the one-level shared exception. No such tree is tracked today, and a missing tsconfig fails closed through the lstat refusal, so this does not block. Consider rejecting parts[2]==='shared' in rule C if the map is meant to stay strictly literal."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The helper reads source.parseDiagnostics, which is not a public TypeScript API, and falls back to []. Syntax errors still fail closed through the syntactic diagnostics of transpileModule(reportDiagnostics:true), and the malformed-source test proves the rejection. The risk is limited to drift on a future TypeScript version, and the TS 6.0.3 pin covers that today."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The virtual/query-id test accepts either a throw or null for each ambiguous id; it does not pin one behaviour. The helper actually refuses (throws) for in-scope query, fragment and NUL ids. That is stricter than the test requires and satisfies the 'do not widen the selection' contract, but a later change to null pass-through would not be caught."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Two minor caveats. First, GREEN diagnostics report the third token's name as 'OpsParameterService2', which is cosmetic renaming in the SSR/esbuild chain. Identity is still proven by reference against the class loaded by the same SSR graph, and by Nest's injected-instance checks. Second, the test proves the helper's bare 'typescript' import resolves to 6.0.3 only by equivalence (same root node_modules anchor, and the fixture symlinks node_modules to the root); it is not asserted directly from inside the helper."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Limits, which this verdict does not certify. The full devai:test glob and the broad or format checks across all files were held during the separate blueprint preview. The full original 3-scenario ordinary DB run (3 executed, 3 PASS, 0 pending, 0 skip) is still running under the Engineer. New exact-head CI with all nine ordinary workloads, foundation fail-closed, and the five mandatory checks has not run. Decorated *.spec.ts files under src (app guards, shared policy.guard.spec) are excluded by design and are outside the ops-perf include. This PASS covers source and focused evidence only. It makes no claim about perf, native custody, C6 or CI readiness."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Frozen identity confirmed. HEAD is ab07455014bd2bcd6acc4298c1249f95ec032057 with tree 27c60d3905098c4484ce6c8c44d68277ce713e35, and the worktree is clean. Since 0cfb3a94 there are 402 changed paths: exactly 6 source/config/test paths (4 modified plus 2 additions inside an existing test file, 1 new test file) and exactly 396 new files under the 3 named reports/ directories (308/36/52). Nothing changed under record/proofs, .devai/state, work/rounds, backlog, product, support or threshold paths."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Hashes match the claims: App vitest.config.ts is db8dec…, Requests vitest.config.ts is 18ea54…, portal.config.mjs is f8dd5b…, and the frozen helper nest-metadata-transform.mjs is 333a08… (last changed in aa957474, an ancestor of the base). ci-isolation.test.mjs changes only the Portal configSha256 pin (084d95… to f8dd5b…); the 333a08 helper pin is unchanged. App and Requests config hashes are not CI-pinned, as disclosed."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Config change is narrow and correct. Each config keeps the original /\\.js$/ esbuild exclusion and adds anchored, regex-escaped exact absolute-path patterns: the 2 RAIT worklist/session controllers for App (performance inherits them through the base spread), and the same 5 Requests/Identity service/clock files for both the Requests and Portal-native configs. Portal and Requests gain createNestMetadataPlugin(). No test filters, skips or assertion changes."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The closure is exact by design, not by derivation. About 45 other decorated Portal requests/identity src files (generated controllers, services, repositories, modules) and other decorated App-graph sources still pass through both the metadata plugin and vite:esbuild. This is safe today, since the tests prove name/identity behaviour only for the closed targets and the interceptor name-dispatches only on the 2 excluded controllers. However, any future name- or identity-sensitive decorated source has to be added by hand to both the config and its test, which asserts exclude.length === targets.length + 1."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The Inspector tests are stronger, not weaker. The App test observes both real transform stages, checks that the second stage receives the helper output byte-identically and returns null, checks that a non-target source keeps ordinary esbuild compilation, and has selector negative controls (basename, tmpdir, .extra, ?query, src-to-tests sibling). It checks controller design:paramtypes service identity and canonical runtime names, and all 18 handler audit branches with next=1 and delegate=0 plus an unmapped-handler delegate control. The Portal test covers native and Requests-default routes with optional/self/token metadata, missing-provider and wrong-token negatives, and test/spec plugin refusal."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "In the Portal test's finally block, settleRequestsBundleCache and the closing assertions (listen/connect counts, before/after source snapshot, adjacent events) can throw and hide an earlier assertion error from the try block. If settle throws, observation.json is not written. The test still fails correctly, so this is a diagnosability issue only. The snapshot comes from git ls-files --exclude-standard, so ignored App/root caches are outside its scope, and the observation records nonOwnedAppRootCachesMeasured:false, consistent with the disclosed future-unknown root-cache gap."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Capture artifacts are coherent, checked independently here. All three manifests match the stated prefixes (f64b0f74…, 4dbb75ca…, b03ea5c4…). Every entry's stored bytes and SHA match, and after gzip/gzip-mtime0 decoding the original bytes and SHA match: 500/500 entries over 307 payloads, 42/42 over 32 blobs, 79/79 over 50 payloads. No stored file is orphaned except the README/acceptance/reporter files, and acceptanceSHA256 matches inspector-acceptance.json. A high-confidence marker scan of the decoded payloads (GitHub/AWS/Slack/OpenAI-style tokens, PEM private keys, JWTs, NODE_AUTH_TOKEN values) found 0 hits. This is a pattern scan, not a universal no-secret certification."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Not verified here, within the read-only scope: the 241/241, 144, 97+7 TODO, 49, 491+1 TODO and Portal 3-test outcomes; the /tmp prior-review JSON files; the in-flight source-freeze checks; CI status; and the EV append. Nothing in this review infers a PASS for them."
+    }
+  ]
+}

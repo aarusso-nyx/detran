@@ -1,0 +1,46 @@
+{
+  "role": "Architect",
+  "scope": "C8 source and reference; Inspector tests delegated",
+  "baseline_commit": "92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c",
+  "owned_sources": [
+    {
+      "path": "docs/meta/security/historical-compatibility.json",
+      "sha256": "38cf0b0ddeb7219c430748de9226f9fd26f578085615f68198e7358e82828e78"
+    },
+    {
+      "path": "tools/security/verify-historical-compatibility.mjs",
+      "sha256": "c8bab102faabcc289339500913e9d9cbc015f7faf8a5a4575a0e3090d002a315"
+    }
+  ],
+  "validation": {
+    "syntax": "PASS",
+    "formatting": "PASS",
+    "before_exact_R0037_transition": "supplementary map verified with recorded gaps; pre-transition capture retained",
+    "current_candidate": "Must contain both exact approved current proof streams; the old base worktree intentionally refuses incomplete integration",
+    "independent_Inspector": "19 tests prior to R25 extension PASS; updated tests separately assigned to c2_dependencies"
+  },
+  "requires_integration": [
+    "Exact R0037 1\u21922line source173ab167ad39e314f5e2d7eaea84bab27a162a52 from authorized PR207 closure",
+    "Exact R0025 4\u21926line source2e04f29c864cc3cdb3e73d4ec0de995e67214db7 from already-integrated main PR205"
+  ],
+  "preservation": {
+    "original_references": 1073,
+    "governed_prefix_records": 150,
+    "legacy_digest": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec",
+    "R0036": "closed PC0022; all existing bytes exact",
+    "reference_breakdown": {
+      "exact_bytes": 1070,
+      "exact_old_prefix_plus_specific_approved_append": 2,
+      "global_governed_prefix": 1
+    }
+  },
+  "findings_retained": [
+    "14 missing record.md names",
+    "R0017 changed after first closed commit",
+    "ADR0001 prose frontmatter gap"
+  ],
+  "native_verdict_replacement": false,
+  "source_copies": "three exact native captures plus original diagnostic README and hashes; no unrelated audit captures",
+  "git_mutations": false,
+  "state_or_proof_writes": false
+}

@@ -1,4 +1,4 @@
-// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92
+// Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
 import { Module } from '@nestjs/common';
 import { AppointmentController } from './controllers/appointment.controller.js';
 import { AppointmentService } from './services/appointment.service.js';

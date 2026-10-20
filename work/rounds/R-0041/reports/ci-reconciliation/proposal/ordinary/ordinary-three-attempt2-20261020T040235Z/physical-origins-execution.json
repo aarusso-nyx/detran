@@ -1,0 +1,12 @@
+{
+  "name": "physical-origins",
+  "argv": [
+    "node",
+    "-e",
+    "const fs=require('fs'),{createRequire}=require('module'),path=require('path');const r=createRequire(path.resolve('package.json'));const v=fs.realpathSync(r.resolve('vitest/package.json'));const vr=createRequire(v);const vi=fs.realpathSync(vr.resolve('vite/package.json'));const t=fs.realpathSync(r.resolve('typescript/package.json'));console.log(JSON.stringify({vitest:{path:v,version:JSON.parse(fs.readFileSync(v)).version},vite:{path:vi,version:JSON.parse(fs.readFileSync(vi)).version},typescript:{path:t,version:JSON.parse(fs.readFileSync(t)).version}},null,2));"
+  ],
+  "exitCode": 0,
+  "startedAt": "2026-10-20T04:02:45.400355+00:00",
+  "endedAt": "2026-10-20T04:02:45.438920+00:00",
+  "durationSeconds": 0.039
+}

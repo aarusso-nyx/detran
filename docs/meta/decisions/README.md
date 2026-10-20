@@ -37,3 +37,7 @@ for implementation versus integration state.
   WCAG/eMAG standard declaration, and card-installment authorization posture.
 - [dashboard.md](dashboard.md) — aggregate-publication cell-suppression threshold and the nine
   BPO alert/SLA calibration proposals, approved in bloc.
+
+## Cross-domain governance
+
+- [scorecard.md](scorecard.md) — actual delegated governance decisions for bounded scorecard delivery; source/measurement custody and remaining gaps, without changing the six product ledgers above.

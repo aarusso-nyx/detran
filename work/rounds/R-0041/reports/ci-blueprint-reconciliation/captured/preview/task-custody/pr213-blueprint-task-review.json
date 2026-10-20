@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The exporter input path is left as a hedge. export-authorization.ts needs --api-map, and export-pii.ts needs --data-model and --pii-model. Both read native inventories, and the retained candidates already exist under work/rounds/R-0039/reports/delivery/inventories/*.json.gz (api-map, data-model, data-model-pii). The packet should name these exact inputs. It should also require the refreshed registries to reproduce the current native_population_sha256 values exactly: authorization abe04205…c7c7, PII 191d7ec4…1d9d. Finally, it should state that a fresh `devai sense run inventory_regeneration` is out of scope, or treat it as STOP. Without this, 'actual supported outputs' leaves the native-custody choice to whoever executes. The existing STOP clause keeps this non-blocking."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The schema reference is ambiguous. There are two module-blueprint schemas. docs/framework/blueprints/module-blueprint.schema.json allows additional module properties, as the packet says. law/schemas/module-blueprint.schema.json (pinned in law/schemas/manifest.json) sets $defs.ModuleMeta to additionalProperties:false and does not list dependencies, ddlFile or devDependencies. The current BPs already fail that stricter schema, so this change adds no new violation. Still, the 'actual complete schema resolver' step should name the docs/framework schema and say that law/schemas/ModuleMeta is not the resolver for these BPs, so a reviewer does not read a red result as caused by this change."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "BP-INF-AIT-001 and BP-PORTAL-REQUESTS-001 already declare module.devDependencies {@types/pg, pg}. For them, the edit inserts a key into an existing object; the other three BPs get a new object. The generated key order then depends on where 'vite' goes, e.g. vitest,@types/pg,pg,vite. The deep-equality-with-key-order allowance covers either placement, but the packet should say which placement to use so the preview is deterministic."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Verified causal facts (all true): HEAD b3b66c6d and tree 620e3b1b match the frozen values. The packet hash is 3584400d…ae6. The roster hash 1d2fc56f…3d7 and capture-manifest hash 612ae50f…23f match. Job 118438492903 in run 39364579555 concluded failure. Log line 2644 shows blueprints:check drift on exactly the 5 manifests, followed by exit 1. The verified-local-rc failure check 118442843807 exists. Commit 2daa0012 added only 'vite':'7.3.6' to the 5 manifests. tools/blueprints and docs/framework/blueprints are byte-identical to main c58278cc. The generator spreads module.devDependencies after the default vitest (lines 503–507). header() at line 126 uses only bp.id, module.version and the raw sha, and writes one line, so adding devDependencies changes only the sha."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Independently recomputed the provenance blast radius. Tracked files whose first line has the current BP sha number exactly 230: CH 13, EST 63, INF 48, OPS 68, PORTAL 38, equal to the roster set. The live consumers are authorization.json (43 header-path sources) and pii-registry.json (5 generated SQL files plus 5 BPs). The 5 manifests appear in neither registry, and no current source hash in either registry is stale at HEAD. The header is a single line, so the SQL startLine/endLine values in PII rows and the endpoint spans stay valid. PII BP pointers are JSON pointers. Unique potential paths: 242."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Every remaining hash consumer is historical and has no live checker. Checked R-0009/R-0010 proof lines and evidence, R-0010/R-0022 reviews, R-0036 contract-input-manifest.json and R-0039 c3-c4-worker/source-comparison.json; git grep over tools/.github/law/package.json finds no reader. The R-0041 preservation-reference.json used by security:history:check does not intersect the 242 paths. Leaving history byte-exact is therefore consistent and needs no sealed transition."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The CI pin intersection is empty. The nine pinned specs and nine tools/security/invariants configs share no path with the 230 header paths. None of the 5 manifests, 5 BPs or 2 registries is pinned in tools/devai/tests/ci-isolation.test.mjs or any other tools/.github check, so the separately owned ops-perf pin work does not overlap. tools/blueprints/generated-files.json covers the unchanged target population. The protection terms are concrete: 1139 = 1004 + 6 + 121 + 8 and PII 211 = 158 + 53 = 70 + 141 (17 overlap) both match the live registry population fields. The preview gate requires root and independent review before apply, and the packet claims no future PASS. No native prototype, transport, custody or review-retry work is proposed."
+    }
+  ]
+}

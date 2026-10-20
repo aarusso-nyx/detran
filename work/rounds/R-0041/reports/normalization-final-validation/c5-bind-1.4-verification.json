@@ -1,0 +1,69 @@
+{
+  "classification": "read-only-bind-verification-not-proof",
+  "base": "73c0b877980ce0e4f20fdd624c2f223a447c0e98",
+  "head": "62043cc5ac54a0505ad2c511decb9d71c8c81c11",
+  "verdict": "PASS",
+  "checks": {
+    "official_envelope_pass": true,
+    "receipt_matches_file": true,
+    "policy_identity": true,
+    "materialized_all_hashes": true,
+    "first_seven_exact_previous_projection": true,
+    "nine_exact_canonical_bindings": true,
+    "exact_two_added_ids": true,
+    "RBAC_only_domain_addition": true,
+    "thresholds_na_both_chains_closed_rounds_same_bytes": true,
+    "core_domains_unchanged": true,
+    "framework_domains_unchanged": true
+  },
+  "materialized": [
+    {
+      "path": ".devai/config/project.json",
+      "expected_sha256": "4af18ddfe257896db047b74ea43ffcfb8a94115d875dfe0a04d466658e72bd79",
+      "actual_sha256": "4af18ddfe257896db047b74ea43ffcfb8a94115d875dfe0a04d466658e72bd79",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/domains.json",
+      "expected_sha256": "9b8ff20dccc96d02bedc11103d8a7f6a786a30e67912029ad1dafbfeb5a47d13",
+      "actual_sha256": "9b8ff20dccc96d02bedc11103d8a7f6a786a30e67912029ad1dafbfeb5a47d13",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/thresholds.json",
+      "expected_sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4",
+      "actual_sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/scorecard-na.json",
+      "expected_sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2",
+      "actual_sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/glob-guards.json",
+      "expected_sha256": "a444e9fb4113e15e2810c4ac6e29fe4b967bf4951b78cd20f66658e9983da761",
+      "actual_sha256": "a444e9fb4113e15e2810c4ac6e29fe4b967bf4951b78cd20f66658e9983da761",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/sensor-inputs.json",
+      "expected_sha256": "38782bf4f29b3208dbaee10a972b7913f770b3fd7aa22e0e57db8e07c6ca95cb",
+      "actual_sha256": "38782bf4f29b3208dbaee10a972b7913f770b3fd7aa22e0e57db8e07c6ca95cb",
+      "matches": true
+    },
+    {
+      "path": ".devai/config/invariant-producers.json",
+      "expected_sha256": "b64d7caf3fe86bd921f48ab4e668a8d1f49b489603e464aa326fae6776827c8e",
+      "actual_sha256": "b64d7caf3fe86bd921f48ab4e668a8d1f49b489603e464aa326fae6776827c8e",
+      "matches": true
+    }
+  ],
+  "preserved_file_count": 1065,
+  "bind_does_not_establish_native_task_standing": true,
+  "preservation_details": {
+    "path": "/tmp/c5-bind-1.4-preservation-details.json",
+    "sha256": "cd2f0074d0c89c998e8a885717ef486cc6a487c46900644523bb13687aabf513"
+  }
+}

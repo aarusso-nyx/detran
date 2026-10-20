@@ -1,0 +1,46 @@
+{
+  "scope": "independent root post-cleanup witness only",
+  "observedAt": "2026-10-20T05:53:50.623429+00:00",
+  "summarySHA256": "67d09ae977b023cc92aa6e4629056108a333dfb252080880f50e59d9c0adc284",
+  "ownedContainerId": "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc",
+  "ownedVolumeIds": [
+    "f63277f566cbdad4eb0cb1ec8159ac049a338c78ab108833d035e13eb240dc76"
+  ],
+  "checks": [
+    {
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .}}"
+      ],
+      "exitCode": 0,
+      "stdoutSHA256": "ce6b455c05e968bdd10454f116aceee40b31d6e68aac081f398707523608d704",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc"
+      ],
+      "exitCode": 1,
+      "stdoutSHA256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "stderrSHA256": "79dd5b42f4322c085bb4a93dbbd4aa218cd93dd962a0666d196d1ba9f2e9f955"
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "f63277f566cbdad4eb0cb1ec8159ac049a338c78ab108833d035e13eb240dc76"
+      ],
+      "exitCode": 1,
+      "stdoutSHA256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "stderrSHA256": "840b230454b2bf172d3f1193c47f46f47cd4016a46eefd4e65441ffedeef391e"
+    }
+  ],
+  "daemonHealthyAndExactOwnedObjectsAbsent": true,
+  "priorRootProbeLimitation": "First root probe stopped on case-sensitive No such check while actual Docker stderr was lower-case no such object. Original probe streams preserved, no runtime/source change.",
+  "publicCopy": "Private container-inspect and disposable credential URLs remain external; IDs/digests only"
+}

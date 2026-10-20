@@ -1,0 +1,785 @@
+{
+  "note": "Read-only diagnostic, synthetic one-step YAML isolates causes; not original-source execution evidence or a native verdict.",
+  "workflowConcurrency": {
+    "group": "${{ github.workflow }}-${{ github.ref }}",
+    "cancelInProgress": true
+  },
+  "jobs": [
+    {
+      "job": "evidence-gate",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [],
+      "hasServices": false,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Verify the DEVAI proof chain (fail-closed)",
+          "envKeys": [],
+          "run": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Select exact-tree attested evidence route",
+          "envKeys": [
+            "EVENT_NAME",
+            "BASE_SHA",
+            "HEAD_SHA"
+          ],
+          "run": "set -euo pipefail\necho \"evidence_mode=false\" >> \"$GITHUB_OUTPUT\"\ncase \"$EVENT_NAME\" in\n  pull_request|push) ;;\n  *) exit 0 ;;\nesac\nif test -z \"$BASE_SHA\" || test \"$BASE_SHA\" = \"0000000000000000000000000000000000000000\"; then\n  exit 0\nfi\ngit cat-file -e \"${BASE_SHA}^{commit}\"\nprotected=false\nwhile IFS= read -r path; do\n  case \"$path\" in\n    .github/*|.devai/config/*|law/policy/*|test-tasks.json|package.json|pnpm-lock.yaml|tools/ci/*)\n      protected=true\n      break\n      ;;\n  esac\ndone < <(git diff --name-only \"$BASE_SHA\" \"$HEAD_SHA\")\nif test \"$protected\" = true; then\n  echo \"Protected CI control changed; the full remote backend suite is mandatory.\"\n  exit 0\nfi\ntree=\"$(git rev-parse \"${HEAD_SHA}^{tree}\")\"\ntag=\"devai-local-evidence/${tree}\"\nif test -n \"$(git ls-remote --tags origin \"refs/tags/${tag}\")\"; then\n  echo \"Exact-tree evidence claim found: ${tag}\"\n  echo \"evidence_mode=true\" >> \"$GITHUB_OUTPUT\"\nfi\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "invariant-producers",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [
+        "DATABASE_URL",
+        "DETRAN_TEST_DATABASE_URL",
+        "STYNX_OWNER_DATABASE_URL",
+        "STYNX_APP_DATABASE_URL",
+        "STYNX_READER_DATABASE_URL",
+        "DETRAN_PRIORITY_BASELINE_ADMIN_DATABASE_URL",
+        "DETRAN_SEED_ADMIN_DATABASE_URL",
+        "DETRAN_SEED_SCRATCH_DATABASE_URL",
+        "DETRAN_RUNTIME_PROFILE",
+        "DETRAN_PRIORITY_UPGRADE_TEST_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_BASELINE_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_BASELINE_RESET_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_RESTORE_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED",
+        "DB_HOST",
+        "DB_PORT",
+        "DB_USER",
+        "DB_PASSWORD",
+        "DB_NAME",
+        "LOG_LEVEL",
+        "SENATRAN_PROVIDER"
+      ],
+      "hasServices": true,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "envKeys": [],
+          "run": "node tools/security/install-native-vitest.mjs \"$RUNNER_TEMP/detran-native-bin\"\necho \"$RUNNER_TEMP/detran-native-bin\" >> \"$GITHUB_PATH\"\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Apply isolated fixture DDL",
+          "envKeys": [],
+          "run": "bash backend/database/apply.sh --full",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 6,
+          "name": "Seed isolated fixture database",
+          "envKeys": [],
+          "run": "bash backend/database/seed.sh",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 7,
+          "name": "Prepare isolated legacy test fixtures",
+          "envKeys": [],
+          "run": "pnpm backend:test:prepare-legacy",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 8,
+          "name": "Measure invariant-ch complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/ch.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 9,
+          "name": "Measure invariant-dash complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/dash.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 10,
+          "name": "Measure invariant-est complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/est.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 11,
+          "name": "Measure invariant-inf complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/inf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 12,
+          "name": "Measure invariant-ops-queue complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/ops-queue.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 13,
+          "name": "Measure invariant-ops-perf complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/ops-perf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 14,
+          "name": "Measure invariant-portal complete semantic population",
+          "envKeys": [],
+          "run": "detran-native-vitest run --config ./tools/security/invariants/portal.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "foundation",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [],
+      "hasServices": false,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "Enforce evidence and invariant producer results",
+          "envKeys": [],
+          "run": "echo \"::error title=evidence-gate::Evidence/invariant gates did not succeed (evidence: ${{ needs.evidence-gate.result }}, invariants: ${{ needs.invariant-producers.result }}) — failing foundation (the gate never silently opens).\"\nexit 1\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 1,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 4,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "envKeys": [],
+          "run": "node tools/security/install-native-vitest.mjs \"$RUNNER_TEMP/detran-native-bin\"\necho \"$RUNNER_TEMP/detran-native-bin\" >> \"$GITHUB_PATH\"\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 6,
+          "name": "Install documentation dependencies",
+          "envKeys": [],
+          "run": "npm ci --prefix docs/site",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 7,
+          "name": "Check (format + typecheck)",
+          "envKeys": [],
+          "run": "pnpm check",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 8,
+          "name": "Build and link-check documentation",
+          "envKeys": [],
+          "run": "pnpm docs:check",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 9,
+          "name": "Audit documentation dependencies",
+          "envKeys": [],
+          "run": "pnpm docs:security",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 10,
+          "name": "DEVAI doctor (blocking)",
+          "envKeys": [],
+          "run": "pnpm exec devai doctor --repo-root . --format human",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 11,
+          "name": "Whitespace check",
+          "envKeys": [],
+          "run": "git diff --check",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "backend-kernel-full",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [
+        "DATABASE_URL",
+        "DETRAN_TEST_DATABASE_URL",
+        "STYNX_OWNER_DATABASE_URL",
+        "STYNX_APP_DATABASE_URL",
+        "STYNX_READER_DATABASE_URL",
+        "DETRAN_PRIORITY_BASELINE_ADMIN_DATABASE_URL",
+        "DETRAN_SEED_ADMIN_DATABASE_URL",
+        "DETRAN_SEED_SCRATCH_DATABASE_URL",
+        "DETRAN_RUNTIME_PROFILE",
+        "DETRAN_PRIORITY_UPGRADE_TEST_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_BASELINE_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_BASELINE_RESET_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_RESTORE_AUTHORIZED",
+        "DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED",
+        "DB_HOST",
+        "DB_PORT",
+        "DB_USER",
+        "DB_PASSWORD",
+        "DB_NAME"
+      ],
+      "hasServices": true,
+      "permissions": {
+        "contents": "read",
+        "checks": "write"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 3,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Run complete remote backend-kernel fallback",
+          "envKeys": [],
+          "run": "pnpm ci:backend-full",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Publish exact-candidate fallback check",
+          "envKeys": [
+            "GH_TOKEN",
+            "CANDIDATE_SHA",
+            "JOB_STATUS"
+          ],
+          "run": "set -euo pipefail\nconclusion=failure\nif test \"$JOB_STATUS\" = success; then conclusion=success; fi\njq -n \\\n  --arg name verified-local-rc \\\n  --arg head_sha \"$CANDIDATE_SHA\" \\\n  --arg conclusion \"$conclusion\" \\\n  --arg title \"Remote backend fallback\" \\\n  --arg summary \"No eligible exact-tree attestation was selected; the complete backend suite ran remotely.\" \\\n  '{name:$name,head_sha:$head_sha,status:\"completed\",conclusion:$conclusion,output:{title:$title,summary:$summary}}' \\\n  | gh api --method POST \"repos/$GITHUB_REPOSITORY/check-runs\" --input -\ntest \"$conclusion\" = success\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "boat-documents-real",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [],
+      "hasServices": false,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Install pinned WeasyPrint PDF/A backend",
+          "envKeys": [],
+          "run": "python -m venv /tmp/boat-weasyprint\n/tmp/boat-weasyprint/bin/pip install --require-hashes -r .github/requirements/boat-weasyprint.txt\n/tmp/boat-weasyprint/bin/weasyprint --version | grep -Fx 'WeasyPrint version 70.0'\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 6,
+          "name": "Resolve immutable veraPDF image",
+          "envKeys": [],
+          "run": "docker pull verapdf/cli@sha256:20202b4bcc2410a25db1f637c7b461a2e0dda1d97dd8a6df658286b30d56c842",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 7,
+          "name": "Prove BOAT production PDF/A-2b path",
+          "envKeys": [
+            "STYNX_VERAPDF_IMAGE",
+            "WEASYPRINT_BIN"
+          ],
+          "run": "pnpm --filter @detran/app test:real",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "senatran-mock",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [],
+      "hasServices": false,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 1,
+          "name": "Set up Docker Buildx",
+          "envKeys": [],
+          "run": null,
+          "uses": "docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 2,
+          "name": "Build the senatran mock image (GHA layer cache)",
+          "envKeys": [],
+          "run": null,
+          "uses": "docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 3,
+          "name": "Boot the senatran mock (compose smoke)",
+          "envKeys": [],
+          "run": "docker compose up -d --wait\ncurl -fsS http://localhost:3000/health | grep -q '\"db\":\"up\"'\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Dump senatran mock logs on failure",
+          "envKeys": [],
+          "run": "if [ -f senatran-mock/docker-compose.yml ]; then\n  docker compose --project-directory senatran-mock logs\nfi\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Tear down the senatran mock",
+          "envKeys": [],
+          "run": "if [ -f senatran-mock/docker-compose.yml ]; then\n  docker compose --project-directory senatran-mock down -v\nfi\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "senatran-mock-tests",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [
+        "DATABASE_URL",
+        "SENATRAN_TEST_DATABASE_URL",
+        "DB_HOST",
+        "DB_PORT",
+        "DB_USER",
+        "DB_PASSWORD",
+        "DB_NAME"
+      ],
+      "hasServices": true,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "Install dependencies (workspace root)",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Check (lint + typecheck + openapi:check + unit)",
+          "envKeys": [],
+          "run": "pnpm check",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Reset the database (DDL + deterministic sample seed)",
+          "envKeys": [],
+          "run": "pnpm db:reset",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 6,
+          "name": "Run the tiered test suite (unit + integration + e2e)",
+          "envKeys": [],
+          "run": "pnpm test:ci",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    },
+    {
+      "job": "stack-smoke",
+      "actualEffect": "unknown",
+      "jobEnvKeys": [],
+      "hasServices": false,
+      "permissions": {
+        "contents": "read"
+      },
+      "steps": [
+        {
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "envKeys": [],
+          "run": null,
+          "uses": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "envKeys": [],
+          "run": null,
+          "uses": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "contextualEffect": "read-only",
+          "isolatedWithoutJobEnvOrServices": "read-only"
+        },
+        {
+          "index": 3,
+          "name": "Install dependencies",
+          "envKeys": [
+            "NODE_AUTH_TOKEN"
+          ],
+          "run": "pnpm install --frozen-lockfile",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 4,
+          "name": "Verify the pinned disposable database image",
+          "envKeys": [],
+          "run": "set -euo pipefail\nexpected='postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5'\nbash tools/detran-stack.sh config | jq -e --arg expected \"$expected\" '.database.image == $expected'\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 5,
+          "name": "Prepare frontend packages used by the stack",
+          "envKeys": [],
+          "run": "pnpm --filter @detran/ui build\npnpm --filter @detran/boat-mobile build\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 6,
+          "name": "Run the disposable local stack smoke sequence",
+          "envKeys": [],
+          "run": "set -euo pipefail\npnpm stack:db-reset\npnpm stack:start\npnpm stack:health\npnpm stack:smoke\n",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        },
+        {
+          "index": 7,
+          "name": "Stop the disposable local stack",
+          "envKeys": [],
+          "run": "pnpm stack:stop",
+          "uses": null,
+          "contextualEffect": "unknown",
+          "isolatedWithoutJobEnvOrServices": "unknown"
+        }
+      ]
+    }
+  ]
+}

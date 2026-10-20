@@ -1,0 +1,65 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Custody: HEAD is b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab. The delivery file's SHA-256 is e5fa2f8e…6041a, as stated. All nine hashes the delivery lists match their files in the capture directory pr213-blueprint-apply-0gxaiu_g, and the capture-manifest entries I checked (export, check and registry stage/before files) also match. preview-review.json in the capture is byte-identical to /tmp/pr213-blueprint-preview-review.json (5516f0f3…). The TASK, preview and metadata-delta reviews all read PASS with no blocking findings."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Source scope matches: the live git diff shows 244 tracked paths, which is the 242 frozen paths plus 2 separately approved harness files (ci-isolation.test.mjs and ops-perf.config.mjs). Untracked files are the 2 nest-metadata-transform files and work/rounds/R-0041/reports/ci-reconciliation/, all outside this delta. Every frozen path's beforeSHA matches HEAD and every afterSHA matches the live file. The 242 paths break down as 230 headerOnly, 5 packageOrderOnly, 5 canonical BPs and 2 registries. No frozen path is unchanged and no changed path is missing from the roster."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Generated outputs match the preview: all 1592 live outputs are byte-identical to the preview copies, and each preview file matches its manifest SHA. The 1357 'unchanged' outputs are byte-equal to HEAD. tools/blueprints/generate.mjs (c9eaac81…) and tools/blueprints/generated-files.json are byte-exact to HEAD."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Header-only changes confirmed: in all 230 headerOnly files everything after the first line is byte-identical to HEAD. Each first line differs from HEAD only by swapping the old BP SHA-256 for the new one, using exactly the 5 BP old→new hash pairs."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Canonical BPs: a deep diff of each of the 5 BPs against HEAD shows one addition only, module.devDependencies.vite = '7.3.6'. In CH, EST and OPS the devDependencies object is new and holds only vite; in INF and PORTAL vite was added to the existing object. The 10 raw before/after rows from the actual module-blueprint.schema.json resolver (Ajv2020 + ajv-formats) are all valid with errors null."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The 5 package manifests parse deepEqual to HEAD, with exact vite 7.3.6. The text diff is limited to moving vite after the last devDependencies key (vitest or pg) and the trailing comma that moves with it."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Registry delta matches: the live registries are byte-equal to registry-stage, and registry-before is byte-equal to HEAD. A deep diff against HEAD finds only /sources[]/sha256 changes: 43 in authorization (all controllers) and 10 in PII (5 BP + 5 DDL). Every old→new value maps to a frozen-manifest pair. Key order, lengths and every other value are identical, including native_population_sha256 (abe04205…, 191d7ec4…), endpoints 1139, fields 211, legal/purpose/retention/permissions, pointers and SQL spans. Every source SHA in both registries matches the current live file, so there are no stale anchors."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Old-input custody is genuine: each R-0039 .gz at HEAD matches its compressedSHA, its decompressed bytes match rawSHA, and the extracted copies match. They are correctly labelled as retained inputs from integration head 6e459da6 with freshNativeExecution false, and no native measurement is claimed. work/rounds/R-0039, record/ and .devai/state have no diff."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The exports-old-input-check stdout calls the inputs 'the three explicit native inputs'. That is the checker's fixed wording, not a native verdict. The delivery and registry-semantic-comparison correctly say there was no fresh native run, but anything downstream that quotes the check output must keep the old-R0039/supplemental label."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Protection comparison: tracked-before to tracked-after across 12416 entries shows exactly 237 changed paths. These are the 242 frozen paths minus the 5 BPs, which were already modified in status-before. This is a Stage 2 before/after statement, not a claim that the other 12179 paths match HEAD; the harness paths were already modified before Stage 2."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Scoped checks match their raw outputs and all exited 0: security:exports:test 68/68, test:stack 58/58, test:stynx-pin 8/8, verify:stynx-pin 1.5.3, exports-check snapshots-only and old-input PASS, scoped prettier clean. The only stderr content is the benign .npmrc NODE_AUTH_TOKEN warning. The raw schema output has no separate 'format' count; 'format 0' is inferred from errors:null on all 10 rows."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Not verified here: full law/doctor/glob checks (still running under c2), fresh CI and backend tiers. No completion is claimed for them. I saw no history, backlog, threshold, product-behaviour, native or C6 effect in the reviewed delta."
+    }
+  ]
+}

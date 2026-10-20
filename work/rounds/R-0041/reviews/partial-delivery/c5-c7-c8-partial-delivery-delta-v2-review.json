@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "file": "DESIGN-DECISIONS.md",
+      "summary": "The prior blocking format finding is resolved. Ignoring whitespace, the current diff of DESIGN-DECISIONS.md and docs/meta/adr/README.md against HEAD makes only these content changes: the ADR-0055 and ADR-0056 Vigência cells now read 'parcial (ativação) → ADR-0057', and a new ADR-0057 Accepted row is added. docs/meta/decisions/README.md only adds the scorecard.md cross-domain link. The raw before-copies in reports/partial-delivery-review-v2 differ from the current files only in spaces and dashes. Prettier --check passes on all changed docs. node tools/docs/state-index/check.mjs exits 0 (58 ADRs, 41 rounds, 25 closures). render-rounds-index --check exits 0. work/rounds/*/reports/ is in .prettierignore, so the unformatted raw copies do not trip the gate.",
+      "failure_scenario": "None. Kept so the remediation can be traced."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "file": "work/rounds/R-0041/reports/partial-delivery-review-v2/custody.json",
+      "summary": "The v2 capsule checks out. The preserved prior review JSON, prompt and bridge are byte-identical to the /tmp originals. The prior verdict is still REVIEW (sha 28d38463…), and custody limits state that this is not a new verdict. All 12 hashes listed in custody match the actual bytes, and so do the 5 in manifest.json. The format commands are recorded with exit 0: prettier --write on the 2 files, and full pnpm format:check reporting 'All matched files use Prettier code style!'. Only the 2 index files and the new capsule changed after the prior review (mtime 00:12–00:14). test-tasks.json 752c… still equals origin/main. The policy 3364…, binding receipt b144…, producers 32c0… and CI test 038f… are unchanged from what the prior review verified. ADR-0055/0056 bytes are unchanged, and they stay status Accepted.",
+      "failure_scenario": "None. Naming note only: the capsule file 'README.md' is the raw pre-format copy of docs/meta/adr/README.md, not a capsule readme. A reader has to use custody.json to tell this apart."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "file": "docs/meta/adr/ADR-0057-partial-security-governance-delivery.md",
+      "line": 7,
+      "summary": "This modeling limitation is kept, as the prompt directed. The installed law/schemas/adr.schema.json sets additionalProperties:false, and when status is active it requires supersedes to have minItems:1. So no partial-scope field can be added, and the binding cannot be removed. The Status section limits supersession to activation timing. Both index rows use the existing partial 'Vigência' convention, and ADR-0055/0056 remain Accepted with unchanged bytes. The only repo consumer of supersedes seen is the state-index check, which still passes. That check's PC supersedes logic covers rounds, not ADR retirement.",
+      "failure_scenario": "A future tool that reads the ADR frontmatter alone could treat ADR-0055/0056 as fully superseded. No current consumer does this."
+    }
+  ]
+}

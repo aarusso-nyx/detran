@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-RBAC-001",
+  "domain": "RBAC",
+  "lifecycle": "supported",
+  "severity": "hard-fail",
+  "type": "rbac",
+  "title": "Shared guard preserves approved authorization decisions",
+  "statement": "For explicitly resource/action-decorated routes, the shared DetranPolicyGuard MUST enforce the existing declared policy matrix: mapped roles are permitted, unmapped roles and absent principals are denied, explicitly public routes retain their declared bypass, and shared ForbiddenException semantics remain unchanged while the application adapter owns approved RAIT error-envelope translation.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["unit"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The complete existing scoped suites exercise the approved positive and negative semantics; exact native producer custody remains independently required."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/meta/adr/ADR-0056-source-bound-security-invariants.md",
+        "anchor": "decision"
+      },
+      {
+        "doc": "work/rounds/R-0007/contracts/CTG-0001.md",
+        "anchor": "1010-terceiro-ciclo-autorizado-pelo-owner"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["shared-policy-guard"],
+    "code_areas": [
+      "backend/domains/shared/src/policy.guard.ts",
+      "backend/domains/shared/src/policy.ts"
+    ]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["ADR-0002", "ADR-0005", "ADR-0056"]
+}

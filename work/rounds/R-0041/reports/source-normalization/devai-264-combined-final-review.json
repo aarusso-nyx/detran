@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "category": "documentation",
+      "file": "docs/reference/error-codes.md",
+      "line": 595,
+      "summary": "The official generator added a `GIT_MISMATCH` row because it found the bare literal in `fail('GIT_MISMATCH')`. That code is never emitted: `native-candidate-links.ts` throws `NATIVE_CANDIDATE_LINK_${code}` (for example `NATIVE_CANDIDATE_LINK_GIT_MISMATCH`, `..._TARGET_INVALID`, `..._OBSERVATION_CHANGED`), and none of those emitted codes are documented.",
+      "failure_scenario": "An operator who gets NATIVE_CANDIDATE_LINK_GIT_MISMATCH searches the error-code reference and finds only an unrelated GIT_MISMATCH row with generic text. This does not affect refusal semantics or exit classes. It is a documentation-accuracy follow-up, not a blocker: the build and generator pass and the refusals still fail closed.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "category": "identity",
+      "file": "packages/cli/src/commands/sense/native-runner-selection.ts",
+      "line": 291,
+      "summary": "`candidateLinks` (version `tracked-unconsumed-directory-links-v1`, empty entries when there are no aliases) is now always part of the native selection digest. Native selection identity therefore changes for every repository, including ones with no aliases.",
+      "failure_scenario": "Native standing recorded before this change will not match after upgrade even with no links. This is consistent with the 2.6.4 compiled-identity rebind (MIG-2.6.4-native-reporter-identity-refresh), ADR-SCR-0021's versioned empty-list statement, and unchanged portable task keys. The only gap is wording: the test title 'does not add a candidate identity' overstates this, because the versioned empty entry is still hashed.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "category": "verification-scope",
+      "file": "packages/cli/src/commands/sense/native-candidate-links.ts",
+      "line": 166,
+      "summary": "Case-alias refusal does not come from the `realpathSync` comparison. On macOS, `realpathSync` (non-native) does not correct case. A case-variant literal is refused only because no committed entry starts with that prefix (TARGET_UNTRACKED), since Git paths are case-sensitive. The behavior is correct and fails closed; the realpath check alone is not a case guarantee.",
+      "failure_scenario": "There is no acceptance path today. A future refactor that loosens the committed-population prefix match could silently lose case-alias refusal. Optional hardening: use `realpathSync.native` or keep a test that pins this. Not a blocker.",
+      "blocking": false
+    }
+  ]
+}

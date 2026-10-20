@@ -1,0 +1,110 @@
+✖ actual appbase default-bundle preserves controls and final Nest metadata/injected tokens without listeners (5665.386ms)
+ℹ {"label":"appbase-default-bundle","dashboardMetadata":null,"guardMetadata":null,"actualDashboardNestFailure":"Nest can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK). Please make sure that the argument at index [0] is available in the current module.\n\nPotential solutions:\n- The dependency at index [0] appears to be undefined at runtime\n- This commonly occurs when using 'import type' instead of 'import' for injectable classes\n- Check your imports and change:\n  ❌ import type { SomeService } from './some.service';\n  ✅ import { SomeService } from './some.service';\n- Ensure the imported class is decorated with @Injectable() or is a valid provider\n- If using dynamic imports, ensure the class is available at runtime, not just for type checking\n\nFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors","guardReflectorActuallyInjected":false}
+✖ actual appbase runner preserves controls and final Nest metadata/injected tokens without listeners (1734.657458ms)
+ℹ {"label":"appbase-runner","dashboardMetadata":null,"guardMetadata":null,"actualDashboardNestFailure":"Nest can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK). Please make sure that the argument at index [0] is available in the current module.\n\nPotential solutions:\n- The dependency at index [0] appears to be undefined at runtime\n- This commonly occurs when using 'import type' instead of 'import' for injectable classes\n- Check your imports and change:\n  ❌ import type { SomeService } from './some.service';\n  ✅ import { SomeService } from './some.service';\n- Ensure the imported class is decorated with @Injectable() or is a valid provider\n- If using dynamic imports, ensure the class is available at runtime, not just for type checking\n\nFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors","guardReflectorActuallyInjected":false}
+✖ actual performance default-bundle preserves controls and final Nest metadata/injected tokens without listeners (1736.738333ms)
+ℹ {"label":"performance-default-bundle","dashboardMetadata":null,"guardMetadata":null,"actualDashboardNestFailure":"Nest can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK). Please make sure that the argument at index [0] is available in the current module.\n\nPotential solutions:\n- The dependency at index [0] appears to be undefined at runtime\n- This commonly occurs when using 'import type' instead of 'import' for injectable classes\n- Check your imports and change:\n  ❌ import type { SomeService } from './some.service';\n  ✅ import { SomeService } from './some.service';\n- Ensure the imported class is decorated with @Injectable() or is a valid provider\n- If using dynamic imports, ensure the class is available at runtime, not just for type checking\n\nFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors","guardReflectorActuallyInjected":false}
+✖ actual performance runner preserves controls and final Nest metadata/injected tokens without listeners (1704.763667ms)
+ℹ {"label":"performance-runner","dashboardMetadata":null,"guardMetadata":null,"actualDashboardNestFailure":"Nest can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK). Please make sure that the argument at index [0] is available in the current module.\n\nPotential solutions:\n- The dependency at index [0] appears to be undefined at runtime\n- This commonly occurs when using 'import type' instead of 'import' for injectable classes\n- Check your imports and change:\n  ❌ import type { SomeService } from './some.service';\n  ✅ import { SomeService } from './some.service';\n- Ensure the imported class is decorated with @Injectable() or is a valid provider\n- If using dynamic imports, ensure the class is available at runtime, not just for type checking\n\nFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors","guardReflectorActuallyInjected":false}
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11468.43175
+
+✖ failing tests:
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual appbase default-bundle preserves controls and final Nest metadata/injected tokens without listeners (5665.386ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   [class Database extends Database],
+  -   [class RequestContext],
+  -   [class OpsParameterService]
+  - ]
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:574:16)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual appbase runner preserves controls and final Nest metadata/injected tokens without listeners (1734.657458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   [class Database extends Database],
+  -   [class RequestContext],
+  -   [class OpsParameterService]
+  - ]
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:574:16)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual performance default-bundle preserves controls and final Nest metadata/injected tokens without listeners (1736.738333ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   [class Database extends Database],
+  -   [class RequestContext],
+  -   [class OpsParameterService]
+  - ]
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:574:16)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual performance runner preserves controls and final Nest metadata/injected tokens without listeners (1704.763667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - [
+  -   [class Database extends Database],
+  -   [class RequestContext],
+  -   [class OpsParameterService]
+  - ]
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:574:16)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

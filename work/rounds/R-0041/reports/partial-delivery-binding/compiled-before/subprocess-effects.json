@@ -1,0 +1,666 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "subprocess-effects",
+  "source_authority": "F1-architect",
+  "materialization": {
+    "target": ".devai/config/subprocess-effects.json",
+    "allowed_verbs": ["devai init bind"],
+    "authority_and_consent_required": true,
+    "byte_identity_required": true,
+    "adopter_binding_path_required": true,
+    "direct_writes_forbidden": true
+  },
+  "templates": [
+    {
+      "template_id": "gh-dynamic-read",
+      "executable": "gh",
+      "argv_shape": ["<dynamic-argv>"],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "Doctor probes a caller-selected GitHub CLI read command; runtime seam enforcement remains required for the dynamic argv.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-auth-status",
+      "executable": "gh",
+      "argv_shape": ["auth", "status"],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "Doctor checks GitHub CLI authentication state without mutation.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-run-list",
+      "executable": "gh",
+      "argv_shape": [
+        "run",
+        "list",
+        "--workflow",
+        "<file>",
+        "--event",
+        "<event>",
+        "--json",
+        "<fields>",
+        "--limit",
+        "1000"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "Harness sensors read the GitHub Actions run history of the population their declaration in .devai/config/sensor-inputs.json names (ADR-SCR-0005 IA-004, ADR-SCR-0010); the broker admits exactly this shape without a host adapter under sense run and check: <file> is one workflow file name of letters, digits, dot, underscore, or hyphen ending in .yml or .yaml, without a directory; <event> is one of push, pull_request, merge_group, workflow_dispatch, or schedule, nothing else; <fields> is one to sixteen comma-separated alphabetic names; the limit is the literal 1000, so a thirty-day window at the current volume of about 450 runs is never cut, and a list that returns 1000 runs reads unknown as truncated (#364). This shape carries no --branch option and is emitted when the declared headBranch is * (any head branch); gh-run-list-branch adds the single --branch <ref> option for a literal head branch, and the -created variants add the --created filter. Each option appears once and in this order; a second --branch, a value outside its grammar, and every other gh argv except auth, auth status, --version, and --help are refused.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-run-list-created",
+      "executable": "gh",
+      "argv_shape": [
+        "run",
+        "list",
+        "--workflow",
+        "<file>",
+        "--event",
+        "<event>",
+        "--json",
+        "<fields>",
+        "--limit",
+        "1000",
+        "--created",
+        ">=<date>"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "The harness_green_main sensor narrows gh-run-list by creation date (ADR-SCR-0005 IA-004, ADR-SCR-0010); the broker admits exactly this shape without a host adapter under sense run and check, with the gh-run-list value grammar and <date> an ISO date or datetime after the literal >= prefix.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-run-list-branch",
+      "executable": "gh",
+      "argv_shape": [
+        "run",
+        "list",
+        "--workflow",
+        "<file>",
+        "--event",
+        "<event>",
+        "--branch",
+        "<ref>",
+        "--json",
+        "<fields>",
+        "--limit",
+        "1000"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "Harness sensors whose declared headBranch is a literal branch reference pass it as the single --branch <ref> option (ADR-SCR-0005 IA-004, ADR-SCR-0010); the broker admits exactly this shape without a host adapter under sense run and check, with the gh-run-list value grammar and <ref> letters, digits, dot, underscore, slash, or hyphen without a leading hyphen or '..'. A second --branch is refused.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-run-list-branch-created",
+      "executable": "gh",
+      "argv_shape": [
+        "run",
+        "list",
+        "--workflow",
+        "<file>",
+        "--event",
+        "<event>",
+        "--branch",
+        "<ref>",
+        "--json",
+        "<fields>",
+        "--limit",
+        "1000",
+        "--created",
+        ">=<date>"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "The harness_green_main sensor with a literal head branch narrows gh-run-list-branch by creation date (ADR-SCR-0005 IA-004, ADR-SCR-0010); the broker admits exactly this shape without a host adapter under sense run and check, with the gh-run-list-branch value grammar and <date> an ISO date or datetime after the literal >= prefix.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-pr-list-all",
+      "executable": "gh",
+      "argv_shape": [
+        "pr",
+        "list",
+        "--state",
+        "all",
+        "--limit",
+        "1000",
+        "--json",
+        "baseRefName,closedAt,createdAt,headRefName,headRefOid,mergedAt,number,state"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "The harness_green_main sensor under outcomeUnit pull-request-final-head reads every pull request's base, state, creation and closing times and final head to admit only pull requests against the declared base and to match each with the gate runs created while it was open, by head branch and sha (ADR-SCR-0014, #365, ADR-SCR-0005 IA-004); a list that returns 1000 pull requests reads unknown as truncated; the broker admits exactly this argv without a host adapter under sense run and check, every token literal and in this order. Any other gh pr argv is refused.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-api-pages-deployments",
+      "executable": "gh",
+      "argv_shape": [
+        "api",
+        "/repos/<owner>/<repo>/deployments?environment=devai-pages-publication&per_page=100"
+      ],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "The site_drift sensor lists the Pages publication deployments that scripts/process/github-pages-journal.mjs records through the GitHub deployments API (ADR-AUT-0002); the broker admits exactly this shape without a host adapter: <owner>/<repo> is the journal repository the sensor declares, the endpoint and query are the fixed strings written here, the method is the implicit GET, and every option is refused, including --method, -X, -f, -F, --field, --raw-field, --input, --paginate, and --hostname. A gh api argv whose repository differs from the declared journal repository, or whose endpoint is neither this shape nor gh-api-pages-deployment-statuses, is refused although the method is GET.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-api-pages-deployment-statuses",
+      "executable": "gh",
+      "argv_shape": ["api", "/repos/<owner>/<repo>/deployments/<id>/statuses?per_page=100"],
+      "capabilities": ["proc:gh-read"],
+      "effect": "read",
+      "reason": "The site_drift sensor lists the statuses of one Pages publication deployment, the journal's intent and verification record (ADR-AUT-0002); the broker admits exactly this shape without a host adapter: <owner>/<repo> is the journal repository the sensor declares, <id> is a decimal integer deployment id taken from gh-api-pages-deployments, the endpoint and query are the fixed strings written here, the method is the implicit GET, and every option is refused, including --method, -X, -f, -F, --field, --raw-field, --input, --paginate, and --hostname. A non-integer <id> is refused.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-dynamic-read",
+      "executable": "git",
+      "argv_shape": ["<dynamic-argv>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Local-evidence verification supplies a bounded read-only git argv assembled by the verifier.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-dynamic-publish",
+      "executable": "git",
+      "argv_shape": ["<dynamic>"],
+      "capabilities": ["proc:git-remote", "net:github-pages"],
+      "effect": "remote-write",
+      "reason": "Documentation publication delegates a selected git publication operation and is conservatively remote-write.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-add",
+      "executable": "git",
+      "argv_shape": ["add", "--", "<dynamic>"],
+      "capabilities": ["proc:git-local", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "Round skill stages an explicit workspace path.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-commit",
+      "executable": "git",
+      "argv_shape": ["commit", "-m", "<dynamic>"],
+      "capabilities": ["proc:git-local", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "Round skill creates a local commit with an explicit message.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-diff-names",
+      "executable": "git",
+      "argv_shape": ["diff", "--name-only"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Round skill reads changed path names.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-log-renames",
+      "executable": "git",
+      "argv_shape": ["log", "--all", "--diff-filter=R", "--name-status", "--pretty=format:"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Round skill reads rename history.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-log-forbidden-actions",
+      "executable": "git",
+      "argv_shape": ["log", "<dynamic>", "--pretty=format:%H%x00%B%x1e"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Forbidden-action inspection reads a bounded number of commit messages.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-ls-remote",
+      "executable": "git",
+      "argv_shape": ["ls-remote", "origin", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Documentation governance reads the configured remote branch head.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-merge-base-ancestor",
+      "executable": "git",
+      "argv_shape": ["merge-base", "--is-ancestor", "<dynamic>", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Round skill checks ancestry without mutation.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-mv",
+      "executable": "git",
+      "argv_shape": ["mv", "<dynamic>", "<dynamic>"],
+      "capabilities": ["proc:git-local", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "Round skill renames an explicit workspace path.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-push-head",
+      "executable": "git",
+      "argv_shape": ["push", "origin", "HEAD"],
+      "capabilities": ["proc:git-remote", "net:github-pages"],
+      "effect": "remote-write",
+      "reason": "Round skill publishes the current branch only after explicit workflow authorization.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-cat-file-blob",
+      "executable": "git",
+      "argv_shape": ["cat-file", "blob", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Translation validation reads exact trace, invariant, and Inspector-overlay bytes from immutable commits.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-cat-file-commit-exists",
+      "executable": "git",
+      "argv_shape": ["cat-file", "-e", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Host-adapter diagnosis verifies that the exact installation commit still exists in the bound repository.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-rev-list-parents",
+      "executable": "git",
+      "argv_shape": ["rev-list", "--parents", "-n", "1", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Evidence verification reads one commit and its parents.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-current-branch",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "--abbrev-ref", "HEAD"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Evidence and round tooling read the current branch.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-inside-worktree",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "--is-inside-work-tree"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Round skill verifies repository context.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-common-dir",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "--path-format=absolute", "--git-common-dir"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "The trusted authority sources read the common Git directory to derive the repository id, which the doctor post-checks of init upgrade recompute.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-verify-ref",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "--verify", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Round skill verifies a selected ref.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-verify-head-commit",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "--verify", "HEAD^{commit}"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Host-adapter installation binds its attestation to the exact current commit in both primary and linked worktrees.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-head",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "HEAD"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Inventory and evidence tooling read the current commit.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "npx-tsc-noemit",
+      "executable": "npx",
+      "argv_shape": ["tsc", "--noEmit"],
+      "capabilities": ["proc:npx-local"],
+      "effect": "read",
+      "reason": "The type_check sensor's default checks the root tsconfig without emitting; the broker admits exactly this argv without a host adapter under sense run (ADR-AUT-0006 mirror of an existing literal).",
+      "owner": "architect"
+    },
+    {
+      "template_id": "npx-tsc-noemit-project",
+      "executable": "npx",
+      "argv_shape": ["tsc", "--noEmit", "-p", "<relative-path>"],
+      "capabilities": ["proc:npx-local"],
+      "effect": "read",
+      "reason": "A type_check declaration may name one project; the broker admits exactly this argv without a host adapter under sense run, with <relative-path> a repository-relative path without a '..' segment and never absolute (ADR-AUT-0006 mirror of an existing literal).",
+      "owner": "architect"
+    },
+    {
+      "template_id": "npx-eslint-json",
+      "executable": "npx",
+      "argv_shape": ["eslint", "--format=json", "<path>"],
+      "capabilities": ["proc:npx-local"],
+      "effect": "read",
+      "reason": "Lint sensors read ESLint's JSON report for one path; the broker admits exactly this argv without a host adapter under sense run (ADR-AUT-0006 mirror of an existing literal). <path> is one repository path, never an option: a value that begins with - is refused before a process starts.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "npx-eslint-fix",
+      "executable": "npx",
+      "argv_shape": ["eslint", "--fix", "."],
+      "capabilities": ["proc:npx-local", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "Round skill invokes the explicit ESLint workspace fixer.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "pnpm-version",
+      "executable": "pnpm",
+      "argv_shape": ["--version"],
+      "capabilities": ["proc:pnpm-read"],
+      "effect": "read",
+      "reason": "Dependency policy reads the package-manager version.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "pnpm-audit",
+      "executable": "pnpm",
+      "argv_shape": ["audit", "--json"],
+      "capabilities": ["proc:pnpm-read"],
+      "effect": "read",
+      "reason": "Dependency policy requests the read-only audit report.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "declared-sensor-task",
+      "executable": "declared-sensor-task",
+      "argv_shape": ["<exact-verified-task-argv>"],
+      "capabilities": ["proc:declared-sensor-task", "fs:workspace", "fs:f5-state"],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0015 and ADR-SCR-0017: only sense run's internally trusted member/task binding admits this process. The executable marker is descriptive, never a runnable command or generic argv shape. Admission binds the exact sensorKinds annotation, population, candidate commit/tree, descriptor and task-policy digests, executable path and byte digest, complete argv, contained cwd, input selectors, dependency completion and toolchain/allowlisted environment identities. A caller cannot manufacture the internal binding; wrong kind, added arguments, changed policy, absent prerequisite custody and unmatched executable bytes refuse before execution. Every bound task requires explicit --write and fs:workspace; fs:f5-state permits only the exact verified task-process target's content-addressed .devai/state/check-cache/v1 write and grants no other state path, native provenance trace or proof write. migration_check additionally retains db:write. Read presets refuse these members and no remote effect is inferred.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "declared-native-sensor-task",
+      "executable": "declared-native-sensor-task",
+      "argv_shape": ["<exact-verified-native-task-argv>"],
+      "capabilities": ["proc:declared-sensor-task", "fs:workspace", "fs:proofs", "fs:f5-state"],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0017: descriptive annotation only for the internally trusted native resultPopulation binding and package-owned reporter/provenance path; no generic argv or caller flag is admitted. Existing exact task process identity and explicit --write remain mandatory. Native-only fs:proofs covers the verified origin append to record/proofs/chain.json, creation of record/proofs if absent, and exclusive exact chain.json.tmp.<pid>.<time> staging renamed only to that chain. An internal origin-operation guard must refuse all other proof paths, deletes and unbound writes. Native-only fs:f5-state covers .devai/state/native-config-traces/<internally-minted-nonce> and its exact transient trace artifacts/owned cleanup; parent directory creation grants no sibling write. The same exact native state operation may create only the fresh empty nonce/runtime directory, internally bind TMPDIR and PWTEST_CACHE_DIR beneath it with caller overrides refused, and admit finite verified framework generated-cache artifacts through an ordered successful mkdir/full-write/rename/remove custody ledger and owned cleanup. The main-process pre-import checkpoint proves the physical runtime root empty; cache reads require a matching live same-execution generated identity. Opt-in Playwright 1.60.0 resultPopulation internally binds --output to the exact nonce/runtime/playwright-results root, overriding config outputDir and refusing caller output flags. Preserve authored task argv/portable identity while privately binding the actual Node identity, complete effective argv and output root; every selected reporter-resolved project outputDir must agree. Its separate fresh/no-link result ledger admits only this root, immediate .playwright-artifacts-<decimal-integer> or ASCII [A-Za-z0-9_-]+ directories, owned directory metadata/creation/cleanup and ordered full-write/removal of root .last-run.json. Arbitrary files, deeper artifacts, unowned overwrites and every rename involving results, including cache/result cross-renames, refuse. Result artifacts grant no readFile, executable, module-load or transformed-source input credit; transformed-source credit remains confined to verified transform-cache .js identities. No arbitrary state-output or browser/attachment effect is admitted. This grants no ambient temporary-directory or external-file permission. Native worker and asynchronous loader control channels are private to their minted scopes; original workerData, loader initialization data and transfer semantics are preserved before candidate imports. Each scope must persist its own end and acknowledge only after supported I/O is complete; the parent wait is bounded to five seconds, and missing acknowledgement or post-seal activity refuses standing. Parent exit or termination cannot invent an end. The host verifies closure and captures complete supported native provenance observations. Ordinary task-bound and read observations gain neither capability nor receipt/trace authority. No public action, role or general workspace/proofs permission is added.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-fixture-inspection",
+      "executable": "owned-native-fixture-inspection",
+      "argv_shape": ["<exact-privately-bound-supervisor-inspection-argv>"],
+      "capabilities": ["proc:owned-native-fixture"],
+      "effect": "read",
+      "reason": "ADR-SCR-0020: descriptive read annotation only for the privately minted sense run service-inspection tuple after closed request and physical supervisor/broker/provisioner/engine identity validation. This marker is not a runnable command or generic argv grant. The exact package-owned supervisor inspection mode may issue only GET /info, GET /version and GET /images/<exact-reviewed-image-reference>/json against the fixed bound local engine socket, returning actual engine/platform/image identities with bounded responses. No provisioning, creation, mutation, pulls, socket export, child native execution, arbitrary image/path/query or general Docker API operation is admitted. The private binding must match the exact actual executable bytes, complete inspection argv/cwd/environment and reviewed requested images before any process starts; supplied JSON or public imports cannot mint it. No fixture capability or write consent is inferred from successful inspection, and the later service launch independently requires the complete privately bound plan and explicit write consent. Missing or mismatched identity refuses without a read-only fallback.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-postgres-http-v1",
+      "executable": "owned-native-fixture",
+      "argv_shape": ["<exact-privately-bound-supervisor-argv>"],
+      "capabilities": [
+        "fs:f5-state",
+        "fs:proofs",
+        "db:write",
+        "fixture:postgresql",
+        "fixture:loopback-http",
+        "proc:owned-native-fixture"
+      ],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0020: descriptive annotation only for sense run's privately minted whole service plan and exact host supervisor tuple; this executable marker and argv placeholder are never runnable or generic command admission. Require the validated profile before consent, explicit --write, exact task/population/candidate commit/tree, policy/input/dependency/environment identities, supervisor/broker/child executable bytes and complete effective argv/cwd/environment, physical provisioner/engine identity and preinstalled immutable platform-specific artifacts. Every actual operation remains privately guarded; caller JSON, stdin, a capability name or consistent nonce cannot mint authority. Fresh exclusive PostgreSQL cluster, owned loopback HTTP and finite nonce-runtime fixture files only; no shared roles/database/template, ambient endpoint or socket fallback. Only fresh internally minted nonce/runtime state and existing exact origin-proof operations are covered; no general state/proofs permission follows. Preserve native own-scope seals, private ordered actual lifecycle evidence and complete cleanup before origin; failed, partial or unimplemented provisioning grants no standing. Ordinary native tasks gain no fixture capability. Existing net:* classification and public action/role/publication boundaries remain unchanged.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-postgres-http-s3-v1",
+      "executable": "owned-native-fixture",
+      "argv_shape": ["<exact-privately-bound-supervisor-argv>"],
+      "capabilities": [
+        "fs:f5-state",
+        "fs:proofs",
+        "db:write",
+        "fixture:postgresql",
+        "fixture:loopback-http",
+        "fixture:localstack-s3",
+        "proc:owned-native-fixture"
+      ],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0020: descriptive annotation only for sense run's privately minted whole service plan and exact host supervisor tuple; this executable marker and argv placeholder are never runnable or generic command admission. Require the validated profile before consent, explicit --write, exact task/population/candidate commit/tree, policy/input/dependency/environment identities, supervisor/broker/child executable bytes and complete effective argv/cwd/environment, physical provisioner/engine identity and preinstalled immutable platform-specific artifacts. Every actual operation remains privately guarded; caller JSON, stdin, a capability name or consistent nonce cannot mint authority. The PostgreSQL/HTTP boundary plus exact LocalStack S3 image and private finite Docker broker for owned resources only; actual AWS signing/object assertions remain unchanged. No raw engine socket, arbitrary Docker request, pull, exec, mount or public egress. Only fresh internally minted nonce/runtime state and existing exact origin-proof operations are covered; no general state/proofs permission follows. Preserve native own-scope seals, private ordered actual lifecycle evidence and complete cleanup before origin; failed, partial or unimplemented provisioning grants no standing. Ordinary native tasks gain no fixture capability. Existing net:* classification and public action/role/publication boundaries remain unchanged.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-postgres-redis-http-s3-kms-v1",
+      "executable": "owned-native-fixture",
+      "argv_shape": ["<exact-privately-bound-supervisor-argv>"],
+      "capabilities": [
+        "fs:f5-state",
+        "fs:proofs",
+        "db:write",
+        "fixture:postgresql",
+        "fixture:loopback-http",
+        "fixture:redis",
+        "fixture:localstack-s3",
+        "fixture:localstack-kms",
+        "proc:owned-native-fixture"
+      ],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0020: descriptive annotation only for sense run's privately minted whole service plan and exact host supervisor tuple; this executable marker and argv placeholder are never runnable or generic command admission. Require the validated profile before consent, explicit --write, exact task/population/candidate commit/tree, policy/input/dependency/environment identities, supervisor/broker/child executable bytes and complete effective argv/cwd/environment, physical provisioner/engine identity and preinstalled immutable platform-specific artifacts. Every actual operation remains privately guarded; caller JSON, stdin, a capability name or consistent nonce cannot mint authority. The PostgreSQL/HTTP boundary plus exact Redis 7-alpine and LocalStack 3.8.1 S3/KMS images, with separate fresh S3 and S3/KMS instances where the original fixtures start them and private finite Docker broker for owned resources only; actual AWS signing/object assertions remain unchanged. No raw engine socket, arbitrary Docker request, pull, exec, mount or public egress. Only fresh internally minted nonce/runtime state and existing exact origin-proof operations are covered; no general state/proofs permission follows. Preserve native own-scope seals, private ordered actual lifecycle evidence and complete cleanup before origin; failed, partial or unimplemented provisioning grants no standing. Ordinary native tasks gain no fixture capability. Existing net:* classification and public action/role/publication boundaries remain unchanged.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-playwright-chromium-web-v1",
+      "executable": "owned-native-fixture",
+      "argv_shape": ["<exact-privately-bound-supervisor-argv>"],
+      "capabilities": [
+        "fs:f5-state",
+        "fs:proofs",
+        "db:write",
+        "fixture:postgresql",
+        "fixture:loopback-http",
+        "fixture:localstack-s3",
+        "fixture:redis",
+        "fixture:localstack-kms",
+        "fixture:chromium",
+        "fixture:reference-web",
+        "proc:owned-native-fixture"
+      ],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0020: descriptive annotation only for sense run's privately minted whole service plan and exact host supervisor tuple; this executable marker and argv placeholder are never runnable or generic command admission. Require the validated profile before consent, explicit --write, exact task/population/candidate commit/tree, policy/input/dependency/environment identities, supervisor/broker/child executable bytes and complete effective argv/cwd/environment, physical provisioner/engine identity and preinstalled immutable platform-specific artifacts. Every actual operation remains privately guarded; caller JSON, stdin, a capability name or consistent nonce cannot mint authority. Forward browser/server graph only: exact contained Chromium, complete original server/build/prerequisite graph, PostgreSQL/Redis/LocalStack S3-KMS and actual finite artifacts require implemented independently verified containment. Browserless support does not admit this profile; an unavailable backend refuses before any effect. Only fresh internally minted nonce/runtime state and existing exact origin-proof operations are covered; no general state/proofs permission follows. Preserve native own-scope seals, private ordered actual lifecycle evidence and complete cleanup before origin; failed, partial or unimplemented provisioning grants no standing. Ordinary native tasks gain no fixture capability. Existing net:* classification and public action/role/publication boundaries remain unchanged.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "pnpm-recursive-build",
+      "executable": "pnpm",
+      "argv_shape": ["-r", "build"],
+      "capabilities": ["proc:pnpm-build", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "The build sensor compiles the workspace (ADR-AUT-0002); the compiler writes under the package directories, so the process is a write and never read-only, and recording its reading is an inspector harness-write under the self-dogfood matrix. Under sense run the broker admits exactly this shape without a host adapter. The sensor takes its argv and cwd from the sources argv_precedence lists in that order: a test-tasks.json build node wins, and a build entry in .devai/config/sensor-inputs.json is admitted only when the descriptor has no build node; a declaration whose argv differs from the descriptor node is a declaration defect that the declared-inputs contract test rejects naming both argv and that the sensor reads as error with conflict_code. A declared argv outside this shape is refused before a process starts.",
+      "owner": "architect",
+      "argv_precedence": [
+        {
+          "source": "test-task-descriptor",
+          "path": "test-tasks.json",
+          "rule": "The argv and cwd of the node whose nodeId is build; when the node exists it is the build sensor's command and no declaration may replace it."
+        },
+        {
+          "source": "sensor-inputs-declaration",
+          "path": ".devai/config/sensor-inputs.json",
+          "rule": "The build input's argv and optional cwd; admitted only when test-tasks.json has no build node, which is the adopter case without a descriptor."
+        }
+      ],
+      "conflict_code": "BUILD_ARGV_CONFLICT"
+    },
+    {
+      "template_id": "pnpm-recursive-typecheck",
+      "executable": "pnpm",
+      "argv_shape": ["-r", "typecheck"],
+      "capabilities": ["proc:pnpm-build", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "The type_check sensor in a pnpm workspace runs every package's typecheck script (ADR-AUT-0006); the shape is bound to type_check and refused for every other sensor kind. The script is adopter code and may write, so the process is a write and never read-only, and recording its reading is an inspector harness-write under the self-dogfood matrix. Under sense run the broker admits exactly this argv without a host adapter, with pnpm or the corepack shim it resolves to as the executable; an added argument, --filter, --, run, exec, or another script name is refused before a process starts.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "pnpm-test-perf",
+      "executable": "pnpm",
+      "argv_shape": ["test:perf"],
+      "capabilities": ["proc:pnpm-build", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "The perf_test sensor runs the root test:perf script, as a declared argv or as the default scriptName (ADR-AUT-0006); the shape is bound to perf_test and refused for every other sensor kind. The script is adopter code and may write, so the process is a write and never read-only, and recording its reading is an inspector harness-write under the self-dogfood matrix. Under sense run the broker admits exactly this argv without a host adapter, with pnpm or the corepack shim it resolves to as the executable; an added argument, run, exec, or another script name is refused before a process starts.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "pnpm-vitest-run-governed-config",
+      "executable": "pnpm",
+      "argv_shape": ["vitest", "run", "--config", "<governed-config>", "<test-path>"],
+      "capabilities": ["proc:pnpm-read"],
+      "effect": "read",
+      "reason": "Test sensors run vitest under a governed configuration (ADR-SCR-0005); under sense run the broker admits exactly this shape without a host adapter: <governed-config> is one of tests/config/local.config.ts, tests/config/rc.performance.config.ts, tests/config/rc.e2e.config.ts (the governed e2e configuration the e2e_test declaration names, ADR-SCR-0007), tests/config/local.coverage.config.ts (the database-free coverage producer test_coverage_depth runs for the local population, ADR-SCR-0007), or the suite configurations the test sensor emits (tests/config/t1.unit.config.ts, t3.integration.config.ts, t4.regression.config.ts, t5.e2e.config.ts), and the optional <test-path> is one repository-relative path under tests/ without an empty, '.', or '..' segment (the perf_test declaration passes tests/regression). A bare package script is refused, such as pnpm run test:perf or pnpm lint; the one exception is exactly pnpm test:perf, admitted by template pnpm-test-perf (ADR-AUT-0006).",
+      "owner": "architect"
+    },
+    {
+      "template_id": "sandbox-exec-translation-validation",
+      "executable": "sandbox-exec",
+      "argv_shape": ["-p", "<dynamic>", "<dynamic>"],
+      "capabilities": ["proc:sandbox-exec"],
+      "effect": "read",
+      "reason": "macOS validation runs a registry-derived test command with network and candidate-worktree writes denied; witness prose never supplies the executable or sandbox profile.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "shell-record-command",
+      "executable": "sh",
+      "argv_shape": ["-c", "<dynamic>"],
+      "capabilities": ["proc:shell-local", "fs:workspace"],
+      "effect": "local-write",
+      "reason": "Evidence recording executes an explicitly supplied test command and conservatively assumes workspace writes.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "shell-command-probe",
+      "executable": "sh",
+      "argv_shape": ["-lc", "<dynamic>"],
+      "capabilities": ["proc:shell-read"],
+      "effect": "read",
+      "reason": "Doctor probes command availability through the login shell.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "which-mmdc",
+      "executable": "which",
+      "argv_shape": ["mmdc"],
+      "capabilities": ["proc:which"],
+      "effect": "read",
+      "reason": "Mermaid rendering checks for the configured renderer before a bounded local render.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "mmdc-version",
+      "executable": "mmdc",
+      "argv_shape": ["--version"],
+      "capabilities": ["proc:mmdc"],
+      "effect": "read",
+      "reason": "Mermaid rendering reads the selected renderer version before local output.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-doctor-log-records",
+      "executable": "git",
+      "argv_shape": ["log", "<dynamic>", "--pretty=format:%H%x00%an%x00%P%x00%B%x1e"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Doctor reads bounded commit records for governance diagnostics.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-doctor-rev-parse-pair",
+      "executable": "git",
+      "argv_shape": ["rev-parse", "<dynamic>", "<dynamic>"],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Doctor resolves two selected revision arguments without mutation.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-doctor-diff-tree-names",
+      "executable": "git",
+      "argv_shape": [
+        "diff-tree",
+        "--root",
+        "--no-commit-id",
+        "--name-status",
+        "-r",
+        "-M",
+        "-m",
+        "<dynamic>"
+      ],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Doctor reads bounded path-change metadata for one selected revision.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "git-doctor-diff-tree-patch",
+      "executable": "git",
+      "argv_shape": [
+        "diff-tree",
+        "--root",
+        "--no-commit-id",
+        "--no-ext-diff",
+        "--unified=0",
+        "-p",
+        "-m",
+        "<dynamic>"
+      ],
+      "capabilities": ["proc:git-read"],
+      "effect": "read",
+      "reason": "Doctor reads a zero-context patch for one selected revision.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "gh-api-issue-projection",
+      "executable": "gh",
+      "argv_shape": ["api", "<dynamic-argv>"],
+      "capabilities": ["proc:gh-remote", "net:github-issues"],
+      "effect": "remote-write",
+      "reason": "Opt-in governance tracking projects public-safe event batches to one governed round's GitHub Issue through the already-authenticated GitHub CLI boundary; no credential is read, extracted, or persisted by DEVAI.",
+      "owner": "architect"
+    },
+    {
+      "template_id": "owned-native-redis-process-control-v1",
+      "executable": "owned-native-fixture",
+      "argv_shape": ["<exact-privately-bound-supervisor-argv>"],
+      "capabilities": [
+        "fs:f5-state",
+        "fs:proofs",
+        "fixture:redis",
+        "fixture:redis-process-control",
+        "proc:owned-native-fixture"
+      ],
+      "effect": "local-write",
+      "reason": "ADR-SCR-0020: descriptive conditional annotation only, never runnable marker or generic process permission. Requires sense run, explicit --write, a Redis-bearing selected profile with redis.processControl=pause-resume-v1, exact active backend support and host-owned finite transition/paused-duration limits, plus the privately minted whole supervisor and exact owned Redis instance binding. Only zero-argument handle pause/resume become private redis-pause/redis-resume requests. Verify actual full owned container identity and live running/Paused state before and after each serialized finite engine operation; return success only after actual target-state observation. No caller container ID, signal, command, image, engine socket or endpoint is accepted. Record ordered requests, results, actual transitions and cleanup; same-state repetition requires independent current identity/state verification. Deadline/termination cleanup resumes the exact owned paused instance before bounded stop/remove and proves final absence; cleanup cannot erase a failed workload operation or mint PASS. No arbitrary Docker, exec, signal, filesystem, network or publication authority; ordinary Redis fixtures gain no process-control capability.",
+      "owner": "architect"
+    }
+  ]
+}

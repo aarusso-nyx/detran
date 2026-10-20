@@ -1,0 +1,764 @@
+{
+  "role": "Auditor",
+  "mode": "read-only initial snapshot; no rerun, source/Git/merge effects",
+  "observedAt": "2026-10-20T03:33:59.722566+00:00",
+  "pr": "https://github.com/aarusso-nyx/detran/pull/213",
+  "head": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+  "tree": "620e3b1b5c4e135aa964867200807340928a3d3e",
+  "base": "c58278cc91f26458e478aa34030075a16e1241aa",
+  "state": "open",
+  "draft": false,
+  "mergeable": true,
+  "mergeableState": "blocked",
+  "run": {
+    "id": 39364579555,
+    "head_sha": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+    "event": "pull_request",
+    "status": "in_progress",
+    "conclusion": null
+  },
+  "mandatoryRules": {
+    "strict": true,
+    "checks": [
+      {
+        "context": "evidence-gate",
+        "app_id": 15368,
+        "latest": {
+          "id": 118438360284,
+          "head_sha": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/aarusso-nyx/detran/actions/runs/39364579555/job/118438360284"
+        }
+      },
+      {
+        "context": "foundation",
+        "app_id": 15368,
+        "latest": {
+          "id": 118438744158,
+          "head_sha": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/aarusso-nyx/detran/actions/runs/39364579555/job/118438744158"
+        }
+      },
+      {
+        "context": "senatran-mock",
+        "app_id": 15368,
+        "latest": {
+          "id": 118438360226,
+          "head_sha": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/aarusso-nyx/detran/actions/runs/39364579555/job/118438360226"
+        }
+      },
+      {
+        "context": "senatran-mock-tests",
+        "app_id": 15368,
+        "latest": {
+          "id": 118438359966,
+          "head_sha": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/aarusso-nyx/detran/actions/runs/39364579555/job/118438359966"
+        }
+      },
+      {
+        "context": "verified-local-rc",
+        "app_id": 15368,
+        "latest": null
+      }
+    ]
+  },
+  "candidateWorkflow": {
+    "events": {
+      "workflow_dispatch": null,
+      "pull_request": null,
+      "push": {
+        "branches": [
+          "main"
+        ]
+      }
+    },
+    "invariantProducersIf": null,
+    "invariantProducersNeeds": null,
+    "serviceNames": [
+      "postgres"
+    ],
+    "ordinarySuites": [
+      {
+        "name": "Run invariant-ch complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/ch.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-dash complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/dash.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-est complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/est.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-inf complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/inf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-ops-queue complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/ops-queue.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-ops-perf complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/ops-perf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-portal complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/portal.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-rbac complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/rbac.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      },
+      {
+        "name": "Run invariant-errors complete semantic population (ordinary CI)",
+        "run": "detran-native-vitest run --config ./tools/security/invariants/errors.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter"
+      }
+    ],
+    "foundationNeeds": [
+      "evidence-gate",
+      "invariant-producers"
+    ],
+    "foundationIf": "${{ !cancelled() }}",
+    "foundationFailureGate": [],
+    "workflowSHA256": "a1cc976d92c44dcb9a356f1e628ead6615f4e0530fcca27e87ae68bda9f99bc9",
+    "foundationFailureGateObservedSteps": [
+      {
+        "name": "Enforce evidence and invariant producer results",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 2,
+        "started_at": "2026-10-20T03:31:05Z",
+        "completed_at": "2026-10-20T03:31:05Z"
+      }
+    ]
+  },
+  "jobSnapshot": [
+    {
+      "id": 118438359966,
+      "name": "senatran-mock-tests",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-20T03:29:46Z",
+      "completed_at": "2026-10-20T03:30:42Z"
+    },
+    {
+      "id": 118438360194,
+      "name": "invariant-producers",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-20T03:29:46Z",
+      "completed_at": "2026-10-20T03:31:01Z"
+    },
+    {
+      "id": 118438360215,
+      "name": "boat-documents-real",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-20T03:29:46Z",
+      "completed_at": "2026-10-20T03:30:38Z"
+    },
+    {
+      "id": 118438360226,
+      "name": "senatran-mock",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-20T03:29:46Z",
+      "completed_at": "2026-10-20T03:30:50Z"
+    },
+    {
+      "id": 118438360284,
+      "name": "evidence-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-20T03:29:46Z",
+      "completed_at": "2026-10-20T03:30:10Z"
+    },
+    {
+      "id": 118438361117,
+      "name": "stack-smoke",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-20T03:29:44Z",
+      "completed_at": "2026-10-20T03:29:44Z"
+    },
+    {
+      "id": 118438492903,
+      "name": "backend-kernel",
+      "status": "in_progress",
+      "conclusion": null,
+      "started_at": "2026-10-20T03:30:12Z",
+      "completed_at": null
+    },
+    {
+      "id": 118438744158,
+      "name": "foundation",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-20T03:31:03Z",
+      "completed_at": "2026-10-20T03:31:07Z"
+    }
+  ],
+  "failures": [
+    {
+      "name": "invariant-producers",
+      "id": 118438360194,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-20T03:29:47Z",
+          "completed_at": "2026-10-20T03:29:48Z"
+        },
+        {
+          "name": "Initialize containers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-20T03:29:48Z",
+          "completed_at": "2026-10-20T03:30:10Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-20T03:30:10Z",
+          "completed_at": "2026-10-20T03:30:16Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-20T03:30:16Z",
+          "completed_at": "2026-10-20T03:30:17Z"
+        },
+        {
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-20T03:30:17Z",
+          "completed_at": "2026-10-20T03:30:26Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-20T03:30:26Z",
+          "completed_at": "2026-10-20T03:30:30Z"
+        },
+        {
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-20T03:30:30Z",
+          "completed_at": "2026-10-20T03:30:30Z"
+        },
+        {
+          "name": "Apply isolated fixture DDL",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-20T03:30:30Z",
+          "completed_at": "2026-10-20T03:30:35Z"
+        },
+        {
+          "name": "Seed isolated fixture database",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-20T03:30:35Z",
+          "completed_at": "2026-10-20T03:30:35Z"
+        },
+        {
+          "name": "Prepare isolated legacy test fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-20T03:30:35Z",
+          "completed_at": "2026-10-20T03:30:41Z"
+        },
+        {
+          "name": "Run invariant-ch complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-20T03:30:41Z",
+          "completed_at": "2026-10-20T03:30:42Z"
+        },
+        {
+          "name": "Run invariant-dash complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-20T03:30:42Z",
+          "completed_at": "2026-10-20T03:30:43Z"
+        },
+        {
+          "name": "Run invariant-est complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-20T03:30:43Z",
+          "completed_at": "2026-10-20T03:30:45Z"
+        },
+        {
+          "name": "Run invariant-inf complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-20T03:30:45Z",
+          "completed_at": "2026-10-20T03:30:46Z"
+        },
+        {
+          "name": "Run invariant-ops-queue complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-20T03:30:46Z",
+          "completed_at": "2026-10-20T03:30:47Z"
+        },
+        {
+          "name": "Run invariant-ops-perf complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 16,
+          "started_at": "2026-10-20T03:30:47Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Run invariant-portal complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Run invariant-rbac complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Run invariant-errors complete semantic population (ordinary CI)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 35,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Stop containers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 38,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 39,
+          "started_at": "2026-10-20T03:30:57Z",
+          "completed_at": "2026-10-20T03:30:57Z"
+        }
+      ],
+      "logReadExit": 0,
+      "logBytes": 845104,
+      "logSHA256": "a71da126e93a5350a81f85f4123f437c7ad1ba9fb1162296833e1655fbaad95a",
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 2,
+          "start_column": null,
+          "end_line": 2,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 29,
+          "start_column": null,
+          "end_line": 29,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Process completed with exit code 1.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "notice",
+          "title": "",
+          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+          "raw_details": ""
+        }
+      ]
+    },
+    {
+      "name": "foundation",
+      "id": 118438744158,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-20T03:31:04Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Enforce evidence and invariant producer results",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 2,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Run pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Install dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Install documentation dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Generate complete native security inventory bodies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Validate security exports against explicit generated native bodies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Check (format + typecheck)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Build and link-check documentation",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Audit documentation dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "DEVAI doctor (blocking)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Whitespace check",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-20T03:31:05Z",
+          "completed_at": "2026-10-20T03:31:05Z"
+        }
+      ],
+      "logReadExit": 0,
+      "logBytes": 3155,
+      "logSHA256": "7a98f0665b5abf2ff84d0125691bfa4b2b6d85e9b6a2fda3b83417aa07a60450",
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 7,
+          "start_column": null,
+          "end_line": 7,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Process completed with exit code 1.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 6,
+          "start_column": null,
+          "end_line": 6,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "evidence-gate",
+          "message": "Evidence/invariant gates did not succeed (evidence: success, invariants: failure) \u2014 failing foundation (the gate never silently opens).",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/aarusso-nyx/detran/blob/b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "notice",
+          "title": "",
+          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+          "raw_details": ""
+        }
+      ]
+    }
+  ],
+  "mergeAllowedNow": false,
+  "findings": [
+    "Real invariant-ops-perf suite setup failure: DashboardStreamService dependency index0 unavailable;3collected tests pending,0executed. Not threshold breach or measurementPASS.",
+    "foundation propagated invariantjobfailure as required; merge blocked.",
+    "backend complete remote fallback running at capturedsnapshot; no verified-local-rc PASS yet."
+  ],
+  "trustedLocalOptional": "No separate trusted-local workflow run for this PR head in observed run list; do not infer a tag404 or signature claim.",
+  "scope": "initial audit only; no assertion of futureCI/merge/main",
+  "actualOrdinarySuiteResults": [
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/domains/ch/encounters/tests/unit/encounter-lifecycle.service.spec.ts"
+      ],
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "pending": 0,
+      "success": true,
+      "suiteMessages": []
+    },
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/domains/shared/src/policy.spec.ts"
+      ],
+      "total": 729,
+      "passed": 729,
+      "failed": 0,
+      "pending": 0,
+      "success": true,
+      "suiteMessages": []
+    },
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts"
+      ],
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "pending": 0,
+      "success": true,
+      "suiteMessages": []
+    },
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/domains/inf/ait/src/ait-lifecycle.service.spec.ts"
+      ],
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "pending": 0,
+      "success": true,
+      "suiteMessages": []
+    },
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/domains/ops/field/tests/integration/shift-lifecycle.integration.spec.ts"
+      ],
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "pending": 0,
+      "success": true,
+      "suiteMessages": []
+    },
+    {
+      "testFiles": [
+        "/home/runner/work/detran/detran/backend/app/tests/performance/backend-baseline.perf.spec.ts"
+      ],
+      "total": 3,
+      "passed": 0,
+      "failed": 0,
+      "pending": 3,
+      "success": false,
+      "suiteMessages": [
+        "Nest can't resolve dependencies of the DashboardStreamService (?, +, +, DASHBOARD_CLOCK). Please make sure that the argument at index [0] is available in the current module.\n\nPotential solutions:\n- The dependency at index [0] appears to be undefined at runtime\n- This commonly occurs when using 'import type' instead of 'import' for injectable classes\n- Check your imports and change:\n  \u274c import type { SomeService } from './some.service';\n  \u2705 import { SomeService } from './some.service';\n- Ensure the imported class is decorated with @Injectable() or is a valid provider\n- If using dynamic imports, ensure the class is available at runtime, not just for type checking\n\nFor more common dependency resolution issues, see: https://docs.nestjs.com/faq/common-errors"
+      ]
+    }
+  ],
+  "rootCause": {
+    "failedStep": "Run invariant-ops-perf complete semantic population (ordinary CI)",
+    "failure": "Nest cannot resolve DashboardStreamService argument index0; suite setup failed before execution",
+    "tests": {
+      "total": 3,
+      "passed": 0,
+      "failed": 0,
+      "pending": 3
+    },
+    "notPerformanceThresholdFailure": true,
+    "failurePropagation": "foundation first prerequisite gate exited1 on invariants failure; protectedgate correctly fails closed"
+  },
+  "ordinaryExecutionSteps": [
+    {
+      "name": "Run invariant-ch complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run invariant-dash complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run invariant-est complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run invariant-inf complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run invariant-ops-queue complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run invariant-ops-perf complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Run invariant-portal complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Run invariant-rbac complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Run invariant-errors complete semantic population (ordinary CI)",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ]
+}

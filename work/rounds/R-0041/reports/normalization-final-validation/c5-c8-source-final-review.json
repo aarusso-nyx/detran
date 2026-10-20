@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "package.json",
+      "line": 5,
+      "category": "scope-hygiene",
+      "summary": "The description's literal em dash was rewritten as the JSON escape \\u2014. The value parses the same, but these bytes changed outside the C5–C8 scope.",
+      "failure_scenario": "Any byte-level hash or diff review of package.json shows a change that no C5–C8 decision explains. Revert the escape so the diff only carries the security:history:check script, the vite 7.3.6 devDependency and the two overrides."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0041/reports/source-normalization/detran-c5-normalization-law-corpus.log",
+      "line": 1,
+      "category": "evidence-completeness",
+      "summary": "tools/law/verify.mjs prints nothing on success and only sets process.exitCode (line 859), so the archived log holds just the npmrc warnings and the command banner, with no exit status.",
+      "failure_scenario": "A later auditor cannot tell a passing law-corpus run from an interrupted one using this log alone, so the PASS rests on the separate law-tests log and the task review. Add a recorded exit code to the next run's capture; do not edit this archived log."
+    },
+    {
+      "severity": "info",
+      "file": ".devai/config/invariant-producers.json",
+      "line": 1,
+      "category": "closure-verified",
+      "summary": "Verified: the canonical adopter-policy invariant_producers block is byte-identical to the generated .devai/config/invariant-producers.json. The policy 1.4.0 binding digests match the actual files for adopter-policy, domains, invariant-producers, project, thresholds and scorecard-na, and thresholds/NA are unchanged. All nine producers bind to test-tasks with the same population, and their requiredTestIds are subsets of each task's: RBAC 10 of 736 (7 guard + 729 policy, overlap with DASH declared) and errors 13 of 13, all matching the real spec titles. INV-AUTH/DATA/SEC-001 stay unbound and untouched.",
+      "failure_scenario": "None. Source-to-generated closure holds."
+    },
+    {
+      "severity": "info",
+      "file": "tools/security/verify-historical-compatibility.mjs",
+      "line": 15,
+      "category": "closure-verified",
+      "summary": "Verified: the only permitted transitions are the two literal appends, R-0037 (PR #207) and R-0025 (PR #205). Current bytes of both streams match the approved sha256 values. The baseline 92be0db and commits 173ab167 and 2e04f29c are all ancestors of HEAD, and the foundation job now uses fetch-depth 0. The 14 missing rounds (R-0001, R-0020 to R-0032) remain named gaps. record/ and .devai/state are unchanged from main. The test fixture resolves the git dir with rev-parse --absolute-git-dir and only reads from it.",
+      "failure_scenario": "None in source. Results from running the 24 tests in clone and worktree shapes are still pending, as stated."
+    },
+    {
+      "severity": "info",
+      "file": ".github/workflows/ci.yml",
+      "line": 109,
+      "category": "downstream-pending",
+      "summary": "The invariant-producers job runs unconditionally with DB fixtures and env preserved, all actions are SHA-pinned to the same refs as devai-local-rc-verify, concurrency is keyed on workflow and ref, and foundation fails closed on any non-success. The Angular build's rollup peer moved 4.62.5 to 4.64.5 as the only change outside the vitest/vite chain; vite 8 and Angular versions are otherwise unchanged in the lock.",
+      "failure_scenario": "Not a source blocker. Native standing (2.6.3 blocked, 2.6.4 not published), real build results, final CI and doctor, and the 8 UNKNOWN CI job effects remain mandatory downstream and must not be presented as PASS."
+    }
+  ]
+}

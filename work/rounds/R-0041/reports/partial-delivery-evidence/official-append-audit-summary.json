@@ -1,0 +1,149 @@
+{
+  "role": "Auditor",
+  "mode": "read-only independent append/preservation audit; external report only",
+  "observedAt": "2026-10-20T03:24:55.879836+00:00",
+  "sourceCommit": "28bc109fcafe92b8b8e6b54952444af5cf5c23b2",
+  "sourceTree": "7bc56c38ac8de4e6511245206f1d76829e67ee12",
+  "currentHEADObserved": "28bc109fcafe92b8b8e6b54952444af5cf5c23b2",
+  "verdict": "PASS",
+  "chain": {
+    "baselineRecords": 165,
+    "currentRecords": 166,
+    "oldOrderedPrefixUnchanged": true,
+    "newEV": "EV-5cdd4249d4badcd0",
+    "newSequence": 166,
+    "newManifestHash": "cf6be7349f6f47eee62a7ced891b3f7f10583a9d2d5344a1306011d4e65ecf89",
+    "manifestRecomputed": true,
+    "proofPath": "record/proofs/work/generic/R-0041.jsonl",
+    "proofPhysicalLines": 1,
+    "proofSHA256": "22bd4e8fde66ef305d822ee293abeefde41756decd114ba2630de1c3ae9d1e05",
+    "proofLineHash": "ae0bb29d61bdae95f65eacb5a54a14d689f76107b07ac665d001430e9e9e8378",
+    "chainFileSHA256": "9e73974a0fea99d37ce167085ade3ea2df539e3713bd0ffb687276d208431ef4"
+  },
+  "officialCommand": {
+    "argv": [
+      "pnpm",
+      "exec",
+      "devai",
+      "evidence",
+      "record",
+      "--kind",
+      "generic",
+      "--round",
+      "R-0041",
+      "--repo-root",
+      ".",
+      "--input",
+      "work/rounds/R-0041/reports/partial-delivery-evidence/evidence-input.json",
+      "--as-role",
+      "architect",
+      "--write",
+      "--format",
+      "json"
+    ],
+    "startedAt": "2026-10-20T03:22:11.774846+00:00",
+    "sourceHead": "28bc109fcafe92b8b8e6b54952444af5cf5c23b2",
+    "exit_code": 0,
+    "seconds": 0.6731861660082359
+  },
+  "payloadArtifactRefs": [
+    {
+      "path": "work/rounds/R-0041/reports/partial-delivery-preservation.json",
+      "sha256": "3f20f955a43d52ef01430b736773c67bc62c9f40a708b9471b791de7c121fc94",
+      "actualSHA256": "3f20f955a43d52ef01430b736773c67bc62c9f40a708b9471b791de7c121fc94",
+      "verified": true
+    },
+    {
+      "path": "work/rounds/R-0041/reports/partial-delivery-binding/custody.json",
+      "sha256": "e2f9d03957c2c41217006a040dddaff4daa0ae97f8b58f36b961db5af1120722",
+      "actualSHA256": "e2f9d03957c2c41217006a040dddaff4daa0ae97f8b58f36b961db5af1120722",
+      "verified": true
+    },
+    {
+      "path": "work/rounds/R-0041/reports/partial-delivery-review-v2/custody.json",
+      "sha256": "1f410abb4247b3292c8e91db7347a32dbde5aa47ac3ae3a2c5aa968aac9dcb7e",
+      "actualSHA256": "1f410abb4247b3292c8e91db7347a32dbde5aa47ac3ae3a2c5aa968aac9dcb7e",
+      "verified": true
+    },
+    {
+      "path": "work/rounds/R-0041/reviews/partial-delivery/c5-c7-c8-partial-delivery-delta-v2-review.json",
+      "sha256": "ad4b3d3650c5952f686f5bb7af49429e7446fa78ed2a1ae8ac3fa8585aff6e90",
+      "actualSHA256": "ad4b3d3650c5952f686f5bb7af49429e7446fa78ed2a1ae8ac3fa8585aff6e90",
+      "verified": true
+    },
+    {
+      "path": "work/rounds/R-0041/reports/partial-delivery-evidence/doctor.stdout",
+      "sha256": "ce2994547252efaf7ceb13408feb236e15169a02e7867c0ffdafeda07494244f",
+      "actualSHA256": "ce2994547252efaf7ceb13408feb236e15169a02e7867c0ffdafeda07494244f",
+      "verified": true
+    }
+  ],
+  "protectedBeforeHashes": {
+    ".devai/state/evidence-chain.json": {
+      "sha256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec",
+      "verified": true
+    },
+    ".devai/config/thresholds.json": {
+      "sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4",
+      "verified": true
+    },
+    ".devai/config/scorecard-na.json": {
+      "sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2",
+      "verified": true
+    },
+    ".devai/config/sensor-inputs.json": {
+      "sha256": "38782bf4f29b3208dbaee10a972b7913f770b3fd7aa22e0e57db8e07c6ca95cb",
+      "verified": true
+    },
+    "test-tasks.json": {
+      "sha256": "752c6105900f752bae1b276f8b0282f501f139777615e5704ba733595ed5fbad",
+      "verified": true
+    }
+  },
+  "rounds": [
+    {
+      "round": "R-0036",
+      "closed": true
+    },
+    {
+      "round": "R-0037",
+      "closed": true
+    },
+    {
+      "round": "R-0038",
+      "closed": true
+    },
+    {
+      "round": "R-0039",
+      "closed": true
+    }
+  ],
+  "scope": {
+    "partialOnly": true,
+    "nativeMeasurementClaimed": false,
+    "freshSensorExecution": false,
+    "readinessPromoting": false,
+    "full43MeasuredClaimed": false,
+    "C6": "blocked/deferred",
+    "R41": "active",
+    "futurePRMergeMainOutcomesClaimed": false
+  },
+  "findings": [],
+  "limits": [
+    "This audit verifies new append identity/digests/artifact hashes and preservation, not rerunning210tests or asserting futurePR/merge/main outcomes.",
+    "Parent separately runs official fullchain verification; no evidence or lifecycle mutation performed by Auditor."
+  ],
+  "historicalComparisons": {
+    "oldProofHistoryFiles": 55,
+    "closedRoundFiles": 1453,
+    "all23Backlogs": 23,
+    "originalR41Reports": 308,
+    "originalADR55_56": 2
+  },
+  "fullAudit": {
+    "path": "official-append-audit.json.gz",
+    "rawSHA256": "a33cc556409ace04ef4e4b2a3466ad970bc8933a6a46fcd965ddb6daa79097f0",
+    "gzipSHA256": "50fd2d7e68b93db55fd473457d2ea934c38da3145c4b430843403cc8f89eca5b",
+    "unchangedComparisons": 1841
+  }
+}

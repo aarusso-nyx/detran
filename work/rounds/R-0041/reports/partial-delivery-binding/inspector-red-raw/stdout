@@ -1,0 +1,47 @@
+✔ CI and generated verifier YAML reject duplicate keys and invalid syntax (21.094625ms)
+✔ CI remains present on every PR and main push with no content filters (7.053875ms)
+✔ workflow and ref keys isolate unrelated workflows and refs while superseding the same candidate (5.126208ms)
+✔ all third-party actions stay immutable and checkout/setup-node converge with the protected verifier (5.737167ms)
+✔ existing CI gate identities and candidate verified-local-rc publishing are preserved (5.281666ms)
+✔ nine invariant semantic producers execute unconditionally with isolated database services (11.079166ms)
+✖ whole native activation is deferred while the original seven task declarations and rc profile stay exact (1.282042ms)
+✔ foundation propagates every non-success producer result instead of silently skipping (3.944459ms)
+✔ protected control edits force remote execution before an exact-tree claim can be selected (3.889333ms)
+✔ generated verifier serializes the exact candidate and checks protected main controls as inert inputs (1.6605ms)
+✔ attestation binds commit tree policy trust and failure outcome without remote fallback (1.357291ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 174.228625
+
+✖ failing tests:
+
+test at tools/devai/tests/ci-isolation.test.mjs:303:1
+✖ whole native activation is deferred while the original seven task declarations and rc profile stay exact (1.282042ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   bindings: [],
+  -   schemaVersion: '1.0.0'
+  - }
+  
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/ci-isolation.test.mjs:329:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { schemaVersion: '1.0.0', bindings: [] },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

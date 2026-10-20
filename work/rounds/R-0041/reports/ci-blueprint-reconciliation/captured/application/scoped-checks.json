@@ -1,0 +1,97 @@
+[
+  {
+    "name": "exports-tests",
+    "argv": [
+      "pnpm",
+      "security:exports:test"
+    ],
+    "startedAt": "2026-10-20T04:13:44.383282+00:00",
+    "endedAt": "2026-10-20T04:13:51.173499+00:00",
+    "seconds": 6.790060792001896,
+    "exitCode": 0
+  },
+  {
+    "name": "exports-old-input-check",
+    "argv": [
+      "pnpm",
+      "security:exports:check",
+      "--",
+      "--api-map",
+      "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_api-api-map.json",
+      "--data-model",
+      "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_data_model-data-model.json",
+      "--pii-model",
+      "/Users/aarusso/.config/devai/evidence/detran/pr213-blueprint-apply-0gxaiu_g/old-r0039-inputs/inventory_data_handling-data-model-pii.json"
+    ],
+    "startedAt": "2026-10-20T04:13:51.173562+00:00",
+    "endedAt": "2026-10-20T04:13:52.943749+00:00",
+    "seconds": 1.7702006250037812,
+    "exitCode": 0
+  },
+  {
+    "name": "exports-snapshots",
+    "argv": [
+      "pnpm",
+      "security:exports:check",
+      "--",
+      "--snapshots-only"
+    ],
+    "startedAt": "2026-10-20T04:13:52.943794+00:00",
+    "endedAt": "2026-10-20T04:13:53.299183+00:00",
+    "seconds": 0.3554172500153072,
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-format",
+    "argv": [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json",
+      "docs/framework/blueprints/BP-EST-CRASH-001.json",
+      "docs/framework/blueprints/BP-INF-AIT-001.json",
+      "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+      "docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json",
+      "law/security/authorization.json",
+      "law/security/pii-registry.json"
+    ],
+    "startedAt": "2026-10-20T04:13:53.299232+00:00",
+    "endedAt": "2026-10-20T04:13:53.899465+00:00",
+    "seconds": 0.6002546250238083,
+    "exitCode": 0
+  },
+  {
+    "name": "stack",
+    "argv": [
+      "pnpm",
+      "test:stack"
+    ],
+    "startedAt": "2026-10-20T04:13:53.899509+00:00",
+    "endedAt": "2026-10-20T04:14:08.169382+00:00",
+    "seconds": 14.269820999994408,
+    "exitCode": 0
+  },
+  {
+    "name": "stynx-pin",
+    "argv": [
+      "pnpm",
+      "verify:stynx-pin"
+    ],
+    "startedAt": "2026-10-20T04:14:08.169431+00:00",
+    "endedAt": "2026-10-20T04:14:08.637700+00:00",
+    "seconds": 0.4682934999873396,
+    "exitCode": 0
+  },
+  {
+    "name": "stynx-pin-tests",
+    "argv": [
+      "pnpm",
+      "test:stynx-pin"
+    ],
+    "startedAt": "2026-10-20T04:14:08.637745+00:00",
+    "endedAt": "2026-10-20T04:14:09.878018+00:00",
+    "seconds": 1.2402900840097573,
+    "exitCode": 0
+  }
+]

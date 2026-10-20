@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Candidate identity checks out. HEAD is 36f865257012c12c3f8cf262e897cdd3762ca83c, tree is 39726d545d39763c00b45b974542bdf605a0b0df, and the worktree is clean. main base c58278cc is the merge-base. Exactly four commits come after b3b66c6d."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Each commit's scope matches its declaration. 563cbbf4 modifies 242 paths: blueprint-generated backend domain and DDL files, 5 docs/framework/blueprints sources (each only adds vite 7.3.6) and the two law/security registries. aa957474 touches 4 paths: backend/app/vitest.config.ts, ops-perf.config.mjs and the nest-metadata-transform .mjs/.d.mts helper. 18ec80fc touches 3 Inspector test paths under tools/devai/tests. 36f86525 adds 301 files, all under work/rounds/R-0041/reports/{ci-reconciliation,ci-blueprint-reconciliation,ci-appbase-reconciliation,ci-reconciliation-finalization}."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "In law/security/authorization.json and pii-registry.json, the only changes are 53 replaced sha256 values, which fits the source-SHA-only claim. There is no diff since b3b66c6d in record/proofs or .devai/state, so both the canonical chain and the legacy chain are unchanged."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "These /tmp artifacts match their declared SHA-256: blueprint review 5375d71e, blueprint delivery e5fa2f8e, appbase delta review f906db14 and Inspector delivery 55179a41. The blueprint review, appbase delta review and preservation audit all record verdict PASS. No expected SHA was given for the preservation audit; it hashes to eaec25a8."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "Not re-verified in this read-only pass: the 1592-output generator preview breakdown, the 239/36/4 test counts, the 2,269-comparison preservation audit, the doctor/verify outputs and the capsule gzip hashes. These rely on the prior reviews and delivery records listed above. The accepted limits stay as stated: the finite secret-marker scan, no isolated/native metrics, and the in-repo finalization capsule carrying an earlier timestamp. This review covers nothing after the EV append, PR push or new CI; C6, native activation and readiness remain out of scope."
+    }
+  ]
+}

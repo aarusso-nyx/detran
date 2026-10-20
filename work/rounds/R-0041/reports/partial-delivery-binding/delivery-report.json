@@ -1,0 +1,145 @@
+{
+  "role": "Architect",
+  "implementationScope": "source exact empty optional declaration; official provider binding only",
+  "policyVersion": "1.5.0",
+  "sourceSHA256": "3364681471dfd86ec0ad3213d0851f6413a15e68eb522389be540278c4012de4",
+  "inspectorTestSHA256": "038fe1abf8ff757bf52fe5df1dfc152e5fff5bff69a51326edf64c9d0f58a73f",
+  "compiledChangedExactly": [
+    ".devai/config/adopter-policy-binding.json",
+    ".devai/config/invariant-producers.json"
+  ],
+  "allOtherCompiledUnchanged": true,
+  "protectedPathsUnchanged": 510,
+  "sourceOtherFieldsUnchanged": true,
+  "sevenOriginalTasksAndProfileUnchanged": true,
+  "nineInvariantsNoMeasurableViaUnchanged": true,
+  "ciWorkloadsUnchanged": true,
+  "checks": [
+    {
+      "name": "inspector-green",
+      "argv": [
+        "node",
+        "--test",
+        "tools/devai/tests/ci-isolation.test.mjs"
+      ],
+      "startedAt": "2026-10-20T03:02:09.499485+00:00",
+      "endedAt": "2026-10-20T03:02:10.490221+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "policy-schema",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "check",
+        "--only",
+        "schema",
+        "--schema",
+        "node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas/adopter-policy.schema.json",
+        "--instance",
+        "law/policy/adopter-policy.json",
+        "--repo-root",
+        "."
+      ],
+      "startedAt": "2026-10-20T03:02:10.491593+00:00",
+      "endedAt": "2026-10-20T03:02:13.037427+00:00",
+      "exitCode": 2
+    },
+    {
+      "name": "projection-schema",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "check",
+        "--only",
+        "schema",
+        "--schema",
+        "node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas/invariant-producers.schema.json",
+        "--instance",
+        ".devai/config/invariant-producers.json",
+        "--repo-root",
+        "."
+      ],
+      "startedAt": "2026-10-20T03:02:13.038446+00:00",
+      "endedAt": "2026-10-20T03:02:16.140660+00:00",
+      "exitCode": 2
+    },
+    {
+      "name": "law-corpus",
+      "argv": [
+        "pnpm",
+        "verify:law-corpus"
+      ],
+      "startedAt": "2026-10-20T03:02:16.141409+00:00",
+      "endedAt": "2026-10-20T03:02:18.057945+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "law-tests",
+      "argv": [
+        "pnpm",
+        "law:test"
+      ],
+      "startedAt": "2026-10-20T03:02:18.059195+00:00",
+      "endedAt": "2026-10-20T03:02:23.496235+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "format",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "law/policy/adopter-policy.json",
+        ".devai/config/invariant-producers.json",
+        ".devai/config/adopter-policy-binding.json",
+        "tools/devai/tests/ci-isolation.test.mjs"
+      ],
+      "startedAt": "2026-10-20T03:02:23.496871+00:00",
+      "endedAt": "2026-10-20T03:02:25.692886+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "doctor",
+      "argv": [
+        "pnpm",
+        "devai:doctor"
+      ],
+      "startedAt": "2026-10-20T03:02:25.693822+00:00",
+      "endedAt": "2026-10-20T03:02:57.975475+00:00",
+      "exitCode": 0
+    }
+  ],
+  "schemaSupplemental": {
+    "exitCode": 0,
+    "bothSchemasValid": true,
+    "scope": "exact installed schemas with all refs; no provider edits"
+  },
+  "doctor": {
+    "ok": true,
+    "checkCount": 16,
+    "note": "Actual dirty implementation tree; not a clean-HEAD or native readiness claim"
+  },
+  "standaloneSchemaCLIGap": {
+    "attempts": 2,
+    "exitCodes": [
+      2,
+      2
+    ],
+    "reason": "generic schema checker does not register referenced project-config/common-defs schemas",
+    "rawFailuresRetained": true,
+    "notReclassifiedAsPass": true
+  },
+  "genuineREDtoGREEN": {
+    "RED": "11total/10pass/1failure exact missing field",
+    "GREEN": "11total/11pass real entire suite"
+  },
+  "noGitEffects": true,
+  "noEvidenceOrLifecycleEffects": true,
+  "newOwnerChoice": false,
+  "C6": "blocked/deferred; no prototype or measurement",
+  "readinessPromoting": false
+}

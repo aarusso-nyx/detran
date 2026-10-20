@@ -1,0 +1,40 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "critical",
+      "blocking": true,
+      "summary": "The proposed 3-file scope is incomplete, and the acceptance criteria contradict each other. tools/devai/tests/ci-isolation.test.mjs:91-98 pins invariant-ops-perf configSha256 to d7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e. Lines 289-293 assert sha256(readFileSync(ops-perf.config.mjs)) equals that value, with the message 'Complete config population/control changed'. Any import or plugin registration in ops-perf.config.mjs breaks that assertion, so `pnpm devai:test` (node --test tools/devai/tests/*.test.mjs) goes red. The packet also forbids edits to original tests and requires the complete existing CI isolation suite to pass. The packet needs a 4th, explicitly authorized path: change only the ops-perf configSha256 literal in ci-isolation.test.mjs to the new reviewed bytes. Keep the other 8 pins, the 9 source pins, the 9 commands, no if/continue-on-error, and the test-tasks/profile/bindings assertions byte-exact. The comment at :37-40 ('pending reviewed changes') anticipates this kind of reviewed pin update."
+    },
+    {
+      "severity": "major",
+      "blocking": false,
+      "summary": "No pin covers the new helper. ci-isolation.test.mjs hashes only the config file and the spec sources, so nothing pins tools/security/invariants/nest-metadata-transform.mjs. Once the config imports it, the helper's bytes control how ops-perf runs, but they are not fixed. To keep the 'exact config bytes preserve runner semantics' contract fail-closed, the packet should either add a helper sha256 pin to the same suite entry (another edit to the ci-isolation test, so it needs the same authorization) or explain why the new Inspector test is enough to guard the helper."
+    },
+    {
+      "severity": "major",
+      "blocking": false,
+      "summary": "The packet says to 'preserve target/module' from the canonical tsconfig, which conflicts with how Vite consumes transformed modules. Every canonical tsconfig (backend/app/tsconfig.json and the domain tsconfig.json files) sets module/moduleResolution NodeNext. With NodeNext, ts.transpileModule has no package.json context, so it can emit the wrong module format for the Vite/Vitest SSR pipeline, which expects ESM. The packet's own evidence script, /tmp/pr213-transform-diagnosis.mjs:11, used module ESNext, not NodeNext. The packet should say: keep experimentalDecorators, emitDecoratorMetadata and target from the nearest canonical tsconfig, and force ESM output (ESNext/Preserve) plus sourcemaps. Otherwise the RED/GREEN result may reflect a module-format failure rather than the DI fix."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "One factual claim in the packet is wrong. backend/domains/ops/core/tsconfig.json has no experimentalDecorators or emitDecoratorMetadata, yet @detran/ops-core is aliased and AppModule imports it through teat-*.providers.ts. Today its src has no decorators, so behavior does not change. Still, the packet should require per-file resolution of the nearest tsconfig, with no blanket flag injection, and should fail closed (refuse) if a file with decorators resolves to a tsconfig without experimentalDecorators."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The 'meaningful Nest regression' test has unstated dependency-resolution constraints. @nestjs/* and reflect-metadata are installed only under backend/app/node_modules, not at the repo root. A node:test under tools/devai/tests would have to resolve them via createRequire anchored at backend/app. The packet should state this so the test is not silently skipped or converted to text-only checks. It should also state that the test runs inside the existing devai:test glob and is not a separately wired gate."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The 3-root source scope is complete for DI purposes. The workspace.config.mjs aliases outside backend/domains/**/src are packages/{api-clients,sefaz-adapter,senatran-adapter,ui}/src, and none of them contains @Injectable or @Controller. backend/app/src makes no cross-root relative imports except within itself. The @stynx-nyx/* packages ship compiled JS from node_modules and are rightly excluded."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Verified at b3b66c6d: dashboard-stream.service.ts:10-28 imports Database, RequestContext and OpsParameterService as values. The constructor at :198-203 gives only index3 an explicit @Inject. AppModule registers the service at :966. The installed versions are vite 7.3.6, vitest 4.1.11 and typescript 6.0.3, with no new dependency needed. The DEVAI native-test-reporter records the config root, include and configFile but does not hash plugins, so registering a plugin does not alter reporter custody. No consumer of the config hash exists outside ci-isolation.test.mjs. The other references are historical work/rounds/R-0041 records, which must stay unedited and are expected to mismatch the new bytes."
+    }
+  ]
+}

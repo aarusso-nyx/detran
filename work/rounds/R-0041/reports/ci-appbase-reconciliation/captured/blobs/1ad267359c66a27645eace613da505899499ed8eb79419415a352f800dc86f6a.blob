@@ -1,0 +1,350 @@
+ M backend/database/ddl/13-ops-field-operations.sql
+ M backend/database/ddl/31-inf-ait.sql
+ M backend/database/ddl/42-ch-encounters.sql
+ M backend/database/ddl/62-portal-requests.sql
+ M backend/database/ddl/70-est-crash.sql
+ M backend/domains/ch/encounters/package.json
+ M backend/domains/ch/encounters/src/controllers/appointment.controller.ts
+ M backend/domains/ch/encounters/src/controllers/encounter.controller.ts
+ M backend/domains/ch/encounters/src/dto/create-appointment.dto.ts
+ M backend/domains/ch/encounters/src/dto/create-encounter.dto.ts
+ M backend/domains/ch/encounters/src/encounters.module.ts
+ M backend/domains/ch/encounters/src/entities/appointment.entity.ts
+ M backend/domains/ch/encounters/src/entities/encounter.entity.ts
+ M backend/domains/ch/encounters/src/index.ts
+ M backend/domains/ch/encounters/src/repositories/appointment.repository.ts
+ M backend/domains/ch/encounters/src/repositories/encounter.repository.ts
+ M backend/domains/ch/encounters/src/services/appointment.service.ts
+ M backend/domains/ch/encounters/src/services/encounter.service.ts
+ M backend/domains/est/crash/package.json
+ M backend/domains/est/crash/src/controllers/crash-damage.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-link.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-person.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-record.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-renaest-submission.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-report-document.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-scene-duty.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-sketch.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-subject-request.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-vehicle.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-victim.controller.ts
+ M backend/domains/est/crash/src/controllers/crash-witness.controller.ts
+ M backend/domains/est/crash/src/crash.module.ts
+ M backend/domains/est/crash/src/dto/create-crash-damage.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-link.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-person.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-record.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-renaest-submission.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-report-document.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-scene-duty.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-sketch.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-subject-request.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-vehicle.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-victim.dto.ts
+ M backend/domains/est/crash/src/dto/create-crash-witness.dto.ts
+ M backend/domains/est/crash/src/entities/crash-damage.entity.ts
+ M backend/domains/est/crash/src/entities/crash-link.entity.ts
+ M backend/domains/est/crash/src/entities/crash-person.entity.ts
+ M backend/domains/est/crash/src/entities/crash-record.entity.ts
+ M backend/domains/est/crash/src/entities/crash-renaest-submission.entity.ts
+ M backend/domains/est/crash/src/entities/crash-report-document.entity.ts
+ M backend/domains/est/crash/src/entities/crash-scene-duty.entity.ts
+ M backend/domains/est/crash/src/entities/crash-sketch.entity.ts
+ M backend/domains/est/crash/src/entities/crash-subject-request.entity.ts
+ M backend/domains/est/crash/src/entities/crash-vehicle.entity.ts
+ M backend/domains/est/crash/src/entities/crash-victim.entity.ts
+ M backend/domains/est/crash/src/entities/crash-witness.entity.ts
+ M backend/domains/est/crash/src/index.ts
+ M backend/domains/est/crash/src/repositories/crash-damage.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-link.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-person.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-record.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-renaest-submission.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-report-document.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-scene-duty.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-sketch.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-subject-request.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-vehicle.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-victim.repository.ts
+ M backend/domains/est/crash/src/repositories/crash-witness.repository.ts
+ M backend/domains/est/crash/src/services/crash-damage.service.ts
+ M backend/domains/est/crash/src/services/crash-link.service.ts
+ M backend/domains/est/crash/src/services/crash-person.service.ts
+ M backend/domains/est/crash/src/services/crash-record.service.ts
+ M backend/domains/est/crash/src/services/crash-renaest-submission.service.ts
+ M backend/domains/est/crash/src/services/crash-report-document.service.ts
+ M backend/domains/est/crash/src/services/crash-scene-duty.service.ts
+ M backend/domains/est/crash/src/services/crash-sketch.service.ts
+ M backend/domains/est/crash/src/services/crash-subject-request.service.ts
+ M backend/domains/est/crash/src/services/crash-vehicle.service.ts
+ M backend/domains/est/crash/src/services/crash-victim.service.ts
+ M backend/domains/est/crash/src/services/crash-witness.service.ts
+ M backend/domains/inf/ait/package.json
+ M backend/domains/inf/ait/src/ait.module.ts
+ M backend/domains/inf/ait/src/controllers/ait-cancel-request-event.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-cancel-request.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-correction.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-person.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-print-event.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-signature.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-status-history.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait-vehicle.controller.ts
+ M backend/domains/inf/ait/src/controllers/ait.controller.ts
+ M backend/domains/inf/ait/src/dto/create-ait-cancel-request-event.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-cancel-request.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-correction.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-person.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-print-event.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-signature.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-status-history.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait-vehicle.dto.ts
+ M backend/domains/inf/ait/src/dto/create-ait.dto.ts
+ M backend/domains/inf/ait/src/entities/ait-cancel-request-event.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-cancel-request.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-correction.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-person.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-print-event.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-signature.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-status-history.entity.ts
+ M backend/domains/inf/ait/src/entities/ait-vehicle.entity.ts
+ M backend/domains/inf/ait/src/entities/ait.entity.ts
+ M backend/domains/inf/ait/src/index.ts
+ M backend/domains/inf/ait/src/repositories/ait-cancel-request-event.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-cancel-request.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-correction.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-person.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-print-event.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-signature.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-status-history.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait-vehicle.repository.ts
+ M backend/domains/inf/ait/src/repositories/ait.repository.ts
+ M backend/domains/inf/ait/src/services/ait-cancel-request-event.service.ts
+ M backend/domains/inf/ait/src/services/ait-cancel-request.service.ts
+ M backend/domains/inf/ait/src/services/ait-correction.service.ts
+ M backend/domains/inf/ait/src/services/ait-person.service.ts
+ M backend/domains/inf/ait/src/services/ait-print-event.service.ts
+ M backend/domains/inf/ait/src/services/ait-signature.service.ts
+ M backend/domains/inf/ait/src/services/ait-status-history.service.ts
+ M backend/domains/inf/ait/src/services/ait-vehicle.service.ts
+ M backend/domains/inf/ait/src/services/ait.service.ts
+ M backend/domains/ops/field/package.json
+ M backend/domains/ops/field/src/controllers/agent-profile.controller.ts
+ M backend/domains/ops/field/src/controllers/application-version.controller.ts
+ M backend/domains/ops/field/src/controllers/approach.controller.ts
+ M backend/domains/ops/field/src/controllers/device-event.controller.ts
+ M backend/domains/ops/field/src/controllers/homologation.controller.ts
+ M backend/domains/ops/field/src/controllers/measurement-instrument.controller.ts
+ M backend/domains/ops/field/src/controllers/operation.controller.ts
+ M backend/domains/ops/field/src/controllers/operational-device.controller.ts
+ M backend/domains/ops/field/src/controllers/patrol-vehicle.controller.ts
+ M backend/domains/ops/field/src/controllers/session-handoff.controller.ts
+ M backend/domains/ops/field/src/controllers/shift.controller.ts
+ M backend/domains/ops/field/src/controllers/team-agent.controller.ts
+ M backend/domains/ops/field/src/controllers/team.controller.ts
+ M backend/domains/ops/field/src/dto/create-agent-profile.dto.ts
+ M backend/domains/ops/field/src/dto/create-application-version.dto.ts
+ M backend/domains/ops/field/src/dto/create-approach.dto.ts
+ M backend/domains/ops/field/src/dto/create-device-event.dto.ts
+ M backend/domains/ops/field/src/dto/create-homologation.dto.ts
+ M backend/domains/ops/field/src/dto/create-measurement-instrument.dto.ts
+ M backend/domains/ops/field/src/dto/create-operation.dto.ts
+ M backend/domains/ops/field/src/dto/create-operational-device.dto.ts
+ M backend/domains/ops/field/src/dto/create-patrol-vehicle.dto.ts
+ M backend/domains/ops/field/src/dto/create-session-handoff.dto.ts
+ M backend/domains/ops/field/src/dto/create-shift.dto.ts
+ M backend/domains/ops/field/src/dto/create-team-agent.dto.ts
+ M backend/domains/ops/field/src/dto/create-team.dto.ts
+ M backend/domains/ops/field/src/entities/agent-profile.entity.ts
+ M backend/domains/ops/field/src/entities/application-version.entity.ts
+ M backend/domains/ops/field/src/entities/approach.entity.ts
+ M backend/domains/ops/field/src/entities/device-event.entity.ts
+ M backend/domains/ops/field/src/entities/homologation.entity.ts
+ M backend/domains/ops/field/src/entities/measurement-instrument.entity.ts
+ M backend/domains/ops/field/src/entities/operation.entity.ts
+ M backend/domains/ops/field/src/entities/operational-device.entity.ts
+ M backend/domains/ops/field/src/entities/patrol-vehicle.entity.ts
+ M backend/domains/ops/field/src/entities/session-handoff.entity.ts
+ M backend/domains/ops/field/src/entities/shift.entity.ts
+ M backend/domains/ops/field/src/entities/team-agent.entity.ts
+ M backend/domains/ops/field/src/entities/team.entity.ts
+ M backend/domains/ops/field/src/field.module.ts
+ M backend/domains/ops/field/src/index.ts
+ M backend/domains/ops/field/src/repositories/agent-profile.repository.ts
+ M backend/domains/ops/field/src/repositories/application-version.repository.ts
+ M backend/domains/ops/field/src/repositories/approach.repository.ts
+ M backend/domains/ops/field/src/repositories/device-event.repository.ts
+ M backend/domains/ops/field/src/repositories/homologation.repository.ts
+ M backend/domains/ops/field/src/repositories/measurement-instrument.repository.ts
+ M backend/domains/ops/field/src/repositories/operation.repository.ts
+ M backend/domains/ops/field/src/repositories/operational-device.repository.ts
+ M backend/domains/ops/field/src/repositories/patrol-vehicle.repository.ts
+ M backend/domains/ops/field/src/repositories/session-handoff.repository.ts
+ M backend/domains/ops/field/src/repositories/shift.repository.ts
+ M backend/domains/ops/field/src/repositories/team-agent.repository.ts
+ M backend/domains/ops/field/src/repositories/team.repository.ts
+ M backend/domains/ops/field/src/services/agent-profile.service.ts
+ M backend/domains/ops/field/src/services/application-version.service.ts
+ M backend/domains/ops/field/src/services/approach.service.ts
+ M backend/domains/ops/field/src/services/device-event.service.ts
+ M backend/domains/ops/field/src/services/homologation.service.ts
+ M backend/domains/ops/field/src/services/measurement-instrument.service.ts
+ M backend/domains/ops/field/src/services/operation.service.ts
+ M backend/domains/ops/field/src/services/operational-device.service.ts
+ M backend/domains/ops/field/src/services/patrol-vehicle.service.ts
+ M backend/domains/ops/field/src/services/session-handoff.service.ts
+ M backend/domains/ops/field/src/services/shift.service.ts
+ M backend/domains/ops/field/src/services/team-agent.service.ts
+ M backend/domains/ops/field/src/services/team.service.ts
+ M backend/domains/portal/requests/package.json
+ M backend/domains/portal/requests/src/controllers/consequence-ack.controller.ts
+ M backend/domains/portal/requests/src/controllers/evaluation.controller.ts
+ M backend/domains/portal/requests/src/controllers/idempotency-record.controller.ts
+ M backend/domains/portal/requests/src/controllers/protocol.controller.ts
+ M backend/domains/portal/requests/src/controllers/request-attachment.controller.ts
+ M backend/domains/portal/requests/src/controllers/request-draft.controller.ts
+ M backend/domains/portal/requests/src/controllers/request.controller.ts
+ M backend/domains/portal/requests/src/dto/create-consequence-ack.dto.ts
+ M backend/domains/portal/requests/src/dto/create-evaluation.dto.ts
+ M backend/domains/portal/requests/src/dto/create-idempotency-record.dto.ts
+ M backend/domains/portal/requests/src/dto/create-protocol.dto.ts
+ M backend/domains/portal/requests/src/dto/create-request-attachment.dto.ts
+ M backend/domains/portal/requests/src/dto/create-request-draft.dto.ts
+ M backend/domains/portal/requests/src/dto/create-request.dto.ts
+ M backend/domains/portal/requests/src/entities/consequence-ack.entity.ts
+ M backend/domains/portal/requests/src/entities/evaluation.entity.ts
+ M backend/domains/portal/requests/src/entities/idempotency-record.entity.ts
+ M backend/domains/portal/requests/src/entities/protocol.entity.ts
+ M backend/domains/portal/requests/src/entities/request-attachment.entity.ts
+ M backend/domains/portal/requests/src/entities/request-draft.entity.ts
+ M backend/domains/portal/requests/src/entities/request.entity.ts
+ M backend/domains/portal/requests/src/index.ts
+ M backend/domains/portal/requests/src/repositories/consequence-ack.repository.ts
+ M backend/domains/portal/requests/src/repositories/evaluation.repository.ts
+ M backend/domains/portal/requests/src/repositories/idempotency-record.repository.ts
+ M backend/domains/portal/requests/src/repositories/protocol.repository.ts
+ M backend/domains/portal/requests/src/repositories/request-attachment.repository.ts
+ M backend/domains/portal/requests/src/repositories/request-draft.repository.ts
+ M backend/domains/portal/requests/src/repositories/request.repository.ts
+ M backend/domains/portal/requests/src/requests.module.ts
+ M backend/domains/portal/requests/src/services/consequence-ack.service.ts
+ M backend/domains/portal/requests/src/services/evaluation.service.ts
+ M backend/domains/portal/requests/src/services/idempotency-record.service.ts
+ M backend/domains/portal/requests/src/services/protocol.service.ts
+ M backend/domains/portal/requests/src/services/request-attachment.service.ts
+ M backend/domains/portal/requests/src/services/request-draft.service.ts
+ M backend/domains/portal/requests/src/services/request.service.ts
+ M docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json
+ M docs/framework/blueprints/BP-EST-CRASH-001.json
+ M docs/framework/blueprints/BP-INF-AIT-001.json
+ M docs/framework/blueprints/BP-OPS-FIELD-001.json
+ M docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json
+ M law/security/authorization.json
+ M law/security/pii-registry.json
+ M tools/devai/tests/ci-isolation.test.mjs
+ M tools/security/invariants/ops-perf.config.mjs
+?? tools/devai/tests/nest-metadata-transform.test.mjs
+?? tools/security/invariants/nest-metadata-transform.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/README.md
+?? work/rounds/R-0041/reports/ci-reconciliation/custody.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/README.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/canonicalNodeNext.js
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/dashboard-stream.typescript-transform.js
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/dashboard-stream.vite7-transform.js
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/dashboard-stream.vite8-transform.js
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/module-format-diagnosis.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/pr213-moduleformat-diagnosis.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/pr213-transform-diagnosis.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/transform-diagnosis.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/diagnosis/viteESM.js
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/audit.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/checks.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/foundation-annotations.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/invariant-producers-annotations.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/jobs.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/parsed-vitest-results.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/initial-ci/requirements.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/ci-isolation-before.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/ci-isolation-config-hash-red.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/ci-isolation-config-hash-red.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/ci-isolation.diff
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/config-before.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/delivery.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/final-ci-isolation.test.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/final-nest-metadata-transform.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/final-nest-metadata-transform.test.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/final-ops-perf.config.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/focused-final.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/focused-final.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/focused-final.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/functional-red.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/functional-red.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/functional-red.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/initial-harness.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/initial-harness.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/nest-green-attempt1.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/nest-green-attempt1.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-format.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-format.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-format.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-red.mjs
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-syntax.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-syntax.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/inspector/test-syntax.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/manifest.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/observations.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/after-hashes.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/alias-install-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/alias-install.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/alias-install.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/before-hashes.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/fixture-ddl-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/fixture-ddl.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/fixture-ddl.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/physical-origins-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/physical-origins.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-20261020T040114Z/physical-origins.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/after-hashes.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/alias-install-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/alias-install.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/alias-install.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/before-hashes.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-ddl-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-ddl.stderr.gz
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-ddl.stdout.gz
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-legacy-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-legacy.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-legacy.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-seed-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-seed.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/fixture-seed.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/ordinary-ops-perf-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/ordinary-ops-perf.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/ordinary-ops-perf.stdout.gz
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/ordinary-vitest-result.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/physical-origins-execution.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/physical-origins.stderr
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/ordinary/ordinary-three-attempt2-20261020T040235Z/physical-origins.stdout
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-delta-review-prompt.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-delta-review.bridge.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-delta-review.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-review-prompt.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-review.bridge.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-review.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v2-review-prompt.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v2-review.bridge.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v2-review.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v3-review-prompt.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v3-review.bridge.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v3-review.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v4-review-prompt.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v4-review.bridge.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/reviews/pr213-metadata-task-v4-review.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/source-state.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-manifest.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v2-manifest.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v2.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v3-manifest.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v3.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v4-manifest.json
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task-v4.md
+?? work/rounds/R-0041/reports/ci-reconciliation/proposal/tasks/pr213-perf-nest-metadata-task.md

@@ -1,0 +1,1668 @@
+{
+  "workflows": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "jobs": [
+        {
+          "name": "evidence-gate",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "invariant-producers",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "foundation",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": [],
+          "condition": "! cancelled ( )",
+          "needs": [
+            "evidence-gate",
+            "invariant-producers"
+          ]
+        },
+        {
+          "name": "backend-kernel-full",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "boat-documents-real",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "senatran-mock",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "senatran-mock-tests",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": []
+        },
+        {
+          "name": "stack-smoke",
+          "effect": "unknown",
+          "permissions": {},
+          "runScripts": [],
+          "condition": "github.event_name == 'workflow_dispatch'"
+        }
+      ],
+      "steps": [
+        {
+          "job": "evidence-gate",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "c8668d952fc65278a98a5ee8e28897fbec0160bc6002371e828ee08e7f7079d7",
+          "files": []
+        },
+        {
+          "job": "evidence-gate",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "evidence-gate",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "evidence-gate",
+          "index": 3,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "evidence-gate",
+          "index": 4,
+          "name": "Verify the DEVAI proof chain (fail-closed)",
+          "sha256": "45b9285f2dd708385f9c65ed96c039a873d4e0e7d323634013f6291381ba4b08",
+          "files": []
+        },
+        {
+          "job": "evidence-gate",
+          "index": 5,
+          "name": "Select exact-tree attested evidence route",
+          "sha256": "d7d263ada28283f1d958f48083108a50179ac099981f572cca1f9df9750b9e84",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "e6c3e67402f9875d8b820dc4040dd4f4aad09f4d1b73f66203896ba672d34538",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 3,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "invariant-producers",
+          "index": 4,
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "sha256": "baa3b2dab7b291513b6cc8dd3915cfecccd880992c614f83c5343d45e8263252",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 5,
+          "name": "Apply isolated fixture DDL",
+          "sha256": "eec675067fbfbf7bd755fe476f8860e19c6a1d1de621cd00505cc09416e21ec3",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 6,
+          "name": "Seed isolated fixture database",
+          "sha256": "f5022d6b82cade8ca462afe8223448ff34dd07382a102c1ec245688a6699608f",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 7,
+          "name": "Prepare isolated legacy test fixtures",
+          "sha256": "17a404603707e0685b8a15fc2a3b427be8015a8d49fc782df3334f49ee5dd869",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "invariant-producers",
+          "index": 8,
+          "name": "Measure invariant-ch complete semantic population",
+          "sha256": "04bcd39743fc4389e94dee75cc7d2097a3e2921a2388089eaedcb71f336bc82b",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 9,
+          "name": "Measure invariant-dash complete semantic population",
+          "sha256": "0567d01f42d07675353fdf48c2abd6321ece63b78934dcefdc86185889152b1c",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 10,
+          "name": "Measure invariant-est complete semantic population",
+          "sha256": "a1a9f3f4a3caf8b84282ad17153381bd226838e365d5483066750ab80f51283a",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 11,
+          "name": "Measure invariant-inf complete semantic population",
+          "sha256": "114bde6601228611b283ffe8194f7bfe7d29668c6fe4f0ead7cc8d2c31702881",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 12,
+          "name": "Measure invariant-ops-queue complete semantic population",
+          "sha256": "957fae70cea5c7f95833207b5c7175233fb428ae0968a317b3376270a08d76c3",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 13,
+          "name": "Measure invariant-ops-perf complete semantic population",
+          "sha256": "7d879910cccf31ffc739e0aa7c2e42bd8054526984c5e5a6ca4548c685792844",
+          "files": []
+        },
+        {
+          "job": "invariant-producers",
+          "index": 14,
+          "name": "Measure invariant-portal complete semantic population",
+          "sha256": "0e14bfbc539fa9c83e29ed5604f09751de3e82b881ebdb2cf73b4ce5c14c5029",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 0,
+          "name": "Enforce evidence and invariant producer results",
+          "sha256": "cdbb3f21a6920e3d6878e09e519ead13fe2bd7762ab316973a363e691e3965ac",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 1,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "1c1d5bf429b279224a05225acf76d9565fc182e742dd4448350b3ebc9c976364",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 2,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 3,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 4,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "foundation",
+          "index": 5,
+          "name": "Provision real installed native Vitest entrypoint alias",
+          "sha256": "336fc8ca07bbd64a761e7996edc894dcd1ec8bfd907d4aa90a16b7307c47402a",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 6,
+          "name": "Install documentation dependencies",
+          "sha256": "a4e66cd35b0623a3d29fb40e4135e984dbfff02f4a35a74f6d7ea8069cfa7b48",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "foundation",
+          "index": 7,
+          "name": "Check (format + typecheck)",
+          "sha256": "ef1605e7e0851c1181fa101342b80c3c174d76402bf2bff32a4328ff56147d7c"
+        },
+        {
+          "job": "foundation",
+          "index": 8,
+          "name": "Build and link-check documentation",
+          "sha256": "8fdc21a4b17613dc4f153c69558594e2f2d835366c415eb3b2612a4eba928abb",
+          "files": [
+            "docs/site/package.json",
+            "docs/site/scripts/sync-docs.mjs",
+            "package.json"
+          ]
+        },
+        {
+          "job": "foundation",
+          "index": 9,
+          "name": "Audit documentation dependencies",
+          "sha256": "9cb38680acb3c5ac6ad3968e247b09f5d3937a2a22343f9304116dd46d3df3e9",
+          "files": [
+            "docs/site/package.json",
+            "docs/site/scripts/check-audit.mjs",
+            "docs/site/scripts/check-braces-patch.mjs",
+            "docs/site/scripts/check-image-size-patch.mjs",
+            "package.json"
+          ]
+        },
+        {
+          "job": "foundation",
+          "index": 10,
+          "name": "DEVAI doctor (blocking)",
+          "sha256": "a0404f938eac69c1854ab0c1005426d43d4ba2b1a1f7553067f01aaa5acbf58e",
+          "files": []
+        },
+        {
+          "job": "foundation",
+          "index": 11,
+          "name": "Whitespace check",
+          "sha256": "a54e657c0ece9799ba73db46a88cc431c9478174f5475b3c5d57c5f5d95cf495",
+          "files": []
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "e6c3e67402f9875d8b820dc4040dd4f4aad09f4d1b73f66203896ba672d34538",
+          "files": []
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 3,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 4,
+          "name": "Run complete remote backend-kernel fallback",
+          "sha256": "b24362a460b03705625be5a596ace80baaaf5f7483b64c62cb36b077e5eab340",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "backend-kernel-full",
+          "index": 5,
+          "name": "Publish exact-candidate fallback check",
+          "sha256": "469f75f236b3d4c5241ab87534a00f25e1bf7f50bf519da28f3b753e7a110f0f",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 3,
+          "name": "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+          "sha256": "30122b8f60f64330cfb770f479f2356ce0f8ce9d91665844bef793bfb66f9906",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 4,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 5,
+          "name": "Install pinned WeasyPrint PDF/A backend",
+          "sha256": "c7b74003ae7579358e5f88136ad8df1779b7dedcee654998fe67453a1fd41566",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 6,
+          "name": "Resolve immutable veraPDF image",
+          "sha256": "3cbc5c065346ae5152715abd9ee66c00e693edc1b20de4540f1502e04bd7f8ab",
+          "files": []
+        },
+        {
+          "job": "boat-documents-real",
+          "index": 7,
+          "name": "Prove BOAT production PDF/A-2b path",
+          "sha256": "d49ca9d33ffb6aed1e347dd86e49cb9da207866445d28e0a82c019ed50b29d56"
+        },
+        {
+          "job": "senatran-mock",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+          "files": []
+        },
+        {
+          "job": "senatran-mock",
+          "index": 1,
+          "name": "Set up Docker Buildx",
+          "sha256": "4e3b2946b6a40a4f9a59beec91da1ee2aff4c21626b8c8ed117f32b02739f37b",
+          "files": []
+        },
+        {
+          "job": "senatran-mock",
+          "index": 2,
+          "name": "Build the senatran mock image (GHA layer cache)",
+          "sha256": "28921a5c3b5e727de9c3b9424834dffd4e94343700a1cc824201fb3ed5326d33",
+          "files": []
+        },
+        {
+          "job": "senatran-mock",
+          "index": 3,
+          "name": "Boot the senatran mock (compose smoke)",
+          "sha256": "fba6524d8c7aa228bc740d445c3d1184f8112ed75a47d181a0716b26c2c08766",
+          "files": []
+        },
+        {
+          "job": "senatran-mock",
+          "index": 4,
+          "name": "Dump senatran mock logs on failure",
+          "sha256": "38eade7bd901b3633b0c4529b5a40e2a350a9cb0b7173d19f7f8e2c491cdbfbf",
+          "files": []
+        },
+        {
+          "job": "senatran-mock",
+          "index": 5,
+          "name": "Tear down the senatran mock",
+          "sha256": "1935d31c7b38d5451be5dc5985fe85d9d5bfe7b482c4c1095b4f3d4b697610e0",
+          "files": []
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+          "files": []
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 3,
+          "name": "Install dependencies (workspace root)",
+          "sha256": "db1e35aa46fc584613e939c2d67692d893046a3ee93fa43b185f1f5b38d15d21",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 4,
+          "name": "Check (lint + typecheck + openapi:check + unit)",
+          "sha256": "4f2a1edc400c4058a81c552327d6ceac99a7ef060c0528edcf1cd64cf0111bb5"
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 5,
+          "name": "Reset the database (DDL + deterministic sample seed)",
+          "sha256": "e66ff7efc5df4e257951b3e287cd70cf036c92359ecf50d0d900b90509f8b02c"
+        },
+        {
+          "job": "senatran-mock-tests",
+          "index": 6,
+          "name": "Run the tiered test suite (unit + integration + e2e)",
+          "sha256": "3fe43321915467810ed0a416c0f63f9077889cc037e4b9012bd71b8d31f00aa7"
+        },
+        {
+          "job": "stack-smoke",
+          "index": 0,
+          "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+          "files": []
+        },
+        {
+          "job": "stack-smoke",
+          "index": 1,
+          "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+          "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+          "files": []
+        },
+        {
+          "job": "stack-smoke",
+          "index": 2,
+          "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+          "files": []
+        },
+        {
+          "job": "stack-smoke",
+          "index": 3,
+          "name": "Install dependencies",
+          "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "stack-smoke",
+          "index": 4,
+          "name": "Verify the pinned disposable database image",
+          "sha256": "902d6b79166bc38c6479efc96a30eb8a1fcee58ec8b19b1df1969c1110a9511d",
+          "files": []
+        },
+        {
+          "job": "stack-smoke",
+          "index": 5,
+          "name": "Prepare frontend packages used by the stack",
+          "sha256": "ce3234c0a85b9f12d77c2eed2af1b8c05c40a9b706f7c07a12d71b471c206ae6"
+        },
+        {
+          "job": "stack-smoke",
+          "index": 6,
+          "name": "Run the disposable local stack smoke sequence",
+          "sha256": "dd3001f23d871e4bbff964efeec33cd4c8a0a5c7a4d6e7b1c8463039030015dc",
+          "files": [
+            "package.json"
+          ]
+        },
+        {
+          "job": "stack-smoke",
+          "index": 7,
+          "name": "Stop the disposable local stack",
+          "sha256": "4092d0e5bbc577c9f687e89667cabae4a003d638557936726d5e1d231efb1d50",
+          "files": [
+            "package.json"
+          ]
+        }
+      ]
+    },
+    {
+      "file": ".github/workflows/devai-local-rc-verify.yml",
+      "jobs": [
+        {
+          "name": "verify-attested-rc",
+          "effect": "publication",
+          "permissions": {},
+          "runScripts": []
+        }
+      ],
+      "steps": [
+        {
+          "job": "verify-attested-rc",
+          "index": 0,
+          "name": "Check out candidate as inert data",
+          "sha256": "2564088d4cdb19c64d8b3ab1845af8f178c80eb9ba68a0adb23a8d9e76599714",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 1,
+          "name": "Check out default-branch controls",
+          "sha256": "62b0e5adec89b9ec6bbd0a5efd3eed70b2f95b6f523dd8015b6f192a76d1dae6",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 2,
+          "name": "Set up verifier runtime",
+          "sha256": "d50453121afe926a4974e35bd9ce4ecc58b2adb539b98a1eba1f4f2214b459fc",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 3,
+          "name": "Materialize protected DEVAI verifier package",
+          "sha256": "a3ff91c95b99b9f62bb2fc15112f24a45584e1dd5e7daf86a38965f8421540cd",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 4,
+          "name": "Bind candidate and protected evidence tag",
+          "sha256": "021c2f0c64db13239986fbe2d017c9445d5bf7ded6c041647d81a152e2702105",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 5,
+          "name": "Check out immutable proof commit",
+          "sha256": "1b8a008c09ce4ada400dd7f30b0eb80acd1c115374f649a7c26f9f349bcc949e",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 6,
+          "name": "Materialize inert versioned proof payload",
+          "sha256": "afb8b1c21feebcf5eb3a4f28d3202158f56367795505acbcdba1e726f2c09e8c",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 7,
+          "name": "Reconstruct exact RC task policy",
+          "sha256": "a96feb923517b0075749ddc83c3cb689bbafaaa20e9ccb6aae907a52c43d2d0a",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 8,
+          "name": "Verify complete trusted local RC bundle",
+          "sha256": "c7ea134693c69c74f570ab50d13cef4e5ce20cdeb5d7391a69fee1f9fd977a45",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 9,
+          "name": "Build concise verification artifact",
+          "sha256": "f95fb88abfd9c1dc7eaa2942d64048312eb130ca5a9bac4437cf4e30cedf34f7",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 10,
+          "name": "Upload verification summary",
+          "sha256": "48b68067200275b43233f105a4b05c52dcc5bee81834addf6b1c6abd0f8871dc",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 11,
+          "name": "Publish candidate check",
+          "sha256": "6a5c7cd4c075f80827e21a334c173b2fb3c60e402f4c532e786359602bc559e9",
+          "files": []
+        },
+        {
+          "job": "verify-attested-rc",
+          "index": 12,
+          "name": "Enforce verification result",
+          "sha256": "d2c31f82fcea6edb2bd3d5892aebe74c3c303c2abbe547bdef2a23fcd0f2f3c1",
+          "files": []
+        }
+      ]
+    }
+  ],
+  "reviewInventory": {
+    "schemaVersion": "1.0.0",
+    "status": "unknown",
+    "reason": "WORKFLOW_INVENTORY_INCOMPLETE",
+    "workflows": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "sha256": "415b39c1007d86eb998497835d36cb0cbc877eaf383e9e73cc59b765dfd82627",
+        "status": "unknown",
+        "reason": "WORKFLOW_INVENTORY_INCOMPLETE",
+        "steps": [
+          {
+            "job": "evidence-gate",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "c8668d952fc65278a98a5ee8e28897fbec0160bc6002371e828ee08e7f7079d7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "evidence-gate",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "evidence-gate",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "evidence-gate",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[3]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "evidence-gate",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[4]",
+            "name": "Verify the DEVAI proof chain (fail-closed)",
+            "sha256": "45b9285f2dd708385f9c65ed96c039a873d4e0e7d323634013f6291381ba4b08",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "evidence-gate",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#evidence-gate[5]",
+            "name": "Select exact-tree attested evidence route",
+            "sha256": "d7d263ada28283f1d958f48083108a50179ac099981f572cca1f9df9750b9e84",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "e6c3e67402f9875d8b820dc4040dd4f4aad09f4d1b73f66203896ba672d34538",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[3]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[4]",
+            "name": "Provision real installed native Vitest entrypoint alias",
+            "sha256": "baa3b2dab7b291513b6cc8dd3915cfecccd880992c614f83c5343d45e8263252",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[5]",
+            "name": "Apply isolated fixture DDL",
+            "sha256": "eec675067fbfbf7bd755fe476f8860e19c6a1d1de621cd00505cc09416e21ec3",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 6,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[6]",
+            "name": "Seed isolated fixture database",
+            "sha256": "f5022d6b82cade8ca462afe8223448ff34dd07382a102c1ec245688a6699608f",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 7,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[7]",
+            "name": "Prepare isolated legacy test fixtures",
+            "sha256": "17a404603707e0685b8a15fc2a3b427be8015a8d49fc782df3334f49ee5dd869",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 8,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[8]",
+            "name": "Measure invariant-ch complete semantic population",
+            "sha256": "04bcd39743fc4389e94dee75cc7d2097a3e2921a2388089eaedcb71f336bc82b",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 9,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[9]",
+            "name": "Measure invariant-dash complete semantic population",
+            "sha256": "0567d01f42d07675353fdf48c2abd6321ece63b78934dcefdc86185889152b1c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 10,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[10]",
+            "name": "Measure invariant-est complete semantic population",
+            "sha256": "a1a9f3f4a3caf8b84282ad17153381bd226838e365d5483066750ab80f51283a",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 11,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[11]",
+            "name": "Measure invariant-inf complete semantic population",
+            "sha256": "114bde6601228611b283ffe8194f7bfe7d29668c6fe4f0ead7cc8d2c31702881",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 12,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[12]",
+            "name": "Measure invariant-ops-queue complete semantic population",
+            "sha256": "957fae70cea5c7f95833207b5c7175233fb428ae0968a317b3376270a08d76c3",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 13,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[13]",
+            "name": "Measure invariant-ops-perf complete semantic population",
+            "sha256": "7d879910cccf31ffc739e0aa7c2e42bd8054526984c5e5a6ca4548c685792844",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "invariant-producers",
+            "index": 14,
+            "occurrence": ".github/workflows/ci.yml#invariant-producers[14]",
+            "name": "Measure invariant-portal complete semantic population",
+            "sha256": "0e14bfbc539fa9c83e29ed5604f09751de3e82b881ebdb2cf73b4ce5c14c5029",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#foundation[0]",
+            "name": "Enforce evidence and invariant producer results",
+            "sha256": "cdbb3f21a6920e3d6878e09e519ead13fe2bd7762ab316973a363e691e3965ac",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#foundation[1]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "1c1d5bf429b279224a05225acf76d9565fc182e742dd4448350b3ebc9c976364",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#foundation[2]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#foundation[3]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#foundation[4]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#foundation[5]",
+            "name": "Provision real installed native Vitest entrypoint alias",
+            "sha256": "336fc8ca07bbd64a761e7996edc894dcd1ec8bfd907d4aa90a16b7307c47402a",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 6,
+            "occurrence": ".github/workflows/ci.yml#foundation[6]",
+            "name": "Install documentation dependencies",
+            "sha256": "a4e66cd35b0623a3d29fb40e4135e984dbfff02f4a35a74f6d7ea8069cfa7b48",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 7,
+            "occurrence": ".github/workflows/ci.yml#foundation[7]",
+            "name": "Check (format + typecheck)",
+            "sha256": "ef1605e7e0851c1181fa101342b80c3c174d76402bf2bff32a4328ff56147d7c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 8,
+            "occurrence": ".github/workflows/ci.yml#foundation[8]",
+            "name": "Build and link-check documentation",
+            "sha256": "8fdc21a4b17613dc4f153c69558594e2f2d835366c415eb3b2612a4eba928abb",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 9,
+            "occurrence": ".github/workflows/ci.yml#foundation[9]",
+            "name": "Audit documentation dependencies",
+            "sha256": "9cb38680acb3c5ac6ad3968e247b09f5d3937a2a22343f9304116dd46d3df3e9",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 10,
+            "occurrence": ".github/workflows/ci.yml#foundation[10]",
+            "name": "DEVAI doctor (blocking)",
+            "sha256": "a0404f938eac69c1854ab0c1005426d43d4ba2b1a1f7553067f01aaa5acbf58e",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "foundation",
+            "index": 11,
+            "occurrence": ".github/workflows/ci.yml#foundation[11]",
+            "name": "Whitespace check",
+            "sha256": "a54e657c0ece9799ba73db46a88cc431c9478174f5475b3c5d57c5f5d95cf495",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "e6c3e67402f9875d8b820dc4040dd4f4aad09f4d1b73f66203896ba672d34538",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[3]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[4]",
+            "name": "Run complete remote backend-kernel fallback",
+            "sha256": "b24362a460b03705625be5a596ace80baaaf5f7483b64c62cb36b077e5eab340",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "backend-kernel-full",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#backend-kernel-full[5]",
+            "name": "Publish exact-candidate fallback check",
+            "sha256": "469f75f236b3d4c5241ab87534a00f25e1bf7f50bf519da28f3b753e7a110f0f",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[3]",
+            "name": "actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405",
+            "sha256": "30122b8f60f64330cfb770f479f2356ce0f8ce9d91665844bef793bfb66f9906",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[4]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[5]",
+            "name": "Install pinned WeasyPrint PDF/A backend",
+            "sha256": "c7b74003ae7579358e5f88136ad8df1779b7dedcee654998fe67453a1fd41566",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 6,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[6]",
+            "name": "Resolve immutable veraPDF image",
+            "sha256": "3cbc5c065346ae5152715abd9ee66c00e693edc1b20de4540f1502e04bd7f8ab",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "boat-documents-real",
+            "index": 7,
+            "occurrence": ".github/workflows/ci.yml#boat-documents-real[7]",
+            "name": "Prove BOAT production PDF/A-2b path",
+            "sha256": "d49ca9d33ffb6aed1e347dd86e49cb9da207866445d28e0a82c019ed50b29d56",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[1]",
+            "name": "Set up Docker Buildx",
+            "sha256": "4e3b2946b6a40a4f9a59beec91da1ee2aff4c21626b8c8ed117f32b02739f37b",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[2]",
+            "name": "Build the senatran mock image (GHA layer cache)",
+            "sha256": "28921a5c3b5e727de9c3b9424834dffd4e94343700a1cc824201fb3ed5326d33",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[3]",
+            "name": "Boot the senatran mock (compose smoke)",
+            "sha256": "fba6524d8c7aa228bc740d445c3d1184f8112ed75a47d181a0716b26c2c08766",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[4]",
+            "name": "Dump senatran mock logs on failure",
+            "sha256": "38eade7bd901b3633b0c4529b5a40e2a350a9cb0b7173d19f7f8e2c491cdbfbf",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock[5]",
+            "name": "Tear down the senatran mock",
+            "sha256": "1935d31c7b38d5451be5dc5985fe85d9d5bfe7b482c4c1095b4f3d4b697610e0",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[3]",
+            "name": "Install dependencies (workspace root)",
+            "sha256": "db1e35aa46fc584613e939c2d67692d893046a3ee93fa43b185f1f5b38d15d21",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[4]",
+            "name": "Check (lint + typecheck + openapi:check + unit)",
+            "sha256": "4f2a1edc400c4058a81c552327d6ceac99a7ef060c0528edcf1cd64cf0111bb5",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[5]",
+            "name": "Reset the database (DDL + deterministic sample seed)",
+            "sha256": "e66ff7efc5df4e257951b3e287cd70cf036c92359ecf50d0d900b90509f8b02c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "senatran-mock-tests",
+            "index": 6,
+            "occurrence": ".github/workflows/ci.yml#senatran-mock-tests[6]",
+            "name": "Run the tiered test suite (unit + integration + e2e)",
+            "sha256": "3fe43321915467810ed0a416c0f63f9077889cc037e4b9012bd71b8d31f00aa7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 0,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[0]",
+            "name": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "sha256": "3ef4af68ef144f12dd555f182fb78c286413a5c20503a3491c8a1a7ea3554af7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 1,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[1]",
+            "name": "pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa",
+            "sha256": "acff8a6c84ac19459632458f96f31e6bdd5fa44981bb6aadf08787badf96442c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 2,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[2]",
+            "name": "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "sha256": "d49621b3f53b49ef34641f95026b0851b01e7d9a1d912232b148086fa9b25168",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 3,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[3]",
+            "name": "Install dependencies",
+            "sha256": "e4f38fa23cf97cb526e13a889c16b5772066dd971b3ecad00e028171821111db",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 4,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[4]",
+            "name": "Verify the pinned disposable database image",
+            "sha256": "902d6b79166bc38c6479efc96a30eb8a1fcee58ec8b19b1df1969c1110a9511d",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 5,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[5]",
+            "name": "Prepare frontend packages used by the stack",
+            "sha256": "ce3234c0a85b9f12d77c2eed2af1b8c05c40a9b706f7c07a12d71b471c206ae6",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 6,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[6]",
+            "name": "Run the disposable local stack smoke sequence",
+            "sha256": "dd3001f23d871e4bbff964efeec33cd4c8a0a5c7a4d6e7b1c8463039030015dc",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "stack-smoke",
+            "index": 7,
+            "occurrence": ".github/workflows/ci.yml#stack-smoke[7]",
+            "name": "Stop the disposable local stack",
+            "sha256": "4092d0e5bbc577c9f687e89667cabae4a003d638557936726d5e1d231efb1d50",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          }
+        ]
+      },
+      {
+        "path": ".github/workflows/devai-local-rc-verify.yml",
+        "sha256": "30bb7935a0ad1ad7303217f77ac64e9c0c4c6ae3f70860d7c21f3a14e35964dc",
+        "status": "unknown",
+        "reason": "WORKFLOW_INVENTORY_INCOMPLETE",
+        "steps": [
+          {
+            "job": "verify-attested-rc",
+            "index": 0,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[0]",
+            "name": "Check out candidate as inert data",
+            "sha256": "2564088d4cdb19c64d8b3ab1845af8f178c80eb9ba68a0adb23a8d9e76599714",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 1,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[1]",
+            "name": "Check out default-branch controls",
+            "sha256": "62b0e5adec89b9ec6bbd0a5efd3eed70b2f95b6f523dd8015b6f192a76d1dae6",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 2,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[2]",
+            "name": "Set up verifier runtime",
+            "sha256": "d50453121afe926a4974e35bd9ce4ecc58b2adb539b98a1eba1f4f2214b459fc",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 3,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[3]",
+            "name": "Materialize protected DEVAI verifier package",
+            "sha256": "a3ff91c95b99b9f62bb2fc15112f24a45584e1dd5e7daf86a38965f8421540cd",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 4,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[4]",
+            "name": "Bind candidate and protected evidence tag",
+            "sha256": "021c2f0c64db13239986fbe2d017c9445d5bf7ded6c041647d81a152e2702105",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 5,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[5]",
+            "name": "Check out immutable proof commit",
+            "sha256": "1b8a008c09ce4ada400dd7f30b0eb80acd1c115374f649a7c26f9f349bcc949e",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 6,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[6]",
+            "name": "Materialize inert versioned proof payload",
+            "sha256": "afb8b1c21feebcf5eb3a4f28d3202158f56367795505acbcdba1e726f2c09e8c",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 7,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[7]",
+            "name": "Reconstruct exact RC task policy",
+            "sha256": "a96feb923517b0075749ddc83c3cb689bbafaaa20e9ccb6aae907a52c43d2d0a",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 8,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[8]",
+            "name": "Verify complete trusted local RC bundle",
+            "sha256": "c7ea134693c69c74f570ab50d13cef4e5ce20cdeb5d7391a69fee1f9fd977a45",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 9,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[9]",
+            "name": "Build concise verification artifact",
+            "sha256": "f95fb88abfd9c1dc7eaa2942d64048312eb130ca5a9bac4437cf4e30cedf34f7",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 10,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[10]",
+            "name": "Upload verification summary",
+            "sha256": "48b68067200275b43233f105a4b05c52dcc5bee81834addf6b1c6abd0f8871dc",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 11,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[11]",
+            "name": "Publish candidate check",
+            "sha256": "6a5c7cd4c075f80827e21a334c173b2fb3c60e402f4c532e786359602bc559e9",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          },
+          {
+            "job": "verify-attested-rc",
+            "index": 12,
+            "occurrence": ".github/workflows/devai-local-rc-verify.yml#verify-attested-rc[12]",
+            "name": "Enforce verification result",
+            "sha256": "d2c31f82fcea6edb2bd3d5892aebe74c3c303c2abbe547bdef2a23fcd0f2f3c1",
+            "closure": {
+              "status": "unknown",
+              "files": null,
+              "reason": "WORKFLOW_INVENTORY_CLOSURE_UNPROVED"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

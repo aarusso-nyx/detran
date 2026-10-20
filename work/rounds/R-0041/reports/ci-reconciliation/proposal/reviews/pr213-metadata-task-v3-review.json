@@ -1,0 +1,35 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "major",
+      "blocking": true,
+      "summary": "The V3 source scope and tsconfig mapping still leave out the shared domain, which V2 review already flagged as blocking. V3 limits the transform to backend/app/src and backend/domains/<grupo>/<pacote>/src, maps each file to backend/app/tsconfig.json or 'o tsconfig do pacote de domínio', and says to return null for paths outside that scope. Verified at b3b66c6d: workspace.config.mjs:284 aliases @detran/shared to backend/domains/shared/src/index.ts, which is only two levels below backend/domains. Its tsconfig is backend/domains/shared/tsconfig.json at depth 4, while all 50 other domain tsconfigs are at depth 5. AppModule imports DetranPolicyGuard from @detran/shared (app.module.ts:49) and registers it at :948. Its constructor in backend/domains/shared/src/policy.guard.ts:19 takes Reflector with no @Inject. Under V3 as written, that file stays on the Vite7/esbuild path with no design:paramtypes. Nest then builds the guard with no arguments, reflector is undefined, and canActivate throws on the ordinary ops-perf requests. That is the same class of failure the packet says it prevents, and it would hit the full-3 gate. Fix: add backend/domains/shared/src -> backend/domains/shared/tsconfig.json to the closed mapping, which has the decorator flags, ES2023, NodeNext and no extends. Alternatively, define the rule as the nearest tracked package tsconfig inside backend/domains without crossing the domain root. Then add a shared-guard case to the Inspector test."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "V3 still does not require proof through the full Vite chain, which V2 review also raised. With enforce:'pre', the helper's ESM output for a .ts id goes through Vite 7's default vite:esbuild transform again, and the sourcemaps are chained. That second pass is most likely harmless, because decorators are already lowered to __decorate/__metadata. Even so, acceptance item 5 only proves the helper's own output and the fixture's DI. Require the regression to load the fixture through a real Vite/Vitest pipeline built from the ops-perf config plus the plugin, and to assert design:paramtypes and successful Test.createTestingModule compilation after that whole chain."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The packet does not pin how TypeScript is resolved. Both typescript@5.9.3 and typescript@6.0.3 are installed (V2 review info). V3 says only 'TypeScript já instalado pelo lock' and relies on the 6.0.3 diagnosis. It should name the exact resolution origin, for example createRequire anchored at backend/app/package.json or the root link, and require the RED/GREEN receipts to record the resolved version and realpath. Otherwise the module-format and metadata behaviour could depend on which copy resolves."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "V3 resolves V1 and V2 findings 1 and 3–5. On ESM, it authorizes module ESNext plus moduleResolution Bundler in memory only, and says to reject CommonJS output. Options are resolved per file using AST decorator detection. Decorated files without the flags are refused, and ops/core returns null with no flags injected (ops/core/tsconfig.json has no decorator flags, and the other 50 configs plus app do). The helper gets a closed literal SHA256 pin inside the existing ordinary-workloads test. @nestjs and reflect-metadata resolve through createRequire from backend/app/package.json inside the existing devai:test glob, and a MODULE_NOT_FOUND failure does not count as RED. Verified: no app or domain tsconfig declares extends or references, so the standalone-config contract holds."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The 4-path scope is complete for hash consumers. Verified: ops-perf.config.mjs hashes to d7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e, and its only live consumer is ci-isolation.test.mjs:94, asserted at :289-293. The other occurrences are historical R-0041 and inspector-red records, which stay unedited. The current config has no plugins, root backend/app, the aliases and include unchanged, and testTimeout 120000. Adding only the import and plugins entry leaves the test settings byte-exact. Hash RED→GREEN plus a separate functional RED→GREEN and the full-3 DB gate are correctly treated as non-substitutable. packages/{api-clients,sefaz-adapter,senatran-adapter,ui}/src have no @Injectable or @Controller, so leaving them out is correct."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Packet integrity checked: the SHA256 is 0a7a4df183776d15352cbc63c22ec8c41ef58b524856742ab426cdcc1722b8db and HEAD is b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab. The V1 FAIL (/tmp/pr213-metadata-task-review.json) and V2 FAIL (/tmp/pr213-metadata-task-v2-review.json) are both present. V3 does not mention the V2 result. Its shared-domain blocker is not fixed, and its full-chain and TypeScript-origin points are not addressed, so V3 cannot be accepted as written. The fix is a small V4 amendment to the mapping and acceptance text. No new paths or authority are needed."
+    }
+  ]
+}

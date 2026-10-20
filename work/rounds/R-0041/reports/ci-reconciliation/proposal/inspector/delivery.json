@@ -1,0 +1,197 @@
+{
+  "status": "FOCUSED_PASS_FULL3_AND_CI_PARENT_OWNED",
+  "head": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+  "ownedPaths": [
+    "tools/devai/tests/nest-metadata-transform.test.mjs",
+    "tools/devai/tests/ci-isolation.test.mjs"
+  ],
+  "sourceHashes": {
+    "tools/devai/tests/nest-metadata-transform.test.mjs": "ebd2e15a40fdf7510dbc533b34360647dd997b6383f42cf486ca32d1f4b605ca",
+    "tools/devai/tests/ci-isolation.test.mjs": "003615a7f812c121dfd37cb17a91700abb3c3b15bdf42eb2bdd16ea812b58a0d",
+    "tools/security/invariants/nest-metadata-transform.mjs": "333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d",
+    "tools/security/invariants/ops-perf.config.mjs": "7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8"
+  },
+  "functionalRed": {
+    "tests": 2,
+    "failed": 2,
+    "skipped": 0,
+    "actualCause": "Actual Vite7 SSR-loaded production DashboardStreamService and DetranPolicyGuard design:paramtypes undefined; actual Nest compile Dashboard index0 error retained."
+  },
+  "hashRed": {
+    "tests": 11,
+    "passed": 10,
+    "failed": 1,
+    "skipped": 0,
+    "actualCause": "ops-perf config d799 old expectation versus7cfe actual bytes"
+  },
+  "focusedGreen": {
+    "tests": 36,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "newTestCases": 25,
+    "ciIsolationCases": 11
+  },
+  "checks": {
+    "focused-final": {
+      "argv": [
+        "node",
+        "--test",
+        "tools/devai/tests/nest-metadata-transform.test.mjs",
+        "tools/devai/tests/ci-isolation.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 2.5268568992614746,
+      "head": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+      "nodeVersion": "v24.22.0",
+      "stdoutSha256": "a5b277b6eaaac2c298235c8add75f6083f417d741ccb8c9b7e888c15669b5f56",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "test-format": {
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "tools/devai/tests/nest-metadata-transform.test.mjs",
+        "tools/devai/tests/ci-isolation.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 0.3902137279510498,
+      "head": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+      "nodeVersion": "v24.22.0",
+      "stdoutSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "stderrSha256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    "test-syntax": {
+      "argv": [
+        "node",
+        "--check",
+        "tools/devai/tests/nest-metadata-transform.test.mjs"
+      ],
+      "cwd": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran",
+      "exitCode": 0,
+      "durationSeconds": 0.0326383113861084,
+      "head": "b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab",
+      "nodeVersion": "v24.22.0",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "scopeNotes": [
+    "Only one existing configSha256 literal and one added fixed helper SHA assertion changed in ci-isolation",
+    "Other eight config pins, nine test source pins, workloads, command/assertion/timeout controls unchanged",
+    "No package/lock/product/source/evidence/round/Git/remote changes by Inspector",
+    "Initial exploratory CJS SSR token-loading error is preserved separately; it is not claimed as functional metadata RED",
+    "Full devai:test and broad checks not run because parent requested hold pending independent blueprint registry consistency",
+    "Full original3 ordinary DB perf and new exact-head CI require separate actual results from parent/Engineer; focused tests grant no native standing"
+  ],
+  "files": {
+    "final-nest-metadata-transform.test.mjs": {
+      "sha256": "ebd2e15a40fdf7510dbc533b34360647dd997b6383f42cf486ca32d1f4b605ca",
+      "byteLength": 16501
+    },
+    "final-ops-perf.config.mjs": {
+      "sha256": "7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8",
+      "byteLength": 720
+    },
+    "ci-isolation-config-hash-red.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "focused-final.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "initial-harness.stdout": {
+      "sha256": "ba7c46f087c4eb857b5a3db356a1a009d53fb0c116dff4b9c2daeafb081a77b8",
+      "byteLength": 7887
+    },
+    "functional-red.stdout": {
+      "sha256": "8a966d5cfda771f736fec25852dcea6ef3454438da89347919c6ea2ad282caca",
+      "byteLength": 4333
+    },
+    "test-format.stderr": {
+      "sha256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc",
+      "byteLength": 310
+    },
+    "test-red.mjs": {
+      "sha256": "ea3ebcbd8546604bf8d4ea0a8122d2c6ec7b1b17068b2e2629f0f12c10366133",
+      "byteLength": 5111
+    },
+    "test-syntax.json": {
+      "sha256": "1e17b0419145446c4d042dd3033eb01ffeeb07659503cd311bb7ccb810765478",
+      "byteLength": 491
+    },
+    "final-nest-metadata-transform.mjs": {
+      "sha256": "333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d",
+      "byteLength": 5789
+    },
+    "test-format.json": {
+      "sha256": "8c27b0582812933f26193d4b370ecba9338259d23805d920878a8be23ff42532",
+      "byteLength": 566
+    },
+    "functional-red.json": {
+      "sha256": "17d751437e060b528bb1b20f509491f56179d432ee90c6bf33082417548f8e06",
+      "byteLength": 1363
+    },
+    "functional-red.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "initial-harness.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "focused-final.stdout": {
+      "sha256": "a5b277b6eaaac2c298235c8add75f6083f417d741ccb8c9b7e888c15669b5f56",
+      "byteLength": 4845
+    },
+    "test-format.stdout": {
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "byteLength": 66
+    },
+    "config-before.mjs": {
+      "sha256": "d7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e",
+      "byteLength": 605
+    },
+    "ci-isolation.diff": {
+      "sha256": "3a72bb2c7bc2adb77c0bf8b50db7b8428a5a4d5b15c0a463b234775a46fad262",
+      "byteLength": 1302
+    },
+    "ci-isolation-config-hash-red.stdout": {
+      "sha256": "32c71c00d5586d63eed00e96dfee31e289192aab0b3020b7a2986c9cec052df3",
+      "byteLength": 2550
+    },
+    "ci-isolation-before.mjs": {
+      "sha256": "038fe1abf8ff757bf52fe5df1dfc152e5fff5bff69a51326edf64c9d0f58a73f",
+      "byteLength": 18903
+    },
+    "focused-final.json": {
+      "sha256": "2f69e8c98ab621b85c51f9cbcabffb080e43da54d9216f536e1f414b73d670c6",
+      "byteLength": 537
+    },
+    "final-ci-isolation.test.mjs": {
+      "sha256": "003615a7f812c121dfd37cb17a91700abb3c3b15bdf42eb2bdd16ea812b58a0d",
+      "byteLength": 19222
+    },
+    "test-syntax.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "nest-green-attempt1.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "nest-green-attempt1.stdout": {
+      "sha256": "bdeccf6b1af7ea18b674c33e4ab6dab549e6af69c1c2dae9540ff886538c71bb",
+      "byteLength": 3687
+    },
+    "test-syntax.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    }
+  }
+}

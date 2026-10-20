@@ -1,0 +1,69 @@
+
+> detran@0.0.1 law:test /Volumes/Development/.codex/worktrees/c5-c8-governance/detran
+> node --test tools/law/tests/*.test.mjs
+
+✔ dado fixture temporária quando prepara os diretórios então cria os caminhos de corpus exigidos (143.238542ms)
+✔ dado schema copiado e hash correspondente quando verifica a regra (a) então não há violação (a) (46.79175ms)
+✔ dado schema ausente quando verifica a regra (a) então aponta a cópia ausente (50.774458ms)
+✔ dado schema extra quando verifica a regra (a) então aponta o arquivo fora do roster (31.41925ms)
+✔ dado schema alterado quando verifica a regra (a) então aponta bytes divergentes (49.355833ms)
+✔ dado sha divergente no manifesto quando verifica a regra (a) então aponta o hash incorreto (30.71125ms)
+✔ dado manifesto sem schema do roster quando verifica a regra (a) então aponta o roster divergente (73.573458ms)
+✔ dado manifesto com schema extra quando verifica a regra (a) então aponta o roster divergente (72.759792ms)
+✔ dado manifesto JSON inválido quando verifica a regra (a) então aponta manifesto inválido (26.100625ms)
+✔ dado OD-R19-001 registrado na seção canônica quando verifica a regra (b) então não há violação (b) (86.709209ms)
+✔ dado cabeçalho Decisão quando a âncora remove o diacrítico então rejeita a aproximação (35.407334ms)
+✔ dado OD anterior em outra seção do registro quando verifica a regra (b) então resolve a linha da tabela (19.210958ms)
+✔ dado OD-R19 fora da seção canônica quando verifica a regra (b) então rejeita a linha deslocada (33.628875ms)
+✔ dado provenance sem fonte quando verifica a regra (b) então aponta o ID não resolvido (29.6395ms)
+▶ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente
+  ✔ ID WF-INF-999 (85.807875ms)
+  ✔ ID UC-INF-999 (44.147167ms)
+  ✔ ID JRN-INF-999 (36.819958ms)
+  ✔ ID APP-MISSING (36.664209ms)
+  ✔ ID ADR-9999 (34.365ms)
+✔ dado ID de cada família sem fonte quando verifica a regra (b) então aponta cada origem ausente (240.461292ms)
+✔ dado âncora ausente no documento quando verifica a regra (b) então aponta a referência inválida (78.270333ms)
+✔ dado documento de autoridade ausente quando verifica a regra (b) então aponta a fonte inexistente (39.892209ms)
+✔ dado OD não registrado quando verifica a regra (b) então aponta a decisão não resolvida (58.746666ms)
+✔ dado README vigente quando verifica a regra (e) então não há violação (e) (17.802375ms)
+✔ dado README-placeholder sem conteúdo autoral quando verifica a regra (e) então placeholders isolados são permitidos (25.269375ms)
+✔ dado README com cada frase obsoleta quando verifica a regra (e) então aponta ambas (37.277458ms)
+✔ dado README de jornada obsoleto com arquivo descendente quando verifica a regra (e) então aponta a frase (32.446875ms)
+✔ dado README autoral que mantém frase obsoleta quando verifica a regra (e) então aponta a frase (31.650208ms)
+✔ dado termo e GE correspondentes quando verifica a regra (c) então aceita o par (53.24375ms)
+✔ dado termo fonte sem GE quando verifica a regra (c) então aponta a ausência (40.874167ms)
+✔ dado GE sem termo no domain.md quando verifica a regra (c) então aponta a entrada órfã (76.273834ms)
+✔ dado JRN com JNY correspondente quando verifica a regra (d) então não marca o par como órfão (31.880625ms)
+✔ dado JRN sem JNY quando verifica a regra (d) então aponta a jornada fonte sem par (82.187125ms)
+✔ dado JNY sem JRN quando verifica a regra (d) então aponta a jornada DEVAI órfã (25.363875ms)
+✔ dado UC com entrada no bundle correspondente quando verifica a regra (d) então não marca o caso como órfão (30.335625ms)
+✔ dado UC sem entrada em bundle quando verifica a regra (d) então aponta o caso fonte sem par (56.566792ms)
+✔ dado caso no bundle sem UC fonte quando verifica a regra (d) então aponta a entrada órfã (66.303375ms)
+✔ dado dois GE com termo repetido sem distinção de caixa então rejeita o duplicado [MUTATION:GLOSSARY_TERM_DUPLICATE] (108.978541ms)
+✔ dado GE fora de draft quando verifica o glossário então rejeita o status [MUTATION:GLOSSARY_STATUS_INVALID] (37.060458ms)
+✔ dado GE sem provenance quando verifica o glossário então rejeita a origem ausente [MUTATION:GLOSSARY_PROVENANCE_MISSING] (117.318083ms)
+✔ dado GE com invariant inexistente então rejeita o vínculo não resolvido [MUTATION:GLOSSARY_INVARIANT_UNRESOLVED] (117.216875ms)
+✔ dado JNY com ID trocado para JRN-PEC-001 então rejeita o mapa fixo [MUTATION:JOURNEY_DIVERGENT_MAPPING] (99.752125ms)
+✔ dado JNY com título divergente da fonte então rejeita a jornada [MUTATION:JOURNEY_DIVERGENT_TITLE] (194.960666ms)
+✔ dado UC com título divergente da fonte então rejeita a entrada [MUTATION:USE_CASE_DIVERGENT_TITLE] (210.323958ms)
+✔ dado UC em bundle diferente da pasta fonte então rejeita o destino [MUTATION:USE_CASE_DIVERGENT_BUNDLE] (139.170542ms)
+✔ dado ID de caso repetido em bundles então rejeita a duplicata [MUTATION:BUNDLE_ID_DUPLICATE] (43.8925ms)
+✔ dado ator ausente da lista roles do bundle então rejeita o papel [MUTATION:USE_CASE_ROLE_UNDECLARED] (61.272667ms)
+✔ dado UC sem atores então rejeita a entrada vazia [MUTATION:USE_CASE_DIVERGENT_EMPTY_ACTORS] (35.217709ms)
+✔ dado JNY sem steps então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_steps] (22.284834ms)
+✔ dado JNY sem AC então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_AC] (19.020833ms)
+✔ dado JNY sem persona então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_sem_persona] (34.224041ms)
+✔ dado JNY status não draft então rejeita conteúdo incompleto [MUTATION:JOURNEY_CONTENT_INCOMPLETE_status_não_draft] (32.736916ms)
+✔ dado 39 JRN quando verifica o total da fonte então rejeita a contagem divergente [MUTATION:JOURNEY_SOURCE_COUNT_DIVERGENT] (110.85975ms)
+✔ dado 40 JRN e 39 JNY quando verifica o total de saídas então rejeita a contagem divergente [MUTATION:JOURNEY_OUTPUT_COUNT_DIVERGENT] (284.807833ms)
+✔ dado 109 UC fontes e 109 bundles quando verifica total de fontes então rejeita a contagem divergente [MUTATION:USE_CASE_SOURCE_COUNT_DIVERGENT] (273.965416ms)
+✔ dado 110 UC fontes e 109 bundles quando verifica total de saídas então rejeita a contagem divergente [MUTATION:USE_CASE_OUTPUT_COUNT_DIVERGENT] (252.073375ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 56
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4223.002542

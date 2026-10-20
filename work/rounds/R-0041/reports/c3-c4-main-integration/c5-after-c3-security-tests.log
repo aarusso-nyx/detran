@@ -1,0 +1,77 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 security:exports:test /Volumes/Development/.codex/worktrees/c5-c8-governance/detran
+> node --import tsx --test tools/security/tests/security-exporters.test.ts tools/security/tests/security-export-checker.test.mjs tools/security/tests/prepare-security-inventories.test.mjs
+
+✔ canonical producer invokes only registered Architect write action, with no persistence/publish bypass (5.594833ms)
+✔ complete REVIEW produces an artifact admission while preserving original verdict, exit and raw streams (4.13625ms)
+✔ complete PASS and seven verified up-to-date bodies are accepted (0.705625ms)
+✔ process errors, interruption, absent exit and arbitrary nonzero exits reject (1.134458ms)
+✔ truncated, non-JSON and missing raw output reject (0.254083ms)
+✔ error/unknown native envelope cannot be hidden by successful process completion (0.284542ms)
+✔ READINESS FAIL remains rejected even if all body metrics claim completeness (0.097667ms)
+✔ dirty candidate and dirty-source UNKNOWN cannot acquire admission (0.162708ms)
+✔ partial, missing, overcounted or errored generation rejects (0.473375ms)
+✔ each required producer must have actual PASS or REVIEW standing (2.483667ms)
+✔ exact HEAD, tree and generated body digest are mandatory (2.327583ms)
+✔ dry run, excluded member, different action and missing write consent reject (0.350916ms)
+✔ contradictory exits, error findings and malformed embedded readings reject (0.225542ms)
+✔ I/O main accepts complete native body hashes, projections and current manifest metadata (14.777458ms)
+✔ I/O main accepts source-equivalent up-to-date bodies without requiring wall-clock freshness (9.843875ms)
+✔ I/O main refuses dirty preflight without invoking producer or writing any capture (9.316416ms)
+✔ I/O main refuses candidate change after producer and preserves complete raw streams (4.539334ms)
+✔ I/O main refuses post-generation dirtiness and preserves raw capture (3.543208ms)
+✔ I/O main rejects a manifest whose actual bytes do not match the native digest (6.774542ms)
+✔ I/O main rejects missing generated bodies and preserves raw capture (5.925709ms)
+✔ I/O main rejects tampered inventory_api body, including fields outside native summary projection (7.157042ms)
+✔ I/O main rejects tampered inventory_data_model body, including fields outside native summary projection (7.316833ms)
+✔ I/O main rejects tampered inventory_data_handling body, including fields outside native summary projection (11.216167ms)
+✔ I/O main rejects contradictory native summary digest even if complete body bytes match (6.232083ms)
+✔ I/O main rejects internally hashed body with stale generatedAt relative to current manifest (4.977208ms)
+✔ I/O main rejects different sourceRepo even if body SHA was quoted consistently (11.059542ms)
+✔ I/O main retains invalid child JSON and stderr before refusing generation (9.367666ms)
+✔ I/O main retains child process errors before refusing generation (9.939666ms)
+✔ native admission requires all three complete-body and producer-projection digests (0.698333ms)
+✔ I/O main refuses wrong manifest HEAD even if its actual SHA is quoted consistently (5.181542ms)
+✔ I/O main refuses invalid manifest timestamp even with a consistent whole-body digest (4.516125ms)
+✔ actual canonical snapshots validate while explicitly disclaiming native regeneration (656.346542ms)
+✔ missing explicit native inputs fail instead of silently skipping production (126.794333ms)
+✔ an additional public application handler cannot bypass individual control review (292.093584ms)
+✔ snapshots-only cannot masquerade as partial native regeneration (124.847875ms)
+✔ full real CLI validates three explicit fixture bodies and both deterministic exporters (2110.484375ms)
+✔ canonical snapshot schema rejects an invalid population type (224.776167ms)
+✔ canonical snapshot schema rejects unexpected nested properties (296.261583ms)
+✔ schema rejects a fabricated runtime proof or an approved legal conclusion (462.979416ms)
+✔ supplied native body with omitted handler fails actual source population matching (1326.693791ms)
+✔ supplied native duplicate identity fails even when its source handler is distinct (1254.568292ms)
+✔ supplied native stale handler coordinates fail actual exporter check (1516.931959ms)
+✔ supplied native model and PII semantic mismatch fails without dropping a field (2295.228875ms)
+✔ explicit input native schema rejects missing capture metadata (345.729916ms)
+✔ tampered population digest passes shape but fails deterministic reproduction (1919.688792ms)
+✔ tampered conditional policy semantics cannot be accepted just because shape is valid (1548.798041ms)
+✔ changed actual source bytes reject stale provenance before native reproduction (249.675041ms)
+✔ liar population totals reject even if all individual snapshot row types are valid (328.957959ms)
+✔ authorization preserves policy conditions, all populations and exact source provenance (62.988417ms)
+✔ authorization public callback preserves guard review without granting runtime proof (25.230542ms)
+✔ authorization rejects omitted source endpoints and duplicate native identities (31.598ms)
+✔ authorization rejects stale method, path, line and binding coordinates (70.090625ms)
+✔ authorization cannot positively bind an unresolved nonliteral route (21.969083ms)
+✔ authorization is deterministic and changes provenance when an actual control source changes (43.867917ms)
+✔ PII union retains blueprint-only fields and does not manufacture legal facts (21.856083ms)
+✔ PII rejects mismatched populations, stale column semantics and source coordinates (32.105625ms)
+✔ PII rejects duplicate SQL tables and duplicate column identities (22.435916ms)
+✔ PII missing blueprint column remains an explicit mapping gap (16.806792ms)
+✔ PII contradictory classifications and retention remain conflicts with provenance (23.014792ms)
+✔ PII determinism and source hash changes preserve quoted classification provenance (64.077083ms)
+✔ PII source namespace must match the inventory table rather than only its unqualified name (52.657208ms)
+✔ PII conflicting purpose and legal sources remain explicit pending conflicts (36.262875ms)
+✔ PII quoted legal basis is explicitly unvalidated even when a source supplies one (30.217708ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 63
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16859.090916

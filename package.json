@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm security:exports:test && pnpm security:exports:check -- --snapshots-only && pnpm devai:test && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build",
+    "check": "pnpm format:check && pnpm verify:archival-pc-guard && pnpm verify:stynx-pin && pnpm test:stynx-pin && pnpm test:stack && pnpm law:test && pnpm security:exports:test && pnpm security:exports:check -- --snapshots-only && pnpm devai:test && pnpm security:history:check && pnpm verify:law-corpus && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm verify:state-index && pnpm verify:rounds-index && pnpm test:rounds-index && pnpm verify:proof-anchors && pnpm test:state-index && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm test:boat-transitions && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm --filter @detran/boat-mobile build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build && pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build && pnpm --filter @detran/teat-mobile lint && pnpm --filter @detran/teat-mobile test && pnpm --filter @detran/teat-mobile build && pnpm --filter @detran/teat-web lint && pnpm --filter @detran/teat-web test && pnpm --filter @detran/teat-web build && pnpm --filter @detran/boat-mobile lint && pnpm --filter @detran/boat-mobile test && pnpm --filter @detran/boat-mobile build && pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "law:test": "node --test tools/law/tests/*.test.mjs",
@@ -91,6 +91,7 @@
     "verify:rounds-index": "node tools/devai/render-rounds-index.mjs --check",
     "test:rounds-index": "node --test tools/devai/tests/render-rounds-index.test.mjs",
     "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+    "security:history:check": "node tools/security/verify-historical-compatibility.mjs && node tools/security/schema-citation-census.mjs && node --test tools/security/tests/historical-compatibility.test.mjs tools/security/tests/schema-citation-census.test.mjs",
     "security:exports:check": "node tools/security/check-security-exports.mjs",
     "security:exports:test": "node --import tsx --test tools/security/tests/security-exporters.test.ts tools/security/tests/security-export-checker.test.mjs tools/security/tests/prepare-security-inventories.test.mjs"
   },
@@ -105,6 +106,7 @@
     "prettier": "^3.5.3",
     "tsx": "^4.23.13",
     "typescript": "^6.0.3",
+    "vite": "7.3.6",
     "vitest": "4.1.11"
   },
   "pnpm": {
@@ -134,7 +136,9 @@
       "postcss@8.5.26>source-map-js": "1.2.2",
       "sass@1.101.0>source-map-js": "1.2.2",
       "sass@1.103.1>source-map-js": "1.2.2",
-      "superagent@10.3.0>qs": "6.16.0"
+      "superagent@10.3.0>qs": "6.16.0",
+      "vitest@4.1.11>vite": "7.3.6",
+      "vite@7.3.6>rollup": "4.64.5"
     }
   }
 }

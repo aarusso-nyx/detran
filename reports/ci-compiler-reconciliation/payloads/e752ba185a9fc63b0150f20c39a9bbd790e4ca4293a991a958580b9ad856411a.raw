@@ -1,0 +1,12 @@
+const fs = require('node:fs');
+const net = require('node:net');
+const path = require('node:path');
+const root = process.env.PORTAL_UNIT_DIAGNOSTIC_CAPTURE;
+if (!root || !path.isAbsolute(root)) throw new Error('DIAGNOSTIC_CAPTURE_REQUIRED');
+for (const [target, key, label] of [[net.Server.prototype,'listen','listen'],[net.Socket.prototype,'connect','connect']]) {
+  target[key] = function () {
+    const value = {pid:process.pid,kind:label,observedAt:new Date().toISOString(),stack:new Error('PORTAL_UNIT_NETWORK_REFUSED').stack};
+    fs.appendFileSync(path.join(root,'network-guard-'+process.pid+'.jsonl'),JSON.stringify(value)+'\n');
+    throw new Error('PORTAL_UNIT_NETWORK_REFUSED:'+label);
+  };
+}

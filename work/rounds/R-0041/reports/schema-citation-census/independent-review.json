@@ -1,0 +1,61 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 339,
+      "summary": "The CLI entry check compares path.resolve(process.argv[1]) with fileURLToPath(import.meta.url). By default Node resolves the main module through realpath, so starting the script through a symlinked path (for example a symlinked worktree, /tmp vs /private/tmp, or a linked bin) makes the check false. The census then never runs, stdout is empty and the exit code is 0. A gate that only looks at the exit code would read that as success. Compare realpaths on both sides, or fail closed. This matters before the separate CI wiring step.",
+      "blocking": false
+    },
+    {
+      "severity": "medium",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 301,
+      "summary": "The population is taken from the Git index, but the bytes are read from the working tree, and the index blob OID (entry.blob) is collected and then dropped. A modified or staged-but-different working-tree file is reported as complete:true with a working-tree sha256. Nothing in the output says the bytes differ from the tracked blob, so a 'tracked population' census can't be tied to a commit. Emit the blob OID and a worktree-matches-index flag (e.g. git hash-object compared to entry.blob), or record the working-tree basis explicitly in gaps.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 189,
+      "summary": "Completeness only holds for an implicit matching grammar: uppercase, 3–4 digits, uppercase namespace segments. Strings like ADR-12345, ADR-14, adr-014, ADR-scr-0021, ADR 014 or Unicode-hyphen forms are skipped without any error. 'ADR-2024-001' is captured as ADR-2024. The regex/grammar isn't recorded in the report, so a consumer can't tell what 'complete' covers. Put the expression in the output or in gaps.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 109,
+      "summary": "The path filter /^law\\/schemas\\/.+\\.json$/ has no 's' flag, so a tracked path containing a newline is dropped from declaredPopulation without any error. The selector is also case-sensitive (*.JSON is excluded). Both are edge cases, but they shrink the population silently instead of refusing.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 39,
+      "summary": "TextDecoder with ignoreBOM=false silently strips a leading UTF-8 BOM. Plain JSON.parse would reject one, so BOM-prefixed schemas are accepted, and stringOffset values refer to the decoded text, not the bytes. The sha256 still covers the raw bytes, so this is only a gap in documentation and strictness.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 260,
+      "summary": "providerObservation's catch-all turns every failure into status 'source-unavailable'. That covers a malformed or duplicate-key devai package.json, a null manifest (TypeError), and EACCES. Corrupted provider metadata therefore looks the same as a genuinely absent source file. It doesn't affect complete, which is by design, but it loses diagnostic precision.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/schema-citation-census.mjs",
+      "line": 250,
+      "summary": "packageJsonPath and sourcePath are absolute physical paths: the worktree plus the pnpm store, including the user's home or volume path. The report is therefore deterministic only on one machine, and it exposes local filesystem layout if it is later published as evidence. Repo-relative or package-relative paths would be portable.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "file": "tools/security/tests/schema-citation-census.test.mjs",
+      "line": 350,
+      "summary": "No test covers these explicit refusal paths: TRACKED_POPULATION_CHANGED, UNMERGED_INPUT (stage≠0), REPOSITORY_ROOT_REQUIRED (repoRoot given as a subdirectory), TRACKED_INPUT_NOT_REGULAR for gitlink mode 160000, CLI INVALID_ARGUMENTS, and the 'dependencies'/'items'-array context branches. The guards look correct when read, but nothing exercises them.",
+      "blocking": false
+    }
+  ]
+}
