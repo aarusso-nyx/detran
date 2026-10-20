@@ -545,6 +545,171 @@ function assertClosedCompilationStages(records, targets, nonTarget) {
   );
 }
 
+const canonicalControllerSpecs = [
+  {
+    name: 'RaitWorklistCommandsController',
+    file: 'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-commands.controller.ts',
+    service: 'RaitWorklistCommandService',
+    serviceFile:
+      'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts',
+    field: 'service',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitSessionCommandsController',
+    file: 'backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts',
+    service: 'RaitSessionCommandService',
+    serviceFile:
+      'backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts',
+    field: 'service',
+    negativeCrud: false,
+  },
+  {
+    name: 'DashboardStreamController',
+    file: 'backend/app/src/dashboard-stream.controller.ts',
+    service: null,
+    serviceFile: null,
+    field: null,
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitCaseScopedReadsController',
+    file: 'backend/domains/inf/rait-case/src/handwritten/rait-case-scoped-reads.controller.ts',
+    service: 'RaitCaseScopeService',
+    serviceFile:
+      'backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts',
+    field: 'scope',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitCaseCommandsController',
+    file: 'backend/domains/inf/rait-case/src/handwritten/rait-case-commands.controller.ts',
+    service: 'RaitCaseCommandService',
+    serviceFile:
+      'backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts',
+    field: 'service',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitInquiryCommandsController',
+    file: 'backend/domains/inf/rait-case/src/handwritten/rait-inquiry-commands.controller.ts',
+    service: 'RaitInquiryCommandService',
+    serviceFile:
+      'backend/domains/inf/rait-case/src/handwritten/rait-inquiry-command.service.ts',
+    field: 'service',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitAdmissibilityCommandsController',
+    file: 'backend/domains/inf/rait-case/src/handwritten/rait-admissibility-commands.controller.ts',
+    service: 'RaitAdmissibilityCommandService',
+    serviceFile:
+      'backend/domains/inf/rait-case/src/handwritten/rait-admissibility-command.service.ts',
+    field: 'service',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitWorklistScopedReadsController',
+    file: 'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-scoped-reads.controller.ts',
+    service: 'RaitCaseScopeService',
+    serviceFile:
+      'backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts',
+    field: 'scope',
+    negativeCrud: false,
+  },
+  {
+    name: 'RaitVoteController',
+    file: 'backend/domains/inf/rait-session/src/controllers/rait-vote.controller.ts',
+    service: 'RaitVoteService',
+    serviceFile:
+      'backend/domains/inf/rait-session/src/services/rait-vote.service.ts',
+    field: 'service',
+    negativeCrud: true,
+  },
+  {
+    name: 'RaitMinutesController',
+    file: 'backend/domains/inf/rait-session/src/controllers/rait-minutes.controller.ts',
+    service: 'RaitMinutesService',
+    serviceFile:
+      'backend/domains/inf/rait-session/src/services/rait-minutes.service.ts',
+    field: 'service',
+    negativeCrud: true,
+  },
+];
+
+function actualCanonicalNameConsumers() {
+  function source(relative) {
+    const text = readFileSync(path.join(root, relative), 'utf8');
+    return ts.createSourceFile(relative, text, ts.ScriptTarget.Latest, true);
+  }
+  function exactlyOne(sf, predicate) {
+    const matches = [];
+    function walk(node) {
+      if (predicate(node)) matches.push(node);
+      ts.forEachChild(node, walk);
+    }
+    walk(sf);
+    assert.equal(matches.length, 1, 'Canonical consumer must be unambiguous');
+    return matches[0].getText(sf);
+  }
+  const dashboard = source(
+    'backend/app/tests/e2e/dashboard-policy.e2e.spec.ts',
+  );
+  const collectorSource = exactlyOne(
+    dashboard,
+    (node) =>
+      ts.isFunctionDeclaration(node) &&
+      node.name?.text === 'collectMountedRoutes',
+  );
+  const session = source(
+    'backend/app/tests/e2e/rait-session-deliberation-minutes-production.e2e.spec.ts',
+  );
+  const negativeDeclaration = exactlyOne(
+    session,
+    (node) =>
+      ts.isVariableDeclaration(node) &&
+      node.name.getText(session) === 'CRUD_CONTROLLERS',
+  );
+  const negativePredicate = exactlyOne(
+    session,
+    (node) =>
+      ts.isArrowFunction(node) &&
+      ts.isBinaryExpression(node.body) &&
+      node.getText(session).includes('CRUD_CONTROLLERS.has(route.controller)'),
+  );
+  const compile = (text) =>
+    ts.transpileModule(text, {
+      compilerOptions: {
+        target: ts.ScriptTarget.ES2023,
+        module: ts.ModuleKind.ESNext,
+      },
+    }).outputText;
+  const collect = new Function(
+    'Reflect',
+    compile(collectorSource) + ';return collectMountedRoutes;',
+  )(Reflect);
+  const forbiddenControllers = new Function(
+    compile('const ' + negativeDeclaration + ';') + ';return CRUD_CONTROLLERS;',
+  )();
+  const { RequestMethod } = requireApp('@nestjs/common');
+  const rejectPost = new Function(
+    'RequestMethod',
+    'CRUD_CONTROLLERS',
+    compile('const predicate = (' + negativePredicate + ');') +
+      ';return predicate;',
+  )(RequestMethod, forbiddenControllers);
+  return {
+    collect,
+    rejectPost,
+    forbiddenControllers,
+    sourceHashes: {
+      dashboardCollector: sha(collectorSource),
+      negativeDeclaration: sha(negativeDeclaration),
+      negativePredicate: sha(negativePredicate),
+    },
+  };
+}
+
 for (const [kind, filename] of [
   ['appbase', 'vitest.config.ts'],
   ['performance', 'vitest.performance.config.ts'],
@@ -599,6 +764,7 @@ for (const [kind, filename] of [
       let server;
       let dashboardModule;
       let guardModule;
+      let namedControllerModule;
       let primary;
       const observation = {
         label,
@@ -624,10 +790,9 @@ for (const [kind, filename] of [
         server = await createServer(options);
         controls(server, kind);
         observation.controlChecks = 'PASS';
-        const controllerTargets = [
-          'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-commands.controller.ts',
-          'backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts',
-        ].map((name) => path.join(root, name));
+        const controllerTargets = canonicalControllerSpecs.map((item) =>
+          path.join(root, item.file),
+        );
         const normalSource = path.join(app, 'src/dashboard-stream.service.ts');
         const stages = observeCompilationStages(server, [
           ...controllerTargets,
@@ -865,6 +1030,131 @@ for (const [kind, filename] of [
           assert.equal(branch.nextCalls, 1);
           assert.equal(branch.delegateCalls, 0);
         }
+        // Exercise every actual canonical-name consumer, including negative
+        // consumers: a numeric rename must not hide a forbidden CRUD POST.
+        const compiledControllers = [];
+        const providers = new Map();
+        const serviceValues = new Map();
+        observation.canonicalNameConsumers = [];
+        const streamExports = await load(
+          'backend/app/src/dashboard-stream.service.ts',
+        );
+        const poller = {};
+        for (const expected of canonicalControllerSpecs) {
+          const Controller = (await load(expected.file))[expected.name];
+          assert.equal(Controller.name, expected.name);
+          compiledControllers.push(Controller);
+          const metadata = Reflect.getMetadata('design:paramtypes', Controller);
+          if (expected.name === 'DashboardStreamController') {
+            assert.deepEqual(metadata, [
+              DashboardStreamService,
+              Database,
+              RequestContext,
+              Object,
+            ]);
+            assert.deepEqual(
+              Reflect.getMetadata('self:paramtypes', Controller),
+              [{ index: 3, param: streamExports.DASHBOARD_STREAM_POLLER }],
+            );
+            providers.set(DashboardStreamService, instance);
+            providers.set(Database, database);
+            providers.set(RequestContext, requestContext);
+            providers.set(streamExports.DASHBOARD_STREAM_POLLER, poller);
+          } else {
+            const Service = (await load(expected.serviceFile))[
+              expected.service
+            ];
+            assert.deepEqual(metadata, [Service]);
+            if (!serviceValues.has(Service)) serviceValues.set(Service, {});
+            providers.set(Service, serviceValues.get(Service));
+          }
+          observation.canonicalNameConsumers.push({
+            expected: expected.name,
+            runtimeName: Controller.name,
+            metadata: metadata.map((value) => value.name),
+            negativeCrud: expected.negativeCrud,
+          });
+        }
+        namedControllerModule = await Test.createTestingModule({
+          controllers: compiledControllers,
+          providers: [...providers].map(([provide, useValue]) => ({
+            provide,
+            useValue,
+          })),
+        }).compile();
+        const consumers = actualCanonicalNameConsumers();
+        const shared = await load('backend/domains/shared/src/index.ts');
+        const { ModulesContainer } = requireApp('@nestjs/core');
+        const realModules = namedControllerModule.get(ModulesContainer);
+        const routes = consumers.collect(
+          realModules.values(),
+          shared.DETRAN_RESOURCE_METADATA_KEY,
+          shared.DETRAN_ACTION_METADATA_KEY,
+          shared.policyKey,
+        );
+        const stream = routes.find(
+          (route) =>
+            route.key === 'dashboard:alert:read' &&
+            route.controller === 'DashboardStreamController',
+        );
+        assert.ok(
+          stream,
+          'Source-identical Dashboard canonical-name consumer must resolve real Nest controller',
+        );
+        assert.equal(stream.method, 'stream');
+        observation.actualConsumerSourceHashes = consumers.sourceHashes;
+        observation.dashboardPolicyConsumer = stream;
+        observation.negativeCrudConsumers = [];
+        for (const expected of canonicalControllerSpecs) {
+          const Controller = compiledControllers.find(
+            (item) => item.name === expected.name,
+          );
+          const actual = namedControllerModule.get(Controller);
+          if (expected.name === 'DashboardStreamController') {
+            assert.equal(actual.service, instance);
+            assert.equal(actual.database, database);
+            assert.equal(actual.requestContext, requestContext);
+            assert.equal(actual.poller, poller);
+          } else {
+            const Service = (await load(expected.serviceFile))[
+              expected.service
+            ];
+            assert.equal(actual[expected.field], serviceValues.get(Service));
+          }
+          if (!expected.negativeCrud) continue;
+          assert.ok(consumers.forbiddenControllers.has(Controller.name));
+          const { RequestMethod } = requireApp('@nestjs/common');
+          const actualRoutes = Object.getOwnPropertyNames(Controller.prototype)
+            .filter((name) => typeof Controller.prototype[name] === 'function')
+            .map((name) => ({
+              controller: Controller.name,
+              method: Reflect.getMetadata('method', Controller.prototype[name]),
+            }))
+            .filter((route) => route.method !== undefined);
+          assert.deepEqual(
+            actualRoutes.map((route) => route.method),
+            [RequestMethod.GET, RequestMethod.GET],
+          );
+          assert.deepEqual(actualRoutes.filter(consumers.rejectPost), []);
+          // Counterfactual records only; never mutate real class/route metadata.
+          const forbiddenPosts = actualRoutes.map((route) => ({
+            ...route,
+            method: RequestMethod.POST,
+          }));
+          assert.equal(
+            forbiddenPosts.filter(consumers.rejectPost).length,
+            2,
+            'Canonical negative consumer must detect forbidden POST, not lose renamed controller identity',
+          );
+          observation.negativeCrudConsumers.push({
+            controller: Controller.name,
+            actualGetRoutes: actualRoutes.length,
+            actualForbiddenPosts: 0,
+            counterfactualPostsDetected: 2,
+          });
+        }
+        assert.equal(observation.canonicalNameConsumers.length, 10);
+        assert.equal(observation.negativeCrudConsumers.length, 2);
         observation.closedSelectors = closedSecondTransformSelectors(
           server,
           controllerTargets,
@@ -880,6 +1170,7 @@ for (const [kind, filename] of [
         try {
           await dashboardModule?.close();
           await guardModule?.close();
+          await namedControllerModule?.close();
           await server?.close();
         } finally {
           net.Server.prototype.listen = originalListen;
