@@ -15,7 +15,17 @@ const template = path.join(
 );
 const approvedConfigSha =
   '18ea54558c7715e306b386a7f4b6d426ad6996caa9622e97efb992c972986c17';
+const aliasMarker = '/* DETRAN_PORTAL_REQUESTS_TEST_ALIASES */';
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
+
+function canonicalAliases() {
+  return JSON.parse(
+    fs.readFileSync(
+      path.join(root, 'docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json'),
+      'utf8',
+    ),
+  ).module.testAliases;
+}
 
 function generate(script, blueprints, output) {
   const result = spawnSync(process.execPath, [script], {
@@ -60,7 +70,14 @@ test('actual blueprint generator preserves the approved Portal metadata config a
         `${JSON.stringify({
           schemaVersion: '1.0.0',
           id,
-          module: { namespace, name, version: '1.0.0' },
+          module: {
+            namespace,
+            name,
+            version: '1.0.0',
+            ...(id === 'BP-PORTAL-REQUESTS-001'
+              ? { testAliases: canonicalAliases() }
+              : {}),
+          },
           database: { entities: [] },
         })}\n`,
       );
@@ -69,12 +86,18 @@ test('actual blueprint generator preserves the approved Portal metadata config a
       path.join(root, 'backend/domains/portal/requests/vitest.config.ts'),
     );
     assert.equal(hash(approved), approvedConfigSha);
-    assert.equal(hash(fs.readFileSync(template)), approvedConfigSha);
-    assert.deepEqual(fs.readFileSync(template), approved);
+    assert.equal(
+      hash(fs.readFileSync(template)),
+      '95df74e27d673e5d6910d52ff9942ad6ce6e77f91318c6b3320ea23fdda82cae',
+    );
+    assert.equal(
+      fs.readFileSync(template, 'utf8').split(aliasMarker).length,
+      2,
+    );
 
     const source = fs.readFileSync(generator, 'utf8');
     const dispatch =
-      /bp\.id === 'BP-PORTAL-REQUESTS-001'\s*\? fs\.readFileSync\([\s\S]*?'utf8',\s*\)\s*:\s*(?=`import \{ fileURLToPath \})/gu;
+      /bp\.id === 'BP-PORTAL-REQUESTS-001'\s*\? portalRequestsVitestConfig\(module\)\s*:\s*(?=`import \{ fileURLToPath \})/gu;
     assert.equal([...source.matchAll(dispatch)].length, 1);
     // This isolated counterfactual removes only the new dispatch. The original
     // generic literal and every other producer statement remain byte exact.
@@ -121,6 +144,21 @@ test('actual blueprint generator preserves the approved Portal metadata config a
         `unrelated generated output changed: ${relative}`,
       );
     }
+    const portalFile = path.join(blueprints, 'BP-PORTAL-REQUESTS-001.json');
+    const changedBlueprint = JSON.parse(fs.readFileSync(portalFile, 'utf8'));
+    assert.deepEqual(changedBlueprint.module.testAliases, canonicalAliases());
+    const originalAlias = changedBlueprint.module.testAliases[0].target;
+    const changedAlias = '../../shared/src/fixture-alias-change.ts';
+    changedBlueprint.module.testAliases[0].target = changedAlias;
+    fs.writeFileSync(portalFile, `${JSON.stringify(changedBlueprint)}\n`);
+    const changedOutput = path.join(temporary, 'changed-canonical-alias');
+    generate(generator, blueprints, changedOutput);
+    const changedConfig = fs.readFileSync(path.join(changedOutput, target));
+    assert.notDeepEqual(changedConfig, approved);
+    assert.match(changedConfig.toString(), /fixture-alias-change\.ts/u);
+    assert.equal(changedConfig.toString().includes(originalAlias), false);
+    assert.match(changedConfig.toString(), /createNestMetadataPlugin/u);
+
     for (const relative of [
       'backend/domains/portal/control/vitest.config.ts',
       'backend/domains/inf/requests/vitest.config.ts',
@@ -128,6 +166,99 @@ test('actual blueprint generator preserves the approved Portal metadata config a
       const content = fs.readFileSync(path.join(current, relative), 'utf8');
       assert.doesNotMatch(content, /createNestMetadataPlugin/u);
       assert.match(content, /passWithNoTests: true/u);
+    }
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+});
+
+test('actual Portal producer refuses missing or duplicate canonical alias markers', () => {
+  const temporary = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'detran-portal-blueprint-marker-'),
+  );
+  try {
+    // The isolated source root uses the same installed formatter/configuration;
+    // no producer or repository source is rewritten to exercise these inputs.
+    fs.mkdirSync(path.join(temporary, 'tools/blueprints/templates'), {
+      recursive: true,
+    });
+    fs.copyFileSync(
+      path.join(root, 'tools/stynx-version.json'),
+      path.join(temporary, 'tools/stynx-version.json'),
+    );
+    fs.copyFileSync(
+      path.join(root, 'package.json'),
+      path.join(temporary, 'package.json'),
+    );
+    fs.copyFileSync(
+      path.join(root, '.prettierrc'),
+      path.join(temporary, '.prettierrc'),
+    );
+    fs.symlinkSync(
+      path.join(root, 'node_modules'),
+      path.join(temporary, 'node_modules'),
+      'dir',
+    );
+    const blueprints = path.join(temporary, 'blueprints');
+    fs.mkdirSync(blueprints);
+    fs.writeFileSync(
+      path.join(blueprints, 'BP-PORTAL-REQUESTS-001.json'),
+      JSON.stringify({
+        schemaVersion: '1.0.0',
+        id: 'BP-PORTAL-REQUESTS-001',
+        module: {
+          namespace: 'portal',
+          name: 'Requests',
+          version: '1.0.0',
+          testAliases: canonicalAliases(),
+        },
+        database: { entities: [] },
+      }),
+    );
+    const originalTemplate = fs.readFileSync(template, 'utf8');
+    for (const [name, content] of [
+      ['missing', originalTemplate.replace(aliasMarker, '')],
+      [
+        'duplicate',
+        originalTemplate.replace(aliasMarker, `${aliasMarker}${aliasMarker}`),
+      ],
+    ]) {
+      fs.writeFileSync(
+        path.join(
+          temporary,
+          'tools/blueprints/templates/portal-requests.vitest.ts',
+        ),
+        content,
+      );
+      const output = path.join(temporary, name);
+      // Catch only at the external harness boundary so genuine producer refusal
+      // is observable without an uncaught-exception process-shutdown dependency.
+      const result = spawnSync(
+        process.execPath,
+        [
+          '--input-type=module',
+          '-e',
+          "import { pathToFileURL } from 'node:url'; try { await import(pathToFileURL(process.argv[1]).href); } catch (error) { process.stderr.write(error.message); process.exitCode = 1; }",
+          generator,
+        ],
+        {
+          cwd: temporary,
+          env: {
+            ...process.env,
+            BLUEPRINTS_DIR: blueprints,
+            BLUEPRINTS_OUTPUT: output,
+          },
+          encoding: 'utf8',
+        },
+      );
+      assert.equal(result.status, 1, result.stderr || result.stdout);
+      assert.match(result.stderr, /requires exactly one alias marker/u);
+      assert.equal(
+        fs.existsSync(
+          path.join(output, 'backend/domains/portal/requests/vitest.config.ts'),
+        ),
+        false,
+      );
     }
   } finally {
     fs.rmSync(temporary, { recursive: true, force: true });
