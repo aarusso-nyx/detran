@@ -1,8 +1,11 @@
 # BUILD-PLAN
 
 > **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
-> S1 security prerequisites integrated through #196–#201 and #203. R-0025/JW-01 remain open.
-> S2 is paused pending approval of its [exact backend-first packet](work/rounds/R-0025/reports/P4-02-S2-approval-packet.md).
+> S1 security prerequisites integrated through #196–#201 and #203.
+> S2 backend-first execution was approved via #205 and is in progress outside main;
+> full acceptance remains pending and resource-blocked. See the
+> [R-0025 S2 implementation record](work/rounds/R-0025/reports/P4-02-S2-implementation.md).
+> R-0025/JW-01/P4/S2 remain OPEN. S3, production and implementation merge are unapproved.
 > Scorecard evaluation/remediation and protected local/recovery work stay separate.
 
 ## Leitura atual (reconciliação de 2026-10-18)
@@ -10,7 +13,7 @@
 As fases originais abaixo são o plano de origem; o addendum de 2026-09-13 e
 C-0003 §4/A-C2-16 determinam a execução atual para infrações. Port/merge de WP
 não certifica jornada produtiva. R-0033 integrou prévias RAIT/Portal e fechou PC-0021; R-0025 integrou admissibilidade por #193 e proteção de escopo/replay por #203;
-claim/risk/legado e a jornada integral continuam pendentes, com S2 pausada;
+claim/risk/legado estão em execução S2 backend-first aprovada por #205 fora de main; a aceitação integral permanece pendente e bloqueada por recursos;
 R-0020 permanece aberta, R-0022 parada; há contratos, testes e implementações
 parciais em R-0023/R-0025…0032 fora de main. Consulte o
 [estado por rodada](work/rounds/README.md) e a
