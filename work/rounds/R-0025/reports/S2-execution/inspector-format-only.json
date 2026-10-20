@@ -1,0 +1,266 @@
+{
+  "task": "TASK-0044 format-only root-gate correction",
+  "scope": "Parent-confirmed changed-vs-origin/main Inspector-owned paths only; root owns Git",
+  "manifestEntries": 26,
+  "existingChecked": 23,
+  "precheck": [
+    {
+      "path": "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts",
+      "exists": true,
+      "formatted": false
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-case-command.fixture.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-p402-claim.fixture.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-command-contract.integration.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.fixture.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.integration.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-p402-claim-transaction.integration.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-di-c4.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-risk.spec.ts",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-claim-context.spec.ts",
+      "exists": false
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-legacy-qualification.spec.ts",
+      "exists": false
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/tests/unit/rait-risk-projection.spec.ts",
+      "exists": false
+    },
+    {
+      "path": "tools/contracts/tests/check-commands.test.mjs",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "tools/parameters/tests/allowlist-rait.test.mjs",
+      "exists": true,
+      "formatted": true
+    },
+    {
+      "path": "tools/parameters/tests/generator.test.mjs",
+      "exists": true,
+      "formatted": true
+    }
+  ],
+  "postcheck": [
+    {
+      "path": "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-case-command.fixture.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/app/tests/shared/rait-p402-claim.fixture.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-command-contract.integration.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.fixture.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.integration.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-p402-claim-transaction.integration.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-di-c4.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "backend/domains/inf/rait-case/tests/unit/rait-case-risk.spec.ts",
+      "formatted": true
+    },
+    {
+      "path": "tools/contracts/tests/check-commands.test.mjs",
+      "formatted": true
+    },
+    {
+      "path": "tools/parameters/tests/allowlist-rait.test.mjs",
+      "formatted": true
+    },
+    {
+      "path": "tools/parameters/tests/generator.test.mjs",
+      "formatted": true
+    }
+  ],
+  "proof": {
+    "path": "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts",
+    "beforeSha256": "aab29505a8dc2a8dc0bef9c3b00d70cf5f961b1249761786ca878668e51bf1ad",
+    "afterSha256": "98cb60c115e4a92d35b8444817f9db367445c147fd86ed53e22ddc88dffff4ee",
+    "changed": true,
+    "transpileOptions": {
+      "target": 9,
+      "module": 99,
+      "removeComments": true,
+      "sourceMap": false,
+      "inlineSourceMap": false
+    },
+    "transpiledJsByteIdentical": false,
+    "transpiledJsAstEquivalent": true,
+    "astNormalization": "Recursive SyntaxKind, decoded identifier/literal text and ordered children; exclude sourcefile raw text, positions and trivia.",
+    "astSha256": "0b8e6834f16d737a8cdcb383e452d97e55b8583f97fbd4a98bad38d65feaf165",
+    "beforeJsSha256": "23c0e2eaa06bd0cb2442d93f551bb3cf3f99c859ab390f87ecd43a6fcd3c5548",
+    "afterJsSha256": "4568c861239a10b6398a40347794ac3a8aed524eae68d0c20c67d37ed83a8b9a",
+    "protectedHashes": {
+      "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "619cea75d03ec7969a49e8ef83192b714d09d66fe1d2a55acc286dc2ba5fdd27",
+      "backend/app/tests/shared/rait-p402-claim.fixture.ts": "0a928dfcfbb629b265b683bfa9d08bee84b4c192757cffecd085bc31e7695c01"
+    }
+  },
+  "missingOriginalManifestPaths": [
+    "backend/domains/inf/rait-case/tests/unit/rait-claim-context.spec.ts",
+    "backend/domains/inf/rait-case/tests/unit/rait-legacy-qualification.spec.ts",
+    "backend/domains/inf/rait-worklist/tests/unit/rait-risk-projection.spec.ts"
+  ],
+  "boundaries": {
+    "changedFileCount": 1,
+    "assertionsTimeoutSemanticsChanged": false,
+    "protected115AndFixtureUnchanged": true,
+    "noDB": true,
+    "noRuntime": true,
+    "noGitMutations": true
+  },
+  "historicalReceipts": "Preserved unchanged; format-only checkpoint adds new source hash without rewriting old epochs"
+}

@@ -515,17 +515,15 @@ beforeAll(async () => {
   const port = (CasePublic as unknown as Record<string, unknown>)
     .RAIT_RISK_PROVENANCE_READER;
   if (typeof port === 'symbol')
-    builder
-      .overrideProvider(port)
-      .useValue({
-        qualify: (
-          tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
-          req: Parameters<RaitP402ClaimFixture['qualify']>[1],
-        ) =>
-          claimFixture
-            ? claimFixture.qualify(tx, req)
-            : Promise.resolve({ status: 'missing', sourceVersions: [] }),
-      });
+    builder.overrideProvider(port).useValue({
+      qualify: (
+        tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
+        req: Parameters<RaitP402ClaimFixture['qualify']>[1],
+      ) =>
+        claimFixture
+          ? claimFixture.qualify(tx, req)
+          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
+    });
   app = (await builder.compile()).createNestApplication({ logger: false });
   await app.init();
 });
