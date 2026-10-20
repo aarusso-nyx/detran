@@ -136,3 +136,13 @@ only. Parent will append exact final outcomes and hashes; no final-head PASS is
 inferred from earlier checkpoints.
 Original64-command/journey acceptance and A2 omitted typed details remain required
 after this bounded executable remainder. No round close/seal or readiness promotion.
+
+### Latest bounded validation checkpoint
+
+F6 correction dd03c7ab has independent unchanged unit GREEN: 3/3 (2.35s),
+with original RED lineage preserved. CASE/app/WORKLIST typechecks PASS.
+This is not a third independent delivery review; REVIEW and exhausted cap remain.
+The full root check at ca83 stopped on a real incomplete parameter literal in
+rait-risk.providers.ts:218; preceding stages through contracts:test PASS.
+An explicit A–D canonical key map correction is underway without verifier changes.
+Current snapshot export consistency PASS; native REVIEW is unchanged.
