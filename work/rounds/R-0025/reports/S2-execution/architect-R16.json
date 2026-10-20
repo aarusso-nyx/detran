@@ -1,0 +1,25 @@
+{
+  "role": "Architect",
+  "authority": "S2-R16",
+  "changes": [
+    {
+      "path": "BUILD-PLAN.md",
+      "beforeSha256": "772181b12e978b76bcd161051330e08a19ef72d88dac2785a396f9940bbb58e5",
+      "afterSha256": "301284a246ee67f77a71624051b3ec362f02337580a14cfea2998e3a4f5e1dcb",
+      "onlyAllowedReplacements": true
+    },
+    {
+      "path": "docs/meta/knowledge-base/session-artifacts/orchestration-handoff.md",
+      "beforeSha256": "d5925f47bf3fbf49abc3db30ec86cdf60a74984984193d6d9284a524210701ad",
+      "afterSha256": "06acc787b04ca92d87db356500ac12c7f23b5a4ee5bb188cc29157ab15a7de54",
+      "onlyAllowedReplacements": true
+    }
+  ],
+  "historicalBodyByteExact": true,
+  "checks": {
+    "limitedReplacementReversal": "PASS",
+    "format": "PASS: pinned pnpm exec prettier --write only both owned documents, unchanged"
+  },
+  "runtimeTests": "not run; prose boundary correction only",
+  "excluded": "No runtime/tests/DB/Git/config changes"
+}
