@@ -1422,6 +1422,69 @@ export class RaitP402ClaimFixture {
       source.receiptId,
     );
   }
+  /** R17 additive synthetic rejected reviews; never UPDATE immutable history. */
+  async negativeLegacyReview(
+    caseId: string,
+    previousId: string,
+    overrides: {
+      admission_ref?: string;
+      pool_scope_ref?: string;
+      observed_state?: string;
+    },
+  ) {
+    const id = randomUUID(),
+      receiptId = randomUUID();
+    await this.owner.query(
+      `insert into inf.rait_claim_legacy_qualification(id,tenant_id,case_id,observed_version,observed_state,assignment_status,classification,revision,admission_ref,distribution_ref,pool_scope_ref,reason,reviewer_id,authorization_ref,observed_at,assignment_ref)
+      select $1,tenant_id,case_id,observed_version,coalesce($3,observed_state),assignment_status,classification,revision+1,coalesce($4,admission_ref),distribution_ref,coalesce($5,pool_scope_ref),$6,reviewer_id,$7,clock_timestamp(),assignment_ref from inf.rait_claim_legacy_qualification where id=$2 and case_id=$8`,
+      [
+        id,
+        previousId,
+        overrides.observed_state ?? null,
+        overrides.admission_ref ?? null,
+        overrides.pool_scope_ref ?? null,
+        syntheticSource +
+          '; R17 isolated negative review, not production authorization',
+        'receipt:' + receiptId,
+        caseId,
+      ],
+    );
+    const q = (
+      await this.owner.query<Record<string, unknown>>(
+        'select * from inf.rait_claim_legacy_qualification where id=$1',
+        [id],
+      )
+    ).rows[0]!;
+    expect(q.case_id).toBe(caseId);
+    const audit = (
+      await this.owner.query<{ event_id: string; at: string }>(
+        `select event_id::text,to_char(occurred_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') at from audit.events where tenant_id=$1 and entity_id=$2 and action='INF_RAIT_CASE_ADMIT' order by event_id desc limit 1`,
+        [RAIT_TENANT, caseId],
+      )
+    ).rows[0]!;
+    const refs = [
+      'sql:inf.rait_case:' + caseId,
+      'sql:inf.rait_claim_legacy_qualification:' + id,
+      'sql:auth.users:' + q.reviewer_id,
+      'sql:inf.rait_pool:' + this.pool,
+      ...[
+        'admission_ref',
+        'distribution_ref',
+        'pool_scope_ref',
+        'assignment_ref',
+      ].flatMap((k) => (q[k] ? [String(q[k])] : [])),
+      'sql:audit.events:' + audit.event_id + '@' + audit.at,
+    ];
+    const receipt = await this.admitReceipt(
+      'legacy',
+      caseId,
+      refs,
+      [],
+      [],
+      receiptId,
+    );
+    return { id, receipt };
+  }
   async admitReceipt(
     kind: string,
     caseId: string | null,
