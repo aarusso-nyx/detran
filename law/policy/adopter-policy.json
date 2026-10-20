@@ -1,7 +1,11 @@
 {
   "schemaVersion": "1.0.0",
   "policy_id": "detran-law-corpus",
-  "policy_version": "1.4.0",
+  "policy_version": "1.5.0",
+  "invariant_producers": {
+    "schemaVersion": "1.0.0",
+    "bindings": []
+  },
   "domains": {
     "client": ["INF", "EST", "CH", "OPS", "PORTAL", "DASH", "RBAC"]
   },
@@ -764,129 +768,5 @@
       "rbac": true,
       "actions": true
     }
-  },
-  "invariant_producers": {
-    "schemaVersion": "1.0.0",
-    "bindings": [
-      {
-        "invariant_id": "INV-CH-001",
-        "subject": "ch-existing-semantic-suite",
-        "taskId": "invariant-ch",
-        "population": "detran-invariant-ch-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-ch%22%2C%22backend%2Fdomains%2Fch%2Fencounters%2Ftests%2Funit%2Fencounter-lifecycle.service.spec.ts%22%2C%5B%22EncounterLifecycleService%22%5D%2C%22AC-PEC-002-1%20opens%20an%20encounter%20only%20from%20a%20checked-in%20appointment%22%5D",
-          "test:v1:%5B%22detran-invariant-ch%22%2C%22backend%2Fdomains%2Fch%2Fencounters%2Ftests%2Funit%2Fencounter-lifecycle.service.spec.ts%22%2C%5B%22EncounterLifecycleService%22%5D%2C%22AC-PEC-002-1%20rejects%20an%20appointment%20in%20CANCELLED%22%5D",
-          "test:v1:%5B%22detran-invariant-ch%22%2C%22backend%2Fdomains%2Fch%2Fencounters%2Ftests%2Funit%2Fencounter-lifecycle.service.spec.ts%22%2C%5B%22EncounterLifecycleService%22%5D%2C%22AC-PEC-002-1%20rejects%20an%20appointment%20in%20NO_SHOW%22%5D",
-          "test:v1:%5B%22detran-invariant-ch%22%2C%22backend%2Fdomains%2Fch%2Fencounters%2Ftests%2Funit%2Fencounter-lifecycle.service.spec.ts%22%2C%5B%22EncounterLifecycleService%22%5D%2C%22AC-PEC-002-1%20resolves%20the%20latest%20checked-in%20appointment%20when%20omitted%22%5D",
-          "test:v1:%5B%22detran-invariant-ch%22%2C%22backend%2Fdomains%2Fch%2Fencounters%2Ftests%2Funit%2Fencounter-lifecycle.service.spec.ts%22%2C%5B%22EncounterLifecycleService%22%5D%2C%22AC-PEC-003-2%20accepts%20only%20a%20scoped%2C%20approved%2C%20non-expired%20check-in%20exception%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-DASH-001",
-        "subject": "dash-existing-semantic-suite",
-        "taskId": "invariant-dash",
-        "population": "detran-invariant-dash-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-dash%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DASHBOARD%20roles%2C%20dashboard%3A*%20policy%20matrix%20and%20access%20layers%20(WP-D0%2C%20CTG-0001)%22%5D%2C%22AUDITOR%20holds%20every%20dashboard%3A%3Cresource%3E%3Aread%20permission%20of%20CTG-0001%20%C2%A73%20(CTG-0001%20%C2%A78.1.10)%22%5D",
-          "test:v1:%5B%22detran-invariant-dash%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DASHBOARD%20roles%2C%20dashboard%3A*%20policy%20matrix%20and%20access%20layers%20(WP-D0%2C%20CTG-0001)%22%5D%2C%22denies%20AUDITOR%20every%20dashboard%20mutation%20(CTG-0001%20%C2%A78.2.22)%22%5D",
-          "test:v1:%5B%22detran-invariant-dash%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DASHBOARD%20roles%2C%20dashboard%3A*%20policy%20matrix%20and%20access%20layers%20(WP-D0%2C%20CTG-0001)%22%5D%2C%22denies%20DPO%20the%20dashboard%20export%20permissions%2C%20read-only%20by%20CTG-0001%20%C2%A78.2.22%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-EST-001",
-        "subject": "est-existing-semantic-suite",
-        "taskId": "invariant-est",
-        "population": "detran-invariant-est-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-est%22%2C%22backend%2Fdomains%2Fest%2Fcrash%2Ftests%2Fintegration%2Fboat-contract.integration.spec.ts%22%2C%5B%22contrato%20persistente%20BOAT%20est%2Fcrash%22%5D%2C%22dadas%20as%20tabelas%20de%20dom%C3%ADnio%20quando%20lidas%20pelo%20cat%C3%A1logo%20ent%C3%A3o%20C-1-03%20for%C3%A7a%20RLS%2C%20pol%C3%ADtica%20e%20gatilho%20de%20tenant%20em%20todas%22%5D",
-          "test:v1:%5B%22detran-invariant-est%22%2C%22backend%2Fdomains%2Fest%2Fcrash%2Ftests%2Fintegration%2Fboat-contract.integration.spec.ts%22%2C%5B%22contrato%20persistente%20BOAT%20est%2Fcrash%22%5D%2C%22dadas%20fixtures%20de%20tenant%20A%20quando%20lidas%20por%20role_app_backend%20no%20tenant%20B%20ent%C3%A3o%20C-1-13%20retorna%20zero%20linhas%22%5D",
-          "test:v1:%5B%22detran-invariant-est%22%2C%22backend%2Fdomains%2Fest%2Fcrash%2Ftests%2Fintegration%2Fboat-contract.integration.spec.ts%22%2C%5B%22contrato%20persistente%20BOAT%20est%2Fcrash%22%5D%2C%22dado%20o%20blueprint%20quando%20comparado%20ao%20contrato%20ent%C3%A3o%20C-1-01%20e%20C-1-02%20permanecem%20%C3%ADntegros%22%5D",
-          "test:v1:%5B%22detran-invariant-est%22%2C%22backend%2Fdomains%2Fest%2Fcrash%2Ftests%2Fintegration%2Fboat-contract.integration.spec.ts%22%2C%5B%22contrato%20persistente%20BOAT%20est%2Fcrash%22%5D%2C%22dado%20role_app_backend%20no%20tenant%20B%20quando%20tenta%20gravar%20uma%20linha%20de%20tenant%20A%20ent%C3%A3o%20C-1-03%20e%20C-1-13%20rejeitam%20o%20cruzamento%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-INF-001",
-        "subject": "inf-existing-semantic-suite",
-        "taskId": "invariant-inf",
-        "population": "detran-invariant-inf-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-inf%22%2C%22backend%2Fdomains%2Finf%2Fait%2Fsrc%2Fait-lifecycle.service.spec.ts%22%2C%5B%22AitLifecycleService%22%5D%2C%22C-0001-09%20%E2%80%94%20dado%20o%20AIT%20%E2%80%A6f8000010%20(RASCUNHO_OFFLINE%2C%20fixture%2025-fixtures-teat.sql)%20quando%20finalize%20ent%C3%A3o%20FINALIZADO_LOCAL%2C%20content_hash%20n%C3%A3o%20nulo%20e%20version%20%2B1%22%5D",
-          "test:v1:%5B%22detran-invariant-inf%22%2C%22backend%2Fdomains%2Finf%2Fait%2Fsrc%2Fait-lifecycle.service.spec.ts%22%2C%5B%22AitLifecycleService%22%5D%2C%22C-0001-10%20%E2%80%94%20dado%20o%20AIT%20%E2%80%A6f8000130%20(INTEGRADO)%20quando%20finalize%20ent%C3%A3o%20409%20TEAT.AIT_STATE_INVALID%20com%20context.allowed%3D%5B%5C%22RASCUNHO_OFFLINE%5C%22%5D%20e%20context.command%3D%5C%22finalize%5C%22%22%5D",
-          "test:v1:%5B%22detran-invariant-inf%22%2C%22backend%2Fdomains%2Finf%2Fait%2Fsrc%2Fait-lifecycle.service.spec.ts%22%2C%5B%22AitLifecycleService%22%5D%2C%22dado%20um%20AIT%20em%20RASCUNHO_OFFLINE%20quando%20finalizado%20ent%C3%A3o%20preserva%20hash%20assinatura%20e%20hist%C3%B3rico%22%5D",
-          "test:v1:%5B%22detran-invariant-inf%22%2C%22backend%2Fdomains%2Finf%2Fait%2Fsrc%2Fait-lifecycle.service.spec.ts%22%2C%5B%22AitLifecycleService%22%5D%2C%22dado%20um%20AIT%20em%20RASCUNHO_OFFLINE%20quando%20finalizado%20ent%C3%A3o%20transita%20para%20FINALIZADO_LOCAL%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-OPS-001",
-        "subject": "ops-queue-existing-semantic-suite",
-        "taskId": "invariant-ops-queue",
-        "population": "detran-invariant-ops-queue-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-ops-queue%22%2C%22backend%2Fdomains%2Fops%2Ffield%2Ftests%2Fintegration%2Fshift-lifecycle.integration.spec.ts%22%2C%5B%22CTG-0002%20%C2%A75.5%20%E2%80%94%20fechamento%20de%20turno%20(M10)%20(C-0002-36%2F37)%22%5D%2C%22C-0002-36%20%E2%80%94%20dado%20POST%20shifts%2F%7Bid%7D%2Fclose%20com%20item%20received%20do%20device%20dentro%20do%20turno%20e%20sem%20reason%20ent%C3%A3o%20422%20TEAT.SHIFT_CLOSE_PENDING_QUEUE%20com%20context.pendingCount%22%5D",
-          "test:v1:%5B%22detran-invariant-ops-queue%22%2C%22backend%2Fdomains%2Fops%2Ffield%2Ftests%2Fintegration%2Fshift-lifecycle.integration.spec.ts%22%2C%5B%22CTG-0002%20%C2%A75.5%20%E2%80%94%20fechamento%20de%20turno%20(M10)%20(C-0002-36%2F37)%22%5D%2C%22C-0002-36%20%E2%80%94%20dado%20o%20mesmo%20fechamento%20**com**%20reason%20ent%C3%A3o%20fecha%20e%20o%20evento%20TURNO_FECHADO%20carrega%20pendingCount%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-OPS-002",
-        "subject": "ops-perf-existing-semantic-suite",
-        "taskId": "invariant-ops-perf",
-        "population": "detran-invariant-ops-perf-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-ops-perf%22%2C%22backend%2Fapp%2Ftests%2Fperformance%2Fbackend-baseline.perf.spec.ts%22%2C%5B%22INV-OPS-002%20%E2%80%94%20generous%20complete%20request-path%20baseline%22%5D%2C%22'dashboard-kpis'%20respects%20the%20initial%20latency%20and%20throughput%20targets%22%5D",
-          "test:v1:%5B%22detran-invariant-ops-perf%22%2C%22backend%2Fapp%2Ftests%2Fperformance%2Fbackend-baseline.perf.spec.ts%22%2C%5B%22INV-OPS-002%20%E2%80%94%20generous%20complete%20request-path%20baseline%22%5D%2C%22'ops-agency-read'%20respects%20the%20initial%20latency%20and%20throughput%20targets%22%5D",
-          "test:v1:%5B%22detran-invariant-ops-perf%22%2C%22backend%2Fapp%2Ftests%2Fperformance%2Fbackend-baseline.perf.spec.ts%22%2C%5B%22INV-OPS-002%20%E2%80%94%20generous%20complete%20request-path%20baseline%22%5D%2C%22'rait-case-read'%20respects%20the%20initial%20latency%20and%20throughput%20targets%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-PORTAL-001",
-        "subject": "portal-existing-semantic-suite",
-        "taskId": "invariant-portal",
-        "population": "detran-invariant-portal-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-portal%22%2C%22backend%2Fdomains%2Fportal%2Frequests%2Ftests%2Fintegration%2Fportal-requests.integration.spec.ts%22%2C%5B%22CTG-0002%20%C2%A73%2F%C2%A74%2F%C2%A711%20%E2%80%94%20ciclo%20consulta_multas%20sobre%20transa%C3%A7%C3%A3o%20real%20(C-0002-31%2C%20C-0002-32)%22%5D%2C%22C-0002-31%20%E2%80%94%20dado%20sujeito%20%E2%80%A670000002%20quando%20create%2Bdraft%2Bsubmit%20de%20consulta_multas%20ent%C3%A3o%20request%2C%20request_draft%20(2%20vers%C3%B5es)%2C%20protocol%2C%20idempotency_record%20(key%20'%3CsubjectId%3E%3A%3Cheader%3E')%20e%202%20linhas%20na%20outbox%20com%20topic%20portal.request.changed%2C%20payload.tenantId%20%3D%20tenant%22%5D",
-          "test:v1:%5B%22detran-invariant-portal%22%2C%22backend%2Fdomains%2Fportal%2Frequests%2Ftests%2Fintegration%2Fportal-requests.integration.spec.ts%22%2C%5B%22CTG-0002%20%C2%A73%2F%C2%A74%2F%C2%A711%20%E2%80%94%20ciclo%20consulta_multas%20sobre%20transa%C3%A7%C3%A3o%20real%20(C-0002-31%2C%20C-0002-32)%22%5D%2C%22C-0002-32%20%E2%80%94%20dado%20transa%C3%A7%C3%A3o%20que%20lan%C3%A7a%20ap%C3%B3s%20publicar%20ent%C3%A3o%20nenhuma%20linha%20na%20outbox%20(rollback%20%3D%20sem%20evento)%22%5D",
-          "test:v1:%5B%22detran-invariant-portal%22%2C%22backend%2Fdomains%2Fportal%2Frequests%2Ftests%2Fintegration%2Fportal-requests.integration.spec.ts%22%2C%5B%22CTG-0002%20%C2%A73.3%2F%C2%A712%20%E2%80%94%20sequ%C3%AAncia%20de%20protocolo%20coerente%20com%20o%20seed%20(C-0002-30)%22%5D%2C%22C-0002-30%20%E2%80%94%20dado%20seed%20executado%20duas%20vezes%20ent%C3%A3o%20protocol_seq%20%E2%89%A5%2014%20(setval)%20e%20nextval%20n%C3%A3o%20colide%20com%20AM-FIXTURES-2026-0000001%E2%80%A6000000e%3B%20a%20sequ%C3%AAncia%20%C3%A9%20compartilhada%20com%20manifestation.protocol%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-RBAC-001",
-        "subject": "shared-guard-approved-policy-boundary",
-        "taskId": "invariant-rbac",
-        "population": "detran-invariant-rbac-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22allows%20a%20mapped%20role%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22allows%20explicitly%20public%20routes%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22dado%20aus%C3%AAncia%20de%20principal%20em%20recurso%20inf%3Arait-*%20quando%20o%20guard%20avalia%20ent%C3%A3o%20preserva%20a%20falha%20de%20autentica%C3%A7%C3%A3o%20vigente%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22dado%20papel%20negado%20em%20recurso%20inf%3Arait-*%20quando%20o%20guard%20compartilhado%20avalia%20ent%C3%A3o%20preserva%20ForbiddenException%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22dado%20papel%20negado%20fora%20de%20inf%3Arait-*%20quando%20o%20guard%20avalia%20ent%C3%A3o%20preserva%20ForbiddenException%20sem%20prefixo%20RAIT%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22denies%20a%20protected%20route%20with%20no%20principal%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.guard.spec.ts%22%2C%5B%22DetranPolicyGuard%22%5D%2C%22denies%20an%20unmapped%20role%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DETRAN%20unified%20policy%20kit%22%5D%2C%22dado%20cada%20regra%20CTG-0001%20quando%20consultada%20por%20todos%20os%20pap%C3%A9is%20ent%C3%A3o%20concede%20somente%20os%20pap%C3%A9is%20can%C3%B4nicos%20permitidos%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DETRAN%20unified%20policy%20kit%22%5D%2C%22grants%20RAIT%20command%20and%20surface%20rules%20only%20to%20RAIT%20staff%20roles%22%5D",
-          "test:v1:%5B%22detran-invariant-rbac%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Fpolicy.spec.ts%22%2C%5B%22DETRAN%20unified%20policy%20kit%22%5D%2C%22keeps%20every%20policy%20key%20domain%20namespaced%22%5D"
-        ]
-      },
-      {
-        "invariant_id": "INV-API-001",
-        "subject": "approved-shared-error-helper-semantics",
-        "taskId": "invariant-errors",
-        "population": "detran-invariant-errors-v1",
-        "requiredTestIds": [
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20%5C%227%5C%22%20(aspas)%20quando%20version%3D7%20ent%C3%A3o%20assertIfMatch%20n%C3%A3o%20lan%C3%A7a%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%207%20(sem%20aspas)%20quando%20version%3D7%20ent%C3%A3o%20assertIfMatch%20n%C3%A3o%20lan%C3%A7a%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20W%2F%5C%227%5C%22%20quando%20version%3D7%20ent%C3%A3o%20assertIfMatch%20n%C3%A3o%20lan%C3%A7a%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20ausente%20quando%20assertIfMatch%20ent%C3%A3o%20lan%C3%A7a%20TEAT.IF_MATCH_REQUIRED%20428%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20divergente%20(%5C%226%5C%22%20quando%20version%3D7)%20quando%20assertIfMatch%20ent%C3%A3o%20lan%C3%A7a%20TEAT.VERSION_CONFLICT%20412%20com%20context.expected%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20mal%20formado%20quando%20assertIfMatch%20ent%C3%A3o%20lan%C3%A7a%20TEAT.IF_MATCH_REQUIRED%20428%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20header%20vazio%20quando%20assertIfMatch%20ent%C3%A3o%20lan%C3%A7a%20TEAT.IF_MATCH_REQUIRED%20428%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22assertIfMatch%20(C-0001-03)%22%5D%2C%22dado%20prefixo%20RAIT%20quando%20header%20ausente%20ent%C3%A3o%20lan%C3%A7a%20RAIT.IF_MATCH_REQUIRED%20428%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22etagOf%20(C-0001-04)%22%5D%2C%22dado%20etagOf(0)%20ent%C3%A3o%20devolve%20%5C%220%5C%22%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%2C%22etagOf%20(C-0001-04)%22%5D%2C%22dado%20etagOf(7)%20ent%C3%A3o%20devolve%20%5C%227%5C%22%20entre%20aspas%2C%20formato%20do%20ETag%20da%20resposta%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%5D%2C%22dado%20context%20com%20ids%20e%20tokens%20quando%20informado%20ent%C3%A3o%20fica%20acess%C3%ADvel%20em%20error.context%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%5D%2C%22dado%20new%20DetranError(%5C%22RAIT.CASE_STATE_INVALID%5C%22)%20quando%20serializado%20ent%C3%A3o%20messageKey%20deriva%20do%20prefixo%20(regex)%2C%20nunca%20de%20tabela%20literal%20(C-0001-02)%22%5D",
-          "test:v1:%5B%22detran-invariant-errors%22%2C%22backend%2Fdomains%2Fshared%2Fsrc%2Ferrors%2Fdetran-error.spec.ts%22%2C%5B%22DetranError%20(M1%2C%20CTG-0001%20%C2%A71)%22%5D%2C%22dado%20new%20DetranError(%5C%22TEAT.AIT_STATE_INVALID%5C%22)%20quando%20serializado%20ent%C3%A3o%20messageKey%20e%20status%20corretos%20(C-0001-01)%22%5D"
-        ]
-      }
-    ]
   }
 }
