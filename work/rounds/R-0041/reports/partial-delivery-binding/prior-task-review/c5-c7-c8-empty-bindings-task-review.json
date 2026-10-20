@@ -1,0 +1,19 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "tools/devai/tests/ci-isolation.test.mjs",
+      "line": 329,
+      "summary": "The step-2 source change contradicts a required test in the dirty tree. That test asserts law/policy/adopter-policy.json has no invariant_producers key, and the task permits editing only the policy file.",
+      "failure_scenario": "Adding invariant_producers {schemaVersion:'1.0.0',bindings:[]} as step 2 says makes `node --test tools/devai/tests/ci-isolation.test.mjs` fail at assert.equal(Object.hasOwn(policy,'invariant_producers'), false). The packet makes this test a mandatory acceptance gate and forbids weakening assertions, so acceptance cannot pass. Fixing it means changing the test, which is outside the single-file write set. The packet needs to add that test file to the authorized delta, for example by asserting the declared key is exactly the closed empty form with bindings length 0 and still asserting no measurable_via. As written it cannot be executed."
+    },
+    {
+      "severity": "info",
+      "file": "node_modules/@aarusso-nyx/devai/dist/runtime/index/release-host.js",
+      "line": 228733,
+      "summary": "Verified against installed DEVAI 2.6.3, no defect: the cited spans match. Every other premise checked also holds.",
+      "failure_scenario": "None. Checked: plan-only exits early at 234751–234759. Ownership is checked by hash at 234650–234678, and the prior receipt hash b64d7caf… matches the current .devai/config/invariant-producers.json, with policy_id detran-law-corpus unchanged. When the key is declared, the projector uses jsonBytes(document[key]) and the canonical readPolicy lookup is skipped. The resolver at 165855–165867 searches only package paths, and no invariant-producers.json default ships in the package. The closed schema requires schemaVersion and bindings, allows an empty array, and lists that exact example. The audit reader at 189855–189872 accepts the empty form. release_verification and reviewed_workflow_steps are absent from the policy, so those targets will not be created. The sensor_inputs jsonBytes hash equals the receipt's 38782bf4…. The seven current tasks and profiles are byte-identical to their HEAD entries. MIG-2.5.0 promises retirement to canonical empty defaults but that default is missing from the package, which is correctly scoped as a packaging gap not repaired here. Measurement deferral, CI workloads, thresholds and Owner decision OD-C4-011 are not altered by the representation itself."
+    }
+  ]
+}

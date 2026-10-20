@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "file": "tools/devai/tests/ci-isolation.test.mjs",
+      "line": 329,
+      "summary": "Checked and found no defect. V2 fixes the V1 FAIL by authorizing exactly one Inspector replacement of the line-329 assertion with a strict deepEqual on the exact empty object. The V1 FAIL is kept as a FAIL and is not reclassified.",
+      "failure_scenario": "None. Checked: line 1 imports node:assert/strict, so deepEqual is deepStrictEqual. With the current policy, where the key is omitted, the replacement is genuinely RED (undefined vs {schemaVersion:'1.0.0',bindings:[]}). It also refuses a missing key, null, extra fields, a different schemaVersion and any binding. The adjacent checks stay intact: the test-tasks.json sha256 752c6105…, the seven nodeIds, the rc profile, and no measurable_via across all nine invariants. The required order is RED on the full suite, then the policy-only source fix, then GREEN, and it stops on concurrent source drift. The prior review /tmp/c5-c7-c8-empty-bindings-task-review.json still says verdict FAIL. Checked against installed DEVAI 2.6.3. A declared key goes through jsonBytes, then schema validation, then validateAuditProjection, which iterates only real bindings. The readPolicy path that hit 'canonical policy source unavailable' is skipped. The resolver searches only package paths. The audit reader compares source[key] ?? {schemaVersion,bindings:[]} canonically, so the explicit empty form is accepted and stays owned in the receipt. The CI invariant-producers job runs the nine ordinary suites without reading the compiled bindings. No other repo consumer needs a non-empty .devai/config/invariant-producers.json. The compiled file still has 9 bindings until the official --write bind runs, and only the provider may change it. The packet adds no Owner choice, threshold or NA change, fallback file, new task or native measurement. The packaging gap is disclosed and not claimed as repaired. C6 stays blocked."
+    }
+  ]
+}

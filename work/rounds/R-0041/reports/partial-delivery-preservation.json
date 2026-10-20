@@ -1,0 +1,338 @@
+{
+  "kind": "partial-security-delivery-preservation-observation",
+  "observedAt": "2026-10-20T02:54:56.259946+00:00",
+  "authority": "OD-C4-011; no new Owner decision or human reply",
+  "scope": "Completed preservation/tag/reconciliation only; no native measurement, integration approval or round closure.",
+  "frozenWip": {
+    "commit": "042215df2f2fed82b49c326372fb1af806767e55",
+    "sourceRef": "refs/heads/codex/c5-c8-governance",
+    "tree": "a38eb9dfc48fdd1ad727e6ee8ffe6519348479e4"
+  },
+  "archive": {
+    "status": "PASS",
+    "manifestSHA256": "c83127d9d4a88b9b608750e45ee11da8e249b956562d70f3f8d5a9c2d1e66c6e",
+    "noFailedMarkerObserved": true,
+    "preservedTrackedFiles": 12211,
+    "preservedR0041Files": 312,
+    "preservedR0041Reports": 308,
+    "captureCopiesVerified": 1225,
+    "historicalUnavailableGapsNotReconstructed": 14,
+    "tarAllMembersMatched": true,
+    "bareBundleFullTreeMatched": true,
+    "ancestryCitationsChecked": 178,
+    "historicalExternalSourceSeparateNotAncestor": true,
+    "inventorySHA256": "9830995d5048976c6d7d09f851a89742ae3711e82f75b20afcb366c284e0e5e4"
+  },
+  "firstAttempt": {
+    "status": "FAIL",
+    "code": "AttributeError",
+    "preservedUnchanged": true,
+    "manifestAbsentObserved": true,
+    "notRecastAsPass": true
+  },
+  "tag": {
+    "verifiedAt": "2026-10-20T02:42:59.096306+00:00",
+    "tag": "archive/c6-native-wip-042215df-20261020",
+    "remoteTagObject": "5d82e3989bcc3762ccb9f1c9c5a8a9e7f9279cb8",
+    "remotePeeledCommit": "042215df2f2fed82b49c326372fb1af806767e55",
+    "localMatchesRemote": true,
+    "sourceTree": "a38eb9dfc48fdd1ad727e6ee8ffe6519348479e4",
+    "archiveManifestSha256": "c83127d9d4a88b9b608750e45ee11da8e249b956562d70f3f8d5a9c2d1e66c6e",
+    "controllerSupplementSha256": "0e5800aebe0624d75a7b55b46c1633fee705247604b27c0052d5920f8c2469bf",
+    "status": "PRESERVED_NONRELEASE_WIP_NO_READINESS_OR_NATIVE_STANDING"
+  },
+  "forwardReconciliation": {
+    "branch": "codex/c5-c7-c8-partial-delivery",
+    "commit": "b409ca6f86f905fc256aeecb55399616834af684",
+    "parents": [
+      "042215df2f2fed82b49c326372fb1af806767e55",
+      "c58278cc91f26458e478aa34030075a16e1241aa"
+    ],
+    "preservationReceipt": {
+      "verifiedAt": "2026-10-20T02:45:46.367686+00:00",
+      "paths": 1567,
+      "closedRoundsLegacyThresholdsAndAll312OldR41Unchanged": true,
+      "chainEntries": 165,
+      "conflictsResolved": [
+        "work/rounds/README.md"
+      ],
+      "proofConflicts": []
+    },
+    "soleConflict": "work/rounds/README.md; exact main bytes plus original open R0041 row; no proof conflict"
+  },
+  "officialBind": {
+    "status": "COMPLETED_OFFICIAL_BIND",
+    "policyVersion": "1.5.0",
+    "sourceSHA256": "3364681471dfd86ec0ad3213d0851f6413a15e68eb522389be540278c4012de4",
+    "sourceDelta": "Only explicit invariant_producers:{schemaVersion:1.0.0,bindings:[]} added; all other fields unchanged",
+    "receiptSHA256": "b144ac217c3a001e09f3615f823ff40854a7c3cd39d73d0116369cee30c4309b",
+    "emptyProjectionSHA256": "32c058fdc22a517bb47ea2b504bd9164c22c099217320fe997af37276dae5e55",
+    "compiledChangedExactly": [
+      ".devai/config/adopter-policy-binding.json",
+      ".devai/config/invariant-producers.json"
+    ],
+    "otherCompiledUnchanged": true,
+    "allMaterializedHashesRechecked": true,
+    "protectedPathsVerifiedByProducer": 510,
+    "doctor": {
+      "exitCode": 0,
+      "ok": true,
+      "checks": 16,
+      "scope": "Dirty implementation candidate declaration-plan diagnostic only, not clean HEAD/native measurement"
+    },
+    "ciContract": {
+      "RED": {
+        "total": 11,
+        "pass": 10,
+        "fail": 1
+      },
+      "GREEN": {
+        "total": 11,
+        "pass": 11,
+        "fail": 0
+      },
+      "nativeOrWorkloadExecution": false
+    },
+    "properCompleteSchemaValidation": {
+      "exitCode": 0,
+      "bothSchemasValid": true,
+      "method": "Exact installed schemas with common/referenced documents registered; Ajv2020 strict:false matching installed runtime; supplemental read-only validation, not native measurement"
+    },
+    "standaloneGenericSchemaProbes": {
+      "exitCodes": [
+        2,
+        2
+      ],
+      "rawFailuresRetained": true,
+      "notReclassified": true
+    },
+    "captureDirectory": "work/rounds/R-0041/reports/partial-delivery-binding",
+    "captureCustodySHA256": "e2f9d03957c2c41217006a040dddaff4daa0ae97f8b58f36b961db5af1120722",
+    "newOwnerDecision": false,
+    "nativeStandingClaimed": false,
+    "priorSupplementalTaskReview": {
+      "verdict": "FAIL",
+      "preservedSeparate": true,
+      "files": [
+        {
+          "path": "prior-task-review/c5-c7-c8-empty-bindings-task-review.json",
+          "sourcePath": "/tmp/c5-c7-c8-empty-bindings-task-review.json",
+          "byteLength": 2569,
+          "sha256": "52118d9e87f8d0db060aa97c391570ff6f04a29079969e81f3feab4e98fc3b65"
+        },
+        {
+          "path": "prior-task-review/c5-c7-c8-empty-bindings-task-review.bridge.json",
+          "sourcePath": "/tmp/c5-c7-c8-empty-bindings-task-review.bridge.json",
+          "byteLength": 493,
+          "sha256": "1bb9d22cb8a26af68942c2d595beb8c9579ee37d1140f512b4c6269577abf626"
+        }
+      ]
+    }
+  },
+  "residuals": [
+    "C6 protocol-v5 review withheld by classifier; no valid verdict and no retry/rephrase.",
+    "Fourteen historical capture gaps remain unavailable; no reconstruction.",
+    "All nine native activation populations deferred together; ordinary CI suite presence grants no native credit.",
+    "R0041 active; R0036-R0039 closed histories, thresholds, N/A entries and separate product backlog preserved.",
+    "Final independent delivery review, required checks on the frozen candidate, PR integration and main verification remain separate pending gates; official binding completed as separately captured."
+  ],
+  "sourceArtifacts": {
+    "archiveManifest": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-042215df-20261020-attempt2/manifest.json",
+      "sha256": "c83127d9d4a88b9b608750e45ee11da8e249b956562d70f3f8d5a9c2d1e66c6e",
+      "byteLength": 246894
+    },
+    "controllerSupplement": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-042215df-20261020-attempt2/controller-supplement/receipt.json",
+      "sha256": "0e5800aebe0624d75a7b55b46c1633fee705247604b27c0052d5920f8c2469bf",
+      "byteLength": 3266
+    },
+    "archiveExecution": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/execution.json",
+      "sha256": "b72496c8e239fe22aca206aae014a0ed6b0b1ae389f3c543026da3a9c23d49a4",
+      "byteLength": 368
+    },
+    "tagCreation": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/tag-created.json",
+      "sha256": "692569895c108921621bb7debea950a1ce8cff083f761ff28d40e8fbad0318c7",
+      "byteLength": 485
+    },
+    "tagPushExecution": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/tag-push-execution.json",
+      "sha256": "e54db88faa67f2f7dc3f0bdfe923584d2ba2c52506bc19ad8fcaa5467f635aec",
+      "byteLength": 183
+    },
+    "tagRemoteVerification": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/tag-remote-verified.json",
+      "sha256": "552bc0cd6d898808a4eea24f16f9ad909757cc21668dfe53ff26eeab6664caef",
+      "byteLength": 597
+    },
+    "mainMergePreservation": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/main-merge-preservation.json",
+      "sha256": "d2b5d3f5f5b7a2516b28b7a87b3ddfaaf29a43a2f16c1f2b7c19bd54374ed362",
+      "byteLength": 241
+    },
+    "mainMergeReconciliation": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-preservation-controller-20261020-attempt2/main-merge-conflict-reconciliation.json",
+      "sha256": "2c7507305f886c16152891133abec773c03beea94bfe455252bf2c18ab1078dc",
+      "byteLength": 490
+    },
+    "firstAttemptFailure": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c6-native-wip-042215df-20261020/FAILED.json",
+      "sha256": "153c44b0cbbeefb9a670c80bb712313c2790b21ed878094e0fd2da5859b87fe9",
+      "byteLength": 113
+    },
+    "bindExecution": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/bind-write-execution.json",
+      "sha256": "146caa155c32f509cbeba028d779bb2fdfc1995c393f48baec3582b4729be955",
+      "byteLength": 314
+    },
+    "bindStdout": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/bind-write.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteLength": 0
+    },
+    "bindStderr": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/bind-write.stderr",
+      "sha256": "99a707a51c93c56af63e8a37df2a97b960d9e80b8e1e43554d00dec55a45865d",
+      "byteLength": 341
+    },
+    "compiledWriteSet": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/compiled-write-set.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "byteLength": 3
+    },
+    "compiledBeforeHashes": {
+      "path": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/compiled-before-hashes.json",
+      "sha256": "369f41bb03ce924ed02f631e8148cc60d826a130083643045013143e11016f07",
+      "byteLength": 1286
+    }
+  },
+  "nativeStandingClaimed": false,
+  "scorecardVerdictClaimed": false,
+  "officialBindHistory": [
+    {
+      "status": "UNRESOLVED",
+      "exitCode": 2,
+      "observedAt": "2026-10-20T02:49:16.199053+00:00",
+      "errorCode": "ACTION_INVOCATION_REFUSED",
+      "reportedReason": "canonical policy source unavailable: law/policy/invariant-producers.json",
+      "compiledWriteSet": [],
+      "passClaimed": false,
+      "sourceArtifacts": [
+        "bindExecution",
+        "bindStdout",
+        "bindStderr",
+        "compiledWriteSet",
+        "compiledBeforeHashes"
+      ],
+      "pendingCorrection": {
+        "representation": {
+          "invariant_producers": {
+            "schemaVersion": "1.0.0",
+            "bindings": []
+          }
+        },
+        "meaning": "Retire entire nine effective bindings via source-owned explicit empty projection, materialized only by official bind",
+        "status": "SUPPLEMENTAL_TASK_REVIEW_AND_EXECUTION_PENDING",
+        "diagnosisSource": "Parent relayed read-only Engineer diagnosis; not a successful binding receipt"
+      }
+    }
+  ],
+  "bindingCompletionObservedAt": "2026-10-20T03:06:11.259762+00:00",
+  "additionalLocalGovernanceChecks": {
+    "executedBy": "Parent; captured raw output copied, no rerun by this documentation task",
+    "checks": [
+      {
+        "name": "devai-tests",
+        "argv": [
+          "pnpm",
+          "devai:test"
+        ],
+        "startedAt": "2026-10-20T03:04:55.807725+00:00",
+        "exit_code": 0,
+        "seconds": 65.96561741598998
+      },
+      {
+        "name": "state-index",
+        "argv": [
+          "pnpm",
+          "verify:state-index"
+        ],
+        "startedAt": "2026-10-20T03:06:01.775580+00:00",
+        "exit_code": 0,
+        "seconds": 0.5171844169963151
+      },
+      {
+        "name": "rounds-index",
+        "argv": [
+          "pnpm",
+          "verify:rounds-index"
+        ],
+        "startedAt": "2026-10-20T03:06:02.293372+00:00",
+        "exit_code": 0,
+        "seconds": 0.398854625003878
+      },
+      {
+        "name": "proof-anchors",
+        "argv": [
+          "pnpm",
+          "verify:proof-anchors"
+        ],
+        "startedAt": "2026-10-20T03:06:02.692776+00:00",
+        "exit_code": 0,
+        "seconds": 1.493562708987156
+      },
+      {
+        "name": "chain-verify",
+        "argv": [
+          "pnpm",
+          "exec",
+          "devai",
+          "evidence",
+          "verify",
+          "--scope",
+          "chain",
+          "--repo-root",
+          ".",
+          "--show-head",
+          "--format",
+          "human"
+        ],
+        "startedAt": "2026-10-20T03:06:04.187146+00:00",
+        "exit_code": 0,
+        "seconds": 1.036757249996299
+      },
+      {
+        "name": "historical-compatibility",
+        "argv": [
+          "node",
+          "tools/security/verify-historical-compatibility.mjs"
+        ],
+        "startedAt": "2026-10-20T03:06:05.225077+00:00",
+        "exit_code": 0,
+        "seconds": 10.612574874976417
+      },
+      {
+        "name": "citation-census",
+        "argv": [
+          "node",
+          "tools/security/schema-citation-census.mjs"
+        ],
+        "startedAt": "2026-10-20T03:06:15.838473+00:00",
+        "exit_code": 0,
+        "seconds": 0.5325735000078566
+      }
+    ],
+    "devaiTestCounts": {
+      "tests": 210,
+      "pass": 210,
+      "fail": 0
+    },
+    "scope": "Local implementation candidate; not final remote CI or main verification",
+    "captureDirectory": "work/rounds/R-0041/reports/partial-delivery-binding/parent-governance-checks",
+    "C8FullCloneUnitSuiteRerun": false,
+    "existingC8FullUnitResultsRemainHistorical": true,
+    "nativeStandingClaimed": false
+  }
+}
