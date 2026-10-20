@@ -1,0 +1,49 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/domains/inf/rait-case
+
+ ❯ tests/unit/rait-claim-context.spec.ts (3 tests | 3 failed) 18ms
+   × R17 unauthenticated discovery denial precedes all global relation locks 8ms
+   × R17 readRole discovery denial precedes all global relation locks 1ms
+   × R17 foreignPool discovery denial precedes all global relation locks 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-claim-context.spec.ts > R17 unauthenticated discovery denial precedes all global relation locks
+ FAIL  tests/unit/rait-claim-context.spec.ts > R17 readRole discovery denial precedes all global relation locks
+ FAIL  tests/unit/rait-claim-context.spec.ts > R17 foreignPool discovery denial precedes all global relation locks
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "lock table ops.parameter in share mode",
++   ],
++   [
++     "lock table inf.rait_holiday in share mode",
++   ],
++ ]
+
+ ❯ tests/unit/rait-claim-context.spec.ts:60:7
+     58|     expect(
+     59|       query.mock.calls.filter(([sql]) => /^\s*lock\s+table/i.test(sql)…
+     60|     ).toEqual([]);
+       |       ^
+     61|   });
+     62|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  22:26:44
+   Duration  4.01s (transform 1.22s, setup 0ms, import 3.66s, tests 18ms, environment 5ms)
+
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/domains/inf/rait-case:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --config vitest.config.ts tests/unit/rait-claim-context.spec.ts

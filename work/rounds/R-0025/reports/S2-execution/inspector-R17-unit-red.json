@@ -1,0 +1,18 @@
+{
+  "task": "TASK-0044 R17 F6",
+  "status": "genuine preimplementation RED",
+  "executed": 3,
+  "failed": 3,
+  "durationSeconds": 4.01,
+  "scenarios": [
+    "unauthenticated403",
+    "read-role403",
+    "explicit foreign pool404"
+  ],
+  "assertion": "Actual RaitClaimContextService.read issues global LOCK TABLE before actual pools authentication/eligibility denial. No private pools override.",
+  "testSha256": "c423d39e85352684f8eed45f1115361abaf66504bf400325629f393893b00385",
+  "runtimeSha256": "888dbf52c84eb39997d1df4b12294efac6b891f5ccf71a5403f13cea448c9eb8",
+  "logSha256": "46f3198170ecdf3ee1a4c47ff4fb996c207a0ac0907f15a2dfb6f4106c6b4671",
+  "DBUsed": false,
+  "HTTPsupplements": "authoring separately; supplemental verification not initial RED"
+}
