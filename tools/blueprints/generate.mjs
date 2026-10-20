@@ -465,6 +465,24 @@ function moduleFile(bp, sha, module, entities) {
   ];
   return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n${handwrittenImports}\n\n@Module({${moduleImports.length ? ` imports: [${moduleImports.map(({ symbol }) => symbol).join(', ')}],` : ''} controllers: [${controllers.join(', ')}], providers: [${providers.join(', ')}]${moduleExports.length ? `, exports: [${moduleExports.join(', ')}]` : ''} })\nexport class ${pascal(module.name)}Module {}`;
 }
+function portalRequestsVitestConfig(module) {
+  const template = fs.readFileSync(
+    path.join(root, 'tools/blueprints/templates/portal-requests.vitest.ts'),
+    'utf8',
+  );
+  const marker = '/* DETRAN_PORTAL_REQUESTS_TEST_ALIASES */';
+  if (template.split(marker).length !== 2)
+    throw new Error(
+      'Portal Requests Vitest template requires exactly one alias marker',
+    );
+  const aliases = (module.testAliases ?? [])
+    .map(
+      (alias) =>
+        `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`,
+    )
+    .join(', ');
+  return template.replace(marker, () => aliases);
+}
 function packageFiles(bp, sha, module, entities) {
   const base = `backend/domains/${module.namespace}/${kebab(module.name)}`;
   write(
@@ -557,13 +575,7 @@ function packageFiles(bp, sha, module, entities) {
   write(
     `${base}/vitest.config.ts`,
     bp.id === 'BP-PORTAL-REQUESTS-001'
-      ? fs.readFileSync(
-          path.join(
-            root,
-            'tools/blueprints/templates/portal-requests.vitest.ts',
-          ),
-          'utf8',
-        )
+      ? portalRequestsVitestConfig(module)
       : `import { fileURLToPath } from 'node:url';\nimport { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
   );
   for (const item of entities) {

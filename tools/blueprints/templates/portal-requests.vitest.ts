@@ -27,17 +27,7 @@ export default defineConfig({
   plugins: [createNestMetadataPlugin()],
   esbuild: { exclude: [/\.js$/, ...metadataCompiledSourcePatterns] },
   resolve: {
-    alias: {
-      '@detran/shared': fileURLToPath(
-        new URL('../../shared/src/index.ts', import.meta.url),
-      ),
-      '@detran/portal-identity': fileURLToPath(
-        new URL('../identity/src/index.ts', import.meta.url),
-      ),
-      '@detran/inf-deadlines': fileURLToPath(
-        new URL('../../inf/deadlines/src/index.ts', import.meta.url),
-      ),
-    },
+    alias: {/* DETRAN_PORTAL_REQUESTS_TEST_ALIASES */},
   },
   test: {
     environment: 'node',
