@@ -1,0 +1,143 @@
+{
+  "role": "Engineer",
+  "task": "TASK-0038 generation continuation",
+  "status": "QUIESCENT_GENERATED_CLIENT_READY_FOR_ROOT_COMMIT",
+  "evaluatedHead": "e142178d3eee9ecc6aabb0896fdf9c1421cd0732",
+  "architectCommit": "ae569081e4b096517ccf64bde258a656126cbc9f",
+  "timestampUTC": "2026-10-20T00:43:47.694691+00:00",
+  "source": {
+    "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+    "sha256": "18d005139a185aadb2c3a6531aa9bf993b2eb29bac7ce0fa43b76b2e9b2c060d",
+    "matchesArchitectReceipt": true,
+    "changes": [
+      {
+        "operationId": "raitPoolClaimNext",
+        "method": "post",
+        "path": "/v1/inf/rait/pools/{id}/claim-next",
+        "status": "403",
+        "codes": [
+          "RAIT.FORBIDDEN_ACTION",
+          "RAIT.FORBIDDEN_CASE_SCOPE",
+          "RAIT.ORDER_OVERRIDE_FORBIDDEN"
+        ],
+        "branchesUnchanged": true
+      },
+      {
+        "operationId": "raitPoolClaimNext",
+        "method": "post",
+        "path": "/v1/inf/rait/pools/{id}/claim-next",
+        "status": "409",
+        "codes": [
+          "RAIT.QUEUE_EMPTY",
+          "RAIT.CASE_POOL_UNRESOLVED",
+          "RAIT.CLAIM_LEGACY_UNVERIFIED",
+          "RAIT.IDEMPOTENCY_REPLAY",
+          "RAIT.ASSIGNMENT_ALREADY_ACTIVE"
+        ],
+        "branchesUnchanged": true
+      },
+      {
+        "operationId": "raitPoolClaimNext",
+        "method": "post",
+        "path": "/v1/inf/rait/pools/{id}/claim-next",
+        "status": "422",
+        "codes": [
+          "RAIT.MEMBER_NOT_AVAILABLE",
+          "RAIT.PARAMETER_SOURCE_PENDING",
+          "RAIT.ASSIGNMENT_WIP_LIMIT"
+        ],
+        "branchesUnchanged": true
+      },
+      {
+        "operationId": "raitClaimContext",
+        "method": "get",
+        "path": "/v1/inf/rait/claim-context",
+        "status": "403",
+        "codes": [
+          "RAIT.FORBIDDEN_ACTION",
+          "RAIT.FORBIDDEN_CASE_SCOPE"
+        ],
+        "branchesUnchanged": true
+      },
+      {
+        "operationId": "raitClaimContext",
+        "method": "get",
+        "path": "/v1/inf/rait/claim-context",
+        "status": "409",
+        "codes": [
+          "RAIT.CASE_POOL_UNRESOLVED",
+          "RAIT.CLAIM_LEGACY_UNVERIFIED"
+        ],
+        "branchesUnchanged": true
+      },
+      {
+        "operationId": "raitCaseRiskSnapshot",
+        "method": "get",
+        "path": "/v1/inf/rait/cases/{id}/risk",
+        "status": "403",
+        "codes": [
+          "RAIT.FORBIDDEN_ACTION",
+          "RAIT.FORBIDDEN_CASE_SCOPE"
+        ],
+        "branchesUnchanged": true
+      }
+    ]
+  },
+  "changedFiles": [
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts",
+      "before": "1355ac310aba4468d8d4cc631403340619eeffbb95f1dd22c8358c5e42feb2ee",
+      "after": "6dfb6a6906f14437b6e31e80f84767fe8fe84bc34b08f6d3d5c2469ade2f4ea6"
+    }
+  ],
+  "unownedChanges": [],
+  "verifiedBeforePopulation": 12015,
+  "beforeSnapshotSha256": "53db1044498b246a601d9ab246c013b629632fc8c75656471a7f0bac42779ce0",
+  "checks": [
+    {
+      "command": "pnpm contracts:clients",
+      "exit": 0,
+      "status": "PASS",
+      "log": "work/rounds/R-0025/reports/S2-execution/engineer-contract-enum-generation-logs/detran-s2-contract-enum-clients.log",
+      "logSha256": "def1e276c7dbd79bd134aa40ba203fdf6b7e1ac90f2c5915430637771ba6fc0b"
+    },
+    {
+      "command": "pnpm contracts:check",
+      "exit": 0,
+      "status": "PASS",
+      "log": "work/rounds/R-0025/reports/S2-execution/engineer-contract-enum-generation-logs/detran-s2-contract-enum-check.log",
+      "logSha256": "47c3dfcaa4c6640864c6c3e1943c0c00fedc9193fda59f4c8b777b18605fa6a8"
+    },
+    {
+      "command": "pnpm contracts:test",
+      "exit": 0,
+      "status": "PASS",
+      "log": "work/rounds/R-0025/reports/S2-execution/engineer-contract-enum-generation-logs/detran-s2-contract-enum-tests.log",
+      "logSha256": "1810f08ad80f85ee4b467014cf6c0cfae92e518190ae5be8edc5c2ad9ca53023"
+    },
+    {
+      "command": "pnpm exec prettier --check packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts",
+      "exit": 0,
+      "status": "PASS",
+      "log": "work/rounds/R-0025/reports/S2-execution/engineer-contract-enum-generation-logs/detran-s2-contract-enum-format.log",
+      "logSha256": "973996a83aadffd30bf7f96d0b6c1ff4340dd23e3799bb5c561ebe2982befbb8"
+    }
+  ],
+  "contractCensus": 331,
+  "synchronizedClients": 72,
+  "tests": {
+    "total": 58,
+    "pass": 58,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "fullPopulationReceipt": {
+    "path": "work/rounds/R-0025/reports/S2-execution/engineer-generation-full-population.json",
+    "sha256": "e23d6e0cabc8c6c59c3f5e096dc97f7c8eb92b8d80e081f74cbeb7e6b740d0f5",
+    "preservedByteIdentical": true,
+    "fullBlueprintRegeneration": "NOT RUN; not required by any executed checker"
+  },
+  "scope": "Only the authorized deterministic CASE command client changed; six redundant outer code-enum intersections. No source,checker,test,handwritten runtime,DB,Git,state,scorecard or security changes. No full runtime GREEN claim."
+}

@@ -3106,7 +3106,13 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code:
+              | 'RAIT.FORBIDDEN_ACTION'
+              | 'RAIT.FORBIDDEN_CASE_SCOPE'
+              | 'RAIT.ORDER_OVERRIDE_FORBIDDEN';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.FORBIDDEN_ACTION';
@@ -3150,7 +3156,8 @@ export interface operations {
                 requestId?: string;
                 /** @description Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context. */
                 context?: Record<string, never>;
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
@@ -3178,7 +3185,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code:
+              | 'RAIT.QUEUE_EMPTY'
+              | 'RAIT.CASE_POOL_UNRESOLVED'
+              | 'RAIT.CLAIM_LEGACY_UNVERIFIED'
+              | 'RAIT.IDEMPOTENCY_REPLAY'
+              | 'RAIT.ASSIGNMENT_ALREADY_ACTIVE';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.QUEUE_EMPTY';
@@ -3243,7 +3258,8 @@ export interface operations {
                   /** Format: uuid */
                   memberId?: string;
                 };
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
@@ -3252,7 +3268,13 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code:
+              | 'RAIT.MEMBER_NOT_AVAILABLE'
+              | 'RAIT.PARAMETER_SOURCE_PENDING'
+              | 'RAIT.ASSIGNMENT_WIP_LIMIT';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.MEMBER_NOT_AVAILABLE';
@@ -3295,7 +3317,8 @@ export interface operations {
                   wip?: number;
                   limit?: number;
                 };
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
@@ -6646,7 +6669,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.FORBIDDEN_ACTION';
@@ -6672,7 +6698,8 @@ export interface operations {
                 requestId?: string;
                 /** @description Empty safe GET denial context; no case, pool, unit, person or source identifiers. */
                 context?: Record<string, never>;
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
@@ -6700,7 +6727,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.CASE_POOL_UNRESOLVED' | 'RAIT.CLAIM_LEGACY_UNVERIFIED';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.CASE_POOL_UNRESOLVED';
@@ -6722,7 +6752,8 @@ export interface operations {
                 requestId?: string;
                 /** @description Optional catalogued details only for the caller/authorized own resource. Never disclose another candidate, person, source or incident. New bounded source/routing/legacy errors have empty context. */
                 context?: Record<string, never>;
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
@@ -6820,7 +6851,10 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json':
+          'application/json': {
+            /** @enum {string} */
+            code: 'RAIT.FORBIDDEN_ACTION' | 'RAIT.FORBIDDEN_CASE_SCOPE';
+          } & (
             | {
                 /** @enum {string} */
                 code: 'RAIT.FORBIDDEN_ACTION';
@@ -6846,7 +6880,8 @@ export interface operations {
                 requestId?: string;
                 /** @description Empty safe GET denial context; no case, pool, unit, person or source identifiers. */
                 context?: Record<string, never>;
-              };
+              }
+          );
         };
       };
       /** @description Per-code optional details preserve canonical rait-error-catalog. Retained POST codes keep existing catalogued context; S2 bounded409/503 expose no candidate/source/incident details. Own/authorized context only, never another candidate. */
