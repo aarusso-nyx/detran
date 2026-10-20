@@ -104,8 +104,8 @@ jobs:
             echo "evidence_mode=true" >> "$GITHUB_OUTPUT"
           fi
 
-  # C6: unconditional complete semantic producers, independently isolated DB.
-  # Foundation explicitly depends on success; an absent/skipped producer cannot open it.
+  # Ordinary CI: nine complete semantic suites, independently isolated DB.
+  # Foundation requires every suite job to succeed; native custody remains deferred.
   invariant-producers:
     runs-on: ubuntu-latest
     services:
@@ -166,23 +166,23 @@ jobs:
         run: bash backend/database/seed.sh
       - name: Prepare isolated legacy test fixtures
         run: pnpm backend:test:prepare-legacy
-      - name: Measure invariant-ch complete semantic population
+      - name: Run invariant-ch complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/ch.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-dash complete semantic population
+      - name: Run invariant-dash complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/dash.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-est complete semantic population
+      - name: Run invariant-est complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/est.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-inf complete semantic population
+      - name: Run invariant-inf complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/inf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-ops-queue complete semantic population
+      - name: Run invariant-ops-queue complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/ops-queue.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-ops-perf complete semantic population
+      - name: Run invariant-ops-perf complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/ops-perf.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-portal complete semantic population
+      - name: Run invariant-portal complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/portal.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-rbac complete semantic population
+      - name: Run invariant-rbac complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/rbac.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
-      - name: Measure invariant-errors complete semantic population
+      - name: Run invariant-errors complete semantic population (ordinary CI)
         run: detran-native-vitest run --config ./tools/security/invariants/errors.config.mjs --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter
 
   foundation:
