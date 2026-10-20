@@ -1,5 +1,6 @@
 // Article7 Inspector. Real HTTP / PolicyGuard / request-role SQL; no snapshot/auth/claim mock.
 import * as CasePublic from '@detran/inf-rait-case';
+import { addCalendarDays, isWeekend } from '@detran/inf-deadlines';
 import { randomUUID } from 'node:crypto';
 import { Client } from 'pg';
 import { Test } from '@nestjs/testing';
@@ -2399,4 +2400,101 @@ for (const mode of [
     expect(denied.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
     expect(denied.body).not.toHaveProperty('data');
     expect(await fixture.effects()).toEqual(before);
+  });
+
+for (const boundary of ['weekend', 'holiday'] as const)
+  it(`ADR0057 raw A threshold on a ${boundary} remains calendar arithmetic in the actual SQL snapshot factory`, async () => {
+    fixture.practiceOn = boundary === 'weekend' ? '2026-06-15' : '2026-06-17';
+    const c = await fixture.admitted(app);
+    await fixture.executableParameters();
+    const parameter = (
+      await fixture.owner.query<{
+        value_json: {
+          tracks: {
+            ceiling: number;
+            steps: { flag: string; after: number }[];
+          }[];
+        };
+      }>('select value_json from ops.parameter where id=$1', [
+        fixture.parameters.get('A')!.id,
+      ])
+    ).rows[0]!.value_json;
+    const step = parameter.tracks.find((t) => t.ceiling === 360)!.steps[0]!;
+    const raw = addCalendarDays(fixture.practiceOn, step.after);
+    const holiday = randomUUID();
+    if (boundary === 'weekend') expect(isWeekend(raw)).toBe(true);
+    else {
+      expect(isWeekend(raw)).toBe(false);
+      await fixture.owner.query(
+        "insert into inf.rait_holiday(id,tenant_id,holiday_on,name,scope,optional) values($1,$2,$3,$4,'municipal',false)",
+        [holiday, RAIT_TENANT, raw, 'TASK0044 isolated raw threshold'],
+      );
+    }
+    const client = new Client({
+      connectionString: process.env.STYNX_APP_DATABASE_URL,
+    });
+    let connected = false;
+    try {
+      await fixture.prepareRisk(c.id);
+      const control = await request(app.getHttpServer())
+        .get(`${PREFIX}/cases/${c.id}/risk`)
+        .set(fixture.riskHeaders());
+      expect(
+        control.status,
+        'F1 qualified positive prerequisite: ' + JSON.stringify(control.body),
+      ).toBe(200);
+      const before = await fixture.effects();
+      await client.connect();
+      connected = true;
+      await client.query('begin');
+      await client.query('set local role role_app_backend');
+      await client.query("select set_config('app.tenant_id',$1,true)", [
+        RAIT_TENANT,
+      ]);
+      expect(
+        (
+          await client.query(
+            "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+          )
+        ).rows,
+      ).toEqual([{ role: 'role_app_backend', tenant: RAIT_TENANT }]);
+      const timezone = (
+        await client.query<{ timezone: string }>(
+          'select timezone from auth.tenants where id=$1',
+          [RAIT_TENANT],
+        )
+      ).rows[0]!.timezone;
+      const operation = app
+        .get(CasePublic.RaitOperationClock)
+        .capture(timezone);
+      expect(operation.instant.valueOf()).toBeLessThanOrEqual(Date.now());
+      expect(Date.now() - operation.instant.valueOf()).toBeLessThan(5000);
+      const tx = client as unknown as CasePublic.RaitRiskTx;
+      await CasePublic.raitLockRiskRelations(tx);
+      await CasePublic.raitLockRiskParents(tx, RAIT_TENANT, [c.id]);
+      const factory = app.get<CasePublic.RaitRiskSnapshotFactory>(
+        CasePublic.RAIT_RISK_SNAPSHOT_FACTORY,
+      );
+      const actual = await factory
+        .create(tx, operation)
+        .read(RAIT_TENANT, c.id);
+      const clock = actual.input.clocks.find((v) => v.clockCode === 'A')!;
+      expect(clock.applicability).toBe('applicable');
+      if (clock.applicability !== 'applicable')
+        throw Error('qualified A applicability prerequisite');
+      expect(clock.steps.find((v) => v.flag === step.flag)!.reachedOn).toBe(
+        raw,
+      );
+      await client.query('rollback');
+      expect(await fixture.effects()).toEqual(before);
+    } finally {
+      if (connected) {
+        await client.query('rollback');
+        await client.end();
+      }
+      if (boundary === 'holiday')
+        await fixture.owner.query('delete from inf.rait_holiday where id=$1', [
+          holiday,
+        ]);
+    }
   });
