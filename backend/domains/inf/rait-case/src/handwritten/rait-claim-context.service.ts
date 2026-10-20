@@ -67,6 +67,61 @@ export class RaitClaimContextService {
     ).rows;
     return { who, rows, operation };
   }
+  private async universe(
+    tx: RaitRiskTx,
+    tenantId: string,
+    actorId: string,
+    poolId: string,
+    operation: RaitOperationClockSnapshot,
+    lockInitial: boolean,
+  ) {
+    // One READ COMMITTED statement snapshot for the whole selector, including
+    // actual routing inventories. The final fence never takes new parent locks.
+    const result = (
+      await tx.query<{
+        pools: Row[];
+        members: Row[];
+        cases: (Row & {
+          id: string;
+          version: number;
+          state: string;
+          instance: string;
+          tenant_id: string;
+        })[];
+      }>(
+        `with eligible_pool as materialized (
+        select p.* from inf.rait_pool p
+        where p.tenant_id=$1 and p.id=$3 and p.active and p.strategy='pull' and p.instance='defesa_previa'
+      ), eligible_member as materialized (
+        select m.* from inf.rait_pool_member m join eligible_pool p on p.id=m.pool_id
+        where m.tenant_id=$1 and m.person_id=$2 and m.member_role='analista' and m.status='ATIVO'
+          and (m.mandate_starts_on is null or m.mandate_starts_on<=$4::date)
+          and (m.mandate_ends_on is null or m.mandate_ends_on>=$4::date)
+      ), potential as materialized (
+        select c.*,to_char(c.protocolled_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as selector_protocolled_at
+        from inf.rait_case c join eligible_pool p on c.instance=p.instance and c.unit_id is not distinct from p.unit_id
+        where c.tenant_id=$1 and c.state in ('ADMITIDO','DISTRIBUIDO') and c.legal_priority is not null
+          and exists(select 1 from eligible_member)
+          and not exists(select 1 from inf.rait_assignment a where a.tenant_id=c.tenant_id and a.case_id=c.id and a.active)
+          and not exists(select 1 from inf.rait_impediment i join eligible_member m on i.member_id=m.id where i.tenant_id=c.tenant_id and i.case_id=c.id)
+        order by c.id ${lockInitial ? 'for update of c' : ''}
+      )
+      select
+        coalesce((select jsonb_agg(to_jsonb(p) order by p.id) from eligible_pool p),'[]'::jsonb) as pools,
+        coalesce((select jsonb_agg(to_jsonb(m) order by m.id) from eligible_member m),'[]'::jsonb) as members,
+        coalesce((select jsonb_agg(
+          (to_jsonb(c)-'selector_protocolled_at') || jsonb_build_object(
+            'protocolled_at',c.selector_protocolled_at,
+            'selector_routes',coalesce((select jsonb_agg(to_jsonb(s) order by s.id) from inf.rait_case_pool_scope s where s.tenant_id=$1 and s.case_id=c.id and s.active and btrim(s.authorization_ref)<>'' and btrim(s.source_ref)<>''),'[]'::jsonb),
+            'selector_batches',coalesce((select jsonb_agg(jsonb_build_object('item',to_jsonb(i),'batch',to_jsonb(b)) order by b.id,i.id) from inf.rait_batch_item i join inf.rait_batch b on b.tenant_id=i.tenant_id and b.id=i.batch_id where i.tenant_id=$1 and i.case_id=c.id and b.state='LOTE_ACEITO'),'[]'::jsonb)
+          ) order by c.id) from potential c),'[]'::jsonb) as cases`,
+        [tenantId, actorId, poolId, operation.today(operation.tenantTz)],
+      )
+    ).rows[0];
+    if (!result)
+      throw new DetranError('RAIT.RISK_SOURCE_UNAVAILABLE', { status: 503 });
+    return result;
+  }
   async candidates(
     tx: RaitRiskTx,
     tenantId: string,
@@ -75,34 +130,17 @@ export class RaitClaimContextService {
     operation: RaitOperationClockSnapshot,
     _lock = false,
   ): Promise<RaitClaimCandidate[]> {
-    const pool = (
-      await tx.query<Row>(
-        "select id,instance,unit_id from inf.rait_pool where tenant_id=$1 and id=$2 and active and strategy='pull'",
-        [tenantId, poolId],
-      )
-    ).rows[0];
-    if (!pool) return missing();
-    const member = (
-      await tx.query<{ id: string }>(
-        "select id from inf.rait_pool_member where tenant_id=$1 and pool_id=$2 and person_id=$3 and member_role='analista' and status='ATIVO'",
-        [tenantId, poolId, actorId],
-      )
-    ).rows[0];
-    if (!member) return missing();
-    const potential = (
-      await tx.query<
-        Row & {
-          id: string;
-          version: number;
-          state: string;
-          instance: string;
-          tenant_id: string;
-        }
-      >(
-        `select c.*,to_char(c.protocolled_at at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as protocolled_at from inf.rait_case c where c.tenant_id=$1 and c.instance=$2 and c.unit_id is not distinct from $3::uuid and c.state in ('ADMITIDO','DISTRIBUIDO') and c.legal_priority is not null and not exists(select 1 from inf.rait_assignment a where a.tenant_id=c.tenant_id and a.case_id=c.id and a.active) and not exists(select 1 from inf.rait_impediment i where i.tenant_id=c.tenant_id and i.case_id=c.id and i.member_id=$4) order by c.id for update of c`,
-        [tenantId, pool.instance, pool.unit_id, member.id],
-      )
-    ).rows;
+    const frozen = await this.universe(
+      tx,
+      tenantId,
+      actorId,
+      poolId,
+      operation,
+      true,
+    );
+    if (frozen.pools.length !== 1 || frozen.members.length !== 1)
+      return missing();
+    const potential = frozen.cases;
     await raitLockRiskParents(
       tx,
       tenantId,
@@ -144,6 +182,17 @@ export class RaitClaimContextService {
           ...new Set([...legacyVersions, ...risk.sourceVersions]),
         ].sort(),
       });
+    }
+    const current = await this.universe(
+      tx,
+      tenantId,
+      actorId,
+      poolId,
+      operation,
+      false,
+    );
+    if (raitCanonical(current) !== raitCanonical(frozen)) {
+      throw new DetranError('RAIT.RISK_SOURCE_UNAVAILABLE', { status: 503 });
     }
     return qualified.sort(
       (a, b) =>

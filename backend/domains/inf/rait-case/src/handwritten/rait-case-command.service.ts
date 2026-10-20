@@ -2146,16 +2146,9 @@ export class RaitCaseCommandService {
     );
     if (!eligible.rows.some((p) => p.id === poolId))
       fail('RAIT.TENANT_MISMATCH', 404);
-    let candidates = await this.claimContext!.candidates(
-      tx,
-      tenantId,
-      actorId,
-      poolId,
-      operation,
-      true,
-    );
-    // Capture the complete set again after all candidate/source lock waits. No page or SKIP LOCKED shortcuts.
-    candidates = await this.claimContext!.candidates(
+    // The shared selector freezes and qualifies once, then fences the complete
+    // universe without absorbing arrivals into an existing parent lock order.
+    const candidates = await this.claimContext!.candidates(
       tx,
       tenantId,
       actorId,
