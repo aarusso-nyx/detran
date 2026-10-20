@@ -192,3 +192,17 @@ expansion, gate weakening or destruction of preserved work follows. Receipt in
 reports/S2-execution/owner-delegation.json. Necessary bounded amendments may be
 adopted under this delegation with a reviewable decision record, rather than
 interrupting the Owner while driving.
+
+### S2 continuation and delegated bounded decisions — 2026-10-19
+
+Owner directed continuation, completing possible validations and opening a review
+PR while recording remaining blockers and preserving local/scorecard work. This
+continues the original delegation window; it does not restart five hours.
+
+R1–R10 in reports/S2-execution record exact adopted recommendations, owned-path
+extensions and exclusions. In particular R6 permits a reviewable executable
+remainder while qualified D RESET/S2/P4 stay OPEN; R7 and R10 add ADR0055/0056 plus
+index rows for source locking/universe consistency, R9 retains defense-only
+contention, and R8 permits exact existing security-export regeneration and
+Inspector-owned sensor calibration without scorecard promotion. No new legal
+fact, permission, source producer, production action, S3 or implementation merge.

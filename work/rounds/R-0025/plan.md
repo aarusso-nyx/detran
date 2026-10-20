@@ -6,11 +6,15 @@
 > são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual (2026-10-19):** admissibilidade #193 e pré-requisito S1
-escopo/projeção/parent/replay #203 integrados, main2df548e0. Pós-merge exato
-não-promotor registrado; R-0025/JW-01 permanecem abertas. S2 backend-first é
-proposta, sem autorização ou dispatch; a adenda PR203 abaixo prevalece sobre
-banners históricos. Nenhuma aceitação integral foi reduzida.
+**Status atual (2026-10-19, America/Sao_Paulo):** admissibilidade #193, S1 #203
+e aprovação backend-first S2 #205 integradas. A continuação S2 foi reconciliada
+com main f3dfc6ee (#209); runtime e geração têm checkpoints preservados, mas
+validação integral/revisão ainda estão em andamento. S2/P4, R-0025 e JW-01
+permanecem abertas. RESET de D e proveniência operacional produtiva continuam
+bloqueados por fonte, conforme S2-R6. S3 e merge da implementação não autorizados.
+A ativação S2 e suas extensões limitadas prevalecem sobre os banners históricos;
+nenhuma aceitação integral foi reduzida. Estado detalhado em
+[implementação S2](reports/P4-02-S2-implementation.md).
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.
@@ -730,3 +734,23 @@ journey/round completion remain unapproved. See AUTHORIZATION.md and
 reports/S2-execution/ for real managed-task custody and role checkpoint evidence.
 S1 plumbing records remain preserved without false finish; S2 uses explicit new
 identities and exact owned paths. Inspector RED precedes Engineer changes.
+
+## S2 implementation continuation — 2026-10-19
+
+Explicit Owner approval remains backend-first S2 only. Original packet/inventory
+are immutable approval history; delegated bounded decisions R1–R10 and their exact
+source/role/owned-path extensions are under reports/S2-execution/. S1/local/recovery
+resources remain preserved, without false managed finish or worktree cleanup.
+
+Runtime checkpoint18deaaeb and canonical generationbcb107c2 are integrated for
+independent acceptance. R10's stable-universe source clarification requires its
+independent RED→Engineer→GREEN correction; no concurrency closure is claimed from
+the older two-pass selector. Full root/backend/kernel/upgrade/HTTP checks, source-
+bound security export regeneration and cross-family delivery review remain gates.
+See reports/P4-02-S2-implementation.md for exact observations, limitations and PR.
+
+S2-R6 preserves required qualified D RESET as source-blocked; authentic production
+provenance/default-missing and operational ladder/calendar/incident/legacy inputs
+remain release gates. No S2/P4/JW01/round closure, S3, parameter activation,
+production migration/provisioning or implementation merge follows from this PR.
+Separate scorecard work and its thresholds/readings remain unchanged.
