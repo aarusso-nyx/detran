@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "authority": "S2-R12; TASK-0043; ADR-0057",
+  "method": "RaitRiskProvenanceReader.qualifyPolicy?",
+  "purpose": "C_USEFUL_MOVEMENT_POLICY",
+  "requestKeys": [
+    "purpose",
+    "tenantId",
+    "caseId",
+    "sourceRefs",
+    "contentRevision",
+    "policySources"
+  ],
+  "purposeAllowed": [
+    "C_USEFUL_MOVEMENT_POLICY"
+  ],
+  "requestCanonicalEnvelope": {
+    "schemaVersion": 1,
+    "namespace": "rait-risk-policy-request-v1",
+    "purpose": "C_USEFUL_MOVEMENT_POLICY",
+    "tenantId": "actual tenant UUID",
+    "caseId": "actual case UUID",
+    "rows": "sorted actual canonical source rows",
+    "dependencies": "sorted already admitted receipt digests, no self-reference",
+    "policySources": "sorted exact canonical source/whole-file digest/actual decision refs"
+  },
+  "contentRevision": "sha256:<lowercase SHA256 canonical request envelope>; canonical bytes and SQL projections exactly inherited from source-provenance-format.json/md",
+  "requestDependencies": "No additional interface key. For this closed independent policy qualification dependencies is exactly []; missing authority cannot be substituted by empty dependencies. The full movement request later carries returned receiptDigest.",
+  "requiredBindings": [
+    "exact current inf.rait_case",
+    "its linked inf.ait_ait",
+    "its linked inf.infraction",
+    "exact current C inf.rait_clock",
+    "exact owner-compatible current T-PAR-3A inf.infraction_timer",
+    "exact actual resolved reset event from inf.rait_case_event OR inf.infraction_event"
+  ],
+  "supportBindings": "All actual support/audit rows named by independently admitted proof; no unrelated extras, duplicates or competing unresolved reset events. Existing per-table fieldsets unchanged.",
+  "policySourceKeys": [
+    "sourceRef",
+    "sourceRevision",
+    "decisionRef"
+  ],
+  "policyCanonicalSources": [
+    {
+      "sourceRef": "docs/framework/arch/rait-deadline-engine.md#2",
+      "sourceRevision": "sha256:8d4f039d0b13ffbd4a019fae0ebb284e14c51fd9c4b5e96b2ffd74c5665be669"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-113.md",
+      "sourceRevision": "sha256:ef3a948ac3811ab45474e0588aeb1bb15dea24771b821867ba58bb50128cf2c4"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2",
+      "sourceRevision": "sha256:1f0020512955efae8710e6d5195f0457f10a59ce0c385c28809b7f6a1f2930b5"
+    },
+    {
+      "sourceRef": "docs/meta/decisions/rait.md",
+      "sourceRevision": "sha256:b7850db8614245cdf4dfd1cc2a4f9d0ebf326cdc9f3c20b5d1ba5782b2f31376"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-110.md",
+      "sourceRevision": "sha256:f2cbcc67cfea610a238d5c5baf83387e3a9aa1e2fcf4676877ccf8b7466ec647"
+    },
+    {
+      "sourceRef": "docs/framework/product/domains/inf/rait/rules/RN-RAIT-111.md",
+      "sourceRevision": "sha256:3a191576c72c79cfa12c5b6c61371ec144e68cd5a389e9510691b84fc9b14fc9"
+    }
+  ],
+  "policySourceSelection": "Nonempty actual complete applicable C policy subset of existing fixed canonical sources, including WF-RAIT-002#4.2 and its verified actual decision provenance. No invented decisionRef; independently validate completeness/legal applicability, not merely subset membership.",
+  "resultQualifiedKeys": [
+    "status",
+    "receiptDigest",
+    "sourceVersions"
+  ],
+  "resultQualified": {
+    "status": "qualified",
+    "receiptDigest": "sha256:<64 lowercase hex>",
+    "sourceVersions": [
+      "rrv1:<64 lowercase hex>"
+    ]
+  },
+  "resultUnqualifiedKeys": [
+    "status",
+    "sourceVersions"
+  ],
+  "resultUnqualifiedStatuses": [
+    "missing",
+    "ambiguous"
+  ],
+  "resultUnqualifiedSourceVersions": [],
+  "receipt": "Existing rait-risk-receipt-v1 core, kind movement, actual tenant/case, full exact bindings, independently verified historical authorization, dependencies=[], exact nonempty applicable policySources. No new receipt kind/namespace/store/writer. Reader method purpose plus complete policySources and binding validation distinguishes policy use; kind movement alone never qualifies policy.",
+  "receiptDigest": "SHA256 of independently retrieved/admitted full existing canonical receipt core, not contentRevision or opaque sourceVersions. Validate digest and origin, bindings and current SQL independently.",
+  "failure": "Absent optional method, unknown purpose, malformed/extra keys, missing/ambiguous receipt, bad digest, wrong parent/tenant/clock/timer/event, incomplete/unknown/conflicting policy => RAIT.RISK_SOURCE_UNAVAILABLE503 before effects",
+  "production": "qualifyPolicy absent OR explicit missing; no accepted production policy verifier invented",
+  "fullMovement": "Existing full movement qualification still binds actual source rows and returned receiptDigest as independently retrieved verified dependency; include opaque policy versions as versions only. Never decode rrv1, never qualify movement with empty refs.",
+  "fixture": "Pre-admit immutable synthetic complete policy receipts independently before HTTP. Reader re-reads actual SQL rows, verifies full policy/source/decision bindings and recomputes canonical request; no request echo. Fixture opaque IDs deliberately differ from receiptDigest.",
+  "frozenSources": {
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.md": "3bb5e2b185b02b14145c7c51aeb3a19ecf7ac00a1add77d62fed462cdeec22b8",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1"
+  },
+  "authorizationLockSequence": [
+    "nonlocking existing S1 assertCase(...,false) preauthorization",
+    "R7 ordered global relation locks and parent locks",
+    "same-Tx locked S1 assertCase/revalidation before source disclosure; revocation denies"
+  ]
+}

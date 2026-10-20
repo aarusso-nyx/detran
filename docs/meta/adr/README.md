@@ -69,6 +69,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0054](ADR-0054-security-authorization-and-data-crosswalks.md)     | Source-bound authorization and personal-data crosswalks                                 | Accepted | —                                                                                |
 | [ADR-0055](ADR-0055-rait-risk-source-transaction-locks.md)             | RAIT risk source transaction locks                                                      | Accepted | —                                                                                |
 | [ADR-0056](ADR-0056-rait-candidate-universe-linearization.md)          | RAIT candidate universe linearization                                                   | Accepted | —                                                                                |
+| [ADR-0057](ADR-0057-rait-policy-provenance-and-risk-boundaries.md)     | RAIT policy provenance and current-risk read boundaries                                 | Accepted | —                                                                                |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
