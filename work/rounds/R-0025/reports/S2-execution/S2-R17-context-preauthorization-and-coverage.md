@@ -50,3 +50,10 @@ F6 locallycorrected does not equal independently re-reviewed. Open only a DRAFT
 review PR with REVIEW/remainingacceptance blockers; no implicit extra review cycle
 or readiness/merge waiver. This follows current Owner request to advance/open
 review while recording blockers, not a gated delivery approval.
+
+Independent RED checkpoint: 9dd48a80 records three actual failing unit controls
+(4.01s), before runtime mutation. Test SHA256
+c423d39e85352684f8eed45f1115361abaf66504bf400325629f393893b00385;
+original runtime SHA256
+888dbf52c84eb39997d1df4b12294efac6b891f5ccf71a5403f13cea448c9eb8.
+Engineer single-path R17 correction is now released under the scope above.
