@@ -2736,17 +2736,15 @@ it('R17 actual Nest WORKLIST projection preserves current qualified risk, S1 pur
     actor: string,
     roles: string[],
   ) =>
-    app
-      .get(RequestContextMutator)
-      .runWithRequestContext(
-        {
-          requestId: randomUUID(),
-          startedAt: new Date(),
-          tenantId: RAIT_TENANT,
-          actorId: actor,
-        },
-        () => service.read(c.id, { id: actor, roles, tenants: [RAIT_TENANT] }),
-      );
+    app.get(RequestContextMutator).runWithRequestContext(
+      {
+        requestId: randomUUID(),
+        startedAt: new Date(),
+        tenantId: RAIT_TENANT,
+        actorId: actor,
+      },
+      () => service.read(c.id, { id: actor, roles, tenants: [RAIT_TENANT] }),
+    );
   const direct = app.get(CasePublic.RaitCaseRiskService),
     before = await fixture.effects();
   const actual = await invoke(projection, fixture.reader, ['rait-coordinator']);
