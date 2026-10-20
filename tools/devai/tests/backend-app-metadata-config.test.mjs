@@ -445,6 +445,106 @@ function manifestIdentityAppVite() {
   return identity(realpathSync(requireApp.resolve('vite/package.json')));
 }
 
+function observeCompilationStages(server, tracked) {
+  const records = [];
+  for (const name of ['detran-ordinary-nest-metadata', 'vite:esbuild']) {
+    const plugin = server.config.plugins.find((item) => item.name === name);
+    assert.ok(plugin);
+    const hook = plugin.transform;
+    const original = typeof hook === 'function' ? hook : hook.handler;
+    const wrapper = async function (...args) {
+      const [input, id] = args;
+      const result = await original.apply(this, args);
+      if (tracked.includes(id)) {
+        const code = typeof result === 'string' ? result : result?.code;
+        records.push({
+          plugin: name,
+          path: path.relative(root, id),
+          inputSHA256: sha(input),
+          resultNull: result == null,
+          outputSHA256: code === undefined ? null : sha(code),
+        });
+      }
+      // Observation only: return the identical original object/string/null.
+      return result;
+    };
+    plugin.transform =
+      typeof hook === 'function' ? wrapper : { ...hook, handler: wrapper };
+  }
+  return records;
+}
+function closedSecondTransformSelectors(server, targets) {
+  const exclude = server.config.esbuild.exclude;
+  assert.ok(Array.isArray(exclude));
+  assert.equal(exclude.length, targets.length + 1);
+  assert.ok(
+    exclude.every((value) => value instanceof RegExp && value.flags === ''),
+  );
+  assert.equal(
+    exclude[0].source,
+    /\.js$/.source,
+    'Preserve the original ordinary .js exclusion',
+  );
+  const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  assert.deepEqual(
+    exclude
+      .slice(1)
+      .map((value) => value.source)
+      .sort(),
+    targets.map((file) => new RegExp('^' + escape(file) + '$').source).sort(),
+  );
+  for (const file of targets) {
+    assert.equal(exclude.slice(1).filter((rule) => rule.test(file)).length, 1);
+    for (const other of [
+      path.basename(file),
+      path.join(tmpdir(), path.basename(file)),
+      file + '.extra',
+      file + '?query',
+      file.replace('/src/', '/tests/'),
+    ]) {
+      assert.ok(
+        exclude.slice(1).every((rule) => !rule.test(other)),
+        'No basename, external, query or sibling widening',
+      );
+    }
+  }
+  return exclude.map((value) => value.source);
+}
+function assertClosedCompilationStages(records, targets, nonTarget) {
+  for (const file of targets) {
+    const relative = path.relative(root, file);
+    const first = records.filter(
+      (item) =>
+        item.path === relative &&
+        item.plugin === 'detran-ordinary-nest-metadata',
+    );
+    const second = records.filter(
+      (item) => item.path === relative && item.plugin === 'vite:esbuild',
+    );
+    assert.ok(
+      first.length > 0 && second.length > 0,
+      'Both real pipeline stages must be observed: ' + relative,
+    );
+    assert.ok(first.every((item) => !item.resultNull && item.outputSHA256));
+    assert.ok(second.every((item) => item.resultNull));
+    for (const item of second)
+      assert.ok(
+        first.some((prior) => prior.outputSHA256 === item.inputSHA256),
+        'Second stage receives actual helper output byte-identically',
+      );
+  }
+  const retained = records.filter(
+    (item) =>
+      item.path === path.relative(root, nonTarget) &&
+      item.plugin === 'vite:esbuild',
+  );
+  assert.ok(
+    retained.length > 0 &&
+      retained.some((item) => !item.resultNull && item.outputSHA256),
+    'A real non-target TS source must retain ordinary esbuild compilation',
+  );
+}
+
 for (const [kind, filename] of [
   ['appbase', 'vitest.config.ts'],
   ['performance', 'vitest.performance.config.ts'],
@@ -524,6 +624,17 @@ for (const [kind, filename] of [
         server = await createServer(options);
         controls(server, kind);
         observation.controlChecks = 'PASS';
+        const controllerTargets = [
+          'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-commands.controller.ts',
+          'backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts',
+        ].map((name) => path.join(root, name));
+        const normalSource = path.join(app, 'src/dashboard-stream.service.ts');
+        const stages = observeCompilationStages(server, [
+          ...controllerTargets,
+          normalSource,
+        ]);
+        observation.compilationStages = stages;
+
         observation.pluginOrder = server.config.plugins.map((x) => x.name);
         const { DashboardStreamService } = await server.ssrLoadModule(
           path.join(app, 'src/dashboard-stream.service.ts'),
@@ -626,6 +737,139 @@ for (const [kind, filename] of [
           assert.ok(final?.code);
           assert.doesNotMatch(final.code, /\b(?:require\(|exports\.)/);
         }
+        const { of, firstValueFrom } = requireApp('rxjs');
+        const load = (name) => server.ssrLoadModule(path.join(root, name));
+        const { RaitTransactionalAuditInterceptor } = await load(
+          'backend/app/src/rait-transactional-audit.interceptor.ts',
+        );
+        const controllerSpecs = [
+          {
+            file: controllerTargets[0],
+            name: 'RaitWorklistCommandsController',
+            service: 'RaitWorklistCommandService',
+            serviceFile:
+              'backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts',
+            handlers: [
+              'createSchedule',
+              'publishSchedule',
+              'createBatch',
+              'approveBatch',
+              'acceptBatchItem',
+              'declareBatchItemImpediment',
+            ],
+          },
+          {
+            file: controllerTargets[1],
+            name: 'RaitSessionCommandsController',
+            service: 'RaitSessionCommandService',
+            serviceFile:
+              'backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts',
+            handlers: [
+              'closeAgenda',
+              'open',
+              'adjourn',
+              'conveneExtraordinary',
+              'read',
+              'view',
+              'withdraw',
+              'createVote',
+              'proclaim',
+              'createMinutes',
+              'signMinutes',
+              'publish',
+            ],
+          },
+        ];
+        observation.auditControllers = [];
+        observation.auditBranches = [];
+        for (const expected of controllerSpecs) {
+          const Controller = (await server.ssrLoadModule(expected.file))[
+            expected.name
+          ];
+          const Service = (await load(expected.serviceFile))[expected.service];
+          const metadata = Reflect.getMetadata('design:paramtypes', Controller);
+          observation.auditControllers.push({
+            expected: expected.name,
+            runtimeName: Controller.name,
+            serviceIdentity: metadata?.[0] === Service,
+          });
+          assert.deepEqual(metadata, [Service]);
+          for (const handlerName of expected.handlers) {
+            const handler = Controller.prototype[handlerName];
+            assert.equal(typeof handler, 'function');
+            let nextCalls = 0,
+              delegateCalls = 0;
+            const interceptor = new RaitTransactionalAuditInterceptor({
+              intercept() {
+                delegateCalls++;
+                return of('duplicated-audit');
+              },
+            });
+            const value = await firstValueFrom(
+              interceptor.intercept(
+                { getClass: () => Controller, getHandler: () => handler },
+                {
+                  handle() {
+                    nextCalls++;
+                    return of('single-transaction-audit');
+                  },
+                },
+              ),
+            );
+            observation.auditBranches.push({
+              controller: expected.name,
+              handlerName,
+              actualHandlerName: handler.name,
+              value,
+              nextCalls,
+              delegateCalls,
+            });
+          }
+          const ordinaryHandler = Controller.prototype.run;
+          assert.equal(typeof ordinaryHandler, 'function');
+          let delegateCalls = 0;
+          const interceptor = new RaitTransactionalAuditInterceptor({
+            intercept() {
+              delegateCalls++;
+              return of('ordinary-delegate');
+            },
+          });
+          assert.equal(
+            await firstValueFrom(
+              interceptor.intercept(
+                {
+                  getClass: () => Controller,
+                  getHandler: () => ordinaryHandler,
+                },
+                {
+                  handle() {
+                    throw new Error('Unmapped handler must delegate');
+                  },
+                },
+              ),
+            ),
+            'ordinary-delegate',
+          );
+          assert.equal(delegateCalls, 1);
+        }
+        assert.equal(observation.auditBranches.length, 18);
+        for (const controller of observation.auditControllers)
+          assert.equal(
+            controller.runtimeName,
+            controller.expected,
+            'Canonical controller name is part of the unchanged audit-dispatch contract',
+          );
+        for (const branch of observation.auditBranches) {
+          assert.equal(branch.actualHandlerName, branch.handlerName);
+          assert.equal(branch.value, 'single-transaction-audit');
+          assert.equal(branch.nextCalls, 1);
+          assert.equal(branch.delegateCalls, 0);
+        }
+        observation.closedSelectors = closedSecondTransformSelectors(
+          server,
+          controllerTargets,
+        );
+        assertClosedCompilationStages(stages, controllerTargets, normalSource);
         observation.declaration = strictDeclarationIdentity();
         observation.status = 'PASS';
       } catch (error) {

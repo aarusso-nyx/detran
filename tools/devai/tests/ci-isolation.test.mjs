@@ -101,7 +101,7 @@ const ordinaryInvariantSuites = [
     nodeId: 'invariant-portal',
     config: './tools/security/invariants/portal.config.mjs',
     configSha256:
-      '084d954d0fb6e2d01921cfe6771832b03bd95a5718c8c2d9c64bd7e350ed1436',
+      'f8dd5b4d0b57961aaeef522b6a8efcb585b7e13e0944d3ee1f20c1a883e5f264',
     executableFiles: [
       'backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts',
     ],
