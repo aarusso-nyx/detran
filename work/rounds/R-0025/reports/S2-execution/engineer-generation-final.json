@@ -1,0 +1,1862 @@
+{
+  "role": "Engineer",
+  "task": "TASK-0038",
+  "baseline": "f67008c8",
+  "status": "GENERATED_OUTPUT_COMPLETE_ACCEPTANCE_PENDING",
+  "fullCanonicalGeneration": {
+    "command": "BLUEPRINTS_OUTPUT=/tmp/detran-s2-blueprints-full-output pnpm blueprints:generate",
+    "exit": 0,
+    "temporaryPause": "own PID77877 SIGSTOP/SIGCONT while targeted generation completed; no generator/config change",
+    "generatedTargetCount": 1596,
+    "comparedOutputCount": 1596,
+    "outputDrift": [],
+    "unownedGeneratedDeltas": [],
+    "targetedModuleOutputCount": 189,
+    "targetedCanonicalEquivalence": true
+  },
+  "globalManifest": {
+    "copiedByteExactFromCanonicalOutput": true,
+    "beforeSha256": "ce82eee75de330f7cc9f49676294cc532d1c7d19658ddabd3ced66d0572fa73a",
+    "afterSha256": "cd5f8af3508ccfaf04c83355e40e372da615a2780da70d6bc84b6c4781000274",
+    "added": [
+      "backend/domains/inf/rait-case/src/controllers/rait-claim-legacy-qualification.controller.ts",
+      "backend/domains/inf/rait-case/src/dto/create-rait-claim-legacy-qualification.dto.ts",
+      "backend/domains/inf/rait-case/src/entities/rait-claim-legacy-qualification.entity.ts",
+      "backend/domains/inf/rait-case/src/repositories/rait-claim-legacy-qualification.repository.ts",
+      "backend/domains/inf/rait-case/src/services/rait-claim-legacy-qualification.service.ts"
+    ],
+    "removed": []
+  },
+  "changedFiles": [
+    {
+      "path": "backend/app/src/generated/parameter-flags.ts",
+      "before": "8bcae688eac857a8faea6ad085d25d0dea2ddc374bdbd6d9ce2cdc01d4e86419",
+      "after": "5997ddad6623af449eca1637af9b1713145c720e0e296060f5572759185dcdfc",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/database/ddl/34-inf-rait-case.sql",
+      "before": "22c99259e906d5ac24a945f0076bcec32dbcdfb92564871046df96fda4a6a73e",
+      "after": "14cf9dd4b5a19b1b4f6b4a38217c7b87cf6fff4727dada9dce719870a133fb2e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/database/ddl/35-inf-rait-worklist.sql",
+      "before": "e44840b004e9857f1af2e51e8700b1d68eb714ee26b0ffe6434023cc6876bdf0",
+      "after": "7bad44d2d5b9b61d1e6625a0b04e2aac26de1c3c09ab5798021868763d4cc9b2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "before": "e6fd77fe2753d62c149f35a48846afdd5a613b2e3b7412e0400ced65516b85b0",
+      "after": "91e993cc3e538afca1f0f65766ad079093c491f946c721f17935309bfd258136",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-admissibility.controller.ts",
+      "before": "537d0ceb9e934724a2b5df864cb7fde28871e3d38ceb90b858d8094f6bfb5190",
+      "after": "be46c318c191eb1be48ad190b7e37f616085c5acde9b05d502c4da9746c97edb",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-event.controller.ts",
+      "before": "4e1478451e8b7a791f194eea40a09cb95c5f9973f4e212e4e337688b66e4da88",
+      "after": "6af295015cbe047eec63335104f81f0e7ffc76e5a199f2d5c88e4a8139701fd2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-pool-scope-record.controller.ts",
+      "before": "d02119debd833d27fcec3019bd5580a93536c6b2c9526ca8a597e232fca2157a",
+      "after": "fdde6dca6d54c6cac5fef02e802ecb738afd49fbd7adb19cc6904803ea36972c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case-read-scope.controller.ts",
+      "before": "e3d76b79eb4e84f30cdc98ba47c1e928f8e318fe064bc724bd0826c07371b36d",
+      "after": "6edb186e4749ca196014a3d49e6ba2be6db6e810477d9657d9bb0512ed6512ef",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-case.controller.ts",
+      "before": "4ea9cf5caf5d59dd23464afe684b7cc4f01637f86ab6859cec6eafb96b54131e",
+      "after": "150c373db9e590877c62bbfd0d16d7cbbb4445dbe4a961e9a90141962382693f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-claim-legacy-qualification.controller.ts",
+      "before": null,
+      "after": "5bbc3a0b778e13d653ad5b2ad975ab2df1f3011f527bc2f5896919bb0dba2b79",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-communication.controller.ts",
+      "before": "50eb21a5efe412e6c9fd98ed06c39cbd7209d1b86d01af8ec914c2408268d3f5",
+      "after": "02a636e9478a69f838c20b7af916094e29e0821fab5c58b2fabdbb35c7da2978",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-deadline.controller.ts",
+      "before": "509ee8b6597eb84b7162a217da9f632aeac690035b1d613734002276b97917dd",
+      "after": "442a25c6b6a07ec4ab326b8f73b4db292a665c47f9457c5263b3f30a9cddb8c6",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-decision.controller.ts",
+      "before": "fc951abf41ea70d3289037229c734546818e2a3120fa180f59d139a548b75ac5",
+      "after": "a037a1ae8101adea5a73d82536da6763f70b36de56d4f3f9c5b0786110bdc2bd",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-document.controller.ts",
+      "before": "c09d9a2e081b07f18a833219777e6e700d6263267b162e07c023b43631806148",
+      "after": "f3c39d141939c61594ac12af12a63e0ef4d9700ee99d8df4f87cc15fa23b5397",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-draft.controller.ts",
+      "before": "dad50ff035e6be78495196d981d2c607867de6fe4038501fd684ed52b5eb3ec9",
+      "after": "20036c338764928b260e7fedb21d9abbc7c81fdb4572afa156945d2be93a86a7",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-inquiry-document.controller.ts",
+      "before": "d56bd0e921c53b5b7f7891e27ec715f263130d54f5e16163eeccd920d05b702e",
+      "after": "483f1b4079fdc153843c48d80672f85f75a5727e3c7cec0661ac5afc288ca14a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-inquiry.controller.ts",
+      "before": "234a43bb6e8d001ab7f842c6691de5c3da299f07c52be66b1a48f1ec0b24d142",
+      "after": "ab4366c354d67ea51513efdfdedc14351dfb2f5814154d2910f4ff666e3c92d8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-party.controller.ts",
+      "before": "f85d30ce6003f0b6820430c1436f08e51bf1be8026f3df2549e134a822ef6c63",
+      "after": "d5f7bfcef21133831899ad654db3c7b597955a0f54408cfff023f9d1ef5ce849",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-pending-content.controller.ts",
+      "before": "274102a297f82f8731b15e485945024a2d070ffafd8b72d1815b532b40931cae",
+      "after": "11e47f20ef77fb7bbb52788832c288bdf48c7b8f803a622ac4ed67a5470d1686",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-pending-document.controller.ts",
+      "before": "bc72435ed6ce4d5d29ccd45280f2322742538fa2be7186d45415fc4a02e155ef",
+      "after": "86406debeb0e8c4a549c0666990a65d29c631a5eb0e5d338a2b863badb70cdbf",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-priority-assessment.controller.ts",
+      "before": "ff9d6055892f84b32495203d13df52bf8ad3fa8422ba6acf5dd10aa5415e0293",
+      "after": "d1ad6eabe1720db92b00bf8c68fbf4696d128f2a0e2c88d5b191c3397238ee4d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-priority-basis.controller.ts",
+      "before": "fe03dafe74b617cc39d39c366c2d250945e619025998412c94e0d907151d8f92",
+      "after": "eccb59de7a9cb047c40eb65624af6a455ad199205d377dfd8373d7b35b1d5f8a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-redirect.controller.ts",
+      "before": "130ee9dd3a1d2c959ba51c731c40cfd5b3ba3d2e7d8841a43112c8c6ab108d7e",
+      "after": "3e97ea71c4b53c3363d5a1e9e01f0af6f5c7d798500a913948d62cba7b074e44",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/controllers/rait-withdrawal-attestation.controller.ts",
+      "before": "e1a4e6fef53ecf93c918c7d529a100f31d0da14b075a174f2a9444a174a85476",
+      "after": "41a7653df3a9cad24db7239467942e1a97300dd4775e53a0d000bf891bebf6b1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-admissibility.dto.ts",
+      "before": "4f68269bd52b69d870447dfb6248f4602a54d35e38d5774513eac49fcf08ce33",
+      "after": "cebecf4ecca72fb931c51c33f1451ce148d0562831dbc889edcccff78cc83f8f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-event.dto.ts",
+      "before": "e1f5a1eb4d896246e8cd07ee20fe7aa3d187c626900e6ff966ca07e70b9684ff",
+      "after": "377fd3b78720a5e12c829022d8c710670cd34830ff964e6b05084574e0498330",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-pool-scope-record.dto.ts",
+      "before": "22489e2d6cdd0849c94a92821fcd982a2301977b479804962f60fde42a3662a2",
+      "after": "56ef03c9fbb99c2f2aaa1a81e9dd79dd7954ba404c2ce048bd26a0b723d2a9d0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case-read-scope.dto.ts",
+      "before": "2e5a5f85a0d828ef4844bcb668a51c167b241d62bbf6434a298aa033e06fdc87",
+      "after": "d65327c6474a61421f7f1421196e27a36b975c0f94bdb724d543c2d1af196ca8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-case.dto.ts",
+      "before": "820832858d1d420d90b8a886f380caa0db7aca672539b57aadc79a686f481b9d",
+      "after": "f6388b41dd81f7c572030625ce20f29d63185706b5789d325570160a49a48f01",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-claim-legacy-qualification.dto.ts",
+      "before": null,
+      "after": "95c08cd41dabe9f82d8d6436ad046faec7ccddbda01fabd44247ef22e0a11d44",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-communication.dto.ts",
+      "before": "2034c71d07465494d84896887984f51cd31316041f36a2eccb5f0b0128232942",
+      "after": "e5512c9d120f33de1163d16c5b86709c7c96481e578df71e4850221519da3c3f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-deadline.dto.ts",
+      "before": "a52d80cbd06ddccbca45fe93f2389ac209a4253eb669d5f275a6d5bf0444ea12",
+      "after": "5d81aa2e101c11b73f6b781ddfabde93091146b4f068153ba7ed90078b598bcd",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-decision.dto.ts",
+      "before": "bf2cb7cfe396587e292fc792e0c6108d3f257db85029a1f0984318a151b5475e",
+      "after": "9031ec3af074eb6afdce1472e319e4baf5282f4bf86de292dd69f83f85c11e0e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-document.dto.ts",
+      "before": "7bd6f5caacef1e5c0ba040c92027722831fc5fc7290058e1432a816815eb4bb8",
+      "after": "735d7619b1438e129728b2309a1fa6d48282d3eb973908e94a857e2e35aadda7",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-draft.dto.ts",
+      "before": "3eacde611fba020a26fe91a70717185f98e6a63561c65b96679dba2c95df9ec0",
+      "after": "7806238b983f73444672969e2a6ec7122cc64ea15af505f9f705a7039cf02418",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-inquiry-document.dto.ts",
+      "before": "3142c301883ecef83be08c48879e771a121d50e591b980839e873e4acad15d96",
+      "after": "037bd77a11391a0702c9af8f5898c02c6b9777b2e0f7eb0bdd96031be587c020",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-inquiry.dto.ts",
+      "before": "507af2a655c72e9673310bba31cd15b26e35f3b9735edb08daaa6bb0522392a1",
+      "after": "e2fa6edeee53f923e12dbbf4f2433198a864b6e711b3c110dfa1ab0ec3d84d4f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-party.dto.ts",
+      "before": "67451a497fdcde4d95c7512ed82a6ee5ebfe054d2605578c067f051788d29e8b",
+      "after": "4aa6fe74f640c1aeec78034f0714bfefd8d47bc2cd211ed2794344c1d51394fe",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-pending-content.dto.ts",
+      "before": "ad99ab3f2e8e43fafc305e9e7403cfa66d22796898aa7ab67377ac81bc5b6491",
+      "after": "21258e2fe28d3c899f59f74861bdddda77ae4807024c501302d106723f408d2d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-pending-document.dto.ts",
+      "before": "d20e1bc58f3505dd22ebb445be812122e5a9bab4ddf7a6b27132ffc024c876d4",
+      "after": "d083a58298ea177f8b5606dff28f787c3f47500a994cb8ae3104c825c755bfad",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-priority-assessment.dto.ts",
+      "before": "01a64be072c608bede59cecfcf66826f88dab0fdedc31c4a1c9180312bbf7be4",
+      "after": "92d4e480ac4f925f615d043e45bb9bed3c2cf38b9e1996377e9f279fc53c5f0c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-priority-basis.dto.ts",
+      "before": "1b2c81cbaf09b8f9e415b133861f24df49023d2f5094bb33e0a274fe783739f5",
+      "after": "c8cb73414da9c9273b33191c759a7d95f15704c91af041a619a15cce9c712d59",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-redirect.dto.ts",
+      "before": "8fe29c090f7fd3ebffea5f2f758b3a4ba70d96844381bec513cd7af1651530c7",
+      "after": "9e67bddc88b990e358b6af7dcd637b806b42b64f8f39379dee655bc5fe8c6f4c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/dto/create-rait-withdrawal-attestation.dto.ts",
+      "before": "453372d28b1c74d7552935f23489871f024703259001002925b9eb704a06656e",
+      "after": "6deb34988d9659a505162af2e3ab0414d17d17e0f68dd36baf2d71aedb34ddbb",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-admissibility.entity.ts",
+      "before": "2b52978a53069c1c2f5050a43c7262a5f6752b2012df0f66cc247ee91506c909",
+      "after": "0bb84fcb627ddcd4141d421cfd4041343bec3a91cfcbb51de365452a9aa20237",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-event.entity.ts",
+      "before": "307f712b63d402b09627ee5e9dd7de1cab8b5e9d96cb58d572e5ebb2d395a27e",
+      "after": "3db1218842961ed22411455fa49995e2000ca7d4fe289e2a2f5c6998e30a31a0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-pool-scope-record.entity.ts",
+      "before": "5df35e5e29f503629f55632f7eef2bb647a3806e857433699527fb883f76a504",
+      "after": "32ed7f8b60004ef35f43a08e87148e7927a7d099bfe572fbf5ce178a1c2cc885",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case-read-scope.entity.ts",
+      "before": "ac13f751eac0d824888c88fcf5ccba7e31cd6d7d473267180717368b66dd5e71",
+      "after": "d83420d4d18e3ed3e2a78194cb3042556da561ebbc4b45867f0ed3c78a387d9a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-case.entity.ts",
+      "before": "82f0d32ddd71541c2d7c47b336fc9e6c4abe5e890020b0d95dddecb71c227d72",
+      "after": "c94ac650652a0c1bbd39079c4434415f7b166da45d2cafdacd5f413b6d357563",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-claim-legacy-qualification.entity.ts",
+      "before": null,
+      "after": "6bda4455f5308bc6bb3ab68f28345bac03f52112d43016109b16396a7ceec2f6",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-communication.entity.ts",
+      "before": "ccc74478471b5a57fde13c68b8ac4b4af148c1d9da58a79d00e8c0b09b8de9cb",
+      "after": "05bb92fcc5aeb5d65c1b46adb2f187aba1706e97689363e67a4c021ab9345786",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-deadline.entity.ts",
+      "before": "e8eba0f72cdb3bb79eb167ea93e3c5c69b18284ec60563f7999885f1778c50e7",
+      "after": "e1d5874e3d8d42a2d578d844682885cbe83df17b05ff677f8d3c54a95affe56f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-decision.entity.ts",
+      "before": "f5134d7cdb86fb726487c23a388e91ab0278341964d85c22ca8becd81e84e81a",
+      "after": "51e7567dad0b8460a440810132efe4374a500555e4094f71e85c221631b99c40",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-document.entity.ts",
+      "before": "943bce1b0a4c3895dad56a3d361c20286567e8dc933eeccbd908d1ca72c4b1de",
+      "after": "c21640e83d4b53463c73b0e6dba9a34470ecd4751b285f6d2f4941def207c5ea",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-draft.entity.ts",
+      "before": "841fe40860ebdb892d5074047b3d11a407729ce5e801eaeb71e3fb18e5d81b18",
+      "after": "8857c1a886d8f645382736c2b598ae9d20d0c7b7a5808d96236894092de6863d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-inquiry-document.entity.ts",
+      "before": "e8fa2dfef827255d2f41d1f877b2b7fe4ee15748cd694157e278accffa5b91c6",
+      "after": "699939171ef1434e33258a3e0bbe075eec0e891d7ab3cbd33a5bc5c8d5b4f4a6",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-inquiry.entity.ts",
+      "before": "02b16cf9881e6a7fe84e0d503c8fc68d340becabb804aa0911342670419852ca",
+      "after": "4c73dcce8962fbc7c742affe962a0db55f8c547efecd9866009794748ef9a56b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-party.entity.ts",
+      "before": "bb809caeccd7253cdf53ff5352f6c38e48d58bcad0c18ac3a931c395fe97b9da",
+      "after": "af5b4505c2a1151bcc4aabf03bfee65effe222f4d00490c014be8045562cf532",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-pending-content.entity.ts",
+      "before": "6611d815cd7502d7b34bb1c984e02bff40cec5a411e6835514278dfb7ad47812",
+      "after": "b64c571b3e2b76eac3937e61da220765db507122a8cc4c3867ecf7a292df9703",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-pending-document.entity.ts",
+      "before": "753302207ddc9d578d462955f04540f95dcba347f754817f445fcf1efb0f8f69",
+      "after": "809e4c176608645137c6beb29343e876be812e06dcbc0d4fa816c3abb206194f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-priority-assessment.entity.ts",
+      "before": "f71dac2a82f51fd53d4111a4465ddebe8b0393fb0aada76caa193812e52f5bf6",
+      "after": "d95a25337f5cb1f70b4f8302009ccfef9279f94f5eed7b63d798cec3bcaa43e1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-priority-basis.entity.ts",
+      "before": "c21522e19fb09d5f47e38470c969a7a9c26c32f87a44741c6dcb497495410909",
+      "after": "c094d836e1c3c59ce1f805e8f756bfba40dace60c40055244be09ff96d130f2c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-redirect.entity.ts",
+      "before": "6bc3a9d6dfa421994310e0a4ce7dc27b2bb778e0d7698c81a5f56cb6d26135a5",
+      "after": "678d484df7b3ebe7eee739935733db57ea565e628ba03dbce072108ad40b88fe",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/entities/rait-withdrawal-attestation.entity.ts",
+      "before": "2ef21ff2095259da1770a334889236756129ce6538da703e54e31388597086e9",
+      "after": "98680363867ed131d2da4c5fe3095bbf13d61282a61e8c58088cf6623918ddd1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/index.ts",
+      "before": "02ce74f3843a9d53d224cba3287ba1065353ad5641134e55ebd9529b1ea0b0ee",
+      "after": "250348c2901413afc875f472586ac6dcf16ac2a59b8a67b6a16bc4e173a40038",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/rait-case.module.ts",
+      "before": "6611368c1e9cf40d63772bff2cbeccc72fbf18647d3e9b4189ef5698834bb3ee",
+      "after": "1e5c0ff66134b86cd8a1b390cce54cd111a380ec104bac7b0c202da62628a867",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-admissibility.repository.ts",
+      "before": "971069ea80f540d1f38443e5323f61dca99a65f49eae129a9aa416d30dfd3b9f",
+      "after": "a93c29784664c82b7ef689fc1214195e10d5dd858016f68603035b5eeb7f6ca4",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-event.repository.ts",
+      "before": "46ab8bf34f516c80d96a447f0ac6a1393426b1b559e9425934dcf0f82dcca7ea",
+      "after": "4f07cf784f609b63a2a311d86e61aa5a9fb292a4b1df9b8041382a1bc0938ca3",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-pool-scope-record.repository.ts",
+      "before": "7ec5779726b0078faee08e7ed201733d1475f202cbd09c09383123838c7b7112",
+      "after": "98c85451b037c9dd492436e4c5841161804b8967b60a9b8eea181e77a090c57a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case-read-scope.repository.ts",
+      "before": "207f4d32a53e241cdac2f171a6759a2b8d9609e961872a4e55bd3dfe3c9419b7",
+      "after": "794c20d7597940759a83bb3480161328bf88f7c0f8c49141ad118d9947161372",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-case.repository.ts",
+      "before": "5540d626f791027c504bcf3ca98896ecdfc347512fa219d5b257f5ed7047900a",
+      "after": "7d87923bece5179d9cdab8db65014e8a0cbfc854d85c4346a24f5df59b49695c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-claim-legacy-qualification.repository.ts",
+      "before": null,
+      "after": "65074bbcb55a1e3ddd4d22609206b6a99fcf7e8c951d8bf59af433f2a0babaa9",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-communication.repository.ts",
+      "before": "f09d2aae18fa20ce8131d10eb59cddfa525db6606283b5bcb4eb0d901a923583",
+      "after": "3fbf3ca1025aeb94d172920540dc17bbdff281eca15109469e5e01eb32908560",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-deadline.repository.ts",
+      "before": "1a5041c40fadfec57d1fc3c1d7281d0998833f5eb82220b3ac4dc6a7a54c80e1",
+      "after": "c251755f6f0a33b283ea2c13218da9ca638d525840868f9582af95390464a461",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-decision.repository.ts",
+      "before": "c5d725b436a1475418ebaf0971a8902d8888b37e97135300abeb95538ec72dea",
+      "after": "728d24de2db060f4676c13a45139744cc00b75d1d18054830546b528c5cce260",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-document.repository.ts",
+      "before": "92aa4ddfd33ff3152e01feb93999769b3420d013bd6f805c9dc7a7690872cdd5",
+      "after": "38e716ceb87e104ab3d9ee215da6f68f4d0f2b7b841d4ff9108b73403135fa6d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-draft.repository.ts",
+      "before": "a5cd6b10e5c31e244fcd0c048b75b1676249dfaaea32f31f4418aa4a89dfb465",
+      "after": "f037f88b976d41c4f05b5d06c4d8af389b0b8ee9cdde496c2a138f3979a97b22",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-inquiry-document.repository.ts",
+      "before": "8886d08cc041bc9db59d40a4e9a2f9ee14a37ecbf3ccb637f857aa409bf4a2d9",
+      "after": "dc21e7291ca90ca8a43b7ab748f4711482916035343a425c9b86845344c4b711",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-inquiry.repository.ts",
+      "before": "662e1961e4750408df24f9e6ecef84702c94a081d70a39077073aab732787914",
+      "after": "9aac56c216f7734015606bb657aa902a4845fa8812aed1b54ccb87e9e82b721b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-party.repository.ts",
+      "before": "70fe43b45464498817b15e5904e91f5c336f580ed16d112097a48b020800e45a",
+      "after": "a9b8f8bb6388dfe82e5f1a87b3d1c86bdad37fae4f57da4f602d6771e33404f8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-pending-content.repository.ts",
+      "before": "853ad03f876776c1d733c4ecf3c5e34487841e6395c22735ff95866027a6af9b",
+      "after": "2e3806cdd7e6a62b01881d6795e3b9c5097be34b94b2a78adcf3eaa043db5965",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-pending-document.repository.ts",
+      "before": "cb61951efe19ec94553529a605ef73de2e52ab710a92f2e3da80d2930eb59f57",
+      "after": "efdcba63301a2fe4c66e0ed69f6da578df9b32e011f250cec269eb0ff30e95d0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-priority-assessment.repository.ts",
+      "before": "582259cac19876f751d0b275299a39f5418e8aa493fc4f7a6493c926cb5b2ceb",
+      "after": "10c9bf4bebd9cbde41758074d56963a044873c1c0ab6754211e0ef61d49160df",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-priority-basis.repository.ts",
+      "before": "827e7cec7253eadadbafe003d46962eb43747966a50bf90c1119a814a36a23fd",
+      "after": "d90a88f1e4d99bfeb65516f06fc3f88c790e2caf1e6d38036ce88f394ae2f000",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-redirect.repository.ts",
+      "before": "8b8ede5d56e5016701abd9c4c98d2e876adc390f20bf0950617a82b16992cd2c",
+      "after": "0c1556b2f24a35c48b1843368c5a512d637ef1ea1939a60bc60e763c02d2c162",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/repositories/rait-withdrawal-attestation.repository.ts",
+      "before": "f1b8f96c6634a647f5e9fd2a05119f74cefca3ffc1c33f30702fff6eb80e8240",
+      "after": "a115671dfee2ed4b8918b5009125c1d8e7c888d511d066c98a61248c057f4ac9",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-admissibility.service.ts",
+      "before": "74eef7d69f2140295e5698a34ea0877a116693a889f501a0cfb1e3af24134df3",
+      "after": "d6c5ab0a98a6ede203555693370bd29e065c418c7b92a3d1cabad951810e7209",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-event.service.ts",
+      "before": "6a30f09a42bfcafa637eb4090f7948d4a4b0a265f8f4446cbaa0c7fa07093aeb",
+      "after": "80f0278689d5130d125fbc9be0ec50b0a54d85c68bdb4db04e7ab785c9099da8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-pool-scope-record.service.ts",
+      "before": "194452e0991a6dd7650e97ff2d4d523f9a1dd1d116274dee825177136baeaf3b",
+      "after": "cb3147b9bf89b88ed1ebb118cb7e554a7620d9f07c92bd87630fb4ccefea4de5",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case-read-scope.service.ts",
+      "before": "cd0b2c0468a07331aeee6960dd8e8294bf3f66bb1b334b8f6695db1c139d7f6c",
+      "after": "5031012c719a76893267000ed7d6b066834e46c0b23c54ada0bf5d251314eb5a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-case.service.ts",
+      "before": "fbafec458160887c19e52dc1d0b089ed9e4a7996fea1790f6ec591e8be78a3ee",
+      "after": "555bb81ddfe5556632441e25ff44fa56ac77f7be23f734408eaae20a83e86d60",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-claim-legacy-qualification.service.ts",
+      "before": null,
+      "after": "e93a951deb708d7407ba883b18f30321703c32854efd44410b40e2b51d0be39f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-communication.service.ts",
+      "before": "218929d7c6b432b4e5acca4e07c59b50e608fd9afff8240e9e8228de9a398161",
+      "after": "344f9a46574df8810d5d5f9bf7ac3252e2487034a2abcd0b36f5327be5d5a405",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-deadline.service.ts",
+      "before": "bde39a2b38dc42bb11506030c738fe447b6945f60ddb4b83398e0733197ccfba",
+      "after": "5772654774eedac5d3a14e8b706b05b7232c5352e8b8bca287a50befc8c68579",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-decision.service.ts",
+      "before": "ea697944e7d0684705b806ddf5599e6a98aff20141e174df58c54913caaea6d9",
+      "after": "4063a753916e0b366a4a12f1fdd9a4babc4f0cc26e9744dfdebfadcf204e2d49",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-document.service.ts",
+      "before": "f5a9de0625bbc7293079a6914842efc4d438398d4dc035c9f0f64b9060b0eb9a",
+      "after": "cbfc344f086aae407c47e9d89f778fdc96e4dfe013071ab8cba39892272b7f43",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-draft.service.ts",
+      "before": "50b325e161563943a5d191d378801547ee5a24da7e51db325af93f7f19f47592",
+      "after": "2fa6c143a4aff4d53f2ca623a8894720fed3619ef040fd02994cfb17ec88e837",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-inquiry-document.service.ts",
+      "before": "472ff27945b192c8790b11dd74b92fa80036826a568f752ca9b29bc30770d92a",
+      "after": "9a411f454366745efd3efa7d7b95f166cb0e880fdd0970f0c3150046fef08ddc",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-inquiry.service.ts",
+      "before": "37f0fa312f58e240c971e7feb6164bcf72ac21e6a19c93bf01eb4773eeb35db2",
+      "after": "c4958eb42080ae1e643b2c8071f87c7bacb8ae4062e4eed1a99304f1700ac2b8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-party.service.ts",
+      "before": "b15b982702a8898e7f3d90d815b23d01cc659459dd493d4c6de14e957a0af926",
+      "after": "79bc3ea90112b0ea1156fcd1ea3f5e1795ac9cf0e8982d9ed29c6965ebf6628e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-pending-content.service.ts",
+      "before": "631e999ca43b8332397b02081b38ba6b5376e1df43cefc6ced1fcc263f0e9246",
+      "after": "2ff515c991accfa640ad973f9b27e0ae0cdb4dbfd09e02c50f7aa4b8e7da1663",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-pending-document.service.ts",
+      "before": "344852400c989d7d4c8a5debca66e2bdb98629d5cca153148de220d19d819ac0",
+      "after": "6090d41cc961c8e7ca15c78329d625667d3812179fb0caaf436e04d0643215cd",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-priority-assessment.service.ts",
+      "before": "9305b7fe75ffafc916256e0c1e6335194481da357b57b5f45be2c22b493bd06d",
+      "after": "bfdf5ca849d1eaa23aedad5e161800820fe245cba42c94bb52269f8e9f451d8b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-priority-basis.service.ts",
+      "before": "a576c3b2f190004f848504d78d367f45dd5657f868b03342655908b4e6fe0a67",
+      "after": "e51525daad39de7aca27bf346b689741bf6f1979c033adfe361ee85d07bb20ea",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-redirect.service.ts",
+      "before": "87da4972d6a25fb13e863d5c8195ae37c60e4c3bfae28877668b485dc1528789",
+      "after": "8953f148f8e23c6268c9ef85c1b9ad7cbd14b13957af4f1ee4f79ff3daded64f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-case/src/services/rait-withdrawal-attestation.service.ts",
+      "before": "518811e02278c928111dcf54cb4b7455b509951c2207d0d6c314212b7ea3d3bb",
+      "after": "145b221425fc87c0c43bd22ba871b5088e5008eda24c200ab62b182f0db00620",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-assignment.controller.ts",
+      "before": "e714821ec074ac2864b4ccc9781d9ef8dfe28de705fc298141d81fd906e65611",
+      "after": "fa42b59693b060446ab8f5b02fc0d22640e36422316977f2775c56835a90f7d1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-draw-snapshot.controller.ts",
+      "before": "adc314474e13e8eb69cd5722fcb136eb3f856ae9d5b81f864a5ee474ed8577a3",
+      "after": "3dad6968ff5f4f477a0e7f3cc9be9651ba496400f6e068a8d0b9bd9f8573ebcd",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-item.controller.ts",
+      "before": "4659319d36486efc541719c8c0401b8883a345acc9a4da39b8e6cd6ab4136aa3",
+      "after": "6eeedf7dddf845d229d1d8f82446d966729547a4ac7e5258953393ae933e8cce",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch-minutes-manifest.controller.ts",
+      "before": "d4d270012aba816de9b6c84bbc32f22cb84ce2ab53125e06d5e51d1188a635cf",
+      "after": "826215485642af9b275ea2f1518716238411c38852a852ccba583a1f0490070e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-batch.controller.ts",
+      "before": "c11dea84531a5976a9a55452f83e1c744955bcda1bbdc97c95f39f4ba8e2e6ba",
+      "after": "a6bcb5a2f2d548f85b01205eab62696afc829d7aca97a0fff804c4e096c5fe7b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-bench.controller.ts",
+      "before": "92be7c7c1add2e1b2e8c2f1f249473af2f3efd737a7e647bcdaf44573bc061f3",
+      "after": "22275984b7b8fed7dfcfe37a63d5b1c261d5ab1d608d2f11f0cab55360d07160",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-clock-alert.controller.ts",
+      "before": "62e6b88c9c211da7a3e7001c4c899aecca8a7c6ef1dc4992e924d4173c10eb3b",
+      "after": "8796a0424cc7a509256d6b9644e6a36650ec6772463d4f76df454aca311eb102",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-clock.controller.ts",
+      "before": "8e6c50353204dae608b35c2aab14c45a92398a345bb2008a5d91dc5da5121288",
+      "after": "c761e7336f9c739fd962ab3c5ba564c7a7a516a1f530ab7a88d2f921cc8e1e71",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-impediment.controller.ts",
+      "before": "3c7498d9d577848b2711822f203e2e81ae015622f3a6f777086011e799b2611e",
+      "after": "0d477f46d4c9901d9a93d28432938831cf3b36dbf6631c695fea1ec762627aa2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-pool-member.controller.ts",
+      "before": "e183d1ba8d8cc0cf120a40f0956601150875348b182a3521006a56f771d5995c",
+      "after": "579d7d4f55d5a8b07c6d3022fc6690bdc32b0e4b81e180b7b4f8a020e2510ef7",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-pool.controller.ts",
+      "before": "4719c0a85f3aacddefdfe581c88b7292bc106f60318006145805887cca945dbe",
+      "after": "912941706ed0a4f0dd973ee5e1b3f38ea2949ce493c2ee280be889915d1b7db3",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-schedule-slot.controller.ts",
+      "before": "e2df1e21c31adc8ced81ed47531ed74fe601312315e1aa2e980066b9729eeaf1",
+      "after": "2c5ef9391244b335178d68b6e317a65ccd9bfe70388ceee0965913285ef92283",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-schedule.controller.ts",
+      "before": "a4d10ddfcfecfaef7d930ac81ecc0a555ddd0861f22be791d9061160f44440ac",
+      "after": "61a1b1c8e55c61b68c4d0dfbef3a7692432fc5ac7164a6d86f90c6e5dd0d220e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-substitute-duty.controller.ts",
+      "before": "c01c95a8f1ead224907b7f7644f57f47e0577d651139852631efeb91da738758",
+      "after": "4277f1a96d1d25e0e13ed79ea2b2b087855d2bc8a91ba742fe9cfb2c8b71bb72",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/controllers/rait-unit.controller.ts",
+      "before": "0348dd55d50579ed3ef24ff1128e66d4c1fb89f73e6b27b0760bed4f24385e1d",
+      "after": "6e825eb74705147c0a078907c1c5d9e79173ae7b0f678e73c2bff7f56593131a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-assignment.dto.ts",
+      "before": "e637bfddfb3b640d4e7317f93789a722854b328f07d359537db2735eb83cb436",
+      "after": "60928f3ad5205a22c74fc6ecc16940f70f1c2c7071f0433e984f295dfb293178",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-draw-snapshot.dto.ts",
+      "before": "d24dd971d60b2a2985aa58492883729d42838d4169485adaaf306a6a015d919c",
+      "after": "f708a8ac1a0c3eefd0f1b77856a3b274137ac74e0b1569c7c917b384f8152195",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-item.dto.ts",
+      "before": "78f0daff17e9541f0f1d6441c56641492f35e6c57aae51068be68eccd8dc9734",
+      "after": "f36c0fbc3079cec486c73686adf4481fb71daf03c48d0ed0f876dd6c80bc73d1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch-minutes-manifest.dto.ts",
+      "before": "7ae28b7d92cf95a7ef84b389cfcc3b94c8c7d8c66ee82baf9980b0e95d306945",
+      "after": "fc741cadb9557361bdf3d1310fc623661c593e39588ad38cef4c3c554702e6c8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-batch.dto.ts",
+      "before": "0c3f6f9950738eaa68f2a85876b4db0ac8b76dcf537f93c9b586c60b5dd16df0",
+      "after": "f8cd20bc46f567275b1622f2d51fe06dabbd1e780f2c30c1c8e186fa03fb00e8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-bench.dto.ts",
+      "before": "e5fd02708f8d08b84df54a863a669c24540cc96ab96a43e9eb4c593a3951e2d3",
+      "after": "2978ebb04d2993eedff513f4aae40c85ca8b5bef2ef8fd54d079ae14a34edd45",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-clock-alert.dto.ts",
+      "before": "e164384f47a1afbc258d0bab86658850227e772b0d5c1cddd634bdb0646571de",
+      "after": "63f52403ce0aef6dd9bbded2d2ca666b51a652c9c64c75749eb2b9889ed23254",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-clock.dto.ts",
+      "before": "6da5a80d8bb0608b841f03885fdcbe5800abbec7d04b6737928c13edf7f2fbf8",
+      "after": "ab5c888fee72e09f24d1461cdde4f3b9e571517ed18a5aace99339ff28dde285",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-impediment.dto.ts",
+      "before": "60050632bf1778b86c885aa40dd34263113fced84f994ab9b9648ed4edf8077b",
+      "after": "a989871f2f31d43464858980656abf65b346c7645605e980a68faed1bcfce0b8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-pool-member.dto.ts",
+      "before": "f16f7295e7a47b21042c546f52698baca35451c43bae471fe90539493e86d4cb",
+      "after": "cff63f32170ee01023fb5977a8a3d030b5f357ae534f05084b110e17841992a7",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-pool.dto.ts",
+      "before": "8d0755ab7fa80c1f9a76ba094b85b664d38447b738e0193e413e0bf369f06c82",
+      "after": "73fc76a9a7decb086362ea9ef6efb09873e05540ecbcb2158f33ef619d53af11",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-schedule-slot.dto.ts",
+      "before": "46bb9e8be33d9d34505f9cc8db6dfd6216fe8b5876616ba884e96c45e83f9843",
+      "after": "49072c02d322b4ee45db2a1f69297d54144299d8365546a4f2eb3a1a69ab9049",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-schedule.dto.ts",
+      "before": "a0ee9e6082fb9ab5176dee8ccc85cb772b3b239081882264b8bd3e3a0aef7ee6",
+      "after": "ead60dd7257c31fad9bbad642be8168719e1b027d65619515c6cec130672bcf1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-substitute-duty.dto.ts",
+      "before": "6b5f39f2f2ef865184723338cc9a7a161a3d0c98057f4fe2bc58e24054ed0bdd",
+      "after": "35fd9c18efb0ac6457b2af595fee304a7ab64ef92b81baf0b5d43c0cebded5af",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/dto/create-rait-unit.dto.ts",
+      "before": "1b62b1d8362cec78a7165d8bbaf7a63c946712d20810c5478425ea94f4b50f7f",
+      "after": "bca899655c021bf66553490016a9bd88c18fa794ead10ba746ce5e93104fd7f4",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-assignment.entity.ts",
+      "before": "66eb2edf9f3b925362e33add0d7609caf4b93ac3d76cfe497655c25c8943f1fc",
+      "after": "fdf147758903703b81827f8717eda97f79708aa126f499f75e104f247e668b6b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-draw-snapshot.entity.ts",
+      "before": "968609e989acbca8e49feb29543dcccf851b4fd20cc936fdd6e29c0bef21d300",
+      "after": "f04c11c08ff2d362b3c187f883ed58fb8ce2d58b6601c3e5ae08f48534cf8473",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-item.entity.ts",
+      "before": "d1d7a1707e65b6df8ea11bcfeea6ecaba240f6b3ee3d3163a1d16fc3fed2c42f",
+      "after": "8698cd67b061550cb6f2ce9d27ecb4303a63858b4a7259ef2fe5ce6a82d5c159",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch-minutes-manifest.entity.ts",
+      "before": "747b857370af5cb1ec7514c6fa5a8cc5f79192ffcbd43c08c1fad5ae96f81baa",
+      "after": "44ffed9f932899ee9942d72b55f1abe68f2150efccb5d5844562a099227d6879",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-batch.entity.ts",
+      "before": "5204fb2ce1114ae08bd69ec16751d12869768f062be0c9587835299e70bee2b3",
+      "after": "ddeed7f2d35b7f954cc2b4bebe779b56d4030040113ac3bc64b6563ef8d519aa",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-bench.entity.ts",
+      "before": "799549e3927f25fadda144941f17a8f426e24928c1115cc9fa9bf7635eea171f",
+      "after": "c7de78620036a314839ba35342b94cb7ddfccd027551a44c29b195db70cad229",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-clock-alert.entity.ts",
+      "before": "6a10cb40b1d3bc4c4fa77e24de8ff8514ca8955eafae6168169e10478882880c",
+      "after": "b31cbbcb882efb7059452411325e3d7ee37765817d5b5a9d315cc05309f6325f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-clock.entity.ts",
+      "before": "df7d7fc6614b981bc30b3e62345d8741fa824372d899697971906c2e4cee508b",
+      "after": "5c2ee2e33d76398c03afa523b3eefd8b358471d2e4e97196164d5ca850356ed0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-impediment.entity.ts",
+      "before": "d96df987339361baf83780ffd1fd03d3912129aa469611484fc7a01e46dc18ee",
+      "after": "3dcb1f6f4ab22e62abd3b5ed2cef2efafd1720c44dfe29d55f5bcea0c1477b6f",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-pool-member.entity.ts",
+      "before": "84f0a8a05bb33d8223a58ca39fd086f5c4115b3afa83d9b46c3c74d9b0fbfd8d",
+      "after": "5c846a91cc29e9c94cde8d84caf77dc523b225bfcae0251a67ec8dbe7270d13b",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-pool.entity.ts",
+      "before": "36dafc3782dc0d13febe8c6b15a85241a14edf87e0ee68c3a00d30f4b2e0dad9",
+      "after": "bb927329a345c55395f1fabc3b283e4413ac4294918137c7b357af17d0991da2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-schedule-slot.entity.ts",
+      "before": "2c600c51216babaab92b13b2ad4ccf527979353fab9c229f92f3521cb345bfa9",
+      "after": "6b450e49d13d81ee90dd53a78a660eae3ad385232e370319b0d4ebf8e921ae25",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-schedule.entity.ts",
+      "before": "2fd206d8fb97ff5cd61b00b47d70b36090c6500c1dcac08f7bee6b218decd8d9",
+      "after": "764a796e32c40f4205eba06864c20dcaadcc2c65c55b756cb09b66cc345f72d0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-substitute-duty.entity.ts",
+      "before": "4d2d2a839d9c034d9876df5bbcb512f45b38c8c2df6f2a626b628eadf2043c0b",
+      "after": "0ec984fb8db9e1b292772ff196f2b09b76b284d4c197e197df5d2d1b943fe8e8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/entities/rait-unit.entity.ts",
+      "before": "d0639aca6a0c085bc3a5eb5856af32f91eede88aa8898833ecbfa355c4e5dae0",
+      "after": "cd035856be205ac4014cc19723727500d79a7a6df3a04e5de03c613248cf8cce",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/index.ts",
+      "before": "73b000b238e00da228d51158e17c54fd3bf26801b8e89702b8bc5f1e5373d464",
+      "after": "359218ac7c98b98ae7213e6d75c6bbf7cdc91ecd2c28279fd175b02fd6b3f0c3",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/rait-worklist.module.ts",
+      "before": "4d134d8a291fdd3a3d885b41b054e4ea71ad36b2fcfb4d31b2baff5a0d79dd68",
+      "after": "2fe7d7e889b2d128db037435c00274f2cf456d39d5b3e87008436fc98eb618b0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-assignment.repository.ts",
+      "before": "d466c5d42d6c604791c6cac74b119faf4b47e965a5af71da0c56c3ee5c858394",
+      "after": "35b56efedb58d9e3e543eecfb338ba71710ddec0650d978fae23f5779153947e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-draw-snapshot.repository.ts",
+      "before": "106977aec15cc84f1fa33d8902593b766584d209d162254227361068c2130a30",
+      "after": "5d6c3084ec232c5270645fad1be083397b66c1fdbc1e7b478a488eebb86ea3d8",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-item.repository.ts",
+      "before": "041a24a3f28ef77d95197e101a2ea556d9a7cf4625f648f803051de07cea75a4",
+      "after": "3652c3c8e00ba47c4318a5c3875fa242889f2fa075599790c803ba80eb3fb1a7",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch-minutes-manifest.repository.ts",
+      "before": "f84c67199399abbb3424c2c7e8df3934e3ecddd7621b0dbb7b06802e55d554ad",
+      "after": "c6c8d0d91953b3385358246bfda7713a9256e04c8344b9a831fc7c5ed5a0ee06",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-batch.repository.ts",
+      "before": "b5e1df9d5e1cc2eb0efb1ab5dd56b1e895146ee4b56696a8d026f6cef3986e07",
+      "after": "a5770895b5414bcba9a8abdd2f7996eae112b488569673f8f0322eb9c08538cf",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-bench.repository.ts",
+      "before": "71b26aa8bbd20862d991639579acca7ee2ad03b041b7e63875d0b7246542ba2d",
+      "after": "8d64aeec52cea3a7e20a5833d63d832922c08b02bbf88d0cd1aaa01d63ba1237",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-clock-alert.repository.ts",
+      "before": "38c20bd4fcc6b9e4343e42e4c3f71b664a99b2b88a06a1bc6c14a87c1d6d463a",
+      "after": "5b7b07135fe6388a1997ccf5830391b8f6ce6682c2c5dca2007742af6deee2f1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-clock.repository.ts",
+      "before": "e83fc6187a537b1d5ebaba5c9edf5e0f207424cc289231ecc70040856ce5fef7",
+      "after": "efdc3e2facb3131a1739ecdfca71e18deb82a3470e5d08c44241f6ec98162faf",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-impediment.repository.ts",
+      "before": "3d1031a8397028e64243f74ceeba8af27047d75f9ce5b6a52c581e32e9959b55",
+      "after": "ae62f6f4bc97d90c43dd6fb1b60517638b5f296228d25a9f65632d5f3cfb999d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-pool-member.repository.ts",
+      "before": "db93d38148fa0fc9e52db2bad08b37d13f1a8af2f25b7177bdf0d9ac8ed7b1bb",
+      "after": "4e52bf4a6047c91925e3268fbe058cb87fc8974314d76dc4a284423812f5b22e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-pool.repository.ts",
+      "before": "559aab24fa30cd26391f72c6024b099887175ab66245b314496ec1473b2c1484",
+      "after": "53939cd4ffa20f89ee0dad41f53dbf35e949f33404162ab58eff0c2d7200cce3",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-schedule-slot.repository.ts",
+      "before": "f649af04b5164a1f58b5580b2e0d3d99b2bba596eb07fbdbd608fc9b45d38ffb",
+      "after": "426739bc12de940f7c3e67a08b824c7c3c018bf3abc39cd5580b91ffc2fea83d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-schedule.repository.ts",
+      "before": "7e578c15585b0d0c9837301aefb9f999c43a831b37a40c974f3cd6c80c963d08",
+      "after": "43af906766e6c55108870bebe5c7ada877c2bd55f291c0a3567817f91d6ee669",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-substitute-duty.repository.ts",
+      "before": "3005621bcfe8791a1c1c6f42e3b57e0146b274ea536ad4acd28e1f3231b89c2e",
+      "after": "ed9d59985659c778cfd66a6f03d20f0d5e46af05a0e392d7829e6101d66c2d77",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/repositories/rait-unit.repository.ts",
+      "before": "dd27a2d8fa19c25dc95852d555b87440da71a0dc85d92bf09689e5984cca7276",
+      "after": "b5c7b81886bad2f9ada052cc49007cbda7678cf90809a667137b7305e89862de",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-assignment.service.ts",
+      "before": "b794d4b908d5383e866ee443075b0fdaeec859f6713a7ba207e181b93e27570f",
+      "after": "d183b22cc9f9487ee1796d4eeee170e72283a1bfd509435b9ca65d20cfb0dea2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-draw-snapshot.service.ts",
+      "before": "61e932f53d40c1b9e96f16448b415ad1d189008c9a8034891aac724c806a8226",
+      "after": "b761fe69fbffb7f7579ab34714620a1e8bb90f9e271ee7017b32dac12aac8766",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-item.service.ts",
+      "before": "ac8be9718817d90f7e2b06357aaa9db6417659b3c07bfa4608ef084ed94839c9",
+      "after": "d1a8c6c04f9eac068de011b6aadc723e738132c2f11b8f2f5e5e2e33eedb744a",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch-minutes-manifest.service.ts",
+      "before": "23a1751239915efac764b3614ebef4530d5f9dbb5f5362707b6edec0e24ebe58",
+      "after": "faa66c21b9b25f7552e6e7a6c2a9a86cd9df3c1c1d16f94e26f608a355ec76c4",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-batch.service.ts",
+      "before": "50fdefccd746b3bd5881aba42e81483d1eac6bd79a988afef4febd827e59baaa",
+      "after": "e66005f0d0b73a85ce66d9aeb66855926d47c6954224758471a52912af043a2e",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-bench.service.ts",
+      "before": "09aa292db1f989fdf128c912d1fa4b5bed7647c7016fe3bb4126b551f7d58ecf",
+      "after": "7b860b7ba84bbb26d01c39c9a1790c60e47a5db8652e3185e7ee83f4b630eff4",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-clock-alert.service.ts",
+      "before": "5f73191ad6dfc504f1d3150adfddd8d546a2385c861928949dabf887f98893a2",
+      "after": "d84fa51a922760d1145d8a72423895409d789c98b20b7f25c1e903d30e383492",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-clock.service.ts",
+      "before": "0ff671f55afd185a9bce44b22797e1be5b319a124d2e702420ae5ee6114f0b54",
+      "after": "93a147594c0c2865c20c9184c81efc6697b8628a4212bd99e761bdaba9709e93",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-impediment.service.ts",
+      "before": "d69754fe0d51932c305568cb1587025d766b80f8394f189fd695519a12a8630c",
+      "after": "5f3e51a5cff883628facb0c467576135213854d2acddff347bc7dfcbd81458c1",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-pool-member.service.ts",
+      "before": "c84c0cd8f87155caa215e4f865555a5667dab50e99d0c4b5d26412a400455225",
+      "after": "16c5a03fae7b73e7417b201229625e56c78e9d091389b3f68011518778774974",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-pool.service.ts",
+      "before": "8fbc24d1a4fa98102e893c7c6e3c51e92b0d9c32adf3a57da69fceee345ba84e",
+      "after": "b59ee2f073fc38986b09d7dcf01b45997ee3ec4314e889b536d4282b9f1cdcee",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-schedule-slot.service.ts",
+      "before": "88fad034721ea2e3f6c0742fff6f389b78487a48ead70d1c378e859bc8fadbdb",
+      "after": "0da1557bd6f611d9051e95024800226bedfbdb01289ec8903f9d3158b16604c0",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-schedule.service.ts",
+      "before": "43c150af07124acae75b52cb76555aacc45a4ba0eedb17c1d881faf89125ee07",
+      "after": "ef9fadfedb253f4f854c4e9c28da878fe83ab476391d8429b7a5be7e175c847c",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-substitute-duty.service.ts",
+      "before": "faec05d8cefc93ff9f5f7fa040efb8c7b4230927aaf2c60e2ccd4ede6d1dca4d",
+      "after": "186f612f87156b4222ba86eda566cdc64ad5c334d9bef6aef114d08c7039de47",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/inf/rait-worklist/src/services/rait-unit.service.ts",
+      "before": "4be4b832f85e67d5fe6000aae01e8511a1f15e6d2b7e2156ecb564a152a1701c",
+      "after": "6a7f213e2357c3904ee510d85dfc82d46cdeac53b568a3c9a84befbeeda7f218",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/generated/parameter-catalogue.ts",
+      "before": "5a06ec7cd342531ebae985788fba3d56efa77b7997fae387c72c6a3885fc69e4",
+      "after": "7c91b25f8f949608acc580df09c251933cbe9e9e75c26aa3337f51edb97265e2",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.commands.ts",
+      "before": "183a787172447c65c10276e5c245270bb559d1b07d54b81fe04dcf4ea596add8",
+      "after": "1355ac310aba4468d8d4cc631403340619eeffbb95f1dd22c8358c5e42feb2ee",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-INF-RAIT-CASE-001.ts",
+      "before": "65f231222730a2222423d72fa76f7e01a8304108469982861f62b4077fd9dd55",
+      "after": "8ef303234dae98198a4104a3e586f182970bc29ded2a22778c1c10b84cea666d",
+      "attribution": "CASE/WORKLIST blueprint, exact CASE transport source, or four typed ladder defaults"
+    },
+    {
+      "path": "tools/blueprints/generated-files.json",
+      "before": "ce82eee75de330f7cc9f49676294cc532d1c7d19658ddabd3ced66d0572fa73a",
+      "after": "cd5f8af3508ccfaf04c83355e40e372da615a2780da70d6bc84b6c4781000274",
+      "attribution": "full global manifest adds exactly five generated entity paths"
+    }
+  ],
+  "checks": [
+    {
+      "command": "pnpm contracts:clients",
+      "exit": 0
+    },
+    {
+      "command": "pnpm parameters:generate",
+      "exit": 0
+    },
+    {
+      "command": "pnpm verify:parameter-catalogue",
+      "exit": 0,
+      "result": "93 entries;18 flags;62 namespaces;0 errors"
+    },
+    {
+      "command": "pnpm exec node tools/contracts/generate-clients.mjs --check",
+      "exit": 0,
+      "result": "72 clients in sync"
+    },
+    {
+      "command": "pnpm exec prettier --check <module src/client/parameter targets>",
+      "exit": 0
+    },
+    {
+      "command": "pnpm --filter @detran/inf-rait-case typecheck",
+      "exit": 2,
+      "status": "BLOCKED",
+      "reason": "eleven TS2307 diagnostics for six not-yet-integrated new handwritten runtime modules"
+    }
+  ],
+  "notRun": [
+    "pnpm blueprints:check (full canonical outputs compared independently here; authoritative root check remains required)",
+    "actual PostgreSQL application/storage tests",
+    "real HTTP/concurrency/rollback/mandatory upgrade/backend kernel",
+    "full pnpm check",
+    "production activation/provisioning",
+    "scorecard changes"
+  ],
+  "preservation": {
+    "beforeSnapshotSha256": "aa9dc9e8e5f63171474fb4634c4befbc40a9a822ad5e30fa422ab846f70d10ef",
+    "beforeFileCount": 11621,
+    "runtimeTestsSourcesToolingConfigStateScorecardSiblingsEdited": false,
+    "databaseUse": false,
+    "parameterSemanticChangedKeys": [
+      "rait.ladder.A",
+      "rait.ladder.B",
+      "rait.ladder.C",
+      "rait.ladder.D"
+    ],
+    "oldOperationalVersions": "unchanged seed DO NOTHING; no activation",
+    "A_C_status": "proposta"
+  },
+  "graft": {
+    "calls": 1,
+    "tokensSaved": 23884,
+    "dollarsProvided": null
+  },
+  "evaluatedInputs": {
+    "base": "f67008c8",
+    "records": [
+      {
+        "path": "docs/framework/arch/parameter-catalogue.md",
+        "beforeSha256": "8f0eb7b9bfc7b0301c344c0813212cada9581a50a5e7eeb3b95c93d431759d60",
+        "evaluatedSha256": "8f0eb7b9bfc7b0301c344c0813212cada9581a50a5e7eeb3b95c93d431759d60"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-BILLING-001.json",
+        "beforeSha256": "dbb379527f32d359e25dee36e8d7232af006c46466c5c86faef3d22de91db860",
+        "evaluatedSha256": "dbb379527f32d359e25dee36e8d7232af006c46466c5c86faef3d22de91db860"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-BIOMETRICS-001.json",
+        "beforeSha256": "23fc0416b68ed64cb3247e3a7945a7f7ae42043134403c34124d78f9a5dfd939",
+        "evaluatedSha256": "23fc0416b68ed64cb3247e3a7945a7f7ae42043134403c34124d78f9a5dfd939"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-CLINICAL-CONTROLS-001.json",
+        "beforeSha256": "0fc842b8a5a36fe3ca506127d7341f9c7bf183f2956d1c77485c5e3f6a8db18c",
+        "evaluatedSha256": "0fc842b8a5a36fe3ca506127d7341f9c7bf183f2956d1c77485c5e3f6a8db18c"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-CLINICAL-NETWORK-001.json",
+        "beforeSha256": "cf3ec339cc0ca843606bd21a0fdf72f4b789898c5953117bfb9bf4fef54c191d",
+        "evaluatedSha256": "cf3ec339cc0ca843606bd21a0fdf72f4b789898c5953117bfb9bf4fef54c191d"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-ENCOUNTERS-001.json",
+        "beforeSha256": "0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92",
+        "evaluatedSha256": "0eae9fa8ccfb086eba21de22f3a9d379e0256092be9e903b2c7feea4c664ec92"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-EXAMS-001.json",
+        "beforeSha256": "bc8c0fd1f8e0a5a9684ebb7d2165df727ebdb3730cb7cf8f3bb8b106f2990fa9",
+        "evaluatedSha256": "bc8c0fd1f8e0a5a9684ebb7d2165df727ebdb3730cb7cf8f3bb8b106f2990fa9"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-INCONSISTENCIES-001.json",
+        "beforeSha256": "8d41845822fa8f12974a6647c408a271a91454cc1edf96a2d24a695385b1f72e",
+        "evaluatedSha256": "8d41845822fa8f12974a6647c408a271a91454cc1edf96a2d24a695385b1f72e"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-JUNTAS-001.json",
+        "beforeSha256": "5c7e357c88ac5886f460c789a7607211ada27acd49d6f9fd47df0da89ad064f2",
+        "evaluatedSha256": "5c7e357c88ac5886f460c789a7607211ada27acd49d6f9fd47df0da89ad064f2"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-OPERATIONAL-CONTROLS-001.json",
+        "beforeSha256": "41855aeaa3c52f966b5c30807e1fe3d821258e6c626a32b72238986d291880da",
+        "evaluatedSha256": "41855aeaa3c52f966b5c30807e1fe3d821258e6c626a32b72238986d291880da"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-PATIENTS-001.json",
+        "beforeSha256": "0d66678ac2689c982108492124f246cf667b4a6004a170339d827cb56e0c95e9",
+        "evaluatedSha256": "0d66678ac2689c982108492124f246cf667b4a6004a170339d827cb56e0c95e9"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-PROCESS-BLOCKS-001.json",
+        "beforeSha256": "4e56ae0c6ab4db581d4cd4f3b88014f634c022cc45f8f991a54976b7da46feab",
+        "evaluatedSha256": "4e56ae0c6ab4db581d4cd4f3b88014f634c022cc45f8f991a54976b7da46feab"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-REPORTS-001.json",
+        "beforeSha256": "223e3b4e60807d8ac51bcd6d9e1294a65ca305509b8ff1dc2f93649c7f3aa1a5",
+        "evaluatedSha256": "223e3b4e60807d8ac51bcd6d9e1294a65ca305509b8ff1dc2f93649c7f3aa1a5"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-RESTRICTIONS-001.json",
+        "beforeSha256": "05527c0aea012ece64e79955246e666899d444700b824e484f1800ff151769bf",
+        "evaluatedSha256": "05527c0aea012ece64e79955246e666899d444700b824e484f1800ff151769bf"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-RETENTION-001.json",
+        "beforeSha256": "8a74485eaee2a6dbb8cbc10772396a77b465cdd84cc5a57db0c90035ef24ea78",
+        "evaluatedSha256": "8a74485eaee2a6dbb8cbc10772396a77b465cdd84cc5a57db0c90035ef24ea78"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-SCHEDULING-001.json",
+        "beforeSha256": "fdbac09747b1d01ea1aa90821a792d537064443364d6a193ca6df5575d591513",
+        "evaluatedSha256": "fdbac09747b1d01ea1aa90821a792d537064443364d6a193ca6df5575d591513"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-TELEHEALTH-001.json",
+        "beforeSha256": "1702fef12182de18153031eed0b113c29e2eaa1406ccd4477fea59340ea96206",
+        "evaluatedSha256": "1702fef12182de18153031eed0b113c29e2eaa1406ccd4477fea59340ea96206"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-CH-TOXICOLOGY-001.json",
+        "beforeSha256": "9bd4b4e46865f6ee6a771bb9c561b1dddfdf2c684b8dc7b2d45a1fb3fbcb5062",
+        "evaluatedSha256": "9bd4b4e46865f6ee6a771bb9c561b1dddfdf2c684b8dc7b2d45a1fb3fbcb5062"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-DASH-MONITOR-001.json",
+        "beforeSha256": "db365ada798a2115de6d57a3153f93d3657948f6562dab9927f4e35f0a8c765a",
+        "evaluatedSha256": "db365ada798a2115de6d57a3153f93d3657948f6562dab9927f4e35f0a8c765a"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-DASHBOARD-CRASHES-001.json",
+        "beforeSha256": "45f272c2e89a665bb7a2cfecc671d0b26d136439df8f239f51adf116bd65b241",
+        "evaluatedSha256": "45f272c2e89a665bb7a2cfecc671d0b26d136439df8f239f51adf116bd65b241"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-EST-CRASH-001.json",
+        "beforeSha256": "99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62",
+        "evaluatedSha256": "99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-AIT-001.json",
+        "beforeSha256": "a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea",
+        "evaluatedSha256": "a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-ALCOHOL-001.json",
+        "beforeSha256": "f54fa6e2f04e73d65b7b187ded6fe373d6b14c80f840688310d1f09b9420e20f",
+        "evaluatedSha256": "f54fa6e2f04e73d65b7b187ded6fe373d6b14c80f840688310d1f09b9420e20f"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-COLLECTION-001.json",
+        "beforeSha256": "10fb057463797bde8609b1b2a33435d80259cd90c69c2e991c5f42e355f924cd",
+        "evaluatedSha256": "10fb057463797bde8609b1b2a33435d80259cd90c69c2e991c5f42e355f924cd"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-INFRACTION-001.json",
+        "beforeSha256": "59e421dbbb90b291b45408217601e9d6a86b992d9c75c00e5f73b17c5b2e21dd",
+        "evaluatedSha256": "59e421dbbb90b291b45408217601e9d6a86b992d9c75c00e5f73b17c5b2e21dd"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-MEASURES-001.json",
+        "beforeSha256": "f6d05352d77e9c4f6fc86a4c3453ea23771ab90fc5f1cdb0482a10c0cb5dfb8b",
+        "evaluatedSha256": "f6d05352d77e9c4f6fc86a4c3453ea23771ab90fc5f1cdb0482a10c0cb5dfb8b"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-NORMATIVE-001.json",
+        "beforeSha256": "41cbbec5aa5c5c6aa56495204f1b421d456abe78852bb03fd76a03715cbde6b1",
+        "evaluatedSha256": "41cbbec5aa5c5c6aa56495204f1b421d456abe78852bb03fd76a03715cbde6b1"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-NOTIFICATION-001.json",
+        "beforeSha256": "4c103efb85b586bbe1d79e0fc7367ae2e566e53d551fa0e41fd4635207283be6",
+        "evaluatedSha256": "4c103efb85b586bbe1d79e0fc7367ae2e566e53d551fa0e41fd4635207283be6"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+        "beforeSha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2",
+        "evaluatedSha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-RAIT-INTEGRATION-001.json",
+        "beforeSha256": "2d42a37638b7f6930d1b8ac07d6cd13218f965f5c2857948e0afeea8df277caf",
+        "evaluatedSha256": "2d42a37638b7f6930d1b8ac07d6cd13218f965f5c2857948e0afeea8df277caf"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-RAIT-ORG-001.json",
+        "beforeSha256": "7ece9578325dfb4c1a393f1ce7805146a621d5e7b4b843176533126efd74d55d",
+        "evaluatedSha256": "7ece9578325dfb4c1a393f1ce7805146a621d5e7b4b843176533126efd74d55d"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-RAIT-SESSION-001.json",
+        "beforeSha256": "0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b",
+        "evaluatedSha256": "0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-RAIT-WORKLIST-001.json",
+        "beforeSha256": "dbdb30cf6d6e61f8180f89ece1cf3a2b22b13e3bb2d41e3480c7d13f917688f5",
+        "evaluatedSha256": "dbdb30cf6d6e61f8180f89ece1cf3a2b22b13e3bb2d41e3480c7d13f917688f5"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INF-SPEED-001.json",
+        "beforeSha256": "a7576a43ce5eca2a2e93dd79ac603a578aa6e7b0127a6dc276c749cd38b02411",
+        "evaluatedSha256": "a7576a43ce5eca2a2e93dd79ac603a578aa6e7b0127a6dc276c749cd38b02411"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-INTEGRATION-RENAEST-MIRROR-001.json",
+        "beforeSha256": "101ecde2758bd6092f78463c18aa9048dc08acfb0893cd998dacadb3b06f5956",
+        "evaluatedSha256": "101ecde2758bd6092f78463c18aa9048dc08acfb0893cd998dacadb3b06f5956"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-AGENCY-001.json",
+        "beforeSha256": "afec0eee717d2c38412377687b43b37d2bc04ae65291d2f8a69cd1c15189af7f",
+        "evaluatedSha256": "afec0eee717d2c38412377687b43b37d2bc04ae65291d2f8a69cd1c15189af7f"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-EVIDENCE-001.json",
+        "beforeSha256": "e739cf21c78ced39113911fbf0c9950d0c2091ab58cc4efedee4225786fe9eac",
+        "evaluatedSha256": "e739cf21c78ced39113911fbf0c9950d0c2091ab58cc4efedee4225786fe9eac"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-EXAMPLE-001.json",
+        "beforeSha256": "a70ca6e407f469de7c4926ee3eea5364795e84c1934982d0662dcaf70341cb29",
+        "evaluatedSha256": "a70ca6e407f469de7c4926ee3eea5364795e84c1934982d0662dcaf70341cb29"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+        "beforeSha256": "9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee",
+        "evaluatedSha256": "9a2e982eefaba2059cf30be7def3e7f3da9a6c5c6b89957df63f173a8d30afee"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-OFFLINE-SYNC-001.json",
+        "beforeSha256": "56d0c4dd4d9f1a20f38bbcc7372af113898d34e435e79b5cccc2ab1e077d0479",
+        "evaluatedSha256": "56d0c4dd4d9f1a20f38bbcc7372af113898d34e435e79b5cccc2ab1e077d0479"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-PARAMETER-001.json",
+        "beforeSha256": "3259251ebb1dfaccd776e889a446ca45db209b824d7760cc132d20c015e3e39e",
+        "evaluatedSha256": "3259251ebb1dfaccd776e889a446ca45db209b824d7760cc132d20c015e3e39e"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-PROVISIONING-001.json",
+        "beforeSha256": "a000d19d0e307a2303ca60295e3ffcc514801b018c0d3b79821c19c2fcda1b35",
+        "evaluatedSha256": "a000d19d0e307a2303ca60295e3ffcc514801b018c0d3b79821c19c2fcda1b35"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-OPS-SNAPSHOTS-001.json",
+        "beforeSha256": "be057438a0ae6bba679549fa27603002919b4035701f4ea81d9ed853b9c00734",
+        "evaluatedSha256": "be057438a0ae6bba679549fa27603002919b4035701f4ea81d9ed853b9c00734"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-CITIZEN-SERVICE-001.json",
+        "beforeSha256": "81c05ec48ec8ab36465ae1b250c4a59f59931b99835bfd1ef52f3b10520f9029",
+        "evaluatedSha256": "81c05ec48ec8ab36465ae1b250c4a59f59931b99835bfd1ef52f3b10520f9029"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-COMPLAINTS-001.json",
+        "beforeSha256": "8c3bc3ce59e94126c71a50e9fad090538fbbb36536ce8c56fca3e2c64e93b60c",
+        "evaluatedSha256": "8c3bc3ce59e94126c71a50e9fad090538fbbb36536ce8c56fca3e2c64e93b60c"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-IDENTITY-001.json",
+        "beforeSha256": "bbfa6f4431768ff2ab5f9af097062b47775c79afb1a954ff7fb21b2c7743e4ea",
+        "evaluatedSha256": "bbfa6f4431768ff2ab5f9af097062b47775c79afb1a954ff7fb21b2c7743e4ea"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-INBOX-001.json",
+        "beforeSha256": "c04ef2d9c11828696abb081206e353636a01f9f86c39e28acfc0ada5addf53da",
+        "evaluatedSha256": "c04ef2d9c11828696abb081206e353636a01f9f86c39e28acfc0ada5addf53da"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-PROJECTIONS-001.json",
+        "beforeSha256": "5deaf3bb32dddcda371d363d5b4d7c5b8f3e0ec17cea92357ccf01a121943012",
+        "evaluatedSha256": "5deaf3bb32dddcda371d363d5b4d7c5b8f3e0ec17cea92357ccf01a121943012"
+      },
+      {
+        "path": "docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json",
+        "beforeSha256": "1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c",
+        "evaluatedSha256": "1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-BILLING-001.openapi.json",
+        "beforeSha256": "7553882313867e6f2e9ce675530230d7a7968cf0cf4675656300742fd5f29414",
+        "evaluatedSha256": "7553882313867e6f2e9ce675530230d7a7968cf0cf4675656300742fd5f29414"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-BIOMETRICS-001.openapi.json",
+        "beforeSha256": "1537677500a85eb55b70ef00bc5addb626842eac4c808231c9a6861fb0f00b03",
+        "evaluatedSha256": "1537677500a85eb55b70ef00bc5addb626842eac4c808231c9a6861fb0f00b03"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-CLINICAL-CONTROLS-001.openapi.json",
+        "beforeSha256": "8ad32a7912bd7697fe504f45e2aac94c8c18034f33e753a7cd2d5dd9809c6483",
+        "evaluatedSha256": "8ad32a7912bd7697fe504f45e2aac94c8c18034f33e753a7cd2d5dd9809c6483"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-CLINICAL-NETWORK-001.openapi.json",
+        "beforeSha256": "cc750e2c10f929fedecf9f3fe02014b3d5cfa8fefa8da655c3ec8d5c6f7e0f3e",
+        "evaluatedSha256": "cc750e2c10f929fedecf9f3fe02014b3d5cfa8fefa8da655c3ec8d5c6f7e0f3e"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-ENCOUNTERS-001.openapi.json",
+        "beforeSha256": "b03644ec38c3a450d5367b5c3d954650953b7ab7dcaf871e6672a1e20a8823a3",
+        "evaluatedSha256": "b03644ec38c3a450d5367b5c3d954650953b7ab7dcaf871e6672a1e20a8823a3"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-EXAMS-001.openapi.json",
+        "beforeSha256": "1b27a6a96ab626db7a11fb897c03e5f3649d8a16d4836a1ef3c4971e35e7952c",
+        "evaluatedSha256": "1b27a6a96ab626db7a11fb897c03e5f3649d8a16d4836a1ef3c4971e35e7952c"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-INCONSISTENCIES-001.openapi.json",
+        "beforeSha256": "5fec252e7fb3dd1cb36863ae96307ed69d846f3198c8de88564c196e2745ccdf",
+        "evaluatedSha256": "5fec252e7fb3dd1cb36863ae96307ed69d846f3198c8de88564c196e2745ccdf"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-JUNTAS-001.openapi.json",
+        "beforeSha256": "c410160ada6bd780effc05c2813ebf5dc02e0550d06f1c39a84ab8a486a5c7eb",
+        "evaluatedSha256": "c410160ada6bd780effc05c2813ebf5dc02e0550d06f1c39a84ab8a486a5c7eb"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-OPERATIONAL-CONTROLS-001.openapi.json",
+        "beforeSha256": "498e4e6597641d8ee0b2d7bc824ca36e268e1a5f70bd1ea6026ab5c332cf0f0b",
+        "evaluatedSha256": "498e4e6597641d8ee0b2d7bc824ca36e268e1a5f70bd1ea6026ab5c332cf0f0b"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-PATIENTS-001.openapi.json",
+        "beforeSha256": "d1178824df441abb395e31206fc42bf44d61ca743cd81694e7fd26c84c7a8e0b",
+        "evaluatedSha256": "d1178824df441abb395e31206fc42bf44d61ca743cd81694e7fd26c84c7a8e0b"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-PROCESS-BLOCKS-001.openapi.json",
+        "beforeSha256": "012d409b6b6a52f7cdb5146b75910a806faa2ddedbe1ecb1be0863fc83bca7e6",
+        "evaluatedSha256": "012d409b6b6a52f7cdb5146b75910a806faa2ddedbe1ecb1be0863fc83bca7e6"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-REPORTS-001.openapi.json",
+        "beforeSha256": "52c481c5a8d98dce870fc9fdf28837770869365f05fab5ed38c93ff26a48c860",
+        "evaluatedSha256": "52c481c5a8d98dce870fc9fdf28837770869365f05fab5ed38c93ff26a48c860"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-RESTRICTIONS-001.openapi.json",
+        "beforeSha256": "3fceb44e19260c50097307946d2518e7b9b6f664809a87c53779940b8c23623f",
+        "evaluatedSha256": "3fceb44e19260c50097307946d2518e7b9b6f664809a87c53779940b8c23623f"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-RETENTION-001.openapi.json",
+        "beforeSha256": "644b7ad88d0ad7a50eaf22b00590e3f821f7336131d5bb2ee7194e03a1efa34d",
+        "evaluatedSha256": "644b7ad88d0ad7a50eaf22b00590e3f821f7336131d5bb2ee7194e03a1efa34d"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-SCHEDULING-001.openapi.json",
+        "beforeSha256": "4937ca499d278d04cecbd541842fade288e143a0ed2ddc725d2f46df46a22fe8",
+        "evaluatedSha256": "4937ca499d278d04cecbd541842fade288e143a0ed2ddc725d2f46df46a22fe8"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-TELEHEALTH-001.openapi.json",
+        "beforeSha256": "346c2e61228622188664ec9b689d303eeda0affb396081b0c52d7601c649b159",
+        "evaluatedSha256": "346c2e61228622188664ec9b689d303eeda0affb396081b0c52d7601c649b159"
+      },
+      {
+        "path": "docs/framework/contracts/BP-CH-TOXICOLOGY-001.openapi.json",
+        "beforeSha256": "1e8bf091b3a675cbdc547a0ba66089f20347aa0a4dc98d980cce9d2a715c5fcb",
+        "evaluatedSha256": "1e8bf091b3a675cbdc547a0ba66089f20347aa0a4dc98d980cce9d2a715c5fcb"
+      },
+      {
+        "path": "docs/framework/contracts/BP-DASH-MONITOR-001.commands.openapi.json",
+        "beforeSha256": "84643a4e8e68443fb7714956a35ebe52432319390acf8c72035dfec5b304d120",
+        "evaluatedSha256": "84643a4e8e68443fb7714956a35ebe52432319390acf8c72035dfec5b304d120"
+      },
+      {
+        "path": "docs/framework/contracts/BP-DASH-MONITOR-001.openapi.json",
+        "beforeSha256": "02c0fe0aed1a9349e38ab202014823abc58e9d6d979a221bfcc6073e56099739",
+        "evaluatedSha256": "02c0fe0aed1a9349e38ab202014823abc58e9d6d979a221bfcc6073e56099739"
+      },
+      {
+        "path": "docs/framework/contracts/BP-DASHBOARD-CRASHES-001.openapi.json",
+        "beforeSha256": "6ea6aeaa3e28ba4f0d1fedd0021cb7cbcf5aba095c2819de954f858d575b6a88",
+        "evaluatedSha256": "6ea6aeaa3e28ba4f0d1fedd0021cb7cbcf5aba095c2819de954f858d575b6a88"
+      },
+      {
+        "path": "docs/framework/contracts/BP-EST-CRASH-001.commands.openapi.json",
+        "beforeSha256": "ae0bf4de88b577e0439ae5c97ba0bfdb30793779317f8e82fe0a0c22809dd248",
+        "evaluatedSha256": "ae0bf4de88b577e0439ae5c97ba0bfdb30793779317f8e82fe0a0c22809dd248"
+      },
+      {
+        "path": "docs/framework/contracts/BP-EST-CRASH-001.openapi.json",
+        "beforeSha256": "b34e4e3ad5daba97024316b2c67cad8f262971105e0fd153c1437a49de32fea9",
+        "evaluatedSha256": "b34e4e3ad5daba97024316b2c67cad8f262971105e0fd153c1437a49de32fea9"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-AIT-001.commands.openapi.json",
+        "beforeSha256": "8c9d2cc0b78ca60fe6fc5919b175d0870ad5f8478f706cb8dfd3801bb93eaaaf",
+        "evaluatedSha256": "8c9d2cc0b78ca60fe6fc5919b175d0870ad5f8478f706cb8dfd3801bb93eaaaf"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-AIT-001.openapi.json",
+        "beforeSha256": "e237f25e6395f73a1f462397f62c51d7d65f2a8b2d9bc792790060fed4824c10",
+        "evaluatedSha256": "e237f25e6395f73a1f462397f62c51d7d65f2a8b2d9bc792790060fed4824c10"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-ALCOHOL-001.commands.openapi.json",
+        "beforeSha256": "726e52b94d61e7f7a42de79f0f2f16e8e8b378aa19b4b05c3c2b1c9b8cc32a14",
+        "evaluatedSha256": "726e52b94d61e7f7a42de79f0f2f16e8e8b378aa19b4b05c3c2b1c9b8cc32a14"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-ALCOHOL-001.openapi.json",
+        "beforeSha256": "4c9aefbb32c6f0cd437f4d492430465a835bf8bbd2b691029d16b9148d75f43a",
+        "evaluatedSha256": "4c9aefbb32c6f0cd437f4d492430465a835bf8bbd2b691029d16b9148d75f43a"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-COLLECTION-001.commands.openapi.json",
+        "beforeSha256": "4434db41741f1302a7eb218e2fc51d8bb2b62fa06cea909c4c689e4f13cdef09",
+        "evaluatedSha256": "4434db41741f1302a7eb218e2fc51d8bb2b62fa06cea909c4c689e4f13cdef09"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-COLLECTION-001.openapi.json",
+        "beforeSha256": "f0a6c308e9d953164eb995e1f13f511e1a1b19d6b8d22740bdad62d505c372e7",
+        "evaluatedSha256": "f0a6c308e9d953164eb995e1f13f511e1a1b19d6b8d22740bdad62d505c372e7"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-INFRACTION-001.commands.openapi.json",
+        "beforeSha256": "86d1601eb381c934d02b63a64c53445c01ef2926c5dac6902383f4a546f9cf1b",
+        "evaluatedSha256": "86d1601eb381c934d02b63a64c53445c01ef2926c5dac6902383f4a546f9cf1b"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-INFRACTION-001.openapi.json",
+        "beforeSha256": "5b7bd1d76cbc1bae8f2cd5664fbc9113a11ef896c6be35489c8415ce2ecac602",
+        "evaluatedSha256": "5b7bd1d76cbc1bae8f2cd5664fbc9113a11ef896c6be35489c8415ce2ecac602"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-MEASURES-001.commands.openapi.json",
+        "beforeSha256": "1032b700ad3538db18f34ab26774edb4afddd547bc6527a9f870408c58926a2d",
+        "evaluatedSha256": "1032b700ad3538db18f34ab26774edb4afddd547bc6527a9f870408c58926a2d"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-MEASURES-001.openapi.json",
+        "beforeSha256": "c3764b9d41d75bcee7e9a2aa02ec4ea253754efa942a51c09976ce0b734a6408",
+        "evaluatedSha256": "c3764b9d41d75bcee7e9a2aa02ec4ea253754efa942a51c09976ce0b734a6408"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-NORMATIVE-001.commands.openapi.json",
+        "beforeSha256": "d8607b5361718e7ff1c6f7c3b22dbddefe1081217b977e25fd6d10837ba56923",
+        "evaluatedSha256": "d8607b5361718e7ff1c6f7c3b22dbddefe1081217b977e25fd6d10837ba56923"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-NORMATIVE-001.openapi.json",
+        "beforeSha256": "43850fc8b8de9c3ecc39be50241af4b50d40b8ad5b3b4772644dff9e36ca89d7",
+        "evaluatedSha256": "43850fc8b8de9c3ecc39be50241af4b50d40b8ad5b3b4772644dff9e36ca89d7"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-NOTIFICATION-001.openapi.json",
+        "beforeSha256": "1c6b3ff309a39807fbe58e58ac9b25e4585b7a051ff0d151afdf1d582f2098cb",
+        "evaluatedSha256": "1c6b3ff309a39807fbe58e58ac9b25e4585b7a051ff0d151afdf1d582f2098cb"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+        "beforeSha256": "2179953a18d991781ff61e9543f7f33508a21d0e9b047d4f29baedb922e38b96",
+        "evaluatedSha256": "2179953a18d991781ff61e9543f7f33508a21d0e9b047d4f29baedb922e38b96"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.openapi.json",
+        "beforeSha256": "53600f4ff425a00b02c40bf66b6661f20e4bb033be3d6f75e7dcbff9b240e96a",
+        "evaluatedSha256": "53600f4ff425a00b02c40bf66b6661f20e4bb033be3d6f75e7dcbff9b240e96a"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-INTEGRATION-001.commands.openapi.json",
+        "beforeSha256": "fdd3cad1409df28c0b2514924045bf81c2fc12dfd772e954797e261d04009dbf",
+        "evaluatedSha256": "fdd3cad1409df28c0b2514924045bf81c2fc12dfd772e954797e261d04009dbf"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-INTEGRATION-001.openapi.json",
+        "beforeSha256": "2749ca4c8a2a6b834370ebe3898c4c99253aea1e3fd8cd917cd7a375688c50e7",
+        "evaluatedSha256": "2749ca4c8a2a6b834370ebe3898c4c99253aea1e3fd8cd917cd7a375688c50e7"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-ORG-001.commands.openapi.json",
+        "beforeSha256": "59525d7e8629870824c771910f15545f1d77cac95c1ccb20e8ed168423f6cca6",
+        "evaluatedSha256": "59525d7e8629870824c771910f15545f1d77cac95c1ccb20e8ed168423f6cca6"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-ORG-001.openapi.json",
+        "beforeSha256": "fb61ed3a5c171ae85b7188718b7d7ca82d8c61955eee48d47e1bdb5684f85623",
+        "evaluatedSha256": "fb61ed3a5c171ae85b7188718b7d7ca82d8c61955eee48d47e1bdb5684f85623"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-SESSION-001.commands.openapi.json",
+        "beforeSha256": "6f16a9e50061eab5c61c0251ab00b94ffa851bb195325e491219135f8b69b2e5",
+        "evaluatedSha256": "6f16a9e50061eab5c61c0251ab00b94ffa851bb195325e491219135f8b69b2e5"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-SESSION-001.openapi.json",
+        "beforeSha256": "2a69d52b8aa7e19a84d0339f6842dabbbca110f4827075b02cb50df8fa193806",
+        "evaluatedSha256": "2a69d52b8aa7e19a84d0339f6842dabbbca110f4827075b02cb50df8fa193806"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.commands.openapi.json",
+        "beforeSha256": "e1414acd90340b27afe40e4bfd8b2a7741a041da68a8832b1f7248c1fe8cd5a4",
+        "evaluatedSha256": "e1414acd90340b27afe40e4bfd8b2a7741a041da68a8832b1f7248c1fe8cd5a4"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-RAIT-WORKLIST-001.openapi.json",
+        "beforeSha256": "ac2e2350eeed0148cfb0e7ab9e1134ee1a3c7797092b9904fe4a0e0157fa7aba",
+        "evaluatedSha256": "ac2e2350eeed0148cfb0e7ab9e1134ee1a3c7797092b9904fe4a0e0157fa7aba"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INF-SPEED-001.openapi.json",
+        "beforeSha256": "d25dd0d03b88d9b902ba62aeb4e58448383c6a053c8c4592e30660b0d316f2d8",
+        "evaluatedSha256": "d25dd0d03b88d9b902ba62aeb4e58448383c6a053c8c4592e30660b0d316f2d8"
+      },
+      {
+        "path": "docs/framework/contracts/BP-INTEGRATION-RENAEST-MIRROR-001.openapi.json",
+        "beforeSha256": "ac4929dee64eaa87c9ea463c4035c0ed0a7f197e3b69f8598a17d7828cff71c3",
+        "evaluatedSha256": "ac4929dee64eaa87c9ea463c4035c0ed0a7f197e3b69f8598a17d7828cff71c3"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-AGENCY-001.openapi.json",
+        "beforeSha256": "8a73f94c6809c652adc0dda8180839735dc267c86b48436d691356b05016069a",
+        "evaluatedSha256": "8a73f94c6809c652adc0dda8180839735dc267c86b48436d691356b05016069a"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-BOOTSTRAP-001.commands.openapi.json",
+        "beforeSha256": "4dd6c352d028c4e22a2364b469351afb4c1a6d2447a1a26170a1c37920c5e60d",
+        "evaluatedSha256": "4dd6c352d028c4e22a2364b469351afb4c1a6d2447a1a26170a1c37920c5e60d"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-EVIDENCE-001.commands.openapi.json",
+        "beforeSha256": "113f8cf7ddd8c3ef18643d10989828caa4c3fd5f3f111acc175c740826634e39",
+        "evaluatedSha256": "113f8cf7ddd8c3ef18643d10989828caa4c3fd5f3f111acc175c740826634e39"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-EVIDENCE-001.openapi.json",
+        "beforeSha256": "52193aa0cd0ef3dc6cde69c7fe422e9f5157a18b51e281f466dccff13c7f1834",
+        "evaluatedSha256": "52193aa0cd0ef3dc6cde69c7fe422e9f5157a18b51e281f466dccff13c7f1834"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-EXAMPLE-001.openapi.json",
+        "beforeSha256": "00f099e45c564bbf2ae84fa2cea60fcd347c68000f23e0e2cf00a54d161b6840",
+        "evaluatedSha256": "00f099e45c564bbf2ae84fa2cea60fcd347c68000f23e0e2cf00a54d161b6840"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-FIELD-001.commands.openapi.json",
+        "beforeSha256": "8fc01df98c3eb988a98d5892fa497d86cfdc6ca2a3a61e9bcf2972b25e5a9ac6",
+        "evaluatedSha256": "8fc01df98c3eb988a98d5892fa497d86cfdc6ca2a3a61e9bcf2972b25e5a9ac6"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-FIELD-001.openapi.json",
+        "beforeSha256": "6e8892204b3915490c3cb0206878c51d0ad8957e1fc51a927668c4bcf81a3633",
+        "evaluatedSha256": "6e8892204b3915490c3cb0206878c51d0ad8957e1fc51a927668c4bcf81a3633"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.commands.openapi.json",
+        "beforeSha256": "ce172cc2df9a11e9009ec7a6d8b3bc4cdbff15b5b070a5563bac65838fdd8a1a",
+        "evaluatedSha256": "ce172cc2df9a11e9009ec7a6d8b3bc4cdbff15b5b070a5563bac65838fdd8a1a"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.openapi.json",
+        "beforeSha256": "53de1d826bbb4fb30db614f37debac7a09cc8be56b96fece35e722ff0b2043ac",
+        "evaluatedSha256": "53de1d826bbb4fb30db614f37debac7a09cc8be56b96fece35e722ff0b2043ac"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-PARAMETER-001.openapi.json",
+        "beforeSha256": "b759c3345b9170f95188bcf46bf9aa16cf059efb39dab63572453e71c5e3b1b5",
+        "evaluatedSha256": "b759c3345b9170f95188bcf46bf9aa16cf059efb39dab63572453e71c5e3b1b5"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-PROVISIONING-001.commands.openapi.json",
+        "beforeSha256": "ec7a795b33a0735faf43e47cd63dd81f8f86636ef6b9186d1ea2d18c214a60be",
+        "evaluatedSha256": "ec7a795b33a0735faf43e47cd63dd81f8f86636ef6b9186d1ea2d18c214a60be"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-PROVISIONING-001.openapi.json",
+        "beforeSha256": "8279c8c8b0fa47e3be22601d81cb7182d23ab4eb79dacacf873911cbc909f2f4",
+        "evaluatedSha256": "8279c8c8b0fa47e3be22601d81cb7182d23ab4eb79dacacf873911cbc909f2f4"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-SNAPSHOTS-001.commands.openapi.json",
+        "beforeSha256": "8d629b1facad002764f60f59cc98f3ff8de85a1d702a0627c6ec9183c5ead925",
+        "evaluatedSha256": "8d629b1facad002764f60f59cc98f3ff8de85a1d702a0627c6ec9183c5ead925"
+      },
+      {
+        "path": "docs/framework/contracts/BP-OPS-SNAPSHOTS-001.openapi.json",
+        "beforeSha256": "e330f2524db795d6253981bf966c188380b7c7dfb3647b3b0f121f07d611fc05",
+        "evaluatedSha256": "e330f2524db795d6253981bf966c188380b7c7dfb3647b3b0f121f07d611fc05"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-CITIZEN-SERVICE-001.commands.openapi.json",
+        "beforeSha256": "0fb4d8da13fc9dc6cfba07ef081200f77c19da6889cbdfb07634442fa5fde5bb",
+        "evaluatedSha256": "0fb4d8da13fc9dc6cfba07ef081200f77c19da6889cbdfb07634442fa5fde5bb"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-CITIZEN-SERVICE-001.openapi.json",
+        "beforeSha256": "fcb48e6d009d1cbd78d8f1101a4b999997f488e82256a120b2c1c05a6cd7bea1",
+        "evaluatedSha256": "fcb48e6d009d1cbd78d8f1101a4b999997f488e82256a120b2c1c05a6cd7bea1"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-COMPLAINTS-001.openapi.json",
+        "beforeSha256": "f070b3e6b2bccc79b1c320ce133a85b40f14cd4b197d14e9c6caa11d8dce8531",
+        "evaluatedSha256": "f070b3e6b2bccc79b1c320ce133a85b40f14cd4b197d14e9c6caa11d8dce8531"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-IDENTITY-001.commands.openapi.json",
+        "beforeSha256": "896210aa8cfb7bc76517d15ba2021ac75201c7da2b3879ebcdaf8295e9372ee8",
+        "evaluatedSha256": "896210aa8cfb7bc76517d15ba2021ac75201c7da2b3879ebcdaf8295e9372ee8"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-IDENTITY-001.openapi.json",
+        "beforeSha256": "265883ad081d2d43d9befdeba67052273ca2cb2f3ac28cb551db48b39674322c",
+        "evaluatedSha256": "265883ad081d2d43d9befdeba67052273ca2cb2f3ac28cb551db48b39674322c"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-INBOX-001.commands.openapi.json",
+        "beforeSha256": "0919f18a7b008b9420310db19c7c02c2bd91b45e90a3cecfee157e17dc493fe3",
+        "evaluatedSha256": "0919f18a7b008b9420310db19c7c02c2bd91b45e90a3cecfee157e17dc493fe3"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-INBOX-001.openapi.json",
+        "beforeSha256": "27b0c791df865ee154093487567fdbd4844f3bc790c1108b528935f8692fd161",
+        "evaluatedSha256": "27b0c791df865ee154093487567fdbd4844f3bc790c1108b528935f8692fd161"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-PROJECTIONS-001.commands.openapi.json",
+        "beforeSha256": "6c16f53ce24abe4b1e38c1d6e39180de4ec79d38611c1cb92156573e48e1c351",
+        "evaluatedSha256": "6c16f53ce24abe4b1e38c1d6e39180de4ec79d38611c1cb92156573e48e1c351"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-PROJECTIONS-001.openapi.json",
+        "beforeSha256": "967c1493fdbcd0da18076abdd35804631d38dc349194fbec3bcb8faa32392fc8",
+        "evaluatedSha256": "967c1493fdbcd0da18076abdd35804631d38dc349194fbec3bcb8faa32392fc8"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-REQUESTS-001.commands.openapi.json",
+        "beforeSha256": "c7eb826904fd70766e8ffc993d2a7790e831a79eaea8494889827a143317a56d",
+        "evaluatedSha256": "c7eb826904fd70766e8ffc993d2a7790e831a79eaea8494889827a143317a56d"
+      },
+      {
+        "path": "docs/framework/contracts/BP-PORTAL-REQUESTS-001.openapi.json",
+        "beforeSha256": "22b7bb9c032651f782389148f20a0a7d49217f44a0531c6fc200d81d09f5a9ad",
+        "evaluatedSha256": "22b7bb9c032651f782389148f20a0a7d49217f44a0531c6fc200d81d09f5a9ad"
+      },
+      {
+        "path": "package.json",
+        "beforeSha256": "acac4a1da153d6bade76c387f896e3a4041ac42b620c711345cef27d80ba1317",
+        "evaluatedSha256": "acac4a1da153d6bade76c387f896e3a4041ac42b620c711345cef27d80ba1317"
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "beforeSha256": "006575c24e9fc24d155533493e24b0b9968fe65743913f1f7aa8a5c2c1e9cd32",
+        "evaluatedSha256": "006575c24e9fc24d155533493e24b0b9968fe65743913f1f7aa8a5c2c1e9cd32"
+      },
+      {
+        "path": "tools/blueprints/generate.mjs",
+        "beforeSha256": "c9eaac8147de7bd32bf9d7cd86e8f9c679391c5e69375db619c42bff2fcfbf08",
+        "evaluatedSha256": "c9eaac8147de7bd32bf9d7cd86e8f9c679391c5e69375db619c42bff2fcfbf08"
+      },
+      {
+        "path": "tools/contracts/generate-clients.mjs",
+        "beforeSha256": "c4be82be72f683677a22fa7509b0895b2a9a40fd0e2d7b824da6ff49ef0f2091",
+        "evaluatedSha256": "c4be82be72f683677a22fa7509b0895b2a9a40fd0e2d7b824da6ff49ef0f2091"
+      },
+      {
+        "path": "tools/parameters/generate-seed.mjs",
+        "beforeSha256": "ce6e357051af4c9178fa8ad2877bf8ddec0f129cbb1ecd424dffa76007d54667",
+        "evaluatedSha256": "ce6e357051af4c9178fa8ad2877bf8ddec0f129cbb1ecd424dffa76007d54667"
+      },
+      {
+        "path": "tools/parameters/parser.mjs",
+        "beforeSha256": "773478cee14260910c40b8fb774d1627b981765e45da97fe83b5d610abcedf59",
+        "evaluatedSha256": "773478cee14260910c40b8fb774d1627b981765e45da97fe83b5d610abcedf59"
+      },
+      {
+        "path": "tools/stynx-version.json",
+        "beforeSha256": "de73781203ad425602ef5948d939ed553f295d93c4ff4d114aea8ab87dbcf081",
+        "evaluatedSha256": "de73781203ad425602ef5948d939ed553f295d93c4ff4d114aea8ab87dbcf081"
+      }
+    ],
+    "allByteIdenticalToBeforeSnapshot": true,
+    "upstreamMainAdvance": "Parent reported f3dfc6ee/PR209; canonical blueprint inputs unchanged; no security or law writes here"
+  },
+  "comparedPopulationReceipt": {
+    "path": "work/rounds/R-0025/reports/S2-execution/engineer-generation-full-population.json",
+    "sha256": "e23d6e0cabc8c6c59c3f5e096dc97f7c8eb92b8d80e081f74cbeb7e6b740d0f5"
+  }
+}
