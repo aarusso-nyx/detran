@@ -1,3 +1,4 @@
+import { RaitRiskSnapshotModule } from './rait-risk.providers.js';
 import {
   CallHandler,
   CanActivate,
@@ -893,6 +894,7 @@ export class AppModule {
         MeasuresModule,
         AlcoholModule,
         CrashModule,
+        RaitRiskSnapshotModule,
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
