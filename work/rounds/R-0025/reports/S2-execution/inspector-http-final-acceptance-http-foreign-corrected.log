@@ -1,0 +1,63 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-19 21:15:37.905 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e681-725f-8594-083b97ac7e0c"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 302
+[2026-10-19 21:15:37.982 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e7b7-75af-8e06-7d285649e780"
+    route: "/v1/inf/rait/cases/65684f53-0755-46ab-9c37-8a58a9a2b477/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 71
+[2026-10-19 21:15:38.033 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e802-76b0-ba07-8591583830f2"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 47
+[2026-10-19 21:15:38.067 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e833-7190-92e5-9eec678f4086"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 32
+[2026-10-19 21:15:38.100 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e855-793e-92ba-7013372d94cc"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 31
+[2026-10-19 21:15:38.136 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e875-7c47-a28a-ee3af51576b2"
+    route: "/v1/inf/rait/cases/65684f53-0755-46ab-9c37-8a58a9a2b477/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 34
+[2026-10-19 21:15:38.523 -0300] INFO (68032): request completed
+    request_id: "01a156a9-e93c-71ac-98ca-fb7060270bfc"
+    route: "/v1/inf/rait/cases/65684f53-0755-46ab-9c37-8a58a9a2b477/risk"
+    method: "GET"
+    status: 200
+    duration_ms: 223
+[2026-10-19 21:15:38.921 -0300] INFO (68032): request completed
+    request_id: "01a156a9-eb3f-7fee-9e41-716d74eb552f"
+    route: "/v1/inf/rait/cases/65684f53-0755-46ab-9c37-8a58a9a2b477/risk"
+    method: "GET"
+    status: 503
+    duration_ms: 106
+S2_ASSERTIONS {"test":"S2 operational incident actual SQL linkage and independent provenance > operational source foreignTenant has exact actual incident linkage","executedAssertions":38}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (103 tests | 102 skipped) 1821ms
+     ✓ operational source foreignTenant has exact actual incident linkage  1530ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 102 skipped (103)
+   Start at  21:15:23
+   Duration  15.67s (transform 9.88s, setup 0ms, import 13.65s, tests 1.82s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-http-foreign-corrected-results.json
