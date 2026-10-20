@@ -6,6 +6,14 @@ import { createNestMetadataPlugin } from '../../tools/security/invariants/nest-m
 const metadataCompiledControllerPatterns = [
   '../domains/inf/rait-worklist/src/handwritten/rait-worklist-commands.controller.ts',
   '../domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts',
+  'src/dashboard-stream.controller.ts',
+  '../domains/inf/rait-case/src/handwritten/rait-case-scoped-reads.controller.ts',
+  '../domains/inf/rait-case/src/handwritten/rait-case-commands.controller.ts',
+  '../domains/inf/rait-case/src/handwritten/rait-inquiry-commands.controller.ts',
+  '../domains/inf/rait-case/src/handwritten/rait-admissibility-commands.controller.ts',
+  '../domains/inf/rait-worklist/src/handwritten/rait-worklist-scoped-reads.controller.ts',
+  '../domains/inf/rait-session/src/controllers/rait-vote.controller.ts',
+  '../domains/inf/rait-session/src/controllers/rait-minutes.controller.ts',
 ].map((relative) => {
   const filename = fileURLToPath(new URL(relative, import.meta.url));
   return new RegExp(
