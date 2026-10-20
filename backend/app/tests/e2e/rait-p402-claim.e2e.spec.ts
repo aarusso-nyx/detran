@@ -1,5 +1,7 @@
 // Article7 Inspector. Real HTTP / PolicyGuard / request-role SQL; no snapshot/auth/claim mock.
 import * as CasePublic from '@detran/inf-rait-case';
+import { RaitRiskProjectionService } from '@detran/inf-rait-worklist';
+import { RequestContextMutator } from '@stynx-nyx/core';
 import { addCalendarDays, isWeekend } from '@detran/inf-deadlines';
 import { randomUUID } from 'node:crypto';
 import { Client } from 'pg';
@@ -2635,5 +2637,295 @@ it('R14 independent actual SQL scalar equivalence preserves identities and fresh
   } finally {
     await client.query('rollback');
     await client.end();
+  }
+});
+
+for (const vector of [
+  'linkedforeignparent',
+  'wrongpoolscope-parent',
+  'wrongactivepool',
+  'staleobservedstate',
+  'missinglegacyprovenance',
+  'ambiguouslegacyprovenance',
+] as const)
+  it(`R17 legacy-specific ${vector} denies GET and POST without effects`, async () => {
+    const c = await fixture.admitted(app),
+      old = await fixture.historicallyDistributed(c.id);
+    await fixture.prepareRisk(c.id);
+    const original = await fixture.qualifyLegacy(c.id, old);
+    const positive = await request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .query({ pool_id: fixture.pool })
+      .set(fixture.headers());
+    expect(positive.status, JSON.stringify(positive.body)).toBe(200);
+    expect(
+      positive.body.data.queue.items.map((v: { id: string }) => v.id),
+    ).toContain(c.id);
+    if (vector === 'missinglegacyprovenance')
+      fixture.revokedReceipts.add(original.digest);
+    else if (vector === 'ambiguouslegacyprovenance')
+      await fixture.admitReceipt(
+        'legacy',
+        c.id,
+        original.core.bindings.map((v) => v.sourceRef),
+      );
+    else {
+      const overrides: {
+        admission_ref?: string;
+        pool_scope_ref?: string;
+        observed_state?: string;
+      } = {};
+      if (vector === 'staleobservedstate')
+        overrides.observed_state = 'ADMITIDO';
+      else if (vector === 'wrongactivepool') {
+        const pool = await fixture.extraPool();
+        const id = randomUUID();
+        await fixture.owner.query(
+          `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) select $1,tenant_id,case_id,$2,true,authorization_ref,source_ref from inf.rait_case_pool_scope where tenant_id=$3 and case_id=$4 and pool_id=$5`,
+          [id, pool, RAIT_TENANT, c.id, fixture.pool],
+        );
+        overrides.pool_scope_ref = 'sql:inf.rait_case_pool_scope:' + id;
+      } else {
+        const other = await fixture.admitted(app);
+        if (vector === 'linkedforeignparent') {
+          const e = (
+            await fixture.owner.query<{ id: string }>(
+              "select id from inf.rait_case_event where case_id=$1 and to_state='ADMITIDO'",
+              [other.id],
+            )
+          ).rows[0]!;
+          overrides.admission_ref = 'sql:inf.rait_case_event:' + e.id;
+        } else {
+          const scope = (
+            await fixture.owner.query<{ id: string }>(
+              'select id from inf.rait_case_pool_scope where case_id=$1 and pool_id=$2 and active',
+              [other.id, fixture.pool],
+            )
+          ).rows[0]!;
+          overrides.pool_scope_ref = 'sql:inf.rait_case_pool_scope:' + scope.id;
+        }
+      }
+      await fixture.negativeLegacyReview(c.id, old.qualification, overrides);
+    }
+    const before = await fixture.effects();
+    const denied = await request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .query({ pool_id: fixture.pool })
+      .set(fixture.headers());
+    expect(denied.status, JSON.stringify(denied.body)).toBe(409);
+    expect(denied.body.code).toBe('RAIT.CLAIM_LEGACY_UNVERIFIED');
+    expect(denied.body.context ?? {}).toEqual({});
+    expect(denied.body).not.toHaveProperty('data');
+    const post = await claim();
+    expect(post.status, JSON.stringify(post.body)).toBe(409);
+    expect(post.body.code).toBe('RAIT.CLAIM_LEGACY_UNVERIFIED');
+    expect(post.body.context ?? {}).toEqual({});
+    expect(post.body).not.toHaveProperty('data');
+    expect(await fixture.effects()).toEqual(before);
+  });
+
+it('R17 actual Nest WORKLIST projection preserves current qualified risk, S1 purpose and source errors', async () => {
+  const c = await fixture.admitted(app);
+  await fixture.prepareRisk(c.id);
+  const projection = app.get(RaitRiskProjectionService);
+  expect(projection).toBeInstanceOf(RaitRiskProjectionService);
+  const invoke = (
+    service: {
+      read: (id: string, p: CasePublic.RaitScopePrincipal) => Promise<unknown>;
+    },
+    actor: string,
+    roles: string[],
+  ) =>
+    app
+      .get(RequestContextMutator)
+      .runWithRequestContext(
+        {
+          requestId: randomUUID(),
+          startedAt: new Date(),
+          tenantId: RAIT_TENANT,
+          actorId: actor,
+        },
+        () => service.read(c.id, { id: actor, roles, tenants: [RAIT_TENANT] }),
+      );
+  const direct = app.get(CasePublic.RaitCaseRiskService),
+    before = await fixture.effects();
+  const actual = await invoke(projection, fixture.reader, ['rait-coordinator']);
+  const expected = await invoke(direct, fixture.reader, ['rait-coordinator']);
+  const result = actual as { data: Record<string, unknown> },
+    compared = expected as { data: Record<string, unknown> };
+  expect(typeof result.data.asOf).toBe('string');
+  expect(typeof compared.data.asOf).toBe('string');
+  const { asOf: actualInstant, ...actualRisk } = result.data;
+  const { asOf: expectedInstant, ...expectedRisk } = compared.data;
+  expect(new Date(String(actualInstant)).valueOf()).toBeLessThanOrEqual(
+    new Date(String(expectedInstant)).valueOf(),
+  );
+  expect(actualRisk).toEqual(expectedRisk);
+  await expect(
+    invoke(projection, fixture.actor, ['rait-analyst']),
+  ).rejects.toMatchObject({ status: 404, code: 'RAIT.TENANT_MISMATCH' });
+  await expect(
+    invoke(direct, fixture.actor, ['rait-analyst']),
+  ).rejects.toMatchObject({ status: 404, code: 'RAIT.TENANT_MISMATCH' });
+  fixture.policyResultMode = 'missing';
+  await expect(
+    invoke(projection, fixture.reader, ['rait-coordinator']),
+  ).rejects.toMatchObject({
+    status: 503,
+    code: 'RAIT.RISK_SOURCE_UNAVAILABLE',
+  });
+  await expect(
+    invoke(direct, fixture.reader, ['rait-coordinator']),
+  ).rejects.toMatchObject({
+    status: 503,
+    code: 'RAIT.RISK_SOURCE_UNAVAILABLE',
+  });
+  expect(await fixture.effects()).toEqual(before);
+});
+
+it('R17 discovery read-role denial finishes before actual global source writer release', async () => {
+  await fixture.executableParameters();
+  const control = await request(app.getHttpServer())
+    .get(`${PREFIX}/claim-context`)
+    .set(fixture.headers());
+  expect(control.status, JSON.stringify(control.body)).toBe(200);
+  const denied = await request(app.getHttpServer())
+    .get(`${PREFIX}/claim-context`)
+    .set(fixture.riskHeaders());
+  expect(denied.status, JSON.stringify(denied.body)).toBe(403);
+  const writer = new Client({
+    connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+  });
+  await writer.connect();
+  await writer.query("select set_config('app.tenant_id',$1,false)", [
+    RAIT_TENANT,
+  ]);
+  const pid = (
+    await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+  ).rows[0]!.pid;
+  let pending: Promise<request.Response> | undefined,
+    settled: request.Response | undefined,
+    waiting: { pid: number; usename: string } | undefined;
+  const before = await fixture.effects();
+  try {
+    await writer.query('begin');
+    await writer.query('update ops.parameter set reason=reason where id=$1', [
+      fixture.parameters.get('A')!.id,
+    ]);
+    expect(
+      (
+        await fixture.owner.query(
+          "select mode from pg_locks where pid=$1 and relation='ops.parameter'::regclass and mode='RowExclusiveLock' and granted",
+          [pid],
+        )
+      ).rows,
+    ).toEqual([{ mode: 'RowExclusiveLock' }]);
+    pending = request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .set(fixture.riskHeaders())
+      .then((r) => {
+        settled = r;
+        return r;
+      });
+    const end = Date.now() + 5000;
+    while (!settled && !waiting && Date.now() < end) {
+      await fixture.owner.query('select pg_stat_clear_snapshot()');
+      waiting = (
+        await fixture.owner.query<{ pid: number; usename: string }>(
+          "select pid,usename from pg_stat_activity where datname=current_database() and wait_event_type='Lock' and $1::int=any(pg_blocking_pids(pid)) and query ilike '%ops.parameter%'",
+          [pid],
+        )
+      ).rows[0];
+      if (!settled && !waiting)
+        await new Promise((done) => setTimeout(done, 20));
+    }
+    const beforeRelease = settled !== undefined;
+    if (waiting)
+      expect(waiting.usename).toBe(
+        new URL(process.env.STYNX_APP_DATABASE_URL!).username,
+      );
+    await writer.query('rollback');
+    const result = await pending;
+    expect(result.status, JSON.stringify(result.body)).toBe(403);
+    expect(result.body).not.toHaveProperty('data');
+    expect(result.body.context ?? {}).toEqual({});
+    expect(await fixture.effects()).toEqual(before);
+    expect(
+      waiting,
+      'actual forbidden discovery must not acquire global risk locks',
+    ).toBeUndefined();
+    expect(beforeRelease).toBe(true);
+  } finally {
+    await writer.query('rollback');
+    if (pending) await Promise.allSettled([pending]);
+    await writer.end();
+  }
+});
+
+it('R17 selected discovery rechecks actual pool eligibility after a source-lock wait', async () => {
+  await fixture.executableParameters();
+  const control = await request(app.getHttpServer())
+    .get(`${PREFIX}/claim-context`)
+    .query({ pool_id: fixture.pool })
+    .set(fixture.headers());
+  expect(control.status, JSON.stringify(control.body)).toBe(200);
+  expect(control.body.data.selectedPoolId).toBe(fixture.pool);
+  const writer = new Client({
+    connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+  });
+  await writer.connect();
+  await writer.query("select set_config('app.tenant_id',$1,false)", [
+    RAIT_TENANT,
+  ]);
+  const pid = (
+    await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+  ).rows[0]!.pid;
+  let pending: Promise<request.Response> | undefined;
+  try {
+    await writer.query('begin');
+    await writer.query('update ops.parameter set reason=reason where id=$1', [
+      fixture.parameters.get('A')!.id,
+    ]);
+    pending = request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .query({ pool_id: fixture.pool })
+      .set(fixture.headers())
+      .then((r) => r);
+    let waiting = false;
+    const end = Date.now() + 5000;
+    while (!waiting && Date.now() < end) {
+      await fixture.owner.query('select pg_stat_clear_snapshot()');
+      const active = (
+        await fixture.owner.query<{ pid: number; usename: string }>(
+          "select pid,usename from pg_stat_activity where datname=current_database() and wait_event_type='Lock' and $1::int=any(pg_blocking_pids(pid)) and query ilike '%ops.parameter%'",
+          [pid],
+        )
+      ).rows[0];
+      if (active) {
+        expect(active.usename).toBe(
+          new URL(process.env.STYNX_APP_DATABASE_URL!).username,
+        );
+        waiting = true;
+      } else await new Promise((done) => setTimeout(done, 20));
+    }
+    expect(
+      waiting,
+      'actual selected discovery must encounter real source lock before eligibility revocation',
+    ).toBe(true);
+    await writer.query(
+      "update inf.rait_pool_member set status='ADVERTIDO' where id=$1",
+      [fixture.member],
+    );
+    await writer.query('commit');
+    const before = await fixture.effects();
+    const result = await pending;
+    expect(result.status, JSON.stringify(result.body)).toBe(404);
+    expect(result.body.context ?? {}).toEqual({});
+    expect(result.body).not.toHaveProperty('data');
+    expect(await fixture.effects()).toEqual(before);
+  } finally {
+    await writer.query('rollback');
+    if (pending) await Promise.allSettled([pending]);
+    await writer.end();
   }
 });
