@@ -1,0 +1,55 @@
+{
+  "verdict": "REVIEW",
+  "candidate": "dbb7f2b8c0a2c05ec90ee7c44aea1b2988eb145a",
+  "scope": "S2 executable remainder, nonpromoting",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "medium",
+      "path": "backend/app/src/rait-risk.providers.ts",
+      "line": 401,
+      "detail": "The C reset gets its operative-policy dependency from qualify('movement', []), a request that uses the 'movement' kind with no source refs. The provider then rebuilds the dependency by rewriting the public opaque sourceVersions from 'rrv1:<hex>' to 'sha256:<hex>' (line 412). source-provenance-format.md says sourceVersions are opaque values derived from receipts, while request.dependencies must be the canonical digest of a policy receipt that the reader admitted and retrieved independently. It also says every request except parameter activation binds the current case and its owner/clock rows. This code assumes the opaque identifier is the receipt digest, which is true only because of the Inspector fixture's own encoding (fixture qualify maps digest to rrv1). It also accepts any zero-binding 'movement' receipt for the case as the policy. A production reader that derives sourceVersions any other way, or that also returns dependency versions, would produce wrong dependency digests. A zero-binding movement receipt cannot be told apart from a policy receipt.",
+      "recommendation": "Do not reverse public sourceVersions into dependency digests. Bind the C policy to the actual selected ops.parameter policy row under the 'parameter' kind, or get the admitted policy receipt digest through the existing port contract under a bounded Architect disposition. Until then, an actual C reset should fail with 503, as R6 does for D RESET. Add an Inspector counterexample where the reader's opaque ids differ from receipt digests."
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "path": "backend/app/src/rait-risk.providers.ts",
+      "line": 467,
+      "detail": "Every ladder step's reachedOn (ALERTA_N1/N2/N3/CRITICO) is pushed forward with the inline weekend/inf.rait_holiday rounding loop (lines 93-105). That rounding is only sourced for the canonical due_on comparison. source-review-disposition.md F3 allows existing non-business-day rounding in the due comparison and says 'No threshold step shifting'. ADR-0049 forbids thresholds absent from the approved ladder. The result is a business-day threshold rule nobody approved: a step whose raw date is a Saturday or a holiday raises its flag days later. That changes worstFlag and the order of defense candidates near ladder boundaries. The holiday lookup is also a second SQL calendar that ignores holiday scope (nacional/estadual/municipal) instead of using the public deadlines Calendar owner.",
+      "recommendation": "Get an Architect disposition on whether step thresholds are calendar dates or rounded dates. Until it is sourced, compute steps with addCalendarDays/addCalendarMonths only and keep rounding to the due/ceiling comparison. If rounding is approved, resolve it through the existing Calendar owner. Inspector adds a boundary sensor where a step lands on a weekend or holiday."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts",
+      "line": 47,
+      "detail": "The HMAC key for the pool and queue cursors is randomBytes(32), created per service instance at process start. A cursor from GET /v1/inf/rait/claim-context is rejected as RAIT.VALIDATION_FAILED 400 after any restart or deploy, and when the next-page request reaches another replica of the one backend deployable. Pagination that works on one instance and fails behind a load balancer is an availability bug in the new transport. It is not just a test-setup artifact.",
+      "recommendation": "Derive the cursor MAC key from existing configured secret material that every instance shares, within already-owned paths and without a new config surface unless one is approved. Otherwise document the single-instance limitation for the PR. Add a sensor that runs two app instances against one cursor."
+    },
+    {
+      "id": "F4",
+      "severity": "low",
+      "path": "backend/domains/inf/deadlines/src/rait-risk.ts",
+      "line": 212,
+      "detail": "evaluateRaitRisk returns sourceVersions as [...set] in insertion order. The provider hands each clock a sorted cumulative list (rait-risk.providers.ts:520), but B's not-applicable list holds only its applicability versions, so the union across clocks is not globally sorted. GET /cases/{id}/risk returns snapshot.sourceVersions unchanged. The format says to deduplicate and sort these opaque identifiers. Only the claim-context and claim audit paths sort again.",
+      "recommendation": "Return [...sourceVersions].sort() from the pure evaluator. Inspector adds a unit vector where the first-seen order is not sorted."
+    },
+    {
+      "id": "F5",
+      "severity": "low",
+      "path": "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.service.ts",
+      "line": 82,
+      "detail": "The risk GET takes the table-global SHARE locks on ops.parameter and inf.rait_holiday before assertCase authorizes the caller, and does so for every case instance including JARI/CETRAN. R9 limits the R7 relation locks to the approved defense risk/context/claim path. As written, any authenticated reader, including out-of-scope or 404 callers, briefly blocks cross-tenant parameter and holiday writers. JARI/CETRAN risk reads widen that contention.",
+      "recommendation": "Run assertCase, which is S1 scope only and reads no risk source, before raitLockRiskRelations. Get an Architect disposition on whether non-defense risk reads fall inside R9's 'defense risk' path. Do not remove the locks for defense reads."
+    }
+  ],
+  "limitations": [
+    "Static read-only review at the exact candidate. Nothing was executed: no DB, HTTP, unit, e2e, kernel, root check or CI. Concurrency and rollback conclusions are by code and lock-order reading only.",
+    "The R10 candidate-universe fence (the second locking candidates() pass in claimDefense and the context GET) is approved source but not yet implemented. It was not evaluated as a finding, per the stated known status.",
+    "D RESET (R6), production default-missing provenance for all eight kinds, A/C proposta rows that fail the vigente gate, and the R7 table-global lock cost are treated as explicit dispositions, not bugs.",
+    "The 187 generated / 170 header attribution was not reconciled exactly. A local count of added or modified files with a 'Generated from' header gives 186 on a different basis (it includes docs/clients). Byte equality against canonical generation was not re-run.",
+    "Verified points with no finding: the internal qualification controller has no routes; append-only trigger and final SQL19 REVOKE ordering via apply.sh; claim-next If-Match 400 and caseId 403 before the ledger; replay rechecks current pool, read scope and own active assignment without re-executing; fingerprint binds the actor; QUEUE_EMPTY before WIP; v+2 new / v+1 legacy staging with per-stage outbox keys inside one transaction; new GETs are @NoIdempotent and write nothing; the e2e substitutes only the provenance reader, and the fixture reader re-reads rows independently and does not echo the request digest.",
+    "Legal correctness of the A 180/360 track selection, the B instance timers and the incident/ORG linkage was checked only against the cited R-0025 sources, not against primary legal texts."
+  ]
+}
