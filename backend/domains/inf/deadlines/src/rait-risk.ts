@@ -209,6 +209,6 @@ export function evaluateRaitRisk(input: RaitRiskInput): RaitRiskSnapshot {
     today: input.today,
     clocks,
     worstFlag,
-    sourceVersions: [...sourceVersions],
+    sourceVersions: [...sourceVersions].sort(),
   };
 }
