@@ -136,7 +136,7 @@ export function canonicalRevision(value: unknown): string {
 }
 
 const sourceColumnTypes = new Map<string, Map<string, string>>();
-export async function readSourceRows(
+export async function readSourceRowsScalar(
   q: Sql,
   sourceRefs: readonly string[],
 ): Promise<SourceRow[]> {
@@ -188,6 +188,77 @@ export async function readSourceRows(
     rows.push({ sourceRef, table, fields: row });
   }
   return rows;
+}
+
+/** Independent fixed-table batching; the frozen scalar oracle above remains separate. */
+export async function readSourceRows(
+  q: Sql,
+  sourceRefs: readonly string[],
+): Promise<SourceRow[]> {
+  if (new Set(sourceRefs).size !== sourceRefs.length)
+    throw Error('Duplicate source reference');
+  const groups = new Map<string, { sourceRef: string; id: string }[]>();
+  for (const sourceRef of [...sourceRefs].sort()) {
+    const m = /^sql:([a-z_]+\.[a-z_]+):(.+)$/.exec(sourceRef);
+    if (!m) throw Error('Unqualified source reference');
+    if (!provenanceFormat.rowFields[m[1]!]) throw Error('Unowned source table');
+    const entries = groups.get(m[1]!) ?? [];
+    entries.push({ sourceRef, id: m[2]! });
+    groups.set(m[1]!, entries);
+  }
+  const rows: SourceRow[] = [];
+  for (const [table, entries] of groups) {
+    const fields = provenanceFormat.rowFields[table]!;
+    let types = sourceColumnTypes.get(table);
+    if (!types) {
+      const [schema, name] = table.split('.');
+      const result = await q.query<{ column_name: string; data_type: string }>(
+        'select column_name,data_type from information_schema.columns where table_schema=$1 and table_name=$2',
+        [schema, name],
+      );
+      types = new Map(result.rows.map((c) => [c.column_name, c.data_type]));
+      sourceColumnTypes.set(table, types);
+    }
+    const columns = fields.map((k) => {
+      const type = types!.get(k);
+      if (!type) throw Error('S2_SCHEMA_PENDING: ' + table + '.' + k);
+      if (type === 'timestamp with time zone')
+        return `to_char("${k}" AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as "${k}"`;
+      if (type === 'date') return `to_char("${k}",'YYYY-MM-DD') as "${k}"`;
+      if (type === 'bytea') return `encode("${k}",'hex') as "${k}"`;
+      if (k === 'event_id' || type === 'uuid') return `"${k}"::text as "${k}"`;
+      return `"${k}"`;
+    });
+    const audit = table === 'audit.events';
+    const where = audit
+      ? "event_id=split_part(requested.identity,'@',1)::bigint and occurred_at=substring(requested.identity from position('@' in requested.identity)+1)::timestamptz"
+      : 'id=requested.identity::uuid';
+    const result = await q.query<Record<string, unknown>>(
+      `select requested.ordinality::int as __source_ordinal, source.* from unnest($1::text[]) with ordinality requested(identity,ordinality) cross join lateral (select ${columns.join(',')} from ${table} where ${where}) source`,
+      [entries.map((e) => e.id)],
+    );
+    for (let index = 0; index < entries.length; index++) {
+      const matches = result.rows.filter(
+        (row) => row.__source_ordinal === index + 1,
+      );
+      if (matches.length !== 1) throw Error('Missing/ambiguous source row');
+      const { __source_ordinal: _, ...fieldsRow } = matches[0]!;
+      if (
+        Object.keys(fieldsRow).sort().join('|') !== [...fields].sort().join('|')
+      )
+        throw Error('Incomplete source projection');
+      rows.push({
+        sourceRef: entries[index]!.sourceRef,
+        table,
+        fields: fieldsRow,
+      });
+    }
+    if (result.rows.length !== entries.length)
+      throw Error('Missing/ambiguous source row');
+  }
+  return rows.sort((a, b) =>
+    a.sourceRef < b.sourceRef ? -1 : a.sourceRef > b.sourceRef ? 1 : 0,
+  );
 }
 
 export class RaitP402ClaimFixture {
