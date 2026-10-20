@@ -25,3 +25,4 @@
 | PC-0021 | R-0033 | - | b4d4d932bb49c58a5df20090a4d49d433a3c0599 | yes |
 | PC-0022 | R-0036 | - | 6f07295b60a51022b9de1d3e3bdebd9bcd48c2b1 | yes |
 | PC-0023 | R-0037 | - | 92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c | yes |
+| PC-0024 | R-0038 | - | 11eea2d7309a958d14d536ea7ced46124dfeed2e | yes |

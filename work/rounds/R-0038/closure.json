@@ -1,0 +1,73 @@
+{
+  "round_id": "R-0038",
+  "title": "C2 dependency tooling and Angular security remediation integrated",
+  "declaring_decision": "D-1",
+  "closing_decision": "D-2",
+  "merged_as": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+  "release_disposition": "none-needed",
+  "batches": [
+    {
+      "id": "C2",
+      "roles": ["Engineer", "Inspector", "Architect"],
+      "commit": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+      "headline": "C2 integrated by PR208;27→0 reported occurrences and26→0 advisory entries; bounded dependency-only remediation."
+    }
+  ],
+  "gates": {
+    "dependency-scope": {
+      "status": "pass",
+      "detail": "Only nine dependency manifests/lock inputs; candidate9e6e5cca and merge11eea2d7 trees byte-identical. Preserve C1/STYNX1.5.3/Node24; no product fixes."
+    },
+    "backend-tests": {
+      "status": "pass",
+      "detail": "Main CI39339090324 complete remote backend-kernel fallback succeeded and published verified-local-rc for exact11eea2d7."
+    },
+    "security-scan": {
+      "status": "pass",
+      "detail": "Retained full audit0 and native security_scan reading SR-bbe1e9585f6b0bda PASS, with official sense.record receipt; this is C2 observation, not a fresh later-main scorecard."
+    },
+    "preservation": {
+      "status": "pass",
+      "detail": "1069 immutable R0036/R0037/proof/legacy/policy files match d7 bytes; both original chains captured and hashed; thresholds unchanged."
+    },
+    "evidence-chain": {
+      "status": "pass",
+      "detail": "Exact-tree main CI evidence-gate passed;155 committed records retain all153 d7 prefix records. Re-run native chain verify after new closure evidence appends."
+    },
+    "stynx-pin": {
+      "status": "pass",
+      "detail": "STYNX1.5.3 preserved and foundation canonical checks passed."
+    },
+    "frozen-install": {
+      "status": "pass",
+      "detail": "Local frozen installs retained; remote exact-tree dependency installs succeeded in foundation/backend jobs."
+    },
+    "integration-ci": {
+      "status": "pass",
+      "detail": "39339090324 completedSUCCESS at11eea2d7309a958d14d536ea7ced46124dfeed2e; no new local attestation or registry release claimed. The non-required Verify trusted local RC evidence check failed because no local attestation exists. The required verified-local-rc succeeded through the official complete remote backend fallback. No local signature is claimed."
+    }
+  },
+  "source_repo_deleted": false,
+  "validation_criteria": [
+    {
+      "criterion": "C2 dependency remediation accepted and integrated",
+      "verdict": "pass",
+      "evidence": "PR208 candidate tree equals exact merge; native security_scan PASS and complete audit0; main CI39339090324 success."
+    },
+    {
+      "criterion": "C1 and C2 resolve the observed BL-0013 vulnerability population",
+      "verdict": "pass",
+      "evidence": "C1 reduced37→27 occurrences; C2 retained before/after audit has26→0 advisories and27→0 occurrences; all severities0. Thresholds remain pass_max_high0/review_max_high5."
+    },
+    {
+      "criterion": "Historical integrity and bounded scope",
+      "verdict": "pass",
+      "evidence": "153-record d7 prefix preserved inside155-record C2 chain; both original reconciliation snapshots match custody hashes; R0036/R0037 closures/legacy/threshold bytes preserved."
+    }
+  ],
+  "notes": "Historical exact C2 integration only. R0036 and R0037 remain closed; no historical verdict is rewritten. Other C3-C8 scope and product backlog remain separate. The official remote full backend fallback satisfies verified-local-rc; no local signed attestation is asserted. The non-required Verify trusted local RC evidence check failed because no local attestation exists. The required verified-local-rc succeeded through the official complete remote backend fallback. No local signature is claimed.",
+  "evidence": {
+    "proof_epoch": "record/proofs/work/generic/R-0038.jsonl",
+    "terminal_sha256": "b5ea9b419fe95b92ee06e0addfc4fc67eab304a219e6877d157f07a942c896f3"
+  }
+}
