@@ -63,6 +63,25 @@ export type ProvenanceRequest = {
   sourceRefs: readonly string[];
   contentRevision: string;
 };
+export type PolicyRequest = {
+  purpose: string;
+  tenantId: string;
+  caseId: string;
+  sourceRefs: readonly string[];
+  contentRevision: string;
+  policySources: readonly { sourceRef: string; sourceRevision: string }[];
+};
+export const isolatedPolicyPurpose =
+  'TASK-0044:C_USEFUL_MOVEMENT_POLICY:isolated-test-only';
+export function opaqueReceiptVersion(digest: string) {
+  return (
+    'rrv1:' +
+    canonicalRevision({
+      namespace: 'isolated-fixture-opaque-version-v1',
+      receiptDigest: digest,
+    }).slice('sha256:'.length)
+  );
+}
 const provenanceFormat = JSON.parse(
   readFileSync(
     new URL(
@@ -179,6 +198,11 @@ export class RaitP402ClaimFixture {
   readonly agency = randomUUID();
   practiceOn = '2026-06-15';
   provenanceChecks = 0;
+  policyPortAbsent = false;
+  policyResultMode:
+    'normal' | 'missing' | 'ambiguous' | 'malformed' | 'badDigest' = 'normal';
+  readonly policyRequests: PolicyRequest[] = [];
+  readonly policyDependencyDigests = new Set<string>();
   readonly qualifiedVersions = new Set<string>();
   readonly qualifiedBackendPids = new Set<number>();
   onQualified: ((req: ProvenanceRequest) => Promise<void>) | undefined;
@@ -856,15 +880,34 @@ export class RaitP402ClaimFixture {
         'C reset fixture requires an actual qualified movement event',
       );
     // Sourced current movement is admission; capture its actual instant, not an invented reset event.
+    const policyRefs = [
+      ...base,
+      'sql:inf.rait_clock:' + c.clock,
+      'sql:inf.infraction_timer:' + c.timer,
+      'sql:inf.rait_case_event:' + currentMovement.id,
+      ...auditRefs,
+    ];
+    // Existing receipt inventory is the sole custody store. This is an isolated-test admission, never legal/production approval.
+    const decision = await this.admitReceipt(
+      'movement',
+      caseId,
+      policyRefs,
+      [],
+      [],
+      randomUUID(),
+      isolatedPolicyPurpose,
+    );
+    const anchor = provenanceFormat.policyCanonicalSources.find(
+      (x) =>
+        x.sourceRef ===
+        'docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2',
+    )!;
     const policy = await this.admitReceipt(
       'movement',
       caseId,
+      policyRefs,
       [],
-      [],
-      provenanceFormat.policyCanonicalSources.map((x) => ({
-        ...x,
-        decisionRef: 'D11',
-      })),
+      [{ ...anchor, decisionRef: decision.core.receiptId }],
     );
     if (options.missing !== 'movement')
       await this.admitReceipt(
@@ -1315,6 +1358,7 @@ export class RaitP402ClaimFixture {
     dependencies: string[] = [],
     policySources: ReceiptCore['policySources'] = [],
     receiptId: string = randomUUID(),
+    authorityDecision = 'P4-02-S2 Owner-approved isolated Inspector source qualification',
   ) {
     const rows = await readSourceRows(this.owner, sourceRefs);
     const core: ReceiptCore = {
@@ -1331,8 +1375,7 @@ export class RaitP402ClaimFixture {
       authorization: {
         authorityRef: syntheticSource,
         actorId: RAIT_SECRETARY,
-        decisionRef:
-          'P4-02-S2 Owner-approved isolated Inspector source qualification',
+        decisionRef: authorityDecision,
         recordedAt: '2026-10-19T00:00:00.000000Z',
       },
       dependencies: [...dependencies].sort(),
@@ -1367,7 +1410,11 @@ export class RaitP402ClaimFixture {
         .pid,
     );
     const missing = { status: 'missing' as const, sourceVersions: [] };
-    if (req.tenantId !== RAIT_TENANT) return missing;
+    if (
+      req.tenantId !== RAIT_TENANT ||
+      (req.kind === 'movement' && req.sourceRefs.length === 0)
+    )
+      return missing;
     const refs = [...req.sourceRefs].sort();
     const matches = this.receipts.filter(
       (r) =>
@@ -1414,6 +1461,22 @@ export class RaitP402ClaimFixture {
           (s) => s.sourceRef === p.sourceRef,
         );
         if (!fixed || fixed.sourceRevision !== p.sourceRevision) return false;
+        const decisions = this.receipts.filter(
+          (x) => x.core.receiptId === p.decisionRef,
+        );
+        if (decisions.length !== 1) return false;
+        const decision = decisions[0]!;
+        if (
+          decision.core.authorization.decisionRef !== isolatedPolicyPurpose ||
+          decision.core.caseId !== r.core.caseId ||
+          decision.core.tenantId !== r.core.tenantId ||
+          decision.core.dependencies.length !== 0 ||
+          decision.core.policySources.length !== 0 ||
+          canonicalBytes(decision.core.bindings) !==
+            canonicalBytes(r.core.bindings) ||
+          !(await verify(decision, new Set(seen)))
+        )
+          return false;
         const path = p.sourceRef.split('#')[0]!;
         const bytes = readFileSync(
           new URL('../../../../' + path, import.meta.url),
@@ -1450,10 +1513,210 @@ export class RaitP402ClaimFixture {
       ...new Set([valid[0]!.digest, ...valid[0]!.core.dependencies]),
     ]
       .sort()
-      .map((d) => 'rrv1:' + d.slice('sha256:'.length));
+      .map(opaqueReceiptVersion)
+      .sort();
     for (const version of sourceVersions) this.qualifiedVersions.add(version);
+    if (req.kind === 'movement')
+      for (const digest of valid[0]!.core.dependencies)
+        this.policyDependencyDigests.add(digest);
     await this.onQualified?.(req);
     return { status: 'qualified', sourceVersions };
+  }
+
+  async qualifyPolicy(tx: Sql, req: PolicyRequest): Promise<unknown> {
+    this.policyRequests.push(structuredClone(req));
+    const identity = (
+      await tx.query(
+        "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+      )
+    ).rows[0];
+    expect(identity).toEqual({ role: 'role_app_backend', tenant: RAIT_TENANT });
+    const missing = { status: 'missing', sourceVersions: [] };
+    const keys = (value: object) => Object.keys(value).sort();
+    const same = (a: unknown, b: unknown) =>
+      canonicalBytes(a) === canonicalBytes(b);
+    if (
+      !same(
+        keys(req),
+        [
+          'purpose',
+          'tenantId',
+          'caseId',
+          'sourceRefs',
+          'contentRevision',
+          'policySources',
+        ].sort(),
+      ) ||
+      req.purpose !== 'C_USEFUL_MOVEMENT_POLICY' ||
+      req.tenantId !== RAIT_TENANT ||
+      !Array.isArray(req.sourceRefs) ||
+      !req.sourceRefs.length ||
+      !same(req.sourceRefs, [...new Set(req.sourceRefs)].sort())
+    )
+      return missing;
+    const anchor = provenanceFormat.policyCanonicalSources.find(
+      (x) =>
+        x.sourceRef ===
+        'docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2',
+    )!;
+    if (!same(req.policySources, [anchor])) return missing; // This pre-admitted isolated proof covers this exact closed C anchor, not a universal6-source policy.
+    const policyReceipts = this.receipts.filter(
+      (r) =>
+        r.core.kind === 'movement' &&
+        r.core.caseId === req.caseId &&
+        r.core.tenantId === req.tenantId &&
+        r.core.policySources.length &&
+        same(
+          r.core.bindings.map((b) => b.sourceRef),
+          req.sourceRefs,
+        ),
+    );
+    const valid: QualifiedReceipt[] = [];
+    try {
+      const current = await readSourceRows(tx, req.sourceRefs);
+      const row = (table: string) => current.filter((x) => x.table === table);
+      const cases = row('inf.rait_case'),
+        aits = row('inf.ait_ait'),
+        infractions = row('inf.infraction'),
+        clocks = row('inf.rait_clock'),
+        timers = row('inf.infraction_timer');
+      const events = current.filter(
+        (x) =>
+          x.table === 'inf.rait_case_event' ||
+          x.table === 'inf.infraction_event',
+      );
+      if (
+        cases.length !== 1 ||
+        aits.length !== 1 ||
+        infractions.length !== 1 ||
+        clocks.length !== 1 ||
+        timers.length !== 1 ||
+        events.length !== 1
+      )
+        return missing;
+      const c = cases[0]!.fields,
+        a = aits[0]!.fields,
+        i = infractions[0]!.fields,
+        cl = clocks[0]!.fields,
+        t = timers[0]!.fields,
+        e = events[0]!.fields;
+      if (
+        c.id !== req.caseId ||
+        c.tenant_id !== req.tenantId ||
+        a.id !== c.ait_id ||
+        i.ait_id !== a.id ||
+        cl.case_id !== c.id ||
+        cl.clock_code !== 'C' ||
+        t.infraction_id !== i.id ||
+        t.timer_code !== 'T-PAR-3A' ||
+        cl.last_reset_at !== e.occurred_at ||
+        (events[0]!.table === 'inf.rait_case_event'
+          ? e.case_id !== c.id
+          : e.infraction_id !== i.id)
+      )
+        return missing;
+      const bindings = current.map((x) => ({
+        sourceRef: x.sourceRef,
+        rowRevision: canonicalRevision(x),
+      }));
+      const trusted = (r: QualifiedReceipt) =>
+        r.admittedOrigin === 'owner-approved-isolated-inspector-fixture' &&
+        !this.revokedReceipts.has(r.digest) &&
+        !this.revokedReceipts.has(r.core.receiptId) &&
+        r.digest === canonicalRevision(r.core) &&
+        r.core.authorization.authorityRef === syntheticSource;
+      for (const receipt of policyReceipts) {
+        if (
+          !trusted(receipt) ||
+          receipt.core.dependencies.length ||
+          !same(receipt.core.bindings, bindings) ||
+          receipt.core.policySources.length !== 1
+        )
+          continue;
+        const triple = receipt.core.policySources[0]!;
+        if (
+          !same(
+            keys(triple),
+            ['sourceRef', 'sourceRevision', 'decisionRef'].sort(),
+          ) ||
+          !same(
+            {
+              sourceRef: triple.sourceRef,
+              sourceRevision: triple.sourceRevision,
+            },
+            anchor,
+          )
+        )
+          continue;
+        const decisions = this.receipts.filter(
+          (x) => x.core.receiptId === triple.decisionRef,
+        );
+        if (decisions.length !== 1) continue;
+        const decision = decisions[0]!;
+        if (
+          !trusted(decision) ||
+          decision.core.authorization.decisionRef !== isolatedPolicyPurpose ||
+          decision.core.tenantId !== req.tenantId ||
+          decision.core.caseId !== req.caseId ||
+          decision.core.dependencies.length ||
+          decision.core.policySources.length ||
+          !same(decision.core.bindings, bindings)
+        )
+          continue;
+        const file = triple.sourceRef.split('#')[0]!;
+        if (
+          'sha256:' +
+            createHash('sha256')
+              .update(
+                readFileSync(new URL('../../../../' + file, import.meta.url)),
+              )
+              .digest('hex') !==
+          triple.sourceRevision
+        )
+          continue;
+        const envelope = {
+          schemaVersion: 1,
+          namespace: 'rait-risk-policy-request-v1',
+          purpose: req.purpose,
+          tenantId: req.tenantId,
+          caseId: req.caseId,
+          rows: current,
+          dependencies: [],
+          policySources: req.policySources,
+        };
+        if (canonicalRevision(envelope) === req.contentRevision)
+          valid.push(receipt);
+      }
+    } catch {
+      return missing;
+    }
+    if (valid.length > 1 || this.policyResultMode === 'ambiguous')
+      return { status: 'ambiguous', sourceVersions: [] };
+    if (valid.length !== 1 || this.policyResultMode === 'missing')
+      return missing;
+    const receipt = valid[0]!;
+    const versions = [
+      opaqueReceiptVersion(receipt.digest),
+      ...receipt.core.policySources.map((p) =>
+        opaqueReceiptVersion(
+          this.receipts.find((r) => r.core.receiptId === p.decisionRef)!.digest,
+        ),
+      ),
+    ].sort();
+    if (this.policyResultMode === 'malformed')
+      return { status: 'qualified', sourceVersions: versions };
+    if (this.policyResultMode === 'badDigest')
+      return {
+        status: 'qualified',
+        receiptDigest: 'rrv1:' + receipt.digest.slice(7),
+        sourceVersions: versions,
+      };
+    for (const v of versions) this.qualifiedVersions.add(v);
+    return {
+      status: 'qualified',
+      receiptDigest: receipt.digest,
+      sourceVersions: versions,
+    };
   }
 
   async close() {
