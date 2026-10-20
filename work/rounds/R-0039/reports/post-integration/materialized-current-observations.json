@@ -1,0 +1,232 @@
+{
+  "observed_at": "2026-10-20T01:30:06.080944+00:00",
+  "closure_base": "207642f2d82634922a93fe5e26fdcc387ad7b530",
+  "delivery_merge": "f3dfc6ee47a94249631bf14e3242aeb309e36001",
+  "prior_chain_prefix_actual": 164,
+  "protected_paths": 11865,
+  "authorization_population": {
+    "total": 1139,
+    "application_policy": 1004,
+    "application_public": 6,
+    "mock": 121,
+    "test_fixture": 8,
+    "other": 0,
+    "unresolved_application": 0
+  },
+  "pii_population": {
+    "sql_tables": 363,
+    "sql_columns": 4122,
+    "native_candidates": 70,
+    "blueprint_fields": 158,
+    "blueprint_matched_native": 17,
+    "blueprint_outside_native_heuristic": 141,
+    "known_field_union": 211,
+    "blueprint_without_sql": 0,
+    "state_candidates": 21,
+    "cnpj_candidates": 8,
+    "pending_fields": 211
+  },
+  "pii_status_counts": {
+    "processing_purpose": {
+      "pending": 211
+    },
+    "legal_basis": {
+      "pending": 211
+    },
+    "retention": {
+      "pending": 73,
+      "source-declared-not-operationally-validated": 134,
+      "source-declared-review-indefinite": 4
+    }
+  },
+  "classification_counts": {
+    "pending": 53,
+    "source-declared": 158
+  },
+  "native_sensor_compatible": {
+    "authorization": false,
+    "pii": false
+  },
+  "original_generation": {
+    "path": "work/rounds/R-0039/reports/delivery/checks/c3-final-positive-generation.log.raw",
+    "sha256": "f2190f6641718222f482ed9688ea485bc3aa0fe2f312db5efaafc74c7082ae3f",
+    "execution_status": "pass",
+    "readiness_status": "review",
+    "exit_code": 1,
+    "actual_generation_reading_status": "review",
+    "actual_metrics": {
+      "kinds_touched": 7,
+      "kinds_rebuilt": 6,
+      "kinds_up_to_date": 1,
+      "error_count": 0,
+      "required_kinds": 7,
+      "missing_required_kinds": 0,
+      "obsolete_bodies_removed": 0,
+      "integration_head": "6e459da656465922f408981d55953701d2da96e9",
+      "integration_tree": "35f4d3e6c2373a5c34425c24ad9e9b6dbd9de476",
+      "inventory_body_sha256": "8739d8d92cbe7a612991a90420f12c6bf809c9bbf6cd6798f82753f933860299",
+      "inventory_api_status": "pass",
+      "inventory_routes_status": "pass",
+      "inventory_data_model_status": "pass",
+      "inventory_rbac_status": "review",
+      "inventory_data_handling_status": "pass",
+      "inventory_dep_graph_status": "pass",
+      "inventory_coverage_status": "review",
+      "inventory_api_command_hash": "3833f9889fea9f128361895e913ba6184cb83a8924cc88df755a596d081a8011",
+      "inventory_api_input_sha256": "789dfd2641f4ebc61d3b57de2e134261a18d8af56b8866f0be210eb1c5f6cc67",
+      "inventory_api_finding_count": 0,
+      "inventory_api_metric_endpoint_count": 1139,
+      "inventory_api_metric_controller_file_count": 257,
+      "inventory_api_metric_endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9",
+      "inventory_routes_command_hash": "be8b865642efad9c87fba6d4e9d63e4d5dd3e72408944124d87a895454b87c12",
+      "inventory_routes_input_sha256": "35976e3c64b191c9ada6e60884c79c8f76e247ab3a593d939e273353dce2209a",
+      "inventory_routes_finding_count": 0,
+      "inventory_routes_metric_route_count": 92,
+      "inventory_routes_metric_route_file_count": 22,
+      "inventory_routes_metric_routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4",
+      "inventory_data_model_command_hash": "636b839bc0d560eeb282267db4fb703cc8df0471462ffd5f0cdb99a5340463d8",
+      "inventory_data_model_input_sha256": "27186ac2ca67a95b45b62d90d6e05f4fe2883d868954453e00c13cfc3e80651a",
+      "inventory_data_model_finding_count": 0,
+      "inventory_data_model_metric_table_count": 363,
+      "inventory_data_model_metric_column_count": 4122,
+      "inventory_data_model_metric_foreign_key_count": 323,
+      "inventory_data_model_metric_migration_file_count": 83,
+      "inventory_data_model_metric_tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+      "inventory_data_model_metric_dialect": "postgres",
+      "inventory_rbac_command_hash": "b13976a82f5e2cf2f0bccd160df9ef12f2a753f052f743cf7d86571c6cd2531a",
+      "inventory_rbac_input_sha256": "b345bf3d2c18e1fa1014dbb33e9d821481e9bdb2cdeafe1427cd15cf62922150",
+      "inventory_rbac_finding_count": 45,
+      "inventory_rbac_metric_role_table_count": 2,
+      "inventory_rbac_metric_permission_table_count": 0,
+      "inventory_rbac_metric_join_table_count": 0,
+      "inventory_rbac_metric_endpoint_binding_count": 45,
+      "inventory_rbac_metric_endpoints_without_role_count": 1094,
+      "inventory_rbac_metric_synthetic_guard_permission_count": 2,
+      "inventory_rbac_metric_synthetic_role_permission_count": 0,
+      "inventory_rbac_metric_rbac_hash": "73f9a550d0990e6695f8589b6e55d733c088a6d88021cf39d4117724cfd9a097",
+      "inventory_data_handling_command_hash": "9dec13f4da6deab2f90728b69dd9e29fd0c341b69e74491d4e09bd6fbc48cbb7",
+      "inventory_data_handling_input_sha256": "d1483ca99c53b074b1b6bf9ba80743b0448af74befd4e2c08966aa3fce0a7ec3",
+      "inventory_data_handling_finding_count": 0,
+      "inventory_data_handling_metric_table_count": 363,
+      "inventory_data_handling_metric_pii_column_count": 70,
+      "inventory_data_handling_metric_unlabeled_pii_column_count": 70,
+      "inventory_data_handling_metric_data_handling_hash": "d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35",
+      "inventory_dep_graph_command_hash": "b41e3b7e89ff82dae8d80d1c6451ca52e77edbfff30f4ff0ee92be4efc4d7662",
+      "inventory_dep_graph_input_sha256": "237f806d483fa78fd3fba7fb51df96bd0ca038856346bbbf7a7cc2567ab43bf2",
+      "inventory_dep_graph_finding_count": 0,
+      "inventory_dep_graph_metric_node_count": 3460,
+      "inventory_dep_graph_metric_edge_count": 16579,
+      "inventory_coverage_command_hash": "f55e0c56a2247d0f8114da6eb87afd28020dc8e428fcdcdc7f0613763415a2e1",
+      "inventory_coverage_input_sha256": "a80083ea8486fc4be651e68d4409c29dff227b862ce12eeb52c5ee647a0a15cb",
+      "inventory_coverage_finding_count": 1,
+      "inventory_coverage_metric_route_count": 92,
+      "inventory_coverage_metric_endpoint_count": 1139,
+      "inventory_coverage_metric_use_case_count": 110,
+      "inventory_coverage_metric_link_count": 0,
+      "inventory_coverage_metric_unmapped_route_count": 92,
+      "inventory_coverage_metric_unmapped_endpoint_count": 1139,
+      "inventory_coverage_metric_inferred_path_match_count": 0,
+      "inventory_coverage_metric_coverage_hash": "70619abbbb4ede842b305e113f7f414591776fb71b43361c1f75367712bbe1ae"
+    },
+    "finding_count": 48
+  },
+  "rebuilt_reading_statuses": [
+    {
+      "kind": "inventory_api",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "e8ee32d849bbeae3819ecaf8f204eeeed189b5d088e3c7f1a3ff941be4d0ea30"
+    },
+    {
+      "kind": "inventory_routes",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "259d89b2a45edd9eae2d62075ac56b06ff0a6bc040642a7f2353bd1e6ceb3463"
+    },
+    {
+      "kind": "inventory_data_model",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "9d10c40de19eeac6471d68cad07f88688d40e35aeaefee87503220513186a157"
+    },
+    {
+      "kind": "inventory_data_handling",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "901e15242fdabbd7304a418154d098c729edc22d01c823228c45133ee51cf0be"
+    },
+    {
+      "kind": "inventory_rbac",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "5a3585c23bf2e691e71010d0985c9a040da4123c10674a36b147767bb8b8b11b"
+    },
+    {
+      "kind": "inventory_dep_graph",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "c4f10e5ce6c869ecb76fc4ca3a0bcfd70d3d89e99f7f70e5f020e9644aa36752"
+    },
+    {
+      "kind": "inventory_coverage",
+      "receipt_ok": true,
+      "action_verdict": "pass",
+      "action": "already-recorded",
+      "embedded_reading_status": "pass",
+      "stored_reading_status": "pass",
+      "finding_codes": [
+        "REBUILT_FROM_BODY"
+      ],
+      "metrics_present": false,
+      "reading_file_sha256": "6c72a1df77cdbf979d309a9f379861f1e15e7a456a6a9a6720857bc03a828128"
+    }
+  ],
+  "fresh_sensor_execution": false,
+  "BL0020": "open unchanged",
+  "all_backlogs": "all23byteunchanged",
+  "delegated_D2_at": "2026-10-20T01:30:06.080944+00:00",
+  "D2_authority": "ExistingOwnerdirectC2-C8grant and recommended-choice delegation; Architectadoptsbefore02:30Z; nonewOwnerreply",
+  "hard_boundary": "If a NEW D2judgment cannot beadopted before02:30Z orOwnerreturns, STOP andawaitOwner. Already-authorizedordinaryeffects persist subjecttoreview/greenchecks."
+}
