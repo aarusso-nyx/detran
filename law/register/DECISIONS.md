@@ -160,3 +160,8 @@ confirmado por `round status`; recibos preservados em
 
 - **D-1 — Owner:** C1 autorizado e PR #206 integrado com checks verdes, conforme `work/rounds/R-0037/AUTHORIZATION.md`.
 - **D-2 — Architect:** fechamento autorizado após CI main 39323527480 success no merge 92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c. Aceitação restrita a C1; scan global FAIL e BL-0013 aberto. Verificação em `work/rounds/R-0037/reports/post-integration/`. R-0036, thresholds e históricos preservados.
+
+### Anexo de R-0038
+
+- **D-1 — Owner:** autorização existente da campanha C2–C8, com esta rodada limitada a C2, registrada em `work/rounds/R-0038/AUTHORIZATION.md`. Não representa nova resposta humana.
+- **D-2 — Architect:** juízo delegado de encerramento limitado a C2 após PR #208 integrado em `11eea2d7309a958d14d536ea7ced46124dfeed2e`, CI 39339090324 success e verificador exact-candidate success. Auditoria completa e reading nativo C2 registram zero vulnerabilidades; campos de dependências dos oito manifests e lock permanecem iguais na árvore de fechamento. Recomenda-se aceitar o encerramento e resolver BL-0013 pelo fluxo oficial após revisão independente PASS, sem declarar prontidão da main posterior. Evidências: `work/rounds/R-0038/reports/post-integration/`. PC e selo serão emitidos exclusivamente pelo runtime; R-0036/R-0037, thresholds e históricos permanecem intactos.
