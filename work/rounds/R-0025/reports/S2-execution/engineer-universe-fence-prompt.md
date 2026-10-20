@@ -1,0 +1,11 @@
+# S2 R10 complete-universe fence correction
+
+Engineer, Article7. TASK-0042 under supported locks-only external execution; parent owns Git. You are not alone; preserve others' edits. Existing clean backend worktree18deaaeb. Remain PAUSED until parent explicitly accepts independent Inspector R10 RED and grants execution. No DB while Inspector lease held.
+
+Read root R10 report/ADR0056 and actual accepted RED evidence, existing CASE context/command code and callers. Own only existing approved rait-claim-context.service.ts and rait-case-command.service.ts under CASE handwritten, and scoped engineer-universe-fence reports. If a necessary third runtime path emerges, report exact path/reason before mutation. No test/source/generator/dependency/state/config/Git edits or new public field/error.
+
+Replace two expanding locking passes with frozen initial complete potential universe + all existing R7 ordered source-parent/child locks + qualification + one final fresh non-locking complete-universe SQL fence after waits. Compare exact candidate identities/state/version and actual routing/eligibility inputs; don't append new parents during recheck. On mismatch existing RISK_SOURCE_UNAVAILABLE503/no candidate disclosure/no command effects/ledger. No invented automatic retry policy. Both defense context and claim must use the same composition; ordinary JARI/CETRAN behavior unchanged per R9.
+
+When stable and all consumed predicates/inventories protected, final statement snapshot is linearization point; later arrivals are concurrent later work, not a promise of queue fixed until commit. Exact named immutable audit receipts are not invalidated by unrelated new appends. Relevant competing/latest/unique inventories still need real coverage and explicit limitation if uncovered. No global CASE/audit lock, admission writer change, grant/isolation/store expansion or fake production source.
+
+After authoring, typecheck affected CASE (app/WORKLIST only if dependency impact), preserve current test hashes, no test changes. Parent checkpoints and integrates into Inspector for unchanged targeted R10 GREEN/full acceptance under exclusive lease. Record exact source hashes/commands/results/remaining R6 production/D RESET gates. A passing targeted sensor is not full S2/P4 completion.
