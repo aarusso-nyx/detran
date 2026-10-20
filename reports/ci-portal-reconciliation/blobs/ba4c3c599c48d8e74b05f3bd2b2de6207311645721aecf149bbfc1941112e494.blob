@@ -1,0 +1,11 @@
+{
+  "name": "physical-packages",
+  "argv": [
+    "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+    "-e",
+    "const fs=require('fs'),{createRequire}=require('module'),path=require('path');const r=createRequire(path.resolve('package.json'));const v=fs.realpathSync(r.resolve('vitest/package.json'));const vi=fs.realpathSync(createRequire(v).resolve('vite/package.json'));const t=fs.realpathSync(r.resolve('typescript/package.json'));console.log(JSON.stringify(Object.fromEntries([['vitest',v],['vite',vi],['typescript',t]].map(([k,p])=>[k,{path:p,version:JSON.parse(fs.readFileSync(p)).version}]))));"
+  ],
+  "exitCode": 0,
+  "startedAt": "2026-10-20T05:52:30.233413+00:00",
+  "seconds": 0.034310500021092594
+}

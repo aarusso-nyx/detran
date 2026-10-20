@@ -1,0 +1,18 @@
+{
+  "scope": "external V4 source only, syntax ast.parse PASS; not executed",
+  "path": "/tmp/pr213-portal-ordinary-run-v4.py",
+  "sha256": "bd191ed950b2268d568211105f862f199d0fecc48490948ae97469d6a807c6d3",
+  "priorV3Path": "/tmp/pr213-portal-ordinary-run-v3.py",
+  "priorV3SHA256": "430e0e188fd0c177cc00beb41a5f6b290c056ff765129f43c33e91e88731abd6",
+  "physicalIdentityPath": "/tmp/pr213-portal-physical-toolchain-identity.json",
+  "physicalIdentitySHA256": "2c632ab4105f43b4dc19f1cda302a91e2a1ef68c4e9fec6badc5c4fc74771d38",
+  "changes": [
+    "Resolve aliases and assert exact actual volume physical Node/Corepack PNPM paths and hashes before first child command/archive/write/Docker.",
+    "Require explicit COREPACK_ENABLE_NETWORK=0; retain exact actual24.15.0/9.15.0 command-version gates.",
+    "Record lexical aliases separately from physical paths, without treating alias as physical.",
+    "Capture authentic traceback for caught run/cleanup exceptions; no fabricated diagnosis.",
+    "Use fresh V4 archive/result paths; original V3 failed attempt/results unchanged."
+  ],
+  "originalFailedAttemptResultSHA256": "8bc9c1283c41827015f71e8db23dca1129fe05d11046d3c3bfbd69aafe2e7e74",
+  "noSourceDBTestsGitEVEffects": true
+}
