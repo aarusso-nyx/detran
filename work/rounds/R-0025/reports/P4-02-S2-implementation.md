@@ -12,7 +12,7 @@ local-RC failed independently and did not produce an attestation. Main f3dfc6ee
 (PR209) was integrated normally, preserving its security/scorecard lane.
 Temporary recommended Owner choices are bounded by the original delegation
 21:39:32Z–02:39:32Z, ending earlier on return; see owner-delegation receipt.
-R1–R10 record exact recommended choices, roles and extensions before actuation.
+R1–R13 record exact recommended choices, roles and extensions before actuation.
 Primary local/security, scorecard, S1/recovery worktrees, expired-lock custody and
 machine config remain outside the commit set. No managed lifecycle finish is
 fabricated from externally performed work.
@@ -55,18 +55,42 @@ Inspector corrected only source-backed stale header/DI unit contracts and actual
 SQL/outbox/fixture/observation errors, preserving unrelated validators, exact stage
 counts, real lock barriers and all51-case off-page controls. Original frozen99
 history remains immutable; amended99 plus3 source-phantom and1 universe race
-make103 authored sensors. Authored is not executed/pass. TASK0041 independently
-executes acceptance under the exclusive disposable53343 lease.
+make103 historical amended sensors. Authored is not executed/pass. TASK0044
+authors independent review counterexamples under the exclusive disposable53343
+lease; its new census is not yet frozen.
 
 R10/ADR0056 source defines a frozen initial complete universe and final fresh
 non-locking equality fence. A changed mandatory current snapshot aborts503 without
 effects; it never absorbs new parents out of order or returns degraded success.
-Independent decisive RED and Engineer/unchanged GREEN are in progress.
+Independent decisive RED returned200 and committed the newly eligible case;
+Engineer5357b49f plus unchanged independent GREEN returns503/no effects, followed
+by a fresh complete two-case read. This77-assertion target passed; it is not a
+full-suite claim.
+
+Valid cross-family delivery review at the preserved R9 checkpoint returned REVIEW
+with F1 policy provenance, F2 threshold rounding, F3 process-local cursor, F4 public
+version ordering and F5 preauthorization/lock findings. ADR0057/R12/R13 freeze the
+correction source, including pair-shaped independent policy requests. Inspector
+RED precedes gated Engineer correction; final delta review remains required.
+
+Frozen ca301e58 complete51 off-page controls:4FAIL/99filtered in315.58s. Three
+decisive bodies exceeded unchanged30s and a preparation hook exceeded10s; teardown
+also timed out. Two actual503 responses arrived around30s. No selector semantics
+PASS or count/order/security mismatch is inferred. Source/runtime hashes and raw
+logs are preserved. Static diagnosis suggests repeated sequential SQL/provenance
+reads; no SQL timeout or definitive root cause is established. Re-evaluate after
+sourced F1/F2 correction without reducing51 cases or increasing budgets.
+
+Governance preflight: state/rounds indexes and doctor PASS; doctor remains
+diagnostic-only. Root format preflight was stopped after traversing protected
+nested local worktrees; authoritative root checks belong in the clean validation
+checkout. No protected worktree was modified or removed.
 
 ## Remaining gates and blocking sources
 
-1. Finish source-backed R10 correction, all103 real HTTP sensors and retained S1/
- CASE/WORKLIST controls, atomic rollback/contention/actual role proofs unchanged.
+1. Finish source-backed F1/F2/F4/F5 corrections and independent unchanged GREEN,
+ resolve complete51 off-page execution blockers, then execute the full final HTTP
+ census and retained S1/CASE/WORKLIST/rollback/contention/actual-role controls.
 2. Run authoritative pnpm check, full backend kernel/DB/RLS/upgrade regressions,
  doctor, evidence verify and valid cross-family delivery review; preserve failed/
  resource/precondition results separately rather than inflate PASS.
@@ -76,7 +100,10 @@ Independent decisive RED and Engineer/unchanged GREEN are in progress.
 4. **D RESET:** OD-305 lacks an accepted executable interruption/event/effective-
  start mapping and authentic applicable policy; RESET safely503 per R6. ORIGINAL
  needs independent qualification. No guessed legal event list or automatic NP reset.
-5. **Production provenance:** no accepted operational verifier/receipts, typed
+5. **Cursor availability (F3):** cursor signing is process-local. Restart/multi-
+ replica continuity remains OPEN; no accepted shared signing key/config exists in
+ this packet. No availability PASS or deployment readiness is claimed.
+6. **Production provenance:** no accepted operational verifier/receipts, typed
  activation, calendar, legacy and incident release inputs are supplied by synthetic
  fixture success. Default missing remains intentional. No source writer or
  provisioning/backfill is authorized. A separately bounded operational source/
