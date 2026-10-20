@@ -349,3 +349,27 @@ it('rejects a sparse sourceVersions array as missing mandatory provenance', () =
   expect(api.RaitRiskSourceError).toBeTypeOf('function');
   expect(() => api.evaluateRaitRisk(value)).toThrow(api.RaitRiskSourceError);
 });
+
+it('globally sorts the deduplicated opaque source-version union independently of clock/input order', () => {
+  const source = input();
+  const low = 'rrv1:' + '1'.repeat(64),
+    middle = 'rrv1:' + '7'.repeat(64),
+    high = 'rrv1:' + 'f'.repeat(64);
+  source.clocks[0]!.sourceVersions = [high, middle];
+  source.clocks[1]!.sourceVersions = [low, high];
+  source.clocks[2]!.sourceVersions = [middle];
+  source.clocks[3]!.sourceVersions = [low];
+  const before = structuredClone(source);
+  expect(api.evaluateRaitRisk(source).sourceVersions).toEqual([
+    low,
+    middle,
+    high,
+  ]);
+  source.clocks.reverse();
+  expect(api.evaluateRaitRisk(source).sourceVersions).toEqual([
+    low,
+    middle,
+    high,
+  ]);
+  expect(before.clocks[0]!.sourceVersions).toEqual([high, middle]);
+});

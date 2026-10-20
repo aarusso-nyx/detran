@@ -1,0 +1,40 @@
+{
+  "task": "TASK-0044",
+  "classification": "Independent source-backed unit RED; not delivery GREEN",
+  "runtimeCheckpoint": "5357b49f",
+  "tests": {
+    "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts": "79dccf3acbed350b19a61bb01db01e6491300d4f22539baea98887f7ffad87bd",
+    "backend/domains/inf/rait-case/tests/unit/rait-case-risk.spec.ts": "c2282a32c39d9eaa6bb03b9cc6bf5b8a0e4c9f795eaddd920ac4d5e3a495bf2b"
+  },
+  "epochs": [
+    {
+      "finding": "F4",
+      "executed": 1,
+      "failed": 1,
+      "filtered": 90,
+      "reason": "Opaque source-version union retains insertion order rather than global sort",
+      "rawLog": "/tmp/detran-s2-review-f4-red.log",
+      "trackedLog": "work/rounds/R-0025/reports/S2-execution/inspector-review-unit-red-F4.log",
+      "logSha256": "7b4946bacda0ac52b49c519d937b2671af85b2188be6e8292b06886783a6a43e"
+    },
+    {
+      "finding": "F5",
+      "executed": 1,
+      "failed": 1,
+      "filtered": 0,
+      "reason": "Actual service calls locked authorization after issuing global source SQL; required initial nonlocking authorization is absent",
+      "rawLog": "/tmp/detran-s2-review-f5-unit-red.log",
+      "trackedLog": "work/rounds/R-0025/reports/S2-execution/inspector-review-unit-red-F5.log",
+      "logSha256": "868bd340218f60f69438e9b15939f372d6cb575351666b04fef40fe0018d5918"
+    }
+  ],
+  "boundaries": {
+    "dbUsed": false,
+    "runtimeModified": false,
+    "httpAcceptancePending": true,
+    "F1Pending": true,
+    "F2Prerequisite": "F1-only wiring before decisive raw-date RED",
+    "F3": "OPEN; deployment availability not proven"
+  },
+  "formattedBeforeFinalEpoch": true
+}
