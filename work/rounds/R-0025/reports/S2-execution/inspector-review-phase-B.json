@@ -1,0 +1,48 @@
+{
+  "task": "TASK-0044",
+  "runtime": "PhaseB2bbbd92e",
+  "state": "Selected11 GREEN; single offpage risk gate timed out; stopped before cascade",
+  "selected11": {
+    "passed": 11,
+    "failed": 0,
+    "filtered": 103,
+    "durationSeconds": 42.63
+  },
+  "sourceHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "7d3183d05c749bb85dee21a3655a0719adb99c859bed6432630f0c791871d0d9",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "a8fae2a69f2e447936253e8e66a1383ecd740d34ee848672de29e18f7b93467c",
+    "backend/app/src/rait-risk.providers.ts": "06567fa743a23322c4c03666cc896f1c9bd3924d664ad5d927e9b1e5c24ea3c7",
+    "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.service.ts": "af71ada5e39ef39009ec308290a07846d243b6bd33bcd02982f73ff1862fea1d",
+    "backend/domains/inf/deadlines/src/rait-risk.ts": "44cd1e7cb4ae06240a937fef5ca2e871d2d50f09803f5040906535f9b35460c5",
+    "pnpm-lock.yaml": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb"
+  },
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-B-eleven.log": "7bd547c0a91ffd50007de2a01eae9701afcff242d0400514555c5ed57e1b465b",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-B-eleven.json": "89ae02c43dd44823d66d13d91b9864155e456b2cc50f695c5d5152a589930433",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-B-hashes.json": "e58ae78d3aa147a6f812214bad992fb044638196626b8eaed6650f4ef8e702af",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-B-offpage-risk.log": "824be3ffa4d4ffa460745cb7f741a52a54fee77cdce4835515e9fa54801f397f",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-B-offpage-risk.json": "8456e3a3ac342083578f16909043ce6250abde421812699565ac187405190b69"
+  },
+  "nextGate": "Single unchanged risk blocker beyondposition50 complete51; stop before cascade on timeout",
+  "boundaries": {
+    "runtimeOrTestsEdited": false,
+    "onlyDB": 53343,
+    "F3": "OPEN",
+    "productionPolicy": "OPEN unavailable without genuine admitted source",
+    "DRESET": "OPEN",
+    "full114": "PENDING"
+  },
+  "offpageRisk": {
+    "passed": 0,
+    "failed": 1,
+    "filtered": 113,
+    "durationSeconds": 100.14,
+    "actualQualifiedComplete51Positive": "HTTP200 claim-context16298ms",
+    "executedAssertions": 1236,
+    "failure": "Test body30s timeout and app.close10s hook timeout; no assertion mismatch recorded",
+    "remaining3": "NOT EXECUTED",
+    "full114": "NOT EXECUTED"
+  },
+  "hashesUnchangedAfter": true,
+  "lease": "Released after runner exited; no further DB operations"
+}
