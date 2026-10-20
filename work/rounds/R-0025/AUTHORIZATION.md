@@ -214,3 +214,22 @@ batching in the existing port and independent fixture, plus one SQL equivalence
 control; original114 controls/complete51 populations/timeouts remain unchanged.
 No production policy, shared cursor key or DRESET rule is fabricated. Host
 resource-blocked full acceptance is reported, not converted into PASS.
+
+### S2 R15–R17 current bounded continuation — 2026-10-19
+
+The original delegation window and its early-return condition remain unchanged.
+R15–R17 continue only the recorded bounded execution/verification scope; R16
+refreshes stale current plan banners and R17 fixes discovery preauthorization in
+the originally owned claim-context service after Inspector RED. It preserves valid
+none200/choice200, scoped selected behavior, same-operation revalidation and all
+R7/R10 fences. No new runtime path, grant, error, timeout or51-case reduction.
+
+Inspector authored nine supplemental HTTP controls (census124=115+2+1+6); app
+typecheck passed, but these additions have no DB execution yet. F6 independent
+three-unit RED9dd48a80 precedes the in-progress single-path correction. The second
+valid delivery review atca83c18d remains REVIEW, resolving F1/F2/F4/F5, deferring F3
+and identifying F6. Its exhausted two-review cap authorizes no third review or
+implicit PASS. The current instruction permits only a DRAFT review PR recording
+blocked independent re-review and resource-blocked full acceptance. Older frozen
+pnpm check results cannot promote the later candidate. No implementation merge,
+S3, production qualification, scorecard action or S2/P4/JW01/R-0025 closure.
