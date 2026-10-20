@@ -9,10 +9,10 @@ import {
   symlinkSync,
 } from 'node:fs';
 import { createRequire } from 'node:module';
-import { isAbsolute, join, relative, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = fileURLToPath(new URL('../../', import.meta.url));
+const root = realpathSync(fileURLToPath(new URL('../../', import.meta.url)));
 const destination = process.argv[2];
 if (!destination || process.argv.length !== 3 || !isAbsolute(destination))
   throw new Error(
@@ -20,7 +20,7 @@ if (!destination || process.argv.length !== 3 || !isAbsolute(destination))
   );
 const directory = resolve(destination);
 const within = relative(root, directory);
-if (!within.startsWith('..') || within === '..')
+if (!within.startsWith(`..${sep}`))
   throw new Error(
     'Native binary alias must be outside the candidate repository',
   );
@@ -41,7 +41,7 @@ if (
   );
 mkdirSync(directory, { recursive: true });
 const resolvedDirectory = relative(root, realpathSync(directory));
-if (!resolvedDirectory.startsWith('..') || resolvedDirectory === '..')
+if (!resolvedDirectory.startsWith(`..${sep}`))
   throw new Error(
     'Native alias destination resolves inside the candidate repository',
   );

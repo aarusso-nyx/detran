@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 import { createHash } from 'node:crypto';
 import {
+  existsSync,
+  lstatSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  realpathSync,
   rmSync,
+  symlinkSync,
   unlinkSync,
   writeFileSync,
 } from 'node:fs';
@@ -690,4 +695,140 @@ test('I/O main refuses invalid manifest timestamp even with a consistent whole-b
       /manifest timestamp/,
     );
     rawRetained(f);
+  }));
+
+// Installer-only fixtures. The fake Vitest entrypoint is never executed; native
+// runner measurement, origin and collection are outside these containment tests.
+function installerFixture(run) {
+  const directory = realpathSync(
+    mkdtempSync(path.join(os.tmpdir(), 'detran-installer-path-')),
+  );
+  const root = path.join(directory, 'repo');
+  const installer = path.join(root, 'tools/security/install-native-vitest.mjs');
+  mkdirSync(path.dirname(installer), { recursive: true });
+  writeFileSync(
+    installer,
+    readFileSync(new URL('../install-native-vitest.mjs', import.meta.url)),
+  );
+  writeFileSync(
+    path.join(root, 'package.json'),
+    '{"private":true,"type":"module"}',
+  );
+  const pkg = path.join(root, 'node_modules/vitest');
+  mkdirSync(pkg, { recursive: true });
+  writeFileSync(
+    path.join(pkg, 'package.json'),
+    JSON.stringify({
+      name: 'vitest',
+      version: '4.1.11',
+      bin: { vitest: 'vitest.mjs' },
+    }),
+  );
+  const target = path.join(pkg, 'vitest.mjs');
+  writeFileSync(
+    target,
+    '#!/usr/bin/env node\nthrow new Error("fake runner must never execute");\n',
+  );
+  const invoke = (destination) =>
+    spawnSync(process.execPath, [installer, destination], {
+      cwd: root,
+      encoding: 'utf8',
+      timeout: 5000,
+    });
+  try {
+    run({ directory, root, target, invoke });
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+test('installer refuses an internal ..disguised directory before writing an alias', () =>
+  installerFixture(({ root, invoke }) => {
+    const destination = path.join(root, '..disguised/bin');
+    const result = invoke(destination);
+    assert.notEqual(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.stderr, /outside the candidate repository/);
+    assert.equal(
+      existsSync(path.join(destination, 'detran-native-vitest')),
+      false,
+    );
+  }));
+
+test('installer refuses an external destination symlink resolving into internal ..disguised', () =>
+  installerFixture(({ directory, root, invoke }) => {
+    const inside = path.join(root, '..disguised/bin');
+    mkdirSync(inside, { recursive: true });
+    const destination = path.join(directory, 'external-link');
+    symlinkSync(inside, destination, 'dir');
+    const result = invoke(destination);
+    assert.notEqual(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.stderr, /resolves inside the candidate repository/);
+    assert.equal(existsSync(path.join(inside, 'detran-native-vitest')), false);
+    assert.equal(lstatSync(destination).isSymbolicLink(), true);
+  }));
+
+test('installer accepts a true external sibling bin and is byte-idempotent', () =>
+  installerFixture(({ directory, target, invoke }) => {
+    const destination = path.join(directory, 'external-bin');
+    const first = invoke(destination);
+    assert.equal(first.status, 0, first.stderr);
+    const alias = path.join(destination, 'detran-native-vitest');
+    assert.equal(lstatSync(alias).isSymbolicLink(), true);
+    assert.equal(realpathSync(alias), realpathSync(target));
+    const before = lstatSync(alias);
+    const second = invoke(destination);
+    assert.equal(second.status, 0, second.stderr);
+    assert.deepEqual(JSON.parse(first.stdout), JSON.parse(second.stdout));
+    assert.equal(lstatSync(alias).ino, before.ino);
+    assert.equal(realpathSync(alias), realpathSync(target));
+  }));
+
+test('installer preserves an unrelated external alias and still refuses the direct parent', () =>
+  installerFixture(({ directory, invoke }) => {
+    const destination = path.join(directory, 'external-bin');
+    mkdirSync(destination);
+    const alias = path.join(destination, 'detran-native-vitest');
+    const original = 'unrelated executable bytes\n';
+    writeFileSync(alias, original);
+    const unrelated = invoke(destination);
+    assert.notEqual(unrelated.status, 0);
+    assert.match(
+      unrelated.stderr,
+      /Refusing to replace an unrelated executable alias/,
+    );
+    assert.equal(readFileSync(alias, 'utf8'), original);
+    const parent = invoke(directory);
+    assert.notEqual(parent.status, 0);
+    assert.match(parent.stderr, /outside the candidate repository/);
+    assert.equal(
+      existsSync(path.join(directory, 'detran-native-vitest')),
+      false,
+    );
+  }));
+
+test('installer canonicalizes its root when Node preserves a symlinked main entrypoint', () =>
+  installerFixture(({ directory, root }) => {
+    const linkedRoot = path.join(directory, 'repo-alias');
+    symlinkSync(root, linkedRoot, 'dir');
+    const physicalInside = path.join(root, 'internal-bin');
+    mkdirSync(physicalInside);
+    const externalDestination = path.join(directory, 'external-bin-link');
+    symlinkSync(physicalInside, externalDestination, 'dir');
+    const result = spawnSync(
+      process.execPath,
+      [
+        '--preserve-symlinks-main',
+        path.join(linkedRoot, 'tools/security/install-native-vitest.mjs'),
+        externalDestination,
+      ],
+      { cwd: directory, encoding: 'utf8', timeout: 5000 },
+    );
+    assert.notEqual(result.status, 0, result.stdout + result.stderr);
+    assert.match(result.stderr, /resolves inside the candidate repository/);
+    assert.equal(
+      existsSync(path.join(physicalInside, 'detran-native-vitest')),
+      false,
+    );
+    assert.equal(lstatSync(linkedRoot).isSymbolicLink(), true);
+    assert.equal(lstatSync(externalDestination).isSymbolicLink(), true);
   }));

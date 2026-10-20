@@ -1,0 +1,44 @@
+✔ canonical producer invokes only registered Architect write action, with no persistence/publish bypass (1.0325ms)
+✔ complete REVIEW produces an artifact admission while preserving original verdict, exit and raw streams (0.640708ms)
+✔ complete PASS and seven verified up-to-date bodies are accepted (0.183291ms)
+✔ process errors, interruption, absent exit and arbitrary nonzero exits reject (0.535458ms)
+✔ truncated, non-JSON and missing raw output reject (0.30225ms)
+✔ error/unknown native envelope cannot be hidden by successful process completion (0.332375ms)
+✔ READINESS FAIL remains rejected even if all body metrics claim completeness (0.109625ms)
+✔ dirty candidate and dirty-source UNKNOWN cannot acquire admission (1.901125ms)
+✔ partial, missing, overcounted or errored generation rejects (0.601292ms)
+✔ each required producer must have actual PASS or REVIEW standing (1.457709ms)
+✔ exact HEAD, tree and generated body digest are mandatory (0.287959ms)
+✔ dry run, excluded member, different action and missing write consent reject (2.691958ms)
+✔ contradictory exits, error findings and malformed embedded readings reject (0.244084ms)
+✔ I/O main accepts complete native body hashes, projections and current manifest metadata (9.14125ms)
+✔ I/O main accepts source-equivalent up-to-date bodies without requiring wall-clock freshness (4.80425ms)
+✔ I/O main refuses dirty preflight without invoking producer or writing any capture (2.878416ms)
+✔ I/O main refuses candidate change after producer and preserves complete raw streams (3.528208ms)
+✔ I/O main refuses post-generation dirtiness and preserves raw capture (3.302208ms)
+✔ I/O main rejects a manifest whose actual bytes do not match the native digest (3.179667ms)
+✔ I/O main rejects missing generated bodies and preserves raw capture (3.602791ms)
+✔ I/O main rejects tampered inventory_api body, including fields outside native summary projection (4.805916ms)
+✔ I/O main rejects tampered inventory_data_model body, including fields outside native summary projection (3.50125ms)
+✔ I/O main rejects tampered inventory_data_handling body, including fields outside native summary projection (3.69075ms)
+✔ I/O main rejects contradictory native summary digest even if complete body bytes match (3.340458ms)
+✔ I/O main rejects internally hashed body with stale generatedAt relative to current manifest (3.57425ms)
+✔ I/O main rejects different sourceRepo even if body SHA was quoted consistently (3.776458ms)
+✔ I/O main retains invalid child JSON and stderr before refusing generation (5.579625ms)
+✔ I/O main retains child process errors before refusing generation (5.634041ms)
+✔ native admission requires all three complete-body and producer-projection digests (0.501125ms)
+✔ I/O main refuses wrong manifest HEAD even if its actual SHA is quoted consistently (3.881833ms)
+✔ I/O main refuses invalid manifest timestamp even with a consistent whole-body digest (5.574833ms)
+✔ installer refuses an internal ..disguised directory before writing an alias (147.353208ms)
+✔ installer refuses an external destination symlink resolving into internal ..disguised (86.778875ms)
+✔ installer accepts a true external sibling bin and is byte-idempotent (153.865792ms)
+✔ installer preserves an unrelated external alias and still refuses the direct parent (130.724375ms)
+✔ installer canonicalizes its root when Node preserves a symlinked main entrypoint (80.633666ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 801.353292
