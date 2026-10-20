@@ -110,7 +110,87 @@ This C8 delivery includes the approved additive design, source index and a suppl
 for these compatibility entries. An implementation or release in a sibling repository
 requires a separately scoped provider task; DETRAN validators continue unchanged.
 
-Schema citations have not been exhaustively re-evaluated by this map. No claim of total
-schema-citation coverage is made. The native round-index generator issue covered by
-ADR-0053 belongs to the C1 closure work and is not duplicated here. New round output may
-reference these findings, but R-0036 stays closed and its sealed bytes remain untouched.
+## Scoped schema-citation census
+
+The [complete working capture](../../../work/rounds/R-0041/reports/schema-citation-census/working-census-v2.json)
+now inventories concrete ADR-ID occurrences across the declared tracked `law/schemas/**/*.json`
+population, including root files and case-insensitive `.json` suffixes. The [custody manifest](../../../work/rounds/R-0041/reports/schema-citation-census/custody-v2.json)
+records source base `c995a8c846e811a6611994f022a25dd1c6cd482c`, tool SHA-256
+`6853ef23dab1c26fce488cdaadb986d266b4c6dd997ce3dd59b33577ae4ba4dd`, exact capture bytes,
+and each input's comparison with that base Git object. All 122 input hashes match the
+base. All 122 worktree inputs also match their index blobs. The selector takes the tracked
+index population and hashes actual worktree bytes; index equality alone is not a commit
+witness. The custody comparison separately binds the captured input bytes to the base.
+Root ran the working source against the working tree; this is a diagnostic capture, not a
+frozen-candidate execution or a native reading.
+
+| Declared population / observed context               |    Count |
+| ---------------------------------------------------- | -------: |
+| Tracked JSON files                                   |      122 |
+| Schema files / manifest files                        |  121 / 1 |
+| Concrete occurrences / unique reference strings      | 138 / 47 |
+| Annotation-value occurrences                         |       96 |
+| Data-keyword-value occurrences                       |       42 |
+| `ADR-014` occurrences, within root `examples` arrays |        6 |
+
+Every one of the 138 rows remains observable with source-byte hash, escaped JSON pointer,
+original string, occurrence index, decoded UTF-16 code-unit offset, reference and structural
+context. Offsets are within decoded JSON strings, not byte offsets into source files.
+The matching grammar recognizes uppercase legacy three/four-digit IDs and uppercase
+namespaced IDs; this is not a census of every possible spelling, every repository file,
+or resolved target decisions. The capture's scope and implementation limitations are
+preserved in custody-v2.json and the raw output. Provider paths in v2 are portable
+package-relative observations; the byte-exact v1 capture retains its original machine-local
+paths. The tool records structural observations without issuing citation exemptions.
+
+The six `ADR-014` occurrences are:
+
+| Schema                              | JSON pointer                                                             |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| `adr-validation-policy.schema.json` | `/examples/0/exception_catalog/entries/0/legacy_record/reference`        |
+| `adr-validation-policy.schema.json` | `/examples/0/exception_catalog/entries/0/path`                           |
+| `adr-validation-policy.schema.json` | `/examples/0/semantic_resolver/resolvable_legacy_references/0/path`      |
+| `adr-validation-policy.schema.json` | `/examples/0/semantic_resolver/resolvable_legacy_references/0/reference` |
+| `adr.schema.json`                   | `/examples/0/id`                                                         |
+| `adr.schema.json`                   | `/examples/0/provenance/0`                                               |
+
+These paths are under the actual root schema keyword `examples`, whose purpose is
+illustrative usage under [JSON Schema 2020-12 validation, section 9.5](https://json-schema.org/draft/2020-12/json-schema-validation#name-examples).
+This structural classification does not establish a DETRAN decision, authenticate an
+upstream ADR or resolve the native citation finding. A schema property merely named
+`examples` does not receive that classification automatically. Likewise, annotation
+context for the other 96 rows does not itself prove that their textual citations are
+non-normative or valid; each remains available for authority review.
+
+All 121 schema files were observed byte-equal to their corresponding files in the
+physically installed, self-declared DEVAI 2.6.3 package. Package/source paths and hashes
+are recorded; `authenticatedOrigin` remains false. Equality with installed bytes does
+not authenticate package publication or the referenced ADRs. The remaining tracked
+`manifest.json` has no observed installed counterpart and no ADR occurrences.
+
+The [v2 Inspector report](../../../work/rounds/R-0041/reports/schema-citation-census/inspector-review-report-v2.json)
+and original streams preserve 23 passing independent fixture tests with zero skips.
+The old-source counterexample run is preserved separately: 17 passed and five failed.
+The original b655 implementation review returned PASS with nonblocking findings, including
+a CLI symlink invocation that could silently exit successfully and missing explicit
+index/worktree witnesses. Root repaired these findings in v2; the new independent delta
+review remains pending. These test results are not a native verdict or resolution of
+citation authority gaps. The v1 capture, review and 17-test report remain unchanged.
+No provider namespace resolver or compatibility waiver has been adopted by this capture.
+
+The archived `decision_citation_resolution` FAIL still names `ADR-014` in these two schema
+files. It reported two file findings, distinct from the six concrete occurrences counted
+here. Its original R-0036 reading remains unchanged. Fourteen missing round records,
+R-0017's historical mutation and the prose ADR frontmatter gap also remain explicit.
+The nineteen old closure-index findings require fresh registered measurement against the
+current canonical index before claiming resolution. ADR-0053 belongs to the C1 closure
+work and is not duplicated here. New round output may reference this inventory, while
+R-0036 stays closed and its sealed bytes remain untouched.
+
+The subsequent [independent v2 delta review](../../../work/rounds/R-0041/reports/schema-citation-census/independent-delta-review-v2.json)
+returned PASS for the source, fixture tests and bounded check wiring. Its
+[custody record](../../../work/rounds/R-0041/reports/schema-citation-census/independent-delta-review-custody-v2.json)
+binds the reviewed hashes and original review bytes. Diagnostic reports retain their
+original temporary output paths; `custody-v2.json` maps those paths to the preserved
+repository copies. This source review grants no native citation verdict or historical
+compatibility exemption.

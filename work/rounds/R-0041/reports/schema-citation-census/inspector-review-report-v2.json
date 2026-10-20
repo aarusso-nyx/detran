@@ -1,0 +1,46 @@
+{
+  "role": "Inspector",
+  "scope": "Review-driven extension of single owned census test file",
+  "baseline": {
+    "source_sha256": "b655c09aa0e25c377f1900210df5c09dcb4d0f1758b609f484527f37c01045b1",
+    "test_sha256": "edbabc222eb118d198ecc9013df5b21a9451408f0695cc8bf1a02391b96f6e88",
+    "tests": 22,
+    "passed": 17,
+    "failed": 5,
+    "exit_code": 1,
+    "stdout": "/tmp/c8-schema-citation-census-review-baseline-red.stdout",
+    "stderr": "/tmp/c8-schema-citation-census-review-baseline-red.stderr",
+    "causes": [
+      "Absolute provider observation paths",
+      "Symlink CLI silent successful no-op",
+      "Dropped index/worktree witnesses",
+      "Silently stripped UTF8BOM",
+      "Silently omitted uppercase/newline schema paths"
+    ]
+  },
+  "final": {
+    "tests": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "duration_ms": 8601.76425,
+    "stdout": "/tmp/c8-schema-citation-census-review-final.stdout",
+    "stderr": "/tmp/c8-schema-citation-census-review-final.stderr"
+  },
+  "hashes": {
+    "tools/security/tests/schema-citation-census.test.mjs": "99345cb2c2db63c8768afb38a521222e18ec6ae69b9aa86633a69ba25dcff949",
+    "tools/security/schema-citation-census.mjs": "6853ef23dab1c26fce488cdaadb986d266b4c6dd997ce3dd59b33577ae4ba4dd"
+  },
+  "checks": {
+    "syntax": "PASS",
+    "prettier": "PASS",
+    "eslint": "PASS"
+  },
+  "notes": [
+    "Baseline22 tests preserved; additional23rd test exercises reported grammar scope and UTF16 offsets.",
+    "No weakened negative assertions or changed timeout/population.",
+    "Only assigned test file edited; root owns production repair.",
+    "Tiny temporary Git fixtures only; no native readings/provider verdicts, actual repo census or heavy suites."
+  ]
+}

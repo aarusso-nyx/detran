@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "summary": "I checked the delta and found nothing blocking. HEAD is c995a8c8. The census tool, the tests and historical-compatibility.md match the SHA-256 values given in the brief. package.json changes only security:history:check: it still runs verify-historical-compatibility.mjs and historical-compatibility.test.mjs, and adds the census run and the census test file. The tool reports structure only: it has no resolver or waiver path, and authenticatedOrigin is false everywhere.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "All seven earlier source and docs defects are fixed. (1) The CLI check now uses import.meta.main, or compares realpaths on both sides, and has a test that runs it through an external symlink. (2) Each file now records indexBlobOid, worktreeBlobOid (computed in the repo's Git object format) and worktreeMatchesIndex, with a test for a changed worktree. (3) The report states citationGrammar: expression, flags, the 3–4 digit range, UTF-16 code-unit offsets, and its limits; a test covers emoji and grammar edge cases. (4) The selector now uses a case-insensitive .json check without a regex, so uppercase-extension and newline paths are kept. (5) A UTF-8 BOM is refused with UTF8_BOM_REFUSED. (6) Provider errors now separate ENOENT/source-unavailable, MANIFEST_SHAPE_INVALID and observation-error with a specific reason code. (7) Provider paths are package-relative; v2 contains no /Volumes or /Users paths.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The v2 data matches the documented figures. working-census-v2.json has complete=true and no errors, 122 files (121 schemas plus manifest.json), 138 occurrences and 47 unique IDs. There are 96 annotation-value and 42 data-keyword-value rows. All six ADR-014 rows sit under the root examples keyword at the six pointers listed in the doc. 121 files are byte-equal to the installed provider files; manifest.json is source-unavailable (ENOENT). In custody-v2, all 122 baseComparisons are byteEqual and worktreeMatchesIndex true, and the hashes of the six capture files match the bytes on disk.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The v1 files are byte-exact. On-disk hashes of working-census.json, inspector-report.json, inspector-tests.stdout/stderr, inspector-test-lint.log, independent-review.json and independent-review.bridge.json match custody.json. The Inspector v2 streams show 23 pass, 0 fail, 0 skip. The baseline red run shows 22 tests: 17 pass and 5 fail, and the failures are caused by the five repaired defects. The doc keeps the native findings, the 14 missing round records, R-0017's mutation, the prose ADR gap and R-0036's sealed status. It correctly calls this delta review pending.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "summary": "inspector-review-report-v2.json still lists /tmp/... paths for its stdout/stderr. Custody is intact, because custody-v2 captureFiles maps each /tmp source to the repo copy and its hash. A reader of the report alone could still be misled; noting the repo copies would help.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "summary": "security:history:check now prints the whole census JSON to stdout on every run (about 290 KB on the real repo). It also passes when worktree files differ from the index (worktreeMatchesIndex=false), because complete only covers the declared tracked population. That matches the documented basis, but the gate will not catch locally modified schema bytes. A summary-only mode or redirecting the output may be worth it before CI wiring.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "summary": "Several refusal paths still have no tests: TRACKED_POPULATION_CHANGED, UNMERGED_INPUT (stage≠0), a gitlink (mode 160000) refused as TRACKED_INPUT_NOT_REGULAR, and the dependencies and items-array context branches. Reading the code, the guards look correct.",
+      "blocking": false
+    }
+  ]
+}
