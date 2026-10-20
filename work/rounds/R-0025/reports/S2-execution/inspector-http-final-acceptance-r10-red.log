@@ -1,0 +1,226 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-19 21:10:49.634 -0300] INFO (40781): request completed
+    request_id: "01a156a5-7f3f-737a-aa1d-3f6e63b1c546"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 611
+[2026-10-19 21:10:49.847 -0300] INFO (40781): request completed
+    request_id: "01a156a5-81a8-735b-931b-6e14343512b4"
+    route: "/v1/inf/rait/cases/e87801cf-1431-429a-b4a3-d7e9e4b00e80/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 207
+[2026-10-19 21:10:49.967 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8279-7e03-9a27-e3de2bcffd36"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 118
+[2026-10-19 21:10:50.083 -0300] INFO (40781): request completed
+    request_id: "01a156a5-82f3-760a-a525-13083a345f5f"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 112
+[2026-10-19 21:10:50.183 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8365-7079-bc33-3061bbc08aac"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 98
+[2026-10-19 21:10:50.280 -0300] INFO (40781): request completed
+    request_id: "01a156a5-83c9-7cb8-b072-ef79f04c9822"
+    route: "/v1/inf/rait/cases/e87801cf-1431-429a-b4a3-d7e9e4b00e80/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 95
+[2026-10-19 21:10:50.831 -0300] INFO (40781): request completed
+    request_id: "01a156a5-85c8-7a17-9ebe-47a70544e7c4"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 135
+[2026-10-19 21:10:50.945 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8652-7bc8-9d54-7fb70fcbbc65"
+    route: "/v1/inf/rait/cases/c17d4f83-1476-4410-9bd1-37c34532494b/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 111
+[2026-10-19 21:10:51.060 -0300] INFO (40781): request completed
+    request_id: "01a156a5-86c3-7268-a494-dbb7af9bd0d6"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 113
+[2026-10-19 21:10:51.166 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8736-77df-82f1-4f121f8cf0ff"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 104
+[2026-10-19 21:10:51.259 -0300] INFO (40781): request completed
+    request_id: "01a156a5-879f-7d5c-b65c-6df1d9ee657b"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 92
+[2026-10-19 21:10:51.350 -0300] INFO (40781): request completed
+    request_id: "01a156a5-87fd-7809-a509-6feea77d6739"
+    route: "/v1/inf/rait/cases/c17d4f83-1476-4410-9bd1-37c34532494b/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 88
+[2026-10-19 21:10:52.164 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8978-7b81-a744-cf04818d271c"
+    route: "/v1/inf/rait/claim-context?pool_id=e0df44cc-ec98-4c30-84f7-5464ad30a42c"
+    method: "GET"
+    status: 200
+    duration_ms: 524
+[2026-10-19 21:10:54.071 -0300] INFO (40781): request completed
+    request_id: "01a156a5-8bc4-705f-ae8a-22d933590eb2"
+    route: "/v1/inf/rait/pools/e0df44cc-ec98-4c30-84f7-5464ad30a42c/claim-next"
+    method: "POST"
+    status: 200
+    duration_ms: 1843
+S2_ASSERTIONS {"test":"S2 R10 fixed complete potential universe > a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set","executedAssertions":69}
+ ❯ tests/e2e/rait-p402-claim.e2e.spec.ts (103 tests | 1 failed | 102 skipped) 5927ms
+     ↓ supplied If-Match "1" returns400 without effects
+     ↓ supplied If-Match not-a-validator returns400 without effects
+     ↓ supplied If-Match * returns400 without effects
+     ↓ caller caseId cannot select/grant a claim
+     ↓ caller actor cannot select/grant a claim
+     ↓ caller tenant_id cannot select/grant a claim
+     ↓ caller role cannot select/grant a claim
+     ↓ caller purpose cannot select/grant a claim
+     ↓ new HTTP-admitted work with unqualified risk fails503 before old QUEUE_EMPTY fallback
+     ↓ unqualified in-scope legacy is409 and cannot be silently claimed
+     ↓ rejects malformed/authority-bearing discovery input {"limit":0}
+     ↓ rejects malformed/authority-bearing discovery input {"limit":51}
+     ↓ rejects malformed/authority-bearing discovery input {"limit":1.5}
+     ↓ rejects malformed/authority-bearing discovery input {"pool_id":"not-a-uuid"}
+     ↓ rejects malformed/authority-bearing discovery input {"actor":"forged"}
+     ↓ rejects malformed/authority-bearing discovery input {"purpose":"merits"}
+     ↓ rejects malformed/authority-bearing discovery input {"tenant_id":"forged"}
+     ↓ rejects malformed/authority-bearing discovery input {"queue_cursor":"not-a-valid-cursor"}
+     ↓ rait-coordinator cannot borrow read authority for claim-context
+     ↓ AUDITOR cannot borrow read authority for claim-context
+     ↓ rait-secretary cannot borrow read authority for claim-context
+     ↓ technical-admin cannot borrow read authority for claim-context
+     ↓ zero eligible pools has exact count0 and empty typed pages
+     ↓ one empty eligible pool is selected from complete set and GET writes nothing
+     ↓ unresolved legacy blocks selected-pool GET409 without a degraded queue
+     ↓ scoped risk for admitted case with absent qualified sources returns503
+     ↓ unknown risk case and unauthorized case share404 without payload
+     ↓ mounts the public narrow provenance port while retaining the actual SQL factory
+     ↓ qualified new HTTP admission claims exactly two state versions and a real assignment
+     ↓ qualified historical admission/distribution advances exactly one version
+     ↓ missing independent A proof is503 despite otherwise complete actual rows
+     ↓ missing independent C proof is503 despite otherwise complete actual rows
+     ↓ missing independent D proof is503 despite otherwise complete actual rows
+     ↓ missing independent track proof is503 despite otherwise complete actual rows
+     ↓ missing independent movement proof is503 despite otherwise complete actual rows
+     ↓ missing independent interruption proof is503 despite otherwise complete actual rows
+     ↓ missing independent applicability proof is503 despite otherwise complete actual rows
+     ↓ missing independent parameter proof is503 despite otherwise complete actual rows
+     ↓ qualified ORIGINAL D requires independently verified complete original history, never absence inference
+     ↓ trusted receipt cannot authorize a shifted canonical raw_due_on
+     ↓ trusted receipt cannot authorize a shifted canonical due_on
+     ↓ consumed SQL source mutation invalidates pre-admitted receipt rather than echoing request digest
+     ↓ a qualified read does not alter flags, clocks, history, ledger or outbox
+     ↓ same actor exact retry returns original typed result without any additional effects
+     ↓ replay still denies revoked current membership without replay effects
+     ↓ valid canonical actor change under the existing key conflicts409 without disclosing original result
+     ↓ no GET internal qualification route
+     ↓ no POST internal qualification route
+     ↓ no PATCH internal qualification route
+     ↓ no DELETE internal qualification route
+     ↓ failure during distribution rolls back both case stages and all claim effects
+     ↓ failure during instruction rolls back both case stages and all claim effects
+     ↓ failure during assignment rolls back both case stages and all claim effects
+     ↓ failure during legalAudit rolls back both case stages and all claim effects
+     ↓ failure during outbox rolls back both case stages and all claim effects
+     ↓ failure during ledger rolls back both case stages and all claim effects
+     ↓ revoked receipt cannot authorize a claim
+     ↓ foreignTenant receipt cannot authorize a claim
+     ↓ unadmittedOrigin receipt cannot authorize a claim
+     ↓ ambiguous receipt cannot authorize a claim
+     ↓ two genuinely authenticated analysts cannot assign the same candidate twice
+     ↓ concurrent same-actor claims serialize WIP1 across two independently qualified cases
+     ↓ membership revoked during real lock wait denies claim without side effects
+     ↓ a risk blocker beyond position50 blocks the whole pool
+     ↓ a legacy blocker beyond position50 blocks the whole pool
+     ↓ a routing blocker beyond position50 blocks the whole pool
+     ↓ a incident blocker beyond position50 blocks the whole pool
+     ↓ true 180-day source has explicit track proof, actual civil dates and defense B NA
+     ↓ true 360-day source has explicit track proof, actual civil dates and defense B NA
+     ↓ operational source qualified has exact actual incident linkage
+     ↓ operational source missingReceipt has exact actual incident linkage
+     ↓ operational source missingIncident has exact actual incident linkage
+     ↓ operational source wrongCase has exact actual incident linkage
+     ↓ operational source foreignTenant has exact actual incident linkage
+     ↓ operational source clockOnly has exact actual incident linkage
+     ↓ the actual PostgreSQL rate limiter was exercised under the isolated fixture cap
+     ↓ risk precedes legal priority, then priority precedes identical protocol time
+     ↓ equal risk/priority/protocol time resolves by ascending actual case id
+     ↓ complete two-pool membership requires choice despite a one-item pool page
+     ↓ same-unit other pool without actual membership does not inherit claim authority
+     ↓ historical NULL priority remains excluded before legacy/risk qualification, without factual repair
+     ↓ trusted hold is preserved and cannot be reclaimed
+     ↓ trusted preserve_assigned is preserved and cannot be reclaimed
+     ↓ stale observed legacy version fails409 without automatic reclassification
+     ↓ parameter revocation after verified SQL read is serialized or revalidated before any stale claim effects
+     × a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set 5450ms
+     ↓ matching parameter INSERT waits for actual source transaction or causes safe revalidation
+     ↓ matching holiday INSERT waits for actual source transaction or causes safe revalidation
+     ↓ matching caseEvent INSERT waits for actual source transaction or causes safe revalidation
+     ↓ actual C movement resets only C while independently qualified D retains original practice start
+     ↓ unknown D reset cannot masquerade as qualified ORIGINAL even with freshly matching content receipts
+     ↓ actual selected parameter proposta fails closed with no fallback/default
+     ↓ actual selected parameter sourcePending fails closed with no fallback/default
+     ↓ actual selected parameter ambiguousActivation fails closed with no fallback/default
+     ↓ impeded best candidate is skipped for next eligible without leaking skipped identities
+     ↓ QUEUE_EMPTY precedes WIP when all eligible work was already consumed
+     ↓ valid different pool under a consumed key conflicts409; a fresh key remains a distinct attempt
+     ↓ VALID queue cursor cannot be replayed across pool
+     ↓ VALID queue cursor cannot be replayed across unauthorizedActor
+     ↓ VALID queue cursor cannot be replayed across revocation
+     ↓ membership in two same-unit pools cannot move a case out of its explicit selected pool
+     ↓ a separately bound coordinator can read unassigned risk while an unassigned analyst cannot borrow that purpose
+     ↓ after a real claim the analyst owns the case purpose; changed risk sources remain fail-closed503
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/rait-p402-claim.e2e.spec.ts > S2 R10 fixed complete potential universe > a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set
+AssertionError: {"data":{"id":"c17d4f83-1476-4410-9bd1-37c34532494b","state":"EM_INSTRUCAO","version":8,"instance":"defesa_previa","assignment_id":"ccdef9f5-046e-4901-8a1c-0098b33b6a1c"},"events":[{"type":"rait.assignment.changed","aggregateId":"ccdef9f5-046e-4901-8a1c-0098b33b6a1c","caseId":"c17d4f83-1476-4410-9bd1-37c34532494b","assignmentId":"ccdef9f5-046e-4901-8a1c-0098b33b6a1c","poolId":"e0df44cc-ec98-4c30-84f7-5464ad30a42c","active":true},{"type":"rait.case.changed","aggregateId":"c17d4f83-1476-4410-9bd1-37c34532494b","caseId":"c17d4f83-1476-4410-9bd1-37c34532494b","fromState":"DISTRIBUIDO","toState":"EM_INSTRUCAO","instance":"defesa_previa"}]}: expected 200 to be 503 // Object.is equality
+
+- Expected
++ Received
+
+- 503
++ 200
+
+ ❯ tests/e2e/rait-p402-claim.e2e.spec.ts:1594:58
+    1592|       resume.resolve();
+    1593|       const result = await pending;
+    1594|       expect(result.status, JSON.stringify(result.body)).toBe(503);
+       |                                                          ^
+    1595|       expect(result.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
+    1596|       expect(result.body.context ?? {}).toEqual({});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 102 skipped (103)
+   Start at  21:10:17
+   Duration  37.01s (transform 25.22s, setup 0ms, import 30.93s, tests 5.93s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-r10-red-results.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/rait-p402-claim.e2e.spec.ts -t previously assigned historical case becoming eligible --reporter=default --reporter=json --outputFile=/tmp/detran-s2-r10-red-results.json

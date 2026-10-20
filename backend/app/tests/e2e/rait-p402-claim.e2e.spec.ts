@@ -319,7 +319,7 @@ async function exactClaimPersistence(
     events.length,
   );
   const flags = await fixture.owner.query(
-    `select count(*)::int n from integration.outbox where tenant_id=$1 and topic='rait.clock.flag-changed' and (aggregate_id=$2 or aggregate_id in(select id::text from inf.rait_clock where case_id=$2) or payload->>'caseId'=$2 or payload->>'clockId' in(select id::text from inf.rait_clock where case_id=$2))`,
+    `select count(*)::int n from integration.outbox where tenant_id=$1 and topic='rait.clock.flag-changed' and (aggregate_id=$2::text or aggregate_id in(select id::text from inf.rait_clock where case_id=$2::uuid) or payload->>'caseId'=$2::text or payload->>'clockId' in(select id::text from inf.rait_clock where case_id=$2::uuid))`,
     [RAIT_TENANT, caseId],
   );
   expect(flags.rows[0]!.n).toBe(0);
@@ -522,7 +522,7 @@ describe('S2 actual SQL factory with independently admitted synthetic provenance
         .set(fixture.riskHeaders());
       expect(control.status, JSON.stringify(control.body)).toBe(200);
       await fixture.owner.query(
-        `update inf.infraction_timer set ${field}=${field}+1 where id=$1`,
+        `update inf.infraction_timer set ${field}=${field}${field === 'raw_due_on' ? '-1' : '+1'} where id=$1`,
         [a.timer],
       );
       if (field === 'due_on')
@@ -746,8 +746,9 @@ describe('S2 source authority is independent of matching SQL content', () => {
 async function waitForActualClaimLock() {
   const deadline = Date.now() + 5000;
   while (Date.now() < deadline) {
+    await fixture.owner.query('select pg_stat_clear_snapshot()');
     const observed = await fixture.owner.query<{ n: number }>(
-      "select count(*)::int n from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query ilike '%rait_%'",
+      "select count(*)::int n from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and pg_backend_pid()=any(pg_blocking_pids(pid)) and query ilike '%rait_%'",
     );
     if (observed.rows[0]!.n > 0) return;
     await new Promise((resolve) => setTimeout(resolve, 20));
@@ -1074,11 +1075,25 @@ describe('S2 operational incident actual SQL linkage and independent provenance'
           [target.incident, other.id],
         );
       }
-      if (mode === 'foreignTenant')
+      if (mode === 'foreignTenant') {
+        const foreign = await fixture.foreignIncidentSource(c.id);
+        expect(foreign.tenantId).not.toBe(RAIT_TENANT);
+        expect(foreign.receipt.core.tenantId).toBe(foreign.tenantId);
+        expect(foreign.receipt.core.caseId).toBe(foreign.caseId);
+        fixture.revokedReceipts.add(target.receipt.digest);
         await fixture.owner.query(
-          'update inf.rait_incident set tenant_id=$2 where id=$1',
-          [target.incident, randomUUID()],
+          'update inf.rait_clock_alert set incident_ref=$2 where id=$1',
+          [target.alert, foreign.ref],
         );
+        expect(
+          (
+            await fixture.owner.query(
+              'select id from inf.rait_incident where tenant_id=$1 and incident_ref=$2',
+              [RAIT_TENANT, foreign.ref],
+            )
+          ).rows,
+        ).toEqual([]);
+      }
       if (mode === 'clockOnly') {
         await fixture.owner.query(
           'update inf.rait_incident set case_id=null where id=$1',
@@ -1133,8 +1148,7 @@ describe('S2 operational incident actual SQL linkage and independent provenance'
         (row) =>
           row.hits >
           (before.find(
-            (old) =>
-              old.bucket_key === row.bucket_key && old.win === row.win,
+            (old) => old.bucket_key === row.bucket_key && old.win === row.win,
           )?.hits ?? 0),
       ),
     ).toBe(true);
@@ -1250,7 +1264,7 @@ describe('S2 server selection, risk/priority/FIFO/id and inherited NULL exclusio
       { state: 'DISTRIBUIDO', unit_id: null, legal_priority: null },
     ]);
     await fixture.owner.query(
-      "insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,true,$4,'S2 historical NULL exclusion observation')",
+      "insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,true,$4,'S2 historical NULL exclusion observation') on conflict(tenant_id,case_id,pool_id) do nothing",
       [
         RAIT_TENANT,
         historical,
@@ -1258,6 +1272,21 @@ describe('S2 server selection, risk/priority/FIFO/id and inherited NULL exclusio
         'Owner-approved isolated Inspector fixture',
       ],
     );
+    expect(
+      (
+        await fixture.owner.query(
+          'select tenant_id,case_id,pool_id,active from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and pool_id=$3',
+          [RAIT_TENANT, historical, pool],
+        )
+      ).rows,
+    ).toEqual([
+      {
+        tenant_id: RAIT_TENANT,
+        case_id: historical,
+        pool_id: pool,
+        active: true,
+      },
+    ]);
     const before = await fixture.effects();
     const r = await request(app.getHttpServer())
       .get(`${PREFIX}/claim-context`)
@@ -1303,9 +1332,11 @@ describe('S2 explicit current legacy dispositions', () => {
       expect(await fixture.effects()).toEqual(before);
       const inventory = await request(app.getHttpServer())
         .get(`${PREFIX}/cases/${c.id}`)
-        .set(disposition === 'hold' ? fixture.riskHeaders() : fixture.headers());
+        .set(
+          disposition === 'hold' ? fixture.riskHeaders() : fixture.headers(),
+        );
       expect(inventory.status, JSON.stringify(inventory.body)).toBe(200);
-      expect(inventory.body.data.state).toBe('DISTRIBUIDO');
+      expect(inventory.body.state).toBe('DISTRIBUIDO');
       expect(await fixture.effects()).toEqual(before);
     });
   it('stale observed legacy version fails409 without automatic reclassification', async () => {
@@ -1371,6 +1402,10 @@ describe('S2 source consistency across the actual claim transaction', () => {
       connectionString: process.env.STYNX_OWNER_DATABASE_URL,
     });
     await writer.connect();
+    await writer.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
+    fixture.qualifiedBackendPids.clear();
     const writerPid = (
       await writer.query<{ id: number }>('select pg_backend_pid() id')
     ).rows[0]!.id;
@@ -1404,11 +1439,19 @@ describe('S2 source consistency across the actual claim transaction', () => {
       let locked = false;
       const end = Date.now() + 5000;
       while (!mutated && !locked && Date.now() < end) {
-        const row = await fixture.owner.query<{ waiting: boolean }>(
-          "select wait_event_type='Lock' waiting from pg_stat_activity where pid=$1",
+        await fixture.owner.query('select pg_stat_clear_snapshot()');
+        const row = await fixture.owner.query<{
+          waiting: boolean;
+          blockers: number[];
+        }>(
+          "select wait_event_type='Lock' waiting,pg_blocking_pids(pid) blockers from pg_stat_activity where pid=$1",
           [writerPid],
         );
-        locked = row.rows[0]?.waiting === true;
+        locked =
+          row.rows[0]?.waiting === true &&
+          row.rows[0].blockers.some((pid) =>
+            fixture.qualifiedBackendPids.has(pid),
+          );
         if (!locked && !mutated) await new Promise((r) => setTimeout(r, 10));
       }
       expect(
@@ -1447,6 +1490,326 @@ describe('S2 source consistency across the actual claim transaction', () => {
       fixture.onQualified = undefined;
     }
   });
+});
+
+describe('S2 R10 fixed complete potential universe', () => {
+  it('a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set', async () => {
+    const initial = await fixture.admitted(app);
+    await fixture.prepareRisk(initial.id);
+    const newcomer = await fixture.admitted(app);
+    const assigned = await fixture.historicallyDistributed(
+      newcomer.id,
+      'preserve_assigned',
+    );
+    await fixture.prepareRisk(newcomer.id);
+    await fixture.qualifyLegacy(newcomer.id, assigned);
+    const active = (
+      await fixture.owner.query<{ id: string }>(
+        'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
+        [RAIT_TENANT, newcomer.id],
+      )
+    ).rows;
+    expect(active).toHaveLength(1);
+    const control = await request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .query({ pool_id: fixture.pool })
+      .set(fixture.headers());
+    expect(control.status, JSON.stringify(control.body)).toBe(200);
+    expect(
+      control.body.data.queue.items.map((item: { id: string }) => item.id),
+    ).toEqual([initial.id]);
+    const selected = fixture.parameters.get('A')!;
+    const reached = deferred<void>(),
+      resume = deferred<void>();
+    let paused = false;
+    fixture.qualifiedBackendPids.clear();
+    fixture.onQualified = async (req) => {
+      if (
+        !paused &&
+        req.kind === 'parameter' &&
+        req.sourceRefs.includes('sql:ops.parameter:' + selected.id)
+      ) {
+        paused = true;
+        reached.resolve();
+        await resume.promise;
+      }
+    };
+    const writer = new Client({
+      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+    });
+    await writer.connect();
+    await writer.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
+    const writerPid = (
+      await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+    ).rows[0]!.pid;
+    const pending = claim().then((r) => r);
+    try {
+      await withDeadline(
+        Promise.race([
+          reached.promise,
+          pending.then((r) => {
+            throw Error(
+              'PREREQUISITE_PENDING: claim returned ' +
+                r.status +
+                ' before actual current-source qualification pause',
+            );
+          }),
+        ]),
+        'PREREQUISITE_PENDING: initial universe not actually qualified',
+      );
+      expect(fixture.qualifiedBackendPids.size).toBeGreaterThan(0);
+      expect(fixture.qualifiedBackendPids.has(writerPid)).toBe(false);
+      // Source-backed historical-assignment release, not a newly protocolled workflow or an ADMITIDO+assignment fiction.
+      await writer.query('begin');
+      const released = await withDeadline(
+        writer.query(
+          "update inf.rait_assignment set active=false,released_at=clock_timestamp(),release_reason='afastamento' where tenant_id=$1 and id=$2 and case_id=$3 and active returning id,active,release_reason",
+          [RAIT_TENANT, active[0]!.id, newcomer.id],
+        ),
+        'PREREQUISITE_PENDING: independent eligibility change could not commit before the fence',
+      );
+      expect(released.rows).toEqual([
+        { id: active[0]!.id, active: false, release_reason: 'afastamento' },
+      ]);
+      const current = await fixture.qualifyReleasedLegacySource(
+        newcomer.id,
+        assigned,
+        writer,
+      );
+      await writer.query('commit');
+      await fixture.qualifyLegacy(newcomer.id, current);
+      expect(
+        (
+          await fixture.owner.query(
+            'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
+            [RAIT_TENANT, newcomer.id],
+          )
+        ).rows,
+      ).toEqual([]);
+      const before = await fixture.effects(); // Includes only the explicit external release/review; no command effect is allowed.
+      resume.resolve();
+      const result = await pending;
+      expect(result.status, JSON.stringify(result.body)).toBe(503);
+      expect(result.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
+      expect(result.body.context ?? {}).toEqual({});
+      expect(result.body).not.toHaveProperty('data');
+      expect(await fixture.effects()).toEqual(before);
+      fixture.onQualified = undefined;
+      const fresh = await request(app.getHttpServer())
+        .get(`${PREFIX}/claim-context`)
+        .query({ pool_id: fixture.pool })
+        .set(fixture.headers());
+      expect(fresh.status, JSON.stringify(fresh.body)).toBe(200);
+      expect(
+        fresh.body.data.queue.items
+          .map((item: { id: string }) => item.id)
+          .sort(),
+      ).toEqual([initial.id, newcomer.id].sort());
+      expect(fresh.body.data.queue.nextCursor).toBeNull();
+      expect(await fixture.effects()).toEqual(before);
+    } finally {
+      resume.resolve();
+      await writer.query('rollback');
+      await Promise.allSettled([pending]);
+      await writer.end();
+      fixture.onQualified = undefined;
+    }
+  });
+});
+
+describe('S2 R7 real INSERT phantom closure under actual request-role SQL', () => {
+  for (const kind of ['parameter', 'holiday', 'caseEvent'] as const)
+    it(`matching ${kind} INSERT waits for actual source transaction or causes safe revalidation`, async () => {
+      const c = await fixture.admitted(app);
+      const source = await fixture.prepareRisk(c.id);
+      await readQualifiedRisk(c.id);
+      const selected = fixture.parameters.get('A')!;
+      const insertedId = randomUUID();
+      const ceiling = (
+        await fixture.owner.query<{ day: string }>(
+          'select ceiling_on::text AS "day" from inf.rait_clock where id=$1',
+          [source.records.get('A')!.clock],
+        )
+      ).rows[0]!.day;
+      if (kind === 'holiday')
+        expect(
+          (
+            await fixture.owner.query(
+              'select id from inf.rait_holiday where tenant_id=$1 and holiday_on=$2::date',
+              [RAIT_TENANT, ceiling],
+            )
+          ).rows,
+        ).toEqual([]);
+      const reached = deferred<void>(),
+        resume = deferred<void>();
+      let paused = false;
+      fixture.qualifiedBackendPids.clear();
+      fixture.onQualified = async (req) => {
+        if (
+          !paused &&
+          req.kind === 'parameter' &&
+          req.sourceRefs.includes('sql:ops.parameter:' + selected.id)
+        ) {
+          paused = true;
+          reached.resolve();
+          await resume.promise;
+        }
+      };
+      const writer = new Client({
+        connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+      });
+      await writer.connect();
+      await writer.query("select set_config('app.tenant_id',$1,false)", [
+        RAIT_TENANT,
+      ]);
+      const writerPid = (
+        await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+      ).rows[0]!.pid;
+      const before = await fixture.effects();
+      let committed = false,
+        writerFailure: unknown;
+      let mutation: Promise<void> | undefined;
+      const pending = claim().then((r) => r);
+      try {
+        await withDeadline(
+          Promise.race([
+            reached.promise,
+            pending.then((r) => {
+              throw Error(
+                'PREREQUISITE_PENDING: claim returned ' +
+                  r.status +
+                  ' before independently verified parameter barrier',
+              );
+            }),
+          ]),
+          'PREREQUISITE_PENDING: actual qualification barrier not reached',
+        );
+        expect(fixture.qualifiedBackendPids.size).toBeGreaterThan(0); // Actual role/tenant assertions execute in qualify(), not a mocked identity.
+        mutation = (async () => {
+          await writer.query('begin');
+          if (kind === 'parameter') {
+            await writer.query(
+              `insert into ops.parameter select (jsonb_populate_record(null::ops.parameter,to_jsonb(p)||jsonb_build_object('id',$1::text,'version',p.version+1,'effective_from',(p.effective_from+1)::text))).* from ops.parameter p where p.id=$2`,
+              [insertedId, selected.id],
+            );
+          } else if (kind === 'holiday') {
+            await writer.query(
+              "insert into inf.rait_holiday(id,tenant_id,name,holiday_on,scope,optional) values($1,$2,'S2 isolated R7 matching calendar source',$3::date,'municipal',false)",
+              [insertedId, RAIT_TENANT, ceiling],
+            );
+          } else {
+            // Existing canonical event kind/transition/actor; a new authentic row changes complete history inventory.
+            await writer.query(
+              `insert into inf.rait_case_event(id,tenant_id,case_id,event_type,from_state,to_state,actor_id,payload,occurred_at)
+              select $1,tenant_id,case_id,event_type,from_state,to_state,actor_id,payload,clock_timestamp() from inf.rait_case_event where tenant_id=$2 and case_id=$3 and to_state='ADMITIDO' order by occurred_at,id limit 1`,
+              [insertedId, RAIT_TENANT, c.id],
+            );
+          }
+          await writer.query('commit');
+          committed = true;
+        })().catch((error) => {
+          writerFailure = error;
+        });
+        let blockingRequest: number | undefined;
+        const end = Date.now() + 5000;
+        while (
+          !committed &&
+          !writerFailure &&
+          blockingRequest === undefined &&
+          Date.now() < end
+        ) {
+          await fixture.owner.query('select pg_stat_clear_snapshot()');
+          const activity = await fixture.owner.query<{
+            blockers: number[];
+            waiting: boolean;
+          }>(
+            "select pg_blocking_pids(pid) blockers,wait_event_type='Lock' waiting from pg_stat_activity where pid=$1",
+            [writerPid],
+          );
+          if (activity.rows[0]?.waiting)
+            blockingRequest = activity.rows[0].blockers.find((pid) =>
+              fixture.qualifiedBackendPids.has(pid),
+            );
+          if (!committed && blockingRequest === undefined)
+            await new Promise((done) => setTimeout(done, 20));
+        }
+        if (writerFailure) throw writerFailure;
+        expect(
+          blockingRequest !== undefined || committed,
+          'Actual INSERT must block on the verified request PID or commit before revalidation',
+        ).toBe(true);
+        const denialBaseline = committed ? await fixture.effects() : undefined;
+        resume.resolve();
+        const result = await pending;
+        if (blockingRequest !== undefined) {
+          expect(result.status, JSON.stringify(result.body)).toBe(200);
+          expect(result.body.data).toMatchObject({
+            id: c.id,
+            state: 'EM_INSTRUCAO',
+            version: c.version + 2,
+          });
+          expect(result.headers.etag).toBe('"' + (c.version + 2) + '"');
+        } else {
+          expect(result.status, JSON.stringify(result.body)).toBe(503);
+          expect(result.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
+          expect(result.body).not.toHaveProperty('data');
+          expect(await fixture.effects()).toEqual(denialBaseline);
+        }
+        await mutation;
+        if (writerFailure) throw writerFailure;
+        expect(committed).toBe(true);
+        const table =
+          kind === 'parameter'
+            ? 'ops.parameter'
+            : kind === 'holiday'
+              ? 'inf.rait_holiday'
+              : 'inf.rait_case_event';
+        expect(
+          (
+            await fixture.owner.query(
+              `select id,tenant_id from ${table} where id=$1`,
+              [insertedId],
+            )
+          ).rows,
+        ).toEqual([{ id: insertedId, tenant_id: RAIT_TENANT }]);
+        if (blockingRequest !== undefined) {
+          const after = await fixture.effects();
+          expect(after.outbox - before.outbox).toBe(3);
+          expect(after.audit - before.audit).toBe(1);
+          expect(after.ledger - before.ledger).toBe(1);
+          expect(after.history - before.history).toBe(
+            kind === 'caseEvent' ? 3 : 2,
+          ); // Exact external source row plus two claim stages.
+          expect(after.assignments).toHaveLength(1);
+          expect(after.clocks).toEqual(before.clocks);
+          expect(after.alerts).toBe(before.alerts);
+          await exactClaimPersistence(c.id, result.body.events);
+        }
+        await fixture.owner.query('select pg_stat_clear_snapshot()');
+        expect(
+          (
+            await fixture.owner.query<{ n: number }>(
+              "select count(*)::int n from pg_stat_activity where pid=$1 and wait_event_type='Lock'",
+              [writerPid],
+            )
+          ).rows[0]!.n,
+        ).toBe(0);
+      } finally {
+        resume.resolve();
+        await Promise.allSettled([pending, ...(mutation ? [mutation] : [])]);
+        await writer.query('rollback');
+        // Only this mutable calendar fixture row is removed; never alter immutable event/qualification history.
+        if (kind === 'holiday' && committed)
+          await writer.query(
+            'delete from inf.rait_holiday where id=$1 and tenant_id=$2',
+            [insertedId, RAIT_TENANT],
+          );
+        await writer.end();
+        fixture.onQualified = undefined;
+      }
+    });
 });
 
 async function readQualifiedRisk(caseId: string) {
@@ -1771,7 +2134,7 @@ describe('S2 risk read preserves complete S1 role-purpose authorization', () => 
       .get(`${PREFIX}/cases/${c.id}`)
       .set(fixture.headers());
     expect(inventory.status, JSON.stringify(inventory.body)).toBe(200);
-    expect(inventory.body.data.id).toBe(c.id);
+    expect(inventory.body.id).toBe(c.id);
     const r = await request(app.getHttpServer())
       .get(`${PREFIX}/cases/${c.id}/risk`)
       .set(fixture.riskHeaders('rait-analyst', fixture.actor));

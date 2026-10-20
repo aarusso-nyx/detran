@@ -180,6 +180,7 @@ export class RaitP402ClaimFixture {
   practiceOn = '2026-06-15';
   provenanceChecks = 0;
   readonly qualifiedVersions = new Set<string>();
+  readonly qualifiedBackendPids = new Set<number>();
   onQualified: ((req: ProvenanceRequest) => Promise<void>) | undefined;
   readonly parameters = new Map<
     string,
@@ -299,7 +300,8 @@ export class RaitP402ClaimFixture {
   }
   async joinExistingPool(pool: string) {
     // Add only a fresh test actor's availability; preserve the canonical pool and historical case facts.
-    const member = randomUUID(), schedule = randomUUID();
+    const member = randomUUID(),
+      schedule = randomUUID();
     await this.owner.query(
       "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'analista','ATIVO')",
       [member, RAIT_TENANT, pool, this.actor],
@@ -970,6 +972,150 @@ export class RaitP402ClaimFixture {
     expect(sources).toHaveLength(2); // Old A and D; current real C movement remains within its36-month ceiling.
     return sources;
   }
+  async foreignIncidentSource(sourceCase: string) {
+    // R8: separate genuine tenant/context/source lineage. Never move A rows to B.
+    const client = new pg.Client({
+      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+    });
+    const tenantId = randomUUID(),
+      caseId = randomUUID(),
+      ait = randomUUID(),
+      actor = randomUUID(),
+      clock = randomUUID(),
+      alert = randomUUID(),
+      incident = randomUUID();
+    await client.connect();
+    try {
+      await client.query('begin');
+      await client.query("select set_config('app.tenant_id',$1,true)", [
+        tenantId,
+      ]);
+      await client.query(
+        `insert into auth.tenants(id,slug,name,short_name,cnpj,timezone,contact_email,contact_phone,state,is_active,suspended_reason,archived_at)
+        select $1::uuid,$1::text,'S2 isolated foreign tenant',short_name,null,timezone,contact_email,contact_phone,state,is_active,suspended_reason,archived_at from auth.tenants where id=$2`,
+        [tenantId, RAIT_TENANT],
+      );
+      await client.query(
+        "insert into auth.users(id,tenant_id,email,display_name) values($1::uuid,$2::uuid,$1::text||'@s2.invalid','S2 foreign fixture reviewer')",
+        [actor, tenantId],
+      );
+      const pool = randomUUID();
+      await client.query(
+        'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
+        [tenantId, actor],
+      );
+      await client.query(
+        "insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy) values($1,$2,'S2 foreign source secretary pool','defesa_previa',1,'pull')",
+        [pool, tenantId],
+      );
+      await client.query(
+        "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')",
+        [randomUUID(), tenantId, pool, actor],
+      );
+      await client.query(
+        `insert into inf.ait_ait select (jsonb_populate_record(null::inf.ait_ait,to_jsonb(a)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'ait_number',$1::text,'receipt_protocol',$1::text))).* from inf.ait_ait a join inf.rait_case c on c.ait_id=a.id where c.id=$3`,
+        [ait, tenantId, sourceCase],
+      );
+      await client.query(
+        `insert into ops.parameter select (jsonb_populate_record(null::ops.parameter,to_jsonb(p)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'changed_by',$3::text))).* from ops.parameter p join auth.tenants t on t.id=p.tenant_id where p.tenant_id=$4 and p.key='rait.priority.legal_bases' and p.traffic_agency_id is null and p.status='vigente' and not p.source_pending and p.effective_from <= (clock_timestamp() at time zone t.timezone)::date and (p.effective_to is null or p.effective_to >= (clock_timestamp() at time zone t.timezone)::date)`,
+        [randomUUID(), tenantId, actor, RAIT_TENANT],
+      );
+      await client.query(
+        `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at)
+        select $1::uuid,$2::uuid,$3::uuid,$1::text,instance,circuit,'PROTOCOLADO',intake_channel,clock_timestamp() from inf.rait_case where id=$4`,
+        [caseId, tenantId, ait, sourceCase],
+      );
+      await client.query(
+        'select inf.rait_record_initial_priority($1,$2,clock_timestamp(),$3::jsonb)',
+        [caseId, actor, '[]'],
+      );
+      const ref = (
+        await this.owner.query<{ ref: string }>(
+          "select 'INC-2026-'||lpad((coalesce(max(substring(incident_ref from 10)::int),0)+1)::text,4,'0') ref from inf.rait_incident where tenant_id=$1 and incident_ref like 'INC-2026-%'",
+          [RAIT_TENANT],
+        )
+      ).rows[0]!.ref;
+      await client.query(
+        `insert into inf.rait_clock select (jsonb_populate_record(null::inf.rait_clock,to_jsonb(c)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'case_id',$3::text))).* from inf.rait_clock c where c.tenant_id=$4 and c.case_id=$5 and c.clock_code='A'`,
+        [clock, tenantId, caseId, RAIT_TENANT, sourceCase],
+      );
+      await client.query(
+        'insert into inf.rait_incident(id,tenant_id,incident_ref,clock_id,case_id,opened_by) values($1,$2,$3,$4,$5,$6)',
+        [incident, tenantId, ref, clock, caseId, actor],
+      );
+      await client.query(
+        "insert into inf.rait_clock_alert(id,tenant_id,clock_id,level,notified_role,incident_ref) values($1,$2,$3,'PRESCRITO_OPERACIONAL','rait-coordinator',$4)",
+        [alert, tenantId, clock, ref],
+      );
+      await client.query('set constraints all immediate');
+      await client.query('commit');
+      await client.query("select set_config('app.tenant_id',$1,false)", [
+        tenantId,
+      ]);
+      await client.query('set role role_app_backend');
+      expect(
+        (
+          await client.query(
+            "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+          )
+        ).rows,
+      ).toEqual([{ role: 'role_app_backend', tenant: tenantId }]);
+      expect(
+        (
+          await client.query(
+            'select i.tenant_id,i.case_id,c.ait_id,a.tenant_id ait_tenant from inf.rait_incident i join inf.rait_case c on c.id=i.case_id and c.tenant_id=i.tenant_id join inf.ait_ait a on a.id=c.ait_id and a.tenant_id=c.tenant_id where i.id=$1',
+            [incident],
+          )
+        ).rows,
+      ).toEqual([
+        {
+          tenant_id: tenantId,
+          case_id: caseId,
+          ait_id: ait,
+          ait_tenant: tenantId,
+        },
+      ]);
+      const rows = await readSourceRows(client, [
+        'sql:inf.rait_case:' + caseId,
+        'sql:inf.rait_clock:' + clock,
+        'sql:inf.rait_clock_alert:' + alert,
+        'sql:inf.rait_incident:' + incident,
+      ]);
+      expect(rows).toHaveLength(4);
+      const core: ReceiptCore = {
+        schemaVersion: 1,
+        namespace: 'rait-risk-receipt-v1',
+        receiptId: randomUUID(),
+        kind: 'incident',
+        tenantId,
+        caseId,
+        bindings: rows.map((row) => ({
+          sourceRef: row.sourceRef,
+          rowRevision: canonicalRevision(row),
+        })),
+        authorization: {
+          authorityRef: syntheticSource,
+          actorId: actor,
+          decisionRef: 'R8 isolated foreign-tenant fixture only',
+          recordedAt: '2026-10-19T00:00:00.000000Z',
+        },
+        dependencies: [],
+        policySources: [],
+      };
+      const receipt: QualifiedReceipt = {
+        core,
+        digest: canonicalRevision(core),
+        admittedOrigin: 'owner-approved-isolated-inspector-fixture',
+      };
+      this.receipts.push(receipt);
+      return { tenantId, caseId, incident, ref, receipt };
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      await client.end();
+    }
+  }
   async historicallyDistributed(
     caseId: string,
     classification:
@@ -1066,6 +1212,55 @@ export class RaitP402ClaimFixture {
       throw e;
     }
     return { qualification, receiptId, admission: admission.id, distribution };
+  }
+  async qualifyReleasedLegacySource(
+    caseId: string,
+    previous: {
+      qualification: string;
+      receiptId: string;
+      admission: string;
+      distribution: string;
+    },
+    writer: pg.Client,
+  ) {
+    const qualification = randomUUID(),
+      receiptId = randomUUID();
+    expect(
+      (
+        await writer.query(
+          'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
+          [RAIT_TENANT, caseId],
+        )
+      ).rows,
+    ).toEqual([]);
+    const inserted = await writer.query(
+      `insert into inf.rait_claim_legacy_qualification(id,tenant_id,case_id,observed_version,observed_state,assignment_status,classification,revision,admission_ref,distribution_ref,pool_scope_ref,reason,reviewer_id,authorization_ref,observed_at,assignment_ref)
+      select $1,q.tenant_id,q.case_id,c.version,c.state,'unassigned','qualified_unassigned',q.revision+1,q.admission_ref,q.distribution_ref,q.pool_scope_ref,$2,q.reviewer_id,$3,clock_timestamp(),null
+      from inf.rait_claim_legacy_qualification q join inf.rait_case c on c.tenant_id=q.tenant_id and c.id=q.case_id
+      where q.id=$4 and q.tenant_id=$5 and q.case_id=$6 and q.classification='preserve_assigned' and c.state='DISTRIBUIDO' and c.version=q.observed_version returning id,classification,assignment_status`,
+      [
+        qualification,
+        syntheticSource +
+          '; R10 independent current review after actual assignment release',
+        'receipt:' + receiptId,
+        previous.qualification,
+        RAIT_TENANT,
+        caseId,
+      ],
+    );
+    expect(inserted.rows).toEqual([
+      {
+        id: qualification,
+        classification: 'qualified_unassigned',
+        assignment_status: 'unassigned',
+      },
+    ]);
+    return {
+      qualification,
+      receiptId,
+      admission: previous.admission,
+      distribution: previous.distribution,
+    };
   }
   async qualifyLegacy(
     caseId: string,
@@ -1167,6 +1362,10 @@ export class RaitP402ClaimFixture {
       )
     ).rows[0]!;
     expect(identity).toEqual({ role: 'role_app_backend', tenant: RAIT_TENANT });
+    this.qualifiedBackendPids.add(
+      (await tx.query<{ pid: number }>('select pg_backend_pid() pid')).rows[0]!
+        .pid,
+    );
     const missing = { status: 'missing' as const, sourceVersions: [] };
     if (req.tenantId !== RAIT_TENANT) return missing;
     const refs = [...req.sourceRefs].sort();
