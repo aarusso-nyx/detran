@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
@@ -32,6 +33,121 @@ const findStep = (job, name) => {
   assert.ok(found, `Missing step: ${name}`);
   return found;
 };
+
+// Closed ordinary-CI workloads are independent of deferred native task activation.
+// Counts identify the preserved collection snapshot; this contract does not measure
+// live test execution or grant native custody. Exact config bytes preserve complete
+// selectors, timeout/assertion controls and runner semantics pending reviewed changes.
+const ordinaryInvariantSuites = [
+  {
+    nodeId: 'invariant-ch',
+    config: './tools/security/invariants/ch.config.mjs',
+    configSha256:
+      '67c334912ecfb810dcbf10ea1aef264e0361ddfda6db6283cd48df069aedc6c2',
+    executableFiles: [
+      'backend/domains/ch/encounters/tests/unit/encounter-lifecycle.service.spec.ts',
+    ],
+    observedOrdinaryCases: 11,
+  },
+  {
+    nodeId: 'invariant-dash',
+    config: './tools/security/invariants/dash.config.mjs',
+    configSha256:
+      'd7d064bd978985961df7dc938b6d45736e4d0bc5ac2354d15a7080ae861d944f',
+    executableFiles: ['backend/domains/shared/src/policy.spec.ts'],
+    observedOrdinaryCases: 729,
+  },
+  {
+    nodeId: 'invariant-est',
+    config: './tools/security/invariants/est.config.mjs',
+    configSha256:
+      'a5e22b181c50cda32f042d8353e9765037170eb247484f880e92f1586e8093c9',
+    executableFiles: [
+      'backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts',
+    ],
+    observedOrdinaryCases: 21,
+  },
+  {
+    nodeId: 'invariant-inf',
+    config: './tools/security/invariants/inf.config.mjs',
+    configSha256:
+      'd0c721686841013950b796b6f03dfe3102e7c2e26180ceb884788be33f111bd3',
+    executableFiles: [
+      'backend/domains/inf/ait/src/ait-lifecycle.service.spec.ts',
+    ],
+    observedOrdinaryCases: 7,
+  },
+  {
+    nodeId: 'invariant-ops-queue',
+    config: './tools/security/invariants/ops-queue.config.mjs',
+    configSha256:
+      '36ff426c62304c92c200447eed5b2d8483eb2d5f1d5cdd8b1976bc7dec5cb357',
+    executableFiles: [
+      'backend/domains/ops/field/tests/integration/shift-lifecycle.integration.spec.ts',
+    ],
+    observedOrdinaryCases: 8,
+  },
+  {
+    nodeId: 'invariant-ops-perf',
+    config: './tools/security/invariants/ops-perf.config.mjs',
+    configSha256:
+      'd7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e',
+    executableFiles: [
+      'backend/app/tests/performance/backend-baseline.perf.spec.ts',
+    ],
+    observedOrdinaryCases: 3,
+  },
+  {
+    nodeId: 'invariant-portal',
+    config: './tools/security/invariants/portal.config.mjs',
+    configSha256:
+      '084d954d0fb6e2d01921cfe6771832b03bd95a5718c8c2d9c64bd7e350ed1436',
+    executableFiles: [
+      'backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts',
+    ],
+    observedOrdinaryCases: 3,
+  },
+  {
+    nodeId: 'invariant-rbac',
+    config: './tools/security/invariants/rbac.config.mjs',
+    configSha256:
+      '330d2236abbbb038648bf09f858c6f99c07300ef2562f064925bdbc83f343ec0',
+    executableFiles: [
+      'backend/domains/shared/src/policy.guard.spec.ts',
+      'backend/domains/shared/src/policy.spec.ts',
+    ],
+    observedOrdinaryCases: 736,
+  },
+  {
+    nodeId: 'invariant-errors',
+    config: './tools/security/invariants/errors.config.mjs',
+    configSha256:
+      'b3c970f0b72eeaa4528a9246734f1adbe24c73373a18f9e25650a19aa8847889',
+    executableFiles: ['backend/domains/shared/src/errors/detran-error.spec.ts'],
+    observedOrdinaryCases: 13,
+  },
+];
+const ordinaryInvariantSourceSha256 = {
+  'backend/app/tests/performance/backend-baseline.perf.spec.ts':
+    'a88d8c75e0713625ee82180d9630ed10003c3e3489af6a732af05000b8929ce8',
+  'backend/domains/ch/encounters/tests/unit/encounter-lifecycle.service.spec.ts':
+    '150669f981594342a7659ac0594821f5b52834b38b9ee6a1af584a7e59028542',
+  'backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts':
+    'd6b983317344d89c36ff5308746a1dedc063c89fb2707c3145f5bc96c11d55ae',
+  'backend/domains/inf/ait/src/ait-lifecycle.service.spec.ts':
+    '4abc079d96053f54c22c18584ba98fa1061db5dfb35e69650e1c73a280477fff',
+  'backend/domains/ops/field/tests/integration/shift-lifecycle.integration.spec.ts':
+    'bc2682cd0d5026191891d6230433d2bcb30c65367764ac58120a50d3b13122d1',
+  'backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts':
+    '6378dbcf29b3723f13ae478ff874e23ef184fdd65cc5be731e76d50716b2fa34',
+  'backend/domains/shared/src/errors/detran-error.spec.ts':
+    '03e27a96be011515985ecb86af0a1e83e8b79178cd27839f34d6a14bce120cec',
+  'backend/domains/shared/src/policy.guard.spec.ts':
+    'a1db0b75aeb9a5a8a6c2a8d62dfc03b32d242d314c86376025f138a0419117c4',
+  'backend/domains/shared/src/policy.spec.ts':
+    'b6287410e09a48eb93924183f5e1623a519ff98bb5b26713c5b26d0b97194bb1',
+};
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 // Contract tests for the actual YAML and this deliberately small expression subset.
 // They do not claim to emulate GitHub's scheduler, contexts or branch protection.
@@ -137,33 +253,98 @@ test('nine invariant semantic producers execute unconditionally with isolated da
     'pnpm backend:test:prepare-legacy',
   ])
     assert.ok(commands.includes(required), required);
-  const descriptor = JSON.parse(
-    readFileSync(path.join(root, 'test-tasks.json'), 'utf8'),
+  const aliasSteps = job.steps.filter((step) =>
+    step.run?.includes('node tools/security/install-native-vitest.mjs '),
   );
-  const tasks = descriptor.tasks.filter((task) =>
-    task.nodeId.startsWith('invariant-'),
+  assert.equal(aliasSteps.length, 1);
+  assert.equal(aliasSteps[0].if, undefined);
+  assert.notEqual(aliasSteps[0]['continue-on-error'], true);
+  assert.equal(
+    aliasSteps[0].run.trim(),
+    [
+      'node tools/security/install-native-vitest.mjs "$RUNNER_TEMP/detran-native-bin"',
+      'echo "$RUNNER_TEMP/detran-native-bin" >> "$GITHUB_PATH"',
+    ].join('\n'),
   );
-  assert.equal(tasks.length, 9);
-  assert.deepEqual(tasks.map((task) => task.nodeId).sort(), [
-    'invariant-ch',
-    'invariant-dash',
-    'invariant-errors',
-    'invariant-est',
-    'invariant-inf',
-    'invariant-ops-perf',
-    'invariant-ops-queue',
-    'invariant-portal',
-    'invariant-rbac',
-  ]);
-  for (const task of tasks) {
-    const step = job.steps.find(
-      (candidate) => candidate.run === task.argv.join(' '),
+  assert.equal(Object.hasOwn(job.env, 'DEVAI_NATIVE_COLLECTION_NONCE'), false);
+  assert.equal(ordinaryInvariantSuites.length, 9);
+  const actualCommands = commands.filter((command) =>
+    command.startsWith('detran-native-vitest run '),
+  );
+  const expectedCommands = ordinaryInvariantSuites.map(
+    ({ config }) =>
+      `detran-native-vitest run --config ${config} --configLoader native --reporter @aarusso-nyx/devai/native-vitest-reporter`,
+  );
+  assert.deepEqual([...actualCommands].sort(), [...expectedCommands].sort());
+  for (const suite of ordinaryInvariantSuites) {
+    const command = expectedCommands[ordinaryInvariantSuites.indexOf(suite)];
+    const matching = job.steps.filter((candidate) => candidate.run === command);
+    assert.equal(
+      matching.length,
+      1,
+      `Exactly one ordinary suite: ${suite.nodeId}`,
     );
-    assert.ok(step, `No exact native producer for ${task.nodeId}`);
-    assert.equal(step.if, undefined);
-    assert.notEqual(step['continue-on-error'], true);
-    assert.equal(task.argv[0], 'detran-native-vitest');
-    assert.ok(task.argv.includes('@aarusso-nyx/devai/native-vitest-reporter'));
+    assert.equal(matching[0].if, undefined);
+    assert.notEqual(matching[0]['continue-on-error'], true);
+    assert.equal(
+      sha256(readFileSync(path.join(root, suite.config))),
+      suite.configSha256,
+      `Complete config population/control changed: ${suite.nodeId}`,
+    );
+    for (const file of suite.executableFiles)
+      assert.equal(
+        sha256(readFileSync(path.join(root, file))),
+        ordinaryInvariantSourceSha256[file],
+        `Complete semantic suite source changed: ${file}`,
+      );
+  }
+});
+
+test('whole native activation is deferred while the original seven task declarations and rc profile stay exact', () => {
+  const bytes = readFileSync(path.join(root, 'test-tasks.json'));
+  // Canonical main c582/207642 has these exact original seven declaration bytes.
+  assert.equal(
+    sha256(bytes),
+    '752c6105900f752bae1b276f8b0282f501f139777615e5704ba733595ed5fbad',
+  );
+  const descriptor = JSON.parse(bytes);
+  assert.deepEqual(
+    descriptor.tasks.map(({ nodeId }) => nodeId),
+    [
+      'backend-kernel',
+      'scorecard-migration',
+      'scorecard-unit',
+      'scorecard-integration',
+      'scorecard-e2e',
+      'scorecard-typecheck',
+      'scorecard-performance',
+    ],
+  );
+  assert.deepEqual(descriptor.profiles, [
+    { profileId: 'rc', mode: 'fixed', requiredNodes: ['backend-kernel'] },
+  ]);
+  const policy = JSON.parse(
+    readFileSync(path.join(root, 'law/policy/adopter-policy.json'), 'utf8'),
+  );
+  assert.deepEqual(policy.invariant_producers, {
+    schemaVersion: '1.0.0',
+    bindings: [],
+  });
+  for (const id of [
+    'INV-CH-001',
+    'INV-DASH-001',
+    'INV-EST-001',
+    'INV-INF-001',
+    'INV-OPS-001',
+    'INV-OPS-002',
+    'INV-PORTAL-001',
+    'INV-RBAC-001',
+    'INV-API-001',
+  ]) {
+    const invariant = JSON.parse(
+      readFileSync(path.join(root, `law/invariants/${id}.json`), 'utf8'),
+    );
+    assert.equal(Object.hasOwn(invariant, 'measurable_via'), false, id);
   }
 });
 
