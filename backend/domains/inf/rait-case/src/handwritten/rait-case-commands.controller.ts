@@ -8,7 +8,13 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { Action, Audit, NoIdempotent, Resource } from '@detran/shared';
+import {
+  Action,
+  Audit,
+  NoIdempotent,
+  Resource,
+  DetranError,
+} from '@detran/shared';
 import { RaitCaseCommandService } from './rait-case-command.service.js';
 
 type Response = { setHeader(name: string, value: string): unknown };
@@ -313,6 +319,8 @@ export class RaitCaseCommandsController {
     @Res({ passthrough: true }) response: Response,
     @Req() request?: AuthenticatedRequest,
   ) {
+    if (match !== undefined)
+      throw new DetranError('RAIT.VALIDATION_FAILED', { status: 400 });
     return this.run(
       'claim-next',
       [id, body, match, key, response],
