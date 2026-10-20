@@ -2,6 +2,17 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import { createNestMetadataPlugin } from '../../tools/security/invariants/nest-metadata-transform.mjs';
 
+// These exact decorated controllers are already compiled by the metadata plugin.
+const metadataCompiledControllerPatterns = [
+  '../domains/inf/rait-worklist/src/handwritten/rait-worklist-commands.controller.ts',
+  '../domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts',
+].map((relative) => {
+  const filename = fileURLToPath(new URL(relative, import.meta.url));
+  return new RegExp(
+    '^' + filename.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$',
+  );
+});
+
 const tier = (process.env.DETRAN_TEST_TIER ?? 'unit') as
   'unit' | 'integration' | 'e2e' | 'real' | 'in-house';
 
@@ -15,6 +26,7 @@ const includeByTier: Record<typeof tier, string[]> = {
 
 export default defineConfig({
   plugins: [createNestMetadataPlugin()],
+  esbuild: { exclude: [/\.js$/, ...metadataCompiledControllerPatterns] },
   resolve: {
     alias: {
       '@detran/shared': fileURLToPath(
