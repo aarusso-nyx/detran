@@ -405,7 +405,10 @@ export async function raitSourceRows(
   refs: readonly string[],
 ): Promise<RaitSourceRow[]> {
   if (new Set(refs).size !== refs.length) throw Error('Duplicate source');
-  const rows: RaitSourceRow[] = [];
+  const groups = new Map<
+    string,
+    { sourceRef: string; id: string; at: number }[]
+  >();
   for (const sourceRef of [...refs].sort()) {
     const m = /^sql:([a-z_]+\.[a-z_]+):(.+)$/.exec(sourceRef);
     if (!m || !FIELDS[m[1]!]) throw Error('Unknown source');
@@ -423,32 +426,59 @@ export async function raitSourceRows(
           )
     )
       throw Error('Noncanonical source identity');
-
+    const group = groups.get(table) ?? [];
+    group.push({ sourceRef, id, at });
+    groups.set(table, group);
+  }
+  const rows: RaitSourceRow[] = [];
+  // Each call re-reads actual rows. Only physical reads within this call are
+  // batched; sourceRef identity is ordinal, never a lossy physical-ID map.
+  for (const [table, group] of groups) {
+    const audit = table === 'audit.events';
+    const expected = new Map(
+      group.map((entry, index) => [String(index + 1), entry]),
+    );
     const columns = FIELDS[table]!.map((k) =>
       TIMESTAMPS.has(k)
-        ? `to_char("${k}" at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as "${k}"`
+        ? `to_char(src."${k}" at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as "${k}"`
         : DATES.has(k)
-          ? `to_char("${k}",'YYYY-MM-DD') as "${k}"`
+          ? `to_char(src."${k}",'YYYY-MM-DD') as "${k}"`
           : ['prev_hash', 'self_hash'].includes(k)
-            ? `encode("${k}",'hex') as "${k}"`
+            ? `encode(src."${k}",'hex') as "${k}"`
             : k === 'event_id'
-              ? `"${k}"::text as "${k}"`
-              : `"${k}"`,
+              ? `src."${k}"::text as "${k}"`
+              : `src."${k}"`,
     ).join(',');
+    const target = audit
+      ? 'unnest($2::bigint[],$3::timestamptz[]) with ordinality wanted(event_id,occurred_at,ordinal) on src.event_id=wanted.event_id and src.occurred_at=wanted.occurred_at'
+      : 'unnest($2::uuid[]) with ordinality wanted(id,ordinal) on src.id=wanted.id';
+    const args = audit
+      ? [
+          tenantId,
+          group.map((entry) => entry.id.slice(0, entry.at)),
+          group.map((entry) => entry.id.slice(entry.at + 1)),
+        ]
+      : [tenantId, group.map((entry) => entry.id)];
     const result = await tx.query<Record<string, unknown>>(
-      `select ${columns} from ${table} where ${audit ? 'event_id=$1::bigint and occurred_at=$2::timestamptz' : 'id=$1::uuid'}${audit || table === 'inf.rait_claim_legacy_qualification' ? '' : ' for share'}`,
-      audit ? [id.slice(0, at), id.slice(at + 1)] : [id],
+      `select wanted.ordinal::text as "__rait_source_ordinal",${columns} from ${table} src join ${target} where src.tenant_id=$1 order by wanted.ordinal${audit || table === 'inf.rait_claim_legacy_qualification' ? '' : ' for share of src'}`,
+      args,
     );
-    const row = result.rows[0];
-    if (
-      result.rows.length !== 1 ||
-      !row ||
-      (row.tenant_id !== undefined && row.tenant_id !== tenantId)
-    )
-      throw Error('Missing source');
-    rows.push({ sourceRef, table, fields: row });
+    if (result.rows.length !== group.length)
+      throw Error('Missing or ambiguous source');
+    for (const row of result.rows) {
+      const { __rait_source_ordinal: ordinal, ...fields } = row;
+      const entry =
+        typeof ordinal === 'string' ? expected.get(ordinal) : undefined;
+      if (!entry || fields.tenant_id !== tenantId)
+        throw Error('Missing or ambiguous source');
+      expected.delete(ordinal as string);
+      rows.push({ sourceRef: entry.sourceRef, table, fields });
+    }
+    if (expected.size) throw Error('Missing source');
   }
-  return rows;
+  return rows.sort((a, b) =>
+    a.sourceRef < b.sourceRef ? -1 : a.sourceRef > b.sourceRef ? 1 : 0,
+  );
 }
 // Additive policy-request-v1 encoding, S2-R13 v2: source pairs identify bytes;
 // the trusted reader independently retrieves receipt decisions and authority.
