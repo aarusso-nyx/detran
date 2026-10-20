@@ -47,3 +47,9 @@ No live test, typecheck or DB process remains. Exclusive53343 lease is released 
 ## Execution metadata clarification
 
 Five verified selected epochs execute19 test invocations across15 distinct cases: R10 1, initial R7 3, corrected R7 3, amended baseline11, foreign rerun1. Filtered cases remain unexecuted. Dedicated53343 was used only after committed exclusive lease transfer and is now released; no further DB execution is authorized until a new transfer. The earlier no-DB and13 missing-runtime prerequisites describe the pre-execution phase, not current completed targeted work. Current gates remain fence/review integration, renewed lease and unchanged full103/required-regression acceptance. All original failed epochs remain preserved.
+
+## Unchanged decisive R10 target GREEN
+
+After parent integrated runtime5357b49f and explicitly transferred the dedicated lease, the unchanged target executes1PASS,102 filtered/unexecuted,24.48s,77 assertions. Actual request role/PID, initial historical-assignment exclusion, independent valid release/current immutable classification+receipt, required503/empty context/noeffects, and fresh complete two-case qualified read all execute. Spec e5f86edd/fixture dec7dd46 remain byte-identical; runtime/test/dependency epoch hashes verify unchanged, and manifests/lock match the prior frozen install. Original R10 RED and all earlier failures remain intact.
+
+Task execution totals now20 selected invocations over six epochs,15 distinct selected cases. This is decisive one-target GREEN, not full103 or S2 readiness. No new review sensors or runtime edits were authored. Architect F1/F2/F4/F5 source disposition and subsequent independent sensors, full amended103 plus required regressions/kernel/CI still gate acceptance. The target-only epoch does not claim a new typecheck against5357b49f; earlier final sensor typecheck remains its own valid receipt. Dedicated DB lease released again; no live test/DB/typecheck process remains.

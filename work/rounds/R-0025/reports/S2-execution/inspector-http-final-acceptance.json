@@ -1,7 +1,7 @@
 {
   "task": "TASK-0041",
   "role": "Inspector",
-  "status": "CHECKPOINT_READY_R10_RED_TARGETED_CONTROLS_GREEN_FULL103_PENDING",
+  "status": "R10_TARGET_GREEN_FULL_SUITE_AND_NEW_REVIEW_SENSORS_PENDING",
   "readinessPromoting": false,
   "source": {
     "parentSuppliedIntegration": "437266e7",
@@ -45,11 +45,11 @@
     "amendedRetainedCases": 99,
     "additiveInsertCases": 3,
     "totalAuthoredCases": 103,
-    "executedCasesThisTask": 19,
+    "executedCasesThisTask": 20,
     "enumeration": "for each parameter,holiday,caseEvent INSERT kind exactly one new test; all original case families retained",
     "additiveEligibilityFenceCases": 1,
     "distinctSelectedCasesThisTask": 15,
-    "executionMeaning": "19 selected test invocations across five epochs;15 distinct selected cases. Filtered cases are unexecuted, not passed. Full103 acceptance pending.",
+    "executionMeaning": "20 selected invocations across six epochs,15 distinct selected cases. Filtered cases unexecuted; full amended103 plus forthcoming reviewed sensors pending.",
     "epochs": [
       {
         "results": "/tmp/detran-s2-r10-red-results.json",
@@ -69,6 +69,10 @@
       },
       {
         "results": "/tmp/detran-s2-http-foreign-corrected-results.json",
+        "selectedExecuted": 1
+      },
+      {
+        "results": "/tmp/detran-s2-r10-green-results.json",
         "selectedExecuted": 1
       }
     ]
@@ -104,10 +108,10 @@
     "databaseExecutionBoundary": "Only dedicated53343 after committed exclusive lease transfer; released to parent after targeted runs. No current lease or live Inspector DB processes."
   },
   "prerequisites": [
-    "Parent integration of R10 fence and exact accepted review dispositions before the next unchanged acceptance epoch.",
-    "New explicit exclusive53343 lease transfer is required before any further Inspector DB execution; current lease is released.",
-    "Unchanged decisive R10 GREEN, full103 unfiltered, retained required regressions/kernel and CI remain pending. Composite targeted invocations do not replace them.",
-    "Four prior complete51 timeouts remain unproven until unchanged full execution resolves them; no budgets or populations relaxed.",
+    "Architect source freeze and exact F1/F2/F4/F5 review dispositions/sensors remain pending; do not infer approval or author them from this target.",
+    "New explicit exclusive53343 lease transfer before any further Inspector DB execution; current target lease released.",
+    "Full amended103 unfiltered plus new reviewed sensors, retained required regressions/kernel/typechecks/CI remain pending. Targeted composite evidence does not replace them.",
+    "Four prior complete51 timeouts remain unproven until unchanged full execution resolves them; no budgets/populations relaxed.",
     "R6 qualified D RESET and genuine production provenance remain blocked; no S2/P4 closure."
   ],
   "typecheck": {
@@ -115,7 +119,7 @@
     "exitCode": 0,
     "command": "pnpm --filter @detran/app typecheck",
     "log": "/tmp/detran-s2-http-final-acceptance-final-types.log",
-    "qualification": "Final amended code hashes verified unchanged after completion"
+    "qualification": "Passed final amended sensor code before fence runtime5357b49f integration; no repeated typecheck in this target-only epoch."
   },
   "baselineTypecheck": {
     "exitCode": 2,
@@ -159,9 +163,9 @@
     "sensorAmendment": "Authorized S2-R11; corrected independent rerun3PASS separately recorded, original epoch unchanged"
   },
   "finalAmendedSource": {
-    "parentSuppliedIntegration": "437266e7",
-    "parentSuppliedRuntime": "18deaaeb/R9; R10 runtime not implemented",
-    "capturedAt": "2026-10-20T00:15:22.225123+00:00",
+    "parentSuppliedRuntime": "5357b49f/R10",
+    "parentSuppliedLeaseCommit": "281e1da3",
+    "capturedAt": "2026-10-20T00:22:16.593781+00:00",
     "sha256": {
       "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "e5f86edd4146e1e6d133a28022370887b640d8a6ab4d096c689ce12e3254c5bd",
       "backend/app/tests/shared/rait-p402-claim.fixture.ts": "dec7dd46597598e38655ead9ac014c9b0933b0d988cf22d21a860bd1d4f70224",
@@ -173,10 +177,10 @@
       "backend/app/src/app.module.ts": "2625f20cdb0d0d13cd8f34cb62289330bfc47377265b12fd319edf4ab929cfa6",
       "backend/app/src/detran-runtime.ts": "23eb90340e35da6986017d2a5bd1f4955a7d8d0d405849ee429ee005c235d573",
       "backend/domains/inf/rait-case/src/handwritten/rait-legacy-qualification.service.ts": "c4c0ed6a1f0c69c7ee5436fb4e61d4f2af9de6595ef9ca3a24f8144d02a0c24a",
-      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "b4ab00769f9d764e4550aeb8c3269db3f169149eee38d5e38b8f0f732d03ccee",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "78c83ab013e0b85551134dc4bb1b84b2601531b19deb9c32ed7707955941f35e",
       "backend/domains/inf/rait-case/src/handwritten/rait-case-transition.port.ts": "3c19fed71e2c036c5721c220e0649e0c4136f4613c7ab4af5eb5d2bca3109157",
       "backend/domains/inf/rait-case/src/handwritten/rait-admissibility-commands.controller.ts": "a8a143abecd87e2973f33e16cabd0ac133fb98a730a9b980a088f600015bd213",
-      "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts": "b10eb7e474bddb8a4f84b87aabc3313c3161e50e4602cb21f413449ad611d2fd",
+      "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts": "888dbf52c84eb39997d1df4b12294efac6b891f5ccf71a5403f13cea448c9eb8",
       "backend/domains/inf/rait-case/src/handwritten/rait-admissibility-command.service.ts": "8a2c0b1cc72001792572a474cfb9cb8b9e81a6dd98766ce9058e34248d6a156a",
       "backend/domains/inf/rait-case/src/handwritten/rait-case-scoped-reads.controller.ts": "b825326e7058d9ce25e969f4c346bb6304ce132e296a6cbeb2da26e003cbe21b",
       "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "669299e7977a685ea7c9c45466115d9d28e550992c1d65440900eb54d930834d",
@@ -192,13 +196,7 @@
       "backend/domains/inf/rait-case/src/handwritten/index.ts": "657f51d68935b4d82f9f520b4f88b4e5241982bc5d9e3b7db35d78568594a2ab",
       "backend/domains/inf/rait-case/src/handwritten/rait-case-pool-scope.service.ts": "0b9a9ff0cf1a5e9b981e6422920598d79125cd35616ff0d9a1ab978175528d56",
       "backend/domains/inf/rait-case/src/handwritten/rait-operation-clock.ts": "054eee003655a8ac809c483b4d59bf750418f05dbe97b044d78902e2e840ec21"
-    },
-    "frozenInstall": "PASS3.4s; pnpm install --frozen-lockfile; actual merged manifests/lock preserved",
-    "amendment": "Complete real B secretary membership required by canonical initial-priority qualification; other test bodies unchanged",
-    "finalVerifiedAt": "2026-10-20T00:17:26.346031+00:00",
-    "installedLockSha256": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb",
-    "nodeVersion": "v24.22.0",
-    "pnpmVersion": "9.15.0"
+    }
   },
   "R7Corrected": {
     "executed": 3,
@@ -237,7 +235,7 @@
     "qualification": "Other10 test bodies/setups and R7/R10 bodies unchanged; helper-only B membership addition does not execute in those tests. Full final-hash103 remains pending."
   },
   "lease": {
-    "status": "RELEASED_TO_PARENT",
+    "status": "RELEASED_TO_PARENT_AFTER_R10_TARGET",
     "noLiveDatabaseProcesses": true,
     "noLiveTypechecks": true
   },
@@ -342,10 +340,94 @@
       "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-acceptance-diff.txt",
       "sha256": "9b376af0a747f3ae3b25c6ac105044b0fd92c89e90c02ddd609087f4469417b6",
       "qualification": "Source-only two-owned-path diff; no runtime edits"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-acceptance-r10-green.log",
+      "sha256": "e70db2d4cca59ab638ccecf467d5cdbc2368856aed65430e4780537490694a3d",
+      "sanitization": "Mechanical database-URL/non-local bearer redaction; raw tmp original preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-acceptance-r10-green-results.json",
+      "sha256": "78ddfa67c8b9571eaec31a7cba8750d99fed9a51847a58effc3c81b63815bc34",
+      "sanitization": "Mechanical database-URL/non-local bearer redaction; raw tmp original preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-acceptance-r10-green-source.json",
+      "sha256": "f7bc951a65f9ab76328e45c47d80cb09a3135cf1e632c5fb6c9aef9f10d2b59d",
+      "sanitization": "Mechanical database-URL/non-local bearer redaction; raw tmp original preserved."
     }
   ],
   "initialPreExecutionPrerequisites": [
     "Before explicit lease transfer: no DB execution permitted. This restriction was satisfied by committed transfer, then targeted runs executed and lease was released.",
     "Before parent runtime integration: generated imports referenced13 absent approved runtime modules; recorded pre-integration typechecks exit2. After integration/install final typecheck passed."
-  ]
+  ],
+  "preFenceAmendedSource": {
+    "parentSuppliedIntegration": "437266e7",
+    "parentSuppliedRuntime": "18deaaeb/R9; R10 runtime not implemented",
+    "capturedAt": "2026-10-20T00:15:22.225123+00:00",
+    "sha256": {
+      "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "e5f86edd4146e1e6d133a28022370887b640d8a6ab4d096c689ce12e3254c5bd",
+      "backend/app/tests/shared/rait-p402-claim.fixture.ts": "dec7dd46597598e38655ead9ac014c9b0933b0d988cf22d21a860bd1d4f70224",
+      "package.json": "6af1f73b2350fd62541b897b46603f8d124289884d94490341acd7ac44e19fbb",
+      "pnpm-lock.yaml": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb",
+      "pnpm-workspace.yaml": "1a654d1d18726e6d5cd330fe108679fb9239716ec17aff748aea13a2c360dc8e",
+      "backend/app/package.json": "8569ee0adc0ad9f9f1fbd70c48664ddb63dbad7af3240004060d864645f73d0a",
+      "backend/domains/inf/rait-case/package.json": "c3722cfdbb74a1a1b3c653fb6439b7d815b50905e5383232fd8a6dd09bff2b9f",
+      "backend/app/src/app.module.ts": "2625f20cdb0d0d13cd8f34cb62289330bfc47377265b12fd319edf4ab929cfa6",
+      "backend/app/src/detran-runtime.ts": "23eb90340e35da6986017d2a5bd1f4955a7d8d0d405849ee429ee005c235d573",
+      "backend/domains/inf/rait-case/src/handwritten/rait-legacy-qualification.service.ts": "c4c0ed6a1f0c69c7ee5436fb4e61d4f2af9de6595ef9ca3a24f8144d02a0c24a",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "b4ab00769f9d764e4550aeb8c3269db3f169149eee38d5e38b8f0f732d03ccee",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-transition.port.ts": "3c19fed71e2c036c5721c220e0649e0c4136f4613c7ab4af5eb5d2bca3109157",
+      "backend/domains/inf/rait-case/src/handwritten/rait-admissibility-commands.controller.ts": "a8a143abecd87e2973f33e16cabd0ac133fb98a730a9b980a088f600015bd213",
+      "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts": "b10eb7e474bddb8a4f84b87aabc3313c3161e50e4602cb21f413449ad611d2fd",
+      "backend/domains/inf/rait-case/src/handwritten/rait-admissibility-command.service.ts": "8a2c0b1cc72001792572a474cfb9cb8b9e81a6dd98766ce9058e34248d6a156a",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-scoped-reads.controller.ts": "b825326e7058d9ce25e969f4c346bb6304ce132e296a6cbeb2da26e003cbe21b",
+      "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "669299e7977a685ea7c9c45466115d9d28e550992c1d65440900eb54d930834d",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-scope.service.ts": "0b318015667cc14450e06756d5ac4e76dc8d7b01241fbd9bf223f65215571a4e",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.service.ts": "5338b4542619fc6c7f8cfbfcc0bb686dcd11056f801d8108575c7a3ca38c82e7",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-commands.controller.ts": "00f63be8bfee0e3880797a863ff181fdc2637732d2d492b3947d2dd24bc2cc51",
+      "backend/domains/inf/rait-case/src/handwritten/rait-document-trust.verifier.ts": "cb7b295c78d6a9c3c430102fd3395ae99bd5486e497522ba953bdb678b6a12b1",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.controller.ts": "3900cf733dd8983a694b35550f586a18b678589bf81d3142a1f1de910c716421",
+      "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-commands.controller.ts": "931799322f66e5ba67c1f078b5b527398b509b02e8be32748ab3b30d2dd6519b",
+      "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.controller.ts": "62b2d9a790ff8bc0e124af24217df4dbe79a37c13d5d3ab58a75ca7e7aedd3bf",
+      "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-command.service.ts": "964bed2630ecb359c2c3fe9136c6a9a3452ee9c35f1b78c5f17c32b7da240b96",
+      "backend/domains/inf/rait-case/src/handwritten/rait-document-trust-worklist.spec.ts": "c8ab8260a9b1fd23a17e429c103c041351307a5a9b28e04589a30e8c8d228ed7",
+      "backend/domains/inf/rait-case/src/handwritten/index.ts": "657f51d68935b4d82f9f520b4f88b4e5241982bc5d9e3b7db35d78568594a2ab",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-pool-scope.service.ts": "0b9a9ff0cf1a5e9b981e6422920598d79125cd35616ff0d9a1ab978175528d56",
+      "backend/domains/inf/rait-case/src/handwritten/rait-operation-clock.ts": "054eee003655a8ac809c483b4d59bf750418f05dbe97b044d78902e2e840ec21"
+    },
+    "frozenInstall": "PASS3.4s; pnpm install --frozen-lockfile; actual merged manifests/lock preserved",
+    "amendment": "Complete real B secretary membership required by canonical initial-priority qualification; other test bodies unchanged",
+    "finalVerifiedAt": "2026-10-20T00:17:26.346031+00:00",
+    "installedLockSha256": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb",
+    "nodeVersion": "v24.22.0",
+    "pnpmVersion": "9.15.0"
+  },
+  "R10Green": {
+    "parentSuppliedRuntime": "5357b49f",
+    "leaseReceipt": "inspector-R10-green-lease.json at root281e1da3",
+    "executed": 1,
+    "passed": 1,
+    "failed": 0,
+    "filteredUnexecuted": 102,
+    "durationSeconds": 24.48,
+    "assertionsReached": 77,
+    "sensorEdits": false,
+    "runtimeEdits": false,
+    "sourceHashesVerifiedUnchanged": true,
+    "specSha256": "e5f86edd4146e1e6d133a28022370887b640d8a6ab4d096c689ce12e3254c5bd",
+    "fixtureSha256": "dec7dd46597598e38655ead9ac014c9b0933b0d988cf22d21a860bd1d4f70224",
+    "reached": [
+      "Actual request role_app_backend/tenant and backend PID",
+      "Initial eligible set excludes active historical assigned case",
+      "Independent source-backed release and immutable current qualified_unassigned revision/receipt",
+      "Changed potential universe returns503 with empty context/no data and no effects",
+      "Fresh qualified operation includes both complete eligible cases without effects"
+    ],
+    "dependencyCustody": "Merged manifests/lock hashes equal prior successful frozen install",
+    "log": "/tmp/detran-s2-r10-green.log",
+    "results": "/tmp/detran-s2-r10-green-results.json",
+    "sourceManifest": "/tmp/detran-s2-r10-green-source.json",
+    "claim": "Decisive one-target GREEN only; no full103/S2/readiness claim"
+  }
 }
