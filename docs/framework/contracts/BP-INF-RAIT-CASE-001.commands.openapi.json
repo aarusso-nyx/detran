@@ -1042,7 +1042,19 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE",
+                        "RAIT.ORDER_OVERRIDE_FORBIDDEN"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -1258,7 +1270,21 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.QUEUE_EMPTY",
+                        "RAIT.CASE_POOL_UNRESOLVED",
+                        "RAIT.CLAIM_LEGACY_UNVERIFIED",
+                        "RAIT.IDEMPOTENCY_REPLAY",
+                        "RAIT.ASSIGNMENT_ALREADY_ACTIVE"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -1420,7 +1446,19 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.MEMBER_NOT_AVAILABLE",
+                        "RAIT.PARAMETER_SOURCE_PENDING",
+                        "RAIT.ASSIGNMENT_WIP_LIMIT"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -7231,7 +7269,18 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -7339,7 +7388,18 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.CASE_POOL_UNRESOLVED",
+                        "RAIT.CLAIM_LEGACY_UNVERIFIED"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
@@ -7619,7 +7679,18 @@
                       },
                       "required": ["code"]
                     }
-                  ]
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "RAIT.FORBIDDEN_ACTION",
+                        "RAIT.FORBIDDEN_CASE_SCOPE"
+                      ]
+                    }
+                  },
+                  "required": ["code"]
                 }
               }
             }
