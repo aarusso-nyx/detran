@@ -1,0 +1,187 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-19 21:40:49.204 -0300] INFO (97278): request completed
+    request_id: "01a156c0-f52b-77f3-a134-28534e85f664"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 520
+[2026-10-19 21:40:49.425 -0300] INFO (97278): request completed
+    request_id: "01a156c0-f73a-794f-ba52-f6185118acff"
+    route: "/v1/inf/rait/cases/0863534f-d394-4a54-b9a7-687aae649e6f/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 214
+[2026-10-19 21:40:49.747 -0300] INFO (97278): request completed
+    request_id: "01a156c0-f812-7f13-b154-95e5e67ee0cf"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 320
+[2026-10-19 21:40:49.951 -0300] INFO (97278): request completed
+    request_id: "01a156c0-f957-7e00-8513-a5c702eb61b2"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 200
+[2026-10-19 21:40:50.141 -0300] INFO (97278): request completed
+    request_id: "01a156c0-fa21-7df9-8b85-d7e9e84e38e1"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 187
+[2026-10-19 21:40:50.360 -0300] INFO (97278): request completed
+    request_id: "01a156c0-fae0-7518-9dc9-730e56c131d7"
+    route: "/v1/inf/rait/cases/0863534f-d394-4a54-b9a7-687aae649e6f/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 216
+[2026-10-19 21:40:52.362 -0300] INFO (97278): request completed
+    request_id: "01a156c0-ff2a-79ed-91c2-049fdb47766d"
+    route: "/v1/inf/rait/cases/0863534f-d394-4a54-b9a7-687aae649e6f/risk"
+    method: "GET"
+    status: 503
+    duration_ms: 1120
+S2_ASSERTIONS {"test":"ADR0057 independently admitted C policy receipt > qualifies actual current C sources through policy source pairs and a separate receipt digest instead of decoding opaque versions","executedAssertions":15}
+ ❯ tests/e2e/rait-p402-claim.e2e.spec.ts (106 tests | 1 failed | 105 skipped) 4548ms
+     ↓ supplied If-Match "1" returns400 without effects
+     ↓ supplied If-Match not-a-validator returns400 without effects
+     ↓ supplied If-Match * returns400 without effects
+     ↓ caller caseId cannot select/grant a claim
+     ↓ caller actor cannot select/grant a claim
+     ↓ caller tenant_id cannot select/grant a claim
+     ↓ caller role cannot select/grant a claim
+     ↓ caller purpose cannot select/grant a claim
+     ↓ new HTTP-admitted work with unqualified risk fails503 before old QUEUE_EMPTY fallback
+     ↓ unqualified in-scope legacy is409 and cannot be silently claimed
+     ↓ rejects malformed/authority-bearing discovery input {"limit":0}
+     ↓ rejects malformed/authority-bearing discovery input {"limit":51}
+     ↓ rejects malformed/authority-bearing discovery input {"limit":1.5}
+     ↓ rejects malformed/authority-bearing discovery input {"pool_id":"not-a-uuid"}
+     ↓ rejects malformed/authority-bearing discovery input {"actor":"forged"}
+     ↓ rejects malformed/authority-bearing discovery input {"purpose":"merits"}
+     ↓ rejects malformed/authority-bearing discovery input {"tenant_id":"forged"}
+     ↓ rejects malformed/authority-bearing discovery input {"queue_cursor":"not-a-valid-cursor"}
+     ↓ rait-coordinator cannot borrow read authority for claim-context
+     ↓ AUDITOR cannot borrow read authority for claim-context
+     ↓ rait-secretary cannot borrow read authority for claim-context
+     ↓ technical-admin cannot borrow read authority for claim-context
+     ↓ zero eligible pools has exact count0 and empty typed pages
+     ↓ one empty eligible pool is selected from complete set and GET writes nothing
+     ↓ unresolved legacy blocks selected-pool GET409 without a degraded queue
+     ↓ scoped risk for admitted case with absent qualified sources returns503
+     ↓ unknown risk case and unauthorized case share404 without payload
+     ↓ mounts the public narrow provenance port while retaining the actual SQL factory
+     ↓ qualified new HTTP admission claims exactly two state versions and a real assignment
+     ↓ qualified historical admission/distribution advances exactly one version
+     ↓ missing independent A proof is503 despite otherwise complete actual rows
+     ↓ missing independent C proof is503 despite otherwise complete actual rows
+     ↓ missing independent D proof is503 despite otherwise complete actual rows
+     ↓ missing independent track proof is503 despite otherwise complete actual rows
+     ↓ missing independent movement proof is503 despite otherwise complete actual rows
+     ↓ missing independent interruption proof is503 despite otherwise complete actual rows
+     ↓ missing independent applicability proof is503 despite otherwise complete actual rows
+     ↓ missing independent parameter proof is503 despite otherwise complete actual rows
+     ↓ qualified ORIGINAL D requires independently verified complete original history, never absence inference
+     ↓ trusted receipt cannot authorize a shifted canonical raw_due_on
+     ↓ trusted receipt cannot authorize a shifted canonical due_on
+     ↓ consumed SQL source mutation invalidates pre-admitted receipt rather than echoing request digest
+     ↓ a qualified read does not alter flags, clocks, history, ledger or outbox
+     ↓ same actor exact retry returns original typed result without any additional effects
+     ↓ replay still denies revoked current membership without replay effects
+     ↓ valid canonical actor change under the existing key conflicts409 without disclosing original result
+     ↓ no GET internal qualification route
+     ↓ no POST internal qualification route
+     ↓ no PATCH internal qualification route
+     ↓ no DELETE internal qualification route
+     ↓ failure during distribution rolls back both case stages and all claim effects
+     ↓ failure during instruction rolls back both case stages and all claim effects
+     ↓ failure during assignment rolls back both case stages and all claim effects
+     ↓ failure during legalAudit rolls back both case stages and all claim effects
+     ↓ failure during outbox rolls back both case stages and all claim effects
+     ↓ failure during ledger rolls back both case stages and all claim effects
+     ↓ revoked receipt cannot authorize a claim
+     ↓ foreignTenant receipt cannot authorize a claim
+     ↓ unadmittedOrigin receipt cannot authorize a claim
+     ↓ ambiguous receipt cannot authorize a claim
+     ↓ two genuinely authenticated analysts cannot assign the same candidate twice
+     ↓ concurrent same-actor claims serialize WIP1 across two independently qualified cases
+     ↓ membership revoked during real lock wait denies claim without side effects
+     ↓ a risk blocker beyond position50 blocks the whole pool
+     ↓ a legacy blocker beyond position50 blocks the whole pool
+     ↓ a routing blocker beyond position50 blocks the whole pool
+     ↓ a incident blocker beyond position50 blocks the whole pool
+     ↓ true 180-day source has explicit track proof, actual civil dates and defense B NA
+     ↓ true 360-day source has explicit track proof, actual civil dates and defense B NA
+     ↓ operational source qualified has exact actual incident linkage
+     ↓ operational source missingReceipt has exact actual incident linkage
+     ↓ operational source missingIncident has exact actual incident linkage
+     ↓ operational source wrongCase has exact actual incident linkage
+     ↓ operational source foreignTenant has exact actual incident linkage
+     ↓ operational source clockOnly has exact actual incident linkage
+     ↓ the actual PostgreSQL rate limiter was exercised under the isolated fixture cap
+     ↓ risk precedes legal priority, then priority precedes identical protocol time
+     ↓ equal risk/priority/protocol time resolves by ascending actual case id
+     ↓ complete two-pool membership requires choice despite a one-item pool page
+     ↓ same-unit other pool without actual membership does not inherit claim authority
+     ↓ historical NULL priority remains excluded before legacy/risk qualification, without factual repair
+     ↓ trusted hold is preserved and cannot be reclaimed
+     ↓ trusted preserve_assigned is preserved and cannot be reclaimed
+     ↓ stale observed legacy version fails409 without automatic reclassification
+     ↓ parameter revocation after verified SQL read is serialized or revalidated before any stale claim effects
+     ↓ a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set
+     ↓ matching parameter INSERT waits for actual source transaction or causes safe revalidation
+     ↓ matching holiday INSERT waits for actual source transaction or causes safe revalidation
+     ↓ matching caseEvent INSERT waits for actual source transaction or causes safe revalidation
+     ↓ actual C movement resets only C while independently qualified D retains original practice start
+     ↓ unknown D reset cannot masquerade as qualified ORIGINAL even with freshly matching content receipts
+     ↓ actual selected parameter proposta fails closed with no fallback/default
+     ↓ actual selected parameter sourcePending fails closed with no fallback/default
+     ↓ actual selected parameter ambiguousActivation fails closed with no fallback/default
+     ↓ impeded best candidate is skipped for next eligible without leaking skipped identities
+     ↓ QUEUE_EMPTY precedes WIP when all eligible work was already consumed
+     ↓ valid different pool under a consumed key conflicts409; a fresh key remains a distinct attempt
+     ↓ VALID queue cursor cannot be replayed across pool
+     ↓ VALID queue cursor cannot be replayed across unauthorizedActor
+     ↓ VALID queue cursor cannot be replayed across revocation
+     ↓ membership in two same-unit pools cannot move a case out of its explicit selected pool
+     ↓ a separately bound coordinator can read unassigned risk while an unassigned analyst cannot borrow that purpose
+     ↓ after a real claim the analyst owns the case purpose; changed risk sources remain fail-closed503
+     ↓ a genuinely unassigned analyst risk denial finishes before a conflicting administrative source writer releases
+     ↓ authorized risk read rechecks its actual oversight binding after a source-lock wait
+     × qualifies actual current C sources through policy source pairs and a separate receipt digest instead of decoding opaque versions 4092ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/rait-p402-claim.e2e.spec.ts > ADR0057 independently admitted C policy receipt > qualifies actual current C sources through policy source pairs and a separate receipt digest instead of decoding opaque versions
+AssertionError: {"code":"RAIT.RISK_SOURCE_UNAVAILABLE","message":"RAIT.RISK_SOURCE_UNAVAILABLE","context":{}}: expected 503 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 503
+
+ ❯ tests/e2e/rait-p402-claim.e2e.spec.ts:2336:56
+    2334|       .get(`${PREFIX}/cases/${c.id}/risk`)
+    2335|       .set(fixture.riskHeaders());
+    2336|     expect(result.status, JSON.stringify(result.body)).toBe(200);
+       |                                                        ^
+    2337|     expect(fixture.policyRequests.length).toBeGreaterThan(0);
+    2338|     for (const policy of fixture.policyRequests) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 105 skipped (106)
+   Start at  21:40:24
+   Duration  27.80s (transform 16.77s, setup 0ms, import 23.02s, tests 4.55s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-review-f1-red.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/rait-p402-claim.e2e.spec.ts -t ADR0057 independently admitted C policy --reporter=default --reporter=json --outputFile=/tmp/detran-s2-review-f1-red.json
