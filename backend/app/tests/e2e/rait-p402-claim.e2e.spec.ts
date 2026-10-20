@@ -50,6 +50,14 @@ beforeAll(async () => {
     // Missing interface remains an explicit prerequisite failure; no snapshot/auth/claim substitute.
     if (typeof port === 'symbol')
       builder.overrideProvider(port).useValue({
+        get qualifyPolicy() {
+          return fixture?.policyPortAbsent
+            ? undefined
+            : (
+                tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
+                req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
+              ) => fixture.qualifyPolicy(tx, req);
+        },
         qualify: (
           tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
           req: Parameters<RaitP402ClaimFixture['qualify']>[1],
@@ -532,7 +540,15 @@ describe('S2 actual SQL factory with independently admitted synthetic provenance
         );
       // Re-admit actual adjusted rows independently: failure must be date qualification, not stale digest.
       const rebound = new Map<string, string>();
-      for (const receipt of [...fixture.receipts]) {
+      const decisionIds = new Set(
+        fixture.receipts.flatMap((r) =>
+          r.core.policySources.map((p) => p.decisionRef),
+        ),
+      );
+      for (const receipt of [...fixture.receipts].filter(
+        (r) =>
+          !r.core.policySources.length && !decisionIds.has(r.core.receiptId),
+      )) {
         fixture.revokedReceipts.add(receipt.digest);
         const fresh = await fixture.admitReceipt(
           receipt.core.kind,
@@ -1821,8 +1837,16 @@ async function readQualifiedRisk(caseId: string) {
 }
 async function rebindActualReceipts() {
   const replacements = new Map<string, string>();
+  const decisionIds = new Set(
+    fixture.receipts.flatMap((r) =>
+      r.core.policySources.map((p) => p.decisionRef),
+    ),
+  );
   for (const receipt of [...fixture.receipts].filter(
-    (r) => !fixture.revokedReceipts.has(r.digest),
+    (r) =>
+      !fixture.revokedReceipts.has(r.digest) &&
+      !r.core.policySources.length &&
+      !decisionIds.has(r.core.receiptId),
   )) {
     fixture.revokedReceipts.add(receipt.digest);
     const fresh = await fixture.admitReceipt(
@@ -2143,3 +2167,236 @@ describe('S2 risk read preserves complete S1 role-purpose authorization', () => 
     expect(await fixture.effects()).toEqual(before);
   });
 });
+
+describe('ADR0057 actual S1 preauthorization before global source contention', () => {
+  it('a genuinely unassigned analyst risk denial finishes before a conflicting administrative source writer releases', async () => {
+    const c = await fixture.admitted(app);
+    await fixture.executableParameters();
+    const selected = fixture.parameters.get('A')!;
+    const merit = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}`)
+      .set(fixture.riskHeaders());
+    expect(merit.status, JSON.stringify(merit.body)).toBe(200);
+    expect(merit.body.id).toBe(c.id);
+    const denied = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}/risk`)
+      .set(fixture.headers());
+    expect(denied.status, JSON.stringify(denied.body)).toBe(404);
+    expect(denied.body).not.toHaveProperty('data');
+    const authorizedMissingSource = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}/risk`)
+      .set(fixture.riskHeaders());
+    expect(
+      authorizedMissingSource.status,
+      JSON.stringify(authorizedMissingSource.body),
+    ).toBe(503);
+    expect(authorizedMissingSource.body.code).toBe(
+      'RAIT.RISK_SOURCE_UNAVAILABLE',
+    );
+    const writer = new Client({
+      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+    });
+    await writer.connect();
+    await writer.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
+    const writerPid = (
+      await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+    ).rows[0]!.pid;
+    let pending: Promise<request.Response> | undefined,
+      settled: request.Response | undefined;
+    let waiting: { pid: number; usename: string } | undefined;
+    const before = await fixture.effects();
+    try {
+      await writer.query('begin');
+      await writer.query(
+        "update ops.parameter set reason=reason||'; isolated uncommitted F5 contention' where id=$1",
+        [selected.id],
+      );
+      expect(
+        (
+          await fixture.owner.query(
+            "select mode from pg_locks where pid=$1 and relation='ops.parameter'::regclass and mode='RowExclusiveLock' and granted",
+            [writerPid],
+          )
+        ).rows,
+      ).toEqual([{ mode: 'RowExclusiveLock' }]);
+      pending = request(app.getHttpServer())
+        .get(`${PREFIX}/cases/${c.id}/risk`)
+        .set(fixture.headers())
+        .then((r) => {
+          settled = r;
+          return r;
+        });
+      const end = Date.now() + 5000;
+      while (!settled && !waiting && Date.now() < end) {
+        await fixture.owner.query('select pg_stat_clear_snapshot()');
+        waiting = (
+          await fixture.owner.query<{ pid: number; usename: string }>(
+            "select pid,usename from pg_stat_activity where datname=current_database() and wait_event_type='Lock' and $1::int=any(pg_blocking_pids(pid)) and query ilike '%ops.parameter%'",
+            [writerPid],
+          )
+        ).rows[0];
+        if (!settled && !waiting)
+          await new Promise((done) => setTimeout(done, 20));
+      }
+      const completedBeforeRelease = settled !== undefined;
+      if (waiting)
+        expect(waiting.usename).toBe(
+          new URL(process.env.STYNX_APP_DATABASE_URL!).username,
+        );
+      await writer.query('rollback');
+      const result = await pending;
+      expect(result.status, JSON.stringify(result.body)).toBe(404);
+      expect(result.body.context ?? {}).toEqual({});
+      expect(result.body).not.toHaveProperty('data');
+      expect(await fixture.effects()).toEqual(before);
+      expect(
+        waiting,
+        'denied request must not wait for a table-global source lock',
+      ).toBeUndefined();
+      expect(
+        completedBeforeRelease,
+        'actual S1 denial must finish while the conflicting writer still holds its real relation lock',
+      ).toBe(true);
+    } finally {
+      await writer.query('rollback');
+      if (pending) await Promise.allSettled([pending]);
+      await writer.end();
+    }
+  });
+
+  it('authorized risk read rechecks its actual oversight binding after a source-lock wait', async () => {
+    const c = await fixture.admitted(app);
+    await fixture.executableParameters();
+    const writer = new Client({
+      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+    });
+    await writer.connect();
+    await writer.query("select set_config('app.tenant_id',$1,false)", [
+      RAIT_TENANT,
+    ]);
+    const writerPid = (
+      await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+    ).rows[0]!.pid;
+    let pending: Promise<request.Response> | undefined;
+    try {
+      await writer.query('begin');
+      await writer.query('update ops.parameter set reason=reason where id=$1', [
+        fixture.parameters.get('A')!.id,
+      ]);
+      pending = request(app.getHttpServer())
+        .get(`${PREFIX}/cases/${c.id}/risk`)
+        .set(fixture.riskHeaders())
+        .then((r) => r);
+      let waiting = false;
+      const end = Date.now() + 5000;
+      while (!waiting && Date.now() < end) {
+        await fixture.owner.query('select pg_stat_clear_snapshot()');
+        waiting =
+          (
+            await fixture.owner.query<{ n: number }>(
+              "select count(*)::int n from pg_stat_activity where datname=current_database() and wait_event_type='Lock' and $1::int=any(pg_blocking_pids(pid)) and query ilike '%ops.parameter%'",
+              [writerPid],
+            )
+          ).rows[0]!.n > 0;
+        if (!waiting) await new Promise((done) => setTimeout(done, 20));
+      }
+      expect(
+        waiting,
+        'actual authorized request must encounter the real source relation wait',
+      ).toBe(true);
+      await writer.query(
+        "update inf.rait_case_read_scope set active=false where tenant_id=$1 and actor_id=$2 and role='rait-coordinator' and unit_id=$3",
+        [RAIT_TENANT, fixture.reader, fixture.unit],
+      );
+      await writer.query('commit');
+      const before = await fixture.effects();
+      const result = await pending;
+      expect(result.status, JSON.stringify(result.body)).toBe(404);
+      expect(result.body).not.toHaveProperty('data');
+      expect(result.body.context ?? {}).toEqual({});
+      expect(await fixture.effects()).toEqual(before);
+    } finally {
+      await writer.query('rollback');
+      if (pending) await Promise.allSettled([pending]);
+      await writer.end();
+    }
+  });
+});
+
+describe('ADR0057 independently admitted C policy receipt', () => {
+  it('qualifies actual current C sources through policy source pairs and a separate receipt digest instead of decoding opaque versions', async () => {
+    const c = await fixture.admitted(app);
+    await fixture.prepareRisk(c.id);
+    const before = await fixture.effects();
+    const result = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}/risk`)
+      .set(fixture.riskHeaders());
+    expect(result.status, JSON.stringify(result.body)).toBe(200);
+    expect(fixture.policyRequests.length).toBeGreaterThan(0);
+    for (const policy of fixture.policyRequests) {
+      expect(Object.keys(policy).sort()).toEqual([
+        'caseId',
+        'contentRevision',
+        'policySources',
+        'purpose',
+        'sourceRefs',
+        'tenantId',
+      ]);
+      expect(policy.purpose).toBe('C_USEFUL_MOVEMENT_POLICY');
+      expect(policy.caseId).toBe(c.id);
+      expect(policy.tenantId).toBe(RAIT_TENANT);
+      expect(policy.sourceRefs).toEqual([...new Set(policy.sourceRefs)].sort());
+      expect(policy.sourceRefs.length).toBeGreaterThan(0);
+      for (const source of policy.policySources)
+        expect(Object.keys(source).sort()).toEqual([
+          'sourceRef',
+          'sourceRevision',
+        ]);
+    }
+    expect(fixture.policyDependencyDigests.size).toBe(1);
+    for (const digest of fixture.policyDependencyDigests) {
+      expect(digest).toMatch(/^sha256:[a-f0-9]{64}$/);
+      expect(fixture.qualifiedVersions.has('rrv1:' + digest.slice(7))).toBe(
+        false,
+      );
+    }
+    expect(await fixture.effects()).toEqual(before);
+  });
+});
+
+for (const mode of [
+  'absent',
+  'missing',
+  'ambiguous',
+  'malformed',
+  'badDigest',
+  'revokedDecision',
+] as const)
+  it(`ADR0057 C policy ${mode} is fail-closed after an actual qualified positive control`, async () => {
+    const c = await fixture.admitted(app);
+    await fixture.prepareRisk(c.id);
+    const positive = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}/risk`)
+      .set(fixture.riskHeaders());
+    expect(
+      positive.status,
+      'positive prerequisite: ' + JSON.stringify(positive.body),
+    ).toBe(200);
+    if (mode === 'absent') fixture.policyPortAbsent = true;
+    else if (mode === 'revokedDecision') {
+      const policy = fixture.receipts.find(
+        (r) => r.core.caseId === c.id && r.core.policySources.length > 0,
+      )!;
+      fixture.revokedReceipts.add(policy.core.policySources[0]!.decisionRef);
+    } else fixture.policyResultMode = mode;
+    const before = await fixture.effects();
+    const denied = await request(app.getHttpServer())
+      .get(`${PREFIX}/cases/${c.id}/risk`)
+      .set(fixture.riskHeaders());
+    expect(denied.status, JSON.stringify(denied.body)).toBe(503);
+    expect(denied.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
+    expect(denied.body).not.toHaveProperty('data');
+    expect(await fixture.effects()).toEqual(before);
+  });
