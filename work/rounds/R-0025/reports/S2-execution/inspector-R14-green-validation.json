@@ -1,0 +1,44 @@
+{
+  "task": "TASK-0044 R14 validation",
+  "runtime": "991c5fc2",
+  "state": "R14 proofGREEN; single risk setup blocked; stopped before cascade",
+  "proof": {
+    "passed": 1,
+    "filtered": 114,
+    "durationSeconds": 27.79,
+    "assertions": 45,
+    "refs": 38,
+    "tables": 10,
+    "fixtureQueries": 10,
+    "runtimeQueries": 10
+  },
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-green.log": "f41cbd5d801623f31d10030e5c0aa79b5a40d6a3db7723baa7fb446a1851c22c",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-green.json": "29093190d5d0bc5dbea75e3507e24eed67fc0cb9e70abee704ef28f0f46fc5e6",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-green-hashes.json": "0abf609fd501302673e4acf34821fcab7e3e62ab98ce59c6ad626a38ef0d46ac",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-green-risk.log": "d4a18f7c411675cedf9c5f3f662900abdf92cf32476eaaca9718bf9e9ee37ce7",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-green-risk.json": "7e172622024b1d023636b172aadbf58ae49485e62a0ee6c34488a9fa5e0f1f37"
+  },
+  "hashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "619cea75d03ec7969a49e8ef83192b714d09d66fe1d2a55acc286dc2ba5fdd27",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "0a928dfcfbb629b265b683bfa9d08bee84b4c192757cffecd085bc31e7695c01",
+    "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "aea7f1128f41be7aed44f16f8b5c0e56f97d58a17dc438bf6a9f34014c206eea",
+    "backend/app/src/rait-risk.providers.ts": "06567fa743a23322c4c03666cc896f1c9bd3924d664ad5d927e9b1e5c24ea3c7",
+    "pnpm-lock.yaml": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb"
+  },
+  "full115": "PENDING",
+  "offpageRemaining3": "PENDING",
+  "F3": "OPEN",
+  "productionPolicy": "OPEN",
+  "DRESET": "OPEN",
+  "riskGate": {
+    "failed": 1,
+    "filtered": 114,
+    "durationSeconds": 46.94,
+    "executedAssertions": 15,
+    "classification": "setup prerequisite: protocolBatch17 hook10s; real POST9.4\u20139.8s; no riskGET reached",
+    "notBehaviorRED": true
+  },
+  "hashesUnchangedAfter": true,
+  "lease": "Released after runner exit, awaiting parent retry disposition"
+}

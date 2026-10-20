@@ -1,0 +1,66 @@
+{
+  "task": "TASK-0044 R14 resource diagnosis",
+  "recordedAt": "2026-10-20T01:05:06.875778+00:00",
+  "observedLocalTime": "2026-10-19 22:03 America/Sao_Paulo",
+  "mode": "read-only; no retry/reset/kill/config/schema/runtime changes",
+  "ownedDatabase": {
+    "host": "127.0.0.1",
+    "port": 53343,
+    "sessions": [
+      {
+        "pid": 1749,
+        "role": "postgres",
+        "state": "active",
+        "waitEventType": null,
+        "waitEvent": null,
+        "blockingPids": [],
+        "transactionAgeSeconds": 0,
+        "commandAgeSeconds": 0,
+        "commandKind": "this read-only activity probe"
+      }
+    ],
+    "afterProbe": "probe client closed normally",
+    "otherSessions": 0,
+    "leftoverOpenTransactions": 0,
+    "blockers": 0
+  },
+  "ownedRunnerPidsAbsent": [
+    11502,
+    37237,
+    95746,
+    6553
+  ],
+  "ownedContainer": {
+    "name": "detran-p402-s2-integration-20261019",
+    "cpuPercent": 0.05,
+    "memoryUsage": "134.9MiB / 7.748GiB",
+    "pids": 6
+  },
+  "host": {
+    "logicalCpus": 8,
+    "loadAverages": [
+      244.34,
+      168.35,
+      200.87
+    ],
+    "physicalMemoryBytes": 17179869184,
+    "memoryPressureReportedFreePercent": 67,
+    "cumulativeSwapins": 17572312,
+    "cumulativeSwapouts": 20721403,
+    "note": "Cumulative swap/page counters do not establish instantaneous pressure; no unrelated process inventory inspected."
+  },
+  "interpretation": "Severe host scheduling contention is consistent with protocolPOST setup delay; no observed ownedDB lock/pool/session cause. No selector inference from blocked setup.",
+  "disposition": "No blind retry. Consider ONE unchanged complete51 risk-only retry only after host load falls substantially and ownedPG remains quiescent. No process killing or timeout/population reduction.",
+  "validationBoundaries": {
+    "R14EquivalenceProof": "GREEN preserved",
+    "singleRiskEpoch": "setup prerequisite blocked; no riskGET reached",
+    "remaining3Offpage": "NOT EXECUTED/resource blocked",
+    "full115": "NOT EXECUTED/resource blocked",
+    "localKernel": "NOT EXECUTED/resource blocked",
+    "priorComplete51BodyPerformance": "Still unverified after batching",
+    "F3": "OPEN",
+    "productionPolicy": "OPEN",
+    "DRESET": "OPEN"
+  },
+  "sanitization": "Only PID/state/wait/blockers/duration/command-kind and summary metrics retained; no full queries, DSNs or credentials."
+}
