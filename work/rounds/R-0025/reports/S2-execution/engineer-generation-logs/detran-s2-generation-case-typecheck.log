@@ -1,0 +1,20 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/inf-rait-case@0.0.1 typecheck /Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/rait-case
+> tsc --noEmit
+
+src/index.ts(115,15): error TS2307: Cannot find module './handwritten/rait-claim-context.controller.js' or its corresponding type declarations.
+src/index.ts(116,15): error TS2307: Cannot find module './handwritten/rait-case-risk.controller.js' or its corresponding type declarations.
+src/index.ts(117,15): error TS2307: Cannot find module './handwritten/rait-claim-context.service.js' or its corresponding type declarations.
+src/index.ts(118,15): error TS2307: Cannot find module './handwritten/rait-case-risk.service.js' or its corresponding type declarations.
+src/index.ts(119,15): error TS2307: Cannot find module './handwritten/rait-risk.port.js' or its corresponding type declarations.
+src/index.ts(120,15): error TS2307: Cannot find module './handwritten/rait-legacy-qualification.service.js' or its corresponding type declarations.
+src/rait-case.module.ts(67,44): error TS2307: Cannot find module './handwritten/rait-claim-context.controller.js' or its corresponding type declarations.
+src/rait-case.module.ts(68,40): error TS2307: Cannot find module './handwritten/rait-case-risk.controller.js' or its corresponding type declarations.
+src/rait-case.module.ts(78,41): error TS2307: Cannot find module './handwritten/rait-claim-context.service.js' or its corresponding type declarations.
+src/rait-case.module.ts(79,37): error TS2307: Cannot find module './handwritten/rait-case-risk.service.js' or its corresponding type declarations.
+src/rait-case.module.ts(80,48): error TS2307: Cannot find module './handwritten/rait-legacy-qualification.service.js' or its corresponding type declarations.
+/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/rait-case:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/inf-rait-case@0.0.1 typecheck: `tsc --noEmit`
+Exit status 2
