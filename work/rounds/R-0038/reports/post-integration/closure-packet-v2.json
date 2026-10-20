@@ -1,0 +1,478 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "PROPOSED_FOR_REVIEW_NOT_EXECUTED",
+  "scope": "C2 exact merge11eea2d7 and R0038/BL0013 only",
+  "evidence_root": "work/rounds/R-0038/reports/post-integration",
+  "verified_facts": {
+    "merge": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+    "candidate": "9e6e5cca395f8dd90e3cfd190e61e4c3a486afdb",
+    "tree": "8d8a37f6fd1cb95de2581b6f3bfb214bcc674556",
+    "ci": {
+      "id": 39339090324,
+      "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+      "checks": [
+        {
+          "id": 118361908825,
+          "name": "verified-local-rc",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/runs/118361908825"
+        },
+        {
+          "id": 118356070211,
+          "name": "foundation",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118356070211"
+        },
+        {
+          "id": 118356070034,
+          "name": "backend-kernel",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118356070034"
+        },
+        {
+          "id": 118355877962,
+          "name": "stack-smoke",
+          "status": "completed",
+          "conclusion": "skipped",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118355877962"
+        },
+        {
+          "id": 118355876194,
+          "name": "senatran-mock",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118355876194"
+        },
+        {
+          "id": 118355876074,
+          "name": "senatran-mock-tests",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118355876074"
+        },
+        {
+          "id": 118355876072,
+          "name": "boat-documents-real",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118355876072"
+        },
+        {
+          "id": 118355875826,
+          "name": "Verify trusted local RC evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090399/job/118355875826"
+        },
+        {
+          "id": 118355875713,
+          "name": "evidence-gate",
+          "status": "completed",
+          "conclusion": "success",
+          "sha": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+          "url": "https://github.com/aarusso-nyx/detran/actions/runs/39339090324/job/118355875713"
+        }
+      ]
+    },
+    "main_observed_later": "f3dfc6ee47a94249631bf14e3242aeb309e36001",
+    "later_main_dependency_continuity": {
+      "head": "f3dfc6ee47a94249631bf14e3242aeb309e36001",
+      "root_fields_equal": {
+        "dependencies": true,
+        "devDependencies": true,
+        "optionalDependencies": true,
+        "peerDependencies": true,
+        "pnpm": true,
+        "engines": true,
+        "packageManager": true
+      },
+      "lock_git_blob": "b7f4508add8bb1fabb19a479fcfb2a23540d67fe",
+      "c2_lock_git_blob": "b7f4508add8bb1fabb19a479fcfb2a23540d67fe",
+      "lock_equal": true,
+      "qualification": "Later-head dependency continuity observed only, not inherited whole-main readiness or a fresh audit."
+    },
+    "native_audit_reading": {
+      "schemaVersion": "1.0.0",
+      "sensor": {
+        "name": "security-scan",
+        "kind": "security_scan"
+      },
+      "timestamp": "2026-10-19T22:36:06.885Z",
+      "status": "pass",
+      "deterministic": false,
+      "command": "pnpm audit --json",
+      "command_hash": "f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247",
+      "tier": "L0",
+      "exit_code": 0,
+      "findings": [],
+      "metrics": {
+        "tool": "pnpm",
+        "total_vulnerabilities": 0,
+        "critical": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "info": 0,
+        "pass_max_high": 0,
+        "review_max_high": 5
+      },
+      "id": "SR-bbe1e9585f6b0bda"
+    },
+    "chain_records": 155,
+    "chain_base_prefix": 153,
+    "preserved_files": 1069,
+    "r0038": "active",
+    "BL0013": "open",
+    "R0036": "closed PC0022 unchanged",
+    "R0037": "closed PC0023 unchanged",
+    "historical_C2_chain_records": 155,
+    "closure_base_chain_records": 163,
+    "closure_base": "f3dfc6ee47a94249631bf14e3242aeb309e36001",
+    "byte_exact_reading_sha256": "751b58224825ab7fa0c3d300142e23ca2bc93ecf9b76b4d49122f753bd1ad671"
+  },
+  "closure_draft_before_runtime_evidence_binding": {
+    "round_id": "R-0038",
+    "title": "C2 dependency tooling and Angular security remediation integrated",
+    "declaring_decision": "D-1",
+    "closing_decision": "D-2",
+    "merged_as": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+    "release_disposition": "none-needed",
+    "batches": [
+      {
+        "id": "C2",
+        "roles": [
+          "Engineer",
+          "Inspector",
+          "Architect"
+        ],
+        "commit": "11eea2d7309a958d14d536ea7ced46124dfeed2e",
+        "headline": "C2 integrated by PR208;27→0 reported occurrences and26→0 advisory entries; bounded dependency-only remediation."
+      }
+    ],
+    "gates": {
+      "dependency-scope": {
+        "status": "pass",
+        "detail": "Only nine dependency manifests/lock inputs; candidate9e6e5cca and merge11eea2d7 trees byte-identical. Preserve C1/STYNX1.5.3/Node24; no product fixes."
+      },
+      "backend-tests": {
+        "status": "pass",
+        "detail": "Main CI39339090324 complete remote backend-kernel fallback succeeded and published verified-local-rc for exact11eea2d7."
+      },
+      "security-scan": {
+        "status": "pass",
+        "detail": "Retained full audit0 and native security_scan reading SR-bbe1e9585f6b0bda PASS, with official sense.record receipt; this is C2 observation, not a fresh later-main scorecard."
+      },
+      "preservation": {
+        "status": "pass",
+        "detail": "1069 immutable R0036/R0037/proof/legacy/policy files match d7 bytes; both original chains captured and hashed; thresholds unchanged."
+      },
+      "evidence-chain": {
+        "status": "pass",
+        "detail": "Exact-tree main CI evidence-gate passed;155 committed records retain all153 d7 prefix records. Re-run native chain verify after new closure evidence appends."
+      },
+      "stynx-pin": {
+        "status": "pass",
+        "detail": "STYNX1.5.3 preserved and foundation canonical checks passed."
+      },
+      "frozen-install": {
+        "status": "pass",
+        "detail": "Local frozen installs retained; remote exact-tree dependency installs succeeded in foundation/backend jobs."
+      },
+      "integration-ci": {
+        "status": "pass",
+        "detail": "39339090324 completedSUCCESS at11eea2d7309a958d14d536ea7ced46124dfeed2e; no new local attestation or registry release claimed. The non-required Verify trusted local RC evidence check failed because no local attestation exists. The required verified-local-rc succeeded through the official complete remote backend fallback. No local signature is claimed."
+      }
+    },
+    "source_repo_deleted": false,
+    "validation_criteria": [
+      {
+        "criterion": "C2 dependency remediation accepted and integrated",
+        "verdict": "pass",
+        "evidence": "PR208 candidate tree equals exact merge; native security_scan PASS and complete audit0; main CI39339090324 success."
+      },
+      {
+        "criterion": "C1 and C2 resolve the observed BL-0013 vulnerability population",
+        "verdict": "pass",
+        "evidence": "C1 reduced37→27 occurrences; C2 retained before/after audit has26→0 advisories and27→0 occurrences; all severities0. Thresholds remain pass_max_high0/review_max_high5."
+      },
+      {
+        "criterion": "Historical integrity and bounded scope",
+        "verdict": "pass",
+        "evidence": "153-record d7 prefix preserved inside155-record C2 chain; both original reconciliation snapshots match custody hashes; R0036/R0037 closures/legacy/threshold bytes preserved."
+      }
+    ],
+    "notes": "Historical exact C2 integration only. R0036 and R0037 remain closed; no historical verdict is rewritten. Other C3-C8 scope and product backlog remain separate. The official remote full backend fallback satisfies verified-local-rc; no local signed attestation is asserted. The non-required Verify trusted local RC evidence check failed because no local attestation exists. The required verified-local-rc succeeded through the official complete remote backend fallback. No local signature is claimed."
+  },
+  "evidence_binding_before_close": {
+    "epoch": "record/proofs/work/generic/R-0038.jsonl",
+    "existing_sequence": 1,
+    "existing_line_hash": "a058c219cfec8faa8c59606f3ac576a0cb9bba88b1cae5ea3cddb5a1ce6ee5c9",
+    "deferred": "Append real postintegration evidence, read actual new terminal hash, add evidence to the reviewed closure draft before round close. No fabricated identity."
+  },
+  "authorized_execution_plan_after_review": [
+    {
+      "order": 1,
+      "action": "accept review and record closure judgment",
+      "role": "Architect",
+      "kind": "reviewed authoring, no runtime result claimed",
+      "instruction": "Append an R-0038 annex to law/register/DECISIONS.md recording existing D-1 Owner authorization and D-2 scoped closure judgment; preserve prior round annexes. Archive these exact CI/audit/preservation artifacts under R0038 reports. Add post-integration narrative and update plan notes as historical progression, without rewriting initial authorization."
+    },
+    {
+      "order": 2,
+      "action": "append actual postintegration evidence",
+      "role": "Auditor",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "record",
+        "--kind",
+        "generic",
+        "--round",
+        "R-0038",
+        "--repo-root",
+        ".",
+        "--input",
+        "work/rounds/R-0038/reports/post-integration/evidence-input.json",
+        "--as-role",
+        "auditor",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "guard": "Input lists actual archived artifact hashes including byte-exact SR-bbe1 reading. Preserve existing epoch line and entire current163-record f3df prefix; it contains155 C2 and153 d7 prefixes. Compare after record and after close, new records only after index162."
+    },
+    {
+      "order": 3,
+      "action": "verify recorded chain and bind closure evidence",
+      "role": "Auditor",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "guard": "Read the newly emitted actual epoch terminal line_hash from the runtime receipt/file. Populate closure draft evidence={proof_epoch:record/proofs/work/generic/R-0038.jsonl,terminal_sha256:<actual new terminal>}; do not preassign a new hash or proof identity."
+    },
+    {
+      "order": 4,
+      "action": "create machine phase closure",
+      "role": "Architect",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "round",
+        "close",
+        "--round",
+        "R-0038",
+        "--repo-root",
+        ".",
+        "--input",
+        "work/rounds/R-0038/closure.json",
+        "--as-role",
+        "architect",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "guard": "Use reviewed draft below with actual evidence binding. Do not provide id, schemaVersion or closed_at: closePhase assigns PC identity and clock. Stop if any required gate fails or another closure exists; do not overwrite. Immediately compare current163-record baseline ordered prefix after close."
+    },
+    {
+      "order": 5,
+      "action": "declare canonical closed record",
+      "role": "Architect",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "round",
+        "plan",
+        "--round",
+        "R-0038",
+        "--declare",
+        "scratch/r0038-closed-record.json",
+        "--repo-root",
+        ".",
+        "--as-role",
+        "architect",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "guard": "Copy existing record metadata exactly; set only status=closed, closed_by=D-2, phase_closure=<actual PC from close receipt>, merged_as=11eea2d7309a958d14d536ea7ced46124dfeed2e. Never invent PC or hand-edit the lifecycle state. Also update only R-0038 row in work/rounds/README.md to fechada, [#208](https://github.com/aarusso-nyx/detran/pull/208), and actual PC from receipt; preserve all other rows."
+    },
+    {
+      "order": 6,
+      "action": "regenerate closure-derived index",
+      "role": "Architect",
+      "argv": [
+        "node",
+        "tools/devai/render-rounds-index.mjs",
+        "--repo-root",
+        ".",
+        "--write"
+      ],
+      "guard": "Approved repository regeneration helper emits record/derived/indexes/rounds.md from actual closures; never author index rows manually."
+    },
+    {
+      "order": 7,
+      "action": "seal closed round",
+      "role": "Architect",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "round",
+        "seal",
+        "--round",
+        "R-0038",
+        "--repo-root",
+        ".",
+        "--as-role",
+        "architect",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "guard": "Native seal checks closure/decisions/green gates/index then emits append-only close-state.jsonl. Preserve existing R0036/R0037 records and seals."
+    },
+    {
+      "order": 8,
+      "action": "resolve live vulnerability backlog item",
+      "role": "Architect",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "backlog",
+        "resolve",
+        "BL-0013",
+        "--resolution",
+        "C1 PR206 R-0037/PC-0023; C2 PR208 11eea2d7309a958d14d536ea7ced46124dfeed2e R-0038/<actual PC from close receipt>; work/rounds/R-0038/reports/post-integration/verification.json",
+        "--repo-root",
+        ".",
+        "--as-role",
+        "architect",
+        "--write",
+        "--format",
+        "json"
+      ],
+      "guard": "Replace only PC placeholder from actual receipt. Do this only after independent review accepts complete C1+C2 remediation and closure succeeds. Preserve BL0013 origin/request_id/round_id and original historical snapshots; official resolve changes only mutable live backlog status/resolution. Leave BL0014-BL0023 untouched."
+    }
+  ],
+  "acceptance_commands_after_execution": [
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "round",
+      "status",
+      "--round",
+      "R-0038",
+      "--repo-root",
+      ".",
+      "--format",
+      "json"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "backlog",
+      "show",
+      "BL-0013",
+      "--repo-root",
+      ".",
+      "--format",
+      "json"
+    ],
+    [
+      "pnpm",
+      "verify:rounds-index"
+    ],
+    [
+      "pnpm",
+      "test:rounds-index"
+    ],
+    [
+      "pnpm",
+      "verify:state-index"
+    ],
+    [
+      "pnpm",
+      "verify:round-tasks"
+    ],
+    [
+      "pnpm",
+      "verify:proof-anchors"
+    ],
+    [
+      "pnpm",
+      "devai:test"
+    ],
+    [
+      "pnpm",
+      "devai:doctor"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "evidence",
+      "verify",
+      "--scope",
+      "chain",
+      "--repo-root",
+      ".",
+      "--show-head",
+      "--format",
+      "human"
+    ]
+  ],
+  "acceptance_invariants": [
+    "round status location=closed, phase_closure matches actual closure receipt, merged_as exact11ee target",
+    "native close-state exists and matches canonical closed record",
+    "backlog BL0013 resolved with actual PR/PC/commit reference; origin and R0036 attribution unchanged",
+    "evaluated155 chain records remain exact ordered prefix; earlier153 d7 prefix and legacy unchanged",
+    "old R0036 and R0037 entire round/proof/closure bytes unchanged",
+    "no source application, threshold, provider pin, unrelated packages or other backlog changes",
+    "all affected governance checks pass; preserve all failed attempts and gaps",
+    "use separate closure-only PR and green mandatory checks; do not pushmain",
+    "if current dependency fields or lock differ from observed continuation, remeasure a genuine complete audit before resolving the live security finding; never infer current readiness from11ee CI",
+    "no new local RC duplicate of oldtree needed: exact remote fallback already succeeded; future closure PR/main CI is separately required",
+    "Current163 baseline records unchanged after evidence record and after close; new records only after index162. R0038 work index row names actual PC andPR208."
+  ],
+  "limitations": [
+    "No lifecycle, backlog, source, state or Git mutations performed by this Auditor",
+    "Native zero-audit observation was produced during C2 and retained; not a new measurement on later main",
+    "Currentmain advanced to C3/C4; exact11ee proof does not approve the later entire tree",
+    "No local signed RC, registry publication or total scorecard readiness is asserted",
+    "Postclosure index/state docs may need approved regeneration; stop on new failures rather than weakening controls"
+  ],
+  "revision": 2,
+  "authority_boundary": "Existing direct Owner authorization covers necessary C2-C8 actions; only NEW recommended Owner decisions are bounded by return/2026-10-20T02:30Z. D2 recorded2026-10-19T23:55Z; no fresh human reply fabricated. Ordinary already-authorized conditional effects remain gated after window; no new Owner choice assumed then."
+}
