@@ -556,7 +556,15 @@ function packageFiles(bp, sha, module, entities) {
   );
   write(
     `${base}/vitest.config.ts`,
-    `import { fileURLToPath } from 'node:url';\nimport { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
+    bp.id === 'BP-PORTAL-REQUESTS-001'
+      ? fs.readFileSync(
+          path.join(
+            root,
+            'tools/blueprints/templates/portal-requests.vitest.ts',
+          ),
+          'utf8',
+        )
+      : `import { fileURLToPath } from 'node:url';\nimport { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
   );
   for (const item of entities) {
     const k = kebab(item.name);
