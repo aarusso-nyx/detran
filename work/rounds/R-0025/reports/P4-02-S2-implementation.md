@@ -130,7 +130,7 @@ Unchanged independent unit GREEN is3/3; no independent delivery re-review is cla
 retain REVIEW and blocked independent re-review even after any local correction.
 
 Full pnpm check at older frozen ca83 stopped at the parameter catalogue; its
-correction passed and the serial remainder is running at b2797801.
+correction passed and the complete serial remainder passed at b2797801.
 Host load approximately227 still blocks full HTTP/kernel acceptance. The nine
 supplemental HTTP controls have not executed; app typecheck PASS is structural
 only. Parent will append exact final outcomes and hashes; no final-head PASS is
@@ -148,3 +148,21 @@ rait-risk.providers.ts:218; preceding stages through contracts:test PASS.
 Explicit A–D canonical key map da74683c passed parameter catalogue and app
 typecheck without verifier changes.
 Current snapshot export consistency PASS; native REVIEW is unchanged.
+
+### Published draft and completed local continuation
+
+PR #211: https://github.com/aarusso-nyx/detran/pull/211 (DRAFT).
+The unchanged root check remainder from parameter catalogue through final RAIT
+build passed (exit0) at b2797801. This is split-checkpoint evidence, not a single
+uninterrupted final-head full check. Full workspace typecheck, remaining guards,
+lints and builds passed. Application tests: UI2; Portal1551 (14TODO);
+Dashboard2042; TEATmobile1172; TEATweb611; BOAT15; RAIT5115 (133TODO,
+one pre-existing skipped file). Raw results/census are retained in
+S2-execution/root-check-remainder-b279.{json,log}. No skip/TODO was added by S2.
+Final changed-tracked-file format and snapshot source consistency passed.
+CI at c886767d is running: evidence, BOAT and both SENATRAN jobs passed;
+foundation/backend-kernel remain pending. Earlier d550 CI was cancelled by the
+update; its fallback verified-local-rc failure on cancellation is not final-head
+acceptance. No trusted local RC receipt or full HTTP/kernel GREEN is claimed.
+Primary local work, machine configuration, protected worktrees and scorecard
+work remain untouched; only isolated S2 branches were committed/pushed.
