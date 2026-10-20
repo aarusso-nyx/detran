@@ -10,6 +10,7 @@ import {
   RAIT_RISK_PROVENANCE_READER,
   RAIT_RISK_SNAPSHOT_FACTORY,
   raitQualify,
+  raitQualifyPolicy,
   raitSourceRows,
   raitCanonical,
   type RaitRiskProvenanceReader,
@@ -398,7 +399,22 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
             )
           )[0]!.local_day;
           if (timer.started_on !== local) return unavailable();
-          const policy = await qualify('movement', []);
+          const policyRefs = [
+            ...base,
+            clockRef,
+            timerRef,
+            movement.sourceRef,
+            ...auditRefs,
+          ];
+          const policy = await raitQualifyPolicy(
+            tx,
+            this.provenance,
+            tenantId,
+            caseId,
+            [...new Set(policyRefs)],
+          );
+          policyRefs.forEach((sourceRef) => allRefs.add(sourceRef));
+          policy.sourceVersions.forEach((version) => versions.add(version));
           await qualify(
             'movement',
             [
@@ -409,7 +425,7 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
               movement.sourceRef,
               ...auditRefs,
             ],
-            policy.map((v) => 'sha256:' + v.slice(5)),
+            [policy.receiptDigest],
           );
         }
         if (code === 'D') {

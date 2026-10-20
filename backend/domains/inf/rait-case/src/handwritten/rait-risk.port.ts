@@ -27,7 +27,26 @@ export interface RaitRiskProvenanceRequest {
   sourceRefs: readonly string[];
   contentRevision: string;
 }
+export interface RaitRiskPolicyRequest {
+  purpose: 'C_USEFUL_MOVEMENT_POLICY';
+  tenantId: string;
+  caseId: string;
+  sourceRefs: readonly string[];
+  contentRevision: string;
+  policySources: readonly { sourceRef: string; sourceRevision: string }[];
+}
+export type RaitRiskPolicyResult =
+  | {
+      status: 'qualified';
+      receiptDigest: string;
+      sourceVersions: readonly string[];
+    }
+  | { status: 'missing' | 'ambiguous'; sourceVersions: readonly string[] };
 export interface RaitRiskProvenanceReader {
+  qualifyPolicy?(
+    tx: RaitRiskTx,
+    request: RaitRiskPolicyRequest,
+  ): Promise<RaitRiskPolicyResult>;
   qualify(
     tx: RaitRiskTx,
     request: RaitRiskProvenanceRequest,
@@ -430,6 +449,71 @@ export async function raitSourceRows(
     rows.push({ sourceRef, table, fields: row });
   }
   return rows;
+}
+// Additive policy-request-v1 encoding, S2-R13 v2: source pairs identify bytes;
+// the trusted reader independently retrieves receipt decisions and authority.
+export async function raitQualifyPolicy(
+  tx: RaitRiskTx,
+  reader: RaitRiskProvenanceReader,
+  tenantId: string,
+  caseId: string,
+  refs: readonly string[],
+): Promise<{ receiptDigest: string; sourceVersions: readonly string[] }> {
+  if (!reader.qualifyPolicy || !refs.length)
+    throw Error('Missing qualified C policy');
+  const rows = await raitSourceRows(tx, tenantId, refs);
+  const purpose = 'C_USEFUL_MOVEMENT_POLICY' as const;
+  const policySources = [
+    {
+      sourceRef:
+        'docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2',
+      sourceRevision:
+        'sha256:1f0020512955efae8710e6d5195f0457f10a59ce0c385c28809b7f6a1f2930b5',
+    },
+  ];
+  const result = await reader.qualifyPolicy(tx, {
+    purpose,
+    tenantId,
+    caseId,
+    sourceRefs: [...refs].sort(),
+    policySources,
+    contentRevision: raitRevision({
+      schemaVersion: 1,
+      namespace: 'rait-risk-policy-request-v1',
+      purpose,
+      tenantId,
+      caseId,
+      rows,
+      dependencies: [],
+      policySources,
+    }),
+  });
+  if (
+    !result ||
+    typeof result !== 'object' ||
+    Array.isArray(result) ||
+    Object.keys(result).sort().join(',') !==
+      'receiptDigest,sourceVersions,status' ||
+    result.status !== 'qualified' ||
+    typeof result.receiptDigest !== 'string' ||
+    !/^sha256:[a-f0-9]{64}$/.test(result.receiptDigest) ||
+    !Array.isArray(result.sourceVersions) ||
+    !result.sourceVersions.length
+  )
+    throw Error('Unqualified C policy');
+  for (const version of result.sourceVersions) {
+    if (typeof version !== 'string' || !/^rrv1:[a-f0-9]{64}$/.test(version))
+      throw Error('Invalid policy version');
+  }
+  if (
+    raitCanonical(result.sourceVersions) !==
+    raitCanonical([...new Set(result.sourceVersions)].sort())
+  )
+    throw Error('Noncanonical policy versions');
+  return {
+    receiptDigest: result.receiptDigest,
+    sourceVersions: result.sourceVersions,
+  };
 }
 export async function raitQualify(
   tx: RaitRiskTx,

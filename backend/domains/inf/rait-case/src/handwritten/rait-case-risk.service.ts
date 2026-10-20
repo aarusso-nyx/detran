@@ -79,7 +79,16 @@ export class RaitCaseRiskService {
     try {
       return await this.scope.transaction(async (tx) => {
         const who = await this.scope.authenticate(tx, principal);
+        await this.scope.assertCase(
+          tx,
+          id,
+          principal,
+          'read',
+          'rait-case',
+          false,
+        );
         await raitLockRiskRelations(tx);
+        await raitLockRiskParents(tx, who.tenantId, [id]);
         await this.scope.assertCase(
           tx,
           id,
@@ -88,7 +97,6 @@ export class RaitCaseRiskService {
           'rait-case',
           true,
         );
-        await raitLockRiskParents(tx, who.tenantId, [id]);
         return {
           data: await this.snapshot(
             tx,
