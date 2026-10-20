@@ -18,6 +18,9 @@ import {
 import {
   RaitP402ClaimFixture,
   canonicalBytes,
+  canonicalRevision,
+  readSourceRows,
+  readSourceRowsScalar,
   PREFIX,
   RAIT_TENANT,
 } from '../shared/rait-p402-claim.fixture.js';
@@ -2498,3 +2501,139 @@ for (const boundary of ['weekend', 'holiday'] as const)
         ]);
     }
   });
+
+it('R14 independent actual SQL scalar equivalence preserves identities and freshness while reducing fixed-table source queries', async () => {
+  const a = await fixture.admitted(app),
+    b = await fixture.admitted(app);
+  await fixture.prepareRisk(a.id);
+  await fixture.prepareRisk(b.id);
+  const refs = [
+    ...new Set(
+      fixture.receipts.flatMap((r) => r.core.bindings.map((v) => v.sourceRef)),
+    ),
+  ].reverse();
+  const client = new Client({
+    connectionString: process.env.STYNX_APP_DATABASE_URL,
+  });
+  await client.connect();
+  let fixtureQueries = 0,
+    runtimeQueries = 0;
+  const counted = (which: 'fixture' | 'runtime') =>
+    ({
+      query: async (sql: string, args?: unknown[]) => {
+        if (!sql.includes('information_schema.columns')) {
+          if (which === 'fixture') fixtureQueries++;
+          else runtimeQueries++;
+        }
+        return client.query(sql, args);
+      },
+    }) as unknown as CasePublic.RaitRiskTx;
+  try {
+    await client.query('begin');
+    await client.query('set local role role_app_backend');
+    await client.query("select set_config('app.tenant_id',$1,true)", [
+      RAIT_TENANT,
+    ]);
+    expect(
+      (
+        await client.query(
+          "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+        )
+      ).rows,
+    ).toEqual([{ role: 'role_app_backend', tenant: RAIT_TENANT }]);
+    const tx = client as unknown as CasePublic.RaitRiskTx;
+    const scalar = await readSourceRowsScalar(tx, refs);
+    const batched = await readSourceRows(counted('fixture'), refs);
+    expect(canonicalBytes(batched)).toBe(canonicalBytes(scalar));
+    expect(canonicalRevision(batched)).toBe(canonicalRevision(scalar));
+    const audits = scalar.filter((r) => r.table === 'audit.events');
+    expect(audits.length).toBeGreaterThan(0);
+    for (const row of audits) {
+      expect(row.fields.event_id).toMatch(/^[1-9][0-9]*$/);
+      expect(row.fields.occurred_at).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/,
+      );
+      expect(row.fields.self_hash).toMatch(/^[a-f0-9]+$/);
+      expect(row.sourceRef).toBe(
+        `sql:audit.events:${row.fields.event_id}@${row.fields.occurred_at}`,
+      );
+    }
+    expect(scalar.some((r) => Object.values(r.fields).includes(null))).toBe(
+      true,
+    );
+    expect(
+      scalar.find((r) => r.table === 'ops.parameter')!.fields.value_json,
+    ).toEqual(expect.any(Object));
+    expect(
+      scalar.find((r) => r.table === 'inf.infraction')!.fields.committed_on,
+    ).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const tables = new Set(scalar.map((r) => r.table)).size;
+    expect(fixtureQueries).toBe(tables);
+    expect(refs.length).toBeGreaterThan(tables);
+    const alias = `sql:inf.rait_case:${a.id.toUpperCase()}`;
+    expect(
+      canonicalBytes(
+        await readSourceRows(tx, [`sql:inf.rait_case:${a.id}`, alias]),
+      ),
+    ).toBe(
+      canonicalBytes(
+        await readSourceRowsScalar(tx, [`sql:inf.rait_case:${a.id}`, alias]),
+      ),
+    );
+    for (const invalid of [
+      [refs[0]!, refs[0]!],
+      ['sql:unowned.source:' + randomUUID()],
+      ['sql:inf.rait_case:' + randomUUID()],
+    ]) {
+      await expect(readSourceRows(tx, invalid)).rejects.toThrow();
+      await expect(readSourceRowsScalar(tx, invalid)).rejects.toThrow();
+    }
+    const parameter = fixture.parameters.get('A')!.id;
+    const parameterRef = ['sql:ops.parameter:' + parameter];
+    const before = await readSourceRows(tx, parameterRef);
+    await fixture.owner.query(
+      "update ops.parameter set reason=reason||'; R14 actual freshness' where id=$1",
+      [parameter],
+    );
+    const fresh = await readSourceRows(tx, parameterRef);
+    expect(canonicalBytes(fresh)).not.toBe(canonicalBytes(before));
+    expect(canonicalBytes(fresh)).toBe(
+      canonicalBytes(await readSourceRowsScalar(tx, parameterRef)),
+    );
+    await client.query("select set_config('app.tenant_id',$1,true)", [
+      randomUUID(),
+    ]);
+    await expect(
+      readSourceRows(tx, ['sql:inf.rait_case:' + a.id]),
+    ).rejects.toThrow();
+    await expect(
+      readSourceRowsScalar(tx, ['sql:inf.rait_case:' + a.id]),
+    ).rejects.toThrow();
+    await client.query("select set_config('app.tenant_id',$1,true)", [
+      RAIT_TENANT,
+    ]);
+    const current = await readSourceRowsScalar(tx, refs);
+    const runtime = await CasePublic.raitSourceRows(
+      counted('runtime'),
+      RAIT_TENANT,
+      refs,
+    );
+    expect(canonicalBytes(runtime)).toBe(canonicalBytes(current));
+    expect(canonicalRevision(runtime)).toBe(canonicalRevision(current));
+    process.stdout.write(
+      'R14_SQL_PROOF ' +
+        JSON.stringify({
+          refs: refs.length,
+          tables,
+          fixtureQueries,
+          runtimeQueries,
+          auditRows: scalar.filter((r) => r.table === 'audit.events').length,
+        }) +
+        '\n',
+    );
+    expect(runtimeQueries).toBe(tables);
+  } finally {
+    await client.query('rollback');
+    await client.end();
+  }
+});
