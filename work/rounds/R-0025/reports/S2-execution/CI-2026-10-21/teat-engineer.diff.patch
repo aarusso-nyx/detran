@@ -1,0 +1,55 @@
+--- a/backend/app/src/teat-stream.service.ts
++++ b/backend/app/src/teat-stream.service.ts
+@@ -145,22 +145,31 @@
+   }
+ 
+   /** Linhas do tenant posteriores a `cursor`, em ordem `(created_at, id)`. */
+-  async listSince(cursor: StreamCursor, limit = 200): Promise<OutboxRow[]> {
++  async listSince(
++    cursor: StreamCursor,
++    limit = 200,
++    topics?: readonly string[],
++  ): Promise<OutboxRow[]> {
+     return withTenantContext(this.database, this.requestContext, async (tx) => {
++      const values: unknown[] = cursor.id
++        ? [cursor.createdAt, cursor.id, limit]
++        : [cursor.createdAt, limit];
++      const topicPredicate =
++        topics === undefined
++          ? ''
++          : ` and jsonb_typeof(payload->'type')='string' and payload->>'type'=any($${values.length + 1}::text[])`;
++      if (topics !== undefined) values.push([...topics]);
+       const sql = cursor.id
+         ? `select id, created_at::text as created_at, payload
+              from integration.outbox
+-            where (created_at, id) > ($1::timestamptz, $2::uuid)
++            where (created_at, id) > ($1::timestamptz, $2::uuid)${topicPredicate}
+             order by created_at, id
+             limit $3`
+         : `select id, created_at::text as created_at, payload
+              from integration.outbox
+-            where created_at > $1::timestamptz
++            where created_at > $1::timestamptz${topicPredicate}
+             order by created_at, id
+             limit $2`;
+-      const values = cursor.id
+-        ? [cursor.createdAt, cursor.id, limit]
+-        : [cursor.createdAt, limit];
+       const result = await asQueryable(tx).query<OutboxRow>(sql, values);
+       return result.rows;
+     });
+--- a/backend/app/src/teat-stream.controller.ts
++++ b/backend/app/src/teat-stream.controller.ts
+@@ -109,7 +109,11 @@
+       if (closed) return;
+       let rows;
+       try {
+-        rows = await this.service.listSince(cursor);
++        rows = await this.service.listSince(
++          cursor,
++          undefined,
++          topicFilter ? [...topicFilter] : undefined,
++        );
+       } catch {
+         return;
+       }
