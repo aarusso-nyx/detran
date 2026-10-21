@@ -1,0 +1,27 @@
+2026-10-21T16:08:06.9634214Z ##[group]Run pnpm docs:security
+2026-10-21T16:08:06.9635010Z pnpm docs:security
+2026-10-21T16:08:06.9707612Z shell: /usr/bin/bash -e {0}
+2026-10-21T16:08:06.9708047Z env:
+2026-10-21T16:08:06.9708478Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-10-21T16:08:06.9709031Z ##[endgroup]
+2026-10-21T16:08:07.4065081Z  WARN  Issue while reading "/home/runner/work/detran/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+2026-10-21T16:08:07.4067332Z  WARN  Issue while reading "/home/runner/work/detran/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+2026-10-21T16:08:07.4193895Z 
+2026-10-21T16:08:07.4194794Z > detran@0.0.1 docs:security /home/runner/work/detran/detran
+2026-10-21T16:08:07.4195655Z > npm --prefix docs/site run security:check
+2026-10-21T16:08:07.4196053Z 
+2026-10-21T16:08:07.5248156Z 
+2026-10-21T16:08:07.5248901Z > detran-docs-site@0.0.0 security:check
+2026-10-21T16:08:07.5250395Z > node scripts/check-image-size-patch.mjs && node scripts/check-braces-patch.mjs && node scripts/check-audit.mjs
+2026-10-21T16:08:07.5251662Z 
+2026-10-21T16:08:07.5636513Z PASS vendored image-size contains the reviewed ICNS/JXL/HEIF fixes
+2026-10-21T16:08:07.6412020Z PASS installed braces patch integrity, glob compatibility and bounded nesting
+2026-10-21T16:08:09.0773748Z BLOCKED  high     GHSA-q3jh-wrc6-jgq8 follow-redirects >=1.16.0 <1.16.1 via follow-redirects@1.16.0: follow-redirects array-form headers bypass cross-origin credential stripping
+2026-10-21T16:08:09.0776749Z BLOCKED  high     GHSA-8r9p-f939-6h3c follow-redirects >=1.16.0 <1.16.1 via follow-redirects@1.16.0: follow-redirects sensitiveHeaders regex escaping can expose credential headers
+2026-10-21T16:08:09.0779088Z BLOCKED  moderate GHSA-698v-4r3x-3vcv launch-editor <=2.14.1 via launch-editor@<=2.14.1: launch-editor: escapeCmdArgs() omits % escaping on Windows
+2026-10-21T16:08:09.0781031Z BLOCKED  moderate GHSA-r825-w8mm-5pxw launch-editor <=2.14.1 via launch-editor@<=2.14.1: launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors
+2026-10-21T16:08:09.0782386Z unused   exception GHSA-vfj7-8cjw-p6xm no longer matches — remove it
+2026-10-21T16:08:09.0783395Z BLOCKED  high     GHSA-587h-7wmj-h5pm launch-editor <=2.14.1 via launch-editor@<=2.14.1: launch-editor: `fs.existsSync()` existence check can be bypassed on Windows
+2026-10-21T16:08:09.0784396Z npm audit: 3 flagged entries, 5 distinct advisories at or above moderate, 0 allowed by exception
+2026-10-21T16:08:09.0918914Z  ELIFECYCLE  Command failed with exit code 1.
+2026-10-21T16:08:09.1161617Z ##[error]Process completed with exit code 1.

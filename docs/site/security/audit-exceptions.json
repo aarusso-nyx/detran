@@ -1,14 +1,4 @@
 {
   "$comment": "Reviewed npm audit exceptions for docs/site. Each entry names one advisory with no fixed release at review time, why it does not apply to this static documentation build, and the date by which it must be re-evaluated. scripts/check-audit.mjs fails the gate when an exception expires.",
-  "exceptions": [
-    {
-      "id": "GHSA-vfj7-8cjw-p6xm",
-      "package": "braces",
-      "range": "<=3.0.3",
-      "severity": "high",
-      "reviewed": "2026-10-15",
-      "expires": "2026-12-15",
-      "reason": "no fixed release exists (3.0.3 is the latest); stack-exhaustion DoS requires attacker-controlled brace patterns, while braces only expands the repository's own globs (micromatch, chokidar) at build time of a static site"
-    }
-  ]
+  "exceptions": []
 }
