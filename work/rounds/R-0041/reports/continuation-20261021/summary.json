@@ -1,0 +1,254 @@
+{
+  "evaluated_commit": "1115f58960679291744e93a3fb59feb35d849cbb",
+  "round": "R-0041",
+  "devai": "2.6.3",
+  "implicit_persistence": false,
+  "readings": [
+    {
+      "kind": "archive_immutability",
+      "reading_id": "SR-7efdbec7f2c9ce5f",
+      "status": "pass",
+      "metrics": {
+        "finding_count": 0
+      },
+      "findings": []
+    },
+    {
+      "kind": "decision_record_integrity",
+      "reading_id": "SR-08912240138d9432",
+      "status": "fail",
+      "metrics": {
+        "finding_count": 1
+      },
+      "findings": [
+        {
+          "severity": "error",
+          "code": "DECISION_FRONTMATTER_INVALID",
+          "message": "law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md: frontmatter is required",
+          "file": "law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md"
+        }
+      ]
+    },
+    {
+      "kind": "docs_drift",
+      "reading_id": "SR-3cb561ad990b52c8",
+      "status": "pass",
+      "metrics": {
+        "schema_file_count": 121,
+        "claims_checked": 2,
+        "drift_count": 0
+      },
+      "findings": [
+        {
+          "severity": "info",
+          "code": "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+          "message": "README.md carries no schema-count claim (preferred state).",
+          "file": "README.md"
+        },
+        {
+          "severity": "info",
+          "code": "DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM",
+          "message": "CLAUDE.md carries no schema-count claim (preferred state).",
+          "file": "CLAUDE.md"
+        },
+        {
+          "severity": "info",
+          "code": "DOCS_DRIFT_NO_DECISION_RANGE_CLAIM",
+          "message": "README.md carries no decision-range claim (preferred state).",
+          "file": "README.md"
+        },
+        {
+          "severity": "info",
+          "code": "DOCS_DRIFT_CAP_CHECK_DISABLED",
+          "message": "worktree_cap_source not configured; cap-coherence check skipped."
+        }
+      ]
+    },
+    {
+      "kind": "harness_coherence",
+      "reading_id": "SR-f925456fd16c0d23",
+      "status": "review",
+      "metrics": {
+        "workflow_count": 2,
+        "action_version_drift_count": 0,
+        "permissions_mixed": 0,
+        "concurrency_mixed": 0,
+        "concurrency_semantic_issues": 1,
+        "incoherence_score": 1,
+        "max_review_incoherence": 3
+      },
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "HARNESS_COHERENCE_CONCURRENCY_POLICY",
+          "message": ".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding)."
+        }
+      ]
+    },
+    {
+      "kind": "harness_idiomaticity",
+      "reading_id": "SR-7d830d27de6181a6",
+      "status": "review",
+      "metrics": {
+        "workflow_count": 2,
+        "composite_action_uses": 0,
+        "reusable_workflow_uses": 0,
+        "cache_present": 1,
+        "idiomaticity_score": 1
+      },
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "HARNESS_IDIOMATICITY_NO_COMPOSITE_ACTIONS",
+          "message": "No composite-action references (./.github/actions/*) found. Consider extracting repeated step sequences."
+        },
+        {
+          "severity": "warning",
+          "code": "HARNESS_IDIOMATICITY_NO_REUSABLE_WORKFLOWS",
+          "message": "No reusable workflow references found. Consider factoring shared CI logic."
+        }
+      ]
+    },
+    {
+      "kind": "harness_security",
+      "reading_id": "SR-cbe4d0135b61f38b",
+      "status": "pass",
+      "metrics": {
+        "workflow_count": 2,
+        "unpinned_action_count": 0,
+        "missing_permissions_block_count": 0,
+        "pwn_request_count": 0
+      },
+      "findings": []
+    },
+    {
+      "kind": "round_record_integrity",
+      "reading_id": "SR-da09c94109c3d4f0",
+      "status": "fail",
+      "metrics": {
+        "finding_count": 15
+      },
+      "findings": [
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0001 has no record.md.",
+          "file": "work/rounds/R-0001"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_ARCHIVE_MUTATED",
+          "message": "R-0017 changed after its first closed commit.",
+          "file": "work/rounds/R-0017"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0020 has no record.md.",
+          "file": "work/rounds/R-0020"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0021 has no record.md.",
+          "file": "work/rounds/R-0021"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0022 has no record.md.",
+          "file": "work/rounds/R-0022"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0023 has no record.md.",
+          "file": "work/rounds/R-0023"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0024 has no record.md.",
+          "file": "work/rounds/R-0024"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0025 has no record.md.",
+          "file": "work/rounds/R-0025"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0026 has no record.md.",
+          "file": "work/rounds/R-0026"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0027 has no record.md.",
+          "file": "work/rounds/R-0027"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0028 has no record.md.",
+          "file": "work/rounds/R-0028"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0029 has no record.md.",
+          "file": "work/rounds/R-0029"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0030 has no record.md.",
+          "file": "work/rounds/R-0030"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0031 has no record.md.",
+          "file": "work/rounds/R-0031"
+        },
+        {
+          "severity": "error",
+          "code": "ROUND_RECORD_MISSING",
+          "message": "R-0032 has no record.md.",
+          "file": "work/rounds/R-0032"
+        }
+      ]
+    },
+    {
+      "kind": "spec_robustness_targets",
+      "reading_id": "SR-caa9fd44d3228470",
+      "status": "pass",
+      "metrics": {
+        "error_semantics_invariants": 1,
+        "error_contract_files": 1,
+        "targets_total": 2
+      },
+      "findings": []
+    },
+    {
+      "kind": "spec_security_coverage",
+      "reading_id": "SR-49b494842d7ff6b2",
+      "status": "review",
+      "metrics": {
+        "threat_model_present": 1,
+        "pii_registry_present": 0,
+        "rbac_invariant_present": 1,
+        "signals_present": 2
+      },
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "SPEC_SECURITY_NO_PII_REGISTRY",
+          "message": "No `INSERT INTO core.pii_map` row found across migration dirs: backend/database/ddl, senatran-mock/database/ddl"
+        }
+      ]
+    }
+  ]
+}

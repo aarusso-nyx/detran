@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_coherence",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T15:17:03.483966+00:00",
+  "finished_at": "2026-10-21T15:17:04.387550+00:00",
+  "exit_code": 1,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_coherence\"},\"members\":[{\"kind\":\"harness_coherence\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_coherence\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"review\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":1,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run harness_coherence\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-f925456fd16c0d23\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-coherence\\\",\\\"kind\\\":\\\"harness_coherence\\\"},\\\"timestamp\\\":\\\"2026-10-21T15:17:04.260Z\\\",\\\"status\\\":\\\"review\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-harness-coherence\\\",\\\"command_hash\\\":\\\"b6c6e606ff19573cb165f392dbd2eaf5adf8f8d5b7febe611b3123414b7641fe\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"HARNESS_COHERENCE_CONCURRENCY_POLICY\\\",\\\"message\\\":\\\".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding).\\\"}],\\\"metrics\\\":{\\\"workflow_count\\\":2,\\\"action_version_drift_count\\\":0,\\\"permissions_mixed\\\":0,\\\"concurrency_mixed\\\":0,\\\"concurrency_semantic_issues\\\":1,\\\"incoherence_score\\\":1,\\\"max_review_incoherence\\\":3}}\",\"stderr\":\"\",\"na\":false,\"status\":1}]}}}\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

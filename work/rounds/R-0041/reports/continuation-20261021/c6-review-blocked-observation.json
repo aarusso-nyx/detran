@@ -1,0 +1,55 @@
+{
+  "kind": "prototype-contract-review-blocked-observation",
+  "observedAt": "2026-10-20T01:50:04.870079+00:00",
+  "refusalTimestamp": null,
+  "observationTimeMeaning": "Actual time this blocked-status record was created; not the unavailable original refusal time.",
+  "bridgeSession": {
+    "sessionId": 39908,
+    "exitCode": 4,
+    "provenance": "Exact exit/status and retained excerpt supplied by root from its compressed toolstate; not independently replayed here."
+  },
+  "validVerdict": false,
+  "verdict": null,
+  "reviewCompleted": false,
+  "status": "BLOCKED_WITHOUT_VALID_VERDICT",
+  "rawReviewerResponse": {
+    "available": false,
+    "expectedPath": "/tmp/c6-prototype-contract-v5-review.json",
+    "observedFileExists": false,
+    "removal": "Root reports bridge removed the invalid raw response; full original response unavailable.",
+    "fullTranscriptAvailable": false
+  },
+  "bridgeMetadata": {
+    "expectedPath": "/tmp/c6-prototype-contract-v5-review.bridge.json",
+    "observedFileExists": false
+  },
+  "retainedExcerpt": {
+    "source": "Root forwarded compressed toolstate excerpt, not a complete raw artifact.",
+    "verbatimRefusalSentence": "I've stopped. A safety classifier withheld the review I was writing, so I won't send it again in any form, and that includes the raw JSON verdict you asked for.",
+    "verbatimBridgeDiagnostic": "bridge: saída do reviewer não é JSON válido: /tmp/c6-prototype-contract-v5-review.json",
+    "otherErrorSummary": "Root retained an excerpt of stdin SyntaxError/unexpected quote parsing; its excerpt contains ellipses and is not copied as a full verbatim response.",
+    "limitations": "Only the forwarded sentence and final bridge line are preserved verbatim here; no missing body, verdict, timing or findings are reconstructed."
+  },
+  "currentSourceAndPromptObservations": [
+    {
+      "path": "/Volumes/Development/projects/stech/devai/.devai/worktrees/c6-owned-postgres/law/adr/ADR-SCR-0022-owned-postgres-kernel-witness-prototype.md",
+      "sha256": "d07485b6e518ec1dc30aca8878fe6775b260f1f120e90542dcf58c0ae780bacc",
+      "byteLength": 7264
+    },
+    {
+      "path": "/Volumes/Development/projects/stech/devai/.devai/worktrees/c6-owned-postgres/docs/dev/security/native-owned-postgres-prototype.md",
+      "sha256": "34b790df2975dd47b822d4b10153a50803a57d737e7fca50d069fc3b898b2912",
+      "byteLength": 68919
+    },
+    {
+      "path": "/tmp/c6-prototype-contract-v5-review-prompt.md",
+      "sha256": "1590c941d6be28d80d47cc2c6e9bced47ff43190733d743904100c1f1f4c408e",
+      "byteLength": 2403
+    }
+  ],
+  "actionsTaken": [
+    "Recorded unavailable/blocked status and current hashes only.",
+    "No review retry, prompt rephrase, alternate model, raw-response recovery, protocol implementation or execution."
+  ],
+  "permissionBoundary": "Independent environment inventory/installer review PASS does not supply a prototype contract verdict or permission. No prototype implementation, compilation, K0/K1, ptrace/pidfd probe or native-origin work is authorized by this observation."
+}

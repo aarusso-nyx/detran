@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--input",
+    "/tmp/detran-c5-c8-followup-20261021/normalized/archive_immutability.json",
+    "--as-role",
+    "Inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exit_code": 7,
+  "stdout": "",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"AUTHORITY_DECLARATION_INVALID\",\"class\":\"contract-violation\",\"exit\":7,\"message\":\"authority declaration invalid\",\"remediation\":\"Use a declared role and the required consent flags.\",\"refs\":{\"doc\":\"law/constitution.md#article-6\"},\"context\":{\"category\":\"usage-error\"}}}\n"
+}

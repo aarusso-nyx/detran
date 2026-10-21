@@ -42,8 +42,17 @@ references, not fresh execution results; candidate-bound results belong to the a
 
 ## Measurement compatibility
 
-DEVAI 2.6.3 recognizes the structured `boundaries` record. Its other security signals currently
-require `domain: RBAC` and literal `INSERT INTO core.pii_map`; DETRAN's existing AUTH/rbac
-invariant and sourced PII metadata must retain their meaning. Until supported representation is
-approved, those native gaps remain visible. No invariant domain, schema, threshold or SQL has
-been changed to manufacture a positive reading.
+DEVAI 2.6.3 recognizes the structured `boundaries` record. The source-bound
+`INV-RBAC-001` and `INV-API-001` declarations were approved by
+[ADR-0056](../adr/ADR-0056-source-bound-security-invariants.md). They preserve the
+existing AUTH invariant and approved helper behavior. Their presence is distinct
+from executable native standing: [ADR-0057](../adr/ADR-0057-partial-security-governance-delivery.md)
+defers all nine additional native bindings together.
+
+The scoped revalidation of main `1115f58960679291744e93a3fb59feb35d849cbb`
+recognizes two security signals (threat model and RBAC) and both robustness signals
+(error-semantics invariant and contract). The security result remains REVIEW:
+the sensor still requires a native SQL PII registry. Supplemental sourced PII
+metadata does not satisfy that predicate. No SQL registry, legal basis, retention
+period or absence-of-personal-data declaration is invented. See the
+[continuation register](c5-c8-continuation.md) for raw evidence and limits.

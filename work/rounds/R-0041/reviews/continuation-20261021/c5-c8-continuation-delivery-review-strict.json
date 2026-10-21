@@ -1,0 +1,19 @@
+{
+  "verdict": "pass",
+  "confidence": 0.88,
+  "rationale": "I reviewed the branch delta against 1115f58960679291744e93a3fb59feb35d849cbb. The change touches only docs/meta/security/README.md, docs/meta/security/threat-model.md, record/proofs/chain.json and the new continuation capsule and review folders. No product code, DDL, workflow, threshold, config or original task declaration changed. The source docs match the nine readings in summary.json: 4 PASS (archive_immutability, docs_drift, harness_security, spec_robustness_targets), 3 REVIEW (harness_coherence, harness_idiomaticity, spec_security_coverage) and 2 FAIL (decision_record_integrity, round_record_integrity). The docs keep spec_security_coverage at REVIEW because the native SQL PII registry is absent and supplementary data does not satisfy it. Fourteen ROUND_RECORD_MISSING findings plus the R-0017 archive finding stay explicit, and archive_immutability PASS is stated not to cancel the round-record FAIL. The prior 168 chain records are a byte-equal prefix of the new 177. Only the head and nine appended sense.readings.record records differ. Each record's artifact SHA-256 matches its on-disk reading body, and each body's status matches summary.json, so FAIL and REVIEW are preserved. All nine record invocations exited 0. The dirty_files values on records 2 to 9 list record/proofs/chain.json, which is real sequential-recording metadata and was not cleaned. All 6366 hashes in protected-before.json still match except record/proofs/chain.json, which is the expected append. Links resolve: ADR-0056, ADR-0057, historical-compatibility.md, the continuation register and the capsule README. Neither document claims a fresh 43-cell scorecard, full43 readiness or native C6 standing. They state that the nine readings are not nine scorecard cells or a fresh 43-cell evaluation. The C6 section is process-only: it proposes human escalation through an official safety/support process. It says a human response is not a technical verdict, selects no mechanism and does not dispatch the request. If no sanctioned route exists, C6 stays blocked, so the missing security verdict remains a gate. I did not open the withheld protocol.",
+  "findings": [
+    {
+      "severity": "info",
+      "code": "reading_bodies_gitignored",
+      "message": "The nine generated reading bodies listed in machine-reading-paths.json match .gitignore:45 (.devai/state/sensor-readings/). Committing them byte-exact needs an explicit force-add. 66 earlier readings are already tracked this way. Until they are added, the new chain records point at untracked artifacts.",
+      "file": ".devai/state/sensor-readings/spec_security_coverage/SR-49b494842d7ff6b2.json"
+    },
+    {
+      "severity": "info",
+      "code": "remaining_native_findings_preserved",
+      "message": "The C7 harness_coherence concurrency-policy REVIEW is still undiagnosed, and the docs record it that way. The doc correctly avoids claiming a provider defect or a workflow change.",
+      "file": "docs/meta/security/c5-c8-continuation.md"
+    }
+  ]
+}

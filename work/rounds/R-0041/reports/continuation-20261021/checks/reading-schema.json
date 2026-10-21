@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "node",
+    "-e",
+    "const fs=require('node:fs');const Ajv=require('./node_modules/.pnpm/node_modules/ajv/dist/2020.js').default;const schema=JSON.parse(fs.readFileSync('node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas/sensor-reading.schema.json'));const validate=new Ajv({strict:false}).compile(schema);let n=0;for(const f of fs.readdirSync('work/rounds/R-0041/reports/continuation-20261021/normalized')){const r=JSON.parse(fs.readFileSync('work/rounds/R-0041/reports/continuation-20261021/normalized/'+f));if(!validate(r))throw Error(JSON.stringify(validate.errors));n++;}console.log(JSON.stringify({schemaValid:true,count:n}));"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"schemaValid\":true,\"count\":9}\n",
+  "stderr": "unknown format \"date-time\" ignored in schema at path \"#/properties/timestamp\"\nunknown format \"date-time\" ignored in schema at path \"#/properties/timestamp\"\n"
+}
