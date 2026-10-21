@@ -1,0 +1,69 @@
+{
+  "task": "PR211 independent provider batching GREEN and unchanged complete51 budget validation",
+  "role": "Inspector",
+  "head": "9020a4a1c5cc2d8fc833a1860d05860bbdb7961e",
+  "sourceHashes": {
+    "backend/app/src/rait-risk.providers.ts": "32df0ae0b8fb8ecf7ac86961bb9f6f6e263247eba89937d44f09c40acdc75a7d",
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "438496574776dc4ab50de7aa7715a02ec222680e7dee962d71f29b8ee716029f",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "11cf8e1ca4dd80bc81de5abd6d09768c4bf1cd8256361d0e5639baeadad2be8b",
+    "pnpm-lock.yaml": "b6e26eea39b702d4983bc0e63ade9448fab65789e1d0e4ee67e99d490770cc15"
+  },
+  "providerProof": {
+    "classification": "GENUINE GREEN unchanged scalar-reference/typed-binding/digest/qualification/query-count assertions",
+    "passed": 1,
+    "filtered": 124,
+    "executedAssertions": 185,
+    "testDurationMs": 1719,
+    "epochDurationSeconds": 14.5,
+    "measurement": {
+      "scalarInventoryQueries": 11,
+      "actualDiscoveryCounts": {
+        "timers": 1,
+        "parameters": 1,
+        "alerts": 1,
+        "incidents": 1
+      },
+      "totalActualQueries": 233,
+      "totalActualQueryMs": 236.54890900001556,
+      "qualifyCalls": 12,
+      "policyCalls": 1,
+      "scalarDigest": "sha256:6d2aa4dea325e44a942167805d965376b60e961fb6b0b5ad30ed62dbeb8d9050"
+    }
+  },
+  "complete51": {
+    "classification": "MATERIAL PERFORMANCE BLOCKER: all four unchanged bodies timed out at30000ms; not setup prerequisite failure",
+    "passed": 0,
+    "failed": 4,
+    "filtered": 121,
+    "epochDurationSeconds": 188.68,
+    "population": 51,
+    "budgetMs": 30000,
+    "kinds": [
+      "risk",
+      "legacy",
+      "routing",
+      "incident"
+    ],
+    "observedQualifiedGetDurationMs": [
+      14102,
+      10809,
+      17165,
+      11113,
+      10538,
+      12722,
+      12608
+    ],
+    "limitation": "No complete51 acceptance GREEN. Async assertions emitted after timeouts do not convert failed controls toPASS."
+  },
+  "boundaries": {
+    "testsEdited": false,
+    "runtimeEdited": false,
+    "budgetsChanged": false,
+    "populationChanged": false,
+    "full125Executed": false,
+    "fullKernelExecuted": false,
+    "throughputClaim": false,
+    "databaseLease": "RELEASED after runner65689 exited; no own DB runner/client remains"
+  },
+  "sanitization": "Raw transcripts contain synthetic fixture identifiers and no auth tokens/passwords/raw DSNs; copied as captured. Historical RED epochs retained."
+}
