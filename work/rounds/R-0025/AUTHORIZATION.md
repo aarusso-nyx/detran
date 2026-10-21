@@ -276,3 +276,17 @@ stay unchanged. Packet hashes and conditions are retained in
 reports/S2-execution/pr211-JW01-rate-isolation-owner-approval.json.
 This does not renew blanket delegation or authorize merge, additional delivery
 review, broader performance changes, proof-chain edits or scorecard promotion.
+
+### Additional independent delta review and repair packets — Owner, 2026-10-21
+
+Owner requested exact packets for the four complete51 timeouts and non-newest
+anchor7 recovery, explicitly authorizing the additional independent review.
+One third delivery delta review is authorized through the cross-family bridge,
+restricted to F6 correction, approved CI repair deltas, main reconciliation and
+the two proposed repair packets. Preserve both prior REVIEW verdicts and all
+raw lineage. This is the explicit human escalation required by orchestra§5, not
+a reset of the cap or permission for repeated cycles. Review is read-only,
+nonpromoting and must preserve known F3/DRESET/production limitations and real
+failed acceptance. No merge or runtime/repair implementation is authorized.
+Packets remain proposals for separate concrete approvals; local, recovery and
+scorecard work remain preserved.
