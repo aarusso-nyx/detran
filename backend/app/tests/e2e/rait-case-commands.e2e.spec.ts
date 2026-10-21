@@ -758,7 +758,11 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
           .post(commandPath(invocation))
           .set(
             command.name === 'claim-next'
-              ? claimFixture!.headers(role)
+              ? claimFixture!.headers(
+                  role,
+                  claimFixture!.actor,
+                  'r7-c3-' + randomUUID(),
+                )
               : headers(role),
           )
           .send(invocation.body);

@@ -1,0 +1,86 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+S2_ASSERTIONS {"test":"S2 actual SQL factory with independently admitted synthetic provenance only > mounts the public narrow provenance port while retaining the actual SQL factory","executedAssertions":2}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (125 tests | 124 skipped) 435ms
+[2026-10-21 12:48:28.695 -0300] INFO (77474): request completed
+    request_id: "01a15f26-4f94-7731-8d6e-e0860754fa55"
+    route: "/v1/ops/stream"
+    method: "GET"
+    status: 403
+    duration_ms: 3
+[2026-10-21 12:48:33.836 -0300] INFO (77474): request completed
+    request_id: "01a15f26-639b-7838-8659-ef830f54b79a"
+    tenant_id: "00000000-0000-7000-8000-00000000a001"
+    actor_id: "00000000-0000-4000-8000-0000b0000001"
+    route: "/v1/ops/stream"
+    method: "GET"
+    status: 204
+    duration_ms: 17
+ ❯ tests/e2e/teat-stream.e2e.spec.ts (9 tests | 2 failed) 14133ms
+     ✓ C-0004-41 — dado DETRAN_LOCAL_ROLES=field-agent quando GET /v1/ops/stream então 200 com content-type text/event-stream  1588ms
+     ✓ C-0004-41 — dado um papel PEC (CANDIDATO) quando GET /v1/ops/stream então 403 11ms
+     ✓ dado um evento integration.item.changed então integration-operator (tem ops:integration:read) o recebe  1053ms
+     ✓ dado o mesmo evento então field-agent (sem ops:integration:read) não o recebe  2019ms
+     × C-0004-43 — dado Last-Event-ID de um evento de 1h atrás então o replay reenvia, em ordem, só os posteriores 2044ms
+     ✓ C-0004-44 — dado Last-Event-ID de um evento de 25h atrás então 204 27ms
+     ✓ C-0004-45 — dado ?topics=ait.changed então só eventos desse tipo chegam  1028ms
+     ✓ C-0004-46 — dado um evento de outro tenant então ele nunca chega ao assinante, e tenantId não aparece em data  2017ms
+   × approved backlog sensor: topics ait.changed reaches its exact event after601 unrequested rows within the unchanged2s budget 2114ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/teat-stream.e2e.spec.ts > CTG-0004 §7.1 — replay por Last-Event-ID (C-0004-43, C-0004-44) > C-0004-43 — dado Last-Event-ID de um evento de 1h atrás então o replay reenvia, em ordem, só os posteriores
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "a6f46be1-6cd9-40a5-a029-02a79d659ab8",
+- ]
++ []
+
+ ❯ tests/e2e/teat-stream.e2e.spec.ts:329:52
+    327|       { timeoutMs: 2000, stopAfter: 1 },
+    328|     );
+    329|     expect(result.events.map((event) => event.id)).toEqual([laterId]);
+       |                                                    ^
+    330|   });
+    331|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/e2e/teat-stream.e2e.spec.ts > approved backlog sensor: topics ait.changed reaches its exact event after601 unrequested rows within the unchanged2s budget
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "b2b56907-ed0e-4282-8918-c36e95f3eb2c",
+- ]
++ []
+
+ ❯ tests/e2e/teat-stream.e2e.spec.ts:444:42
+    442|   );
+    443|   expect(result.status).toBe(200);
+    444|   expect(result.events.map((e) => e.id)).toEqual([target]);
+       |                                          ^
+    445|   expect(result.events.map((e) => e.event)).toEqual(['ait.changed']);
+    446| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 8 passed | 124 skipped (134)
+   Start at  12:48:12
+   Duration  26.37s (transform 8.88s, setup 0ms, import 11.58s, tests 14.57s, environment 0ms)
+
+JSON report written to /tmp/pr211-teat-typed-warm-red.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/rait-p402-claim.e2e.spec.ts tests/e2e/teat-stream.e2e.spec.ts -t mounts the public narrow provenance port|CTG-0004|approved backlog sensor --reporter=default --reporter=json --outputFile=/tmp/pr211-teat-typed-warm-red.json
