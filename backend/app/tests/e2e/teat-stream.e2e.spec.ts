@@ -397,3 +397,50 @@ describe('CTG-0004 §7.1 — isolamento de tenant (C-0004-46)', () => {
     }
   });
 });
+
+it('approved backlog sensor: topics ait.changed reaches its exact event after601 unrequested rows within the unchanged2s budget', async () => {
+  const start = Date.now() - 60 * 60 * 1000;
+  const cursor = await insertOutboxRow(
+    TENANT_ID,
+    'ait.changed',
+    'AIT_CHANGED',
+    AIT_ID,
+    new Date(start).toISOString(),
+  );
+  const noise = await client.query<{ id: string }>(
+    `insert into integration.outbox(tenant_id,topic,aggregate_type,aggregate_id,payload,idempotency_key,status,created_at,available_at)
+    select $1,'ait.concurrency-suspected','ait',$2,jsonb_build_object('type','ait.concurrency-suspected','domainEvent','AIT_CONCURRENCY_SUSPECTED','version',1,'tenantId',$1::text,'aggregate',jsonb_build_object('kind','ait','id',$2::text,'version',1),'data',jsonb_build_object('aitId',$2::text)),'TEAT-approved-backlog-'||gen_random_uuid()::text,'pending',$3::timestamptz+g*interval '1 millisecond',$3::timestamptz+g*interval '1 millisecond' from generate_series(1,601)g returning id`,
+    [TENANT_ID, AIT_ID, new Date(start).toISOString()],
+  );
+  expect(noise.rows).toHaveLength(601);
+  createdOutboxIds.push(...noise.rows.map((r) => r.id));
+  const target = await insertOutboxRow(
+    TENANT_ID,
+    'ait.changed',
+    'AIT_CHANGED',
+    AIT_ID,
+    new Date(start + 602).toISOString(),
+  );
+  const interval = await client.query<{ type: string; id: string }>(
+    `select id,payload->>'type' type from integration.outbox where tenant_id=$1 and (created_at,id)>((select created_at from integration.outbox where id=$2),$2::uuid) and (created_at,id)<=((select created_at from integration.outbox where id=$3),$3::uuid) order by created_at,id`,
+    [TENANT_ID, cursor, target],
+  );
+  expect(interval.rows).toHaveLength(602);
+  expect(interval.rows.slice(0, 601).map((r) => r.id)).toEqual(
+    expect.arrayContaining(noise.rows.map((r) => r.id)),
+  );
+  expect(
+    interval.rows
+      .slice(0, 601)
+      .every((r) => r.type === 'ait.concurrency-suspected'),
+  ).toBe(true);
+  expect(interval.rows[601]).toEqual({ id: target, type: 'ait.changed' });
+  const result = await readStream(
+    '/v1/ops/stream?topics=ait.changed',
+    { ...headers('field-agent'), 'last-event-id': cursor },
+    { timeoutMs: 2000, stopAfter: 1 },
+  );
+  expect(result.status).toBe(200);
+  expect(result.events.map((e) => e.id)).toEqual([target]);
+  expect(result.events.map((e) => e.event)).toEqual(['ait.changed']);
+});

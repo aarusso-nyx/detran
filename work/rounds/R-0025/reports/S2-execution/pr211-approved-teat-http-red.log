@@ -1,0 +1,41 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+ ❯ tests/e2e/teat-stream.e2e.spec.ts (9 tests | 9 skipped) 10052ms
+     ↓ C-0004-41 — dado DETRAN_LOCAL_ROLES=field-agent quando GET /v1/ops/stream então 200 com content-type text/event-stream
+     ↓ C-0004-41 — dado um papel PEC (CANDIDATO) quando GET /v1/ops/stream então 403
+     ↓ dado um evento integration.item.changed então integration-operator (tem ops:integration:read) o recebe
+     ↓ dado o mesmo evento então field-agent (sem ops:integration:read) não o recebe
+     ↓ C-0004-43 — dado Last-Event-ID de um evento de 1h atrás então o replay reenvia, em ordem, só os posteriores
+     ↓ C-0004-44 — dado Last-Event-ID de um evento de 25h atrás então 204
+     ↓ C-0004-45 — dado ?topics=ait.changed então só eventos desse tipo chegam
+     ↓ C-0004-46 — dado um evento de outro tenant então ele nunca chega ao assinante, e tenantId não aparece em data
+   ↓ approved backlog sensor: topics ait.changed reaches its exact event after601 unrequested rows within the unchanged2s budget
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/teat-stream.e2e.spec.ts [ tests/e2e/teat-stream.e2e.spec.ts ]
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ tests/e2e/teat-stream.e2e.spec.ts:184:1
+    182| }
+    183|
+    184| beforeAll(async () => {
+       | ^
+    185|   for (const key of [
+    186|     'DETRAN_RUNTIME_PROFILE',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 skipped (9)
+   Start at  12:31:28
+   Duration  10.22s (transform 8.19s, setup 0ms, import 60ms, tests 10.05s, environment 0ms)
+
+JSON report written to /tmp/pr211-teat-http-red.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/teat-stream.e2e.spec.ts -t approved backlog sensor --reporter=default --reporter=json --outputFile=/tmp/pr211-teat-http-red.json

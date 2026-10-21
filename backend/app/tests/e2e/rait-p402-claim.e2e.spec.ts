@@ -2,7 +2,11 @@
 import * as CasePublic from '@detran/inf-rait-case';
 import { RaitRiskProjectionService } from '@detran/inf-rait-worklist';
 import { RequestContextMutator } from '@stynx-nyx/core';
-import { addCalendarDays, isWeekend } from '@detran/inf-deadlines';
+import {
+  addCalendarDays,
+  isWeekend,
+  evaluateRaitRisk,
+} from '@detran/inf-deadlines';
 import { randomUUID } from 'node:crypto';
 import { Client } from 'pg';
 import { Test } from '@nestjs/testing';
@@ -23,6 +27,7 @@ import {
   canonicalRevision,
   readSourceRows,
   readSourceRowsScalar,
+  frozenScalarProviderInventories,
   PREFIX,
   RAIT_TENANT,
 } from '../shared/rait-p402-claim.fixture.js';
@@ -2937,5 +2942,181 @@ it('R17 selected discovery rechecks actual pool eligibility after a source-lock 
     await writer.query('rollback');
     if (pending) await Promise.allSettled([pending]);
     await writer.end();
+  }
+});
+
+it('approved provider inventory batching preserves frozen scalar typed bindings and qualifications while reducing real discovery SQL', async () => {
+  fixture.practiceOn = '2019-06-15';
+  const c = await fixture.admitted(app);
+  const sources = await fixture.prepareRisk(c.id);
+  await fixture.operationalIncidents(c.id, sources.records);
+  const control = await readQualifiedRisk(c.id);
+  expect(control.body.data.worstFlag).toBe('PRESCRITO_OPERACIONAL');
+  const client = new Client({
+    connectionString: process.env.STYNX_APP_DATABASE_URL,
+  });
+  await client.connect();
+  const trace: {
+    sql: string;
+    rows: Record<string, unknown>[];
+    elapsedMs: number;
+  }[] = [];
+  const qualified: { kind: string; sourceRefs: readonly string[] }[] = [];
+  try {
+    await client.query('begin');
+    await client.query('set local role role_app_backend');
+    await client.query("select set_config('app.tenant_id',$1,true)", [
+      RAIT_TENANT,
+    ]);
+    expect(
+      (
+        await client.query(
+          "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+        )
+      ).rows,
+    ).toEqual([{ role: 'role_app_backend', tenant: RAIT_TENANT }]);
+    const timezone = (
+      await client.query<{ timezone: string }>(
+        'select timezone from auth.tenants where id=$1',
+        [RAIT_TENANT],
+      )
+    ).rows[0]!.timezone;
+    const operation = app.get(CasePublic.RaitOperationClock).capture(timezone);
+    const tx = client as unknown as CasePublic.RaitRiskTx;
+    await CasePublic.raitLockRiskRelations(tx);
+    await CasePublic.raitLockRiskParents(tx, RAIT_TENANT, [c.id]);
+    const scalar = await frozenScalarProviderInventories(tx, {
+      caseId: c.id,
+      infractionId: sources.infraction,
+      agencyId: fixture.agency,
+      today: operation.today(timezone),
+    });
+    fixture.onQualified = async (req) => {
+      qualified.push({ kind: req.kind, sourceRefs: [...req.sourceRefs] });
+    };
+    const policyBefore = fixture.policyRequests.length;
+    const counted = {
+      query: async (sql: string, args?: unknown[]) => {
+        const start = performance.now();
+        const result = await client.query(sql, args);
+        trace.push({
+          sql,
+          rows: result.rows,
+          elapsedMs: performance.now() - start,
+        });
+        return result;
+      },
+    } as unknown as CasePublic.RaitRiskTx;
+    const actual = await app
+      .get<CasePublic.RaitRiskSnapshotFactory>(
+        CasePublic.RAIT_RISK_SNAPSHOT_FACTORY,
+      )
+      .create(counted, operation)
+      .read(RAIT_TENANT, c.id);
+    const snapshot = evaluateRaitRisk(actual.input);
+    const { asOf: _, ...risk } = snapshot;
+    const { asOf: __, ...httpRisk } = control.body.data;
+    expect(risk).toEqual(httpRisk);
+    expect(
+      snapshot.clocks.map((v) => [
+        v.clockCode,
+        v.applicability,
+        'flag' in v ? v.flag : null,
+      ]),
+    ).toEqual([
+      ['A', 'applicable', 'PRESCRITO_OPERACIONAL'],
+      ['B', 'not_applicable', null],
+      ['C', 'applicable', 'SEM_RISCO'],
+      ['D', 'applicable', 'PRESCRITO_OPERACIONAL'],
+    ]);
+    const fresh = await readSourceRowsScalar(
+      tx,
+      scalar.rows.map((r) => r.sourceRef),
+    );
+    expect(canonicalBytes(fresh)).toBe(canonicalBytes(scalar.rows));
+    expect(canonicalRevision(fresh)).toBe(scalar.digest);
+    for (const row of scalar.rows) {
+      expect(actual.sourceRefs).toContain(row.sourceRef);
+      const captures = trace
+        .filter(
+          (t) =>
+            t.sql.includes('__rait_source_ordinal') &&
+            t.sql.includes('from ' + row.table + ' src join'),
+        )
+        .flatMap((t) => t.rows)
+        .filter((r) => r.id === row.fields.id);
+      expect(
+        captures.length,
+        'actual source projection must consume independently frozen row ' +
+          row.sourceRef,
+      ).toBeGreaterThan(0);
+      for (const { __rait_source_ordinal: ordinal, ...fields } of captures) {
+        expect(typeof ordinal).toBe('string');
+        expect(canonicalBytes(fields)).toBe(canonicalBytes(row.fields));
+        expect(
+          canonicalRevision({
+            sourceRef: row.sourceRef,
+            table: row.table,
+            fields,
+          }),
+        ).toBe(canonicalRevision(row));
+      }
+    }
+    expect(qualified.map((q) => q.kind).sort()).toEqual(
+      [
+        'timer',
+        'timer',
+        'timer',
+        'parameter',
+        'parameter',
+        'parameter',
+        'track',
+        'applicability',
+        'movement',
+        'interruption',
+        'incident',
+        'incident',
+      ].sort(),
+    );
+    expect(fixture.policyRequests.length - policyBefore).toBe(1);
+    const counts = { timers: 0, parameters: 0, alerts: 0, incidents: 0 };
+    for (const t of trace) {
+      const sql = t.sql.replace(/\s+/g, ' ').trim();
+      if (/^select id(?:,[^ ]+)? from inf\.infraction_timer where/.test(sql))
+        counts.timers++;
+      if (
+        /^select id,(?:key,)?traffic_agency_id from ops\.parameter where/.test(
+          sql,
+        )
+      )
+        counts.parameters++;
+      if (/^select (?:a\.)?id,.* from inf\.rait_clock_alert/.test(sql))
+        counts.alerts++;
+      if (/^select id,.* from inf\.rait_incident where/.test(sql))
+        counts.incidents++;
+    }
+    process.stdout.write(
+      'PROVIDER_BATCHING_PROOF ' +
+        JSON.stringify({
+          scalarInventoryQueries: scalar.observations.length,
+          actualDiscoveryCounts: counts,
+          totalActualQueries: trace.length,
+          totalActualQueryMs: trace.reduce((n, t) => n + t.elapsedMs, 0),
+          qualifyCalls: qualified.length,
+          policyCalls: fixture.policyRequests.length - policyBefore,
+          scalarDigest: scalar.digest,
+        }) +
+        '\n',
+    );
+    expect(counts).toEqual({
+      timers: 1,
+      parameters: 1,
+      alerts: 1,
+      incidents: 1,
+    });
+  } finally {
+    fixture.onQualified = undefined;
+    await client.query('rollback');
+    await client.end();
   }
 });

@@ -261,6 +261,115 @@ export async function readSourceRows(
   );
 }
 
+/** Frozen physical scalar discovery SQL from provider d9a85938; real same-Tx oracle, never a producer override. */
+export async function frozenScalarProviderInventories(
+  tx: Sql,
+  input: {
+    caseId: string;
+    infractionId: string;
+    agencyId: string;
+    today: string;
+  },
+) {
+  const observations: {
+    kind: string;
+    sql: string;
+    args: unknown[];
+    rows: Record<string, unknown>[];
+    elapsedMs: number;
+  }[] = [];
+  const q = async (kind: string, sql: string, args: unknown[]) => {
+    const start = performance.now();
+    const result = await tx.query<Record<string, unknown>>(sql, args);
+    observations.push({
+      kind,
+      sql,
+      args,
+      rows: result.rows,
+      elapsedMs: performance.now() - start,
+    });
+    return result.rows;
+  };
+  const clocks = await q(
+    'clocks',
+    'select id,clock_code from inf.rait_clock where tenant_id=$1 and case_id=$2 order by id for share',
+    [RAIT_TENANT, input.caseId],
+  );
+  const refs: string[] = [];
+  const selected: {
+    code: string;
+    clock: string;
+    timer: string;
+    parameter: string;
+    alerts: string[];
+    incidents: string[];
+  }[] = [];
+  for (const [code, timerCode, key] of [
+    ['A', 'T-DEC', 'rait.ladder.A'],
+    ['C', 'T-PAR-3A', 'rait.ladder.C'],
+    ['D', 'T-PRESC-5A', 'rait.ladder.D'],
+  ] as const) {
+    const matching = clocks.filter((c) => c.clock_code === code);
+    expect(matching).toHaveLength(1);
+    const clockRef = 'sql:inf.rait_clock:' + matching[0]!.id;
+    refs.push(clockRef);
+    const clock = (await readSourceRowsScalar(tx, [clockRef]))[0]!.fields;
+    const timers = await q(
+      'timers',
+      "select id from inf.infraction_timer where tenant_id=$1 and infraction_id=$2 and timer_code=$3 and status='armado' and satisfied_at is null and expired_at is null and instance is null order by id for share",
+      [RAIT_TENANT, input.infractionId, timerCode],
+    );
+    expect(timers).toHaveLength(1);
+    const timerRef = 'sql:inf.infraction_timer:' + timers[0]!.id;
+    refs.push(timerRef);
+    const parameters = await q(
+      'parameters',
+      "select id,traffic_agency_id from ops.parameter where tenant_id=$1 and surface='rait' and key=$2 and effective_from<=$3 and (effective_to is null or effective_to>=$3) and (traffic_agency_id=$4 or traffic_agency_id is null) order by (traffic_agency_id is not null) desc,effective_from desc,version desc for share",
+      [RAIT_TENANT, key, input.today, input.agencyId],
+    );
+    const agency = parameters.filter(
+      (p) => p.traffic_agency_id === input.agencyId,
+    );
+    const tier = agency.length
+      ? agency
+      : parameters.filter((p) => p.traffic_agency_id === null);
+    expect(tier).toHaveLength(1);
+    const parameterRef = 'sql:ops.parameter:' + tier[0]!.id;
+    refs.push(parameterRef);
+    const record = {
+      code,
+      clock: clockRef,
+      timer: timerRef,
+      parameter: parameterRef,
+      alerts: [] as string[],
+      incidents: [] as string[],
+    };
+    if (input.today >= String(clock.ceiling_on)) {
+      const alerts = await q(
+        'alerts',
+        "select id,incident_ref from inf.rait_clock_alert where tenant_id=$1 and clock_id=$2 and level='PRESCRITO_OPERACIONAL' order by id for share",
+        [RAIT_TENANT, clock.id],
+      );
+      expect(alerts).toHaveLength(1);
+      expect(alerts[0]!.incident_ref).toEqual(expect.any(String));
+      const incidents = await q(
+        'incidents',
+        'select id,case_id,clock_id from inf.rait_incident where tenant_id=$1 and incident_ref=$2 order by id for share',
+        [RAIT_TENANT, alerts[0]!.incident_ref],
+      );
+      expect(incidents).toHaveLength(1);
+      expect(incidents[0]!.case_id).toBe(input.caseId);
+      expect(incidents[0]!.clock_id).toBe(clock.id);
+      record.alerts.push('sql:inf.rait_clock_alert:' + alerts[0]!.id);
+      record.incidents.push('sql:inf.rait_incident:' + incidents[0]!.id);
+      refs.push(...record.alerts, ...record.incidents);
+    }
+    selected.push(record);
+  }
+  const rows = await readSourceRowsScalar(tx, refs);
+  return { rows, selected, observations, digest: canonicalRevision(rows) };
+}
+
 export class RaitP402ClaimFixture {
   readonly owner = new pg.Client({
     connectionString: process.env.STYNX_OWNER_DATABASE_URL,

@@ -1,0 +1,171 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+ ❯ src/teat-stream.service.spec.ts (12 tests | 5 failed) 1190ms
+     ✓ §16.3 — dado um TeatStreamPoller manual então a outbox só é consultada de novo quando a inscrição de polling dispara  1171ms
+     ✓ §16.7 item 11(a) — dado o controlador quando conectado então faz duas inscrições na porta: polling (sem intervalMs) e heartbeat (com HEARTBEAT_INTERVAL_MS) 1ms
+     ✓ §16.7 item 11(b) — dado a inscrição de heartbeat quando ela dispara então escreve ": heartbeat\n\n" na resposta 1ms
+     ✓ §16.7 item 11(c) — dado as duas inscrições quando a conexão fecha então ambas são canceladas 1ms
+     ✓ §16.7 item 11(d) — dado o controlador quando conectado então nunca chama um setInterval real, nem para polling nem para heartbeat 1ms
+     × controller default forwards exact optional topic intent 6ms
+     × controller filtered forwards exact optional topic intent 3ms
+     × controller explicit empty forwards exact optional topic intent 1ms
+     ✓ actual service default tuple keeps tuple/order/default200 and binds topic predicates before limit 2ms
+     ✓ actual service default instant keeps tuple/order/default200 and binds topic predicates before limit 1ms
+     × actual service filtered tuple keeps tuple/order/default200 and binds topic predicates before limit 1ms
+     × actual service empty instant keeps tuple/order/default200 and binds topic predicates before limit 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/teat-stream.service.spec.ts > approved topic-before-limit SQL and controller argument contract > controller default forwards exact optional topic intent
+AssertionError: expected "vi.fn()" to be called once with arguments: [ ObjectContaining {"id": null}, …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   ObjectContaining {
++   {
++     "createdAt": "2026-09-14T15:00:00.000Z",
+      "id": null,
+    },
+-   undefined,
+-   undefined,
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/teat-stream.service.spec.ts:274:33
+    272|         topics,
+    273|       );
+    274|       expect(service.listSince).toHaveBeenCalledExactlyOnceWith(
+       |                                 ^
+    275|         expect.objectContaining({ id: null }),
+    276|         undefined,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/teat-stream.service.spec.ts > approved topic-before-limit SQL and controller argument contract > controller filtered forwards exact optional topic intent
+AssertionError: expected "vi.fn()" to be called once with arguments: [ ObjectContaining {"id": null}, …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   ObjectContaining {
++   {
++     "createdAt": "2026-09-14T15:00:00.000Z",
+      "id": null,
+    },
+-   undefined,
+-   [
+-     "ait.changed",
+-     "ait.concurrency-suspected",
+-   ],
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/teat-stream.service.spec.ts:274:33
+    272|         topics,
+    273|       );
+    274|       expect(service.listSince).toHaveBeenCalledExactlyOnceWith(
+       |                                 ^
+    275|         expect.objectContaining({ id: null }),
+    276|         undefined,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/teat-stream.service.spec.ts > approved topic-before-limit SQL and controller argument contract > controller explicit empty forwards exact optional topic intent
+AssertionError: expected "vi.fn()" to be called once with arguments: [ ObjectContaining {"id": null}, …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   ObjectContaining {
++   {
++     "createdAt": "2026-09-14T15:00:00.000Z",
+      "id": null,
+    },
+-   undefined,
+-   [],
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/teat-stream.service.spec.ts:274:33
+    272|         topics,
+    273|       );
+    274|       expect(service.listSince).toHaveBeenCalledExactlyOnceWith(
+       |                                 ^
+    275|         expect.objectContaining({ id: null }),
+    276|         undefined,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/teat-stream.service.spec.ts > approved topic-before-limit SQL and controller argument contract > actual service filtered tuple keeps tuple/order/default200 and binds topic predicates before limit
+AssertionError: expected [ '2026-10-21T09:00:00Z', …(2) ] to deeply equal [ '2026-10-21T09:00:00Z', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "2026-10-21T09:00:00Z",
+    "00000000-0000-4000-8000-000000000001",
+    200,
+-   [
+-     "ait.changed",
+-   ],
+  ]
+
+ ❯ src/teat-stream.service.spec.ts:321:20
+    319|       const [sql, args] = query.mock.calls[0] as unknown as [string, u…
+    320|       const base = id ? [cursor.createdAt, id, 200] : [cursor.createdA…
+    321|       expect(args).toEqual(
+       |                    ^
+    322|         topics === undefined ? base : [...base, [...topics]],
+    323|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/teat-stream.service.spec.ts > approved topic-before-limit SQL and controller argument contract > actual service empty instant keeps tuple/order/default200 and binds topic predicates before limit
+AssertionError: expected [ '2026-10-21T09:00:00Z', 200 ] to deeply equal [ '2026-10-21T09:00:00Z', 200, [] ]
+
+- Expected
++ Received
+
+  [
+    "2026-10-21T09:00:00Z",
+    200,
+-   [],
+  ]
+
+ ❯ src/teat-stream.service.spec.ts:321:20
+    319|       const [sql, args] = query.mock.calls[0] as unknown as [string, u…
+    320|       const base = id ? [cursor.createdAt, id, 200] : [cursor.createdA…
+    321|       expect(args).toEqual(
+       |                    ^
+    322|         topics === undefined ? base : [...base, [...topics]],
+    323|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 7 passed (12)
+   Start at  12:31:19
+   Duration  1.34s (transform 345ms, setup 0ms, import 34ms, tests 1.19s, environment 0ms)
+
+JSON report written to /tmp/pr211-teat-unit-red.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/teat-stream.service.spec.ts --reporter=default --reporter=json --outputFile=/tmp/pr211-teat-unit-red.json
