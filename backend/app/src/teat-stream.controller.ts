@@ -109,7 +109,11 @@ export class TeatStreamController {
       if (closed) return;
       let rows;
       try {
-        rows = await this.service.listSince(cursor);
+        rows = await this.service.listSince(
+          cursor,
+          undefined,
+          topicFilter ? [...topicFilter] : undefined,
+        );
       } catch {
         return;
       }
