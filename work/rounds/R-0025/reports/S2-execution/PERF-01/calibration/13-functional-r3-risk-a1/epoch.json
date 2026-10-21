@@ -1,0 +1,3164 @@
+{
+  "slot": 13,
+  "mode": "functional",
+  "round": 3,
+  "control": "risk",
+  "attempt": 1,
+  "startUTC": "2026-10-21T20:24:55.636758+00:00",
+  "directory": "/tmp/pr211-calibration/13-functional-r3-risk-a1",
+  "idleBefore": "detran_r7_ctg1_a2|0",
+  "prepareExit": [
+    0,
+    0
+  ],
+  "command": [
+    "pnpm",
+    "--filter",
+    "@detran/app",
+    "exec",
+    "vitest",
+    "run",
+    "tests/e2e/rait-p402-claim.e2e.spec.ts",
+    "-t",
+    "a risk blocker beyond position50",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=/tmp/pr211-calibration/13-functional-r3-risk-a1/result.json"
+  ],
+  "budgetMs": 90000,
+  "runnerExit": 0,
+  "runnerWallSeconds": 67.49562016699929,
+  "idleAfter": "detran_r7_ctg1_a2|0",
+  "calibration": {
+    "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+    "mode": "functional",
+    "budgetMs": 90000,
+    "lifecycleStatus": "pass",
+    "setupMs": 12710.506541,
+    "bodyMs": 40015.65004200001,
+    "setupCompleted": true,
+    "elapsedMs": 52855.664625000005,
+    "reference30sExceeded": true,
+    "detailedQueryObserver": false,
+    "queryPrototypeOriginal": true,
+    "operations": [
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 2,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 718.1723340000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 6,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 842.2013329999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 4,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 973.324208,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 8,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1235.6881250000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 1,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1419.476958000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 5,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1522.4619579999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 17,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1624.101791000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 3,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1802.7290840000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 7,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1935.280334000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 12,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2060.4222499999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 16,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2182.799832999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 9,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2349.1694580000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 10,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2485.2608330000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 13,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2611.8027090000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 15,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2737.781500000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 11,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2895.035249999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 14,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 3014.9748339999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 20,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 107.45904100000189,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 21,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 168.07866699999795,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 19,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 227.0590830000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 28,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 284.41204199999993,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 32,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 339.932291000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 29,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 399.35920799999803,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 26,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 458.27300000000105,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 33,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 515.8287920000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 25,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 582.5551250000026,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 24,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 641.3547499999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 34,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 690.0467919999974,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 18,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 761.2888329999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 30,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 815.6159169999992,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 23,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 879.3341670000009,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 31,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 931.0049579999977,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 22,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 996.0996669999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 27,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1052.7306250000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 39,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 134.79733300000225,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 36,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 190.9397080000017,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 37,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 247.51379099999758,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 42,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 300.5901249999988,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 50,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 351.52795799999876,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 35,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 412.7200410000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 46,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 462.5517919999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 38,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 518.0807090000017,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 44,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 567.242374999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 40,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 621.4255410000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 45,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 678.7647089999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 51,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 729.0875840000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 48,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 790.2852919999968,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 49,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 849.0466250000027,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 41,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 906.7119160000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 43,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 958.068207999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 47,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1009.9969999999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 56,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/170f252f-e29d-4bc9-93be-2497a34a20da/commands/triage",
+        "status": 200,
+        "elapsedMs": 215.04491699999926,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 60,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a08d850f-a7c3-48c9-92e9-382f689ef059/commands/triage",
+        "status": 200,
+        "elapsedMs": 222.5925840000018,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 63,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/76fe0d15-f405-49f9-b2c0-f7fc5ef712b6/commands/triage",
+        "status": 200,
+        "elapsedMs": 235.882916999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 55,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1a7d8d98-1e26-44ed-add3-366dfdfdc3cb/commands/triage",
+        "status": 200,
+        "elapsedMs": 258.3610830000034,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 64,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/35e78001-c1aa-49ef-8024-84d9ff994327/commands/triage",
+        "status": 200,
+        "elapsedMs": 262.28449999999793,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 52,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a056a224-1330-400a-99d0-e6abe43140a4/commands/triage",
+        "status": 200,
+        "elapsedMs": 275.3354580000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 61,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7df53b39-401d-491e-b11a-3f784d7aebcc/commands/triage",
+        "status": 200,
+        "elapsedMs": 276.5925000000025,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 65,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4c01063d-31b1-41e9-a276-58388598a280/commands/triage",
+        "status": 200,
+        "elapsedMs": 278.26554199999737,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 59,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/6b282878-5639-4a5e-b0a7-93615ed900f8/commands/triage",
+        "status": 200,
+        "elapsedMs": 282.9094580000019,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 54,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/86117a6d-9505-42c4-bfb1-0912e1f0a6be/commands/triage",
+        "status": 200,
+        "elapsedMs": 287.0350830000025,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 66,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/ccee4fc0-11fb-443c-9069-70a743c92db3/commands/triage",
+        "status": 200,
+        "elapsedMs": 284.70866599999863,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 53,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d75dd6e4-720f-45f8-be66-a43a77e77577/commands/triage",
+        "status": 200,
+        "elapsedMs": 293.6252499999973,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 62,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c3d92db4-7533-4554-a23c-4303323845a3/commands/triage",
+        "status": 200,
+        "elapsedMs": 292.98962499999834,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 58,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0b4ab484-a97e-40a2-a025-643d8dac28d6/commands/triage",
+        "status": 200,
+        "elapsedMs": 296.4011250000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 57,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/90b17243-afce-4b5f-bda3-3bd0a30cecbf/commands/triage",
+        "status": 200,
+        "elapsedMs": 298.66100000000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 67,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e8e1ebfc-91d5-4504-9c29-b1f0eaccfd7b/commands/triage",
+        "status": 200,
+        "elapsedMs": 294.6212080000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 68,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/8cb4d44f-620e-48a7-ba03-5816b9800967/commands/triage",
+        "status": 200,
+        "elapsedMs": 295.6524580000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 69,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/715f167d-ae4c-4a6b-969d-03c10579c839/commands/triage",
+        "status": 200,
+        "elapsedMs": 158.09445800000321,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 82,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0312ae0d-8efa-4a24-8b7e-e9a9d412a0ba/commands/triage",
+        "status": 200,
+        "elapsedMs": 163.27837499999805,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 70,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/743c28c5-2ae4-497b-aa03-052135430f47/commands/triage",
+        "status": 200,
+        "elapsedMs": 181.63645800000086,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 71,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/93d64a48-9cb3-4081-9780-f4f42c38fd59/commands/triage",
+        "status": 200,
+        "elapsedMs": 196.2088330000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 73,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fa1c5bcb-9d25-45b1-8204-16cbb1fb5424/commands/triage",
+        "status": 200,
+        "elapsedMs": 199.58216700000048,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 79,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/dedf917b-d87e-4e75-a72e-92dd38727d80/commands/triage",
+        "status": 200,
+        "elapsedMs": 205.20908399999826,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 77,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/97ffd176-fd0e-4b3a-8411-0485c95978fe/commands/triage",
+        "status": 200,
+        "elapsedMs": 211.36633399999846,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 80,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/6d338867-21fe-4874-b952-2a6d138c2666/commands/triage",
+        "status": 200,
+        "elapsedMs": 215.52433299999757,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 72,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2a6bbef3-d3b0-48b0-a73d-a321cc7cc82b/commands/triage",
+        "status": 200,
+        "elapsedMs": 223.2834159999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 85,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e59f8c34-45fc-4c02-a00f-8d4d9fedfbf8/commands/triage",
+        "status": 200,
+        "elapsedMs": 220.32104100000288,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 78,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/80a3459d-9de5-481e-ba11-39ab303b02dd/commands/triage",
+        "status": 200,
+        "elapsedMs": 226.81833299999926,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 74,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1da82249-ec46-44cc-809c-a0952645613a/commands/triage",
+        "status": 200,
+        "elapsedMs": 231.19191599999976,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 76,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7f52df33-8289-4520-a5bb-d237373a8cad/commands/triage",
+        "status": 200,
+        "elapsedMs": 232.31058300000223,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 84,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f00a5439-5621-47e8-8b07-82c6fde18bc2/commands/triage",
+        "status": 200,
+        "elapsedMs": 231.85162499999933,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 81,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1dda7278-a8b4-48ae-8eb6-dfa0e1147f5c/commands/triage",
+        "status": 200,
+        "elapsedMs": 234.84787499999948,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 83,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/01b01fa9-75c0-40c2-8144-d492471d9fa6/commands/triage",
+        "status": 200,
+        "elapsedMs": 238.3126250000023,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 75,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2d2373c3-6a94-4d04-97d6-39b4d6cb9255/commands/triage",
+        "status": 200,
+        "elapsedMs": 242.59070899999642,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 88,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/ae93c5dc-0e4a-4954-ba3a-f35f19177937/commands/triage",
+        "status": 200,
+        "elapsedMs": 142.0309589999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 90,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/04974420-c432-49fe-8c79-2029169497e1/commands/triage",
+        "status": 200,
+        "elapsedMs": 161.5282499999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 89,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0aba0269-6777-42b2-b0b0-b8b7b3e63488/commands/triage",
+        "status": 200,
+        "elapsedMs": 168.38424999999916,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 87,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/cf2b68ee-eae9-4521-a20a-d1fd16b47673/commands/triage",
+        "status": 200,
+        "elapsedMs": 193.6428330000017,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 102,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2a52a17b-42d3-458f-bb1c-4b190e158f4d/commands/triage",
+        "status": 200,
+        "elapsedMs": 191.2938749999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 99,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fc3a7316-f7ba-4c76-966b-4f251540ae72/commands/triage",
+        "status": 200,
+        "elapsedMs": 197.27279199999975,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 95,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/25d34659-9e69-4e8a-a3e1-3d46efcc1513/commands/triage",
+        "status": 200,
+        "elapsedMs": 204.19770900000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 101,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c616708e-c459-4345-b717-84f75fd86de3/commands/triage",
+        "status": 200,
+        "elapsedMs": 204.31595799999923,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 98,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/92e70781-0e72-4653-8a2f-63a44110bbcf/commands/triage",
+        "status": 200,
+        "elapsedMs": 209.84937499999796,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 86,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e15bd278-176c-4422-80ef-879b91ca3e7d/commands/triage",
+        "status": 200,
+        "elapsedMs": 220.48645800000304,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 97,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/84e5e506-e66f-4f38-ae82-d0c5a202d459/commands/triage",
+        "status": 200,
+        "elapsedMs": 216.3090000000011,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 100,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3846d85b-ebc6-40b1-9659-28c75cf899c6/commands/triage",
+        "status": 200,
+        "elapsedMs": 217.83279100000073,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 96,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2ba09a40-79fc-494d-8f19-585edba1d775/commands/triage",
+        "status": 200,
+        "elapsedMs": 222.69237500000236,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 94,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/097b9b52-9d6a-45de-b6b8-9ea3d7733d5d/commands/triage",
+        "status": 200,
+        "elapsedMs": 225.2799159999995,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 93,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f52e8e58-4279-4bcf-b55b-bae76cafed4a/commands/triage",
+        "status": 200,
+        "elapsedMs": 227.5840840000019,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 91,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a2d0aa24-4ae5-4412-9a61-a79dfb29f143/commands/triage",
+        "status": 200,
+        "elapsedMs": 230.52108299999963,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 92,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a8280433-d1c7-4e5c-822b-a124e8eb3389/commands/triage",
+        "status": 200,
+        "elapsedMs": 232.12666700000045,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 117,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 114.07800000000134,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 103,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 128.7142500000009,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 104,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 140.89120900000125,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 107,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 146.25224999999773,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 110,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 151.0789999999979,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 112,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 154.8518750000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 119,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 156.515416000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 115,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 161.53204099999857,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 105,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 167.99175000000105,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 113,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 167.21999999999753,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 116,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 168.08870799999931,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 106,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 174.16970799999763,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 114,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 173.11854099999982,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 109,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 177.38754100000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 118,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 176.51050000000032,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 111,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 180.98662500000137,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 108,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 185.4802920000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 130,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 129.52779200000077,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 120,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 141.0276670000021,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 132,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 143.255208999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 128,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 150.59270899999683,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 123,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 156.94195899999977,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 122,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 160.56716699999743,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 136,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 159.52495900000213,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 131,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 163.64229199999681,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 135,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 164.53787499999817,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 134,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 166.93695800000205,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 129,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 170.97037499999715,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 125,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 173.94225000000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 124,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 176.15270800000144,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 133,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 175.42583300000115,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 126,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 179.62329200000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 127,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 180.9710419999974,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 121,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 184.72274999999718,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 137,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 140.6007920000011,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 138,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 155.2793329999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 142,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 163.40799999999945,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 149,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 167.9025419999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 153,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 170.05145899999843,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 144,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 179.52816699999676,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 140,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 187.12045800000124,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 148,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 188.1946250000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 150,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 191.4610840000023,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 141,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 198.48512500000288,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 139,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 203.44491699999708,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 147,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 202.50220799999806,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 143,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 206.27649999999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 145,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 207.156541999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 146,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 208.47158399999898,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 152,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 207.4745839999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 151,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 210.0993750000016,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 155,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 185.37766700000066,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 161,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 190.82641700000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 163,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 201.9867919999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 170,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 206.3524580000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 154,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 218.82029200000034,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 158,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 220.65241700000115,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 164,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 220.44041600000128,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 167,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 221.9358339999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 156,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 227.69554199999766,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 169,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 225.2503340000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 168,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 227.72712500000125,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 159,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 233.85912500000268,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 160,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 235.0279589999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 162,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 236.4711669999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 157,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 240.916792,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 165,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 240.1238340000018,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 166,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 241.578125,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 176,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 120.6931250000016,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 171,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 135.32187499999782,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 180,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 139.29037499999686,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 178,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 149.31358399999954,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 174,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 158.99612500000148,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 185,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 156.58558400000038,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 183,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 163.19779199999903,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 179,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 168.7392089999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 175,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 175.0112079999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 182,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 172.0765829999982,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 187,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 171.46829100000105,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 172,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 182.67704199999935,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 173,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 184.06929200000013,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 184,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 179.66229100000055,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 181,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 183.6580419999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 186,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 182.820208000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 177,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 189.56129200000214,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 191,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 163.27604200000133,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 189,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 169.0208330000023,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 190,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 174.05133399999977,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 195,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 175.7659160000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 198,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 178.6280000000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 196,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 181.21620900000198,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 194,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 183.70308300000033,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 203,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 183.15233399999852,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 199,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 186.29812500000116,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 197,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 189.13400000000183,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 204,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 188.93520799999897,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 188,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 196.1004580000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 202,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 193.26800000000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 192,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 198.57787500000268,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 193,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 200.53495900000053,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 201,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 199.6299579999977,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 200,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 201.476458000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 205,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 153.2352920000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 207,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 162.54070800000045,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 214,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 164.8362500000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 209,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 175.9809580000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 221,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 177.39745799999946,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 206,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 189.07908300000054,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 211,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 190.8369590000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 220,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 188.29316599999947,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 208,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 196.01591700000063,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 217,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 193.85749999999825,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 212,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 198.45329200000197,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 213,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 199.68325000000186,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 215,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 200.79254100000253,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 210,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 204.42549999999756,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 218,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 202.23425000000134,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 219,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 203.50624999999854,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 216,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 207.01587500000096,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 223,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 187.39729100000113,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 230,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 193.59137499999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 224,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.07633400000122,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 235,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.69304099999863,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 227,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 211.82745799999975,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 231,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 213.085916,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 226,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 216.9075840000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 238,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 214.67754200000127,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 232,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 219.99587500000052,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 229,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 223.21554099999776,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 237,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 221.01987500000178,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 236,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 223.87254200000098,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 225,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 231.54079199999978,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 222,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 235.67379199999777,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 228,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 236.13774999999805,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 233,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 236.48849999999948,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 234,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 237.9527080000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 242,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 297.72004200000083,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 243,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 336.6265000000021,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 247,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 354.16945799999667,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 244,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 362.70066699999734,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 252,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 362.2842090000013,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 239,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 372.3345420000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 249,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 369.87066699999923,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 251,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 372.9462080000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 246,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 378.12275000000227,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 240,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 383.55370799999946,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 255,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 377.4807920000021,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 253,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 381.70587499999965,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 241,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 389.7308329999978,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 248,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 388.70508300000074,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 245,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 393.4986659999995,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 250,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 392.5282079999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 254,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 392.3401669999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 265,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7df53b39-401d-491e-b11a-3f784d7aebcc/commands/admit",
+        "status": 200,
+        "elapsedMs": 154.45470799999748,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 262,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0b4ab484-a97e-40a2-a025-643d8dac28d6/commands/admit",
+        "status": 200,
+        "elapsedMs": 168.44987499999843,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 261,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/90b17243-afce-4b5f-bda3-3bd0a30cecbf/commands/admit",
+        "status": 200,
+        "elapsedMs": 178.29100000000108,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 256,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a056a224-1330-400a-99d0-e6abe43140a4/commands/admit",
+        "status": 200,
+        "elapsedMs": 191.67516700000124,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 271,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e8e1ebfc-91d5-4504-9c29-b1f0eaccfd7b/commands/admit",
+        "status": 200,
+        "elapsedMs": 188.29375000000073,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 260,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/170f252f-e29d-4bc9-93be-2497a34a20da/commands/admit",
+        "status": 200,
+        "elapsedMs": 195.96249999999782,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 268,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/35e78001-c1aa-49ef-8024-84d9ff994327/commands/admit",
+        "status": 200,
+        "elapsedMs": 195.55083300000115,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 266,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c3d92db4-7533-4554-a23c-4303323845a3/commands/admit",
+        "status": 200,
+        "elapsedMs": 199.617209,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 257,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d75dd6e4-720f-45f8-be66-a43a77e77577/commands/admit",
+        "status": 200,
+        "elapsedMs": 207.23075000000244,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 258,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/86117a6d-9505-42c4-bfb1-0912e1f0a6be/commands/admit",
+        "status": 200,
+        "elapsedMs": 210.250082999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 263,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/6b282878-5639-4a5e-b0a7-93615ed900f8/commands/admit",
+        "status": 200,
+        "elapsedMs": 211.07312499999898,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 269,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4c01063d-31b1-41e9-a276-58388598a280/commands/admit",
+        "status": 200,
+        "elapsedMs": 211.32074999999895,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 259,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1a7d8d98-1e26-44ed-add3-366dfdfdc3cb/commands/admit",
+        "status": 200,
+        "elapsedMs": 217.9081670000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 272,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/8cb4d44f-620e-48a7-ba03-5816b9800967/commands/admit",
+        "status": 200,
+        "elapsedMs": 215.33791700000074,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 267,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/76fe0d15-f405-49f9-b2c0-f7fc5ef712b6/commands/admit",
+        "status": 200,
+        "elapsedMs": 220.77758299999914,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 264,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a08d850f-a7c3-48c9-92e9-382f689ef059/commands/admit",
+        "status": 200,
+        "elapsedMs": 225.51916699999856,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 270,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/ccee4fc0-11fb-443c-9069-70a743c92db3/commands/admit",
+        "status": 200,
+        "elapsedMs": 225.52820799999972,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 279,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2d2373c3-6a94-4d04-97d6-39b4d6cb9255/commands/admit",
+        "status": 200,
+        "elapsedMs": 131.48354200000176,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 280,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7f52df33-8289-4520-a5bb-d237373a8cad/commands/admit",
+        "status": 200,
+        "elapsedMs": 147.51058399999965,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 273,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/715f167d-ae4c-4a6b-969d-03c10579c839/commands/admit",
+        "status": 200,
+        "elapsedMs": 181.85375000000204,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 277,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fa1c5bcb-9d25-45b1-8204-16cbb1fb5424/commands/admit",
+        "status": 200,
+        "elapsedMs": 187.54229100000157,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 285,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1dda7278-a8b4-48ae-8eb6-dfa0e1147f5c/commands/admit",
+        "status": 200,
+        "elapsedMs": 188.51595799999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 289,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e59f8c34-45fc-4c02-a00f-8d4d9fedfbf8/commands/admit",
+        "status": 200,
+        "elapsedMs": 189.5893329999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 281,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/97ffd176-fd0e-4b3a-8411-0485c95978fe/commands/admit",
+        "status": 200,
+        "elapsedMs": 195.33799999999974,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 278,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1da82249-ec46-44cc-809c-a0952645613a/commands/admit",
+        "status": 200,
+        "elapsedMs": 199.49291699999958,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 284,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/6d338867-21fe-4874-b952-2a6d138c2666/commands/admit",
+        "status": 200,
+        "elapsedMs": 200.6108749999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 288,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f00a5439-5621-47e8-8b07-82c6fde18bc2/commands/admit",
+        "status": 200,
+        "elapsedMs": 202.2567080000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 287,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/01b01fa9-75c0-40c2-8144-d492471d9fa6/commands/admit",
+        "status": 200,
+        "elapsedMs": 206.445499999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 276,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2a6bbef3-d3b0-48b0-a73d-a321cc7cc82b/commands/admit",
+        "status": 200,
+        "elapsedMs": 213.2310409999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 286,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0312ae0d-8efa-4a24-8b7e-e9a9d412a0ba/commands/admit",
+        "status": 200,
+        "elapsedMs": 213.87329200000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 283,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/dedf917b-d87e-4e75-a72e-92dd38727d80/commands/admit",
+        "status": 200,
+        "elapsedMs": 217.60654200000135,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 275,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/93d64a48-9cb3-4081-9780-f4f42c38fd59/commands/admit",
+        "status": 200,
+        "elapsedMs": 223.37662499999715,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 274,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/743c28c5-2ae4-497b-aa03-052135430f47/commands/admit",
+        "status": 200,
+        "elapsedMs": 226.96145899999829,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 282,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/80a3459d-9de5-481e-ba11-39ab303b02dd/commands/admit",
+        "status": 200,
+        "elapsedMs": 227.3454160000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 298,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/097b9b52-9d6a-45de-b6b8-9ea3d7733d5d/commands/admit",
+        "status": 200,
+        "elapsedMs": 171.56725000000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 294,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/04974420-c432-49fe-8c79-2029169497e1/commands/admit",
+        "status": 200,
+        "elapsedMs": 184.54212499999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 295,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a2d0aa24-4ae5-4412-9a61-a79dfb29f143/commands/admit",
+        "status": 200,
+        "elapsedMs": 193.7487089999995,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 304,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3846d85b-ebc6-40b1-9659-28c75cf899c6/commands/admit",
+        "status": 200,
+        "elapsedMs": 198.99583300000086,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 293,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0aba0269-6777-42b2-b0b0-b8b7b3e63488/commands/admit",
+        "status": 200,
+        "elapsedMs": 207.51808399999936,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 306,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2a52a17b-42d3-458f-bb1c-4b190e158f4d/commands/admit",
+        "status": 200,
+        "elapsedMs": 206.36254200000258,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 296,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a8280433-d1c7-4e5c-822b-a124e8eb3389/commands/admit",
+        "status": 200,
+        "elapsedMs": 213.2728750000024,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 303,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fc3a7316-f7ba-4c76-966b-4f251540ae72/commands/admit",
+        "status": 200,
+        "elapsedMs": 214.86233300000094,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 305,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c616708e-c459-4345-b717-84f75fd86de3/commands/admit",
+        "status": 200,
+        "elapsedMs": 217.40233300000182,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 297,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f52e8e58-4279-4bcf-b55b-bae76cafed4a/commands/admit",
+        "status": 200,
+        "elapsedMs": 223.0917920000029,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 290,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/e15bd278-176c-4422-80ef-879b91ca3e7d/commands/admit",
+        "status": 200,
+        "elapsedMs": 229.05779200000325,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 292,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/ae93c5dc-0e4a-4954-ba3a-f35f19177937/commands/admit",
+        "status": 200,
+        "elapsedMs": 231.84020899999814,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 300,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2ba09a40-79fc-494d-8f19-585edba1d775/commands/admit",
+        "status": 200,
+        "elapsedMs": 232.7124589999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 302,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/92e70781-0e72-4653-8a2f-63a44110bbcf/commands/admit",
+        "status": 200,
+        "elapsedMs": 235.47358299999905,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 299,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/25d34659-9e69-4e8a-a3e1-3d46efcc1513/commands/admit",
+        "status": 200,
+        "elapsedMs": 239.93162499999744,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 291,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/cf2b68ee-eae9-4521-a20a-d1fd16b47673/commands/admit",
+        "status": 200,
+        "elapsedMs": 245.67737500000294,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 301,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/84e5e506-e66f-4f38-ae82-d0c5a202d459/commands/admit",
+        "status": 200,
+        "elapsedMs": 245.85433399999965,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 307,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 200,
+        "elapsedMs": 9261.490708999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 308,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 200,
+        "elapsedMs": 9483.287250000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 309,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 503,
+        "elapsedMs": 11725.536500000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+        "id": 310,
+        "phase": "body",
+        "method": "POST",
+        "path": "/v1/inf/rait/pools/40fb7e4b-fefa-4967-af53-eb6f29dab7ca/claim-next",
+        "status": 503,
+        "elapsedMs": 9481.17566700001,
+        "late": false
+      }
+    ],
+    "limitation": "Lightweight HTTP/phase timing; native Vitest outcome authoritative, no performancePASS from provisionalbudget"
+  },
+  "nativeCounts": {
+    "numPassedTests": 1,
+    "numFailedTests": 0,
+    "numPendingTests": 125,
+    "numTotalTests": 126
+  },
+  "detailedSnapshots": 0,
+  "lateHTTPCount": 0,
+  "bodyObserved": true,
+  "endUTC": "2026-10-21T20:26:17.550480+00:00",
+  "rawCustody": {
+    "uncompressedSHA256": "f3f6495e250f721144f63faaa8f8c541dfd7b63057be9fe2c6b69be68a2977d7",
+    "uncompressedBytes": 153886,
+    "gzipSHA256": "4a4158efca0598cfe830ea04219334879c4dedd25a02e03178ee2954f415bc6a",
+    "gzipBytes": 20151
+  }
+}

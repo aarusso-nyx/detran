@@ -1,0 +1,3164 @@
+{
+  "slot": 18,
+  "mode": "functional",
+  "round": 4,
+  "control": "legacy",
+  "attempt": 1,
+  "startUTC": "2026-10-21T20:31:14.598872+00:00",
+  "directory": "/tmp/pr211-calibration/18-functional-r4-legacy-a1",
+  "idleBefore": "detran_r7_ctg1_a2|0",
+  "prepareExit": [
+    0,
+    0
+  ],
+  "command": [
+    "pnpm",
+    "--filter",
+    "@detran/app",
+    "exec",
+    "vitest",
+    "run",
+    "tests/e2e/rait-p402-claim.e2e.spec.ts",
+    "-t",
+    "a legacy blocker beyond position50",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=/tmp/pr211-calibration/18-functional-r4-legacy-a1/result.json"
+  ],
+  "budgetMs": 90000,
+  "runnerExit": 0,
+  "runnerWallSeconds": 73.8895869590342,
+  "idleAfter": "detran_r7_ctg1_a2|0",
+  "calibration": {
+    "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+    "mode": "functional",
+    "budgetMs": 90000,
+    "lifecycleStatus": "pass",
+    "setupMs": 16018.649458,
+    "bodyMs": 41712.75975,
+    "setupCompleted": true,
+    "elapsedMs": 57754.849541,
+    "reference30sExceeded": true,
+    "detailedQueryObserver": false,
+    "queryPrototypeOriginal": true,
+    "operations": [
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 12,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 655.8391669999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 9,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 830.2026670000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 3,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1047.4190839999992,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 5,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1197.4714159999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 13,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1337.2287079999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 6,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1519.7440419999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 11,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1659.2852919999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 4,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1815.828375000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 1,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1992.9547500000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 15,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2076.945916999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 10,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2232.7895000000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 16,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2352.967291000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 2,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2537.839749999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 14,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2654.3989170000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 17,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2786.951708999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 8,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2973.952874999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 7,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 3157.617542,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 19,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 154.7219589999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 20,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 217.14429100000052,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 25,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 272.3362500000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 21,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 340.1474999999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 23,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 410.59608300000036,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 30,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 470.81129099999816,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 24,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 541.5759170000019,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 18,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 615.2517920000028,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 27,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 672.510542,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 33,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 731.2227079999975,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 31,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 808.2597920000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 32,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 882.5190419999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 28,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 960.3094999999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 22,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1031.6902910000026,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 34,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1091.7667499999989,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 29,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1208.808083,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 26,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1277.9025000000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 35,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 172.57924999999886,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 36,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 226.789166999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 37,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 286.4354170000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 47,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 335.0111250000009,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 42,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 396.6903749999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 41,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 453.24854199999754,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 46,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 505.0742089999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 45,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 561.1610419999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 48,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 624.2422079999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 39,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 691.9091249999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 40,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 747.5697499999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 51,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 805.0684579999979,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 44,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 868.9199159999989,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 38,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 928.208749999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 43,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 983.8467909999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 50,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1036.2588329999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 49,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 1092.3812090000029,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 52,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d5aee2ab-4b3c-4290-a50a-fe3781a21077/commands/triage",
+        "status": 200,
+        "elapsedMs": 493.37062499999956,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 65,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/04ef5463-20bb-4339-afb2-c33cde1d1d51/commands/triage",
+        "status": 200,
+        "elapsedMs": 524.073292000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 63,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2881eff6-21c8-41b7-be57-99d94ebe7d3f/commands/triage",
+        "status": 200,
+        "elapsedMs": 553.0047080000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 60,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/da9a1045-bbbe-4b03-937f-a7db4cccda40/commands/triage",
+        "status": 200,
+        "elapsedMs": 567.0915829999976,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 57,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c31612fc-a2a0-482d-a262-23f3816222fe/commands/triage",
+        "status": 200,
+        "elapsedMs": 577.8801250000033,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 64,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/29612f1b-ad42-4bf6-8934-4dc33b58ebde/commands/triage",
+        "status": 200,
+        "elapsedMs": 575.7749579999982,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 66,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/9335113b-5833-4e21-994c-e0ad0d2b9cab/commands/triage",
+        "status": 200,
+        "elapsedMs": 583.3793340000011,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 55,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/06afe5df-c801-490b-a420-b3bcbcb7cfe4/commands/triage",
+        "status": 200,
+        "elapsedMs": 600.9973329999993,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 54,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/53e7083e-691c-41de-86c3-bef5a250e8d1/commands/triage",
+        "status": 200,
+        "elapsedMs": 608.5920420000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 62,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/8c0a829d-9145-411d-986d-05ccba693dd5/commands/triage",
+        "status": 200,
+        "elapsedMs": 605.9602080000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 68,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3fd5d884-5f66-4198-82be-e9ae84878f83/commands/triage",
+        "status": 200,
+        "elapsedMs": 602.2922500000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 58,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/51e6a146-c6e6-4c68-b276-e648ac7bfd7a/commands/triage",
+        "status": 200,
+        "elapsedMs": 616.8142499999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 53,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c739d8ad-5f90-424b-9242-480a1cc20fef/commands/triage",
+        "status": 200,
+        "elapsedMs": 622.7844579999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 67,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3d5f1d5a-e07a-4e46-ad78-0b250b1f7beb/commands/triage",
+        "status": 200,
+        "elapsedMs": 612.9315829999978,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 56,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fdb24cbf-92d1-448d-97ad-b29562af7388/commands/triage",
+        "status": 200,
+        "elapsedMs": 629.473791999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 59,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f6131923-6a1c-4e87-b44c-b0ec86e4ef30/commands/triage",
+        "status": 200,
+        "elapsedMs": 634.4808329999978,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 61,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/452ee815-55da-4898-9a4c-55fb6cefdb93/commands/triage",
+        "status": 200,
+        "elapsedMs": 640.111832999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 71,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3ef57f77-fbbd-40d2-9041-bd9eff40c22f/commands/triage",
+        "status": 200,
+        "elapsedMs": 263.68462499999805,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 70,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/30f974d3-fd75-43ee-aa1a-d200c8c46bad/commands/triage",
+        "status": 200,
+        "elapsedMs": 290.6559589999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 75,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/de985ebc-de71-4c92-afc3-30866371e53c/commands/triage",
+        "status": 200,
+        "elapsedMs": 302.3780000000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 83,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/41293954-ef4b-453b-8b74-36a256b42bea/commands/triage",
+        "status": 200,
+        "elapsedMs": 298.0064170000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 74,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f2f82a45-9a83-471a-9427-d1b04aae46e7/commands/triage",
+        "status": 200,
+        "elapsedMs": 351.74475000000166,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 73,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/44f36c82-da6f-41c7-ad6d-fe74065323c4/commands/triage",
+        "status": 200,
+        "elapsedMs": 368.0653749999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 80,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a62a14a2-162d-438a-94f2-17c4fad8aaf2/commands/triage",
+        "status": 200,
+        "elapsedMs": 352.44545800000196,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 82,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3f5ead64-fb3f-46b0-864e-6f1c6cd1f841/commands/triage",
+        "status": 200,
+        "elapsedMs": 362.93054199999824,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 69,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f470b8f5-5697-4132-8590-7dc89fc17089/commands/triage",
+        "status": 200,
+        "elapsedMs": 416.484375,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 81,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/184f6360-9e10-4f79-b475-d36005d5c469/commands/triage",
+        "status": 200,
+        "elapsedMs": 373.1216670000031,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 84,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d298040d-14f4-4dc2-a0d4-f3fd3f91f304/commands/triage",
+        "status": 200,
+        "elapsedMs": 373.890625,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 85,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/dd2ec3a8-fa99-4627-88b2-517eca35cafe/commands/triage",
+        "status": 200,
+        "elapsedMs": 376.9679169999981,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 72,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/13ca67df-89e7-4c3e-aef4-085019df8475/commands/triage",
+        "status": 200,
+        "elapsedMs": 420.67412500000137,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 77,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/bbe7d4fe-b7a2-4b81-896a-ccba573bb090/commands/triage",
+        "status": 200,
+        "elapsedMs": 404.2491660000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 76,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/abf3de7c-019f-4f06-b860-53fbf5490ccf/commands/triage",
+        "status": 200,
+        "elapsedMs": 411.2650419999991,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 79,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a0e7f061-7f78-44ab-8f22-71244125e7c1/commands/triage",
+        "status": 200,
+        "elapsedMs": 402.15437499999825,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 78,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4a2ba058-450e-44b1-8e11-cc2b32b096a9/commands/triage",
+        "status": 200,
+        "elapsedMs": 408.43174999999974,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 86,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1152f56f-49f3-4aff-aa53-346e547edc07/commands/triage",
+        "status": 200,
+        "elapsedMs": 153.67833400000018,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 88,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2923d0b6-632e-4127-95c4-00e1ab495cfc/commands/triage",
+        "status": 200,
+        "elapsedMs": 170.54858400000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 89,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/94c9e746-fe79-4354-94e1-8e6b6dd097e4/commands/triage",
+        "status": 200,
+        "elapsedMs": 176.90179100000023,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 96,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7721e6d0-26d6-44d3-95ba-731ccec541d0/commands/triage",
+        "status": 200,
+        "elapsedMs": 181.8496669999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 99,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1ff2bf60-e2da-4fa6-b304-b3f88edf6ce0/commands/triage",
+        "status": 200,
+        "elapsedMs": 184.9187920000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 91,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4501955e-14be-48ad-9009-6c1e8f672b54/commands/triage",
+        "status": 200,
+        "elapsedMs": 195.43841699999757,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 90,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/87006fb5-afd6-47cd-a9c5-527c8b27ea84/commands/triage",
+        "status": 200,
+        "elapsedMs": 200.7713330000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 102,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1a0f65e0-eae2-4857-951b-747c157e1f28/commands/triage",
+        "status": 200,
+        "elapsedMs": 197.96170800000255,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 101,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/b4cfe9fd-f124-458a-9157-d7bcf1aa7227/commands/triage",
+        "status": 200,
+        "elapsedMs": 202.88324999999895,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 93,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/9a706d5c-22b9-4b0a-9f98-254b9014b4c8/commands/triage",
+        "status": 200,
+        "elapsedMs": 212.3534159999981,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 94,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/bcc52c1e-123a-4fcd-baba-062b43f4e762/commands/triage",
+        "status": 200,
+        "elapsedMs": 215.0961669999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 98,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c4ad4c2c-c4dc-40f5-a206-e179e78c458f/commands/triage",
+        "status": 200,
+        "elapsedMs": 215.79183299999931,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 95,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/05d59a05-960c-496c-afa6-dc7836506acf/commands/triage",
+        "status": 200,
+        "elapsedMs": 221.041792,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 92,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2b382e3d-79ee-4d5b-a3c2-fabc2d27a7de/commands/triage",
+        "status": 200,
+        "elapsedMs": 225.07433300000048,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 97,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0c1c455b-7124-4dbf-a042-ba2fc1c21136/commands/triage",
+        "status": 200,
+        "elapsedMs": 225.40608299999803,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 100,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/00303f71-46af-45b8-bd84-c030f668476d/commands/triage",
+        "status": 200,
+        "elapsedMs": 224.62491599999703,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 87,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d5eafd8a-c1a1-45a6-a976-63d909a698ac/commands/triage",
+        "status": 200,
+        "elapsedMs": 234.02391599999828,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 103,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 186.7943750000013,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 108,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 206.6371250000011,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 113,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 227.27470900000117,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 106,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 252.72583299999678,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 109,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 259.77908300000126,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 104,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 272.6222080000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 119,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 284.3028329999979,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 105,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 302.67304199999853,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 118,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 302.34749999999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 114,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 309.44124999999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 110,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 316.668875000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 107,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 322.0369580000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 115,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 327.3902080000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 111,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 335.1357500000013,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 112,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 339.52024999999776,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 116,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 341.7630419999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 117,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 344.68216700000266,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 121,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 234.4339579999978,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 122,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 255.22699999999895,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 127,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 262.3743749999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 130,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 269.60383400000137,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 133,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 274.42662500000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 131,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 282.7766249999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 129,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 294.4735409999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 132,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 299.52950000000055,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 123,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 313.43129099999715,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 126,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 317.50579199999993,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 135,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 312.2722079999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 128,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 326.2534590000032,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 120,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 336.744708000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 136,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 324.1899999999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 124,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 341.49774999999863,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 125,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 355.86712500000067,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 134,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 353.085959,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 142,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 228.10625000000073,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 144,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 244.32095800000025,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 150,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 271.84449999999924,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 139,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 293.895625000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 153,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 316.46216699999786,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 148,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 336.6283340000009,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 137,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 354.24204199999804,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 151,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 352.61666700000205,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 140,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 366.3993330000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 138,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 373.6958749999976,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 149,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 372.2470839999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 143,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 381.9582499999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 141,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 386.7258330000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 146,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 387.4457909999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 145,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 389.77016699999876,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 152,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 387.23149999999805,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 147,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 392.63966699999946,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 157,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 133.3022920000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 155,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 169.80274999999892,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 170,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 170.36258299999827,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 163,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 183.18683299999975,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 159,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 190.72791700000016,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 156,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 195.92570799999885,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 169,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 192.40779199999815,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 158,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 201.3859169999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 165,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 201.42412499999773,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 164,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.5512920000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 154,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 213.10491700000057,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 160,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 212.49245899999733,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 162,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 214.55199999999968,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 167,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 214.8692919999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 166,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 217.19554100000096,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 161,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 222.26329199999964,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 168,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 220.5706250000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 173,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 160.4077920000018,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 183,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 178.541583000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 178,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 189.91770800000086,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 187,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 196.3467500000006,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 171,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 209.11454199999935,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 182,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 211.3539579999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 176,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 216.15762499999983,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 179,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 217.49316700000054,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 181,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 219.0817500000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 172,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 224.6915829999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 185,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 224.01774999999907,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 174,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 230.13683300000048,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 184,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 229.950582999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 186,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 232.619917,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 177,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 238.1492500000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 175,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 242.80587500000183,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 180,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 243.28616700000202,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 201,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 178.52708300000086,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 194,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 203.75787499999933,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 190,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 223.78562500000044,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 198,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 236.59733400000187,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 199,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 248.74637500000244,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 203,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 253.74804099999892,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 204,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 257.81379200000083,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 200,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 265.7275840000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 197,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 270.62445800000205,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 191,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 276.6750420000026,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 192,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 278.8875829999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 193,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 283.8755829999973,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 195,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 286.1008750000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 202,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 283.16712499999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 188,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 294.7451250000013,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 196,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 293.37674999999945,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 189,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 299.8104579999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 205,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 156.55749999999898,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 207,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 196.15350000000035,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 208,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.24937499999942,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 215,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 212.676958,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 211,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 221.08633299999929,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 213,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 234.62845799999923,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 219,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 254.4277919999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 218,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 264.57304099999965,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 212,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 274.7140419999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 210,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 281.1558750000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 220,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 278.0695830000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 209,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 289.73975000000064,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 217,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 287.7796669999989,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 206,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 296.79458299999897,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 216,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 295.2875830000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 221,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 294.8141250000008,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 214,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 303.7819580000032,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 228,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 209.5070420000011,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 226,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 219.76816600000166,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 223,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 226.88341699999728,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 230,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 232.0062919999982,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 222,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 245.74524999999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 231,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 248.3427499999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 227,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 257.1597499999989,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 235,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 255.65966599999956,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 233,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 261.54454199999964,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 229,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 268.3934160000026,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 238,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 260.7011249999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 224,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 275.7067500000012,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 237,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 266.5916659999966,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 225,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 280.239375000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 234,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 280.2627079999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 232,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 285.3038750000014,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 236,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 282.8027919999986,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 246,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 145.45700000000215,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 240,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 159.32920800000284,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 244,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 166.36062500000116,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 243,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 171.8495830000029,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 249,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 174.68074999999953,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 250,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 176.99487500000032,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 253,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 180.33583400000134,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 254,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 184.06741700000202,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 242,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 192.93604200000118,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 245,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 194.051958,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 248,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 194.08212499999718,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 252,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 194.57966599999781,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 255,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 195.92016700000022,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 241,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.54304200000115,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 247,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 205.81883300000118,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 239,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 211.85491700000057,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 251,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/admissibility",
+        "status": 200,
+        "elapsedMs": 207.461041999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 267,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2881eff6-21c8-41b7-be57-99d94ebe7d3f/commands/admit",
+        "status": 200,
+        "elapsedMs": 141.50287500000195,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 256,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d5aee2ab-4b3c-4290-a50a-fe3781a21077/commands/admit",
+        "status": 200,
+        "elapsedMs": 164.42412499999773,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 264,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/da9a1045-bbbe-4b03-937f-a7db4cccda40/commands/admit",
+        "status": 200,
+        "elapsedMs": 173.95933300000252,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 269,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/04ef5463-20bb-4339-afb2-c33cde1d1d51/commands/admit",
+        "status": 200,
+        "elapsedMs": 180.6007090000021,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 272,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3fd5d884-5f66-4198-82be-e9ae84878f83/commands/admit",
+        "status": 200,
+        "elapsedMs": 180.9790839999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 268,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/29612f1b-ad42-4bf6-8934-4dc33b58ebde/commands/admit",
+        "status": 200,
+        "elapsedMs": 189.85399999999936,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 271,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3d5f1d5a-e07a-4e46-ad78-0b250b1f7beb/commands/admit",
+        "status": 200,
+        "elapsedMs": 190.62808400000358,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 257,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c739d8ad-5f90-424b-9242-480a1cc20fef/commands/admit",
+        "status": 200,
+        "elapsedMs": 202.0862500000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 258,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/53e7083e-691c-41de-86c3-bef5a250e8d1/commands/admit",
+        "status": 200,
+        "elapsedMs": 205.82404099999985,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 260,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/fdb24cbf-92d1-448d-97ad-b29562af7388/commands/admit",
+        "status": 200,
+        "elapsedMs": 210.80058400000053,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 259,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/06afe5df-c801-490b-a420-b3bcbcb7cfe4/commands/admit",
+        "status": 200,
+        "elapsedMs": 215.31116699999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 261,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c31612fc-a2a0-482d-a262-23f3816222fe/commands/admit",
+        "status": 200,
+        "elapsedMs": 218.37491600000067,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 262,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/51e6a146-c6e6-4c68-b276-e648ac7bfd7a/commands/admit",
+        "status": 200,
+        "elapsedMs": 222.81837499999892,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 265,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/452ee815-55da-4898-9a4c-55fb6cefdb93/commands/admit",
+        "status": 200,
+        "elapsedMs": 225.23008299999856,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 270,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/9335113b-5833-4e21-994c-e0ad0d2b9cab/commands/admit",
+        "status": 200,
+        "elapsedMs": 226.2447089999987,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 266,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/8c0a829d-9145-411d-986d-05ccba693dd5/commands/admit",
+        "status": 200,
+        "elapsedMs": 231.82995800000208,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 263,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f6131923-6a1c-4e87-b44c-b0ec86e4ef30/commands/admit",
+        "status": 200,
+        "elapsedMs": 236.61912500000108,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 283,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a0e7f061-7f78-44ab-8f22-71244125e7c1/commands/admit",
+        "status": 200,
+        "elapsedMs": 190.8916250000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 274,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/30f974d3-fd75-43ee-aa1a-d200c8c46bad/commands/admit",
+        "status": 200,
+        "elapsedMs": 211.01608299999862,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 281,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/bbe7d4fe-b7a2-4b81-896a-ccba573bb090/commands/admit",
+        "status": 200,
+        "elapsedMs": 216.2450830000016,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 275,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3ef57f77-fbbd-40d2-9041-bd9eff40c22f/commands/admit",
+        "status": 200,
+        "elapsedMs": 224.44924999999785,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 278,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f2f82a45-9a83-471a-9427-d1b04aae46e7/commands/admit",
+        "status": 200,
+        "elapsedMs": 228.06270900000163,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 288,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d298040d-14f4-4dc2-a0d4-f3fd3f91f304/commands/admit",
+        "status": 200,
+        "elapsedMs": 228.23433300000033,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 289,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/dd2ec3a8-fa99-4627-88b2-517eca35cafe/commands/admit",
+        "status": 200,
+        "elapsedMs": 232.52645800000028,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 282,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4a2ba058-450e-44b1-8e11-cc2b32b096a9/commands/admit",
+        "status": 200,
+        "elapsedMs": 241.3445419999989,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 284,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/a62a14a2-162d-438a-94f2-17c4fad8aaf2/commands/admit",
+        "status": 200,
+        "elapsedMs": 245.9007500000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 285,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/184f6360-9e10-4f79-b475-d36005d5c469/commands/admit",
+        "status": 200,
+        "elapsedMs": 248.7130419999994,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 286,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/3f5ead64-fb3f-46b0-864e-6f1c6cd1f841/commands/admit",
+        "status": 200,
+        "elapsedMs": 254.09400000000096,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 277,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/44f36c82-da6f-41c7-ad6d-fe74065323c4/commands/admit",
+        "status": 200,
+        "elapsedMs": 262.5541659999981,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 280,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/abf3de7c-019f-4f06-b860-53fbf5490ccf/commands/admit",
+        "status": 200,
+        "elapsedMs": 266.75633299999754,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 287,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/41293954-ef4b-453b-8b74-36a256b42bea/commands/admit",
+        "status": 200,
+        "elapsedMs": 268.04358299999876,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 279,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/de985ebc-de71-4c92-afc3-30866371e53c/commands/admit",
+        "status": 200,
+        "elapsedMs": 276.3682910000025,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 273,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/f470b8f5-5697-4132-8590-7dc89fc17089/commands/admit",
+        "status": 200,
+        "elapsedMs": 283.47262500000215,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 276,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/13ca67df-89e7-4c3e-aef4-085019df8475/commands/admit",
+        "status": 200,
+        "elapsedMs": 286.3417499999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 290,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1152f56f-49f3-4aff-aa53-346e547edc07/commands/admit",
+        "status": 200,
+        "elapsedMs": 142.6140830000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 291,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/d5eafd8a-c1a1-45a6-a976-63d909a698ac/commands/admit",
+        "status": 200,
+        "elapsedMs": 162.61020799999824,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 293,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/94c9e746-fe79-4354-94e1-8e6b6dd097e4/commands/admit",
+        "status": 200,
+        "elapsedMs": 174.0049590000017,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 294,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/87006fb5-afd6-47cd-a9c5-527c8b27ea84/commands/admit",
+        "status": 200,
+        "elapsedMs": 197.3224999999984,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 299,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/05d59a05-960c-496c-afa6-dc7836506acf/commands/admit",
+        "status": 200,
+        "elapsedMs": 205.02258299999812,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 306,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1a0f65e0-eae2-4857-951b-747c157e1f28/commands/admit",
+        "status": 200,
+        "elapsedMs": 205.2971660000003,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 301,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/0c1c455b-7124-4dbf-a042-ba2fc1c21136/commands/admit",
+        "status": 200,
+        "elapsedMs": 219.11645900000076,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 292,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2923d0b6-632e-4127-95c4-00e1ab495cfc/commands/admit",
+        "status": 200,
+        "elapsedMs": 234.8344160000015,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 302,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/c4ad4c2c-c4dc-40f5-a206-e179e78c458f/commands/admit",
+        "status": 200,
+        "elapsedMs": 229.18720799999937,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 296,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/2b382e3d-79ee-4d5b-a3c2-fabc2d27a7de/commands/admit",
+        "status": 200,
+        "elapsedMs": 240.86604200000147,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 305,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/b4cfe9fd-f124-458a-9157-d7bcf1aa7227/commands/admit",
+        "status": 200,
+        "elapsedMs": 234.01766700000007,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 304,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/00303f71-46af-45b8-bd84-c030f668476d/commands/admit",
+        "status": 200,
+        "elapsedMs": 239.99345899999753,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 300,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/7721e6d0-26d6-44d3-95ba-731ccec541d0/commands/admit",
+        "status": 200,
+        "elapsedMs": 249.97950000000128,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 295,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/4501955e-14be-48ad-9009-6c1e8f672b54/commands/admit",
+        "status": 200,
+        "elapsedMs": 259.0312920000033,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 303,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/1ff2bf60-e2da-4fa6-b304-b3f88edf6ce0/commands/admit",
+        "status": 200,
+        "elapsedMs": 252.38520800000333,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 298,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/bcc52c1e-123a-4fcd-baba-062b43f4e762/commands/admit",
+        "status": 200,
+        "elapsedMs": 262.3919999999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 297,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases/9a706d5c-22b9-4b0a-9f98-254b9014b4c8/commands/admit",
+        "status": 200,
+        "elapsedMs": 266.28891699999804,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 307,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 200,
+        "elapsedMs": 9493.525083,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 308,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 200,
+        "elapsedMs": 10183.256916999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 309,
+        "phase": "body",
+        "method": "GET",
+        "path": "/v1/inf/rait/claim-context",
+        "status": 409,
+        "elapsedMs": 11700.194666999996,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+        "id": 310,
+        "phase": "body",
+        "method": "POST",
+        "path": "/v1/inf/rait/pools/f87a9a0c-cb7a-4e99-99d0-8ac112781c71/claim-next",
+        "status": 409,
+        "elapsedMs": 10251.535458999992,
+        "late": false
+      }
+    ],
+    "limitation": "Lightweight HTTP/phase timing; native Vitest outcome authoritative, no performancePASS from provisionalbudget"
+  },
+  "nativeCounts": {
+    "numPassedTests": 1,
+    "numFailedTests": 0,
+    "numPendingTests": 125,
+    "numTotalTests": 126
+  },
+  "detailedSnapshots": 0,
+  "lateHTTPCount": 0,
+  "bodyObserved": true,
+  "endUTC": "2026-10-21T20:32:41.555220+00:00",
+  "rawCustody": {
+    "uncompressedSHA256": "cade692bdee81940b5ecb7a8341f722631e9b1e3cfaaa1ad1105c47b022469b5",
+    "uncompressedBytes": 154439,
+    "gzipSHA256": "f4f670bbfa4f073aec9e85ee0dfc454085d5a9bda9e7f2c3a8614164e50b9087",
+    "gzipBytes": 20283
+  }
+}
