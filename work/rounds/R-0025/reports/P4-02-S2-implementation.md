@@ -268,3 +268,29 @@ Receipts: S2-execution/pr211-JW01-isolation-final.json. The previous awaiting
 Owner approval statement is superseded only for this bounded extension.
 Four51-case timeouts, supported historical-anchor reconciliation and independent
 review authority remain unresolved. No merge, S3, scorecard action or closure.
+
+### Owner-authorized additional review and exact repair packets — 2026-10-21
+
+The previous statement that independent review authority is missing is superseded
+by the explicit one-time authorization in AUTHORIZATION.md. It was executed via
+the cross-family bridge at63cb628f; verdict REVIEW, F6resolved, F3deferred. This
+is one human-escalated cycle, not a reset or fourth-review authorization.
+Raw artifacts: reviews/S2-delivery-owner-extension/ relative to R-0025.
+
+Proposals now prepared: reports/S2-execution/P4-02-S2-PERF-01.md (closed P0
+measurement of real runtime/verifier/calendar costs; P1 implementation paused) and
+reports/S2-execution/P4-02-S2-ANCHOR-01.md (supported upstream repair/release, then
+separate actual-version DETRAN adoption). Neither packet is approved for execution.
+No speculative speedup, available recovery API/version, sibling write or chain
+repair is claimed. All original custody hashes and line7 digest match.
+
+ReviewF7 identifies a real-PG service-ordering sensor gap: the current role403
+control stops at the guard. F8 identifies an overbroad wrongactivepool label; actual
+coverage combines wrong pool and inactive binding. Both remain explicit Inspector
+follow-ups; F9 stale authority/report text is corrected by this appendix after the
+review, without an independent re-review. See
+reports/S2-execution/P4-02-S2-review-extension-disposition.md.
+
+Four complete51/30s failures, anchor7 orphan, F3, DRESET and authentic production
+sources remain OPEN. FullkernelFAIL and prior reviews are preserved. No merge,
+S3, frontend/runtime optimization, scorecard action or round closure.

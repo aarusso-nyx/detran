@@ -120,3 +120,18 @@ This resolves bounded JW01 isolation acceptance only. A new uninterrupted full
 canonical kernel was not run, and the earlier14FAIL epoch remains immutable.
 The four complete51/30s controls, unsupported non-newest proof recovery and
 exhausted independent review cap remain OPEN; no merge or readiness promotion.
+
+## Owner escalation executed and repair proposals prepared — 2026-10-21
+
+The previous missing-review-authority condition is superseded: Owner explicitly
+authorized one additional independent review, executed at63cb628f with REVIEW.
+F6resolved; F3deferred. New low findingsF7(service-level real-PG sensor gap) and
+F8(inactive wrong-pool vector label) remain Inspector follow-ups. F9reportstaleness
+corrected by latest appendix; no fourth review or implicit PASS.
+
+Exact proposals: ../P4-02-S2-PERF-01.md and ../P4-02-S2-ANCHOR-01.md. Approving
+PERF-01 authorizes only P0's closed two-test-path observation/contract preparation,
+not guessed runtime optimization. Anchor upstream capability and actual-version
+adoption need their separately concrete approvals. No implementation was executed.
+Review disposition: ../P4-02-S2-review-extension-disposition.md. All four performance
+failures and anchor7 remain blockers; no merge or scorecard promotion.
