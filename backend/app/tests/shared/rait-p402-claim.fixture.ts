@@ -393,6 +393,9 @@ export class P0QueryObservation {
   private readonly operations: Record<string, unknown>[] = [];
   private static readonly originalQuery = pg.Client.prototype.query;
   private readonly originalQuery = P0QueryObservation.originalQuery;
+  static queryPrototypeOriginal() {
+    return pg.Client.prototype.query === P0QueryObservation.originalQuery;
+  }
   static restore() {
     pg.Client.prototype.query = P0QueryObservation.originalQuery;
     P0QueryObservation.active = undefined;
@@ -678,7 +681,97 @@ export class P0QueryObservation {
   }
 }
 
+export class CalibrationObservation {
+  private phaseName = 'setup';
+  private bodyStart?: number;
+  private bodyEnd?: number;
+  private stopped = false;
+  private sequence = 0;
+  private readonly operations: Record<string, unknown>[] = [];
+  private listener?: (
+    req: { url?: string; method?: string },
+    res: {
+      statusCode: number;
+      once: (event: string, fn: () => void) => unknown;
+    },
+  ) => void;
+  constructor(
+    readonly test: string,
+    readonly mode: string,
+    readonly budgetMs: number,
+    readonly start: number,
+  ) {}
+  install(privateServer: {
+    prependListener: (event: string, fn: any) => unknown;
+    removeListener: (event: string, fn: any) => unknown;
+  }) {
+    this.server = privateServer;
+    this.listener = (req, res) => {
+      const begin = performance.now(),
+        phase = this.phaseName,
+        id = ++this.sequence;
+      const path = new URL(req.url ?? '/', 'http://fixture.invalid').pathname;
+      res.once('finish', () => {
+        const record = {
+          test: this.test,
+          id,
+          phase,
+          method: req.method,
+          path,
+          status: res.statusCode,
+          elapsedMs: performance.now() - begin,
+          late: this.stopped,
+        };
+        this.operations.push(record);
+        if (this.stopped)
+          console.log('CALIBRATION_LATE_HTTP', JSON.stringify(record));
+      });
+    };
+    privateServer.prependListener('request', this.listener);
+  }
+  private server?: { removeListener: (event: string, fn: any) => unknown };
+  phase(name: string) {
+    this.phaseName = name;
+    if (name === 'body') this.bodyStart = performance.now();
+    if (name === 'teardown' && this.bodyStart !== undefined)
+      this.bodyEnd = performance.now();
+  }
+  stop(status: string) {
+    this.stopped = true;
+    if (this.listener) this.server?.removeListener('request', this.listener);
+    console.log(
+      'CALIBRATION_OBSERVATION',
+      JSON.stringify({
+        test: this.test,
+        mode: this.mode,
+        budgetMs: this.budgetMs,
+        lifecycleStatus: status,
+        setupMs:
+          this.bodyStart === undefined
+            ? performance.now() - this.start
+            : this.bodyStart - this.start,
+        bodyMs:
+          this.bodyStart === undefined || this.bodyEnd === undefined
+            ? null
+            : this.bodyEnd - this.bodyStart,
+        setupCompleted: this.bodyStart !== undefined,
+        elapsedMs: performance.now() - this.start,
+        reference30sExceeded:
+          this.bodyStart !== undefined && this.bodyEnd !== undefined
+            ? this.bodyEnd - this.bodyStart > 30000
+            : null,
+        detailedQueryObserver: this.mode === 'profile',
+        queryPrototypeOriginal: P0QueryObservation.queryPrototypeOriginal(),
+        operations: this.operations,
+        limitation:
+          'Lightweight HTTP/phase timing; native Vitest outcome authoritative, no performancePASS from provisionalbudget',
+      }),
+    );
+  }
+}
+
 export class RaitP402ClaimFixture {
+  calibration: CalibrationObservation | undefined;
   observation: P0QueryObservation | undefined;
   private observe<T>(
     kind: string,

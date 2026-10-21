@@ -24,6 +24,7 @@ import {
 import {
   RaitP402ClaimFixture,
   P0QueryObservation,
+  CalibrationObservation,
   canonicalBytes,
   canonicalRevision,
   readSourceRows,
@@ -33,6 +34,22 @@ import {
   RAIT_TENANT,
 } from '../shared/rait-p402-claim.fixture.js';
 
+const calibrationMode = process.env.DETRAN_P402_CALIBRATION_MODE;
+if (
+  calibrationMode !== undefined &&
+  calibrationMode !== 'profile' &&
+  calibrationMode !== 'functional'
+)
+  throw Error(
+    'Unsupported DETRAN_P402_CALIBRATION_MODE; expected profile or functional',
+  );
+const completePoolBudget =
+  calibrationMode === 'profile'
+    ? 120000
+    : calibrationMode === 'functional'
+      ? 90000
+      : 30000;
+const detailedObservation = calibrationMode !== 'functional';
 let app: INestApplication;
 let fixture: RaitP402ClaimFixture;
 // Module loading is outside lifecycle hooks, as with static Nest imports; no timeout increase.
@@ -88,12 +105,25 @@ beforeAll(async () => {
   }
 });
 beforeEach(async () => {
+  const setupStart = performance.now();
   fixture = new RaitP402ClaimFixture();
   await fixture.connect();
   const name = expect.getState().currentTestName ?? '';
+  if (calibrationMode && name.includes('blocker beyond position50')) {
+    fixture.calibration = new CalibrationObservation(
+      name,
+      calibrationMode,
+      completePoolBudget,
+      setupStart,
+    );
+    fixture.calibration.install(app.getHttpServer());
+    if (calibrationMode === 'functional')
+      expect(P0QueryObservation.queryPrototypeOriginal()).toBe(true);
+  }
   if (
-    name.includes('blocker beyond position50') ||
-    name.includes('approved provider inventory batching')
+    detailedObservation &&
+    (name.includes('blocker beyond position50') ||
+      name.includes('approved provider inventory batching'))
   ) {
     fixture.observation = new P0QueryObservation(name, RAIT_TENANT);
     fixture.observation.install(app.getHttpServer());
@@ -111,10 +141,12 @@ afterEach(async (context) => {
       }) +
       '\n',
   );
+  fixture?.calibration?.phase('teardown');
   fixture?.observation?.phase('teardown');
   try {
     await fixture?.close();
   } finally {
+    fixture?.calibration?.stop(context.task.result?.state ?? 'unknown');
     fixture?.observation?.stop(context.task.result?.state ?? 'unknown');
   }
 });
@@ -952,67 +984,72 @@ describe('S2 complete pool inventory precedes pagination', () => {
 
   beforeEach(() => {
     fixture.observation?.phase('body');
+    fixture.calibration?.phase('body');
   });
 
   for (const missing of ['risk', 'legacy', 'routing', 'incident'] as const)
-    it(`a ${missing} blocker beyond position50 blocks the whole pool`, async () => {
-      const cases = fixture.batchCases;
-      // First prove the exact complete qualified population, rather than observing an earlier unrelated failure.
-      const control = await request(app.getHttpServer())
-        .get(`${PREFIX}/claim-context`)
-        .query({ pool_id: fixture.pool, limit: 50 })
-        .set(fixture.headers());
-      expect(control.status, JSON.stringify(control.body)).toBe(200);
-      expect(control.body.data.queue.items).toHaveLength(50);
-      expect(control.body.data.queue.nextCursor).toEqual(expect.any(String));
-      const page = await request(app.getHttpServer())
-        .get(`${PREFIX}/claim-context`)
-        .query({
-          pool_id: fixture.pool,
-          limit: 50,
-          queue_cursor: control.body.data.queue.nextCursor,
-        })
-        .set(fixture.headers());
-      expect(page.status, JSON.stringify(page.body)).toBe(200);
-      expect(page.body.data.queue.items).toHaveLength(1);
-      const last = page.body.data.queue.items[0].id as string;
-      expect(cases.map((c) => c.id)).toContain(last);
-      if (missing === 'risk' || missing === 'incident')
-        for (const receipt of fixture.receipts)
-          if (
-            receipt.core.caseId === last &&
-            receipt.core.kind ===
-              (missing === 'incident' ? 'incident' : 'timer')
-          )
-            fixture.revokedReceipts.add(receipt.digest);
-      if (missing === 'legacy') await fixture.historicallyDistributed(last); // Actual history and disposition row, independently trusted legacy receipt intentionally absent.
-      if (missing === 'routing')
-        await fixture.owner.query(
-          'update inf.rait_case_pool_scope set active=false,updated_at=clock_timestamp() where case_id=$1 and pool_id=$2',
-          [last, fixture.pool],
-        );
-      const before = await fixture.effects();
-      const discovery = await request(app.getHttpServer())
-        .get(`${PREFIX}/claim-context`)
-        .query({ pool_id: fixture.pool, limit: 1 })
-        .set(fixture.headers());
-      const claimed = await claim();
-      for (const r of [discovery, claimed]) {
-        expect(r.status, JSON.stringify(r.body)).toBe(
-          missing === 'risk' || missing === 'incident' ? 503 : 409,
-        );
-        expect(r.body.code).toBe(
-          missing === 'risk' || missing === 'incident'
-            ? 'RAIT.RISK_SOURCE_UNAVAILABLE'
-            : missing === 'legacy'
-              ? 'RAIT.CLAIM_LEGACY_UNVERIFIED'
-              : 'RAIT.CASE_POOL_UNRESOLVED',
-        );
-        expect(r.body).not.toHaveProperty('data');
-        expect(r.body.context ?? {}).toEqual({});
-      }
-      expect(await fixture.effects()).toEqual(before);
-    });
+    it(
+      `a ${missing} blocker beyond position50 blocks the whole pool`,
+      async () => {
+        const cases = fixture.batchCases;
+        // First prove the exact complete qualified population, rather than observing an earlier unrelated failure.
+        const control = await request(app.getHttpServer())
+          .get(`${PREFIX}/claim-context`)
+          .query({ pool_id: fixture.pool, limit: 50 })
+          .set(fixture.headers());
+        expect(control.status, JSON.stringify(control.body)).toBe(200);
+        expect(control.body.data.queue.items).toHaveLength(50);
+        expect(control.body.data.queue.nextCursor).toEqual(expect.any(String));
+        const page = await request(app.getHttpServer())
+          .get(`${PREFIX}/claim-context`)
+          .query({
+            pool_id: fixture.pool,
+            limit: 50,
+            queue_cursor: control.body.data.queue.nextCursor,
+          })
+          .set(fixture.headers());
+        expect(page.status, JSON.stringify(page.body)).toBe(200);
+        expect(page.body.data.queue.items).toHaveLength(1);
+        const last = page.body.data.queue.items[0].id as string;
+        expect(cases.map((c) => c.id)).toContain(last);
+        if (missing === 'risk' || missing === 'incident')
+          for (const receipt of fixture.receipts)
+            if (
+              receipt.core.caseId === last &&
+              receipt.core.kind ===
+                (missing === 'incident' ? 'incident' : 'timer')
+            )
+              fixture.revokedReceipts.add(receipt.digest);
+        if (missing === 'legacy') await fixture.historicallyDistributed(last); // Actual history and disposition row, independently trusted legacy receipt intentionally absent.
+        if (missing === 'routing')
+          await fixture.owner.query(
+            'update inf.rait_case_pool_scope set active=false,updated_at=clock_timestamp() where case_id=$1 and pool_id=$2',
+            [last, fixture.pool],
+          );
+        const before = await fixture.effects();
+        const discovery = await request(app.getHttpServer())
+          .get(`${PREFIX}/claim-context`)
+          .query({ pool_id: fixture.pool, limit: 1 })
+          .set(fixture.headers());
+        const claimed = await claim();
+        for (const r of [discovery, claimed]) {
+          expect(r.status, JSON.stringify(r.body)).toBe(
+            missing === 'risk' || missing === 'incident' ? 503 : 409,
+          );
+          expect(r.body.code).toBe(
+            missing === 'risk' || missing === 'incident'
+              ? 'RAIT.RISK_SOURCE_UNAVAILABLE'
+              : missing === 'legacy'
+                ? 'RAIT.CLAIM_LEGACY_UNVERIFIED'
+                : 'RAIT.CASE_POOL_UNRESOLVED',
+          );
+          expect(r.body).not.toHaveProperty('data');
+          expect(r.body.context ?? {}).toEqual({});
+        }
+        expect(await fixture.effects()).toEqual(before);
+      },
+      completePoolBudget,
+    );
 });
 
 describe('S2 actual canonical date ownership and applicability', () => {
