@@ -322,3 +322,32 @@ line7 remains orphaned. Verifier-first runtime-amendment.md is a proposal only,
 with no optimization authority. PR211 stays DRAFT/unmerged; S2/P4/R0025 open,
 F3/DRESET/authentic source and fullkernel/CI blockers remain independent.
 Protected local, recovery and scorecard work remain separate and untouched.
+
+## Calibration executed; proposed budgets awaiting adoption — 2026-10-21
+
+The approved120s/90s experiment ran all24 planned bodies in25 invocations.
+Four instrumented diagnostic controls passed in39.001–48.849s. Functional
+results are17PASS/3bodytimeouts at90s plus one extra routing10s protocolBatch
+preparation-hook failure. Completed functional bodies span32.478–59.286s;
+ALL24 bodies exceed the separate30s reference. Failed bodies were not retried
+to substitute successes. Censored completion times remain≥90s with unknown
+upper bounds; no completed-only maximum or credible p95 is claimed.
+
+Five functional samples per scenario are preserved with host conditions and
+raw custody under PERF-01/calibration/ (relative to S2-execution/). Load varied
+materially on8CPU/16GiB; no unrelated process or scorecard work was modified.
+No source/runtime drift during measurements. Owned DB53343 ended withzero
+clients and lease RELEASED. Original body emittedJS is byte-identical.
+
+Architect recommends90s functional and120s diagnostic HARD CEILINGS only for
+the four51-case bodies, with persistent separate30s exceedance reporting.
+Exact proposal: PERF-01/calibration-budget-proposal.md. This is NOT adoption:
+native four defaults and generic E2E remain30s, existinghooks unchanged.
+90s is not certified adequate for all measured conditions; performance remains
+OPEN/RED. No further deadline increase to manufacturePASS is recommended.
+Controlled-environment acceptance, affected suites, uninterrupted kernel and
+exact-head requiredCI remain necessary; no production SLO is established.
+
+Raw thirdREVIEW, prior full126/kernel failures, anchor7 orphan/DEVAIissue418,
+F3/DRESET/authentic source gaps remain independent. No optimization, fourth
+review, merge, S3, scorecard promotion or round closure. PR211 stays DRAFT.
