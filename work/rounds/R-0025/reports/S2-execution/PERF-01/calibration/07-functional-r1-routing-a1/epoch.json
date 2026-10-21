@@ -1,0 +1,224 @@
+{
+  "slot": 7,
+  "mode": "functional",
+  "round": 1,
+  "control": "routing",
+  "attempt": 1,
+  "startUTC": "2026-10-21T20:06:04.940821+00:00",
+  "directory": "/tmp/pr211-calibration/07-functional-r1-routing-a1",
+  "idleBefore": "detran_r7_ctg1_a2|0",
+  "prepareExit": [
+    0,
+    0
+  ],
+  "command": [
+    "pnpm",
+    "--filter",
+    "@detran/app",
+    "exec",
+    "vitest",
+    "run",
+    "tests/e2e/rait-p402-claim.e2e.spec.ts",
+    "-t",
+    "a routing blocker beyond position50",
+    "--reporter=default",
+    "--reporter=json",
+    "--outputFile=/tmp/pr211-calibration/07-functional-r1-routing-a1/result.json"
+  ],
+  "budgetMs": 90000,
+  "runnerExit": 1,
+  "runnerWallSeconds": 60.719113749975804,
+  "idleAfter": "detran_r7_ctg1_a2|0",
+  "calibration": {
+    "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+    "mode": "functional",
+    "budgetMs": 90000,
+    "lifecycleStatus": "fail",
+    "setupMs": 14403.803667,
+    "bodyMs": null,
+    "setupCompleted": false,
+    "elapsedMs": 14403.816041999999,
+    "reference30sExceeded": null,
+    "detailedQueryObserver": false,
+    "queryPrototypeOriginal": true,
+    "operations": [
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 8,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2530.6254169999957,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 7,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 2968.0682499999966,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 2,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 3462.4253329999992,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 11,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 3804.083458000001,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 4,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 4309.161708,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 1,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 4721.9571670000005,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 17,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 5042.627791999999,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 10,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 5427.213292,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 3,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 5879.027833,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 9,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 6388.270624999997,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 14,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 6874.179667000004,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 15,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 7748.979458000002,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 12,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 8259.8085,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 5,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 8759.042957999998,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 13,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 9289.843792,
+        "late": false
+      },
+      {
+        "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+        "id": 16,
+        "phase": "setup",
+        "method": "POST",
+        "path": "/v1/inf/rait/cases",
+        "status": 200,
+        "elapsedMs": 9713.152625000002,
+        "late": false
+      }
+    ],
+    "limitation": "Lightweight HTTP/phase timing; native Vitest outcome authoritative, no performancePASS from provisionalbudget"
+  },
+  "nativeCounts": {
+    "numPassedTests": 0,
+    "numFailedTests": 1,
+    "numPendingTests": 125,
+    "numTotalTests": 126
+  },
+  "detailedSnapshots": 0,
+  "lateHTTPCount": 1,
+  "bodyObserved": false,
+  "endUTC": "2026-10-21T20:07:25.413549+00:00",
+  "rawCustody": {
+    "uncompressedSHA256": "1cce03bd0c015140194e83c02a348d24878e9651552dbc891ff02454bc462ca9",
+    "uncompressedBytes": 21098,
+    "gzipSHA256": "67e362091df13dbc47a619041028174e71bf0fe70bdbe54602f1e4caa717edb7",
+    "gzipBytes": 5412
+  }
+}

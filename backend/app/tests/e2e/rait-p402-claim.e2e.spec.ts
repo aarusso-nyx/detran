@@ -121,9 +121,8 @@ beforeEach(async () => {
       expect(P0QueryObservation.queryPrototypeOriginal()).toBe(true);
   }
   if (
-    detailedObservation &&
-    (name.includes('blocker beyond position50') ||
-      name.includes('approved provider inventory batching'))
+    name.includes('approved provider inventory batching') ||
+    (detailedObservation && name.includes('blocker beyond position50'))
   ) {
     fixture.observation = new P0QueryObservation(name, RAIT_TENANT);
     fixture.observation.install(app.getHttpServer());
