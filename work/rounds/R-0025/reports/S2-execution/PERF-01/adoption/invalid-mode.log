@@ -1,0 +1,14 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+Error: Unsupported DETRAN_P402_CALIBRATION_MODE; expected profile or functional
+ ❯ tests/e2e/rait-p402-claim.e2e.spec.ts:43:9
+     41|   calibrationMode !== 'functional'
+     42| )
+     43|   throw Error(
+       |         ^
+     44|     'Unsupported DETRAN_P402_CALIBRATION_MODE; expected profile or fun…
+     45|   );
+
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest list tests/e2e/rait-p402-claim.e2e.spec.ts

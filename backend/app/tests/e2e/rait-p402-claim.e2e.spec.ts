@@ -43,13 +43,8 @@ if (
   throw Error(
     'Unsupported DETRAN_P402_CALIBRATION_MODE; expected profile or functional',
   );
-const completePoolBudget =
-  calibrationMode === 'profile'
-    ? 120000
-    : calibrationMode === 'functional'
-      ? 90000
-      : 30000;
-const detailedObservation = calibrationMode !== 'functional';
+const completePoolBudget = calibrationMode === 'profile' ? 120000 : 90000;
+const detailedObservation = calibrationMode === 'profile';
 let app: INestApplication;
 let fixture: RaitP402ClaimFixture;
 // Module loading is outside lifecycle hooks, as with static Nest imports; no timeout increase.
@@ -109,15 +104,15 @@ beforeEach(async () => {
   fixture = new RaitP402ClaimFixture();
   await fixture.connect();
   const name = expect.getState().currentTestName ?? '';
-  if (calibrationMode && name.includes('blocker beyond position50')) {
+  if (name.includes('blocker beyond position50')) {
     fixture.calibration = new CalibrationObservation(
       name,
-      calibrationMode,
+      calibrationMode ?? 'functional',
       completePoolBudget,
       setupStart,
     );
     fixture.calibration.install(app.getHttpServer());
-    if (calibrationMode === 'functional')
+    if (calibrationMode !== 'profile')
       expect(P0QueryObservation.queryPrototypeOriginal()).toBe(true);
   }
   if (
