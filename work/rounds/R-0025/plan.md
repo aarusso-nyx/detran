@@ -6,17 +6,23 @@
 > são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual (2026-10-19, America/Sao_Paulo):** admissibilidade #193, S1 #203
-e aprovação backend-first S2 #205 integradas. A continuação S2 foi reconciliada
-com main207642f2 (#210); runtime, geração e correções F1/F2/F4/F5 têm
-checkpoints preservados. A prova SQL R14 passou; a suíte integral local está
-bloqueada pela carga extrema do host. A segunda revisão de delta em ca83c18d mantém REVIEW: F1/F2/F4/F5 resolvidos, F3 adiado e novo F6; correção F6 em andamento após RED independente. O limite de duas revisões foi esgotado: somente PR DRAFT, com re-review independente e aceitação pendentes. S2/P4, R-0025 e JW-01
-permanecem abertas. RESET de D e proveniência operacional produtiva continuam
-bloqueados por fonte, conforme S2-R6. A continuidade de cursor entre processos
-também permanece aberta (F3). S3 e merge da implementação não autorizados.
-A ativação S2 e suas extensões limitadas prevalecem sobre os banners históricos;
-nenhuma aceitação integral foi reduzida. Estado detalhado em
-[implementação S2](reports/P4-02-S2-implementation.md).
+**Status atual (2026-10-21, America/Sao_Paulo):** admissibilidade #193, S1 #203
+e aprovação backend-first S2 #205 integradas. O PR de implementação #211 está em
+DRAFT, sem autorização de merge. CI de16af3d8f: foundation e quatro jobs auxiliares
+PASS; backend-kernel falhou26 testes/4 arquivos, verified-local-rc herdou a falha.
+Retomada reconciliada normalmente com main1115f589 (#213). ADRs S2 têm identidades
+canônicas0058–0060, com aliases e corpos aceitos preservados; ADRs scorecard0055–57
+permanecem intactas. Fixtures e sensores corrigidos nos caminhos autorizados,
+isolamento do limiter na suíte scope aprovado expressamente; full3 S2/PEC em prova.
+F6 tem GREEN independente3/3; REVIEW e limite de duas revisões permanecem sem waiver.
+Duas extensões limitadas (TEAT e batching51) estão propostas, sem autorização até
+resposta expressa. A linha7 da evidência R0025 continua sem âncora na cadeia
+integrada: CLI2.6.3 recusou a recuperação não-newest; bytes/históricos preservados,
+linha8 recuperada por verbo suportado. Isso bloqueia CI/merge, sem edição manual.
+S2/P4, R-0025 e JW-01 continuam abertas; RESET D, proveniência operacional e cursor
+entre processos(F3) permanecem pendentes. S3/produção/scorecard não ativados.
+Estado detalhado em [implementação S2](reports/P4-02-S2-implementation.md) e
+[retomada CI](reports/S2-execution/CI-2026-10-21/).
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.

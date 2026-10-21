@@ -4,6 +4,29 @@ Status: **IN_PROGRESS / NONPROMOTING**. Architect coordination,2026-10-19
 America/Sao_Paulo. One executable-remainder review PR is authorized. Implementation
 merge, S3, production activation and S2/P4/JW01/R-0025 closure remain unauthorized.
 
+## Current CI reconciliation —2026-10-21
+
+PR211 remains DRAFT. Its exact16af3d8f CI passed foundation/evidence/BOAT/both
+SENATRAN jobs; kernel failed26 tests in4 files (2203 PASS,3 TODO) and fallback
+verified-local-rc failed with it. This supersedes prior “CI running” status below.
+Main1115f589 is merged normally. ADR identity mapping0055/56/57 S2→0058/59/60
+preserves main's scorecard ADRs and immutable accepted bodies/historical references.
+Fixture calibration d4357787 fixes missing narrow qualifyPolicy forwarding,
+verified unchanged policy dependencies, independently prepared auxiliary cases,
+DDL-valid append-only stale-state negatives, exact public guard metadata and
+isolated protocol routing parents. Owner explicitly approved scope-only10000
+capacity with guaranteed restore; production120/realPGlimiter/PEC remain unchanged.
+Full affected three-file actualHTTP acceptance and unchanged PEC controls are
+running at9df01e30, with124census/51population/30s budgets preserved.
+TEAT backlog and provider physical batching packets are proposed, awaiting explicit
+Owner approval because original scope/R14 excludes them. No runtime edits for
+those extensions yet. Newest proof anchor8 recovered throughCLI; non-newest7
+remains blocked by installedDEVAI2.6.3. Original epoch bytes and divergent chains
+are preserved; historical-prefix recovery was refused and restored immediately.
+Do not call evidence-gate green or fabricate an anchor. Upstream supported repair
+is required independently of implementation checks. F6 unitGREEN3/3 is retained;
+no third delivery review/new readiness or merge approval is inferred.
+
 ## Authority and preserved work
 
 PR205 merged2e04f29c after all five required checks and exact postmerge CI GREEN.

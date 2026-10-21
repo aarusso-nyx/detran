@@ -1,0 +1,51 @@
+{
+  "status": "PROPOSAL ONLY; requires separate Owner bounded approval because R14 excluded provider inventories",
+  "runtimePaths": [
+    "backend/app/src/rait-risk.providers.ts"
+  ],
+  "excluded": [
+    "CASE port/interfaces/selector/commands",
+    "Calendar changes",
+    "source/authority/receipt-key changes",
+    "fixture thresholds/population/budgets",
+    "cache across calls/transactions/qualification checks",
+    "JSONB conversion or source normalization change",
+    "schema/index/config/grant/newwriter"
+  ],
+  "baseline": "Actual kernel incident51 control200 ~7728/7786ms, denialGET503 ~7568ms, full body39078ms vs unchanged30000ms. No semantic mismatch or provenSQLtimeout.",
+  "physicalPlan": [
+    "Within existing factory.read and caller Tx, bulk-discover all applicable A/C/D clocks and timers and effective ladder parameters for this one actual case/owner. Defense B remains NA and is not newly queried. Other-instance B retains compatible infraction/case deadline owner rules.",
+    "Use existing raitSourceRows grouped lookup once for selected clock IDs, once selected timer IDs, once selected parameter IDs. Each resulting row is consumed once by its own clock branch; no memoized read replacement for raitQualify/qualifyPolicy or independent reader.",
+    "Replace three alert inventories with one query over actual selected C/A/D clock IDs whose canonical clock.ceiling_on<=capturedtoday; retain level=PRESCRITO_OPERACIONAL only. Fetch incidents once by all returned exact incident_ref values. Validate per consumed clock exact-one alert and incident, populated same-case/clock links; keep missing/ambiguous503. Validate canonical due equivalence before treating an inventory entry as required prescription proof.",
+    "Keep EVERY timer/parameter/track/applicability/policy/fullmovement/interruption/incident qualification and dependency verification as a separate fresh sameTx read. Do not reuse contentRevision/receipt results or skip reader checks. Keep sourceVersions opaque, R7 parents/child locks and R10 universe fence."
+  ],
+  "discoverySQL": {
+    "timers": "select id,timer_code,instance from inf.infraction_timer where tenant_id=$1 and infraction_id=$2 and timer_code=any($3::text[]) and status='armado' and satisfied_at is null and expired_at is null and ((timer_code=any($4::text[]) and instance is null) or (timer_code='T-JUL-24M' and instance=$5)) order by id for share",
+    "parameters": "select id,key,traffic_agency_id from ops.parameter where tenant_id=$1 and surface='rait' and key=any($2::text[]) and effective_from<=$3 and (effective_to is null or effective_to>=$3) and (traffic_agency_id=$4 or traffic_agency_id is null) order by id for share",
+    "prescriptionAlerts": "select a.id,a.clock_id,a.incident_ref from inf.rait_clock_alert a join inf.rait_clock c on c.tenant_id=a.tenant_id and c.id=a.clock_id where a.tenant_id=$1 and a.clock_id=any($2::uuid[]) and a.level='PRESCRITO_OPERACIONAL' and c.ceiling_on<=$3::date order by a.id for share of a",
+    "incidents": "select id,incident_ref,case_id,clock_id from inf.rait_incident where tenant_id=$1 and incident_ref=any($2::text[]) order by id for share"
+  },
+  "equivalenceRules": [
+    "Timers: per-code cardinality exactly1 across compatible infraction and existing B-case owner inventory, no fallback after ambiguity.",
+    "Parameters: per-key original agency-vs-tenant tier selection, overlapping same-tier versions reject; status/type/source_pending/scope checks unchanged. No proposed-row activation.",
+    "Native row projections/byte/date/UUID/JSON/null types unchanged through existing port; lookup maps only index the primary bulk result for once-per-row semantic consumption.",
+    "No work removed from any qualification or receipt verification. This is grouping discovery/projection SELECTs that were individually repeated per clock."
+  ],
+  "estimatedPhysicalReduction": "For defense with3 applicable prescribed clocks: clockprojection3\u21921,timerinventory3\u21921,timerprojection3\u21921,parameterinventory3\u21921,parameterprojection3\u21921,alertinventory3\u21921,incidentinventory3\u21921 =14 fewer runtime SQL round-trips/case (~714 per51 snapshot). Not a measured timing gain or guarantee under30s.",
+  "InspectorPaths": [
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts"
+  ],
+  "requiredEvidence": [
+    "Before mutation: freeze current incident51 failure and instrument actual caller-Tx SELECT counts/latencies without changing factory or verifiers.",
+    "After proposed runtime: prove exact scalar-vs-bulk typed bindings/digests/outcomes and reduced actual runtime query count, with complete51 and all original assertions/timeouts unchanged.",
+    "Every legacy negative/duplicate timer/overlap parameter/stale policy/wrong incident link/absent incident/foreigntenant control unchanged; real R7 phantom/update/rollback/R10 controls and full kernel rerun.",
+    "No optimization of independently authored fixture authority checks by Engineer. Inspector may maintain measurement only or propose its own separately bounded physical batching."
+  ],
+  "open": [
+    "Owner approval absent; no runtime change released.",
+    "R14 no-provider-inventory boundary remains binding until separately approved.",
+    "Production provenance/D RESET/process-local cursor/review/evidence-chain issues remain independent blockers."
+  ],
+  "originalProviderSha256": "d9a859388e45668b352864ca5b2bac5bc6b6810e8b50a309768551c63f878043"
+}

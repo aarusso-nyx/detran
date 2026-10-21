@@ -243,3 +243,17 @@ accepted bodies and historical receipts/prompts/proofs remain unchanged. Bare ol
 numbers in S2 checkpoints resolve by that original slug and the additive mapping
 in reports/S2-execution/CI-2026-10-21/adr-identity-mapping.md (relative to R-0025).
 This is identity reconciliation only, with no policy or completion promotion.
+
+## PR211 CI continuation — Owner,2026-10-21
+
+Direct instruction: “Verifique a CI do PR #211, corrija as falhas e conclua as
+validações pendentes. Apresente os bloqueios e as decisões necessárias antes do
+merge, preservando o trabalho local e de scorecard.” No merge authority or renewed
+blanket Owner delegation. Existing temporary delegation expired.
+
+Owner expressly approved the exact scope-only limiter extension in
+reports/S2-execution/CI-2026-10-21/scope-rate-isolation-approval.md, answering
+“Aprovar a extensão limitada (recomendado)”. One existing Inspector test path,
+capacity10000 only for that app lifetime, real limiter and production120 intact,
+guaranteed restoration. All other original source/test/gate exclusions remain.
+TEAT and provider-batching packets require their own explicit approvals.

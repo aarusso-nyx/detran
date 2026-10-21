@@ -1,0 +1,30 @@
+{
+  "status": "PROPOSAL ONLY; no runtime edits/release",
+  "runtimePaths": [
+    "backend/app/src/teat-stream.service.ts",
+    "backend/app/src/teat-stream.controller.ts"
+  ],
+  "InspectorPaths": [
+    "backend/app/tests/e2e/teat-stream.e2e.spec.ts",
+    "backend/app/src/teat-stream.service.spec.ts"
+  ],
+  "basis": "CTG-0004 \u00a77.1/7.2 current optional topic filter semantics; actual kernel C-0004-43 RED after large shared tenant backlog",
+  "patch": "/tmp/pr211-teat-topic-before-limit-proposed.patch",
+  "originalHashes": {
+    "backend/app/src/teat-stream.service.ts": "242d487faaef0c99866d75009e73c64378082406f9203a21a2d126754c5ed5a7",
+    "backend/app/src/teat-stream.controller.ts": "2652ca91604c8db25768af2fbf30a004b24ee26bde0a963b99a9d4f23a0ba74b"
+  },
+  "semantics": [
+    "Optional third service argument scopes payload.type before LIMIT using bound text[] and JSON string-type predicate; undefined preserves exact default SQL/results and200 limit.",
+    "Explicit empty topic array matches none, preserving current truthy-whitespace-query empty Set behavior.",
+    "Tuple cursor/order, window24h, poller1s, heartbeat20s, current request-role withTenantContext/RLS and controller isTypeReadableBy check remain unchanged.",
+    "Controller retains postquery topic and policy filters; unknown/malformed/unreadable types never become grants. No new index/schema/role/grant/endpoint/config."
+  ],
+  "RED": "Before runtime, Inspector adds one real HTTP/Postgres replay sensor to existing e2e spec: cursor1h ago,601 real intervening ait.concurrency-suspected events then requested ait.changed event, all same tenant/inf:ait read purpose. Query topics=ait.changed; unchanged existing2000ms budget must yield exact final ID, no unrequested type. Old runtime consumes only200/tick and fails; updated runtime must pass. Preserve existing8 controls, foreigntenant/RLS/unreadabletopic/stale204/default-no-topic/order coverage. Bulk fixture insertion is test setup, no outbox deletion to hide backlog.",
+  "checks": [
+    "Inspector independent new RED then unchanged GREEN plus all existing8e2e/5unit controls",
+    "app typecheck; pinnedformat two paths; kernelfull",
+    "No production throughput/all-topic latency claim; unauthorized requested types still postfiltered by established policy."
+  ],
+  "blast": "Graft full TeatStreamService.listSince callers: controller.tick\u2192stream only; class registration AppModule. rg verifies other stream classes own separate methods. Existing service.spec fake ignores args and asserts call counts; no additional runtime caller found."
+}
