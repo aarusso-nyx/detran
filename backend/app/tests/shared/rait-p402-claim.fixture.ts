@@ -464,6 +464,9 @@ export class P0QueryObservation {
       )
         category = 'runtime.calendar';
       else if (context?.kind) category = 'verifier.receipt';
+      else if (/raitSourceRows/.test(stack)) category = 'runtime.source_rows';
+      else if (/rait-risk\.providers/.test(stack))
+        category = 'runtime.discovery';
       else if (
         /raitLockRisk|rait-claim-context\.service|rait-case-command\.service/.test(
           stack,
@@ -473,9 +476,6 @@ export class P0QueryObservation {
         )
       )
         category = 'runtime.lock_universe';
-      else if (/raitSourceRows/.test(stack)) category = 'runtime.source_rows';
-      else if (/rait-risk\.providers/.test(stack))
-        category = 'runtime.discovery';
       else if (/rait-p402-claim\.fixture/.test(stack))
         category =
           observation.phaseName === 'setup' ? 'fixture.setup' : 'unclassified';
@@ -493,6 +493,7 @@ export class P0QueryObservation {
         const end = performance.now();
         const row = (value as { rows?: Record<string, unknown>[] })?.rows?.[0];
         const record = {
+          observerTest: observation.test,
           operation,
           phase,
           tenantId: observation.tenantId,
@@ -552,6 +553,7 @@ export class P0QueryObservation {
           !hasCallback
         )
           observation.queries.push({
+            observerTest: observation.test,
             operation,
             phase,
             category: 'unclassified',
@@ -576,6 +578,7 @@ export class P0QueryObservation {
       res.once('finish', () => {
         const end = performance.now();
         this.operations.push({
+          observerTest: this.test,
           id,
           method: req.method,
           path: url.pathname,
@@ -618,6 +621,7 @@ export class P0QueryObservation {
         work,
       );
       this.spans.push({
+        observerTest: this.test,
         id,
         parent: parent?.span ?? null,
         operation: parent?.operation ?? this.currentOperation,
@@ -631,6 +635,7 @@ export class P0QueryObservation {
       return value;
     } catch (error) {
       this.spans.push({
+        observerTest: this.test,
         id,
         parent: parent?.span ?? null,
         caseId,
