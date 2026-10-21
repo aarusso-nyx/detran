@@ -15,8 +15,8 @@ canônicas0058–0060, com aliases e corpos aceitos preservados; ADRs scorecard0
 permanecem intactas. Fixtures e sensores corrigidos nos caminhos autorizados,
 isolamento do limiter na suíte scope aprovado expressamente; full3 S2/PEC em prova.
 F6 tem GREEN independente3/3; REVIEW e limite de duas revisões permanecem sem waiver.
-Duas extensões limitadas (TEAT e batching51) estão propostas, sem autorização até
-resposta expressa. A linha7 da evidência R0025 continua sem âncora na cadeia
+Owner aprovou expressamente as extensões limitadas TEAT e batching51;
+aguardam referência/RED independente e execução nos caminhos fechados. A linha7 da evidência R0025 continua sem âncora na cadeia
 integrada: CLI2.6.3 recusou a recuperação não-newest; bytes/históricos preservados,
 linha8 recuperada por verbo suportado. Isso bloqueia CI/merge, sem edição manual.
 S2/P4, R-0025 e JW-01 continuam abertas; RESET D, proveniência operacional e cursor

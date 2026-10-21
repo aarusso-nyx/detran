@@ -18,9 +18,9 @@ isolated protocol routing parents. Owner explicitly approved scope-only10000
 capacity with guaranteed restore; production120/realPGlimiter/PEC remain unchanged.
 Full affected three-file actualHTTP acceptance and unchanged PEC controls are
 running at9df01e30, with124census/51population/30s budgets preserved.
-TEAT backlog and provider physical batching packets are proposed, awaiting explicit
-Owner approval because original scope/R14 excludes them. No runtime edits for
-those extensions yet. Newest proof anchor8 recovered throughCLI; non-newest7
+Owner expressly approved the exact TEAT backlog and physical provider batching
+packets on2026-10-21; independent reference/RED precedes Engineer execution.
+No new blanket delegation, third delivery review, production or merge authority. Newest proof anchor8 recovered throughCLI; non-newest7
 remains blocked by installedDEVAI2.6.3. Original epoch bytes and divergent chains
 are preserved; historical-prefix recovery was refused and restored immediately.
 Do not call evidence-gate green or fabricate an anchor. Upstream supported repair

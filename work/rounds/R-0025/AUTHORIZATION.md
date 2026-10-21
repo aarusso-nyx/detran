@@ -257,3 +257,9 @@ reports/S2-execution/CI-2026-10-21/scope-rate-isolation-approval.md, answering
 capacity10000 only for that app lifetime, real limiter and production120 intact,
 guaranteed restoration. All other original source/test/gate exclusions remain.
 TEAT and provider-batching packets require their own explicit approvals.
+
+Owner also explicitly approved both exact runtime-extension packets on2026-10-21:
+“Aprovar correção TEAT limitada (recomendado)” and “Aprovar batching limitado
+(recomendado)”. Exact packet/diff hashes and exclusions are preserved in
+reports/S2-execution/CI-2026-10-21/approved-runtime-extensions.json. This is bounded
+path/behavior authority only; no renewed blanket delegation, third review or merge.
