@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "round_record_integrity",
+    "--round",
+    "R-0041",
+    "--as-role",
+    "Auditor",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T15:16:40.487682+00:00",
+  "finished_at": "2026-10-21T15:16:41.126036+00:00",
+  "exit_code": 2,
+  "stdout": "",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"AUTHORITY_DECLARATION_NOT_APPLICABLE\",\"class\":\"routing-authority\",\"exit\":2,\"message\":\"authority declaration not applicable\",\"remediation\":\"This action's effect is 'read'; remove --as-role.\",\"refs\":{\"doc\":\"law/constitution.md#article-6\"},\"context\":{\"category\":\"usage-error\",\"action_id\":\"sense run\",\"effect\":\"read\",\"declared\":{\"as_role\":true,\"authority_session\":false,\"write\":false,\"allow_publish\":false,\"experimental\":false},\"required\":{\"write\":false,\"allow_publish\":false,\"experimental\":false}}}}\n"
+}

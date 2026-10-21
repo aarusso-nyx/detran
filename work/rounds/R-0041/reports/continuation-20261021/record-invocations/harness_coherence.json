@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--input",
+    "/tmp/detran-c5-c8-followup-20261021/normalized/harness_coherence.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.devai/state/sensor-readings/harness_coherence/SR-f925456fd16c0d23.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-f925456fd16c0d23\",\"sensor\":{\"name\":\"harness-coherence\",\"kind\":\"harness_coherence\"},\"timestamp\":\"2026-10-21T15:17:04.260Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-harness-coherence\",\"command_hash\":\"b6c6e606ff19573cb165f392dbd2eaf5adf8f8d5b7febe611b3123414b7641fe\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"HARNESS_COHERENCE_CONCURRENCY_POLICY\",\"message\":\".github/workflows/ci.yml must declare a non-empty concurrency group with cancel-in-progress: true (superseding).\"}],\"metrics\":{\"workflow_count\":2,\"action_version_drift_count\":0,\"permissions_mixed\":0,\"concurrency_mixed\":0,\"concurrency_semantic_issues\":1,\"incoherence_score\":1,\"max_review_incoherence\":3}}}}}\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

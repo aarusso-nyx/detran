@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "node",
+    "-e",
+    "const fs=require('node:fs');const Ajv=require('./node_modules/.pnpm/node_modules/ajv/dist/2020.js').default;const formats=require('./node_modules/.pnpm/node_modules/ajv-formats');const a=new Ajv({strict:false});formats(a);const v=a.compile(JSON.parse(fs.readFileSync('node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas/sensor-reading.schema.json')));let count=0;for(const f of fs.readdirSync('work/rounds/R-0041/reports/continuation-20261021/normalized')){const r=JSON.parse(fs.readFileSync('work/rounds/R-0041/reports/continuation-20261021/normalized/'+f));if(!v(r))throw Error(JSON.stringify(v.errors));count++;}console.log(JSON.stringify({schemaValid:true,formatsValidated:true,count}));"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"schemaValid\":true,\"formatsValidated\":true,\"count\":9}\n",
+  "stderr": ""
+}
