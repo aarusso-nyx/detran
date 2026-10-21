@@ -200,3 +200,35 @@ accepted bodies and historical receipts/prompts/proofs remain unchanged. Bare ol
 numbers in S2 checkpoints resolve by that original slug and the additive mapping
 in reports/S2-execution/CI-2026-10-21/adr-identity-mapping.md (relative to R-0025).
 This is identity reconciliation only, with no policy or completion promotion.
+
+## PR211 CI repair checkpoint — 2026-10-21
+
+This additive checkpoint supersedes older running-CI and unexecuted-HTTP status
+above. Main1115f589 is reconciled; ADR identity mapping preserves main's
+scorecard records. Owner explicitly approved only the scope-suite limiter
+isolation, TEAT four-path repair and physical provider batching recorded in
+S2-execution/CI-2026-10-21/approved-runtime-extensions.json.
+
+Independent corrected preimplementation references reproduced both TEAT replay
+failures and redundant inventory queries. Approved implementations now pass all12
+TEAT units, all9 TEAT HTTP controls (including601 noise events), all3 protocol
+routing controls and the old qualified analyst claim. The final focused HTTP
+invocation selected14 of587 registered tests;573 were filtered. It is not a
+full-suite acceptance claim. The provider equivalence control passed185
+assertions, preserving typed rows, source digests, HTTP semantics and every
+independent qualification while reducing245 queries to233. All four complete51
+controls still exceed the unchanged30s budget. Full canonical kernel is running
+on the exclusively owned disposable database; no final result is inferred.
+
+Current published fdbdd971 CI fails evidence-gate on immutable R-0025 line7;
+foundation fails by dependency and backend-kernel is prevented. DEVAI2.6.3
+supported recovery restored newest anchor8 but refuses non-newest7. Both
+original chains, unchanged epoch bytes and provenance are preserved. No manual
+chain join, rewritten proof, fabricated gap, gate waiver or new generic evidence
+is authorized. Structural doctor success does not resolve anchor verification.
+
+The measured performance blocker, supported upstream evidence repair, explicit
+additional review authority after the exhausted cap, and eventual exact-head
+merge authority are separated in CI-2026-10-21/premerge-decisions.md. No merge,
+S3, production activation, scorecard promotion or round closure. Existing local
+and scorecard work stays separate.
