@@ -35,6 +35,7 @@ import {
 } from '../shared/rait-case-command.fixture.js';
 
 let claimFixture: RaitP402ClaimFixture | undefined;
+const protocolForAdmitCases = new Set<string>();
 type Command = {
   name: string;
   path: string;
@@ -217,7 +218,9 @@ async function protocolForAdmit(
     );
   expect(response.status, JSON.stringify(response.body)).toBe(200);
   expect(response.body.data.id).toMatch(/^[0-9a-f-]{36}$/u);
-  return response.body.data.id as string;
+  const id = response.body.data.id as string;
+  protocolForAdmitCases.add(id);
+  return id;
 }
 
 function commandPath(command: Command): string {
@@ -577,6 +580,13 @@ afterAll(async () => {
     await fixture.owner.query(
       "update inf.rait_case set state='DILIGENCIA',version=1 where id=any($1::uuid[])",
       [inquiryCases],
+    );
+    // Fresh HTTP admission controls also leave qualified, claimable intake.
+    // Retain their immutable history but remove only this run's own parents
+    // from later suites' live candidate universe, as for inquiryCases above.
+    await fixture.owner.query(
+      "update inf.rait_case set state='DILIGENCIA' where tenant_id=$1 and id=any($2::uuid[]) and state in ('ADMITIDO','DISTRIBUIDO')",
+      [RAIT_TENANT, [...protocolForAdmitCases]],
     );
     await fixture.owner.query(
       'delete from inf.rait_pool_member where id=any($1::uuid[])',
