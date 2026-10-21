@@ -233,3 +233,13 @@ implicit PASS. The current instruction permits only a DRAFT review PR recording
 blocked independent re-review and resource-blocked full acceptance. Older frozen
 pnpm check results cannot promote the later candidate. No implementation merge,
 S3, production qualification, scorecard action or S2/P4/JW01/R-0025 closure.
+
+## Current ADR identity mapping — PR211 reconciliation, 2026-10-21
+
+Main1115f589 retains scorecard ADR0055–0057. Historical S2 decisions are now
+canonical ADR0058 (risk-source locks), ADR0059 (candidate-universe fence) and
+ADR0060 (policy provenance/risk boundaries). Original S2 slugged paths redirect;
+accepted bodies and historical receipts/prompts/proofs remain unchanged. Bare old
+numbers in S2 checkpoints resolve by that original slug and the additive mapping
+in reports/S2-execution/CI-2026-10-21/adr-identity-mapping.md (relative to R-0025).
+This is identity reconciliation only, with no policy or completion promotion.

@@ -166,3 +166,14 @@ update; its fallback verified-local-rc failure on cancellation is not final-head
 acceptance. No trusted local RC receipt or full HTTP/kernel GREEN is claimed.
 Primary local work, machine configuration, protected worktrees and scorecard
 work remain untouched; only isolated S2 branches were committed/pushed.
+
+
+## Current ADR identity mapping — PR211 reconciliation, 2026-10-21
+
+Main1115f589 retains scorecard ADR0055–0057. Historical S2 decisions are now
+canonical ADR0058 (risk-source locks), ADR0059 (candidate-universe fence) and
+ADR0060 (policy provenance/risk boundaries). Original S2 slugged paths redirect;
+accepted bodies and historical receipts/prompts/proofs remain unchanged. Bare old
+numbers in S2 checkpoints resolve by that original slug and the additive mapping
+in reports/S2-execution/CI-2026-10-21/adr-identity-mapping.md (relative to R-0025).
+This is identity reconciliation only, with no policy or completion promotion.
