@@ -328,3 +328,29 @@ No successful90s functional run can ratify performance or rewrite historical
 failures. No automatic optimization, final budget adoption, merge, review-cycle
 reset, chain repair, runtime/scorecard work or readiness promotion is authorized.
 PR211 stays DRAFT/unmerged; protected local/recovery work stays untouched.
+
+### PERF-01 bounded90s/120s adoption — Owner,2026-10-21
+
+Owner explicitly approved the exact calibration-budget-proposal.md adoption
+packet and directed controlled-environment validation, preserving30s as a
+separate performance reference. Approved packet SHA256:
+bfe47c015f1681e32736ff60de9fda266efb6fff979572272dcd9449a93d1d12.
+Its original proposal bytes remain unchanged; this later decision supersedes
+only its pending-adoption status.
+
+Inspector source inventory is ONLY
+backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts: four native defaults90000ms,
+profile120000/functional90000 closed modes, four-control detailed SQL observer
+profile-only, existing lightweight HTTP/phase recorder enabled by default,
+original-query proof for default/functional, and equivalence observer preserved
+in every mode. Preserve all51 cases, original bodies/assertions, every hook,
+global E2E30s, other controls, fixture/oracles, runtime and dependencies.
+
+Validation includes four unchanged default controls under documented controlled
+resource conditions, complete affected suites, uninterrupted canonical kernel
+and exact-head requiredCI. Preserve all historical failures and30s exceedances.
+Report resource-blocked acceptance if a controlled host is unavailable; no
+unrelated process or scorecard modification. A90s functionalPASS is not a
+performancePASS, product SLO or permission for another deadline increase.
+No optimization, fourthreview, anchorrepair, merge, S3, production, scorecard
+promotion or roundclosure is authorized. PR211 remainsDRAFT/unmerged.
