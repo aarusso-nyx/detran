@@ -254,3 +254,17 @@ Supported historical-anchor recovery, further performance packet, additional
 independent review authority and eventual exact-head merge remain separate
 decisions. Current disposition/receipts:
 S2-execution/CI-2026-10-21/premerge-decisions.md. No merge or broader promotion.
+
+### Approved JW01 limiter isolation completed — 2026-10-21
+
+Owner approved the exact single-file extension. At b4dd036e all50 unchanged JW01
+business controls plus the actual PGwindow proof passed; with the cheap claim
+warm control,52PASS124filtered. Two unchanged PEC limiter controls passed under
+the original environment. Capacity10000 was limited to the test app lifetime;
+restoration and actual PostgreSQL consumption verified. Production120, runtime,
+guards, budgets and populations unchanged. Earlier setup-blocked epochs and
+canonical14FAIL are retained; this is not a final uninterrupted kernelPASS.
+Receipts: S2-execution/pr211-JW01-isolation-final.json. The previous awaiting
+Owner approval statement is superseded only for this bounded extension.
+Four51-case timeouts, supported historical-anchor reconciliation and independent
+review authority remain unresolved. No merge, S3, scorecard action or closure.

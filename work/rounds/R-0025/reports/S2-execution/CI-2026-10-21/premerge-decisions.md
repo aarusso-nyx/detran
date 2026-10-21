@@ -97,3 +97,26 @@ Security snapshots/source consistency, workspace typecheck, contracttests58,
 parameters and formatting passed at the retained checkpoints. Native security
 REVIEW and immutable line7 anchor FAIL stay nonpromoting. Primary local work,
 scorecard checkout, recovery worktrees and machine config remain preserved.
+
+## JW01 approval executed — 2026-10-21
+
+Decision5 above is resolved by Owner's explicit approval recorded in
+../pr211-JW01-rate-isolation-owner-approval.json. Inspector implemented only the
+owned JW01 test path at b4dd036e. All50 original business controls are byte-identical;
+all50 plus one actual PostgreSQL window proof passed. Including the cheap claim
+warm control,52PASS124filtered/176registered in19.70s. Public --cache=false kept
+the standard serial sequencer; actual order claimfirst thenJW01. Two earlier
+10s-hook setup-blocked epochs are preserved, not counted as business failures or
+acceptance. No hook/import/timeout/population change.
+
+Actual tenant-scoped windows consumed110hits, not actor-scoped buckets;110<120
+does not prove the isolated suite alone exhausts the production capacity. The
+historical canonical429 responses remain recorded. Environmentunset restored
+unset even after failed setup; two unchanged PEC persistence controls passed
+under the original environment. App typecheck/format passed; DB lease released.
+Full evidence: ../pr211-JW01-isolation-final.json.
+
+This resolves bounded JW01 isolation acceptance only. A new uninterrupted full
+canonical kernel was not run, and the earlier14FAIL epoch remains immutable.
+The four complete51/30s controls, unsupported non-newest proof recovery and
+exhausted independent review cap remain OPEN; no merge or readiness promotion.
