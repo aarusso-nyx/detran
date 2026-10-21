@@ -1422,6 +1422,62 @@ export class RaitP402ClaimFixture {
       source.receiptId,
     );
   }
+  /** Independently revalidate preserved C policy custody/current rows before reuse. */
+  async verifiedUnchangedPolicyDependencies(): Promise<Map<string, string>> {
+    const client = new pg.Client({
+      connectionString: process.env.STYNX_APP_DATABASE_URL,
+    });
+    await client.connect();
+    const preserved = new Map<string, string>();
+    try {
+      await client.query('begin');
+      await client.query('set local role role_app_backend');
+      await client.query("select set_config('app.tenant_id',$1,true)", [
+        RAIT_TENANT,
+      ]);
+      for (const receipt of this.receipts.filter(
+        (r) =>
+          r.core.policySources.length && !this.revokedReceipts.has(r.digest),
+      )) {
+        const sourceRefs = receipt.core.bindings.map((b) => b.sourceRef);
+        const rows = await readSourceRows(client, sourceRefs);
+        const policySources = receipt.core.policySources.map(
+          ({ sourceRef, sourceRevision }) => ({ sourceRef, sourceRevision }),
+        );
+        const req: PolicyRequest = {
+          purpose: 'C_USEFUL_MOVEMENT_POLICY',
+          tenantId: RAIT_TENANT,
+          caseId: receipt.core.caseId!,
+          sourceRefs,
+          policySources,
+          contentRevision: canonicalRevision({
+            schemaVersion: 1,
+            namespace: 'rait-risk-policy-request-v1',
+            purpose: 'C_USEFUL_MOVEMENT_POLICY',
+            tenantId: RAIT_TENANT,
+            caseId: receipt.core.caseId,
+            rows,
+            dependencies: [],
+            policySources,
+          }),
+        };
+        const result = (await this.qualifyPolicy(client, req)) as {
+          status: string;
+          receiptDigest?: string;
+        };
+        expect(
+          result.status,
+          'preserved dependency needs independent current SQL/custody verification',
+        ).toBe('qualified');
+        expect(result.receiptDigest).toBe(receipt.digest);
+        preserved.set(receipt.digest, receipt.digest);
+      }
+      return preserved;
+    } finally {
+      await client.query('rollback');
+      await client.end();
+    }
+  }
   /** R17 additive synthetic rejected reviews; never UPDATE immutable history. */
   async negativeLegacyReview(
     caseId: string,
@@ -1436,7 +1492,7 @@ export class RaitP402ClaimFixture {
       receiptId = randomUUID();
     await this.owner.query(
       `insert into inf.rait_claim_legacy_qualification(id,tenant_id,case_id,observed_version,observed_state,assignment_status,classification,revision,admission_ref,distribution_ref,pool_scope_ref,reason,reviewer_id,authorization_ref,observed_at,assignment_ref)
-      select $1,tenant_id,case_id,observed_version,coalesce($3,observed_state),assignment_status,classification,revision+1,coalesce($4,admission_ref),distribution_ref,coalesce($5,pool_scope_ref),$6,reviewer_id,$7,clock_timestamp(),assignment_ref from inf.rait_claim_legacy_qualification where id=$2 and case_id=$8`,
+      select $1,tenant_id,case_id,observed_version,coalesce($3,observed_state),assignment_status,case when $3::text is null then classification else 'hold' end,revision+1,coalesce($4,admission_ref),distribution_ref,coalesce($5,pool_scope_ref),$6,reviewer_id,$7,clock_timestamp(),assignment_ref from inf.rait_claim_legacy_qualification where id=$2 and case_id=$8`,
       [
         id,
         previousId,

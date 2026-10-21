@@ -516,6 +516,13 @@ beforeAll(async () => {
     .RAIT_RISK_PROVENANCE_READER;
   if (typeof port === 'symbol')
     builder.overrideProvider(port).useValue({
+      qualifyPolicy: (
+        tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
+        req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
+      ) =>
+        claimFixture
+          ? claimFixture.qualifyPolicy(tx, req)
+          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
       qualify: (
         tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
         req: Parameters<RaitP402ClaimFixture['qualify']>[1],

@@ -545,7 +545,7 @@ describe('S2 actual SQL factory with independently admitted synthetic provenance
           [a.clock],
         );
       // Re-admit actual adjusted rows independently: failure must be date qualification, not stale digest.
-      const rebound = new Map<string, string>();
+      const rebound = await fixture.verifiedUnchangedPolicyDependencies();
       const decisionIds = new Set(
         fixture.receipts.flatMap((r) =>
           r.core.policySources.map((p) => p.decisionRef),
@@ -2681,12 +2681,13 @@ for (const vector of [
         const pool = await fixture.extraPool();
         const id = randomUUID();
         await fixture.owner.query(
-          `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) select $1,tenant_id,case_id,$2,true,authorization_ref,source_ref from inf.rait_case_pool_scope where tenant_id=$3 and case_id=$4 and pool_id=$5`,
+          `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) select $1,tenant_id,case_id,$2,false,authorization_ref,source_ref from inf.rait_case_pool_scope where tenant_id=$3 and case_id=$4 and pool_id=$5`,
           [id, pool, RAIT_TENANT, c.id, fixture.pool],
         );
         overrides.pool_scope_ref = 'sql:inf.rait_case_pool_scope:' + id;
       } else {
         const other = await fixture.admitted(app);
+        await fixture.prepareRisk(other.id);
         if (vector === 'linkedforeignparent') {
           const e = (
             await fixture.owner.query<{ id: string }>(
@@ -2706,6 +2707,13 @@ for (const vector of [
         }
       }
       await fixture.negativeLegacyReview(c.id, old.qualification, overrides);
+    }
+    if (vector === 'wrongactivepool') {
+      const active = await fixture.owner.query<{ pool_id: string }>(
+        'select pool_id from inf.rait_case_pool_scope where case_id=$1 and active',
+        [c.id],
+      );
+      expect(active.rows).toEqual([{ pool_id: fixture.pool }]);
     }
     const before = await fixture.effects();
     const denied = await request(app.getHttpServer())
@@ -2846,7 +2854,11 @@ it('R17 discovery read-role denial finishes before actual global source writer r
     const result = await pending;
     expect(result.status, JSON.stringify(result.body)).toBe(403);
     expect(result.body).not.toHaveProperty('data');
-    expect(result.body.context ?? {}).toEqual({});
+    expect(result.body.context).toEqual({
+      resource: 'inf:rait-case',
+      action: 'claim-next',
+      roles: ['rait-coordinator'],
+    });
     expect(await fixture.effects()).toEqual(before);
     expect(
       waiting,
