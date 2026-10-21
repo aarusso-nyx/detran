@@ -42,3 +42,9 @@ Independent delivery review: PASS (0.90), preserved under
 audit counted three flagged dependency entries and the local pre-change audit
 counted two; both identified the same five blocking advisories. The difference
 is retained without inventing a cause. Fresh CI remains pending.
+
+The exact failure excerpt is gzip-encoded without changing its uncompressed
+bytes, verified against its first plaintext Git object (identified in
+original-ci-failure-source.json). This preserves source trailing spaces while
+keeping the ordinary whitespace gate unchanged. The full original capture remains
+externally preserved by its recorded SHA-256.
