@@ -23,6 +23,7 @@ import {
 } from 'vitest';
 import {
   RaitP402ClaimFixture,
+  P0QueryObservation,
   canonicalBytes,
   canonicalRevision,
   readSourceRows,
@@ -89,8 +90,18 @@ beforeAll(async () => {
 beforeEach(async () => {
   fixture = new RaitP402ClaimFixture();
   await fixture.connect();
+  const name = expect.getState().currentTestName ?? '';
+  if (
+    name.includes('blocker beyond position50') ||
+    name.includes('approved provider inventory batching')
+  ) {
+    fixture.observation = new P0QueryObservation(name, RAIT_TENANT);
+    fixture.observation.install(app.getHttpServer());
+    if (name.includes('approved provider inventory batching'))
+      fixture.observation.phase('body');
+  }
 });
-afterEach(async () => {
+afterEach(async (context) => {
   const state = expect.getState();
   process.stdout.write(
     'S2_ASSERTIONS ' +
@@ -100,12 +111,18 @@ afterEach(async () => {
       }) +
       '\n',
   );
-  await fixture?.close();
+  fixture?.observation?.phase('teardown');
+  try {
+    await fixture?.close();
+  } finally {
+    fixture?.observation?.stop(context.task.result?.state ?? 'unknown');
+  }
 });
 afterAll(async () => {
   try {
     await app?.close();
   } finally {
+    P0QueryObservation.restore();
     restoreRateLimit();
   }
 });
@@ -932,6 +949,10 @@ describe('S2 complete pool inventory precedes pagination', () => {
           await fixture.operationalIncidents(c.id, risk.records);
       }
     });
+
+  beforeEach(() => {
+    fixture.observation?.phase('body');
+  });
 
   for (const missing of ['risk', 'legacy', 'routing', 'incident'] as const)
     it(`a ${missing} blocker beyond position50 blocks the whole pool`, async () => {
@@ -2648,7 +2669,7 @@ it('R14 independent actual SQL scalar equivalence preserves identities and fresh
 for (const vector of [
   'linkedforeignparent',
   'wrongpoolscope-parent',
-  'wrongactivepool',
+  'wrongpoolinactivebinding',
   'staleobservedstate',
   'missinglegacyprovenance',
   'ambiguouslegacyprovenance',
@@ -2682,7 +2703,7 @@ for (const vector of [
       } = {};
       if (vector === 'staleobservedstate')
         overrides.observed_state = 'ADMITIDO';
-      else if (vector === 'wrongactivepool') {
+      else if (vector === 'wrongpoolinactivebinding') {
         const pool = await fixture.extraPool();
         const id = randomUUID();
         await fixture.owner.query(
@@ -2713,7 +2734,7 @@ for (const vector of [
       }
       await fixture.negativeLegacyReview(c.id, old.qualification, overrides);
     }
-    if (vector === 'wrongactivepool') {
+    if (vector === 'wrongpoolinactivebinding') {
       const active = await fixture.owner.query<{ pool_id: string }>(
         'select pool_id from inf.rait_case_pool_scope where case_id=$1 and active',
         [c.id],
@@ -2794,7 +2815,7 @@ it('R17 actual Nest WORKLIST projection preserves current qualified risk, S1 pur
   expect(await fixture.effects()).toEqual(before);
 });
 
-it('R17 discovery read-role denial finishes before actual global source writer release', async () => {
+it('R17 PolicyGuard read-role403 denial finishes before actual global source writer release', async () => {
   await fixture.executableParameters();
   const control = await request(app.getHttpServer())
     .get(`${PREFIX}/claim-context`)
@@ -2868,6 +2889,98 @@ it('R17 discovery read-role denial finishes before actual global source writer r
     expect(
       waiting,
       'actual forbidden discovery must not acquire global risk locks',
+    ).toBeUndefined();
+    expect(beforeRelease).toBe(true);
+  } finally {
+    await writer.query('rollback');
+    if (pending) await Promise.allSettled([pending]);
+    await writer.end();
+  }
+});
+
+it('F7 guard-passing analyst ineligible pool404 denial finishes before actual global source writer release', async () => {
+  await fixture.executableParameters();
+  const ineligiblePool = randomUUID();
+  const control = await request(app.getHttpServer())
+    .get(`${PREFIX}/claim-context`)
+    .set(fixture.headers());
+  expect(control.status, JSON.stringify(control.body)).toBe(200);
+  const denied = await request(app.getHttpServer())
+    .get(`${PREFIX}/claim-context`)
+    .query({ pool_id: ineligiblePool })
+    .set(fixture.headers());
+  expect(denied.status, JSON.stringify(denied.body)).toBe(404);
+  const writer = new Client({
+    connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+  });
+  await writer.connect();
+  await writer.query("select set_config('app.tenant_id',$1,false)", [
+    RAIT_TENANT,
+  ]);
+  const pid = (
+    await writer.query<{ pid: number }>('select pg_backend_pid() pid')
+  ).rows[0]!.pid;
+  let pending: Promise<request.Response> | undefined,
+    settled: request.Response | undefined,
+    waiting: { pid: number; usename: string } | undefined;
+  const before = await fixture.effects();
+  try {
+    await writer.query('begin');
+    await writer.query('update ops.parameter set reason=reason where id=$1', [
+      fixture.parameters.get('A')!.id,
+    ]);
+    expect(
+      (
+        await fixture.owner.query(
+          "select mode from pg_locks where pid=$1 and relation='ops.parameter'::regclass and mode='RowExclusiveLock' and granted",
+          [pid],
+        )
+      ).rows,
+    ).toEqual([{ mode: 'RowExclusiveLock' }]);
+    pending = request(app.getHttpServer())
+      .get(`${PREFIX}/claim-context`)
+      .query({ pool_id: ineligiblePool })
+      .set(fixture.headers())
+      .then((r) => {
+        settled = r;
+        return r;
+      });
+    const end = Date.now() + 5000;
+    while (!settled && !waiting && Date.now() < end) {
+      await fixture.owner.query('select pg_stat_clear_snapshot()');
+      waiting = (
+        await fixture.owner.query<{ pid: number; usename: string }>(
+          "select pid,usename from pg_stat_activity where datname=current_database() and wait_event_type='Lock' and $1::int=any(pg_blocking_pids(pid)) and query ilike '%ops.parameter%'",
+          [pid],
+        )
+      ).rows[0];
+      if (!settled && !waiting)
+        await new Promise((done) => setTimeout(done, 20));
+    }
+    const beforeRelease = settled !== undefined;
+    if (waiting)
+      expect(waiting.usename).toBe(
+        new URL(process.env.STYNX_APP_DATABASE_URL!).username,
+      );
+    await writer.query('rollback');
+    const result = await pending;
+    console.log(
+      'F7_LOCK_PRECEDENCE',
+      JSON.stringify({
+        writerPid: pid,
+        observedBlockedPid: waiting?.pid ?? null,
+        completedBeforeWriterRelease: beforeRelease,
+        status: result.status,
+      }),
+    );
+    expect(result.status, JSON.stringify(result.body)).toBe(404);
+    expect(result.body).not.toHaveProperty('data');
+    expect(result.body.code).toBe('RAIT.TENANT_MISMATCH');
+    expect(result.body.context).toEqual({});
+    expect(await fixture.effects()).toEqual(before);
+    expect(
+      waiting,
+      'actual guard-passing ineligible pool discovery must not acquire global risk locks',
     ).toBeUndefined();
     expect(beforeRelease).toBe(true);
   } finally {

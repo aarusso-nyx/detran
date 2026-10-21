@@ -1,5 +1,6 @@
 // Article7 Inspector: synthetic isolated S2 sources, never production qualification.
 import { randomUUID, createHash } from 'node:crypto';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { readFileSync } from 'node:fs';
 import type { Transaction } from '@stynx-nyx/data';
 import pg from 'pg';
@@ -370,7 +371,320 @@ export async function frozenScalarProviderInventories(
   return { rows, selected, observations, digest: canonicalRevision(rows) };
 }
 
+type P0Context = {
+  observer?: P0QueryObservation;
+  operation: string;
+  caseId?: string | null;
+  kind?: string;
+  depth: number;
+  span?: number;
+};
+export class P0QueryObservation {
+  private static active: P0QueryObservation | undefined;
+  private static readonly context = new AsyncLocalStorage<P0Context>();
+  private readonly context = P0QueryObservation.context;
+  private readonly start = performance.now();
+  private currentOperation = 'ambient';
+  private phaseName = 'setup';
+  private stopped = false;
+  private sequence = 0;
+  private readonly queries: Record<string, unknown>[] = [];
+  private readonly spans: Record<string, unknown>[] = [];
+  private readonly operations: Record<string, unknown>[] = [];
+  private static readonly originalQuery = pg.Client.prototype.query;
+  private readonly originalQuery = P0QueryObservation.originalQuery;
+  static restore() {
+    pg.Client.prototype.query = P0QueryObservation.originalQuery;
+    P0QueryObservation.active = undefined;
+    console.log(
+      'P0_OBSERVER_RESTORED',
+      pg.Client.prototype.query === P0QueryObservation.originalQuery,
+    );
+  }
+  private server?: {
+    removeListener: (
+      name: string,
+      listener: (...args: any[]) => void,
+    ) => unknown;
+  };
+  private listener?: (...args: any[]) => void;
+  constructor(
+    readonly test: string,
+    readonly tenantId: string,
+  ) {}
+  install(server: {
+    prependListener: (
+      name: string,
+      listener: (...args: any[]) => void,
+    ) => unknown;
+    removeListener: (
+      name: string,
+      listener: (...args: any[]) => void,
+    ) => unknown;
+  }) {
+    if (P0QueryObservation.active) throw Error('P0 observer overlap');
+    P0QueryObservation.active = this;
+    const original = this.originalQuery as unknown as (
+      ...args: unknown[]
+    ) => unknown;
+    (
+      pg.Client.prototype as unknown as {
+        query: (...args: unknown[]) => unknown;
+      }
+    ).query = function (this: pg.Client, ...args: unknown[]) {
+      const observation =
+        P0QueryObservation.context.getStore()?.observer ??
+        P0QueryObservation.active;
+      if (!observation) return original.apply(this, args);
+      const overheadStart = performance.now();
+      const text =
+        typeof args[0] === 'string'
+          ? args[0]
+          : (args[0] as { text?: string })?.text;
+      const sql = text ?? '[unsupported query representation]';
+      const stack = new Error().stack ?? '';
+      const context = observation.context.getStore();
+      const operation = context?.operation ?? observation.currentOperation;
+      const phase = observation.phaseName;
+      const identity = /current_role|pg_backend_pid\(\)/i.test(sql);
+      const tables = [
+        ...new Set(
+          [
+            ...sql.matchAll(
+              /\b(?:from|join|update|into|table)\s+([a-z_]+\.[a-z_]+)/gi,
+            ),
+          ].map((m) => m[1]),
+        ),
+      ].sort();
+      let category = 'unclassified';
+      if (identity && context?.kind) category = 'verifier.identity';
+      else if (
+        /rait_holiday/i.test(sql) &&
+        /isBusinessDay|nextBusinessDay|calendar/i.test(stack)
+      )
+        category = 'runtime.calendar';
+      else if (context?.kind) category = 'verifier.receipt';
+      else if (
+        /raitLockRisk|rait-claim-context\.service|rait-case-command\.service/.test(
+          stack,
+        ) &&
+        /lock table|eligible_pool|potential as materialized|for (?:share|update)|selector_/i.test(
+          sql,
+        )
+      )
+        category = 'runtime.lock_universe';
+      else if (/raitSourceRows/.test(stack)) category = 'runtime.source_rows';
+      else if (/rait-risk\.providers/.test(stack))
+        category = 'runtime.discovery';
+      else if (/rait-p402-claim\.fixture/.test(stack))
+        category =
+          observation.phaseName === 'setup' ? 'fixture.setup' : 'unclassified';
+      if (
+        category === 'unclassified' &&
+        /^(?:begin|commit|rollback|set\s|select set_config)/i.test(sql.trim())
+      )
+        category = 'session_control';
+      const observerBeforeMs = performance.now() - overheadStart;
+      const queryStart = performance.now();
+      let completed = false;
+      const finish = (error?: unknown, value?: unknown) => {
+        if (completed) return;
+        completed = true;
+        const end = performance.now();
+        const row = (value as { rows?: Record<string, unknown>[] })?.rows?.[0];
+        const record = {
+          operation,
+          phase,
+          tenantId: observation.tenantId,
+          caseId: context?.caseId ?? null,
+          kind: context?.kind ?? null,
+          depth: context?.depth ?? 0,
+          span: context?.span ?? null,
+          category,
+          sqlHash: createHash('sha256').update(sql).digest('hex'),
+          tables,
+          command: sql.trim().split(/\s+/)[0]?.toLowerCase(),
+          elapsedMs: end - queryStart,
+          observerBeforeMs,
+          late: observation.stopped,
+          error: error
+            ? ((error as { code?: string }).code ??
+              (error as Error).name ??
+              'error')
+            : null,
+          backendPid:
+            (this as unknown as { processID?: number }).processID ?? null,
+          identity:
+            identity && row
+              ? {
+                  role: row.role ?? null,
+                  tenant: row.tenant ?? null,
+                  pid: row.pid ?? null,
+                }
+              : undefined,
+        };
+        Object.assign(record, { observerAfterMs: performance.now() - end });
+        observation.queries.push(record);
+        if (observation.stopped)
+          console.log('P0_LATE_QUERY', JSON.stringify(record));
+      };
+      const callbackIndex = args.length - 1;
+      const hasCallback = typeof args[callbackIndex] === 'function';
+      if (typeof args[callbackIndex] === 'function') {
+        const callback = args[callbackIndex] as (
+          ...values: unknown[]
+        ) => unknown;
+        args[callbackIndex] = function (this: unknown, ...values: unknown[]) {
+          finish(values[0], values[1]);
+          return callback.apply(this, values);
+        };
+      }
+      try {
+        const result = original.apply(this, args);
+        if (result && typeof (result as Promise<unknown>).then === 'function')
+          void (result as Promise<unknown>).then(
+            (value) => finish(undefined, value),
+            (error) => finish(error),
+          );
+        if (
+          (!result ||
+            typeof (result as Promise<unknown>).then !== 'function') &&
+          !hasCallback
+        )
+          observation.queries.push({
+            operation,
+            phase,
+            category: 'unclassified',
+            sqlHash: createHash('sha256').update(sql).digest('hex'),
+            tables,
+            elapsedMs: null,
+            unsupportedOverload: true,
+            late: observation.stopped,
+          });
+        return result;
+      } catch (error) {
+        finish(error);
+        throw error;
+      }
+    } as never;
+    this.listener = (req, res) => {
+      const id = 'http-' + ++this.sequence;
+      const begin = performance.now();
+      const url = new URL(req.url ?? '/', 'http://fixture.invalid');
+      this.currentOperation = id;
+      this.context.enterWith({ observer: this, operation: id, depth: 0 });
+      res.once('finish', () => {
+        const end = performance.now();
+        this.operations.push({
+          id,
+          method: req.method,
+          path: url.pathname,
+          cursorPresent: url.searchParams.has('queue_cursor'),
+          elapsedMs: end - begin,
+          status: res.statusCode,
+          late: this.stopped,
+        });
+        if (this.currentOperation === id)
+          this.currentOperation = 'between-http';
+        if (this.stopped)
+          console.log(
+            'P0_LATE_OPERATION',
+            JSON.stringify(this.operations.at(-1)),
+          );
+      });
+    };
+    server.prependListener('request', this.listener);
+    this.server = server;
+  }
+  async span<T>(
+    kind: string,
+    caseId: string | null,
+    depth: number,
+    work: () => Promise<T>,
+  ): Promise<T> {
+    const parent = this.context.getStore();
+    const id = ++this.sequence,
+      start = performance.now();
+    try {
+      const value = await this.context.run(
+        {
+          observer: this,
+          operation: parent?.operation ?? this.currentOperation,
+          caseId,
+          kind,
+          depth,
+          span: id,
+        },
+        work,
+      );
+      this.spans.push({
+        id,
+        parent: parent?.span ?? null,
+        operation: parent?.operation ?? this.currentOperation,
+        caseId,
+        kind,
+        depth,
+        inclusiveMs: performance.now() - start,
+        status: (value as { status?: string })?.status ?? 'returned',
+        late: this.stopped,
+      });
+      return value;
+    } catch (error) {
+      this.spans.push({
+        id,
+        parent: parent?.span ?? null,
+        caseId,
+        kind,
+        depth,
+        inclusiveMs: performance.now() - start,
+        error: (error as Error).name,
+        late: this.stopped,
+      });
+      throw error;
+    }
+  }
+  phase(name: string) {
+    this.phaseName = name;
+  }
+  stop(status: string) {
+    this.stopped = true;
+    if (this.listener) this.server?.removeListener('request', this.listener);
+    if (P0QueryObservation.active === this) {
+      P0QueryObservation.active = undefined;
+    }
+    console.log(
+      'P0_OBSERVATION',
+      JSON.stringify({
+        test: this.test,
+        status,
+        elapsedMs: performance.now() - this.start,
+        queries: this.queries,
+        spans: this.spans,
+        operations: this.operations,
+        limitations: [
+          'query elapsed includes driver/network/PG/lock time, not server-only execution',
+          'inclusive verifier spans overlap leaf SQL and are never added to SQL totals',
+          'serialization and exact PG lock-wait time unobserved; remain within HTTP/residual wall',
+          'callsite-ambiguous queries explicitly unclassified',
+          'late asynchronous callbacks are not PASS',
+        ],
+      }),
+    );
+  }
+}
+
 export class RaitP402ClaimFixture {
+  observation: P0QueryObservation | undefined;
+  private observe<T>(
+    kind: string,
+    caseId: string | null,
+    depth: number,
+    work: () => Promise<T>,
+  ): Promise<T> {
+    return this.observation
+      ? this.observation.span(kind, caseId, depth, work)
+      : work();
+  }
   readonly owner = new pg.Client({
     connectionString: process.env.STYNX_OWNER_DATABASE_URL,
   });
@@ -1697,325 +2011,347 @@ export class RaitP402ClaimFixture {
     status: 'qualified' | 'missing' | 'ambiguous';
     sourceVersions: readonly string[];
   }> {
-    this.provenanceChecks++;
-    const identity = (
-      await tx.query<{ role: string; tenant: string }>(
-        "select current_role::text role,current_setting('app.tenant_id',true) tenant",
-      )
-    ).rows[0]!;
-    expect(identity).toEqual({ role: 'role_app_backend', tenant: RAIT_TENANT });
-    this.qualifiedBackendPids.add(
-      (await tx.query<{ pid: number }>('select pg_backend_pid() pid')).rows[0]!
-        .pid,
-    );
-    const missing = { status: 'missing' as const, sourceVersions: [] };
-    if (
-      req.tenantId !== RAIT_TENANT ||
-      (req.kind === 'movement' && req.sourceRefs.length === 0)
-    )
-      return missing;
-    const refs = [...req.sourceRefs].sort();
-    const matches = this.receipts.filter(
-      (r) =>
-        r.core.kind === req.kind &&
-        (r.core.caseId === req.caseId ||
-          (r.core.kind === 'parameter' && r.core.caseId === null)) &&
-        canonicalBytes(r.core.bindings.map((b) => b.sourceRef)) ===
-          canonicalBytes(refs),
-    );
-    const valid: QualifiedReceipt[] = [];
-    const verify = async (
-      r: QualifiedReceipt,
-      seen: Set<string>,
-    ): Promise<boolean> => {
-      if (
-        seen.has(r.digest) ||
-        this.revokedReceipts.has(r.core.receiptId) ||
-        this.revokedReceipts.has(r.digest) ||
-        r.admittedOrigin !== 'owner-approved-isolated-inspector-fixture' ||
-        canonicalRevision(r.core) !== r.digest
-      )
-        return false;
-      seen.add(r.digest);
-      const current = await readSourceRows(
-        tx,
-        r.core.bindings.map((b) => b.sourceRef),
+    return this.observe(req.kind, req.caseId, 0, async () => {
+      this.provenanceChecks++;
+      const identity = (
+        await tx.query<{ role: string; tenant: string }>(
+          "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+        )
+      ).rows[0]!;
+      expect(identity).toEqual({
+        role: 'role_app_backend',
+        tenant: RAIT_TENANT,
+      });
+      this.qualifiedBackendPids.add(
+        (await tx.query<{ pid: number }>('select pg_backend_pid() pid'))
+          .rows[0]!.pid,
       );
+      const missing = { status: 'missing' as const, sourceVersions: [] };
       if (
-        canonicalBytes(
-          current.map((row) => ({
-            sourceRef: row.sourceRef,
-            rowRevision: canonicalRevision(row),
-          })),
-        ) !== canonicalBytes(r.core.bindings)
+        req.tenantId !== RAIT_TENANT ||
+        (req.kind === 'movement' && req.sourceRefs.length === 0)
       )
-        return false;
-      for (const d of r.core.dependencies) {
-        const dep = this.receipts.filter((x) => x.digest === d);
-        if (dep.length !== 1 || !(await verify(dep[0]!, new Set(seen))))
-          return false;
-      }
-      for (const p of r.core.policySources) {
-        const fixed = provenanceFormat.policyCanonicalSources.find(
-          (s) => s.sourceRef === p.sourceRef,
+        return missing;
+      const refs = [...req.sourceRefs].sort();
+      const matches = this.receipts.filter(
+        (r) =>
+          r.core.kind === req.kind &&
+          (r.core.caseId === req.caseId ||
+            (r.core.kind === 'parameter' && r.core.caseId === null)) &&
+          canonicalBytes(r.core.bindings.map((b) => b.sourceRef)) ===
+            canonicalBytes(refs),
+      );
+      const valid: QualifiedReceipt[] = [];
+      const verify = async (
+        r: QualifiedReceipt,
+        seen: Set<string>,
+      ): Promise<boolean> => {
+        return this.observe(
+          r.core.kind,
+          r.core.caseId,
+          seen.size + 1,
+          async () => {
+            if (
+              seen.has(r.digest) ||
+              this.revokedReceipts.has(r.core.receiptId) ||
+              this.revokedReceipts.has(r.digest) ||
+              r.admittedOrigin !==
+                'owner-approved-isolated-inspector-fixture' ||
+              canonicalRevision(r.core) !== r.digest
+            )
+              return false;
+            seen.add(r.digest);
+            const current = await readSourceRows(
+              tx,
+              r.core.bindings.map((b) => b.sourceRef),
+            );
+            if (
+              canonicalBytes(
+                current.map((row) => ({
+                  sourceRef: row.sourceRef,
+                  rowRevision: canonicalRevision(row),
+                })),
+              ) !== canonicalBytes(r.core.bindings)
+            )
+              return false;
+            for (const d of r.core.dependencies) {
+              const dep = this.receipts.filter((x) => x.digest === d);
+              if (dep.length !== 1 || !(await verify(dep[0]!, new Set(seen))))
+                return false;
+            }
+            for (const p of r.core.policySources) {
+              const fixed = provenanceFormat.policyCanonicalSources.find(
+                (s) => s.sourceRef === p.sourceRef,
+              );
+              if (!fixed || fixed.sourceRevision !== p.sourceRevision)
+                return false;
+              const decisions = this.receipts.filter(
+                (x) => x.core.receiptId === p.decisionRef,
+              );
+              if (decisions.length !== 1) return false;
+              const decision = decisions[0]!;
+              if (
+                decision.core.authorization.decisionRef !==
+                  isolatedPolicyPurpose ||
+                decision.core.caseId !== r.core.caseId ||
+                decision.core.tenantId !== r.core.tenantId ||
+                decision.core.dependencies.length !== 0 ||
+                decision.core.policySources.length !== 0 ||
+                canonicalBytes(decision.core.bindings) !==
+                  canonicalBytes(r.core.bindings) ||
+                !(await verify(decision, new Set(seen)))
+              )
+                return false;
+              const path = p.sourceRef.split('#')[0]!;
+              const bytes = readFileSync(
+                new URL('../../../../' + path, import.meta.url),
+              );
+              if (
+                'sha256:' + createHash('sha256').update(bytes).digest('hex') !==
+                p.sourceRevision
+              )
+                return false;
+            }
+            return true;
+          },
         );
-        if (!fixed || fixed.sourceRevision !== p.sourceRevision) return false;
-        const decisions = this.receipts.filter(
-          (x) => x.core.receiptId === p.decisionRef,
-        );
-        if (decisions.length !== 1) return false;
-        const decision = decisions[0]!;
-        if (
-          decision.core.authorization.decisionRef !== isolatedPolicyPurpose ||
-          decision.core.caseId !== r.core.caseId ||
-          decision.core.tenantId !== r.core.tenantId ||
-          decision.core.dependencies.length !== 0 ||
-          decision.core.policySources.length !== 0 ||
-          canonicalBytes(decision.core.bindings) !==
-            canonicalBytes(r.core.bindings) ||
-          !(await verify(decision, new Set(seen)))
-        )
-          return false;
-        const path = p.sourceRef.split('#')[0]!;
-        const bytes = readFileSync(
-          new URL('../../../../' + path, import.meta.url),
-        );
-        if (
-          'sha256:' + createHash('sha256').update(bytes).digest('hex') !==
-          p.sourceRevision
-        )
-          return false;
+      };
+      try {
+        const current = await readSourceRows(tx, refs);
+        for (const r of matches) {
+          if (!(await verify(r, new Set()))) continue;
+          const envelope = {
+            schemaVersion: 1,
+            namespace: 'rait-risk-source-v1',
+            kind: req.kind,
+            tenantId: req.tenantId,
+            caseId: req.caseId,
+            rows: current,
+            dependencies: r.core.dependencies,
+          };
+          if (canonicalRevision(envelope) === req.contentRevision)
+            valid.push(r);
+        }
+      } catch {
+        return missing;
       }
-      return true;
-    };
-    try {
-      const current = await readSourceRows(tx, refs);
-      for (const r of matches) {
-        if (!(await verify(r, new Set()))) continue;
-        const envelope = {
-          schemaVersion: 1,
-          namespace: 'rait-risk-source-v1',
-          kind: req.kind,
-          tenantId: req.tenantId,
-          caseId: req.caseId,
-          rows: current,
-          dependencies: r.core.dependencies,
-        };
-        if (canonicalRevision(envelope) === req.contentRevision) valid.push(r);
-      }
-    } catch {
-      return missing;
-    }
-    if (valid.length > 1) return { status: 'ambiguous', sourceVersions: [] };
-    if (!valid.length) return missing;
-    const sourceVersions = [
-      ...new Set([valid[0]!.digest, ...valid[0]!.core.dependencies]),
-    ]
-      .sort()
-      .map(opaqueReceiptVersion)
-      .sort();
-    for (const version of sourceVersions) this.qualifiedVersions.add(version);
-    if (req.kind === 'movement')
-      for (const digest of valid[0]!.core.dependencies)
-        this.policyDependencyDigests.add(digest);
-    await this.onQualified?.(req);
-    return { status: 'qualified', sourceVersions };
+      if (valid.length > 1) return { status: 'ambiguous', sourceVersions: [] };
+      if (!valid.length) return missing;
+      const sourceVersions = [
+        ...new Set([valid[0]!.digest, ...valid[0]!.core.dependencies]),
+      ]
+        .sort()
+        .map(opaqueReceiptVersion)
+        .sort();
+      for (const version of sourceVersions) this.qualifiedVersions.add(version);
+      if (req.kind === 'movement')
+        for (const digest of valid[0]!.core.dependencies)
+          this.policyDependencyDigests.add(digest);
+      await this.onQualified?.(req);
+      return { status: 'qualified', sourceVersions };
+    });
   }
 
   async qualifyPolicy(tx: Sql, req: PolicyRequest): Promise<unknown> {
-    this.policyRequests.push(structuredClone(req));
-    const identity = (
-      await tx.query(
-        "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+    return this.observe('policy', req.caseId, 0, async () => {
+      this.policyRequests.push(structuredClone(req));
+      const identity = (
+        await tx.query(
+          "select current_role::text role,current_setting('app.tenant_id',true) tenant",
+        )
+      ).rows[0];
+      expect(identity).toEqual({
+        role: 'role_app_backend',
+        tenant: RAIT_TENANT,
+      });
+      const missing = { status: 'missing', sourceVersions: [] };
+      const keys = (value: object) => Object.keys(value).sort();
+      const same = (a: unknown, b: unknown) =>
+        canonicalBytes(a) === canonicalBytes(b);
+      if (
+        !same(
+          keys(req),
+          [
+            'purpose',
+            'tenantId',
+            'caseId',
+            'sourceRefs',
+            'contentRevision',
+            'policySources',
+          ].sort(),
+        ) ||
+        req.purpose !== 'C_USEFUL_MOVEMENT_POLICY' ||
+        req.tenantId !== RAIT_TENANT ||
+        !Array.isArray(req.sourceRefs) ||
+        !req.sourceRefs.length ||
+        !same(req.sourceRefs, [...new Set(req.sourceRefs)].sort())
       )
-    ).rows[0];
-    expect(identity).toEqual({ role: 'role_app_backend', tenant: RAIT_TENANT });
-    const missing = { status: 'missing', sourceVersions: [] };
-    const keys = (value: object) => Object.keys(value).sort();
-    const same = (a: unknown, b: unknown) =>
-      canonicalBytes(a) === canonicalBytes(b);
-    if (
-      !same(
-        keys(req),
-        [
-          'purpose',
-          'tenantId',
-          'caseId',
-          'sourceRefs',
-          'contentRevision',
-          'policySources',
-        ].sort(),
-      ) ||
-      req.purpose !== 'C_USEFUL_MOVEMENT_POLICY' ||
-      req.tenantId !== RAIT_TENANT ||
-      !Array.isArray(req.sourceRefs) ||
-      !req.sourceRefs.length ||
-      !same(req.sourceRefs, [...new Set(req.sourceRefs)].sort())
-    )
-      return missing;
-    const anchor = provenanceFormat.policyCanonicalSources.find(
-      (x) =>
-        x.sourceRef ===
-        'docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2',
-    )!;
-    if (!same(req.policySources, [anchor])) return missing; // This pre-admitted isolated proof covers this exact closed C anchor, not a universal6-source policy.
-    const policyReceipts = this.receipts.filter(
-      (r) =>
-        r.core.kind === 'movement' &&
-        r.core.caseId === req.caseId &&
-        r.core.tenantId === req.tenantId &&
-        r.core.policySources.length &&
-        same(
-          r.core.bindings.map((b) => b.sourceRef),
-          req.sourceRefs,
-        ),
-    );
-    const valid: QualifiedReceipt[] = [];
-    try {
-      const current = await readSourceRows(tx, req.sourceRefs);
-      const row = (table: string) => current.filter((x) => x.table === table);
-      const cases = row('inf.rait_case'),
-        aits = row('inf.ait_ait'),
-        infractions = row('inf.infraction'),
-        clocks = row('inf.rait_clock'),
-        timers = row('inf.infraction_timer');
-      const events = current.filter(
+        return missing;
+      const anchor = provenanceFormat.policyCanonicalSources.find(
         (x) =>
-          x.table === 'inf.rait_case_event' ||
-          x.table === 'inf.infraction_event',
+          x.sourceRef ===
+          'docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md#4.2',
+      )!;
+      if (!same(req.policySources, [anchor])) return missing; // This pre-admitted isolated proof covers this exact closed C anchor, not a universal6-source policy.
+      const policyReceipts = this.receipts.filter(
+        (r) =>
+          r.core.kind === 'movement' &&
+          r.core.caseId === req.caseId &&
+          r.core.tenantId === req.tenantId &&
+          r.core.policySources.length &&
+          same(
+            r.core.bindings.map((b) => b.sourceRef),
+            req.sourceRefs,
+          ),
       );
-      if (
-        cases.length !== 1 ||
-        aits.length !== 1 ||
-        infractions.length !== 1 ||
-        clocks.length !== 1 ||
-        timers.length !== 1 ||
-        events.length !== 1
-      )
-        return missing;
-      const c = cases[0]!.fields,
-        a = aits[0]!.fields,
-        i = infractions[0]!.fields,
-        cl = clocks[0]!.fields,
-        t = timers[0]!.fields,
-        e = events[0]!.fields;
-      if (
-        c.id !== req.caseId ||
-        c.tenant_id !== req.tenantId ||
-        a.id !== c.ait_id ||
-        i.ait_id !== a.id ||
-        cl.case_id !== c.id ||
-        cl.clock_code !== 'C' ||
-        t.infraction_id !== i.id ||
-        t.timer_code !== 'T-PAR-3A' ||
-        cl.last_reset_at !== e.occurred_at ||
-        (events[0]!.table === 'inf.rait_case_event'
-          ? e.case_id !== c.id
-          : e.infraction_id !== i.id)
-      )
-        return missing;
-      const bindings = current.map((x) => ({
-        sourceRef: x.sourceRef,
-        rowRevision: canonicalRevision(x),
-      }));
-      const trusted = (r: QualifiedReceipt) =>
-        r.admittedOrigin === 'owner-approved-isolated-inspector-fixture' &&
-        !this.revokedReceipts.has(r.digest) &&
-        !this.revokedReceipts.has(r.core.receiptId) &&
-        r.digest === canonicalRevision(r.core) &&
-        r.core.authorization.authorityRef === syntheticSource;
-      for (const receipt of policyReceipts) {
-        if (
-          !trusted(receipt) ||
-          receipt.core.dependencies.length ||
-          !same(receipt.core.bindings, bindings) ||
-          receipt.core.policySources.length !== 1
-        )
-          continue;
-        const triple = receipt.core.policySources[0]!;
-        if (
-          !same(
-            keys(triple),
-            ['sourceRef', 'sourceRevision', 'decisionRef'].sort(),
-          ) ||
-          !same(
-            {
-              sourceRef: triple.sourceRef,
-              sourceRevision: triple.sourceRevision,
-            },
-            anchor,
-          )
-        )
-          continue;
-        const decisions = this.receipts.filter(
-          (x) => x.core.receiptId === triple.decisionRef,
+      const valid: QualifiedReceipt[] = [];
+      try {
+        const current = await readSourceRows(tx, req.sourceRefs);
+        const row = (table: string) => current.filter((x) => x.table === table);
+        const cases = row('inf.rait_case'),
+          aits = row('inf.ait_ait'),
+          infractions = row('inf.infraction'),
+          clocks = row('inf.rait_clock'),
+          timers = row('inf.infraction_timer');
+        const events = current.filter(
+          (x) =>
+            x.table === 'inf.rait_case_event' ||
+            x.table === 'inf.infraction_event',
         );
-        if (decisions.length !== 1) continue;
-        const decision = decisions[0]!;
         if (
-          !trusted(decision) ||
-          decision.core.authorization.decisionRef !== isolatedPolicyPurpose ||
-          decision.core.tenantId !== req.tenantId ||
-          decision.core.caseId !== req.caseId ||
-          decision.core.dependencies.length ||
-          decision.core.policySources.length ||
-          !same(decision.core.bindings, bindings)
+          cases.length !== 1 ||
+          aits.length !== 1 ||
+          infractions.length !== 1 ||
+          clocks.length !== 1 ||
+          timers.length !== 1 ||
+          events.length !== 1
         )
-          continue;
-        const file = triple.sourceRef.split('#')[0]!;
+          return missing;
+        const c = cases[0]!.fields,
+          a = aits[0]!.fields,
+          i = infractions[0]!.fields,
+          cl = clocks[0]!.fields,
+          t = timers[0]!.fields,
+          e = events[0]!.fields;
         if (
-          'sha256:' +
-            createHash('sha256')
-              .update(
-                readFileSync(new URL('../../../../' + file, import.meta.url)),
-              )
-              .digest('hex') !==
-          triple.sourceRevision
+          c.id !== req.caseId ||
+          c.tenant_id !== req.tenantId ||
+          a.id !== c.ait_id ||
+          i.ait_id !== a.id ||
+          cl.case_id !== c.id ||
+          cl.clock_code !== 'C' ||
+          t.infraction_id !== i.id ||
+          t.timer_code !== 'T-PAR-3A' ||
+          cl.last_reset_at !== e.occurred_at ||
+          (events[0]!.table === 'inf.rait_case_event'
+            ? e.case_id !== c.id
+            : e.infraction_id !== i.id)
         )
-          continue;
-        const envelope = {
-          schemaVersion: 1,
-          namespace: 'rait-risk-policy-request-v1',
-          purpose: req.purpose,
-          tenantId: req.tenantId,
-          caseId: req.caseId,
-          rows: current,
-          dependencies: [],
-          policySources: req.policySources,
-        };
-        if (canonicalRevision(envelope) === req.contentRevision)
-          valid.push(receipt);
+          return missing;
+        const bindings = current.map((x) => ({
+          sourceRef: x.sourceRef,
+          rowRevision: canonicalRevision(x),
+        }));
+        const trusted = (r: QualifiedReceipt) =>
+          r.admittedOrigin === 'owner-approved-isolated-inspector-fixture' &&
+          !this.revokedReceipts.has(r.digest) &&
+          !this.revokedReceipts.has(r.core.receiptId) &&
+          r.digest === canonicalRevision(r.core) &&
+          r.core.authorization.authorityRef === syntheticSource;
+        for (const receipt of policyReceipts) {
+          if (
+            !trusted(receipt) ||
+            receipt.core.dependencies.length ||
+            !same(receipt.core.bindings, bindings) ||
+            receipt.core.policySources.length !== 1
+          )
+            continue;
+          const triple = receipt.core.policySources[0]!;
+          if (
+            !same(
+              keys(triple),
+              ['sourceRef', 'sourceRevision', 'decisionRef'].sort(),
+            ) ||
+            !same(
+              {
+                sourceRef: triple.sourceRef,
+                sourceRevision: triple.sourceRevision,
+              },
+              anchor,
+            )
+          )
+            continue;
+          const decisions = this.receipts.filter(
+            (x) => x.core.receiptId === triple.decisionRef,
+          );
+          if (decisions.length !== 1) continue;
+          const decision = decisions[0]!;
+          if (
+            !trusted(decision) ||
+            decision.core.authorization.decisionRef !== isolatedPolicyPurpose ||
+            decision.core.tenantId !== req.tenantId ||
+            decision.core.caseId !== req.caseId ||
+            decision.core.dependencies.length ||
+            decision.core.policySources.length ||
+            !same(decision.core.bindings, bindings)
+          )
+            continue;
+          const file = triple.sourceRef.split('#')[0]!;
+          if (
+            'sha256:' +
+              createHash('sha256')
+                .update(
+                  readFileSync(new URL('../../../../' + file, import.meta.url)),
+                )
+                .digest('hex') !==
+            triple.sourceRevision
+          )
+            continue;
+          const envelope = {
+            schemaVersion: 1,
+            namespace: 'rait-risk-policy-request-v1',
+            purpose: req.purpose,
+            tenantId: req.tenantId,
+            caseId: req.caseId,
+            rows: current,
+            dependencies: [],
+            policySources: req.policySources,
+          };
+          if (canonicalRevision(envelope) === req.contentRevision)
+            valid.push(receipt);
+        }
+      } catch {
+        return missing;
       }
-    } catch {
-      return missing;
-    }
-    if (valid.length > 1 || this.policyResultMode === 'ambiguous')
-      return { status: 'ambiguous', sourceVersions: [] };
-    if (valid.length !== 1 || this.policyResultMode === 'missing')
-      return missing;
-    const receipt = valid[0]!;
-    const versions = [
-      opaqueReceiptVersion(receipt.digest),
-      ...receipt.core.policySources.map((p) =>
-        opaqueReceiptVersion(
-          this.receipts.find((r) => r.core.receiptId === p.decisionRef)!.digest,
+      if (valid.length > 1 || this.policyResultMode === 'ambiguous')
+        return { status: 'ambiguous', sourceVersions: [] };
+      if (valid.length !== 1 || this.policyResultMode === 'missing')
+        return missing;
+      const receipt = valid[0]!;
+      const versions = [
+        opaqueReceiptVersion(receipt.digest),
+        ...receipt.core.policySources.map((p) =>
+          opaqueReceiptVersion(
+            this.receipts.find((r) => r.core.receiptId === p.decisionRef)!
+              .digest,
+          ),
         ),
-      ),
-    ].sort();
-    if (this.policyResultMode === 'malformed')
-      return { status: 'qualified', sourceVersions: versions };
-    if (this.policyResultMode === 'badDigest')
+      ].sort();
+      if (this.policyResultMode === 'malformed')
+        return { status: 'qualified', sourceVersions: versions };
+      if (this.policyResultMode === 'badDigest')
+        return {
+          status: 'qualified',
+          receiptDigest: 'rrv1:' + receipt.digest.slice(7),
+          sourceVersions: versions,
+        };
+      for (const v of versions) this.qualifiedVersions.add(v);
       return {
         status: 'qualified',
-        receiptDigest: 'rrv1:' + receipt.digest.slice(7),
+        receiptDigest: receipt.digest,
         sourceVersions: versions,
       };
-    for (const v of versions) this.qualifiedVersions.add(v);
-    return {
-      status: 'qualified',
-      receiptDigest: receipt.digest,
-      sourceVersions: versions,
-    };
+    });
   }
 
   async close() {
