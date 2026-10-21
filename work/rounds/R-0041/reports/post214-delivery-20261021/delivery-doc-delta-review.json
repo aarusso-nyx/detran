@@ -1,0 +1,42 @@
+{
+  "verdict": "pass",
+  "findings": [],
+  "scope": {
+    "baseline_tree": "f6772fcd3745d605ac7a6a3bf72eaeef0fe3a210",
+    "current_staged_tree": "4d4329e72564e8dfbcf12586633b22e744938193",
+    "changed_paths": ["docs/dev/operations/local-rc-attestation.md (+12/-7)"],
+    "unstaged_changes": "none",
+    "other_files_and_controls_changed": "none; the tree diff touches only this runbook, so the workflow, policies, scripts, tests and evidence files are byte-identical to the reviewed tree"
+  },
+  "checks": [
+    {
+      "item": "versions attributed to toolchain only",
+      "result": "resolved",
+      "evidence": "law/policy/devai-local-rc-toolchain.json sets node v24.15.0 and pnpm 9.15.0. The runbook now names only the toolchain policy as the source of the versions."
+    },
+    {
+      "item": "environment policy described as variable hashes",
+      "result": "resolved",
+      "evidence": "law/policy/devai-local-rc-environment.json maps each of 5 variable names to a sha256 digest. The runbook now says it holds the hashes of the allowed variables."
+    },
+    {
+      "item": "post-publish workflow_dispatch exact-commit vs post-merge push exact-tree",
+      "result": "resolved",
+      "evidence": ".github/workflows/devai-local-rc-verify.yml:206-210 emits binding=exact-tree when GITHUB_EVENT_NAME is push and exact-commit otherwise. The triggers are push to main and workflow_dispatch (lines 4-6). The runbook wording matches this and still forbids changing the binding mode or simulating another event."
+    },
+    {
+      "item": "event added to gh run list JSON",
+      "result": "resolved",
+      "evidence": "The --json list now includes event, and event is a valid gh run list JSON field."
+    },
+    {
+      "item": "shell line continuations",
+      "result": "resolved",
+      "evidence": "The command now spans three lines ending in ' \\' with no trailing whitespace, replacing the old single line that had odd internal spacing."
+    }
+  ],
+  "notes": [
+    "Out of scope as instructed: C6 withheld protocol, native WIP, previous evidence and tests.",
+    "The runbook makes no signed RC or readiness claim."
+  ]
+}

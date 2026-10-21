@@ -1,0 +1,42 @@
+{
+  "verdict": "pass",
+  "confidence": 0.86,
+  "rationale": "I checked everything here read-only. Nothing was edited, no C6 or native-WIP material was opened, and I did not run any typecheck, E2E, RC or CI job. Scope: the staged tree is f6772fcd3745d605ac7a6a3bf72eaeef0fe3a210, and working files match the index (git diff --quiet returned 0) with no untracked files. The diff against 68d5c2a has 180 paths: the 4 F3 test files, 4 docs files, 35 files in the c7-transport capsule plus 116 in the post214 capsule (the two capsule manifests list 34 and 115 because they leave themselves out, and both match their capsule files exactly by sha256 and size), 20 sensor readings and record/proofs/chain.json. Nothing in product runtime, dependencies, config, workflows, descriptors or thresholds changed, and R-0036 to R-0039 are untouched. F3 code: createPortalApp now calls app.listen(0,'127.0.0.1') after app.init(). If listen fails it closes the app; if close also fails it throws an AggregateError holding both errors, otherwise it rethrows the original listen error unchanged. The two duplicate listen calls in payload-lint and stream are gone, and stream still reads its port with the same address extraction. Stream's http.get targets 127.0.0.1, so binding only to IPv4 loopback is consistent. createPortalApp has 10 call sites in 9 files; all close their apps, including requests' failingApp in afterAll and national-unavailable's sneUnavailableApp in a finally block. None of them still calls listen itself. The C-0002-76 change only adds lines: a line diff against the original shows two inserts (10 lines and 2 lines) and nothing else, so every original byte is kept, as source-preservation.json says. getHttpServer() returns any, so reading .port compiles. The tsconfig target is ES2023, so AggregateError is available. Prettier passes on all changed source and docs files. Evidence: the chain has 200 records, the first 180 are byte-identical to the base, and records 181 to 200 are all sense.readings.record. Their 20 artifact paths are exactly the 20 staged readings, every sha256 matches, previous_hash links are continuous, and `devai evidence verify` reports valid with head 21c332a4…. The legacy chain hashes to 5adb65af…0fec and test-tasks.json to 752c6105…5fbad, both unchanged. The rc profile requires only backend-kernel and all seven descriptors are still present. Readings: 10 kinds with 2 each. Canonical results are 4 PASS, 3 REVIEW, 3 FAIL, and the fixed nine are 4/3/2. The worktree citation reading has 5 finding files, 2 of them git-ignored (docs/site/build/ and docs/site/docs/). The clean-checkout reading has the 3 tracked files. The three copied run summaries still carry candidate=68d5c2a and no_config_or_test_changes=true. summary-errata.json corrects both fields and says these are dirty-tree diagnostics that cannot be attested. The README and the post214 doc call them ordinary working-tree checks, not signed RC, and both say the C75 difference has no established cause. The commit, tree and DEVAI 2.6.3 facts in the post214 doc check out. No published page links to docs/dev. Runbook claims checked against code: Node and pnpm versions, the clean-worktree, named-branch and published-upstream preconditions, the 0600 key check, `check --rc --run --as-role inspector --write`, the pinned PostGIS image, immutable bundles, the existing trust store, the publisher dispatching devai-local-rc-verify.yml, and the push→exact-tree / other→exact-commit binding. All match. I found no defect in the code, scope or evidence. What remains are three low-severity wording issues in the runbook plus the untested cleanup branch, which the docs already disclose.",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "docs/dev/operations/local-rc-attestation.md",
+      "area": "runbook accuracy",
+      "issue": "'Confira o novo run originado pelo push' (check the new run triggered by the push) only holds when a PR-head proof is followed by a merge. publish-local-rc.mjs dispatches devai-local-rc-verify.yml itself, so publishing for a commit already on main produces a workflow_dispatch run with exact-commit binding, not a push run. The suggested `gh run list` call does not filter or return `event`, so it cannot tell these two runs apart.",
+      "recommendation": "Say which event to expect in each flow (dispatch → exact-commit after publish; push → exact-tree after merging an identical tree), and add `event` to --json or pass `--event`. No change to the workflow or verifier needed."
+    },
+    {
+      "severity": "low",
+      "file": "docs/dev/operations/local-rc-attestation.md",
+      "area": "runbook accuracy",
+      "issue": "The text says the Node v24.15.0 and pnpm 9.15.0 identities are in both the toolchain and environment policy files. Only devai-local-rc-toolchain.json has them; devai-local-rc-environment.json holds hashes of the allowlisted environment variables.",
+      "recommendation": "Attribute the versions to the toolchain policy and describe the environment policy as hashes of the allowlisted variables."
+    },
+    {
+      "severity": "info",
+      "file": "docs/dev/operations/local-rc-attestation.md",
+      "area": "formatting",
+      "issue": "The `gh run list` example has runs of extra spaces between arguments, apparently left over from removing backslash line continuations. It still runs, but it is untidy.",
+      "recommendation": "Use single spaces or restore the backslash continuations."
+    },
+    {
+      "severity": "info",
+      "file": "backend/app/tests/e2e/portal-e2e.support.ts",
+      "area": "test coverage (disclosed)",
+      "issue": "Reading the source, the listen-failure branch looks right: it closes the app, rethrows the original listen error, and throws AggregateError([listenError, closeError]) if close also fails. No test exercises it, and the contract, the capsule README and the post214 doc all say so. Nobody claims it is covered.",
+      "recommendation": "No change required for this packet. A later focused unit test could inject a listen failure."
+    },
+    {
+      "severity": "info",
+      "file": "work/rounds/R-0041/reports/c7-transport-20261021",
+      "area": "evidence classification",
+      "issue": "Not a defect, just a confirmation. The raw run summaries keep their wrong inherited fields, summary-errata.json corrects them by addition, and nothing presents the RED, partial-GREEN or 43-pass runs as clean-candidate or signed RC evidence. The full original RC on a clean published HEAD, export and publish only after a real success, independent official verification, green PR checks, a normal merge and exact-main verification are all still owed.",
+      "recommendation": "Keep these as gates for the next stage. This review approves source only, not readiness."
+    }
+  ]
+}
