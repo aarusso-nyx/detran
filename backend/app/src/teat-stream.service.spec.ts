@@ -249,3 +249,95 @@ describe('CTG-0004 §7/§16.3/§16.7 item 11 — TeatStreamController: poller in
     expect(setIntervalSpy).not.toHaveBeenCalled();
   });
 });
+
+describe('approved topic-before-limit SQL and controller argument contract', () => {
+  for (const [label, topics, expected] of [
+    ['default', undefined, undefined],
+    [
+      'filtered',
+      ' ait.changed,ait.concurrency-suspected,ait.changed ',
+      ['ait.changed', 'ait.concurrency-suspected'],
+    ],
+    ['explicit empty', '   ', []],
+  ] as const)
+    it(`controller ${label} forwards exact optional topic intent`, async () => {
+      const { Controller } = await loadStreamModules();
+      const service = fakeService([[]]);
+      const poller = manualPoller();
+      const { req, res } = fakeReqRes();
+      await new Controller(service, poller.port).stream(
+        req,
+        res,
+        undefined,
+        topics,
+      );
+      expect(service.listSince).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ id: null }),
+        undefined,
+        expected,
+      );
+    });
+  for (const [label, id, topics] of [
+    ['default tuple', '00000000-0000-4000-8000-000000000001', undefined],
+    ['default instant', null, undefined],
+    ['filtered tuple', '00000000-0000-4000-8000-000000000001', ['ait.changed']],
+    ['empty instant', null, []],
+  ] as const)
+    it(`actual service ${label} keeps tuple/order/default200 and binds topic predicates before limit`, async () => {
+      const module = (await importModule('./teat-stream.service.js')) as {
+        TeatStreamService: new (...args: unknown[]) => {
+          listSince: (
+            cursor: unknown,
+            limit?: number,
+            topics?: readonly string[],
+          ) => Promise<unknown>;
+        };
+      };
+      const rows = [
+        {
+          id: 'sentinel',
+          created_at: '2026-10-21T10:00:00Z',
+          payload: { type: 'ait.changed' },
+        },
+      ];
+      const query = vi.fn(async () => ({ rows }));
+      const tx = vi.fn(
+        async (work: (q: unknown) => Promise<unknown>, options: unknown) => {
+          expect(options).toEqual({ role: 'app' });
+          return work({ query });
+        },
+      );
+      const service = new module.TeatStreamService(
+        { tx },
+        {
+          hasActiveContext: () => true,
+          snapshot: () => ({ tenantId: 'tenant', actorId: 'actor' }),
+        },
+      );
+      const cursor = { createdAt: '2026-10-21T09:00:00Z', id };
+      expect(await service.listSince(cursor, undefined, topics)).toBe(rows);
+      const [sql, args] = query.mock.calls[0] as unknown as [string, unknown[]];
+      const base = id ? [cursor.createdAt, id, 200] : [cursor.createdAt, 200];
+      expect(args).toEqual(
+        topics === undefined ? base : [...base, [...topics]],
+      );
+      const normalized = sql.replace(/\s+/g, ' ').trim();
+      if (topics === undefined)
+        expect(normalized).toBe(
+          id
+            ? 'select id, created_at::text as created_at, payload from integration.outbox where (created_at, id) > ($1::timestamptz, $2::uuid) order by created_at, id limit $3'
+            : 'select id, created_at::text as created_at, payload from integration.outbox where created_at > $1::timestamptz order by created_at, id limit $2',
+        );
+      else {
+        expect(normalized).toContain("jsonb_typeof(payload->'type')='string'");
+        expect(normalized).toContain(
+          `payload->>'type'=any($${base.length + 1}::text[])`,
+        );
+        expect(normalized.indexOf('any(')).toBeLessThan(
+          normalized.indexOf(' limit '),
+        );
+      }
+      expect(query).toHaveBeenCalledOnce();
+      expect(tx).toHaveBeenCalledOnce();
+    });
+});
