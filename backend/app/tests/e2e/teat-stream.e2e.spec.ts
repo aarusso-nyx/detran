@@ -409,7 +409,7 @@ it('approved backlog sensor: topics ait.changed reaches its exact event after601
   );
   const noise = await client.query<{ id: string }>(
     `insert into integration.outbox(tenant_id,topic,aggregate_type,aggregate_id,payload,idempotency_key,status,created_at,available_at)
-    select $1,'ait.concurrency-suspected','ait',$2,jsonb_build_object('type','ait.concurrency-suspected','domainEvent','AIT_CONCURRENCY_SUSPECTED','version',1,'tenantId',$1::text,'aggregate',jsonb_build_object('kind','ait','id',$2::text,'version',1),'data',jsonb_build_object('aitId',$2::text)),'TEAT-approved-backlog-'||gen_random_uuid()::text,'pending',$3::timestamptz+g*interval '1 millisecond',$3::timestamptz+g*interval '1 millisecond' from generate_series(1,601)g returning id`,
+    select $1::uuid,'ait.concurrency-suspected','ait',$2::text,jsonb_build_object('type','ait.concurrency-suspected','domainEvent','AIT_CONCURRENCY_SUSPECTED','version',1,'tenantId',$1::text,'aggregate',jsonb_build_object('kind','ait','id',$2::text,'version',1),'data',jsonb_build_object('aitId',$2::text)),'TEAT-approved-backlog-'||gen_random_uuid()::text,'pending',$3::timestamptz+g*interval '1 millisecond',$3::timestamptz+g*interval '1 millisecond' from generate_series(1,601)g returning id`,
     [TENANT_ID, AIT_ID, new Date(start).toISOString()],
   );
   expect(noise.rows).toHaveLength(601);

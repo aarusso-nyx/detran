@@ -2774,8 +2774,8 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         first = randomUUID(),
         second = randomUUID();
       await owner.query(
-        "insert into inf.rait_unit(id,tenant_id,name,judging_body) values($1,$2,'S1 isolated protocol unit','jari')",
-        [unit, RAIT_TENANT],
+        "insert into inf.rait_unit(id,tenant_id,name,judging_body) values($1,$2,$3,'jari')",
+        [unit, RAIT_TENANT, 'S1 isolated protocol unit ' + unit],
       );
       for (const [id, active, strategy] of [
         [first, true, routing === 'zero' ? 'round_robin' : 'pull'],
