@@ -20,6 +20,17 @@ import {
 let app: INestApplication;
 let fixture: Jw01AdmissibilityFixture;
 let prepared = false;
+const originalRateCapacity = process.env.STYNX_RATE_LIMIT_DEFAULT;
+type RateWindow = { bucket_key: string; window_start: string; hits: number };
+let rateWindowsBefore: RateWindow[] = [];
+async function ownRateWindows(): Promise<RateWindow[]> {
+  return (
+    await fixture.owner.query<RateWindow>(
+      'select bucket_key,window_start::text,hits from integration.rate_limit_windows where tenant_id=$1 order by bucket_key,window_start',
+      [RAIT_TENANT],
+    )
+  ).rows;
+}
 const triagePath = (id = JW_CASE) => `/v1/inf/rait/cases/${id}/commands/triage`;
 const savePath = '/v1/inf/rait/admissibility';
 function headers(
@@ -60,10 +71,12 @@ async function saveAll(verdicts: readonly boolean[] = [true, true, true]) {
 }
 beforeAll(async () => {
   assertDedicatedDatabaseEnvironment();
+  process.env.STYNX_RATE_LIMIT_DEFAULT = '10000';
   process.env.DETRAN_LOCAL_TENANT_ID = RAIT_TENANT;
   process.env.DETRAN_LOCAL_ACTOR_ID = RAIT_ACTOR;
   fixture = new Jw01AdmissibilityFixture();
   await fixture.connect();
+  rateWindowsBefore = await ownRateWindows();
   const { AppModule } = await import('../../src/app.module.js');
   app = await NestFactory.create(AppModule.forRoot(), {
     logger: false,
@@ -76,11 +89,28 @@ beforeEach(async () => {
   prepared = true;
 });
 afterAll(async () => {
-  await app?.close();
-  if (fixture) {
-    await fixture.cleanupForeign();
-    if (prepared) await fixture.close();
-    else await fixture.owner.end();
+  try {
+    try {
+      await app?.close();
+    } finally {
+      if (fixture) {
+        await fixture.cleanupForeign();
+        if (prepared) await fixture.close();
+        else await fixture.owner.end();
+      }
+    }
+  } finally {
+    if (originalRateCapacity === undefined)
+      delete process.env.STYNX_RATE_LIMIT_DEFAULT;
+    else process.env.STYNX_RATE_LIMIT_DEFAULT = originalRateCapacity;
+    expect(process.env.STYNX_RATE_LIMIT_DEFAULT).toBe(originalRateCapacity);
+    console.log(
+      'JW01_RATE_CAPACITY_RESTORED',
+      JSON.stringify({
+        original: originalRateCapacity ?? null,
+        restored: process.env.STYNX_RATE_LIMIT_DEFAULT ?? null,
+      }),
+    );
   }
 });
 
@@ -601,4 +631,35 @@ describe('review1 current-version persistence and actual audit attribution', () 
       ]);
     });
   }
+});
+
+it('approved isolated JW01 capacity still exercises actual tenant PostgreSQL rate windows', async () => {
+  const after = await ownRateWindows();
+  const baseline = new Map(
+    rateWindowsBefore.map((row) => [
+      `${row.bucket_key}:${row.window_start}`,
+      row.hits,
+    ]),
+  );
+  const consumed = after
+    .map((row) => ({
+      ...row,
+      consumed:
+        row.hits - (baseline.get(`${row.bucket_key}:${row.window_start}`) ?? 0),
+    }))
+    .filter((row) => row.consumed > 0);
+  expect(process.env.STYNX_RATE_LIMIT_DEFAULT).toBe('10000');
+  expect(consumed.length).toBeGreaterThan(0);
+  expect(consumed.reduce((sum, row) => sum + row.consumed, 0)).toBeGreaterThan(
+    0,
+  );
+  console.log(
+    'JW01_RATE_WINDOW_PROOF',
+    JSON.stringify({
+      capacity: 10000,
+      before: rateWindowsBefore,
+      after,
+      consumed,
+    }),
+  );
 });
