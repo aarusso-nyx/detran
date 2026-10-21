@@ -290,3 +290,21 @@ nonpromoting and must preserve known F3/DRESET/production limitations and real
 failed acceptance. No merge or runtime/repair implementation is authorized.
 Packets remain proposals for separate concrete approvals; local, recovery and
 scorecard work remain preserved.
+
+### PERF-01 P0, F7/F8 and DEVAI forwarding — Owner,2026-10-21
+
+Owner approved P0 of PERF-01 and forwarding ANCHOR-01 to DEVAI, directing actual
+measurement and correction of the two low Inspector findings. Inspector owns
+only backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts and
+backend/app/tests/shared/rait-p402-claim.fixture.ts plus PERF-01 receipts. Preserve
+four51/30s bodies and independent scalar oracle; implement F7's genuine real-PG
+HTTP RED/GREEN and F8's accurate inactive-binding label without weakening409 or
+noeffects. Historical service RED uses disposable validation state only; current
+production runtime/proofs remain unchanged. Architect freezes measurement contract
+and prepares the measured amendment for separate approval.
+
+Forwarding permits one upstream DEVAI issue containing ANCHOR-01 and custody,
+not sibling edits, repair implementation, adoption or manual anchor mutation.
+No existing DEVAI chat/project was available; official GitHub repository verified,
+matching issue searches returned none. Owner instruction grants no P1 optimization,
+new review cycle, merge, scorecard action or closure. PR211 stays unmerged.
