@@ -294,3 +294,31 @@ reports/S2-execution/P4-02-S2-review-extension-disposition.md.
 Four complete51/30s failures, anchor7 orphan, F3, DRESET and authentic production
 sources remain OPEN. FullkernelFAIL and prior reviews are preserved. No merge,
 S3, frontend/runtime optimization, scorecard action or round closure.
+
+## PERF-01 P0 executed; calibration approved — 2026-10-21
+
+Earlier statements that P0 and forwarding lack approval are historical and
+superseded by AUTHORIZATION.md. P0 ran without runtime changes: original185
+assertions PASS; full126 remains120PASS6FAIL. Isolated routing/incident reached
+actual bodies and hit30s, with approximately63% of observed query counts in
+the independent verifier and material observer/host-load limitations. These
+are censored prefixes, not completed controls or production-throughput proof.
+F7 historical real-PG sensorRED/currentGREEN and F8 honest inactive-binding
+label correction are complete; raw delivery REVIEW is not rerated. Details in
+S2-execution/PERF-01/final-partition.json relative to the reports root.
+
+The30s budget originates in generic Vitest E2E whole-it configuration, not an
+evidenced RAIT product SLA. Owner now authorizes a separate calibration:
+four instrumented120s diagnostic runs, then five repetitions PER scenario
+without detailed observation under90s provisional functional ceilings.
+Default30s and other tests/hooks stay unchanged; all prior failures remain.
+Contract: S2-execution/PERF-01/calibration-contract.md relative to reports root.
+Final limits await complete/censored results and a separately stated proposal;
+no90s success can erase the30s reference or establish performance acceptance.
+
+ANCHOR-01 was forwarded to https://github.com/aarusso-nyx/devai/issues/418 with
+original custody. No upstream repair/release or DETRAN adoption is implemented;
+line7 remains orphaned. Verifier-first runtime-amendment.md is a proposal only,
+with no optimization authority. PR211 stays DRAFT/unmerged; S2/P4/R0025 open,
+F3/DRESET/authentic source and fullkernel/CI blockers remain independent.
+Protected local, recovery and scorecard work remain separate and untouched.

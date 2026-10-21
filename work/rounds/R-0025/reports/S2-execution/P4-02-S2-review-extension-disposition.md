@@ -54,3 +54,27 @@ bridge-bound bytes. Its only formatting exemption follows the existing exact-pat
 immutable review-prompt convention in .prettierignore. Bridge prompt/result hashes
 are independently checked; no broad exclusion, runtime/test gate change or
 rewritten review metadata. All other new authored files remain format-checked.
+
+## P0 Inspector follow-up executed — 2026-10-21
+
+The historical OPEN statuses for F7/F8 above are superseded by actual bounded
+Inspector execution, not by a fourth independent review. F7 now has a guard-
+passing real-PG HTTP sensor: exact pre-fix service bytes from ca83c18d failed
+the no-writer-blocked-Lock assertion; the corrected service returned404 before
+writer release in366ms with no effects or blocked PID. Disposable historical
+checkout was restored. F8 is honestly named wrongpoolinactivebinding; unchanged
+409/noeffects passed in1061ms. No active-wrong-pool coverage is invented.
+
+Receipts: PERF-01/pr211-f7-historical-checkout.json, preserved historicalRED
+logs and PERF-01/epoch-1-partition.json. Existing full126 remains120PASS6FAIL.
+Both corrections are locally Inspector-proven; raw third REVIEW and earlier
+verdicts remain unchanged. F9's latest factual corrections are this appendix.
+
+P0 measurement executed with partial prefixes and independent observer-cost
+limits, recorded in PERF-01/final-partition.json. A new Owner-approved calibration
+experiment is separately bounded by PERF-01/calibration-contract.md;120s
+diagnostic and90s provisional functional ceilings do not authorize a delivery
+PASS, final budget adoption or a runtime optimization. Historical30s failures
+remain visible. ANCHOR-01 forwarding completed as DEVAIissue418; no upstream
+repair/release/adoption or anchor7 recovery has occurred. All other blockers
+and no-merge/no-scorecard boundaries remain in force.

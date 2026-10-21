@@ -308,3 +308,23 @@ not sibling edits, repair implementation, adoption or manual anchor mutation.
 No existing DEVAI chat/project was available; official GitHub repository verified,
 matching issue searches returned none. Owner instruction grants no P1 optimization,
 new review cycle, merge, scorecard action or closure. PR211 stays unmerged.
+
+### PERF-01 calibration experiment — Owner, 2026-10-21
+
+Owner explicitly approved the proposed calibration experiment: four existing
+51-case controls instrumented with120s whole-body diagnostic ceilings, followed
+by five unobserved repetitions PER control with provisional90s whole-body
+functional ceilings. Preserve the original51 populations, assertions, scalar
+reference, production runtime, hook defaults and generic E2E30s configuration.
+Only an explicit calibration invocation may select the two approved budgets
+and disable detailed P0 observation. Default execution remains unchanged.
+
+Inspector retains the same two test paths plus PERF-01/calibration/ receipts.
+Architect records this bounded experiment and proposes definitive budgets from
+actual complete/censored measurements. Separate setup, body, HTTP, late work and
+host conditions; retain every failed epoch and the exceeded30s performance
+reference. Five samples do not establish a trustworthy p95 or product SLA.
+No successful90s functional run can ratify performance or rewrite historical
+failures. No automatic optimization, final budget adoption, merge, review-cycle
+reset, chain repair, runtime/scorecard work or readiness promotion is authorized.
+PR211 stays DRAFT/unmerged; protected local/recovery work stays untouched.
