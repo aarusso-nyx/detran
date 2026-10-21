@@ -158,6 +158,116 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
         C: 'rait.ladder.C',
         D: 'rait.ladder.D',
       } as const;
+      const timerCodes = {
+        A: 'T-DEC',
+        B: 'T-JUL-24M',
+        C: 'T-PAR-3A',
+        D: 'T-PRESC-5A',
+      } as const;
+      const applicable = (['A', 'B', 'C', 'D'] as const).filter(
+        (code) => code !== 'B' || parent.instance !== 'defesa_previa',
+      );
+      const clockRefs = new Map<(typeof applicable)[number], string>();
+      for (const code of applicable) {
+        const found = clocks.filter((clock) => clock.clock_code === code);
+        if (found.length !== 1) return unavailable();
+        clockRefs.set(code, ref('inf.rait_clock', found[0]!.id));
+      }
+      // Primary one-case inventories are consumed once per clock. Qualifications
+      // below still re-read independently through the original same-Tx ports.
+      const clockRows = new Map(
+        (await raitSourceRows(tx, tenantId, [...clockRefs.values()])).map(
+          (row) => [row.sourceRef, row.fields],
+        ),
+      );
+      const timerInventory = await q(
+        "select id,timer_code,instance from inf.infraction_timer where tenant_id=$1 and infraction_id=$2 and timer_code=any($3::text[]) and status='armado' and satisfied_at is null and expired_at is null and ((timer_code=any($4::text[]) and instance is null) or (timer_code='T-JUL-24M' and instance=$5)) order by id for share",
+        [
+          tenantId,
+          infraction.id,
+          applicable.map((code) => timerCodes[code]),
+          ['T-DEC', 'T-PAR-3A', 'T-PRESC-5A'],
+          parent.instance,
+        ],
+      );
+      const caseTimers = applicable.includes('B')
+        ? await q(
+            'select id from inf.rait_deadline where tenant_id=$1 and case_id=$2 and timer_code=$3 and satisfied_at is null order by id for share',
+            [tenantId, caseId, timerCodes.B],
+          )
+        : [];
+      const timerRefs = new Map<(typeof applicable)[number], string>();
+      for (const code of applicable) {
+        const available = timerInventory
+          .filter((timer) => timer.timer_code === timerCodes[code])
+          .map((timer) => ref('inf.infraction_timer', timer.id));
+        if (code === 'B')
+          available.push(
+            ...caseTimers.map((timer) => ref('inf.rait_deadline', timer.id)),
+          );
+        if (available.length !== 1) return unavailable();
+        timerRefs.set(code, available[0]!);
+      }
+      const timerRows = new Map(
+        (await raitSourceRows(tx, tenantId, [...timerRefs.values()])).map(
+          (row) => [row.sourceRef, row.fields],
+        ),
+      );
+      const parameterInventory = await q(
+        "select id,key,traffic_agency_id from ops.parameter where tenant_id=$1 and surface='rait' and key=any($2::text[]) and effective_from<=$3 and (effective_to is null or effective_to>=$3) and (traffic_agency_id=$4 or traffic_agency_id is null) order by id for share",
+        [
+          tenantId,
+          applicable.map((code) => ladderKeys[code]),
+          today,
+          ait.traffic_agency_id,
+        ],
+      );
+      const parameterRefs = new Map<(typeof applicable)[number], string>();
+      for (const code of applicable) {
+        const parameters = parameterInventory.filter(
+          (parameter) => parameter.key === ladderKeys[code],
+        );
+        const tier = parameters.filter(
+          (parameter) => parameter.traffic_agency_id === ait.traffic_agency_id,
+        );
+        const selected = tier.length
+          ? tier
+          : parameters.filter(
+              (parameter) => parameter.traffic_agency_id === null,
+            );
+        if (selected.length !== 1) return unavailable();
+        parameterRefs.set(code, ref('ops.parameter', selected[0]!.id));
+      }
+      const parameterRows = new Map(
+        (await raitSourceRows(tx, tenantId, [...parameterRefs.values()])).map(
+          (row) => [row.sourceRef, row.fields],
+        ),
+      );
+      const prescribedClocks = [...clockRows.values()]
+        .filter(
+          (clock) =>
+            typeof clock.ceiling_on === 'string' && clock.ceiling_on <= today,
+        )
+        .map((clock) => clock.id);
+      const alertInventory = prescribedClocks.length
+        ? await q(
+            "select a.id,a.clock_id,a.incident_ref from inf.rait_clock_alert a join inf.rait_clock c on c.tenant_id=a.tenant_id and c.id=a.clock_id where a.tenant_id=$1 and a.clock_id=any($2::uuid[]) and a.level='PRESCRITO_OPERACIONAL' and c.ceiling_on<=$3::date order by a.id for share of a",
+            [tenantId, prescribedClocks, today],
+          )
+        : [];
+      const incidentRefs = [
+        ...new Set(
+          alertInventory
+            .map((alert) => alert.incident_ref)
+            .filter((value) => typeof value === 'string' && value.length > 0),
+        ),
+      ];
+      const incidentInventory = incidentRefs.length
+        ? await q(
+            'select id,incident_ref,case_id,clock_id from inf.rait_incident where tenant_id=$1 and incident_ref=any($2::text[]) order by id for share',
+            [tenantId, incidentRefs],
+          )
+        : [];
       const inputs: RaitRiskClockInput[] = [];
       const incidentQualifications: RaitRiskSourceSnapshot['incidentQualifications'][number][] =
         [];
@@ -172,46 +282,10 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
           });
           continue;
         }
-        const found = clocks.filter((c) => c.clock_code === code);
-        if (found.length !== 1) return unavailable();
-        const clockRef = ref('inf.rait_clock', found[0]!.id),
-          clock = (await raitSourceRows(tx, tenantId, [clockRef]))[0]!.fields;
-        const timerCode = (
-          {
-            A: 'T-DEC',
-            B: 'T-JUL-24M',
-            C: 'T-PAR-3A',
-            D: 'T-PRESC-5A',
-          } as const
-        )[code];
-        const availableTimers: { id: unknown; table: string }[] = [];
-        const infractionTimers = await q(
-          `select id from inf.infraction_timer where tenant_id=$1 and infraction_id=$2 and timer_code=$3 and status='armado' and satisfied_at is null and expired_at is null and ${code === 'B' ? 'instance=$4' : 'instance is null'} order by id for share`,
-          code === 'B'
-            ? [tenantId, infraction.id, timerCode, parent.instance]
-            : [tenantId, infraction.id, timerCode],
-        );
-        availableTimers.push(
-          ...infractionTimers.map((t) => ({
-            id: t.id,
-            table: 'inf.infraction_timer',
-          })),
-        );
-        if (code === 'B') {
-          const caseTimers = await q(
-            'select id from inf.rait_deadline where tenant_id=$1 and case_id=$2 and timer_code=$3 and satisfied_at is null order by id for share',
-            [tenantId, caseId, timerCode],
-          );
-          availableTimers.push(
-            ...caseTimers.map((t) => ({
-              id: t.id,
-              table: 'inf.rait_deadline',
-            })),
-          );
-        }
-        if (availableTimers.length !== 1) return unavailable();
-        const timerRef = ref(availableTimers[0]!.table, availableTimers[0]!.id),
-          timer = (await raitSourceRows(tx, tenantId, [timerRef]))[0]!.fields;
+        const clockRef = clockRefs.get(code)!,
+          clock = clockRows.get(clockRef)!;
+        const timerRef = timerRefs.get(code)!,
+          timer = timerRows.get(timerRef)!;
         if (
           (timer.cancel_reason !== undefined && timer.cancel_reason !== null) ||
           (timer.business_days !== undefined && timer.business_days !== false)
@@ -219,21 +293,8 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
           return unavailable();
         const refs = [...base, clockRef, timerRef];
         await qualify('timer', refs);
-        const parameters = await q(
-          `select id,traffic_agency_id from ops.parameter where tenant_id=$1 and surface='rait' and key=$2 and effective_from<=$3 and (effective_to is null or effective_to>=$3) and (traffic_agency_id=$4 or traffic_agency_id is null) order by (traffic_agency_id is not null) desc,effective_from desc,version desc for share`,
-          [tenantId, ladderKeys[code], today, ait.traffic_agency_id],
-        );
-        const tier = parameters.filter(
-          (p) => p.traffic_agency_id === ait.traffic_agency_id,
-        );
-        const selected = tier.length
-          ? tier
-          : parameters.filter((p) => p.traffic_agency_id === null);
-        // Overlapping effective activations are ambiguous, even when one version is newer.
-        if (selected.length !== 1) return unavailable();
-        const parameterRef = ref('ops.parameter', selected[0]!.id),
-          parameter = (await raitSourceRows(tx, tenantId, [parameterRef]))[0]!
-            .fields;
+        const parameterRef = parameterRefs.get(code)!,
+          parameter = parameterRows.get(parameterRef)!;
         if (
           parameter.status !== 'vigente' ||
           parameter.scope !==
@@ -491,15 +552,13 @@ export class SqlRaitRiskSnapshotFactory implements RaitRiskSnapshotFactory {
           sourceRef: ladder.sourceRef,
         });
         if (today >= due) {
-          const alerts = await q(
-            "select id,incident_ref from inf.rait_clock_alert where tenant_id=$1 and clock_id=$2 and level='PRESCRITO_OPERACIONAL' order by id for share",
-            [tenantId, clock.id],
+          const alerts = alertInventory.filter(
+            (alert) => alert.clock_id === clock.id,
           );
           if (alerts.length !== 1 || !alerts[0]!.incident_ref)
             return unavailable();
-          const incidents = await q(
-            'select id,case_id,clock_id from inf.rait_incident where tenant_id=$1 and incident_ref=$2 order by id for share',
-            [tenantId, alerts[0]!.incident_ref],
+          const incidents = incidentInventory.filter(
+            (incident) => incident.incident_ref === alerts[0]!.incident_ref,
           );
           if (
             incidents.length !== 1 ||
