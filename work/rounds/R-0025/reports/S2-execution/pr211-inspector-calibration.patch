@@ -1,0 +1,328 @@
+--- a/backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts
++++ b/backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts
+@@ -545,7 +545,7 @@
+           [a.clock],
+         );
+       // Re-admit actual adjusted rows independently: failure must be date qualification, not stale digest.
+-      const rebound = new Map<string, string>();
++      const rebound = await fixture.verifiedUnchangedPolicyDependencies();
+       const decisionIds = new Set(
+         fixture.receipts.flatMap((r) =>
+           r.core.policySources.map((p) => p.decisionRef),
+@@ -2681,12 +2681,13 @@
+         const pool = await fixture.extraPool();
+         const id = randomUUID();
+         await fixture.owner.query(
+-          `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) select $1,tenant_id,case_id,$2,true,authorization_ref,source_ref from inf.rait_case_pool_scope where tenant_id=$3 and case_id=$4 and pool_id=$5`,
++          `insert into inf.rait_case_pool_scope(id,tenant_id,case_id,pool_id,active,authorization_ref,source_ref) select $1,tenant_id,case_id,$2,false,authorization_ref,source_ref from inf.rait_case_pool_scope where tenant_id=$3 and case_id=$4 and pool_id=$5`,
+           [id, pool, RAIT_TENANT, c.id, fixture.pool],
+         );
+         overrides.pool_scope_ref = 'sql:inf.rait_case_pool_scope:' + id;
+       } else {
+         const other = await fixture.admitted(app);
++        await fixture.prepareRisk(other.id);
+         if (vector === 'linkedforeignparent') {
+           const e = (
+             await fixture.owner.query<{ id: string }>(
+@@ -2706,6 +2707,13 @@
+         }
+       }
+       await fixture.negativeLegacyReview(c.id, old.qualification, overrides);
++    }
++    if (vector === 'wrongactivepool') {
++      const active = await fixture.owner.query<{ pool_id: string }>(
++        'select pool_id from inf.rait_case_pool_scope where case_id=$1 and active',
++        [c.id],
++      );
++      expect(active.rows).toEqual([{ pool_id: fixture.pool }]);
+     }
+     const before = await fixture.effects();
+     const denied = await request(app.getHttpServer())
+@@ -2846,7 +2854,11 @@
+     const result = await pending;
+     expect(result.status, JSON.stringify(result.body)).toBe(403);
+     expect(result.body).not.toHaveProperty('data');
+-    expect(result.body.context ?? {}).toEqual({});
++    expect(result.body.context).toEqual({
++      resource: 'inf:rait-case',
++      action: 'claim-next',
++      roles: ['rait-coordinator'],
++    });
+     expect(await fixture.effects()).toEqual(before);
+     expect(
+       waiting,
+--- a/backend/app/tests/shared/rait-p402-claim.fixture.ts
++++ b/backend/app/tests/shared/rait-p402-claim.fixture.ts
+@@ -1422,6 +1422,62 @@
+       source.receiptId,
+     );
+   }
++  /** Independently revalidate preserved C policy custody/current rows before reuse. */
++  async verifiedUnchangedPolicyDependencies(): Promise<Map<string, string>> {
++    const client = new pg.Client({
++      connectionString: process.env.STYNX_APP_DATABASE_URL,
++    });
++    await client.connect();
++    const preserved = new Map<string, string>();
++    try {
++      await client.query('begin');
++      await client.query('set local role role_app_backend');
++      await client.query("select set_config('app.tenant_id',$1,true)", [
++        RAIT_TENANT,
++      ]);
++      for (const receipt of this.receipts.filter(
++        (r) =>
++          r.core.policySources.length && !this.revokedReceipts.has(r.digest),
++      )) {
++        const sourceRefs = receipt.core.bindings.map((b) => b.sourceRef);
++        const rows = await readSourceRows(client, sourceRefs);
++        const policySources = receipt.core.policySources.map(
++          ({ sourceRef, sourceRevision }) => ({ sourceRef, sourceRevision }),
++        );
++        const req: PolicyRequest = {
++          purpose: 'C_USEFUL_MOVEMENT_POLICY',
++          tenantId: RAIT_TENANT,
++          caseId: receipt.core.caseId!,
++          sourceRefs,
++          policySources,
++          contentRevision: canonicalRevision({
++            schemaVersion: 1,
++            namespace: 'rait-risk-policy-request-v1',
++            purpose: 'C_USEFUL_MOVEMENT_POLICY',
++            tenantId: RAIT_TENANT,
++            caseId: receipt.core.caseId,
++            rows,
++            dependencies: [],
++            policySources,
++          }),
++        };
++        const result = (await this.qualifyPolicy(client, req)) as {
++          status: string;
++          receiptDigest?: string;
++        };
++        expect(
++          result.status,
++          'preserved dependency needs independent current SQL/custody verification',
++        ).toBe('qualified');
++        expect(result.receiptDigest).toBe(receipt.digest);
++        preserved.set(receipt.digest, receipt.digest);
++      }
++      return preserved;
++    } finally {
++      await client.query('rollback');
++      await client.end();
++    }
++  }
+   /** R17 additive synthetic rejected reviews; never UPDATE immutable history. */
+   async negativeLegacyReview(
+     caseId: string,
+@@ -1436,7 +1492,7 @@
+       receiptId = randomUUID();
+     await this.owner.query(
+       `insert into inf.rait_claim_legacy_qualification(id,tenant_id,case_id,observed_version,observed_state,assignment_status,classification,revision,admission_ref,distribution_ref,pool_scope_ref,reason,reviewer_id,authorization_ref,observed_at,assignment_ref)
+-      select $1,tenant_id,case_id,observed_version,coalesce($3,observed_state),assignment_status,classification,revision+1,coalesce($4,admission_ref),distribution_ref,coalesce($5,pool_scope_ref),$6,reviewer_id,$7,clock_timestamp(),assignment_ref from inf.rait_claim_legacy_qualification where id=$2 and case_id=$8`,
++      select $1,tenant_id,case_id,observed_version,coalesce($3,observed_state),assignment_status,case when $3::text is null then classification else 'hold' end,revision+1,coalesce($4,admission_ref),distribution_ref,coalesce($5,pool_scope_ref),$6,reviewer_id,$7,clock_timestamp(),assignment_ref from inf.rait_claim_legacy_qualification where id=$2 and case_id=$8`,
+       [
+         id,
+         previousId,
+--- a/backend/app/tests/e2e/rait-case-commands.e2e.spec.ts
++++ b/backend/app/tests/e2e/rait-case-commands.e2e.spec.ts
+@@ -516,6 +516,13 @@
+     .RAIT_RISK_PROVENANCE_READER;
+   if (typeof port === 'symbol')
+     builder.overrideProvider(port).useValue({
++      qualifyPolicy: (
++        tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
++        req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
++      ) =>
++        claimFixture
++          ? claimFixture.qualifyPolicy(tx, req)
++          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
+       qualify: (
+         tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
+         req: Parameters<RaitP402ClaimFixture['qualify']>[1],
+--- a/backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts
++++ b/backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts
+@@ -66,6 +66,8 @@
+ let app: INestApplication;
+ let owner: Client;
+ const previousEnv = new Map<string, string | undefined>();
++let scopeRateBefore: { bucket_key: string; win: string; hits: number }[] = [];
++let scopeAppReady = false;
+ function env(key: string, value: string) {
+   if (!previousEnv.has(key)) previousEnv.set(key, process.env[key]);
+   process.env[key] = value;
+@@ -142,6 +144,8 @@
+ beforeAll(async () => {
+   assertDedicatedDatabaseEnvironment();
+   env('DETRAN_LOCAL_TENANT_ID', RAIT_TENANT);
++  // Exact Owner-approved scope-suite capacity; real PG limiter remains enabled.
++  env('STYNX_RATE_LIMIT_DEFAULT', '10000');
+   owner = new Client({
+     connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+   });
+@@ -161,12 +165,25 @@
+   } finally {
+     await appClient.end();
+   }
++  scopeRateBefore = (
++    await owner.query<{ bucket_key: string; win: string; hits: number }>(
++      'select bucket_key,window_start::text win,hits from integration.rate_limit_windows where tenant_id=$1',
++      [RAIT_TENANT],
++    )
++  ).rows;
+   const { AppModule } = await import('../../src/app.module.js');
+   const builder = Test.createTestingModule({ imports: [AppModule.forRoot()] });
+   const port = (CasePublic as unknown as Record<string, unknown>)
+     .RAIT_RISK_PROVENANCE_READER;
+   if (typeof port === 'symbol')
+     builder.overrideProvider(port).useValue({
++      qualifyPolicy: (
++        tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
++        req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
++      ) =>
++        claimFixture
++          ? claimFixture.qualifyPolicy(tx, req)
++          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
+       qualify: (
+         tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
+         req: Parameters<RaitP402ClaimFixture['qualify']>[1],
+@@ -177,13 +194,51 @@
+     });
+   app = (await builder.compile()).createNestApplication({ logger: false });
+   await app.init();
++  scopeAppReady = true;
+ }, 180_000);
+ afterAll(async () => {
+-  await app?.close();
+-  await owner?.end();
+-  for (const [key, value] of previousEnv) {
+-    if (value === undefined) delete process.env[key];
+-    else process.env[key] = value;
++  try {
++    if (scopeAppReady) {
++      const windows = (
++        await owner.query<{ bucket_key: string; win: string; hits: number }>(
++          'select bucket_key,window_start::text win,hits from integration.rate_limit_windows where tenant_id=$1',
++          [RAIT_TENANT],
++        )
++      ).rows;
++      expect(
++        windows.some(
++          (row) =>
++            row.hits >
++            (scopeRateBefore.find(
++              (old) => old.bucket_key === row.bucket_key && old.win === row.win,
++            )?.hits ?? 0),
++        ),
++        'actual own-tenant PG rate window must be exercised',
++      ).toBe(true);
++      expect(process.env.STYNX_RATE_LIMIT_DEFAULT).toBe('10000');
++      process.stdout.write(
++        'S1_RATE_WINDOW_PROOF ' +
++          JSON.stringify({
++            tenantId: RAIT_TENANT,
++            exercised: true,
++            capacity: 10000,
++          }) +
++          '\n',
++      );
++    }
++  } finally {
++    try {
++      await app?.close();
++    } finally {
++      try {
++        await owner?.end();
++      } finally {
++        for (const [key, value] of previousEnv) {
++          if (value === undefined) delete process.env[key];
++          else process.env[key] = value;
++        }
++      }
++    }
+   }
+ });
+ 
+@@ -2714,15 +2769,39 @@
+     });
+   for (const routing of ['zero', 'one', 'multiple'] as const)
+     it(`protocol with ${routing} routing retains existing legal response/body/events and never adds admission criterion`, async () => {
+-      await fixture.scope(RAIT_SECRETARY, 'rait-secretary');
+-      await owner.query('update inf.rait_pool set strategy=$2 where id=$1', [
+-        POOL,
+-        routing === 'zero' ? 'round_robin' : 'pull',
+-      ]);
+-      await owner.query('update inf.rait_pool set active=$2 where id=$1', [
+-        RaitP402ScopeFixture.OTHER_POOL,
+-        routing === 'multiple',
+-      ]);
++      // Dedicated parents prevent preserved S2 pools from changing this exact census.
++      const unit = randomUUID(),
++        first = randomUUID(),
++        second = randomUUID();
++      await owner.query(
++        "insert into inf.rait_unit(id,tenant_id,name,judging_body) values($1,$2,'S1 isolated protocol unit','jari')",
++        [unit, RAIT_TENANT],
++      );
++      for (const [id, active, strategy] of [
++        [first, true, routing === 'zero' ? 'round_robin' : 'pull'],
++        [second, routing === 'multiple', 'pull'],
++      ] as const)
++        await owner.query(
++          "insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id,active) values($1,$2,'S1 isolated protocol pool','defesa_previa',1,$3,$4,$5)",
++          [id, RAIT_TENANT, strategy, unit, active],
++        );
++      await owner.query(
++        "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')",
++        [randomUUID(), RAIT_TENANT, first, RAIT_SECRETARY],
++      );
++      await fixture.scope(RAIT_SECRETARY, 'rait-secretary', 'unit', unit);
++      const candidates = await owner.query<{ id: string }>(
++        "select id from inf.rait_pool where tenant_id=$1 and unit_id=$2 and active and strategy='pull' and instance='defesa_previa' order by id",
++        [RAIT_TENANT, unit],
++      );
++      expect(candidates.rows.map((p) => p.id).sort()).toEqual(
++        (routing === 'zero'
++          ? []
++          : routing === 'one'
++            ? [first]
++            : [first, second]
++        ).sort(),
++      );
+       const before = await effects();
+       try {
+         const response = await request(app.getHttpServer())
+@@ -2735,7 +2814,7 @@
+             circuit: 1,
+             intake_channel: 'portal',
+             protocolled_at: '2026-09-11T13:00:00Z',
+-            unit_id: RaitP402ScopeFixture.UNIT,
++            unit_id: unit,
+             documents: [],
+             proofs: [],
+           });
+@@ -2751,7 +2830,7 @@
+           [id],
+         );
+         expect(links.rows).toEqual(
+-          routing === 'one' ? [{ pool_id: POOL }] : [],
++          routing === 'one' ? [{ pool_id: first }] : [],
+         );
+         const after = await effects();
+         // Baseline protocol returns events:[] and has no outbox write. Its
+@@ -2775,12 +2854,8 @@
+         ]);
+       } finally {
+         await owner.query(
+-          "update inf.rait_pool set strategy='pull' where id=$1",
+-          [POOL],
+-        );
+-        await owner.query(
+-          'update inf.rait_pool set active=true where id=any($1::uuid[])',
+-          [[POOL, RaitP402ScopeFixture.OTHER_POOL]],
++          'update inf.rait_pool set active=false where id=any($1::uuid[])',
++          [[first, second]],
+         );
+       }
+     });

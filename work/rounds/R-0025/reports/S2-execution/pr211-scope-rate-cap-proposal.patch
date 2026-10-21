@@ -1,0 +1,34 @@
+--- a/backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts
++++ b/backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts
+@@ -142,6 +142,8 @@
+ beforeAll(async () => {
+   assertDedicatedDatabaseEnvironment();
+   env('DETRAN_LOCAL_TENANT_ID', RAIT_TENANT);
++  // Proposed bounded fixture capacity; actual PostgreSQL limiter remains enabled.
++  env('STYNX_RATE_LIMIT_DEFAULT', '10000');
+   owner = new Client({
+     connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+   });
+@@ -186,11 +188,17 @@
+   await app.init();
+ }, 180_000);
+ afterAll(async () => {
+-  await app?.close();
+-  await owner?.end();
+-  for (const [key, value] of previousEnv) {
+-    if (value === undefined) delete process.env[key];
+-    else process.env[key] = value;
++  try {
++    await app?.close();
++  } finally {
++    try {
++      await owner?.end();
++    } finally {
++      for (const [key, value] of previousEnv) {
++        if (value === undefined) delete process.env[key];
++        else process.env[key] = value;
++      }
++    }
+   }
+ });
+ 

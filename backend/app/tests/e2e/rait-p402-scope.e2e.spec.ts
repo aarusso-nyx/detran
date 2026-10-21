@@ -66,6 +66,8 @@ const DOCUMENT = '00000000-0000-7000-8000-000012000007';
 let app: INestApplication;
 let owner: Client;
 const previousEnv = new Map<string, string | undefined>();
+let scopeRateBefore: { bucket_key: string; win: string; hits: number }[] = [];
+let scopeAppReady = false;
 function env(key: string, value: string) {
   if (!previousEnv.has(key)) previousEnv.set(key, process.env[key]);
   process.env[key] = value;
@@ -142,6 +144,8 @@ function mountedRoutes() {
 beforeAll(async () => {
   assertDedicatedDatabaseEnvironment();
   env('DETRAN_LOCAL_TENANT_ID', RAIT_TENANT);
+  // Exact Owner-approved scope-suite capacity; real PG limiter remains enabled.
+  env('STYNX_RATE_LIMIT_DEFAULT', '10000');
   owner = new Client({
     connectionString: process.env.STYNX_OWNER_DATABASE_URL,
   });
@@ -161,12 +165,25 @@ beforeAll(async () => {
   } finally {
     await appClient.end();
   }
+  scopeRateBefore = (
+    await owner.query<{ bucket_key: string; win: string; hits: number }>(
+      'select bucket_key,window_start::text win,hits from integration.rate_limit_windows where tenant_id=$1',
+      [RAIT_TENANT],
+    )
+  ).rows;
   const { AppModule } = await import('../../src/app.module.js');
   const builder = Test.createTestingModule({ imports: [AppModule.forRoot()] });
   const port = (CasePublic as unknown as Record<string, unknown>)
     .RAIT_RISK_PROVENANCE_READER;
   if (typeof port === 'symbol')
     builder.overrideProvider(port).useValue({
+      qualifyPolicy: (
+        tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
+        req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
+      ) =>
+        claimFixture
+          ? claimFixture.qualifyPolicy(tx, req)
+          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
       qualify: (
         tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
         req: Parameters<RaitP402ClaimFixture['qualify']>[1],
@@ -177,13 +194,51 @@ beforeAll(async () => {
     });
   app = (await builder.compile()).createNestApplication({ logger: false });
   await app.init();
+  scopeAppReady = true;
 }, 180_000);
 afterAll(async () => {
-  await app?.close();
-  await owner?.end();
-  for (const [key, value] of previousEnv) {
-    if (value === undefined) delete process.env[key];
-    else process.env[key] = value;
+  try {
+    if (scopeAppReady) {
+      const windows = (
+        await owner.query<{ bucket_key: string; win: string; hits: number }>(
+          'select bucket_key,window_start::text win,hits from integration.rate_limit_windows where tenant_id=$1',
+          [RAIT_TENANT],
+        )
+      ).rows;
+      expect(
+        windows.some(
+          (row) =>
+            row.hits >
+            (scopeRateBefore.find(
+              (old) => old.bucket_key === row.bucket_key && old.win === row.win,
+            )?.hits ?? 0),
+        ),
+        'actual own-tenant PG rate window must be exercised',
+      ).toBe(true);
+      expect(process.env.STYNX_RATE_LIMIT_DEFAULT).toBe('10000');
+      process.stdout.write(
+        'S1_RATE_WINDOW_PROOF ' +
+          JSON.stringify({
+            tenantId: RAIT_TENANT,
+            exercised: true,
+            capacity: 10000,
+          }) +
+          '\n',
+      );
+    }
+  } finally {
+    try {
+      await app?.close();
+    } finally {
+      try {
+        await owner?.end();
+      } finally {
+        for (const [key, value] of previousEnv) {
+          if (value === undefined) delete process.env[key];
+          else process.env[key] = value;
+        }
+      }
+    }
   }
 });
 
@@ -2714,15 +2769,39 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
     });
   for (const routing of ['zero', 'one', 'multiple'] as const)
     it(`protocol with ${routing} routing retains existing legal response/body/events and never adds admission criterion`, async () => {
-      await fixture.scope(RAIT_SECRETARY, 'rait-secretary');
-      await owner.query('update inf.rait_pool set strategy=$2 where id=$1', [
-        POOL,
-        routing === 'zero' ? 'round_robin' : 'pull',
-      ]);
-      await owner.query('update inf.rait_pool set active=$2 where id=$1', [
-        RaitP402ScopeFixture.OTHER_POOL,
-        routing === 'multiple',
-      ]);
+      // Dedicated parents prevent preserved S2 pools from changing this exact census.
+      const unit = randomUUID(),
+        first = randomUUID(),
+        second = randomUUID();
+      await owner.query(
+        "insert into inf.rait_unit(id,tenant_id,name,judging_body) values($1,$2,'S1 isolated protocol unit','jari')",
+        [unit, RAIT_TENANT],
+      );
+      for (const [id, active, strategy] of [
+        [first, true, routing === 'zero' ? 'round_robin' : 'pull'],
+        [second, routing === 'multiple', 'pull'],
+      ] as const)
+        await owner.query(
+          "insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy,unit_id,active) values($1,$2,'S1 isolated protocol pool','defesa_previa',1,$3,$4,$5)",
+          [id, RAIT_TENANT, strategy, unit, active],
+        );
+      await owner.query(
+        "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')",
+        [randomUUID(), RAIT_TENANT, first, RAIT_SECRETARY],
+      );
+      await fixture.scope(RAIT_SECRETARY, 'rait-secretary', 'unit', unit);
+      const candidates = await owner.query<{ id: string }>(
+        "select id from inf.rait_pool where tenant_id=$1 and unit_id=$2 and active and strategy='pull' and instance='defesa_previa' order by id",
+        [RAIT_TENANT, unit],
+      );
+      expect(candidates.rows.map((p) => p.id).sort()).toEqual(
+        (routing === 'zero'
+          ? []
+          : routing === 'one'
+            ? [first]
+            : [first, second]
+        ).sort(),
+      );
       const before = await effects();
       try {
         const response = await request(app.getHttpServer())
@@ -2735,7 +2814,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
             circuit: 1,
             intake_channel: 'portal',
             protocolled_at: '2026-09-11T13:00:00Z',
-            unit_id: RaitP402ScopeFixture.UNIT,
+            unit_id: unit,
             documents: [],
             proofs: [],
           });
@@ -2751,7 +2830,7 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
           [id],
         );
         expect(links.rows).toEqual(
-          routing === 'one' ? [{ pool_id: POOL }] : [],
+          routing === 'one' ? [{ pool_id: first }] : [],
         );
         const after = await effects();
         // Baseline protocol returns events:[] and has no outbox write. Its
@@ -2775,12 +2854,8 @@ describe('S1 actor-bound command replay and unchanged legal admissibility/routin
         ]);
       } finally {
         await owner.query(
-          "update inf.rait_pool set strategy='pull' where id=$1",
-          [POOL],
-        );
-        await owner.query(
-          'update inf.rait_pool set active=true where id=any($1::uuid[])',
-          [[POOL, RaitP402ScopeFixture.OTHER_POOL]],
+          'update inf.rait_pool set active=false where id=any($1::uuid[])',
+          [[first, second]],
         );
       }
     });
