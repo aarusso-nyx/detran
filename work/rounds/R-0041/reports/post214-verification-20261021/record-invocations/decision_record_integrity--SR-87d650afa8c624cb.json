@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--input",
+    "/Users/aarusso/.config/devai/evidence/detran/post214-main-20261021/canonical-readings/decision_record_integrity.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T19:52:36.320285+00:00",
+  "finished_at": "2026-10-21T19:52:37.126321+00:00",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.devai/state/sensor-readings/decision_record_integrity/SR-87d650afa8c624cb.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"decision_record_integrity\",\"kind\":\"decision_record_integrity\"},\"timestamp\":\"2026-10-21T19:38:47.251Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense run decision_record_integrity\",\"command_hash\":\"c8a38781adc2fbd3fb7b0405a198b1dff15504f29dfa641215bd660246d17cc4\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"DECISION_FRONTMATTER_INVALID\",\"message\":\"law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md: frontmatter is required\",\"file\":\"law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md\"}],\"metrics\":{\"finding_count\":1},\"id\":\"SR-87d650afa8c624cb\"}}}}\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

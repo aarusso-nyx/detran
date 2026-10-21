@@ -1,0 +1,19 @@
+{
+  "classification": "additive correction of authored ordinary-diagnostic summaries; not machine proof",
+  "applies_to": [
+    "runs/red/summary.json",
+    "runs/partial-green/summary.json",
+    "runs/full-fixtures-green/summary.json"
+  ],
+  "corrections": {
+    "no_config_or_test_changes": "The inherited true field is inaccurate for these C7 runs: the approved F3 guard/fixture source changed. Existing business assertions, test populations and timeouts were preserved.",
+    "candidate": "The inherited SHA68d5c2a is the BASE HEAD only, not an exact committed candidate containing the working-tree F3 changes. These are ordinary dirty-tree diagnostic runs, never attestable RC results."
+  },
+  "raw_summaries_preserved": true,
+  "actual_outcomes": {
+    "red": "8pass2fail: expected listening=false guard plus separate C75 validation failure",
+    "partial_green": "9pass1fail: listener guard and C76 business assertions pass; same C75 failure remains",
+    "full_fixtures_green": "43pass0fail in the full three-file population with canonical PostGIS/SENATRAN fixtures"
+  },
+  "causality_limit": "Fixture population/order changed for the final three-file capture; do not attribute the C75 difference to the listener change or claim a proven socket/timeout root cause."
+}

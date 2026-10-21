@@ -1,0 +1,27 @@
+{
+  "classification": "ordinary-focused-diagnostic-not-attestation",
+  "argv": [
+    "docker",
+    "run",
+    "--detach",
+    "--rm",
+    "--name",
+    "detran-post214-startup-diagnostic-2480",
+    "--platform",
+    "linux/amd64",
+    "--env",
+    "POSTGRES_DB=detran",
+    "--env",
+    "POSTGRES_USER=postgres",
+    "--env",
+    "POSTGRES_PASSWORD=postgres",
+    "--publish",
+    "127.0.0.1::5432",
+    "postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5"
+  ],
+  "started_at": "2026-10-21T19:57:08.443276+00:00",
+  "finished_at": "2026-10-21T19:57:09.305871+00:00",
+  "exitCode": 0,
+  "stdout": "1d080df95c7cd05b5687dd6c0c427a6f58b4696d4b1645a74a3270ce3eceb749\n",
+  "stderr": ""
+}

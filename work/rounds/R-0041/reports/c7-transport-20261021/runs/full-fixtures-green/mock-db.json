@@ -1,0 +1,14 @@
+{
+  "classification": "ordinary-focused-diagnostic-not-attestation",
+  "argv": [
+    "pnpm",
+    "--dir",
+    "senatran-mock",
+    "db:reset"
+  ],
+  "started_at": "2026-10-21T20:03:54.971428+00:00",
+  "finished_at": "2026-10-21T20:03:58.578872+00:00",
+  "exitCode": 0,
+  "stdout": "\n> senatran-mock@0.0.1 db:reset /Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/senatran-mock\n> bash database/apply.sh --full --sample\n\nDropping and recreating database 'senatran'\u2026\n  ddl/00-extensions.sql\n  ddl/01-schemas.sql\n  ddl/05-senatran-ref.sql\n  ddl/10-senatran-entities.sql\n  ddl/20-renach.sql\n  ddl/21-renainf.sql\n  ddl/22-audit.sql\n  ddl/23-renaest.sql\n  ddl/24-sne.sql\n  ddl/25-cdt.sql\n  ddl/26-detran.sql\n  ddl/30-mock.sql\n  ddl/90-contract-read.sql\n  ddl/91-contract-transactional.sql\n  ddl/92-comments.sql\n  seed/10-ref.sql\n  seed/20-read.sql\n  seed/30-mock.sql\n  seed/40-renach.sql\n  seed/50-renainf.sql\n  seed/60-audit.sql\n  seed/70-renaest.sql\n  seed/80-sne.sql\n  seed/85-cdt.sql\n  seed/88-detran.sql\napply.sh: done (full=1 sample=1, db=senatran)\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\nNOTICE:  database \"senatran\" does not exist, skipping\n"
+}

@@ -1,0 +1,1252 @@
+{
+  "classification": "read-only-source-diagnosis-not-native-verdict",
+  "candidate": "68d5c2a20d9c760831a3c2d0422c2b2968b87502",
+  "first_closed_commit": "9790efa651a1625a091bc43329474a8151dc6016",
+  "observed_commits": [
+    {
+      "commit": "4f388ab1df5f9799f92299dbe00d459c8c223886",
+      "patch_sha256": "1117c3bf8029efbcd836dc3e9de10584bc31fc832a6d403ae32c87c9a5b797db",
+      "files": [
+        {
+          "path": "work/rounds/R-0017/evidence-CTG-SEAL.json",
+          "git_change": "A",
+          "before_sha256": null,
+          "after_sha256": "0c4126bfa8bb239648c4c9bbb4850fabae02349a9c8b48f3240a5f6940492b68",
+          "existing_bytes_preserved_as_prefix": null
+        }
+      ]
+    },
+    {
+      "commit": "e10c8e1a481079374d077dc8584858e302f9891f",
+      "patch_sha256": "afef1cce4652928b831b8f6116444aa3d70bfc95ba2f178dd926925727f24662",
+      "files": [
+        {
+          "path": "work/rounds/R-0017/plan.md",
+          "git_change": "M",
+          "before_sha256": "33a97a5be998b9158b79bd234008253d9f04c22c131cd0dc51235bafe6937fc5",
+          "after_sha256": "3d3b2427b5adbab54066a315192eea20b8ac4d7782a8b20f11a2633ee40e36a3",
+          "existing_bytes_preserved_as_prefix": false
+        },
+        {
+          "path": "work/rounds/R-0017/reports/seal-readiness-2026-09-27.md",
+          "git_change": "M",
+          "before_sha256": "48aa5a8e46436c9e5ca7336f3b8004d8b3eed238bc5a12d6e6143dad98186c3b",
+          "after_sha256": "22c109b5ac6c90068f24595d92cbad7c711f15288e6241dace5d227ba45d6c10",
+          "existing_bytes_preserved_as_prefix": true
+        },
+        {
+          "path": "work/rounds/R-0017/reviews/delivery-review-CTG-SEAL-observation.bridge.json",
+          "git_change": "A",
+          "before_sha256": null,
+          "after_sha256": "094ca6f941cc4fadfe1b470d421725123e3c8c3b485f01f2839a26ded431ffbb",
+          "existing_bytes_preserved_as_prefix": null
+        },
+        {
+          "path": "work/rounds/R-0017/reviews/delivery-review-CTG-SEAL-observation.json",
+          "git_change": "A",
+          "before_sha256": null,
+          "after_sha256": "8af7ea10ee3461c55ec60570768d2c50d2439fea81e0bd65fa9cca3caf1b6c08",
+          "existing_bytes_preserved_as_prefix": null
+        },
+        {
+          "path": "work/rounds/R-0017/reviews/delivery-review-CTG-SEAL-observation.md",
+          "git_change": "A",
+          "before_sha256": null,
+          "after_sha256": "3c71ea567f033a2bd43f537c546c5ccce0897be49d5b36679fd451da39b67e21",
+          "existing_bytes_preserved_as_prefix": null
+        }
+      ]
+    }
+  ],
+  "missing_record_search": [
+    {
+      "path": "work/rounds/R-0001/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0001/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0001/plan.md",
+        "sha256": "29a7a9834ae0f800cd75830883854e0ac9ce35b70e0366a08d8be093b5a05314",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# Round 1 plan \u2014 WP-0 substrate migration and definition-round closure"
+          },
+          {
+            "line": 3,
+            "text": "**Status:** local working paper opened on 2026-09-13 to hold the evidence epoch of the"
+          },
+          {
+            "line": 4,
+            "text": "definition round (docs/rait-build-definitions) and of WP-0 (build/stynx-1-3-1)."
+          },
+          {
+            "line": 6,
+            "text": "## Goal"
+          },
+          {
+            "line": 8,
+            "text": "Adopt STYNX 1.3.1 / Angular 22 (ADR-0015, steering H.41) and close the implementation gate of"
+          },
+          {
+            "line": 9,
+            "text": "the infractions scope (steering \u00a7H.38\u201357) with the evidence chain intact."
+          },
+          {
+            "line": 11,
+            "text": "## Waves"
+          },
+          {
+            "line": 13,
+            "text": "1. Definition round (Architect/Owner): five build packs, implementation gate, decision-closure"
+          },
+          {
+            "line": 14,
+            "text": "   plan, parameter catalogue (ADR-0021), Owner ballots, institutional letters, product-corpus"
+          },
+          {
+            "line": 15,
+            "text": "   propagation \u2014 commits 7d4b3eb, 6460a1e, 0d2866b, 692f8fa."
+          },
+          {
+            "line": 16,
+            "text": "2. WP-0 (Engineer): pins 1.1.1 \u2192 1.3.1, Angular 22 kit, feature-flags dependency, RLS contract"
+          },
+          {
+            "line": 17,
+            "text": "   split into tenant and reference tables \u2014 commits 56d5395, 101056b. Gates: `pnpm check`,"
+          },
+          {
+            "line": 18,
+            "text": "   backend unit/integration/e2e, adapter unit/integration, RLS smoke, devai doctor."
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": []
+    },
+    {
+      "path": "work/rounds/R-0020/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 278,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0020/contracts/CTG-0003-A3.5-guard-manifest.json",
+        "work/rounds/R-0020/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0020/plan.md",
+        "sha256": "2c50710a0416e0f27569e64de9bab7c4752a4a4fb0bc2856eb71f1eeef1a8841",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0020 \u2014 frente `devai-sensors` (a\u00e7\u00e3o 5 da C-0002: sensores DEVAI com o m\u00e1ximo de PASS)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/devai-sensors` @ `ebf308e7`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **ativa \u2014 autorizada pelo Owner em 2026-09-27.** Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` (\u00a72 fase B, \u00a73.2, \u00a74, \u00a75) e da"
+          },
+          {
+            "line": 11,
+            "text": "inspe\u00e7\u00e3o somente leitura de 2026-09-25 (relat\u00f3rio (e), `work/campaigns/C-0002-inspecao-2026-09-25/e-devai.md`, versionado com"
+          },
+          {
+            "line": 12,
+            "text": "a campanha; os fatos usados est\u00e3o transcritos abaixo). Maestro **Sol 6** (Codex); reviewer **Opus 5.5**"
+          },
+          {
+            "line": 13,
+            "text": "(Claude Code) pela ponte `tools/orchestra/bridge.sh claude`. Worktree deste host:"
+          },
+          {
+            "line": 14,
+            "text": "`/Users/aarusso/.codex/worktrees/devai-sensors/detran`, branch `orchestra/devai-sensors`."
+          },
+          {
+            "line": 16,
+            "text": "## Concorr\u00eancia"
+          },
+          {
+            "line": 18,
+            "text": "Fase B. **Abre ap\u00f3s o merge de R-0018** (`index-state`: destino de `law/adr` por OD-R18-001, gate"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "ebf308e7",
+          "local_object_resolves": true,
+          "full_commit": "ebf308e7d5d33a6fa734cc9094664f85964e6574",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0021/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 150,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0021/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0021/plan.md",
+        "sha256": "853f6d86ea1b1097c31fef005401e6bc1425a0927eaf96b2ffc60b9f56665988",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0021 \u2014 frente `stynx-canonical` (C-0002, a\u00e7\u00e3o 7a: pin 1.4.0 e m\u00f3dulos can\u00f4nicos STYNX)"
+          },
+          {
+            "line": 3,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26 pelo"
+          },
+          {
+            "line": 4,
+            "text": "Architect a partir de `work/campaigns/C-0002-consolidacao.md` \u00a72 (fase C) e da inspe\u00e7\u00e3o (d)"
+          },
+          {
+            "line": 5,
+            "text": "(`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md`, versionada com a campanha; fatos transcritos aqui e em"
+          },
+          {
+            "line": 6,
+            "text": "`work/campaigns/C-0002-stynx-upstream-spec.md`). Nenhum `AUTHORIZATION.md`, `tasks/` ou"
+          },
+          {
+            "line": 7,
+            "text": "`compositions.json` existe: o maestro os produz no bootstrap. Maestro **Sol 6** (Codex); reviewer"
+          },
+          {
+            "line": 8,
+            "text": "**Opus 5.5** via `tools/orchestra/bridge.sh claude \u2026` (ids de CLI confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 9,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/stynx-canonical`, branch `orchestra/stynx-canonical`."
+          },
+          {
+            "line": 10,
+            "text": "**Concorr\u00eancia com upstreams da campanha:** abre ap\u00f3s o merge de **R-0017** (`local-stack`: stack e"
+          },
+          {
+            "line": 11,
+            "text": "`stack:smoke` para o smoke das trocas). Corre em paralelo a **S-1.5** (reposit\u00f3rio STYNX, 1.5.0):"
+          },
+          {
+            "line": 12,
+            "text": "esta rodada **n\u00e3o depende** da 1.5.0 e **alimenta** a especifica\u00e7\u00e3o upstream com as lacunas que"
+          },
+          {
+            "line": 13,
+            "text": "encontrar (adenda no CTG-0001, antes de S-1.5 congelar o escopo). R-0022 depende desta rodada mesclada."
+          },
+          {
+            "line": 14,
+            "text": "Nenhum lock comum com R-0018/R-0019/R-0020 al\u00e9m de `docs/meta/adr/README.md` (integrar `main` por merge)."
+          },
+          {
+            "line": 15,
+            "text": "**Janelas previstas:** 2 (1: bootstrap + CTG-0001 + CTG-0002; 2: CTG-0003\u2026CTG-0007 + fechamento);"
+          },
+          {
+            "line": 16,
+            "text": "recalibrar no bootstrap."
+          },
+          {
+            "line": 18,
+            "text": "## Metas"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": []
+    },
+    {
+      "path": "work/rounds/R-0022/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 293,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0022/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0022/plan.md",
+        "sha256": "f848bde58fbc69597f2e8290edefd2f842ba6bfcea696b03c919f1366e98be59",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0022 \u2014 frente `stynx-sse-tenancy` (C-0002, a\u00e7\u00e3o 7c: pin 1.5.0, SSE com fonte \u00fanica, tenancy sem _monkey-patch_, assinatura final)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** parada por OD-C3-001; somente salvamento seletivo em R-0034."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `codex/detran-r22-adoption-160` @ `c22ea63a`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "> **Adenda vigente A1 (2026-09-27), em \u00a7Adendas:** R-0022 recebe assinatura, outbox e offline-sync inteiras de R-0021; n\u00e3o pressupor migra\u00e7\u00f5es parciais. A transfer\u00eancia n\u00e3o autoriza o in\u00edcio desta rodada."
+          },
+          {
+            "line": 11,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26 pelo"
+          },
+          {
+            "line": 12,
+            "text": "Architect a partir de `work/campaigns/C-0002-consolidacao.md` \u00a72 (fase C) e de"
+          },
+          {
+            "line": 13,
+            "text": "`work/campaigns/C-0002-stynx-upstream-spec.md` (\u00a73, \u00a74, \u00a76.11, \u00a76.12). Reaproveita o rascunho da"
+          },
+          {
+            "line": 14,
+            "text": "revis\u00e3o 1 (rascunho n\u00e3o versionado) com ids, ordem, maestros e"
+          },
+          {
+            "line": 15,
+            "text": "depend\u00eancias corrigidos. Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro"
+          },
+          {
+            "line": 16,
+            "text": "os produz no bootstrap. Maestro **Opus 5.5** (Claude Code); reviewer **Sol 6** via"
+          },
+          {
+            "line": 17,
+            "text": "`tools/orchestra/bridge.sh codex \u2026` (ids confirmados no bootstrap), n\u00edvel grande em toda revis\u00e3o."
+          },
+          {
+            "line": 18,
+            "text": "Worktree `/Volumes/Thiamat II/stech/detran-worktrees/stynx-sse-tenancy`, branch"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "c22ea63a",
+          "local_object_resolves": true,
+          "full_commit": "c22ea63a9f2c949a18a9877c66d241235af68ac2",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0023/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0023/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0023/plan.md",
+        "sha256": "f1ff0b1a60c1a5f37e7e2817b770fcee471b8f2e53b65c190725ceb612118fda",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0023 \u2014 frente `authz-unification` (C-0002, a\u00e7\u00e3o 7d: autoriza\u00e7\u00e3o com fonte \u00fanica no STYNX)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/authz-unification` @ `9ee0deb1`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` \u00a72 (fase C) e da inspe\u00e7\u00e3o (d)"
+          },
+          {
+            "line": 11,
+            "text": "(`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` \u00a74.2\u2013\u00a74.3, lacuna A3, M3, candidatos U6/U7). Nenhum"
+          },
+          {
+            "line": 12,
+            "text": "`AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: nascem no bootstrap, depois da"
+          },
+          {
+            "line": 13,
+            "text": "autoriza\u00e7\u00e3o. Maestro **Sol 6** (Codex); workers da escada Codex (Sol 6 grande; Terra e Luna"
+          },
+          {
+            "line": 14,
+            "text": "vigentes no m\u00e9dio e pequeno \u2014 ids confirmados com `codex --help` no bootstrap); reviewer **Opus 5.5"
+          },
+          {
+            "line": 15,
+            "text": "n\u00edvel grande** pela ponte (`tools/orchestra/bridge.sh claude <id-opus-5.5> \u2026`, id confirmado com"
+          },
+          {
+            "line": 16,
+            "text": "`claude --help`). Frente de **seguran\u00e7a**: reviewer grande em toda delivery-review, **sem waiver**."
+          },
+          {
+            "line": 17,
+            "text": "Worktree `/Volumes/Thiamat II/stech/detran-worktrees/authz-unification`, branch"
+          },
+          {
+            "line": 18,
+            "text": "`orchestra/authz-unification`."
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "9ee0deb1",
+          "local_object_resolves": true,
+          "full_commit": "9ee0deb1913ac3e9f8e6bf17802274029e833f86",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0024/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0024/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0024/plan.md",
+        "sha256": "0e95eb342ff5252cd6880a25a1865854a850ed8aedb57ee9997030429bbd0f00",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0024 \u2014 frente `stynx-dedup` (C-0002, a\u00e7\u00e3o 7b: deduplica\u00e7\u00e3o STYNX e `@detran/ui` como kit de app)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** permanece proposta, sem branch dedicado no invent\u00e1rio"
+          },
+          {
+            "line": 4,
+            "text": "> remoto. A ordem de abertura das jornadas foi substitu\u00edda por C-0003 \u00a74/A-C2-16;"
+          },
+          {
+            "line": 5,
+            "text": "> n\u00e3o usar as depend\u00eancias antigas abaixo para bloquear a pr\u00e9via. Ver a"
+          },
+          {
+            "line": 6,
+            "text": "> [fila reconciliada](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 8,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26"
+          },
+          {
+            "line": 9,
+            "text": "pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` \u00a72 (fase C), \u00a73.3 e \u00a74 (padr\u00e3o de"
+          },
+          {
+            "line": 10,
+            "text": "liga\u00e7\u00e3o), e da inspe\u00e7\u00e3o (d) (`work/campaigns/C-0002-inspecao-2026-09-25/d-stynx.md` \u00a74, \u00a75 A4/M1/M4/M5/M6/B1\u2013B3, \u00a77)."
+          },
+          {
+            "line": 11,
+            "text": "Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: nascem no bootstrap, depois da"
+          },
+          {
+            "line": 12,
+            "text": "autoriza\u00e7\u00e3o. Maestro **Opus 5.5** (Claude Code); workers da escada Claude (Opus 5.5 grande e m\u00e9dio,"
+          },
+          {
+            "line": 13,
+            "text": "Sonnet 5 pequeno) por subagentes nativos; reviewer **Sol 6 n\u00edvel grande** pela ponte"
+          },
+          {
+            "line": 14,
+            "text": "(`tools/orchestra/bridge.sh codex <id-sol-6> \u2026`, id confirmado com `codex --help`)."
+          },
+          {
+            "line": 15,
+            "text": "Worktree `/Volumes/Thiamat II/stech/detran-worktrees/stynx-dedup`, branch `orchestra/stynx-dedup`."
+          },
+          {
+            "line": 16,
+            "text": "**Concorr\u00eancia:** abre **empilhada** em `origin/orchestra/stynx-sse-tenancy` (R-0022: pin 1.5.0,"
+          },
+          {
+            "line": 17,
+            "text": "SSE Angular can\u00f4nico, tenancy sem _monkey-patch_); o PR final espera o merge de R-0022 (OD-C2-005)."
+          },
+          {
+            "line": 18,
+            "text": "CTG-0001\u2026CTG-0003 (invent\u00e1rio, kit, apps) correm **em paralelo a R-0023**"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": []
+    },
+    {
+      "path": "work/rounds/R-0025/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 328,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0025/plan.md",
+        "work/rounds/R-0025/reports/PR200-evidence-record.json",
+        "work/rounds/R-0025/reports/PR203-post-merge/README.md",
+        "work/rounds/R-0025/reports/PR203-post-merge/evidence-record.json",
+        "work/rounds/R-0025/reports/PR205-main-reconciliation/README.md",
+        "work/rounds/R-0025/reports/S1-evidence-record.json",
+        "work/rounds/R-0025/reports/S1-final-source-manifest.json",
+        "work/rounds/R-0025/reports/pr203-ci-reconciliation-20261019/custody-manifest.json"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0025/plan.md",
+        "sha256": "0d7f882538749ab529bc5cf800c77fe07d075375ec916f4920ddcaffa0a8a838",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0025 \u2014 frente `rait-web-wiring` (a\u00e7\u00e3o 6 da C-0002 \u2014 RAIT web: 64 comandos, `caseAccessGuard`, SSE can\u00f4nico, formul\u00e1rios e rotas L0)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint hist\u00f3rico `orchestra/rait-web-wiring`"
+          },
+          {
+            "line": 4,
+            "text": "> @ `9e69d867` preservado. Continua\u00e7\u00e3o de admissibilidade integrada por #193,"
+          },
+          {
+            "line": 5,
+            "text": "> merge `e68266a0`; rodada integral n\u00e3o fechada. Depend\u00eancias de setembro abaixo"
+          },
+          {
+            "line": 6,
+            "text": "> s\u00e3o hist\u00f3ricas; estado atual e limites nas adendas A-C3-01 e p\u00f3s-merge."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status atual (2026-10-19):** admissibilidade #193 e pr\u00e9-requisito S1"
+          },
+          {
+            "line": 10,
+            "text": "escopo/proje\u00e7\u00e3o/parent/replay #203 integrados, main2df548e0. P\u00f3s-merge exato"
+          },
+          {
+            "line": 11,
+            "text": "n\u00e3o-promotor registrado; R-0025/JW-01 permanecem abertas. S2 backend-first \u00e9"
+          },
+          {
+            "line": 12,
+            "text": "proposta, sem autoriza\u00e7\u00e3o ou dispatch; a adenda PR203 abaixo prevalece sobre"
+          },
+          {
+            "line": 13,
+            "text": "banners hist\u00f3ricos. Nenhuma aceita\u00e7\u00e3o integral foi reduzida."
+          },
+          {
+            "line": 15,
+            "text": "**Estado hist\u00f3rico da Sess\u00e3o A:** A-C2-15 liberava somente"
+          },
+          {
+            "line": 16,
+            "text": "TASK-0001/0002/0003/0006 e aguardava os upstreams."
+          },
+          {
+            "line": 17,
+            "text": "Planejada em 2026-09-26"
+          },
+          {
+            "line": 18,
+            "text": "pelo Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72, fase D). Maestro **Sol 6** (Codex CLI),"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "9e69d867",
+          "local_object_resolves": true,
+          "full_commit": "9e69d867643182ad56894e33754d4928fd2cfc87",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0026/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0026/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0026/plan.md",
+        "sha256": "ee61e91bd9922358f758932c1f881083568bd75aa3acf1ec254489f4aa302e21",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0026 \u2014 frente `dashboard-wiring` (a\u00e7\u00e3o 6 da C-0002 \u2014 DASHBOARD: console L0 \u2192 L2 sobre `BP-DASH-MONITOR-001`)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/dashboard-wiring` @ `01e6afc2`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner.** Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72, fase D). Maestro **Opus 5.5** (Claude"
+          },
+          {
+            "line": 11,
+            "text": "Code), workers da escada Claude (Opus 5.5 grande/m\u00e9dio, Sonnet 5 pequeno), reviewer **Sol 6** pela"
+          },
+          {
+            "line": 12,
+            "text": "ponte `tools/orchestra/bridge.sh codex` (OD-C2-003; ids de CLI confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 13,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/dashboard-wiring`, branch `orchestra/dashboard-wiring`."
+          },
+          {
+            "line": 14,
+            "text": "Rastreio: #123 (reconcilia\u00e7\u00e3o), #124 (L0 \u2192 L2), #96 (produtores RAIT, OD-D17), #97 (OD-D33), #98"
+          },
+          {
+            "line": 15,
+            "text": "(OD-D35), #99 (OD-D50, job de relat\u00f3rios), #100 (OD-D58). `AUTHORIZATION.md`, `tasks/` e"
+          },
+          {
+            "line": 16,
+            "text": "`compositions.json` s\u00f3 nascem no bootstrap, depois da autoriza\u00e7\u00e3o."
+          },
+          {
+            "line": 17,
+            "text": "**Concorr\u00eancia (upstreams da campanha):**"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "01e6afc2",
+          "local_object_resolves": true,
+          "full_commit": "01e6afc244c0729eeac4df198168e73109f5524c",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0027/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 3,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0027/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0027/plan.md",
+        "sha256": "247b94422d218d6146003773bce7bd385cc24839817f9f1ce20b7b428b074bc8",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0027 \u2014 frente `portal-delegations` (a\u00e7\u00e3o 6 da C-0002 \u2014 Portal: defesa, recursos, indica\u00e7\u00e3o, pagamento, junta e dilig\u00eancia religados)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/portal-delegations` @ `d64ec29a`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26 pelo"
+          },
+          {
+            "line": 10,
+            "text": "Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72, fase D). Maestro **Sol 6** (Codex CLI), workers"
+          },
+          {
+            "line": 11,
+            "text": "da escada Codex (Sol 6 / Terra / Luna vigentes) por subagentes nativos, reviewer **Opus 5.5** pela"
+          },
+          {
+            "line": 12,
+            "text": "ponte `tools/orchestra/bridge.sh claude` (C-0002 \u00a74; ids de CLI confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 13,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/portal-delegations`, branch `orchestra/portal-delegations`."
+          },
+          {
+            "line": 14,
+            "text": "Sem issue: TASK-0002 abre a issue da frente (referenciando `backlog.md:103-107`) no CTG-0001; ela entra no PR final (OD-C2-005)."
+          },
+          {
+            "line": 15,
+            "text": "Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap."
+          },
+          {
+            "line": 16,
+            "text": "**Concorr\u00eancia:** abre sobre **R-0024 `stynx-dedup`** mesclada ou publicada em"
+          },
+          {
+            "line": 17,
+            "text": "`origin/orchestra/stynx-dedup` (abertura empilhada, \u00a7Execu\u00e7\u00e3o OD-C2-005; o PR final espera o merge) (cliente de comando, costura SSE, shell"
+          },
+          {
+            "line": 18,
+            "text": "e error boundary \u00fanicos em `@detran/ui`; `docs/framework/arch/frontend-wiring-pattern.md`, entreg\u00e1vel"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "d64ec29a",
+          "local_object_resolves": true,
+          "full_commit": "d64ec29a7e7867ae35d30f308e231570f769a772",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0028/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0028/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0028/plan.md",
+        "sha256": "e8d80b720cca6386a6e691575acb3ba1c830875c86f45ac581978dc41806e90a",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0028 \u2014 frente `boat-wiring` (a\u00e7\u00e3o 6 da C-0002 \u2014 BOAT: telas ligadas a `est/crash`, portas nativas atr\u00e1s de interfaces)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/boat-wiring` @ `d79b6f02`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26 pelo"
+          },
+          {
+            "line": 10,
+            "text": "Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72, fase D). Maestro **Opus 5.5** (Claude Code),"
+          },
+          {
+            "line": 11,
+            "text": "workers da escada Claude (Opus 5.5 grande/m\u00e9dio, Sonnet 5 pequeno) por subagentes nativos, reviewer"
+          },
+          {
+            "line": 12,
+            "text": "**Sol 6** pela ponte `tools/orchestra/bridge.sh codex` (C-0002 \u00a74; id de CLI confirmado no bootstrap)."
+          },
+          {
+            "line": 13,
+            "text": "Worktree `/Volumes/Thiamat II/stech/detran-worktrees/boat-wiring`, branch `orchestra/boat-wiring`."
+          },
+          {
+            "line": 14,
+            "text": "Rastreio: #118 (OD-R15-003/005), #119 (OD-R15-004), #120 (RENAEST real \u2014 **fora**), #109 (Capacitor \u2014"
+          },
+          {
+            "line": 15,
+            "text": "**fora**); a liga\u00e7\u00e3o de dados/formul\u00e1rios e OD-R15-006 n\u00e3o t\u00eam issue: TASK-0002 redige a issue da frente."
+          },
+          {
+            "line": 16,
+            "text": "Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap."
+          },
+          {
+            "line": 17,
+            "text": "**Concorr\u00eancia:** abre ap\u00f3s o merge de **R-0024 `stynx-dedup`** (padr\u00e3o de liga\u00e7\u00e3o"
+          },
+          {
+            "line": 18,
+            "text": "`docs/framework/arch/frontend-wiring-pattern.md`, entreg\u00e1vel de R-0024 \u2014 **ainda n\u00e3o existe em"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "d79b6f02",
+          "local_object_resolves": true,
+          "full_commit": "d79b6f02ffc426cfb4c291a3e6eddbce42d806a8",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0029/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0029/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0029/plan.md",
+        "sha256": "747e68ad65867e3d12884a7d1fc4e7fb72bdd2c440380c3f1d487f85a649a931",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0029 \u2014 frente `teat-web-wiring` (a\u00e7\u00e3o 6 da C-0002 \u2014 TEAT web produtivo no lugar da p\u00e1gina gen\u00e9rica JSON)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/teat-web-wiring` @ `679f68db`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**; OD-R29-001 decidida = (a) em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "(escopo de homologa\u00e7\u00e3o da ADR-0033 sobre o TEAT web). Planejada em 2026-09-26 pelo Architect"
+          },
+          {
+            "line": 11,
+            "text": "(`work/campaigns/C-0002-consolidacao.md` \u00a72, fase D). Maestro **Sol 6** (Codex CLI), workers da escada"
+          },
+          {
+            "line": 12,
+            "text": "Codex (Sol 6 / Terra / Luna vigentes) por subagentes nativos, reviewer **Opus 5.5** pela ponte"
+          },
+          {
+            "line": 13,
+            "text": "`tools/orchestra/bridge.sh claude` (C-0002 \u00a74; ids de CLI confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 14,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/teat-web-wiring`, branch `orchestra/teat-web-wiring`."
+          },
+          {
+            "line": 15,
+            "text": "Sem issue (#108\u2013#112 cobrem s\u00f3 o mobile): TASK-0002 redige a issue da frente."
+          },
+          {
+            "line": 16,
+            "text": "Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap."
+          },
+          {
+            "line": 17,
+            "text": "**Concorr\u00eancia:** abre ap\u00f3s o merge de **R-0024 `stynx-dedup`** (`docs/framework/arch/frontend-wiring-pattern.md`,"
+          },
+          {
+            "line": 18,
+            "text": "entreg\u00e1vel de R-0024 \u2014 **ainda n\u00e3o existe em 2026-09-26**; ausente \u2192 a rodada n\u00e3o abre). **Lock"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "679f68db",
+          "local_object_resolves": true,
+          "full_commit": "679f68db0112e6a0d40311bd1e5949b57bd03157",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0030/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 3,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0030/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0030/plan.md",
+        "sha256": "915ed189cfca71f21b8ccc1bd52280a02c6c3b171393c234418e97c4abb55ab5",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0030 \u2014 frente `user-docs` (a\u00e7\u00e3o 1 da C-0002: documenta\u00e7\u00e3o de usu\u00e1rio por perfil, FAQ, gloss\u00e1rio, ajuda contextual, site pt-BR)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/user-docs` @ `a9e19915`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72 fase E, \u00a73.6). Maestro previsto:"
+          },
+          {
+            "line": 11,
+            "text": "**Opus 5.5** (Claude Code), workers pela escada Claude (Opus 5.5 grande e m\u00e9dio, Sonnet 5 pequeno)"
+          },
+          {
+            "line": 12,
+            "text": "por subagentes nativos; reviewer **Sol 6** pela ponte `tools/orchestra/bridge.sh codex` (OD-C2-003;"
+          },
+          {
+            "line": 13,
+            "text": "ids exatos confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 14,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/user-docs`, branch `orchestra/user-docs`. Nenhum"
+          },
+          {
+            "line": 15,
+            "text": "`AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap."
+          },
+          {
+            "line": 16,
+            "text": "Anexo normativo desta rodada, **antecipado para a fase D**: `availability-manifest.schema.md`."
+          },
+          {
+            "line": 17,
+            "text": "**Concorr\u00eancia:** o PR final espera o merge de **R-0025 `rait-web-wiring`, R-0026 `dashboard-wiring`,"
+          },
+          {
+            "line": 18,
+            "text": "R-0027 `portal-delegations`, R-0028 `boat-wiring` e R-0029 `teat-web-wiring`**; a abertura \u00e9"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "a9e19915",
+          "local_object_resolves": true,
+          "full_commit": "a9e19915209bc8516262e6b1134ff666427e8d5a",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0031/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0031/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0031/plan.md",
+        "sha256": "76633152a0577a11d58468eecdc9e4f666a8a5947efd04e3833c441b4da68f3b",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0031 \u2014 frente `pec-web` (a\u00e7\u00e3o 8 da C-0002, ADR-0034: contratos e fixtures PEC, consoles cl\u00ednico e regulat\u00f3rio, manual PEC)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/pec-web` @ `7c0854f3`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect (`work/campaigns/C-0002-consolidacao.md` \u00a72 fase F, \u00a73.7; decis\u00e3o do Owner"
+          },
+          {
+            "line": 11,
+            "text": "OD-C2-002 e `docs/meta/adr/ADR-0034-pec-web-frontend.md`, vinculantes). Maestro previsto: **Sol 6**"
+          },
+          {
+            "line": 12,
+            "text": "(Codex CLI), workers pela escada Codex (Sol 6 grande, Terra m\u00e9dio, Luna pequeno \u2014 nomes vigentes"
+          },
+          {
+            "line": 13,
+            "text": "confirmados em `model-ladder.md` ap\u00f3s R-0018) por subagentes nativos; reviewer **Opus 5.5** pela"
+          },
+          {
+            "line": 14,
+            "text": "ponte `tools/orchestra/bridge.sh claude` (OD-C2-003; ids confirmados no bootstrap). Worktree"
+          },
+          {
+            "line": 15,
+            "text": "`/Volumes/Thiamat II/stech/detran-worktrees/pec-web`, branch `orchestra/pec-web`. Nenhum"
+          },
+          {
+            "line": 16,
+            "text": "`AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no bootstrap."
+          },
+          {
+            "line": 17,
+            "text": "**OD-PW-001 \u2014 decidida pelo Owner em 2026-09-26: plano completo em R-0032.** A superf\u00edcie C"
+          },
+          {
+            "line": 18,
+            "text": "(P-01\u2026P-07 no Portal, ADR-0034 \u00a72) saiu desta rodada e virou **R-0032 `portal-pec`**"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "7c0854f3",
+          "local_object_resolves": true,
+          "full_commit": "7c0854f314ab6253c80c71cc8de7e2ce4c3b6a7d",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    },
+    {
+      "path": "work/rounds/R-0032/record.md",
+      "exists_at_main": false,
+      "reachable_commits_touching_exact_path": [],
+      "scope": "reachable local Git refs; not proof that external or unreachable source never existed",
+      "present_artifact_count": 2,
+      "available_lifecycle_candidates": [
+        "work/rounds/R-0032/plan.md"
+      ],
+      "plan_source": {
+        "path": "work/rounds/R-0032/plan.md",
+        "sha256": "f2150e7b0eea040f8418636880b0e2f80577b8e6f47c3231a3cfb3521565a1f1",
+        "opening_excerpt": [
+          {
+            "line": 1,
+            "text": "# R-0032 \u2014 frente `portal-pec` (a\u00e7\u00e3o 8 da C-0002, ADR-0034 \u00a72: superf\u00edcie do candidato P-01\u2026P-07 no Portal, v\u00ednculo cidad\u00e3o \u2192 candidato PEC, comandos cidad\u00e3os por delega\u00e7\u00e3o, manual do cidad\u00e3o PEC)"
+          },
+          {
+            "line": 3,
+            "text": "> **Reconcilia\u00e7\u00e3o 2026-10-18:** checkpoint preservado fora de main; rodada n\u00e3o fechada."
+          },
+          {
+            "line": 4,
+            "text": "> Fonte mais recente de execu\u00e7\u00e3o: `orchestra/portal-pec` @ `3a492978`, caminhos desta rodada"
+          },
+          {
+            "line": 5,
+            "text": "> lidos nesse head. O status e as depend\u00eancias abaixo s\u00e3o o plano/hist\u00f3rico de main;"
+          },
+          {
+            "line": 6,
+            "text": "> n\u00e3o anulam a execu\u00e7\u00e3o/autoriza\u00e7\u00e3o registrada no branch nem provam integra\u00e7\u00e3o."
+          },
+          {
+            "line": 7,
+            "text": "> Ver [entregas, tarefas restantes e decis\u00f5es](../../../docs/meta/knowledge-base/backlog.md#reconcilia\u00e7\u00e3o-em-2026-10-18--fila-de-execu\u00e7\u00e3o-atual)."
+          },
+          {
+            "line": 9,
+            "text": "**Status:** **proposta \u2014 C-0002 rev. 2, aguardando autoriza\u00e7\u00e3o do Owner**. Planejada em 2026-09-26"
+          },
+          {
+            "line": 10,
+            "text": "pelo Architect para executar a decis\u00e3o do Owner **OD-PW-001** (\"elabore um plano de implementa\u00e7\u00e3o"
+          },
+          {
+            "line": 11,
+            "text": "completo para o m\u00f3dulo do cidad\u00e3o/PEC dispon\u00edvel no portal\", 2026-09-26). O Architect decidiu, para"
+          },
+          {
+            "line": 12,
+            "text": "execut\u00e1-la, tirar a superf\u00edcie C de R-0031 e fazer dela esta rodada pr\u00f3pria: isso paraleliza o"
+          },
+          {
+            "line": 13,
+            "text": "trabalho e isola a quest\u00e3o de identidade (OD-R32-001). Fontes vinculantes:"
+          },
+          {
+            "line": 14,
+            "text": "`work/campaigns/C-0002-consolidacao.md` \u00a72 fase F, \u00a74 e \u00a78; `docs/meta/adr/ADR-0034-pec-web-frontend.md`"
+          },
+          {
+            "line": 15,
+            "text": "\u00a7Decis\u00e3o 2\u20136."
+          },
+          {
+            "line": 16,
+            "text": "Maestro previsto: **Opus 5.5** (Claude Code). Workers pela escada Claude (Opus 5.5 grande e m\u00e9dio,"
+          },
+          {
+            "line": 17,
+            "text": "Sonnet 5 pequeno, com nomes vigentes em `model-ladder.md` ap\u00f3s R-0018), por subagentes nativos."
+          },
+          {
+            "line": 18,
+            "text": "Reviewer: **Sol 6** pela ponte `tools/orchestra/bridge.sh codex`. A altern\u00e2ncia com R-0031, cujo"
+          }
+        ]
+      },
+      "quoted_checkpoint_record_lookup": [
+        {
+          "quoted_commit": "3a492978",
+          "local_object_resolves": true,
+          "full_commit": "3a49297800dcebe040a2ace7c4bbf0f4af42545b",
+          "exact_record_exists_at_quoted_commit": false
+        }
+      ]
+    }
+  ],
+  "no_historical_edits": true,
+  "native_finding_remains": "ROUND_ARCHIVE_MUTATED:R-0017"
+}

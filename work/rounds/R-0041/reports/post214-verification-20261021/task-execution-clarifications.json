@@ -1,0 +1,13 @@
+{
+  "candidate": "68d5c2a20d9c760831a3c2d0422c2b2968b87502",
+  "task_review": "task-review.json",
+  "accepted_clarifications": [
+    "Candidate branch remains frozen and clean through prepare and publish; no source commits before publication.",
+    "Fixed sensor population is the same nine as the prior baseline; all valid PASS/REVIEW/FAIL readings will be recorded.",
+    "No orphan control or bundle is removed or renamed for retry; failures remain authentic.",
+    "Success requires the actual official verifier workflow on exact main SHA and published tag object, not local export alone.",
+    "Existing C6 text and capsules remain byte-identical and excluded from technical review.",
+    "Only inert diagnostic results and provenance hashes are eligible for a report; modified external provider copy is never adopted or committed."
+  ],
+  "collector_observation": "Two normalizer failures concerned nested JSON stdout and gate-failure stderr envelopes. Original command invocations were retained, not rerun or changed; each reading was later extracted from its original envelope."
+}

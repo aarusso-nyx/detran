@@ -30,8 +30,8 @@ import {
 
 /**
  * R-0009 CTG-0002 §2.7, §9 e §13 (TASK-0006) — C-0002-82: `GET /v1/portal/stream`
- * (M18) no padrão de teat-stream.e2e.spec.ts (servidor real via `app.listen(0)`,
- * leitura em streaming por `http.get`) com o poller MANUAL injetado em
+ * (M18) com listener real de loopback e porta efêmera sob `createPortalApp`,
+ * leitura em streaming por `http.get` e o poller MANUAL injetado em
  * `PORTAL_STREAM_POLLER` (§9: nenhum `setInterval` no controlador): as linhas
  * da outbox só chegam quando o teste dispara o tick, e o heartbeat só quando o
  * teste dispara a inscrição de heartbeat. Sem `PortalClock` fixo aqui: a
@@ -251,7 +251,6 @@ beforeAll(async () => {
     [{ token: stream.PORTAL_STREAM_POLLER, value: poller.port }],
     { fixedClock: false },
   );
-  await app.listen(0);
   const address = app.getHttpServer().address();
   port = typeof address === 'object' && address ? address.port : 0;
 

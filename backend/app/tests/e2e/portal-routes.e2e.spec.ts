@@ -559,6 +559,16 @@ describe('CTG-0002 §2.4/§6 — caixa, SNE e push (C-0002-74, C-0002-75, C-0002
       endpoint: 'https://push.local-e2e.invalid/sub/e2e-1',
       keys: { p256dh: 'p', auth: 'a' },
     };
+    const fixtureServer = app.getHttpServer();
+    expect(fixtureServer.listening).toBe(true);
+    const fixtureAddress = fixtureServer.address();
+    expect(fixtureAddress).toMatchObject({
+      address: '127.0.0.1',
+      family: 'IPv4',
+      port: expect.any(Number),
+    });
+    expect(Number.isInteger(fixtureAddress.port)).toBe(true);
+    expect(fixtureAddress.port).toBeGreaterThan(0);
     const first = await api()
       .post('/v1/portal/push-subscriptions')
       .set(headers())
@@ -585,6 +595,8 @@ describe('CTG-0002 §2.4/§6 — caixa, SNE e push (C-0002-74, C-0002-75, C-0002
       .send({ endpoint: 'nao-e-url', keys: { p256dh: 'p', auth: 'a' } });
     expect(invalid.status).toBe(400);
     expect(invalid.body.code).toBe('PORTAL.VALIDATION_FAILED');
+    expect(fixtureServer.listening).toBe(true);
+    expect(fixtureServer.address()).toEqual(fixtureAddress);
   });
 });
 
