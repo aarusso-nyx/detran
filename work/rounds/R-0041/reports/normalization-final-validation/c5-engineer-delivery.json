@@ -1,0 +1,449 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "engineer-delivery-not-native-reading",
+  "round": "R-0041",
+  "ownedSources": [
+    {
+      "path": "package.json",
+      "sha256": "11a70294c5947160c3fc3a7c8779dfbc8487aba6415ea0a4fde0455332c82eea"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "96a4a4e664744e65605c013f49eb286b31fd8e10a04e24cbda75d2bee67286bc"
+    },
+    {
+      "path": "test-tasks.json",
+      "sha256": "e3cdecb9ed032ed7247eacd5ce2ef6ee7681868189007fd20e2fb0eba4a5a773"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "7a932f7b3cbb7ebf61cb39b0bd8a569f74c18092e37016cf9a56528622c43126"
+    },
+    {
+      "path": "tools/security/invariants/rbac.config.mjs",
+      "sha256": "330d2236abbbb038648bf09f858c6f99c07300ef2562f064925bdbc83f343ec0"
+    },
+    {
+      "path": "tools/security/invariants/errors.config.mjs",
+      "sha256": "b3c970f0b72eeaa4528a9246734f1adbe24c73373a18f9e25650a19aa8847889"
+    }
+  ],
+  "nativeStanding": false,
+  "evidenceWritten": false,
+  "gitMutationsByEngineer": false,
+  "governanceStateMutationsByEngineer": false,
+  "thresholdChangesByEngineer": false,
+  "originalSevenTaskDescriptorsUnchanged": true,
+  "producerCount": 9,
+  "completeTestObservations": 1531,
+  "distinctPhysicalCases": 802,
+  "overlappingDASH_RBACCases": 729,
+  "newProducerCollections": [
+    {
+      "task": "invariant-rbac",
+      "completePassed": 736,
+      "failed": 0,
+      "skipped": 0,
+      "invalid": []
+    },
+    {
+      "task": "invariant-errors",
+      "completePassed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "invalid": []
+    }
+  ],
+  "checks": {
+    "format": "PASS",
+    "installedSchemas": "PASS",
+    "STYNXPin": "PASS1.5.3",
+    "CIIsolation": "PASS10/10 after independent Inspector update",
+    "fullAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "frozenInstall": "PASS",
+    "consumerBuilds": [
+      {
+        "package": "@detran/rait-web",
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/rait-web",
+          "build"
+        ],
+        "exit": 0,
+        "startedAt": "2026-10-19T23:28:37.085041+00:00",
+        "elapsedSeconds": 146.885,
+        "prerequisites": [
+          "@detran/ui build PASS",
+          "@detran/boat-mobile build PASS"
+        ]
+      },
+      {
+        "package": "@detran/dashboard-web",
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/dashboard-web",
+          "build"
+        ],
+        "exit": 0,
+        "startedAt": "2026-10-19T23:28:37.096576+00:00",
+        "elapsedSeconds": 91.507,
+        "prerequisites": [
+          "@detran/ui build PASS",
+          "@detran/boat-mobile build PASS"
+        ]
+      },
+      {
+        "package": "@detran/portal-web",
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/portal-web",
+          "build"
+        ],
+        "exit": 0,
+        "startedAt": "2026-10-19T23:30:08.617877+00:00",
+        "elapsedSeconds": 127.628,
+        "prerequisites": [
+          "@detran/ui build PASS",
+          "@detran/boat-mobile build PASS"
+        ]
+      },
+      {
+        "package": "@detran/teat-mobile",
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/teat-mobile",
+          "build"
+        ],
+        "exit": 0,
+        "startedAt": "2026-10-19T23:31:03.978968+00:00",
+        "elapsedSeconds": 81.912,
+        "prerequisites": [
+          "@detran/ui build PASS",
+          "@detran/boat-mobile build PASS"
+        ]
+      },
+      {
+        "package": "@detran/teat-web",
+        "argv": [
+          "pnpm",
+          "--filter",
+          "@detran/teat-web",
+          "build"
+        ],
+        "exit": 0,
+        "startedAt": "2026-10-19T23:32:16.247560+00:00",
+        "elapsedSeconds": 42.342,
+        "prerequisites": [
+          "@detran/ui build PASS",
+          "@detran/boat-mobile build PASS"
+        ]
+      }
+    ]
+  },
+  "coupledToolchainChange": {
+    "scope": "approved-coupled-Rollup-peer-resolution",
+    "unchanged": [
+      "Angular build version",
+      "Vite version",
+      "esbuild version"
+    ],
+    "changes": [
+      {
+        "cwd": ".",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      },
+      {
+        "cwd": "apps/rait/web",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      },
+      {
+        "cwd": "apps/dashboard/web",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      },
+      {
+        "cwd": "apps/portal/web",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      },
+      {
+        "cwd": "apps/teat/mobile",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      },
+      {
+        "cwd": "apps/teat/web",
+        "from": "4.62.5",
+        "to": "4.64.5"
+      }
+    ]
+  },
+  "preservedRejectedAttempts": [
+    "Initial CI isolation expected7 rejected9; parent Inspector updated exact population assertion.",
+    "Initial consumer builds failed missing @detran/ui / @detran/boat-mobile dist; existing pnpm-check prerequisite order compiled both, all five final builds passed.",
+    "Official no-peer-dedupe trial increased lock churn; both trial lock/logs preserved and first smaller official lock selected under parent authorization."
+  ],
+  "remaining": [
+    "Official generated bind/clean-candidate native measurements and record belong to parent.",
+    "CI remote effects and scorecard standing remain unproven by these supplemental direct runs."
+  ],
+  "rawManifest": [
+    {
+      "path": "/tmp/c5-engineer-source-hashes.json",
+      "bytes": 788,
+      "sha256": "68a6371551381be952c9d6660c7d446b7d1ad64a73a84b567170ae8dae048827"
+    },
+    {
+      "path": "/tmp/c5-engineer-original-seven.json",
+      "bytes": 282021,
+      "sha256": "0b62989887580336b2dcb6426cb4ba4ac1cdb36532b3751f680082a203dda92b"
+    },
+    {
+      "path": "/tmp/c5-engineer-rbac-collection.json",
+      "bytes": 750549,
+      "sha256": "692845c103294c28f73617fefea751383c450e41d3c7878603b4a4898e4aee23"
+    },
+    {
+      "path": "/tmp/c5-engineer-errors-collection.json",
+      "bytes": 13604,
+      "sha256": "3670e6c9ca3d4bc0fa8d610c41025ac61198445cea948c8b402ce1a6ec66a2b1"
+    },
+    {
+      "path": "/tmp/c5-engineer-rbac.stdout",
+      "bytes": 585149,
+      "sha256": "118725ce8c79925b4e9b8efdf01b4740c04622f2f76ebaa9c57cfaba63104c66"
+    },
+    {
+      "path": "/tmp/c5-engineer-rbac.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/c5-engineer-errors.stdout",
+      "bytes": 11269,
+      "sha256": "11ba731e30b6b7da0d12e0265064d3bd268d3d2d3e9f4d1b217440c121e759fd"
+    },
+    {
+      "path": "/tmp/c5-engineer-errors.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-rbac.stdout",
+      "bytes": 584915,
+      "sha256": "f70fc867588999be58a206351d0810c408faa6ac5b945e7ffaebd41d6c95ea4f"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-rbac.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-errors.stdout",
+      "bytes": 11269,
+      "sha256": "ab03ab787be0eab9ce391f1f5aafd3f2abf84e80bbd1f8a978a4dadd136d74e4"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-errors.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/c5-engineer-toolchain-before.json",
+      "bytes": 977,
+      "sha256": "998530de895c7ebc1af34e848f74496ad334f3253adcfedd07cd0afe09a32866"
+    },
+    {
+      "path": "/tmp/c5-engineer-toolchain-after.json",
+      "bytes": 977,
+      "sha256": "629a80d2c04541b22ba6a407d60fdc60c8f66cb63b14377d161975b91bfcf27c"
+    },
+    {
+      "path": "/tmp/c5-engineer-toolchain-comparison.json",
+      "bytes": 695,
+      "sha256": "034d68581ecaaed96bb353b189d938c994f9c75484994405305c25f529f6ab8b"
+    },
+    {
+      "path": "/tmp/c5-engineer-full-audit.json",
+      "bytes": 312,
+      "sha256": "b42fb582a30725b25cc5e4a48fe97b62a17c88146613ba63ad3b36f5ae037eca"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-full-audit.json",
+      "bytes": 312,
+      "sha256": "b42fb582a30725b25cc5e4a48fe97b62a17c88146613ba63ad3b36f5ae037eca"
+    },
+    {
+      "path": "/tmp/c5-engineer-final-frozen-install.log",
+      "bytes": 419,
+      "sha256": "fce6152241e1714356f1792905f370ce4141d69a2ac59eb509821862718e2ae9"
+    },
+    {
+      "path": "/tmp/c5-engineer-format-final.log",
+      "bytes": 376,
+      "sha256": "bd0b1e9b1ded143556fe2f4891a8a84c878bd483fe44707f507e1248d9b88a5f"
+    },
+    {
+      "path": "/tmp/c5-engineer-schemas-final.log",
+      "bytes": 57,
+      "sha256": "adf27454e2700b9f36fdd3d965eef8da4a8fc0d184a2c65689e7780d1f8b7e3e"
+    },
+    {
+      "path": "/tmp/c5-engineer-stynx-pin.log",
+      "bytes": 473,
+      "sha256": "7f871e4593dda036a9425913673886e12a3dc2c6bb28cc57b016d25bf6b841b3"
+    },
+    {
+      "path": "/tmp/c5-engineer-ci-tests.log",
+      "bytes": 2129,
+      "sha256": "33111c0613378bb973e614d58d750f7bcab7ba166a501ecfa1eb9b5be8c71397"
+    },
+    {
+      "path": "/tmp/c5-engineer-ci-tests-final.log",
+      "bytes": 1170,
+      "sha256": "3358bc5aeb179bc781780936c5a0f283791c3a242a6729adf41d7086b85b4f68"
+    },
+    {
+      "path": "/tmp/c5-engineer-ui-prerequisite-build.log",
+      "bytes": 1753,
+      "sha256": "606023f2e5d61652de4ec24057dbb2a3df0a930a676cb81a11784c84d7d831d7"
+    },
+    {
+      "path": "/tmp/c5-engineer-boat-prerequisite-build.log",
+      "bytes": 1816,
+      "sha256": "d7e69ae8c4ad7304dc2c90d24854c0f3a8ebc7a29973081f5f2ad95c59d0e134"
+    },
+    {
+      "path": "/tmp/c5-engineer-lock-regeneration.log",
+      "bytes": 7730,
+      "sha256": "a6844766dd40581638cb7a6de49ee1ffc88a8ee592871c82ab1d7013ec48f995"
+    },
+    {
+      "path": "/tmp/c5-engineer-lock-no-peer-dedupe.log",
+      "bytes": 8458,
+      "sha256": "df1550e87ee26f4ee41ac3104ea69375fd0e3ca25bfcafa24cc9f373e14942ae"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/dashboard-web.json",
+      "bytes": 168,
+      "sha256": "a6b95db688a68392abb2e871369c95e411f5ca479e746cd94f855c2699aba40d"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/dashboard-web.log",
+      "bytes": 64502,
+      "sha256": "90c148d91550b5ac49511e8b7e8eef050da7818f3adfa88b7a7b0275ed601e69"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/portal-web.json",
+      "bytes": 162,
+      "sha256": "e49c2ea7dc009debf123c5e02e9972c370efc9e24c5eaf17d899a4330ffcc6c6"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/portal-web.log",
+      "bytes": 151902,
+      "sha256": "87f2df62a345a35e3e1add36148c2895455e6d529182c5dc53c4797613965635"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/rait-web.json",
+      "bytes": 158,
+      "sha256": "faaf2eaf8b1f4309ebbbfc6704cc8d7c220805c4b8694961fb1bccace48eba19"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/rait-web.log",
+      "bytes": 178330,
+      "sha256": "c73385f1ac2d02650fbfd6fba7bbc784aa9ff7bfab6d54e4fdd8a4a9e42197a9"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/summary.json",
+      "bytes": 928,
+      "sha256": "6db18be7ee41a3d604589eff155676318a6069a57707b3a5be0c462670102e8b"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/teat-mobile.json",
+      "bytes": 164,
+      "sha256": "0abbf707af6752b12ea3555da1a90896e3782479d316d5489bf9e75118e7ddd7"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/teat-mobile.log",
+      "bytes": 1332,
+      "sha256": "d09fdceb5c5dec9ed8a2c1c03f0b431ccda1cc4351c1ba0d6d6322a2a1987565"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/teat-web.json",
+      "bytes": 158,
+      "sha256": "29ab1df192a5b3b13b1e2e5489380ac45c716a78def56684de273670cea34dea"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds/teat-web.log",
+      "bytes": 1703,
+      "sha256": "5a97e574de32ebde38e5e0529b11e7805e747fe1439ee4a8e00ffd1456dc360f"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/dashboard-web.json",
+      "bytes": 311,
+      "sha256": "f40e3f3090c730b97be525fc9f75af7b3a664f0e1fbeafeecd0ecacd33459dc0"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/dashboard-web.log",
+      "bytes": 2357,
+      "sha256": "f0d8523fa2548df63541a841149d9dc0a2ee5f966cb4c760f8a9533a3ce53127"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/portal-web.json",
+      "bytes": 306,
+      "sha256": "e9e75a9bbcc45546cc2b3541bf3e51fa97ac6f12a39d1767c73e1f2ae04cdfcb"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/portal-web.log",
+      "bytes": 2328,
+      "sha256": "73ad4e0e60ac641b48e15c1fca0318cf145ec710ebe54e1acfd476d555b57474"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/rait-web.json",
+      "bytes": 302,
+      "sha256": "77d3ae19dff97c05e9e5a4cd5ee4913fbd70690ad53b7b373a9e0eb8eff4a062"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/rait-web.log",
+      "bytes": 2361,
+      "sha256": "37db9a10fddf8c9aadaf713019948eac0005e162d39973563d2e8d345352a22c"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/summary.json",
+      "bytes": 1695,
+      "sha256": "c3b628c277321f056d355c6116057072bd572f5aee61a269bbe1182690a9253f"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/teat-mobile.json",
+      "bytes": 307,
+      "sha256": "57a673bb5c16a78ab2f0ae7da1de552eee2b2f98f73540363517be92b025af75"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/teat-mobile.log",
+      "bytes": 2351,
+      "sha256": "d5f007ce515fe8573d5a209e9ff160a7681d52934dd0a64ff84d5b6ffe79427a"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/teat-web.json",
+      "bytes": 301,
+      "sha256": "c9c44a473c1f47d67e24906ee3ab1cc58eddeca8bcda26dd9b439baeec37d94d"
+    },
+    {
+      "path": "/tmp/c5-engineer-consumer-builds-final/teat-web.log",
+      "bytes": 2754,
+      "sha256": "0da5a428a9266426520317f40dc71840fb0a69847ba1848af811652d9d52bc63"
+    }
+  ]
+}

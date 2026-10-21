@@ -1,0 +1,50 @@
+{
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "major",
+      "blocking": true,
+      "summary": "The ESM requirement contradicts the other options the packet allows. backend/app and all 50 domain tsconfigs declare module/moduleResolution NodeNext. In TS 6.0.3 (root node_modules/typescript -> typescript@6.0.3), transpileWorker sets impliedNodeFormat through getImpliedNodeFormatForFile. Its in-memory host has fileExists true only for the input file and readFile returning '', so it never sees the package.json type:module and a .ts input defaults to CommonJS output. The packet requires keeping the declared module value, allows changing only noEmit/declaration/declarationMap/sourcemap, and also requires ESM output. Taken literally, those rules leave no valid implementation and trip the packet's own stop condition. The V1 diagnosis only checked for design:paramtypes, not module format. Fix: before implementation, name one deterministic ESM mechanism in the packet, for example an in-memory .mts transpile fileName or an explicitly authorized transform-only module override, with a test asserting there is no exports/require in the output."
+    },
+    {
+      "severity": "major",
+      "blocking": true,
+      "summary": "The tsconfig mapping misses the shared domain. The determinism section limits scope to backend/domains/<grupo>/<pacote>/src and maps each file to that package's tsconfig. But @detran/shared is aliased in tools/security/invariants/workspace.config.mjs:284 to backend/domains/shared/src/index.ts, and its tsconfig is backend/domains/shared/tsconfig.json, one level up. AppModule registers DetranPolicyGuard from @detran/shared (app.module.ts:49,948). Its constructor at backend/domains/shared/src/policy.guard.ts:19 takes Reflector with no @Inject, so it depends on design:paramtypes. A fail-closed implementation of V2 as written would leave shared untransformed, and Nest would hit the next unresolved dependency. This is exactly the failure class the packet says it prevents. Fix: add backend/domains/shared/src -> backend/domains/shared/tsconfig.json to the closed mapping, or state the rule as nearest tracked package tsconfig within the domain roots."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The packet says the involved domain tsconfigs set experimentalDecorators/emitDecoratorMetadata true. That is not true for all of them: backend/domains/ops/core/tsconfig.json declares neither, while the other 49 domain configs plus app and shared do. ops/core/src has no Nest decorators today, so this is harmless. The plugin should still preserve each package's declared values rather than assume or require the flags, and should not inject them where they are not declared."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The hash guard does not cover the helper. ci-isolation.test.mjs:290-292 hashes only the config file bytes, yet its comment says exact config bytes preserve runner semantics. After V2, ops-perf transform behaviour lives in the unhashed nest-metadata-transform.mjs. workspace.config.mjs is already an unhashed import, so there is precedent. Still, a later helper change could alter the ordinary ops-perf runner without tripping any guard. Consider an explicit helper hash or a documented limitation. Adding one would be a new guard field, which falls outside the literal four-path/one-literal scope, so it needs a root decision."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The new test will run automatically and needs dependencies the root cannot resolve. tools/devai/tests/nest-metadata-transform.test.mjs matches the devai:test glob (node --test tools/devai/tests/*.test.mjs, chained in pnpm check). The repo root has no node_modules/@nestjs and no reflect-metadata; @nestjs/common/core/testing are installed under backend/app/node_modules. The packet should require deterministic createRequire resolution from backend/app, following the existing ci-isolation pattern that resolves devai from the real package path. It should also say how the Vite 7.3.6 esbuild RED path is resolved, and that this test cannot be skipped when run by devai:test."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The test only proves the helper's own output, not what the full pipeline produces. In Vite 7 the enforce:'pre' plugin's JS output for a .ts id is passed again through the default vite:esbuild transform. That second pass is expected to be harmless because the decorators are already lowered, but the packet's acceptance only checks helper output. Require the regression test to assert design:paramtypes after the complete Vite/Vitest transform chain used by the ops-perf config, not only from the helper."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Two TypeScript versions are installed (typescript@5.9.3 and typescript@6.0.3). The root link and the backend/app package.json (^6.0.3) both point to 6.0.3. The packet should record which resolution origin the helper uses and capture the resolved version and real path in the RED/GREEN receipts."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The four-path scope is complete for hash consumers. At b3b66c6d, the only live consumer of SHA d7994027... is tools/devai/tests/ci-isolation.test.mjs:94, confirmed by the config hash matching. The other occurrences are historical records and must stay unchanged: work/rounds/R-0041 provider-native-custody-perf-diagnostic.json and proposal.md, and the partial-delivery-binding inspector-red-raw source-before/source-after copies. .github/workflows/ci.yml:179-180 refers to the config by path only, and the ci-isolation command-equality guard stays unchanged. No other invariant, guard or test-tasks file consumes the config bytes."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Verified: the packet SHA256 is 40a01ee754e3d05482ab06b1680a7858649d189d317812b78a0843178ec49788 and HEAD is b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab. The current ops-perf.config.mjs has no plugins and runs under --configLoader native, so a sibling .mjs import loads natively. packages/*/src has no Nest decorators, so the backend/app/src plus backend/domains roots are the right population once shared is mapped. The proposed RED-before/GREEN-after flow for the single literal, the ban on dynamic or dual hashes, and keeping the other eight hashes and the source hashes are adequate as written."
+    }
+  ]
+}

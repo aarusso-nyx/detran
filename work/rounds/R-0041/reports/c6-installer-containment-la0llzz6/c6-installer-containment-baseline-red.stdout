@@ -1,0 +1,87 @@
+✔ canonical producer invokes only registered Architect write action, with no persistence/publish bypass (1.029708ms)
+✔ complete REVIEW produces an artifact admission while preserving original verdict, exit and raw streams (1.334375ms)
+✔ complete PASS and seven verified up-to-date bodies are accepted (0.810334ms)
+✔ process errors, interruption, absent exit and arbitrary nonzero exits reject (1.497791ms)
+✔ truncated, non-JSON and missing raw output reject (0.328375ms)
+✔ error/unknown native envelope cannot be hidden by successful process completion (0.326375ms)
+✔ READINESS FAIL remains rejected even if all body metrics claim completeness (0.104375ms)
+✔ dirty candidate and dirty-source UNKNOWN cannot acquire admission (0.150917ms)
+✔ partial, missing, overcounted or errored generation rejects (0.497333ms)
+✔ each required producer must have actual PASS or REVIEW standing (3.344667ms)
+✔ exact HEAD, tree and generated body digest are mandatory (0.351917ms)
+✔ dry run, excluded member, different action and missing write consent reject (2.262625ms)
+✔ contradictory exits, error findings and malformed embedded readings reject (0.645875ms)
+✔ I/O main accepts complete native body hashes, projections and current manifest metadata (4.719459ms)
+✔ I/O main accepts source-equivalent up-to-date bodies without requiring wall-clock freshness (4.967375ms)
+✔ I/O main refuses dirty preflight without invoking producer or writing any capture (2.689833ms)
+✔ I/O main refuses candidate change after producer and preserves complete raw streams (6.73975ms)
+✔ I/O main refuses post-generation dirtiness and preserves raw capture (4.953583ms)
+✔ I/O main rejects a manifest whose actual bytes do not match the native digest (10.842667ms)
+✔ I/O main rejects missing generated bodies and preserves raw capture (5.802417ms)
+✔ I/O main rejects tampered inventory_api body, including fields outside native summary projection (4.5115ms)
+✔ I/O main rejects tampered inventory_data_model body, including fields outside native summary projection (3.530667ms)
+✔ I/O main rejects tampered inventory_data_handling body, including fields outside native summary projection (3.414792ms)
+✔ I/O main rejects contradictory native summary digest even if complete body bytes match (3.474709ms)
+✔ I/O main rejects internally hashed body with stale generatedAt relative to current manifest (3.38675ms)
+✔ I/O main rejects different sourceRepo even if body SHA was quoted consistently (4.896ms)
+✔ I/O main retains invalid child JSON and stderr before refusing generation (3.2ms)
+✔ I/O main retains child process errors before refusing generation (55.650833ms)
+✔ native admission requires all three complete-body and producer-projection digests (0.592667ms)
+✔ I/O main refuses wrong manifest HEAD even if its actual SHA is quoted consistently (5.71925ms)
+✔ I/O main refuses invalid manifest timestamp even with a consistent whole-body digest (13.085083ms)
+✖ installer refuses an internal ..disguised directory before writing an alias (98.69075ms)
+✖ installer refuses an external destination symlink resolving into internal ..disguised (92.096708ms)
+✔ installer accepts a true external sibling bin and is byte-idempotent (221.457292ms)
+✔ installer preserves an unrelated external alias and still refuses the direct parent (195.761917ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 33
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 941.443958
+
+✖ failing tests:
+
+test at tools/security/tests/prepare-security-inventories.test.mjs:745:1
+✖ installer refuses an internal ..disguised directory before writing an alias (98.69075ms)
+  AssertionError [ERR_ASSERTION]: {"alias":"/private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-installer-path-uTbIYr/repo/..disguised/bin/detran-native-vitest","target":"/private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-installer-path-uTbIYr/repo/node_modules/vitest/vitest.mjs","sha256":"20e02e97769cbb3abb2cf122c8fdea4aa20198edb0b92bb1da9d305d322a6599"}
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:749:12
+      at installerFixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:739:5)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:746:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at tools/security/tests/prepare-security-inventories.test.mjs:757:1
+✖ installer refuses an external destination symlink resolving into internal ..disguised (92.096708ms)
+  AssertionError [ERR_ASSERTION]: {"alias":"/private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-installer-path-jMs0Zk/external-link/detran-native-vitest","target":"/private/var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-installer-path-jMs0Zk/repo/node_modules/vitest/vitest.mjs","sha256":"20e02e97769cbb3abb2cf122c8fdea4aa20198edb0b92bb1da9d305d322a6599"}
+  
+      at file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:764:12
+      at installerFixture (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:739:5)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/security/tests/prepare-security-inventories.test.mjs:758:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }

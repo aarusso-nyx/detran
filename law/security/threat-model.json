@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "DETRAN-THREAT-MODEL",
+  "status": "engineering-assessment",
+  "scope": {
+    "repository": "detran",
+    "baseline_commit": "92be0db44f9cc111ec9369f2fb81c5f6bd1efa1c",
+    "deployable": "backend/app",
+    "exclusions": [
+      "Production deployment, key custody and ingress configuration are not observed by repository inspection.",
+      "SENATRAN real-provider payload and operational assurance are not inferred from mock tests."
+    ]
+  },
+  "assets": [
+    "Tenant-scoped citizen, driver, vehicle, case and sensitive health records",
+    "Authorization context, callback authentication material and session identity",
+    "Transactional command state, audit integrity and idempotency records",
+    "CI control sources, immutable evidence and trusted local RC attestations"
+  ],
+  "boundaries": [
+    {
+      "id": "TB-HTTP",
+      "name": "Untrusted browser/client to authenticated backend",
+      "flow": "Apps and external clients send requests to the sole NestJS composition root.",
+      "threats": [
+        "Forged or absent principal; missing policy metadata; unauthorized read/write; cross-tenant or cross-agency access."
+      ],
+      "controls": [
+        "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+        "backend/app/src/app.module.ts",
+        "backend/domains/shared/src/policy.guard.ts",
+        "backend/domains/shared/src/policy.ts",
+        "law/invariants/INV-AUTH-001.json"
+      ],
+      "tests": [
+        "backend/domains/shared/src/policy.guard.spec.ts",
+        "backend/domains/shared/src/policy.spec.ts"
+      ],
+      "gaps": [
+        "The source and decorator census do not establish every contextual negative case or production identity configuration."
+      ]
+    },
+    {
+      "id": "TB-DATA",
+      "name": "Request transaction to PostgreSQL schemas",
+      "flow": "Tenant context governs domain reads/writes in one PostgreSQL database.",
+      "threats": [
+        "Tenant escape; owner-role request bypass; partial command persistence; sensitive-data exposure."
+      ],
+      "controls": [
+        "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+        "law/invariants/INV-DATA-001.json",
+        "backend/database/ddl"
+      ],
+      "tests": [
+        "backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts",
+        "backend/domains/portal/identity/tests/integration/portal-rls.integration.spec.ts",
+        "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts"
+      ],
+      "gaps": [
+        "Coverage of BOAT contracts and named RLS suites must not be generalized to every table or deployment role.",
+        "PII purpose, legal basis and retention remain source-scoped; unresolved C4 rows are not silently approved."
+      ]
+    },
+    {
+      "id": "TB-CALLBACK",
+      "name": "External callback to tenant-scoped integration principal",
+      "flow": "RENACH callbacks authenticate exact raw bytes and bind tenant/event/timestamp before principal creation.",
+      "threats": [
+        "Forged signature; changed body; invalid tenant; expired replay; absent secret."
+      ],
+      "controls": [
+        "backend/app/src/main.ts",
+        "backend/app/src/renach-webhook.guard.ts"
+      ],
+      "tests": ["backend/app/src/renach-webhook.guard.spec.ts"],
+      "gaps": [
+        "Timestamp-window rejection does not alone prove durable duplicate-event prevention.",
+        "Secret rotation, storage and ingress transport assurance require operational evidence."
+      ]
+    },
+    {
+      "id": "TB-SENATRAN",
+      "name": "Domain to national-system adapter",
+      "flow": "Domains call packages/senatran-adapter, which maps mock or real provider responses.",
+      "threats": [
+        "Direct bypass; provider payload drift; retry duplication; upstream failure misclassification."
+      ],
+      "controls": [
+        "docs/meta/adr/ADR-0003-senatran-adapter-sole-boundary.md",
+        "packages/senatran-adapter/README.md"
+      ],
+      "tests": [
+        "packages/senatran-adapter/src/errors.spec.ts",
+        "packages/senatran-adapter/src/idempotency.spec.ts",
+        "packages/senatran-adapter/tests/integration/http-client.integration.spec.ts"
+      ],
+      "gaps": [
+        "Mock contracts do not validate real-provider schemas or production timeout/circuit configuration."
+      ]
+    },
+    {
+      "id": "TB-PROOFS",
+      "name": "Contributor-controlled candidate to trusted CI verifier",
+      "flow": "Required CI checks validate code and evidence; protected verifier controls validate signed exact-tree claims.",
+      "threats": [
+        "Forged/stale evidence; candidate-controlled verifier; missing required check; simultaneous runs cancelling unrelated subjects."
+      ],
+      "controls": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/devai-local-rc-verify.yml",
+        ".devai/config/project.json",
+        "law/policy/devai-local-rc-trust-store.json"
+      ],
+      "tests": [],
+      "gaps": [
+        "Static workflow review does not replace remote check completion, protected environment policy or signature validation.",
+        "Historical missing records remain explicit gaps, even when the preserved proof chain verifies."
+      ]
+    }
+  ],
+  "limitations": [
+    "This assessment documents existing controls and threats; listed test paths are reproducible checks, not claims of fresh execution.",
+    "No legal basis or retention period is established here. Existing legal drafts and unresolved institutional questions retain that status.",
+    "Resource/Action metadata alone does not prove contextual authorization; public routes and mock populations require their own controls.",
+    "No new product mitigation, role permission, deadline or runtime retry policy is introduced."
+  ]
+}

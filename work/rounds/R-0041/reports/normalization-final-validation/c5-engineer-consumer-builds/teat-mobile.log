@@ -1,0 +1,27 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/c5-c8-governance/detran/apps/teat/mobile
+> ng build
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [38.861 seconds] - 2026-10-19T23:26:54.577Z
+
+✘ [ERROR] TS2307: Cannot find module '@detran/ui' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/main.ts:5:46:
+      5 │ import { provideDetranAuthenticatedApp } from '@detran/ui';
+        ╵                                               ~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module '@detran/boat-mobile' or its corresponding type declarations. [plugin angular-compiler]
+
+    src/main.ts:6:56:
+      6 │ ...AT_PT_BR_CATALOG, createBoatExtension } from '@detran/boat-mobile';
+        ╵                                                 ~~~~~~~~~~~~~~~~~~~~~
+
+
+/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/apps/teat/mobile:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/teat-mobile@0.1.0 build: `ng build`
+Exit status 1

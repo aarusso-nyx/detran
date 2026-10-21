@@ -35,7 +35,10 @@
       }
     ],
     "owners": ["detran-ch"],
-    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel. A chave de processo RENACH e unica por tenant (um processo RENACH pertence a um so paciente; OD-HF-B9-001 = (a), Owner 2026-09-29): indice unico parcial ux_ch_encounter_renach_process_key, com pre-checagem de duplicatas no DDL manuscrito 19-ch-encounter-renach-key.sql."
+    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel. A chave de processo RENACH e unica por tenant (um processo RENACH pertence a um so paciente; OD-HF-B9-001 = (a), Owner 2026-09-29): indice unico parcial ux_ch_encounter_renach_process_key, com pre-checagem de duplicatas no DDL manuscrito 19-ch-encounter-renach-key.sql.",
+    "devDependencies": {
+      "vite": "7.3.6"
+    }
   },
   "database": {
     "entities": [

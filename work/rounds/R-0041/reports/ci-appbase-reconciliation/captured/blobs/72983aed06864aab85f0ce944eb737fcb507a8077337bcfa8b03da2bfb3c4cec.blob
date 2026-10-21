@@ -1,0 +1,78 @@
+✖ actual appbase default-bundle preserves controls and final Nest metadata/injected tokens without listeners (6480.994209ms)
+ℹ {"label":"appbase-default-bundle","dashboardMetadata":["Database","RequestContext","OpsParameterService2","Object"],"guardMetadata":["Reflector"],"actualDashboardNestFailure":null,"guardReflectorActuallyInjected":true}
+✖ actual appbase runner preserves controls and final Nest metadata/injected tokens without listeners (2882.867ms)
+ℹ {"label":"appbase-runner","dashboardMetadata":["Database","RequestContext","OpsParameterService2","Object"],"guardMetadata":["Reflector"],"actualDashboardNestFailure":null,"guardReflectorActuallyInjected":true}
+✖ actual performance default-bundle preserves controls and final Nest metadata/injected tokens without listeners (2856.982875ms)
+ℹ {"label":"performance-default-bundle","dashboardMetadata":["Database","RequestContext","OpsParameterService2","Object"],"guardMetadata":["Reflector"],"actualDashboardNestFailure":null,"guardReflectorActuallyInjected":true}
+✖ actual performance runner preserves controls and final Nest metadata/injected tokens without listeners (2805.84025ms)
+ℹ {"label":"performance-runner","dashboardMetadata":["Database","RequestContext","OpsParameterService2","Object"],"guardMetadata":["Reflector"],"actualDashboardNestFailure":null,"guardReflectorActuallyInjected":true}
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15601.55025
+
+✖ failing tests:
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual appbase default-bundle preserves controls and final Nest metadata/injected tokens without listeners (6480.994209ms)
+  AssertionError [ERR_ASSERTION]: Plugin declaration must resolve to the actual Vitest-peer Vite7 package
+      at strictDeclarationIdentity (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:406:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:609:35)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual appbase runner preserves controls and final Nest metadata/injected tokens without listeners (2882.867ms)
+  AssertionError [ERR_ASSERTION]: Plugin declaration must resolve to the actual Vitest-peer Vite7 package
+      at strictDeclarationIdentity (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:406:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:609:35)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual performance default-bundle preserves controls and final Nest metadata/injected tokens without listeners (2856.982875ms)
+  AssertionError [ERR_ASSERTION]: Plugin declaration must resolve to the actual Vitest-peer Vite7 package
+      at strictDeclarationIdentity (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:406:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:609:35)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tools/devai/tests/backend-app-metadata-config.test.mjs:433:5
+✖ actual performance runner preserves controls and final Nest metadata/injected tokens without listeners (2805.84025ms)
+  AssertionError [ERR_ASSERTION]: Plugin declaration must resolve to the actual Vitest-peer Vite7 package
+      at strictDeclarationIdentity (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:406:10)
+      at TestContext.<anonymous> (file:///Volumes/Development/.codex/worktrees/c5-c8-governance/detran/tools/devai/tests/backend-app-metadata-config.test.mjs:609:35)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

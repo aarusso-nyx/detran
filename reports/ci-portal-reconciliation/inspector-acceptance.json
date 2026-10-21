@@ -1,0 +1,214 @@
+{
+  "role": "Inspector",
+  "observedAt": "2026-10-20T05:56:25.334143+00:00",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "label": "reviewed manifest authenticSHA",
+      "ok": true
+    },
+    {
+      "label": "root actual Python-I runner/hash/env/exit",
+      "ok": true
+    },
+    {
+      "label": "root execution raw streams",
+      "ok": true
+    },
+    {
+      "label": "full12763 source census exact",
+      "ok": true
+    },
+    {
+      "label": "all reviewed source hashes",
+      "ok": true
+    },
+    {
+      "label": "242protected source hashes",
+      "ok": true
+    },
+    {
+      "label": "Git status unchanged before/after",
+      "ok": true
+    },
+    {
+      "label": "evaluated HEAD0cf exact",
+      "ok": true
+    },
+    {
+      "label": "governed167 chain byteexact",
+      "ok": true
+    },
+    {
+      "label": "R41 both proof lines byteexact",
+      "ok": true
+    },
+    {
+      "label": "legacy exact",
+      "ok": true
+    },
+    {
+      "label": "current full source hashes remain exact while root canonical read checks run",
+      "ok": true
+    },
+    {
+      "label": "one authentic reporter JSON population",
+      "ok": true
+    },
+    {
+      "label": "actual original3IDs allpassed",
+      "ok": true
+    },
+    {
+      "label": "actual3/3 nofailed/pending/todo",
+      "ok": true
+    },
+    {
+      "label": "unmodified full DDL command",
+      "ok": true
+    },
+    {
+      "label": "unmodified seed command",
+      "ok": true
+    },
+    {
+      "label": "unmodified legacy preparation",
+      "ok": true
+    },
+    {
+      "label": "exact CI original argv",
+      "ok": true
+    },
+    {
+      "label": "authentic TCP readiness5failure+6success",
+      "ok": true
+    },
+    {
+      "label": "actual authenticated targetDB/nonemptyPostGIS",
+      "ok": true
+    },
+    {
+      "label": "actual fixed runtime versions",
+      "ok": true
+    },
+    {
+      "label": "actual physical tool origin hashes",
+      "ok": true
+    },
+    {
+      "label": "physical packages preserved",
+      "ok": true
+    },
+    {
+      "label": "owned container/image identity",
+      "ok": true
+    },
+    {
+      "label": "immutable approved image digest",
+      "ok": true
+    },
+    {
+      "label": "unique ownershiplabel",
+      "ok": true
+    },
+    {
+      "label": "exact owned cleanup command",
+      "ok": true
+    },
+    {
+      "label": "root cleanup witness bound actual owned IDs",
+      "ok": true
+    },
+    {
+      "label": "confirmation2 daemon positively healthy",
+      "ok": true
+    },
+    {
+      "label": "healthy daemon exact object absence 1",
+      "ok": true
+    },
+    {
+      "label": "absence raw SHA bound 1",
+      "ok": true
+    },
+    {
+      "label": "healthy daemon exact object absence 2",
+      "ok": true
+    },
+    {
+      "label": "absence raw SHA bound 2",
+      "ok": true
+    },
+    {
+      "label": "first root case-sensitive probe false refusal retained",
+      "ok": true
+    }
+  ],
+  "findings": [],
+  "ordinaryResult": {
+    "numTotalTests": 3,
+    "numPassedTests": 3,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true
+  },
+  "actualFullIds": [
+    "CTG-0002 \u00a73.3/\u00a712 \u2014 sequ\u00eancia de protocolo coerente com o seed (C-0002-30) C-0002-30 \u2014 dado seed executado duas vezes ent\u00e3o protocol_seq \u2265 14 (setval) e nextval n\u00e3o colide com AM-FIXTURES-2026-0000001\u2026000000e; a sequ\u00eancia \u00e9 compartilhada com manifestation.protocol",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-31 \u2014 dado sujeito \u202670000002 quando create+draft+submit de consulta_multas ent\u00e3o request, request_draft (2 vers\u00f5es), protocol, idempotency_record (key '<subjectId>:<header>') e 2 linhas na outbox com topic portal.request.changed, payload.tenantId = tenant",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-32 \u2014 dado transa\u00e7\u00e3o que lan\u00e7a ap\u00f3s publicar ent\u00e3o nenhuma linha na outbox (rollback = sem evento)"
+  ],
+  "evaluatedHEAD": "0cfb3a9439cfff2114d3de067e7192ddd101069a",
+  "reviewedManifestSHA256": "a26b64e0c3cd7fd248f752c5a1fcfd841666632102781e13def9097790690f24",
+  "sourceCount": 12763,
+  "protectedCount": 242,
+  "chainRecords": 167,
+  "R41ProofLines": 2,
+  "legacySHA256": "5adb65afca27197d0381bc74efa5377d4415e1cf0058d7d82a68966a83790fec",
+  "rootExecution": {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-I",
+      "/tmp/pr213-portal-ordinary-run-v4.py",
+      "--reviewed-manifest",
+      "/tmp/pr213-portal-source-manifest-iteration2.json",
+      "--reviewed-manifest-sha256",
+      "a26b64e0c3cd7fd248f752c5a1fcfd841666632102781e13def9097790690f24"
+    ],
+    "runnerSHA256": "bd191ed950b2268d568211105f862f199d0fecc48490948ae97469d6a807c6d3",
+    "pythonPhysicalPath": "/opt/homebrew/Cellar/python@3.15/3.15.0/Frameworks/Python.framework/Versions/3.15/bin/python3.15",
+    "pythonSHA256": "1955899cb535256cfa477d926d016819e52e747984722c44f76e39a4950fee0e",
+    "startedAt": "2026-10-20T05:52:25.042008+00:00",
+    "endedAt": "2026-10-20T05:52:54.637021+00:00",
+    "seconds": 29.595060708001256,
+    "exitCode": 0,
+    "stdoutSHA256": "67d09ae977b023cc92aa6e4629056108a333dfb252080880f50e59d9c0adc284",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "COREPACK_ENABLE_NETWORK": "0",
+    "ordinaryScopeOnly": true
+  },
+  "cleanupSummary": {
+    "ownedContainerId": "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc",
+    "ownedVolumeIds": [
+      "f63277f566cbdad4eb0cb1ec8159ac049a338c78ab108833d035e13eb240dc76"
+    ],
+    "daemonHealthy": true,
+    "exactOwnedObjectsAbsent": 2,
+    "firstProbeLimitation": "First root probe stopped on case-sensitive No such check while actual Docker stderr was lower-case no such object. Original probe streams preserved, no runtime/source change."
+  },
+  "runtime": {
+    "node": "24.15.0",
+    "pnpm": "9.15.0",
+    "vitest": "4.1.11",
+    "vite": "7.3.6",
+    "typescript": "6.0.3"
+  },
+  "limits": [
+    "Complete original ordinary Portal3tests; no nativeorigin/nonce/sense/readiness/43claim.",
+    "Parsed actual reporter JSON line without assuming entire stdout is JSON.",
+    "Owner for disposable setup; existing role_app_backend/tenant/RLS transaction path in unchanged original spec; existing owner fixture inspection/cleanup remains distinct.",
+    "Initial CI bootstrapdetran differs local namedtarget init; unchanged apply--full recreates actual approved target beforetests.",
+    "First root cleanup wrapper stopped on case sensitivity; original raw preserved, confirmation2 proves healthy daemon plus container/volume absences.",
+    "No canonical241/fullbackend/merge futureclaim from this acceptance."
+  ]
+}

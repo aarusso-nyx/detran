@@ -1,0 +1,82 @@
+[
+  {
+    "name": "devai-tests",
+    "argv": [
+      "pnpm",
+      "devai:test"
+    ],
+    "startedAt": "2026-10-20T03:04:55.807725+00:00",
+    "exit_code": 0,
+    "seconds": 65.96561741598998
+  },
+  {
+    "name": "state-index",
+    "argv": [
+      "pnpm",
+      "verify:state-index"
+    ],
+    "startedAt": "2026-10-20T03:06:01.775580+00:00",
+    "exit_code": 0,
+    "seconds": 0.5171844169963151
+  },
+  {
+    "name": "rounds-index",
+    "argv": [
+      "pnpm",
+      "verify:rounds-index"
+    ],
+    "startedAt": "2026-10-20T03:06:02.293372+00:00",
+    "exit_code": 0,
+    "seconds": 0.398854625003878
+  },
+  {
+    "name": "proof-anchors",
+    "argv": [
+      "pnpm",
+      "verify:proof-anchors"
+    ],
+    "startedAt": "2026-10-20T03:06:02.692776+00:00",
+    "exit_code": 0,
+    "seconds": 1.493562708987156
+  },
+  {
+    "name": "chain-verify",
+    "argv": [
+      "pnpm",
+      "exec",
+      "devai",
+      "evidence",
+      "verify",
+      "--scope",
+      "chain",
+      "--repo-root",
+      ".",
+      "--show-head",
+      "--format",
+      "human"
+    ],
+    "startedAt": "2026-10-20T03:06:04.187146+00:00",
+    "exit_code": 0,
+    "seconds": 1.036757249996299
+  },
+  {
+    "name": "historical-compatibility",
+    "argv": [
+      "node",
+      "tools/security/verify-historical-compatibility.mjs"
+    ],
+    "startedAt": "2026-10-20T03:06:05.225077+00:00",
+    "exit_code": 0,
+    "seconds": 10.612574874976417
+  },
+  {
+    "name": "citation-census",
+    "argv": [
+      "node",
+      "tools/security/schema-citation-census.mjs"
+    ],
+    "startedAt": "2026-10-20T03:06:15.838473+00:00",
+    "exit_code": 0,
+    "seconds": 0.5325735000078566
+  }
+]

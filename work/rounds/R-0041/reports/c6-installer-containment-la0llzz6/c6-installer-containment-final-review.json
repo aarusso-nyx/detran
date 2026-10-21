@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "summary": "I checked both dirty files and their SHA-256 hashes match the expected values (ea3ec111…829656 and 2888ddf2…862e00). The change does what it claims. Both guards in tools/security/install-native-vitest.mjs (line 23 for the requested path, line 44 for the resolved path) now require a real parent step (`..${sep}`). A directory named '..disguised/bin' inside the repo is now refused. Asking for the repo's direct parent ('..') is still refused, and so is the repo root itself (''). On Windows, a path on a different drive makes relative() return an absolute path, so it is refused too, which is the safe outcome. Nothing else changed: the Vitest 4.1.11 version pin, the realpath and shebang checks on the runner, the refusal to replace an unrelated alias, the post-link realpath check and the sha256 output are all as before. Links are not followed any more widely than before and no limits changed.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "The test file only adds code; none of the 31 existing tests are touched. The 4 new tests use Node's built-in test runner and isolated temp directories (realpath'd mkdtemp). They cover: the internal '..disguised' path refused at the first check with no alias written; an external symlink that leads to the internal '..disguised' directory refused at the second check, with the link left alone; a genuine external sibling directory accepted, with the same output and the same alias inode on a second run; and an unrelated regular-file alias refused with its bytes unchanged, plus the direct parent refused. The fake runner's code throws if run, and these tests never run it. The assertions are specific: exit status, error-message patterns, and whether the alias exists or what it contains. I found no weakened tests. I did not re-run the tests; the claimed 35 passes / 0 skips and the 33-pass/2-fail result against the old source come from the Inspector's report, not from me.",
+      "blocking": false
+    },
+    {
+      "severity": "low",
+      "summary": "An older weakness the new tests don't exercise: `root` comes from import.meta.url and is never resolved to its real path, but line 43 compares it to realpathSync(directory). If the repo is opened through a symlinked path (for example macOS /tmp versus /private/tmp, or a symlinked worktree mount), an outside link pointing into the repo resolves to a path that looks like it is outside. The second check would then let it through. The new tests resolve their temp directory to its real path first, which hides this case. A possible later fix is `realpathSync(root)` before the second comparison. This is outside the scope of this correction and does not block it.",
+      "blocking": false
+    },
+    {
+      "severity": "info",
+      "summary": "Another older issue, not blocking: there is a time gap between the containment checks, existsSync and symlinkSync, so something could swap the path in between. A broken (dangling) alias makes existsSync return false and symlinkSync then fails with EEXIST, so that case fails safely. This change does not make either issue worse.",
+      "blocking": false
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "Step 2 tells the Inspector to add the helper SHA256 assertion 'dentro do teste existente complete ordinary workloads', but no test in ci-isolation.test.mjs has that name. The test that holds the per-suite configSha256 assertion (lines 289-293, literal at line 94) is 'nine invariant semantic producers execute unconditionally with isolated database services' (line 230). The 'complete ordinary workloads' wording comes from commit d8b79c5b's subject. The packet should name the test by its real title so the one added assertion lands in that test and not in a new one."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The helper derives its root from import.meta.url and refuses paths that are lexically inside but resolve through a symlink. The packet does not say to realpath the root first. On macOS, os.tmpdir() fixtures live under /var, which resolves to /private/var, and Vite ids are realpaths. A lexical root could then classify every fixture file as out of scope and return null, silently passing files through untransformed instead of failing closed. The full-chain Nest assertions would still catch this, so it is not blocking. Recommend stating that the root is realpathSync'd once at factory time and that ids are compared after realpath, with a refusal (not null) when an in-scope id's realpath leaves the root."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "Step 1 requires a functional RED in the same test before the helper exists, and correctly says MODULE_NOT_FOUND does not count. The packet should also say that the new test must load the helper lazily (dynamic import, or only through ops-perf.config.mjs). Otherwise a static import of the missing helper makes the whole file fail at load, and the real Vite7 pipeline RED (missing design:paramtypes, or Nest unable to resolve the DashboardStreamService or DetranPolicyGuard dependencies) is never observed."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "All three V3 blockers are resolved, and nothing remains open from V1 or V2. (1) Shared is now explicit mapping B, backend/domains/shared/src to backend/domains/shared/tsconfig.json. Verified: the tsconfig SHA is 166fa6e7…, it has both decorator flags, ES2023 and NodeNext, and no extends or references. policy.guard.ts (SHA 46578781…) lines 18-19 has @Injectable and constructor(private readonly reflector: Reflector) with no @Inject. The packet now requires a real Reflector metadata assertion and a DetranPolicyGuard compile. (2) The full Vite7 chain is required: the real ops-perf config with configLoader native, the helper's pre transform followed by vite:esbuild, and metadata/Nest assertions after the final transform. The full-3 Vitest run remains mandatory and is not replaced. (3) Compiler origins are pinned. Root node_modules/typescript resolves to .pnpm/typescript@6.0.3. The physical Vitest is 4.1.11 and its sibling vite realpath is vite@7.3.6, the same Vitest that install-native-vitest.mjs resolves (and version-checks against 4.1.11) for CI. @nestjs/core, @nestjs/common and reflect-metadata realpaths are identical from backend/app and backend/domains/shared, so the Reflector identity comparison is sound."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The four-path scope and both hash guards are complete. ops-perf.config.mjs hashes to d7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e, and its only live consumer is ci-isolation.test.mjs:94 (asserted at 289-293). The other occurrences are history only and stay unedited: R-0041 provider-native-custody-perf-diagnostic.json and proposal.md, and inspector-red-raw source-before and source-after. ci.yml:180 references the config by path only. Nothing hashes ci-isolation.test.mjs, and no file references nest-metadata-transform yet. The new paths are not in the protected-control selector set, and the new test matches the existing devai:test glob."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The closed mapping covers all of today's DI population. Every git-tracked decorated file under backend/app/src and backend/domains/**/src maps to an existing tsconfig with both decorator flags. Domain tsconfigs sit at depth 4 for shared and depth 5 for the other 50. No app or domain tsconfig uses extends, references, importHelpers, verbatimModuleSyntax or isolatedModules. ops/core/tsconfig.json is the only one without the flags, and ops/core/src has no decorators, so the null pass-through is correct. Every workspace alias resolves to one of the three mapped roots or to packages/*/src, and packages/*/src has no Nest decorators. The perf spec and dashboard-e2e.support.ts declare no decorated classes. The one decorated file outside src is portal/requests/tests/support/nest-construct.ts, which is not in the ops-perf graph. The in-memory-only ESNext/Bundler adaptation matches the established NodeNext transpileModule CommonJS defect and does not touch the product's typecheck or build. Thresholds, timeouts, the other eight config pins, the nine source pins and all histories are preserved. The verified packet SHA256 is 0dfe4898f0d3e2f415117fe1138431d39824f248d03c6864f29ed8a75897a72e and HEAD is b3b66c6df1c8153f1bc5427c3cd14c9e98c4e0ab. This PASS covers only the design. The RED-to-GREEN runs, the full-3 run and CI outcomes are still future obligations and have not been asserted."
+    }
+  ]
+}

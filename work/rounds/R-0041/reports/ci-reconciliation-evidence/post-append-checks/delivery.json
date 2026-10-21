@@ -1,0 +1,86 @@
+{
+  "sourceHEAD": "36f865257012c12c3f8cf262e897cdd3762ca83c",
+  "officialNewEV": "EV-e1408f10095aacf2",
+  "checks": [
+    {
+      "name": "proof-anchors",
+      "argv": [
+        "pnpm",
+        "verify:proof-anchors"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:54:16.159810+00:00",
+      "endedAt": "2026-10-20T04:54:17.040070+00:00",
+      "seconds": 0.8802923749899492,
+      "stdoutSHA256": "4fd4fe43c1e02d956e7c8f67a555badd6283de697ea28e9ac456c92f2acde5fc",
+      "stderrSHA256": "675e56bda4f492cd0457a6acb0ca8e82142ee425090776b0a2947a3df2a0ce9a"
+    },
+    {
+      "name": "canonical-chain",
+      "argv": [
+        "pnpm",
+        "exec",
+        "devai",
+        "evidence",
+        "verify",
+        "--scope",
+        "chain",
+        "--repo-root",
+        ".",
+        "--show-head",
+        "--format",
+        "human"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:54:17.040354+00:00",
+      "endedAt": "2026-10-20T04:54:17.604296+00:00",
+      "seconds": 0.5639727500092704,
+      "stdoutSHA256": "b12162e853ee5b777c15e23338085bb5813052cb7f44a12351e48d9e4beb3b11",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    {
+      "name": "state-index",
+      "argv": [
+        "pnpm",
+        "verify:state-index"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:54:17.604994+00:00",
+      "endedAt": "2026-10-20T04:54:17.866061+00:00",
+      "seconds": 0.26109908299986273,
+      "stdoutSHA256": "f45eac54d9793d6bdd951373d80c810860323825010c58f4576a74ea568b2658",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    {
+      "name": "rounds-index",
+      "argv": [
+        "pnpm",
+        "verify:rounds-index"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:54:17.866278+00:00",
+      "endedAt": "2026-10-20T04:54:18.101149+00:00",
+      "seconds": 0.23490770798525773,
+      "stdoutSHA256": "5302d94a4e9cab60335c8b99194e649c478a3f48a6d5abed09f8cc9c0b1e7277",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    },
+    {
+      "name": "new-evidence-format",
+      "argv": [
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "work/rounds/R-0041/reports/ci-reconciliation-evidence"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T04:54:18.101365+00:00",
+      "endedAt": "2026-10-20T04:54:18.369348+00:00",
+      "seconds": 0.26801900001009926,
+      "stdoutSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "stderrSHA256": "837ae478d819174b005713d7f2d8286b6e28db1853451d7581c555f6752aa0dc"
+    }
+  ],
+  "allPassed": true,
+  "nativeOrCIOutcomeClaimed": false
+}

@@ -1,0 +1,26 @@
+{
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "blocking": true,
+      "file": "DESIGN-DECISIONS.md",
+      "line": 67,
+      "summary": "The delta introduces a format-gate failure. Running `prettier --check` on the current tree flags DESIGN-DECISIONS.md and docs/meta/adr/README.md. The new ADR-0057 rows are not padded to the table's column widths, and the edited ADR-0055/0056 rows widen the last column. The HEAD copies of both files pass Prettier, and every other changed file passes. The recorded format check covered only the four policy/config/test files, so it did not catch this.",
+      "failure_scenario": "The repository `format:check` step (`prettier --check .`, which the CI foundation format gate runs, and which is the first step of `pnpm check`) fails on the candidate. This blocks the required-green PR. Fix it by formatting those two tables only (prettier --write on the two files), then rerun format:check across the whole repository. No content change is needed. Docs that claim 'law/format checks passed' should keep that claim scoped to the four files that were actually checked."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "file": "docs/meta/adr/ADR-0057-partial-security-governance-delivery.md",
+      "line": 7,
+      "summary": "The front-matter `supersedes: ['ADR-0055','ADR-0056']` is an unqualified machine-readable field. The body text and both index rows limit the supersession to activation timing and keep 0055/0056 Accepted.",
+      "failure_scenario": "Any docs-governance or ADR-index tooling that reads `supersedes` could treat ADR-0055 and ADR-0056 as fully superseded, even though their source obligations remain binding. Doctor docs-governance passed on this tree, so nothing breaks today. Consider recording the partial scope in a structured field, or confirm that the existing convention accepts partial supersedes."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Every other requested property was verified, with no defect found. test-tasks.json is byte-identical to origin/main c58278cc (sha256 752c6105…) and keeps the seven tasks and the rc profile. All nine measurable_via annotations are removed together. The seven original gate invariants are byte-equal to main. INV-RBAC-001 and INV-API-001 keep their content except for the annotation. The policy differs from main only in version 1.5.0, the closed empty invariant_producers and the RBAC domain. Only the two compiled files changed. Receipt source digest 3364…, projection 32c0… and receipt b144… all match the actual bytes. The diff of ci.yml against frozen 042215df changes only comments and step names. All nine commands, the service, environment, prerequisites, job id and foundation are unchanged, and no other code references the old step names. The CI-contract test is strengthened, not weakened. It now uses a closed list of nine expected commands, exactly one unconditional step per suite with no continue-on-error, config and source sha256 pins, a bare alias step and no synthetic nonce. It adds a strict deepEqual on the empty binding, a test-tasks hash, and the absence of measurable_via across all nine. The current test file equals the RED source-after (038f…). The RED diff is exactly the single assertion replacement. The raw output shows RED 11/10/1 and GREEN 11/11. The doctor capture has 16 checks, all ok, declaration-plan diagnostic only. The parent-governance-checks manifest shows all exits 0, including 210/210 DEVAI tests. All 86 entries in custody.json match on hash. The preservation audit records 13/13 pass. No ADR-0055/0056, record/, .devai/state, R-0036–R-0039 or R-0041 report bytes changed (312 files, 308 reports). R-0040 is absent and not invented. chain.json is equal to main with 165 records. The remote tag object 5d82… peels to 042215df. The decision.json hash f6d1…, packet 7a19… and review ec4b… match. The docs make no claim of native, 43-measured, legal or readiness status, and no claim of campaign closure or of a completed PR/CI/merge."
+    }
+  ]
+}

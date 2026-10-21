@@ -1,0 +1,13 @@
+{
+  "container": "detran-c6-invariants-23009",
+  "image": "postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5",
+  "port": "62565",
+  "request_role": "role_app_backend",
+  "native_service_profile_declared": false,
+  "owned_native_service_backend_available": false,
+  "preparation": [
+    "backend/database/apply.sh --full",
+    "backend/database/seed.sh",
+    "pnpm backend:test:prepare-legacy"
+  ]
+}

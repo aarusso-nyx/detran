@@ -1,0 +1,30 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "The type gate can pass without proving anything. The App tsconfig, which the task requires using unchanged, sets skipLibCheck:true, so tsc ignores errors inside the new nest-metadata-transform.d.mts. If its `import type { Plugin } from 'vite'` fails to resolve, the factory's return type silently becomes any and both the canonical and focused checks still pass. The task should require separate evidence that the declaration resolves to the root Vite 7.3.6 Plugin type (same physical package as vitest's vite), for example by checking the .d.mts itself without skipLibCheck, or by a type-level identity assertion that adds no alternate module declaration and no ts-ignore."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "In Vite 7.3.6 (config.js:35983-36001), loadConfigFromBundledFile removes its temp file with a callback-style fs.unlink(tempFileName, () => {}), which is not awaited. An after-case listing of backend/app/node_modules/.vite-temp can therefore still see the timestamp-*.mjs file. The task does not say whether that file counts as a recorded new entry, as 'unavailable after automatic cleanup', or as an unknown residual that triggers STOP. Other Vite/Vitest runs in the same worktree also write to this shared directory. The task should define a settle-and-classify rule, plus how concurrent entries are attributed, before the four default-bundle cases run, so the STOP gate does not fire falsely or get bypassed ad hoc."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The canonical consumer should be named explicitly. backend/app/package.json typecheck runs `tsc --noEmit` against tsconfig.json, whose include covers vitest.config.ts but not vitest.performance.config.ts. The canonical @detran/app typecheck is therefore the gate the new import must pass, and the focused NodeNext check is still needed for the performance config. The task currently leaves this to the parent's broad checks and 'existing CI'."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Verified with reads and hashes only. The V2 file matches SHA 72f743ab…; V1 matches 2be66fff… at both /tmp paths; HEAD is b3b66c6d. The seven source hashes match the diagnostic: config 14f68bf1, performance config d12e699f, helper 333a08bd, ops-perf 7cfe5918, CI test 003615a7, existing unit test ebd2e15a, tsconfig cd804a68. The Vite source citations match: the nearest-node_modules lookup at 1733-1740, .vite-temp writing and the EACCES fallback beside the source config, and import.meta.url injection. backend/app/node_modules is a regular directory, no .vite-temp exists yet, and the root .gitignore rule `node_modules/` ignores backend/app/node_modules/.vite-temp. backend/app/node_modules/vite and root vite resolve to the same physical 7.3.6. The helper anchors its root with `new URL('../../../', import.meta.url)`, so the mandatory default-bundle case is justified. The existing withVite uses middlewareMode without ws:false, which matches the reported refused-listen setup failure. The cause and the four-path scope hold up: the base config has no plugin, the performance config spreads base, and the only strict-type error was TS7016."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The diagnostic covers only three cases (base-native, performance-native, performance-runner). Base-runner and both default-bundle cases are unobserved, as the task itself says, so their GREEN results are new required proofs, not existing evidence. The performance-native load failure is correctly kept as a separate observation outside scope."
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "scope": "ordinary complete Portal suite only; no native/nonce/EV/readiness/43 claims",
+  "archive": "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/pr213-perf-setup-diagnosis/ordinary-portal-v4-20261020T055225Z-45d02a6b4216",
+  "failure": null,
+  "steps": [
+    {
+      "name": "node-version",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:29.860919+00:00",
+      "seconds": 0.0277190420019906
+    },
+    {
+      "name": "pnpm-version",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/pnpm.js",
+        "--version"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:29.888981+00:00",
+      "seconds": 0.23248649999732152
+    },
+    {
+      "name": "alias-install",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "tools/security/install-native-vitest.mjs",
+        "/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/pr213-perf-setup-diagnosis/ordinary-portal-v4-20261020T055225Z-45d02a6b4216/bin"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:30.194197+00:00",
+      "seconds": 0.038853707985254005
+    },
+    {
+      "name": "physical-packages",
+      "argv": [
+        "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node",
+        "-e",
+        "const fs=require('fs'),{createRequire}=require('module'),path=require('path');const r=createRequire(path.resolve('package.json'));const v=fs.realpathSync(r.resolve('vitest/package.json'));const vi=fs.realpathSync(createRequire(v).resolve('vite/package.json'));const t=fs.realpathSync(r.resolve('typescript/package.json'));console.log(JSON.stringify(Object.fromEntries([['vitest',v],['vite',vi],['typescript',t]].map(([k,p])=>[k,{path:p,version:JSON.parse(fs.readFileSync(p)).version}]))));"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:30.233413+00:00",
+      "seconds": 0.034310500021092594
+    },
+    {
+      "name": "image-inspect",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:30.268144+00:00",
+      "seconds": 0.11689674999797717
+    },
+    {
+      "name": "container-create",
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--name",
+        "detran-pr213-portal-20261020t055225z-45d02a6b4216",
+        "--label",
+        "detran.inspector.owned=45d02a6b4216",
+        "--publish",
+        "127.0.0.1::5432",
+        "--env",
+        "POSTGRES_USER",
+        "--env",
+        "POSTGRES_PASSWORD",
+        "--env",
+        "POSTGRES_DB",
+        "postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:30.385554+00:00",
+      "seconds": 0.20315895800013095
+    },
+    {
+      "name": "container-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:30.589410+00:00",
+      "seconds": 0.02793416698114015
+    },
+    {
+      "name": "fixture-ddl",
+      "argv": [
+        "bash",
+        "backend/database/apply.sh",
+        "--full"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:36.012627+00:00",
+      "seconds": 4.079340915981447
+    },
+    {
+      "name": "fixture-seed",
+      "argv": [
+        "bash",
+        "backend/database/seed.sh"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:40.092948+00:00",
+      "seconds": 0.5815576250024606
+    },
+    {
+      "name": "fixture-legacy",
+      "argv": [
+        "pnpm",
+        "backend:test:prepare-legacy"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:40.674925+00:00",
+      "seconds": 7.023814458021661
+    },
+    {
+      "name": "ordinary-portal",
+      "argv": [
+        "detran-native-vitest",
+        "run",
+        "--config",
+        "./tools/security/invariants/portal.config.mjs",
+        "--configLoader",
+        "native",
+        "--reporter",
+        "@aarusso-nyx/devai/native-vitest-reporter"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:47.699202+00:00",
+      "seconds": 2.421780040982412
+    },
+    {
+      "name": "container-final-logs",
+      "argv": [
+        "docker",
+        "logs",
+        "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:50.208036+00:00",
+      "seconds": 0.023010792006971315
+    },
+    {
+      "name": "owned-container-cleanup",
+      "argv": [
+        "docker",
+        "rm",
+        "--force",
+        "--volumes",
+        "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-20T05:52:50.231842+00:00",
+      "seconds": 0.2624292919936124
+    }
+  ],
+  "sourceSnapshotUnchanged": true,
+  "protected242": 242,
+  "priorChainRecords": 167,
+  "priorR41ProofLines": 2,
+  "ordinaryResult": {
+    "numTotalTests": 3,
+    "numPassedTests": 3,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true
+  },
+  "exactFullIds": true,
+  "actualFullIds": [
+    "CTG-0002 \u00a73.3/\u00a712 \u2014 sequ\u00eancia de protocolo coerente com o seed (C-0002-30) C-0002-30 \u2014 dado seed executado duas vezes ent\u00e3o protocol_seq \u2265 14 (setval) e nextval n\u00e3o colide com AM-FIXTURES-2026-0000001\u2026000000e; a sequ\u00eancia \u00e9 compartilhada com manifestation.protocol",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-31 \u2014 dado sujeito \u202670000002 quando create+draft+submit de consulta_multas ent\u00e3o request, request_draft (2 vers\u00f5es), protocol, idempotency_record (key '<subjectId>:<header>') e 2 linhas na outbox com topic portal.request.changed, payload.tenantId = tenant",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-32 \u2014 dado transa\u00e7\u00e3o que lan\u00e7a ap\u00f3s publicar ent\u00e3o nenhuma linha na outbox (rollback = sem evento)"
+  ],
+  "expectedFullIds": [
+    "CTG-0002 \u00a73.3/\u00a712 \u2014 sequ\u00eancia de protocolo coerente com o seed (C-0002-30) C-0002-30 \u2014 dado seed executado duas vezes ent\u00e3o protocol_seq \u2265 14 (setval) e nextval n\u00e3o colide com AM-FIXTURES-2026-0000001\u2026000000e; a sequ\u00eancia \u00e9 compartilhada com manifestation.protocol",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-31 \u2014 dado sujeito \u202670000002 quando create+draft+submit de consulta_multas ent\u00e3o request, request_draft (2 vers\u00f5es), protocol, idempotency_record (key '<subjectId>:<header>') e 2 linhas na outbox com topic portal.request.changed, payload.tenantId = tenant",
+    "CTG-0002 \u00a73/\u00a74/\u00a711 \u2014 ciclo consulta_multas sobre transa\u00e7\u00e3o real (C-0002-31, C-0002-32) C-0002-32 \u2014 dado transa\u00e7\u00e3o que lan\u00e7a ap\u00f3s publicar ent\u00e3o nenhuma linha na outbox (rollback = sem evento)"
+  ],
+  "allThreeActualStatusesPassed": true,
+  "cleanupCompleted": true,
+  "ownedContainerId": "977a1be79fd06036fb29776b5e5ccd214255bda9c08e5510443da029a98e78dc",
+  "noNativeClaim": true,
+  "completeStdoutJSON": false
+}

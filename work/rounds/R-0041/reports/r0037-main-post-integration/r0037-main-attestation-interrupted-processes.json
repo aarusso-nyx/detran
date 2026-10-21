@@ -1,0 +1,62 @@
+[
+  {
+    "pid": 9820,
+    "ppid": 72325,
+    "command": "node /Users/aarusso/.nvm/versions/node/v24.15.0/bin/pnpm exec prettier --stdin-filepath backend/domains/ops/evidence/src/services/evidence.service.ts"
+  },
+  {
+    "pid": 66565,
+    "ppid": 27216,
+    "command": "node tools/ci/prepare-local-rc.mjs"
+  },
+  {
+    "pid": 66713,
+    "ppid": 66565,
+    "command": "node /Users/aarusso/.nvm/versions/node/v24.15.0/bin/pnpm exec devai check --rc --run --task-timeout-ms 3600000 --as-role inspector --write --format json"
+  },
+  {
+    "pid": 66765,
+    "ppid": 66713,
+    "command": "node ./node_modules/.bin/../@aarusso-nyx/devai/dist/runtime/index/bin.js check --rc --run --task-timeout-ms 3600000 --as-role inspector --write --format json"
+  },
+  {
+    "pid": 68234,
+    "ppid": 66765,
+    "command": "node /Volumes/Development/runtimes/nvm/versions/node/v24.15.0/lib/node_modules/corepack/dist/pnpm.js run ci:backend-kernel:local"
+  },
+  {
+    "pid": 68639,
+    "ppid": 68234,
+    "command": "node tools/ci/run-backend-kernel-local.mjs"
+  },
+  {
+    "pid": 70268,
+    "ppid": 68639,
+    "command": "bash -o pipefail -c bash tools/ci/run-backend-kernel.sh 2>&1 | tee \"$1\" detran-local-rc /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-local-rc-68639.log"
+  },
+  {
+    "pid": 70270,
+    "ppid": 70268,
+    "command": "bash tools/ci/run-backend-kernel.sh"
+  },
+  {
+    "pid": 70271,
+    "ppid": 70268,
+    "command": "tee /var/folders/5c/m4tbc9kj091cw8v71dnxtrt00000gn/T/detran-local-rc-68639.log"
+  },
+  {
+    "pid": 72197,
+    "ppid": 70270,
+    "command": "node /Users/aarusso/.nvm/versions/node/v24.15.0/bin/pnpm blueprints:check"
+  },
+  {
+    "pid": 72321,
+    "ppid": 72197,
+    "command": "node tools/blueprints/check.mjs"
+  },
+  {
+    "pid": 72325,
+    "ppid": 72321,
+    "command": "/Volumes/Development/runtimes/nvm/versions/node/v24.15.0/bin/node /Volumes/Development/.codex/worktrees/r0037-main-attestation/detran/tools/blueprints/generate.mjs"
+  }
+]

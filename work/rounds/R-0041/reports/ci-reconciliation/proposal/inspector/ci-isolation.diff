@@ -1,0 +1,32 @@
+diff --git a/tools/devai/tests/ci-isolation.test.mjs b/tools/devai/tests/ci-isolation.test.mjs
+index f444ee65..0fea1e81 100644
+--- a/tools/devai/tests/ci-isolation.test.mjs
++++ b/tools/devai/tests/ci-isolation.test.mjs
+@@ -91,7 +91,7 @@ const ordinaryInvariantSuites = [
+     nodeId: 'invariant-ops-perf',
+     config: './tools/security/invariants/ops-perf.config.mjs',
+     configSha256:
+-      'd7994027c07dd52f97fdfa9591b3637b46d1581ab920fc3b03bf49a2f137b34e',
++      '7cfe5918d2e67c501e7179d0c5f40a4ac526e8eebd339e3acda26cd237f1abf8',
+     executableFiles: [
+       'backend/app/tests/performance/backend-baseline.perf.spec.ts',
+     ],
+@@ -228,6 +228,18 @@ test('existing CI gate identities and candidate verified-local-rc publishing are
+ });
+ 
+ test('nine invariant semantic producers execute unconditionally with isolated database services', () => {
++  assert.equal(
++    sha256(
++      readFileSync(
++        path.join(
++          root,
++          'tools/security/invariants/nest-metadata-transform.mjs',
++        ),
++      ),
++    ),
++    '333a08bdae8a4a070c0cdb675b012a33cc368128fc5ef8cc5a35f7947e382d6d',
++    'Reviewed ordinary Nest metadata transformer bytes changed',
++  );
+   const job = workflow('ci').jobs['invariant-producers'];
+   assert.ok(job);
+   assert.equal(job.if, undefined);

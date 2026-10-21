@@ -1,0 +1,12 @@
+import {readFileSync,writeFileSync,mkdirSync,realpathSync,readdirSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import path from 'node:path';
+const root='/Volumes/Development/.codex/worktrees/c5-c8-governance/detran';
+const out='/Users/aarusso/.config/devai/evidence/detran/c5-c7-c8-partial-delivery/pr213-perf-setup-diagnosis';mkdirSync(out,{recursive:true});
+const req=createRequire(path.join(root,'package.json'));const vite7Path=realpathSync(path.join(path.dirname(req.resolve('vite/package.json')),'dist/node/index.js'));const vite8Dir=readdirSync(path.join(root,'node_modules/.pnpm')).find(x=>x.startsWith('vite@8.2.2_'));const vite8Path=path.join(root,'node_modules/.pnpm',vite8Dir,'node_modules/vite/dist/node/index.js');
+const filename=path.join(root,'backend/app/src/dashboard-stream.service.ts');const source=readFileSync(filename,'utf8');const v7=await import(pathToFileURL(vite7Path).href);const v8=await import(pathToFileURL(vite8Path).href);
+const a=await v7.transformWithEsbuild(source,filename,{loader:'ts',tsconfigRaw:{compilerOptions:{experimentalDecorators:true,emitDecoratorMetadata:true}}});const b=await v8.transformWithOxc(source,filename,{});
+writeFileSync(path.join(out,'dashboard-stream.vite7-transform.js'),a.code);writeFileSync(path.join(out,'dashboard-stream.vite8-transform.js'),b.code);
+const ts=req('typescript');const c=ts.transpileModule(source,{fileName:filename,compilerOptions:{target:ts.ScriptTarget.ES2023,module:ts.ModuleKind.ESNext,experimentalDecorators:true,emitDecoratorMetadata:true,sourceMap:true}});writeFileSync(path.join(out,'dashboard-stream.typescript-transform.js'),c.outputText);
+const result={mode:'read-only transforms of actual unchanged source; no module app execution/build, no test or DB writes',filename,vite7Path,vite8Path,sourceMetadataCompilerOption:true,vite7:{version:v7.version,hasDesignParamtypes:a.code.includes('design:paramtypes')},vite8:{version:v8.version,hasDesignParamtypes:b.code.includes('design:paramtypes')},typescript:{version:ts.version,hasDesignParamtypes:c.outputText.includes('design:paramtypes')},outputs:[a.code,b.code,c.outputText].map(s=>s.split('\n').filter(x=>x.includes('design:paramtypes')||x.includes('Database, RequestContext')||x.includes('DashboardStreamService =')))};writeFileSync(path.join(out,'transform-diagnosis.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));

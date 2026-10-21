@@ -1,0 +1,40 @@
+{
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Base and custody hashes match. HEAD is b3b66c6d and tree 620e3b1b. Delivery 1f66205e…3a9 matches, and so do all 8 file hashes it lists. All 1627 capture-manifest entries match on byte length and SHA-256, with no uncovered or missing files (the manifest only leaves out itself). The task-custody copies are present. The generator is c9eaac81…f08 and tools/blueprints has no diff from HEAD. The schema is 803f0fa0…a8d. The five before/after-canonical captures match HEAD and the working-tree bytes."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "The canonical source delta is exactly 5 additions of module.devDependencies.vite=\"7.3.6\", each placed last. CH, EST and OPS get a new object. INF and PORTAL get the key appended after pg. No other bytes in the BPs changed. backend/, tools/blueprints and law/security have no diff from HEAD, so no generated output or registry has been written yet."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "My own recomputation over all 1592 preview files against the current repo bytes found 1357 byte-identical files and 230 header-only changes. Header-only means only the first line differs, the old BP SHA is replaced by the new one with nothing else changed, and every remaining byte matches (CH13/EST63/INF48/OPS68/PORTAL38). Another 5 package.json files are order-only: parsed objects are deepEqual including sorted-key equality, vite=7.3.6, and only devDependencies key order changed (vitest before vite; INF/PORTAL: vitest,@types/pg,pg,vite). There were 0 new paths and 0 issues. The 230 header paths are exactly the 230 tracked files whose first line contains an old BP SHA, and exactly the potentialHeaderOnlyPaths in roster 1d2fc56f…3d7. The roster total is 230+5+5+2=242."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "generated-files.json in the preview is byte-identical to the repo copy. Its 1591 entries are exactly the preview population minus the index itself, and every one exists in the repo, so no path is added or deleted. Every sourceSHA256 in all-preview-output-manifest matches the current repo file, and every previewSHA256 matches the preview file. Applying the reviewed outputs means copying those 235 preview files."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "Registry coupling confirmed. authorization.json contains 43 current source hashes of header-changed files and no BP or package hashes. pii-registry.json contains each of the 5 old BP hashes once, plus the 5 header-changed DDL files (13-ops-field-operations, 31-inf-ait, 42-ch-encounters, 62-portal-requests, 70-est-crash). Neither registry references the 5 package manifests. Current native_population_sha256 values are abe04205…c7c7 and 191d7ec4…1d9d. The three R-0039 inventories match the recorded compressed and uncompressed hashes, and the old manifest 1acef15a…234 is recorded honestly: its subject is 6e459da6 and the per-artifact integration_head is null rather than made up."
+    },
+    {
+      "severity": "minor",
+      "blocking": false,
+      "summary": "For the next step, the exporter refresh from the R-0039 inventories should only be accepted if all of the following hold: both native_population_sha256 values are unchanged, populations are still 1139 (1004/6/121/8) and 211 (158/53, 70/141/17, all pending), and every row, pointer and SQL span is preserved. The only allowed differences are the 43+5+5 source hashes and the truthfully labelled old-input provenance. Any other registry delta is a STOP. This preview does not prove that outcome."
+    },
+    {
+      "severity": "info",
+      "blocking": false,
+      "summary": "A new untracked directory, work/rounds/R-0041/reports/ci-reconciliation/, appeared in the working tree during this review. It is not in status-before-preview.txt or the session-start status. It falls outside this preview and the 242-path roster, so it does not block preview approval, but root should account for it before freeze or commit."
+    }
+  ]
+}

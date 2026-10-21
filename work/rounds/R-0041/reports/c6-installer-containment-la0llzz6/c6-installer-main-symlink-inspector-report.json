@@ -1,0 +1,42 @@
+{
+  "role": "Inspector",
+  "scope": "Append one real --preserve-symlinks-main root-alias containment fixture, existing35-case source preserved byte-prefix",
+  "ownedPath": "tools/security/tests/prepare-security-inventories.test.mjs",
+  "testSha256": "b466be5b7dfd166338ca6f81fb4df565341e15c5e1aaf6090b76142622074bc0",
+  "baseline": {
+    "installerSha256": "ea3ec1118061b0a7b7292b642a3a3aa138a83aa6f9d0dd3bd52b665a05829656",
+    "tests": 36,
+    "passed": 35,
+    "failed": 1,
+    "exitCode": 1,
+    "cause": "Physical internal destination symlink accepted under lexical repo alias root with --preserve-symlinks-main; actual alias written.",
+    "stdout": "/tmp/c6-installer-main-symlink-baseline-red.stdout",
+    "stderr": "/tmp/c6-installer-main-symlink-baseline-red.stderr"
+  },
+  "final": {
+    "installerSha256": "d4a203391a3d1f70a4bfc7cf960022fb0722e24726deb6a3f1cf1db18762cb52",
+    "tests": 36,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "stdout": "/tmp/c6-installer-main-symlink-final.stdout",
+    "stderr": "/tmp/c6-installer-main-symlink-final.stderr"
+  },
+  "checks": {
+    "syntax": "PASS",
+    "prettier": "PASS",
+    "eslint": "PASS"
+  },
+  "limitations": [
+    "No actual Vitest entrypoint executed, origin/nonce/native reading or Git effects.",
+    "Only assigned test file edited. Root owns canonicalization runtime change.",
+    "Shared adversarial trusted setup TOCTOU remains outside this bounded installer task; no measurement claim."
+  ],
+  "rawHashes": {
+    "/tmp/c6-installer-main-symlink-baseline-red.stdout": "dccdabfed803d8b06ac7232bebca5d429e6492ffc38fb9094b9d9e2f207f6b9a",
+    "/tmp/c6-installer-main-symlink-baseline-red.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/c6-installer-main-symlink-final.stdout": "866ac864bac3b57aa7ae314daff0a7de48d8c1bbe8fa7abc3ef328c5e2ba3255",
+    "/tmp/c6-installer-main-symlink-final.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

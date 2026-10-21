@@ -1,0 +1,85 @@
+{
+  "role": "Architect",
+  "classification": "author-delivery-report-not-governed-proof",
+  "head_at_work": "73c0b877980ce0e4f20fdd624c2f223a447c0e98",
+  "task_review": "/tmp/detran-c5-normalization-task-review.json",
+  "changed_owned_files": [
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/docs/meta/adr/ADR-0056-source-bound-security-invariants.md",
+      "sha256": "7eab2aa7ff34a9e93b4cf1d7b7b3fa432bbaa80ca8e9fe76450c890bde4ac3e8"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/docs/meta/adr/README.md",
+      "sha256": "1b7bcfd729efa1e9b8cd04a673c3fdd7d6b9b8901c38caa3bfcbda3f7894f0cd"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/DESIGN-DECISIONS.md",
+      "sha256": "6316c93bd7c63045bcd10b3b0cb4f371e698d2ca42a24a51755a087d33b53c1f"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/invariants/INV-RBAC-001.json",
+      "sha256": "bcc11e78b5006c3947d36754a2a4300507560177077c6d5b11d88d02e0926a76"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/invariants/INV-API-001.json",
+      "sha256": "592f34ae4fbb194b722c131709907c6a9db7e63ceab06726b758595f4341f290"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/invariants/README.md",
+      "sha256": "64f2350bb6dc3e3cf14bf8e6e72ca5e7050bf4a14fd0f23340ac3ace2f0dac50"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/invariants/VERSION",
+      "sha256": "1575e1af4a95f12f70b4ee6a6adce8160953d93ea17dc2611b90883ccc3ad3b8"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/trace.json",
+      "sha256": "27c7ab870043a3ae400529b5b6f527576705005b4758fbf2392bca3cd777501f"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/law/policy/adopter-policy.json",
+      "sha256": "e91ada7ad3ea4e8a360bbfa1c466991141166e11bfde5dc021960160f49e434e"
+    },
+    {
+      "path": "/Volumes/Development/.codex/worktrees/c5-c8-governance/detran/docs/framework/arch/errors-contract.md",
+      "sha256": "1422b38d432b844965015042db723de0b6a6a2b2159cb928f0e3fbd2ae128f0f"
+    }
+  ],
+  "checks": {
+    "verify:law-corpus": {
+      "exit_code": 0,
+      "raw": "/tmp/detran-c5-normalization-law-corpus.log"
+    },
+    "verify:state-index": {
+      "exit_code": 0,
+      "ADRs": 56,
+      "raw": "/tmp/detran-c5-normalization-state-index.log"
+    },
+    "law:test": {
+      "exit_code": 0,
+      "passed": 56,
+      "failed": 0,
+      "raw": "/tmp/detran-c5-normalization-law-tests.log"
+    },
+    "targeted_format": {
+      "exit_code": 0,
+      "raw": "/tmp/detran-c5-normalization-format.log"
+    },
+    "policy_final_format": {
+      "exit_code": 0,
+      "raw": "/tmp/detran-c5-normalization-policy-format.log"
+    }
+  },
+  "bindings_check": "/tmp/detran-c5-normalization-binding-check.json",
+  "preservation_check": "/tmp/detran-c5-normalization-preservation.json",
+  "pending": [
+    "Root official bind and schema/domain/trace checks on frozen candidate",
+    "Authentic native task executions and standing",
+    "Independent final review"
+  ],
+  "residual_gaps": [
+    "Absent native SQL core.pii_map registry remains REVIEW",
+    "CI effect classification gap remains REVIEW"
+  ],
+  "git_state_or_evidence_mutations": false
+}

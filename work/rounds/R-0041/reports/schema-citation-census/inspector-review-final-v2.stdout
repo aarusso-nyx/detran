@@ -1,0 +1,31 @@
+✔ complete tracked recursive schema population includes citation-free files and excludes untracked or unrelated JSON (395.00775ms)
+✔ exact source bytes, JSON Pointer escaping and repeated occurrence offsets are retained (197.664291ms)
+✔ ADR-looking object keys remain observable with an escaped pointer (225.405125ms)
+✔ schema examples and a schema property named examples retain distinct conservative contexts (345.851667ms)
+✔ numeric and provider scoped namespaces are preserved without fake local resolution (282.972917ms)
+✔ deterministic census does not rewrite tracked bytes or the Git index (631.793833ms)
+✔ malformed tracked JSON is an explicit population error (240.646417ms)
+✔ duplicate JSON keys cannot silently discard a citation (269.468708ms)
+✔ missing tracked schema is retained as an error rather than shrinking population (206.00975ms)
+✔ tracked symlink to an internal schema is refused (271.8785ms)
+✔ tracked external symlink is refused without citing outside bytes (260.353375ms)
+✔ a schema directory replaced by an escaping symlink cannot admit external bytes (299.684083ms)
+✔ CLI returns whole JSON and nonzero exit for an incomplete population (421.831375ms)
+✔ byte equality with a self-declared installed package never authenticates a provider or resolves a citation (404.720375ms)
+✔ invalid UTF-8 is an error rather than a replacement-character source witness (360.507417ms)
+✔ equivalent escaped duplicate JSON keys also reject (345.533541ms)
+✔ a Git repository with no tracked schemas cannot claim completeness (243.590875ms)
+✔ CLI invoked through an external symlink still emits whole JSON and refuses malformed input (416.452958ms)
+✔ changed worktree bytes expose their distinct Git blob identity and declared measurement basis (694.715417ms)
+✔ UTF-8 BOM is explicitly refused rather than silently stripped (539.138208ms)
+✔ uppercase JSON extension and newline-containing tracked paths cannot silently disappear (510.074708ms)
+✔ non-root repository directories and invalid CLI arguments fail closed (387.050458ms)
+✔ declared citation grammar states its limits and offsets count decoded UTF-16 units (492.9ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8601.76425

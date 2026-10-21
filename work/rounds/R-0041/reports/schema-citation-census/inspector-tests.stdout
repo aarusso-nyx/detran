@@ -1,0 +1,25 @@
+✔ complete tracked recursive schema population includes citation-free files and excludes untracked or unrelated JSON (472.802958ms)
+✔ exact source bytes, JSON Pointer escaping and repeated occurrence offsets are retained (231.42525ms)
+✔ ADR-looking object keys remain observable with an escaped pointer (202.719083ms)
+✔ schema examples and a schema property named examples retain distinct conservative contexts (275.765625ms)
+✔ numeric and provider scoped namespaces are preserved without fake local resolution (186.27ms)
+✔ deterministic census does not rewrite tracked bytes or the Git index (448.575708ms)
+✔ malformed tracked JSON is an explicit population error (155.799708ms)
+✔ duplicate JSON keys cannot silently discard a citation (174.512708ms)
+✔ missing tracked schema is retained as an error rather than shrinking population (166.36625ms)
+✔ tracked symlink to an internal schema is refused (165.942375ms)
+✔ tracked external symlink is refused without citing outside bytes (387.955875ms)
+✔ a schema directory replaced by an escaping symlink cannot admit external bytes (490.734708ms)
+✔ CLI returns whole JSON and nonzero exit for an incomplete population (706.095667ms)
+✔ byte equality with a self-declared installed package never authenticates a provider or resolves a citation (394.389833ms)
+✔ invalid UTF-8 is an error rather than a replacement-character source witness (152.059333ms)
+✔ equivalent escaped duplicate JSON keys also reject (353.292125ms)
+✔ a Git repository with no tracked schemas cannot claim completeness (225.062916ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5271.31975
