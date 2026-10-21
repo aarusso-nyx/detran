@@ -232,3 +232,25 @@ additional review authority after the exhausted cap, and eventual exact-head
 merge authority are separated in CI-2026-10-21/premerge-decisions.md. No merge,
 S3, production activation, scorecard promotion or round closure. Existing local
 and scorecard work stays separate.
+
+### Final canonical and split validation — 2026-10-21
+
+The running-kernel checkpoint above is superseded by the exact completed census
+in S2-execution/pr211-canonical-kernel-split-results.json: unit3069PASS8TODO;
+integration1515PASS; appE2E2217PASS14FAIL3TODO. KernelFAIL, not readiness. Four
+complete51 timeouts and eight JW01429 controls remain OPEN. The AIT socket
+control passed unchanged on a focused rerun. The historicalNULL503 was genuinely
+reproduced after command tests left their own admitted cases in the shared pool;
+bounded cleanup in the existing commands test now passes99 two-file controls
+and the unchanged postcommands NULL control. Runtime and frozen oracle unchanged.
+
+All remaining canonical tiers were attempted separately: upgrade21PASS,
+adapterE2E10PASS, SQLparameter5preparedcommandsPASS;13packagecommands yielded
+11actualPASS tests and11NO_TEST_FILES commands. No uninterrupted finalfullkernel
+PASS is claimed. No runner/mock remains; disposable DBlease released.
+
+The exact JW01singlefile rate-isolation proposal awaits explicit Ownerapproval.
+Supported historical-anchor recovery, further performance packet, additional
+independent review authority and eventual exact-head merge remain separate
+decisions. Current disposition/receipts:
+S2-execution/CI-2026-10-21/premerge-decisions.md. No merge or broader promotion.
