@@ -1,0 +1,262 @@
+{
+  "classification": "diagnostic-only-not-native-reading",
+  "facts": [
+    {
+      "name": "evidence-gate",
+      "effects": {
+        "_diagnostic": {
+          "diagnosticStepRejection": {
+            "stepIndex": 3,
+            "fields": [
+              "name",
+              "env",
+              "run"
+            ],
+            "envKeys": [
+              "NODE_AUTH_TOKEN"
+            ],
+            "metadataAdmitted": false
+          },
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": true,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "invariant-producers",
+      "effects": {
+        "_diagnostic": {
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": false,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "foundation",
+      "effects": {
+        "_diagnostic": {
+          "diagnosticStepRejection": {
+            "stepIndex": 4,
+            "fields": [
+              "name",
+              "env",
+              "run"
+            ],
+            "envKeys": [
+              "NODE_AUTH_TOKEN"
+            ],
+            "metadataAdmitted": false
+          },
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": true,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": [],
+        "condition": "! cancelled ( )",
+        "needs": [
+          "evidence-gate",
+          "invariant-producers"
+        ]
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "backend-kernel-full",
+      "effects": {
+        "_diagnosticUnsafeControls": "job-condition-not-admitted",
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "boat-documents-real",
+      "effects": {
+        "_diagnostic": {
+          "diagnosticStepRejection": {
+            "stepIndex": 4,
+            "fields": [
+              "name",
+              "env",
+              "run"
+            ],
+            "envKeys": [
+              "NODE_AUTH_TOKEN"
+            ],
+            "metadataAdmitted": false
+          },
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": true,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "senatran-mock",
+      "effects": {
+        "_diagnostic": {
+          "diagnosticStepRejection": {
+            "stepIndex": 3,
+            "fields": [
+              "name",
+              "working-directory",
+              "run"
+            ],
+            "envKeys": [],
+            "metadataAdmitted": false
+          },
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": true,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "senatran-mock-tests",
+      "effects": {
+        "_diagnostic": {
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": false,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "stack-smoke",
+      "effects": {
+        "_diagnostic": {
+          "diagnosticStepRejection": {
+            "stepIndex": 3,
+            "fields": [
+              "name",
+              "env",
+              "run"
+            ],
+            "envKeys": [
+              "NODE_AUTH_TOKEN"
+            ],
+            "metadataAdmitted": false
+          },
+          "adopterInvalid": false,
+          "workflowMetadataAdmitted": true,
+          "jobMetadataAdmitted": true,
+          "executionsAvailable": false,
+          "scripts": [],
+          "actions": []
+        },
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": [],
+        "condition": "github.event_name == 'workflow_dispatch'"
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    }
+  ]
+}

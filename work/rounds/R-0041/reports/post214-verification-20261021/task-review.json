@@ -1,0 +1,55 @@
+{
+  "verdict": "pass",
+  "confidence": 0.8,
+  "rationale": "I reviewed this read-only. The TASK is bounded and matches ADR-0057 and docs/meta/security/c5-c8-continuation.md. It keeps all nine added native bindings empty and deferred together. It leaves the original seven task descriptors, thresholds, N/A entries, closed rounds R-0036 through R-0039, the legacy chain, the immutable archive tag and the product backlog unchanged. It excludes C6 completely, including any retry or switch to another reviewer or model, and makes no all43 readiness claim. The attestation preconditions can be met right now. HEAD is 68d5c2a20d9c760831a3c2d0422c2b2968b87502, which equals @{upstream}, origin/main and the remote head of codex/c5-c7-c8-post214. The worktree is clean and the installed DEVAI is 2.6.3, matching the pin. The rc profile requires only the backend-kernel node, which runs `pnpm run ci:backend-kernel:local`. That fits the 'original backend-kernel RC task only' limit. The scripts block when the private key is inside the repo or its permissions are not 0600, and the evidence root is outside the repo by default. No bundle or .controls directory exists yet for tree 1e7dac1b3d64c637fce50b91a2a387dbdb8760cc. The C5, C7 and C8 instructions forbid a dummy SQL PII registry, invented legal basis or retention rules, edits to installed or repo provider source, workflow changes made only to satisfy an analyzer, and retroactive records or edits to closed history. The findings below are clarifications that make the task easier to execute safely. None of them blocks it.",
+  "findings": [
+    {
+      "severity": "medium",
+      "area": "attestation-ordering",
+      "summary": "Attestation needs a frozen candidate. Both prepare-local-rc.mjs and publish-local-rc.mjs require a clean worktree with HEAD equal to @{upstream} and to the remote head of the named branch. If the C5/C7/C8 commits land or are pushed to codex/c5-c7-c8-post214 before publication, the attested tree no longer matches HEAD and publication is blocked.",
+      "recommendation": "State explicitly: (1) run prepare and publish on 68d5c2a on a clean worktree with nothing pushed to that branch; (2) only after the outcome is recorded, either way, start C5/C7/C8 commits, preferably on a separate branch for the later PR."
+    },
+    {
+      "severity": "medium",
+      "area": "sensor-population",
+      "summary": "'Fresh registered read-only sensors' does not name which sensors run. Without a fixed list, the set could be chosen to look favourable.",
+      "recommendation": "Fix the population before running: the same nine sensors as the 1115f589 baseline (spec_robustness_targets, spec_security_coverage, docs_drift, harness_security, harness_coherence, harness_idiomaticity, decision_record_integrity, round_record_integrity, archive_immutability). Record every valid reading through `sense record` whatever its verdict, and pass no authority flags to the read-only sensor invocations."
+    },
+    {
+      "severity": "low",
+      "area": "failed-run-preservation",
+      "summary": "prepare-local-rc.mjs creates `<tree>.controls` with mkdir(recursive:false) before export. A failed export leaves an orphan directory, as with the existing 8a500678….controls, and a retry for the same tree then fails. 'Preserve failed runs' therefore means one attempt per tree unless new scope is granted.",
+      "recommendation": "Say that a failed or blocked attempt is recorded as-is (exit code, stderr, partial bundle or controls identity), is not deleted or renamed to allow a retry, and ends attestation for this tree in this task."
+    },
+    {
+      "severity": "low",
+      "area": "official-verification-definition",
+      "summary": "'Official verification passes' is not defined. devai-local-rc-verify.yml runs on push to main or on workflow_dispatch with candidate_sha. It is unclear whether publish-local-rc dispatches it and which run counts.",
+      "recommendation": "Define success as the devai-local-rc-verify.yml run for candidate 68d5c2a20d9c760831a3c2d0422c2b2968b87502 finishing with success and its 'Verify trusted local RC evidence' check present. Record the run ID and the published tag object. Make no claim if the run fails or never starts."
+    },
+    {
+      "severity": "low",
+      "area": "stale-local-ref",
+      "summary": "In this worktree the local `main` ref is stale (d7f18c5f…), while origin/main and HEAD are 68d5c2a2….",
+      "recommendation": "Identify the candidate by full SHA and remote ref, not by the local `main` ref name."
+    },
+    {
+      "severity": "low",
+      "area": "c6-boundary-in-shared-artifacts",
+      "summary": "c5-c8-continuation.md has a C6 escalation section, and the existing continuation capsule holds c6-review-blocked-observation.json. Updating the 'source documentation' could touch C6 material by accident.",
+      "recommendation": "Put the new outcomes in an additive section or a new document and a new capsule. Leave the C6 section's text and the existing capsule files byte-identical, and do not open the C6 observation."
+    },
+    {
+      "severity": "low",
+      "area": "c7-diagnostic-copy-custody",
+      "summary": "A diagnostic-only copy of provider parsing functions, if committed under the repo, could be picked up by format, lint or typecheck runs, or mistaken for adopted provider code.",
+      "recommendation": "Keep the copy outside the repo. If a reference must be committed, include only its hash, the provider source path and version, and the hashes of the copied functions, as inert report data labelled 'external diagnostic, not a native reading'."
+    },
+    {
+      "severity": "info",
+      "area": "roles",
+      "summary": "The TASK spans several Article 7 roles: Engineer for the RC run, Inspector for sense recording (the declaration the earlier recording used), and Architect or Auditor for the diagnostics and docs.",
+      "recommendation": "Declare the role in one line at the start of each scoped step, as AGENTS.md requires, and use the supported Inspector declaration with local-write consent only for `sense record`."
+    }
+  ]
+}

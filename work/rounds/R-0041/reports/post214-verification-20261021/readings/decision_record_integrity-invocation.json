@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "decision_record_integrity",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T18:52:08.722459+00:00",
+  "finished_at": "2026-10-21T18:52:09.599561+00:00",
+  "exitCode": 3,
+  "stdout": "",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"decision_record_integrity\"},\"members\":[{\"kind\":\"decision_record_integrity\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"decision_record_integrity\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run decision_record_integrity\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"decision_record_integrity\\\",\\\"kind\\\":\\\"decision_record_integrity\\\"},\\\"timestamp\\\":\\\"2026-10-21T18:52:09.459Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense run decision_record_integrity\\\",\\\"command_hash\\\":\\\"c8a38781adc2fbd3fb7b0405a198b1dff15504f29dfa641215bd660246d17cc4\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"DECISION_FRONTMATTER_INVALID\\\",\\\"message\\\":\\\"law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md: frontmatter is required\\\",\\\"file\\\":\\\"law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md\\\"}],\\\"metrics\\\":{\\\"finding_count\\\":1},\\\"id\\\":\\\"SR-1e1b726ff8a4600b\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

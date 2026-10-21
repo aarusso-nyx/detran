@@ -1,0 +1,37 @@
+{
+  "verdict": "pass",
+  "confidence": 0.86,
+  "rationale": "I checked the v2 four-file scope against the source at 68d5c2a2, and it fits the authorized C7 test-fixture scope. createPortalApp (portal-e2e.support.ts:558-580) only calls app.init(). A grep shows exactly nine importers of createPortalApp: boat-projections, portal-journeys, portal-manifestation-tenant-isolation, portal-national-mock, portal-national-unavailable, portal-payload-lint, portal-requests, portal-routes and portal-stream. This matches the graft caller list. Only two of these callers call listen themselves: payload-lint:107 with (0,'127.0.0.1') and stream:254 with (0). Both need to be removed. Nest 11.2.1 NestApplication.listen calls httpAdapter.listen on the same server, and Node's net.Server rejects a second listen with ERR_SERVER_ALREADY_LISTEN. So the v2 removals are required, and wrapping a second listen call would not be allowed anyway. The 127.0.0.1 bind is compatible with both callers. payload-lint already used 127.0.0.1. portal-stream connects with http.get({host:'127.0.0.1', port}) at line 115, so moving its server from the default dual-stack bind to 127.0.0.1 does not break its client. The port is still read from the address after the fixture returns. supertest 7.2.2 serverAddress (lib/test.js:60-63) only calls app.listen(0) and later closes it when app.address() is falsy, and it targets 127.0.0.1:<port>. So with a listening fixture, the per-request start/stop cycle goes away, as claimed. Nest listen resolves only after address() is non-null, and it rejects on a server 'error' event or a callback error, so a failure surfaces as the original error. Calling app.close() after a failed listen resolves: the express adapter runs httpServer.close(resolve) and ignores ERR_SERVER_NOT_RUNNING. The cleanup-and-rethrow / AggregateError design therefore works and cannot turn a failure into success. Every app created by the fixture has a close path, so the new listening sockets do not leak open handles. The main apps close in afterAll. portal-requests failingApp closes in afterAll at line 138. portal-national-unavailable sneUnavailableApp closes in finally at line 148. No caller relies on a non-listening server or on address() being null. The other app.listen(0) users (boat-crash-commands, dashboard-stream, dashboard-policy, teat-stream) build their own apps without createPortalApp and are not affected. The RED is deterministic: with the unchanged helper, server.listening is false before the first request. The task correctly does not claim to fix the boat-projections beforeAll timeout or to identify the socket-hang-up root cause; an extra loopback listen adds negligible setup time and no evidence for either. The adjustments below are tightenings, not blockers.",
+  "findings": [
+    {
+      "severity": "minor",
+      "area": "portal-routes.e2e.spec.ts C-0002-76 pre-assertion",
+      "issue": "'Address is a loopback address' is weaker than the contract. A check that accepts ::1 or any 127/8 address would still pass if the fixture bound somewhere other than the 127.0.0.1 the Architect contract requires.",
+      "adjustment": "Assert that server.address() is an object with address === '127.0.0.1', family 'IPv4' and an integer port > 0. After the three original requests, assert listening === true and deep-equal the captured {address, family, port} snapshot."
+    },
+    {
+      "severity": "minor",
+      "area": "RED evidence",
+      "issue": "For RED to count, the failure has to come from the new listening precondition, not from something incidental like DB state or a timeout. Because C-0002-76 shares beforeAll state with the rest of portal-routes, a failure from another cause would be ambiguous.",
+      "adjustment": "In the RED artifact, record the failing expectation text (listening expected true, received false) and its line number. Also record that the rest of the complete portal-routes file passed or skipped exactly as on main, with the original hook and test timeouts. For GREEN, record the same file in a fresh disposable pinned PostGIS fixture with every test passing."
+    },
+    {
+      "severity": "minor",
+      "area": "portal-e2e.support.ts failure path",
+      "issue": "The listen-failure cleanup path (close, rethrow the original error, AggregateError if cleanup also fails) has no test, and the four-file scope does not allow adding one.",
+      "adjustment": "Keep the implementation minimal and inspectable: try { await app.listen(0,'127.0.0.1') } catch (listenError) { try { await app.close() } catch (closeError) { throw new AggregateError([listenError, closeError], ...) } throw listenError }. Have the independent delivery review confirm this by reading the code, and record in the report that the path has no test rather than implying coverage."
+    },
+    {
+      "severity": "info",
+      "area": "portal-stream.e2e.spec.ts",
+      "issue": "Lines 33-34 describe the teat-stream pattern as 'servidor real via app.listen(0)'. Once line 254 is removed, that wording is wrong for this file. The fixture also changes the bind from the default dual-stack address to 127.0.0.1, which the client at line 115 already uses.",
+      "adjustment": "Change only the wording to say the real listener is owned by createPortalApp (127.0.0.1, OS-assigned port). Keep lines 255-256 (address/port extraction), the stream lifecycle and teardown byte-identical."
+    },
+    {
+      "severity": "info",
+      "area": "behavioural blast radius",
+      "issue": "Seven callers that used to run without a listener (boat-projections, journeys, manifestation-tenant-isolation, national-mock, national-unavailable including its secondary app, requests including failingApp, routes) will now each own a real loopback socket for the app's lifetime.",
+      "adjustment": "Covered by the required complete original RC/CI run. Treat any new open-handle hang or EADDR* error in those nine files as a regression from this change, not as baseline noise. Report the attempt-1 boat-projections timeout and the attempt-2 portal-routes C-0002-76 failure as preserved, unresolved prior main failures."
+    }
+  ]
+}

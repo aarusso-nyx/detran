@@ -1,0 +1,164 @@
+{
+  "classification": "diagnostic-only-not-native-reading",
+  "facts": [
+    {
+      "name": "push",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "evidence-gate",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "invariant-producers",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "foundation",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": [],
+        "condition": "! cancelled ( )",
+        "needs": [
+          "evidence-gate",
+          "invariant-producers"
+        ]
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "backend-kernel-full",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "boat-documents-real",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "senatran-mock",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "senatran-mock-tests",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": []
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    },
+    {
+      "name": "stack-smoke",
+      "effects": {
+        "effect": "unknown",
+        "permissions": {},
+        "runScripts": [],
+        "condition": "github.event_name == 'workflow_dispatch'"
+      },
+      "concurrency": {
+        "group": "${{ github.workflow }}-${{ github.ref }}",
+        "cancelInProgress": true
+      },
+      "events": [
+        "workflow_dispatch",
+        "pull_request",
+        "push"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+[error] stdin: SyntaxError: 'TaggedTemplateExpression' is not allowed in JSON. (1:1)
+[error] >  1 | ```json
+[error]      | ^^^^^^^
+[error] >  2 | {
+[error]      | ^
+[error] >  3 |   "verdict": "pass",
+[error]      | ^^^^^^^^^^^^^^^^^^^^
+[error] >  4 |   "scope": "Delta from HEAD 771d6c0c (tree 2f1303ab): law/security/authorization.json, record/proofs/chain.json, record/proofs/work/generic/R-0041.jsonl, work/rounds/R-0041/reports/c7-export-provenance-20261021/. Read-only; no files modified (git status unchanged before and after review).",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  5 |   "findings": [
+[error]      | ^^^^^^^^^^^^^^^
+[error] >  6 |     {
+[error]      | ^^^^^
+[error] >  7 |       "severity": "info",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  8 |       "file": "record/proofs/work/generic/R-0041.jsonl",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] >  9 |       "path": "line sequence 8 / payload.remaining_gates",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 10 |       "reason": "remaining_gates lists 'fresh original RC and signed proof for final tree', 'green required PR CI', 'normal merge and main exact-tree verifier'. It does not name the independent official verifier for the final tree as a separate gate. README.md and regeneration-witness.json.required_next do name it ('RC/export/publish/verifier'), so the report set as a whole is accurate. Wording gap only, not a defect, and it does not block."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 11 |     },
+[error]      | ^^^^^^
+[error] > 12 |     {
+[error]      | ^^^^^
+[error] > 13 |       "severity": "info",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 14 |       "file": "record/proofs/chain.json",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 15 |       "path": "records[201].context.git.dirty_files",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 16 |       "reason": "dirty_files does not include manifest.json or chain.json. This is consistent with manifest.json being written after the evidence record (both timestamps are 18:01 local, the record at 21:01:04Z). This is expected ordering, not an omission of altered content."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 17 |     },
+[error]      | ^^^^^^
+[error] > 18 |     {
+[error]      | ^^^^^
+[error] > 19 |       "severity": "info",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 20 |       "file": "(review limitation)",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 21 |       "path": "C6 native extra bindings",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 22 |       "reason": "I did not locate or open a dedicated native-extra-bindings file, because C6 material is out of scope. The delta touches no file under .devai/ and nothing under law/ other than authorization.json. The proof payload, witness and README all state C6_native_activation=false, and C6 stays blocked. I did not verify beyond this delta."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 23 |     }
+[error]      | ^^^^^
+[error] > 24 |   ],
+[error]      | ^^^^
+[error] > 25 |   "evidence": {
+[error]      | ^^^^^^^^^^^^^^^
+[error] > 26 |     "authorization_json": {
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 27 |       "diff": "Exactly one leaf changed: /sources[19]/sha256 for backend/app/tests/e2e/portal-routes.e2e.spec.ts, d384482a… → 6291e988…. The set of leaf keys is identical; every other leaf value is identical to HEAD.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 28 |       "new_hash_matches_file": "sha256(backend/app/tests/e2e/portal-routes.e2e.spec.ts) at the working tree and at HEAD = 6291e988bed990fe34cde84cba4847b96c1d26e3a115c08b4a5eb2281c704ca5. The test file is unchanged since HEAD.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 29 |       "old_hash_provenance": "d384482a… equals the file at a3400902~1. The stale digest was introduced when the F3 fixture commit a3400902 changed the test without regenerating the export.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 30 |       "all_source_hashes": "Recomputed all 373 path/sha256 pairs against the working tree: 0 mismatches, 0 missing.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 31 |       "semantics": "Populations, permissions, controls and pending items are unchanged (no other leaf differs). Witness population: total 1139 = 1004 policy + 6 public + 121 mock + 8 fixture, 0 other, 0 unresolved.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 32 |       "exporter_check_rerun_by_reviewer": "node tools/security/check-security-exports.mjs with the three explicit native bodies → PASS, exit 0."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 33 |     },
+[error]      | ^^^^^^
+[error] > 34 |     "evidence_chain": {
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 35 |       "R-0041.jsonl": "The original 29806 bytes are a strict byte prefix (cmp reports EOF on the original). One line was appended, with sequence 8.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 36 |       "chain.json": "This file is a JSON document with a rewritten 'head' field, so a byte prefix is not possible by design. Structurally: the only top-level keys are head and records; the original 201 records are identical to new records[0:201]; one record was appended (sequence 202). previous_hash = previous_run_hash = old head f3009fda… = old last manifest_hash. New head = 74ab3ada… = new record's manifest_hash.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 37 |       "proof_anchor": "proof_sha256 43e83d7d… equals sha256 of the appended JSONL line (without the newline).",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 38 |       "payload_vs_input": "The appended payload is deep-equal to the report's evidence-input.json. The recorded invocation is 'devai evidence record --kind generic --round R-0041 --as-role architect --write', exitCode 0.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 39 |       "verify": "devai evidence verify --scope chain → 'valid; 114 proof lines anchored; 53 historical gap acknowledged; head 74ab3ada…'.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 40 |       "legacy_and_other_state": "git status shows only the three tracked files modified. .devai/state/evidence-chain.json (legacy), tasks, thresholds and closed rounds are all unchanged."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 41 |     },
+[error]      | ^^^^^^
+[error] > 42 |     "report_manifest": "manifest.json lists exactly the 20 other files in the directory (set-equal, excluding itself). All 20 SHA-256 values match.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 43 |     "observations_authenticity": {
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 44 |       "native_receipt": "successful-native-receipt.json is byte-identical to .devai/state/check-cache/v1/receipts/69af916b….json. Its filename hash equals its manifest hash. The receipt binds commit 771d6c0c, tree 2f1303ab, profile rc, and resultDigest 6204768d.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 45 |       "native_result": "successful-native-result.json hashes to 6204768d…, which matches the receipt and the cached results/6204768d….json. It records status PASS for backend-kernel.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 46 |       "export_recovery": "prepare-export-failure.json records exit 1, ARTIFACT_SYMLINK_ESCAPE, backend_passed=true, bundle_published=false. export-publish-recovery.json records the official export resumed on the same receipt and controls (controls_equal_canonical=true) using physical key paths. It contains verifier_status 'in_progress' at that moment. That is preserved as-is rather than upgraded after the fact, which counts as an authentic observation.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 47 |       "publish": "The protected tag devai-local-evidence/2f1303ab… points to annotated tag 3ac1d768. The bundle hashes include results/6204768d…. The publish log shows ok/published for candidate 771d6c0c.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 48 |       "verifier": "candidate-verifier-success.json is run 39674482673, conclusion success. verification-summary.json records verdict pass, binding exact-commit, candidate and evidence commit 771d6c0c, tree 2f1303ab.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 49 |       "foundation_failure": "foundation-failed.log records run 39674634207 failing with 'Stale source digest: backend/app/tests/e2e/portal-routes.e2e.spec.ts', exit 1. The check was not relaxed.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 50 |       "inventory_generation": "security-inventory-regeneration.log covers seven kinds: api, coverage, data_handling, data_model, dep_graph, rbac, routes. Aggregate readiness_status=review, native exit_code=1, kept as is. The harness line reads 'Complete inventory body generation admitted for 771d6c0c…; original native readiness=REVIEW … not a native PASS or readiness approval'.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 51 |       "exporter_tests": "security-exports-tests.log reports tests 68, pass 68, fail 0, skipped 0. security-exports-recheck.log reports PASS."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 52 |     },
+[error]      | ^^^^^^
+[error] > 53 |     "distinction_prior_vs_final": "README.md, regeneration-witness.json and the proof payload all attribute the backend RC PASS, the export and publish, and verifier 39674482673 to the prior tree 2f1303ab (commit 771d6c0c). They explicitly say these do not attest the corrected catalogue ('Esses resultados se referem à árvore anterior, não atestam a correção deste catálogo'). They set readiness_promoting=false and full_43_recomputed=false. No altered verdicts were found."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 54 |   },
+[error]      | ^^^^
+[error] > 55 |   "rationale": "The delta does what it claims: it regenerates exactly one stale source digest so that it matches the unchanged, previously reviewed F3 test file. It changes no authorization semantics, populations or other hashes, and the exporter check passes again when I re-run it. Both evidence files keep their original history. The JSONL is a strict byte prefix. chain.json keeps its records as a prefix, with only head advanced, which is inherent to its format. The new link verifies. The copied receipt, result and recovery artefacts are byte-identical to, or digest-consistent with, the local cache and published bundle. They are kept as observations of the earlier candidate, including failures and in-progress states.",
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 56 |   "not_claimed": "This is a source-delta review only. It is not a fresh full RC, not a native-readiness approval, and not a verifier result for the changed tree. The changed tree still needs its own original RC/export/publish, an independent official verifier on the exact commit, all required CI checks green, a normal merge, and main exact-tree verification. The prior source hashes, receipts and verifier metadata describe the earlier tree, not this candidate. C6 was not opened, retried, reformulated, reviewed or executed. It remains blocked, and no bypass is recommended."
+[error]      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error] > 57 | }
+[error]      | ^
+[error] > 58 | ```
+[error]      | ^^^
+[error]   59 |
+bridge: saída do reviewer não é JSON válido: /Volumes/Development/runtimes/devai/config/evidence/detran/post214-main-20261021/candidate-771d6c0c/export-delta-review.json

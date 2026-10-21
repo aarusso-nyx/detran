@@ -1,0 +1,74 @@
+{
+  "candidate": "68d5c2a20d9c760831a3c2d0422c2b2968b87502",
+  "observations": 20,
+  "distinct_sensor_kinds": 10,
+  "canonical_counts": {
+    "fail": 3,
+    "review": 3,
+    "pass": 4
+  },
+  "nine_baseline_comparison": [
+    {
+      "kind": "spec_security_coverage",
+      "worktree_status": "review",
+      "canonical_status": "review",
+      "metrics_equal": true
+    },
+    {
+      "kind": "spec_robustness_targets",
+      "worktree_status": "pass",
+      "canonical_status": "pass",
+      "metrics_equal": true
+    },
+    {
+      "kind": "harness_coherence",
+      "worktree_status": "review",
+      "canonical_status": "review",
+      "metrics_equal": true
+    },
+    {
+      "kind": "harness_security",
+      "worktree_status": "pass",
+      "canonical_status": "pass",
+      "metrics_equal": true
+    },
+    {
+      "kind": "harness_idiomaticity",
+      "worktree_status": "review",
+      "canonical_status": "review",
+      "metrics_equal": true
+    },
+    {
+      "kind": "docs_drift",
+      "worktree_status": "pass",
+      "canonical_status": "pass",
+      "metrics_equal": true
+    },
+    {
+      "kind": "decision_record_integrity",
+      "worktree_status": "fail",
+      "canonical_status": "fail",
+      "metrics_equal": true
+    },
+    {
+      "kind": "round_record_integrity",
+      "worktree_status": "fail",
+      "canonical_status": "fail",
+      "metrics_equal": true
+    },
+    {
+      "kind": "archive_immutability",
+      "worktree_status": "pass",
+      "canonical_status": "pass",
+      "metrics_equal": true
+    }
+  ],
+  "citations": {
+    "worktree_findings": 5,
+    "canonical_findings": 3,
+    "ignored_derived_files": 2,
+    "both_native_verdicts": "fail"
+  },
+  "selection": "All valid readings from both populations retained; no changed thresholds, input declarations or native verdict rules.",
+  "full_43_recomputed": false
+}

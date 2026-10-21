@@ -1,0 +1,56 @@
+{
+  "verdict": "fail",
+  "confidence": 0.93,
+  "rationale": "Read-only review at HEAD 68d5c2a20d9c760831a3c2d0422c2b2968b87502. The idea fits C7 harness-correction scope: it changes only test fixtures, with no product code, retries, timeouts, assertions or C6 changes, and the supertest reasoning holds. But the plan as written would break two of the nine callers every time. portal-payload-lint.e2e.spec.ts:107 runs `await app.listen(0, '127.0.0.1')` and portal-stream.e2e.spec.ts:254 runs `await app.listen(0)`, both on the app that createPortalApp returns. @nestjs/core 11.2.1 NestApplication.listen (nest-application.js:174-208) has no already-listening guard: it calls httpAdapter.listen, Node's http.Server.listen throws ERR_SERVER_ALREADY_LISTEN (checked locally), and that throw becomes a rejection. If the fixture already called listen, both files' beforeAll would fail with that error. The requirement that 'all nine callers remain covered by complete original RC/CI' and the limit of 'only the two F3 files' cannot both hold. Implementation needs an adjusted scope first.",
+  "findings": [
+    {
+      "severity": "blocker",
+      "file": "backend/app/tests/e2e/portal-payload-lint.e2e.spec.ts",
+      "line": 107,
+      "summary": "This caller already calls app.listen(0,'127.0.0.1') on the createPortalApp result. A second listen on an already-listening server throws ERR_SERVER_ALREADY_LISTEN.",
+      "failure_scenario": "After the support change, beforeAll rejects every time, so every test in the file fails. This is a regression caused by this change, not a main-baseline failure."
+    },
+    {
+      "severity": "blocker",
+      "file": "backend/app/tests/e2e/portal-stream.e2e.spec.ts",
+      "line": 254,
+      "summary": "Same double listen (app.listen(0)) right after createPortalApp, at lines 250-254.",
+      "failure_scenario": "The beforeAll rejects with ERR_SERVER_ALREADY_LISTEN and the whole SSE suite fails."
+    },
+    {
+      "severity": "adjustment",
+      "file": "backend/app/tests/e2e/portal-e2e.support.ts",
+      "line": 558,
+      "summary": "Pick one remediation and get it authorized. (a) Preferred: widen the scope to 4 files and delete the now-redundant listen calls in portal-payload-lint:107 and portal-stream:254. portal-stream already reads the port from getHttpServer().address() and connects to host '127.0.0.1' (line 115), so the fixture's loopback bind is compatible. Also update the doc comment at portal-stream:33 that describes the app.listen(0) pattern. (b) Alternative: an opt-in fixture option such as { listen: true }, used only by portal-routes. That keeps the two-file scope, but the stable-listener contract then covers one caller, and the other seven keep the per-request start/stop. Do not patch around it with a wrapper that turns a second app.listen into a no-op; that would hide double ownership.",
+      "failure_scenario": "Without one of these, the 'two F3 files only' limit and full-RC green on all nine callers contradict each other."
+    },
+    {
+      "severity": "adjustment",
+      "file": "backend/app/tests/e2e/portal-e2e.support.ts",
+      "line": 579,
+      "summary": "The listen-failure cleanup must rethrow the original listen error even if app.close() also throws: wrap close in try/catch and rethrow the listen error, or throw an AggregateError. Do not let a close error replace it or be swallowed.",
+      "failure_scenario": "An EADDRNOTAVAIL from listen gets hidden by a secondary close error, or a successful close makes the setup failure look resolved."
+    },
+    {
+      "severity": "info",
+      "file": "node_modules/.pnpm/supertest@7.2.2/node_modules/supertest/lib/test.js",
+      "line": 63,
+      "summary": "Confirmed: serverAddress only sets _server = app.listen(0) when address() is null, and end() only closes _server. With a server that is already listening, supertest neither starts nor closes it, so the 'eliminates per-request start/stop' claim holds. As noted, this does not prove the socket hang up root cause.",
+      "failure_scenario": "n/a"
+    },
+    {
+      "severity": "info",
+      "file": "backend/app/tests/e2e/portal-routes.e2e.spec.ts",
+      "line": 556,
+      "summary": "RED is deterministic. With the unchanged helper, server.listening is false and address() is null, so the precondition fails before any of the three requests. No push_subscription row is written. The rest of the file and the afterAll app.close() teardown are unaffected. Keep the three requests and their status, DB and code assertions byte-identical, and add only the pre/post listener assertions. For the post check, compare the exact family, address and port captured before the requests.",
+      "failure_scenario": "n/a"
+    },
+    {
+      "severity": "info",
+      "file": "backend/app/tests/e2e/portal-national-unavailable.e2e.spec.ts",
+      "line": 101,
+      "summary": "The second app created inside test C-4-57 will now also listen. It is already closed in finally (line 147-148), so no listener leaks. boat-projections, portal-journeys, portal-manifestation-tenant-isolation, portal-national-mock and portal-requests only use request(app.getHttpServer()) plus app.close(), so they are compatible, but their behaviour changes and they still need the complete RC run.",
+      "failure_scenario": "n/a"
+    }
+  ]
+}

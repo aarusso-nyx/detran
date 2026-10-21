@@ -1,0 +1,37 @@
+{
+  "verdict": "pass",
+  "confidence": "high",
+  "findings": [
+    {
+      "severity": "low",
+      "file": "record/proofs/work/generic/R-0041.jsonl",
+      "path": "line sequence 8 payload; record/proofs/chain.json records[201].artifacts",
+      "reason": "Unlike sequences 5 and 6, the new proof line has no artifacts array, and the chain record has artifacts: []. The proof therefore does not hash-bind the report manifest.json or law/security/authorization.json. The report manifest does hash every other report file, and git custody covers the rest. Integrity holds, but the provenance binding is weaker than in prior lines. Non-blocking."
+    },
+    {
+      "severity": "low",
+      "file": "record/proofs/work/generic/R-0041.jsonl",
+      "path": "payload.remaining_gates",
+      "reason": "remaining_gates names 'fresh original RC and signed proof for final tree', green required PR CI, and normal merge plus the main exact-tree verifier. It does not list the independent official verifier for the final candidate as its own gate, although README.md and regeneration-witness.json.required_next do. The wording is incomplete but not wrong. Non-blocking."
+    },
+    {
+      "severity": "info",
+      "file": "record/proofs/chain.json",
+      "path": "records[201].context.git.dirty_files",
+      "reason": "dirty_files leaves out manifest.json and evidence-record-invocation.json. This is consistent with both files being written after the record call (mtime 18:01). It is an ordering observation, not tampering."
+    }
+  ],
+  "checks": {
+    "authorization_delta": "git diff shows exactly 1 line changed: the portal-routes.e2e.spec.ts sha256 goes from d384482a… to 6291e988…. The actual file hash at HEAD and in the worktree is 6291e988…, and the file is unchanged since HEAD. No other hash, population, permission or control line differs.",
+    "history_prefix": "R-0041.jsonl at HEAD (29806 bytes) is a byte-exact prefix of the current file. In chain.json, records[0..200] are deep-equal to HEAD. The only other change is the head pointer, which must change on an append. The new record's previous_hash and previous_run_hash equal the old head f3009fda…, its sequence is 202 and proof_sequence is 8. Its proof_sha256 43e83d… equals the sha256 of the new line, the same convention as the prior record (50b529db…). The new line's previous_line_hash matches line 7's line_hash.",
+    "unchanged_tracked": "git status shows only the 3 modified files plus the new report directory. .devai (including legacy evidence-chain.json and thresholds), all other work/rounds content and closed rounds are unchanged against HEAD.",
+    "chain_verify": "devai evidence verify --scope chain: valid; 114 proof lines anchored; 53 historical gap acknowledged; head 74ab3ada… matches chain.json head.",
+    "exporter_check": "Re-ran check-security-exports.mjs with the three native bodies (api-map, data-model, data-model-pii) using the CI ci.yml:238 arguments: PASS, exit 0.",
+    "exporter_tests": "Re-ran security:exports:test: 68 tests, 68 pass, 0 fail, 0 skipped.",
+    "inventory_regeneration": "The log records full body generation admitted for 771d6c0c with native readiness=REVIEW and native exit=1 preserved, and states explicitly that this is not a native PASS. The witness records tree 2f1303ab, which equals git rev-parse HEAD^{tree}.",
+    "report_manifest": "All 20 files other than manifest.json match their manifest sha256. The manifest lists no extra entries and does not list itself.",
+    "observations_authentic": "prepare-export-failure.json records ARTIFACT_SYMLINK_ESCAPE with backend_passed true and bundle_published false. export-publish-recovery.json reuses the same receipt and native_result status PASS, with controls_equal_canonical true. It shows verifier_status in_progress as a point-in-time snapshot; candidate-verifier-success.json later shows pass/exact-commit for 771d6c0c. foundation-failed.log preserves the real CI failure 'Stale source digest'. No verdict was altered. These results are correctly attributed to the prior tree.",
+    "evidence_distinction": "README, witness and proof line agree: the earlier RC and verifier run 39674482673 attest 771d6c0c only, and the corrected catalogue needs a fresh RC, export, publish, independent verifier, green required CI, and normal merge plus main exact-tree verification. readiness_promoting=false, full_43_recomputed=false, C6_native_activation=false."
+  },
+  "limitations": "This is a narrow source-delta review only. It is not a fresh full RC, an official verifier run, CI, or readiness approval for the changed tree. The final tree still requires the original RC, an independent official verifier, all required green CI, and normal merge with main exact-tree verification. CI and verifier run outcomes (39674482673, 39674634207) were taken from the preserved report files, not re-fetched from GitHub. The native inventory sensor was not re-run; only the generated bodies already on disk were re-checked. C6 protocol material was not opened, reviewed or executed. C6 status (blocked, native extra bindings empty) was confirmed only from preserved records and from the fact that no tracked governance files changed. Prior source hashes and metadata are historical and do not represent this candidate."
+}

@@ -1,0 +1,64 @@
+{
+  "classification": "sourced-gap-inventory-not-native-reading-or-legal-decision",
+  "candidate": "68d5c2a20d9c760831a3c2d0422c2b2968b87502",
+  "source": {
+    "path": "law/security/pii-registry.json",
+    "sha256": "a7d6b9696cff08239c1a18c01f09e8edeb8d513b5f825e7a3f989eab337202c6"
+  },
+  "population": {
+    "sql_tables": 363,
+    "sql_columns": 4122,
+    "native_candidates": 70,
+    "blueprint_fields": 158,
+    "blueprint_matched_native": 17,
+    "blueprint_outside_native_heuristic": 141,
+    "known_field_union": 211,
+    "blueprint_without_sql": 0,
+    "state_candidates": 21,
+    "cnpj_candidates": 8,
+    "pending_fields": 211
+  },
+  "field_status_counts": {
+    "classification_status": {
+      "pending": 53,
+      "source-declared": 158
+    },
+    "processing_purpose": {
+      "pending": 211
+    },
+    "legal_basis": {
+      "pending": 211
+    },
+    "retention": {
+      "pending": 73,
+      "source-declared-not-operationally-validated": 134,
+      "source-declared-review-indefinite": 4
+    }
+  },
+  "known_gaps": [
+    "Only fields recognized by native heuristics or explicit blueprint PII metadata are included; free-text/JSON/linkability requires separate review.",
+    "Native CREATE TABLE static inventory has parser limitations and is not proof of the complete migrated database.",
+    "A blueprint retention parameter or literal is a source claim, not proof of operational deletion or legal sufficiency.",
+    "DEVAI 2.6.3 does not consume this JSON registry. Native readings remain separate."
+  ],
+  "native_contract": {
+    "sensor": "spec_security_coverage",
+    "required_SQL_literal": "INSERT INTO core.pii_map",
+    "declaration_roots": [
+      "backend/database/ddl",
+      "senatran-mock/database/ddl"
+    ],
+    "JSON_crosswalk_is_not_consumed": true
+  },
+  "next_actions": [
+    {
+      "owner": "Architect and Owner/DPO",
+      "action": "Resolve existing per-field source questions; retain unknowns until authentic classification, purpose, legal basis and retention sources exist."
+    },
+    {
+      "owner": "Architect",
+      "action": "Evaluate a separately reviewed provider representation for sourced metadata; do not introduce dummy SQL or a second compliance authority."
+    }
+  ],
+  "no_product_or_legal_changes": true
+}

@@ -9,6 +9,8 @@ the others.
   historical bytes and native failures remain preserved.
 - [C5–C8 continuation](c5-c8-continuation.md) — current scoped measurements,
   remaining dependencies and a non-executable C6 escalation proposal.
+- [Post-PR214 verification](c5-c7-c8-post214-verification.md) — source-population
+  witnesses, failed main attestation attempts and the bounded C7 fixture correction.
 
 ## LGPD
 

@@ -104,7 +104,6 @@ beforeAll(async () => {
   await seedLocalParameters(client);
   await resetLocalPortalRows(client);
   app = await createPortalApp();
-  await app.listen(0, '127.0.0.1');
   subjects.prata = await subjectIdOf(app, prata);
   subjects.bronze = await subjectIdOf(app, bronze);
   subjects.ouro = await subjectIdOf(app, ouro);

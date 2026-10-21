@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--input",
+    "/Users/aarusso/.config/devai/evidence/detran/post214-main-20261021/c8-citations/decision_citation_resolution.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T19:52:29.075107+00:00",
+  "finished_at": "2026-10-21T19:52:29.887099+00:00",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.devai/state/sensor-readings/decision_citation_resolution/SR-76aaeea5adb4f088.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-76aaeea5adb4f088\",\"sensor\":{\"name\":\"decision_citation_resolution\",\"kind\":\"decision_citation_resolution\"},\"timestamp\":\"2026-10-21T19:34:43.684Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense run decision_citation_resolution\",\"command_hash\":\"190a76c829ea0a34b275ccd66b08f17ca72a9660de52094fa2b16d072a2faa9b\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"law/schemas/adr-validation-policy.schema.json cites missing ADR-014.\",\"file\":\"law/schemas/adr-validation-policy.schema.json\"},{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"law/schemas/adr.schema.json cites missing ADR-014.\",\"file\":\"law/schemas/adr.schema.json\"},{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"docs/meta/security/historical-compatibility.md cites missing ADR-014.\",\"file\":\"docs/meta/security/historical-compatibility.md\"},{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"docs/site/build/assets/js/ecbc7d1d.2a5342c1.js cites missing ADR-014.\",\"file\":\"docs/site/build/assets/js/ecbc7d1d.2a5342c1.js\"},{\"severity\":\"error\",\"code\":\"DECISION_CITATION_UNRESOLVED\",\"message\":\"docs/site/docs/meta/security/historical-compatibility.md cites missing ADR-014.\",\"file\":\"docs/site/docs/meta/security/historical-compatibility.md\"}],\"metrics\":{\"finding_count\":5}}}}}\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}

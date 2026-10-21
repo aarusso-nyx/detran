@@ -1,0 +1,27 @@
+{
+  "source_candidate": "771d6c0c7680c87859c7ba40ff19d3209b9248ba",
+  "source_tree": "2f1303ab10f22e87cbec23c0b1248d3a6cb52729",
+  "failing_check": "foundation",
+  "run": 39674634207,
+  "failure": "Stale source digest: backend/app/tests/e2e/portal-routes.e2e.spec.ts",
+  "regeneration": "pnpm exec tsx tools/security/export-authorization.ts --api-map .devai/state/sensors/inventory_api/api-map.json --output law/security/authorization.json",
+  "changed_source": "backend/app/tests/e2e/portal-routes.e2e.spec.ts",
+  "before_sha256": "d384482ad84b7344b21ef9ea7c35704843c2253b4551917158373ae37723e1f2",
+  "after_sha256": "6291e988bed990fe34cde84cba4847b96c1d26e3a115c08b4a5eb2281c704ca5",
+  "semantic_crosswalk_equal_after_replacing_sources": true,
+  "other_sources_identical": true,
+  "population": {
+    "total": 1139,
+    "application_policy": 1004,
+    "application_public": 6,
+    "mock": 121,
+    "test_fixture": 8,
+    "other": 0,
+    "unresolved_application": 0
+  },
+  "native_inventory_readiness": "REVIEW, preserved; not promoted to PASS",
+  "native_C6_activation": false,
+  "full43_recomputed": false,
+  "readiness_promoting": false,
+  "required_next": "Fresh official RC/export/publish/verifier for final changed tree, green required PR checks, normal merge, main exact-tree verifier."
+}

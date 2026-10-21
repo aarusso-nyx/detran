@@ -576,6 +576,19 @@ export async function createPortalApp(
     abortOnError: false,
   });
   await app.init();
+  try {
+    await app.listen(0, '127.0.0.1');
+  } catch (listenError) {
+    try {
+      await app.close();
+    } catch (closeError) {
+      throw new AggregateError(
+        [listenError, closeError],
+        'Portal E2E listener setup and cleanup failed',
+      );
+    }
+    throw listenError;
+  }
   return app;
 }
 

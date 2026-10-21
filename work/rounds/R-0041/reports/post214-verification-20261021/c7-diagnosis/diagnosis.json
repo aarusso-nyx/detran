@@ -1,0 +1,131 @@
+{
+  "classification": "external-instrumented-source-diagnosis-not-native-reading",
+  "candidate": "68d5c2a20d9c760831a3c2d0422c2b2968b87502",
+  "provider": "@aarusso-nyx/devai 2.6.3",
+  "native_status": "review",
+  "source_workflow": ".github/workflows/ci.yml",
+  "source_sha256": "a1cc976d92c44dcb9a356f1e628ead6615f4e0530fcca27e87ae68bda9f99bc9",
+  "observed_group": "${{ github.workflow }}-${{ github.ref }}",
+  "observed_cancel_in_progress": true,
+  "jobs": [
+    {
+      "job": "evidence-gate",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": true,
+      "first_step_metadata_refusal": {
+        "stepIndex": 3,
+        "fields": [
+          "name",
+          "env",
+          "run"
+        ],
+        "envKeys": [
+          "NODE_AUTH_TOKEN"
+        ],
+        "metadataAdmitted": false
+      }
+    },
+    {
+      "job": "invariant-producers",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": false,
+      "first_step_metadata_refusal": null
+    },
+    {
+      "job": "foundation",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": true,
+      "first_step_metadata_refusal": {
+        "stepIndex": 4,
+        "fields": [
+          "name",
+          "env",
+          "run"
+        ],
+        "envKeys": [
+          "NODE_AUTH_TOKEN"
+        ],
+        "metadataAdmitted": false
+      }
+    },
+    {
+      "job": "backend-kernel-full",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": "job-condition-not-admitted",
+      "workflow_metadata_admitted": null,
+      "job_metadata_admitted": null,
+      "first_step_metadata_refusal": null
+    },
+    {
+      "job": "boat-documents-real",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": true,
+      "first_step_metadata_refusal": {
+        "stepIndex": 4,
+        "fields": [
+          "name",
+          "env",
+          "run"
+        ],
+        "envKeys": [
+          "NODE_AUTH_TOKEN"
+        ],
+        "metadataAdmitted": false
+      }
+    },
+    {
+      "job": "senatran-mock",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": true,
+      "first_step_metadata_refusal": {
+        "stepIndex": 3,
+        "fields": [
+          "name",
+          "working-directory",
+          "run"
+        ],
+        "envKeys": [],
+        "metadataAdmitted": false
+      }
+    },
+    {
+      "job": "senatran-mock-tests",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": false,
+      "first_step_metadata_refusal": null
+    },
+    {
+      "job": "stack-smoke",
+      "diagnostic_effect": "unknown",
+      "source_condition_refusal": null,
+      "workflow_metadata_admitted": true,
+      "job_metadata_admitted": true,
+      "first_step_metadata_refusal": {
+        "stepIndex": 3,
+        "fields": [
+          "name",
+          "env",
+          "run"
+        ],
+        "envKeys": [
+          "NODE_AUTH_TOKEN"
+        ],
+        "metadataAdmitted": false
+      }
+    }
+  ],
+  "conclusion": "Concurrency declaration is recognized. Unproved job effects prevent the coherence predicate from holding; the generic diagnostic does not identify a missing literal group. This is not a security authorization or a provider fix.",
+  "next_action": "Separate bounded provider/source-projection review of authentic metadata and transitive effects; retain fail-closed unknown classification until validated. Do not remove services, credentials, job needs or tests to satisfy the sensor."
+}

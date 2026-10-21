@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/Users/aarusso/.nvm/versions/node/v24.15.0/bin/node",
+    "/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/node_modules/.pnpm/@aarusso-nyx+devai@2.6.3/node_modules/@aarusso-nyx/devai/dist/runtime/index/bin.js",
+    "sense",
+    "run",
+    "spec_security_coverage",
+    "--repo-root",
+    "/Users/aarusso/.config/devai/evidence/detran/post214-main-20261021/citation-clean-clone",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T19:38:42.780669+00:00",
+  "finished_at": "2026-10-21T19:38:43.485790+00:00",
+  "exitCode": 1,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"spec_security_coverage\"},\"members\":[{\"kind\":\"spec_security_coverage\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"spec_security_coverage\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"review\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":1,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run spec_security_coverage\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"spec-security-coverage\\\",\\\"kind\\\":\\\"spec_security_coverage\\\"},\\\"timestamp\\\":\\\"2026-10-21T19:38:43.358Z\\\",\\\"status\\\":\\\"review\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-spec-security-coverage\\\",\\\"command_hash\\\":\\\"16dea51ec07b7477c4c4ca65b9f7fc90fe8fa63bf79b92be28f52777e37b065c\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"SPEC_SECURITY_NO_PII_REGISTRY\\\",\\\"message\\\":\\\"No `INSERT INTO core.pii_map` row found across migration dirs: backend/database/ddl, senatran-mock/database/ddl\\\"}],\\\"metrics\\\":{\\\"threat_model_present\\\":1,\\\"pii_registry_present\\\":0,\\\"rbac_invariant_present\\\":1,\\\"signals_present\\\":2},\\\"id\\\":\\\"SR-a60884c7aa08b3e0\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":1}]}}}\n",
+  "stderr": ""
+}

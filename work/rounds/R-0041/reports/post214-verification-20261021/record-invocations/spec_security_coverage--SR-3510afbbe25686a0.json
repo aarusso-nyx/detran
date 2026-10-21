@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--input",
+    "/Users/aarusso/.config/devai/evidence/detran/post214-main-20261021/readings/spec_security_coverage.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T19:52:19.577296+00:00",
+  "finished_at": "2026-10-21T19:52:22.775108+00:00",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.devai/state/sensor-readings/spec_security_coverage/SR-3510afbbe25686a0.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"spec-security-coverage\",\"kind\":\"spec_security_coverage\"},\"timestamp\":\"2026-10-21T18:50:50.160Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-spec-security-coverage\",\"command_hash\":\"16dea51ec07b7477c4c4ca65b9f7fc90fe8fa63bf79b92be28f52777e37b065c\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"SPEC_SECURITY_NO_PII_REGISTRY\",\"message\":\"No `INSERT INTO core.pii_map` row found across migration dirs: backend/database/ddl, senatran-mock/database/ddl\"}],\"metrics\":{\"threat_model_present\":1,\"pii_registry_present\":0,\"rbac_invariant_present\":1,\"signals_present\":2},\"id\":\"SR-3510afbbe25686a0\"}}}}\n",
+  "stderr": "\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n\u2009WARN\u2009 Issue while reading \"/Volumes/Development/.codex/worktrees/r0041-main-attestation/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n"
+}
