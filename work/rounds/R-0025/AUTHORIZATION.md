@@ -263,3 +263,16 @@ Owner also explicitly approved both exact runtime-extension packets on2026-10-21
 (recomendado)”. Exact packet/diff hashes and exclusions are preserved in
 reports/S2-execution/CI-2026-10-21/approved-runtime-extensions.json. This is bounded
 path/behavior authority only; no renewed blanket delegation, third review or merge.
+
+### PR211 JW01 test-app limiter extension — Owner, 2026-10-21
+
+Owner answered “Aprovar extensão limitada (recomendado)” to the exact
+pr211-JW01-rate-isolation-approval.md packet and adjacent proposed diff.
+Inspector ownership extends only to the existing
+backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts: test-app capacity10000,
+guaranteed restoration, actual PostgreSQL window proof and unchanged PEC rate
+controls. Production120, all50 business controls, budgets, runtime and guards
+stay unchanged. Packet hashes and conditions are retained in
+reports/S2-execution/pr211-JW01-rate-isolation-owner-approval.json.
+This does not renew blanket delegation or authorize merge, additional delivery
+review, broader performance changes, proof-chain edits or scorecard promotion.

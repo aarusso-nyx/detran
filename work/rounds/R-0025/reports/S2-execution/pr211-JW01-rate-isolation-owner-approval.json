@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-21",
+  "authority": "Owner direct async reply",
+  "answer": "Aprovar extens\u00e3o limitada (recomendado)",
+  "scope": [
+    "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts"
+  ],
+  "approvedPackets": {
+    "pr211-JW01-rate-isolation-approval.md": "f1a964899d639b87792b3762d6d7d075f5cd53ee3fdbdee4d609e8b756e4adc7",
+    "pr211-JW01-rate-isolation-PROPOSED.patch": "c01838d8ede69866c2fbe59decbedba2e2ca8d12c6276d2e9711272d2021b1ea"
+  },
+  "conditions": [
+    "capacity10000 only during this test app lifetime",
+    "guaranteed restoration even cleanup failure",
+    "real PostgreSQL window exercised",
+    "original50 business controls unchanged",
+    "unchanged PEC limiter controls under original environment",
+    "production120, budgets, populations, guards and runtime unchanged"
+  ],
+  "excluded": [
+    "merge",
+    "new delivery review",
+    "further performance optimization",
+    "manual proof-chain repair",
+    "scorecard work"
+  ]
+}
