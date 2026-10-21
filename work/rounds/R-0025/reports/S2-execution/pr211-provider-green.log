@@ -1,0 +1,58 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-21 12:53:46.866 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-292d-71fc-94ae-e946da4a8b60"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 324
+[2026-10-21 12:53:46.957 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2a76-72a7-86ae-3ebf876f82a4"
+    route: "/v1/inf/rait/cases/6e51bf1b-b368-423b-b5f1-accf567da9c6/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 87
+[2026-10-21 12:53:47.009 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2acf-7205-bdee-b560495a523c"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 50
+[2026-10-21 12:53:47.065 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2b02-7caa-ba85-d1902e767ef0"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 55
+[2026-10-21 12:53:47.116 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2b3b-71a5-bd9d-4bd88ba7d2bb"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 49
+[2026-10-21 12:53:47.160 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2b6e-760a-ad75-0c8c82523af3"
+    route: "/v1/inf/rait/cases/6e51bf1b-b368-423b-b5f1-accf567da9c6/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 42
+[2026-10-21 12:53:47.642 -0300] INFO (78718): request completed
+    request_id: "01a15f2b-2c60-7442-b1f2-3aba7e6997e4"
+    route: "/v1/inf/rait/cases/6e51bf1b-b368-423b-b5f1-accf567da9c6/risk"
+    method: "GET"
+    status: 200
+    duration_ms: 282
+PROVIDER_BATCHING_PROOF {"scalarInventoryQueries":11,"actualDiscoveryCounts":{"timers":1,"parameters":1,"alerts":1,"incidents":1},"totalActualQueries":233,"totalActualQueryMs":236.54890900001556,"qualifyCalls":12,"policyCalls":1,"scalarDigest":"sha256:6d2aa4dea325e44a942167805d965376b60e961fb6b0b5ad30ed62dbeb8d9050"}
+S2_ASSERTIONS {"test":"approved provider inventory batching preserves frozen scalar typed bindings and qualifications while reducing real discovery SQL","executedAssertions":185}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (125 tests | 124 skipped) 2088ms
+   ✓ approved provider inventory batching preserves frozen scalar typed bindings and qualifications while reducing real discovery SQL  1719ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 124 skipped (125)
+   Start at  12:53:33
+   Duration  14.50s (transform 9.31s, setup 0ms, import 12.29s, tests 2.09s, environment 0ms)
+
+JSON report written to /tmp/pr211-provider-green.json
