@@ -29,3 +29,23 @@ delivery remain in their original histories.
 Checks and preservation outcomes are captured additively alongside these files.
 Nothing in this capsule closes a round, resolves a product backlog item or grants
 native standing to ordinary CI logs.
+
+## Completed validation
+
+The unchanged canonical `pnpm security:history:check` completed with 47 tests
+passed, zero failures/skips/TODO in the extended capture. The original 180-second
+capture remains explicitly incomplete; neither test assertions nor their timeouts
+were changed. `law:test` passed all 56 tests. Documentation/publish checks, state
+and round indexes, installed reading-schema validation with date-time formats,
+formatter, doctor and full proof-chain verification passed.
+
+`preservation-final.json` confirms the entire original 168-record prefix within
+the 178-record chain, the prior R-0041 proof prefix and all other 6,366 protected
+file comparisons. The only changed protected paths are official append targets:
+`record/proofs/chain.json` and `record/proofs/work/generic/R-0041.jsonl`.
+
+The generic proof recorded the longer historical capture as pending at its actual
+recording time. Its payload remains unchanged; the later successful observation is
+`checks/security-history-check-extended-capture.json`. Independent delivery review
+PASS is under `../../reviews/continuation-20261021/`; it excludes technical review
+of the withheld C6 protocol. Remote checks on the new PR remain a separate gate.
