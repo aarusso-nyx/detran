@@ -19,3 +19,16 @@ old slugged files become renumber stubs. This changes identities only, not polic
 Historical source/review/receipt/proof bytes stay unchanged; both indexes retain
 main rows plus S2 canonical rows and aliases. Current coordination gets additive
 mapping only. No scorecard reference/measurement/config edits.
+
+## Actual recovery outcome — no bypass
+
+DEVAI refused the proposed historical-prefix restoration with
+PROOF_HISTORY_MODIFIED. The finally block restored the original complete JSONL
+byte-for-byte immediately; no proof line was rewritten or lost. This attempted
+route is REFUSED, not approved recovery evidence. Do not repeat it through an
+alternate checkout or internal SDK. Supported newest-line recovery for8 succeeded
+with original full bytes. Verification still fails exactly at line7, an existing
+immutable record anchored in the preserved original S2 chain. Multi-line merge
+recovery requires a supported DEVAI capability/explicit independently reviewed
+upstream repair, not a manual chain edit, historical-gap waiver or gate exception.
+This remains a merge/CI blocker and no new generic evidence is claimed.
