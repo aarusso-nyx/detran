@@ -1,0 +1,11 @@
+# Engineer R10 realization checkpoint
+
+Engineer, Constitution Article7. TASK-0042; runtime base18deaaeb. The parent accepted the independent decisive R10 RED at46f26508 before this implementation. Authority is R10/ADR0056 and the scoped Engineer prompt.
+
+Only rait-claim-context.service.ts and rait-case-command.service.ts changed. The shared selector captures one complete initial potential universe (pool/member eligibility, CASE identities/state/version and actual route/batch inventories), acquires the existing ordered R7 parents/children, and qualifies the frozen set once. It then executes one fresh nonlocking statement with the same complete projection/predicates. Exact canonical envelope mismatch throws existing RAIT.RISK_SOURCE_UNAVAILABLE503 with no context; no new parent is locked, no retry is invented, and no command write precedes the fence. The defense command no longer performs the second expanding locking pass. Context and defense claim share this composition; the ordinary JARI/CETRAN branch is unchanged.
+
+When the final envelope is equal and consumed source predicates/inventories are protected, the final statement snapshot is the selector linearization point. Later arrivals are concurrent later work. This is not a global queue freeze, serializable isolation or universal freshness claim. Relevant competing/latest/unique source inventories retain their own concurrency/authority requirements; unrelated appends do not invalidate an exact named immutable audit binding.
+
+CASE typecheck PASS (exit0); Prettier on the two owned files PASS. No database, HTTP or new test execution occurred: Inspector exclusively owns DB53343. Independent targeted R10 GREEN, R7 probes, full acceptance and parent checks remain pending. Graft full caller trace was attempted but the graph had no symbol; actual source search confirmed context.read and defense claim as callers. Source/test/log hashes are in the companion JSON.
+
+Authentic production provenance remains default-missing and qualified D RESET is source-blocked under R6. No S2/P4 closure, production/S3 activation or integration merge is claimed. No Git, Inspector test, canonical source, generated/dependency/config/state, scorecard, primary/sibling or other local work was edited.

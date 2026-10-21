@@ -76,3 +76,6 @@ do $$ begin
   raise exception 'Scope tables require forced tenant RLS';
  end if;
 end $$;
+
+-- S2-R5: final privilege state after DDL20 broad INF grants.
+revoke update, delete on table inf.rait_claim_legacy_qualification from role_app_backend;

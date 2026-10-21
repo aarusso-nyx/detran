@@ -1,0 +1,44 @@
+--- backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts
++++ backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts
+@@ -20,6 +20,7 @@
+ let app: INestApplication;
+ let fixture: Jw01AdmissibilityFixture;
+ let prepared = false;
++const originalRateCapacity = process.env.STYNX_RATE_LIMIT_DEFAULT;
+ const triagePath = (id = JW_CASE) => `/v1/inf/rait/cases/${id}/commands/triage`;
+ const savePath = '/v1/inf/rait/admissibility';
+ function headers(
+@@ -60,6 +61,7 @@
+ }
+ beforeAll(async () => {
+   assertDedicatedDatabaseEnvironment();
++  process.env.STYNX_RATE_LIMIT_DEFAULT = '10000';
+   process.env.DETRAN_LOCAL_TENANT_ID = RAIT_TENANT;
+   process.env.DETRAN_LOCAL_ACTOR_ID = RAIT_ACTOR;
+   fixture = new Jw01AdmissibilityFixture();
+@@ -76,11 +78,20 @@
+   prepared = true;
+ });
+ afterAll(async () => {
+-  await app?.close();
+-  if (fixture) {
+-    await fixture.cleanupForeign();
+-    if (prepared) await fixture.close();
+-    else await fixture.owner.end();
++  try {
++    try {
++      await app?.close();
++    } finally {
++      if (fixture) {
++        await fixture.cleanupForeign();
++        if (prepared) await fixture.close();
++        else await fixture.owner.end();
++      }
++    }
++  } finally {
++    if (originalRateCapacity === undefined)
++      delete process.env.STYNX_RATE_LIMIT_DEFAULT;
++    else process.env.STYNX_RATE_LIMIT_DEFAULT = originalRateCapacity;
+   }
+ });
+ 

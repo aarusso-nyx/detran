@@ -157,3 +157,122 @@ It does not approve S2 or its recommended backend-first sequencing. No S2 task
 creation, RED authoring, Engineer dispatch, implementation, merge, close/seal or
 scorecard modification follows. The proposal and closed owned paths are in
 reports/P4-02-S2-approval-packet.md and reports/P4-02-S2-owned-paths.json.
+
+## P4-02-S2 execution — Owner, 2026-10-19
+
+Direct instruction:
+
+> I approve P4-02-S2 as written, including backend-first sequencing. Check CI on PR #205, fix any failures, and merge once required checks are green. Then execute the approved slice, preserving local and scorecard work.
+
+Exact approved packet: reports/P4-02-S2-approval-packet.md and its248-path inventory,
+unchanged by main security reconciliation. PR205 merged12161d73 as2e04f29c with
+all five required checks PASS. Authorizes only S2 source→Inspector RED→Engineer→
+Inspector GREEN/review and an implementation PR. S3 UI activation, production,
+scorecard changes, this future implementation PR's merge and close/seal remain
+outside this slice. Original64-command and full-journey acceptance is retained.
+
+S1's ready/queued metadata and expired locks are preserved as recovery custody,
+not fabricated managed completion. Supported task/status inspection plus new
+explicit S2 identities/CTG/locks avoids redispatch and collision; no old managed
+worktree is released or removed. Current host boundary remains CLI-only; actual
+external role work is reported separately from managed-provider lifecycle state.
+
+### Temporary delegated Owner choices
+
+Owner instructed (Portuguese, literal):
+
+> Estarei dirigindo pelas próximas 5 horas, então até eu sinalizar que voltei ao console, assuma sempre as opções recomendadas em cada questão de OWNER que surgir nesse período.
+> Be wise. I trust you :)
+
+Authorization recorded2026-10-19T21:39:32Z, ending on return-to-console signal or
+2026-10-20T02:39:32Z, whichever comes first. Within the already authorized task,
+record each concrete Owner question, recommended choice, justification and exact
+bounds before acting. No invented legal/external fact, automatic S3/production
+expansion, gate weakening or destruction of preserved work follows. Receipt in
+reports/S2-execution/owner-delegation.json. Necessary bounded amendments may be
+adopted under this delegation with a reviewable decision record, rather than
+interrupting the Owner while driving.
+
+### S2 continuation and delegated bounded decisions — 2026-10-19
+
+Owner directed continuation, completing possible validations and opening a review
+PR while recording remaining blockers and preserving local/scorecard work. This
+continues the original delegation window; it does not restart five hours.
+
+R1–R14 in reports/S2-execution record exact adopted recommendations, owned-path
+extensions and exclusions. In particular R6 permits a reviewable executable
+remainder while qualified D RESET/S2/P4 stay OPEN; R7 and R10 add ADR0055/0056 plus
+index rows for source locking/universe consistency, R9 retains defense-only
+contention, and R8 permits exact existing security-export regeneration and
+Inspector-owned sensor calibration without scorecard promotion. No new legal
+fact, permission, source producer, production action, S3 or implementation merge.
+
+R12/ADR0057 and R13 freeze delivery-review corrections for independent policy
+provenance, owner-compatible calendar use, sorted versions and authorization
+before source contention. R14 authorizes only equivalent physical source-read
+batching in the existing port and independent fixture, plus one SQL equivalence
+control; original114 controls/complete51 populations/timeouts remain unchanged.
+No production policy, shared cursor key or DRESET rule is fabricated. Host
+resource-blocked full acceptance is reported, not converted into PASS.
+
+### S2 R15–R17 current bounded continuation — 2026-10-19
+
+The original delegation window and its early-return condition remain unchanged.
+R15–R17 continue only the recorded bounded execution/verification scope; R16
+refreshes stale current plan banners and R17 fixes discovery preauthorization in
+the originally owned claim-context service after Inspector RED. It preserves valid
+none200/choice200, scoped selected behavior, same-operation revalidation and all
+R7/R10 fences. No new runtime path, grant, error, timeout or51-case reduction.
+
+Inspector authored nine supplemental HTTP controls (census124=115+2+1+6); app
+typecheck passed, but these additions have no DB execution yet. F6 independent
+three-unit RED9dd48a80 precedes the in-progress single-path correction. The second
+valid delivery review atca83c18d remains REVIEW, resolving F1/F2/F4/F5, deferring F3
+and identifying F6. Its exhausted two-review cap authorizes no third review or
+implicit PASS. The current instruction permits only a DRAFT review PR recording
+blocked independent re-review and resource-blocked full acceptance. Older frozen
+pnpm check results cannot promote the later candidate. No implementation merge,
+S3, production qualification, scorecard action or S2/P4/JW01/R-0025 closure.
+
+## Current ADR identity mapping — PR211 reconciliation, 2026-10-21
+
+Main1115f589 retains scorecard ADR0055–0057. Historical S2 decisions are now
+canonical ADR0058 (risk-source locks), ADR0059 (candidate-universe fence) and
+ADR0060 (policy provenance/risk boundaries). Original S2 slugged paths redirect;
+accepted bodies and historical receipts/prompts/proofs remain unchanged. Bare old
+numbers in S2 checkpoints resolve by that original slug and the additive mapping
+in reports/S2-execution/CI-2026-10-21/adr-identity-mapping.md (relative to R-0025).
+This is identity reconciliation only, with no policy or completion promotion.
+
+## PR211 CI continuation — Owner,2026-10-21
+
+Direct instruction: “Verifique a CI do PR #211, corrija as falhas e conclua as
+validações pendentes. Apresente os bloqueios e as decisões necessárias antes do
+merge, preservando o trabalho local e de scorecard.” No merge authority or renewed
+blanket Owner delegation. Existing temporary delegation expired.
+
+Owner expressly approved the exact scope-only limiter extension in
+reports/S2-execution/CI-2026-10-21/scope-rate-isolation-approval.md, answering
+“Aprovar a extensão limitada (recomendado)”. One existing Inspector test path,
+capacity10000 only for that app lifetime, real limiter and production120 intact,
+guaranteed restoration. All other original source/test/gate exclusions remain.
+TEAT and provider-batching packets require their own explicit approvals.
+
+Owner also explicitly approved both exact runtime-extension packets on2026-10-21:
+“Aprovar correção TEAT limitada (recomendado)” and “Aprovar batching limitado
+(recomendado)”. Exact packet/diff hashes and exclusions are preserved in
+reports/S2-execution/CI-2026-10-21/approved-runtime-extensions.json. This is bounded
+path/behavior authority only; no renewed blanket delegation, third review or merge.
+
+### PR211 JW01 test-app limiter extension — Owner, 2026-10-21
+
+Owner answered “Aprovar extensão limitada (recomendado)” to the exact
+pr211-JW01-rate-isolation-approval.md packet and adjacent proposed diff.
+Inspector ownership extends only to the existing
+backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts: test-app capacity10000,
+guaranteed restoration, actual PostgreSQL window proof and unchanged PEC rate
+controls. Production120, all50 business controls, budgets, runtime and guards
+stay unchanged. Packet hashes and conditions are retained in
+reports/S2-execution/pr211-JW01-rate-isolation-owner-approval.json.
+This does not renew blanket delegation or authorize merge, additional delivery
+review, broader performance changes, proof-chain edits or scorecard promotion.

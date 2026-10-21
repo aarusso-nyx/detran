@@ -1,6 +1,9 @@
 import { createHash } from 'node:crypto';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
+import { RaitClaimContextService } from './rait-claim-context.service.js';
+import { RaitCaseRiskService } from './rait-case-risk.service.js';
+import { raitLockRiskRelations } from './rait-risk.port.js';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import {
@@ -8,6 +11,7 @@ import {
   createDeadlineEngine,
   isWeekend,
   StaticTimerCatalog,
+  type Calendar,
   type Deadline,
   type DeadlineEngine,
   type DeadlineEvent,
@@ -295,6 +299,27 @@ const isNonEmpty = (value: unknown): value is string =>
 export class RaitDeadlineEngineFactory {
   constructor() {}
 
+  static calendar(transaction: Tx): Calendar {
+    return {
+      isBusinessDay: async (date, tenantId) => {
+        if (isWeekend(date)) return false;
+        const holiday = rows(
+          await transaction.query(
+            `${'select id from inf.rait_holiday'} where tenant_id = $1 and holiday_on = $2 limit 1`,
+            [tenantId, date],
+          ),
+        );
+        return holiday.length === 0;
+      },
+      nextBusinessDay: async function (date: LocalDate, tenantId: string) {
+        let candidate = addCalendarDays(date, 1);
+        while (!(await this.isBusinessDay(candidate, tenantId)))
+          candidate = addCalendarDays(candidate, 1);
+        return candidate;
+      },
+    };
+  }
+
   create(
     transaction: Tx,
     operationSnapshot?: RaitOperationClockSnapshot,
@@ -356,24 +381,7 @@ export class RaitDeadlineEngineFactory {
         today: () => today(),
         now: () => new Date(),
       },
-      calendar: {
-        isBusinessDay: async (date, tenantId) => {
-          if (isWeekend(date)) return false;
-          const holiday = rows(
-            await transaction.query(
-              `${'select id from inf.rait_holiday'} where tenant_id = $1 and holiday_on = $2 limit 1`,
-              [tenantId, date],
-            ),
-          );
-          return holiday.length === 0;
-        },
-        nextBusinessDay: async function (date: LocalDate, tenantId: string) {
-          let candidate = addCalendarDays(date, 1);
-          while (!(await this.isBusinessDay(candidate, tenantId)))
-            candidate = addCalendarDays(candidate, 1);
-          return candidate;
-        },
-      },
+      calendar: RaitDeadlineEngineFactory.calendar(transaction),
       catalog: new StaticTimerCatalog(),
       store: {
         insert: async (deadline) => {
@@ -550,6 +558,8 @@ export class RaitCaseCommandService {
     private readonly deadlines: RaitDeadlineEngineFactory,
     private readonly trust: RaitDocumentTrustVerifier,
     private readonly operationClock?: RaitOperationClock,
+    @Optional() private readonly claimContext?: RaitClaimContextService,
+    @Optional() private readonly riskService?: RaitCaseRiskService,
   ) {}
 
   async protocol(input: {
@@ -813,6 +823,8 @@ export class RaitCaseCommandService {
     )
       fail('RAIT.VALIDATION_FAILED', 400);
     this.validatePayload(input);
+    if (input.command === 'claim-next' && input.headers['If-Match'])
+      fail('RAIT.VALIDATION_FAILED', 400);
     if (input.command !== 'claim-next' && !input.headers['If-Match'])
       fail('RAIT.IF_MATCH_REQUIRED', 428);
     const key = input.headers['Idempotency-Key'];
@@ -906,6 +918,19 @@ export class RaitCaseCommandService {
             digest,
           );
         return replay.response_body;
+      }
+      if (input.command === 'claim-next') {
+        const pool = rows(
+          await tx.query<{ instance: string }>(
+            'select instance from inf.rait_pool where tenant_id=$1 and id=$2',
+            [context.tenantId, input.targetId],
+          ),
+        )[0];
+        if (pool?.instance === 'defesa_previa') {
+          // ADR-0055/S2-R9: source locks precede defense pool serialization only.
+          await raitLockRiskRelations(tx);
+          return this.claimDefense(tx, input, context, digest, key, scope);
+        }
       }
       const current =
         input.command === 'claim-next'
@@ -2078,6 +2103,221 @@ export class RaitCaseCommandService {
     });
   }
 
+  private async claimDefense(
+    tx: Tx,
+    input: CommandInput,
+    context: ReturnType<RaitCaseCommandService['context']> & {
+      role: string | null;
+      auditDetails: Record<string, unknown>;
+    },
+    digest: string,
+    key: string,
+    scope: RaitCaseScopeService,
+  ): Promise<CommandResult> {
+    if (!this.claimContext || !this.riskService)
+      fail('RAIT.RISK_SOURCE_UNAVAILABLE', 503);
+    const tenantId = context.tenantId,
+      actorId = context.actorId,
+      poolId = input.targetId;
+    await tx.query(
+      "select pg_advisory_xact_lock(hashtextextended($1 || ':rait-claim-pool:' || $2,0))",
+      [tenantId, poolId],
+    );
+    const pool = rows(
+      await tx.query(
+        "select id,instance from inf.rait_pool where tenant_id=$1 and id=$2 and active and strategy='pull' for update",
+        [tenantId, poolId],
+      ),
+    )[0];
+    if (!pool) fail('RAIT.TENANT_MISMATCH', 404);
+    if (pool.instance !== 'defesa_previa')
+      fail('RAIT.RISK_SOURCE_UNAVAILABLE', 503);
+    await tx.query(
+      'select id from inf.rait_pool_member where tenant_id=$1 and pool_id=$2 and person_id=$3 order by id for update',
+      [tenantId, poolId, actorId],
+    );
+    await scope.command(
+      tx,
+      input.principal,
+      'claim-next',
+      poolId,
+      input.payload,
+    );
+    const operation = await this.riskService!.operation(tx, tenantId);
+    const eligible = await this.claimContext!.pools(
+      tx,
+      input.principal,
+      operation,
+    );
+    if (!eligible.rows.some((p) => p.id === poolId))
+      fail('RAIT.TENANT_MISMATCH', 404);
+    // The shared selector freezes and qualifies once, then fences the complete
+    // universe without absorbing arrivals into an existing parent lock order.
+    const candidates = await this.claimContext!.candidates(
+      tx,
+      tenantId,
+      actorId,
+      poolId,
+      operation,
+      true,
+    );
+    await tx.query(
+      'select id from auth.memberships where tenant_id=$1 and user_id=$2 for share',
+      [tenantId, actorId],
+    );
+    await scope.command(
+      tx,
+      input.principal,
+      'claim-next',
+      poolId,
+      input.payload,
+    );
+    const candidate = candidates[0];
+    if (!candidate) fail('RAIT.QUEUE_EMPTY', 409, { poolId });
+    const member = rows(
+      await tx.query<{ id: string }>(
+        "select id from inf.rait_pool_member where tenant_id=$1 and pool_id=$2 and person_id=$3 and member_role='analista' and status='ATIVO'",
+        [tenantId, poolId, actorId],
+      ),
+    )[0];
+    if (!member) fail('RAIT.TENANT_MISMATCH', 404);
+    const day = operation.today(operation.tenantTz);
+    const schedule = rows(
+      await tx.query<Record<string, unknown>>(
+        "select id,wip_limit from inf.rait_schedule where tenant_id=$1 and pool_id=$2 and member_id=$3 and kind='escala_semanal' and period_start<=$4 and period_end>=$4 and published_at is not null order by period_start desc limit 1 for share",
+        [tenantId, poolId, member!.id, day],
+      ),
+    )[0];
+    if (!schedule)
+      fail('RAIT.MEMBER_NOT_AVAILABLE', 422, { memberId: member!.id });
+    const slot = rows(
+      await tx.query<{ availability: string }>(
+        'select availability from inf.rait_schedule_slot where tenant_id=$1 and schedule_id=$2 and slot_on=$3 for share',
+        [tenantId, schedule!.id, day],
+      ),
+    )[0];
+    if (!slot || !['DISPONIVEL', 'EM_PLANTAO'].includes(slot.availability))
+      fail('RAIT.MEMBER_NOT_AVAILABLE', 422, { memberId: member!.id });
+    if (schedule!.wip_limit === null || schedule!.wip_limit === undefined)
+      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {
+        key: 'rait.wip.limit',
+      });
+    const active = rows(
+      await tx.query<{ count: string }>(
+        "select count(*)::text count from inf.rait_assignment a join inf.rait_case c on c.tenant_id=a.tenant_id and c.id=a.case_id where a.tenant_id=$1 and a.member_id=$2 and a.active and c.state in ('EM_INSTRUCAO','DILIGENCIA')",
+        [tenantId, member!.id],
+      ),
+    )[0];
+    const wip = Number(active?.count ?? 0),
+      limit = Number(schedule!.wip_limit);
+    if (!Number.isSafeInteger(limit) || limit < 0)
+      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {
+        key: 'rait.wip.limit',
+      });
+    if (wip >= limit) fail('RAIT.ASSIGNMENT_WIP_LIMIT', 422, { wip, limit });
+    const events: Record<string, unknown>[] = [],
+      original = candidate!.state;
+    let state = original,
+      version = candidate!.version;
+    const stage = async (next: string) => {
+      const changed = rows(
+        await tx.query<{ id: string; version: number }>(
+          'update inf.rait_case set state=$1,version=version+1,updated_at=$2,last_movement_at=$2 where tenant_id=$3 and id=$4 and version=$5 returning id,version',
+          [next, operation.instant, tenantId, candidate!.id, version],
+        ),
+      )[0];
+      if (!changed)
+        fail('RAIT.VERSION_CONFLICT', 412, { currentVersion: version });
+      const event = {
+        type: 'rait.case.changed',
+        aggregateId: candidate!.id,
+        caseId: candidate!.id,
+        fromState: state,
+        toState: next,
+        instance: candidate!.instance,
+      };
+      await tx.query(
+        'insert into inf.rait_case_event(tenant_id,case_id,event_type,from_state,to_state,actor_id,payload,occurred_at) values($1,$2,$3,$4,$5,$6,$7,clock_timestamp())',
+        [
+          tenantId,
+          candidate!.id,
+          'RAIT_CASO_ESTADO_ALTERADO',
+          state,
+          next,
+          actorId,
+          JSON.stringify(event),
+        ],
+      );
+      events.push(event);
+      state = next;
+      version = changed!.version;
+    };
+    if (original === 'ADMITIDO') await stage('DISTRIBUIDO');
+    const assignment = rows(
+      await tx.query<{ id: string }>(
+        'insert into inf.rait_assignment(tenant_id,case_id,pool_id,member_id,assigned_by,active) values($1,$2,$3,$4,$5,true) returning id',
+        [tenantId, candidate!.id, poolId, member!.id, actorId],
+      ),
+    )[0];
+    if (!assignment) fail('RAIT.INTERNAL', 500);
+    events.push({
+      type: 'rait.assignment.changed',
+      aggregateId: assignment!.id,
+      caseId: candidate!.id,
+      assignmentId: assignment!.id,
+      poolId,
+      active: true,
+    });
+    await stage('EM_INSTRUCAO');
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i]!;
+      await tx.query(
+        'insert into integration.outbox(tenant_id,topic,aggregate_type,aggregate_id,payload,idempotency_key,status) values($1,$2,$3,$4,$5,$6,$7)',
+        [
+          tenantId,
+          event.type,
+          event.type === 'rait.assignment.changed'
+            ? 'inf.rait_assignment'
+            : 'inf.rait_case',
+          candidate!.id,
+          JSON.stringify(event),
+          `${key}:${String(event.type)}:stage-${i}`,
+          'pending',
+        ],
+      );
+    }
+    await tx.query('select audit.write($1,$2,$3,$4,$5,$6,$7,null,null,null)', [
+      tenantId,
+      actorId,
+      context.role,
+      'INF_RAIT_CASE_CLAIM_NEXT',
+      'inf.rait_case',
+      candidate!.id,
+      JSON.stringify({
+        command: 'claim-next',
+        sourceVersions: [
+          ...new Set(candidates.flatMap((c) => [...c.sourceVersions])),
+        ].sort(),
+      }),
+    ]);
+    const result: CommandResult = {
+      data: {
+        id: candidate!.id,
+        state,
+        version,
+        instance: candidate!.instance,
+        assignment_id: assignment!.id,
+      },
+      events,
+      etag: `"${version}"`,
+    };
+    await tx.query(
+      "insert into integration.idempotency_keys(tenant_id,idem_key,request_fingerprint,status_code,response_body,expires_at) values($1,$2,$3,200,$4,clock_timestamp()+interval '24 hours')",
+      [tenantId, key, digest, JSON.stringify(result)],
+    );
+    return result;
+  }
+
   private async claim(
     tx: Tx,
     tenantId: string,
@@ -2092,6 +2332,9 @@ export class RaitCaseCommandService {
     )[0];
     if (!pool || pool.active !== true || pool.strategy !== 'pull')
       fail('RAIT.FORBIDDEN_CASE_SCOPE', 403, { poolId });
+    // A concurrent dispatch change must never route defense work through the legacy selector.
+    if (pool.instance === 'defesa_previa')
+      fail('RAIT.RISK_SOURCE_UNAVAILABLE', 503);
     const member = rows(
       await tx.query<Record<string, unknown>>(
         "select id, pool_id, status from inf.rait_pool_member where tenant_id = $1 and pool_id = $2 and person_id = $3 and member_role = 'analista' for update",
@@ -2125,7 +2368,9 @@ export class RaitCaseCommandService {
         availability,
       });
     if (schedule.wip_limit === null || schedule.wip_limit === undefined)
-      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, { poolId });
+      fail('RAIT.PARAMETER_SOURCE_PENDING', 422, {
+        key: 'rait.wip.limit',
+      });
     const candidate = rows(
       await tx.query<CaseRow>(
         `select item.id, item.state, item.version, item.instance,

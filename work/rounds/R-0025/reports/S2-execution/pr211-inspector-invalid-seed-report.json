@@ -1,0 +1,585 @@
+{
+  "task": "PR211 canonical full3 validation epoch",
+  "classification": "INVALID legacy fixture baseline; not blanket123runtimebugs and notGREEN",
+  "head": "9df01e30",
+  "sourceHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "970ba761fe30fda6cba8f46b7c32348b4c6f5693276c348d2a538490795c36be",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "650ae92818a5a7401c8aa01655062e0b06291c70014db6ba6ae23c97496a89d1",
+    "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "33323a609b9f11c2f9edd170b88938214b81cbba28c47d792027a3f3f20eb9d5",
+    "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "33b32d71b651d297874bff92c7606bf76f8541ec74c9499790d97e3457e3d582",
+    "backend/app/tests/shared/rait-case-command.fixture.ts": "6e423b63b2d015eb8ca7d5c68380573358a77668fc8cce7cfb2f80d6371dfa9c",
+    "backend/app/src/rait-risk.providers.ts": "d9a859388e45668b352864ca5b2bac5bc6b6810e8b50a309768551c63f878043",
+    "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "aea7f1128f41be7aed44f16f8b5c0e56f97d58a17dc438bf6a9f34014c206eea",
+    "pnpm-lock.yaml": "b6e26eea39b702d4983bc0e63ade9448fab65789e1d0e4ee67e99d490770cc15"
+  },
+  "sourceHashesUnchangedAfter": true,
+  "totals": {
+    "registered": 577,
+    "passed": 337,
+    "failed": 123,
+    "inheritedSkipped": 117,
+    "durationSeconds": 314.57
+  },
+  "files": [
+    {
+      "file": "rait-case-commands.e2e.spec.ts",
+      "counts": {
+        "failed": 98
+      },
+      "elapsedMs": 868.822265625,
+      "failures": [
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado Database STYNX do app quando abre transa\u00e7\u00e3o de comando ent\u00e3o usa banco dedicado, role_app_backend, tenant e ator na mesma conex\u00e3o",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado secretaria com v\u00ednculo ativo quando protocol atravessa HTTP ent\u00e3o cria atomicamente o intake qualificado",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado ADMIN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado ADMIN_CLINICA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado MEDICO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado PSICOLOGO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado RECEPCAO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado TECNICO_BIOMETRIA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado AUDITOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado GESTOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado SUPERVISOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado GESTOR_DETRAN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado JUNTA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CETRAN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado DPO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado SUPORTE quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CANDIDATO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado field-agent quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado field-supervisor quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado processing-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado traffic-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado agency-admin quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado technical-admin quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado bi-analyst quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado integration-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-analyst quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-coordinator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-signing-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-central-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-rapporteur quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-chair quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-manager quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-hr quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-finance quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado dash-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado dash-duty-owner quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CIDADAO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar actor quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar actorId quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar assessed_by quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar verified_by quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar tenant_id quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar policy quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar rank quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado secretary sem v\u00ednculo do ator autenticado quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando admit atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando admit atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando non-admission atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando non-admission atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando remit atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando remit atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando receive atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando receive atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando ready atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando ready atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-signing-authority quando decide atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando decide atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-signing-authority quando return-draft atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando return-draft atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando withdraw atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando withdraw atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando redirect atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando redirect atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando resolve-pending atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando resolve-pending atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando claim-next atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando claim-next atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando answer atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-rapporteur quando answer atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando answer atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando extend atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-rapporteur quando extend atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando extend atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado principal humano quando expire \u00e9 chamado pela rota ent\u00e3o permanece negado e n\u00e3o ganha grant",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado defesa_previa/balcao quando h\u00e1 exatamente um T-DEF armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado jari/portal quando h\u00e1 exatamente um T-NP-VENC armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado cetran/sne quando h\u00e1 exatamente um T-R2 armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit converte protocolled_at para dia civil America/Manaus na fronteira UTC sem usar today",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timer ausente quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timer fechado quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timers armados m\u00faltiplos quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado canal postal quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado canal n\u00e3o suportado quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timezone vazio quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timezone IANA inv\u00e1lido quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado replay serial com a mesma chave quando o comando completa ent\u00e3o persiste uma \u00fanica auditoria/outbox/vers\u00e3o",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado replay parallel com a mesma chave quando o comando completa ent\u00e3o persiste uma \u00fanica auditoria/outbox/vers\u00e3o",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado audit.write falhando ap\u00f3s a primeira escrita quando comando executa ent\u00e3o dom\u00ednio/outbox/ledger/audit sofrem rollback",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio empty quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio valid-optional quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio invalid-optional quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-cross-tenant quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-invalid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-all-valid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio valid-plus-invalid-mandatory quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio wrong-entity quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio blank-storage quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        },
+        {
+          "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio packaged-valid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+          "firstError": "error: insert or update on table \"rait_deadline\" violates foreign key constraint \"fk_inf_rait_deadline_case\""
+        }
+      ]
+    },
+    {
+      "file": "rait-p402-claim.e2e.spec.ts",
+      "counts": {
+        "failed": 15,
+        "passed": 109
+      },
+      "elapsedMs": 288055.43359375,
+      "failures": [
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match \"1\" returns400 without effects",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match not-a-validator returns400 without effects",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match * returns400 without effects",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller caseId cannot select/grant a claim",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller actor cannot select/grant a claim",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller tenant_id cannot select/grant a claim",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller role cannot select/grant a claim",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller purpose cannot select/grant a claim",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites unqualified in-scope legacy is409 and cannot be silently claimed",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 actual mounted discovery/risk transport and read-only guarantees unresolved legacy blocks selected-pool GET409 without a degraded queue",
+          "firstError": "error: query returned no rows"
+        },
+        {
+          "name": "S2 complete pool inventory precedes pagination a risk blocker beyond position50 blocks the whole pool",
+          "firstError": "Error: STACK_TRACE_ERROR"
+        },
+        {
+          "name": "S2 complete pool inventory precedes pagination a legacy blocker beyond position50 blocks the whole pool",
+          "firstError": "Error: STACK_TRACE_ERROR"
+        },
+        {
+          "name": "S2 complete pool inventory precedes pagination a routing blocker beyond position50 blocks the whole pool",
+          "firstError": "Error: STACK_TRACE_ERROR"
+        },
+        {
+          "name": "S2 complete pool inventory precedes pagination a incident blocker beyond position50 blocks the whole pool",
+          "firstError": "Error: STACK_TRACE_ERROR"
+        },
+        {
+          "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion historical NULL priority remains excluded before legacy/risk qualification, without factual repair",
+          "firstError": "AssertionError: expected [] to deeply equal [ { state: 'DISTRIBUIDO', \u2026(2) } ]"
+        }
+      ]
+    },
+    {
+      "file": "rait-p402-scope.e2e.spec.ts",
+      "counts": {
+        "passed": 228,
+        "failed": 10,
+        "skipped": 117
+      },
+      "elapsedMs": 5609.22802734375,
+      "failures": [
+        {
+          "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields retains own assigned-case HTTP200 as a positive control",
+          "firstError": "AssertionError: {\"code\":\"RAIT.TENANT_MISMATCH\",\"message\":\"Recurso n\u00e3o encontrado.\",\"context\":{}}: expected 404 to be 200 // Object.is equality"
+        },
+        {
+          "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields legacy unit-null base pool is a real matching relation, not a missing-scope fallback",
+          "firstError": "AssertionError: expected undefined to deeply equal { case_unit: null, pool_unit: null }"
+        },
+        {
+          "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields retains preadmission triage200 with the exact closed case subset",
+          "firstError": "AssertionError: {\"code\":\"RAIT.TENANT_MISMATCH\",\"message\":\"Recurso n\u00e3o encontrado.\",\"context\":{}}: expected 404 to be 200 // Object.is equality"
+        },
+        {
+          "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields triage party projection suppresses identity numbers, emails and audit attribution",
+          "firstError": "AssertionError: expected 0 to be greater than 0"
+        },
+        {
+          "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields own assigned document read excludes storage credentials, URLs and unrelated fields",
+          "firstError": "AssertionError: {\"code\":\"RAIT.TENANT_MISMATCH\",\"message\":\"Recurso n\u00e3o encontrado.\",\"context\":{}}: expected 404 to be 200 // Object.is equality"
+        },
+        {
+          "name": "S1 real mutation bypasses preserve persisted rows and all side effects authorized assigned analyst generic POST documents rejects protected body400 without effects",
+          "firstError": "AssertionError: {\"code\":\"RAIT.TENANT_MISMATCH\",\"message\":\"Recurso n\u00e3o encontrado.\",\"context\":{}}: expected 404 to be 400 // Object.is equality"
+        },
+        {
+          "name": "S1 real mutation bypasses preserve persisted rows and all side effects authorized assigned analyst generic POST inquiries rejects protected body400 without effects",
+          "firstError": "AssertionError: {\"code\":\"RAIT.TENANT_MISMATCH\",\"message\":\"Recurso n\u00e3o encontrado.\",\"context\":{}}: expected 404 to be 400 // Object.is equality"
+        },
+        {
+          "name": "S1 real mutation bypasses preserve persisted rows and all side effects raw case PATCH is removed404 and cannot change state/version",
+          "firstError": "TypeError: Cannot read properties of undefined (reading 'state')"
+        },
+        {
+          "name": "S1 real mutation bypasses preserve persisted rows and all side effects reparenting an authorized child to an unauthorized case fails404 and preserves source",
+          "firstError": "TypeError: Cannot read properties of null (reading 'find')"
+        },
+        {
+          "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/admissibility/{id}: omitted role never executes or returns a resource",
+          "firstError": "Error: socket hang up"
+        }
+      ]
+    }
+  ],
+  "failureClassification": {
+    "118LegacySeedDependent": "98command reset deadlineFK +10claim syntheticLegacy missing06 +1claim NULLpriority missing18 +9scopefixedcase/child prerequisites",
+    "4Complete51BodyTimeouts": "Actual ownHTTP51 source setup completed; unchanged30sbodytimedout. Retain as material performance acceptance blocker.",
+    "1ScopeSocketHangup": "Infrastructure/request transport failure; not protectionproof"
+  },
+  "rootConfirmedCause": "Canonical fresh seed intentionally excludes legacy20; required backend:test:prepare-legacy was omitted before lease transfer. Actual canonical kernel includes it; no fixture change warranted.",
+  "readOnlyDBObservation": "Canonical case05/06/07/18 absent; only transient read-only probe session, closed normally.",
+  "scopeRateIsolation": {
+    "actualWindowProof": "S1_RATE_WINDOW_PROOF exercisedtrue capacity10000",
+    "429Failures": 0,
+    "capacityRestoration": "Finally source plus subsequent independent PEC env=null; no in-process equality log claimed"
+  },
+  "PECSeparateEpoch": {
+    "passed": 2,
+    "failed": 0,
+    "durationSeconds": 1.29,
+    "capacityEnvironment": null,
+    "actualLimiterContextLimit": 1,
+    "assertions": "First instance allowed used1; second instance denied used2; unchanged source"
+  },
+  "boundedCredits": [
+    "All6R17legacy negative vectors passed",
+    "ActualNestWORKLIST projection qualified/404/503 passed",
+    "BothF6actualwriter/revocation passed",
+    "Date-shift negative fixtures passed instead of Unrebound prerequisite"
+  ],
+  "next": "Parent runs supported backend:test:prepare-legacy on sameowned53343, then unchangedfull3 once on valid baseline; no test edits or budget/population changes",
+  "lease": "RELEASED; no live runners or other DB sessions after readonly probe",
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-full3.log": "e0a55b654e4193cbe9b446652f5bf8bacfa88985470bcdd032b5b23325aa54b3",
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-full3.json": "aef48ee95c635b11d0f5b6cf8e6fc80fc695df567af4e2c7fc517239252af96b",
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-full3-source.json": "a3067e65f82dc3d7d7c48985660441383396cacb6d0bc0d59cb086aff8e99dfd",
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-pec.log": "607aabba9b618da7012f3290e7d04da6d417a5463d23db914cb999a3fe5f88e8",
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-pec.json": "ffc5cfcdac9ff745c27c7cf465f65fdaad3f58d21fe19b139661b0499f830dcb",
+    "work/rounds/R-0025/reports/S2-execution/pr211-inspector-invalid-seed-pec-env.json": "2cc06638d60632bd43f279f67aa01fedcacfa0c8c9b47c9e56ce62b5e17c56b9"
+  },
+  "historicalEvidence": "Original CI failures and all older epochs preserved",
+  "readiness": "No fullsuiteS2/readiness/merge claim; F3/production/DRESET remainOPEN"
+}

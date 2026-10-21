@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-10-20T01:00:39.606722+00:00",
+  "role": "Engineer Article7",
+  "task": "TASK-0045 continuation R14",
+  "parentGrant": "01aaca63; parent-R14-runtime-grant.json",
+  "independentAcceptedRED": "caeb612a;45assertions reached equivalence/canonicalbytes/digests/freshness/RLS before oldruntime38vs10table querybound failure",
+  "runtimePath": "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts",
+  "runtimeSha256": "aea7f1128f41be7aed44f16f8b5c0e56f97d58a17dc438bf6a9f34014c206eea",
+  "preservedFrozenInspectorHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "619cea75d03ec7969a49e8ef83192b714d09d66fe1d2a55acc286dc2ba5fdd27",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "0a928dfcfbb629b265b683bfa9d08bee84b4c192757cffecd085bc31e7695c01"
+  },
+  "providerUnchangedSha256": "06567fa743a23322c4c03666cc896f1c9bd3924d664ad5d927e9b1e5c24ea3c7",
+  "physicalChange": [
+    "Prevalidate exact duplicate refs, known fixed table and original canonical UUID/audit identity validators before grouping sorted sourceRefs by table.",
+    "One native typed SELECT per fixed table through UUID-array unnest WITH ORDINALITY; audit joins paired bigint-text/timestamptz arrays with ordinality. No physical-ID-only map, Number conversion of source identities or JSONB coercion.",
+    "Keep original FIELDS and timestamp6/date/bytea/event_id-text projections, qualify columns by src to avoid target alias ambiguity; add ordinal::text in internal alias then remove it from fields.",
+    "Use explicit src.tenant_id predicate with existing request-role RLS and same caller Tx. Preserve FOR SHARE OFsrc in sourceRef order for mutable tables, no rowlock for immutable audit/legacy exceptions.",
+    "Require total exact cardinality and one expected textual ordinal per returned row; reject missing, extra, duplicate ordinal or foreign tenant; retain original sourceRef identity and canonical sorted output.",
+    "Each call creates fresh local grouping/output only; every policy/full qualification and independent receipt verification still re-reads actual current rows. No cross-call/crossTx cache."
+  ],
+  "checks": {
+    "CASE typecheck": "PASS exit0 once",
+    "app typecheck": "PASS exit0 once",
+    "WORKLIST typecheck": "PASS exit0 once",
+    "pinned Prettier runtime1file": "PASS",
+    "frozen115 spec and fixture hashes": "PASS unchanged",
+    "provider inventories": "UNCHANGED bytes match parent root",
+    "DB/HTTP/unit": "NOT RUN; unchanged independent GREEN/full115/51 pending",
+    "graft caller trace": "Attempted raitSourceRows depthall; graph had no symbol; existing callers preserved."
+  },
+  "logHashes": {
+    "/tmp/detran-s2-backend-case-typecheck-R14.log": "17726477173eeab2bcb69ef22d2de630677b9000262d95174320f06f0e5b7e78",
+    "/tmp/detran-s2-backend-app-typecheck-R14.log": "c9b85509952012f7d439395a79e125eefc2706aa4c1d8c22022ed69fe13d45c5",
+    "/tmp/detran-s2-backend-worklist-typecheck-R14.log": "93dee02a301e1a1bcd027c547732cb7c73993b0168a0e36ffe401d921a9b3831"
+  },
+  "notProven": [
+    "Actual audit bigint beyond JS safe integer. Source handling remains text and paired timestamp without numeric conversion.",
+    "Schema absence and artificial ambiguous physical source key. No fake audit/DDL or disabled guard introduced.",
+    "Actual runtime batched equivalence/query bound and complete51 performance remain pending independent execution."
+  ],
+  "remaining": [
+    "Process-local cursor restart/multireplica availability OPEN; qualified D RESET and authentic production provenance source-blocked/defaultmissing.",
+    "No full S2/P4/JW01/round closure, production/S3/scorecard promotion or implementation merge claim."
+  ],
+  "preservation": "Only approved port implementation and this scoped receipt changed. No provider/test/source/ADRs/generated/dependency/config/state/Git/DB/sibling/local-work mutation.",
+  "quiescent": true
+}

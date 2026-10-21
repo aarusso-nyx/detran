@@ -2,12 +2,22 @@ import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
 
 import type { INestApplication } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { Test } from '@nestjs/testing';
+import * as CasePublic from '@detran/inf-rait-case';
+import { RaitP402ClaimFixture } from '../shared/rait-p402-claim.fixture.js';
 import { RequestContextMutator } from '@stynx-nyx/core';
 import { Database } from '@stynx-nyx/data';
 import { DETRAN_ROLES } from '@detran/shared';
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
 
 import {
   assertDedicatedDatabaseEnvironment,
@@ -24,6 +34,8 @@ import {
   RAIT_TENANT,
 } from '../shared/rait-case-command.fixture.js';
 
+let claimFixture: RaitP402ClaimFixture | undefined;
+const protocolForAdmitCases = new Set<string>();
 type Command = {
   name: string;
   path: string;
@@ -206,14 +218,16 @@ async function protocolForAdmit(
     );
   expect(response.status, JSON.stringify(response.body)).toBe(200);
   expect(response.body.data.id).toMatch(/^[0-9a-f-]{36}$/u);
-  return response.body.data.id as string;
+  const id = response.body.data.id as string;
+  protocolForAdmitCases.add(id);
+  return id;
 }
 
 function commandPath(command: Command): string {
   return `/v1/inf/rait/${command.path.replace(':id', command.target)}`;
 }
 
-function headers(role: string) {
+function headers(role: string, claim = false) {
   process.env.DETRAN_LOCAL_ROLES = role;
   process.env.DETRAN_LOCAL_ACTOR_ID =
     role === 'rait-signing-authority'
@@ -226,7 +240,7 @@ function headers(role: string) {
   return {
     authorization: 'Bearer local',
     'x-tenant-id': RAIT_TENANT,
-    'if-match': '"1"',
+    ...(claim ? {} : { 'if-match': '"1"' }),
     'idempotency-key': `r7-c3-${role}-${randomUUID()}`,
   };
 }
@@ -500,13 +514,34 @@ beforeAll(async () => {
   fixture = new RaitCaseCommandFixture();
   await fixture.connect();
   const { AppModule } = await import('../../src/app.module.js');
-  app = await NestFactory.create(AppModule.forRoot(), {
-    logger: false,
-    abortOnError: false,
-  });
+  const builder = Test.createTestingModule({ imports: [AppModule.forRoot()] });
+  const port = (CasePublic as unknown as Record<string, unknown>)
+    .RAIT_RISK_PROVENANCE_READER;
+  if (typeof port === 'symbol')
+    builder.overrideProvider(port).useValue({
+      qualifyPolicy: (
+        tx: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[0],
+        req: Parameters<RaitP402ClaimFixture['qualifyPolicy']>[1],
+      ) =>
+        claimFixture
+          ? claimFixture.qualifyPolicy(tx, req)
+          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
+      qualify: (
+        tx: Parameters<RaitP402ClaimFixture['qualify']>[0],
+        req: Parameters<RaitP402ClaimFixture['qualify']>[1],
+      ) =>
+        claimFixture
+          ? claimFixture.qualify(tx, req)
+          : Promise.resolve({ status: 'missing', sourceVersions: [] }),
+    });
+  app = (await builder.compile()).createNestApplication({ logger: false });
   await app.init();
 });
 
+afterEach(async () => {
+  await claimFixture?.close();
+  claimFixture = undefined;
+});
 beforeEach(async () => {
   process.env.DETRAN_LOCAL_ROLES = 'bi-analyst';
   await fixture.resetMutableState();
@@ -545,6 +580,13 @@ afterAll(async () => {
     await fixture.owner.query(
       "update inf.rait_case set state='DILIGENCIA',version=1 where id=any($1::uuid[])",
       [inquiryCases],
+    );
+    // Fresh HTTP admission controls also leave qualified, claimable intake.
+    // Retain their immutable history but remove only this run's own parents
+    // from later suites' live candidate universe, as for inquiryCases above.
+    await fixture.owner.query(
+      "update inf.rait_case set state='DILIGENCIA' where tenant_id=$1 and id=any($2::uuid[]) and state in ('ADMITIDO','DISTRIBUIDO')",
+      [RAIT_TENANT, [...protocolForAdmitCases]],
     );
     await fixture.owner.query(
       'delete from inf.rait_pool_member where id=any($1::uuid[])',
@@ -681,7 +723,7 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
         const inquiry = ['answer', 'extend'].includes(command.name)
           ? await qualifiedInquiry(role)
           : undefined;
-        const invocation = inquiry
+        let invocation = inquiry
           ? {
               ...command,
               target: inquiry.target,
@@ -691,6 +733,17 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
                   : command.body,
             }
           : command;
+        if (command.name === 'claim-next') {
+          claimFixture = new RaitP402ClaimFixture();
+          await claimFixture.connect();
+          const legacy = await claimFixture.admitted(app);
+          const disposition = await claimFixture.historicallyDistributed(
+            legacy.id,
+          );
+          await claimFixture.prepareRisk(legacy.id);
+          await claimFixture.qualifyLegacy(legacy.id, disposition);
+          invocation = { ...invocation, target: claimFixture.pool };
+        }
         // Admission can create initial routing on a fresh database, while an
         // existing active OR revoked disposition must remain unchanged. Fix the
         // candidate precondition and expectation before invoking the handler.
@@ -713,7 +766,15 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
         const before = await persistentEffectCounts();
         const response = await request(app.getHttpServer())
           .post(commandPath(invocation))
-          .set(headers(role))
+          .set(
+            command.name === 'claim-next'
+              ? claimFixture!.headers(
+                  role,
+                  claimFixture!.actor,
+                  'r7-c3-' + randomUUID(),
+                )
+              : headers(role),
+          )
           .send(invocation.body);
         expect(response.status, JSON.stringify(response.body)).toBe(200);
         expect(response.headers.etag).toMatch(/^"\d+"$/u);
@@ -778,7 +839,7 @@ describe('CTG-0001 §10.8 — HTTP real, política e PostgreSQL', () => {
       const before = await persistentEffectCounts();
       const response = await request(app.getHttpServer())
         .post(commandPath(command))
-        .set(headers('bi-analyst'))
+        .set(headers('bi-analyst', command.name === 'claim-next'))
         .send(command.body);
       expect(response.status, JSON.stringify(response.body)).toBe(403);
       expect(response.body).toMatchObject({

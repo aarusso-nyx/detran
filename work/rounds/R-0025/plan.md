@@ -6,11 +6,23 @@
 > são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual (2026-10-19):** admissibilidade #193 e pré-requisito S1
-escopo/projeção/parent/replay #203 integrados, main2df548e0. Pós-merge exato
-não-promotor registrado; R-0025/JW-01 permanecem abertas. S2 backend-first é
-proposta, sem autorização ou dispatch; a adenda PR203 abaixo prevalece sobre
-banners históricos. Nenhuma aceitação integral foi reduzida.
+**Status atual (2026-10-21, America/Sao_Paulo):** admissibilidade #193, S1 #203
+e aprovação backend-first S2 #205 integradas. O PR de implementação #211 está em
+DRAFT, sem autorização de merge. CI de16af3d8f: foundation e quatro jobs auxiliares
+PASS; backend-kernel falhou26 testes/4 arquivos, verified-local-rc herdou a falha.
+Retomada reconciliada normalmente com main1115f589 (#213). ADRs S2 têm identidades
+canônicas0058–0060, com aliases e corpos aceitos preservados; ADRs scorecard0055–57
+permanecem intactas. Fixtures e sensores corrigidos nos caminhos autorizados,
+isolamento do limiter na suíte scope aprovado expressamente; full3 S2/PEC em prova.
+F6 tem GREEN independente3/3; REVIEW e limite de duas revisões permanecem sem waiver.
+Owner aprovou expressamente as extensões limitadas TEAT e batching51;
+aguardam referência/RED independente e execução nos caminhos fechados. A linha7 da evidência R0025 continua sem âncora na cadeia
+integrada: CLI2.6.3 recusou a recuperação não-newest; bytes/históricos preservados,
+linha8 recuperada por verbo suportado. Isso bloqueia CI/merge, sem edição manual.
+S2/P4, R-0025 e JW-01 continuam abertas; RESET D, proveniência operacional e cursor
+entre processos(F3) permanecem pendentes. S3/produção/scorecard não ativados.
+Estado detalhado em [implementação S2](reports/P4-02-S2-implementation.md) e
+[retomada CI](reports/S2-execution/CI-2026-10-21/).
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.
@@ -719,3 +731,49 @@ No managed tasks, locks or runtime edits are created by this proposal. D1–D11 
 approved; operational bindings/ladder/legacy/incident inputs remain release gates.
 A2 unavailable batch/pending-item fields require later typed restoration.
 No close/seal, readiness promotion, production provisioning or scorecard changes.
+
+## S2 execution activation — 2026-10-19
+
+Owner approved the exact backend-first S2 packet. PR205 merged as2e04f29c after
+all required checks green, following main92be0db4 security reconciliation with
+both original evidence forks preserved. The historical “S2 paused” proposal above
+is superseded only for its approved scope. S3, operational production and whole-
+journey/round completion remain unapproved. See AUTHORIZATION.md and
+reports/S2-execution/ for real managed-task custody and role checkpoint evidence.
+S1 plumbing records remain preserved without false finish; S2 uses explicit new
+identities and exact owned paths. Inspector RED precedes Engineer changes.
+
+## S2 implementation continuation — 2026-10-19
+
+Explicit Owner approval remains backend-first S2 only. Original packet/inventory
+are immutable approval history; delegated bounded decisions R1–R17 and their exact
+source/role/owned-path extensions are under reports/S2-execution/. S1/local/recovery
+resources remain preserved, without false managed finish or worktree cleanup.
+
+Runtime checkpoint18deaaeb and canonical generationbcb107c2 are integrated for
+independent acceptance. R10's stable-universe source clarification requires its
+independent RED→Engineer→GREEN correction; no concurrency closure is claimed from
+the older two-pass selector. Full root/backend/kernel/upgrade/HTTP checks, source-
+bound security export regeneration and cross-family delivery review remain gates.
+See reports/P4-02-S2-implementation.md for exact observations, limitations and PR.
+
+S2-R6 preserves required qualified D RESET as source-blocked; authentic production
+provenance/default-missing and operational ladder/calendar/incident/legacy inputs
+remain release gates. No S2/P4/JW01/round closure, S3, parameter activation,
+production migration/provisioning or implementation merge follows from this PR.
+Separate scorecard work and its thresholds/readings remain unchanged.
+
+### S2 R15–R17 acceptance checkpoint — 2026-10-19
+
+Current authored HTTP census is124: preserved115 plus2 discovery contention/
+revocation,1 actual WORKLIST projection and6 legacy-negative controls. The nine
+additions are authored/typechecked, not executed against DB. Existing PhaseB11,
+R14 SQL45 assertions and universe-race proofs retain only their recorded checkpoint
+scope. F6 has independent three-control unit RED at9dd48a80; single-path Engineer
+correction is in progress, not yet GREEN. Second delta review atca83c18d is REVIEW;
+F1/F2/F4/F5 resolved, F3 deferred and F6 open. Two-cycle cap is exhausted; no third
+review or inferred PASS. DRAFT review PR only, blocked on independent re-review
+and remaining acceptance. Full pnpm check is still running on the older frozen
+ca83 candidate; it cannot establish final-head acceptance. Full HTTP/kernel proof
+remains resource-blocked (host load approximately227). No DB execution of the nine
+new controls, no S3/production/implementation merge and no S2/P4/JW01/R-0025 closure.

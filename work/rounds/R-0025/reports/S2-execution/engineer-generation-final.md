@@ -1,0 +1,15 @@
+# S2 generated-output Engineer report
+
+Engineer, Articles6–10/24; TASK-0038, baseline f67008c8. Generated output is complete; S2 acceptance remains pending. Root owns all Git and integration.
+
+Existing generators produced the authorized CASE/WORKLIST wiring, five internal qualification files, DDL, CASE clients and four typed ladder defaults. The canonical full generation into a separate output directory completed with exit0. All 1596 generated targets match that output byte for byte. The targeted module outputs match full canonical generation; every unrelated generated output equals its before hash. No source, handwritten runtime, tests, generator logic, package/config input, SQL19, loader, state, scorecard or sibling repository was edited. No database was accessed.
+
+The exact full canonical global manifest was copied after comparison. Its delta adds precisely the five new qualification files, with no removed target. 187 generated files differ from the original snapshot. The earlier temporary-directory partial manifest never forms this final checkpoint. The initial full-worktree generator epoch was deliberately interrupted with SIGTERM143; its unrelated output stayed byte-identical. A later full temporary generator was SIGSTOP/SIGCONT-paused only to prioritize the coherent module checkpoint. These are execution dispositions, not passing observations of the interrupted epoch.
+
+Catalogue verification passed:93 entries,18 flags,62 namespaces,0 errors. Client check passed:72 synchronized clients. Generated code formatting passed. Independent catalogue-model comparison changes exactly A/B/C/D after excluding derived source line offsets. B's fresh default selects H.54 from canonical OD-006,H.54 and preserves both tokens; D retains DT-030. Existing operating rows remain preserved by unchanged DO NOTHING/version1/date semantics. A/C stay proposta; no operational promotion is implied.
+
+Static DDL realization includes exactly seven CHECKs, composite revision uniqueness, tenant/case FK, full UPDATE/DELETE and TRUNCATE42501 rejection and app-role append-only REVOKE. The internal controller has zero HTTP method decorators; operations[] remains empty. Actual final applied-DDL/role_app_backend acceptance and the separate SQL19 final grant-order REVOKE remain runtime/Inspector responsibilities. Storage constraints do not establish provenance authenticity.
+
+CASE typecheck exit2 exposed only eleven TS2307 diagnostics for six new handwritten modules not yet integrated from the parallel runtime Engineer. It is BLOCKED on that prerequisite, not GREEN. Full blueprints:check, root checks, independent runtime GREEN, actual DB/HTTP/concurrency/rollback/mandatory upgrade/kernel, doctor/evidence verification and review remain required. Production provenance verifiers and activation inputs remain missing; this report authorizes no production action, S3 or readiness/round closure.
+
+The JSON report binds exact paths, hashes, command outcomes and the no-drift comparison. Raw command logs and intermediate partial receipts remain preserved.

@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
+-- Generated from BP-INF-RAIT-CASE-001 v1.3.0 sha256:1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2
 
 -- Regenerable-only DDL for BP-INF-RAIT-CASE-001; request-path writes use role_app_backend.
 
@@ -502,6 +502,53 @@ create index if not exists ix_rait_case_pool_scope_tenant_id on inf.rait_case_po
 create index if not exists ix_rait_case_pool_scope_case_id on inf.rait_case_pool_scope (case_id);
 create index if not exists ix_rait_case_pool_scope_pool_id on inf.rait_case_pool_scope (pool_id);
 
+create table if not exists inf.rait_claim_legacy_qualification (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  observed_version integer not null,
+  observed_state varchar(40) not null,
+  assignment_status varchar(30) not null,
+  classification varchar(30) not null,
+  revision integer not null,
+  admission_ref text,
+  distribution_ref text,
+  assignment_ref text,
+  pool_scope_ref text,
+  reason text,
+  reviewer_id uuid not null,
+  authorization_ref text not null,
+  observed_at timestamptz not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_claim_legacy_qualification primary key (id),
+  constraint ck_inf_rait_claim_legacy_positive_version check (observed_version > 0 and revision > 0),
+  constraint ck_inf_rait_claim_legacy_classification check (classification in ('qualified_unassigned','preserve_assigned','hold')),
+  constraint ck_inf_rait_claim_legacy_assignment_status check (assignment_status in ('unassigned','assigned')),
+  constraint ck_inf_rait_claim_legacy_authorization check (length(btrim(authorization_ref)) > 0),
+  constraint ck_inf_rait_claim_legacy_qualified check (classification <> 'qualified_unassigned' or (observed_state = 'DISTRIBUIDO' and assignment_status = 'unassigned' and admission_ref is not null and length(btrim(admission_ref)) > 0 and distribution_ref is not null and length(btrim(distribution_ref)) > 0 and pool_scope_ref is not null and length(btrim(pool_scope_ref)) > 0)),
+  constraint ck_inf_rait_claim_legacy_assigned check (classification <> 'preserve_assigned' or (assignment_status = 'assigned' and assignment_ref is not null and length(btrim(assignment_ref)) > 0)),
+  constraint ck_inf_rait_claim_legacy_hold check (classification <> 'hold' or (reason is not null and length(btrim(reason)) > 0)),
+  constraint fk_inf_rait_claim_legacy_case foreign key (tenant_id, case_id) references inf.rait_case (tenant_id, id)
+);
+create unique index if not exists ux_inf_rait_claim_legacy_revision on inf.rait_claim_legacy_qualification (tenant_id, case_id, observed_version, revision);
+create index if not exists ix_rait_claim_legacy_qualification_tenant_id on inf.rait_claim_legacy_qualification (tenant_id);
+create index if not exists ix_rait_claim_legacy_qualification_case_id on inf.rait_claim_legacy_qualification (case_id);
+create index if not exists ix_rait_claim_legacy_qualification_reviewer_id on inf.rait_claim_legacy_qualification (reviewer_id);
+
+create or replace function inf.reject_immutable_blueprint_row()
+returns trigger language plpgsql as $$ begin
+  raise exception 'Immutable blueprint row cannot be changed' using errcode = '42501';
+end $$;
+
+drop trigger if exists rait_claim_legacy_qualification_immutable on inf.rait_claim_legacy_qualification;
+create trigger rait_claim_legacy_qualification_immutable before update or delete on inf.rait_claim_legacy_qualification
+  for each row execute function inf.reject_immutable_blueprint_row();
+drop trigger if exists rait_claim_legacy_qualification_no_truncate on inf.rait_claim_legacy_qualification;
+drop trigger if exists rait_claim_legacy_qualification_immutable_truncate on inf.rait_claim_legacy_qualification;
+create trigger rait_claim_legacy_qualification_no_truncate before truncate on inf.rait_claim_legacy_qualification
+  for each statement execute function inf.reject_immutable_blueprint_row();
+
 select auth.create_rls_policy('inf', 'rait_case');
 
 select auth.create_rls_policy('inf', 'rait_party');
@@ -540,10 +587,14 @@ select auth.create_rls_policy('inf', 'rait_case_read_scope');
 
 select auth.create_rls_policy('inf', 'rait_case_pool_scope');
 
+select auth.create_rls_policy('inf', 'rait_claim_legacy_qualification');
+
 select auth.install_tenant_triggers();
 
 grant usage on schema inf to role_app_backend;
 
 grant select, insert, update, delete on all tables in schema inf to role_app_backend;
+
+revoke update, delete on table inf.rait_claim_legacy_qualification from role_app_backend;
 
 grant usage, select on all sequences in schema inf to role_app_backend;

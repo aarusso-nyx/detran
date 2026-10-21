@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0042",
+  "round_id": "R-0025",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "P4-02-S2 stable candidate universe fence",
+  "description": "Engineer realization of explicitly approved R10 after independent RED; exact two existing CASE paths, no runtime outside approved defense scope.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-r25-s2-universe-fence"
+  ],
+  "target_substrates": [
+    "F2"
+  ],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0022",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 3,
+  "priority": 1,
+  "tags": [
+    "r25",
+    "p402-s2"
+  ],
+  "branch": "codex/r0025-s2-backend",
+  "prompt_composition_id": "PC-bb95a044a55f2250",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "typecheck"
+    ]
+  ],
+  "created_at": "2026-10-20T00:09:55.190941+00:00",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-app",
+    "model": "gpt-6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "codex-cli"
+    },
+    "instructions_ref": "work/rounds/R-0025/reports/S2-execution/engineer-universe-fence-prompt.md",
+    "prompt_composition_id": "PC-bb95a044a55f2250",
+    "max_iterations": 3,
+    "capabilities": [
+      "repository-read",
+      "engineer-runtime-write"
+    ]
+  }
+}

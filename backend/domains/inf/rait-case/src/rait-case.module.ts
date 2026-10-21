@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.2.0 sha256:1b90179b79d5d4ff32396ee08e8b4f308b5c60a90cbf5cd3e6bf1d1fa400265f
+// Generated from BP-INF-RAIT-CASE-001 v1.3.0 sha256:1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2
 import { Module } from '@nestjs/common';
 import { RaitCaseController } from './controllers/rait-case.controller.js';
 import { RaitCaseService } from './services/rait-case.service.js';
@@ -57,10 +57,15 @@ import { RaitCaseReadScopeRepository } from './repositories/rait-case-read-scope
 import { RaitCasePoolScopeRecordController } from './controllers/rait-case-pool-scope-record.controller.js';
 import { RaitCasePoolScopeRecordService } from './services/rait-case-pool-scope-record.service.js';
 import { RaitCasePoolScopeRecordRepository } from './repositories/rait-case-pool-scope-record.repository.js';
+import { RaitClaimLegacyQualificationController } from './controllers/rait-claim-legacy-qualification.controller.js';
+import { RaitClaimLegacyQualificationService } from './services/rait-claim-legacy-qualification.service.js';
+import { RaitClaimLegacyQualificationRepository } from './repositories/rait-claim-legacy-qualification.repository.js';
 import { RaitCaseCommandsController } from './handwritten/rait-case-commands.controller.js';
 import { RaitInquiryCommandsController } from './handwritten/rait-inquiry-commands.controller.js';
 import { RaitAdmissibilityCommandsController } from './handwritten/rait-admissibility-commands.controller.js';
 import { RaitCaseScopedReadsController } from './handwritten/rait-case-scoped-reads.controller.js';
+import { RaitClaimContextController } from './handwritten/rait-claim-context.controller.js';
+import { RaitCaseRiskController } from './handwritten/rait-case-risk.controller.js';
 import { RaitCaseCommandService } from './handwritten/rait-case-command.service.js';
 import { RaitInquiryCommandService } from './handwritten/rait-inquiry-command.service.js';
 import { RaitDeadlineEngineFactory } from './handwritten/rait-case-command.service.js';
@@ -70,6 +75,9 @@ import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
 import { RaitAdmissibilityCommandService } from './handwritten/rait-admissibility-command.service.js';
 import { RaitCaseScopeService } from './handwritten/rait-case-scope.service.js';
 import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.service.js';
+import { RaitClaimContextService } from './handwritten/rait-claim-context.service.js';
+import { RaitCaseRiskService } from './handwritten/rait-case-risk.service.js';
+import { RaitLegacyQualificationService } from './handwritten/rait-legacy-qualification.service.js';
 
 @Module({
   controllers: [
@@ -77,6 +85,8 @@ import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.ser
     RaitInquiryCommandsController,
     RaitAdmissibilityCommandsController,
     RaitCaseScopedReadsController,
+    RaitClaimContextController,
+    RaitCaseRiskController,
     RaitCaseController,
     RaitPartyController,
     RaitDocumentController,
@@ -96,6 +106,7 @@ import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.ser
     RaitCaseEventController,
     RaitCaseReadScopeController,
     RaitCasePoolScopeRecordController,
+    RaitClaimLegacyQualificationController,
   ],
   providers: [
     RaitCaseService,
@@ -136,6 +147,8 @@ import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.ser
     RaitCaseReadScopeRepository,
     RaitCasePoolScopeRecordService,
     RaitCasePoolScopeRecordRepository,
+    RaitClaimLegacyQualificationService,
+    RaitClaimLegacyQualificationRepository,
     RaitCaseCommandService,
     RaitInquiryCommandService,
     RaitDeadlineEngineFactory,
@@ -145,7 +158,14 @@ import { RaitCasePoolScopeService } from './handwritten/rait-case-pool-scope.ser
     RaitAdmissibilityCommandService,
     RaitCaseScopeService,
     RaitCasePoolScopeService,
+    RaitClaimContextService,
+    RaitCaseRiskService,
+    RaitLegacyQualificationService,
   ],
-  exports: [RaitCaseScopeService],
+  exports: [
+    RaitCaseScopeService,
+    RaitCaseRiskService,
+    RaitLegacyQualificationService,
+  ],
 })
 export class RaitCaseModule {}

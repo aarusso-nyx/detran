@@ -1,0 +1,65 @@
+{
+  "task": "TASK-0044 R14",
+  "runtimeBeforeEngineer": "PhaseB2bbbd92e old scalar port",
+  "classification": "Genuine query-reduction RED after source equivalence passed",
+  "census": {
+    "authored": 115,
+    "historicalControlsUnchanged": 114,
+    "additiveEquivalenceControl": 1,
+    "executed": 1,
+    "failed": 1,
+    "filtered": 114,
+    "durationSeconds": 33.97,
+    "executedAssertions": 45
+  },
+  "actualProof": {
+    "sourceRefs": 38,
+    "distinctTables": 10,
+    "fixtureBatchDataQueries": 10,
+    "runtimeDataQueries": 38,
+    "auditCompositeRows": 2,
+    "scalarBatchRuntimeCanonicalBytesAndDigest": "PASS",
+    "roleTenant": "actual role_app_backend and approved tenant",
+    "freshness": "actual independent owner update to owned parameter observed in same request-role Tx on next read; scalar and batch agree",
+    "lexicalUUIDAlias": "fixture scalar/batch preserve two distinct refs to same physical UUID; runtime receives canonical refs only",
+    "negatives": "duplicate/missing/unknown-table/foreign-tenant passed",
+    "observedTypes": "microsecond UTC audit timestamps, bigint event ID text, bytea hex, nullable fields, DATE strings, JSON object"
+  },
+  "notProven": [
+    "Beyond-safe-integer bigint boundary: actual fixture audit IDs below boundary; no audit-history write authorized",
+    "Missing schema column: no DDL/schema alteration authorized",
+    "Artificial ambiguous physical key: actual source tables enforce keys; no guard weakening authorized"
+  ],
+  "boundaries": {
+    "onlyOwnedHelperAndOneAdditiveTest": true,
+    "runtimeEdited": false,
+    "rowCacheIntroduced": false,
+    "runtimeHelperReusedByFixture": false,
+    "roleReceiptRecursiveChecksUnchanged": true,
+    "timeoutsPopulationUnchanged": true,
+    "all115Acceptance": "PENDING",
+    "originalOffpageFailures": "PRESERVED",
+    "F3": "OPEN",
+    "productionPolicy": "OPEN",
+    "DRESET": "OPEN"
+  },
+  "hashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "619cea75d03ec7969a49e8ef83192b714d09d66fe1d2a55acc286dc2ba5fdd27",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "0a928dfcfbb629b265b683bfa9d08bee84b4c192757cffecd085bc31e7695c01",
+    "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "3236e9e717abe2ddf00e3a35838612b4cbbeec1004053e4fbcc2d5524a2fe4fc",
+    "pnpm-lock.yaml": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb"
+  },
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-red.log": "dc9ca9569fc48aa71e6468fdb6282778a34515ef2b0b3e467b5dd97b310c1808",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-red.json": "43fb70f841be26136aae425424447e8e1ba480a150232fd341f9df47c6171e5e",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-hashes.json": "fddcc3f1da7a9b4f8d00eadcecd3b80ebbb5b827a5331933bf585b43639844f2",
+    "work/rounds/R-0025/reports/S2-execution/inspector-R14-typecheck.log": "d62b53df6491efab67f5883e4d07a96ab6889f41ade90f51ab78846d9b91118a"
+  },
+  "lease": "Released after test runner exit; no DB worker active",
+  "sanitization": "Raw transcripts copied unchanged after review; no raw DSN or credentials included.",
+  "frozenScalarSourceProof": {
+    "normalizedRenameOnlyMatchesParentPrebatchHelper": true,
+    "sha256": "fe636c4d4688749517386be202ff82b941d01b1d9ba12da01e95c1da00868d9d"
+  },
+  "typecheck": "PASS @detran/app tsc --noEmit"
+}

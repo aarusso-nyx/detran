@@ -1,0 +1,147 @@
+{
+  "task": "PR211 final canonical package E2E remainder",
+  "headAtStart": "963218b7",
+  "headAtCompletion": "76f30d48",
+  "commandSource": "package.json backend:test:e2e unchanged13commands after app",
+  "serialExecution": true,
+  "results": [
+    {
+      "package": "@detran/ops-agency",
+      "command": "pnpm --filter @detran/ops-agency test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-1.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/ops-field",
+      "command": "pnpm --filter @detran/ops-field test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-2.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/ops-snapshots",
+      "command": "pnpm --filter @detran/ops-snapshots test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-3.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/ops-evidence",
+      "command": "pnpm --filter @detran/ops-evidence test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-4.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/ops-offline-sync",
+      "command": "pnpm --filter @detran/ops-offline-sync test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-5.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/ops-provisioning",
+      "command": "pnpm --filter @detran/ops-provisioning test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-6.log",
+      "noTestFiles": false,
+      "passed": 10
+    },
+    {
+      "package": "@detran/inf-ait",
+      "command": "pnpm --filter @detran/inf-ait test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-7.log",
+      "noTestFiles": false,
+      "passed": 1
+    },
+    {
+      "package": "@detran/portal-identity",
+      "command": "pnpm --filter @detran/portal-identity test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-8.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/portal-requests",
+      "command": "pnpm --filter @detran/portal-requests test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-9.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/portal-inbox",
+      "command": "pnpm --filter @detran/portal-inbox test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-10.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/portal-citizen-service",
+      "command": "pnpm --filter @detran/portal-citizen-service test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-11.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/portal-projections",
+      "command": "pnpm --filter @detran/portal-projections test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-12.log",
+      "noTestFiles": true,
+      "passed": 0
+    },
+    {
+      "package": "@detran/dashboard-monitor",
+      "command": "pnpm --filter @detran/dashboard-monitor test:e2e",
+      "exit": 0,
+      "log": "pr211-package-e2e-13.log",
+      "noTestFiles": true,
+      "passed": 0
+    }
+  ],
+  "summary": {
+    "commands": 13,
+    "exitZero": 13,
+    "actualPassedTests": 11,
+    "noTestFileCommands": 11,
+    "meaning": "11actualPASS,11commandsNO_TESTS; noTests not acceptancePASS"
+  },
+  "finalHashes": {
+    "backend/app/src/rait-risk.providers.ts": "32df0ae0b8fb8ecf7ac86961bb9f6f6e263247eba89937d44f09c40acdc75a7d",
+    "backend/app/src/teat-stream.service.ts": "dc022fcebf740269314059e4b595e5d739213cd1f662dc697b0999a16316eba7",
+    "backend/app/src/teat-stream.controller.ts": "acdd56c0732096385a7c9a309d837acd4e7285732084aa77bae1e17cb738f5c2",
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "438496574776dc4ab50de7aa7715a02ec222680e7dee962d71f29b8ee716029f",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "11cf8e1ca4dd80bc81de5abd6d09768c4bf1cd8256361d0e5639baeadad2be8b",
+    "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "3510d4c7f5bdcce387554671ee7b587147384b3bfe45ad43d63f9bbfa73b8b4a",
+    "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "8aab7db6a4bd9aeb01be0dede98fdfab04af0eddf8c00b1cb2db4eba568e79d9",
+    "backend/app/tests/e2e/teat-stream.e2e.spec.ts": "ed02a416692da5899abf1697e1c30dfcceb84ffad5e7f78b71a2d50f951ad92a",
+    "tools/ci/run-backend-kernel.sh": "ee107c2762c8256f780ba962d626f492fb0c85cecac6c79c5ebee695ef5e73d3",
+    "pnpm-lock.yaml": "b6e26eea39b702d4983bc0e63ade9448fab65789e1d0e4ee67e99d490770cc15"
+  },
+  "onlySourceDelta": "Previouslycheckpointed76f30d48 owncommandsfixturecleanup; packages do not consume this testpath. All runtime and frozenclaimfixture/reference unchanged.",
+  "fullKernel": "Original54f92111 canonical14FAIL preserved; splitremainder does not turn it GREEN",
+  "db": {
+    "port": 53343,
+    "mockPort": 53344,
+    "mockOwnPIDClosed": true,
+    "otherClientCountAtRelease": 0,
+    "lease": "RELEASED"
+  },
+  "outstanding": [
+    "complete51four actual30000ms timeouts",
+    "JW01eight429; singlefileproposedpacket requires explicitOwnerapproval",
+    "fullcanonicalkernel not rerun after boundedcommandsfixturecleanup",
+    "independentreview cap/readiness boundary unchanged"
+  ]
+}

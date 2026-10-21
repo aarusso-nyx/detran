@@ -1,0 +1,87 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+[2026-10-19 20:16:39.377 -0300] INFO (29103): request completed
+    request_id: "01a15673-e39f-7b61-964e-725e4d88eeae"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 1456
+[2026-10-19 20:16:40.063 -0300] INFO (29103): request completed
+    request_id: "01a15673-e961-72c9-a569-7a114251a6f2"
+    route: "/v1/inf/rait/cases/907fe006-703b-40e6-bab4-bcc0542468f5/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 668
+[2026-10-19 20:16:40.782 -0300] INFO (29103): request completed
+    request_id: "01a15673-ec0b-7d2c-bbff-3416feb4264c"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 707
+[2026-10-19 20:16:41.292 -0300] INFO (29103): request completed
+    request_id: "01a15673-eed3-70a2-ae07-facdc81fa5fc"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 505
+[2026-10-19 20:16:41.668 -0300] INFO (29103): request completed
+    request_id: "01a15673-f0d3-7da2-95c7-e8823d62e7fd"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 365
+[2026-10-19 20:16:41.911 -0300] INFO (29103): request completed
+    request_id: "01a15673-f258-7ddb-bbbc-80ef2cea4c23"
+    route: "/v1/inf/rait/cases/907fe006-703b-40e6-bab4-bcc0542468f5/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 223
+S2_ASSERTIONS {"test":"S2 operational incident actual SQL linkage and independent provenance > the actual PostgreSQL rate limiter was exercised under the isolated fixture cap","executedAssertions":10}
+[2026-10-19 20:16:42.779 -0300] INFO (29103): request completed
+    request_id: "01a15673-f680-771d-843c-da3a6c3fd81a"
+    route: "/v1/inf/rait/claim-context?pool_id=00000000-0000-7000-8000-000020000001"
+    method: "GET"
+    status: 404
+    duration_ms: 25
+S2_ASSERTIONS {"test":"S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion > historical NULL priority remains excluded before legacy/risk qualification, without factual repair","executedAssertions":3}
+[2026-10-19 20:16:43.907 -0300] INFO (29103): request completed
+    request_id: "01a15673-f977-76d9-8f55-4bbd1c5b5d1f"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 396
+[2026-10-19 20:16:44.290 -0300] INFO (29103): request completed
+    request_id: "01a15673-fb41-77ab-bfe9-e78626534a29"
+    route: "/v1/inf/rait/cases/2000421f-6294-493e-be67-034f5bc67243/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 321
+[2026-10-19 20:16:44.535 -0300] INFO (29103): request completed
+    request_id: "01a15673-fc8d-7683-b5da-ecaef8879918"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 233
+[2026-10-19 20:16:44.770 -0300] INFO (29103): request completed
+    request_id: "01a15673-fd79-751f-af54-315a640b8e88"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 233
+[2026-10-19 20:16:45.123 -0300] INFO (29103): request completed
+    request_id: "01a15673-fe65-7d6b-8b0e-2e2634de856f"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 350
+[2026-10-19 20:16:45.432 -0300] INFO (29103): request completed
+    request_id: "01a15673-ffe7-702a-a51e-876e836ee3df"
+    route: "/v1/inf/rait/cases/2000421f-6294-493e-be67-034f5bc67243/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 272
+S2_ASSERTIONS {"test":"S2 explicit current legacy dispositions > trusted hold is preserved and cannot be reclaimed","executedAssertions":7}
+JSON report written to /tmp/detran-s2-http-final-delta-results.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/rait-p402-claim.e2e.spec.ts -t actual PostgreSQL rate limiter|historical NULL priority|trusted hold --reporter=json --outputFile=/tmp/detran-s2-http-final-delta-results.json

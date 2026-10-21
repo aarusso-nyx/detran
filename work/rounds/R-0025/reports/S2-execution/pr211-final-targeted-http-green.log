@@ -1,0 +1,99 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+S2_ASSERTIONS {"test":"S2 actual SQL factory with independently admitted synthetic provenance only > mounts the public narrow provenance port while retaining the actual SQL factory","executedAssertions":2}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (125 tests | 124 skipped) 473ms
+[2026-10-21 13:01:23.559 -0300] INFO (80610): request completed
+    request_id: "01a15f32-2126-785e-8408-5d6b6c6a646f"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 320
+[2026-10-21 13:01:23.782 -0300] INFO (80610): request completed
+    request_id: "01a15f32-22ef-71da-a4d8-ef215e94975e"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 86
+[2026-10-21 13:01:23.937 -0300] INFO (80610): request completed
+    request_id: "01a15f32-239f-71a5-bf2e-8109d099ee51"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 66
+S1_RATE_WINDOW_PROOF {"tenantId":"00000000-0000-7000-8000-00000000a001","exercised":true,"capacity":10000}
+ ✓ tests/e2e/rait-p402-scope.e2e.spec.ts (355 tests | 352 skipped) 3353ms
+     ✓ protocol with zero routing retains existing legal response/body/events and never adds admission criterion  580ms
+[2026-10-21 13:01:28.125 -0300] INFO (80619): request completed
+    request_id: "01a15f32-3437-79f4-b6ed-335e131a7bbc"
+    route: "/v1/ops/stream"
+    method: "GET"
+    status: 403
+    duration_ms: 5
+[2026-10-21 13:01:31.252 -0300] INFO (80619): request completed
+    request_id: "01a15f32-406b-7626-8895-21ea0557c4e1"
+    tenant_id: "00000000-0000-7000-8000-00000000a001"
+    actor_id: "00000000-0000-4000-8000-0000b0000001"
+    route: "/v1/ops/stream"
+    method: "GET"
+    status: 204
+    duration_ms: 8
+ ✓ tests/e2e/teat-stream.e2e.spec.ts (9 tests) 9721ms
+     ✓ C-0004-41 — dado DETRAN_LOCAL_ROLES=field-agent quando GET /v1/ops/stream então 200 com content-type text/event-stream  1593ms
+     ✓ dado um evento integration.item.changed então integration-operator (tem ops:integration:read) o recebe  1059ms
+     ✓ dado o mesmo evento então field-agent (sem ops:integration:read) não o recebe  2021ms
+     ✓ C-0004-45 — dado ?topics=ait.changed então só eventos desse tipo chegam  1027ms
+     ✓ C-0004-46 — dado um evento de outro tenant então ele nunca chega ao assinante, e tenantId não aparece em data  2019ms
+[2026-10-21 13:01:37.353 -0300] INFO (80747): request completed
+    request_id: "01a15f32-571f-7ba5-ae42-5c8e3369b9a3"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 298
+[2026-10-21 13:01:37.438 -0300] INFO (80747): request completed
+    request_id: "01a15f32-584c-7edb-aa74-3f3cb3d0d632"
+    route: "/v1/inf/rait/cases/4ff2e013-3895-41bd-972c-aa1eec3f38db/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 81
+[2026-10-21 13:01:37.487 -0300] INFO (80747): request completed
+    request_id: "01a15f32-58a0-7348-b39d-cba6c59511f3"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 47
+[2026-10-21 13:01:37.531 -0300] INFO (80747): request completed
+    request_id: "01a15f32-58d1-7eef-aa1e-202a6d35e250"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 42
+[2026-10-21 13:01:37.573 -0300] INFO (80747): request completed
+    request_id: "01a15f32-58fd-754d-bfe8-0880f91981f5"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 40
+[2026-10-21 13:01:37.616 -0300] INFO (80747): request completed
+    request_id: "01a15f32-5926-72a5-9d74-f51bf3b5611f"
+    route: "/v1/inf/rait/cases/4ff2e013-3895-41bd-972c-aa1eec3f38db/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 42
+[2026-10-21 13:01:38.193 -0300] INFO (80747): request completed
+    request_id: "01a15f32-5a26-716d-86f1-10c15742b114"
+    route: "/v1/inf/rait/pools/c244dc9b-8cc5-4f77-abf6-83282bd1e0ef/claim-next"
+    method: "POST"
+    status: 200
+    duration_ms: 363
+ ✓ tests/e2e/rait-case-commands.e2e.spec.ts (98 tests | 97 skipped) 3148ms
+     ✓ dado papel mínimo rait-analyst quando claim-next atravessa HTTP, PolicyGuard e banco então responde 200, ETag só no header e efeitos atômicos  1515ms
+
+ Test Files  4 passed (4)
+      Tests  14 passed | 573 skipped (587)
+   Start at  13:01:07
+   Duration  30.56s (transform 9.23s, setup 0ms, import 13.44s, tests 16.70s, environment 0ms)
+
+JSON report written to /tmp/pr211-final-targeted-http-green.json

@@ -1,0 +1,72 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 contracts:test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> node --test tools/contracts/tests/*.test.mjs
+
+✔ dado contrato dashboard cujo 4xx cita DASH.LAYER_N3_NEVER (código real do catálogo, presente em dashboard-error-catalog.md) quando checkCommands (catálogos padrão) então sem unknown-error-code (vermelho hoje: lacuna 3 — DASH ausente de ERROR_CATALOG_PATHS/ERROR_CATALOG_PREFIXES) (509.197625ms)
+✔ dado contrato dashboard cujo 4xx cita DASH.NAO_EXISTE (código fora do catálogo) quando checkCommands então exatamente um unknown-error-code citando o código e o prefixo DASH (verde hoje — já é o comportamento correto antes e depois de TASK-0009) (500.180958ms)
+✔ dado código PORTAL.DEMO_PRESERVED_CODE num contrato dashboard (presente só em portal-error-catalog.md, ausente de dashboard-error-catalog.md) quando checkCommands então continua julgado pelo catálogo PORTAL — comportamento atual preservado (verde hoje e depois de TASK-0009) (497.067833ms)
+✔ dado POST v1/dashboard/alerts/:id/ack em backend/domains/dashboard/monitor/src/handwritten/surface/ (+ handwritten/cycle/ e src/controllers/ vazios, sem rota) quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 1 — CONTROLLER_ROOTS não lista backend/domains/dashboard/monitor/src/handwritten) (553.353208ms)
+✔ dado a mesma rota POST v1/dashboard/alerts/:id/ack sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 1 — a raiz nunca é varrida, então a rota nunca é reportada) (671.551083ms)
+✔ dado operação dashboardAlertAck no contrato sem controlador nenhum em lugar algum quando checkCommands então exatamente um missing-route (verde hoje — independe das três lacunas: nenhum controlador existe em nenhuma raiz) (641.557917ms)
+✔ dado GET v1/dashboard/stream em backend/app/src/dashboard-stream.controller.ts quando checkCommands (raízes padrão, sem --controllers) então ok=true (vermelho hoje: lacuna 2 — o filtro de backend/app/src só aceita teat-*/portal-*) (620.210875ms)
+✔ dado a mesma rota de stream sem operação correspondente no contrato quando checkCommands (raízes padrão) então exatamente um missing-operation (vermelho hoje: lacuna 2 — o arquivo é filtrado antes de ser varrido, então a rota nunca é reportada) (650.120292ms)
+✔ dado backend/app/src/other-thing.controller.ts (sem prefixo teat-/portal-/dashboard-) quando checkCommands (raízes padrão) então continua ignorado, sem nenhum problema (verde hoje e depois de TASK-0009 — comportamento do filtro do app não muda para arquivos sem prefixo reconhecido) (654.370042ms)
+✔ dado node tools/contracts/check-commands.mjs na fixture (b) válida (POST v1/dashboard/alerts/:id/ack em handwritten/surface/) então exit 0 e "commands contracts: OK (1 operations)" (vermelho hoje: lacuna 1 — raiz ausente de CONTROLLER_ROOTS) (618.470125ms)
+✔ dado o repositório real (checkCommands() com opções padrão, forma de pnpm contracts:check) então ok=true (vermelho hoje: as três lacunas — raiz, filtro do app, catálogo) (1051.579417ms)
+✔ dado os contratos e controladores reais quando comparados então o conjunto de rotas do BP-DASH-MONITOR-001 é exatamente as 43 rotas de CTG-0002 §3 (sete controllers + stream), com operationId únicos (vermelho hoje: lacunas 1 e 2 — nenhuma rota dashboard é varrida pelas raízes padrão) (123.267875ms)
+✔ dado contrato válido e controlador com a mesma rota quando checkCommands então ok=true, operations=1 e problems=[] (49.996667ms)
+✔ dado rota no contrato sem controlador correspondente quando checkCommands então exatamente um missing-route (13.727917ms)
+✔ dado rota no controlador sem operação correspondente quando checkCommands então exatamente um missing-operation (35.647958ms)
+✔ dado código 4xx fora do catálogo quando checkCommands então exatamente um unknown-error-code citando o código (61.87475ms)
+✔ dado o mesmo operationId em dois arquivos quando checkCommands então exatamente um duplicate-operation-id citando os dois arquivos (44.202375ms)
+✔ dado x-blueprint que não existe em blueprintsDir quando checkCommands então há um unknown-blueprint (14.015875ms)
+✔ dado contrato com JSON quebrado quando checkCommands então exatamente um invalid-json no arquivo quebrado (12.171833ms)
+✔ dado arquivo *.openapi.json sem sufixo .commands quando checkCommands então é ignorado (mesmo se ilegível como JSON) (28.070458ms)
+✔ dado o repositório fixture sem problemas quando rodar a CLI então exit 0 e "commands contracts: OK (1 operations)" (405.810041ms)
+✔ dado o repositório fixture com uma rota órfã quando rodar a CLI então exit 1 com a lista de problemas em stderr e stdout vazio (552.072916ms)
+✔ C-5-03 — dado contrato sem x-blueprint, com x-commands ausente/false, ou com x-generated presente quando checkCommands então cada caso gera exatamente um invalid-json (49.774583ms)
+✔ C-5-05 — dado contrato cujo nome de arquivo não corresponde a nenhum blueprint mas cujo x-blueprint existe quando checkCommands então ok=true (resolução por x-blueprint, nunca pelo nome do arquivo) (7.66775ms)
+✔ C-5-07 — dado resposta 4xx sem properties.code.enum quando checkCommands então um unknown-error-code; dada a mesma resposta com x-kernel idempotency então ok=true (33.2005ms)
+✔ C-5-08 — dado enum de error_code (recibo de sincronização) com código fora do catálogo quando checkCommands então um unknown-error-code (55.471042ms)
+✔ C-5-12 — dado :id no controlador e {id} no contrato quando checkCommands então ok=true (normalização :id ↔ {id}); dado {aitId} no contrato contra :id no controlador então um missing-route e um missing-operation (105.197583ms)
+✔ C-5-13 — dado controlador sob src/controllers/ ou src/generated/, ou arquivo *.spec.ts, quando checkCommands então a rota não é varrida (sem missing-operation) (28.809833ms)
+✔ C-5-14 — dado backend/app/src (truque de cwd) quando rodar a CLI então só teat-x.controller.ts é varrido; outro.controller.ts (sem prefixo teat-) é ignorado (557.355959ms)
+✔ C-5-15 — dado um decorador de rota com argumento não literal quando checkCommands então um invalid-json citando classe e método; e a CLI sai com exit 1 (679.467417ms)
+✔ C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=331 (1297.661958ms)
+✔ C-2-16 — dado código BOAT presente somente no catálogo BOAT quando rodar o gate então passa; código BOAT ausente do catálogo BOAT falha (2769.982ms)
+✔ C-2-16 — dado resposta 4xx BOAT e recibo com error_code BOAT quando checkCommands então ambos consultam o catálogo BOAT (10.902417ms)
+✔ C-2-17 — dado rota BOAT no contrato e controlador correspondente quando checkCommands então passa; sem controlador então há missing-route (92.820834ms)
+✔ C-2-17 — dado controlador BOAT sem operação correspondente quando checkCommands então há missing-operation (52.881041ms)
+✔ C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 100 operações TEAT permanecem presentes (25.16425ms)
+✔ dado um contrato gerado e um contrato de comando quando generateClients então escreve um .ts por arquivo com export interface paths (243.06625ms)
+✔ dado BP-DEMO-001.commands.openapi.json quando generateClients então a saída é BP-DEMO-001.commands.ts (62.754958ms)
+✔ dada a mesma entrada quando gerar duas vezes então os bytes de saída são idênticos (idempotência) (55.647333ms)
+✔ dado um .ts órfão em outDir quando generateClients então é removido e não aparece em written (31.708708ms)
+✔ dado contrato com JSON inválido quando rodar a CLI então exit 1 e o arquivo de saída anterior não é truncado (2103.665375ms)
+✔ dado o conjunto fixture sem erros quando rodar a CLI então stdout "clients written: 2" (1523.142792ms)
+✔ checkClients — em sincronia (outDir gerado a partir do mesmo contractsDir) então ok=true e problems=[] (139.471ms)
+✔ checkClients — stale-client (arquivo em outDir diverge do que generateClients produziria) então um stale-client citando o arquivo, sem corrigi-lo (92.727291ms)
+✔ checkClients — orphan-client (.ts em outDir sem *.openapi.json correspondente) então um orphan-client citando o arquivo, sem removê-lo (160.147875ms)
+✔ checkClients — missing-client (*.openapi.json sem .ts correspondente em outDir) então um missing-client citando o arquivo esperado (133.439291ms)
+✔ checkClients — CLI --check: exit 0 "clients in sync: <n>" quando em sincronia; exit 1 com stderr quando divergente (2901.431458ms)
+✔ C-5-22 — dado o repositório real (sem flags) quando checkClients então ok=true (7133.341125ms)
+✔ dado contrato de provisionamento quando comandos POST são verificados então os seis exigem If-Match e Idempotency-Key e retornam ETag (5.607042ms)
+✔ dado contrato de provisionamento quando os dois GET são verificados então não exigem cabeçalhos de comando (0.136042ms)
+✔ dado contratos de registro e ato offline quando schemas são verificados então chave privada é ausente e os oito campos de INV-OFFLINE-001 são obrigatórios (0.086792ms)
+✔ dado cada resposta final de provisionamento quando o contrato é publicado então cada sucesso declara um corpo OpenAPI concreto sem material privado (0.478ms)
+✔ dado corpos JSON de concessão, recibo e reconciliação quando o contrato é verificado então coleções são arrays tipados, nunca objetos JSON livres (0.146125ms)
+✔ dado grant persistido publicado quando entidade e DTO CRUD são gerados então ambos preservam arrays de agentes e reservas tipadas (12.881625ms)
+✔ C-5-23 — todo docs/framework/schemas/*.json e schemas/events/*.json faz JSON.parse sem erro e declara $schema draft 2020-12 e $id (75.681584ms)
+✔ C-5-24 — os dezesseis events/<type>.schema.json de CTG-0005 §5.4 existem e o const de type é igual ao nome do arquivo (12.824167ms)
+✔ C-5-25 — cada events/<type>.schema.json de §5.4 é carregável e declara a forma mínima de envelope (properties.type.const e properties.data); a produção real do envelope é C-5-25′ (events.schema.spec.ts de cada módulo) (12.149625ms)
+✔ C-5-26 — teat-offline-sync-batch.schema.json valida o corpo do lote usado em backend/app/tests/e2e/teat-field-sync.e2e.spec.ts e recusa um item sem payload_hash (2.758ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15660.600625

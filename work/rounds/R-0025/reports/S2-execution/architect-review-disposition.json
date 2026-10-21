@@ -1,0 +1,30 @@
+{
+  "task": "TASK-0043",
+  "role": "Architect",
+  "authority": "S2-R12 in integration e6f9cdb7; Architect checkout source checkpoint43948f67",
+  "outcome": "source authored; no runtime/tests/DB/Git/state mutation",
+  "sources": {
+    "docs/meta/adr/ADR-0057-rait-policy-provenance-and-risk-boundaries.md": "b11ead9b28c9b53c2eb6545d47b9acaaed5e230273f39bb305a461fb7340ca4b",
+    "docs/meta/adr/README.md": "f34bd0246ac46613c3b74b472afda9667d05ef78a7b47d64e8930286683306c4",
+    "DESIGN-DECISIONS.md": "88e47b955aa5e302808e578ecc26c4efbe06e89d312681d5eb56b6bd1e92d635",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-policy-port.md": "1900673c8f7b7673ea5a99a1083260e21d27249890767d0cb608a6b715d53bbf",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-policy-port.json": "1c7521c1dc14f9580bfd8d4a8d995a70ac9fafb8b9d3a100ab54184d6655cf11"
+  },
+  "frozenUnchanged": true,
+  "frozenHashes": {
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.md": "3bb5e2b185b02b14145c7c51aeb3a19ecf7ac00a1add77d62fed462cdeec22b8",
+    "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1"
+  },
+  "checks": {
+    "targetedPrettier": "PASS for three docs/index paths; report paths ignored by repository default; explicit check pending parent",
+    "runtimeTests": "not run, Architect source only",
+    "stateIndex": "PASS:58 ADRs,6 redirects,40 rounds,23 closures"
+  },
+  "limits": [
+    "F3 process-local cursor OPEN",
+    "D RESET blocked",
+    "production provenance missing",
+    "no new policy/key/kind/writer/store/grant",
+    "parent owns Git and source checkpoint before Inspector RED"
+  ]
+}

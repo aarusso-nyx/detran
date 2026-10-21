@@ -1,0 +1,54 @@
+{
+  "task": "TASK-0044",
+  "runtime": "PhaseA328ec147 plus F4c0be1d93; checkout3bc6eefe",
+  "classification": "F1/F5 selected GREEN plus decisive F2 RED; full114 acceptance pending",
+  "census": {
+    "totalAuthoredHTTP": 114,
+    "selectedExecuted": 11,
+    "passed": 9,
+    "failed": 2,
+    "filtered": 103,
+    "durationSeconds": 54.92
+  },
+  "F1": "All7 controls PASS including real qualified200 and6 negative policy controls after qualified200",
+  "F5": "Both actual relation-lock contention controls PASS",
+  "F2": [
+    {
+      "kind": "weekend",
+      "expectedRaw": "2026-12-12",
+      "actualRounded": "2026-12-14"
+    },
+    {
+      "kind": "actual owned municipal holiday",
+      "expectedRaw": "2026-12-14",
+      "actualRounded": "2026-12-15"
+    }
+  ],
+  "F2Qualification": "Each actual authorizedHTTP200 before real SQL snapshot factory, actual app-role PostgreSQL transaction, current tenant operation clock, actual parameter tracks, actual calendar rows. No factory/clock substitution.",
+  "F3": "OPEN",
+  "offpage": "Earlier unchanged4 timeouts remain material validation blocker; not rerun in this epoch",
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-A-f1-f5-f2.log": "2fe25d11c7be1416d2e0fe877f99c2caead2bc06d2ddada54cf0d49eaa68f341",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-A-f1-f5-f2.json": "ab6eff27158fea160d767a6c671f5372a5accd9786d536821c33a7ca2fab19e2",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-A-hashes.json": "b3bea140167e2732340ffcf51f4fc3fc32b6b7fe5fe916192b716830de61c895",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-A-f4-green.log": "140842525b345d1c76351442de1aa7d26d16782f449032f2a8e83a5e99450adf",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-phase-A-f5-unit-green.log": "c96453fa052aac8418d55586d7835e66efbf5b838be4a3c98cedb5955797d7de"
+  },
+  "sourceHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "7d3183d05c749bb85dee21a3655a0719adb99c859bed6432630f0c791871d0d9",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "a8fae2a69f2e447936253e8e66a1383ecd740d34ee848672de29e18f7b93467c",
+    "backend/app/src/rait-risk.providers.ts": "a5b89848e92e4f1a1286de6a3a80e19c1abc8c8923db350fb3e1d06b0e0584fb",
+    "backend/domains/inf/rait-case/src/handwritten/rait-case-risk.service.ts": "af71ada5e39ef39009ec308290a07846d243b6bd33bcd02982f73ff1862fea1d",
+    "backend/domains/inf/deadlines/src/rait-risk.ts": "44cd1e7cb4ae06240a937fef5ca2e871d2d50f09803f5040906535f9b35460c5",
+    "pnpm-lock.yaml": "5ec08274307296072c11c141693f9a6ab8fc48f38fb253a3f6c2060a7e5aacdb"
+  },
+  "typecheck": "PASS prior to execution",
+  "runtimeUnchangedDuringEpoch": true,
+  "oldEpochsPreserved": true,
+  "sanitization": "Copied unchanged raw transcripts inspected for credentials/raw DSNs; none included.",
+  "units": {
+    "F4": "1PASS90filtered229ms",
+    "F5": "1PASS1.62s"
+  },
+  "lease": "53343 released; no live DB/test process"
+}

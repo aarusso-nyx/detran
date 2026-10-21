@@ -1,0 +1,43 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/domains/inf/deadlines
+
+ ❯ tests/unit/rait-risk.spec.ts (91 tests | 1 failed | 90 skipped) 54ms
+   × globally sorts the deduplicated opaque source-version union independently of clock/input order 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > globally sorts the deduplicated opaque source-version union independently of clock/input order
+AssertionError: expected [ …(3) ] to deeply equal [ …(3) ]
+
+- Expected
++ Received
+
+  [
+-   "rrv1:1111111111111111111111111111111111111111111111111111111111111111",
+-   "rrv1:7777777777777777777777777777777777777777777777777777777777777777",
+    "rrv1:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
++   "rrv1:7777777777777777777777777777777777777777777777777777777777777777",
++   "rrv1:1111111111111111111111111111111111111111111111111111111111111111",
+  ]
+
+ ❯ tests/unit/rait-risk.spec.ts:363:55
+    361|   source.clocks[3]!.sourceVersions = [low];
+    362|   const before = structuredClone(source);
+    363|   expect(api.evaluateRaitRisk(source).sourceVersions).toEqual([
+       |                                                       ^
+    364|     low,
+    365|     middle,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 90 skipped (91)
+   Start at  21:39:44
+   Duration  805ms (transform 271ms, setup 0ms, import 421ms, tests 54ms, environment 0ms)
+
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/domains/inf/deadlines:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run --config vitest.config.ts tests/unit/rait-risk.spec.ts -t globally sorts

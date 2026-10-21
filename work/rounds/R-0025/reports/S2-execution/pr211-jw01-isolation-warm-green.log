@@ -1,0 +1,88 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+stdout | tests/e2e/rait-jw01-admissibility.e2e.spec.ts
+JW01_RATE_CAPACITY_RESTORED {"original":null,"restored":null}
+
+ ❯ tests/e2e/rait-jw01-admissibility.e2e.spec.ts (51 tests | 51 skipped) 10025ms
+     ↓ rait-analyst starts strict F01 with one engine-owned verdict and a case ETag
+     ↓ rait-secretary starts strict F01 with one engine-owned verdict and a case ETag
+     ↓ starts, saves three individual human criteria, upserts and admits with current ETag
+     ↓ rejects with canonical reason and operator grounds; no client inferred legal basis
+     ↓ admit cannot bypass incomplete human checklist
+     ↓ engine missing timer input fails closed before any state/verdict/event/audit write
+     ↓ bi-analyst cannot triage; no persisted effect
+     ↓ bi-analyst cannot save; no persisted effect
+     ↓ rait-chair cannot triage; no persisted effect
+     ↓ rait-chair cannot save; no persisted effect
+     ↓ rait-rapporteur cannot triage; no persisted effect
+     ↓ rait-rapporteur cannot save; no persisted effect
+     ↓ R01 rejects server-owned field tenant_id
+     ↓ R01 rejects server-owned field evaluated_by
+     ↓ R01 rejects server-owned field evaluated_at
+     ↓ R01 rejects server-owned field version
+     ↓ R01 rejects server-owned field tempestividade
+     ↓ F01 rejects nonempty body {"verdict":true}
+     ↓ F01 rejects nonempty body {"tenant_id":"00000000-0000-7000-8000-00000000a001"}
+     ↓ F01 rejects nonempty body {"case_id":"00000000-0000-7000-8000-000010000002"}
+     ↓ triage: 428 for null
+     ↓ save: 428 for null
+     ↓ triage: 412 for "0"
+     ↓ save: 412 for "0"
+     ↓ requires idempotency key and does not accept supplied tempestividade as a human criterion
+     ↓ cross-tenant resource ID is indistinguishable from missing and produces no writes
+     ↓ patch cannot bypass controlled admissibility POST
+     ↓ delete cannot bypass controlled admissibility POST
+     ↓ triage rejects a later case state rather than rewinding workflow
+     ↓ triage serial replay has one version/audit/outbox
+     ↓ save serial replay has one version/audit/outbox
+     ↓ triage parallel replay has one version/audit/outbox
+     ↓ save parallel replay has one version/audit/outbox
+     ↓ reusing R01 key with a different valid payload is 409 without another mutation
+     ↓ triage rolls back all state/verdicts/ledger/events if audit persistence fails
+     ↓ save rolls back all state/verdicts/ledger/events if audit persistence fails
+     ↓ cannot save a human verdict before F01 transitions the protocolled case
+     ↓ cannot save against an actual foreign-tenant parent case
+     ↓ F01 cannot omit its idempotency header
+     ↓ reject cannot omit the operator legal basis or use the legacy body field
+     ↓ saves all three, edits one, then A→B→A with fresh versions and persisted verdicts
+     ↓ triage: same key with changed If-Match is 409 without replaying stale success
+     ↓ save: same key with changed If-Match is 409 without replaying stale success
+     ↓ admit: same key with changed If-Match is 409 without replaying stale success
+     ↓ reject: same key with changed If-Match is 409 without replaying stale success
+     ↓ triage: same original key/version but another authorized actor conflicts
+     ↓ save: same original key/version but another authorized actor conflicts
+     ↓ standalone technical-admin cannot triage/save by wildcard or alter audit history
+     ↓ rait-secretary: triage and human save audit the actual authenticated role
+     ↓ technical-admin,rait-secretary: triage and human save audit the actual authenticated role
+   ↓ approved isolated JW01 capacity still exercises actual tenant PostgreSQL rate windows
+S2_ASSERTIONS {"test":"S2 actual SQL factory with independently admitted synthetic provenance only > mounts the public narrow provenance port while retaining the actual SQL factory","executedAssertions":2}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (125 tests | 124 skipped) 436ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/e2e/rait-jw01-admissibility.e2e.spec.ts [ tests/e2e/rait-jw01-admissibility.e2e.spec.ts ]
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ tests/e2e/rait-jw01-admissibility.e2e.spec.ts:72:1
+     70|   return match as string;
+     71| }
+     72| beforeAll(async () => {
+       | ^
+     73|   assertDedicatedDatabaseEnvironment();
+     74|   process.env.STYNX_RATE_LIMIT_DEFAULT = '10000';
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 passed | 175 skipped (176)
+   Start at  13:53:26
+   Duration  14.79s (transform 9.73s, setup 0ms, import 4.08s, tests 10.46s, environment 0ms)
+
+JSON report written to /tmp/pr211-jw01-isolation-warm-green.json
+undefined
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/e2e/rait-p402-claim.e2e.spec.ts tests/e2e/rait-jw01-admissibility.e2e.spec.ts -t mounts the public narrow provenance port|TASK25|review1 current-version|approved isolated JW01 capacity --reporter=default --reporter=json --outputFile=/tmp/pr211-jw01-isolation-warm-green.json

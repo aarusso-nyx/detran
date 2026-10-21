@@ -1,0 +1,285 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/inf-deadlines@0.0.1 test:unit /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/deadlines
+> DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts "tests/unit/rait-risk.spec.ts" "--passWithNoTests=false"
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/deadlines
+
+ ❯ tests/unit/rait-risk.spec.ts (89 tests | 89 failed) 251ms
+     × exports the canonical additive API without replacing the existing engine 30ms
+     × uses reached civil boundary 2026-09-09 as SEM_RISCO 6ms
+     × uses reached civil boundary 2026-09-10 as ALERTA_N1 1ms
+     × uses reached civil boundary 2026-09-14 as ALERTA_N1 1ms
+     × uses reached civil boundary 2026-09-15 as ALERTA_N2 1ms
+     × uses reached civil boundary 2026-09-18 as CRITICO 0ms
+     × uses reached civil boundary 2026-09-20 as PRESCRITO_OPERACIONAL 0ms
+     × uses reached civil boundary 2026-09-21 as PRESCRITO_OPERACIONAL 0ms
+     × returns explicit null for four qualified NA clocks, never assessed low risk 0ms
+     × worst applicable clock outranks array order and does not invent D N3 0ms
+     × rejects missing clock with typed source error 1ms
+     × rejects duplicate clock with typed source error 0ms
+     × rejects invalid date with typed source error 0ms
+     × rejects invalid instant with typed source error 3ms
+     × rejects invalid timezone with typed source error 27ms
+     × rejects operation day mismatch with typed source error 6ms
+     × rejects missing source versions with typed source error 1ms
+     × rejects missing NA provenance with typed source error 1ms
+     × rejects missing timer with typed source error 1ms
+     × rejects missing step provenance with typed source error 8ms
+     × rejects missing parameter with typed source error 0ms
+     × rejects duplicate flag with typed source error 2ms
+     × rejects reversed dates with typed source error 3ms
+     × rejects wrong ceiling stage with typed source error 7ms
+     × rejects start after ceiling with typed source error 22ms
+     × uses tenant civil day across UTC midnight from the supplied operation instant 1ms
+   × qualified A180 stage ALERTA_N1 boundary -1 uses resolved dates 102ms
+   × qualified A180 stage ALERTA_N1 boundary 0 uses resolved dates 1ms
+   × qualified A180 stage ALERTA_N1 boundary 1 uses resolved dates 0ms
+   × qualified A180 stage ALERTA_N2 boundary -1 uses resolved dates 0ms
+   × qualified A180 stage ALERTA_N2 boundary 0 uses resolved dates 0ms
+   × qualified A180 stage ALERTA_N2 boundary 1 uses resolved dates 0ms
+   × qualified A180 stage CRITICO boundary -1 uses resolved dates 0ms
+   × qualified A180 stage CRITICO boundary 0 uses resolved dates 0ms
+   × qualified A180 stage CRITICO boundary 1 uses resolved dates 0ms
+   × qualified A180 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates 0ms
+   × qualified A180 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates 0ms
+   × qualified A180 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N1 boundary -1 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N1 boundary 0 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N1 boundary 1 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N2 boundary -1 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N2 boundary 0 uses resolved dates 0ms
+   × qualified A360 stage ALERTA_N2 boundary 1 uses resolved dates 0ms
+   × qualified A360 stage CRITICO boundary -1 uses resolved dates 3ms
+   × qualified A360 stage CRITICO boundary 0 uses resolved dates 1ms
+   × qualified A360 stage CRITICO boundary 1 uses resolved dates 1ms
+   × qualified A360 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates 0ms
+   × qualified A360 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates 0ms
+   × qualified A360 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N1 boundary -1 uses resolved dates 1ms
+   × qualified B24 stage ALERTA_N1 boundary 0 uses resolved dates 1ms
+   × qualified B24 stage ALERTA_N1 boundary 1 uses resolved dates 1ms
+   × qualified B24 stage ALERTA_N2 boundary -1 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N2 boundary 0 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N2 boundary 1 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N3 boundary -1 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N3 boundary 0 uses resolved dates 0ms
+   × qualified B24 stage ALERTA_N3 boundary 1 uses resolved dates 0ms
+   × qualified B24 stage CRITICO boundary -1 uses resolved dates 0ms
+   × qualified B24 stage CRITICO boundary 0 uses resolved dates 0ms
+   × qualified B24 stage CRITICO boundary 1 uses resolved dates 0ms
+   × qualified B24 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates 0ms
+   × qualified B24 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates 0ms
+   × qualified B24 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N2 boundary -1 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N2 boundary 0 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N2 boundary 1 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N3 boundary -1 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N3 boundary 0 uses resolved dates 0ms
+   × qualified C36 stage ALERTA_N3 boundary 1 uses resolved dates 0ms
+   × qualified C36 stage CRITICO boundary -1 uses resolved dates 0ms
+   × qualified C36 stage CRITICO boundary 0 uses resolved dates 0ms
+   × qualified C36 stage CRITICO boundary 1 uses resolved dates 0ms
+   × qualified C36 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates 0ms
+   × qualified C36 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates 0ms
+   × qualified C36 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N1 boundary -1 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N1 boundary 0 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N1 boundary 1 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N2 boundary -1 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N2 boundary 0 uses resolved dates 0ms
+   × qualified D60 stage ALERTA_N2 boundary 1 uses resolved dates 0ms
+   × qualified D60 stage CRITICO boundary -1 uses resolved dates 0ms
+   × qualified D60 stage CRITICO boundary 0 uses resolved dates 0ms
+   × qualified D60 stage CRITICO boundary 1 uses resolved dates 0ms
+   × qualified D60 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates 0ms
+   × qualified D60 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates 0ms
+   × qualified D60 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 89 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > exports the canonical additive API without replacing the existing engine
+AssertionError: expected undefined to be type of 'function'
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/unit/rait-risk.spec.ts:86:34
+     84| describe('S2 public pure current risk (interface-pending until runtime…
+     85|   it('exports the canonical additive API without replacing the existin…
+     86|     expect(api.evaluateRaitRisk).toBeTypeOf('function');
+       |                                  ^
+     87|     expect(api.RaitRiskSourceError).toBeTypeOf('function');
+     88|     expect(deadlines.createDeadlineEngine).toBeTypeOf('function');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-09 as SEM_RISCO
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-10 as ALERTA_N1
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-14 as ALERTA_N1
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-15 as ALERTA_N2
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-18 as CRITICO
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-20 as PRESCRITO_OPERACIONAL
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses reached civil boundary 2026-09-21 as PRESCRITO_OPERACIONAL
+TypeError: api.evaluateRaitRisk is not a function
+ ❯ tests/unit/rait-risk.spec.ts:102:26
+    100|       const source = input(today),
+    101|         before = structuredClone(source);
+    102|       const result = api.evaluateRaitRisk(source);
+       |                          ^
+    103|       expect(result).toMatchObject({
+    104|         asOf: source.asOf,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > returns explicit null for four qualified NA clocks, never assessed low risk
+TypeError: api.evaluateRaitRisk is not a function
+ ❯ tests/unit/rait-risk.spec.ts:135:16
+    133|       sourceVersions: [`opaque:${c.clockCode}`],
+    134|     }));
+    135|     expect(api.evaluateRaitRisk(source).worstFlag).toBeNull();
+       |                ^
+    136|   });
+    137|   it('worst applicable clock outranks array order and does not invent …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > worst applicable clock outranks array order and does not invent D N3
+TypeError: api.evaluateRaitRisk is not a function
+ ❯ tests/unit/rait-risk.spec.ts:173:16
+    171|       sourceVersions: ['opaque:D'],
+    172|     };
+    173|     expect(api.evaluateRaitRisk(source).worstFlag).toBe('CRITICO');
+       |                ^
+    174|     source.clocks.reverse();
+    175|     expect(api.evaluateRaitRisk(source).worstFlag).toBe('CRITICO');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing clock with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects duplicate clock with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects invalid date with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects invalid instant with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects invalid timezone with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects operation day mismatch with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing source versions with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing NA provenance with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing timer with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing step provenance with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects missing parameter with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects duplicate flag with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects reversed dates with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects wrong ceiling stage with typed source error
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > rejects start after ceiling with typed source error
+AssertionError: expected undefined to be type of 'function'
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ tests/unit/rait-risk.spec.ts:282:36
+    280|       const v = input();
+    281|       mutate(v);
+    282|       expect(api.evaluateRaitRisk).toBeTypeOf('function');
+       |                                    ^
+    283|       expect(api.RaitRiskSourceError).toBeTypeOf('function');
+    284|       expect(() => api.evaluateRaitRisk(v)).toThrow(api.RaitRiskSource…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > S2 public pure current risk (interface-pending until runtime export exists) > uses tenant civil day across UTC midnight from the supplied operation instant
+TypeError: api.evaluateRaitRisk is not a function
+ ❯ tests/unit/rait-risk.spec.ts:289:16
+    287|     const v = input('2026-09-14');
+    288|     v.asOf = '2026-09-15T02:00:00Z';
+    289|     expect(api.evaluateRaitRisk(v)).toMatchObject({
+       |                ^
+    290|       today: '2026-09-14',
+    291|       worstFlag: 'ALERTA_N1',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/89]⎯
+
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N1 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N1 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N1 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N2 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N2 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage ALERTA_N2 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage CRITICO boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage CRITICO boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage CRITICO boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A180 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N1 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N1 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N1 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N2 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N2 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage ALERTA_N2 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage CRITICO boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage CRITICO boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage CRITICO boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified A360 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N1 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N1 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N1 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N2 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N2 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N2 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N3 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N3 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage ALERTA_N3 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage CRITICO boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage CRITICO boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage CRITICO boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified B24 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N2 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N2 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N2 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N3 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N3 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage ALERTA_N3 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage CRITICO boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage CRITICO boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage CRITICO boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified C36 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N1 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N1 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N1 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N2 boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N2 boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage ALERTA_N2 boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage CRITICO boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage CRITICO boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage CRITICO boundary 1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage PRESCRITO_OPERACIONAL boundary -1 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage PRESCRITO_OPERACIONAL boundary 0 uses resolved dates
+ FAIL  tests/unit/rait-risk.spec.ts > qualified D60 stage PRESCRITO_OPERACIONAL boundary 1 uses resolved dates
+TypeError: api.evaluateRaitRisk is not a function
+ ❯ tests/unit/rait-risk.spec.ts:339:20
+    337|         const expected =
+    338|           delta < 0 ? (flags[stage - 1] ?? 'SEM_RISCO') : flags[stage];
+    339|         expect(api.evaluateRaitRisk(value).worstFlag).toBe(expected);
+       |                    ^
+    340|       });
+    341|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/89]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  89 failed (89)
+   Start at  19:04:32
+   Duration  2.05s (transform 373ms, setup 0ms, import 556ms, tests 251ms, environment 0ms)
+
+/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran/backend/domains/inf/deadlines:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @detran/inf-deadlines@0.0.1 test:unit: `DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts "tests/unit/rait-risk.spec.ts" "--passWithNoTests=false"`
+Exit status 1

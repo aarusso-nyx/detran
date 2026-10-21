@@ -70,6 +70,9 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0055](ADR-0055-scorecard-harness-and-historical-compatibility.md) | Executable invariant producers and additive historical compatibility                    | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0056](ADR-0056-source-bound-security-invariants.md)               | Source-bound RBAC and error-semantics invariants                                        | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0057](ADR-0057-partial-security-governance-delivery.md)           | Partial C5/C7/C8 delivery; all-nine native C6 activation remains blocked WIP            | Accepted | —                                                                                 |
+| [ADR-0058](ADR-0058-rait-risk-source-transaction-locks.md)             | RAIT risk source transaction locks                                                      | Accepted | —                                                                                 |
+| [ADR-0059](ADR-0059-rait-candidate-universe-linearization.md)          | RAIT candidate universe linearization                                                   | Accepted | —                                                                                 |
+| [ADR-0060](ADR-0060-rait-policy-provenance-and-risk-boundaries.md)     | RAIT policy provenance and current-risk read boundaries                                 | Accepted | —                                                                                 |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
@@ -99,6 +102,10 @@ não uma citação, e não muda.
 | ADR-0046      | [ADR-0046-devai-263-measurement-repairs.md](ADR-0046-devai-263-measurement-repairs.md)             | ADR-0051    | [ADR-0051-devai-263-measurement-repairs.md](ADR-0051-devai-263-measurement-repairs.md)             |
 
 | ADR-0050 | [ADR-0050-rait-command-replay-provenance.md](ADR-0050-rait-command-replay-provenance.md) | ADR-0052 | [ADR-0052-rait-command-replay-provenance.md](ADR-0052-rait-command-replay-provenance.md) |
+
+| ADR-0055 | [ADR-0055-rait-risk-source-transaction-locks.md](ADR-0055-rait-risk-source-transaction-locks.md) | ADR-0058 | [ADR-0058-rait-risk-source-transaction-locks.md](ADR-0058-rait-risk-source-transaction-locks.md) |
+| ADR-0056 | [ADR-0056-rait-candidate-universe-linearization.md](ADR-0056-rait-candidate-universe-linearization.md) | ADR-0059 | [ADR-0059-rait-candidate-universe-linearization.md](ADR-0059-rait-candidate-universe-linearization.md) |
+| ADR-0057 | [ADR-0057-rait-policy-provenance-and-risk-boundaries.md](ADR-0057-rait-policy-provenance-and-risk-boundaries.md) | ADR-0060 | [ADR-0060-rait-policy-provenance-and-risk-boundaries.md](ADR-0060-rait-policy-provenance-and-risk-boundaries.md) |
 
 ## R-0025 admissibility continuation
 

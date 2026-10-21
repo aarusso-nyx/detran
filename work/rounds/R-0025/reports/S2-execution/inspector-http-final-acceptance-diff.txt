@@ -1,0 +1,724 @@
+--- backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts parent-before
++++ backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts amended
+@@ -319,7 +319,7 @@
+     events.length,
+   );
+   const flags = await fixture.owner.query(
+-    `select count(*)::int n from integration.outbox where tenant_id=$1 and topic='rait.clock.flag-changed' and (aggregate_id=$2 or aggregate_id in(select id::text from inf.rait_clock where case_id=$2) or payload->>'caseId'=$2 or payload->>'clockId' in(select id::text from inf.rait_clock where case_id=$2))`,
++    `select count(*)::int n from integration.outbox where tenant_id=$1 and topic='rait.clock.flag-changed' and (aggregate_id=$2::text or aggregate_id in(select id::text from inf.rait_clock where case_id=$2::uuid) or payload->>'caseId'=$2::text or payload->>'clockId' in(select id::text from inf.rait_clock where case_id=$2::uuid))`,
+     [RAIT_TENANT, caseId],
+   );
+   expect(flags.rows[0]!.n).toBe(0);
+@@ -522,7 +522,7 @@
+         .set(fixture.riskHeaders());
+       expect(control.status, JSON.stringify(control.body)).toBe(200);
+       await fixture.owner.query(
+-        `update inf.infraction_timer set ${field}=${field}+1 where id=$1`,
++        `update inf.infraction_timer set ${field}=${field}${field === 'raw_due_on' ? '-1' : '+1'} where id=$1`,
+         [a.timer],
+       );
+       if (field === 'due_on')
+@@ -746,8 +746,9 @@
+ async function waitForActualClaimLock() {
+   const deadline = Date.now() + 5000;
+   while (Date.now() < deadline) {
++    await fixture.owner.query('select pg_stat_clear_snapshot()');
+     const observed = await fixture.owner.query<{ n: number }>(
+-      "select count(*)::int n from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and query ilike '%rait_%'",
++      "select count(*)::int n from pg_stat_activity where datname=current_database() and pid<>pg_backend_pid() and wait_event_type='Lock' and pg_backend_pid()=any(pg_blocking_pids(pid)) and query ilike '%rait_%'",
+     );
+     if (observed.rows[0]!.n > 0) return;
+     await new Promise((resolve) => setTimeout(resolve, 20));
+@@ -1074,11 +1075,25 @@
+           [target.incident, other.id],
+         );
+       }
+-      if (mode === 'foreignTenant')
++      if (mode === 'foreignTenant') {
++        const foreign = await fixture.foreignIncidentSource(c.id);
++        expect(foreign.tenantId).not.toBe(RAIT_TENANT);
++        expect(foreign.receipt.core.tenantId).toBe(foreign.tenantId);
++        expect(foreign.receipt.core.caseId).toBe(foreign.caseId);
++        fixture.revokedReceipts.add(target.receipt.digest);
+         await fixture.owner.query(
+-          'update inf.rait_incident set tenant_id=$2 where id=$1',
+-          [target.incident, randomUUID()],
+-        );
++          'update inf.rait_clock_alert set incident_ref=$2 where id=$1',
++          [target.alert, foreign.ref],
++        );
++        expect(
++          (
++            await fixture.owner.query(
++              'select id from inf.rait_incident where tenant_id=$1 and incident_ref=$2',
++              [RAIT_TENANT, foreign.ref],
++            )
++          ).rows,
++        ).toEqual([]);
++      }
+       if (mode === 'clockOnly') {
+         await fixture.owner.query(
+           'update inf.rait_incident set case_id=null where id=$1',
+@@ -1133,8 +1148,7 @@
+         (row) =>
+           row.hits >
+           (before.find(
+-            (old) =>
+-              old.bucket_key === row.bucket_key && old.win === row.win,
++            (old) => old.bucket_key === row.bucket_key && old.win === row.win,
+           )?.hits ?? 0),
+       ),
+     ).toBe(true);
+@@ -1250,7 +1264,7 @@
+       { state: 'DISTRIBUIDO', unit_id: null, legal_priority: null },
+     ]);
+     await fixture.owner.query(
+-      "insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,true,$4,'S2 historical NULL exclusion observation')",
++      "insert into inf.rait_case_pool_scope(tenant_id,case_id,pool_id,active,authorization_ref,source_ref) values($1,$2,$3,true,$4,'S2 historical NULL exclusion observation') on conflict(tenant_id,case_id,pool_id) do nothing",
+       [
+         RAIT_TENANT,
+         historical,
+@@ -1258,6 +1272,21 @@
+         'Owner-approved isolated Inspector fixture',
+       ],
+     );
++    expect(
++      (
++        await fixture.owner.query(
++          'select tenant_id,case_id,pool_id,active from inf.rait_case_pool_scope where tenant_id=$1 and case_id=$2 and pool_id=$3',
++          [RAIT_TENANT, historical, pool],
++        )
++      ).rows,
++    ).toEqual([
++      {
++        tenant_id: RAIT_TENANT,
++        case_id: historical,
++        pool_id: pool,
++        active: true,
++      },
++    ]);
+     const before = await fixture.effects();
+     const r = await request(app.getHttpServer())
+       .get(`${PREFIX}/claim-context`)
+@@ -1303,9 +1332,11 @@
+       expect(await fixture.effects()).toEqual(before);
+       const inventory = await request(app.getHttpServer())
+         .get(`${PREFIX}/cases/${c.id}`)
+-        .set(disposition === 'hold' ? fixture.riskHeaders() : fixture.headers());
++        .set(
++          disposition === 'hold' ? fixture.riskHeaders() : fixture.headers(),
++        );
+       expect(inventory.status, JSON.stringify(inventory.body)).toBe(200);
+-      expect(inventory.body.data.state).toBe('DISTRIBUIDO');
++      expect(inventory.body.state).toBe('DISTRIBUIDO');
+       expect(await fixture.effects()).toEqual(before);
+     });
+   it('stale observed legacy version fails409 without automatic reclassification', async () => {
+@@ -1371,6 +1402,10 @@
+       connectionString: process.env.STYNX_OWNER_DATABASE_URL,
+     });
+     await writer.connect();
++    await writer.query("select set_config('app.tenant_id',$1,false)", [
++      RAIT_TENANT,
++    ]);
++    fixture.qualifiedBackendPids.clear();
+     const writerPid = (
+       await writer.query<{ id: number }>('select pg_backend_pid() id')
+     ).rows[0]!.id;
+@@ -1404,11 +1439,19 @@
+       let locked = false;
+       const end = Date.now() + 5000;
+       while (!mutated && !locked && Date.now() < end) {
+-        const row = await fixture.owner.query<{ waiting: boolean }>(
+-          "select wait_event_type='Lock' waiting from pg_stat_activity where pid=$1",
++        await fixture.owner.query('select pg_stat_clear_snapshot()');
++        const row = await fixture.owner.query<{
++          waiting: boolean;
++          blockers: number[];
++        }>(
++          "select wait_event_type='Lock' waiting,pg_blocking_pids(pid) blockers from pg_stat_activity where pid=$1",
+           [writerPid],
+         );
+-        locked = row.rows[0]?.waiting === true;
++        locked =
++          row.rows[0]?.waiting === true &&
++          row.rows[0].blockers.some((pid) =>
++            fixture.qualifiedBackendPids.has(pid),
++          );
+         if (!locked && !mutated) await new Promise((r) => setTimeout(r, 10));
+       }
+       expect(
+@@ -1447,6 +1490,326 @@
+       fixture.onQualified = undefined;
+     }
+   });
++});
++
++describe('S2 R10 fixed complete potential universe', () => {
++  it('a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set', async () => {
++    const initial = await fixture.admitted(app);
++    await fixture.prepareRisk(initial.id);
++    const newcomer = await fixture.admitted(app);
++    const assigned = await fixture.historicallyDistributed(
++      newcomer.id,
++      'preserve_assigned',
++    );
++    await fixture.prepareRisk(newcomer.id);
++    await fixture.qualifyLegacy(newcomer.id, assigned);
++    const active = (
++      await fixture.owner.query<{ id: string }>(
++        'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
++        [RAIT_TENANT, newcomer.id],
++      )
++    ).rows;
++    expect(active).toHaveLength(1);
++    const control = await request(app.getHttpServer())
++      .get(`${PREFIX}/claim-context`)
++      .query({ pool_id: fixture.pool })
++      .set(fixture.headers());
++    expect(control.status, JSON.stringify(control.body)).toBe(200);
++    expect(
++      control.body.data.queue.items.map((item: { id: string }) => item.id),
++    ).toEqual([initial.id]);
++    const selected = fixture.parameters.get('A')!;
++    const reached = deferred<void>(),
++      resume = deferred<void>();
++    let paused = false;
++    fixture.qualifiedBackendPids.clear();
++    fixture.onQualified = async (req) => {
++      if (
++        !paused &&
++        req.kind === 'parameter' &&
++        req.sourceRefs.includes('sql:ops.parameter:' + selected.id)
++      ) {
++        paused = true;
++        reached.resolve();
++        await resume.promise;
++      }
++    };
++    const writer = new Client({
++      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
++    });
++    await writer.connect();
++    await writer.query("select set_config('app.tenant_id',$1,false)", [
++      RAIT_TENANT,
++    ]);
++    const writerPid = (
++      await writer.query<{ pid: number }>('select pg_backend_pid() pid')
++    ).rows[0]!.pid;
++    const pending = claim().then((r) => r);
++    try {
++      await withDeadline(
++        Promise.race([
++          reached.promise,
++          pending.then((r) => {
++            throw Error(
++              'PREREQUISITE_PENDING: claim returned ' +
++                r.status +
++                ' before actual current-source qualification pause',
++            );
++          }),
++        ]),
++        'PREREQUISITE_PENDING: initial universe not actually qualified',
++      );
++      expect(fixture.qualifiedBackendPids.size).toBeGreaterThan(0);
++      expect(fixture.qualifiedBackendPids.has(writerPid)).toBe(false);
++      // Source-backed historical-assignment release, not a newly protocolled workflow or an ADMITIDO+assignment fiction.
++      await writer.query('begin');
++      const released = await withDeadline(
++        writer.query(
++          "update inf.rait_assignment set active=false,released_at=clock_timestamp(),release_reason='afastamento' where tenant_id=$1 and id=$2 and case_id=$3 and active returning id,active,release_reason",
++          [RAIT_TENANT, active[0]!.id, newcomer.id],
++        ),
++        'PREREQUISITE_PENDING: independent eligibility change could not commit before the fence',
++      );
++      expect(released.rows).toEqual([
++        { id: active[0]!.id, active: false, release_reason: 'afastamento' },
++      ]);
++      const current = await fixture.qualifyReleasedLegacySource(
++        newcomer.id,
++        assigned,
++        writer,
++      );
++      await writer.query('commit');
++      await fixture.qualifyLegacy(newcomer.id, current);
++      expect(
++        (
++          await fixture.owner.query(
++            'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
++            [RAIT_TENANT, newcomer.id],
++          )
++        ).rows,
++      ).toEqual([]);
++      const before = await fixture.effects(); // Includes only the explicit external release/review; no command effect is allowed.
++      resume.resolve();
++      const result = await pending;
++      expect(result.status, JSON.stringify(result.body)).toBe(503);
++      expect(result.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
++      expect(result.body.context ?? {}).toEqual({});
++      expect(result.body).not.toHaveProperty('data');
++      expect(await fixture.effects()).toEqual(before);
++      fixture.onQualified = undefined;
++      const fresh = await request(app.getHttpServer())
++        .get(`${PREFIX}/claim-context`)
++        .query({ pool_id: fixture.pool })
++        .set(fixture.headers());
++      expect(fresh.status, JSON.stringify(fresh.body)).toBe(200);
++      expect(
++        fresh.body.data.queue.items
++          .map((item: { id: string }) => item.id)
++          .sort(),
++      ).toEqual([initial.id, newcomer.id].sort());
++      expect(fresh.body.data.queue.nextCursor).toBeNull();
++      expect(await fixture.effects()).toEqual(before);
++    } finally {
++      resume.resolve();
++      await writer.query('rollback');
++      await Promise.allSettled([pending]);
++      await writer.end();
++      fixture.onQualified = undefined;
++    }
++  });
++});
++
++describe('S2 R7 real INSERT phantom closure under actual request-role SQL', () => {
++  for (const kind of ['parameter', 'holiday', 'caseEvent'] as const)
++    it(`matching ${kind} INSERT waits for actual source transaction or causes safe revalidation`, async () => {
++      const c = await fixture.admitted(app);
++      const source = await fixture.prepareRisk(c.id);
++      await readQualifiedRisk(c.id);
++      const selected = fixture.parameters.get('A')!;
++      const insertedId = randomUUID();
++      const ceiling = (
++        await fixture.owner.query<{ day: string }>(
++          'select ceiling_on::text AS "day" from inf.rait_clock where id=$1',
++          [source.records.get('A')!.clock],
++        )
++      ).rows[0]!.day;
++      if (kind === 'holiday')
++        expect(
++          (
++            await fixture.owner.query(
++              'select id from inf.rait_holiday where tenant_id=$1 and holiday_on=$2::date',
++              [RAIT_TENANT, ceiling],
++            )
++          ).rows,
++        ).toEqual([]);
++      const reached = deferred<void>(),
++        resume = deferred<void>();
++      let paused = false;
++      fixture.qualifiedBackendPids.clear();
++      fixture.onQualified = async (req) => {
++        if (
++          !paused &&
++          req.kind === 'parameter' &&
++          req.sourceRefs.includes('sql:ops.parameter:' + selected.id)
++        ) {
++          paused = true;
++          reached.resolve();
++          await resume.promise;
++        }
++      };
++      const writer = new Client({
++        connectionString: process.env.STYNX_OWNER_DATABASE_URL,
++      });
++      await writer.connect();
++      await writer.query("select set_config('app.tenant_id',$1,false)", [
++        RAIT_TENANT,
++      ]);
++      const writerPid = (
++        await writer.query<{ pid: number }>('select pg_backend_pid() pid')
++      ).rows[0]!.pid;
++      const before = await fixture.effects();
++      let committed = false,
++        writerFailure: unknown;
++      let mutation: Promise<void> | undefined;
++      const pending = claim().then((r) => r);
++      try {
++        await withDeadline(
++          Promise.race([
++            reached.promise,
++            pending.then((r) => {
++              throw Error(
++                'PREREQUISITE_PENDING: claim returned ' +
++                  r.status +
++                  ' before independently verified parameter barrier',
++              );
++            }),
++          ]),
++          'PREREQUISITE_PENDING: actual qualification barrier not reached',
++        );
++        expect(fixture.qualifiedBackendPids.size).toBeGreaterThan(0); // Actual role/tenant assertions execute in qualify(), not a mocked identity.
++        mutation = (async () => {
++          await writer.query('begin');
++          if (kind === 'parameter') {
++            await writer.query(
++              `insert into ops.parameter select (jsonb_populate_record(null::ops.parameter,to_jsonb(p)||jsonb_build_object('id',$1::text,'version',p.version+1,'effective_from',(p.effective_from+1)::text))).* from ops.parameter p where p.id=$2`,
++              [insertedId, selected.id],
++            );
++          } else if (kind === 'holiday') {
++            await writer.query(
++              "insert into inf.rait_holiday(id,tenant_id,name,holiday_on,scope,optional) values($1,$2,'S2 isolated R7 matching calendar source',$3::date,'municipal',false)",
++              [insertedId, RAIT_TENANT, ceiling],
++            );
++          } else {
++            // Existing canonical event kind/transition/actor; a new authentic row changes complete history inventory.
++            await writer.query(
++              `insert into inf.rait_case_event(id,tenant_id,case_id,event_type,from_state,to_state,actor_id,payload,occurred_at)
++              select $1,tenant_id,case_id,event_type,from_state,to_state,actor_id,payload,clock_timestamp() from inf.rait_case_event where tenant_id=$2 and case_id=$3 and to_state='ADMITIDO' order by occurred_at,id limit 1`,
++              [insertedId, RAIT_TENANT, c.id],
++            );
++          }
++          await writer.query('commit');
++          committed = true;
++        })().catch((error) => {
++          writerFailure = error;
++        });
++        let blockingRequest: number | undefined;
++        const end = Date.now() + 5000;
++        while (
++          !committed &&
++          !writerFailure &&
++          blockingRequest === undefined &&
++          Date.now() < end
++        ) {
++          await fixture.owner.query('select pg_stat_clear_snapshot()');
++          const activity = await fixture.owner.query<{
++            blockers: number[];
++            waiting: boolean;
++          }>(
++            "select pg_blocking_pids(pid) blockers,wait_event_type='Lock' waiting from pg_stat_activity where pid=$1",
++            [writerPid],
++          );
++          if (activity.rows[0]?.waiting)
++            blockingRequest = activity.rows[0].blockers.find((pid) =>
++              fixture.qualifiedBackendPids.has(pid),
++            );
++          if (!committed && blockingRequest === undefined)
++            await new Promise((done) => setTimeout(done, 20));
++        }
++        if (writerFailure) throw writerFailure;
++        expect(
++          blockingRequest !== undefined || committed,
++          'Actual INSERT must block on the verified request PID or commit before revalidation',
++        ).toBe(true);
++        const denialBaseline = committed ? await fixture.effects() : undefined;
++        resume.resolve();
++        const result = await pending;
++        if (blockingRequest !== undefined) {
++          expect(result.status, JSON.stringify(result.body)).toBe(200);
++          expect(result.body.data).toMatchObject({
++            id: c.id,
++            state: 'EM_INSTRUCAO',
++            version: c.version + 2,
++          });
++          expect(result.headers.etag).toBe('"' + (c.version + 2) + '"');
++        } else {
++          expect(result.status, JSON.stringify(result.body)).toBe(503);
++          expect(result.body.code).toBe('RAIT.RISK_SOURCE_UNAVAILABLE');
++          expect(result.body).not.toHaveProperty('data');
++          expect(await fixture.effects()).toEqual(denialBaseline);
++        }
++        await mutation;
++        if (writerFailure) throw writerFailure;
++        expect(committed).toBe(true);
++        const table =
++          kind === 'parameter'
++            ? 'ops.parameter'
++            : kind === 'holiday'
++              ? 'inf.rait_holiday'
++              : 'inf.rait_case_event';
++        expect(
++          (
++            await fixture.owner.query(
++              `select id,tenant_id from ${table} where id=$1`,
++              [insertedId],
++            )
++          ).rows,
++        ).toEqual([{ id: insertedId, tenant_id: RAIT_TENANT }]);
++        if (blockingRequest !== undefined) {
++          const after = await fixture.effects();
++          expect(after.outbox - before.outbox).toBe(3);
++          expect(after.audit - before.audit).toBe(1);
++          expect(after.ledger - before.ledger).toBe(1);
++          expect(after.history - before.history).toBe(
++            kind === 'caseEvent' ? 3 : 2,
++          ); // Exact external source row plus two claim stages.
++          expect(after.assignments).toHaveLength(1);
++          expect(after.clocks).toEqual(before.clocks);
++          expect(after.alerts).toBe(before.alerts);
++          await exactClaimPersistence(c.id, result.body.events);
++        }
++        await fixture.owner.query('select pg_stat_clear_snapshot()');
++        expect(
++          (
++            await fixture.owner.query<{ n: number }>(
++              "select count(*)::int n from pg_stat_activity where pid=$1 and wait_event_type='Lock'",
++              [writerPid],
++            )
++          ).rows[0]!.n,
++        ).toBe(0);
++      } finally {
++        resume.resolve();
++        await Promise.allSettled([pending, ...(mutation ? [mutation] : [])]);
++        await writer.query('rollback');
++        // Only this mutable calendar fixture row is removed; never alter immutable event/qualification history.
++        if (kind === 'holiday' && committed)
++          await writer.query(
++            'delete from inf.rait_holiday where id=$1 and tenant_id=$2',
++            [insertedId, RAIT_TENANT],
++          );
++        await writer.end();
++        fixture.onQualified = undefined;
++      }
++    });
+ });
+ 
+ async function readQualifiedRisk(caseId: string) {
+@@ -1771,7 +2134,7 @@
+       .get(`${PREFIX}/cases/${c.id}`)
+       .set(fixture.headers());
+     expect(inventory.status, JSON.stringify(inventory.body)).toBe(200);
+-    expect(inventory.body.data.id).toBe(c.id);
++    expect(inventory.body.id).toBe(c.id);
+     const r = await request(app.getHttpServer())
+       .get(`${PREFIX}/cases/${c.id}/risk`)
+       .set(fixture.riskHeaders('rait-analyst', fixture.actor));
+--- backend/app/tests/shared/rait-p402-claim.fixture.ts parent-before
++++ backend/app/tests/shared/rait-p402-claim.fixture.ts amended
+@@ -180,6 +180,7 @@
+   practiceOn = '2026-06-15';
+   provenanceChecks = 0;
+   readonly qualifiedVersions = new Set<string>();
++  readonly qualifiedBackendPids = new Set<number>();
+   onQualified: ((req: ProvenanceRequest) => Promise<void>) | undefined;
+   readonly parameters = new Map<
+     string,
+@@ -299,7 +300,8 @@
+   }
+   async joinExistingPool(pool: string) {
+     // Add only a fresh test actor's availability; preserve the canonical pool and historical case facts.
+-    const member = randomUUID(), schedule = randomUUID();
++    const member = randomUUID(),
++      schedule = randomUUID();
+     await this.owner.query(
+       "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'analista','ATIVO')",
+       [member, RAIT_TENANT, pool, this.actor],
+@@ -970,6 +972,150 @@
+     expect(sources).toHaveLength(2); // Old A and D; current real C movement remains within its36-month ceiling.
+     return sources;
+   }
++  async foreignIncidentSource(sourceCase: string) {
++    // R8: separate genuine tenant/context/source lineage. Never move A rows to B.
++    const client = new pg.Client({
++      connectionString: process.env.STYNX_OWNER_DATABASE_URL,
++    });
++    const tenantId = randomUUID(),
++      caseId = randomUUID(),
++      ait = randomUUID(),
++      actor = randomUUID(),
++      clock = randomUUID(),
++      alert = randomUUID(),
++      incident = randomUUID();
++    await client.connect();
++    try {
++      await client.query('begin');
++      await client.query("select set_config('app.tenant_id',$1,true)", [
++        tenantId,
++      ]);
++      await client.query(
++        `insert into auth.tenants(id,slug,name,short_name,cnpj,timezone,contact_email,contact_phone,state,is_active,suspended_reason,archived_at)
++        select $1::uuid,$1::text,'S2 isolated foreign tenant',short_name,null,timezone,contact_email,contact_phone,state,is_active,suspended_reason,archived_at from auth.tenants where id=$2`,
++        [tenantId, RAIT_TENANT],
++      );
++      await client.query(
++        "insert into auth.users(id,tenant_id,email,display_name) values($1::uuid,$2::uuid,$1::text||'@s2.invalid','S2 foreign fixture reviewer')",
++        [actor, tenantId],
++      );
++      const pool = randomUUID();
++      await client.query(
++        'insert into auth.memberships(tenant_id,user_id) values($1,$2)',
++        [tenantId, actor],
++      );
++      await client.query(
++        "insert into inf.rait_pool(id,tenant_id,name,instance,circuit,strategy) values($1,$2,'S2 foreign source secretary pool','defesa_previa',1,'pull')",
++        [pool, tenantId],
++      );
++      await client.query(
++        "insert into inf.rait_pool_member(id,tenant_id,pool_id,person_id,member_role,status) values($1,$2,$3,$4,'secretaria','ATIVO')",
++        [randomUUID(), tenantId, pool, actor],
++      );
++      await client.query(
++        `insert into inf.ait_ait select (jsonb_populate_record(null::inf.ait_ait,to_jsonb(a)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'ait_number',$1::text,'receipt_protocol',$1::text))).* from inf.ait_ait a join inf.rait_case c on c.ait_id=a.id where c.id=$3`,
++        [ait, tenantId, sourceCase],
++      );
++      await client.query(
++        `insert into ops.parameter select (jsonb_populate_record(null::ops.parameter,to_jsonb(p)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'changed_by',$3::text))).* from ops.parameter p join auth.tenants t on t.id=p.tenant_id where p.tenant_id=$4 and p.key='rait.priority.legal_bases' and p.traffic_agency_id is null and p.status='vigente' and not p.source_pending and p.effective_from <= (clock_timestamp() at time zone t.timezone)::date and (p.effective_to is null or p.effective_to >= (clock_timestamp() at time zone t.timezone)::date)`,
++        [randomUUID(), tenantId, actor, RAIT_TENANT],
++      );
++      await client.query(
++        `insert into inf.rait_case(id,tenant_id,ait_id,protocol_number,instance,circuit,state,intake_channel,protocolled_at)
++        select $1::uuid,$2::uuid,$3::uuid,$1::text,instance,circuit,'PROTOCOLADO',intake_channel,clock_timestamp() from inf.rait_case where id=$4`,
++        [caseId, tenantId, ait, sourceCase],
++      );
++      await client.query(
++        'select inf.rait_record_initial_priority($1,$2,clock_timestamp(),$3::jsonb)',
++        [caseId, actor, '[]'],
++      );
++      const ref = (
++        await this.owner.query<{ ref: string }>(
++          "select 'INC-2026-'||lpad((coalesce(max(substring(incident_ref from 10)::int),0)+1)::text,4,'0') ref from inf.rait_incident where tenant_id=$1 and incident_ref like 'INC-2026-%'",
++          [RAIT_TENANT],
++        )
++      ).rows[0]!.ref;
++      await client.query(
++        `insert into inf.rait_clock select (jsonb_populate_record(null::inf.rait_clock,to_jsonb(c)||jsonb_build_object('id',$1::text,'tenant_id',$2::text,'case_id',$3::text))).* from inf.rait_clock c where c.tenant_id=$4 and c.case_id=$5 and c.clock_code='A'`,
++        [clock, tenantId, caseId, RAIT_TENANT, sourceCase],
++      );
++      await client.query(
++        'insert into inf.rait_incident(id,tenant_id,incident_ref,clock_id,case_id,opened_by) values($1,$2,$3,$4,$5,$6)',
++        [incident, tenantId, ref, clock, caseId, actor],
++      );
++      await client.query(
++        "insert into inf.rait_clock_alert(id,tenant_id,clock_id,level,notified_role,incident_ref) values($1,$2,$3,'PRESCRITO_OPERACIONAL','rait-coordinator',$4)",
++        [alert, tenantId, clock, ref],
++      );
++      await client.query('set constraints all immediate');
++      await client.query('commit');
++      await client.query("select set_config('app.tenant_id',$1,false)", [
++        tenantId,
++      ]);
++      await client.query('set role role_app_backend');
++      expect(
++        (
++          await client.query(
++            "select current_role::text role,current_setting('app.tenant_id',true) tenant",
++          )
++        ).rows,
++      ).toEqual([{ role: 'role_app_backend', tenant: tenantId }]);
++      expect(
++        (
++          await client.query(
++            'select i.tenant_id,i.case_id,c.ait_id,a.tenant_id ait_tenant from inf.rait_incident i join inf.rait_case c on c.id=i.case_id and c.tenant_id=i.tenant_id join inf.ait_ait a on a.id=c.ait_id and a.tenant_id=c.tenant_id where i.id=$1',
++            [incident],
++          )
++        ).rows,
++      ).toEqual([
++        {
++          tenant_id: tenantId,
++          case_id: caseId,
++          ait_id: ait,
++          ait_tenant: tenantId,
++        },
++      ]);
++      const rows = await readSourceRows(client, [
++        'sql:inf.rait_case:' + caseId,
++        'sql:inf.rait_clock:' + clock,
++        'sql:inf.rait_clock_alert:' + alert,
++        'sql:inf.rait_incident:' + incident,
++      ]);
++      expect(rows).toHaveLength(4);
++      const core: ReceiptCore = {
++        schemaVersion: 1,
++        namespace: 'rait-risk-receipt-v1',
++        receiptId: randomUUID(),
++        kind: 'incident',
++        tenantId,
++        caseId,
++        bindings: rows.map((row) => ({
++          sourceRef: row.sourceRef,
++          rowRevision: canonicalRevision(row),
++        })),
++        authorization: {
++          authorityRef: syntheticSource,
++          actorId: actor,
++          decisionRef: 'R8 isolated foreign-tenant fixture only',
++          recordedAt: '2026-10-19T00:00:00.000000Z',
++        },
++        dependencies: [],
++        policySources: [],
++      };
++      const receipt: QualifiedReceipt = {
++        core,
++        digest: canonicalRevision(core),
++        admittedOrigin: 'owner-approved-isolated-inspector-fixture',
++      };
++      this.receipts.push(receipt);
++      return { tenantId, caseId, incident, ref, receipt };
++    } catch (error) {
++      await client.query('rollback');
++      throw error;
++    } finally {
++      await client.end();
++    }
++  }
+   async historicallyDistributed(
+     caseId: string,
+     classification:
+@@ -1066,6 +1212,55 @@
+       throw e;
+     }
+     return { qualification, receiptId, admission: admission.id, distribution };
++  }
++  async qualifyReleasedLegacySource(
++    caseId: string,
++    previous: {
++      qualification: string;
++      receiptId: string;
++      admission: string;
++      distribution: string;
++    },
++    writer: pg.Client,
++  ) {
++    const qualification = randomUUID(),
++      receiptId = randomUUID();
++    expect(
++      (
++        await writer.query(
++          'select id from inf.rait_assignment where tenant_id=$1 and case_id=$2 and active',
++          [RAIT_TENANT, caseId],
++        )
++      ).rows,
++    ).toEqual([]);
++    const inserted = await writer.query(
++      `insert into inf.rait_claim_legacy_qualification(id,tenant_id,case_id,observed_version,observed_state,assignment_status,classification,revision,admission_ref,distribution_ref,pool_scope_ref,reason,reviewer_id,authorization_ref,observed_at,assignment_ref)
++      select $1,q.tenant_id,q.case_id,c.version,c.state,'unassigned','qualified_unassigned',q.revision+1,q.admission_ref,q.distribution_ref,q.pool_scope_ref,$2,q.reviewer_id,$3,clock_timestamp(),null
++      from inf.rait_claim_legacy_qualification q join inf.rait_case c on c.tenant_id=q.tenant_id and c.id=q.case_id
++      where q.id=$4 and q.tenant_id=$5 and q.case_id=$6 and q.classification='preserve_assigned' and c.state='DISTRIBUIDO' and c.version=q.observed_version returning id,classification,assignment_status`,
++      [
++        qualification,
++        syntheticSource +
++          '; R10 independent current review after actual assignment release',
++        'receipt:' + receiptId,
++        previous.qualification,
++        RAIT_TENANT,
++        caseId,
++      ],
++    );
++    expect(inserted.rows).toEqual([
++      {
++        id: qualification,
++        classification: 'qualified_unassigned',
++        assignment_status: 'unassigned',
++      },
++    ]);
++    return {
++      qualification,
++      receiptId,
++      admission: previous.admission,
++      distribution: previous.distribution,
++    };
+   }
+   async qualifyLegacy(
+     caseId: string,
+@@ -1167,6 +1362,10 @@
+       )
+     ).rows[0]!;
+     expect(identity).toEqual({ role: 'role_app_backend', tenant: RAIT_TENANT });
++    this.qualifiedBackendPids.add(
++      (await tx.query<{ pid: number }>('select pg_backend_pid() pid')).rows[0]!
++        .pid,
++    );
+     const missing = { status: 'missing' as const, sourceVersions: [] };
+     if (req.tenantId !== RAIT_TENANT) return missing;
+     const refs = [...req.sourceRefs].sort();

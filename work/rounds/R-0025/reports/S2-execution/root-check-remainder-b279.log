@@ -1,0 +1,1432 @@
+
+EXECUTE pnpm verify:parameter-catalogue
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:parameter-catalogue /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> node tools/parameters/verify.mjs --check-generated --check-usage
+
+verify:parameter-catalogue: OK (93 entries, 18 flags, 62 i18n namespaces, 0 errors)
+
+EXECUTE pnpm --filter @detran/ui build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/ui@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/ui
+> ng-packagr -p ng-package.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/ui'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+✔ Generating FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/ui
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/ui
+- to:   /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/ui/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-20T01:34:49.905Z - Time: 1397ms
+
+
+EXECUTE pnpm --filter @detran/boat-mobile build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+> ng-packagr -p ng-package.json -c tsconfig.lib.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/boat-mobile'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+✔ Generating FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/boat-mobile
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+- to:   /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-20T01:34:51.588Z - Time: 940ms
+
+
+EXECUTE pnpm typecheck
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 typecheck /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> pnpm -r --if-present run typecheck
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+Scope: 63 of 64 workspace projects
+backend/domains/inf/deadlines typecheck$ tsc --noEmit
+backend/domains/shared typecheck$ tsc --noEmit
+packages/api-clients typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck$ tsc --noEmit
+packages/sefaz-adapter typecheck: Done
+packages/senatran-adapter typecheck$ tsc --noEmit
+packages/api-clients typecheck: Done
+packages/ui typecheck$ tsc -p tsconfig.spec.json --noEmit
+backend/domains/inf/deadlines typecheck: Done
+senatran-mock typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/senatran-adapter typecheck: Done
+backend/domains/shared typecheck: Done
+senatran-mock typecheck: Done
+apps/dashboard/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/boat/mobile typecheck$ tsc -p tsconfig.lib.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/portal/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/rait/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/boat/mobile typecheck: Done
+backend/domains/ch/clinical-network typecheck$ tsc --noEmit
+apps/dashboard/web typecheck: Done
+backend/domains/est/crash typecheck$ tsc --noEmit
+backend/domains/ch/clinical-network typecheck: Done
+backend/domains/inf/normative typecheck$ tsc --noEmit
+apps/portal/web typecheck: Done
+backend/domains/inf/rait-integration typecheck$ tsc --noEmit
+backend/domains/est/crash typecheck: Done
+.../domains/integration/renaest-mirror typecheck$ tsc --noEmit
+backend/domains/inf/normative typecheck: Done
+backend/domains/ops/agency typecheck$ tsc --noEmit
+apps/rait/web typecheck: Done
+backend/domains/ops/core typecheck$ tsc --noEmit
+backend/domains/inf/rait-integration typecheck: Done
+backend/domains/ops/example typecheck$ tsc --noEmit
+.../domains/integration/renaest-mirror typecheck: Done
+backend/domains/ops/parameter typecheck$ tsc --noEmit
+backend/domains/ops/agency typecheck: Done
+backend/domains/portal/complaints typecheck$ tsc --noEmit
+backend/domains/ops/core typecheck: Done
+backend/domains/portal/identity typecheck$ tsc --noEmit
+backend/domains/ops/example typecheck: Done
+backend/domains/ops/parameter typecheck: Done
+backend/domains/portal/complaints typecheck: Done
+backend/domains/portal/identity typecheck: Done
+apps/teat/mobile typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+apps/teat/web typecheck$ tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit
+backend/domains/ch/patients typecheck$ tsc --noEmit
+backend/domains/ch/operational-controls typecheck$ tsc --noEmit
+backend/domains/ch/patients typecheck: Done
+backend/domains/dashboard/crashes typecheck$ tsc --noEmit
+backend/domains/ch/operational-controls typecheck: Done
+backend/domains/inf/ait typecheck$ tsc --noEmit
+apps/teat/web typecheck: Done
+backend/domains/ops/evidence typecheck$ tsc --noEmit
+backend/domains/dashboard/crashes typecheck: Done
+backend/domains/ops/field typecheck$ tsc --noEmit
+apps/teat/mobile typecheck: Done
+backend/domains/ops/offline-sync typecheck$ tsc --noEmit
+backend/domains/inf/ait typecheck: Done
+backend/domains/ops/snapshots typecheck$ tsc --noEmit
+backend/domains/ops/evidence typecheck: Done
+backend/domains/portal/projections typecheck$ tsc --noEmit
+backend/domains/ops/field typecheck: Done
+backend/domains/portal/requests typecheck$ tsc --noEmit
+backend/domains/ops/offline-sync typecheck: Done
+backend/domains/ops/snapshots typecheck: Done
+backend/domains/portal/projections typecheck: Done
+backend/domains/portal/requests typecheck: Done
+backend/domains/inf/infraction typecheck$ tsc --noEmit
+backend/domains/ch/encounters typecheck$ tsc --noEmit
+backend/domains/ch/toxicology typecheck$ tsc --noEmit
+backend/domains/dashboard/monitor typecheck$ tsc --noEmit
+backend/domains/ch/toxicology typecheck: Done
+backend/domains/inf/measures typecheck$ tsc --noEmit
+backend/domains/ch/encounters typecheck: Done
+backend/domains/inf/speed typecheck$ tsc --noEmit
+backend/domains/inf/infraction typecheck: Done
+backend/domains/ops/provisioning typecheck$ tsc --noEmit
+backend/domains/dashboard/monitor typecheck: Done
+backend/domains/portal/citizen-service typecheck$ tsc --noEmit
+backend/domains/inf/speed typecheck: Done
+backend/domains/portal/inbox typecheck$ tsc --noEmit
+backend/domains/inf/measures typecheck: Done
+backend/domains/ops/provisioning typecheck: Done
+backend/domains/portal/citizen-service typecheck: Done
+backend/domains/portal/inbox typecheck: Done
+backend/domains/ch/inconsistencies typecheck$ tsc --noEmit
+backend/domains/ch/biometrics typecheck$ tsc --noEmit
+backend/domains/ch/process-blocks typecheck$ tsc --noEmit
+backend/domains/ch/exams typecheck$ tsc --noEmit
+backend/domains/ch/inconsistencies typecheck: Done
+backend/domains/ch/scheduling typecheck$ tsc --noEmit
+backend/domains/ch/process-blocks typecheck: Done
+backend/domains/ch/telehealth typecheck$ tsc --noEmit
+backend/domains/ch/exams typecheck: Done
+backend/domains/inf/alcohol typecheck$ tsc --noEmit
+backend/domains/ch/biometrics typecheck: Done
+backend/domains/inf/collection typecheck$ tsc --noEmit
+backend/domains/ch/telehealth typecheck: Done
+backend/domains/inf/notification typecheck$ tsc --noEmit
+backend/domains/ch/scheduling typecheck: Done
+backend/domains/inf/collection typecheck: Done
+backend/domains/inf/alcohol typecheck: Done
+backend/domains/inf/notification typecheck: Done
+backend/domains/ch/billing typecheck$ tsc --noEmit
+backend/domains/inf/rait-case typecheck$ tsc --noEmit
+backend/domains/ch/clinical-reports typecheck$ tsc --noEmit
+backend/domains/ch/clinical-controls typecheck$ tsc --noEmit
+backend/domains/ch/clinical-controls typecheck: Done
+backend/domains/ch/billing typecheck: Done
+backend/domains/ch/clinical-reports typecheck: Done
+backend/domains/inf/rait-case typecheck: Done
+backend/domains/ch/restrictions typecheck$ tsc --noEmit
+backend/domains/ch/retention typecheck$ tsc --noEmit
+backend/domains/ch/juntas typecheck$ tsc --noEmit
+backend/domains/inf/rait-worklist typecheck$ tsc --noEmit
+backend/domains/ch/restrictions typecheck: Done
+backend/domains/ch/retention typecheck: Done
+backend/domains/ch/juntas typecheck: Done
+backend/domains/inf/rait-worklist typecheck: Done
+backend/domains/inf/rait-org typecheck$ tsc --noEmit
+backend/domains/inf/rait-session typecheck$ tsc --noEmit
+backend/domains/inf/rait-org typecheck: Done
+backend/domains/inf/rait-session typecheck: Done
+backend/app typecheck$ tsc --noEmit
+backend/app typecheck: Done
+
+EXECUTE pnpm --filter @detran/ui test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/ui@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/ui
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/ui
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  22:36:00
+   Duration  1.40s (transform 32ms, setup 0ms, import 341ms, tests 54ms, environment 892ms)
+
+
+EXECUTE pnpm verify:decorators
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:decorators /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/verify-controller-decorators.ts
+
+verify-controller-decorators: OK (1012 handlers scanned)
+
+EXECUTE pnpm verify:rls-ddl
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:rls-ddl /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> node --test tools/rls-ddl/tests/*.test.mjs && tsx tools/check-rls-ddl.ts
+
+✔ executable helper covers a tenant table across files (11.059584ms)
+✔ comments, strings and procedural bodies cannot impersonate applied policy (0.341708ms)
+✔ only a real tenant column creates an obligation (0.159833ms)
+✔ quoted identifiers retain SQL identity (0.136167ms)
+✔ exemptions are exact (0.108792ms)
+✔ nonliteral and differently qualified calls cannot claim coverage (0.696083ms)
+✔ unterminated lexical constructs fail closed (0.239ms)
+✔ CR-only line comments end before executable policy (0.109625ms)
+✔ stored SQL-standard bodies require explicit classification (0.300208ms)
+✔ stored rule actions cannot impersonate applied policy (0.190291ms)
+✔ COPY stdin data requires classification before raw rows can impersonate SQL (0.147ms)
+✔ conditional and embedded helper expressions cannot claim coverage (0.226584ms)
+✔ escaped and dollar-quoted bodies preserve statement boundaries (0.459375ms)
+✔ newline continuations inherit escape-string boundaries (0.145125ms)
+✔ ordinary newline string continuations preserve literal identity (0.077417ms)
+✔ comments and case do not hide executable SQL (0.093208ms)
+✔ quoted case and punctuation cannot alias another table or exemption (0.138958ms)
+✔ nested expressions, constraints and decoy tables do not create obligations (0.089791ms)
+✔ ambiguous tenant identities and Unicode escapes fail closed with source names (0.18425ms)
+✔ unquoted non-ASCII identifiers require classification while quoted identities work (0.082667ms)
+✔ inventory is deterministic across source order, duplicate signals and final statements (0.2055ms)
+✔ current repository DDL stays covered and deleting a real policy is detected (68.237167ms)
+✔ CLI reports real gaps, respects named exemptions and rejects malformed SQL (270.184708ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 469.42325
+check-rls-ddl: OK (270 tenant tables covered, 2 exempt by design: portal.brand_profile, portal.public_hostname)
+
+EXECUTE pnpm verify:role-catalog
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:role-catalog /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/check-role-catalog.ts
+
+check-role-catalog: OK (36 roles, 10 RAIT, 2 dashboard)
+
+EXECUTE pnpm verify:lifecycle-vocabulary
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:lifecycle-vocabulary /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/check-lifecycle-vocabulary.ts
+
+check-lifecycle-vocabulary: OK (15 INF states, 12 INF substates, 28 INF timers, 17 AIT states; 9 EST local states, 4 EST national states, 3 EST severities, 7 EST scene duties, 5 EST source_pending catalogs, 1 EST timers; 10 DASHBOARD alert states, 8 DASHBOARD duty states, 4 DASHBOARD freshness states, 4 DASHBOARD severities, 4 DASHBOARD layers, 3 DASHBOARD classifications, 4 DASHBOARD blocks, 14 DASHBOARD timers)
+
+EXECUTE pnpm verify:senatran-boundary
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:senatran-boundary /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/verify-senatran-boundary.ts
+
+SENATRAN boundary verification passed: 3828 runtime files scanned; packages/senatran-adapter is the sole HTTP/auth boundary.
+
+EXECUTE pnpm verify:senatran-contracts
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:senatran-contracts /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> pnpm --filter @detran/senatran-adapter contracts:check
+
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/senatran-adapter@0.0.1 contracts:check /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/packages/senatran-adapter
+> tsx scripts/generate-contracts.ts --check
+
+
+EXECUTE pnpm verify:pec-parity
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:pec-parity /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/verify-pec-parity.ts
+
+verify-pec-parity: ACCOUNTED / READY (76/76 tested, 0/76 blocked, 0 behavioral origin specs deferred/blocked, 611 origin specs dispositioned)
+
+EXECUTE pnpm verify:pec-superset
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:pec-superset /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran
+> tsx tools/verify-pec-superset.ts
+
+verify-pec-superset: PASS (32 packages, 50 tables, 611 specs, 2 transferred artifacts)
+
+EXECUTE pnpm --filter @detran/portal-web lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/portal/web
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/portal-web test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/portal/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/portal/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: navigation to another Document
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  125 passed (125)
+      Tests  1551 passed | 14 todo (1565)
+   Start at  22:36:14
+   Duration  50.39s (transform 9.38s, setup 50.38s, import 52.20s, tests 95.13s, environment 121.58s)
+
+
+EXECUTE pnpm --filter @detran/portal-web build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/portal-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/portal/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names               |  Raw size | Estimated transfer size
+main-NENBG2KY.js    | main                | 543.69 kB |               130.21 kB
+styles-LSNMVM7I.css | styles              |   2.21 kB |               636 bytes
+
+                    | Initial total       | 545.90 kB |               130.84 kB
+
+Lazy chunk files    | Names               |  Raw size | Estimated transfer size
+chunk-DQqmKBOY.js   | -                   | 425.43 kB |                77.21 kB
+chunk-BZDaVUbe.js   | processos-routes    |  52.72 kB |                10.78 kB
+chunk-DGkWDKke.js   | -                   |  52.08 kB |                11.35 kB
+chunk-x03pO5H3.js   | defesa-routes       |  34.48 kB |                 5.69 kB
+chunk-BgQDdXjB.js   | notificacoes-routes |  33.99 kB |                 8.10 kB
+chunk-oCECq77H.js   | pagamento-routes    |  33.62 kB |                 7.40 kB
+chunk-C_9kHypY.js   | documentos-routes   |  32.49 kB |                 7.11 kB
+chunk-BMr6pvHI.js   | atendimento-routes  |  32.35 kB |                 7.11 kB
+chunk-BL3pZlMP.js   | autos-routes        |  24.08 kB |                 5.59 kB
+chunk-CZJpgEfr.js   | -                   |  21.27 kB |                 5.75 kB
+chunk-9BBMj28v.js   | indicacao-routes    |  18.03 kB |                 5.13 kB
+chunk-zucuq6jR.js   | privacidade-routes  |  16.03 kB |                 4.80 kB
+chunk-j8iaznab.js   | exames-routes       |  15.54 kB |                 4.46 kB
+chunk-QctfSsDr.js   | catalogo-routes     |  13.29 kB |                 3.75 kB
+chunk-DyzZCInS.js   | sinistros-routes    |  11.76 kB |                 3.34 kB
+...and 8 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [8.234 seconds] - 2026-10-20T01:37:14.738Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/portal/web/dist
+
+
+EXECUTE pnpm --filter @detran/dashboard-web lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/dashboard/web
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/dashboard-web test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/dashboard/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/dashboard/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  64 passed (64)
+      Tests  2042 passed (2042)
+   Start at  22:37:19
+   Duration  40.27s (transform 16.58s, setup 52.93s, import 39.54s, tests 66.77s, environment 98.34s)
+
+
+EXECUTE pnpm --filter @detran/dashboard-web build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/dashboard-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/dashboard/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                |  Raw size | Estimated transfer size
+main-HWBOCRPZ.js    | main                 | 501.34 kB |               122.56 kB
+styles-LSNMVM7I.css | styles               |   2.21 kB |               636 bytes
+
+                    | Initial total        | 503.55 kB |               123.19 kB
+
+Lazy chunk files    | Names                |  Raw size | Estimated transfer size
+chunk-C6WzYaSQ.js   | -                    |  40.62 kB |                 8.99 kB
+chunk-9G_2sLcQ.js   | dashboard-pt-BR-json |  22.57 kB |                 5.59 kB
+chunk-Dpjrb4Cn.js   | duties-routes        |  12.17 kB |                 3.19 kB
+chunk-C9EODUiN.js   | triage-routes        |  10.39 kB |                 3.06 kB
+chunk-CzAyCVUS.js   | radar-routes         |   7.13 kB |                 1.52 kB
+chunk-Cg9cJtfx.js   | -                    |   6.82 kB |                 2.14 kB
+chunk-DVjNhbgg.js   | catalogue-routes     |   6.25 kB |                 1.77 kB
+chunk-D1Rmzv0E.js   | reports-routes       |   6.18 kB |                 1.81 kB
+chunk-Pd0n06EM.js   | integrations-routes  |   4.37 kB |                 1.55 kB
+chunk-3UVWGb4K.js   | -                    |   4.00 kB |                 1.53 kB
+chunk-xzdUS-4R.js   | audit-routes         |   3.85 kB |                 1.53 kB
+chunk-BB9EF3sG.js   | comparison-routes    |   3.65 kB |                 1.43 kB
+chunk-DuvZFIZ8.js   | -                    |   3.61 kB |                 1.41 kB
+chunk-BlUsivFG.js   | -                    |   3.28 kB |                 1.25 kB
+chunk-B1OPlpGq.js   | transparency-routes  |   3.17 kB |                 1.31 kB
+...and 10 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [5.304 seconds] - 2026-10-20T01:38:07.144Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/dashboard/web/dist
+
+
+EXECUTE pnpm --filter @detran/teat-mobile lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/mobile
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/teat-mobile test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/mobile
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/mobile
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  25 passed (25)
+      Tests  1172 passed (1172)
+   Start at  22:38:12
+   Duration  12.10s (transform 6.93s, setup 14.97s, import 10.02s, tests 14.13s, environment 31.04s)
+
+
+EXECUTE pnpm --filter @detran/teat-mobile build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/mobile
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                |  Raw size | Estimated transfer size
+main-YWQGBWNW.js    | main                 | 899.87 kB |               178.50 kB
+styles-5INURTSO.css | styles               |   0 bytes |                 0 bytes
+
+                    | Initial total        | 899.87 kB |               178.50 kB
+
+Lazy chunk files    | Names                |  Raw size | Estimated transfer size
+chunk-D2poSG9b.js   | -                    |  12.77 kB |                 3.81 kB
+chunk-Bg8XibWO2.js  | sinistro-routes      |   9.59 kB |                 1.13 kB
+chunk-C9pcgVnt.js   | ait-routes           |   5.10 kB |               777 bytes
+chunk-BIjMh3le.js   | -                    |   4.78 kB |                 1.22 kB
+chunk-CcPEIdR12.js  | ait-review-page      |   4.54 kB |                 1.51 kB
+chunk-DKd-D3Sy2.js  | ait-start-page       |   4.06 kB |                 1.39 kB
+chunk-CDziUKNK2.js  | open-shift-page      |   3.80 kB |                 1.44 kB
+chunk-bciL-dQ4.js   | turno-routes         |   3.04 kB |               623 bytes
+chunk-B0Tp4H2i.js   | auth-mfa-page        |   3.00 kB |                 1.21 kB
+chunk-CCYmV7N-2.js  | auth-login-page      |   2.97 kB |                 1.11 kB
+chunk-S7Oj0VvP.js   | alcoolemia-routes    |   2.59 kB |               489 bytes
+chunk-CBZ9vaxY.js   | medidas-routes       |   2.16 kB |               476 bytes
+chunk-B6WBx9Az.js   | consultas-routes     |   1.98 kB |               472 bytes
+chunk-2ahWjbTy.js   | sincronizacao-routes |   1.84 kB |               452 bytes
+chunk-wG3LICwu2.js  | ait-done-page        |   1.79 kB |               783 bytes
+...and 53 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [7.954 seconds] - 2026-10-20T01:38:34.134Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/mobile/dist
+
+
+EXECUTE pnpm --filter @detran/teat-web lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/web
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/teat-web test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  4 passed (4)
+      Tests  611 passed (611)
+   Start at  22:38:38
+   Duration  5.50s (transform 4.55s, setup 7.80s, import 3.33s, tests 3.33s, environment 3.76s)
+
+
+EXECUTE pnpm --filter @detran/teat-web build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/teat-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                                  |  Raw size | Estimated transfer size
+main-ZOCOFKLI.js    | main                                   | 499.39 kB |                94.88 kB
+chunk-B1OXHneA.js   | -                                      | 416.14 kB |               100.71 kB
+styles-5INURTSO.css | styles                                 |   0 bytes |                 0 bytes
+
+                    | Initial total                          | 915.53 kB |               195.59 kB
+
+Lazy chunk files    | Names                                  |  Raw size | Estimated transfer size
+chunk-LMIK2ZX7.js   | detran-boat-mobile-boat-pages-BR3RpsiQ |   6.77 kB |               751 bytes
+chunk-_6eks4m5.js   | fiscalizacao-routes                    |   2.02 kB |               442 bytes
+chunk-BuGhdW3o.js   | operations-routes                      |   1.44 kB |               412 bytes
+chunk-Coye9Ri2.js   | admin-routes                           |   1.30 kB |               316 bytes
+chunk-BiuUVwla.js   | audit-routes                           |   1.25 kB |               400 bytes
+chunk-5do_lD8J.js   | technical-routes                       |   1.22 kB |               316 bytes
+chunk-9xELuM5S.js   | normative-routes                       |   1.19 kB |               328 bytes
+chunk-CTNHVYaA.js   | evidence-routes                        |   1.07 kB |               341 bytes
+chunk-DJ1hUUvi.js   | measures-routes                        | 972 bytes |               972 bytes
+chunk-CCHmPoyY.js   | bi-routes                              | 961 bytes |               961 bytes
+chunk-CbL9UfzA.js   | entry-routes                           | 651 bytes |               651 bytes
+chunk-CAQQjO9Y.js   | alcohol-routes                         | 594 bytes |               594 bytes
+chunk-I0RISLan.js   | sinistros-routes                       | 104 bytes |               104 bytes
+chunk-BP5OLDQR.js   | product-page-component                 | 103 bytes |               103 bytes
+
+Application bundle generation complete. [4.452 seconds] - 2026-10-20T01:38:49.614Z
+
+▲ [WARNING] bundle initial exceeded maximum budget. Budget 600.00 kB was not met by 315.53 kB with a total of 915.53 kB.
+
+
+Output location: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/teat/web/dist
+
+
+EXECUTE pnpm --filter @detran/boat-mobile lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/boat-mobile test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  22:38:52
+   Duration  3.77s (transform 4.24s, setup 6.78s, import 229ms, tests 535ms, environment 2.39s)
+
+
+EXECUTE pnpm --filter @detran/boat-mobile build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/boat-mobile@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+> ng-packagr -p ng-package.json -c tsconfig.lib.json
+
+Building Angular Package
+
+------------------------------------------------------------------------------
+Building entry point '@detran/boat-mobile'
+------------------------------------------------------------------------------
+- Compiling with Angular sources in partial compilation mode.
+✔ Compiling with Angular sources in partial compilation mode.
+- Writing FESM and DTS bundles
+✔ Writing FESM and DTS bundles
+- Copying assets
+✔ Copying assets
+- Writing package manifest
+WARNING: Found a conflicting export condition for ".". The "types" condition would be overridden by ng-packagr. Please unset it.
+WARNING: Found a conflicting export condition for ".". The "default" condition would be overridden by ng-packagr. Please unset it.
+ℹ Removing scripts section in package.json as it's considered a potential security vulnerability.
+ℹ Removing devDependencies section in package.json.
+✔ Writing package manifest
+✔ Built @detran/boat-mobile
+
+------------------------------------------------------------------------------
+Built Angular Package
+- from: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile
+- to:   /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/boat/mobile/dist
+------------------------------------------------------------------------------
+
+Build at: 2026-10-20T01:38:58.376Z - Time: 878ms
+
+
+EXECUTE pnpm --filter @detran/rait-web lint
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 lint /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/rait/web
+> eslint .
+
+
+EXECUTE pnpm --filter @detran/rait-web test
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 test /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/rait/web
+> vitest run --config vitest.config.ts
+
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/rait/web
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  170 passed | 1 skipped (171)
+      Tests  5115 passed | 133 todo (5248)
+   Start at  22:39:04
+   Duration  79.15s (transform 12.53s, setup 76.78s, import 96.56s, tests 149.83s, environment 189.74s)
+
+
+EXECUTE pnpm --filter @detran/rait-web build
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> @detran/rait-web@0.1.0 build /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/rait/web
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names             |  Raw size | Estimated transfer size
+chunk-XbvF3EP1.js   | -                 | 512.80 kB |               125.59 kB
+main-REVPGLJD.js    | main              |  18.67 kB |                 5.76 kB
+styles-LSNMVM7I.css | styles            |   2.21 kB |               636 bytes
+
+                    | Initial total     | 533.69 kB |               131.99 kB
+
+Lazy chunk files    | Names             |  Raw size | Estimated transfer size
+chunk-CH9tjI6l.js   | caso-routes       | 501.71 kB |                90.44 kB
+chunk-BWXwwSav.js   | colegiado-routes  |  99.39 kB |                15.90 kB
+chunk-CmEokdCg.js   | rait-pt-BR-json   |  61.49 kB |                14.31 kB
+chunk-DrAob5M6.js   | -                 |  46.90 kB |                 9.85 kB
+chunk-DzVvLpO72.js  | protocolo-routes  |  44.21 kB |                 8.07 kB
+chunk-C_7K6xxc.js   | gestao-routes     |  32.21 kB |                 6.83 kB
+chunk-snkBb05H.js   | assinatura-routes |  12.96 kB |                 3.65 kB
+chunk-Dqk6gdk0.js   | -                 |  12.92 kB |                 3.46 kB
+chunk--zv3B3uh.js   | -                 |  11.09 kB |                 3.80 kB
+chunk-BtMRJ2v22.js  | arquivo-routes    |  10.82 kB |                 2.91 kB
+chunk-DMxsqbky.js   | painel-routes     |   8.57 kB |                 2.65 kB
+chunk-BvuLJrKH.js   | fila-routes       |   8.29 kB |                 2.27 kB
+chunk-Bn1lDvx5.js   | autoridade-routes |   7.96 kB |                 2.64 kB
+chunk-d0llbO47.js   | -                 |   6.27 kB |                 1.66 kB
+chunk-DIZObqy1.js   | -                 |   5.63 kB |                 2.06 kB
+...and 26 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [8.056 seconds] - 2026-10-20T01:40:33.000Z
+
+Output location: /Volumes/Development/.codex/worktrees/r0025-s2-validation/detran/apps/rait/web/dist
+

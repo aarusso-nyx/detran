@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitWorklist",
     "namespace": "inf",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "ddlFile": "35-inf-rait-worklist.sql",
     "dependencies": {
       "@detran/inf-deadlines": "workspace:*",
@@ -42,15 +42,20 @@
       {
         "target": "handwritten/rait-worklist-command.service",
         "symbol": "RaitWorklistCommandService"
+      },
+      {
+        "target": "handwritten/rait-risk-projection.service",
+        "symbol": "RaitRiskProjectionService"
       }
     ],
     "handwrittenExports": [
       "handwritten/rait-worklist-commands.controller",
       "handwritten/rait-worklist-command.service",
-      "handwritten/rait-worklist-scoped-reads.controller"
+      "handwritten/rait-worklist-scoped-reads.controller",
+      "handwritten/rait-risk-projection.service"
     ],
     "owners": ["detran-inf"],
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura. v1.5.0: P4-02-S1/ADR-0046/0047 closed T0 scopes replace generated HTTP with handwritten scoped functional reads, preserving effective role/action and typed projections; no claim-context, risk producer or selector change.",
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura. v1.5.0: P4-02-S1/ADR-0046/0047 closed T0 scopes replace generated HTTP with handwritten scoped functional reads, preserving effective role/action and typed projections; no claim-context, risk producer or selector change. v1.5.2: P4-02-S2 read-only current risk projection consumes public CASE snapshot provider; no flag persistence/publication or command activation.",
     "moduleImports": [
       {
         "package": "@detran/inf-rait-case",

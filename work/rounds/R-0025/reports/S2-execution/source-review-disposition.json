@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "scope": "Architect source-only F1-F6 correction, not independent re-review/runtime acceptance",
+  "authority": "Parent-recorded delegated adoption S2-R3 at22:15Z; no new or extended Owner delegation asserted",
+  "review": {
+    "path": "work/rounds/R-0025/reviews/S2-source/review.json",
+    "sha256": "cb5025dd060b8584d408c7b7657d5595f0ec0076e9b9fe11c65bc63f53af731b",
+    "verdict": "changes_requested",
+    "read": "full"
+  },
+  "corrections": [
+    {
+      "id": "F1",
+      "disposition": "option(a), per-code catalogued optional contexts; standard envelope fields preserved; safe caller/authorized-own only; new bounded409/503 emptycontext",
+      "retained_order_override": "Existing catalogued ORDER_OVERRIDE_FORBIDDEN403 represented with optional empty context; no new runtime behavior"
+    },
+    {
+      "id": "F2",
+      "disposition": "production all eight kinds explicitly missing absent named accepted immutable verifier; legacy409/risk503; synthetic narrow receipt reader only actual SQL factory retained"
+    },
+    {
+      "id": "F3",
+      "disposition": "expected canonical raw/due compared separately via existing date/calendar owner; clockceiling=expected due; unqualified otheradjustments unsupported503; no stepshift/pure elapsedheuristic"
+    },
+    {
+      "id": "F4",
+      "disposition": "CASE commands1.3.0 and scope/description corrected"
+    },
+    {
+      "id": "F5",
+      "disposition": "JARI/CETRAN existingv+1 stated; eventrecord unchanged, exactevents remain Inspector proof"
+    },
+    {
+      "id": "F6",
+      "disposition": "Inspector acceptance UPDATE/DELETE including updated_at reject and internalroute absence required, not claimedrun"
+    }
+  ],
+  "files": [
+    {
+      "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+      "sha256": "2179953a18d991781ff61e9543f7f33508a21d0e9b047d4f29baedb922e38b96"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-provenance-format.md",
+      "sha256": "3bb5e2b185b02b14145c7c51aeb3a19ecf7ac00a1add77d62fed462cdeec22b8"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json",
+      "sha256": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1"
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-review-disposition.md",
+      "sha256": "4d8dfdfbea4d81070833f1d7ef0deb344cafbfd5295433763ff2902824670f27"
+    }
+  ],
+  "historical_freeze": [
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-freeze.md",
+      "sha256": "2b14893898eca4020ac08761bfd62f47ab855d645b1a090b49b71c4d998ed01e",
+      "matches_preserved_integration": true
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/source-freeze.json",
+      "sha256": "b55ef6ff9e06f10ee1412ddb0443822e39a99000d83b116077a3ef1637f6004e",
+      "matches_preserved_integration": true
+    }
+  ],
+  "generation": {
+    "command": "pnpm contracts:openapi",
+    "exit_code": 0,
+    "reported_documents": 48,
+    "compared_existing_CRUD_documents": 48,
+    "changed_CRUD_documents": [],
+    "scope": "No generated CRUD byte changes; no manual generated code"
+  },
+  "verification": {
+    "json_parse": "PASS",
+    "original_freeze_matches_integration": "PASS",
+    "targeted_format": "PASS; five corrected source/report files checked, final retained ORDER_OVERRIDE_FORBIDDEN variant formatted afterward",
+    "runtime_tests": "NOT EXECUTED by Architect",
+    "independent_re_review": "PENDING parent request"
+  },
+  "unchanged_boundaries": [
+    "No catalogue or other command operation edits",
+    "No runtime/test/state/proof/Git changes",
+    "No new source store/writer/audit action/permission",
+    "No S3/provider/production activation"
+  ],
+  "getDenialFollowup": {
+    "sourceReview": "work/rounds/R-0025/reviews/S2-source-2/review.recovered.json",
+    "reviewSha256": "242a8cc74da58b26ba15e0c5a7d35469f6e961f890021e29099a11f4775e88eb",
+    "verdict": "accepted_with_notes recovered JSON, bridge fenced-output failure preserved; not bridge PASS",
+    "semanticDiff": [
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/description",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/caseId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/poolId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/unitId",
+      "/paths//v1/inf/rait/cases/{id}/risk/get/responses/404/content/application/json/schema/properties/context/description",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/description",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/caseId",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/poolId",
+      "/paths//v1/inf/rait/claim-context/get/responses/403/content/application/json/schema/oneOf/1/properties/context/properties/unitId",
+      "/paths//v1/inf/rait/claim-context/get/responses/404/content/application/json/schema/properties/context/description"
+    ],
+    "postOperationByteEquivalentJson": true,
+    "behavior": "Only two new GET denial contexts empty; no new code/path/permission or runtime change",
+    "generation": {
+      "command": "pnpm contracts:openapi",
+      "exitCode": 0,
+      "documents": 48,
+      "compared_CRUD_documents": 48,
+      "changed_CRUD_documents": []
+    },
+    "format": "PASS for canonical contract and both disposition reports"
+  },
+  "generatorNativeImmutabilityR5": {
+    "authority": "Parent S2-R5 at2026-10-19T22:54:11Z, rootc11f6017",
+    "blueprint": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+    "sha256": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2",
+    "entity": "RaitClaimLegacyQualification",
+    "exactSemanticDiff": {
+      "immutable": true,
+      "applicationAppendOnly": true
+    },
+    "immutableColumns": "ABSENT",
+    "allOtherBlueprintSemantics": "Byte-equivalent parsed JSON after removing exact two flags",
+    "generation": {
+      "command": "pnpm contracts:openapi",
+      "exitCode": 0,
+      "documents": 48,
+      "compared_CRUD_documents": 48,
+      "changed_CRUD_documents": []
+    },
+    "format": "PASS blueprint and additive markdown, JSON serialized with existing2spaceformat",
+    "runtimeDDL": "NOT GENERATED or edited by Architect",
+    "acceptanceTests": "NOT EXECUTED by Architect; Inspector final appliedDDL acceptance pending",
+    "engineerBoundary": "Use existing generator fullUPDATE/DELETE/TRUNCATE42501, no customtrigger. Final supportingSQL19 REVOKE compensates laterbroadgrant order, no loader/generatorlogic change."
+  }
+}

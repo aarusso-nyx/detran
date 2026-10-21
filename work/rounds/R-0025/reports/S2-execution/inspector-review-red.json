@@ -1,0 +1,77 @@
+{
+  "task": "TASK-0044",
+  "status": "partial executed RED; final unchanged acceptance pending",
+  "runtimeCheckpoint": "5357b49f",
+  "epochs": [
+    {
+      "finding": "offpage",
+      "checkout": "frozen validation ca301e58",
+      "passed": 0,
+      "failed": 4,
+      "filtered": 99,
+      "durationSeconds": 315.58,
+      "classification": "material validation blocker: three test timeouts30s, legacy setup10s and teardown10s; no completed assertion counterexample; no budget or population changes"
+    },
+    {
+      "finding": "F5 actual HTTP",
+      "passed": 1,
+      "failed": 1,
+      "filtered": 103,
+      "durationSeconds": 40.31,
+      "classification": "genuine denial-before-lock RED; locked revocation control PASS"
+    },
+    {
+      "finding": "F1 actual HTTP",
+      "passed": 0,
+      "failed": 1,
+      "filtered": 105,
+      "durationSeconds": 27.8,
+      "classification": "qualified positive RED:503 instead of200; new policy port not reached by old factory"
+    },
+    {
+      "finding": "Final formatted ADR0057 selection",
+      "passed": 1,
+      "failed": 8,
+      "filtered": 103,
+      "durationSeconds": 56.55,
+      "classification": "F1 qualified positive genuine RED; F5 denial contention genuine RED; six policy-negative cases blocked at mandatory positive prerequisite; postwait scope revocation PASS"
+    }
+  ],
+  "currentAuthoredHttpCensus": 112,
+  "newCases": {
+    "F1": 7,
+    "F5": 2
+  },
+  "F2": "Prerequisite pending F1-only wiring; decisive real factory raw-date RED still required before arithmetic correction",
+  "F3": "OPEN deployment availability limitation",
+  "policyAuthority": "Synthetic isolated-test custody in existing receipt inventory, bound actual current rows and exact WF4.2 source pair; UUID is not a canonical legal decision. Production availability remains unavailable without genuinely admitted complete policy.",
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-offpage-source.json": "14bc6b4f508a6ebe8c143813fccb864213fa228c4a7f752ebbef8e4043238e6a",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-offpage-results.json": "71144f13a01f446a979b805686453d6f6aade4c9dbd18f41178cf20b1b0412af",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-offpage.log": "2fb67087a25e3bf962738e8680027dabb5dcad4894d8f1443c1e0e2389585da9",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-f5-http-red.json": "061292141a2973ba5dd86a13208dba64210ea469629b4ead3e6df2e4246dc1bd",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-f5-http-red.log": "74f70c7bcd56c1aee5cea547736f59049a497a4da891ca24d444cc2534d47bd9",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-f1-red.json": "5810fbd9ed85f49bbccf8c09bf6663c3f952536331b889fbd5f5ef0ec06143eb",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-f1-red.log": "2fbcadf1f481627a0c00afa62f2e99e9cec7c906f42ba630623c8df8c1abd658",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-current-hashes.json": "64aae22ef3b64e16efb0646ba404cd1f8d12c110941e63200828825fc719e01d",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-amended-red.log": "16c27b80fa8493472690f6646f1954a7d1b63be35ee6d92d6239cd91437ab0c9",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-amended-red.json": "08b9f185a42f511305190fd5e803627b9301ee40bcf790f536ccbe6844637c10",
+    "work/rounds/R-0025/reports/S2-execution/inspector-review-typecheck.log": "d62b53df6491efab67f5883e4d07a96ab6889f41ade90f51ab78846d9b91118a"
+  },
+  "boundaries": {
+    "dbUsed": true,
+    "exclusivePort": 53343,
+    "runtimeEdited": false,
+    "gitUsedForMutation": false,
+    "oldEpochsPreserved": true,
+    "negativePolicyCases": "six executed and blocked at actual qualified positive prerequisite, not protected behavior proof",
+    "noFullGreen": true
+  },
+  "sanitization": "Transcripts copied unchanged after review; no raw DSNs/auth credentials are included.",
+  "finalAuthoredHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "43888b35257a1f9d1a4565401188baf9ce773511000fa9c3ff0316fae92abedb",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "a8fae2a69f2e447936253e8e66a1383ecd740d34ee848672de29e18f7b93467c"
+  },
+  "typecheck": "PASS @detran/app tsc --noEmit",
+  "lease": "Released after final selected epoch; no DB worker active"
+}

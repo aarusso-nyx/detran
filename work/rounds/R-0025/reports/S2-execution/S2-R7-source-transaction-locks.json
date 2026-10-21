@@ -1,0 +1,32 @@
+{
+  "role": "Architect",
+  "recorded_at": "2026-10-19T23:55:56.998144+00:00",
+  "decision": "S2-R7",
+  "delegation": {
+    "receipt": "owner-delegation.json",
+    "valid_until": "2026-10-20T02:39:32Z",
+    "ends_on_owner_return": true
+  },
+  "question": "How to close READ COMMITTED source INSERT phantom gaps without a new writer, store, privilege or isolation redesign?",
+  "adopted_recommendation": "Ordered existing-role transaction locks, explicit table-global contention cost, independent real SQL acceptance; qualified sources remain mandatory.",
+  "owned_path_extension": [
+    "docs/meta/adr/ADR-0055-rait-risk-source-transaction-locks.md",
+    "docs/meta/adr/README.md",
+    "DESIGN-DECISIONS.md"
+  ],
+  "runtime_boundary": "Only already approved S2 handwritten paths; no new runtime path, writer, grant, table, legal rule or parameter activation.",
+  "sensor_boundary": "Already owned Inspector claim HTTP spec may add real phantom/lock acceptance with no timeout increase or skipped tests; independent Inspector owns it.",
+  "exclusions": [
+    "S3",
+    "production qualification or deployment",
+    "scorecard work",
+    "implementation merge",
+    "unverified legal policy"
+  ],
+  "required_before_green": [
+    "Relation SHARE on ops.parameter then inf.rait_holiday before source reads",
+    "Strongest ordered complete-set parent locks, actual FK coverage plus existing child row locks",
+    "Real role_app_backend privilege and concurrent writer wait/revalidation/rollback evidence",
+    "Explicit remaining arbitrary-audit/provenance and reverse-order writer risks; no blanket deadlock-free claim"
+  ]
+}

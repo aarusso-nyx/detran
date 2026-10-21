@@ -1,0 +1,138 @@
+{
+  "role": "Inspector",
+  "external_checkout": "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-unit/detran",
+  "provided_checkpoint": "f53d1418",
+  "architect_source_checkpoint": "a3bd2df7",
+  "source_integration": "7dff556fba457d0bbbebbefd5e5c430cc3906bc2",
+  "status": "SCOPED_INITIAL_RED_READY_NOT_COMPLETE_S2_ACCEPTANCE",
+  "database_execution": false,
+  "files": {
+    "tools/parameters/tests/generator.test.mjs": "2d0e3f7a3635167f1f9973349ef0e3eda73597699526ac5f0ccf8925e54ea3f3",
+    "tools/parameters/tests/allowlist-rait.test.mjs": "69765ee695003227934121a3fcfa915b44b7d4e4f14b2030713160d1a6e7d4c7",
+    "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts": "f96ddea534c33c7c84b4fbf133e2bffb871ecec5589e3cce6a8cbde743652d44",
+    "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts": "56791a7e95a13e8e7c19a449f5db1fdfbd62de59c114e3223cf23a5a60f8d62d"
+  },
+  "results": [
+    {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "log": "inspector-unit-parameters-red.log",
+      "executed": 70,
+      "pass": 39,
+      "fail": 31,
+      "skip": 0,
+      "classification": "behavioral RED: actual strings and accepted invalid shapes; unrelated default equivalence PASS"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-rait-case test:unit tests/unit/rait-case-behavioral-matrix.spec.ts --passWithNoTests=false",
+      "log": "inspector-unit-claim-matrix-red.log",
+      "executed": 105,
+      "pass": 104,
+      "fail": 1,
+      "skip": 0,
+      "classification": "behavioral RED: supplied claim If-Match succeeds instead of400"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-deadlines test:unit tests/unit/rait-risk.spec.ts --passWithNoTests=false",
+      "log": "inspector-unit-pure-interface-pending.log",
+      "executed": 89,
+      "pass": 0,
+      "fail": 89,
+      "skip": 0,
+      "classification": "INTERFACE_PENDING only: missing public evaluateRaitRisk/RaitRiskSourceError; never behavioral protection proof"
+    },
+    {
+      "command": "node --test --test-name-pattern='S2 ladder' tools/parameters/tests/allowlist-rait.test.mjs",
+      "log": "inspector-unit-allowlist-source.log",
+      "executed": 4,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "classification": "source-status/provenance controls; proposedA/C retained"
+    }
+  ],
+  "pending": [
+    "Architect additive receipt-encoding source clarification",
+    "Other Inspector real HTTP/transaction full coverage before Engineer dispatch",
+    "No real DB lease granted; no DB execution performed",
+    "Internal CASE/WORKLIST service-unit coverage only after actual implementation interfaces; no invented constructors/private API"
+  ],
+  "typing": {
+    "command": "pnpm --filter @detran/inf-deadlines typecheck",
+    "exit": 0,
+    "log": "/tmp/detran-s2-deadlines-test-types.log"
+  },
+  "format": {
+    "exit": 0,
+    "log": "/tmp/detran-s2-inspector-format-check.log"
+  },
+  "baseline_runtime_hashes": {
+    "tools/parameters/parser.mjs": "a3a34ec9f2ad53679c8be70f7583450591f53eb45f8008d7c847c206beeaffa3",
+    "backend/domains/inf/deadlines/src/index.ts": "c07c0b3707301955860481c34167f05fce1466b1fc38b9b20c3b888957a47f98",
+    "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322"
+  },
+  "provenance_epoch": {
+    "provided_source_checkpoint": "e9d98482",
+    "format_read": [
+      "source-provenance-format.md",
+      "source-provenance-format.json"
+    ],
+    "new_storage_sensors": {
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-p402-claim-transaction.integration.spec.ts",
+      "sha256": "93d821a5f6f350152245e6bf46adda5c529d471ac839bf16825e14c1a523ebd5",
+      "tests": 15,
+      "executed": false,
+      "reason": "No database lease granted; baseline schema not generated. Never count absence as protection."
+    },
+    "typecheck": {
+      "command": "pnpm --filter @detran/inf-rait-case typecheck",
+      "exit": 0,
+      "log": "/tmp/detran-s2-case-test-types.log"
+    },
+    "source_issue": "Exact table identity inf.ait must be corrected by Architect to actual inf.ait_ait before real SQL receipts; no alias/no schema mutation.",
+    "source_issue_resolution": {
+      "status": "resolved by Architect",
+      "source_commit": "ae6f7284",
+      "format_json_sha_prefix": "8058e15e",
+      "format_md_sha_prefix": "288688bb",
+      "resolution": "Canonical exact table identity corrected from inf.ait to actual inf.ait_ait; historical finding retained. No schema/alias change."
+    },
+    "F6_append_only_metadata": {
+      "assertion": "UPDATE updated_at rejected42501 and exact JSONB row preserved after rollback-to-savepoint",
+      "existing_reason_update_and_delete": "unchanged",
+      "execution": "UNEXECUTED/schema-pending; no DB lease",
+      "pure89": "unchanged"
+    }
+  },
+  "generic_fixture_disposition": {
+    "reason": "Historical generic JSON noninterference control used now-reserved exact ladderB with unsupported percent string. ApprovedR2 requires typedB; generic control must use unrelated JSON key.",
+    "path": "tools/parameters/tests/generator.test.mjs",
+    "change": "Only old noninterference fixture key and corresponding direct-string selector: rait.ladder.B -> canonical unrelated rait.signing.schedule; metadata equivalence loop and directstring50/75/90% assertions retained. New31typedladdernegative controls unchanged.",
+    "before_sha256": "2d0e3f7a3635167f1f9973349ef0e3eda73597699526ac5f0ccf8925e54ea3f3",
+    "after_sha256": "261833a517f00f4bc96f7063a1719d88eab9eb7d0924dfa0a9224db8edde796a",
+    "old_parser_result": {
+      "command": "node --test tools/parameters/tests/generator.test.mjs tools/parameters/tests/allowlist-rait.test.mjs",
+      "executed": 70,
+      "pass": 39,
+      "intentional_behavioral_red": 31,
+      "skip": 0,
+      "generic_control": "PASS",
+      "log": "inspector-unit-generic-fixture-old-parser-red.log"
+    },
+    "boundary": "No parser/runtime/source/defaultfallback/assertion removal. Parent transfers exact formatted bytes before EngineerGREEN."
+  },
+  "sparse_provenance_epoch": {
+    "test": "rejects a sparse sourceVersions array as missing mandatory provenance",
+    "path": "backend/domains/inf/deadlines/tests/unit/rait-risk.spec.ts",
+    "original89": "unchanged; one appended control, total90",
+    "test_sha256": "89658980f7bfa7e20a6895e4088f6c5c4b84b61112218f31f5bbe529b2d31919",
+    "candidate_path": "/Volumes/Development/.codex/worktrees/r0025-s2-pure-parser/detran/backend/domains/inf/deadlines/src/rait-risk.ts",
+    "candidate_sha256": "c23389a69456e6d67d453498a64cebdd5aff7076a67dfe9232c1a58320d553e4",
+    "command": "pnpm exec tsx /tmp/detran-s2-sparse-provenance-probe.ts",
+    "exit": 1,
+    "actual_result": "candidate succeeds and includes undefined in sourceVersions; expected typed source exception absent",
+    "classification": "actual behavioral RED against implemented candidate, not missing API",
+    "log": "inspector-unit-sparse-provenance-red.log",
+    "independent_probe": "inspector-unit-sparse-provenance-probe.log",
+    "runtime_edits": false
+  }
+}

@@ -1,0 +1,105 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-19 21:22:37.440 -0300] INFO (76779): request completed
+    request_id: "01a156b0-4c59-7392-bfdf-fd349b220aaf"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 550
+[2026-10-19 21:22:37.609 -0300] INFO (76779): request completed
+    request_id: "01a156b0-4e86-72ff-b436-fba30528b346"
+    route: "/v1/inf/rait/cases/591ebe0e-dd1f-4dfc-95c1-6075c7009392/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 163
+[2026-10-19 21:22:37.711 -0300] INFO (76779): request completed
+    request_id: "01a156b0-4f2b-7ec2-8503-62a520a4dec1"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 100
+[2026-10-19 21:22:37.794 -0300] INFO (76779): request completed
+    request_id: "01a156b0-4f91-7c29-b681-cdb360146fda"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 81
+[2026-10-19 21:22:37.899 -0300] INFO (76779): request completed
+    request_id: "01a156b0-4fe5-760d-9ed2-45086bcd1f27"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 102
+[2026-10-19 21:22:38.011 -0300] INFO (76779): request completed
+    request_id: "01a156b0-504e-7e84-aa87-7451c85c9fa5"
+    route: "/v1/inf/rait/cases/591ebe0e-dd1f-4dfc-95c1-6075c7009392/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 109
+[2026-10-19 21:22:38.552 -0300] INFO (76779): request completed
+    request_id: "01a156b0-523e-7441-aad9-402dbade20bd"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 154
+[2026-10-19 21:22:38.625 -0300] INFO (76779): request completed
+    request_id: "01a156b0-52da-76a3-8a4a-1be5e31388e4"
+    route: "/v1/inf/rait/cases/7926c7cd-831a-4544-b0b0-c185242f0d2b/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 71
+[2026-10-19 21:22:38.698 -0300] INFO (76779): request completed
+    request_id: "01a156b0-5324-7ff7-b33c-3b4e10bb4cfc"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 70
+[2026-10-19 21:22:38.786 -0300] INFO (76779): request completed
+    request_id: "01a156b0-536c-7128-bba7-35e88893367a"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 86
+[2026-10-19 21:22:38.888 -0300] INFO (76779): request completed
+    request_id: "01a156b0-53c5-7dcd-a90e-1a2122e1994c"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 99
+[2026-10-19 21:22:38.956 -0300] INFO (76779): request completed
+    request_id: "01a156b0-542a-7b25-a084-d8945e3aab9d"
+    route: "/v1/inf/rait/cases/7926c7cd-831a-4544-b0b0-c185242f0d2b/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 66
+[2026-10-19 21:22:39.491 -0300] INFO (76779): request completed
+    request_id: "01a156b0-5508-7e71-acef-cd10eaee42a4"
+    route: "/v1/inf/rait/claim-context?pool_id=e52017b6-dd9c-4c48-8421-aac3ee936fd6"
+    method: "GET"
+    status: 200
+    duration_ms: 379
+[2026-10-19 21:22:40.272 -0300] INFO (76779): request completed
+    request_id: "01a156b0-56b9-7726-9291-f5afc2d8cae0"
+    route: "/v1/inf/rait/pools/e52017b6-dd9c-4c48-8421-aac3ee936fd6/claim-next"
+    method: "POST"
+    status: 503
+    duration_ms: 727
+[2026-10-19 21:22:42.053 -0300] INFO (76779): request completed
+    request_id: "01a156b0-59a0-72b0-9cd1-915ef3f176c5"
+    route: "/v1/inf/rait/claim-context?pool_id=e52017b6-dd9c-4c48-8421-aac3ee936fd6"
+    method: "GET"
+    status: 200
+    duration_ms: 1765
+S2_ASSERTIONS {"test":"S2 R10 fixed complete potential universe > a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set","executedAssertions":77}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (103 tests | 102 skipped) 6043ms
+     ✓ a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set  5551ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 102 skipped (103)
+   Start at  21:22:17
+   Duration  24.48s (transform 13.71s, setup 0ms, import 18.25s, tests 6.04s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-r10-green-results.json

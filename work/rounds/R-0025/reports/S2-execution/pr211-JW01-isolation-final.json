@@ -1,0 +1,477 @@
+{
+  "task": "Owner-approved singlefileJW01 rate isolation",
+  "role": "Inspector",
+  "baseHead": "c706ed9941b22277b3d39a4cb1331abb2e819d68",
+  "sourceHashes": {
+    "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts": "3cb3edd84c161c57af6182d0c5c88bf4f68998b03064bf8c5ca91eb7c557786f",
+    "backend/app/src/detran-runtime.ts": "23eb90340e35da6986017d2a5bd1f4955a7d8d0d405849ee429ee005c235d573",
+    "backend/app/tests/integration/pec-pipeline-persistence.integration.spec.ts": "198b1de40eb01ee0e4fdf9e77f5e7aa1a835c87c81cd0f7fdcf5ef57793e46c6"
+  },
+  "original50BusinessBodiesByteIdentical": true,
+  "authority": "Parent conveyed explicitOwner approval of exact singlefilecapacity/lifetime/actualPGproof packet; no otherpath changed.",
+  "census": {
+    "JW01": {
+      "original": 50,
+      "additiveWindowProof": 1,
+      "passed": 51
+    },
+    "normalSerialTwofile": {
+      "registered": 176,
+      "selected": 52,
+      "passed": 52,
+      "filtered": 124,
+      "durationSeconds": 19.7,
+      "actualOrder": [
+        "cheapclaimmount",
+        "JW01full51"
+      ]
+    },
+    "PEC": {
+      "passed": 2,
+      "durationSeconds": 0.859,
+      "originalCapacity": null
+    }
+  },
+  "ephemeralRunnerCondition": {
+    "installedCLI": "vitest4.1.11 --cache Enable cache confirmed --help --cache",
+    "option": "--cache=false",
+    "defaultSequencer": true,
+    "forcedOrder": false,
+    "cacheFilesEditedOrDeleted": false,
+    "reason": "Prior defaultfailurecache ranJW01first, so allowedcheapclaim wasnotwarm; parentexplicitlyauthorized one publicCLIcache-disablednormalserial epoch."
+  },
+  "priorSetupEpochs": [
+    {
+      "name": "isolatedcold",
+      "hookBudgetMs": 10000,
+      "JW01AssertionsExecuted": 0,
+      "JW01Skipped": 51,
+      "durationSeconds": 10.76
+    },
+    {
+      "name": "normalserialcachedJW01first",
+      "cheapclaimPassed": 1,
+      "JW01AssertionsExecuted": 0,
+      "JW01Skipped": 51,
+      "totalFilteredOrSetupSkipped": 175,
+      "durationSeconds": 14.79
+    }
+  ],
+  "actualPGProof": {
+    "capacity": 10000,
+    "before": [
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 13
+      },
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 13
+      },
+      {
+        "bucket_key": "detran.answer-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.answer-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:44:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:46:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.extend-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.extend-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.protocol:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 21
+      },
+      {
+        "bucket_key": "detran.protocol:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 21
+      },
+      {
+        "bucket_key": "detran.receive-judging-body:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.receive-judging-body:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.redirect:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.redirect:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 6
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 6
+      },
+      {
+        "bucket_key": "detran.remit-jari:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 11
+      },
+      {
+        "bucket_key": "detran.remit-jari:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 11
+      },
+      {
+        "bucket_key": "detran.resolve-pending-content:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.resolve-pending-content:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.return-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.return-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.sign:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.sign:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.submit-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.submit-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.withdraw:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.withdraw:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      }
+    ],
+    "after": [
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 13
+      },
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 13
+      },
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 5
+      },
+      {
+        "bucket_key": "detran.answer-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.answer-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:44:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.claim-next:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:46:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 3
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 50
+      },
+      {
+        "bucket_key": "detran.extend-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.extend-inquiry:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 2
+      },
+      {
+        "bucket_key": "detran.protocol:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 21
+      },
+      {
+        "bucket_key": "detran.protocol:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 21
+      },
+      {
+        "bucket_key": "detran.receive-judging-body:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.receive-judging-body:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.redirect:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.redirect:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 6
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 6
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 6
+      },
+      {
+        "bucket_key": "detran.remit-jari:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 11
+      },
+      {
+        "bucket_key": "detran.remit-jari:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 11
+      },
+      {
+        "bucket_key": "detran.resolve-pending-content:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.resolve-pending-content:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.return-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.return-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.sign:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.sign:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.submit-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.submit-draft:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 49
+      },
+      {
+        "bucket_key": "detran.withdraw:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:43:00+00",
+        "hits": 1
+      },
+      {
+        "bucket_key": "detran.withdraw:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:45:00+00",
+        "hits": 1
+      }
+    ],
+    "consumed": [
+      {
+        "bucket_key": "detran.admit:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 5,
+        "consumed": 5
+      },
+      {
+        "bucket_key": "detran.create:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 50,
+        "consumed": 50
+      },
+      {
+        "bucket_key": "detran.reject:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 6,
+        "consumed": 6
+      },
+      {
+        "bucket_key": "detran.triage:tenant:00000000-0000-7000-8000-00000000a001",
+        "window_start": "2026-10-21 16:55:00+00",
+        "hits": 49,
+        "consumed": 49
+      }
+    ]
+  },
+  "actualCapacityRestoration": {
+    "original": null,
+    "restored": null
+  },
+  "classification": "GENUINE fullJW0151 GREEN plusPEC2GREEN; coldsetupfailures retained, not counted behaviorRED. Canonical prior14FAIL not erased/fullkernel not rerun.",
+  "bucketBoundary": "Actualbuckets aretenant+scope, notactor. Thisisolatedepoch consumed110 across4buckets; no assertionthatJW01aloneexceeded120. Originalcanonical8late429 evidencedsharedfixturepressure, exactpriorbucketrowsnotretainedafterupgrade.",
+  "checks": {
+    "appTypecheck": "PASS",
+    "pinnedPrettier": "PASS"
+  },
+  "unchangedBoundaries": [
+    "productiondefault120/window",
+    "realPGlimiter enabled",
+    "all50businessassertions",
+    "timeouts/hooks/populations",
+    "PECsource",
+    "runtime/provider/claimreference"
+  ],
+  "db": {
+    "port": 53343,
+    "otherClientsAtRelease": 0,
+    "lease": "RELEASED; no runner/client remains"
+  },
+  "sanitization": "Rawlogscontain syntheticIDs/windowkeys, no auth tokens/passwords/rawDSNs."
+}

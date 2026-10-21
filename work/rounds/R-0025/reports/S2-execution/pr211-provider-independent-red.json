@@ -1,0 +1,90 @@
+{
+  "task": "PR211 approved provider physical batching independent RED",
+  "head": "6ba809de630d917754cc9943141ff8735cffd125",
+  "sourceHashes": {
+    "backend/app/tests/e2e/teat-stream.e2e.spec.ts": "ef6abaa992704dc3d1e4ac6869e70fc8326726603ac8925ee7c4e2e9428f0db8",
+    "backend/app/src/teat-stream.service.spec.ts": "62d1b3f3e2b97de02d467e4434881a970d812bf10024c89b01c42f44de9ac7dd",
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "438496574776dc4ab50de7aa7715a02ec222680e7dee962d71f29b8ee716029f",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "11cf8e1ca4dd80bc81de5abd6d09768c4bf1cd8256361d0e5639baeadad2be8b",
+    "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "33323a609b9f11c2f9edd170b88938214b81cbba28c47d792027a3f3f20eb9d5",
+    "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "33b32d71b651d297874bff92c7606bf76f8541ec74c9499790d97e3457e3d582",
+    "backend/app/src/rait-risk.providers.ts": "d9a859388e45668b352864ca5b2bac5bc6b6810e8b50a309768551c63f878043",
+    "backend/app/src/teat-stream.service.ts": "242d487faaef0c99866d75009e73c64378082406f9203a21a2d126754c5ed5a7",
+    "backend/app/src/teat-stream.controller.ts": "2652ca91604c8db25768af2fbf30a004b24ee26bde0a963b99a9d4f23a0ba74b",
+    "pnpm-lock.yaml": "b6e26eea39b702d4983bc0e63ade9448fab65789e1d0e4ee67e99d490770cc15"
+  },
+  "runtimeProviderSha256": "d9a859388e45668b352864ca5b2bac5bc6b6810e8b50a309768551c63f878043",
+  "classification": "GENUINE QUERY-REDUCTION RED after every independent scalar typed/digest/outcome check passed",
+  "proof": {
+    "scalarInventoryQueries": 11,
+    "actualDiscoveryCounts": {
+      "timers": 3,
+      "parameters": 3,
+      "alerts": 2,
+      "incidents": 2
+    },
+    "totalActualQueries": 245,
+    "totalActualQueryMs": 243.49011400033487,
+    "qualifyCalls": 12,
+    "policyCalls": 1,
+    "scalarDigest": "sha256:48f7ac280c17ad5e609fc33584364fd7ea8ab13e214a934972bc265ac94c585c"
+  },
+  "assertion": "Only final expected discovery1each fails against original3timers/3parameters/2alerts/2incidents",
+  "qualificationChecks": "Exact12 qualify kind population plus1 qualifyPolicy executed fresh; no producer override/cache/private method mock",
+  "oracle": "Frozen original physical scalar SQL + independent scalar native source projections, same actual app-role Tx/operation; captured actual runtime fields and digests perclock/sourceRef; actualHTTPoutcome+explicit A/D prescription,CSEM_RISCO,BNA",
+  "limitation": "Not a500line fullsemantic oracle. All124originalcontrols and final fullkernel remain required. No throughput/latency gain claimed.",
+  "full4": {
+    "registered": 587,
+    "passed": 577,
+    "failed": 10,
+    "skipped": 0,
+    "durationSeconds": 427.11,
+    "files": [
+      {
+        "file": "rait-case-commands.e2e.spec.ts",
+        "counts": {
+          "passed": 97,
+          "failed": 1
+        }
+      },
+      {
+        "file": "rait-p402-claim.e2e.spec.ts",
+        "counts": {
+          "passed": 120,
+          "failed": 5
+        }
+      },
+      {
+        "file": "rait-p402-scope.e2e.spec.ts",
+        "counts": {
+          "passed": 353,
+          "failed": 2
+        }
+      },
+      {
+        "file": "teat-stream.e2e.spec.ts",
+        "counts": {
+          "passed": 7,
+          "failed": 2
+        }
+      }
+    ]
+  },
+  "failureClassification": [
+    "4 complete51 actual30s performance body failures",
+    "1 intended provider querycount RED",
+    "1 existing TEAT C43 actual2s replay RED",
+    "1 new601 TEAT fixture SQL paramtype prerequisite (notbehaviorRED)",
+    "2 protocol fixture unique-unit-name prerequisites",
+    "1 commands exactoutbox counter mismatch under readonlytriage"
+  ],
+  "sourceHashesUnchangedThroughEpoch": true,
+  "artifacts": {
+    "work/rounds/R-0025/reports/S2-execution/pr211-valid-baseline-full4-red.log": "4a17b2e90645c8223d8a5806439b14ca74809df5dac92ef835118ea98a4ec505",
+    "work/rounds/R-0025/reports/S2-execution/pr211-valid-baseline-full4-red.json": "cdb0fce5e65b84b46b61dec6854ac34302d3927085420a653535db053c373f0c",
+    "work/rounds/R-0025/reports/S2-execution/pr211-valid-baseline-full4-source.json": "efc78599242cad210fb762d31962dbf16784249c5fb40509ac232b5fdccbea28"
+  },
+  "historicalEvidence": "Invalid seed and coldhook epochs retained separately; this epoch canonicallegacy20 valid",
+  "EngineerRelease": "Provider only may proceed after parent checkpoint; TEAT601behavior stillpendingfixturecast correction",
+  "review": "No independent thirdreview/merge/readiness claim"
+}

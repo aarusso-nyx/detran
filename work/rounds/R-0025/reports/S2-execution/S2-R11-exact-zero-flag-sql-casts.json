@@ -1,0 +1,17 @@
+{
+  "recordedAt": "2026-10-20T00:13:14.942579+00:00",
+  "role": "Architect coordination/Inspector sensor route",
+  "delegation": "Original Owner window ending2026-10-20T02:39:32Z or earlier return",
+  "task": "TASK-0041",
+  "classification": "sensor-error: PostgreSQL shared parameter inference in previously unreached zero-flag SQL",
+  "ownedPath": "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts",
+  "recommendationAdopted": "Explicit text casts for TEXT outbox.aggregate_id and JSON text comparisons; explicit uuid cast for inf.rait_clock.case_id; retain clock id::text subqueries and exact zero count. No assertion/outcome change.",
+  "source": "backend/database/ddl/04-integration-storage.sql:6 aggregate_id TEXT; actual R7 probe SQL uuid=text error",
+  "preserve": [
+    "Original R10 RED and three-probe pre-correction results/source hashes",
+    "All observed actual writer PID/blocker and stable-state/delta assertions",
+    "No timeout/test skip/production write/runtime or grant change"
+  ],
+  "scope": "Syntax/type-only correction and unchanged targeted rerun with fresh epoch paths. Existing frozen99 history remains immutable; final amended103 hashes explicit.",
+  "remaining": "Executed3 probes reached substantive controls then SQL assertion error; no whole-probe or full103 PASS yet."
+}

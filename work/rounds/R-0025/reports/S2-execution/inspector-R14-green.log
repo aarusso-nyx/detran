@@ -1,0 +1,88 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/backend/app
+
+[2026-10-19 22:01:50.404 -0300] INFO (8471): request completed
+    request_id: "01a156d4-31bc-7930-b829-ea34d15fb621"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 1031
+[2026-10-19 22:01:50.771 -0300] INFO (8471): request completed
+    request_id: "01a156d4-35cb-7788-ac8a-2720b3cb9e04"
+    route: "/v1/inf/rait/cases/f5aa96e1-d6c3-4e44-bef2-6e03ef44f12c/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 360
+[2026-10-19 22:01:51.073 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3737-73cf-a65b-930f0bf8d05d"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 298
+[2026-10-19 22:01:51.302 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3864-785b-9963-dcd1e1d30693"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 226
+[2026-10-19 22:01:51.557 -0300] INFO (8471): request completed
+    request_id: "01a156d4-394a-730f-ad8d-db4442e50f9e"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 250
+[2026-10-19 22:01:51.900 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3a46-7853-b414-529af41e6106"
+    route: "/v1/inf/rait/cases/f5aa96e1-d6c3-4e44-bef2-6e03ef44f12c/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 341
+[2026-10-19 22:01:52.227 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3bfc-7e25-a633-1f15d1ee0cbc"
+    route: "/v1/inf/rait/cases"
+    method: "POST"
+    status: 200
+    duration_ms: 231
+[2026-10-19 22:01:52.567 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3ce6-7603-b8db-3fd3d2d5fd54"
+    route: "/v1/inf/rait/cases/40354c6b-0214-4d2e-8d75-85a51c02fc2d/commands/triage"
+    method: "POST"
+    status: 200
+    duration_ms: 336
+[2026-10-19 22:01:52.857 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3e39-7d61-8af2-7c79954d3054"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 288
+[2026-10-19 22:01:53.005 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3f5d-7fde-af9f-f6bf1496ca14"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 144
+[2026-10-19 22:01:53.133 -0300] INFO (8471): request completed
+    request_id: "01a156d4-3ff0-7582-9050-6f2c85a04f5f"
+    route: "/v1/inf/rait/admissibility"
+    method: "POST"
+    status: 200
+    duration_ms: 125
+[2026-10-19 22:01:53.261 -0300] INFO (8471): request completed
+    request_id: "01a156d4-406f-78ff-a0f7-68f3a04ad9c3"
+    route: "/v1/inf/rait/cases/40354c6b-0214-4d2e-8d75-85a51c02fc2d/commands/admit"
+    method: "POST"
+    status: 200
+    duration_ms: 126
+R14_SQL_PROOF {"refs":38,"tables":10,"fixtureQueries":10,"runtimeQueries":10,"auditRows":2}
+S2_ASSERTIONS {"test":"R14 independent actual SQL scalar equivalence preserves identities and freshness while reducing fixed-table source queries","executedAssertions":45}
+ ✓ tests/e2e/rait-p402-claim.e2e.spec.ts (115 tests | 114 skipped) 7134ms
+   ✓ R14 independent actual SQL scalar equivalence preserves identities and freshness while reducing fixed-table source queries  5819ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 114 skipped (115)
+   Start at  22:01:26
+   Duration  27.79s (transform 14.52s, setup 0ms, import 20.40s, tests 7.13s, environment 0ms)
+
+JSON report written to /tmp/detran-s2-R14-green.json

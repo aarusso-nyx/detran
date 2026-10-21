@@ -1,0 +1,90 @@
+{
+  "role": "Architect",
+  "task": "TASK-0043 continuation",
+  "path": "docs/framework/contracts/BP-INF-RAIT-CASE-001.commands.openapi.json",
+  "beforeSha256": "2179953a18d991781ff61e9543f7f33508a21d0e9b047d4f29baedb922e38b96",
+  "afterSha256": "18d005139a185aadb2c3a6531aa9bf993b2eb29bac7ce0fa43b76b2e9b2c060d",
+  "changes": [
+    {
+      "operationId": "raitPoolClaimNext",
+      "method": "post",
+      "path": "/v1/inf/rait/pools/{id}/claim-next",
+      "status": "403",
+      "codes": [
+        "RAIT.FORBIDDEN_ACTION",
+        "RAIT.FORBIDDEN_CASE_SCOPE",
+        "RAIT.ORDER_OVERRIDE_FORBIDDEN"
+      ],
+      "branchesUnchanged": true
+    },
+    {
+      "operationId": "raitPoolClaimNext",
+      "method": "post",
+      "path": "/v1/inf/rait/pools/{id}/claim-next",
+      "status": "409",
+      "codes": [
+        "RAIT.QUEUE_EMPTY",
+        "RAIT.CASE_POOL_UNRESOLVED",
+        "RAIT.CLAIM_LEGACY_UNVERIFIED",
+        "RAIT.IDEMPOTENCY_REPLAY",
+        "RAIT.ASSIGNMENT_ALREADY_ACTIVE"
+      ],
+      "branchesUnchanged": true
+    },
+    {
+      "operationId": "raitPoolClaimNext",
+      "method": "post",
+      "path": "/v1/inf/rait/pools/{id}/claim-next",
+      "status": "422",
+      "codes": [
+        "RAIT.MEMBER_NOT_AVAILABLE",
+        "RAIT.PARAMETER_SOURCE_PENDING",
+        "RAIT.ASSIGNMENT_WIP_LIMIT"
+      ],
+      "branchesUnchanged": true
+    },
+    {
+      "operationId": "raitClaimContext",
+      "method": "get",
+      "path": "/v1/inf/rait/claim-context",
+      "status": "403",
+      "codes": [
+        "RAIT.FORBIDDEN_ACTION",
+        "RAIT.FORBIDDEN_CASE_SCOPE"
+      ],
+      "branchesUnchanged": true
+    },
+    {
+      "operationId": "raitClaimContext",
+      "method": "get",
+      "path": "/v1/inf/rait/claim-context",
+      "status": "409",
+      "codes": [
+        "RAIT.CASE_POOL_UNRESOLVED",
+        "RAIT.CLAIM_LEGACY_UNVERIFIED"
+      ],
+      "branchesUnchanged": true
+    },
+    {
+      "operationId": "raitCaseRiskSnapshot",
+      "method": "get",
+      "path": "/v1/inf/rait/cases/{id}/risk",
+      "status": "403",
+      "codes": [
+        "RAIT.FORBIDDEN_ACTION",
+        "RAIT.FORBIDDEN_CASE_SCOPE"
+      ],
+      "branchesUnchanged": true
+    }
+  ],
+  "equivalence": "Only redundant outer type/object, code enum union and required code; all oneOf branches unchanged; no outer additionalProperties:false. Existing union already requires object and code.",
+  "checks": {
+    "jsonParse": "PASS",
+    "exactSixResponses": "PASS",
+    "branchPreservation": "PASS",
+    "gate": "PASS: node tools/contracts/check-commands.mjs;331 operations",
+    "clientGeneration": "not run; parent dispatches separately",
+    "format": "PASS: Prettier source formatting"
+  },
+  "excluded": "No checker/test/runtime/DB/Git edits"
+}

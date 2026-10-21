@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "role": "Inspector",
+  "status": "AUTHORED_BASELINE_EXECUTED_NONPROMOTING",
+  "readinessPromoting": false,
+  "source": {
+    "capturedAt": "2026-10-19T23:06:17.185853+00:00",
+    "parentSuppliedSourceHead": "fb6708bd",
+    "sha256": {
+      "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "aab29505a8dc2a8dc0bef9c3b00d70cf5f961b1249761786ca878668e51bf1ad",
+      "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts": "f02803fdad189387cf5228b2520d02befc5883be0501c02cad90bd695603ad2f",
+      "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts": "16a8aa8346598197fe3388dc2d0ea9aab06aaac0e2afd401d6318e079e72a247",
+      "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "f3403f1ddef67e0c5a45fb754cb9341debd8ad04b3632ef64b58af2066ca63da",
+      "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "8f5d7b7a28179bbf57b9a4e62e157d6c698061a86c86559aa881b07d71489e8a",
+      "backend/app/tests/shared/rait-case-command.fixture.ts": "6e423b63b2d015eb8ca7d5c68380573358a77668fc8cce7cfb2f80d6371dfa9c",
+      "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts": "b696830b535b09f9db8f2a5655e4885720c4d293e48e3205aaa3c3d3c21f3b3c",
+      "backend/app/tests/shared/rait-p402-claim.fixture.ts": "ae5791fa22afeefbff089f02d4d66a216c0080f57e21ab8ff2e71c15a71a9d0a",
+      "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts": "d1e18316bd100c69925c7a57aefddd36147df91c37c54195e5a51d56c147e11b",
+      "tools/contracts/tests/check-commands.test.mjs": "bc72f87559659083c35c8da3041195a810c514010b54c6e7fd2be8a75d9dc75d",
+      "backend/app/src/app.module.ts": "4d013e69e4c176e0df71e22f2c2fa1cdb1a2af35a4263ecbd76d54788db04600",
+      "backend/app/src/detran-runtime.ts": "23eb90340e35da6986017d2a5bd1f4955a7d8d0d405849ee429ee005c235d573",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322",
+      "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts": "22c89228b58adcd4b71f60c51e6f79610ee2508ce38f3c7b5e44bcb663b2a45a",
+      "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1",
+      "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2"
+    }
+  },
+  "executionCustody": {
+    "checkout": "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran",
+    "kind": "external checkout; TASK-0035 supported locks-only",
+    "database": "dedicated disposable database at 127.0.0.1:53343",
+    "protectedPortsUntouched": [
+      53340,
+      53341,
+      58483
+    ],
+    "runtimeEdited": false,
+    "gitMutationsByInspector": false
+  },
+  "typecheck": {
+    "command": "pnpm --filter @detran/app typecheck",
+    "result": "PASS",
+    "exitCode": 0,
+    "log": "/tmp/detran-s2-http-final-delta-types.log"
+  },
+  "finalHttp": {
+    "command": "DETRAN_TEST_TIER=e2e pnpm --filter @detran/app exec vitest run tests/e2e/rait-p402-claim.e2e.spec.ts --reporter=default --reporter=json --outputFile=/tmp/detran-s2-http-final-r2-results.json",
+    "status": "EXECUTED_NONPROMOTING",
+    "rawLog": "/tmp/detran-s2-http-final-r2-red.log",
+    "rawResults": "/tmp/detran-s2-http-final-r2-results.json",
+    "filteredCasesCountAsPass": false,
+    "assertionCountsIncludeFixturePreconditions": true,
+    "total": 99,
+    "passed": 5,
+    "failed": 94,
+    "skipped": 0,
+    "durationSeconds": 303.48,
+    "sourceHashesVerifiedUnchanged": true
+  },
+  "priorEpochs": [
+    {
+      "rawLog": "/tmp/detran-s2-http-initial-red.log",
+      "sha256": "cc9a4ea27becd8d163375cfd7c3e3fef3797db3cd2aff20556161f079559740c",
+      "frameworkSummary": [
+        "Test Files  1 failed (1)",
+        "Tests  19 skipped (19)",
+        "Duration  14.41s (transform 5.42s, setup 0ms, import 3.26s, tests 10.03s, environment 0ms)"
+      ]
+    },
+    {
+      "rawLog": "/tmp/detran-s2-http-stage1-red.log",
+      "sha256": "777e49f35151a57a93fc0eeb381d14b423b979fc9190c12808329cf4142f84c1",
+      "frameworkSummary": [
+        "Test Files  1 failed (1)",
+        "Tests  23 failed | 4 passed (27)",
+        "Duration  21.12s (transform 7.64s, setup 0ms, import 11.73s, tests 9.23s, environment 0ms)"
+      ]
+    },
+    {
+      "rawLog": "/tmp/detran-s2-http-expanded-red.log",
+      "sha256": "236065277a198709667c2123aa7e7f31b8b596e642f85c7e4b0c2accd4966ebf",
+      "frameworkSummary": [
+        "Test Files  1 failed (1)",
+        "Tests  62 failed | 4 passed (66)",
+        "Duration  258.15s (transform 27.31s, setup 0ms, import 34.86s, tests 222.87s, environment 0ms)"
+      ]
+    },
+    {
+      "rawLog": "/tmp/detran-s2-http-qualified-family-red.log",
+      "sha256": "1e10db601e9bbc5dc736a0febc68b9d91c7e21fefbfa0f2190bf49d4fd397ea8",
+      "frameworkSummary": [
+        "Test Files  1 failed (1)",
+        "Tests  5 failed | 1 passed | 78 skipped (84)",
+        "Duration  128.95s (transform 74.44s, setup 0ms, import 90.72s, tests 36.11s, environment 0ms)"
+      ]
+    },
+    {
+      "rawLog": "/tmp/detran-s2-http-final-red.log",
+      "sha256": "e569a56bf231156d1d7ff378c85cda21d5173712a15573badd68037b54cb2d15",
+      "frameworkSummary": [
+        "Test Files  1 failed (1)",
+        "Tests  99 failed (99)",
+        "Duration  87.39s (transform 34.63s, setup 0ms, import 44.63s, tests 41.69s, environment 0ms)"
+      ]
+    }
+  ],
+  "priorGateDiagnostics": [
+    {
+      "command": "contract commands census tests",
+      "result": "23PASS/1FAIL: two declared GETs absent from mounted runtime",
+      "classification": "transport-interface prerequisite; not protection proof",
+      "log": "/tmp/detran-s2-http-contracts-red.log"
+    },
+    {
+      "command": "AIT RLS integration census",
+      "result": "2PASS/1FAIL: expected99 versus existing98 tables",
+      "classification": "missing approved schema prerequisite; no fixture creates it",
+      "log": "/tmp/detran-s2-http-rls-schema-red.log"
+    }
+  ],
+  "fixtureCalibrations": [
+    "New admitted claim: real HTTP protocol/triage/human checklist/admit, independent agency executable parameters and pre-admitted SQL-content receipt registry. Only narrow provenance reader substituted; actual SQL snapshot factory/auth/claim remain real.",
+    "Qualified legacy uses actual prior HTTP admission plus explicitly synthetic historical distribution and immutable authorized disposition. If the approved table is absent, S2_SCHEMA_PENDING is fatal and remains a prerequisite; no ad-hoc table/guard bypass.",
+    "Late180 track derives its piece mark from actual T-DEF due_on+1, asserts persisted false tempestividade, stays in real triage; admitted360 retains actual true timely defense plus explicit canonical extension history.",
+    "Risk GET positives use a separately persisted coordinator and actual same-unit read binding under D3. Triage analyst and post-claim own-assignment purposes remain explicit; no unassigned analyst merits grant.",
+    "Existing CASE positive keeps exact legal audit1/events2/outbox2 using a qualified legacy first-use fixture. Existing scope replay release/reassign/impediment/exact-pool denials and no-effects/nondisclosure remain.",
+    "Fresh caseId preserves source403 ORDER_OVERRIDE_FORBIDDEN precedence; other unknown fields400. Valid changed actor/pool under existing key conflicts409; invalid body never receives a prior successful result.",
+    "New suite only: R4 cap10000 around one actual app lifetime, original environment restored exactly once after close/setup failure. Actual PG limiter retained and window hit delta asserted. Inherited suites keep default120.",
+    "All timeout values unchanged. Four51-case controls prepare real306-command admission journeys in bounded ordinary hooks; every phase fatal, then complete-pool assertion remains one test.",
+    "Rollback uses only fixture-named added triggers and exact nontransactional sequence hit1; no production trigger disabled. Stage observer listens before claim and captures actual committed state/version order via pg_notify.",
+    "Case/AIT/infraction source dates/projections follow frozen format; no B ghost timer or missing-to-NA fallback; production provenance remains explicitly missing."
+  ],
+  "remainingAcceptance": [
+    "Composite baseline completed; final runtime GREEN pending. R2 fixture defects and bounded corrective delta are distinguished from behavior RED and prerequisites.",
+    "Future runtime GREEN must run all99 cases unfiltered and actually reach positive transport/SQL/race/rollback controls; passing404 because a route is absent is no protection evidence.",
+    "Required complete S2 backend/old S1 kernel and exact required CI remain parent/Engineer/Inspector acceptance after implementation.",
+    "No production qualification, release-readiness, frontend S3, radar publisher, incident writer, legal extinction, scorecard or round closure is claimed."
+  ],
+  "classification": {
+    "genuineBehaviorRed": [
+      "Three supplied If-Match values accepted200 and persisted claim effects instead of400",
+      "Real admitted case missing risk returned409 QUEUE_EMPTY instead of503",
+      "Unqualified legacy case claimed200 instead of409",
+      "Qualified newly admitted path returned409 instead of200/v+2"
+    ],
+    "existingControlsPassed": [
+      "caseId selection denied403",
+      "Four other unknown body fields denied400"
+    ],
+    "prerequisites": "Missing GET routes, qualification schema, DI contracts and unreached transaction barriers are not security/rollback/concurrency proof.",
+    "fixtureDefectsCorrected": [
+      "Reserved SQL alias window changed to win in rate-window control",
+      "NULL-unit pool uses existing canonical pool plus fresh member/schedule, preserving unique index and historical facts",
+      "Hold inventory read uses already authorized coordinator, no analyst grant"
+    ]
+  },
+  "delta": {
+    "status": "EXECUTED_NONPROMOTING",
+    "rawLog": "/tmp/detran-s2-http-final-delta.log",
+    "rawResults": "/tmp/detran-s2-http-final-delta-results.json",
+    "sourceManifest": "/tmp/detran-s2-http-final-delta-source.json",
+    "scope": "Three affected cases only; remaining96 assertion bodies and fixtures unchanged except additive uncalled joinExistingPool helper.",
+    "executed": 3,
+    "passed": 1,
+    "failed": 2,
+    "filteredUnexecuted": 96,
+    "sourceHashesVerifiedUnchanged": true,
+    "classification": {
+      "rateControl": "PASS actual PostgreSQL window hit increment under approved isolated cap",
+      "historicalNull": "Transport prerequisite: canonical pool setup succeeds, new GET absent404",
+      "hold": "Schema prerequisite: qualification entity absent; header cannot yet be exercised"
+    }
+  },
+  "finalSource": {
+    "capturedAt": "2026-10-19T23:14:44.037938+00:00",
+    "parentSuppliedSourceHead": "fb6708bd",
+    "sha256": {
+      "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "aab29505a8dc2a8dc0bef9c3b00d70cf5f961b1249761786ca878668e51bf1ad",
+      "backend/app/tests/e2e/rait-ctg2-final-structural.e2e.spec.ts": "f02803fdad189387cf5228b2520d02befc5883be0501c02cad90bd695603ad2f",
+      "backend/app/tests/e2e/rait-jw01-admissibility.e2e.spec.ts": "16a8aa8346598197fe3388dc2d0ea9aab06aaac0e2afd401d6318e079e72a247",
+      "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "f865598ccb6026deeb7e954f287796de8d1eaa8ccaa4a4765e5e5b307c03cab2",
+      "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "8f5d7b7a28179bbf57b9a4e62e157d6c698061a86c86559aa881b07d71489e8a",
+      "backend/app/tests/shared/rait-case-command.fixture.ts": "6e423b63b2d015eb8ca7d5c68380573358a77668fc8cce7cfb2f80d6371dfa9c",
+      "backend/app/tests/shared/rait-jw01-admissibility.fixture.ts": "b696830b535b09f9db8f2a5655e4885720c4d293e48e3205aaa3c3d3c21f3b3c",
+      "backend/app/tests/shared/rait-p402-claim.fixture.ts": "887e58c375ef4d035fd4a55f29121c9866b71c1f796a41e360a64fd2188e821d",
+      "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts": "d1e18316bd100c69925c7a57aefddd36147df91c37c54195e5a51d56c147e11b",
+      "tools/contracts/tests/check-commands.test.mjs": "bc72f87559659083c35c8da3041195a810c514010b54c6e7fd2be8a75d9dc75d",
+      "backend/app/src/app.module.ts": "4d013e69e4c176e0df71e22f2c2fa1cdb1a2af35a4263ecbd76d54788db04600",
+      "backend/app/src/detran-runtime.ts": "23eb90340e35da6986017d2a5bd1f4955a7d8d0d405849ee429ee005c235d573",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts": "5bbc49757e102608618da286381b908d08d529eeac90375acb4d7694c997d322",
+      "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts": "22c89228b58adcd4b71f60c51e6f79610ee2508ce38f3c7b5e44bcb663b2a45a",
+      "work/rounds/R-0025/reports/S2-execution/source-provenance-format.json": "11900e422e26263191433348d03255d2a78ce645144a4c879062584d285458d1",
+      "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json": "1cc510a10cfe7e10e232b53291df1132f8a90e54bce9c71c4e2c39acbfa41af2"
+    }
+  },
+  "databaseLease": "RELEASED; no live Inspector database processes",
+  "preservedArtifacts": [
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-r2-red.log",
+      "sha256": "dcb9255949671426ee996211a5c904a326e9aba360aeb40f65b016ee6e01a3b8",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-r2-results.json",
+      "sha256": "37066d5405eb87ff6f4e2ac77e84b02a5056c2fdd964f8098b6f46895fe61903",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-r2-source.json",
+      "sha256": "d0ddff4f2cc411da35e6f7100101e40064501560591d5253804f023c39f92bea",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-delta.log",
+      "sha256": "3f0932d301bcc1f11d072ba777b6e44accd91e5a8cc531225397828ae71aa403",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-delta-results.json",
+      "sha256": "d179e5b02be8cd0a88bc1e7bbc8784e2fda1a2a4c97bd0bd24f7afc2d93e2198",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-delta-source.json",
+      "sha256": "cbcf206f694915d45d4b935bb200871b6c46e6e68242efdbf0d787c78114de73",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    },
+    {
+      "path": "work/rounds/R-0025/reports/S2-execution/inspector-http-final-delta-types.log",
+      "sha256": "d62b53df6491efab67f5883e4d07a96ab6889f41ade90f51ab78846d9b91118a",
+      "sanitization": "Mechanical database-URL and non-local bearer redaction; raw tmp originals preserved."
+    }
+  ],
+  "roleAndCapacityReceipt": {
+    "actualPipeline": "Actual AppModule HTTP admission and PostgreSQL rate-window increment executed",
+    "provenanceTransactionIdentity": "Authored role_app_backend + tenant assertion, unreached while public token absent; not executed proof",
+    "capacity": "10000 only new-suite lifetime; PG hit increment passed",
+    "restoration": "Idempotent lifecycle source restores original value after app close; no separate logged restored-equality assertion"
+  },
+  "semanticFixtureDisposition": [
+    "The old S1 unit-first/selected-foreign-case404 scenario is semantically recalibrated, not byte-identical: S2 must select within the explicit pool rather than select by unit and subsequently reject. Invariant coverage maps to rait-p402-claim.e2e.spec.ts:1715 (two actual same-unit memberships; other pool typed empty queue, QUEUE_EMPTY, no case IDs/no effects; original pool contains only the explicitly bound case) and rait-p402-scope.e2e.spec.ts:2213 (same-unit unauthorized pool404 sentinel, no effects/nondisclosure). Baseline absent GET is transport prerequisite, not proof of correct selection."
+  ]
+}

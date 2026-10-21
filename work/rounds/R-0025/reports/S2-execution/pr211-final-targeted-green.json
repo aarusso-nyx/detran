@@ -1,0 +1,2978 @@
+{
+  "task": "PR211 final focused TEAT and three sensor correction GREEN",
+  "role": "Inspector",
+  "head": "ffce34c27d669c87dd77c0b63d2109c508f376d8",
+  "sourceHashes": {
+    "backend/app/src/teat-stream.service.ts": "dc022fcebf740269314059e4b595e5d739213cd1f662dc697b0999a16316eba7",
+    "backend/app/src/teat-stream.controller.ts": "acdd56c0732096385a7c9a309d837acd4e7285732084aa77bae1e17cb738f5c2",
+    "backend/app/src/rait-risk.providers.ts": "32df0ae0b8fb8ecf7ac86961bb9f6f6e263247eba89937d44f09c40acdc75a7d",
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "438496574776dc4ab50de7aa7715a02ec222680e7dee962d71f29b8ee716029f",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "11cf8e1ca4dd80bc81de5abd6d09768c4bf1cd8256361d0e5639baeadad2be8b",
+    "backend/app/tests/e2e/rait-p402-scope.e2e.spec.ts": "3510d4c7f5bdcce387554671ee7b587147384b3bfe45ad43d63f9bbfa73b8b4a",
+    "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts": "8d80901a1b30e919c9792261961057c4a17c316acf5cabbf87317ce6f2438b58",
+    "backend/app/tests/e2e/teat-stream.e2e.spec.ts": "ed02a416692da5899abf1697e1c30dfcceb84ffad5e7f78b71a2d50f951ad92a",
+    "backend/app/src/teat-stream.service.spec.ts": "62d1b3f3e2b97de02d467e4434881a970d812bf10024c89b01c42f44de9ac7dd"
+  },
+  "unchangedAfterExecution": true,
+  "units": {
+    "registered": 12,
+    "passed": 12,
+    "failed": 0,
+    "durationSeconds": 1.29
+  },
+  "http": {
+    "registered": 587,
+    "selected": 14,
+    "passed": 14,
+    "failed": 0,
+    "filtered": 573,
+    "durationSeconds": 30.56,
+    "actualControls": [
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado Database STYNX do app quando abre transa\u00e7\u00e3o de comando ent\u00e3o usa banco dedicado, role_app_backend, tenant e ator na mesma conex\u00e3o",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado secretaria com v\u00ednculo ativo quando protocol atravessa HTTP ent\u00e3o cria atomicamente o intake qualificado",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado ADMIN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado ADMIN_CLINICA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado MEDICO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado PSICOLOGO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado RECEPCAO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado TECNICO_BIOMETRIA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado AUDITOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado GESTOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado SUPERVISOR quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado GESTOR_DETRAN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado JUNTA quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CETRAN quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado DPO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado SUPORTE quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CANDIDATO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado field-agent quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado field-supervisor quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado processing-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado traffic-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado agency-admin quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado technical-admin quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado bi-analyst quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado integration-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-analyst quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-coordinator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-signing-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-central-authority quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-rapporteur quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-chair quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-manager quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-hr quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado rait-finance quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado dash-operator quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado dash-duty-owner quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel isolado CIDADAO quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar actor quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar actorId quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar assessed_by quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar verified_by quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar tenant_id quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar policy quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado payload que tenta controlar rank quando protocol atravessa HTTP ent\u00e3o rejeita sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado secretary sem v\u00ednculo do ator autenticado quando protocol atravessa HTTP ent\u00e3o responde 403 sem efeito persistido",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando admit atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando admit atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando non-admission atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando non-admission atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando remit atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando remit atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando receive atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando receive atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando ready atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando ready atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-signing-authority quando decide atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando decide atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-signing-authority quando return-draft atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando return-draft atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando withdraw atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando withdraw atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando redirect atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando redirect atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-secretary quando resolve-pending atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando resolve-pending atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando claim-next atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "passed",
+        "durationMs": 1515.1727500000002
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando claim-next atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando answer atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-rapporteur quando answer atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando answer atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-analyst quando extend atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel m\u00ednimo rait-rapporteur quando extend atravessa HTTP, PolicyGuard e banco ent\u00e3o responde 200, ETag s\u00f3 no header e efeitos at\u00f4micos",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado papel omitido quando extend atravessa PolicyGuard ent\u00e3o responde 403 RAIT.FORBIDDEN_ACTION sem escrita",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.8 \u2014 HTTP real, pol\u00edtica e PostgreSQL dado principal humano quando expire \u00e9 chamado pela rota ent\u00e3o permanece negado e n\u00e3o ganha grant",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado defesa_previa/balcao quando h\u00e1 exatamente um T-DEF armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado jari/portal quando h\u00e1 exatamente um T-NP-VENC armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado cetran/sne quando h\u00e1 exatamente um T-R2 armado ent\u00e3o usa a infra\u00e7\u00e3o e admite",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit converte protocolled_at para dia civil America/Manaus na fronteira UTC sem usar today",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timer ausente quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timer fechado quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timers armados m\u00faltiplos quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado canal postal quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado canal n\u00e3o suportado quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timezone vazio quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 binding real de tempestividade de admit dado timezone IANA inv\u00e1lido quando admit \u00e9 solicitado ent\u00e3o bloqueia sem efeito parcial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado replay serial com a mesma chave quando o comando completa ent\u00e3o persiste uma \u00fanica auditoria/outbox/vers\u00e3o",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado replay parallel com a mesma chave quando o comando completa ent\u00e3o persiste uma \u00fanica auditoria/outbox/vers\u00e3o",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "CTG-0001 \u00a710.9 \u2014 auditoria transacional e replay HTTP dado audit.write falhando ap\u00f3s a primeira escrita quando comando executa ent\u00e3o dom\u00ednio/outbox/ledger/audit sofrem rollback",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio empty quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio valid-optional quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio invalid-optional quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-cross-tenant quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-invalid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio mandatory-all-valid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio valid-plus-invalid-mandatory quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio wrong-entity quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio blank-storage quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE bloqueia o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "OD-R7-FJ0-001 \u2014 10 categorias reais e isoladas de TEAT_EVIDENCE dado cen\u00e1rio packaged-valid quando remit valida F-J-0 ent\u00e3o TEAT_EVIDENCE satisfaz o piso fail-closed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match \"1\" returns400 without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match not-a-validator returns400 without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites supplied If-Match * returns400 without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller caseId cannot select/grant a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller actor cannot select/grant a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller tenant_id cannot select/grant a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller role cannot select/grant a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites caller purpose cannot select/grant a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites new HTTP-admitted work with unqualified risk fails503 before old QUEUE_EMPTY fallback",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 existing real claim behavior counterexamples, before new service/schema prerequisites unqualified in-scope legacy is409 and cannot be silently claimed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"limit\":0}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"limit\":51}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"limit\":1.5}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"pool_id\":\"not-a-uuid\"}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"actor\":\"forged\"}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"purpose\":\"merits\"}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"tenant_id\":\"forged\"}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rejects malformed/authority-bearing discovery input {\"queue_cursor\":\"not-a-valid-cursor\"}",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rait-coordinator cannot borrow read authority for claim-context",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees AUDITOR cannot borrow read authority for claim-context",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees rait-secretary cannot borrow read authority for claim-context",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees technical-admin cannot borrow read authority for claim-context",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees zero eligible pools has exact count0 and empty typed pages",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees one empty eligible pool is selected from complete set and GET writes nothing",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees unresolved legacy blocks selected-pool GET409 without a degraded queue",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees scoped risk for admitted case with absent qualified sources returns503",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual mounted discovery/risk transport and read-only guarantees unknown risk case and unauthorized case share404 without payload",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only mounts the public narrow provenance port while retaining the actual SQL factory",
+        "status": "passed",
+        "durationMs": 144.9389169999995
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only qualified new HTTP admission claims exactly two state versions and a real assignment",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only qualified historical admission/distribution advances exactly one version",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent A proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent C proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent D proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent track proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent movement proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent interruption proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent applicability proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only missing independent parameter proof is503 despite otherwise complete actual rows",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only qualified ORIGINAL D requires independently verified complete original history, never absence inference",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only trusted receipt cannot authorize a shifted canonical raw_due_on",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only trusted receipt cannot authorize a shifted canonical due_on",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only consumed SQL source mutation invalidates pre-admitted receipt rather than echoing request digest",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only a qualified read does not alter flags, clocks, history, ledger or outbox",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only same actor exact retry returns original typed result without any additional effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only replay still denies revoked current membership without replay effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual SQL factory with independently admitted synthetic provenance only valid canonical actor change under the existing key conflicts409 without disclosing original result",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 internal qualification has no public CRUD authority no GET internal qualification route",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 internal qualification has no public CRUD authority no POST internal qualification route",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 internal qualification has no public CRUD authority no PATCH internal qualification route",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 internal qualification has no public CRUD authority no DELETE internal qualification route",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during distribution rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during instruction rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during assignment rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during legalAudit rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during outbox rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 transaction rollback boundaries through actual HTTP failure during ledger rolls back both case stages and all claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 source authority is independent of matching SQL content revoked receipt cannot authorize a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 source authority is independent of matching SQL content foreignTenant receipt cannot authorize a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 source authority is independent of matching SQL content unadmittedOrigin receipt cannot authorize a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 source authority is independent of matching SQL content ambiguous receipt cannot authorize a claim",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 observed PostgreSQL contention, no clock or transaction adapter substitute two genuinely authenticated analysts cannot assign the same candidate twice",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 observed PostgreSQL contention, no clock or transaction adapter substitute concurrent same-actor claims serialize WIP1 across two independently qualified cases",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 observed PostgreSQL contention, no clock or transaction adapter substitute membership revoked during real lock wait denies claim without side effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete pool inventory precedes pagination a risk blocker beyond position50 blocks the whole pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete pool inventory precedes pagination a legacy blocker beyond position50 blocks the whole pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete pool inventory precedes pagination a routing blocker beyond position50 blocks the whole pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete pool inventory precedes pagination a incident blocker beyond position50 blocks the whole pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual canonical date ownership and applicability true 180-day source has explicit track proof, actual civil dates and defense B NA",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 actual canonical date ownership and applicability true 360-day source has explicit track proof, actual civil dates and defense B NA",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source qualified has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source missingReceipt has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source missingIncident has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source wrongCase has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source foreignTenant has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance operational source clockOnly has exact actual incident linkage",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 operational incident actual SQL linkage and independent provenance the actual PostgreSQL rate limiter was exercised under the isolated fixture cap",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion risk precedes legal priority, then priority precedes identical protocol time",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion equal risk/priority/protocol time resolves by ascending actual case id",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion complete two-pool membership requires choice despite a one-item pool page",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion same-unit other pool without actual membership does not inherit claim authority",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 server selection, risk/priority/FIFO/id and inherited NULL exclusion historical NULL priority remains excluded before legacy/risk qualification, without factual repair",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 explicit current legacy dispositions trusted hold is preserved and cannot be reclaimed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 explicit current legacy dispositions trusted preserve_assigned is preserved and cannot be reclaimed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 explicit current legacy dispositions stale observed legacy version fails409 without automatic reclassification",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 source consistency across the actual claim transaction parameter revocation after verified SQL read is serialized or revalidated before any stale claim effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 R10 fixed complete potential universe a previously assigned historical case becoming eligible before the final fence aborts503; a fresh qualified read includes the complete set",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 R7 real INSERT phantom closure under actual request-role SQL matching parameter INSERT waits for actual source transaction or causes safe revalidation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 R7 real INSERT phantom closure under actual request-role SQL matching holiday INSERT waits for actual source transaction or causes safe revalidation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 R7 real INSERT phantom closure under actual request-role SQL matching caseEvent INSERT waits for actual source transaction or causes safe revalidation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 SQL source/date qualification rather than permissive pure inputs actual C movement resets only C while independently qualified D retains original practice start",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 SQL source/date qualification rather than permissive pure inputs unknown D reset cannot masquerade as qualified ORIGINAL even with freshly matching content receipts",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 SQL source/date qualification rather than permissive pure inputs actual selected parameter proposta fails closed with no fallback/default",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 SQL source/date qualification rather than permissive pure inputs actual selected parameter sourcePending fails closed with no fallback/default",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 SQL source/date qualification rather than permissive pure inputs actual selected parameter ambiguousActivation fails closed with no fallback/default",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context impeded best candidate is skipped for next eligible without leaking skipped identities",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context QUEUE_EMPTY precedes WIP when all eligible work was already consumed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context valid different pool under a consumed key conflicts409; a fresh key remains a distinct attempt",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context VALID queue cursor cannot be replayed across pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context VALID queue cursor cannot be replayed across unauthorizedActor",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 complete eligible ordering and idempotency context VALID queue cursor cannot be replayed across revocation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 exact pool routing under independently valid memberships membership in two same-unit pools cannot move a case out of its explicit selected pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 risk read preserves complete S1 role-purpose authorization a separately bound coordinator can read unassigned risk while an unassigned analyst cannot borrow that purpose",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S2 risk read preserves complete S1 role-purpose authorization after a real claim the analyst owns the case purpose; changed risk sources remain fail-closed503",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 actual S1 preauthorization before global source contention a genuinely unassigned analyst risk denial finishes before a conflicting administrative source writer releases",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 actual S1 preauthorization before global source contention authorized risk read rechecks its actual oversight binding after a source-lock wait",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 independently admitted C policy receipt qualifies actual current C sources through policy source pairs and a separate receipt digest instead of decoding opaque versions",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy absent is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy missing is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy ambiguous is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy malformed is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy badDigest is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 C policy revokedDecision is fail-closed after an actual qualified positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 raw A threshold on a weekend remains calendar arithmetic in the actual SQL snapshot factory",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "ADR0057 raw A threshold on a holiday remains calendar arithmetic in the actual SQL snapshot factory",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R14 independent actual SQL scalar equivalence preserves identities and freshness while reducing fixed-table source queries",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific linkedforeignparent denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific wrongpoolscope-parent denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific wrongactivepool denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific staleobservedstate denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific missinglegacyprovenance denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 legacy-specific ambiguouslegacyprovenance denies GET and POST without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 actual Nest WORKLIST projection preserves current qualified risk, S1 purpose and source errors",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 discovery read-role denial finishes before actual global source writer release",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "R17 selected discovery rechecks actual pool eligibility after a source-lock wait",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "approved provider inventory batching preserves frozen scalar typed bindings and qualifications while reducing real discovery SQL",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers has exactly107 unique dispositions:71 replaced,25 retained-scoped,11 removed",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/cases is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/cases/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/cases/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/cases/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/parties is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/parties is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/parties/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/parties/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/parties/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/documents is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/documents is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/documents/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/documents/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/documents/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pending-contents is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/pending-contents is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pending-contents/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/pending-contents/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/pending-contents/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/redirects is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/redirects is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/redirects/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/redirects/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/redirects/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/admissibility is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/admissibility/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/deadlines is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/deadlines is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/deadlines/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/deadlines/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/deadlines/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/inquiries is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/inquiries is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/inquiries/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/inquiries/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/inquiries/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/drafts is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/drafts is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/drafts/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/drafts/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/drafts/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/decisions is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/decisions is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/decisions/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/decisions/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/decisions/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/communications is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/communications is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/communications/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/communications/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/communications/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/events is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/events is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/events/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers PATCH /v1/inf/rait/events/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers DELETE /v1/inf/rait/events/{id} is removed with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/admit is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/non-admission is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/remit is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/receive is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/ready is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/decide is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/return-draft is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/withdraw is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/redirect is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/resolve-pending is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/pools/{id}/claim-next is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/inquiries/{id}/commands/answer is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/inquiries/{id}/commands/extend is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/inquiries/{id}/commands/expire is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/cases/{id}/commands/triage is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/admissibility is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/units is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/units/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pools is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pools/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pool-members is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/pool-members/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/schedules is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/schedules/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/schedule-slots is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/schedule-slots/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/batches is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/batches/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/batch-items is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/batch-items/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/assignments is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/assignments/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/impediments is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/impediments/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/substitute-duties is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/substitute-duties/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/benches is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/benches/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/clocks is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/clocks/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/clock-alerts is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers GET /v1/inf/rait/clock-alerts/{id} is replaced with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/schedules is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/schedules/{id}/publish is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/batches is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/batches/{id}/approve is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/batches/{id}/items/{caseId}/accept is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/batches/{id}/items/{caseId}/impediment is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/batches/{id}/commands/draw is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 frozen107-method disposition and actual mounted handlers POST /v1/inf/rait/assignments/{id}/commands/reassign is retained-scoped with one authoritative handler",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields retains own assigned-case HTTP200 as a positive control",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields legacy unit-null base pool is a real matching relation, not a missing-scope fallback",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields retains preadmission triage200 with the exact closed case subset",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields filters other analysts assigned cases before list pagination, not only on detail",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-analyst without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-coordinator without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields AUDITOR without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields technical-admin without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields agency-admin without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-manager without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-rapporteur without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-chair without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields rait-central-authority without a complete matching purpose cannot read somebody else's merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields denies orphan/external identity 71000000-0000-7000-8000-000000009999",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields denies orphan/external identity external-oidc-subject",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields does not combine coordinator action with analyst membership under multi-role principal",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields triage party projection suppresses identity numbers, emails and audit attribution",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields caller-supplied document.kind does not prove necessary intake document class",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 decisive HTTP reads, canonical identity and closed triage/merits fields own assigned document read excludes storage credentials, URLs and unrelated fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 real mutation bypasses preserve persisted rows and all side effects authorized assigned analyst generic POST documents rejects protected body400 without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 real mutation bypasses preserve persisted rows and all side effects authorized assigned analyst generic POST inquiries rejects protected body400 without effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 real mutation bypasses preserve persisted rows and all side effects raw case PATCH is removed404 and cannot change state/version",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 real mutation bypasses preserve persisted rows and all side effects reparenting an authorized child to an unauthorized case fails404 and preserves source",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/cases: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/cases/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/cases/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/cases/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/parties: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/parties: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/parties/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/parties/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/parties/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/documents: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/documents: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/documents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/documents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/documents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pending-contents: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/pending-contents: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pending-contents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/pending-contents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/pending-contents/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/redirects: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/redirects: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/redirects/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/redirects/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/redirects/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/admissibility: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/admissibility/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/deadlines: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/deadlines: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/deadlines/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/deadlines/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/deadlines/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/inquiries: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/inquiries: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/inquiries/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/inquiries/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/inquiries/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/drafts: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/drafts: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/drafts/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/drafts/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/drafts/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/decisions: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/decisions: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/decisions/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/decisions/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/decisions/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/communications: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/communications: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/communications/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/communications/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/communications/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/events: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/events: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/events/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation PATCH /v1/inf/rait/events/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation DELETE /v1/inf/rait/events/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/admit: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/non-admission: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/remit: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/receive: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/ready: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/decide: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/return-draft: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/withdraw: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/redirect: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/resolve-pending: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/pools/{id}/claim-next: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/inquiries/{id}/commands/answer: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/inquiries/{id}/commands/extend: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/inquiries/{id}/commands/expire: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/cases/{id}/commands/triage: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/admissibility: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/units: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/units/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pools: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pools/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pool-members: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/pool-members/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/schedules: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/schedules/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/schedule-slots: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/schedule-slots/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/batches: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/batches/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/batch-items: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/batch-items/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/assignments: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/assignments/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/impediments: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/impediments/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/substitute-duties: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/substitute-duties/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/benches: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/benches/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/clocks: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/clocks/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/clock-alerts: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation GET /v1/inf/rait/clock-alerts/{id}: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/schedules: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/schedules/{id}/publish: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/batches: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/batches/{id}/approve: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/batches/{id}/items/{caseId}/accept: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/batches/{id}/items/{caseId}/impediment: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/batches/{id}/commands/draw: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 every baseline method has an HTTP action-denial observation POST /v1/inf/rait/assignments/{id}/commands/reassign: omitted role never executes or returns a resource",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS hidden pool-scope record CRUD get collection is absent even for technical-admin wildcard",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS hidden pool-scope record CRUD get detail is absent even for technical-admin wildcard",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS hidden pool-scope record CRUD post collection is absent even for technical-admin wildcard",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS hidden pool-scope record CRUD patch detail is absent even for technical-admin wildcard",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS hidden pool-scope record CRUD delete detail is absent even for technical-admin wildcard",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /cases/not-a-uuid returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /documents/not-a-uuid returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /cases?case_id=not-a-uuid returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /documents?case_id=not-a-uuid returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /cases?limit=not-a-number returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /cases?offset=-1 returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed identifier/pagination /cases?limit=Infinity returns a controlled denial",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-secretary batch-item list and detail expose exactly the four sourced fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-manager batch-item list and detail expose exactly the four sourced fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator batch-item list and detail expose exactly the four sourced fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-rapporteur batch-item list and detail expose exactly the four sourced fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-chair batch-item list and detail expose exactly the four sourced fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-analyst own assignment alone does not reveal another member's released assignment history",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-rapporteur own assignment alone does not reveal another member's released assignment history",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS revoked operational routing cannot authorize pool-only merits through either same-unit pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed worklist read /batch-items/not-a-uuid has a controlled response",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed worklist read /batch-items?case_id=not-a-uuid has a controlled response",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed worklist read /assignments/not-a-uuid has a controlled response",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed retained command /inquiries/not-a-uuid/commands/answer never raises an uncontrolled SQL error",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed retained command /pools/not-a-uuid/claim-next never raises an uncontrolled SQL error",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed retained command /schedules/not-a-uuid/publish never raises an uncontrolled SQL error",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed retained command /assignments/not-a-uuid/commands/reassign never raises an uncontrolled SQL error",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator: explicit active unit binding positively reads unassigned merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator: exact pool binding reads its linked case, excludes other pool in same unit and unlinked case",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator: independently authorized bindings union without cross-role borrowing",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator: binding revocation and authenticated role removal deny subsequent reads",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator: impediment excludes both detail and collection despite explicit scope",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR: explicit active unit binding positively reads unassigned merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR: exact pool binding reads its linked case, excludes other pool in same unit and unlinked case",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR: independently authorized bindings union without cross-role borrowing",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR: binding revocation and authenticated role removal deny subsequent reads",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR: impediment excludes both detail and collection despite explicit scope",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS parties: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS documents: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS admissibility: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS pending-contents: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS redirects: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS deadlines: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS inquiries: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS drafts: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS decisions: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS communications: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS events: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS assignments: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS clocks: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS clock-alerts: actual child positive + revoked-parent detail/list negative + closed fields",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS active tenant membership and internal auth.users identity are necessary even with valid scope",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS own impediment metadata remains readable while another member and ordinary case merits remain hidden",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS triage cannot borrow a same-unit membership when the case is explicitly linked to another pool",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS qualified coordinator creates a schedule through the real collection controller",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS qualified secretary creates an exact-pool batch through the real collection controller",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS same-unit same-instance batch creation requires a current exact route beyond independent secretary scope",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS batch creation rejects only the wrong requested pool in an otherwise valid request",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed route caseId for batch accept is404 before SQL or body validation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS malformed route caseId for batch impediment is404 before SQL or body validation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS triage has no sourced pending-contents projection for actual records",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS triage has no sourced redirects projection for actual records",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-coordinator retains approved decision grounds rather than suppressing merits as generic metadata",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-chair retains approved decision grounds rather than suppressing merits as generic metadata",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS manager positively reads operational case projection and cannot access parties/documents/merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS secretary positive triage retains only triage fields; procedural membership never blanket merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS AUDITOR sealed archive uses S redaction rather than oversight merits union",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rapporteur own-assignment positive is retained; pool membership alone cannot read another case",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS chair requires scope AND matching active presidency, rather than either factor alone",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rapporteur relevant agenda participation authorizes supporting merits without an own active assignment",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS central designated review scope positively reads favorable JARI decision, denies unrelated defense case",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS signer qualified jurisdiction/appointment/current duty positively reads ready case and loses access after duty revocation",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-hr functional role does not authorize generic case merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-finance functional role does not authorize generic case merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS integration-operator functional role does not authorize generic case merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS bi-analyst functional role does not authorize generic case merits",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS ordinary own-case party metadata and document filename remain successful, protected representation is not writable",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party reparent requires BOTH authorized source and target: 00000000-0000-7000-8000-000011000007 -> 00000000-0000-7000-8000-000010000008",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party reparent requires BOTH authorized source and target: 00000000-0000-7000-8000-000011000008 -> 00000000-0000-7000-8000-000010000007",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-secretary authorized scope post communications: empty/ordinary raw write is400, never noop200",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-secretary authorized scope patch communications: empty/ordinary raw write is400, never noop200",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-chair authorized scope post decisions: empty/ordinary raw write is400, never noop200",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS rait-chair authorized scope patch decisions: empty/ordinary raw write is400, never noop200",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party DELETE has no sourced S1 case purpose even for technical-admin",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party DELETE has no sourced S1 case purpose even for technical-admin,rait-secretary",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party DELETE has no sourced S1 case purpose even for technical-admin,AUDITOR",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS party DELETE has no sourced S1 case purpose even for technical-admin,rait-secretary,AUDITOR",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS cross-tenant parent and membership FKs reject foreign scope and caller cannot manufacture unit/pool authority",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS independent tenantB binding is invisible under tenantA real app-role RLS and both internal tables enforce RLS",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS actual independently persisted tenant-B case is missing to tenantA HTTP and visible only under tenantB app-role context",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS scope constraints require one parent, nonempty provenance, default inactive and unique exact role binding",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS internal scope tables remain unreachable as public CRUD and case-pool FK/uniqueness/provenance are enforced",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 explicit bindings, exact pools, complete purposes and real role_app_backend RLS revocation committed while request waits on an existing case lock is revalidated before command effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing successful same-actor exact retry retains response/ETag and does not repeat effects after state/version advances",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing same key reused by another authenticated eligible actor returns safe409 without prior response",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing current membership revocation prevents exact replay but preserves historical command evidence",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing role removal prevents exact replay while stale first-use version remains412",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing existing claim exact retry reauthorizes actor/membership after independently qualified S2 first use",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing claim replay after release reauthorizes the selected case before returning the stored result",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing claim replay after reassign reauthorizes the selected case before returning the stored result",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing claim replay after impediment reauthorizes the selected case before returning the stored result",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing existing claim rejects another pool in the same legal unit without actual pool membership before effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing claim replay must still belong to the exact original requested pool after a qualified assignment transfer",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing multiple active secretary memberships in the SAME legal unit/instance preserve protocol success",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing secretary memberships across different legal units do not authorize an ambiguous unspecified intake unit",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing admission preserves a revoked pool relation and its provenance without a new routing audit",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing actor-unbound protocol replay denies legacy-missing provenance without new effects or public receipt disclosure",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing actor-unbound protocol replay denies ambiguous provenance without new effects or public receipt disclosure",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing actor-unbound protocol replay denies other-actor provenance without new effects or public receipt disclosure",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing a failed actor-binding receipt atomically rolls back protocol, legal audit, routing and ledger",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing protocol exact retry remains accepted after state advances with current qualified secretary purpose and no repeated effects",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing admission with zero qualified routing retains legal200,v+1 and one unchanged domain event",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing admission with one qualified routing retains legal200,v+1 and one unchanged domain event",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing admission with multiple qualified routing retains legal200,v+1 and one unchanged domain event",
+        "status": "skipped",
+        "durationMs": null
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing protocol with zero routing retains existing legal response/body/events and never adds admission criterion",
+        "status": "passed",
+        "durationMs": 580.26125
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing protocol with one routing retains existing legal response/body/events and never adds admission criterion",
+        "status": "passed",
+        "durationMs": 178.36541699999998
+      },
+      {
+        "name": "S1 actor-bound command replay and unchanged legal admissibility/routing protocol with multiple routing retains existing legal response/body/events and never adds admission criterion",
+        "status": "passed",
+        "durationMs": 165.34458300000006
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 GET /v1/ops/stream: guarda de pol\u00edtica (C-0004-41) C-0004-41 \u2014 dado DETRAN_LOCAL_ROLES=field-agent quando GET /v1/ops/stream ent\u00e3o 200 com content-type text/event-stream",
+        "status": "passed",
+        "durationMs": 1592.8732909999999
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 GET /v1/ops/stream: guarda de pol\u00edtica (C-0004-41) C-0004-41 \u2014 dado um papel PEC (CANDIDATO) quando GET /v1/ops/stream ent\u00e3o 403",
+        "status": "passed",
+        "durationMs": 16.377792000000227
+      },
+      {
+        "name": "CTG-0004 \u00a77.2/\u00a716.2 \u2014 filtro por papel/recurso (C-0004-42, OD-T64 ratificada) dado um evento integration.item.changed ent\u00e3o integration-operator (tem ops:integration:read) o recebe",
+        "status": "passed",
+        "durationMs": 1058.926959
+      },
+      {
+        "name": "CTG-0004 \u00a77.2/\u00a716.2 \u2014 filtro por papel/recurso (C-0004-42, OD-T64 ratificada) dado o mesmo evento ent\u00e3o field-agent (sem ops:integration:read) n\u00e3o o recebe",
+        "status": "passed",
+        "durationMs": 2020.756625
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 replay por Last-Event-ID (C-0004-43, C-0004-44) C-0004-43 \u2014 dado Last-Event-ID de um evento de 1h atr\u00e1s ent\u00e3o o replay reenvia, em ordem, s\u00f3 os posteriores",
+        "status": "passed",
+        "durationMs": 32.22816700000021
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 replay por Last-Event-ID (C-0004-43, C-0004-44) C-0004-44 \u2014 dado Last-Event-ID de um evento de 25h atr\u00e1s ent\u00e3o 204",
+        "status": "passed",
+        "durationMs": 17.34254200000032
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 filtro ?topics= (C-0004-45) C-0004-45 \u2014 dado ?topics=ait.changed ent\u00e3o s\u00f3 eventos desse tipo chegam",
+        "status": "passed",
+        "durationMs": 1027.3171250000005
+      },
+      {
+        "name": "CTG-0004 \u00a77.1 \u2014 isolamento de tenant (C-0004-46) C-0004-46 \u2014 dado um evento de outro tenant ent\u00e3o ele nunca chega ao assinante, e tenantId n\u00e3o aparece em data",
+        "status": "passed",
+        "durationMs": 2019.4894999999988
+      },
+      {
+        "name": "approved backlog sensor: topics ait.changed reaches its exact event after601 unrequested rows within the unchanged2s budget",
+        "status": "passed",
+        "durationMs": 136.01387500000055
+      }
+    ]
+  },
+  "classification": "Genuine focused GREEN; all9TEAT HTTP controls plus mount,3protocol census controls and qualifiedclaim exact effects. Not full587 acceptance.",
+  "boundaries": {
+    "budgetsChanged": false,
+    "testOrRuntimeEdits": false,
+    "fullKernelExecuted": false,
+    "complete51BudgetBlocker": "OPEN: prior unchanged4 timeout epoch preserved",
+    "providerProofReference": "UNCHANGED",
+    "dbLease": "RELEASED after runner25167 exited; no own DB client remains"
+  },
+  "sanitization": "Raw logs retain synthetic identifiers; no auth tokens/passwords/rawDSNs."
+}
