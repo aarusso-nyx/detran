@@ -1,0 +1,12 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+> detran@0.0.1 verify:sql-param-types /Volumes/Development/.codex/worktrees/r0025-s2-inspector-http/detran
+> tsx tools/check-sql-param-types.ts
+
+ok   backend/domains/ch/telehealth/src/telehealth-lifecycle.service.ts#conclude (insert into ch.billing_item)
+ok   backend/domains/ch/juntas/src/junta-lifecycle.service.ts#designate (designation_deadline_rule, designation_deadline_at)
+ok   backend/domains/ch/juntas/src/junta-lifecycle.service.ts#decide (update ch.junta_case)
+ok   backend/domains/ch/retention/src/retention-lifecycle.service.ts#propose (insert into ch.retention_disposition)
+ok   backend/domains/portal/complaints/src/complaint-lifecycle.service.ts#transition (update portal.complaint)
+verify:sql-param-types: 5 command(s) prepared under role_app_backend.
