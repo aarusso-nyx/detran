@@ -1,0 +1,65 @@
+{
+  "provider_head": "f90fb65426d6372123820a395f3ac735d6737a3a",
+  "focused_tests": {
+    "success": true,
+    "passed": 38,
+    "failed": 0,
+    "source": "external retained focused-results.json; tests are not scorecard readings"
+  },
+  "unchanged_provider_contracts": [
+    {
+      "path": "law/constitution.md",
+      "sha256": "d7f8791f1d00a7247bced66bdcdf8b1af431bb57e49d03b6ddd7024cb52f957d",
+      "same_as_published_2_6_3": true
+    },
+    {
+      "path": "law/policy/thresholds.json",
+      "sha256": "4662c41fbbce00db9e887be3f44f7f799e9bee587cb74dccb86e68eca3e4e9f4",
+      "same_as_published_2_6_3": true
+    },
+    {
+      "path": "law/policy/sensor-registry.json",
+      "sha256": "0910facf9d6ffb9b73dc937c3973dcf1d7d8a5fd62272e0154376b85ff7d7806",
+      "same_as_published_2_6_3": true
+    },
+    {
+      "path": "law/policy/scorecard-na.json",
+      "sha256": "a7eeaecd4147efab2a6a40621cf2d87955c947d0739a13093d2baa93096488a2",
+      "same_as_published_2_6_3": true
+    }
+  ],
+  "supplemental_real_population_diagnostic": [
+    {
+      "sensor": "test_coherence",
+      "status": "review"
+    },
+    {
+      "sensor": "test_idiomaticity",
+      "status": "review"
+    },
+    {
+      "sensor": "test_security_coverage",
+      "status": "pass"
+    },
+    {
+      "sensor": "test_performance_coverage",
+      "status": "pass"
+    },
+    {
+      "sensor": "test_robustness_coverage",
+      "status": "pass"
+    }
+  ],
+  "mandatory_gate": "running; no green claim",
+  "independent_static_review": "pending; issue 422 approval does not substitute for this package",
+  "release_plan_preview": {
+    "status": "refused",
+    "code": "ACTION_OUTPUT_CONTRACT_VIOLATION",
+    "detail": "RELEASE_PLAN_FAILED: rpl-policy-source-unresolved",
+    "executable": "maintainer pr-bootstrap CLI",
+    "disposition": "Retain refusal; no injected resolver, fabricated snapshot or changed policy. Rehearsal/promotion remains on the documented official release workflow after integration and its own preconditions. This preview is not release readiness."
+  },
+  "canonical_gaps_resolved_in_this_preparation": 0,
+  "official_provider_publication": false,
+  "C6": "blocked"
+}
