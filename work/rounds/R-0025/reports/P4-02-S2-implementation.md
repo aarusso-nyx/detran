@@ -351,3 +351,44 @@ exact-head requiredCI remain necessary; no production SLO is established.
 Raw thirdREVIEW, prior full126/kernel failures, anchor7 orphan/DEVAIissue418,
 F3/DRESET/authentic source gaps remain independent. No optimization, fourth
 review, merge, S3, scorecard promotion or round closure. PR211 stays DRAFT.
+
+## Owner-approved90s/120s adoption applied — 2026-10-21
+
+Owner approved the exact calibration-budget-proposal.md packet. Original
+proposal SHA256 and later approval are retained in AUTHORIZATION.md; its old
+pending-adoption language is historical. Source checkpoint5c202a3c changes
+ONLY the existing claimE2E spec: four native defaults90s, profile120s,
+profile-only four-control SQL observation, persistent lightweight30s reference
+reporting and default/functional original-query proof. Equivalence observation
+stays enabled; global E2E30s, hooks, fixture/scalaroracle, runtime, dependencies
+and proof chains remain unchanged. Emitted four bodies are byte-identical.
+
+Actual default mode(no override): four controls4PASS122filtered,219.22s native
+duration; complete claim suite126PASS,402.92s native duration. Bodytimes:
+
+| Invocation | risk(s) | legacy(s) | routing(s) | incident(s) |
+| --- | ---: | ---: | ---: | ---: |
+| Default four |32.683|33.168|48.327|47.126|
+| Fullclaim126 |65.622|63.446|43.744|43.711|
+
+All eight observed bodies exceed30s; original-query proofs passed and no detailed
+SQL snapshots were emitted for those bodies. FunctionalPASS does not resolve
+performance, explain older censored failures or establish a product SLO.
+All earlier mixed-condition calibration and global/kernelFAIL remain intact.
+
+Scope/JW01 and uninterrupted canonical kernel acceptance remain pending a
+controlled resource window: active unrelated Vitest/TypeScript work was observed
+before dispatch. No tests from these stages were started under that competing
+workload; resource-blocked preflights and waiting samples are preserved. The
+original scheduler's future forced E2E tier was corrected before any kernel
+launch; canonical execution must leave DETRAN_TEST_TIER absent. Claim's actual
+child was uninterrupted and exited0; wrapper pause time is not benchmark time.
+
+Full receipts, source proof and precise continuation status are under
+PERF-01/adoption/ relative to S2-execution/. Approved adoption scope/status:
+PERF-01/adoption-decision.md. Dynamic acceptance is PARTIAL, not kernelPASS.
+Exact-head remote CI must be observed after publication; the existing manual
+workflow is available. Local chain still fails orphan7; no manual repair or
+proof append. Doctor and snapshot consistency passed without native scorecard
+regeneration. PR211 remainsDRAFT/unmerged, noauto-merge, optimization, fourth
+review, S3, production/scorecard promotion or roundclosure.

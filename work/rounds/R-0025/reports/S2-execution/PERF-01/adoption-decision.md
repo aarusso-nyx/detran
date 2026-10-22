@@ -53,3 +53,14 @@ failure; DEVAIissue418 is forwarding, not a repair/release/adoption.
 No fourth delivery review, runtime optimization, S3, production/scorecard action,
 merge or roundclosure. PR211 remainsDRAFT/unmerged withauto-merge disabled.
 Protected local/machine/recovery and separate scorecard work remain untouched.
+
+## Current result — partial acceptance
+
+Defaultfour4PASS122filtered(219.22s native), completeclaim126PASS0skip
+(402.92s native), actualexit0 both. All8body observations retain30s EXCEEDED
+and originalqueryproof. Scope/JW01 and uninterruptedcanonicalkernel were not
+executed after21 observations/~10min of actual competing test activity.
+Their status is PENDING_RESOURCE_WINDOW, notPASS/FAIL; no new Owner decision
+is required to resume the approved checks. DB53343leaseRELEASED/zero clients.
+See adoption/final-summary.md, final-validation.json and resume.md for custody
+and precise already-authorized continuation. Historical failures stay intact.
