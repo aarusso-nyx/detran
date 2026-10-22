@@ -1,0 +1,1162 @@
+[
+  {
+    "path": ".devai/state/sensor-readings/inventory_api/SR-741327bc2cdbba8a.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-741327bc2cdbba8a",
+      "sensor": {
+        "name": "inventory:api",
+        "kind": "inventory_api",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:01.375Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense api --repo-root .",
+      "command_hash": "c65789fbdf62cc883860a3a63713405c6dbb5c88e69ee408dd7be964ea54b562",
+      "tier": "L0",
+      "duration_ms": 778,
+      "metrics": {
+        "endpoint_count": 1151,
+        "controller_file_count": 279,
+        "endpoints_hash": "c4570027dd7a0282fffc25b1f7f33efbc914b0e704bc221fa097fb07335d336a"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_api/SR-963d6fd01c886898.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-963d6fd01c886898",
+      "sensor": {
+        "name": "inventory:api",
+        "kind": "inventory_api",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:16.651Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense api --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "cb2983cff97e597a3fec72283f348caa763e9c102d7f153bb31868572a798030",
+      "tier": "L0",
+      "duration_ms": 540,
+      "metrics": {
+        "endpoint_count": 1139,
+        "controller_file_count": 257,
+        "endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_api/SR-d667aab2204f9ef0.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-d667aab2204f9ef0",
+      "sensor": {
+        "name": "inventory:api",
+        "kind": "inventory_api",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:28.651Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense api --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "2b24caa513dfe5ddf30b30d947164862b2ea1bf4aa0b93417bca8f6b5dedc1f6",
+      "tier": "L0",
+      "duration_ms": 268,
+      "metrics": {
+        "endpoint_count": 1139,
+        "controller_file_count": 257,
+        "endpoints_hash": "a6c06b28f93e39c219e405624e12e6722406cb10f809eb76b21a1a85ae5ebbd9"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_coverage/SR-127609a763426cf7.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-127609a763426cf7",
+      "sensor": {
+        "name": "inventory:coverage",
+        "kind": "inventory_coverage",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:33.352Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense coverage --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "ed445f690f45ed128fcaf4251f3bbc28d3ec2b422acbe260f9552571a5ad45c0",
+      "tier": "L0",
+      "duration_ms": 58,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "COVERAGE_PARTIAL_USE_CASE_LINKING",
+          "message": "110 use-case(s) populate 0 link(s); 92 route(s) and 1139 endpoint(s) remain unmapped. Extend use-case refs.routeIds + refs.endpointIds to close."
+        }
+      ],
+      "metrics": {
+        "route_count": 92,
+        "endpoint_count": 1139,
+        "use_case_count": 110,
+        "link_count": 0,
+        "unmapped_route_count": 92,
+        "unmapped_endpoint_count": 1139,
+        "inferred_path_match_count": 0,
+        "coverage_hash": "70619abbbb4ede842b305e113f7f414591776fb71b43361c1f75367712bbe1ae"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_coverage/SR-30934f2bb735b040.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-30934f2bb735b040",
+      "sensor": {
+        "name": "inventory:coverage",
+        "kind": "inventory_coverage",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:08.064Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense coverage --repo-root .",
+      "command_hash": "ce8408d76cac9f9dac515a2998bee4c3928973f7e1cedf1b0d60eb06b6fe03b2",
+      "tier": "L0",
+      "duration_ms": 66,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "COVERAGE_REQUIRES_API_MAP",
+          "message": "api-map body not found at record/proofs/sensors/inventory_api/api-map.json. Run 'devai sense run inventory_api' first."
+        },
+        {
+          "severity": "warning",
+          "code": "COVERAGE_REQUIRES_ROUTES",
+          "message": "No routes-inventory body found under record/proofs/sensors/inventory_routes. Run 'devai sense run inventory_routes' first."
+        }
+      ],
+      "metrics": {
+        "route_count": 0,
+        "endpoint_count": 0,
+        "use_case_count": 110,
+        "link_count": 0,
+        "unmapped_route_count": 0,
+        "unmapped_endpoint_count": 0,
+        "inferred_path_match_count": 0,
+        "coverage_hash": "321d19a9365d422c1357bceb71ad18a5522413987c13ea310755b79d803c816e"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_coverage/SR-5886002dcc03d5cd.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-5886002dcc03d5cd",
+      "sensor": {
+        "name": "inventory:coverage",
+        "kind": "inventory_coverage",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T00:31:43.493Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense coverage --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "5d3acc8291a3ce97ac8fc40135f8938a5307c9cc612a55c95ae27c724b75ebde",
+      "tier": "L0",
+      "duration_ms": 154,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "COVERAGE_PARTIAL_USE_CASE_LINKING",
+          "message": "110 use-case(s) populate 0 link(s); 92 route(s) and 1139 endpoint(s) remain unmapped. Extend use-case refs.routeIds + refs.endpointIds to close."
+        }
+      ],
+      "metrics": {
+        "route_count": 92,
+        "endpoint_count": 1139,
+        "use_case_count": 110,
+        "link_count": 0,
+        "unmapped_route_count": 92,
+        "unmapped_endpoint_count": 1139,
+        "inferred_path_match_count": 0,
+        "coverage_hash": "70619abbbb4ede842b305e113f7f414591776fb71b43361c1f75367712bbe1ae"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_coverage/SR-e731c248c5647b7b.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-e731c248c5647b7b",
+      "sensor": {
+        "name": "inventory:coverage",
+        "kind": "inventory_coverage",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:36.305Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense coverage --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "5d3acc8291a3ce97ac8fc40135f8938a5307c9cc612a55c95ae27c724b75ebde",
+      "tier": "L0",
+      "duration_ms": 12,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "COVERAGE_REQUIRES_API_MAP",
+          "message": "api-map body not found at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_api/api-map.json. Run 'devai sense run inventory_api' first."
+        },
+        {
+          "severity": "warning",
+          "code": "COVERAGE_REQUIRES_ROUTES",
+          "message": "No routes-inventory body found under /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_routes. Run 'devai sense run inventory_routes' first."
+        }
+      ],
+      "metrics": {
+        "route_count": 0,
+        "endpoint_count": 0,
+        "use_case_count": 110,
+        "link_count": 0,
+        "unmapped_route_count": 0,
+        "unmapped_endpoint_count": 0,
+        "inferred_path_match_count": 0,
+        "coverage_hash": "321d19a9365d422c1357bceb71ad18a5522413987c13ea310755b79d803c816e"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_handling/SR-27624e03b71069b4.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-27624e03b71069b4",
+      "sensor": {
+        "name": "inventory:data-handling",
+        "kind": "inventory_data_handling",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:26.370Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense data-handling --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "f4c453d044156956bfb3b527143b00c4b6e889ab594e4f7e53a451c54cf4af85",
+      "tier": "L0",
+      "duration_ms": 26,
+      "metrics": {
+        "table_count": 363,
+        "pii_column_count": 70,
+        "unlabeled_pii_column_count": 70,
+        "data_handling_hash": "d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_handling/SR-41d2256492509cdf.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-41d2256492509cdf",
+      "sensor": {
+        "name": "inventory:data-handling",
+        "kind": "inventory_data_handling",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:33.001Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense data-handling --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "1747233df0b780ae540f32a6dde56ac059dbf70427144fce039c4615349ccbdb",
+      "tier": "L0",
+      "duration_ms": 0,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "DATA_HANDLING_REQUIRES_DATA_MODEL",
+          "message": "Data-model body not found at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensors/inventory_data_model/data-model.json or /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_regeneration' to regenerate the inventory bodies."
+        }
+      ],
+      "metrics": {
+        "table_count": 0,
+        "pii_column_count": 0,
+        "unlabeled_pii_column_count": 0,
+        "data_handling_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_handling/SR-95b2ca0c26abb065.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-95b2ca0c26abb065",
+      "sensor": {
+        "name": "inventory:data-handling",
+        "kind": "inventory_data_handling",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:05.144Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense data-handling --repo-root .",
+      "command_hash": "74b3bcb5765d3e577f73acbce593efe82ad7123753bf01c2e1c07559e011fee2",
+      "tier": "L0",
+      "duration_ms": 0,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "DATA_HANDLING_REQUIRES_DATA_MODEL",
+          "message": "Data-model body not found at record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_data_model' first."
+        }
+      ],
+      "metrics": {
+        "table_count": 0,
+        "pii_column_count": 0,
+        "unlabeled_pii_column_count": 0,
+        "data_handling_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_handling/SR-c0825d021e660cf9.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-c0825d021e660cf9",
+      "sensor": {
+        "name": "inventory:data-handling",
+        "kind": "inventory_data_handling",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T00:31:40.322Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense data-handling --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "1747233df0b780ae540f32a6dde56ac059dbf70427144fce039c4615349ccbdb",
+      "tier": "L0",
+      "duration_ms": 72,
+      "metrics": {
+        "table_count": 363,
+        "pii_column_count": 70,
+        "unlabeled_pii_column_count": 70,
+        "data_handling_hash": "d979c3c0be31faea3c3e3e52ae34d3c931d617fa03fd6e317a4fb03a2c33dd35"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_model/SR-7d0f4a706282deb8.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-7d0f4a706282deb8",
+      "sensor": {
+        "name": "inventory:data-model",
+        "kind": "inventory_data_model",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:31.247Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense data-model --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "76e3123cdb0b15a97e63ee64a980fc695df14bb64165c3fb3beba91dbca9fe6d",
+      "tier": "L0",
+      "duration_ms": 62,
+      "metrics": {
+        "table_count": 363,
+        "column_count": 4122,
+        "foreign_key_count": 323,
+        "migration_file_count": 83,
+        "tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+        "dialect": "postgres"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_model/SR-ab7fc6bd20462821.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-ab7fc6bd20462821",
+      "sensor": {
+        "name": "inventory:data-model",
+        "kind": "inventory_data_model",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:05.144Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense data-model --repo-root .",
+      "command_hash": "6a2784cfbaa9836dd5d1dea7fb70e2e7e36ff7419359ac29f0fa18379d72478a",
+      "tier": "L0",
+      "duration_ms": 0,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "DATA_MODEL_EMPTY",
+          "message": "No CREATE TABLE statements found under: migrations, db/migrations, db, database"
+        }
+      ],
+      "metrics": {
+        "table_count": 0,
+        "column_count": 0,
+        "foreign_key_count": 0,
+        "migration_file_count": 0,
+        "tables_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "dialect": "postgres"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_data_model/SR-e043af26b4e82bb2.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-e043af26b4e82bb2",
+      "sensor": {
+        "name": "inventory:data-model",
+        "kind": "inventory_data_model",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:22.370Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense data-model --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "5682c2edff4d0889dcf5c781f839a92612030bb2ad9f134d9c561f8ef0f939a5",
+      "tier": "L0",
+      "duration_ms": 98,
+      "metrics": {
+        "table_count": 363,
+        "column_count": 4122,
+        "foreign_key_count": 323,
+        "migration_file_count": 83,
+        "tables_hash": "8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993",
+        "dialect": "postgres"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_dep_graph/SR-092d0b3048862b04.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-092d0b3048862b04",
+      "sensor": {
+        "name": "inventory:dep-graph",
+        "kind": "inventory_dep_graph",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:31.373Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense dep-graph --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "d3e6c93d46c373b614e350a47970df25f5c6c93fedc0cb0b74714bdfdb822634",
+      "tier": "L0",
+      "duration_ms": 1874,
+      "metrics": {
+        "node_count": 3461,
+        "edge_count": 16584
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_dep_graph/SR-12e9ac0b5570058d.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-12e9ac0b5570058d",
+      "sensor": {
+        "name": "inventory:dep-graph",
+        "kind": "inventory_dep_graph",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:08.063Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense dep-graph --repo-root .",
+      "command_hash": "106666185d3f3b83ab13ffba253ed785de58674127b8c511b95c03ce65346631",
+      "tier": "L0",
+      "duration_ms": 2917,
+      "metrics": {
+        "node_count": 3372,
+        "edge_count": 15898
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_dep_graph/SR-829a864fb516229a.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-829a864fb516229a",
+      "sensor": {
+        "name": "inventory:dep-graph",
+        "kind": "inventory_dep_graph",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:35.410Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense dep-graph --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "ff915279ab24258e71da66ca28b530edeecb2fd8a1735f23ccb586ca0d0b1280",
+      "tier": "L0",
+      "duration_ms": 1618,
+      "metrics": {
+        "node_count": 3461,
+        "edge_count": 16584
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_rbac/SR-4f3faa05a6420dff.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-4f3faa05a6420dff",
+      "sensor": {
+        "name": "inventory:rbac",
+        "kind": "inventory_rbac",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:24.433Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense rbac --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "aa3735d51680951862bfe0e9f4f75ed9c7f95d524643e33f34ac928173046dc6",
+      "tier": "L0",
+      "duration_ms": 39,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fch%2Ftransmissions%2Fcallbacks%2Frenach%22%2C%7B%22class%22%3A%22PecRenachTransmissionController%22%2C%22endLine%22%3A50%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fpec-renach-transmission.controller.ts%22%2C%22methodName%22%3A%22acknowledge%22%2C%22startLine%22%3A33%7D%2C%5B%7B%22endLine%22%3A50%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fpec-renach-transmission.controller.ts%22%2C%22startLine%22%3A33%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fch%2Ftransmissions%2Fcallbacks%2Ftoxicology%22%2C%7B%22class%22%3A%22PecToxicologyInboundController%22%2C%22endLine%22%3A32%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fpec-toxicology-inbound.controller.ts%22%2C%22methodName%22%3A%22receive%22%2C%22startLine%22%3A19%7D%2C%5B%7B%22endLine%22%3A32%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fpec-toxicology-inbound.controller.ts%22%2C%22startLine%22%3A19%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A266%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A207%7D%2C%5B%7B%22endLine%22%3A266%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A207%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%2F%3AaitId%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A294%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A268%7D%2C%5B%7B%22endLine%22%3A294%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A268%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%2F%3AaitId%2Fpoints%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A310%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22points%22%2C%22startLine%22%3A296%7D%2C%5B%7B%22endLine%22%3A310%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A296%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fcrashes%22%2C%7B%22class%22%3A%22PortalCrashesController%22%2C%22endLine%22%3A100%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A83%7D%2C%5B%7B%22endLine%22%3A100%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22startLine%22%3A83%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fcrashes%2F%3Aid%22%2C%7B%22class%22%3A%22PortalCrashesController%22%2C%22endLine%22%3A133%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A102%7D%2C%5B%7B%22endLine%22%3A133%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22startLine%22%3A102%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fdocuments%2Fcnh%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A245%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22cnh%22%2C%22startLine%22%3A214%7D%2C%5B%7B%22endLine%22%3A245%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A214%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fevaluations%22%2C%7B%22class%22%3A%22PortalEvaluationsController%22%2C%22endLine%22%3A77%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fevaluations.controller.ts%22%2C%22methodName%22%3A%22evaluate%22%2C%22startLine%22%3A58%7D%2C%5B%7B%22endLine%22%3A77%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fevaluations.controller.ts%22%2C%22startLine%22%3A58%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fexams%22%2C%7B%22class%22%3A%22PortalExamsController%22%2C%22endLine%22%3A93%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A83%7D%2C%5B%7B%22endLine%22%3A93%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22startLine%22%3A83%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fexams%2F%3Aid%22%2C%7B%22class%22%3A%22PortalExamsController%22%2C%22endLine%22%3A121%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A95%7D%2C%5B%7B%22endLine%22%3A121%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22startLine%22%3A95%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fassurance%2Felevations%22%2C%7B%22class%22%3A%22PortalAssuranceController%22%2C%22endLine%22%3A52%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22methodName%22%3A%22createElevation%22%2C%22startLine%22%3A46%7D%2C%5B%7B%22endLine%22%3A52%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22startLine%22%3A46%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fassurance%2Felevations%2F%3Aid%2Fcomplete%22%2C%7B%22class%22%3A%22PortalAssuranceController%22%2C%22endLine%22%3A66%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22methodName%22%3A%22completeElevation%22%2C%22startLine%22%3A54%7D%2C%5B%7B%22endLine%22%3A66%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22startLine%22%3A54%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fme%22%2C%7B%22class%22%3A%22PortalMeController%22%2C%22endLine%22%3A54%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fme.controller.ts%22%2C%22methodName%22%3A%22me%22%2C%22startLine%22%3A38%7D%2C%5B%7B%22endLine%22%3A54%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fme.controller.ts%22%2C%22startLine%22%3A38%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22PUT%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fpreferences%22%2C%7B%22class%22%3A%22PortalPreferencesController%22%2C%22endLine%22%3A53%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fpreferences.controller.ts%22%2C%22methodName%22%3A%22update%22%2C%22startLine%22%3A32%7D%2C%5B%7B%22endLine%22%3A53%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fpreferences.controller.ts%22%2C%22startLine%22%3A32%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A102%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A92%7D%2C%5B%7B%22endLine%22%3A102%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A92%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A90%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22create%22%2C%22startLine%22%3A63%7D%2C%5B%7B%22endLine%22%3A90%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A63%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22DELETE%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%2F%3Aid%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A122%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22revoke%22%2C%22startLine%22%3A104%7D%2C%5B%7B%22endLine%22%3A122%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A104%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Finbox%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A82%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A73%7D%2C%5B%7B%22endLine%22%3A82%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A73%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Finbox%2F%3Aid%2Fread%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A95%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22read%22%2C%22startLine%22%3A84%7D%2C%5B%7B%22endLine%22%3A95%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A84%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fmanifestations%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A129%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A120%7D%2C%5B%7B%22endLine%22%3A129%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A120%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fmanifestations%2F%3Aid%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A140%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A131%7D%2C%5B%7B%22endLine%22%3A140%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A131%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fmanifestations%2F%3Aid%2Facknowledge%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A161%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22acknowledge%22%2C%22startLine%22%3A142%7D%2C%5B%7B%22endLine%22%3A161%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A142%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fpoints-summary%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A339%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22pointsSummary%22%2C%22startLine%22%3A312%7D%2C%5B%7B%22endLine%22%3A339%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A312%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fpush-subscriptions%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A135%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22subscribePush%22%2C%22startLine%22%3A97%7D%2C%5B%7B%22endLine%22%3A135%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A97%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A179%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A174%7D%2C%5B%7B%22endLine%22%3A179%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A174%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A83%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22create%22%2C%22startLine%22%3A69%7D%2C%5B%7B%22endLine%22%3A83%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A69%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A192%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A181%7D%2C%5B%7B%22endLine%22%3A192%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A181%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fattachments%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A118%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22intendAttachment%22%2C%22startLine%22%3A103%7D%2C%5B%7B%22endLine%22%3A118%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A103%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fattachments%2F%3AattachmentId%2Fcomplete%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A136%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22completeAttachment%22%2C%22startLine%22%3A120%7D%2C%5B%7B%22endLine%22%3A136%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A120%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdecision%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A209%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22decision%22%2C%22startLine%22%3A204%7D%2C%5B%7B%22endLine%22%3A209%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A204%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdiligences%2F%3Adid%2Fresponses%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A227%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22respondDiligence%22%2C%22startLine%22%3A211%7D%2C%5B%7B%22endLine%22%3A227%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A211%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22PUT%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdraft%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A101%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22updateDraft%22%2C%22startLine%22%3A85%7D%2C%5B%7B%22endLine%22%3A101%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A85%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fevaluation%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A244%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22evaluate%22%2C%22startLine%22%3A229%7D%2C%5B%7B%22endLine%22%3A244%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A229%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Freceipt%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A202%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22receipt%22%2C%22startLine%22%3A194%7D%2C%5B%7B%22endLine%22%3A202%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A194%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fsubmit%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A153%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22submit%22%2C%22startLine%22%3A138%7D%2C%5B%7B%22endLine%22%3A153%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A138%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fwithdraw%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A172%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22withdraw%22%2C%22startLine%22%3A155%7D%2C%5B%7B%22endLine%22%3A172%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A155%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fservice-charter%2F%3AserviceKey%2Fdeadline%22%2C%7B%22class%22%3A%22PortalServiceCharterController%22%2C%22endLine%22%3A66%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fservice-charter.controller.ts%22%2C%22methodName%22%3A%22deadline%22%2C%22startLine%22%3A40%7D%2C%5B%7B%22endLine%22%3A66%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fservice-charter.controller.ts%22%2C%22startLine%22%3A40%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22DELETE%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A173%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22cancel%22%2C%22startLine%22%3A146%7D%2C%5B%7B%22endLine%22%3A173%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A146%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A86%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A80%7D%2C%5B%7B%22endLine%22%3A86%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A80%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A144%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22enroll%22%2C%22startLine%22%3A88%7D%2C%5B%7B%22endLine%22%3A144%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A88%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fstream%22%2C%7B%22class%22%3A%22PortalStreamController%22%2C%22endLine%22%3A219%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fportal-stream.controller.ts%22%2C%22methodName%22%3A%22stream%22%2C%22startLine%22%3A78%7D%2C%5B%7B%22endLine%22%3A219%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fportal-stream.controller.ts%22%2C%22startLine%22%3A78%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fvehicles%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A274%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22vehicles%22%2C%22startLine%22%3A247%7D%2C%5B%7B%22endLine%22%3A274%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A247%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fvehicles%2F%3Aid%2Fclearance%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A326%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22clearance%22%2C%22startLine%22%3A276%7D%2C%5B%7B%22endLine%22%3A326%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A276%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fvehicles%2F%3Aid%2Fcrlv-e%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A358%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22issueCrlv%22%2C%22startLine%22%3A328%7D%2C%5B%7B%22endLine%22%3A358%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A328%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        }
+      ],
+      "metrics": {
+        "role_table_count": 2,
+        "permission_table_count": 0,
+        "join_table_count": 0,
+        "endpoint_binding_count": 45,
+        "endpoints_without_role_count": 1094,
+        "synthetic_guard_permission_count": 2,
+        "synthetic_role_permission_count": 0,
+        "rbac_hash": "73f9a550d0990e6695f8589b6e55d733c088a6d88021cf39d4117724cfd9a097"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_rbac/SR-507d8ea256ce2928.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-507d8ea256ce2928",
+      "sensor": {
+        "name": "inventory:rbac",
+        "kind": "inventory_rbac",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:32.109Z",
+      "status": "unknown",
+      "deterministic": true,
+      "command": "devai sense rbac --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "e4551a6fd79e5e55acf5935dda4d08ac8cfa5416b4c7ee940592dc9e67ffedf6",
+      "tier": "L0",
+      "duration_ms": 0,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "RBAC_REQUIRES_DATA_MODEL",
+          "message": "Data-model body not found at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensors/inventory_data_model/data-model.json or /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_regeneration' to regenerate the inventory bodies; nothing measured."
+        }
+      ],
+      "metrics": {
+        "role_table_count": 0,
+        "permission_table_count": 0,
+        "join_table_count": 0,
+        "endpoint_binding_count": 0,
+        "endpoints_without_role_count": 0,
+        "synthetic_guard_permission_count": 0,
+        "synthetic_role_permission_count": 0,
+        "rbac_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_rbac/SR-9426cb77a8f8ed54.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-9426cb77a8f8ed54",
+      "sensor": {
+        "name": "inventory:rbac",
+        "kind": "inventory_rbac",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:05.144Z",
+      "status": "unknown",
+      "deterministic": true,
+      "command": "devai sense rbac --repo-root .",
+      "command_hash": "e0c5e638501022c0f1e6489d484cc154da7b040c0d15e98518025c1005add63c",
+      "tier": "L0",
+      "duration_ms": 0,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "RBAC_REQUIRES_DATA_MODEL",
+          "message": "Data-model body not found at record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_data_model' first; nothing measured."
+        }
+      ],
+      "metrics": {
+        "role_table_count": 0,
+        "permission_table_count": 0,
+        "join_table_count": 0,
+        "endpoint_binding_count": 0,
+        "endpoints_without_role_count": 0,
+        "synthetic_guard_permission_count": 0,
+        "synthetic_role_permission_count": 0,
+        "rbac_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_rbac/SR-ede26a93bb8f1d00.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-ede26a93bb8f1d00",
+      "sensor": {
+        "name": "inventory:rbac",
+        "kind": "inventory_rbac",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T00:31:36.626Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense rbac --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "e4551a6fd79e5e55acf5935dda4d08ac8cfa5416b4c7ee940592dc9e67ffedf6",
+      "tier": "L0",
+      "duration_ms": 141,
+      "findings": [
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fch%2Ftransmissions%2Fcallbacks%2Frenach%22%2C%7B%22class%22%3A%22PecRenachTransmissionController%22%2C%22endLine%22%3A50%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fpec-renach-transmission.controller.ts%22%2C%22methodName%22%3A%22acknowledge%22%2C%22startLine%22%3A33%7D%2C%5B%7B%22endLine%22%3A50%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fpec-renach-transmission.controller.ts%22%2C%22startLine%22%3A33%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fch%2Ftransmissions%2Fcallbacks%2Ftoxicology%22%2C%7B%22class%22%3A%22PecToxicologyInboundController%22%2C%22endLine%22%3A32%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fpec-toxicology-inbound.controller.ts%22%2C%22methodName%22%3A%22receive%22%2C%22startLine%22%3A19%7D%2C%5B%7B%22endLine%22%3A32%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fpec-toxicology-inbound.controller.ts%22%2C%22startLine%22%3A19%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A266%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A207%7D%2C%5B%7B%22endLine%22%3A266%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A207%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%2F%3AaitId%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A294%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A268%7D%2C%5B%7B%22endLine%22%3A294%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A268%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Faits%2F%3AaitId%2Fpoints%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A310%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22points%22%2C%22startLine%22%3A296%7D%2C%5B%7B%22endLine%22%3A310%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A296%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fcrashes%22%2C%7B%22class%22%3A%22PortalCrashesController%22%2C%22endLine%22%3A100%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A83%7D%2C%5B%7B%22endLine%22%3A100%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22startLine%22%3A83%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fcrashes%2F%3Aid%22%2C%7B%22class%22%3A%22PortalCrashesController%22%2C%22endLine%22%3A133%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A102%7D%2C%5B%7B%22endLine%22%3A133%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fcrashes.controller.ts%22%2C%22startLine%22%3A102%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fdocuments%2Fcnh%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A245%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22cnh%22%2C%22startLine%22%3A214%7D%2C%5B%7B%22endLine%22%3A245%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A214%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fevaluations%22%2C%7B%22class%22%3A%22PortalEvaluationsController%22%2C%22endLine%22%3A77%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fevaluations.controller.ts%22%2C%22methodName%22%3A%22evaluate%22%2C%22startLine%22%3A58%7D%2C%5B%7B%22endLine%22%3A77%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fevaluations.controller.ts%22%2C%22startLine%22%3A58%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fexams%22%2C%7B%22class%22%3A%22PortalExamsController%22%2C%22endLine%22%3A93%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A83%7D%2C%5B%7B%22endLine%22%3A93%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22startLine%22%3A83%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fexams%2F%3Aid%22%2C%7B%22class%22%3A%22PortalExamsController%22%2C%22endLine%22%3A121%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A95%7D%2C%5B%7B%22endLine%22%3A121%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fexams.controller.ts%22%2C%22startLine%22%3A95%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fassurance%2Felevations%22%2C%7B%22class%22%3A%22PortalAssuranceController%22%2C%22endLine%22%3A52%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22methodName%22%3A%22createElevation%22%2C%22startLine%22%3A46%7D%2C%5B%7B%22endLine%22%3A52%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22startLine%22%3A46%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fassurance%2Felevations%2F%3Aid%2Fcomplete%22%2C%7B%22class%22%3A%22PortalAssuranceController%22%2C%22endLine%22%3A66%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22methodName%22%3A%22completeElevation%22%2C%22startLine%22%3A54%7D%2C%5B%7B%22endLine%22%3A66%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fassurance.controller.ts%22%2C%22startLine%22%3A54%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fme%22%2C%7B%22class%22%3A%22PortalMeController%22%2C%22endLine%22%3A54%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fme.controller.ts%22%2C%22methodName%22%3A%22me%22%2C%22startLine%22%3A38%7D%2C%5B%7B%22endLine%22%3A54%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fme.controller.ts%22%2C%22startLine%22%3A38%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22PUT%22%2C%22%2Fv1%2Fportal%2Fidentity%2Fpreferences%22%2C%7B%22class%22%3A%22PortalPreferencesController%22%2C%22endLine%22%3A53%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fpreferences.controller.ts%22%2C%22methodName%22%3A%22update%22%2C%22startLine%22%3A32%7D%2C%5B%7B%22endLine%22%3A53%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Fpreferences.controller.ts%22%2C%22startLine%22%3A32%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A102%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A92%7D%2C%5B%7B%22endLine%22%3A102%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A92%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A90%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22create%22%2C%22startLine%22%3A63%7D%2C%5B%7B%22endLine%22%3A90%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A63%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22DELETE%22%2C%22%2Fv1%2Fportal%2Fidentity%2Frepresentations%2F%3Aid%22%2C%7B%22class%22%3A%22PortalRepresentationsController%22%2C%22endLine%22%3A122%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22methodName%22%3A%22revoke%22%2C%22startLine%22%3A104%7D%2C%5B%7B%22endLine%22%3A122%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fidentity%2Fsrc%2Fhandwritten%2Frepresentations.controller.ts%22%2C%22startLine%22%3A104%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Finbox%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A82%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A73%7D%2C%5B%7B%22endLine%22%3A82%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A73%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Finbox%2F%3Aid%2Fread%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A95%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22read%22%2C%22startLine%22%3A84%7D%2C%5B%7B%22endLine%22%3A95%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A84%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fmanifestations%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A129%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A120%7D%2C%5B%7B%22endLine%22%3A129%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A120%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fmanifestations%2F%3Aid%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A140%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A131%7D%2C%5B%7B%22endLine%22%3A140%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A131%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fmanifestations%2F%3Aid%2Facknowledge%22%2C%7B%22class%22%3A%22PortalManifestationsController%22%2C%22endLine%22%3A161%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22methodName%22%3A%22acknowledge%22%2C%22startLine%22%3A142%7D%2C%5B%7B%22endLine%22%3A161%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fmanifestations.controller.ts%22%2C%22startLine%22%3A142%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fpoints-summary%22%2C%7B%22class%22%3A%22PortalAitsController%22%2C%22endLine%22%3A339%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22methodName%22%3A%22pointsSummary%22%2C%22startLine%22%3A312%7D%2C%5B%7B%22endLine%22%3A339%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Faits.controller.ts%22%2C%22startLine%22%3A312%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fpush-subscriptions%22%2C%7B%22class%22%3A%22PortalInboxController%22%2C%22endLine%22%3A135%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22methodName%22%3A%22subscribePush%22%2C%22startLine%22%3A97%7D%2C%5B%7B%22endLine%22%3A135%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Finbox.controller.ts%22%2C%22startLine%22%3A97%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A179%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22list%22%2C%22startLine%22%3A174%7D%2C%5B%7B%22endLine%22%3A179%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A174%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A83%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22create%22%2C%22startLine%22%3A69%7D%2C%5B%7B%22endLine%22%3A83%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A69%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A192%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A181%7D%2C%5B%7B%22endLine%22%3A192%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A181%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fattachments%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A118%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22intendAttachment%22%2C%22startLine%22%3A103%7D%2C%5B%7B%22endLine%22%3A118%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A103%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fattachments%2F%3AattachmentId%2Fcomplete%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A136%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22completeAttachment%22%2C%22startLine%22%3A120%7D%2C%5B%7B%22endLine%22%3A136%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A120%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdecision%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A209%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22decision%22%2C%22startLine%22%3A204%7D%2C%5B%7B%22endLine%22%3A209%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A204%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdiligences%2F%3Adid%2Fresponses%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A227%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22respondDiligence%22%2C%22startLine%22%3A211%7D%2C%5B%7B%22endLine%22%3A227%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A211%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22PUT%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fdraft%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A101%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22updateDraft%22%2C%22startLine%22%3A85%7D%2C%5B%7B%22endLine%22%3A101%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A85%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fevaluation%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A244%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22evaluate%22%2C%22startLine%22%3A229%7D%2C%5B%7B%22endLine%22%3A244%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A229%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Freceipt%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A202%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22receipt%22%2C%22startLine%22%3A194%7D%2C%5B%7B%22endLine%22%3A202%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A194%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fsubmit%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A153%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22submit%22%2C%22startLine%22%3A138%7D%2C%5B%7B%22endLine%22%3A153%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A138%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Frequests%2F%3Aid%2Fwithdraw%22%2C%7B%22class%22%3A%22PortalRequestsController%22%2C%22endLine%22%3A172%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22methodName%22%3A%22withdraw%22%2C%22startLine%22%3A155%7D%2C%5B%7B%22endLine%22%3A172%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Frequests%2Fsrc%2Fhandwritten%2Frequests.controller.ts%22%2C%22startLine%22%3A155%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fservice-charter%2F%3AserviceKey%2Fdeadline%22%2C%7B%22class%22%3A%22PortalServiceCharterController%22%2C%22endLine%22%3A66%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fservice-charter.controller.ts%22%2C%22methodName%22%3A%22deadline%22%2C%22startLine%22%3A40%7D%2C%5B%7B%22endLine%22%3A66%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fcitizen-service%2Fsrc%2Fhandwritten%2Fservice-charter.controller.ts%22%2C%22startLine%22%3A40%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22DELETE%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A173%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22cancel%22%2C%22startLine%22%3A146%7D%2C%5B%7B%22endLine%22%3A173%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A146%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A86%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22get%22%2C%22startLine%22%3A80%7D%2C%5B%7B%22endLine%22%3A86%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A80%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fsne%2Fenrollment%22%2C%7B%22class%22%3A%22PortalSneEnrollmentController%22%2C%22endLine%22%3A144%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22methodName%22%3A%22enroll%22%2C%22startLine%22%3A88%7D%2C%5B%7B%22endLine%22%3A144%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Finbox%2Fsrc%2Fhandwritten%2Fsne-enrollment.controller.ts%22%2C%22startLine%22%3A88%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fstream%22%2C%7B%22class%22%3A%22PortalStreamController%22%2C%22endLine%22%3A219%2C%22file%22%3A%22backend%2Fapp%2Fsrc%2Fportal-stream.controller.ts%22%2C%22methodName%22%3A%22stream%22%2C%22startLine%22%3A78%7D%2C%5B%7B%22endLine%22%3A219%2C%22path%22%3A%22backend%2Fapp%2Fsrc%2Fportal-stream.controller.ts%22%2C%22startLine%22%3A78%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fvehicles%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A274%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22vehicles%22%2C%22startLine%22%3A247%7D%2C%5B%7B%22endLine%22%3A274%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A247%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22GET%22%2C%22%2Fv1%2Fportal%2Fvehicles%2F%3Aid%2Fclearance%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A326%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22clearance%22%2C%22startLine%22%3A276%7D%2C%5B%7B%22endLine%22%3A326%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A276%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        },
+        {
+          "severity": "info",
+          "code": "RBAC_AUTHORIZATION_UNRESOLVED",
+          "message": "Endpoint api:v1:%5B%22POST%22%2C%22%2Fv1%2Fportal%2Fvehicles%2F%3Aid%2Fcrlv-e%22%2C%7B%22class%22%3A%22PortalDocumentsController%22%2C%22endLine%22%3A358%2C%22file%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22methodName%22%3A%22issueCrlv%22%2C%22startLine%22%3A328%7D%2C%5B%7B%22endLine%22%3A358%2C%22path%22%3A%22backend%2Fdomains%2Fportal%2Fprojections%2Fsrc%2Fhandwritten%2Fdocuments.controller.ts%22%2C%22startLine%22%3A328%7D%5D%5D declares authentication guards without a resolved static role/permission declaration. Guard identity does not prove conditional authorization semantics."
+        }
+      ],
+      "metrics": {
+        "role_table_count": 2,
+        "permission_table_count": 0,
+        "join_table_count": 0,
+        "endpoint_binding_count": 45,
+        "endpoints_without_role_count": 1094,
+        "synthetic_guard_permission_count": 2,
+        "synthetic_role_permission_count": 0,
+        "rbac_hash": "73f9a550d0990e6695f8589b6e55d733c088a6d88021cf39d4117724cfd9a097"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_routes/SR-00e7a5b6777f6a1c.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-00e7a5b6777f6a1c",
+      "sensor": {
+        "name": "inventory:routes",
+        "kind": "inventory_routes",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-21T23:51:29.778Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense routes --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran",
+      "command_hash": "38b091b5f39250a9354d1b9fb96aba861eba835dd7e2abcec5921fd4ab9c4e13",
+      "tier": "L0",
+      "duration_ms": 650,
+      "metrics": {
+        "route_count": 92,
+        "route_file_count": 22,
+        "routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_routes/SR-ea12ad63d5185dac.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-ea12ad63d5185dac",
+      "sensor": {
+        "name": "inventory:routes",
+        "kind": "inventory_routes",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-22T02:31:19.140Z",
+      "status": "pass",
+      "deterministic": true,
+      "command": "devai sense routes --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran",
+      "command_hash": "bb01fc5665f91dbab7941fadb8ca7385d8e26a934433027ac70910f714974319",
+      "tier": "L0",
+      "duration_ms": 786,
+      "metrics": {
+        "route_count": 92,
+        "route_file_count": 22,
+        "routes_hash": "718d8a1c4047ae36355c8e44083008e54094ee121d6592f7301d0511965a82e4"
+      }
+    }
+  },
+  {
+    "path": ".devai/state/sensor-readings/inventory_routes/SR-fc8a67d399c609ed.json",
+    "reading": {
+      "schemaVersion": "1.0.0",
+      "id": "SR-fc8a67d399c609ed",
+      "sensor": {
+        "name": "inventory:routes",
+        "kind": "inventory_routes",
+        "version": "1.0.0"
+      },
+      "timestamp": "2026-10-18T20:55:02.154Z",
+      "status": "review",
+      "deterministic": true,
+      "command": "devai sense routes --repo-root .",
+      "command_hash": "874d36c5f759e22247bb0de9330d661fa15ac6049a101db8b389415c151cbcbe",
+      "tier": "L0",
+      "duration_ms": 2989,
+      "findings": [
+        {
+          "severity": "warning",
+          "code": "ROUTES_INVENTORY_EMPTY",
+          "message": "No React routes (<Route .../> or createBrowserRouter([...])) discovered under scan path."
+        }
+      ],
+      "metrics": {
+        "route_count": 0,
+        "route_file_count": 0,
+        "routes_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    }
+  }
+]
