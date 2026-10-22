@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-21T23:56:59.126774+00:00",
+  "schedulerPaused": 5250,
+  "reason": "Avoid forced E2E tier leaking into generic canonical unit scripts; current claim child remains uninterrupted.",
+  "ownedProcessTree": [
+    {
+      "pid": 5250,
+      "ppid": 5235,
+      "state": "T",
+      "elapsed": "10:29",
+      "commandKind": "Python"
+    },
+    {
+      "pid": 7456,
+      "ppid": 5250,
+      "state": "S",
+      "elapsed": "06:17",
+      "commandKind": "node"
+    },
+    {
+      "pid": 7457,
+      "ppid": 7456,
+      "state": "S",
+      "elapsed": "06:17",
+      "commandKind": "node"
+    },
+    {
+      "pid": 7463,
+      "ppid": 7457,
+      "state": "S",
+      "elapsed": "06:17",
+      "commandKind": "esbuild"
+    },
+    {
+      "pid": 7465,
+      "ppid": 7457,
+      "state": "S",
+      "elapsed": "06:16",
+      "commandKind": "node"
+    }
+  ]
+}
