@@ -1,0 +1,484 @@
+{
+  "status": "PENDING_RESOURCE_WINDOW",
+  "sourceHead": "5c202a3c59013f37947f09787f57d1af547d6664",
+  "OwnerApprovalCommit": "a6e26a49",
+  "approvedProposalSHA256": "bfe47c015f1681e32736ff60de9fda266efb6fff979572272dcd9449a93d1d12",
+  "sourceHashes": {
+    "backend/app/tests/e2e/rait-p402-claim.e2e.spec.ts": "b49153cc0d8b12ffc91fc06f2a412c9109711e849f662851514c2060e871895b",
+    "backend/app/tests/shared/rait-p402-claim.fixture.ts": "911a77310fd6c440db09e985cd378bf1503ee67c36b35c9c6e2e360b0ce46d4b",
+    "backend/app/src/rait-risk.providers.ts": "32df0ae0b8fb8ecf7ac86961bb9f6f6e263247eba89937d44f09c40acdc75a7d",
+    "backend/domains/inf/rait-case/src/handwritten/rait-risk.port.ts": "aea7f1128f41be7aed44f16f8b5c0e56f97d58a17dc438bf6a9f34014c206eea",
+    "backend/domains/inf/rait-case/src/handwritten/rait-claim-context.service.ts": "07f33bfbe2b27e7702cd36de4ea5479415c4ee776d05bf274d9ba5c1d8520a4e",
+    "pnpm-lock.yaml": "b6e26eea39b702d4983bc0e63ade9448fab65789e1d0e4ee67e99d490770cc15"
+  },
+  "completedStages": [
+    {
+      "stage": "native-four",
+      "exit": 0,
+      "nativeCounts": {
+        "numPassedTests": 4,
+        "numFailedTests": 0,
+        "numPendingTests": 122,
+        "numTotalTests": 126
+      },
+      "rawCustody": {
+        "SHA256": "09251847a01198896eb7ff06043e2e1ffb5a0175aa93af6c88ae402fdc69a077",
+        "bytes": 615719,
+        "gzipSHA256": "32a3828437f3abbdb9151df24f9ac4030c0e72d9225660be9ccb3333dbdc20b0",
+        "gzipBytes": 78477
+      },
+      "bodyObservations": [
+        {
+          "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+          "bodyMs": 32682.603042000002,
+          "setupMs": 12278.405499999999,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 8889.908541,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 7971.033624999996,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 503,
+              "elapsedMs": 7726.387499999997,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/62ba8fd3-6187-47ea-8cb1-e15d47a013e0/claim-next",
+              "status": 503,
+              "elapsedMs": 8046.385541999996,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+          "bodyMs": 33167.87795899999,
+          "setupMs": 10590.211541000004,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 8147.376833000002,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 8106.2483340000035,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 409,
+              "elapsedMs": 8097.9513330000045,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/3d8f7a0a-5bb0-4876-a6bc-2090811d1e20/claim-next",
+              "status": 409,
+              "elapsedMs": 8773.162958,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+          "bodyMs": 48327.393708,
+          "setupMs": 10711.199416999996,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 10011.536540999994,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 16189.659542000009,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 409,
+              "elapsedMs": 12826.8695,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/f217c6a5-3ada-42d2-bd64-29741c4f1740/claim-next",
+              "status": 409,
+              "elapsedMs": 9074.720709000016,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+          "bodyMs": 47125.595333000005,
+          "setupMs": 11587.75562499999,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 11226.707750000001,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 14782.655249999982,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 503,
+              "elapsedMs": 9971.362708,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/965829c5-ddf3-4de8-8739-ba453c6865d8/claim-next",
+              "status": 503,
+              "elapsedMs": 11103.304417000007,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        }
+      ],
+      "P0Snapshots": 0,
+      "nativeDurationSeconds": 219.22,
+      "wrapperDurationLimitation": null
+    },
+    {
+      "stage": "claim126",
+      "exit": 0,
+      "nativeCounts": {
+        "numPassedTests": 126,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "numTotalTests": 126
+      },
+      "rawCustody": {
+        "SHA256": "e5f0643888a413bd8b4a7adfebc12f43fc08fe307451ff8a48dbaf5f32c404a0",
+        "bytes": 1415374,
+        "gzipSHA256": "5a8e54560a947a02e794ccd50f6ea409213ae69d8a9fa4f6c2b607b88b737f88",
+        "gzipBytes": 177689
+      },
+      "bodyObservations": [
+        {
+          "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+          "bodyMs": 65621.767625,
+          "setupMs": 15465.374708999996,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 16802.039791999996,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 16452.747833,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 503,
+              "elapsedMs": 17238.735625,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a risk blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/1ba843f4-4064-491c-ab0c-58f01a277e81/claim-next",
+              "status": 503,
+              "elapsedMs": 15053.64516700001,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+          "bodyMs": 63446.10570799999,
+          "setupMs": 16685.754125000007,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 15755.439874999982,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 15523.603042000002,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 409,
+              "elapsedMs": 15146.017624999979,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a legacy blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/a5e43ea0-7bf5-4c3f-8d14-95e0c200d309/claim-next",
+              "status": 409,
+              "elapsedMs": 16933.37391699999,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+          "bodyMs": 43743.936084000015,
+          "setupMs": 17562.344165999995,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 13032.392791999999,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 9732.327375000023,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 409,
+              "elapsedMs": 10403.14291700002,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a routing blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/3e45edb1-9fb7-45fa-be12-69efa03c4e0f/claim-next",
+              "status": 409,
+              "elapsedMs": 10535.458250000025,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        },
+        {
+          "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+          "bodyMs": 43711.16008400003,
+          "setupMs": 12265.412165999995,
+          "setupHTTPCount": 306,
+          "bodyHTTP": [
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 307,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 11389.97541699995,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 308,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 200,
+              "elapsedMs": 12215.649124999996,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 309,
+              "phase": "body",
+              "method": "GET",
+              "path": "/v1/inf/rait/claim-context",
+              "status": 503,
+              "elapsedMs": 10240.054084000003,
+              "late": false
+            },
+            {
+              "test": "S2 complete pool inventory precedes pagination > a incident blocker beyond position50 blocks the whole pool",
+              "id": 310,
+              "phase": "body",
+              "method": "POST",
+              "path": "/v1/inf/rait/pools/43f34cfe-4ee2-4ea6-8181-7da0969d7ff5/claim-next",
+              "status": 503,
+              "elapsedMs": 9836.659374999988,
+              "late": false
+            }
+          ],
+          "queryPrototypeOriginal": true,
+          "budgetMs": 90000,
+          "historical30sExceeded": true
+        }
+      ],
+      "P0Snapshots": 1,
+      "nativeDurationSeconds": 402.92,
+      "wrapperDurationLimitation": "Claim wrapper451.45s includes schedulerpause; native402.92s is authoritative. No claimbody interrupted or rerun."
+    }
+  ],
+  "notExecuted": [
+    "scope355/JW01-51 affectedsuites",
+    "uninterruptedcanonicalkernel"
+  ],
+  "resourceWait": {
+    "samples": 21,
+    "scheduledSpanSeconds": 600,
+    "condition": "ActiveTypeScript/Vitest jobs duringwait; finalfreshactualVitestlifecycle confirmsworkload; idleDEVAIpathmarkersaloneexcluded",
+    "noNumericalLoadGate": true,
+    "noOtherProcessControls": true
+  },
+  "leaseReleased": true,
+  "finalDBIdle": "detran_r7_ctg1_a2|0",
+  "sourceRuntimeChanges": "Onlyapprovedclaimspecsettings changed, nofixture/runtime/globalhook/assertion/51populationchange",
+  "nativeModeEnv": "DETRAN_P402_CALIBRATION_MODE absent, actualmodefunctional and originalqueryproofall8",
+  "reference30s": "EXCEEDEDall8; functionalPASSdoesnotclearperformance/SLO",
+  "remainingResumeRequiresNewOwnerApproval": false,
+  "remainingPrerequisite": "Freshrepeatedresourcepreflight/nocompetingheavyjob/exclusive53343; sourcefrozen; correctcanonicalenv"
+}
