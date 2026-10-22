@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_performance",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"workflow\":\"ci.yml\",\"event\":\"push\",\"headBranch\":\"main\",\"attempts\":\"last\",\"includeCancelled\":false,\"lookbackDays\":30,\"minimumSample\":10,\"excludedJobs\":[]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:55:17.384Z",
+  "finished_at": "2026-10-21T23:55:22.764Z",
+  "exitCode": 3,
+  "signal": null,
+  "error": null,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_performance\"},\"members\":[{\"kind\":\"harness_performance\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_performance\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run harness_performance\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-2d9fda3d0929b1c3\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-performance\\\",\\\"kind\\\":\\\"harness_performance\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:55:22.554Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-21\\\",\\\"command_hash\\\":\\\"a4a2ae424dc451587b85f1154f81c7c46d8a631bd3d3ff59cf1b791c42c48a19\\\",\\\"tier\\\":\\\"L2\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"HARNESS_PERFORMANCE_TOO_SLOW\\\",\\\"message\\\":\\\"median 1739s, p95 2280s — above review thresholds.\\\"}],\\\"metrics\\\":{\\\"run_count\\\":95,\\\"success_count\\\":94,\\\"sample_size\\\":94,\\\"median_ms\\\":1739000,\\\"p95_ms\\\":2280000,\\\"pass_median_ms\\\":900000,\\\"pass_p95_ms\\\":1800000,\\\"minimum_sample\\\":10,\\\"population_workflow\\\":\\\"ci.yml\\\",\\\"population_event\\\":\\\"push\\\",\\\"population_head_branch\\\":\\\"main\\\",\\\"population_base_branch\\\":\\\"main\\\",\\\"population_attempts\\\":\\\"last\\\",\\\"population_include_cancelled\\\":false,\\\"population_lookback_days\\\":30,\\\"population_base_branch_verified\\\":true,\\\"population_excluded_jobs_unverified\\\":0,\\\"population_unverified\\\":\\\"\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

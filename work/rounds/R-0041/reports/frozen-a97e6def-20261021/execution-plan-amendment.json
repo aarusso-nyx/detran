@@ -1,0 +1,17 @@
+{
+  "observed_at": "2026-10-21T23:55:24.000550+00:00",
+  "supersedes": "execution-plan.json blocked task-local-log classification only",
+  "finding": "Existing task scripts and coverage config write new local execution artifacts beneath .devai/local/rounds/R-0036. This fresh worktree had none. These are not historical work/rounds/R-0036 artifacts or lifecycle records. Originals stay byte-exact; no log path override and no frozen source mutation. Record active evaluation as R-0041 in this audit capsule.",
+  "selected_additional": [
+    "build",
+    "type_check",
+    "unit_test",
+    "migration_check",
+    "integration_test",
+    "e2e_test",
+    "perf_test",
+    "inventory_regeneration"
+  ],
+  "C6": "All nine additional native producer bindings remain empty and security hold is unchanged. Original seven task descriptors only.",
+  "retry": "Preserve first coverage timeout; repeat with longer collection window only, never alter suite timeouts or thresholds."
+}

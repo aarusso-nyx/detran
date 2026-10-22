@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "action_effect_inference",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:55:51.043Z",
+  "finished_at": "2026-10-21T23:55:51.878Z",
+  "exitCode": 1,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"action_effect_inference\"},\"members\":[{\"kind\":\"action_effect_inference\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"action_effect_inference\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"unknown\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":0,\"unknown\":1,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run action_effect_inference\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"action_effect_inference\\\",\\\"kind\\\":\\\"action_effect_inference\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:55:51.749Z\\\",\\\"status\\\":\\\"unknown\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense run action_effect_inference\\\",\\\"command_hash\\\":\\\"28839f4758526713a08795db6468a27c12af20dc589113cca49e8e0b63120789\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"warning\\\",\\\"code\\\":\\\"ACTION_EFFECT_INFERENCE_INPUT_MISSING\\\",\\\"message\\\":\\\"Required input is absent: /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/policy/subprocess-effects.json\\\"}],\\\"id\\\":\\\"SR-92764dca9c85649b\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

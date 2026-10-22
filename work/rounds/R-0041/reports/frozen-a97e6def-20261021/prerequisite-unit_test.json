@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "unit_test",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"taskId\":\"scorecard-unit\",\"population\":\"detran-workspace-unit\"}",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T00:00:35.744Z",
+  "finished_at": "2026-10-22T00:05:45.807Z",
+  "exitCode": 3,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"unit_test\"},\"members\":[{\"kind\":\"unit_test\",\"effect\":\"local-write\",\"capabilities\":[\"proc:pnpm-vitest\",\"fs:f5-state\",\"fs:workspace\",\"proc:declared-sensor-task\"],\"consent\":{\"write\":true,\"publish\":false}}],\"executed\":[\"unit_test\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"local-write\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"error\",\"readiness_status\":\"unknown\",\"applicable_count\":0,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":1},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run unit_test\",\"stdout\":\"\",\"stderr\":\"SENSE_TASK_BINDING_CHANGED\",\"status\":null}]}}}}\n"
+}

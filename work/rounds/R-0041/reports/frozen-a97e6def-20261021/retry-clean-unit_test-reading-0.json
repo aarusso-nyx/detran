@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-84722bfc145a3790",
+  "sensor": {
+    "name": "task:scorecard-unit",
+    "kind": "unit_test"
+  },
+  "timestamp": "2026-10-22T00:49:01.205Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "node tools/devai/scorecard-local-task.mjs unit",
+  "command_hash": "b669297cdd48d87e8fb962fc3c14a1bbb64c72d1a03ccf8b5bdce1e6af9c274a",
+  "exit_code": 1,
+  "duration_ms": 901352,
+  "out_head": "SCORECARD_TASK_LOGS=/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/local/rounds/R-0036/tasks/unit-1792629244225-39953\n\n RUN  v4.1.11 /Volumes/Development/.codex/worktrees/a97-scorecard/detran\n\n ✓ |apps/boat/mobile| src/lib/forms/boat-forms-r0015.spec.ts (3 tests) 1386ms\n   ✓ dado o módulo real de forms BOAT quando carregado então exporta exatamente os quatorze schemas  1047ms\n   ✓ dado cada gate real quando recebe payload canônico válido e inválido então executa o schema  324ms\n ✓ |apps/boat/mobile| src/lib/boat-r0015.spec.ts (5 tests) 3953ms\n   ✓ dado victimAccessGuard real quando avaliado então exige papel, finalidade e auditoria  337ms\n   ✓ dadas as doze páginas BOAT quando montadas então axe não encontra impacto serious/critical  3360ms\n ✓ |apps/boat/mobile| src/lib/navigation/transitions.test.ts (7 tests) 73ms\n ✓ |apps/dashboard/web| src/app/app.guards-matrix.presence.spec.ts (267 tests) 15372ms\n     ✓ dado a rota 'D-01' ('/monitoramento') e sessão com papel 'AUDITOR' (ativo) quando navegada então ativa (C-02-10)  1366ms\n     ✓ dado a rota 'D-03' ('/monitoramento/radar/rait') e sessão com papel 'AUDITOR' (ativo) quando navegada então ativa (C-02-10)  448ms\n     ✓ dado a rota 'D-06' ('/monitoramento/integracoes') e sessão com papel 'AUDITOR' (ativo) quando navegada então ativa (C-02-10)  509ms\n     ✓ dado a rota 'D-08' ('/monitoramento/deveres') e sessão com papel 'ADMIN' (ativo) quando navegada então ativa (C-02-10)  659ms\n     ✓ dado a rota 'D-10' ('/monitoramento/comparativo') e sessão com papel 'AUDITOR' (ativo) quando navegada então ativa (C-02-10)  622ms\n ✓ |apps/dashboard/web| src/app/app.guards-matrix.absence.spec.ts (453 tests) 18657ms\n     ✓ dado a rota 'D-01' ('/monitoramento') e sessão com papel 'ADMIN' (negado) quando navegada então /monitoramento/sem-permissao?de=<url> e nenhum data-screen (C-02-11)  1231ms\n ✓ |apps/dashboard/web| src/app/app.guards-matrix.session.spec.ts (79 tests) 6305ms\n     ✓ dado sessão ativa com roles [] quando navegada '/monitoramento' então /monitorame",
+  "err_head": " WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\n WARN  Issue while reading \"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.npmrc\". Failed to replace env in config: ${NODE_AUTH_TOKEN}\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() me",
+  "killed": false,
+  "findings": [],
+  "metrics": {
+    "output_digests": "{\"stderr\":\"6a9959c06486d46e48bdf931b1a0da539dc8163b4032076ff08bf056563e81bd\",\"stdout\":\"fdd9d4991202b0b6393446364adff031d79b3c27ca714e8ec87270fd148ce802\"}",
+    "task_id": "scorecard-unit",
+    "population": "detran-workspace-unit",
+    "runner": "node",
+    "task_key": "db645faba142dcb149a08b845fea46ff280c9c9fa9e48d6eee5c84dbf97b5bbb",
+    "input_digest": "3542068b07e73ba2048b9fcbd5ec4f809c888072fd16d4d6b7a24ace11e97250",
+    "stdout_sha256": "fdd9d4991202b0b6393446364adff031d79b3c27ca714e8ec87270fd148ce802",
+    "stderr_sha256": "6a9959c06486d46e48bdf931b1a0da539dc8163b4032076ff08bf056563e81bd",
+    "descriptor_digest": "a8bfc7223dc731e1a8a3f3119af80ea5f9f9cb1ea5929b79400216d9e5ec9fac",
+    "task_policy_digest": "6c3157200e185927bf4a6131cb317a86588ac91a551c0e719a2d5f21013d07d0",
+    "candidate_commit": "a97e6def6cc4b80d65c5ab0ee9579241f0b33446",
+    "candidate_tree": "15a0068b4386af4e79bbbcd4cadf589e4df63d50",
+    "prerequisite_digests": "{}",
+    "tests_passed": 13587,
+    "tests_failed": 54
+  }
+}

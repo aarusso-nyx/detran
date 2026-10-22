@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-harness_green_main-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:00.328Z",
+  "finished_at": "2026-10-22T01:13:01.642Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/harness_green_main/SR-d145d0924b79f69c.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-d145d0924b79f69c\",\"sensor\":{\"name\":\"harness-green-main\",\"kind\":\"harness_green_main\"},\"timestamp\":\"2026-10-21T23:54:56.583Z\",\"status\":\"pass\",\"deterministic\":false,\"command\":\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-21\",\"command_hash\":\"a4a2ae424dc451587b85f1154f81c7c46d8a631bd3d3ff59cf1b791c42c48a19\",\"tier\":\"L2\",\"findings\":[],\"metrics\":{\"run_count\":95,\"success_count\":94,\"success_pct\":98.95,\"threshold_pass\":95,\"threshold_review\":80,\"sample_size\":95,\"minimum_sample\":10,\"population_workflow\":\"ci.yml\",\"population_event\":\"push\",\"population_head_branch\":\"main\",\"population_base_branch\":\"main\",\"population_attempts\":\"last\",\"population_include_cancelled\":false,\"population_lookback_days\":30,\"population_base_branch_verified\":true,\"population_excluded_jobs_unverified\":0,\"population_unverified\":\"\"}}}}}\n",
+  "stderr": ""
+}

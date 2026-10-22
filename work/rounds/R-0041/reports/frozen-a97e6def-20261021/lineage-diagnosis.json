@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-22T01:31:37.713880+00:00",
+  "provider": "2.6.3",
+  "provider_sha256": "5265d15c14cb7b99a35380a9867da20ab7ba7e3c528a98c28e0c2f02c18e4033",
+  "native_refusal_capture": "evaluated-scorecard.json",
+  "official_new_emission_probe": "official-supersession-probe.json",
+  "schema_supersedes_type": "string",
+  "source_functions": {
+    "assertCandidateSupersessionGraph": "release-host.js:200613",
+    "resolveSensorReadingInstance": "release-host.js:214106",
+    "readStoreFile": "release-host.js:203278"
+  },
+  "facts": [
+    "Six kinds contain two unretired readings with custody at the same a97 HEAD.",
+    "The existing implementation requires one existing leaf before creating a new native instance.",
+    "Each supersedes field names one parent; no supported reconcile/retract verb is exposed by sense help.",
+    "No reading, ID, timestamp, supersedes field, previous record or custody hash was edited or removed."
+  ],
+  "cause": "This attempt captured repeated kinds before recording their predecessors. The operator ordering created the ambiguity; the native refusal is preserved.",
+  "recovery_requires_new_native_SHA_approval": true
+}

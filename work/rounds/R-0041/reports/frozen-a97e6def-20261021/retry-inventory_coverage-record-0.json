@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/retry-inventory_coverage-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:40.508Z",
+  "finished_at": "2026-10-22T01:13:41.305Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/inventory_coverage/SR-5886002dcc03d5cd.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-5886002dcc03d5cd\",\"sensor\":{\"name\":\"inventory:coverage\",\"kind\":\"inventory_coverage\",\"version\":\"1.0.0\"},\"timestamp\":\"2026-10-22T00:31:43.493Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense coverage --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran\",\"command_hash\":\"5d3acc8291a3ce97ac8fc40135f8938a5307c9cc612a55c95ae27c724b75ebde\",\"tier\":\"L0\",\"duration_ms\":154,\"findings\":[{\"severity\":\"info\",\"code\":\"COVERAGE_PARTIAL_USE_CASE_LINKING\",\"message\":\"110 use-case(s) populate 0 link(s); 92 route(s) and 1139 endpoint(s) remain unmapped. Extend use-case refs.routeIds + refs.endpointIds to close.\"}],\"metrics\":{\"route_count\":92,\"endpoint_count\":1139,\"use_case_count\":110,\"link_count\":0,\"unmapped_route_count\":92,\"unmapped_endpoint_count\":1139,\"inferred_path_match_count\":0,\"coverage_hash\":\"70619abbbb4ede842b305e113f7f414591776fb71b43361c1f75367712bbe1ae\"}}}}}\n",
+  "stderr": ""
+}
