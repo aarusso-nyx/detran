@@ -1,13 +1,5 @@
 // Generated from BP-CH-PATIENTS-001 v1.1.0 sha256:0d66678ac2689c982108492124f246cf667b4a6004a170339d827cb56e0c95e9
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import type { CreatePatientDto } from '../dto/create-patient.dto.js';
 import { PatientService } from '../services/patient.service.js';

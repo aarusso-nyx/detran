@@ -1004,7 +1004,7 @@ export class RaitCaseScopeService {
     purpose: RaitReadPurpose,
     identity: { tenantId: string; actorId: string },
   ): Promise<Row | null> {
-    let fields = FIELDS[resource]?.[purpose];
+    const fields = FIELDS[resource]?.[purpose];
     if (!fields) return null;
     if (purpose === 'T') {
       if (

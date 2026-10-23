@@ -307,6 +307,7 @@ function parse(input: InitiateUploadInput): ParsedInput {
 }
 
 function requestHashOf(input: InitiateUploadInput): string {
-  const { idempotency_key: _key, ...rest } = input;
+  const rest = { ...input };
+  Reflect.deleteProperty(rest, 'idempotency_key');
   return sha256Hex(stableJson(rest));
 }

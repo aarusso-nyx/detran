@@ -21,7 +21,8 @@ export class InMemoryCalendar implements Calendar {
    * O calendário da fixture é o do órgão (nacional + AM + Manaus); o argumento
    * `tenantId` existe para a implementação que lê `rait_holiday` por tenant.
    */
-  async isBusinessDay(d: LocalDate, _tenantId: string): Promise<boolean> {
+  isBusinessDay(d: LocalDate, _tenantId: string): Promise<boolean>;
+  async isBusinessDay(d: LocalDate): Promise<boolean> {
     return !isWeekend(d) && !this.holidays.has(d);
   }
 

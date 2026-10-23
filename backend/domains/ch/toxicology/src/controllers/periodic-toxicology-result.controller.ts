@@ -1,15 +1,6 @@
 // Generated from BP-CH-TOXICOLOGY-001 v1.0.0 sha256:9bd4b4e46865f6ee6a771bb9c561b1dddfdf2c684b8dc7b2d45a1fb3fbcb5062
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
-import type { CreatePeriodicToxicologyResultDto } from '../dto/create-periodic-toxicology-result.dto.js';
+import { Controller, Get, Param } from '@nestjs/common';
+import { Action, Resource } from '@detran/shared';
 import { PeriodicToxicologyResultService } from '../services/periodic-toxicology-result.service.js';
 
 @Controller('v1/ch/toxicology/results')

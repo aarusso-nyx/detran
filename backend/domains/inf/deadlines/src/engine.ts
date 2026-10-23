@@ -283,7 +283,8 @@ class Engine implements DeadlineEngine {
    * motivo vive no envelope do evento, não em coluna de `inf.infraction_timer`
    * (CTG-0001 §1.2).
    */
-  async satisfy(id: string, _reason: string): Promise<void> {
+  satisfy(id: string, _reason: string): Promise<void>;
+  async satisfy(id: string): Promise<void> {
     const deadline = await this.open(id);
     if (deadline.status !== 'armado') return;
     await this.store.update({

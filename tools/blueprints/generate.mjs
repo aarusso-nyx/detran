@@ -302,6 +302,8 @@ function dto(bp, sha, entity) {
         f.name,
       ),
   );
+  if (!fields.length)
+    return `${header(bp, sha)}\nexport type Create${entity.name}Dto = NonNullable<unknown>;`;
   return `${header(bp, sha)}\nexport interface Create${entity.name}Dto {\n${fields.map((f) => `  ${f.name}${f.nullable || f.default !== undefined ? '?' : ''}: ${tsType(f)}${f.nullable ? ' | null' : ''};`).join('\n')}\n}`;
 }
 function entity(bp, sha, item) {
@@ -430,7 +432,30 @@ function controller(bp, sha, entity, module) {
   ]
     .filter(Boolean)
     .join('\n');
-  return `${header(bp, sha)}\nimport { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';\nimport { Action, Audit, Resource } from '@detran/shared';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n${methods}\n}`;
+  const writes = ['create', 'update', 'delete'].some((operation) =>
+    operations.has(operation),
+  );
+  const nestImports = [
+    ...(['create', 'update'].some((operation) => operations.has(operation))
+      ? ['Body']
+      : []),
+    'Controller',
+    ...(operations.has('delete') ? ['Delete'] : []),
+    ...(['list', 'get'].some((operation) => operations.has(operation))
+      ? ['Get']
+      : []),
+    ...(KEYED_OPERATIONS.some((operation) => operations.has(operation))
+      ? ['Param']
+      : []),
+    ...(operations.has('update') ? ['Patch'] : []),
+    ...(operations.has('create') ? ['Post'] : []),
+  ];
+  const dtoImport = ['create', 'update'].some((operation) =>
+    operations.has(operation),
+  )
+    ? `import type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\n`
+    : '';
+  return `${header(bp, sha)}\nimport { ${nestImports.join(', ')} } from '@nestjs/common';\nimport { ${methods ? 'Action, ' : ''}${writes ? 'Audit, ' : ''}Resource } from '@detran/shared';\n${dtoImport}import { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n${methods}\n}`;
 }
 function moduleFile(bp, sha, module, entities) {
   const handwrittenControllers = module.handwrittenControllers ?? [];
@@ -576,7 +601,7 @@ function packageFiles(bp, sha, module, entities) {
     `${base}/vitest.config.ts`,
     bp.id === 'BP-PORTAL-REQUESTS-001'
       ? portalRequestsVitestConfig(module)
-      : `import { fileURLToPath } from 'node:url';\nimport { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
+      : `${module.testAliases?.length ? "import { fileURLToPath } from 'node:url';\n" : ''}import { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
   );
   for (const item of entities) {
     const k = kebab(item.name);

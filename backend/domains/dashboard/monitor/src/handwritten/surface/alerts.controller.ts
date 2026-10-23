@@ -95,7 +95,8 @@ export class DashboardAlertsController {
         app: query.app,
         filters: query,
       });
-      const { layer: _layer, ...filters } = query;
+      const filters = { ...query };
+      Reflect.deleteProperty(filters, 'layer');
       const listed = await listAlerts(
         tx,
         this.gate.tenantId(),

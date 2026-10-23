@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import {
-  AuditInterceptor,
   AuthContextGuard as LegacyAuthContextGuard,
   getPrincipalFromRequest,
   type RequestLike,

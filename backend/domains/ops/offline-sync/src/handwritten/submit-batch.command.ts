@@ -116,12 +116,11 @@ const submitSyncBatchSchema = z.object({
 /** `context.fields[] { path, rule, params }` do catálogo §1 regra 5. */
 function validationFields(error: z.ZodError): Array<Record<string, unknown>> {
   return error.issues.map((issue) => {
-    const {
-      code,
-      path,
-      message: _message,
-      ...params
-    } = issue as unknown as Record<string, unknown>;
+    const { code, path } = issue as unknown as Record<string, unknown>,
+      params = { ...(issue as unknown as Record<string, unknown>) };
+    Reflect.deleteProperty(params, 'code');
+    Reflect.deleteProperty(params, 'path');
+    Reflect.deleteProperty(params, 'message');
     return {
       path: (path as unknown[]).map(String).join('.'),
       rule: String(code),
