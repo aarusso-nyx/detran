@@ -11,6 +11,12 @@ superseded_by: null
 
 # ADR-0062: Source-bound governed-upgrade compatibility
 
+## Status
+
+Accepted by the Architect on 2026-10-23 under the Owner-authorized milestone 1
+completion request. Required-green integration and actual delivery validation
+remain separate gates; this status supplies no native execution PASS.
+
 ## Context and authority
 
 The Owner authorized completion of milestone 1, including governed DEVAI adoption,
