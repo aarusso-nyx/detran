@@ -1,5 +1,10 @@
 # C-0004 — implementação de C2–C8
 
+> **Approved completion roadmap — 2026-10-23:** [COMPLETION-PLAN.md §11](../../COMPLETION-PLAN.md#11-approved-consolidated-roadmap--2026-10-23)
+> is the Owner-approved remaining-work schedule. Original acceptance, decisions,
+> exclusions and histories remain binding. Begin milestone 1; #211 stays unmerged,
+> S3 runtime held and C6 blocked. Older status/scheduling text below is dated provenance.
+
 Status: autorizada pelo Owner em 2026-10-19; execução humana coordenada por agentes via ADR-0022. Sem regulador experimental autônomo. Campanha distinta da R-0036 encerrada e do runtime RAIT.
 
 ## Mandato

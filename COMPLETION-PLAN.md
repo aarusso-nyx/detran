@@ -1,4 +1,15 @@
-# DETRAN completion plan — review baseline, 2026-10-18
+# DETRAN completion plan — approved consolidated roadmap, 2026-10-23
+
+> **Current authority — 2026-10-23:** The Owner approved the consolidated eight-milestone
+> roadmap and directed its recording in a PR, followed by beginning milestone 1.
+> [Section 11](#11-approved-consolidated-roadmap--2026-10-23) is the current remaining-work
+> schedule. Sections 1–10 retain the original scope, acceptance, decisions and dated
+> planning provenance; older scheduling/session-owner statements yield only to §11.
+> PR #211 remains unmerged; C6 remains blocked. Recording this approval does not
+> approve any later exact packet, new authority exception, upstream write or release.
+> [ADR-0060](docs/meta/adr/ADR-0060-consolidated-completion-roadmap.md) records this cutover.
+
+## Historical completion baseline — 2026-10-18 and subsequent amendments
 
 **Authority:** Architect, Constitution Articles 6–10. **Status: P1–P3 integrated by #195; P4 contract packets and S1 integrated through #203; S2 approved in #205 and implemented in unmerged draft #211; parallel S3 packet preparation approved and scheduling integrated #217.**
 This is the single completion baseline approved under P1–P3, not a new governance framework or an
@@ -182,7 +193,10 @@ CP-03↔CP-08 whole-outcome dependency. If source reconciliation demonstrates su
 cycle under the current PEC-last rule, P7 must resolve the schedule explicitly;
 that service remains pending rather than being counted complete or moved silently.
 
-## 5. Sequencing and dependency policy
+## 5. Historical sequencing and dependency policy
+
+The current schedule is §11. The dependency, source and acceptance safeguards below
+remain binding wherever §11 has not explicitly changed scheduling.
 
 1. **Review CP-00**, settle only decisions that block the next packet, then authorize
    CP-01's reconciled first package. Preserve the agreed RAIT→Portal→Dashboard→TEAT
@@ -340,3 +354,122 @@ isolated existing managed worktree and its own codex branch, without checkout,
 stash, reset, cleanup, migration or writes in the primary checkout. Other-session
 commits may advance concurrently; preservation means no interference, not freezing
 another authorized session's work.
+
+## 11. Approved consolidated roadmap — 2026-10-23
+
+### Approval, authority and retained acceptance
+
+Direct Owner instruction in the consolidated DETRAN chat:
+
+> I approve the consolidated roadmap. Record it as the new completion plan in a PR, preserving original acceptance criteria, histories and local work. Then begin milestone 1, keeping #211 unmerged and C6 blocked.
+
+This approves the eight-milestone schedule below and beginning M1. The plan PR is
+for review; it is not authorized for automatic merge. The same chat coordinates
+product delivery and scorecard work with separate role sessions, packets, receipts
+and conclusions. Archival of the Scorecard and Backlog chats changes coordination,
+not the authority or standing of any artifact. Their dated conclusions remain
+historical observations. Neither those chats nor a prior five-hour delegation
+provides a continuing blanket Owner decision mandate.
+
+The unchanged CP-00…CP-11 outcomes in §4, D/Q/O boundaries in §3, binding decisions,
+source precedence, exclusions and §9 acceptance checklist remain mandatory. Keep
+the crosswalk of 40 JNY records, 110 UCs and 12 overlapping RAIT JW views, all original
+64-command obligations plus approved additions, and the per-round acceptance. A
+workflow may require several reviewable PRs; no incomplete criterion becomes PASS
+from rescheduling. Round IDs below express existing accountability, not new rounds,
+new task IDs or permission to reopen a closed round.
+
+### Milestones and exit evidence
+
+| Milestone                                               | Delivery and source accountability                                                                                                                                                                                                     | Exit evidence and retained limits                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **M1 — Trustworthy execution baseline**                 | Current-main trusted-local-RC attestation; governed scorecard provider adoption and fresh assessment; reconcile stale status projections and already-integrated repairs. R-0020 and R-0041…R-0045 retain their individual obligations. | Exact clean candidate, reproducible required checks, 43 applicable-cell register plus two unchanged N/A cells, native scorecard, evidence manifest/comparison and separate remediation backlog. Report measured/blocked and PASS/REVIEW/FAIL independently. Close only eligible scopes through official verbs; C6 and genuine residuals stay open. |
+| **M2 — Integrate RAIT S2**                              | R-0025 / CP-01: supported U1/B1 contracts/capabilities, release-bound DETRAN adoption/recovery, catalogue generation, bounded smoke/provisioning repairs and full candidate validation.                                                | #211 integration requires supported proof recovery, exact-candidate required-green checks, review and a separate explicit removal of its merge hold. M1 adoption alone does not supply recovery authority.                                                                                                                                         |
+| **M3 — Complete the RAIT analyst journey**              | R-0025 / CP-01: exact S3 claim→dossier/header/browser packet, official documents, inquiry/resumption, versioned draft and signing handoff/return; restore required A2 omissions.                                                       | Connected JW-01 with role/tenant negatives, state/version/idempotency/concurrency controls, failure and recovery. Preserve S2 integration/audit before S3 runtime and its exact approval requirement.                                                                                                                                              |
+| **M4 — Complete the cross-application appeals service** | R-0025/26/27 / CP-02/03/04: remaining RAIT roles, citizen requests/tracking, decisions/notifications, Dashboard producers/read models, reports and exports.                                                                            | Citizen request→staff processing→decision→publication/notification→operational visibility; each remaining role/journey and original command has acceptance evidence. Resolve affected OD-C3-009 access conflicts before implementation; no implied grant.                                                                                          |
+| **M5 — Complete field-office workflows**                | R-0028/29 / CP-05: BOAT reporting/capture/review/sync and TEAT operational web console, retaining shared-shell locks and dependencies.                                                                                                 | Complete local/homologation workflows, truthful route availability and existing adapter acceptance. Native camera/GPS/hardware, field release and productive RENAEST qualification remain M8.                                                                                                                                                      |
+| **M6 — Complete clinical staff and citizen services**   | R-0031/32 / CP-08: PEC staff screens, Portal PEC views, projections, dossier and delegations.                                                                                                                                          | Clinical→regulatory→citizen acceptance, CH RLS, approved P2/RENACH/signing/retention constraints, manuals and availability. Retain PEC/R-0030 prerequisites and final placement; earlier contract preparation is not earlier UI implementation.                                                                                                    |
+| **M7 — Certify the assembled software**                 | R-0023/24/34/35 / CP-07/09: residual platform convergence and original hardening, parity/freeze/retirement review, full regression, accessibility, security, recovery and applicable performance.                                      | Every commissioned software requirement has an evidence-backed disposition on the assembled exact candidate. No whole R-0022 merge or restart, origin archival, test weakening or inferred production readiness.                                                                                                                                   |
+| **M8 — Qualify and release operationally**              | CP-10/11, including separately commissioned TEAT #108–112: real providers/institutions, identity/trust, native device/offline evidence, distribution, support and rollout.                                                             | Separate Q and O gates, real accepted samples/devices/environments, signed artifacts where required, restore/rollback/training/runbooks and explicit operational-release authority. Mocks, adapters and green CI do not supply these proofs.                                                                                                       |
+
+### Dependency and integration rules
+
+The immediate sequence is M1, supported M2 recovery/integration, then M3. M1 is a
+set of bounded workstreams, not permission to wait for every scorecard FAIL to turn
+PASS before unrelated authorized product work proceeds. C6 remains an explicit
+residual; an evaluation may report it without claiming full C6/campaign completion.
+
+After M3, schedule M4 deliveries by real cross-application producer/consumer
+dependencies. Portal and Dashboard can accompany the business events they consume;
+this replaces rigid whole-application completion barriers, not shared locks or
+required producers. M5 respects BOAT→TEAT web dependencies. M6 retains the original
+PEC prerequisites. CP-07 platform slices enter earlier only for a demonstrated
+journey dependency under approved P2 and an exact bounded packet. M7 assembles and
+revalidates all previously delivered slices.
+
+CP-06 documentation, pt-BR help, availability, previews, accessibility, security,
+source traceability and negative tests accompany every milestone; R-0030 retains
+its final coverage audit. CP-10 dependency preparation can start early, but sending
+requests, collecting credentials, real-target execution, device/field operations
+and deployment retain their separate authority gates. Preserve the complete
+original suite-level E2E, including signing, adapter publication, notification and
+audit-chain verification; do not replace it with a mock-only readiness claim.
+
+Use the existing concurrency limits and explicit app/backend/policy locks. Serialize
+changes to shared evidence/catalogue/policy surfaces and refresh source bindings
+when main changes. Preserve primary local files, staged merges, protected worktrees,
+recovery bundles, stopped checkpoints, old readings and complete proof histories.
+Generated/state/proof outputs are written only by registered official actions.
+
+### M1 execution contract
+
+1. Freeze and verify live main, its CI/attestation status, installed provider and
+   published release identity. Preserve baseline hashes and existing local state.
+2. Inspector diagnoses and executes trusted local RC only through the existing
+   prepare/publish/verification flow, using its exact published candidate, required
+   Node/pnpm versions, trust policy and disposable services. Retain original failures.
+3. In a separate governed adoption packet/role session, verify the released provider
+   containing #424, actual package integrity and supported migration. Use the existing
+   R-0042 adoption/execution plan, revising only newly observed release-specific facts.
+   Review constitution 1.0.2→1.1.0 and the distinct RC/native runtime requirements; do
+   not change a guard, hash binding or runtime graph to make adoption appear valid.
+4. Engineer owns dependency/lock changes; Architect owns canonical policy/reference
+   amendments; Inspector owns execution/assertion populations and persistence; Auditor
+   assesses without ratifying sources. Registered init plan/bind/apply actions alone
+   materialize pin/config/state outputs. Stop dependent effects on undeclared migration
+   effects, incompatible runtime/policy, lost custody or changed protected populations.
+5. After approved configuration, freeze an exact clean source candidate. Reconcile the
+   installed sensor registry and execute prerequisites and all applicable cells; schema
+   validate and officially record each emission immediately before another of that
+   kind. Run required second passes. Never invoke an old wrapper hardcoded to closed
+   R-0036 or combine readings across SHAs.
+6. Publish the scorecard, 43-row register/two N/A, complete manifest, comparison and
+   separate remediation dispositions. Reconcile BL-0016/#218 and other integrated
+   scopes against their exact acceptance before official backlog/round transitions.
+   R-0020's divergent maestro/RGR obligations require their own no-loss disposition.
+
+M1 does not reopen R-0036…R-0039, relax thresholds, change N/A declarations, activate
+any of the nine C6 producers, retry/rephrase the withheld C6 review, or authorize
+upstream repository writes/releases. DEVAI 2.7.0's measurement adoption is distinct
+from U1/B1 recovery: the reviewed release lacks #211's required capabilities. Keep
+#211 unmerged and S3 runtime held. A future recovery contract/implementation/release
+and D1-L package must still satisfy their exact approval boundaries.
+
+### Verified starting status and reporting
+
+Observed main: `80505ac00690a3210913f09904004898b78860c3`. DETRAN CI run
+39985646190 passed; trusted RC run39985646229 failed. Installed DEVAI is2.6.3 with
+constitution1.0.2 and STYNX1.5.3; DEVAI v2.7.0 is published but not adopted. #211 is
+open, non-draft and conflicting at9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99. Its
+local staged reconciliation is preserved, not a committed or integrated result.
+
+Latest complete assessment at0e26c795:36/43 measured, seven observation gaps, overall
+FAIL. R-0042 has two later cell dispositions on another SHA; these are not added
+to36. C1/C2 and C3/C4 closed in R-0037…0039; R-0041…0045 remain formally open despite
+merged partial deliveries. Residual dependency/lint/security/PII/coverage/traceability/
+governance/performance findings keep their original evidence and specific backlog
+identities. Completing measurement does not certify product behavior.
+
+Report separately: implemented, integrated, verified on the exact candidate, awaiting
+integration, blocked by evidence/authority, stale bookkeeping, and external Q/O. No
+calendar finish date is inferred from checkbox totals, branch commits or old budgets.

@@ -1,5 +1,10 @@
 # HANDOFF PROMPT — DETRAN Monorepo Consolidation & New Apps (BOAT, RAIT, PORTAL, DASHBOARD)
 
+> **Approved completion roadmap — 2026-10-23:** [COMPLETION-PLAN.md §11](../../../../COMPLETION-PLAN.md#11-approved-consolidated-roadmap--2026-10-23)
+> is the Owner-approved remaining-work schedule. Original acceptance, decisions,
+> exclusions and histories remain binding. Begin milestone 1; #211 stays unmerged,
+> S3 runtime held and C6 blocked. Older status/scheduling text below is dated provenance.
+
 > **Current boundary — 2026-10-23:** S1 integrated; S2 approved via #205,
 > implemented in draft #211, not integrated. R-0025/JW-01 remain open.
 > [Approved RAIT schedule](../rait-progress-plan-2026-10-23.md) separates integration/validation blockers
