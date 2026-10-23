@@ -1,0 +1,126 @@
+{
+  "plan": {
+    "from": "2.6.3",
+    "to": "2.7.0",
+    "status": "ready",
+    "constitution": {
+      "bound": "1.0.2",
+      "installed": "1.1.0",
+      "rebind_requested": true
+    },
+    "releases": [
+      {
+        "version": "2.6.4",
+        "status": "unreleased",
+        "changes": [
+          {
+            "id": "MIG-2.6.4-native-reporter-identity-refresh",
+            "kind": "rebind",
+            "summary": "After installing the exact published package, registered upgrade refreshes compiled authority and framework identities to 2.6.4. Native Vitest report custody retains complete raw streams; unrelated tracked internal directory links are bound only as opaque metadata under ADR-SCR-0021. Actual alias reads remain refused. Already validated repository-relative native configuration is executed through its canonical absolute argument, bound with its bytes and preparation in the selection identity; external, linked and swapped configuration remains refused. Collection, nonce, candidate, task and execution-origin verification are preserved. This repair adds no adopter configuration, public action or new evidence standing. Existing constitution, authority roots, declared inputs, thresholds and trusted verifier remain unchanged.",
+            "decision_records": ["ADR-SCR-0017", "ADR-SCR-0021"],
+            "segments": ["authority"]
+          }
+        ]
+      },
+      {
+        "version": "2.7.0",
+        "status": "released",
+        "changes": [
+          {
+            "id": "MIG-2.7.0-constitution-1-1-0",
+            "kind": "constitution",
+            "summary": "Constitution 1.1.0 amends Articles 6, 7 and 10 so the Engineer holds a focused-regression verb on the test class: within a task that changes sources it may add tests that import or target a file the same task changed and modify tests that task added, never delete a test, change another test's assertions, or lower a threshold; a round or task designated independent-assurance withholds the verb. Every other core path row is unchanged. Binding it replaces the vendored copy and the project.json pin.",
+            "decision_records": ["ADR-GOV-0026", "ADR-CHK-0009"],
+            "segments": ["constitution", "authority"]
+          }
+        ]
+      }
+    ],
+    "segments": [
+      {
+        "segment": "constitution",
+        "run": true
+      },
+      {
+        "segment": "operational-law",
+        "run": false
+      },
+      {
+        "segment": "subprocess-effects",
+        "run": false
+      },
+      {
+        "segment": "adopter-policy",
+        "run": true
+      },
+      {
+        "segment": "authority",
+        "run": true
+      },
+      {
+        "segment": "host-adapters",
+        "run": false
+      },
+      {
+        "segment": "harness-ci",
+        "run": false
+      }
+    ],
+    "changed_files": [
+      {
+        "path": ".devai/pin/constitution.md",
+        "operation": "update",
+        "segment": "constitution"
+      },
+      {
+        "path": ".devai/constitution.md",
+        "operation": "update",
+        "segment": "constitution"
+      },
+      {
+        "path": ".devai/config/project.json",
+        "operation": "update",
+        "segment": "adopter-policy"
+      },
+      {
+        "path": ".devai/config/adopter-policy-binding.json",
+        "operation": "update",
+        "segment": "adopter-policy"
+      },
+      {
+        "path": ".devai/config/authority-policy.json",
+        "operation": "update",
+        "segment": "authority"
+      }
+    ],
+    "retired_keys": [],
+    "replaced_defaults": [],
+    "stale_version_stamps": [
+      {
+        "path": ".devai/constitution.md",
+        "field": "generated-by",
+        "version": "2.6.3",
+        "refreshed": true
+      },
+      {
+        "path": ".devai/config/project.json",
+        "field": "devai_version",
+        "version": "2.6.3",
+        "refreshed": true
+      }
+    ],
+    "obligations": [
+      {
+        "change": "MIG-2.7.0-constitution-1-1-0",
+        "check": "constitution-version",
+        "requirement": "Bind the installed constitution with init upgrade --constitution (or init bind --constitution) after the Architect has reviewed the amendment.",
+        "status": "satisfied-by-upgrade",
+        "decision_required": true,
+        "source": "manifest"
+      }
+    ],
+    "refusals": [],
+    "interrupted_bind": false,
+    "receipt": "stale"
+  }
+}
