@@ -1,0 +1,77 @@
+{
+  "round": "R-0042",
+  "backlog": "BL-0024",
+  "status": "prepared-not-executed",
+  "adopter_baseline": "42fe78f9c18b758d9ea7404a1513e6787e2bda34",
+  "installed_provider": "2.6.3",
+  "target_provider": "2.6.4, subject to independent review, official release gates and exact publication authority",
+  "provider_baseline": "4a1156ea21ca93d95bb568db4aba4d80298f8f2c",
+  "provider_candidate": "f90fb65426d6372123820a395f3ac735d6737a3a",
+  "C6": "BLOCKED; all nine native producers inactive and effective invariant bindings empty; no retry/rephrasing of withheld protocol",
+  "cells": [
+    {
+      "cell": "F3:T3",
+      "sensor": "test_coherence",
+      "current_disposition": "blocked-provider-publication",
+      "next_action": "Official provider review/publication/adoption, frozen new SHA, fresh sense run then immediate sense record"
+    },
+    {
+      "cell": "F3:T5",
+      "sensor": "test_idiomaticity",
+      "current_disposition": "blocked-provider-publication",
+      "next_action": "Official provider review/publication/adoption, frozen new SHA, fresh sense run then immediate sense record"
+    },
+    {
+      "cell": "F3:T6",
+      "sensor": "test_security_coverage",
+      "current_disposition": "blocked-provider-publication",
+      "next_action": "Official provider review/publication/adoption, frozen new SHA, fresh sense run then immediate sense record"
+    },
+    {
+      "cell": "F3:T7",
+      "sensor": "test_performance_coverage",
+      "current_disposition": "blocked-provider-publication",
+      "next_action": "Official provider review/publication/adoption, frozen new SHA, fresh sense run then immediate sense record"
+    },
+    {
+      "cell": "F3:T8",
+      "sensor": "test_robustness_coverage",
+      "current_disposition": "blocked-provider-publication",
+      "next_action": "Official provider review/publication/adoption, frozen new SHA, fresh sense run then immediate sense record"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "P1",
+      "action": "Complete exact-candidate provider mandatory local gate and PR CI",
+      "status": "running"
+    },
+    {
+      "id": "P2",
+      "action": "Independent static population review, distinct from issue 422 approval and C6",
+      "status": "pending"
+    },
+    {
+      "id": "P3",
+      "action": "Protected integration, canonical release rehearsal including fresh Linux adoption, exact Owner publication authorization, signed tag and promotion of retained artifacts",
+      "status": "pending; no release, tag or package publication authorized by preparation"
+    },
+    {
+      "id": "D1",
+      "action": "Verify canonical release manifest and registry tarball digest, then use init upgrade and adopter-policy bind in a dedicated adopter change",
+      "status": "blocked-by-P3"
+    },
+    {
+      "id": "D2",
+      "action": "Validate preserved controls; freeze a new native evaluation SHA; collect and immediately record fresh emissions",
+      "status": "blocked-by-D1"
+    }
+  ],
+  "preservation": "Existing seven-gap capsule and evidence manifests are immutable; use new directories for every attempt; closed rounds and product backlog unchanged",
+  "limitations": [
+    "A locally built provider diagnostic is supplemental only and does not resolve a canonical gap.",
+    "Do not combine readings from 0e26c795, cd0c1b09 and a future evaluation SHA.",
+    "F3:T1 FAIL and F3:T2 REVIEW remain historical measured results at cd0c1b09; they do not count as fresh results for a future SHA.",
+    "Known product failures and coverage shortfall remain in the separate product backlog."
+  ]
+}

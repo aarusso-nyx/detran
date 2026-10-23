@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-action_effect_inference-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:12:48.686Z",
+  "finished_at": "2026-10-22T01:12:50.157Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/action_effect_inference/SR-92764dca9c85649b.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"action_effect_inference\",\"kind\":\"action_effect_inference\"},\"timestamp\":\"2026-10-21T23:55:51.749Z\",\"status\":\"unknown\",\"deterministic\":true,\"command\":\"devai sense run action_effect_inference\",\"command_hash\":\"28839f4758526713a08795db6468a27c12af20dc589113cca49e8e0b63120789\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"ACTION_EFFECT_INFERENCE_INPUT_MISSING\",\"message\":\"Required input is absent: /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/policy/subprocess-effects.json\"}],\"id\":\"SR-92764dca9c85649b\"}}}}\n",
+  "stderr": ""
+}

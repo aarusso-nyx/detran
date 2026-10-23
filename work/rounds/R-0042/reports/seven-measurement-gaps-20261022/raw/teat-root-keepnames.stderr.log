@@ -1,0 +1,66 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |apps/teat/web| src/app/app.runtime-foundations.spec.ts > dado o perfil reutilizável quando componentes compartilhados são inventariados então todos existem como componentes Angular
+AssertionError: expected [ 'AuditTimeline', …(9) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "PageHeader",
++ [
++   "AuditTimeline",
++   "BoatExtensionOutletComponent2",
++   "DashboardPanel",
+    "DataTable",
+-   "StatusBadge",
+-   "SseRefresh",
+    "EvidenceViewer",
+-   "AuditTimeline",
+-   "DashboardPanel",
+    "FreshnessBadge",
+-   "BoatExtensionOutlet",
++   "PageHeader",
++   "ProductPageComponent2",
++   "SseRefresh",
++   "StatusBadge",
+  ]
+
+ ❯ src/app/app.runtime-foundations.spec.ts:396:17
+    394|     .filter((type) => 'ɵcmp' in type)
+    395|     .map((type) => type.name.replace(/Component$/, ''));
+    396|   expect(names).toEqual(
+       |                 ^
+    397|     expect.arrayContaining([
+    398|       'PageHeader',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |apps/teat/web| src/app/app.runtime-foundations.spec.ts > F005 dado SSE indisponível quando passam 15 s então usa polling resiliente e limpa recursos
+AssertionError: expected undefined to be defined
+ ❯ src/app/app.runtime-foundations.spec.ts:530:24
+    528|       (type) => type.name === 'SseService',
+    529|     ) as Type<Readonly<{ stream(): Observable<unknown> }>> | undefined;
+    530|     expect(SseService).toBeDefined();
+       |                        ^
+    531|     TestBed.configureTestingModule({
+    532|       providers: [
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

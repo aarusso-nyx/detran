@@ -1,0 +1,345 @@
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+ WARN  Issue while reading "/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.npmrc". Failed to replace env in config: ${NODE_AUTH_TOKEN}
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.1 — PortalInboxService.read (C-0002-34, C-0002-35) > C-0002-34 — dado item source 'sne' não lido quando read então read_on = today, acknowledgement_evidence (displayed_sha256 = sha256 do canonicalJson exibido), INBOX_LIDO e NOTIFICACAO_CIENCIA na outbox; quando read de novo então nenhuma escrita e mesma resposta
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:224:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.1 — PortalInboxService.read (C-0002-34, C-0002-35) > C-0002-35 — dado item source 'portal' quando read então read_on, INBOX_LIDO, sem evidência e sem NOTIFICACAO_CIENCIA
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:303:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.1 — PortalInboxService.read (C-0002-34, C-0002-35) > §6.1 — dado item de outro sujeito ou inexistente quando read então 404 PORTAL.NOT_FOUND { kind: 'inbox_item' } e nenhuma escrita
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:330:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.enroll (C-0002-36) > C-0002-36 — dado enroll sem email e sem phone então 422 SNE_CONTACT_REQUIRED { missing: ['email','phone'] }
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:355:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.enroll (C-0002-36) > C-0002-36 — dado effectsAck com 3 efeitos então 400 VALIDATION_FAILED { fields: ['consent.effectsAck'] }; efeitos repetidos idem
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:373:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.enroll (C-0002-36) > C-0002-36 — dado identity 'simples' então 403 ASSURANCE_INSUFFICIENT { actKey: 'adesao_sne', resumeRoute: '/v1/portal/sne/enrollment' } (A1(a))
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:433:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.enroll (C-0002-36) > C-0002-36 — dado ADERIDO_SNE então 409 SNE_ALREADY_ENROLLED {}
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:452:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.enroll (C-0002-36) > C-0002-36 — dado NAO_ADERIDO_SNE (cancelada) então re-adesão com since novo e cancelled_at null; effects_ack = os quatro true; SNE_ADESAO_SOLICITADA
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:467:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.cancel e get (C-0002-37) > C-0002-37 — dado cancel sem linha então 409 SNE_NOT_ENROLLED {}; dado NAO_ADERIDO_SNE idem
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:561:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.cancel e get (C-0002-37) > C-0002-37 — dado ADERIDO_SNE então NAO_ADERIDO_SNE, cancelled_at, cancel_reason, SNE_CANCELAMENTO_SOLICITADO com aggregate.version = 2 (adesão = 1)
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:582:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts > CTG-0002 §6.2 — PortalSneEnrollmentService.cancel e get (C-0002-37) > C-0002-37 — dado identity 'simples' quando cancel então 403 ASSURANCE_INSUFFICIENT { actKey: 'cancelamento_sne' }
+Error: PortalSneEnrollmentService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX, PortalInboxService, PORTAL_SNE_PORT]. Dependências lidas dos metadados: PortalIdentityService2, PORTAL_SNE_PORT, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/inbox.service.spec.ts:171:15
+ ❯ src/handwritten/inbox.service.spec.ts:659:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  |backend/domains/portal/projections| src/handwritten/points-view.projection.spec.ts > CTG-0002 §7.4 — points_view (C-0002-53) > C-0002-53 — dado finalOn há mais de 12 meses então fora de last_12_months_json (janela addCalendarMonths(today, -12)), mas os pontos contam
+AssertionError: expected [] to deeply equal [ { …(3) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "aitId": "00000000-0000-7000-8000-0000f0000009",
+-     "finalOn": "2025-09-14",
+-     "points": 1,
+-   },
+- ]
++ []
+
+ ❯ src/handwritten/points-view.projection.spec.ts:193:7
+    191|     expect(
+    192|       pointsOf(h, SUBJECTS.qualificada.cpfHash)!.last_12_months_json,
+    193|     ).toEqual([{ aitId: AIT_F9, finalOn: windowStart, points: 1 }]);
+       |       ^
+    194|   });
+    195|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST manifestations nunca recusa (C-0002-40…42) > C-0002-40 — dado kind 'xyz' quando manifest então 400 PORTAL.MANIFESTATION_KIND_INVALID { allowed: [5 tokens] }; dado kind ausente idem
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:335:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST manifestations nunca recusa (C-0002-40…42) > C-0002-40 — dado corpo sem text, com campo extra e attachmentIds inválido então NÃO recusa (RN-PORTAL-109): text '' e extras ignorados
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:352:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST manifestations nunca recusa (C-0002-40…42) > C-0002-41 — dado manifest anônimo então state 'COMPROVANTE_EMITIDO', protocol na gramática do §3.3, received_at = relógio, agency_due_on = today + durationOf('T-OUV-RESPOSTA') (lido, não 30), subject_id null, MANIFESTACAO_REGISTRADA com actor.id = PORTAL_PUBLIC_ACTOR_ID
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:394:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST manifestations nunca recusa (C-0002-40…42) > C-0002-41 — dado manifest sem Idempotency-Key então 400 PORTAL.VALIDATION_FAILED { fields: ["Idempotency-Key"] } (M9, escopo public)
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:455:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST manifestations nunca recusa (C-0002-40…42) > C-0002-42 — dado identity presente e anonymous false então subject_id = subject; dado identity presente e anonymous true então subject_id null e anonymous true
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:466:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — acknowledge (C-0002-43) > C-0002-43 — dado acknowledge × 9 estados então só CIENCIA_AO_USUARIO passa (→ AVALIACAO_OFERECIDA na mesma transação, acknowledged_at, MANIFESTACAO_ENCERRADA); demais 409 PORTAL.MANIFESTATION_STATE_INVALID { state, allowed: ['CIENCIA_AO_USUARIO'] }
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:513:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — acknowledge (C-0002-43) > §2.6 — dado manifestação de outro sujeito quando acknowledge então 404 PORTAL.NOT_FOUND { kind: 'manifestation' }
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:570:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST evaluations (C-0002-44) > C-0002-44 — dado evaluate manifestação em EM_ANALISE então 409 PORTAL.EVALUATION_NOT_OFFERED { state: 'EM_ANALISE' }
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:595:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST evaluations (C-0002-44) > C-0002-44 — em AVALIACAO_OFERECIDA então portal.evaluation (subject_kind 'manifestation'), 'AVALIADA', AVALIACAO_REGISTRADA sem scores no data; segunda então 409 EVALUATION_ALREADY_SUBMITTED
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:612:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/22]⎯
+
+ FAIL  |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts > CTG-0002 §2.6 — POST evaluations (C-0002-44) > C-0002-44 — dado subjectKind 'request' então delega a PortalRequestsService.evaluate (spy); dado manifestação de outro sujeito então 404 { kind: 'manifestation' }; sem Idempotency-Key então 400
+Error: PortalManifestationService2: o construtor pede 'PortalIdentityService2' (posição 0); o spec oferece [PortalIdentityService, PortalIdempotencyService, PortalRequestsService, PortalClock, Database, RequestContext, SqlTeatEventOutbox, TEAT_EVENT_OUTBOX]. Dependências lidas dos metadados: PortalIdentityService2, PortalIdempotencyService2, PortalClock2, RequestContext, TEAT_EVENT_OUTBOX
+ ❯ ../requests/tests/support/nest-construct.ts:79:11
+     77|     if (dependency.name in providers) return providers[dependency.name…
+     78|     if (dependency.optional) return undefined;
+     79|     throw new Error(
+       |           ^
+     80|       `${label}: o construtor pede '${dependency.name}' (posição ${dep…
+     81|         `o spec oferece [${Object.keys(providers).join(', ')}]. ` +
+ ❯ constructInjectable ../requests/tests/support/nest-construct.ts:76:29
+ ❯ harness src/handwritten/manifestation.service.spec.ts:312:26
+ ❯ src/handwritten/manifestation.service.spec.ts:687:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/22]⎯
+

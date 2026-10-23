@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-inventory_rbac-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:12.278Z",
+  "finished_at": "2026-10-22T01:13:13.132Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/inventory_rbac/SR-507d8ea256ce2928.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-507d8ea256ce2928\",\"sensor\":{\"name\":\"inventory:rbac\",\"kind\":\"inventory_rbac\",\"version\":\"1.0.0\"},\"timestamp\":\"2026-10-21T23:51:32.109Z\",\"status\":\"unknown\",\"deterministic\":true,\"command\":\"devai sense rbac --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran\",\"command_hash\":\"e4551a6fd79e5e55acf5935dda4d08ac8cfa5416b4c7ee940592dc9e67ffedf6\",\"tier\":\"L0\",\"duration_ms\":0,\"findings\":[{\"severity\":\"info\",\"code\":\"RBAC_REQUIRES_DATA_MODEL\",\"message\":\"Data-model body not found at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensors/inventory_data_model/data-model.json or /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_data_model/data-model.json. Run 'devai sense run inventory_regeneration' to regenerate the inventory bodies; nothing measured.\"}],\"metrics\":{\"role_table_count\":0,\"permission_table_count\":0,\"join_table_count\":0,\"endpoint_binding_count\":0,\"endpoints_without_role_count\":0,\"synthetic_guard_permission_count\":0,\"synthetic_role_permission_count\":0,\"rbac_hash\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}}}}}\n",
+  "stderr": ""
+}

@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-trace_resolution-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:30.941Z",
+  "finished_at": "2026-10-22T01:13:31.733Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/trace_resolution/SR-40c1aa0acba482e8.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-40c1aa0acba482e8\",\"sensor\":{\"name\":\"trace-resolve\",\"kind\":\"trace_resolution\"},\"timestamp\":\"2026-10-21T23:50:56.862Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense trace-resolve --trace /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/trace.json --invariants-dir /Volumes/Development/.codex/worktrees/a97-scorecard/detran/law/invariants\",\"command_hash\":\"844ff336b7ee9321a07aeee429a0229521fd6e87335681926059935aab51712c\",\"findings\":[],\"metrics\":{\"unresolved_trace_entries\":0,\"missing_test_paths\":0,\"untraced_invariants\":0,\"invariants_total\":12,\"traced_invariants\":12,\"attestation_only_invariants\":0}}}}}\n",
+  "stderr": ""
+}

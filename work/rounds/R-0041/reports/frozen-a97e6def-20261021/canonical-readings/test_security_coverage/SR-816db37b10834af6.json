@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "SR-816db37b10834af6",
+  "sensor": {
+    "name": "test-security-coverage",
+    "kind": "test_security_coverage"
+  },
+  "timestamp": "2026-10-21T23:55:11.688Z",
+  "status": "error",
+  "deterministic": true,
+  "command": "devai sense-test-security-coverage",
+  "command_hash": "8a34e022880a8a30a8c1e4e26c7ed4d58462282cb9608bcef551a4ba33d02200",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "critical",
+      "code": "TEST_EXECUTABLE_POPULATION_INCOMPLETE",
+      "message": "Executable population contains a symbolic link: /Volumes/Development/.codex/worktrees/a97-scorecard/detran/apps/rait/web/src/app/preview/fixtures"
+    }
+  ],
+  "metrics": {
+    "test_files": 794,
+    "security_tests": 156,
+    "security_pct": 19.65,
+    "threshold_pass": 5,
+    "threshold_review": 2
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_coverage",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T00:31:41.002Z",
+  "finished_at": "2026-10-22T00:31:44.240Z",
+  "exitCode": 1,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"review\",\"media_type\":\"application/json\",\"value\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_coverage\"},\"members\":[{\"kind\":\"inventory_coverage\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_coverage\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"review\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":1,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":1,\"results\":[{\"command\":\"devai sense run inventory_coverage\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-5886002dcc03d5cd\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:coverage\\\",\\\"kind\\\":\\\"inventory_coverage\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-22T00:31:43.493Z\\\",\\\"status\\\":\\\"review\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense coverage --repo-root /Volumes/Development/.codex/worktrees/a97-scorecard/detran\\\",\\\"command_hash\\\":\\\"5d3acc8291a3ce97ac8fc40135f8938a5307c9cc612a55c95ae27c724b75ebde\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":154,\\\"findings\\\":[{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"COVERAGE_PARTIAL_USE_CASE_LINKING\\\",\\\"message\\\":\\\"110 use-case(s) populate 0 link(s); 92 route(s) and 1139 endpoint(s) remain unmapped. Extend use-case refs.routeIds + refs.endpointIds to close.\\\"}],\\\"metrics\\\":{\\\"route_count\\\":92,\\\"endpoint_count\\\":1139,\\\"use_case_count\\\":110,\\\"link_count\\\":0,\\\"unmapped_route_count\\\":92,\\\"unmapped_endpoint_count\\\":1139,\\\"inferred_path_match_count\\\":0,\\\"coverage_hash\\\":\\\"70619abbbb4ede842b305e113f7f414591776fb71b43361c1f75367712bbe1ae\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":1}]}}}\n",
+  "stderr": ""
+}

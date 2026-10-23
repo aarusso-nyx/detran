@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-inventory_adherence.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:49:51.356Z",
+  "finished_at": "2026-10-22T02:49:53.080Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/inventory_adherence/SR-ee404dcb60cb1be7.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"inventory-adherence\",\"kind\":\"inventory_adherence\"},\"timestamp\":\"2026-10-22T02:49:51.033Z\",\"status\":\"fail\",\"deterministic\":true,\"command\":\"devai sense-inventory-adherence\",\"command_hash\":\"7f08cb76c9a1f4dc2bd5d1be86f022c6ed87e3b49baad79246eed300c7cccfd6\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"error\",\"code\":\"INVENTORY_ADHERENCE_BELOW_THRESHOLD\",\"message\":\"5460 orphans exceed max_orphans=50.\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-d66d3fde\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-35ccb6d0\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-b917f7b8\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-423a8b1a\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-5e8da48c\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-53854274\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-2f917f72\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-04b00238\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-4d8a0d33\",\"file\":\"\"},{\"severity\":\"info\",\"code\":\"INVENTORY_ADHERENCE_ORPHAN\",\"message\":\"Unclaimed route: ROUTE-335a4e33\",\"file\":\"\"}],\"metrics\":{\"total_count\":6138,\"claimed_count\":678,\"orphan_count\":5460,\"max_orphans\":50},\"id\":\"SR-ee404dcb60cb1be7\"}}}}\n",
+  "stderr": ""
+}

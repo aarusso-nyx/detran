@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "harness_robustness",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"workflow\":\"ci.yml\",\"event\":\"push\",\"headBranch\":\"main\",\"attempts\":\"last\",\"includeCancelled\":false,\"lookbackDays\":30,\"minimumSample\":10,\"excludedJobs\":[]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:55:22.796Z",
+  "finished_at": "2026-10-21T23:55:27.181Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"harness_robustness\"},\"members\":[{\"kind\":\"harness_robustness\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"harness_robustness\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run harness_robustness\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-88fcf3c7dc1e1eb4\\\",\\\"sensor\\\":{\\\"name\\\":\\\"harness-robustness\\\",\\\"kind\\\":\\\"harness_robustness\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:55:27.033Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"gh run list --workflow ci.yml --event push --branch main --json attempt,conclusion,createdAt,databaseId,event,headBranch,updatedAt --limit 1000 --created >=2026-09-21\\\",\\\"command_hash\\\":\\\"a4a2ae424dc451587b85f1154f81c7c46d8a631bd3d3ff59cf1b791c42c48a19\\\",\\\"tier\\\":\\\"L2\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"run_count\\\":95,\\\"flaky_runs\\\":0,\\\"flakiness_pct\\\":0,\\\"threshold_pass\\\":5,\\\"threshold_review\\\":15,\\\"sample_size\\\":95,\\\"minimum_sample\\\":10,\\\"population_workflow\\\":\\\"ci.yml\\\",\\\"population_event\\\":\\\"push\\\",\\\"population_head_branch\\\":\\\"main\\\",\\\"population_base_branch\\\":\\\"main\\\",\\\"population_attempts\\\":\\\"last\\\",\\\"population_include_cancelled\\\":false,\\\"population_lookback_days\\\":30,\\\"population_base_branch_verified\\\":true,\\\"population_excluded_jobs_unverified\\\":0,\\\"population_unverified\\\":\\\"\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

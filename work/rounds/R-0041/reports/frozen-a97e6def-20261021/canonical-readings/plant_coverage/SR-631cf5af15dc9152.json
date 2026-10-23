@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "plant-coverage",
+    "kind": "plant_coverage"
+  },
+  "timestamp": "2026-10-21T23:51:39.532Z",
+  "status": "fail",
+  "deterministic": true,
+  "command": "devai sense-plant-coverage",
+  "command_hash": "795653f993ca4aadb9de3352e0c028f747f98c7740e2e555f1a02896c8016fa4",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "error",
+      "code": "PLANT_COVERAGE_NO_INVENTORY",
+      "message": "Neither api-map (read at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensors/inventory_api/api-map.json or /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_api/api-map.json) nor routes-inventory (read at /Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensors/inventory_routes/routes-*.json or /Volumes/Development/.codex/worktrees/a97-scorecard/detran/record/proofs/sensors/inventory_routes/routes-*.json) found. Run 'devai sense run inventory_regeneration' to regenerate the inventory bodies."
+    }
+  ],
+  "metrics": {
+    "endpoint_count": 0,
+    "route_count": 0,
+    "missing_files": 0
+  },
+  "id": "SR-631cf5af15dc9152"
+}

@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import {
   angularCoveragePlugin,
+  nestCoveragePlugin,
   coverageSourcePatterns,
   populationReporter,
   workspacePopulation,
@@ -35,6 +36,16 @@ for (const pkg of population.packages) {
     throw new Error(`COVERAGE_PROJECT_CONFIG_UNSUPPORTED:${pkg}`);
   const originalTest = original.test ?? {};
   const plugins = [...(original.plugins ?? [])];
+  // The aggregate collector must use the production compiler's DI metadata,
+  // including packages whose standalone unit config relies on esbuild alone.
+  // Reuse the ordinary transformer; this does not enable native C6 producers.
+  if (pkg.startsWith('backend/')) {
+    const metadata = plugins.findIndex(
+      (plugin) => plugin?.name === 'detran-ordinary-nest-metadata',
+    );
+    if (metadata < 0) plugins.push(nestCoveragePlugin());
+    else plugins.splice(metadata, 1, nestCoveragePlugin(plugins[metadata]));
+  }
   const jit = plugins.findIndex(
     (plugin) => plugin?.name === 'angular-jit-initializer-apis',
   );

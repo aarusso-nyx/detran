@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-security_scan-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:18.146Z",
+  "finished_at": "2026-10-22T01:13:18.919Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/security_scan/SR-94d55faaafb86baf.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-94d55faaafb86baf\",\"sensor\":{\"name\":\"security-scan\",\"kind\":\"security_scan\"},\"timestamp\":\"2026-10-21T23:51:27.775Z\",\"status\":\"fail\",\"deterministic\":false,\"command\":\"pnpm audit --json\",\"command_hash\":\"f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247\",\"tier\":\"L0\",\"exit_code\":1,\"findings\":[{\"severity\":\"error\",\"code\":\"SECURITY_SCAN_HIGH_OVER_THRESHOLD\",\"message\":\"8 high-severity vulnerabilities exceed REVIEW threshold 5.\"}],\"metrics\":{\"tool\":\"pnpm\",\"total_vulnerabilities\":37,\"critical\":0,\"high\":8,\"moderate\":25,\"low\":4,\"info\":0,\"pass_max_high\":0,\"review_max_high\":5}}}}}\n",
+  "stderr": ""
+}

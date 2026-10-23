@@ -70,6 +70,7 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0055](ADR-0055-scorecard-harness-and-historical-compatibility.md) | Executable invariant producers and additive historical compatibility                    | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0056](ADR-0056-source-bound-security-invariants.md)               | Source-bound RBAC and error-semantics invariants                                        | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0057](ADR-0057-partial-security-governance-delivery.md)           | Partial C5/C7/C8 delivery; all-nine native C6 activation remains blocked WIP            | Accepted | —                                                                                 |
+| [ADR-0058](ADR-0058-scorecard-collector-fidelity.md)                   | Preserve compiler metadata and runtime names in scorecard collection                    | Accepted | —                                                                                 |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
 
@@ -107,3 +108,7 @@ não uma citação, e não muda.
 ## Completion-plan proposal
 
 - [ADR-0042: Reconcile one DETRAN completion baseline](ADR-0042-completion-plan-rebaseline.md) — **Accepted**, Owner approved P1–P3 on 2026-10-18; implementation paused pending exact P4 packet approval.
+
+## Scorecard measurement fidelity
+
+- [ADR-0058: Preserve compiler metadata and runtime names in scorecard collection](ADR-0058-scorecard-collector-fidelity.md) — Architect, R-0042; measurement only, C6 held.

@@ -12,6 +12,8 @@ import {
 import { createRequire } from 'node:module';
 import { dirname, join, matchesGlob, relative, resolve } from 'node:path';
 import istanbulCoverage from 'istanbul-lib-coverage';
+import { transformWithEsbuild } from 'vite';
+import { createNestMetadataPlugin } from '../../tools/security/invariants/nest-metadata-transform.mjs';
 
 const { createCoverageMap, createFileCoverage } = istanbulCoverage;
 const coverageLibraryVersion = createRequire(import.meta.url)(
@@ -21,6 +23,30 @@ const coverageLibraryVersion = createRequire(import.meta.url)(
 // Node's default heap. Keep at most two unchanged program contexts; evicted apps
 // rebuild from the same canonical configurations on the next transform.
 const angularPrograms = new Map();
+
+function preserveCompilerIdentity(code, map, id) {
+  return transformWithEsbuild(
+    code,
+    id,
+    { loader: 'js', target: 'esnext', keepNames: true, sourcemap: true },
+    map,
+  );
+}
+
+// Adapt the existing ordinary compiler only at the aggregate collector boundary.
+// Its source admission, compiler flags and refusal behavior remain unchanged.
+export function nestCoveragePlugin(plugin = createNestMetadataPlugin()) {
+  return {
+    ...plugin,
+    name: 'scorecard-nest-original-source-map',
+    async transform(code, id) {
+      const result = await plugin.transform.call(this, code, id);
+      return result === null
+        ? null
+        : preserveCompilerIdentity(result.code, result.map, id);
+    },
+  };
+}
 
 export function coverageExclusions(root) {
   // The installed contract admits literal repository paths, never globs.
@@ -104,7 +130,7 @@ export async function angularCoveragePlugin(root, app) {
   return {
     name: 'scorecard-angular-original-source-map',
     enforce: 'pre',
-    transform(_code, id) {
+    async transform(_code, id) {
       if (
         !id.endsWith('.ts') ||
         id.includes('node_modules') ||
@@ -160,7 +186,10 @@ export async function angularCoveragePlugin(root, app) {
       );
       if (result.emitSkipped || code === undefined || map === undefined)
         throw new Error(`COVERAGE_ORIGINAL_SOURCE_MAP_MISSING:${id}`);
-      return { code, map: JSON.parse(map) };
+      // The compiler's decorator emit introduces nested class expressions.
+      // Preserve their original runtime names before Vite rewrites SSR scopes,
+      // composing the generated map with the original TypeScript source map.
+      return preserveCompilerIdentity(code, JSON.parse(map), id);
     },
   };
 }
