@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-plant_depth.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:50:49.753Z",
+  "finished_at": "2026-10-22T02:50:51.359Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/plant_depth/SR-2bb83fe7a43aa772.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"plant-depth\",\"kind\":\"plant_depth\"},\"timestamp\":\"2026-10-22T02:50:49.461Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-plant-depth\",\"command_hash\":\"f81f3e093e5840c1b2aa12c9a06f4d9eca6254edf05460d901005813c218f4c2\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"files_count\":3156,\"lines_total\":427073,\"lines_max\":6656,\"lines_mean\":135,\"lines_p95\":427,\"threshold_pass\":500,\"threshold_review\":1000},\"id\":\"SR-2bb83fe7a43aa772\"}}}}\n",
+  "stderr": ""
+}

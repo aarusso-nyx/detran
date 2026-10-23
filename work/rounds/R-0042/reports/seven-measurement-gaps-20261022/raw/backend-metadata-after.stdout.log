@@ -1,0 +1,59 @@
+
+ RUN  v4.1.11 /Volumes/Development/.codex/worktrees/scorecard-0e26/detran
+
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-case-behavioral-matrix.spec.ts (105 tests) 1595ms
+     ✓ dado admit válido quando é confirmado então devolve ETag, evento e auditoria completos  1510ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-case-command-contract.spec.ts (38 tests) 69ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-case-delivery-c3.spec.ts (6 tests) 4ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-case-di-c4.spec.ts (1 test) 857ms
+     ✓ dado o módulo RAIT quando Nest carrega os seis providers concretos então a composição é carregável  856ms
+ ✓ |backend/domains/inf/rait-case| src/handwritten/rait-document-trust-worklist.spec.ts (1 test) 358ms
+     ✓ dado a manifestação preparada pelo serviço documental quando a fachada RAIT a delega então não a confunde com verificação de assinatura  357ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/cetran-receipt.schema.spec.ts (2 tests) 369ms
+     ✓ dado recebimento CETRAN quando receive é executado então preserva o corpo canônico e devolve a ETag do serviço  366ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-jw01-admissibility.spec.ts (19 tests) 7ms
+ ✓ |backend/domains/inf/rait-case| tests/unit/rait-session-transition-port.spec.ts (3 tests) 4ms
+ ❯ |backend/domains/portal/citizen-service| src/handwritten/manifestation.service.spec.ts (11 tests | 10 failed) 9ms
+     × C-0002-40 — dado kind 'xyz' quando manifest então 400 PORTAL.MANIFESTATION_KIND_INVALID { allowed: [5 tokens] }; dado kind ausente idem 4ms
+     × C-0002-40 — dado corpo sem text, com campo extra e attachmentIds inválido então NÃO recusa (RN-PORTAL-109): text '' e extras ignorados 0ms
+     × C-0002-41 — dado manifest anônimo então state 'COMPROVANTE_EMITIDO', protocol na gramática do §3.3, received_at = relógio, agency_due_on = today + durationOf('T-OUV-RESPOSTA') (lido, não 30), subject_id null, MANIFESTACAO_REGISTRADA com actor.id = PORTAL_PUBLIC_ACTOR_ID 0ms
+     × C-0002-41 — dado manifest sem Idempotency-Key então 400 PORTAL.VALIDATION_FAILED { fields: ["Idempotency-Key"] } (M9, escopo public) 0ms
+     × C-0002-42 — dado identity presente e anonymous false então subject_id = subject; dado identity presente e anonymous true então subject_id null e anonymous true 0ms
+     × C-0002-43 — dado acknowledge × 9 estados então só CIENCIA_AO_USUARIO passa (→ AVALIACAO_OFERECIDA na mesma transação, acknowledged_at, MANIFESTACAO_ENCERRADA); demais 409 PORTAL.MANIFESTATION_STATE_INVALID { state, allowed: ['CIENCIA_AO_USUARIO'] } 1ms
+     × §2.6 — dado manifestação de outro sujeito quando acknowledge então 404 PORTAL.NOT_FOUND { kind: 'manifestation' } 0ms
+     × C-0002-44 — dado evaluate manifestação em EM_ANALISE então 409 PORTAL.EVALUATION_NOT_OFFERED { state: 'EM_ANALISE' } 0ms
+     × C-0002-44 — em AVALIACAO_OFERECIDA então portal.evaluation (subject_kind 'manifestation'), 'AVALIADA', AVALIACAO_REGISTRADA sem scores no data; segunda então 409 EVALUATION_ALREADY_SUBMITTED 0ms
+     × C-0002-44 — dado subjectKind 'request' então delega a PortalRequestsService.evaluate (spy); dado manifestação de outro sujeito então 404 { kind: 'manifestation' }; sem Idempotency-Key então 400 0ms
+     ✓ C-0002-45 — dado portal-timers.ts então PORTAL_TIMER_CODES = exatamente os quatro códigos owner=portal de DDL 14 (M14) 0ms
+ ✓ |backend/domains/portal/citizen-service| src/handwritten/guards/manifestation.transitions.spec.ts (67 tests) 7ms
+ ❯ |backend/domains/portal/inbox| src/handwritten/inbox.service.spec.ts (13 tests | 11 failed) 8ms
+     ✓ C-0002-33 — dado availableOn 2026-09-01 quando fictitiousAcknowledgementOn então available + duração de T-SNE-CIENCIA lida de StaticTimerCatalog 1ms
+     × C-0002-34 — dado item source 'sne' não lido quando read então read_on = today, acknowledgement_evidence (displayed_sha256 = sha256 do canonicalJson exibido), INBOX_LIDO e NOTIFICACAO_CIENCIA na outbox; quando read de novo então nenhuma escrita e mesma resposta 3ms
+     × C-0002-35 — dado item source 'portal' quando read então read_on, INBOX_LIDO, sem evidência e sem NOTIFICACAO_CIENCIA 1ms
+     × §6.1 — dado item de outro sujeito ou inexistente quando read então 404 PORTAL.NOT_FOUND { kind: 'inbox_item' } e nenhuma escrita 0ms
+     × C-0002-36 — dado enroll sem email e sem phone então 422 SNE_CONTACT_REQUIRED { missing: ['email','phone'] } 0ms
+     × C-0002-36 — dado effectsAck com 3 efeitos então 400 VALIDATION_FAILED { fields: ['consent.effectsAck'] }; efeitos repetidos idem 0ms
+     × C-0002-36 — dado identity 'simples' então 403 ASSURANCE_INSUFFICIENT { actKey: 'adesao_sne', resumeRoute: '/v1/portal/sne/enrollment' } (A1(a)) 0ms
+     × C-0002-36 — dado ADERIDO_SNE então 409 SNE_ALREADY_ENROLLED {} 0ms
+     × C-0002-36 — dado NAO_ADERIDO_SNE (cancelada) então re-adesão com since novo e cancelled_at null; effects_ack = os quatro true; SNE_ADESAO_SOLICITADA 0ms
+     ✓ §6.2 — dado SNE_ENROLLMENT_TRANSITIONS então as três linhas de CTG-0001 §6.3 (enroll de nada e de NAO_ADERIDO_SNE; cancel de ADERIDO_SNE) 0ms
+     × C-0002-37 — dado cancel sem linha então 409 SNE_NOT_ENROLLED {}; dado NAO_ADERIDO_SNE idem 0ms
+     × C-0002-37 — dado ADERIDO_SNE então NAO_ADERIDO_SNE, cancelled_at, cancel_reason, SNE_CANCELAMENTO_SOLICITADO com aggregate.version = 2 (adesão = 1) 0ms
+     × C-0002-37 — dado identity 'simples' quando cancel então 403 ASSURANCE_INSUFFICIENT { actKey: 'cancelamento_sne' } 0ms
+ ✓ |backend/domains/portal/projections| src/handwritten/infraction-view.projection.spec.ts (16 tests | 1 todo) 25ms
+ ❯ |backend/domains/portal/projections| src/handwritten/points-view.projection.spec.ts (5 tests | 1 failed) 17ms
+     ✓ C-0002-53 — dado PENALIDADE_DEFINITIVA points 4 sobre ait com view (…f0000009, cpf da qualificada) então definitive_points += 4, last_12_months_json e by_vehicle_json 9ms
+     ✓ C-0002-53 — dado a linha …71000001 da prata (definitive 3, disputed 4) então += acumula sobre o existente e disputed_points não muda 1ms
+     ✓ C-0002-53 — dado ait sem view então last_error 'PORTAL.INTERNAL:infraction_view:<aitId>' e nenhuma linha 1ms
+     × C-0002-53 — dado finalOn há mais de 12 meses então fora de last_12_months_json (janela addCalendarMonths(today, -12)), mas os pontos contam 4ms
+     ✓ §7.1 — dado o mesmo PENALIDADE_DEFINITIVA duas vezes então skipped 'already_applied' e definitive_points não dobra 1ms
+ ✓ |backend/domains/portal/projections| src/handwritten/exam-view.projection.spec.ts (3 tests) 10ms
+ ✓ |backend/domains/portal/projections| src/handwritten/crash-view.projection.spec.ts (3 tests) 11ms
+ ✓ |backend/domains/portal/projections| src/handwritten/process-timeline.projection.spec.ts (6 tests) 36ms
+
+ Test Files  3 failed | 13 passed (16)
+      Tests  22 failed | 276 passed | 1 todo (299)
+   Start at  12:02:24
+   Duration  11.15s (transform 2.49s, setup 100ms, import 6.31s, tests 3.39s, environment 1ms)
+
+JSON report written to /Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/local/rounds/R-0036/coverage-runs/1792681343966-11484/test-results.json

@@ -1,0 +1,19 @@
+{
+  "scope": "Follow-up proposals only; no product fix or existing product backlog edit",
+  "findings": [
+    {
+      "id": "FOLLOWUP-CDT-RECOGNITION",
+      "observation": "SENATRAN mock national-extensions E2E expected200 for40percent recognition; actual402.",
+      "test": "senatran-mock/tests/e2e/national-extensions.e2e.spec.ts:193",
+      "owner": "Engineer / Inspector",
+      "next_action": "Diagnose current fixture state, guards and test isolation before proposing any product change. Preserve assertions."
+    },
+    {
+      "id": "FOLLOWUP-RENACH-IDEMPOTENCY",
+      "observation": "SENATRAN mock RENACH medical exam idempotency E2E expected201; actual402.",
+      "test": "senatran-mock/tests/e2e/renach-workflow.e2e.spec.ts:101",
+      "owner": "Engineer / Inspector",
+      "next_action": "Diagnose current fixture/profile state and guard refusal before proposing any product change. Preserve assertions."
+    }
+  ]
+}

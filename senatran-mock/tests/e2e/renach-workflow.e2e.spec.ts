@@ -1,21 +1,22 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { createE2eApp, AUTH, type TestApp } from '../utils/e2e-app.js';
+import { createWorkflowFixture } from '../utils/workflow-fixtures.js';
 
 /**
  * INV-RENACH-001 — RENACH process read, reference lists, an idempotent exam
- * registration, and the NOT_FOUND envelope. Assumes a fresh `pnpm db:reset`
- * (process RS123456789 seeded at AGUARDANDO_MEDICO).
+ * registration, and the NOT_FOUND envelope. Requires the canonical seed; each
+ * run copies RS123456789 into its own AGUARDANDO_MEDICO process.
  */
 let ctx: TestApp;
+let PROC: string;
 beforeAll(async () => {
   ctx = await createE2eApp();
+  PROC = await createWorkflowFixture('renach');
 });
 afterAll(async () => {
   await ctx.close();
 });
-
-const PROC = 'RS123456789';
 
 describe('renach workflow (INV-RENACH-001)', () => {
   it('GET processo → 200 with string situacao', async () => {

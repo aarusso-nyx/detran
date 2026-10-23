@@ -1,0 +1,85 @@
+{
+  "status": "prepared-not-executed",
+  "round": "R-0042",
+  "prerequisites": [
+    "Official immutable provider release identity verified; no workspace link or local tarball substitution",
+    "Approved adoption configuration committed on a separate source epoch",
+    "Node v24.20.0; installed package migrations and doctor pass",
+    "Unchanged input roots, seven original task descriptors, thresholds and N/A; C6 producers inactive"
+  ],
+  "adoption_commands": [
+    [
+      "pnpm",
+      "add",
+      "-Dw",
+      "--save-exact",
+      "@aarusso-nyx/devai@2.6.4"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "init",
+      "upgrade",
+      "--target",
+      ".",
+      "--as-role",
+      "architect",
+      "--format",
+      "json"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "init",
+      "upgrade",
+      "--target",
+      ".",
+      "--as-role",
+      "architect",
+      "--write",
+      "--format",
+      "json"
+    ],
+    [
+      "pnpm",
+      "exec",
+      "devai",
+      "init",
+      "bind",
+      "--target",
+      ".",
+      "--adopter-policy",
+      "law/policy/adopter-policy.json",
+      "--as-role",
+      "architect",
+      "--write",
+      "--format",
+      "json"
+    ],
+    [
+      "pnpm",
+      "devai:doctor"
+    ]
+  ],
+  "measurement_sequence": [
+    "Generate prerequisite inventory, build, migration, original complete tests/coverage and approved performance artifacts using declared role and supported command. Keep C6 native service producers inactive.",
+    "Execute canonical first pass excluding task-backed and regeneration sensors; execute those separately under their registered role and local-write effect. Include all five repaired static sensors with unchanged declared populations.",
+    "For EACH emission: capture raw envelope, validate against installed schema, verify frozen source/input/provider identity, immediately sense record as Inspector before any next sensor. If record fails stop; preserve the attempt and do not recollect into the same lineage.",
+    "Run and immediately record second-pass store readers harness_invariant_alignment and inventory_performance; record unsupported or missing evidence as gaps without activating C6.",
+    "Run audit scorecard --repo-root . --at <new-40-character-frozen-sha> --format json; reconcile exactly 45 unique coordinates: 43 applicable plus existing F1:T1 and F4:T5 N/A.",
+    "Verify evidence chain and all preservation hashes. Report fresh measured count separately from verdict counts and blockers; keep earlier assessment and product backlog untouched."
+  ],
+  "canonical_command_templates": {
+    "run": "pnpm exec devai sense run <sensor> --repo-root . --round R-0042 --input <unchanged-declared-input-json> --format json",
+    "record": "pnpm exec devai sense record --repo-root . --input <exact-emitted-reading-file> --as-role inspector --write --format json",
+    "chain": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human"
+  },
+  "stop_conditions": [
+    "Any threshold, input population, N/A, closed-round or historical proof change",
+    "Any C6 producer activation or native custody claim without separate security disposition",
+    "Missing official package identity, independent review, release authority, rehearsal or mandatory check",
+    "Stale input/report, interrupted command, schema mismatch, failed persistence or ambiguous reading lineage"
+  ]
+}

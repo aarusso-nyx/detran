@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "docs_drift",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:52:54.172Z",
+  "finished_at": "2026-10-22T02:52:55.766Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"docs_drift\"},\"members\":[{\"kind\":\"docs_drift\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"docs_drift\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run docs_drift\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"docs-drift\\\",\\\"kind\\\":\\\"docs_drift\\\"},\\\"timestamp\\\":\\\"2026-10-22T02:52:55.490Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-docs-drift\\\",\\\"command_hash\\\":\\\"d4eb8adce11fa0786742effb54c913b93dccac3cd1fb44c6b8258decdad01d01\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\\\",\\\"message\\\":\\\"README.md carries no schema-count claim (preferred state).\\\",\\\"file\\\":\\\"README.md\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"DOCS_DRIFT_NO_SCHEMA_COUNT_CLAIM\\\",\\\"message\\\":\\\"CLAUDE.md carries no schema-count claim (preferred state).\\\",\\\"file\\\":\\\"CLAUDE.md\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"DOCS_DRIFT_NO_DECISION_RANGE_CLAIM\\\",\\\"message\\\":\\\"README.md carries no decision-range claim (preferred state).\\\",\\\"file\\\":\\\"README.md\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"DOCS_DRIFT_CAP_CHECK_DISABLED\\\",\\\"message\\\":\\\"worktree_cap_source not configured; cap-coherence check skipped.\\\"}],\\\"metrics\\\":{\\\"schema_file_count\\\":121,\\\"claims_checked\\\":2,\\\"drift_count\\\":0},\\\"id\\\":\\\"SR-60d979f0af2f5b73\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

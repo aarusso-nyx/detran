@@ -1,15 +1,18 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { createE2eApp, AUTH, type TestApp } from '../utils/e2e-app.js';
+import { createWorkflowFixture } from '../utils/workflow-fixtures.js';
 
 /**
  * SNE / CDT / DETRAN-bridge national extensions (INV-SNE/CDT/DETRAN-001): auth,
  * the adherence/discount/profile business rules, idempotency and the magic-key
- * 500s. Assumes a fresh `pnpm db:reset`.
+ * 500s. Requires the canonical seed; the recognition write uses a per-run copy.
  */
 let ctx: TestApp;
+let recognitionAit: string;
 beforeAll(async () => {
   ctx = await createE2eApp();
+  recognitionAit = await createWorkflowFixture('cdt');
 });
 afterAll(async () => {
   await ctx.close();
@@ -189,7 +192,10 @@ describe('CDT (INV-CDT-001)', () => {
   });
 
   it('reconhecimento of a 40% infraction → 200 RECONHECIDA', async () => {
-    const res = await post('/v1/cdt/infracoes/A0001001/reconhecimento', {});
+    const res = await post(
+      `/v1/cdt/infracoes/${recognitionAit}/reconhecimento`,
+      {},
+    );
     expect(res.status).toBe(200);
     expect(res.body.situacao).toBe('RECONHECIDA');
     expect(res.body.percentualDesconto).toBe(40);

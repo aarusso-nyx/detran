@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "spec-security-coverage",
+    "kind": "spec_security_coverage"
+  },
+  "timestamp": "2026-10-21T23:54:58.344Z",
+  "status": "review",
+  "deterministic": true,
+  "command": "devai sense-spec-security-coverage",
+  "command_hash": "16dea51ec07b7477c4c4ca65b9f7fc90fe8fa63bf79b92be28f52777e37b065c",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "warning",
+      "code": "SPEC_SECURITY_NO_PII_REGISTRY",
+      "message": "No `INSERT INTO core.pii_map` row found across migration dirs: backend/database/ddl, senatran-mock/database/ddl"
+    }
+  ],
+  "metrics": {
+    "threat_model_present": 1,
+    "pii_registry_present": 0,
+    "rbac_invariant_present": 1,
+    "signals_present": 2
+  },
+  "id": "SR-b48d337a6ac49536"
+}

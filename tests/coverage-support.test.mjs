@@ -93,7 +93,7 @@ test('emits original mapped JavaScript for the BOAT library configuration', asyn
   const plugin = await angularCoveragePlugin(root, 'apps/boat/mobile');
   const file = join(root, 'apps/boat/mobile/src/lib/a11y.ts');
   const original = readFileSync(file, 'utf8');
-  const result = plugin.transform(original, file);
+  const result = await plugin.transform(original, file);
   assert.ok(result);
   assert.match(result.code, /export async function assertBoatA11y/);
   assert.doesNotMatch(result.code, /Readonly|Promise<boolean>/);

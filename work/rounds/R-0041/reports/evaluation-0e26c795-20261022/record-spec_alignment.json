@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-spec_alignment.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:50:32.623Z",
+  "finished_at": "2026-10-22T02:50:34.478Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/spec_alignment/SR-df0841ca9167236a.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"spec-alignment\",\"kind\":\"spec_alignment\"},\"timestamp\":\"2026-10-22T02:50:32.277Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-spec-alignment\",\"command_hash\":\"973b1e07803f8c106ec5529818013f9d2edfef33dfe8c1571eb8d9e3b06ef858\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"SPEC_ALIGNMENT_REVERSE_BELOW_THRESHOLD\",\"message\":\"Reverse-claim ratio 12.2% is below threshold 80% (386 / 3156 source files claimed).\"}],\"metrics\":{\"invariants_scanned\":12,\"invariants_broken_forward\":0,\"source_files_scanned\":3156,\"source_files_claimed\":386,\"reverse_pct\":12.23,\"reverse_threshold_pct\":80},\"id\":\"SR-df0841ca9167236a\"}}}}\n",
+  "stderr": ""
+}

@@ -1,0 +1,126 @@
+{
+  "source_head": "f26f26bc31538cbd69ec912b881a8df0fa105f76",
+  "baseline": "a1521a781d1e0b8119542cc787125148b8656297",
+  "required_gate_exit": 1,
+  "receipt_refusal": "task-population-not-pass",
+  "nodes": [
+    {
+      "nodeId": "generate",
+      "outcome": "PASS",
+      "durationMs": 0
+    },
+    {
+      "nodeId": "test:authority",
+      "outcome": "PASS",
+      "durationMs": 0
+    },
+    {
+      "nodeId": "build",
+      "outcome": "PASS",
+      "durationMs": 11202,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:package-staging",
+      "outcome": "PASS",
+      "durationMs": 12294,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:cli",
+      "outcome": "FAIL",
+      "durationMs": 438694,
+      "exitCode": 1
+    },
+    {
+      "nodeId": "test:evidence",
+      "outcome": "PASS",
+      "durationMs": 12508,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:loop",
+      "outcome": "PASS",
+      "durationMs": 52249,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:sensors",
+      "outcome": "PASS",
+      "durationMs": 18940,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:schemas",
+      "outcome": "PASS",
+      "durationMs": 2815,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:skills",
+      "outcome": "PASS",
+      "durationMs": 20145,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:spec",
+      "outcome": "PASS",
+      "durationMs": 10430,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "test:root",
+      "outcome": "FAIL",
+      "durationMs": 95018,
+      "exitCode": 1
+    },
+    {
+      "nodeId": "format",
+      "outcome": "PASS",
+      "durationMs": 22893,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "release:static-integrity",
+      "outcome": "PASS",
+      "durationMs": 314,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "release:closure",
+      "outcome": "PASS",
+      "durationMs": 795,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "law:validate",
+      "outcome": "PASS",
+      "durationMs": 880,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "lint",
+      "outcome": "PASS",
+      "durationMs": 12627,
+      "exitCode": 0
+    },
+    {
+      "nodeId": "typecheck",
+      "outcome": "PASS",
+      "durationMs": 13348,
+      "exitCode": 0
+    }
+  ],
+  "focused_population_tests_passed": 61,
+  "adapter_declaration_tests_passed": 102,
+  "ADR_closure_tests_passed": 101,
+  "workspace_build_exit": 0,
+  "sensor_typecheck_exit": 0,
+  "persistent_failed_tests": {
+    "test:cli": 48,
+    "test:root": 10
+  },
+  "attribution": "Native code is byte-identical to upstream baseline; no full baseline reproduction or independent security verdict claimed.",
+  "source_publication": "Blocked by mandatory hook; no alternate push/PR/source publication attempted.",
+  "C6": "blocked; no native source, protocol, invariant binding or producer activation changed"
+}

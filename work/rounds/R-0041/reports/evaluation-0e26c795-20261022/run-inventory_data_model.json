@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_data_model",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"migrationDirs\":[\"backend/database/ddl\",\"senatran-mock/database/ddl\"]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:31:21.091Z",
+  "finished_at": "2026-10-22T02:31:22.649Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_data_model\"},\"members\":[{\"kind\":\"inventory_data_model\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_data_model\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_data_model\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-e043af26b4e82bb2\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory:data-model\\\",\\\"kind\\\":\\\"inventory_data_model\\\",\\\"version\\\":\\\"1.0.0\\\"},\\\"timestamp\\\":\\\"2026-10-22T02:31:22.370Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense data-model --repo-root /Volumes/Development/.codex/worktrees/scorecard-0e26/detran\\\",\\\"command_hash\\\":\\\"5682c2edff4d0889dcf5c781f839a92612030bb2ad9f134d9c561f8ef0f939a5\\\",\\\"tier\\\":\\\"L0\\\",\\\"duration_ms\\\":98,\\\"metrics\\\":{\\\"table_count\\\":363,\\\"column_count\\\":4122,\\\"foreign_key_count\\\":323,\\\"migration_file_count\\\":83,\\\"tables_hash\\\":\\\"8b46dad6a0c5d54ea16752dab1c669eb6057b66ebbc3b432bee975932602f993\\\",\\\"dialect\\\":\\\"postgres\\\"}}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

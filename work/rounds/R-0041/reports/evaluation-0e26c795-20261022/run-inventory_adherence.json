@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_adherence",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:49:49.405Z",
+  "finished_at": "2026-10-22T02:49:51.323Z",
+  "exitCode": 3,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_adherence\"},\"members\":[{\"kind\":\"inventory_adherence\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_adherence\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run inventory_adherence\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory-adherence\\\",\\\"kind\\\":\\\"inventory_adherence\\\"},\\\"timestamp\\\":\\\"2026-10-22T02:49:51.033Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-inventory-adherence\\\",\\\"command_hash\\\":\\\"7f08cb76c9a1f4dc2bd5d1be86f022c6ed87e3b49baad79246eed300c7cccfd6\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_BELOW_THRESHOLD\\\",\\\"message\\\":\\\"5460 orphans exceed max_orphans=50.\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-d66d3fde\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-35ccb6d0\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-b917f7b8\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-423a8b1a\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-5e8da48c\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-53854274\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-2f917f72\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-04b00238\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-4d8a0d33\\\",\\\"file\\\":\\\"\\\"},{\\\"severity\\\":\\\"info\\\",\\\"code\\\":\\\"INVENTORY_ADHERENCE_ORPHAN\\\",\\\"message\\\":\\\"Unclaimed route: ROUTE-335a4e33\\\",\\\"file\\\":\\\"\\\"}],\\\"metrics\\\":{\\\"total_count\\\":6138,\\\"claimed_count\\\":678,\\\"orphan_count\\\":5460,\\\"max_orphans\\\":50},\\\"id\\\":\\\"SR-ee404dcb60cb1be7\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

@@ -1,0 +1,61 @@
+{
+  "round": "R-0043",
+  "source_commit": "912e074836793d9c703ab7ca485f1a9766a0c86d",
+  "status": "local-validation-complete; pending PR review/CI/integration",
+  "scope": "Inspector test fixtures only; no runtime or dependency changes",
+  "cause": "State-changing E2E consumed canonical shared seeds A0001001 and RS123456789; fresh focused run passes but repeated run on same DB fails with the exact two HTTP402 responses.",
+  "correction": "Clone canonical workflow rows with per-run unique IDs and initial states for writing. Preserve shared seeds, production guards, test cases and assertions.",
+  "red": {
+    "fresh_focused": {
+      "passed": 37,
+      "failed": 0
+    },
+    "repeated_focused": {
+      "passed": 35,
+      "failed": 2
+    }
+  },
+  "green": {
+    "focused_on_consumed_db": {
+      "passed": 37,
+      "failed": 0
+    },
+    "complete_mock_ci": {
+      "unit_passed": 119,
+      "integration_passed": 14,
+      "e2e_passed": 113
+    },
+    "repeated_complete_e2e": {
+      "passed": 113,
+      "failed": 0
+    },
+    "official_test_record": {
+      "id": "TR-01M5KFHQBRGDDFRR91R4Z8Z9F8",
+      "command": "pnpm --dir senatran-mock test:e2e",
+      "status": "pass",
+      "node": "v24.20.0",
+      "source_commit": "912e074836793d9c703ab7ca485f1a9766a0c86d"
+    },
+    "mock_check": "pass; one preexisting unused-eslint-disable warning",
+    "format": "pass"
+  },
+  "existing_assertions": {
+    "preserved": 88,
+    "existing_tests_removed": 0,
+    "thresholds_changed": false,
+    "timeout_budgets_changed": false
+  },
+  "disposable_target": {
+    "container": "detran-e2e-remediation-20261023",
+    "host": "127.0.0.1",
+    "port": 55443,
+    "database": "detran_e2e_remediation_20261023",
+    "shared_database_modified": false
+  },
+  "limitations": [
+    "These are test/diagnostic results, not new native scorecard readings. Fresh full grid requires its own frozen source epoch.",
+    "Round remains active; no closure or readiness claim.",
+    "Known unrelated lint warning retained; other remediation packages remain separate."
+  ],
+  "C6": "blocked; invariant bindings, producer declarations and withheld native protocol untouched"
+}
