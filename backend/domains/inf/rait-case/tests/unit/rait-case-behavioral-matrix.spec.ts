@@ -1076,7 +1076,7 @@ describe('CTG-0001 §3 — matriz comportamental integral de envelope e isolamen
     });
   }
 
-  for (const [command, role, payload, next] of INQUIRY_COMMANDS) {
+  for (const [command, role, payload] of INQUIRY_COMMANDS) {
     it(`dado ${command} válido quando é confirmado então devolve ETag, eventos e auditoria completos`, async () => {
       const subject = await inquirySubject(role);
       await expect(

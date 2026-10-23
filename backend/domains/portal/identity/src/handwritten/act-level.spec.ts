@@ -10,12 +10,7 @@
 // TASK-0004 escrever.
 import { describe, expect, it } from 'vitest';
 
-import {
-  assertActLevel,
-  assuranceRank,
-  PORTAL_ELEVATION_METHODS,
-  PortalError,
-} from './index.js';
+import { assertActLevel, assuranceRank, PortalError } from './index.js';
 
 interface FakePolicyRow {
   id: string;

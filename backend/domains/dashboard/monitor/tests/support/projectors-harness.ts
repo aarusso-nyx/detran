@@ -366,7 +366,8 @@ export function runProjectionContractSuite(
       const tx = new FakeDashboardTx();
       const ctx = fakeContext(tx);
       const projector = createProjector();
-      const { [requiredDataField]: _removed, ...rest } = validEvent.data;
+      const rest = { ...validEvent.data };
+      Reflect.deleteProperty(rest, requiredDataField);
       const invalid = { ...validEvent, data: rest };
 
       await expect(projector.apply(invalid, ctx)).rejects.toMatchObject({

@@ -546,7 +546,8 @@ export interface ProviderOverride {
  */
 export class E2eFixedClock {
   readonly tz = FIXED_TZ;
-  today(_tenantTz?: string): string {
+  today(_tenantTz?: string): string;
+  today(): string {
     return FIXED_TODAY;
   }
   now(): Date {

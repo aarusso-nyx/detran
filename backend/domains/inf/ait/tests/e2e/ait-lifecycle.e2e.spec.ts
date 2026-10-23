@@ -37,7 +37,9 @@ function context(tenantId: string, actorId: string) {
 
 function database(tenantId: string, actorId: string) {
   return {
-    async tx<T>(work: (transaction: unknown) => Promise<T>) {
+    async tx<T>(
+      work: (transaction: { query: typeof client.query }) => Promise<T>,
+    ) {
       await client.query('begin');
       try {
         await client.query('set local role role_app_backend');
@@ -123,7 +125,7 @@ describe('AIT lifecycle', () => {
       description: 'Infraction framing',
       status: 'active',
     });
-    const fixture = await dbA.tx(async (tx: any) => {
+    const fixture = await dbA.tx(async (tx) => {
       const vehicle = await tx.query(
         `insert into ops.snapshots_vehicle (plate, source) values ('BRA2E19', 'e2e') returning id`,
       );

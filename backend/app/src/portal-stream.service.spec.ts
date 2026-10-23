@@ -222,17 +222,20 @@ describe('CTG-0002 §9 — PortalStreamService (C-0002-60)', () => {
     expect(reshape(TOPIC.paymentConfirmed, payment)).toEqual({ aitId: AIT_ID });
 
     // sem produtor nesta rodada (OD-P40): envelope sem domainEvent, como rait.inquiry.changed
-    const { domainEvent: _none, ...inbox } = envelope(
-      TOPIC.inboxItem,
-      '',
-      { kind: 'portal.inbox_item', id: INBOX_ID, version: 1 },
-      {
-        id: INBOX_ID,
-        kind: 'acao_necessaria',
-        subjectId: SUBJECT_ID,
-        subjectCpfHash: CPF_HASH,
-      },
-    );
+    const inbox = {
+      ...envelope(
+        TOPIC.inboxItem,
+        '',
+        { kind: 'portal.inbox_item', id: INBOX_ID, version: 1 },
+        {
+          id: INBOX_ID,
+          kind: 'acao_necessaria',
+          subjectId: SUBJECT_ID,
+          subjectCpfHash: CPF_HASH,
+        },
+      ),
+    };
+    Reflect.deleteProperty(inbox, 'domainEvent');
     expect(reshape(TOPIC.inboxItem, inbox)).toEqual({
       id: INBOX_ID,
       kind: 'acao_necessaria',

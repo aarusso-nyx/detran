@@ -688,7 +688,12 @@ export class SqlCapture {
     this.statements.length = 0;
     this.active = true;
     if (this.original) return;
-    const capture = this;
+    const captureStatement = (client: unknown, args: unknown[]): void => {
+      if (this.active && client !== this.excluded) {
+        const text = statementText(args[0]);
+        if (text) this.statements.push(text);
+      }
+    };
     const prototype = pg.Client.prototype as unknown as { query: QueryFn };
     this.original = prototype.query;
     const original = this.original;
@@ -696,10 +701,7 @@ export class SqlCapture {
       this: unknown,
       ...args: unknown[]
     ): unknown {
-      if (capture.active && this !== capture.excluded) {
-        const text = statementText(args[0]);
-        if (text) capture.statements.push(text);
-      }
+      captureStatement(this, args);
       return original.apply(this, args);
     };
   }

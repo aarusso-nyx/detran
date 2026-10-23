@@ -626,7 +626,8 @@ describe('CTG-0002 §7.1 — idempotência por event.id (C-0002-55) e parâmetro
         true,
       );
     }
-    const { aggregate: _aggregate, ...withoutAggregate } = OUTBOX_EVENTS[0]!;
+    const withoutAggregate = { ...OUTBOX_EVENTS[0]! };
+    Reflect.deleteProperty(withoutAggregate, 'aggregate');
     expect(PORTAL_CONSUMED_ENVELOPE.safeParse(withoutAggregate).success).toBe(
       false,
     );

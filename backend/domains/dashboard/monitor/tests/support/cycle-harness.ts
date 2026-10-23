@@ -242,25 +242,29 @@ export class CycleDb {
   ): Promise<void> {
     const seed = await this.alert(seedAlertId);
     if (!seed) throw new Error(`alerta do seed ausente: ${seedAlertId}`);
-    const {
-      id: _id,
-      created_at: _c,
-      updated_at: _u,
-      ...rest
-    } = seed as Row & { id: string; created_at: unknown; updated_at: unknown };
-    await this.insertAlert({ ...rest, ...overrides, id: newId });
-    const trail = await this.trail(seedAlertId);
-    for (const line of trail) {
-      const {
-        id: _tid,
-        created_at: _tc,
-        updated_at: _tu,
-        ...lineRest
-      } = line as Row & {
+    const rest = {
+      ...(seed as Row & {
         id: string;
         created_at: unknown;
         updated_at: unknown;
+      }),
+    };
+    Reflect.deleteProperty(rest, 'id');
+    Reflect.deleteProperty(rest, 'created_at');
+    Reflect.deleteProperty(rest, 'updated_at');
+    await this.insertAlert({ ...rest, ...overrides, id: newId });
+    const trail = await this.trail(seedAlertId);
+    for (const line of trail) {
+      const lineRest = {
+        ...(line as Row & {
+          id: string;
+          created_at: unknown;
+          updated_at: unknown;
+        }),
       };
+      Reflect.deleteProperty(lineRest, 'id');
+      Reflect.deleteProperty(lineRest, 'created_at');
+      Reflect.deleteProperty(lineRest, 'updated_at');
       const columns = Object.keys({ ...lineRest, alert_id: newId });
       const values = { ...lineRest, alert_id: newId } as Row;
       await this.client.query(

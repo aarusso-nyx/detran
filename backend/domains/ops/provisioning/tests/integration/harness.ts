@@ -1,4 +1,9 @@
 import pg from 'pg';
+import type { z } from 'zod';
+import type { schemas } from '../../src/handwritten/provisioning.contract.js';
+
+export type FixtureActs = z.infer<typeof schemas.reconcile>['acts'];
+export type FixtureAgents = z.infer<typeof schemas.issue>['authorized_agents'];
 import { randomUUID, createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -69,7 +74,7 @@ export type Operation =
   | 'readiness'
   | 'revoke'
   | 'reconcile';
-export type CommandReply = { body: Record<string, any>; etag: string };
+export type CommandReply = { body: Record<string, unknown>; etag: string };
 export type FixturePrincipal = {
   subject: string;
   roles: string[];
@@ -82,7 +87,7 @@ export type CommandInput = {
   deviceId: string;
   packageId: string;
   grantId: string;
-  body: Record<string, any>;
+  body: Record<string, unknown>;
   ifMatch?: string;
   idempotencyKey?: string;
   clock: { now: () => Date };
@@ -144,14 +149,23 @@ export async function invokeInFreshProcess(
     ],
   };
   const [file, symbol] = names[operation];
-  const { db: _db, ports: _ports, clock, ...wire } = input;
+  const { clock } = input,
+    wire = { ...input };
+  Reflect.deleteProperty(wire, 'db');
+  Reflect.deleteProperty(wire, 'ports');
+  Reflect.deleteProperty(wire, 'clock');
   const modulePath = fileURLToPath(
     new URL(`../../src/handwritten/${file}.ts`, import.meta.url),
   );
   const tsconfigPath = fileURLToPath(
     new URL('./tsconfig.fresh-process.json', import.meta.url),
   );
-  const script = `import pg from 'pg'; import { ${symbol} } from ${JSON.stringify(modulePath)};
+  const script = `import pg from 'pg';
+import type { z } from 'zod';
+import type { schemas } from '../../src/handwritten/provisioning.contract.js';
+
+export type FixtureActs = z.infer<typeof schemas.reconcile>['acts'];
+export type FixtureAgents = z.infer<typeof schemas.issue>['authorized_agents']; import { ${symbol} } from ${JSON.stringify(modulePath)};
     void (async () => {
       const input = ${JSON.stringify(wire)};
       const client = new pg.Client({ connectionString: process.env.DETRAN_TEST_DATABASE_URL });
@@ -440,7 +454,7 @@ export class ProofHarness {
   body(
     operation: Operation,
     key = `${this.prefix}-${operation}`,
-  ): Record<string, any> {
+  ): Record<string, unknown> {
     const common = { idempotency_key: key };
     switch (operation) {
       case 'challenge':

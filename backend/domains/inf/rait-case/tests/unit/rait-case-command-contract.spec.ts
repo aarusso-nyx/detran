@@ -881,7 +881,7 @@ describe('CTG-0001 — comandos do caso na porta SQL transacional', () => {
 });
 
 describe('CTG-0001 — diligências na porta SQL transacional', () => {
-  for (const [command, role, payload, state, eventCount] of [
+  for (const [command, role, payload, , eventCount] of [
     [
       'answer',
       'rait-analyst',

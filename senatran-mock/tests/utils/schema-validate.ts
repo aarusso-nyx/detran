@@ -118,7 +118,6 @@ export function loadContract(fileName: string): Contract {
       resolve(here, '../../docs/framework/contracts', fileName),
       'utf8',
     ),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) as any;
 }
 

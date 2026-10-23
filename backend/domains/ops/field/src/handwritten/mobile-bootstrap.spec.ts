@@ -297,16 +297,16 @@ function deps(state: World = world()) {
       snapshot: () => ({ tenantId: TENANT_ID, actorId: AGENT_ID }),
     },
     parameters: {
-      get: vi.fn(
-        async (
+      get: vi.fn<
+        (
           key: string,
-          _options?: Record<string, unknown>,
-        ): Promise<ParameterFixture> => ({
-          key,
-          value_json: 'warn (lavra com flag de risco; autoridade decide)',
-          source_pending: false,
-        }),
-      ),
+          options?: Record<string, unknown>,
+        ) => Promise<ParameterFixture>
+      >(async (key): Promise<ParameterFixture> => ({
+        key,
+        value_json: 'warn (lavra com flag de risco; autoridade decide)',
+        source_pending: false,
+      })),
     },
     outbox: { append: vi.fn(async () => ({ id: 'outbox-row-1' })) },
     clock: { now: () => NOW, today: () => NOW.slice(0, 10) },
