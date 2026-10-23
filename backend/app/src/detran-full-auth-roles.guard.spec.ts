@@ -93,11 +93,23 @@ function roleRead(
   contextFailure?: Error,
 ) {
   let activeScope: { tenantId: string; actorId: string } | undefined;
-  const query = vi.fn(async (_sql: string, _values: readonly unknown[]) => {
+  const queryImplementation = async () => {
     if (failure) throw failure;
     return { rows };
-  });
-  const tx = vi.fn(async (work, _options) => {
+  };
+  const query =
+    vi.fn<
+      (
+        _sql: string,
+        _values: readonly unknown[],
+      ) => ReturnType<typeof queryImplementation>
+    >(queryImplementation);
+  const tx = vi.fn<
+    (
+      work: (transaction: { query: typeof query }) => Promise<unknown>,
+      options?: unknown,
+    ) => Promise<unknown>
+  >(async (work) => {
     if (!activeScope) throw new Error('request context is required for app tx');
     return work({ query });
   });

@@ -25,7 +25,7 @@ type SqlTransaction = Transaction & {
 type ProfessionalKind =
   'MEDICO' | 'PSICOLOGO' | 'TECNICO_BIOMETRIA' | 'SUPERVISOR' | 'RECEPCAO';
 
-interface CouncilIdentity extends CouncilVerificationRequest {}
+type CouncilIdentity = CouncilVerificationRequest;
 
 interface CouncilCacheRow {
   status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';

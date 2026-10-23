@@ -1,13 +1,5 @@
 // Generated from BP-CH-SCHEDULING-001 v1.0.0 sha256:fdbac09747b1d01ea1aa90821a792d537064443364d6a193ca6df5575d591513
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateProfessionalScheduleDto } from '../dto/create-professional-schedule.dto.js';
 import { ProfessionalScheduleService } from '../services/professional-schedule.service.js';

@@ -118,7 +118,9 @@ export function projectorsHarness(options: HarnessOptions = {}) {
   };
   const poller = {
     intervalMs: 1000,
-    schedule: vi.fn((_fn: () => void | Promise<void>) => () => undefined),
+    schedule: vi.fn<(fn: () => void | Promise<void>) => () => undefined>(
+      () => () => undefined,
+    ),
   };
   const providers: Record<string, unknown> = {
     [tokenKey(INFRACTION_VIEW_SOURCE, 'INFRACTION_VIEW_SOURCE')]: source,

@@ -152,7 +152,7 @@ describe('TASK-0047 — composição HTTP de sessão e pauta', () => {
       (route) => route.method === RequestMethod.POST,
     );
 
-    for (const [_command, concretePath] of ROUTES) {
+    for (const [, concretePath] of ROUTES) {
       const pattern = concretePath
         .replace(SESSION, ':id')
         .replace(AGENDA_ITEM, ':id');

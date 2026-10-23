@@ -1,13 +1,5 @@
 // Generated from BP-INF-NOTIFICATION-001 v1.1.1 sha256:4c103efb85b586bbe1d79e0fc7367ae2e566e53d551fa0e41fd4635207283be6
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNoticeAcknowledgementDto } from '../dto/create-notice-acknowledgement.dto.js';
 import { NoticeAcknowledgementService } from '../services/notice-acknowledgement.service.js';

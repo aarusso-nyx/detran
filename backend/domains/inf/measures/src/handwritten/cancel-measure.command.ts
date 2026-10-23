@@ -22,7 +22,8 @@ export interface CancelMeasureInput {
 export class CancelMeasureCommand {
   constructor(private readonly deps: MeasureDeps) {}
 
-  async execute(measureId: string, _input: CancelMeasureInput): Promise<never> {
+  execute(measureId: string, _input: CancelMeasureInput): Promise<never>;
+  async execute(measureId: string): Promise<never> {
     return inTenantTransaction(this.deps, async (tx) => {
       const measure = await lockRow(this.deps, tx, 'measures', measureId);
       if (!measure) throw tenantMismatch({ measureId });

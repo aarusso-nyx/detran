@@ -1,15 +1,6 @@
 // Generated from BP-CH-ENCOUNTERS-001 v1.2.1 sha256:b72b0b7aad32b908d777d9b44b885244d74a7a214c442fecc03551811f18b2fd
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
-import type { CreateEncounterDto } from '../dto/create-encounter.dto.js';
+import { Controller, Get, Param } from '@nestjs/common';
+import { Action, Resource } from '@detran/shared';
 import { EncounterService } from '../services/encounter.service.js';
 
 @Controller('v1/ch/encounters')

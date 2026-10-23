@@ -12,9 +12,9 @@ export const TENANT_TZ = 'America/Manaus';
 export const FIXED_TODAY = '2026-09-14';
 export const FIXED_NOW = new Date('2026-09-14T12:00:00-04:00');
 
-export const fixedClock = {
+export const fixedClock: { now(): Date; today(tenantTz?: string): string } = {
   now: () => new Date(FIXED_NOW.getTime()),
-  today: (_tenantTz?: string) => FIXED_TODAY,
+  today: () => FIXED_TODAY,
 };
 
 /** CTG-0001 §10.2 — sujeitos das fixtures. */

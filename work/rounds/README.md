@@ -82,6 +82,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0042 | Seven scorecard measurement gaps (BL-0024); collector fidelity and separate provider repair; C6 held                        | aberta            | —                                                      | —       | Codex                                               |
 | R-0043 | E2E fixture isolation                                                                                                       | aberta            | —                                                      | —       | Codex                                               |
 | R-0044 | Current dependency vulnerabilities                                                                                          | aberta            | —                                                      | —       | Codex                                               |
+| R-0045 | Existing full-workspace lint                                                                                                | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
 

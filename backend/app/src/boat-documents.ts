@@ -390,7 +390,8 @@ export class BoatDocumentsFacade implements DocumentsFacade {
     return document;
   }
 
-  sign(_documentId: string, _signer: DocumentSigner): Promise<SignedDocument> {
+  sign(_documentId: string, _signer: DocumentSigner): Promise<SignedDocument>;
+  sign(): Promise<SignedDocument> {
     return Promise.reject(
       new Error('Default D1 forbids signing the preliminary report'),
     );

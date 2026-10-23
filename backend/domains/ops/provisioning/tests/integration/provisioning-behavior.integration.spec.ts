@@ -1,3 +1,4 @@
+import type { FixtureActs, FixtureAgents } from './harness.js';
 import { readFileSync } from 'node:fs';
 import { randomUUID, createHash } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,15 +20,30 @@ import {
   type CommandReply,
 } from './harness.js';
 
-const contract = JSON.parse(
-  readFileSync(
-    new URL(
-      '../../../../../../docs/framework/contracts/BP-OPS-PROVISIONING-001.commands.openapi.json',
-      import.meta.url,
+interface Schema {
+  $ref?: string;
+  type?: string;
+  required?: string[];
+  additionalProperties?: boolean;
+  properties?: Record<string, Schema>;
+  items?: Schema;
+  minItems?: number;
+  minimum?: number;
+  minLength?: number;
+  format?: string;
+  enum?: unknown[];
+}
+
+const contract: { components: { schemas: Record<string, Schema> } } =
+  JSON.parse(
+    readFileSync(
+      new URL(
+        '../../../../../../docs/framework/contracts/BP-OPS-PROVISIONING-001.commands.openapi.json',
+        import.meta.url,
+      ),
+      'utf8',
     ),
-    'utf8',
-  ),
-);
+  );
 const operations: Operation[] = [
   'challenge',
   'register',
@@ -71,43 +87,48 @@ afterEach(async () => {
   await h.close();
 });
 
-function validateSchema(value: any, schema: any): void {
+function validateSchema(value: unknown, schema: Schema): void {
   if (schema.$ref)
     return validateSchema(
       value,
-      contract.components.schemas[schema.$ref.split('/').at(-1)],
+      contract.components.schemas[schema.$ref.split('/').at(-1)!],
     );
   if (schema.type === 'object') {
     expect(value).toBeTypeOf('object');
     expect(value).not.toBeNull();
     expect(Array.isArray(value)).toBe(false);
     for (const key of schema.required ?? [])
-      expect(Object.hasOwn(value, key), key).toBe(true);
+      expect(Object.hasOwn(value as object, key), key).toBe(true);
     if (schema.additionalProperties === false)
       expect(
-        Object.keys(value).filter(
-          (key) => !Object.hasOwn(schema.properties, key),
+        Object.keys(value as object).filter(
+          (key) => !Object.hasOwn(schema.properties!, key),
         ),
       ).toEqual([]);
     for (const [key, definition] of Object.entries(schema.properties ?? {}))
-      if (Object.hasOwn(value, key)) validateSchema(value[key], definition);
+      if (Object.hasOwn(value as object, key))
+        validateSchema((value as Record<string, unknown>)[key], definition);
   } else if (schema.type === 'array') {
     expect(Array.isArray(value)).toBe(true);
-    expect(value.length).toBeGreaterThanOrEqual(schema.minItems ?? 0);
-    for (const item of value) validateSchema(item, schema.items);
+    expect((value as { length: number }).length).toBeGreaterThanOrEqual(
+      schema.minItems ?? 0,
+    );
+    for (const item of value as unknown[]) validateSchema(item, schema.items!);
   } else if (schema.type === 'integer') {
     expect(Number.isInteger(value)).toBe(true);
     expect(value).toBeGreaterThanOrEqual(schema.minimum ?? -Infinity);
   } else {
     expect(typeof value).toBe(schema.type);
     if (schema.minLength)
-      expect(value.length).toBeGreaterThanOrEqual(schema.minLength);
+      expect((value as { length: number }).length).toBeGreaterThanOrEqual(
+        schema.minLength,
+      );
     if (schema.format === 'uuid')
       expect(value).toMatch(
         /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iu,
       );
     if (schema.format === 'date-time')
-      expect(Number.isFinite(Date.parse(value))).toBe(true);
+      expect(Number.isFinite(Date.parse(value as string))).toBe(true);
   }
   if (schema.enum) expect(schema.enum).toContain(value);
 }
@@ -585,7 +606,13 @@ describe('P1/P4 — versões, replay durável e exclusão mútua', () => {
       'select id, idempotency_key, payload from integration.outbox where tenant_id=$1 and idempotency_key=any($2::text[]) order by idempotency_key',
       [TENANT_A, [`receipt:${rawKey}`, `revoke:${rawKey}`, rawKey]],
     );
-    expect(events.rows.map(({ id: _id, ...event }) => event)).toEqual([
+    expect(
+      events.rows.map((row) => {
+        const event = { ...row };
+        Reflect.deleteProperty(event, 'id');
+        return event;
+      }),
+    ).toEqual([
       { idempotency_key: `receipt:${rawKey}`, payload: receipt.body },
       { idempotency_key: `revoke:${rawKey}`, payload: revoke.body },
     ]);
@@ -723,7 +750,7 @@ describe('P1/P4 — versões, replay durável e exclusão mútua', () => {
       if (operation === 'issue') input.body.maximum_acts = 9;
       else if (operation === 'receipt') input.body.receipt_type = 'activated';
       else if (operation === 'reconcile')
-        input.body.acts[0].local_content_hash += '-changed';
+        (input.body.acts as FixtureActs)[0].local_content_hash += '-changed';
       else input.body[field] += '-changed';
       await expect(invoke(operation, input)).rejects.toMatchObject({
         code: 'TEAT.IDEMPOTENCY_REPLAY',
@@ -822,13 +849,12 @@ describe('P2/P3 — enrollment e envelope ligados ao dispositivo', () => {
     async (location) => {
       const input = await h.prepare('register');
       if (location === 'public-key-pem') {
-        const oldPublic = input.body.public_key;
+        const oldPublic = input.body.public_key as string;
         input.body.public_key =
           '-----BEGIN PRIVATE KEY-----FORBIDDEN-FIXTURE-----END PRIVATE KEY-----';
-        input.body.challenge_proof = input.body.challenge_proof.replace(
-          oldPublic,
-          input.body.public_key,
-        );
+        (input.body.challenge_proof as string) = (
+          input.body.challenge_proof as string
+        ).replace(oldPublic, input.body.public_key as string);
       } else {
         input.body.attestation_evidence =
           location === 'attestation-private-key'
@@ -875,7 +901,8 @@ describe('P2/P3 — enrollment e envelope ligados ao dispositivo', () => {
     'dado enrollment %s quando registra então recusa sem persistir chave',
     async (condition) => {
       const input = await h.prepare('register');
-      if (condition === 'proof') input.body.challenge_proof = 'tampered';
+      if (condition === 'proof')
+        (input.body.challenge_proof as string) = 'tampered';
       if (condition === 'expired') h.now = '2026-09-23T00:00:00.000Z';
       if (condition === 'copied-device') input.deviceId = randomUUID();
       if (condition === 'private-material')
@@ -903,7 +930,7 @@ describe('P2/P3 — enrollment e envelope ligados ao dispositivo', () => {
       {
         device_id: h.deviceId,
         traffic_agency_id: AGENCY_A,
-        authorized_agents_json: input.body.authorized_agents,
+        authorized_agents_json: input.body.authorized_agents as FixtureAgents,
         numbering_reservation_ids_json: [h.issuanceReservationId],
         issued_by_subject: ISSUER_A,
         maximum_acts: 10,
@@ -1045,7 +1072,7 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
     'dado ato formalizado em %s fora da validade quando reconcilia então rejeita sem consumo',
     async (occurredAt) => {
       const input = h.input('reconcile');
-      input.body.acts[0].occurred_at = occurredAt;
+      (input.body.acts as FixtureActs)[0].occurred_at = occurredAt;
       const before = await h.snapshot();
       await expect(invoke('reconcile', input)).rejects.toMatchObject({
         code: 'TEAT.VALIDATION_FAILED',
@@ -1057,7 +1084,7 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
   it('dado ato posterior à revogação conhecida quando reconcilia então rejeita sem consumir saldo bloqueado', async () => {
     const revoked = await invoke('revoke', h.input('revoke'));
     const input = h.input('reconcile', { ifMatch: revoked.etag });
-    input.body.acts[0].occurred_at = '2026-09-21T13:00:00Z';
+    (input.body.acts as FixtureActs)[0].occurred_at = '2026-09-21T13:00:00Z';
     const before = await h.snapshot();
     await expect(invoke('reconcile', input)).rejects.toMatchObject({
       code: 'TEAT.VALIDATION_FAILED',
@@ -1078,7 +1105,7 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
     'dado ato sem %s quando reconciliado então recusa 400 sem consumo nem outbox',
     async (field) => {
       const input = h.input('reconcile');
-      delete input.body.acts[0][field];
+      delete (input.body.acts as Array<Record<string, unknown>>)[0][field];
       const before = await h.snapshot();
       await expect(invoke('reconcile', input)).rejects.toMatchObject({
         code: 'TEAT.VALIDATION_FAILED',
@@ -1096,7 +1123,7 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
     'dado ato com %s alheio ao grant quando reconciliado então recusa 422 sem efeito',
     async (field) => {
       const input = h.input('reconcile');
-      input.body.acts[0][field] =
+      (input.body.acts as Array<Record<string, unknown>>)[0][field] =
         field === 'reserved_numbering_context'
           ? { reservation_id: randomUUID(), number: 1 }
           : randomUUID();
@@ -1127,16 +1154,18 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
       {
         reservation_id: h.reservationId,
         number: String(h.number),
-        idempotency_key: input.body.acts[0].idempotency_key,
-        details_json: expect.objectContaining(input.body.acts[0]),
+        idempotency_key: (input.body.acts as FixtureActs)[0].idempotency_key,
+        details_json: expect.objectContaining(
+          (input.body.acts as FixtureActs)[0],
+        ),
       },
     ]);
     await persistedReply('reconcile', input, reply);
   });
   it('dado lote com ato válido e ato adulterado quando reconcilia então nenhuma metade é confirmada', async () => {
     const input = h.input('reconcile');
-    input.body.acts.push({
-      ...input.body.acts[0],
+    (input.body.acts as FixtureActs).push({
+      ...(input.body.acts as FixtureActs)[0],
       idempotency_key: `${h.prefix}-second-act`,
       normative_package_id: randomUUID(),
     });
@@ -1157,7 +1186,7 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
         idempotency_key: `${h.prefix}-different-act`,
         acts: [
           {
-            ...input.body.acts[0],
+            ...(input.body.acts as FixtureActs)[0],
             idempotency_key: `${h.prefix}-other-legal-act`,
             local_content_hash: `${h.prefix}-other-hash`,
           },
@@ -1256,7 +1285,9 @@ describe('P4/P5 — INV-OFFLINE-001, crash e reconciliação', () => {
       );
       expect(original.rowCount).toBe(1);
       expect(original.rows[0].number).toBe(String(h.number));
-      expect(original.rows[0].details_json).toMatchObject(input.body.acts[0]);
+      expect(original.rows[0].details_json).toMatchObject(
+        (input.body.acts as FixtureActs)[0],
+      );
       const replay = await invoke('reconcile', input);
       expect(replay).toEqual(reply);
       expect(

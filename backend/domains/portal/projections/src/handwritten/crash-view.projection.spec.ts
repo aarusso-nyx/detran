@@ -42,8 +42,12 @@ describe('CTG-0002 §7.2 — crash_view esqueleto (C-0002-54)', () => {
     expect(outcome).toMatchObject({ projection: PROJECTION, applied: true });
     const after = h.db.rows(TABLE)[0]!;
     expect(after.last_event_id).toBe(EVENT_IDS.e11);
-    const { last_event_id: _b, updated_at: _bu, ...beforeRest } = before;
-    const { last_event_id: _a, updated_at: _au, ...afterRest } = after;
+    const beforeRest = { ...before };
+    Reflect.deleteProperty(beforeRest, 'last_event_id');
+    Reflect.deleteProperty(beforeRest, 'updated_at');
+    const afterRest = { ...after };
+    Reflect.deleteProperty(afterRest, 'last_event_id');
+    Reflect.deleteProperty(afterRest, 'updated_at');
     expect(afterRest).toEqual(beforeRest);
     expect(h.appliedEvents(EVENT_IDS.e11)).toHaveLength(1);
   });

@@ -10,7 +10,7 @@ const actorId = '22222222-2222-4222-8222-222222222222';
 
 function harness(settingsRows: Array<Record<string, unknown>> = []) {
   const queue = [...settingsRows];
-  const query = vi.fn(async (sql: string, params?: readonly unknown[]) => {
+  const queryImplementation = async (sql: string) => {
     if (sql.includes('select settings')) {
       const settings = queue.shift();
       return {
@@ -19,7 +19,14 @@ function harness(settingsRows: Array<Record<string, unknown>> = []) {
       };
     }
     return { rows: [], rowCount: 1 };
-  });
+  };
+  const query =
+    vi.fn<
+      (
+        sql: string,
+        params?: readonly unknown[],
+      ) => ReturnType<typeof queryImplementation>
+    >(queryImplementation);
   const tx = vi.fn(
     async (work: (transaction: Transaction) => Promise<unknown>) =>
       work({ query } as unknown as Transaction),

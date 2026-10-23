@@ -1,15 +1,6 @@
 // Generated from BP-CH-RETENTION-001 v1.0.0 sha256:8a74485eaee2a6dbb8cbc10772396a77b465cdd84cc5a57db0c90035ef24ea78
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
-import type { CreateRetentionCaseDto } from '../dto/create-retention-case.dto.js';
+import { Controller, Get, Param } from '@nestjs/common';
+import { Action, Resource } from '@detran/shared';
 import { RetentionCaseService } from '../services/retention-case.service.js';
 
 @Controller('v1/ch/retention/cases')

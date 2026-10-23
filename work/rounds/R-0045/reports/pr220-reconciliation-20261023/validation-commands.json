@@ -1,0 +1,42 @@
+[
+  {
+    "command": "pnpm verify:proof-anchors",
+    "exit_code": 0,
+    "log": "pr220-check-0.log"
+  },
+  {
+    "command": "pnpm devai:doctor",
+    "exit_code": 0,
+    "log": "pr220-check-1.log"
+  },
+  {
+    "command": "pnpm verify:state-index",
+    "exit_code": 0,
+    "log": "pr220-check-2.log"
+  },
+  {
+    "command": "pnpm verify:rounds-index",
+    "exit_code": 0,
+    "log": "pr220-check-3.log"
+  },
+  {
+    "command": "pnpm verify:law-corpus",
+    "exit_code": 0,
+    "log": "pr220-check-4.log"
+  },
+  {
+    "command": "git diff --check",
+    "exit_code": 0,
+    "log": "pr220-check-5.log"
+  },
+  {
+    "command": "pnpm exec prettier --check work/rounds/README.md",
+    "exit_code": 0,
+    "log": "pr220-check-6.log"
+  },
+  {
+    "command": "pnpm blueprints:check",
+    "exit_code": 0,
+    "log": "pr220-check-7.log"
+  }
+]

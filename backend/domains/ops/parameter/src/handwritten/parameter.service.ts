@@ -99,7 +99,8 @@ export class SystemParameterClock implements ParameterClock {
 
 @Injectable()
 export class NullParameterCache implements ParameterCache {
-  invalidate(_tenantId: string, _key: string): void {
+  invalidate(_tenantId: string, _key: string): void;
+  invalidate(): void {
     // Parameter reads are not cache-backed in this release.
   }
 }

@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Param,
-  Query,
-  Req,
-} from '@nestjs/common';
-import { Action, Audit, NoIdempotent, Resource } from '@detran/shared';
+import { Body, Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { Action, Resource } from '@detran/shared';
 import {
   RaitCaseScopeService,
   type RaitScopeRequest,
@@ -23,8 +13,6 @@ export class RaitWorklistScopedReadsController {
   listRaitUnit(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'units',
@@ -57,8 +45,6 @@ export class RaitWorklistScopedReadsController {
   listRaitPool(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'pools',
@@ -91,8 +77,6 @@ export class RaitWorklistScopedReadsController {
   listRaitPoolMember(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'pool-members',
@@ -125,8 +109,6 @@ export class RaitWorklistScopedReadsController {
   listRaitSchedule(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'schedules',
@@ -159,8 +141,6 @@ export class RaitWorklistScopedReadsController {
   listRaitScheduleSlot(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'schedule-slots',
@@ -193,8 +173,6 @@ export class RaitWorklistScopedReadsController {
   listRaitBatch(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'batches',
@@ -227,8 +205,6 @@ export class RaitWorklistScopedReadsController {
   listRaitBatchItem(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'batch-items',
@@ -261,8 +237,6 @@ export class RaitWorklistScopedReadsController {
   listRaitAssignment(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('assignments', undefined, query, request.principal);
   }
@@ -283,8 +257,6 @@ export class RaitWorklistScopedReadsController {
   listRaitImpediment(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'impediments',
@@ -317,8 +289,6 @@ export class RaitWorklistScopedReadsController {
   listRaitSubstituteDuty(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'substitute-duties',
@@ -351,8 +321,6 @@ export class RaitWorklistScopedReadsController {
   listRaitBench(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.organizational(
       'benches',
@@ -385,8 +353,6 @@ export class RaitWorklistScopedReadsController {
   listRaitClock(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('clocks', undefined, query, request.principal);
   }
@@ -407,8 +373,6 @@ export class RaitWorklistScopedReadsController {
   listRaitClockAlert(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('clock-alerts', undefined, query, request.principal);
   }

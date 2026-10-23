@@ -1,13 +1,5 @@
 // Generated from BP-INF-INFRACTION-001 v1.1.2 sha256:59e421dbbb90b291b45408217601e9d6a86b992d9c75c00e5f73b17c5b2e21dd
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateInfractionEventDto } from '../dto/create-infraction-event.dto.js';
 import { InfractionEventService } from '../services/infraction-event.service.js';

@@ -1,3 +1,4 @@
+import type { FixtureActs } from './harness.js';
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { provisioningPorts } from '../../src/handwritten/provisioning.provider.js';
@@ -241,7 +242,7 @@ describe('Amendment 3 F-013 — budgets persistidos e ETag', () => {
         remaining_acts: budget === 'maximum-acts' ? 0 : 9,
         remaining_numbering_count: budget === 'interval' ? 0 : 2,
       });
-      expect(after.body.blockers.length).toBeGreaterThan(0);
+      expect((after.body.blockers as unknown[]).length).toBeGreaterThan(0);
       expect(after.etag).not.toBe(before.etag);
     },
   );
@@ -429,7 +430,8 @@ describe('Amendment 3 F-015 — enrollment real anterior à reserva', () => {
     const challenge = await coldChallenge();
     const input = h.input('register', { ifMatch: challenge.etag });
     input.body.challenge_id = challenge.body.challenge_id;
-    input.body.challenge_proof = `fixture-proof:${challenge.body.challenge}:${h.deviceId}:${input.body.public_key}`;
+    (input.body.challenge_proof as string) =
+      `fixture-proof:${challenge.body.challenge}:${h.deviceId}:${input.body.public_key}`;
     if (variant === 'subject') input.context.principal.subject = randomUUID();
     if (variant === 'device') input.deviceId = randomUUID();
     if (variant === 'device-claim')
@@ -492,7 +494,7 @@ async function recordProof(at: string, unresolved = 0) {
   // Renewal negatives start from a real, canonical persisted proof rather than
   // an arbitrary digest which could be rejected before the condition under test.
   const input = h.input('reconcile', { clock: { now: () => new Date(at) } });
-  input.body.acts = [];
+  (input.body.acts as FixtureActs) = [];
   const reply = await invoke('reconcile', input);
   const records = await h.owner.query(
     'select reconciliation_digest from ops.provisioning_reconciliation where grant_id=$1',
@@ -573,7 +575,7 @@ describe('Amendment 3 F-016 — renovação exige reconciliação terminal persi
     async (kind, count) => {
       await terminate(kind);
       const input = h.input('reconcile');
-      if (count === 0) input.body.acts = [];
+      if (count === 0) (input.body.acts as FixtureActs) = [];
       const reply = await invoke('reconcile', input);
       expect(reply.body).toMatchObject({
         grant_id: h.grantId,

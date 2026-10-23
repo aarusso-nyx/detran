@@ -1,3 +1,4 @@
+import type { FixtureActs, FixtureAgents } from './harness.js';
 import { randomUUID } from 'node:crypto';
 import { beforeEach, afterEach, describe, expect, it } from 'vitest';
 import { provisioningPorts } from '../../src/handwritten/provisioning.provider.js';
@@ -153,7 +154,8 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
         [h.grantId],
       );
       const input = realInput(op);
-      if (op === 'reconcile') input.body.acts[0].normative_package_id = normId;
+      if (op === 'reconcile')
+        (input.body.acts as FixtureActs)[0].normative_package_id = normId;
       const before = await h.snapshot();
       if (op === 'readiness') {
         const reply = await invoke(op, input);
@@ -161,7 +163,7 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
           ready: false,
           remaining_numbering_count: 0,
         });
-        expect(reply.body.blockers.length).toBeGreaterThan(0);
+        expect((reply.body.blockers as unknown[]).length).toBeGreaterThan(0);
       } else await expect(invoke(op, input)).rejects.toMatchObject(validation);
       expect(await h.snapshot()).toEqual(before);
     },
@@ -182,7 +184,7 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
       invoke('issue', second),
     ]);
     expect(replies[0]).toEqual(replies[1]);
-    await assertBindings(replies[0]!.body.grant_id, [
+    await assertBindings(replies[0]!.body.grant_id as string, [
       { reservation_id: h.issuanceReservationId, authorized_agent_id: AGENT_A },
     ]);
     expect(
@@ -198,21 +200,23 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
     const input = await issueInput(true);
     expect(input.context.principal.claims).not.toHaveProperty('agent_id');
     expect(
-      input.body.authorized_agents.map((a: { agent_id: string }) => a.agent_id),
+      (input.body.authorized_agents as FixtureAgents).map(
+        (a: { agent_id: string }) => a.agent_id,
+      ),
     ).not.toContain(adminSubject);
     const reply = await invoke('issue', input);
     assertReply(reply);
     const grants = await h.owner.query(
       'select issued_by_subject,authorized_agents_json from ops.offline_authorization_grant where id=$1',
-      [reply.body.grant_id],
+      [reply.body.grant_id as string],
     );
     expect(grants.rows).toEqual([
       {
         issued_by_subject: adminSubject,
-        authorized_agents_json: input.body.authorized_agents,
+        authorized_agents_json: input.body.authorized_agents as FixtureAgents,
       },
     ]);
-    await assertBindings(reply.body.grant_id, [
+    await assertBindings(reply.body.grant_id as string, [
       { reservation_id: h.issuanceReservationId, authorized_agent_id: AGENT_A },
     ]);
     expect(
@@ -297,14 +301,14 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
       ],
     );
     const input = await issueInput(true);
-    input.body.authorized_agents.push({
-      ...input.body.authorized_agents[0],
+    (input.body.authorized_agents as FixtureAgents).push({
+      ...(input.body.authorized_agents as FixtureAgents)[0],
       agent_id: recipientB,
       registration_number: recipientB,
     });
-    input.body.numbering_reservation_ids.push(second);
+    (input.body.numbering_reservation_ids as string[]).push(second);
     const reply = await invoke('issue', input);
-    await assertBindings(reply.body.grant_id, [
+    await assertBindings(reply.body.grant_id as string, [
       { reservation_id: h.issuanceReservationId, authorized_agent_id: AGENT_A },
       { reservation_id: second, authorized_agent_id: recipientB },
     ]);
@@ -312,13 +316,13 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
       (
         await h.owner.query(
           'select issued_by_subject,authorized_agents_json from ops.offline_authorization_grant where id=$1',
-          [reply.body.grant_id],
+          [reply.body.grant_id as string],
         )
       ).rows,
     ).toEqual([
       {
         issued_by_subject: adminSubject,
-        authorized_agents_json: input.body.authorized_agents,
+        authorized_agents_json: input.body.authorized_agents as FixtureAgents,
       },
     ]);
   });
@@ -350,7 +354,7 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
       try {
         const input = await issueInput();
         expect(
-          input.body.authorized_agents.map(
+          (input.body.authorized_agents as FixtureAgents).map(
             (a: { agent_id: string }) => a.agent_id,
           ),
         ).toEqual([AGENT_A]);
@@ -367,9 +371,9 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
   );
   it('dado recipient omitido da lista mas igual ao emissor quando emite então identidade do emissor não autoriza a reserva', async () => {
     const input = await issueInput();
-    input.body.authorized_agents = [
+    (input.body.authorized_agents as FixtureAgents) = [
       {
-        ...input.body.authorized_agents[0],
+        ...(input.body.authorized_agents as FixtureAgents)[0],
         agent_id: recipientB,
         registration_number: recipientB,
       },
@@ -426,7 +430,7 @@ describe('Amendment 4 — responsável, destinatários e reserva persistida', ()
       expect(await h.snapshot()).toEqual(before);
       h.crashAt = undefined;
       const reply = await invoke('issue', input);
-      await assertBindings(reply.body.grant_id, [
+      await assertBindings(reply.body.grant_id as string, [
         {
           reservation_id: h.issuanceReservationId,
           authorized_agent_id: AGENT_A,
@@ -657,7 +661,7 @@ describe('Amendment 4 — todo histórico terminal participa da renovação', ()
       await extraGrant();
       await reconcileZero(h.grantId);
       const reply = await invoke('issue', await issueInput());
-      await assertBindings(reply.body.grant_id, [
+      await assertBindings(reply.body.grant_id as string, [
         {
           reservation_id: h.issuanceReservationId,
           authorized_agent_id: AGENT_A,
@@ -688,7 +692,7 @@ describe('Amendment 4 — todo histórico terminal participa da renovação', ()
       const before = await h.snapshot();
       if (proofs === 'both') {
         const reply = await invoke('issue', input);
-        await assertBindings(reply.body.grant_id, [
+        await assertBindings(reply.body.grant_id as string, [
           {
             reservation_id: h.issuanceReservationId,
             authorized_agent_id: AGENT_A,

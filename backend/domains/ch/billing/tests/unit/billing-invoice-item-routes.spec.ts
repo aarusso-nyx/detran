@@ -38,7 +38,7 @@ function mountedRoutes(module: object): MountedRoute[] {
   const controllers = (Reflect.getMetadata(
     MODULE_METADATA.CONTROLLERS,
     module,
-  ) ?? []) as (Function & { name: string; prototype: object })[];
+  ) ?? []) as { name: string; prototype: object }[];
   const routes: MountedRoute[] = [];
   for (const controller of controllers) {
     const prefix: unknown = Reflect.getMetadata(PATH_METADATA, controller);

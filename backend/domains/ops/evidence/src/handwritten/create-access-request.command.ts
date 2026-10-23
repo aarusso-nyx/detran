@@ -2,7 +2,7 @@
 // /v1/ops/evidence-access-requests`. O rol do art. 13 é fechado e é o mesmo
 // do check `ck_ops_evidence_access_requester_role` (DDL 17). Sem token em §8,
 // nada é publicado (§11.7): o efeito observável é a linha `requested`.
-import { DetranError } from '@detran/shared';
+import '@detran/shared';
 
 import {
   insertRow,

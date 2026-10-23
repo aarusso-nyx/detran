@@ -33,21 +33,33 @@ function stubService(
     Object.assign(ait, patch);
     return { ...ait };
   });
+  const appendImplementation = async () => ({
+    id: 'outbox-row-70',
+  });
   const outbox = {
-    append: vi.fn(async (_tx: unknown, _envelope: unknown) => ({
-      id: 'outbox-row-70',
-    })),
+    append:
+      vi.fn<
+        (
+          _tx: unknown,
+          _envelope: unknown,
+        ) => ReturnType<typeof appendImplementation>
+      >(appendImplementation),
   };
   const openConflict =
     options.openConflict === undefined
       ? { id: 'conflict-70', syncQueueItemId: 'queue-70' }
       : options.openConflict;
+  const resolveImplementation = async () => undefined;
+  const findOpenConcurrencyConflictImplementation = async () => openConflict;
   const syncConflicts = {
-    findOpenConcurrencyConflict: vi.fn(
-      async (_aitId: string, _tx: unknown) => openConflict,
-    ),
-    resolve: vi.fn(
-      async (
+    findOpenConcurrencyConflict: vi.fn<
+      (
+        _aitId: string,
+        _tx: unknown,
+      ) => ReturnType<typeof findOpenConcurrencyConflictImplementation>
+    >(findOpenConcurrencyConflictImplementation),
+    resolve: vi.fn<
+      (
         _conflictId: string,
         _options: {
           action: 'accept_server' | 'reject';
@@ -55,8 +67,8 @@ function stubService(
           description?: string;
         },
         _tx: unknown,
-      ) => undefined,
-    ),
+      ) => ReturnType<typeof resolveImplementation>
+    >(resolveImplementation),
   };
   const repositories = {
     ait: {

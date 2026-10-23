@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 const tier = process.env.DETRAN_TEST_TIER ?? 'unit';
 const include: Record<string, string[]> = {

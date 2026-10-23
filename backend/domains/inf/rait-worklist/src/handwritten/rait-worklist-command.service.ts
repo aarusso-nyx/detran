@@ -462,7 +462,8 @@ export class RaitWorklistCommandService {
     validateEnvelope(input);
     const context = this.context();
     const key = input.headers['Idempotency-Key'];
-    const { principal: _principal, ...originalInput } = input;
+    const originalInput = { ...input };
+    Reflect.deleteProperty(originalInput, 'principal');
     const digest = fingerprint(originalInput);
     return withTenantContext(this.database, this.requestContext, async (tx) => {
       const scope = new RaitCaseScopeService(

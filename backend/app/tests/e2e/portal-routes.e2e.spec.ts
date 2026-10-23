@@ -62,14 +62,20 @@ const SCORES = {
   channel: 5,
 };
 
+const listCitizenVehiclesImplementation = async () => ({
+  items: [{ plate: 'FIX2EE1', renavam: '00000000001' }],
+});
+const getCitizenLicenseImplementation = async () => ({
+  license: { category: 'B', status: 'fixture' },
+});
 const ports = {
   cdt: {
-    getCitizenLicense: vi.fn(async (_cpf: string) => ({
-      license: { category: 'B', status: 'fixture' },
-    })),
-    listCitizenVehicles: vi.fn(async (_cpf: string) => ({
-      items: [{ plate: 'FIX2EE1', renavam: '00000000001' }],
-    })),
+    getCitizenLicense: vi.fn<
+      (_cpf: string) => ReturnType<typeof getCitizenLicenseImplementation>
+    >(getCitizenLicenseImplementation),
+    listCitizenVehicles: vi.fn<
+      (_cpf: string) => ReturnType<typeof listCitizenVehiclesImplementation>
+    >(listCitizenVehiclesImplementation),
     getPaymentQuote: vi.fn(async () => ({ tiers: [] })),
   },
   renach: { findDriverByCpf: vi.fn(async () => null) },

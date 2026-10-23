@@ -1647,7 +1647,7 @@ function collectMountedRoutes(
   for (const module of modulesContainer) {
     for (const wrapper of module.controllers.values()) {
       const metatype = wrapper.metatype as
-        (Function & { name: string }) | undefined;
+        { name: string; prototype: object } | undefined;
       if (!metatype) continue;
       const classResource = Reflect.getMetadata(
         DETRAN_RESOURCE_METADATA_KEY,

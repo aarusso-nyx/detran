@@ -16,7 +16,8 @@ export class FixedClock implements Clock {
    * A data fixa. O argumento existe para a implementação de produção (que lê o
    * fuso do tenant); aqui o fuso já está no construtor.
    */
-  today(_tenantTz: string): LocalDate {
+  today(_tenantTz: string): LocalDate;
+  today(): LocalDate {
     return this.fixedToday;
   }
 

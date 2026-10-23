@@ -1,15 +1,6 @@
 // Generated from BP-CH-OPERATIONAL-CONTROLS-001 v1.0.0 sha256:41855aeaa3c52f966b5c30807e1fe3d821258e6c626a32b72238986d291880da
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
-import type { CreateOperationalRecordDto } from '../dto/create-operational-record.dto.js';
+import { Controller, Get, Param } from '@nestjs/common';
+import { Action, Resource } from '@detran/shared';
 import { OperationalRecordService } from '../services/operational-record.service.js';
 
 @Controller('v1/ch/operational-controls/records')

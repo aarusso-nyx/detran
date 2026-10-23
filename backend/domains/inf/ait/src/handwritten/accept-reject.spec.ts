@@ -26,10 +26,17 @@ function stubService(currentStatus: string, startingVersion = 1) {
   });
   // §13 item 5: `append` devolve `{ id }` (o id real da linha da outbox);
   // o serviço nunca gera esse id sozinho.
+  const appendImplementation = async () => ({
+    id: 'outbox-row-1',
+  });
   const outbox = {
-    append: vi.fn(async (_tx: unknown, _envelope: unknown) => ({
-      id: 'outbox-row-1',
-    })),
+    append:
+      vi.fn<
+        (
+          _tx: unknown,
+          _envelope: unknown,
+        ) => ReturnType<typeof appendImplementation>
+      >(appendImplementation),
   };
   const repositories = {
     ait: {

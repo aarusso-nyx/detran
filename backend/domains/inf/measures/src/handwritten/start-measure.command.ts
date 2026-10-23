@@ -36,10 +36,11 @@ export interface StartMeasureResult {
 export class StartMeasureCommand {
   constructor(private readonly deps: MeasureDeps) {}
 
-  async execute(
+  execute(
     measureId: string,
-    _input: StartMeasureInput = {},
-  ): Promise<StartMeasureResult> {
+    _input?: StartMeasureInput,
+  ): Promise<StartMeasureResult>;
+  async execute(measureId: string): Promise<StartMeasureResult> {
     const scope = scopeOf(this.deps);
     return inTenantTransaction(this.deps, async (tx) => {
       const measure = await lockRow(this.deps, tx, 'measures', measureId);

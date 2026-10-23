@@ -146,7 +146,7 @@ export class RaitInquiryCommandService {
       fail('RAIT.VALIDATION_FAILED', 400);
     if (!effect && !input.headers['If-Match'])
       fail('RAIT.IF_MATCH_REQUIRED', 428);
-    const context = this.context(input);
+    const context = this.context();
     const key = effect
       ? `timer-expired:${effect.ownerKind}:${effect.ownerId}:${effect.timerCode}:${effect.dueOn}`
       : input.headers['Idempotency-Key'];
@@ -460,7 +460,7 @@ export class RaitInquiryCommandService {
     });
   }
 
-  private context(_input: InquiryCommandInput): {
+  private context(): {
     tenantId: string;
     actorId: string;
     role: string;

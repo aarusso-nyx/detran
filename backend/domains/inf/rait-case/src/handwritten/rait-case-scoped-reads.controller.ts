@@ -23,8 +23,6 @@ export class RaitCaseScopedReadsController {
   listRaitCase(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('cases', undefined, query, request.principal);
   }
@@ -45,8 +43,6 @@ export class RaitCaseScopedReadsController {
   listRaitParty(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('parties', undefined, query, request.principal);
   }
@@ -63,7 +59,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'parties',
@@ -139,8 +134,6 @@ export class RaitCaseScopedReadsController {
   listRaitDocument(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('documents', undefined, query, request.principal);
   }
@@ -157,7 +150,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'documents',
@@ -209,8 +201,6 @@ export class RaitCaseScopedReadsController {
   listRaitPendingContent(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read(
       'pending-contents',
@@ -232,7 +222,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'pending-contents',
@@ -284,8 +273,6 @@ export class RaitCaseScopedReadsController {
   listRaitRedirect(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('redirects', undefined, query, request.principal);
   }
@@ -302,7 +289,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'redirects',
@@ -354,8 +340,6 @@ export class RaitCaseScopedReadsController {
   listRaitAdmissibility(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read(
       'admissibility',
@@ -381,8 +365,6 @@ export class RaitCaseScopedReadsController {
   listRaitDeadline(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('deadlines', undefined, query, request.principal);
   }
@@ -399,7 +381,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'deadlines',
@@ -451,8 +432,6 @@ export class RaitCaseScopedReadsController {
   listRaitInquiry(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('inquiries', undefined, query, request.principal);
   }
@@ -469,7 +448,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'inquiries',
@@ -521,8 +499,6 @@ export class RaitCaseScopedReadsController {
   listRaitDraft(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('drafts', undefined, query, request.principal);
   }
@@ -539,7 +515,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'drafts',
@@ -591,8 +566,6 @@ export class RaitCaseScopedReadsController {
   listRaitDecision(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('decisions', undefined, query, request.principal);
   }
@@ -609,7 +582,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'decisions',
@@ -661,8 +633,6 @@ export class RaitCaseScopedReadsController {
   listRaitCommunication(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read(
       'communications',
@@ -684,7 +654,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'communications',
@@ -736,8 +705,6 @@ export class RaitCaseScopedReadsController {
   listRaitCaseEvent(
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
-    @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.read('events', undefined, query, request.principal);
   }
@@ -754,7 +721,6 @@ export class RaitCaseScopedReadsController {
     @Req() request: RaitScopeRequest,
     @Query() query: Record<string, unknown>,
     @Body() body: Record<string, unknown>,
-    @Param('id') id: string,
   ) {
     return this.scope.mutate(
       'events',

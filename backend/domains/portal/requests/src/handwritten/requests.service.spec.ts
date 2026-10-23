@@ -59,7 +59,6 @@ import {
   type IdentityLike,
 } from '../../tests/support/portal-fixtures.js';
 import {
-  PORTAL_DELEGATION_TARGETS,
   ReadServiceDelegationTarget,
   RequestDelegationService,
   UnavailableDelegationTarget,
