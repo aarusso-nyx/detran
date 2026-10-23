@@ -821,3 +821,72 @@ test('C-01-13 dado db-reset quando o volume é gerenciado então preserva volume
 test('C-01-04 dado os serviços ativos quando proxy e backend são comparados então usam a mesma porta contratada', () => {
   assert.equal(proxy['/v1'].target, 'http://127.0.0.1:3001');
 });
+
+test('PR211 dado nomes e códigos de transporte conhecidos ou arbitrários então aplica a lista fechada sem divulgar mensagens', () => {
+  const stateDir = mkdtempSync(join(tmpdir(), 'detran-transport-allowlist-'));
+  const smokePath = join(root, 'tools/stack/smoke.mjs');
+  const names = ['TypeError', 'Error', 'AbortError', 'TimeoutError'];
+  const codes = [
+    'ECONNRESET',
+    'ECONNREFUSED',
+    'EPIPE',
+    'ETIMEDOUT',
+    'ENOTFOUND',
+    'EAI_AGAIN',
+    'UND_ERR_SOCKET',
+    'UND_ERR_CONNECT_TIMEOUT',
+    'UND_ERR_HEADERS_TIMEOUT',
+    'UND_ERR_BODY_TIMEOUT',
+  ];
+  try {
+    const source = `
+      import assert from 'node:assert/strict';
+      import { runSmoke } from ${JSON.stringify(smokePath)};
+      import { readFileSync } from 'node:fs';
+      const names = ${JSON.stringify(names)};
+      const codes = ${JSON.stringify(codes)};
+      const vectors = [
+        ...names.map((name) => ({ name, code: 'ECONNRESET', expectedName: name, expectedCode: 'ECONNRESET' })),
+        ...codes.map((code) => ({ name: 'Error', code, expectedName: 'Error', expectedCode: code })),
+        { name: 'PRIVATE_NAME_SENTINEL', code: 'PRIVATE_CODE_SENTINEL', expectedName: 'unknown', expectedCode: 'unknown' },
+        { name: null, code: 123, expectedName: 'unknown', expectedCode: 'unknown' },
+        { name: { private: 'PRIVATE_OBJECT_SENTINEL' }, code: { private: 'PRIVATE_OBJECT_SENTINEL' }, expectedName: 'unknown', expectedCode: 'unknown' },
+        { expectedName: 'unknown', expectedCode: 'unknown' },
+      ];
+      const targets = {
+        backend: { url: 'http://127.0.0.1:3001', health: ['/healthz'] },
+        senatran: { url: 'http://127.0.0.1:3000', health: [] },
+        sefaz: { url: 'http://127.0.0.1:3999', health: [] },
+        frontends: [], ch: [], pec: { state: 'not_built_r0031' },
+      };
+      for (const vector of vectors) {
+        const report = await runSmoke({ targets, fetchImpl: async () => {
+          throw { name: vector.name, message: 'PRIVATE_MESSAGE_SENTINEL', cause: { code: vector.code, message: 'PRIVATE_CAUSE_SENTINEL' }, arbitrary: 'PRIVATE_PROPERTY_SENTINEL' };
+        } });
+        assert.equal(report.complete, false);
+        assert.equal(report.rows.length, 1);
+        const row = report.rows[0];
+        assert.equal(row.target, 'backend.healthz');
+        assert.equal(row.result, 'failed');
+        assert.equal(row.reason, 'backend_unreachable');
+        assert.equal(row.status, 0);
+        assert.equal(row.transportErrorName, vector.expectedName);
+        assert.equal(row.transportCauseCode, vector.expectedCode);
+        assert.doesNotMatch(JSON.stringify(report), /PRIVATE_/);
+        assert.doesNotMatch(readFileSync(${JSON.stringify(join(stateDir, 'smoke-report.json'))}, 'utf8'), /PRIVATE_/);
+      }
+    `;
+    const result = spawnSync(
+      process.execPath,
+      ['--input-type=module', '-e', source],
+      {
+        cwd: root,
+        encoding: 'utf8',
+        env: { ...process.env, DETRAN_STACK_STATE_DIR: stateDir },
+      },
+    );
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+  } finally {
+    rmSync(stateDir, { recursive: true, force: true });
+  }
+});

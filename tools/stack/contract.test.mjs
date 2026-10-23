@@ -448,6 +448,39 @@ test('C-02-05/06 dado falhas de backend ou leitura proxy quando smoke é executa
   }
 });
 
+test('PR211 dado erro de transporte em health, proxy ou CH então preserva falha e publica somente identificadores seguros', () => {
+  for (const [target, predicate, result] of [
+    ['backend.healthz', "value.endsWith('/healthz')", 'failed'],
+    [
+      'frontend.portal.proxy',
+      'value === targets.frontends[0].proxyUrl + targets.frontends[0].readPath',
+      'failed',
+    ],
+    ['ch.pades', "value.endsWith('/v1/ch/reports')", 'blocked_before_adapter'],
+  ]) {
+    const stateDir = mkdtempSync(join(tmpdir(), 'detran-transport-safe-'));
+    try {
+      const source = smokeScenarioSource(
+        `if (${predicate}) throw new TypeError('PRIVATE_MESSAGE_SENTINEL', { cause: Object.assign(new Error('PRIVATE_CAUSE_SENTINEL'), { code: 'ECONNRESET', private: 'PRIVATE_PROPERTY_SENTINEL' }) });`,
+        `const row = report.rows.find(({ target }) => target === ${JSON.stringify(target)});
+         if (report.complete !== false || row?.result !== ${JSON.stringify(result)} || row.reason !== 'backend_unreachable' || row.status !== 0) throw new Error('original transport failure must survive');
+         if (row.transportErrorName !== 'TypeError' || row.transportCauseCode !== 'ECONNRESET') throw new Error('safe transport identifiers missing');
+         if (JSON.stringify(report).includes('PRIVATE_')) throw new Error('private error content leaked');`,
+      );
+      const child = runSmokeChild(source, { DETRAN_STACK_STATE_DIR: stateDir });
+      assert.equal(child.status, 0, child.stderr || child.stdout);
+      for (const name of ['smoke-report.json', 'smoke-report.txt']) {
+        assert.doesNotMatch(
+          readFileSync(join(stateDir, name), 'utf8'),
+          /PRIVATE_/,
+        );
+      }
+    } finally {
+      rmSync(stateDir, { recursive: true, force: true });
+    }
+  }
+});
+
 test('C-02-04 dado 403 ou 503 CH fora do adapter quando smoke é executado então bloqueia a linha do adapter', () => {
   assert.ok(existsSync(smokePath), 'TASK-0007 must provide smoke.mjs');
   const scenarios = [
@@ -632,7 +665,7 @@ globalThis.fetch = async (input) => {
         restarts.map(({ roles }) => roles),
         [
           'AUDITOR',
-          'rait-coordinator',
+          'rait-secretary',
           'dash-operator',
           'field-agent',
           'MEDICO',
@@ -642,7 +675,7 @@ globalThis.fetch = async (input) => {
         ],
       );
       for (const restart of restarts.filter(
-        ({ roles }) => roles !== 'MEDICO',
+        ({ roles }) => !['MEDICO', 'rait-secretary'].includes(roles),
       )) {
         assert.equal(
           restart.actorState,
@@ -656,6 +689,13 @@ globalThis.fetch = async (input) => {
           `${restart.roles} must receive only its explicit roles override`,
         );
       }
+      assert.deepEqual(restarts[1], {
+        roles: 'rait-secretary',
+        localValues:
+          'DETRAN_LOCAL_ACTOR_ID=00000000-0000-4000-8000-0000b0000005,DETRAN_LOCAL_ROLES=rait-secretary',
+        actorState: 'present',
+        actorValue: '00000000-0000-4000-8000-0000b0000005',
+      });
       assert.deepEqual(restarts[4], {
         roles: 'MEDICO',
         localValues:
