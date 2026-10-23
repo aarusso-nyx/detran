@@ -13,7 +13,7 @@ superseded_by: null
 
 ## Status
 
-Accepted by direct Owner approval on2026-10-23. Recording/integration is proposed
+Accepted by direct Owner approval on 2026-10-23. Recording/integration is proposed
 through this PR. This supplements ADR-0042; it changes scheduling and coordination,
 not original product acceptance, substrate authority, scope or historical standing.
 
@@ -28,8 +28,8 @@ or erase incomplete original-round obligations.
 ## Decision
 
 Use [COMPLETION-PLAN.md §11](../../../COMPLETION-PLAN.md#11-approved-consolidated-roadmap--2026-10-23)
-as the single remaining-work schedule. Retain CP-00…CP-11 acceptance and the40JNY/
-110UC/12overlappingJW crosswalk, all64RAIT commands plus approved additions,
+as the single remaining-work schedule. Retain CP-00…CP-11 acceptance and the 40 JNY/
+110 UC/12 overlapping JW crosswalk, all 64 RAIT commands plus approved additions,
 round/task identity, decisions, exclusions and D/Q/O milestones. Milestone labels
 are planning references, not new DEVAI rounds or lifecycle states.
 
@@ -56,6 +56,6 @@ or an incomplete campaign complete. Required-green PR integration remains bindin
 ## Validation
 
 Verify unchanged §3/§4/§9 completion/acceptance sections and historical ADR/proof/
-closed-round bytes against main80505ac0. Run formatting, KB/publication, state/round
+closed-round bytes against main 80505ac0. Run formatting, KB/publication, state/round
 indexes and doctor; independent review before PR. Report M1 execution separately
 from this documentation-only change, with exact source SHA and actual receipts.

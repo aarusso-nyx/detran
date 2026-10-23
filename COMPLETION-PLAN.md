@@ -458,14 +458,14 @@ and D1-L package must still satisfy their exact approval boundaries.
 ### Verified starting status and reporting
 
 Observed main: `80505ac00690a3210913f09904004898b78860c3`. DETRAN CI run
-39985646190 passed; trusted RC run39985646229 failed. Installed DEVAI is2.6.3 with
-constitution1.0.2 and STYNX1.5.3; DEVAI v2.7.0 is published but not adopted. #211 is
-open, non-draft and conflicting at9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99. Its
+39985646190 passed; trusted RC run 39985646229 failed. Installed DEVAI is 2.6.3 with
+constitution 1.0.2 and STYNX 1.5.3; DEVAI v2.7.0 is published but not adopted. #211 is
+open, non-draft and conflicting at 9b2a190aa1276f4b15469b7079ed0d7c4c8c4c99. Its
 local staged reconciliation is preserved, not a committed or integrated result.
 
-Latest complete assessment at0e26c795:36/43 measured, seven observation gaps, overall
+Latest complete assessment at 0e26c795: 36/43 measured, seven observation gaps, overall
 FAIL. R-0042 has two later cell dispositions on another SHA; these are not added
-to36. C1/C2 and C3/C4 closed in R-0037…0039; R-0041…0045 remain formally open despite
+to 36. C1/C2 and C3/C4 closed in R-0037…0039; R-0041…0045 remain formally open despite
 merged partial deliveries. Residual dependency/lint/security/PII/coverage/traceability/
 governance/performance findings keep their original evidence and specific backlog
 identities. Completing measurement does not certify product behavior.
