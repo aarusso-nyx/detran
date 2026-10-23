@@ -131,6 +131,17 @@ resolvido por `DETRAN_STACK_STATE_DIR` (ou no temporário do sistema), em
 `smoke-report.json` e `smoke-report.txt`; execuções com sufixo geram
 `smoke-report-<sufixo>.json/.txt`.
 
+O smoke RAIT usa a persona `rait-secretary` com o ator sintético já semeado
+`00000000-0000-4000-8000-0000b0000005`, membro ativo do pool do caso protocolado.
+A leitura comprova somente a projeção de pré-admissibilidade T; não fornece
+acesso a mérito, escopo de supervisão ou novas permissões. As demais personas
+retêm seus próprios overrides e a restauração padrão.
+
+Falhas de transporte mantêm `backend_unreachable`, status0 e resultado de falha.
+Os campos `transportErrorName` e `transportCauseCode` registram apenas
+identificadores conhecidos de uma lista fechada, ou `unknown`; mensagens brutas
+de exceção não são publicadas. Não há retry, espera extra ou waiver de saúde.
+
 ## Diagnóstico
 
 - `pnpm stack:status`: processos gerenciados, serviços Docker e URLs.

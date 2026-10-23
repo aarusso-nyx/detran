@@ -354,3 +354,21 @@ unrelated process or scorecard modification. A90s functionalPASS is not a
 performancePASS, product SLO or permission for another deadline increase.
 No optimization, fourthreview, anchorrepair, merge, S3, production, scorecard
 promotion or roundclosure is authorized. PR211 remainsDRAFT/unmerged.
+
+## PR211 repair and integration goal — Owner, 2026-10-23
+
+Direct active goal: “Your goal is repair and merge PR#211”. This supersedes the
+earlier PR211 no-merge hold only: repair the outstanding failures, complete
+acceptance and merge through the normal PR path once every required check and
+review gate is satisfied. S2/P4/JW01/R-0025 closure, S3 runtime, production
+activation and scorecard promotion are not implied. Preserve protected local,
+machine-specific, recovery and independent scorecard work.
+
+This instruction authorizes bounded repair work toward that result; it does not
+waive machine-only evidence authority or permit manual proof-chain reconciliation.
+The released supported recovery capability and exact-version adoption inventory
+remain prerequisites under ANCHOR-01. Upstream issue418 closure represents the
+accepted ADR only: at this observation no recovery implementation/release exists.
+No sibling repository modification is authorized. Record each concrete repair
+boundary and separate Architect, Engineer and Inspector responsibilities before
+actuation; preserve original failed observations and the30s performance reference.
