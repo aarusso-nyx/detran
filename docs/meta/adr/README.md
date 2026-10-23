@@ -70,41 +70,4 @@ decision; `—` means no partial-validity note is recorded.
 | [ADR-0055](ADR-0055-scorecard-harness-and-historical-compatibility.md) | Executable invariant producers and additive historical compatibility                    | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0056](ADR-0056-source-bound-security-invariants.md)               | Source-bound RBAC and error-semantics invariants                                        | Accepted | parcial (ativação) → [ADR-0057](ADR-0057-partial-security-governance-delivery.md) |
 | [ADR-0057](ADR-0057-partial-security-governance-delivery.md)           | Partial C5/C7/C8 delivery; all-nine native C6 activation remains blocked WIP            | Accepted | —                                                                                 |
-| [ADR-0059](ADR-0059-official-test-proof-anchor-compatibility.md)       | Exact custody verification for official test proof anchors                              | Accepted | —                                                                                 |
-
-ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
-
-## Série `law/adr`
-
-Série DEVAI distinta, com prefixo `LAW-ADR-` nos índices (OD-R18-001, opção b).
-
-| ADR                                                                   | Título                                    | Status   | Vigência                                                                                                                                |
-| --------------------------------------------------------------------- | ----------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| LAW-ADR-0001 (`law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md`) | Adopt DEVAI 1.4.5 and unified STYNX 1.1.1 | Accepted | parcial → [ADR-0015](ADR-0015-stynx-1-3-1-angular-22-and-rait-role-catalogue.md), [ADR-0028](ADR-0028-devai-1-5-2-attested-local-rc.md) |
-
-## Aliases
-
-Números renumerados pela [ADR-0035](ADR-0035-adr-numbering-policy.md). O arquivo antigo é um
-redirecionamento sem conteúdo normativo; o conteúdo vive no arquivo novo, idêntico ao original
-abaixo da nota de proveniência. Citações sem slug anteriores a R-0018 (código, blueprints,
-gerados, corpus, rodadas históricas) não foram reescritas: leia-as por esta tabela. O valor
-persistido `policyCode` `ADR-0024-2026-09-16` é um identificador de dado da política da ADR-0037,
-não uma citação, e não muda.
-
-| Número antigo | Redirecionamento                                                                                   | Número novo | Arquivo novo                                                                                       |
-| ------------- | -------------------------------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------------------------------- |
-| ADR-0006      | [ADR-0006-ops-field-operations-port.md](ADR-0006-ops-field-operations-port.md)                     | ADR-0036    | [ADR-0036-ops-field-operations-port.md](ADR-0036-ops-field-operations-port.md)                     |
-| ADR-0024      | [ADR-0024-rait-legal-priority-owner-policy.md](ADR-0024-rait-legal-priority-owner-policy.md)       | ADR-0037    | [ADR-0037-rait-legal-priority-owner-policy.md](ADR-0037-rait-legal-priority-owner-policy.md)       |
-| ADR-0028      | [ADR-0028-provisionamento-operacional-offline.md](ADR-0028-provisionamento-operacional-offline.md) | ADR-0038    | [ADR-0038-provisionamento-operacional-offline.md](ADR-0038-provisionamento-operacional-offline.md) |
-| ADR-0045      | [ADR-0045-whole-source-local-coverage.md](ADR-0045-whole-source-local-coverage.md)                 | ADR-0050    | [ADR-0050-whole-source-local-coverage.md](ADR-0050-whole-source-local-coverage.md)                 |
-| ADR-0046      | [ADR-0046-devai-263-measurement-repairs.md](ADR-0046-devai-263-measurement-repairs.md)             | ADR-0051    | [ADR-0051-devai-263-measurement-repairs.md](ADR-0051-devai-263-measurement-repairs.md)             |
-
-| ADR-0050 | [ADR-0050-rait-command-replay-provenance.md](ADR-0050-rait-command-replay-provenance.md) | ADR-0052 | [ADR-0052-rait-command-replay-provenance.md](ADR-0052-rait-command-replay-provenance.md) |
-
-## R-0025 admissibility continuation
-
-- [ADR-0041: RAIT admissibility context write boundary](ADR-0041-rait-admissibility-context-write-boundary.md) — accepted Architect 2026-10-18; server-owned context/timeliness, generated read-only CRUD and canonical handwritten write.
-
-## Completion-plan proposal
-
-- [ADR-0042: Reconcile one DETRAN completion baseline](ADR-0042-completion-plan-rebaseline.md) — **Accepted**, Owner approved P1–P3 on 2026-10-18; implementation paused pending exact P4 packet approval.
+| [ADR-0058](ADR-0058-scorecard-collector-fidelity.md)                   | Preserve compiler metadata and runtime names in scorecard collection                    | Accepted | —                                                                                 |

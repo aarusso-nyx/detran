@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "spec_freshness",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:51:38.120Z",
+  "finished_at": "2026-10-21T23:51:38.868Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"spec_freshness\"},\"members\":[{\"kind\":\"spec_freshness\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"spec_freshness\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run spec_freshness\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"spec-freshness\\\",\\\"kind\\\":\\\"spec_freshness\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:51:38.754Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-spec-freshness\\\",\\\"command_hash\\\":\\\"3f976fe45b9b8eb999279f43f85fdd1c05e792c74a53e2923a3a8e722fdfdb8c\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"invariants_scanned\\\":12,\\\"stale_count\\\":0,\\\"threshold_days\\\":90},\\\"id\\\":\\\"SR-7df2c5bd9c654656\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

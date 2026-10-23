@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-spec_freshness-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:21.300Z",
+  "finished_at": "2026-10-22T01:13:22.091Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/spec_freshness/SR-7df2c5bd9c654656.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"spec-freshness\",\"kind\":\"spec_freshness\"},\"timestamp\":\"2026-10-21T23:51:38.754Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense-spec-freshness\",\"command_hash\":\"3f976fe45b9b8eb999279f43f85fdd1c05e792c74a53e2923a3a8e722fdfdb8c\",\"tier\":\"L0\",\"findings\":[],\"metrics\":{\"invariants_scanned\":12,\"stale_count\":0,\"threshold_days\":90},\"id\":\"SR-7df2c5bd9c654656\"}}}}\n",
+  "stderr": ""
+}

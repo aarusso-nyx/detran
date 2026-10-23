@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-trace_resolution.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:30:22.136Z",
+  "finished_at": "2026-10-22T02:30:23.010Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/trace_resolution/SR-25473c26f2c87549.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-25473c26f2c87549\",\"sensor\":{\"name\":\"trace-resolve\",\"kind\":\"trace_resolution\"},\"timestamp\":\"2026-10-22T02:30:21.930Z\",\"status\":\"pass\",\"deterministic\":true,\"command\":\"devai sense trace-resolve --trace /Volumes/Development/.codex/worktrees/scorecard-0e26/detran/law/trace.json --invariants-dir /Volumes/Development/.codex/worktrees/scorecard-0e26/detran/law/invariants\",\"command_hash\":\"de5d0dbe0efcf01510af3607e866787824ec14ed5f8c9de566edc353c2f39072\",\"findings\":[],\"metrics\":{\"unresolved_trace_entries\":0,\"missing_test_paths\":0,\"untraced_invariants\":0,\"invariants_total\":12,\"traced_invariants\":12,\"attestation_only_invariants\":0}}}}}\n",
+  "stderr": ""
+}

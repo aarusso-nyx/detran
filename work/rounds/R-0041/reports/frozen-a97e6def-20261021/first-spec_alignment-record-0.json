@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    ".devai/local/rounds/R-0041/audit/frozen-a97e6def-20261021/first-spec_alignment-reading-0.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T01:13:19.710Z",
+  "finished_at": "2026-10-22T01:13:20.510Z",
+  "exitCode": 0,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/a97-scorecard/detran/.devai/state/sensor-readings/spec_alignment/SR-fd80690864fe408f.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"spec-alignment\",\"kind\":\"spec_alignment\"},\"timestamp\":\"2026-10-21T23:54:57.487Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-spec-alignment\",\"command_hash\":\"973b1e07803f8c106ec5529818013f9d2edfef33dfe8c1571eb8d9e3b06ef858\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"SPEC_ALIGNMENT_REVERSE_BELOW_THRESHOLD\",\"message\":\"Reverse-claim ratio 12.2% is below threshold 80% (386 / 3156 source files claimed).\"}],\"metrics\":{\"invariants_scanned\":12,\"invariants_broken_forward\":0,\"source_files_scanned\":3156,\"source_files_claimed\":386,\"reverse_pct\":12.23,\"reverse_threshold_pct\":80},\"id\":\"SR-fd80690864fe408f\"}}}}\n",
+  "stderr": ""
+}

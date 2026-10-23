@@ -1,5 +1,28 @@
 # Autorização direta — R-0025 `rait-web-wiring`
 
+## Current authority boundary — 2026-10-23
+
+Owner approved the exact backend-first S2 packet:
+
+> I approve P4-02-S2 as written, including backend-first sequencing. Check CI on PR #205, fix any failures, and merge once required checks are green. Then execute the approved slice, preserving local and scorecard work.
+
+PR205 integrated the packet. S2 implementation and subsequent approved extensions
+are preserved in draft PR211, not integrated. Earlier dated S2 “not approved”
+instructions below record their historical scope and are superseded by this
+approval; they do not revoke later authorizations or pause already approved checks.
+
+Owner's current instruction:
+
+> I approve parallel S3 packet preparation. Check CI on PR #217, fix any failures, and merge once required checks are green. Then proceed with the plan, keeping PR #211 unmerged and preserving local and scorecard work.
+
+This approves only the timing of S3 packet preparation. S3 runtime still requires
+S2 integration, its separately authorized audit, refreshed exact ownership and
+explicit implementation approval. PR211 merge and new unowned repairs/recovery
+adoption are not authorized. Preserve all original acceptance, local and scorecard
+work. Current schedule: [RAIT progress plan](../../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md).
+
+## Historical authorizations and instructions
+
 **Papel decisor:** Owner. **Recebimento local nesta sessão:** 2026-09-29
 (America/Sao_Paulo). A fonte textual da adenda A-C2-15 em
 `work/campaigns/C-0002-consolidacao.md` é datada de 2026-09-30; essa data é
@@ -140,7 +163,9 @@ of tools/contracts/tests/check-commands.test.mjs for the exact fixed census
 All route/error, TEAT100 and malformed-input assertions remain. No runtime,
 contract, generator, threshold, scorecard, S2 or merge authority is added.
 
-## PR203 merge and post-merge planning — Owner, 2026-10-19
+## Historical PR203 merge and post-merge planning — Owner, 2026-10-19
+
+The S2 hold in this dated instruction is superseded by the current authority boundary above.
 
 Direct instruction:
 

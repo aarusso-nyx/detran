@@ -1,0 +1,11 @@
+import pathlib,hashlib,json,os,subprocess,datetime
+repo=pathlib.Path('/Volumes/Development/.codex/worktrees/scorecard-0e26/detran');root=pathlib.Path(__file__).parent;before=json.loads((root/'preservation-before.json').read_text());changed=[];missing=[]
+for name,info in before['files'].items():
+ p=repo/name
+ if p.is_symlink():body=os.readlink(p).encode();kind='symlink'
+ elif p.is_file():body=p.read_bytes();kind='file'
+ else:missing.append(name);continue
+ if hashlib.sha256(body).hexdigest()!=info['sha256'] or kind!=info['kind']:changed.append(name)
+allowed={'record/proofs/chain.json','record/proofs/work/generic/R-0041.jsonl'};unexpected=[x for x in changed if x not in allowed];chain=json.loads((repo/'record/proofs/chain.json').read_text());old=before['chain']['records'];prefix=chain['records'][:len(old)]==old;generic=(repo/'record/proofs/work/generic/R-0041.jsonl').read_text().startswith(before['generic_epoch']);legacy=hashlib.sha256((repo/'.devai/state/evidence-chain.json').read_bytes()).hexdigest()==before['files']['.devai/state/evidence-chain.json']['sha256'];bindings=json.loads((repo/'.devai/config/invariant-producers.json').read_text())['bindings'];tasks=json.loads((repo/'test-tasks.json').read_text())['tasks'];task_count=len(tasks)
+head=subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip();out={'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'frozen_head':before['head'],'actual_head':head,'tracked_baseline_files':len(before['files']),'changed_existing_paths':changed,'missing':missing,'unexpected_changes':unexpected,'original_chain_records':len(old),'current_chain_records':len(chain['records']),'original_chain_prefix_preserved':prefix,'original_generic_prefix_preserved':generic,'legacy_chain_unchanged':legacy,'C6_bindings':bindings,'original_task_descriptor_count':task_count,'thresholds_and_closed_rounds_unchanged':not unexpected and not missing,'failed_a97_capsule_and_readings_unchanged':not any(x.startswith('work/rounds/R-0041/reports/frozen-a97')or x.startswith('.devai/state/sensor-readings/')for x in changed)}
+print(json.dumps(out,indent=2));assert not unexpected and not missing and prefix and generic and legacy and not bindings and task_count==7 and head==before['head']

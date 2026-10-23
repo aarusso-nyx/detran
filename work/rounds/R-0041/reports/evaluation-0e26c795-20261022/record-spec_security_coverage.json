@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/evaluation-0e26c795-20261022/reading-spec_security_coverage.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:50:36.507Z",
+  "finished_at": "2026-10-22T02:50:38.368Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/spec_security_coverage/SR-1937ce45b7c1b9cd.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"sensor\":{\"name\":\"spec-security-coverage\",\"kind\":\"spec_security_coverage\"},\"timestamp\":\"2026-10-22T02:50:36.156Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-spec-security-coverage\",\"command_hash\":\"16dea51ec07b7477c4c4ca65b9f7fc90fe8fa63bf79b92be28f52777e37b065c\",\"tier\":\"L0\",\"findings\":[{\"severity\":\"warning\",\"code\":\"SPEC_SECURITY_NO_PII_REGISTRY\",\"message\":\"No `INSERT INTO core.pii_map` row found across migration dirs: backend/database/ddl, senatran-mock/database/ddl\"}],\"metrics\":{\"threat_model_present\":1,\"pii_registry_present\":0,\"rbac_invariant_present\":1,\"signals_present\":2},\"id\":\"SR-1937ce45b7c1b9cd\"}}}}\n",
+  "stderr": ""
+}

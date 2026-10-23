@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "record",
+    "--repo-root",
+    ".",
+    "--input",
+    "/Volumes/Development/runtimes/devai/config/evidence/detran/measurement-seven-gaps-20261022/native-cd0c1b09/reading-test_coverage_depth.json",
+    "--as-role",
+    "inspector",
+    "--write",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T16:02:42.256Z",
+  "finished_at": "2026-10-22T16:02:42.915Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense record\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"path\":\"/Volumes/Development/.codex/worktrees/scorecard-0e26/detran/.devai/state/sensor-readings/test_coverage_depth/SR-01d9bca900c51904.json\",\"action\":\"created\",\"reading\":{\"schemaVersion\":\"1.0.0\",\"id\":\"SR-01d9bca900c51904\",\"sensor\":{\"name\":\"test-coverage-depth\",\"kind\":\"test_coverage_depth\"},\"timestamp\":\"2026-10-22T16:02:42.134Z\",\"status\":\"review\",\"deterministic\":true,\"command\":\"devai sense-test-coverage-depth\",\"command_hash\":\"d7b2f1c9b6051a6c97d386b14e31285260fa137788e6d75d81d1caaa100be471\",\"tier\":\"L2\",\"findings\":[{\"severity\":\"warning\",\"code\":\"TEST_COVERAGE_PARTIAL\",\"message\":\"Lines coverage 56.5% over the local population is between review (50%) and pass (80%) thresholds.\"}],\"metrics\":{\"population\":\"local\",\"lines_total\":47128,\"lines_covered\":26640,\"lines_pct\":56.53,\"threshold_pass\":80,\"threshold_review\":50}}}}}\n",
+  "stderr": ""
+}

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "plant_coherence",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"sourceRoots\":[\"apps/boat/mobile/src\",\"apps/dashboard/web/src\",\"apps/portal/web/src\",\"apps/rait/web/src\",\"apps/teat/mobile/src\",\"apps/teat/web/src\",\"backend/app/src\",\"backend/domains/ch/billing/src\",\"backend/domains/ch/biometrics/src\",\"backend/domains/ch/clinical-controls/src\",\"backend/domains/ch/clinical-network/src\",\"backend/domains/ch/clinical-reports/src\",\"backend/domains/ch/encounters/src\",\"backend/domains/ch/exams/src\",\"backend/domains/ch/inconsistencies/src\",\"backend/domains/ch/juntas/src\",\"backend/domains/ch/operational-controls/src\",\"backend/domains/ch/patients/src\",\"backend/domains/ch/process-blocks/src\",\"backend/domains/ch/restrictions/src\",\"backend/domains/ch/retention/src\",\"backend/domains/ch/scheduling/src\",\"backend/domains/ch/telehealth/src\",\"backend/domains/ch/toxicology/src\",\"backend/domains/dashboard/crashes/src\",\"backend/domains/dashboard/monitor/src\",\"backend/domains/est/crash/src\",\"backend/domains/inf/ait/src\",\"backend/domains/inf/alcohol/src\",\"backend/domains/inf/collection/src\",\"backend/domains/inf/deadlines/src\",\"backend/domains/inf/infraction/src\",\"backend/domains/inf/measures/src\",\"backend/domains/inf/normative/src\",\"backend/domains/inf/notification/src\",\"backend/domains/inf/rait-case/src\",\"backend/domains/inf/rait-integration/src\",\"backend/domains/inf/rait-org/src\",\"backend/domains/inf/rait-session/src\",\"backend/domains/inf/rait-worklist/src\",\"backend/domains/inf/speed/src\",\"backend/domains/integration/renaest-mirror/src\",\"backend/domains/ops/agency/src\",\"backend/domains/ops/core/src\",\"backend/domains/ops/evidence/src\",\"backend/domains/ops/example/src\",\"backend/domains/ops/field/src\",\"backend/domains/ops/offline-sync/src\",\"backend/domains/ops/parameter/src\",\"backend/domains/ops/provisioning/src\",\"backend/domains/ops/snapshots/src\",\"backend/domains/portal/citizen-service/src\",\"backend/domains/portal/complaints/src\",\"backend/domains/portal/identity/src\",\"backend/domains/portal/inbox/src\",\"backend/domains/portal/projections/src\",\"backend/domains/portal/requests/src\",\"backend/domains/shared/src\",\"packages/api-clients/src\",\"packages/sefaz-adapter/src\",\"packages/senatran-adapter/src\",\"packages/ui/src\",\"senatran-mock/apps/api/src\",\"senatran-mock/domain/autorizacoes/api/src\",\"senatran-mock/domain/cdt/api/src\",\"senatran-mock/domain/condutores/api/src\",\"senatran-mock/domain/consulta-csv/api/src\",\"senatran-mock/domain/detran/api/src\",\"senatran-mock/domain/indicadores/api/src\",\"senatran-mock/domain/infracoes/api/src\",\"senatran-mock/domain/renach/api/src\",\"senatran-mock/domain/renaest/api/src\",\"senatran-mock/domain/renainf/api/src\",\"senatran-mock/domain/restricoes-judiciais/api/src\",\"senatran-mock/domain/roubo-furto/api/src\",\"senatran-mock/domain/shared/api/src\",\"senatran-mock/domain/sne/api/src\",\"senatran-mock/domain/veiculos/api/src\"]}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:55:01.289Z",
+  "finished_at": "2026-10-21T23:55:02.148Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"plant_coherence\"},\"members\":[{\"kind\":\"plant_coherence\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"plant_coherence\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run plant_coherence\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"plant-coherence\\\",\\\"kind\\\":\\\"plant_coherence\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:55:02.025Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-plant-coherence\\\",\\\"command_hash\\\":\\\"3b42edf8c321fd356c907dd1a2cd72ac2c357bb02486e4bf9d19106a3a3a7eef\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"dirs_scanned\\\":542,\\\"incoherent_dirs\\\":0,\\\"max_review_incoherent\\\":3},\\\"id\\\":\\\"SR-72f041eb4f6229a6\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

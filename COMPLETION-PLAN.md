@@ -1,6 +1,6 @@
 # DETRAN completion plan — review baseline, 2026-10-18
 
-**Authority:** Architect, Constitution Articles 6–10. **Status: P1–P3 integrated by #195; P4 contract packets and S1 integrated through #203; S2 awaiting approval.**
+**Authority:** Architect, Constitution Articles 6–10. **Status: P1–P3 integrated by #195; P4 contract packets and S1 integrated through #203; S2 approved in #205 and implemented in unmerged draft #211; parallel S3 packet preparation approved and scheduling integrated #217.**
 This is the single completion baseline approved under P1–P3, not a new governance framework or an
 implementation authorization. Planning labels CP-00…CP-11 are document references,
 not reserved DEVAI rounds, task IDs, queues or new lifecycle states.
@@ -12,6 +12,8 @@ Owner instruction:
 No implementation resumes from this PR. No round is closed, sealed, cancelled or
 renumbered. No branch, recovery patch, receipt, test or acceptance criterion is
 removed. No scorecard configuration, reading, policy or result is changed here.
+
+Current execution schedule: [RAIT progress plan, 2026-10-23](docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md). It separates S2 integration blockers from Owner-approved parallel S3 packet preparation; it authorizes no runtime or merge.
 
 ## 1. Baseline and how this plan becomes authoritative
 
@@ -26,7 +28,7 @@ requirements, acceptance, evidence, exclusions and historical records remain sou
 The [planning ADR](docs/meta/adr/ADR-0042-completion-plan-rebaseline.md)
 records the approved cutover and bounded P1/P2 amendments. The approval is transcribed
 in §8 and the campaign addenda; implementation remains paused until the exact P4
-packet is approved. P4-01/P4-02/S1 approvals have since been recorded; only the proposed S2 remains paused here. P5–P7 remain unresolved where applicable.
+packet is approved. P4-01/P4-02/S1 approvals have since been recorded; S2 is approved but not integrated; S3 runtime remains paused. P5–P7 remain unresolved where applicable.
 
 Read in this order:
 
@@ -140,11 +142,12 @@ Admissibility #193/#194 and the S1 scope/projection/parent/replay prerequisite
 access, legacy and risk design choices; do not reopen them as unsolved discovery.
 See [PR203 exact-merge evidence/audit](work/rounds/R-0025/reports/PR203-post-merge/README.md).
 
-The [exact proposed S2 packet](work/rounds/R-0025/reports/P4-02-S2-approval-packet.md)
-recommends backend risk + legacy qualification + atomic claim/context as one PR,
+The [exact approved S2 packet](work/rounds/R-0025/reports/P4-02-S2-approval-packet.md)
+authorizes backend risk + legacy qualification + atomic claim/context as one PR,
 then separately approved S3 typed claim→dossier/header/browser activation. This is
 an explicit delivery split, not removal of original UI/journey acceptance. S2 is
-paused pending exact approval; no task dispatch follows from this planning update.
+approved via #205 and implemented in unmerged draft #211; no new task dispatch
+follows from this planning update.
 Production source qualification remains separate from synthetic fixture proof.
 
 After those slices: documents/inquiry/draft/signing with their provider gates.
@@ -277,17 +280,17 @@ from another workflow. Exact source/owner and activation gate are required.
 **Owner approval, 2026-10-18:** “Fix the remaining review findings, record my approval of P1–P3, run the required checks, and open the completion plan PR. Keep implementation paused until we approve the exact P4 packet, and preserve local and scorecard work.”
 
 P1–P3 below are approved; campaign addenda amend the prior scheduling restrictions
-without rewriting their history. P4 is pending exact-packet approval; P5–P7 remain
+without rewriting their history. P4 approvals extend through S2; S3 needs its exact packet. P5–P7 remain
 unresolved where applicable. This approval does not prefill acceptance or PASS.
 
-| ID                                | Decision / recommendation                                                                                                                                                                                                                                                      | Authority and current restriction                                                                                                                       |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **P1 — Delivery model**           | Allow bounded, independently reviewable PRs inside an existing open round; retain final whole-round acceptance, evidence and close/seal. Require contract→RED→implementation→affected/full PR gates→cross-family review→CI→authorized merge→scoped evidence/audit per delivery | Approved by Owner 2026-10-18; amended in C-0002/C-0003 addenda. Aggregate acceptance/close/seal retained; S1 integrated #203; exact S2 approval pending |
-| **P2 — Platform prerequisite**    | Permit R-0034 only after an accepted complete vertical outcome or an explicitly approved narrowly bounded prerequisite needed to complete that outcome; avoid waiting for every RAIT command solely because of round grouping                                                  | Approved by Owner 2026-10-18; C-0003 scheduling amendment. No R-0034 opening or R-0022 restart authorized; shared locks/no-touch boundaries retained    |
-| **P3 — Meaning of completion**    | Approve D/Q/O milestones separately; retain full commissioned software scope, original external/native exclusions and explicit operational obligations. No production label until Q/O pass                                                                                     | Approved by Owner 2026-10-18; no external execution commissioned, no D acceptance reduction, no Q/O readiness claim                                     |
-| **P4 — Next CP-01 packet**        | Reconcile pool, distribution, claim destination and signing handoff with canonical sources; then authorize only the selected bounded packet                                                                                                                                    | D1–D11/ADR0045–49 approved and integrated; S1 merged #203; exact backend-first S2 and later UI activation require separate approvals                    |
-| **P5 — Journey/access conflicts** | Resolve OD-C3-009 before the affected JW02/05/08 journeys and identify authority for any individual case-access rule                                                                                                                                                           | Owner/source custodian; no inferred grant or permission widening                                                                                        |
-| **P6 — External ownership**       | Name custodians, exact requests, expected public/formal evidence, target response dates and fallback/deactivation conditions for CP-10/11                                                                                                                                      | Owner/institution/LEGAL; no invented normative values, credentials or institution promises; no sending messages from this PR                            |
+| ID                                | Decision / recommendation                                                                                                                                                                                                                                                      | Authority and current restriction                                                                                                                                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **P1 — Delivery model**           | Allow bounded, independently reviewable PRs inside an existing open round; retain final whole-round acceptance, evidence and close/seal. Require contract→RED→implementation→affected/full PR gates→cross-family review→CI→authorized merge→scoped evidence/audit per delivery | Approved by Owner 2026-10-18; amended in C-0002/C-0003 addenda. Aggregate acceptance/close/seal retained; S1 integrated #203; S2 approved #205; implementation #211 not integrated |
+| **P2 — Platform prerequisite**    | Permit R-0034 only after an accepted complete vertical outcome or an explicitly approved narrowly bounded prerequisite needed to complete that outcome; avoid waiting for every RAIT command solely because of round grouping                                                  | Approved by Owner 2026-10-18; C-0003 scheduling amendment. No R-0034 opening or R-0022 restart authorized; shared locks/no-touch boundaries retained                               |
+| **P3 — Meaning of completion**    | Approve D/Q/O milestones separately; retain full commissioned software scope, original external/native exclusions and explicit operational obligations. No production label until Q/O pass                                                                                     | Approved by Owner 2026-10-18; no external execution commissioned, no D acceptance reduction, no Q/O readiness claim                                                                |
+| **P4 — Next CP-01 packet**        | Reconcile pool, distribution, claim destination and signing handoff with canonical sources; then authorize only the selected bounded packet                                                                                                                                    | D1–D11/ADR0045–49 approved and integrated; S1 merged #203; backend-first S2 approved #205; later S3 UI activation requires its exact approval                                      |
+| **P5 — Journey/access conflicts** | Resolve OD-C3-009 before the affected JW02/05/08 journeys and identify authority for any individual case-access rule                                                                                                                                                           | Owner/source custodian; no inferred grant or permission widening                                                                                                                   |
+| **P6 — External ownership**       | Name custodians, exact requests, expected public/formal evidence, target response dates and fallback/deactivation conditions for CP-10/11                                                                                                                                      | Owner/institution/LEGAL; no invented normative values, credentials or institution promises; no sending messages from this PR                                                       |
 
 After review: keep the first commitment to one small CP-01 packet, with contract,
 source conflicts, proofs and completion boundary visible. Re-estimate from its

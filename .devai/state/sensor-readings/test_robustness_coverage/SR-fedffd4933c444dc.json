@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "sensor": {
+    "name": "test-robustness-coverage",
+    "kind": "test_robustness_coverage"
+  },
+  "timestamp": "2026-10-22T02:51:30.312Z",
+  "status": "error",
+  "deterministic": true,
+  "command": "devai sense-test-robustness-coverage",
+  "command_hash": "d6de5ea6f2d8804d7ba4272f65600bd52cf98e8fdff70586159a5981864ca240",
+  "tier": "L0",
+  "findings": [
+    {
+      "severity": "critical",
+      "code": "TEST_EXECUTABLE_POPULATION_INCOMPLETE",
+      "message": "Executable population contains a symbolic link: /Volumes/Development/.codex/worktrees/scorecard-0e26/detran/apps/rait/web/src/app/preview/fixtures"
+    }
+  ],
+  "metrics": {
+    "test_files": 794,
+    "robust_tests": 420,
+    "robust_pct": 52.9,
+    "threshold_pass": 10,
+    "threshold_review": 5
+  },
+  "id": "SR-fedffd4933c444dc"
+}

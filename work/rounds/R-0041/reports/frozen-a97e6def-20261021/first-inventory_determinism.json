@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "inventory_determinism",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:54:41.567Z",
+  "finished_at": "2026-10-21T23:54:51.170Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"inventory_determinism\"},\"members\":[{\"kind\":\"inventory_determinism\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"inventory_determinism\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run inventory_determinism\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"inventory-determinism\\\",\\\"kind\\\":\\\"inventory_determinism\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:54:51.035Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-inventory-determinism\\\",\\\"command_hash\\\":\\\"a98e42de47872a05c0a07a0f3bbed050ad244c3e751207208fd8640d37dab650\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"hash_a\\\":\\\"3c5b19ec98ec1eb41d88db7ffe6b8ef99aa14f30b25877c9fe849284b7a7d7b9\\\",\\\"hash_b\\\":\\\"3c5b19ec98ec1eb41d88db7ffe6b8ef99aa14f30b25877c9fe849284b7a7d7b9\\\",\\\"bytes_a\\\":996648,\\\"bytes_b\\\":996648,\\\"equal\\\":1},\\\"id\\\":\\\"SR-6e514c2e7660229c\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}

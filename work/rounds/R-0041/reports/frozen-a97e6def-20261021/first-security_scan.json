@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "security_scan",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-21T23:50:56.998Z",
+  "finished_at": "2026-10-21T23:51:27.938Z",
+  "exitCode": 3,
+  "signal": null,
+  "error": null,
+  "stdout": "",
+  "stderr": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":false,\"error\":{\"schemaVersion\":\"1.0.0\",\"code\":\"ACTION_GATE_FAILED\",\"class\":\"gate-fail\",\"exit\":3,\"message\":\"The action completed with a failing gate outcome.\",\"remediation\":\"Resolve the reported gate findings, then rerun the action.\",\"context\":{\"payload\":{\"ok\":false,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"security_scan\"},\"members\":[{\"kind\":\"security_scan\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"security_scan\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"fail\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":0,\"review\":0,\"fail\":1,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":3,\"results\":[{\"command\":\"devai sense run security_scan\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"id\\\":\\\"SR-94d55faaafb86baf\\\",\\\"sensor\\\":{\\\"name\\\":\\\"security-scan\\\",\\\"kind\\\":\\\"security_scan\\\"},\\\"timestamp\\\":\\\"2026-10-21T23:51:27.775Z\\\",\\\"status\\\":\\\"fail\\\",\\\"deterministic\\\":false,\\\"command\\\":\\\"pnpm audit --json\\\",\\\"command_hash\\\":\\\"f94effb1655d1d0b007b3c6543061f5de53dad08a1278a581152253f3f34d247\\\",\\\"tier\\\":\\\"L0\\\",\\\"exit_code\\\":1,\\\"findings\\\":[{\\\"severity\\\":\\\"error\\\",\\\"code\\\":\\\"SECURITY_SCAN_HIGH_OVER_THRESHOLD\\\",\\\"message\\\":\\\"8 high-severity vulnerabilities exceed REVIEW threshold 5.\\\"}],\\\"metrics\\\":{\\\"tool\\\":\\\"pnpm\\\",\\\"total_vulnerabilities\\\":37,\\\"critical\\\":0,\\\"high\\\":8,\\\"moderate\\\":25,\\\"low\\\":4,\\\"info\\\":0,\\\"pass_max_high\\\":0,\\\"review_max_high\\\":5}}\",\"stderr\":\"\",\"na\":false,\"status\":2}]}}}}\n"
+}

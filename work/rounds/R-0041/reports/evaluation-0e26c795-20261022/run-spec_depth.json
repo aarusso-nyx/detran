@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pnpm",
+    "exec",
+    "devai",
+    "sense",
+    "run",
+    "spec_depth",
+    "--repo-root",
+    ".",
+    "--round",
+    "R-0041",
+    "--input",
+    "{\"adrDir\":\"docs/meta/adr\",\"invariantsDir\":\"law/invariants\"}",
+    "--format",
+    "json"
+  ],
+  "started_at": "2026-10-22T02:31:34.479Z",
+  "finished_at": "2026-10-22T02:31:35.426Z",
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "stdout": "{\"schemaVersion\":\"1.0.0\",\"action_id\":\"sense run\",\"ok\":true,\"result\":{\"verdict\":\"pass\",\"media_type\":\"application/json\",\"value\":{\"ok\":true,\"dry_run\":false,\"selection\":{\"type\":\"kind\",\"value\":\"spec_depth\"},\"members\":[{\"kind\":\"spec_depth\",\"effect\":\"read\",\"capabilities\":[],\"consent\":{\"write\":false,\"publish\":false}}],\"executed\":[\"spec_depth\"],\"excluded\":[],\"round_required\":false,\"round_id\":\"R-0041\",\"aggregate_effect\":\"read\",\"generic_ceiling\":\"remote-write\",\"implicit_persistence\":false,\"execution_status\":\"pass\",\"readiness_status\":\"pass\",\"applicable_count\":1,\"na_count\":0,\"counts\":{\"pass\":1,\"review\":0,\"fail\":0,\"unknown\":0,\"na\":0,\"error\":0},\"exit_code\":0,\"results\":[{\"command\":\"devai sense run spec_depth\",\"stdout\":\"{\\\"schemaVersion\\\":\\\"1.0.0\\\",\\\"sensor\\\":{\\\"name\\\":\\\"spec-depth\\\",\\\"kind\\\":\\\"spec_depth\\\"},\\\"timestamp\\\":\\\"2026-10-22T02:31:35.240Z\\\",\\\"status\\\":\\\"pass\\\",\\\"deterministic\\\":true,\\\"command\\\":\\\"devai sense-spec-depth\\\",\\\"command_hash\\\":\\\"7c1ed1e046ec90b894d82250b5f1998f51be1488e6a361f18debb677288da1d1\\\",\\\"tier\\\":\\\"L0\\\",\\\"findings\\\":[],\\\"metrics\\\":{\\\"invariant_count\\\":12,\\\"adr_count\\\":63,\\\"use_case_count\\\":6,\\\"component_count\\\":14},\\\"id\\\":\\\"SR-ec62b6b90aa3d0c3\\\"}\",\"stderr\":\"\",\"na\":false,\"status\":0}]}}}\n",
+  "stderr": ""
+}
