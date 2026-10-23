@@ -80,3 +80,22 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0039 | `C3/C4` — normalização suplementar integrada; lacunas preservadas                                                           | fechada           | [#209](https://github.com/aarusso-nyx/detran/pull/209) | PC-0025 | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
 | R-0042 | Seven scorecard measurement gaps (BL-0024); collector fidelity and separate provider repair; C6 held                        | aberta            | —                                                      | —       | Codex                                               |
+| R-0043 | E2E fixture isolation                                                                                                       | aberta            | —                                                      | —       | Codex                                               |
+
+## Folder convention (`R-nnnn/`)
+
+| Path                    | Content                                                                                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plan.md`               | goals, task table, acceptance commands, map deliverable → definitions, risks, §Bloqueios, §Retomada, §Leitura                                                   |
+| `prompts/00-maestro.md` | the single prompt that opens the orchestra (instantiated template)                                                                                              |
+| `prompts/TASK-nnnn.md`  | worker prompts composed by the maestro                                                                                                                          |
+| `tasks/TASK-nnnn.json`  | tasks in the DEVAI `task.schema.json` (2.0.0)                                                                                                                   |
+| `compositions.json`     | prompt composition ids (`PC-<16hex>`) per task                                                                                                                  |
+| `reviews/`              | reviewer prompts, verdicts (JSON) and bridge records                                                                                                            |
+| `reports/`              | worker delivery reports — tracked by git since R-0018 CTG-0002 (`.gitignore` re-includes `work/rounds/*/reports/`); excluded from Prettier as verbatim evidence |
+| `evidence-*.json`       | payloads recorded through `devai evidence record`                                                                                                               |
+| `budget.json`           | token accounting per task and reviewer call                                                                                                                     |
+| `closure.json`          | phase-closure draft for `devai round close`                                                                                                                     |
+
+Seal: `devai round seal` (R-0020) seals R-0003…R-0016, R-0018 and R-0019;
+R-0017 was sealed in its own round. The seal artefact and path are defined by R-0020.
