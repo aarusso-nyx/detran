@@ -16,9 +16,9 @@ isolation:
 waves:
   - id: "W1"
     title: "Reproduce and implement the bounded correction"
-    roles: ["engineer", "inspector"]
+    roles: ["architect", "engineer", "inspector"]
     type: "implementation"
-    lock_scopes: ["backend", "apps", "packages", "senatran-mock", "tools"]
+    lock_scopes: ["backend", "apps", "packages", "senatran-mock", "tools", "tools/blueprints/generate.mjs", "law/security/authorization.json", "law/security/pii-registry.json"]
     gates: ["assertions-preserved", "thresholds-preserved", "C6-held"]
   - id: "W2"
     title: "Validate and retain official evidence"
