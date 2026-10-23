@@ -37,3 +37,31 @@ Repeated preflight2026-10-23T04:34:29Z found six Vitest processes, including
 workers at74.7%,78.0% and126.8% CPU. This is actual competing test execution,
 not merely an idle tool-server marker. S2 resource-dependent validation remains
 pending; this observation grants no performance PASS or new timeout budget.
+
+## Prospective PR217-head reconciliation — 2026-10-23
+
+The inventory above remains the historical a97e6def comparison. A second dry-run
+compares reviewed planning head `6f8b673a135f20ee1365c5ffda05080a0f471ca8`
+with unchanged S2 `cd2b6740d41676d000fd0f30ba6049ff3d8073cc`, before
+planning integration. `git merge-tree --write-tree` returned1 and projected four
+conflicts: `BUILD-PLAN.md`,
+`docs/meta/knowledge-base/session-artifacts/orchestration-handoff.md`,
+`work/rounds/R-0025/plan.md`, and the existing machine-only
+`record/proofs/chain.json`. No runtime/test conflict was introduced.
+
+[A1-planning-resolution.patch](A1-planning-resolution.patch) is an unapplied
+review artifact covering exactly the three prose paths. Its preimage is pinned
+S2 cd2b6740; its prospective result starts from the merge-tree text result, retains
+current approved scheduling, and labels preserved older S2 checkpoints historical.
+Every nonempty source line in those S2 files remains present:70 BUILD-PLAN lines,
+156 handoff lines and688 R-0025 plan lines. The S2 activation, implementation and
+R15–R17 addenda remain intact; no whole-file replacement from main is proposed.
+The patch retains the explicit S3 runtime/S2 merge gates and records approved
+parallel packet preparation, without granting runtime or proof authority.
+
+Validation: `git apply --check` exited0 in a disposable temporary Git repository
+containing only the three exact pinned S2 prose preimages. Neither the S2 worktree
+nor its branch was modified. This artifact is not a merge commit, does not resolve
+or read machine-chain content, and cannot bypass the remaining machine-only
+conflict. Recheck refs and the complete merge projection after PR217 integrates;
+new overlap stops for review. No runtime or test validation was executed.

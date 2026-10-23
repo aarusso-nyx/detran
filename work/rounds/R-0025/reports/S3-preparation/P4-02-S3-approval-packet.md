@@ -64,7 +64,8 @@ references are the inspected baseline and must be refreshed after integration.
   an exact persistence/identity amendment before adding it.
 - Validate required result identity/state/version and strong CASE ETag before
   treating success as routable. Navigate `data.id` to `/casos/:id/dossie`.
-  Missing/malformed success cannot fabricate an ID, assignment or ETag. Do not
+  Missing/malformed success retains the uncertain attempt for same-key retry; it
+  cannot fabricate an ID, assignment or ETag. Do not
   derive a case ETag from pool metadata. Existing commands retain their If-Match
   and idempotency behavior; the helper extension is selector-only.
 - Consume typed risk only for the active authorized dossier; distinguish

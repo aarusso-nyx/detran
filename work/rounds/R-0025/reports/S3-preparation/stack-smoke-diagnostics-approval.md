@@ -4,7 +4,7 @@ Architect. **Proposed, not executed.** One Engineer path:
 `.github/workflows/ci.yml`, only the existing manual `stack-smoke` job.
 
 Run39698481809/job119561609883 failed `pnpm stack:smoke` after successful stack
-health. `tools/stack/smoke.mjs` writes sanitized per-target rows through
+health. `tools/stack/smoke.mjs` writes per-target rows through
 `writeReport` to the directory selected by `DETRAN_STACK_STATE_DIR ?? join(TMPDIR ?? "/tmp", "detran-stack")` and exits
 nonzero without printing those reports. The workflow runs cleanup but does not
 retain them; the run's artifact list has only a Docker build artifact. The actual

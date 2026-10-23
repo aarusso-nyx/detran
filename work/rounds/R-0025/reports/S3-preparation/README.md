@@ -15,8 +15,10 @@ unowned repairs or later journeys.
   source-backed transport, retry/risk/preview boundaries, RED and browser acceptance.
 - [Closed path inventory](path-inventory.json):25 existing +6 new, unique and
   checked against the inspected main; none of the proposed runtime/test paths edited.
-- [A1 inventory](A1-integration-inventory.md): one machine-only chain conflict,
-  security output refresh under existing R8 authority, no source/test conflict.
+- [A1 inventory](A1-integration-inventory.md): the original machine-only chain conflict plus three later planning conflicts,
+  security output refresh under existing R8 authority, no runtime/test conflict.
+- [Unapplied planning resolution](A1-planning-resolution.patch): three prose paths,
+  every nonempty pinned S2 source line preserved; isolated dry-run apply passed.
 - [A2 exact diagnostic amendment](stack-smoke-diagnostics-approval.md): proposed
   one-file logging change; existing smoke exit and cleanup preserved.
 - [Packet digests](packet-manifest.json): exact prepared bytes, not governed proof
