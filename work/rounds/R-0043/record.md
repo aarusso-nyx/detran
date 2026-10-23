@@ -18,7 +18,7 @@ waves:
     title: "Reproduce and implement the bounded correction"
     roles: ["engineer", "inspector"]
     type: "implementation"
-    lock_scopes: ["senatran-mock/tests", "senatran-mock/domain", "senatran-mock/database"]
+    lock_scopes: ["senatran-mock/tests", "senatran-mock/domain", "senatran-mock/database", "tools/devai/verify-proof-anchors.mjs", "tools/devai/tests/verify-proof-anchors.test.mjs", "docs/meta/adr/ADR-0059-official-test-proof-anchor-compatibility.md"]
     gates: ["assertions-preserved", "thresholds-preserved", "C6-held"]
   - id: "W2"
     title: "Validate and retain official evidence"
