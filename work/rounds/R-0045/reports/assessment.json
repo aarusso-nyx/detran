@@ -1,0 +1,53 @@
+{
+  "round": "R-0045",
+  "baseline": "a97e6def6cc4b80d65c5ab0ee9579241f0b33446",
+  "source_commit": "2864873b0c20ae8b5c9857df4bd9a3d3963dd349",
+  "snapshot_candidate": "de6f781e29b6da0e381c2480ddf1051337d70a14",
+  "scope": "Canonical lint source fixes, durable blueprint generation and deterministic current authorization reference refresh",
+  "lint": {
+    "command": "pnpm exec eslint --format=json .",
+    "files_before": 3619,
+    "files_after": 3619,
+    "errors_before": 1368,
+    "errors_after": 0,
+    "warnings_before": 1,
+    "warnings_after": 0
+  },
+  "validation": {
+    "canonical_blueprint_comparison": "pass",
+    "backend_typechecked_packages": 52,
+    "typecheck_provenance": "29 unaffected package checks retained; 23 corrected or outstanding checks passed separately. The first atomic command remains recorded as failed.",
+    "metadata_passed": 4,
+    "scoped_http_passed": 355,
+    "unit_passed": 1323,
+    "existing_todo_preserved": 8,
+    "provisioning_focused_passed": 1,
+    "provisioning_cli_deselected": 607,
+    "decorator_handlers": 1010,
+    "security_exporter_tests_passed": 68,
+    "historical_security_tests_passed": 47
+  },
+  "preservation": {
+    "assertion_files": 31,
+    "assertions": 1016,
+    "test_populations": "unchanged",
+    "generated_controller_bodies_and_decorators": 251,
+    "empty_dto_runtime_outputs_unchanged": 14,
+    "scoped_handler_bodies_and_decorators": 71,
+    "asserted_mapper": "One omission expression changed from destructuring to copied-object deletion; identical expected values and focused existing regression pass.",
+    "authorization_endpoints": 1139,
+    "authorization_semantics": "all bindings, controls, public reviews, populations and gaps unchanged; generated references and 166 source hashes refreshed by existing exporters",
+    "pii_registry": "byte-identical",
+    "DEVAI": "2.6.3",
+    "STYNX": "1.5.3",
+    "thresholds": "unchanged",
+    "C6": "blocked"
+  },
+  "limitations": [
+    "Diagnostics are not native sensor readings or a recomputed 43-cell scorecard.",
+    "Original RED ESLint source payload is retained privately with its hash; archived RED diagnostics remove only embedded source text, preserving all diagnostics and populations.",
+    "Private fixture dump/inspect/credentials are excluded from tracked archives; sanitized target identity and recovery hashes are retained.",
+    "No merge, release or round closure is performed."
+  ],
+  "runtime": "Owned disposable PostGIS stopped; retained volume and never-started recovery container available."
+}
