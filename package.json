@@ -91,7 +91,7 @@
     "verify:rounds-index": "node tools/devai/render-rounds-index.mjs --check",
     "test:rounds-index": "node --test tools/devai/tests/render-rounds-index.test.mjs",
     "verify:proof-anchors": "node tools/devai/verify-proof-anchors.mjs --repo-root . && pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
-    "security:history:check": "node tools/security/verify-historical-compatibility.mjs && node tools/security/schema-citation-census.mjs && node --test tools/security/tests/historical-compatibility.test.mjs tools/security/tests/schema-citation-census.test.mjs",
+    "security:history:check": "node tools/security/verify-historical-compatibility.mjs && node tools/security/schema-citation-census.mjs && node --test tools/security/tests/historical-compatibility.test.mjs tools/security/tests/schema-citation-census.test.mjs tools/security/tests/governed-upgrade-compatibility.test.mjs",
     "security:exports:check": "node tools/security/check-security-exports.mjs",
     "security:exports:test": "node --import tsx --test tools/security/tests/security-exporters.test.ts tools/security/tests/security-export-checker.test.mjs tools/security/tests/prepare-security-inventories.test.mjs"
   },
