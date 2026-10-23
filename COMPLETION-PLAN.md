@@ -1,6 +1,6 @@
 # DETRAN completion plan — review baseline, 2026-10-18
 
-**Authority:** Architect, Constitution Articles 6–10. **Status: P1–P3 integrated by #195; P4 contract packets and S1 integrated through #203; S2 approved in #205 and implemented in unmerged draft #211; RAIT scheduling amendment proposed.**
+**Authority:** Architect, Constitution Articles 6–10. **Status: P1–P3 integrated by #195; P4 contract packets and S1 integrated through #203; S2 approved in #205 and implemented in unmerged draft #211; parallel S3 packet preparation approved and scheduling integrated #217.**
 This is the single completion baseline approved under P1–P3, not a new governance framework or an
 implementation authorization. Planning labels CP-00…CP-11 are document references,
 not reserved DEVAI rounds, task IDs, queues or new lifecycle states.
@@ -13,7 +13,7 @@ No implementation resumes from this PR. No round is closed, sealed, cancelled or
 renumbered. No branch, recovery patch, receipt, test or acceptance criterion is
 removed. No scorecard configuration, reading, policy or result is changed here.
 
-Current execution proposal: [RAIT progress plan, 2026-10-23](docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md). It separates S2 integration blockers from proposed parallel S3 packet preparation; it authorizes no runtime or merge.
+Current execution schedule: [RAIT progress plan, 2026-10-23](docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md). It separates S2 integration blockers from Owner-approved parallel S3 packet preparation; it authorizes no runtime or merge.
 
 ## 1. Baseline and how this plan becomes authoritative
 

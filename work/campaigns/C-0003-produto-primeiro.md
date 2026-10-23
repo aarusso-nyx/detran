@@ -282,12 +282,12 @@ Upon integration, [COMPLETION-PLAN.md](../../COMPLETION-PLAN.md) replaces remain
 
 **Historical implementation hold (2026-10-18, superseded for approved S1/S2):** P4's exact reconciled packet still needed explicit approval. The current boundary above governs; S3 runtime still requires its exact approval. P5–P7 remain unresolved for their affected work. Preserve local changes, recovery artifacts and the separate scorecard session. No round lifecycle, proof, permission or runtime state changes in this amendment.
 
-## Architect scheduling proposal — 2026-10-23
+## Approved scheduling amendment — 2026-10-23
 
 S2 was approved through #205 and implemented in draft #211; integration and
 validation remain incomplete. Earlier “P4 pending” wording is historical.
 The [RAIT progress proposal](../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
 proposes preparing the exact S3 packet concurrently with S2 integration work.
-It changes no Owner decision, acceptance or runtime authorization. Owner approved
-parallel packet preparation on2026-10-23; integration of this schedule awaits #217.
+It preserves prior product/security decisions, acceptance and runtime holds. Owner approved
+parallel packet preparation on2026-10-23; this schedule integrated through #217.
 S3 runtime and #211 merge stay paused.

@@ -65,3 +65,9 @@ nor its branch was modified. This artifact is not a merge commit, does not resol
 or read machine-chain content, and cannot bypass the remaining machine-only
 conflict. Recheck refs and the complete merge projection after PR217 integrates;
 new overlap stops for review. No runtime or test validation was executed.
+
+Post-integration recheck: main `1c8488028cddc2c9526b8b9d06465e83987a1a3c`
+versus pinned S2 cd2b6740 returned1 with the same four conflicts listed above.
+The planning merge did not change the source/proof dispositions. The prospective
+patch's current headings were synchronized with the approved schedule; its pinned
+S2 preimages and complete preserved S2 addenda remain unchanged.

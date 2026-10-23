@@ -42,3 +42,22 @@ S2's chain conflict/orphan; issue closure and an ADR are not delivery. Keep PR21
 unmerged. After S2 integration and separately authorized audit, refresh S3's exact
 contract/path inventory and request implementation approval. A2 data omissions and
 all remaining whole-round acceptance remain required.
+
+## PR217 integration and preparation checks
+
+PR217 merged2026-10-23T05:15:13Z as
+`1c8488028cddc2c9526b8b9d06465e83987a1a3c`, reviewed head
+`6f8b673a135f20ee1365c5ffda05080a0f471ca8`. All five required contexts passed:
+evidence-gate, foundation, senatran-mock, senatran-mock-tests, verified-local-rc.
+The full backend fallback passed; manual stack-smoke was not executed by this
+pull-request event. [Exact-head run39902238684](https://github.com/aarusso-nyx/detran/actions/runs/39902238684).
+
+Review finding about stale current S2 holds was fixed in6f8b673a (campaign,
+backlog, authorization) and the conversation resolved. No administrator bypass,
+force-push, gate change or runtime/test change was used. The continuation branch
+merged current main without rewriting its published history.
+
+Local preparation: KB check/publication dry run, rounds-index check, doctor,
+main-derived proof-chain verification, inventory31 uniqueness/existence, packet
+hashes, isolated patch dry-run and diff whitespace checks passed. No S3 RED or
+runtime/browser acceptance was executed; those remain future gated work.
