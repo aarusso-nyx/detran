@@ -1,9 +1,10 @@
 # HANDOFF PROMPT — DETRAN Monorepo Consolidation & New Apps (BOAT, RAIT, PORTAL, DASHBOARD)
 
-> **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
-> S1 security prerequisites integrated through #196–#201 and #203. R-0025/JW-01 remain open.
-> S2 is paused pending approval of its [exact backend-first packet](../../../../work/rounds/R-0025/reports/P4-02-S2-approval-packet.md).
-> Scorecard evaluation/remediation and protected local/recovery work stay separate.
+> **Current boundary — 2026-10-23:** S1 integrated; S2 approved via #205,
+> implemented in draft #211, not integrated. R-0025/JW-01 remain open.
+> [RAIT progress proposal](../rait-progress-plan-2026-10-23.md) separates integration/validation blockers
+> from proposed parallel S3 packet preparation. S3 runtime and #211 merge remain paused.
+> Preserve local, recovery and separate scorecard work.
 
 > **Nota de leitura — reconciliação de 2026-10-18:** este handoff preserva a missão,
 > as decisões e os gates originais. Versões, caminhos e estado de execução são

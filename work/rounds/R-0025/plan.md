@@ -6,11 +6,12 @@
 > são históricas; estado atual e limites nas adendas A-C3-01 e pós-merge.
 > Ver [entregas, tarefas restantes e decisões](../../../docs/meta/knowledge-base/backlog.md#reconciliação-em-2026-10-18--fila-de-execução-atual).
 
-**Status atual (2026-10-19):** admissibilidade #193 e pré-requisito S1
-escopo/projeção/parent/replay #203 integrados, main2df548e0. Pós-merge exato
-não-promotor registrado; R-0025/JW-01 permanecem abertas. S2 backend-first é
-proposta, sem autorização ou dispatch; a adenda PR203 abaixo prevalece sobre
-banners históricos. Nenhuma aceitação integral foi reduzida.
+**Status atual (2026-10-23):** admissibilidade #193 e S1 #203 integrados;
+S2 aprovado via #205 e implementado no PR #211, ainda draft e sem merge.
+R-0025/JW-01 permanecem abertas. A [proposta de sequência RAIT](../../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
+separa integração/validação de S2 da preparação paralela proposta do pacote S3.
+S3 runtime continua pausado; os registros datados abaixo são históricos, não
+revogam aprovações posteriores e não certificam aceitação integral.
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.

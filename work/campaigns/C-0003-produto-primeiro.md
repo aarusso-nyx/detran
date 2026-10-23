@@ -1,11 +1,12 @@
 # Campanha C-0003: produto primeiro — prévia de frontend, jornadas verticais, endurecimento
 
-> **Current boundary — 2026-10-19:** P1–P3 integrated by #195; P4 contracts and
-> S1 security prerequisites integrated through #196–#201 and #203. R-0025/JW-01 remain open.
-> S2 is paused pending approval of its [exact backend-first packet](../rounds/R-0025/reports/P4-02-S2-approval-packet.md).
-> Scorecard evaluation/remediation and protected local/recovery work stay separate.
+> **Current boundary — 2026-10-23:** S2 approved via #205 and implemented in
+> draft #211; integration/validation incomplete. R-0025/JW-01 remain open.
+> Owner approved parallel S3 packet preparation; S3 runtime and #211 merge stay paused.
+> [Current RAIT schedule](../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md) retains all acceptance and recovery gates.
+> Local, recovery and separate scorecard work remain protected.
 
-> **Continuação atual — 2026-10-19:** R-0033 fechada/selada PC-0021; R-0025
+> **Continuação histórica — 2026-10-19 (superada pelo limite atual acima):** R-0033 fechada/selada PC-0021; R-0025
 > tem admissibilidade #193 e pré-requisito de segurança S1 #203 em main2df548e0.
 > Pós-merge exato registrado sem promoção de readiness. Proposta: S2 backend
 > risco/legado/claim atômico, depois S3 UI/dossiê sob aprovação separada; nenhuma
@@ -16,7 +17,8 @@
 **Autoridade:** Architect (Constitution Article 6). Revisão 1 de 2026-10-14, redigida a partir da
 diretiva do Owner que **parou** a R-0022 `stynx-sse-tenancy` (C-0002, ação 7c) na mesma data.
 **Status atual:** em execução; R-0033 integrada e encerrada, R-0025 retomada
-com admissibilidade e S1 integrados; S2 aguarda aprovação.
+com admissibilidade e S1 integrados; S2 aprovada #205 e implementada no PR #211,
+ainda sem integração. Preparação paralela S3 aprovada; runtime S3 pausado.
 
 **Status histórico da revisão 1:** proposta com decisões OD-C3-001…006 tomadas,
 aguardando autorização para abrir R-0033; naquele momento nenhuma rodada estava aberta. O `AUTHORIZATION.md` de cada rodada só nasce quando o Owner autoriza o respectivo
@@ -278,4 +280,14 @@ Upon integration, [COMPLETION-PLAN.md](../../COMPLETION-PLAN.md) replaces remain
 - **P2 approved:** amends the R-0034 merged-J-round opening prerequisite to permit an accepted complete vertical outcome or an explicitly approved narrowly bounded prerequisite necessary for that outcome. No blanket platform rewrite, R-0022 restart or R-0034 opening is authorized. Shared locks, no-touch boundaries and packet authorization remain. Admissibility alone is insufficient.
 - **P3 approved:** distinguish development (D), institutional/provider qualification (Q), and operational release (O). Retain commissioned software scope and existing external/native exclusions; no production claim until applicable Q/O acceptance. No external execution is commissioned here.
 
-**Implementation hold:** P4's exact reconciled packet still needs explicit approval. P5–P7 remain unresolved for their affected work. Preserve local changes, recovery artifacts and the separate scorecard session. No round lifecycle, proof, permission or runtime state changes in this amendment.
+**Historical implementation hold (2026-10-18, superseded for approved S1/S2):** P4's exact reconciled packet still needed explicit approval. The current boundary above governs; S3 runtime still requires its exact approval. P5–P7 remain unresolved for their affected work. Preserve local changes, recovery artifacts and the separate scorecard session. No round lifecycle, proof, permission or runtime state changes in this amendment.
+
+## Architect scheduling proposal — 2026-10-23
+
+S2 was approved through #205 and implemented in draft #211; integration and
+validation remain incomplete. Earlier “P4 pending” wording is historical.
+The [RAIT progress proposal](../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
+proposes preparing the exact S3 packet concurrently with S2 integration work.
+It changes no Owner decision, acceptance or runtime authorization. Owner approved
+parallel packet preparation on2026-10-23; integration of this schedule awaits #217.
+S3 runtime and #211 merge stay paused.
