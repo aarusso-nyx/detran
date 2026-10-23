@@ -841,3 +841,200 @@ test('dado historical-gap e generic com a mesma sequência quando verifica entã
     },
   );
 });
+
+// Official test evidence has its own physical namespace and byte-bound anchor.
+async function withTestProof(run, payload = {}) {
+  await withFixture(
+    {
+      baseline: await canonicalBaseline(),
+      lines: [{ roundId: 'R-0043', value: proofLine('R-0043', 1) }],
+      records: [anchor('R-0043', 1)],
+    },
+    async (root) => {
+      const value = JSON.stringify({
+        schemaVersion: '1.0.0',
+        line_type: 'record',
+        round_id: 'R-0043',
+        kind: 'test',
+        sequence: 1,
+        payload,
+      });
+      const proofPath = 'record/proofs/work/test/R-0043.jsonl';
+      const file = path.join(root, proofPath);
+      await mkdir(path.dirname(file), { recursive: true });
+      await writeFile(file, `${value}\n`);
+      const chainFile = path.join(root, 'record/proofs/chain.json');
+      const chain = JSON.parse(await readFile(chainFile, 'utf8'));
+      const record = {
+        ...anchor('R-0043', 1),
+        action: 'evidence.record.test',
+        proof_path: proofPath,
+        proof_sequence: 1,
+        proof_sha256: sha256(value),
+      };
+      chain.records.push(record);
+      await writeFile(chainFile, JSON.stringify(chain));
+      await run({ root, value, file, chainFile, chain, record });
+    },
+  );
+}
+
+test('test e generic na mesma rodada e sequência mantêm âncoras independentes', async () => {
+  await withTestProof(async ({ root }) => {
+    const result = verify(root);
+    expectPass(result);
+    assert.match(result.stdout, /directly anchored: 2/);
+  });
+});
+
+test('resultado test fail permanece evidência válida sem promover o resultado', async () => {
+  const payload = {
+    result: { status: 'fail', exit_code: 1 },
+    service_exit_code: 1,
+  };
+  await withTestProof(async ({ root, file, chainFile }) => {
+    const proofBefore = await readFile(file);
+    const chainBefore = await readFile(chainFile);
+    expectPass(verify(root));
+    assert.deepEqual(await readFile(file), proofBefore);
+    assert.deepEqual(await readFile(chainFile), chainBefore);
+    assert.deepEqual(JSON.parse(proofBefore.toString()).payload, payload);
+  }, payload);
+});
+
+for (const [name, mutate, reason] of [
+  [
+    'hash ausente',
+    ({ record }) => {
+      delete record.proof_sha256;
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'hash divergente',
+    ({ record }) => {
+      record.proof_sha256 = '0'.repeat(64);
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'caminho ausente',
+    ({ record }) => {
+      delete record.proof_path;
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'namespace da âncora errado',
+    ({ record }) => {
+      record.proof_path = 'record/proofs/work/generic/R-0043.jsonl';
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'sequência da âncora ausente',
+    ({ record }) => {
+      delete record.proof_sequence;
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'sequência da âncora divergente',
+    ({ record }) => {
+      record.proof_sequence = 2;
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'rodada da âncora divergente',
+    ({ record }) => {
+      record.notes[0] = 'round_id=R-0044';
+    },
+    /invalid anchor reference/,
+  ],
+  [
+    'sequência da nota divergente',
+    ({ record }) => {
+      record.notes[1] = 'proof_sequence=2';
+    },
+    /invalid anchor reference/,
+  ],
+  [
+    'âncora duplicada',
+    ({ chain, record }) => {
+      chain.records.push({ ...record, id: 'duplicate' });
+    },
+    /duplicate anchors/,
+  ],
+  [
+    'âncora ausente',
+    ({ chain }) => {
+      chain.records.pop();
+    },
+    /undeclared orphan/,
+  ],
+  [
+    'tipo da âncora desconhecido',
+    ({ record }) => {
+      record.action = 'evidence.record.unknown';
+    },
+    /invalid anchor reference/,
+  ],
+]) {
+  test(`test com ${name} falha`, async () => {
+    await withTestProof(async (fixture) => {
+      mutate(fixture);
+      await writeFile(fixture.chainFile, JSON.stringify(fixture.chain));
+      expectFailure(verify(fixture.root), 'R-0043', 1, reason);
+    });
+  });
+}
+
+for (const [name, mutate, reason] of [
+  [
+    'bytes adulterados',
+    (line) => {
+      line.payload = { tampered: true };
+    },
+    /invalid test anchor/,
+  ],
+  [
+    'namespace físico errado',
+    (line) => {
+      line.kind = 'generic';
+    },
+    /proof kind does not match its path/,
+  ],
+  [
+    'tipo desconhecido',
+    (line) => {
+      line.kind = 'unknown';
+    },
+    /unsupported proof kind/,
+  ],
+  [
+    'rodada física divergente',
+    (line) => {
+      line.round_id = 'R-0044';
+    },
+    /round_id.*does not match/,
+  ],
+  [
+    'sequência física divergente',
+    (line) => {
+      line.sequence = 2;
+    },
+    /expected sequence/,
+  ],
+]) {
+  test(`linha test com ${name} falha`, async () => {
+    await withTestProof(async ({ root, value, file }) => {
+      const line = JSON.parse(value);
+      mutate(line);
+      await writeFile(file, `${JSON.stringify(line)}\n`);
+      const result = verify(root);
+      assert.notEqual(result.status, 0, result.stdout);
+      assert.match(result.stderr, reason);
+    });
+  });
+}

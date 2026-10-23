@@ -80,6 +80,7 @@ históricos não foram alterados para corrigir a projeção de status.
 | R-0039 | `C3/C4` — normalização suplementar integrada; lacunas preservadas                                                           | fechada           | [#209](https://github.com/aarusso-nyx/detran/pull/209) | PC-0025 | Codex                                               |
 | R-0041 | C5-C8 security specification and governance controls                                                                        | aberta            | —                                                      | —       | Codex                                               |
 | R-0042 | Seven scorecard measurement gaps (BL-0024); collector fidelity and separate provider repair; C6 held                        | aberta            | —                                                      | —       | Codex                                               |
+| R-0043 | E2E fixture isolation                                                                                                       | aberta            | —                                                      | —       | Codex                                               |
 
 ## Folder convention (`R-nnnn/`)
 
