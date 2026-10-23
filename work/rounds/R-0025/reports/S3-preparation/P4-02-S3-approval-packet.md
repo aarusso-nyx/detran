@@ -83,13 +83,12 @@ references are the inspected baseline and must be refreshed after integration.
 
 ## Closed ownership inventory
 
-The companion `path-inventory.json` is the closed inventory: **31 paths =25
-existing +6 new**, validated for uniqueness/existence. Four speculative runtime
-compatibility paths and three speculative test paths were deliberately excluded;
+The companion `path-inventory.json` is the closed inventory: **34 paths =28
+existing +6 new**, validated for uniqueness/existence. Unowned compatibility paths remain excluded;
 if required later, stop for a bounded amendment. This packet creates no files
 from that inventory; it names proposed ownership only.
 
-### Engineer —12 existing +2 new
+### Engineer —13 existing +2 new
 
 - `apps/rait/web/src/app/data/api/case.client.ts`
 - `apps/rait/web/src/app/data/api/worklist.client.ts`
@@ -103,6 +102,7 @@ from that inventory; it names proposed ownership only.
 - `apps/rait/web/src/app/preview/adapters/preview-worklist.client.ts`
 - `apps/rait/web/src/app/i18n/rait.pt-BR.json`
 - `apps/rait/web/src/app/data/models/index.ts`
+- `apps/rait/web/src/app/core/error-codes.ts`
 - **New:** `apps/rait/web/src/app/data/models/claim.models.ts`
 - **New:** `apps/rait/web/src/app/data/facades/claim-attempt.ts`
 
@@ -110,7 +110,7 @@ The claim models are aliases/projections of existing generated CASE types only.
 The claim-attempt helper owns only actor/pool/key/uncertainty state. The HTTP helper
 extension must preserve all existing callers; no generic request-SDK rewrite.
 
-### Inspector —11 existing +4 new
+### Inspector —12 existing +4 new
 
 - `apps/rait/web/src/app/data/api/case.client.spec.ts`
 - `apps/rait/web/src/app/data/api/worklist.client.spec.ts`
@@ -123,6 +123,7 @@ extension must preserve all existing callers; no generic request-SDK rewrite.
 - `apps/rait/web/src/app/preview/adapters/preview-case.client.spec.ts`
 - `apps/rait/web/src/app/preview/adapters/preview-worklist.client.spec.ts`
 - `apps/rait/web/src/app/i18n/i18n.spec.ts`
+- `apps/rait/web/src/app/core/error-boundary.spec.ts`
 - **New:** `apps/rait/web/src/app/data/facades/claim-attempt.spec.ts`
 - **New:** `apps/rait/web/src/app/data/api/case-claim.wiring.spec.ts`
 - **New:** `apps/rait/web/src/app/features/fila/pages/defense-pool-queue.wiring.spec.ts`
@@ -133,15 +134,42 @@ an explicitly supplied controlled browser/backend/DB environment. No dependency
 or package-script change, fixed developer-machine browser path or committed
 credential. Absent browser/DB/auth resources mean pending validation, not PASS.
 
-### Architect —2 existing reference paths
+### Architect —3 existing reference paths
 
 - `docs/framework/arch/i18n/rait.pt-BR.json`
 - `docs/framework/arch/rait-i18n-glossary.md`
+- `docs/framework/arch/rait-error-catalog.md`
+
+Transcribe the already accepted S2 codes into parsed §3 of the canonical error
+catalogue; retain its dated supplements and all existing semantics. The fixture
+reader `src/testing/kb.ts:224–231` extracts only “3. Códigos”; extending only the
+appendix would leave the exact catalogue/order assertion unsatisfied. Add
+RAIT.CLAIM_LEGACY_UNVERIFIED and RAIT.CASE_POOL_UNRESOLVED under §3.4 after
+ASSIGNMENT_ALREADY_ACTIVE, in that order; add RAIT.RISK_SOURCE_UNAVAILABLE under
+§3.9 after PARAMETER_SOURCE_PENDING. Engineer mirrors that exact canonical order
+in core/error-codes.ts and adds no other code. Status409/409/503, safe disclosure
+and source semantics remain those already accepted in ADR0047/48/49.
 
 Only source-backed presentation keys/explanations may be added under Architect
-ownership before runtime implementation. No new behavioral error or rule. Record
+ownership before runtime implementation. No new behavioral error or rule. This is reference synchronization for accepted
+codes, not a new backend/public contract. Record
 approved exact strings before Inspector writes against them; maintain app/canonical
 i18n synchronization through their separate roles.
+
+## Exact error-catalogue compatibility
+
+Only the three operation codes absent from the existing runtime catalogue need
+registration: RAIT.CLAIM_LEGACY_UNVERIFIED, RAIT.CASE_POOL_UNRESOLVED and
+RAIT.RISK_SOURCE_UNAVAILABLE. Existing `messageKeyOf`/`classifyError` behavior
+already maps registered409/503 codes to their code-specific i18n keys; keep that
+runtime unchanged. Inspector owns only the added boundary spec for direct HTTP
+and SDK classifications, catalogue membership/order, localized-key presence and
+retained unknown-code/403/status-kind/Retry-After behavior. Existing i18n coverage
+is already owned: update any exact seed-key census only to the count of the
+source-backed canonical additions, preserving all old values and subset/order
+assertions. Do not add a generic-prefix allowance or weaken unknown fallback.
+The canonical §3 edit, runtime registration and localized strings occur only in
+the future role sequence after S3 runtime entry/approval gates are satisfied.
 
 ## Inspector RED and decisive acceptance
 
@@ -164,7 +192,10 @@ behavior before Engineer implementation, not missing infrastructure.
    not a browser transport mock as sole acceptance. Respect S2 source prerequisites.
 6. Preview banner, asset-only/no-v1 interception and explicitly unavailable claim;
    unchanged admissibility/triage/archive and scoped-read positive/negative paths.
-7. Keyboard-accessible selector/confirmation, loading/error/empty/uncertain states,
+7. The three accepted codes classify as conflict409/conflict409/unavailable503
+   with their exact message keys for HTTP and SDK errors. Existing catalogue/order,
+   unknown fallback, forbidden403 and retry metadata assertions remain intact.
+8. Keyboard-accessible selector/confirmation, loading/error/empty/uncertain states,
    Portuguese source-backed labels and disabled action explanation.
 
 Run generated-client sync checks without regeneration, affected unit/routed tests,
@@ -182,7 +213,9 @@ client or generator edit, STYNX/shared UI/pin/lockfile/workflow edit, alternate 
 runtime, private-field grant, signing/inquiry/draft activation, sibling write,
 scorecard input/output or proof-chain hand edit. Existing RLS and parent/replay
 boundaries remain. Preserve generic idempotency-key.ts, etag-store.ts,
-commands.ts, error-boundary runtime/tests and risk-flag runtime/tests byte-identically.
+commands.ts, error-boundary runtime, error-boundary-interceptors.spec.ts and
+risk-flag runtime/tests byte-identically. Only error-boundary.spec.ts is added
+for the bounded three-code coverage above.
 Any need to edit them requires an exact amendment; regressions still run.
 
 A2 batch position/deadline/acceptance and pending missing-item restoration is

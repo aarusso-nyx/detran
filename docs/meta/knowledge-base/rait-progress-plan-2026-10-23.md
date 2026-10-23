@@ -93,11 +93,11 @@ required checks passed on reviewed head6f8b673a. The stale S2 stop instructions
 were corrected; their review conversation was resolved after independent checking.
 
 The [preparation report](../../../work/rounds/R-0025/reports/S3-preparation/README.md)
-records the exact S3 packet (31 proposed paths), A1 inventory and unapplied prose
+records the exact S3 packet (34 proposed paths), A1 inventory and unapplied prose
 resolution patch, and separately proposed one-file smoke diagnostics. Post-merge
 A1 still finds three planning conflicts and the machine-only chain conflict;
-no runtime/test conflict. S3 runtime and PR211 merge remain held. The diagnostic
-extension requires its separate approval; quiet-window S2 checks retain their
+no runtime/test conflict. S3 runtime and PR211 merge remain held. The Owner approved the diagnostic
+extension with PR221-first sequencing; quiet-window S2 checks retain their
 existing authorization and have not been fabricated as completed.
 
 ## Review references and planning validation
