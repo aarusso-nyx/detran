@@ -8,10 +8,12 @@
 
 **Status atual (2026-10-23):** admissibilidade #193 e S1 #203 integrados;
 S2 aprovado via #205 e implementado no PR #211, ainda draft e sem merge.
-R-0025/JW-01 permanecem abertas. A [proposta de sequência RAIT](../../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
-separa integração/validação de S2 da preparação paralela proposta do pacote S3.
+R-0025/JW-01 permanecem abertas. A [sequência RAIT aprovada](../../../docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md)
+separa integração/validação de S2 da preparação paralela aprovada do pacote S3.
 S3 runtime continua pausado; os registros datados abaixo são históricos, não
 revogam aprovações posteriores e não certificam aceitação integral.
+O [pacote S3 preparado](reports/S3-preparation/P4-02-S3-approval-packet.md) é proposta
+de implementação futura, dependente de integração/audit S2 e aprovação exata.
 
 **Estado histórico da Sessão A:** A-C2-15 liberava somente
 TASK-0001/0002/0003/0006 e aguardava os upstreams.

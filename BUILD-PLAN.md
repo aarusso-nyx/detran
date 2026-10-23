@@ -2,8 +2,8 @@
 
 > **Current boundary — 2026-10-23:** S1 integrated; S2 approved via #205,
 > implemented in draft #211, not integrated. R-0025/JW-01 remain open.
-> [RAIT progress proposal](docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md) separates integration/validation blockers
-> from proposed parallel S3 packet preparation. S3 runtime and #211 merge remain paused.
+> [Approved RAIT schedule](docs/meta/knowledge-base/rait-progress-plan-2026-10-23.md) separates integration/validation blockers
+> from Owner-approved parallel S3 packet preparation. S3 runtime and #211 merge remain paused.
 > Preserve local, recovery and separate scorecard work.
 
 ## Leitura atual (reconciliação de 2026-10-18)

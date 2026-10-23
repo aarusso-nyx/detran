@@ -1,6 +1,6 @@
 # RAIT progress plan — 2026-10-23
 
-**Authority:** Architect. **Status:** proposal for review; no runtime dispatch or merge authorization.
+**Authority:** Architect. **Status:** Owner approved parallel packet preparation; schedule integrated by #217. No S3 runtime or PR211 merge authorization.
 
 ## Purpose and retained baseline
 
@@ -11,12 +11,13 @@ acceptance, tenant/role boundaries and separate development/qualification/releas
 milestones. Scorecard work, local configuration, recovery patches and receipts are
 outside this plan. No branch or worktree cleanup is proposed.
 
-The scheduling change proposed here is narrow: prepare S3's source reconciliation
+The approved scheduling change is narrow: prepare S3's source reconciliation
 and review packet while S2 integration is blocked. S3 runtime still waits for S2
 integration, its separately authorized audit, an exact approved packet and the
 Architect → Inspector RED → Engineer → Inspector GREEN sequence. The final
 paragraph of the S2 approval packet remains historical authorization; only its
-**timing of packet preparation** would change on approval of this proposal.
+**timing of packet preparation** was approved by the Owner on2026-10-23 and
+integrated through #217; runtime entry gates remain unchanged.
 
 ## Evidence baseline and truthful status
 
@@ -67,12 +68,12 @@ RAIT-first and PEC-last scheduling and P5–P7 boundaries.
 
 ## Review decisions and immediate next action
 
-Recommended approval: advance **S3 packet preparation only** in parallel with A,
+Owner approved **S3 packet preparation only** in parallel with A,
 retaining S2 integration/audit as the prerequisite for S3 runtime. This proposal
 itself executes no A1 source reconciliation, tests or S3 runtime. No reapproval of
 D1–D11, S2, or the90s/120s budget is requested.
 
-After review, start with A1's conflict/ownership inventory and B's read-only
+With preparation authorized, start with A1's conflict/ownership inventory and B's read-only
 source/acceptance map. Report the smallest actionable missing authorization;
 do not ask for a broad permission to “finish RAIT.” S2 merge, upstream adoption,
 any newly unowned repair and the final S3 packet remain separate explicit gates.
@@ -84,6 +85,20 @@ The success measure for this amendment is a reconciled S2 candidate plus a
 reviewable S3 packet prepared while integration blockers are resolved. Completion
 still means accepted journeys, complete command coverage and applicable Q/O
 proof; a green subset, approved plan or scorecard reading is insufficient.
+
+## Executed preparation and remaining gates
+
+PR217 integrated as `1c8488028cddc2c9526b8b9d06465e83987a1a3c` after all five
+required checks passed on reviewed head6f8b673a. The stale S2 stop instructions
+were corrected; their review conversation was resolved after independent checking.
+
+The [preparation report](../../../work/rounds/R-0025/reports/S3-preparation/README.md)
+records the exact S3 packet (34 proposed paths), A1 inventory and unapplied prose
+resolution patch, and separately proposed one-file smoke diagnostics. Post-merge
+A1 still finds three planning conflicts and the machine-only chain conflict;
+no runtime/test conflict. S3 runtime and PR211 merge remain held. The Owner approved the diagnostic
+extension with PR221-first sequencing; quiet-window S2 checks retain their
+existing authorization and have not been fabricated as completed.
 
 ## Review references and planning validation
 
